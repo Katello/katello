@@ -29,11 +29,11 @@ module Pulp
       delegate :remotes_file_file_partial_update, to: :file_remotes_api
       delegate :remotes_file_file_sync, to: :file_remotes_api
 
-      delegate :distributions_create, to: :distributions_api
-      delegate :distributions_list, to: :distributions_api
-      delegate :distributions_read, to: :distributions_api
-      delegate :distributions_delete, to: :distributions_api
-      delegate :distributions_partial_update, to: :distributions_api
+      delegate :distributions_file_file_create, to: :file_distributions_api
+      delegate :distributions_file_file_list, to: :file_distributions_api
+      delegate :distributions_file_file_read, to: :file_distributions_api
+      delegate :distributions_file_file_delete, to: :file_distributions_api
+      delegate :distributions_file_file_partial_update, to: :file_distributions_api
 
       delegate :tasks_read, to: :tasks_api
 
@@ -41,8 +41,8 @@ module Pulp
         @repositories_api ||= PulpcoreClient::RepositoriesApi.new
       end
 
-      def distributions_api
-        @distributions_api ||= PulpcoreClient::DistributionsApi.new
+      def file_distributions_api
+        @file_distributions_api ||= PulpFileClient::DistributionsApi.new
       end
 
       def file_publishers_api

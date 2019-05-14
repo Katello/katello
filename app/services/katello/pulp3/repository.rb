@@ -83,66 +83,18 @@ module Katello
         response
       end
 
-      def update_distribution(path)
-        distribution_reference = distribution_reference(path)
-        if distribution_reference
-          pulp3_api.distributions_partial_update(distribution_reference.href, publication: repo.publication_href)
-        end
-      end
-
       def refresh_distributions
-        responses = []
-        paths.map do |prefix, path|
-          dist_ref = distribution_reference(path)
-          if dist_ref
-            if prefix == :http
-              if repo.root.unprotected
-                responses << update_distribution(path)
-              else
-                result = delete_distribution(dist_ref.href)
-                dist_ref.destroy!
-                responses << result
-              end
-            else
-              responses << update_distribution(path)
-            end
-          else
-            if prefix == :http
-              responses << create_distribution(prefix, path) if repo.root.unprotected
-            else
-              responses << create_distribution(prefix, path)
-            end
-          end
+        path = repo.relative_path.sub(/^\//, '')
+        dist_ref = distribution_reference(path)
+        if dist_ref
+          update_distribution(path)
+        else
+          create_distribution(path)
         end
-        responses
       end
 
       def create_version
         pulp3_api.repositories_versions_create(repository_reference.repository_href, {})
-      end
-
-      private def delete_distribution(href)
-        pulp3_api.distributions_delete(href)
-      end
-
-      def lookup_distributions(args)
-        pulp3_api.distributions_list(args).results
-      end
-
-      def get_distribution(href)
-        pulp3_api.distributions_read(href)
-      rescue Zest::ApiError => e
-        raise e if e.code != 404
-        nil
-      end
-
-      def delete_distributions
-        paths.values.each do |path|
-          dists = lookup_distributions(base_path: path.sub(/^\//, ''))
-          delete_distribution(dists.first._href) if dists.first
-          dist_ref = distribution_reference(path)
-          dist_ref.destroy! if dist_ref
-        end
       end
 
       def save_distribution_references(hrefs)
@@ -152,22 +104,6 @@ module Katello
             DistributionReference.create!(path: path, href: href, root_repository_id: repo.root.id)
           end
         end
-      end
-
-      def create_distribution(prefix, path)
-        path = path.sub(/^\//, '')
-        distribution_data = PulpcoreClient::Distribution.new(
-          base_path: path,
-          publication: repo.publication_href,
-          name: "#{prefix}_#{backend_object_name}")
-        pulp3_api.distributions_create(distribution_data)
-      end
-
-      def paths
-        {
-          https: "https/#{repo.relative_path}",
-          http: "http/#{repo.relative_path}"
-        }
       end
 
       def common_remote_options

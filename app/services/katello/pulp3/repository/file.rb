@@ -68,6 +68,44 @@ module Katello
             repository: repository_reference.repository_href)
           pulp3_api.publications_file_file_create(publication_data)
         end
+
+        def create_distribution(path)
+          distribution_data = PulpFileClient::FileDistribution.new(
+            base_path: path,
+            publication: repo.publication_href,
+            name: "#{backend_object_name}")
+          pulp3_api.distributions_file_file_create(distribution_data)
+        end
+
+        def delete_distributions
+          path = repo.relative_path.sub(/^\//, '')
+          dists = lookup_distributions(base_path: path)
+          delete_distribution(dists.first._href) if dists.first
+          dist_ref = distribution_reference(path)
+          dist_ref.destroy! if dist_ref
+        end
+
+        private def delete_distribution(href)
+          pulp3_api.distributions_file_file_delete(href)
+        end
+
+        def lookup_distributions(args)
+          pulp3_api.distributions_file_file_list(args).results
+        end
+
+        def update_distribution(path)
+          distribution_reference = distribution_reference(path)
+          if distribution_reference
+            pulp3_api.distributions_file_file_partial_update(distribution_reference.href, publication: repo.publication_href)
+          end
+        end
+
+        def get_distribution(href)
+          pulp3_api.distributions_file_file_read(href)
+        rescue PulpFileClient::ApiError => e
+          raise e if e.code != 404
+          nil
+        end
       end
     end
   end

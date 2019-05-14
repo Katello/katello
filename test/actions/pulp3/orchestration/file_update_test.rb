@@ -14,9 +14,9 @@ module ::Actions::Pulp3
         ::Actions::Katello::Repository::MetadataGenerate, @repo,
         repository_creation: true)
 
-      assert_equal 2,
+      assert_equal 1,
         Katello::Pulp3::DistributionReference.where(root_repository_id: @repo.root.id).count,
-        "Expected 2 distribution references (for both http and https paths)."
+        "Expected a distribution reference."
       @repo.root.update_attributes(
         verify_ssl_on_sync: false,
         ssl_ca_cert: katello_gpg_keys(:unassigned_gpg_key),
@@ -37,7 +37,7 @@ module ::Actions::Pulp3
 
     def test_update_unset_unprotected
       assert @repo.root.unprotected
-      assert_equal 2, Katello::Pulp3::DistributionReference.where(
+      assert_equal 1, Katello::Pulp3::DistributionReference.where(
         root_repository_id: @repo.root.id).count
 
       @repo.root.update_attributes(unprotected: false)
@@ -50,10 +50,7 @@ module ::Actions::Pulp3
       dist_refs = Katello::Pulp3::DistributionReference.where(
          root_repository_id: @repo.root.id)
 
-      assert_equal 1, dist_refs.count, "Expected 1 distribution reference but found 2"
-
-      assert dist_refs.first.path.start_with?('https'),
-        "Distribution reference '#{dist_refs.first.path}' path didn't start with 'https'."
+      assert_equal 1, dist_refs.count, "Expected 1 distribution reference."
     end
 
     def test_update_set_unprotected
@@ -77,8 +74,7 @@ module ::Actions::Pulp3
 
       dist_refs = Katello::Pulp3::DistributionReference.where(
         root_repository_id: @repo.root.id)
-      assert_equal 2, dist_refs.count, "Expected a distribution reference for both https and http paths, but only found 1 #{dist_refs.first.path}."
-      assert dist_refs.sort_by(&:path).last.path.start_with?('https')
+      assert_equal 1, dist_refs.count, "Expected a distribution reference."
     end
   end
 end
