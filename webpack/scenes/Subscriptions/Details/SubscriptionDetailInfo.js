@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
 import subscriptionAttributes from './SubscriptionAttributes';
+import subscriptionPurposeAttributes from './SubscriptionPurposeAttributes';
 
 const SubscriptionDetailInfo = ({ subscriptionDetails }) => {
   const subscriptionLimits = (subDetails) => {
@@ -54,7 +55,17 @@ const SubscriptionDetailInfo = ({ subscriptionDetails }) => {
           </tr>
         </tbody>
       </Table>
-
+      <h2>{__('System Purpose')}</h2>
+      <Table>
+        <tbody>
+          {Object.keys(subscriptionPurposeAttributes).map(key => (
+            <tr key={key}>
+              <td><b>{__(subscriptionPurposeAttributes[key])}</b></td>
+              <td>{subscriptionDetailValue(subscriptionDetails, key)}</td>
+            </tr>
+            ))}
+        </tbody>
+      </Table>
     </div>
   );
 };

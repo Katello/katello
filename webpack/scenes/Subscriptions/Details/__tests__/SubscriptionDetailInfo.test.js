@@ -10,6 +10,7 @@ describe('subscriptions detail associations page', () => {
     const testInstance = testRenderer.root;
 
     expect(testRenderer.toJSON()).toMatchSnapshot();
-    expect(testInstance.findByType('h2').children[0]).toBe('Subscription Info');
+    expect(testInstance.findAllByType('h2')[0].children[0]).toBe('Subscription Info');
+    expect(testInstance.findAllByType('h2')[1].children[0]).toBe('System Purpose');
   });
 });
