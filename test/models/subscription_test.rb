@@ -48,5 +48,11 @@ module Katello
                                :organization => @basic.organization, :provider => @basic.organization.anonymous_provider)
       refute @basic.redhat?
     end
+
+    def test_multi_entitlement
+      assert @basic.multi_entitlement?
+
+      refute @other.multi_entitlement?
+    end
   end
 end
