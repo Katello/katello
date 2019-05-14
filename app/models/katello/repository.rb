@@ -281,19 +281,24 @@ module Katello
         group("#{errata}.id").count
     end
 
-    def empty_errata
+    def partial_errata
+      return [] if library_instance?
+
       errata_with_package_counts = ::Katello::Repository.errata_with_package_counts(self)
-      if errata_with_package_counts.any? && !library_instance?
+      partial_errata = self.errata
+      if errata_with_package_counts.any?
         errata_with_packages_in_library = ::Katello::Repository.errata_with_package_counts(library_instance)
-        errata_with_package_counts.keep_if {|id| errata_with_package_counts[id] == errata_with_packages_in_library[id]}
-        self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_with_package_counts.keys)
-      else
-        self.errata
+        errata_with_package_counts.keep_if { |id| errata_with_package_counts[id] == errata_with_packages_in_library[id] }
+        unless errata_with_package_counts.empty?
+          partial_errata = self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_with_package_counts.keys)
+        end
       end
+
+      partial_errata
     end
 
     def empty_errata!
-      found = empty_errata.to_a
+      found = partial_errata.to_a
       yield(found) if block_given?
       self.repository_errata.where(:erratum_id => found.map(&:id)).delete_all
       found
