@@ -42,6 +42,10 @@ module Katello
       pools.any?(&:recently_expired?)
     end
 
+    def multi_entitlement?
+      pools.where("#{Katello::Pool.table_name}.multi_entitlement" => true).any?
+    end
+
     def virt_who_pools
       pools.where("#{Katello::Pool.table_name}.virt_who" => true)
     end
