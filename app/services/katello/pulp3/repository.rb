@@ -41,6 +41,10 @@ module Katello
         Katello::RepositoryTypeManager.repository_types[repo.root.content_type].pulp3_service_class.new(repo, smart_proxy)
       end
 
+      def should_purge_empty_contents?
+        false
+      end
+
       def backend_object_name
         "#{root.label}-#{repo.id}#{rand(9999)}"
       end
@@ -73,10 +77,12 @@ module Katello
         pulp3_api.repositories_list(args).results
       end
 
-      def delete(href = repository_reference.repository_href)
-        response = pulp3_api.repositories_delete(href)
-        repository_reference.destroy if repository_reference
-        response
+      def delete(href = repository_reference.try(:repository_href))
+        repository_reference.try(:destroy)
+        if href
+          response = pulp3_api.repositories_delete(href)
+          response
+        end
       end
 
       def refresh_distributions

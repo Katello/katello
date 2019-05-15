@@ -2,7 +2,7 @@ module Actions
   module Pulp
     module Repository
       class CopyAllUnits < Pulp::AbstractAsyncTask
-        def plan(source_repo, target_repo, options = {})
+        def plan(source_repo, _smart_proxy, target_repo, options = {})
           filter_ids = options.fetch(:filters, nil)&.map(&:id)
           rpm_filenames = options.fetch(:rpm_filenames, nil)
           solve_dependencies = options.fetch(:solve_dependencies, false)

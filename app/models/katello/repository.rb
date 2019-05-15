@@ -739,20 +739,28 @@ module Katello
       RepositoryTypeManager.find(self.content_type)
     end
 
+    def copy_indexed_data(source_repository)
+      repository_type.content_types_to_index.each do |type|
+        type.model_class.copy_repository_associations(source_repository, self)
+        repository_type.index_additional_data_proc&.call(self, source_repository)
+      end
+    end
+
     def index_linked_repo
       if (base_repo = self.target_repository)
-        repository_type.content_types_to_index.each do |type|
-          type.model_class.copy_repository_associations(base_repo, self)
-          repository_type.index_additional_data_proc&.call(self, target_repository)
-        end
+        copy_indexed_data(base_repo)
       else
         Rails.logger.error("Cannot index #{self.id}, no target repository found.")
       end
     end
 
-    def index_content
+    def index_content(options = {})
+      source_repository = options.fetch(:source_repository, nil)
+
       if self.yum? && !self.master?
         index_linked_repo
+      elsif source_repository
+        copy_indexed_data(source_repository)
       else
         repository_type.content_types_to_index.each do |type|
           type.model_class.import_for_repository(self)

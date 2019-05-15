@@ -15,6 +15,14 @@ module ::Actions::Katello
     end
   end
 
+  class KatelloOptionalAction < Actions::EntryAction
+    include Actions::Katello::PulpSelector
+
+    def plan_self(*args)
+      plan_optional_pulp_action(*args)
+    end
+  end
+
   class PulpSelectorTestTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::RemoteAction
@@ -55,10 +63,16 @@ module ::Actions::Katello
     def test_plans_not_found
       smart_proxy.stubs(:pulp3_support?).returns(true)
       action = create_action KatelloAction
-
       assert_raise do
         plan_action(action, [Pulp2TestAction], repo, smart_proxy)
       end
+    end
+
+    def test_plans_not_found_optional
+      smart_proxy.stubs(:pulp3_support?).returns(true)
+      action = create_action KatelloOptionalAction
+
+      assert plan_action(action, [Pulp2TestAction], repo, smart_proxy)
     end
   end
 end

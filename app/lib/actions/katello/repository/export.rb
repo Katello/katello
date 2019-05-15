@@ -68,7 +68,7 @@ module Actions
             repos.each do |repo|
               sequence do
                 if repo.link?
-                  plan_action(Katello::Repository::Clear, repo)
+                  plan_action(Pulp::Repository::Clear, repo, SmartProxy.pulp_master!)
                   plan_action(Pulp::Repository::CopyAllUnits, repo.target_repository, repo)
                 end
               end

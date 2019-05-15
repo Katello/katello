@@ -2,11 +2,6 @@ module Actions
   module Pulp
     module Repository
       class Refresh < Pulp::AbstractAsyncTask
-        input_format do
-          param :capsule_id
-          param :pulp_id
-        end
-
         def plan(repository, options = {})
           options[:capsule_id] ||= SmartProxy.default_capsule!.id
           plan_self(:capsule_id => options[:capsule_id], :pulp_id => repository.pulp_id)
