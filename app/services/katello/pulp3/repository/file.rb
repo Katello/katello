@@ -70,7 +70,7 @@ module Katello
           dist_ref.destroy! if dist_ref
         end
 
-        private def delete_distribution(href)
+        def delete_distribution(href)
           pulp3_api.distributions_file_file_delete(href)
         end
 

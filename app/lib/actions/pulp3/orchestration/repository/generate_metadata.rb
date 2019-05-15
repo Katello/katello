@@ -7,8 +7,13 @@ module Actions
             options[:contents_changed] = (options && options.key?(:contents_changed)) ? options[:contents_changed] : true
             sequence do
               plan_action(Actions::Pulp3::Repository::CreateVersion, repository, smart_proxy) if options[:repository_creation]
-              plan_action(Actions::Pulp3::Repository::CreatePublication, repository, smart_proxy, options)
-              plan_action(Actions::Pulp3::Repository::RefreshDistribution, repository, smart_proxy, :contents_changed => options[:contents_changed])
+              if options[:source_repository]
+                repository.update_attributes!(publication_href: options[:source_repository].publication_href)
+              else
+                plan_action(Actions::Pulp3::Repository::CreatePublication, repository, smart_proxy, options)
+              end
+
+              plan_action(Actions::Pulp3::Repository::RefreshDistribution, repository, smart_proxy, :contents_changed => options[:contents_changed]) if repository.environment
             end
           end
         end

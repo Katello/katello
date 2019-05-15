@@ -4,6 +4,7 @@ module Actions
       # Clones the contnet of the repository into the environment
       # effectively promotion the repository to the environment
       class CloneToEnvironment < Actions::Base
+        include Actions::Katello::PulpSelector
         def plan(repository, environment)
           clone = find_or_build_environment_clone(repository, environment)
 
@@ -12,11 +13,8 @@ module Actions
               plan_action(Repository::Create, clone, true, false)
             else
               #only clear if it should be empty, but its not
-              plan_action(Repository::Clear, clone) if (!clone.yum? || !clone.empty_in_pulp?)
-
-              if ::Katello::Repository.needs_distributor_updates([clone], SmartProxy.pulp_master).first
-                plan_action(Pulp::Repository::Refresh, clone)
-              end
+              plan_optional_pulp_action([Actions::Pulp::Repository::Clear], clone, SmartProxy.pulp_master) if (!clone.yum? || !clone.empty_in_pulp?)
+              plan_optional_pulp_action([Actions::Pulp::Orchestration::Repository::RefreshIfNeeded], clone, SmartProxy.pulp_master)
             end
 
             plan_action(::Actions::Katello::Repository::CloneContents, [repository], clone, :copy_contents => !clone.yum?)

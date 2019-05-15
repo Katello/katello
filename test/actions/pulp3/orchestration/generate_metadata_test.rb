@@ -8,7 +8,14 @@ module ::Actions::Pulp3
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:generic_file)
       @repo.root.update_attributes(:url => 'http://test/test/')
+      ensure_creatable(@repo, @master)
       create_repo(@repo, @master)
+    end
+
+    def teardown
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+      @repo.reload
     end
 
     def test_generate_metadata
@@ -19,6 +26,15 @@ module ::Actions::Pulp3
 
       assert @repo.version_href
       assert @repo.publication_href
+    end
+
+    def test_generate_with_source_repo
+      clone = katello_repositories(:generic_file_dev)
+
+      assert_equal 0, Katello::Pulp3::DistributionReference.where(root_repository_id: clone.root.id).count
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, clone, @master, source_repository: @repo)
+      assert_equal @repo.publication_href, clone.publication_href
+      assert_equal 1, Katello::Pulp3::DistributionReference.where(root_repository_id: clone.root.id).count
     end
   end
 end

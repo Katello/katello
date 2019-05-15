@@ -8,11 +8,13 @@ module Actions
           param :id, Integer
           param :dependency, Hash
           param :contents_changed
+          param :source_repository_id
         end
 
         def run
+          source_repository = ::Katello::Repository.find(input[:source_repository_id]) if input[:source_repository_id]
           repo = ::Katello::Repository.find(input[:id])
-          repo.index_content
+          repo.index_content(source_repository: source_repository)
         end
       end
     end

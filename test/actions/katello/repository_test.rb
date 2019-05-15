@@ -519,8 +519,8 @@ module ::Actions::Katello::Repository
       repository.stubs(:target_repository).returns(custom_repository)
 
       plan_action(action, [repository], false, nil, 0, "8")
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Clear,
-                                repository)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::Clear,
+                                repository, SmartProxy.pulp_master)
 
       assert_action_planed_with(action, Actions::Pulp::Repository::CopyAllUnits, custom_repository, repository)
     end
