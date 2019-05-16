@@ -115,7 +115,7 @@ class Setting::Content < Setting
                  false, N_('Content View Dependency Solving Default')),
         self.set('dependency_solving_algorithm',
                  N_("How the logic of solving dependencies in a Content View is managed. Conservative will only add " \
-                 "packages to solve the dependencies if the packaged needed doesn't exist. Greedy will pull in the " \
+                 "packages to solve the dependencies if the package needed doesn't exist. Greedy will pull in the " \
                  "latest package to solve a dependency even if it already does exist in the repository."),
                  'conservative', N_('Content View Dependency Solving Algorithm'), nil,
                  :collection => dependency_solving_options)
