@@ -35,7 +35,6 @@ module Actions
                         repository, SmartProxy.pulp_master)
             plan_self(:repository_id => root.library_instance.id)
           end
-
         end
 
         def run
