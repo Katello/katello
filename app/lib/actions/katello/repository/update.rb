@@ -28,9 +28,13 @@ module Actions
                                        label: content.label,
                                        gpg_url: repository.yum_gpg_key_url)
           end
-
-          plan_action(::Actions::Pulp::Repository::Refresh, repository) if root.pulp_update_needed?
-          plan_self(:repository_id => root.library_instance.id)
+          if root.pulp_update_needed?
+            plan_action(PulpSelector,
+                        [::Actions::Pulp::Repository::Refresh,
+                         Pulp3::Orchestration::Repository::Update],
+                        repository, SmartProxy.pulp_master)
+            plan_self(:repository_id => root.library_instance.id)
+          end
         end
 
         def run

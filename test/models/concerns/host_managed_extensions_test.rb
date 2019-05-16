@@ -44,8 +44,8 @@ module Katello
     end
 
     def test_info_with_katello
-      assert_equal @foreman_host.info['parameters']['content_view'], nil
-      assert_equal @foreman_host.info['parameters']['lifecycle_environment'], nil
+      assert_nil @foreman_host.info['parameters']['content_view']
+      assert_nil @foreman_host.info['parameters']['lifecycle_environment']
       assert_equal @foreman_host.info['parameters']['foreman_host_collections'], []
 
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
@@ -58,8 +58,8 @@ module Katello
     end
 
     def test_info_with_katello_deprecated
-      assert_equal @foreman_host.info['parameters']['kt_cv'], nil
-      assert_equal @foreman_host.info['parameters']['kt_env'], nil
+      assert_nil @foreman_host.info['parameters']['kt_cv']
+      assert_nil @foreman_host.info['parameters']['kt_env']
 
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
 

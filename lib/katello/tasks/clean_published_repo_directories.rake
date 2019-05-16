@@ -2,7 +2,7 @@ namespace :katello do
   desc "Cleans up obsolete directories and estimates time to republish current directories. Run with COMMIT=true to republish."
   task :clean_published_repo_directories => ['environment'] do
     User.current = User.anonymous_admin
-    OLD_DIRECTORY = '/var/lib/pulp/published/yum/master'.freeze
+    OLD_DIRECTORY ||= '/var/lib/pulp/published/yum/master'.freeze
 
     current_cv_directories = []
     Katello::ContentViewVersion.all.each do |cvv|

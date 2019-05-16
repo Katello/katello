@@ -1,8 +1,8 @@
 module Katello
   module ProductTestData
-    ORG_ID = "admin-org-37070".freeze
-    PRODUCT_ID = '37070'.freeze
-    PRODUCTS =
+    ORG_ID ||= "admin-org-37070".freeze
+    PRODUCT_ID ||= '37070'.freeze
+    PRODUCTS ||=
       [
         { 'productId' => 'product_1' },
         { 'productId' => 'product_2', 'providedProductIds' => ['p product 1', 'p product 2'] },
@@ -10,9 +10,9 @@ module Katello
         { 'productId' => 'product_4', 'providedProductIds' => ['p product 4', 'p product 3'] }
       ].freeze
 
-    PRODUCT_NAME = "Load_Balancing".freeze
+    PRODUCT_NAME ||= "Load_Balancing".freeze
 
-    SIMPLE_PRODUCT = {
+    SIMPLE_PRODUCT ||= {
       :name => ProductTestData::PRODUCT_NAME,
       :label => "product-foo",
       :id => ProductTestData::PRODUCT_ID,
@@ -22,7 +22,7 @@ module Katello
       :organization_id => 1
     }.with_indifferent_access
 
-    SIMPLE_PRODUCT_WITH_INVALID_NAME = HashWithIndifferentAccess.new(
+    SIMPLE_PRODUCT_WITH_INVALID_NAME ||= HashWithIndifferentAccess.new(
       :name => 'This name is invalid',
       :label => "foo",
       :id => ProductTestData::PRODUCT_ID,
@@ -30,7 +30,7 @@ module Katello
       :attrs => []
     )
 
-    PRODUCT_WITH_ATTRS = HashWithIndifferentAccess.new(
+    PRODUCT_WITH_ATTRS ||= HashWithIndifferentAccess.new(
       :name => ProductTestData::PRODUCT_NAME,
       :label => "foo",
       :id => ProductTestData::PRODUCT_ID,
@@ -57,7 +57,7 @@ module Katello
                  }]
     )
 
-    PRODUCT_WITH_CONTENT = HashWithIndifferentAccess.new(
+    PRODUCT_WITH_CONTENT ||= HashWithIndifferentAccess.new(
       :name => ProductTestData::PRODUCT_NAME,
       :label => "dream",
       :id => ProductTestData::PRODUCT_ID,
@@ -65,7 +65,7 @@ module Katello
       :attrs => []
     )
 
-    PRODUCT_WITH_CP_CONTENT = HashWithIndifferentAccess.new(
+    PRODUCT_WITH_CP_CONTENT ||= HashWithIndifferentAccess.new(
       :name => ProductTestData::PRODUCT_NAME,
       :label => "dreamer",
       :id => ProductTestData::PRODUCT_ID,
@@ -89,7 +89,7 @@ module Katello
       :attrs => {'name' => ProductTestData::PRODUCT_NAME}
     )
 
-    POOLS = HashWithIndifferentAccess.new(
+    POOLS ||= HashWithIndifferentAccess.new(
       "id" => "ff808081311ad38001311ae11f4e0010",
       "attributes" => [],
       "owner" => {
@@ -125,7 +125,7 @@ module Katello
       "created" => "2011-07-11T20=>26=>26.510+0000"
     )
 
-    DERIVED_PROVIDED_PRODUCT = HashWithIndifferentAccess.new(
+    DERIVED_PROVIDED_PRODUCT ||= HashWithIndifferentAccess.new(
         "created" => "2013-12-30T16:11:26.000+0000",
         "id" => "8a85f987430cc341014344462dc06c38",
         "productId" => "180",

@@ -98,13 +98,14 @@ module Actions
       def transform_task_response(response)
         response = [] if response.nil?
         response = [response] unless response.is_a?(Array)
-        response = response.map { |task| task.is_a?(Zest::AsyncOperationResponse) ? task.as_json : task }
+        response = response.map do |task|
+          task.as_json
+        end
         response
       end
 
       def external_task=(external_task_data)
         output[:pulp_tasks] = transform_task_response(external_task_data)
-
         output[:pulp_tasks].each do |pulp_task|
           if (pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task))
             fail pulp_exception
