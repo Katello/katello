@@ -60,6 +60,10 @@ describe('Controller: ContentHostDetailsController', function() {
             },
             subscription: {uuid: 'abcd-1234'},
             subscription_facet_attributes: {
+              id: 101,
+              release_version: '7Server',
+              autoheal: true,
+              service_level: 'Premium',
               purpose_role: 'current-role',
               purpose_usage: 'current-usage',
               purpose_addons: ['current-addon']
@@ -113,6 +117,45 @@ describe('Controller: ContentHostDetailsController', function() {
             MenuExpander: MenuExpander
         });
     }));
+
+    describe("saveSubscriptionFacet()", function() {
+        var expectedHost;
+
+        beforeEach(function() {
+            expectedHost = {
+                id: 1,
+                subscription_facet_attributes: {
+                  id: 101,
+                  autoheal: true,
+                  purpose_role: 'current-role',
+                  purpose_usage: 'current-usage',
+                  service_level: 'Premium',
+                  release_version: '7Server',
+                }
+            };
+        });
+
+        it("sends purpose addons when they are set", function() {
+          spyOn($scope, 'save');
+          $scope.purposeAddonsList = [
+              {name: "Addon1", selected: true},
+              {name: "Addon2", selected: false},
+          ];
+          expectedHost['subscription_facet_attributes']['purpose_addons'] = ['Addon1'];
+
+          $scope.saveSubscriptionFacet(mockHost);
+
+          expect($scope.save).toHaveBeenCalledWith(expectedHost, true);
+        });
+
+        it ("doesn't send addons when they aren't set", function() {
+          spyOn($scope, 'save');
+
+          $scope.saveSubscriptionFacet(mockHost);
+
+          expect($scope.save).toHaveBeenCalledWith(expectedHost, true);
+        });
+    });
 
     it("sets the menu expander on the scope", function() {
         expect($scope.menuExpander).toBe(MenuExpander);
