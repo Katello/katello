@@ -33,9 +33,9 @@ module Actions
                         [::Actions::Pulp::Repository::Refresh,
                          Pulp3::Orchestration::Repository::Update],
                         repository, SmartProxy.pulp_master)
+            plan_self(:repository_id => root.library_instance.id)
           end
 
-          plan_self(:repository_id => root.library_instance.id)
         end
 
         def run
