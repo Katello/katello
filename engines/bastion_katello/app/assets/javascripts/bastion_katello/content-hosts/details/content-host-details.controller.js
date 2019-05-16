@@ -32,7 +32,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.defaultRoles = ['Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'];
         $scope.defaultServiceLevels = ['Self-Support', 'Standard', 'Premium'];
 
-        $scope.purposeAddonsList = [];
         $scope.purposeAddonsCount = 0;
 
         $scope.panel = {
@@ -64,23 +63,23 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
 
         $scope.saveSubscriptionFacet = function (host) {
             var newHost = {id: host.id};
-            var addOns = [];
-
-            angular.forEach($scope.purposeAddonsList, function (addOn) {
-                if (addOn.selected) {
-                    addOns.push(addOn.name);
-                }
-            });
 
             newHost['subscription_facet_attributes'] = {
                 id: host.subscription_facet_attributes.id,
                 autoheal: host.subscription_facet_attributes.autoheal,
                 'purpose_role': host.subscription_facet_attributes.purpose_role,
                 'purpose_usage': host.subscription_facet_attributes.purpose_usage,
-                'purpose_addons': addOns,
                 'service_level': host.subscription_facet_attributes.service_level,
                 'release_version': host.subscription_facet_attributes.release_version
             };
+
+            if ($scope.purposeAddonsList) {
+                newHost['subscription_facet_attributes']['purpose_addons'] = _.chain($scope.purposeAddonsList).filter(function(addOn) {
+                    return addOn.selected;
+                }).map(function(addOn) {
+                    return addOn.name;
+                }).value();
+            }
 
             return $scope.save(newHost, true);
         };
@@ -186,7 +185,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                 });
 
                 angular.forEach(addOns, function (addOn) {
-                    $scope.purposeAddonsList.push({"name": addOn, "selected": $scope.host.subscription_facet_attributes.purpose_addons.indexOf(addOn) > -1});
+                    $scope.purposeAddonsList.push({"name": addOn, "selected": purposeAddons.indexOf(addOn) > -1});
                 });
 
                 return $scope.purposeAddonsList;
