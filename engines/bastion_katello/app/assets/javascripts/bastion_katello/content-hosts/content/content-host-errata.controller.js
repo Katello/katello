@@ -5,6 +5,7 @@
  * @requires $scope
  * @resource $timeout
  * @resource $window
+ * @resource $location
  * @requires HostErratum
  * @requires Nutupane
  * @requires BastionConfig
@@ -13,8 +14,8 @@
  *   Provides the functionality for the content host package list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostErrataController',
-    ['$scope', '$timeout', '$window', 'translate', 'HostErratum', 'Nutupane', 'Organization', 'Environment', 'BastionConfig',
-    function ($scope, $timeout, $window, translate, HostErratum, Nutupane, Organization, Environment, BastionConfig) {
+    ['$scope', '$timeout', '$window', '$location', 'translate', 'HostErratum', 'Nutupane', 'Organization', 'Environment', 'BastionConfig',
+    function ($scope, $timeout, $window, $location, translate, HostErratum, Nutupane, Organization, Environment, BastionConfig) {
         var errataNutupane, params = {
             'sort_by': 'updated',
             'sort_order': 'DESC',
@@ -30,9 +31,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
 
         errataNutupane = new Nutupane(HostErratum, params, 'get');
         $scope.controllerName = 'katello_errata';
+
         errataNutupane.masterOnly = true;
         $scope.table = errataNutupane.table;
         $scope.table.errataFilterTerm = "";
+        $scope.nutupane = errataNutupane;
+
         $scope.table.errataCompare = function (item) {
             var searchText = $scope.table.errataFilterTerm;
             return item.type.indexOf(searchText) >= 0 ||
@@ -118,22 +122,16 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         };
 
         $scope.selectedErrataIds = function () {
-            var errataIds = [], selected = $scope.table.getSelected();
-            angular.forEach(selected, function (value) {
-                errataIds.push(value['errata_id']);
-            });
-            return errataIds;
+            return $scope.nutupane.getAllSelectedResults('errata_id');
         };
 
         $scope.performViaKatelloAgent = function () {
             var errataIds = $scope.selectedErrataIds();
-            if (errataIds.length > 0) {
-                HostErratum.apply({id: $scope.host.id, 'errata_ids': errataIds},
-                                   function (task) {
-                                        $scope.table.selectAll(false);
-                                        $scope.transitionTo('content-host.tasks.details', {taskId: task.id});
-                                    });
-            }
+            HostErratum.apply({id: $scope.host.id, 'bulk_errata_ids': errataIds},
+                               function (task) {
+                                    $scope.table.selectAll(false);
+                                    $scope.transitionTo('content-host.tasks.details', {taskId: task.id});
+                                });
         };
 
         $scope.performViaRemoteExecution = function(customize) {
@@ -154,6 +152,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 $scope.performViaKatelloAgent();
             }
         };
+
+        errataNutupane.enableSelectAllResults();
+        // if ($location.search()['select_all']) {
+        //     nutupane.table.selectAllResults(true);
+        // }
+
 
         if ($scope.$stateParams.errataId) {
             loadErratum($scope.$stateParams.errataId);
