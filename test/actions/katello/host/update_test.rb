@@ -82,5 +82,18 @@ module Katello::Host
         refute_action_planed action, ::Actions::Candlepin::Consumer::Update
       end
     end
+
+    describe 'Host update using facet params' do
+      it 'plans' do
+        @host.subscription_facet.stubs(:consumer_attributes).returns('autoheal' => true)
+        action.stubs(:action_subject).with(@host)
+
+        plan_action action, @host
+
+        # we shouldn't plan AutoAttach just because the facet has it enabled
+        refute_action_planed action, ::Actions::Candlepin::Consumer::AutoAttachSubscriptions
+        assert_action_planed_with action, ::Actions::Candlepin::Consumer::Update, @host.subscription_facet.uuid, @host.subscription_facet.consumer_attributes
+      end
+    end
   end
 end

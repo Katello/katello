@@ -10,12 +10,14 @@ module Actions
           sequence do
             host.content_facet.save! if host.content_facet
 
+            auto_attach_enabled_via_checkin = consumer_params.try(:[], 'autoheal')
+
             if host.subscription_facet
               consumer_params ||= host.subscription_facet.consumer_attributes
               cp_update = plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
             end
 
-            if consumer_params.present? && consumer_params['autoheal']
+            if auto_attach_enabled_via_checkin
               plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => host.subscription_facet.uuid)
             end
 
