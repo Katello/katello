@@ -72,6 +72,34 @@ module Katello
       respond_for_async :resource => task
     end
 
+    def find_bulk_errata_ids(bulk_params)
+      #works on a structure of param_group bulk_params and transforms it into a list of errata_ids
+      bulk_params[:included] ||= {}
+      bulk_params[:excluded] ||= {}
+      @errata = []
+
+      unless bulk_params[:included][:ids].blank?
+        @errata = @host.content_facet.installable_errata.where(:errata_id => bulk_params[:included][:ids])
+      end
+
+      if bulk_params[:included][:search]
+        search_errata = @host.content_facet.installable_errata
+        search_errata = search_errata.search_for(bulk_params[:included][:search])
+        if @errata.any?
+          ::Katello::Erratum.where("errata_id in (?) OR errata_id in (?)", @errata, search_errata)
+        else
+          @errata = search_errata
+        end
+      end
+
+      @errata = @errata.where('errata_id not in (?)', bulk_params[:excluded][:ids]) unless bulk_params[:excluded][:ids].blank?
+
+      if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
+        fail HttpErrors::BadRequest, _("No errata have been specified.")
+      end
+      @errata.pluck(:errata_id)
+    end
+
     protected
 
     def index_relation
@@ -112,34 +140,6 @@ module Katello
       else
         @errata_ids = find_bulk_errata_ids(params[:bulk_errata_ids])
       end
-    end
-
-    def find_bulk_errata_ids(bulk_params)
-      #works on a structure of param_group bulk_params and transforms it into a list of errata_ids
-      bulk_params[:included] ||= {}
-      bulk_params[:excluded] ||= {}
-      @errata = []
-
-      unless bulk_params[:included][:ids].blank?
-        @errata = @host.content_facet.installable_errata.where(:errata_id => bulk_params[:included][:ids])
-      end
-
-      if bulk_params[:included][:search]
-        search_errata = @host.content_facet.installable_errata
-        search_errata = search_errata.search_for(bulk_params[:included][:search])
-        if @errata.any?
-          ::Katello::Erratum.where("errata_id in (?) OR errata_id in (?)", @errata, search_errata)
-        else
-          @errata = search_errata
-        end
-      end
-
-      @errata = @errata.where('errata_id not in (?)', bulk_params[:excluded][:ids]) unless bulk_params[:excluded][:ids].blank?
-
-      if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
-        fail HttpErrors::BadRequest, _("No errata have been specified.")
-      end
-      @errata.pluck(:errata_id)
     end
   end
 end
