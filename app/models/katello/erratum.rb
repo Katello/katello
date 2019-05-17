@@ -120,10 +120,6 @@ module Katello
           where(statement).pluck(:filename)
     end
 
-    def modular?
-      ::Katello::Erratum.modular.where(:id => id).exists?
-    end
-
     def module_streams
       # return something like
       # {module_stream => [packages]}

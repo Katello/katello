@@ -5,7 +5,6 @@ attributes :issued, :updated, :version, :status, :release
 attributes :severity, :description, :solution, :summary, :reboot_suggested
 attributes :_href
 attributes :pulp_id => :uuid
-attributes :modular? => :modular
 
 child :cves => :cves do
   attributes :cve_id, :href
