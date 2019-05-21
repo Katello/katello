@@ -304,6 +304,18 @@ module Katello
       assert_equal host3, Katello::Host::SubscriptionFacet.find_host(facts, org)
     end
 
+    def test_find_host_multiple_existing_empty_uuid
+      allowed_dups = ['', 'Not Settable', 'Not Present']
+      allowed_dups.each do |dup|
+        host = FactoryBot.create(:host, organization: org)
+        FactValue.create(value: dup, host: host, fact_name: uuid_fact_name)
+
+        facts = {'network.hostname' => 'inexistent_hostname', 'dmi.system.uuid' => dup}
+
+        assert_nil Katello::Host::SubscriptionFacet.find_host(facts, org)
+      end
+    end
+
     def test_find_or_create_host_with_org
       created_host = FactoryBot.create(:host, :organization_id => org.id)
       host = Katello::Host::SubscriptionFacet.find_or_create_host(org, :facts => {'network.hostname' => created_host.name})
