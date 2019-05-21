@@ -71,7 +71,7 @@ module Katello
       refute_includes @fedora_17_x86_64_dev.partial_errata, erratum
     end
 
-    def test_empty_errata!
+    def test_remove_partial_errata!
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       source_repo = @fedora_17_x86_64_dev.library_instance
       source_repo.errata.destroy_all
@@ -86,7 +86,7 @@ module Katello
       @fedora_17_x86_64_dev.errata << erratum
       @fedora_17_x86_64_dev.save!
 
-      errata = @fedora_17_x86_64_dev.empty_errata!
+      errata = @fedora_17_x86_64_dev.test_remove_partial_errata!
       assert_includes errata, erratum
       assert_not_includes @fedora_17_x86_64_dev.reload.errata, erratum
     end

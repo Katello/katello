@@ -297,7 +297,7 @@ module Katello
       partial_errata
     end
 
-    def empty_errata!
+    def remove_partial_errata!
       found = partial_errata.to_a
       yield(found) if block_given?
       self.repository_errata.where(:erratum_id => found.map(&:id)).delete_all

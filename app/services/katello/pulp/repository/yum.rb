@@ -125,7 +125,7 @@ module Katello
         end
 
         def purge_empty_contents
-          [purge_empty_errata, purge_empty_package_groups]
+          [purge_partial_errata, purge_empty_package_groups]
         end
 
         def should_purge_empty_contents?
@@ -134,9 +134,9 @@ module Katello
 
         private
 
-        def purge_empty_errata
+        def purge_partial_errata
           task = nil
-          repo.empty_errata! do |errata_to_delete|
+          repo.remove_partial_errata! do |errata_to_delete|
             task = repo.unassociate_by_filter(::Katello::ContentViewErratumFilter::CONTENT_TYPE,
                                                 "id" => { "$in" => errata_to_delete.map(&:errata_id) })
           end
