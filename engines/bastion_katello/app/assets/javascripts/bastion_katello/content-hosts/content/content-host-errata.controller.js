@@ -15,7 +15,7 @@
 angular.module('Bastion.content-hosts').controller('ContentHostErrataController',
     ['$scope', '$timeout', '$window', 'translate', 'HostErratum', 'Nutupane', 'Organization', 'Environment', 'BastionConfig',
     function ($scope, $timeout, $window, translate, HostErratum, Nutupane, Organization, Environment, BastionConfig) {
-        var errataNutupane, params = {
+        var params = {
             'sort_by': 'updated',
             'sort_order': 'DESC',
             'paged': true,
@@ -28,13 +28,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 'errata_id': errataId});
         }
 
-        errataNutupane = new Nutupane(HostErratum, params, 'get');
+        $scope.nutupane = new Nutupane(HostErratum, params, 'get');
         $scope.controllerName = 'katello_errata';
-
-        errataNutupane.masterOnly = true;
-        $scope.table = errataNutupane.table;
+        $scope.nutupane.masterOnly = true;
+        $scope.table = $scope.nutupane.table;
         $scope.table.errataFilterTerm = "";
-        $scope.nutupane = errataNutupane;
 
         $scope.table.errataCompare = function (item) {
             var searchText = $scope.table.errataFilterTerm;
@@ -83,8 +81,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         $scope.host.$promise.then(function() {
             $scope.setupErrataOptions($scope.host);
             if ($scope.host['content_facet_attributes'] && $scope.host.id) {
-                errataNutupane.setParams({id: $scope.host.id});
-                errataNutupane.load();
+                $scope.nutupane.setParams({id: $scope.host.id});
+                $scope.nutupane.load();
             }
         });
 
@@ -111,8 +109,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 errataParams['environment_id'] = option['environment_id'];
             }
 
-            errataNutupane.setParams(errataParams);
-            errataNutupane.refresh();
+            $scope.nutupane.setParams(errataParams);
+            $scope.nutupane.refresh();
         };
 
         $scope.transitionToErratum = function (erratum) {
@@ -152,7 +150,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             }
         };
 
-        errataNutupane.enableSelectAllResults();
+        $scope.nutupane.enableSelectAllResults();
 
         if ($scope.$stateParams.errataId) {
             loadErratum($scope.$stateParams.errataId);
