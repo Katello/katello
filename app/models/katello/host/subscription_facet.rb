@@ -29,6 +29,8 @@ module Katello
 
       attr_accessor :facts
 
+      DMI_UUID_ALLOWED_DUPS = ['', 'Not Settable', 'Not Present'].freeze
+
       def host_type
         host_facts = self.host.facts
         host_facts["virt::host_type"] || host_facts["hypervisor::type"]
@@ -249,7 +251,7 @@ module Katello
 
         hosts = ::Host.unscoped.distinct.left_outer_joins(:fact_values)
                 .where("#{::Host.table_name}.name = ? OR (#{FactValue.table_name}.fact_name_id = ?
-               AND #{FactValue.table_name}.value = ?)", host_name, uuid_fact_id, host_uuid)
+               AND #{FactValue.table_name}.value = ? AND #{FactValue.table_name}.value NOT IN (?))", host_name, uuid_fact_id, host_uuid, DMI_UUID_ALLOWED_DUPS)
 
         return if hosts.empty?
 
