@@ -5,7 +5,6 @@
  * @requires $scope
  * @resource $timeout
  * @resource $window
- * @resource $location
  * @requires HostErratum
  * @requires Nutupane
  * @requires BastionConfig
@@ -14,8 +13,8 @@
  *   Provides the functionality for the content host package list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostErrataController',
-    ['$scope', '$timeout', '$window', '$location', 'translate', 'HostErratum', 'Nutupane', 'Organization', 'Environment', 'BastionConfig',
-    function ($scope, $timeout, $window, $location, translate, HostErratum, Nutupane, Organization, Environment, BastionConfig) {
+    ['$scope', '$timeout', '$window', 'translate', 'HostErratum', 'Nutupane', 'Organization', 'Environment', 'BastionConfig',
+    function ($scope, $timeout, $window, translate, HostErratum, Nutupane, Organization, Environment, BastionConfig) {
         var errataNutupane, params = {
             'sort_by': 'updated',
             'sort_order': 'DESC',
@@ -154,10 +153,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         };
 
         errataNutupane.enableSelectAllResults();
-        // if ($location.search()['select_all']) {
-        //     nutupane.table.selectAllResults(true);
-        // }
-
 
         if ($scope.$stateParams.errataId) {
             loadErratum($scope.$stateParams.errataId);
