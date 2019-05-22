@@ -86,13 +86,13 @@ module Katello
         search_errata = @host.content_facet.installable_errata
         search_errata = search_errata.search_for(bulk_params[:included][:search])
         if @errata.any?
-          ::Katello::Erratum.where("errata_id in (?) OR errata_id in (?)", @errata, search_errata)
+          ::Katello::Erratum.where(:errata_id: @errata).or(::Katello::Erratum.where(:errata_id: search_errata))
         else
           @errata = search_errata
         end
       end
 
-      @errata = @errata.where('errata_id not in (?)', bulk_params[:excluded][:ids]) unless bulk_params[:excluded][:ids].blank?
+      @errata = @errata.where.not(:errata_id: bulk_params[:excluded][:ids]) unless bulk_params[:excluded][:ids].blank?
 
       if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
         fail HttpErrors::BadRequest, _("No errata have been specified.")
