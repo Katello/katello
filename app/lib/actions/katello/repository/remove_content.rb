@@ -15,12 +15,17 @@ module Actions
 
           action_subject(repository)
 
-          pulp_action = Pulp::Repository::RemoveUnits
           content_unit_ids = content_units.map(&:id)
           content_unit_type = content_units.first.class::CONTENT_TYPE
 
           sequence do
-            plan_action(pulp_action, :repo_id => repository.id, :contents => content_unit_ids, :content_unit_type => content_unit_type)
+            pulp_action = plan_action(PulpSelector,
+                                      [Pulp::Repository::RemoveUnits, Pulp3::Orchestration::Repository::RemoveUnits],
+                                      repository, SmartProxy.pulp_master,
+                                      repository.id,
+                                      content_unit_ids,
+                                      content_unit_type)
+            return if pulp_action.error
             plan_self(:content_unit_class => content_units.first.class.name, :content_unit_ids => content_unit_ids)
             plan_action(CapsuleSync, repository) if sync_capsule
           end
