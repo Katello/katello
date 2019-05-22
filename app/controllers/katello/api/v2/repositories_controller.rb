@@ -79,6 +79,7 @@ module Katello
     param :file_id, String, :desc => N_("Id of a file to find repositories that contain the file")
     param :ostree_branch_id, String, :desc => N_("Id of an ostree branch to find repositories that contain that branch")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
+    param :archived, :bool, :desc => N_("show archived repositories")
     param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
     param :name, String, :desc => N_("name of the repository"), :required => false
     param :label, String, :desc => N_("label of the repository"), :required => false
@@ -132,6 +133,7 @@ module Katello
     def index_relation_content_view(query)
       if params[:content_view_version_id]
         query = query.where(:content_view_version_id => params[:content_view_version_id])
+        query = query.archived if ::Foreman::Cast.to_bool params[:archived]
         query = Katello::Repository.where(:id => query.select(:library_instance_id)) if params[:library]
       elsif params[:content_view_id]
         query = filter_by_content_view(query, params[:content_view_id], params[:environment_id], params[:available_for] == 'content_view')

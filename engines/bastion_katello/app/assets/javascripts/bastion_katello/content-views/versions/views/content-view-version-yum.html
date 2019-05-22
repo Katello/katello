@@ -11,14 +11,14 @@
     <tbody>
       <tr bst-table-row ng-repeat="repository in table.rows">
         <td bst-table-cell>
-          <a ui-sref="product.repository.info({productId: repository.product.id, repositoryId: repository.id})">{{ repository.name }}</a>
+          <a ui-sref="product.repository.info({productId: repository.product.id, repositoryId: repository.library_instance_id })">{{ repository.name }}</a>
         </td>
         <td bst-table-cell>
           <a ui-sref="product.info({productId: repository.product.id})">{{ repository.product.name }}</a>
         </td>
         <td bst-table-cell>
           <div>
-            <a ui-sref="product.repository.manage-content.packages({productId: repository.product.id, repositoryId: repository.id})" translate>
+            <a ui-sref="product.repository.manage-content.packages({productId: repository.product.id, repositoryId: repository.library_instance_id})" translate>
               {{ repository.content_counts.rpm }} Packages
             </a>
           </div>
@@ -26,12 +26,12 @@
             {{ repository.content_counts.srpm }} Source RPMs
           </div>
           <div>
-            <a ui-sref="errata({repositoryId: repository.id})" translate>
+            <a ui-sref="errata({repositoryId: repository.library_instance_id})" translate>
               {{ repository.content_counts.erratum }} Errata
             </a>
           </div>
           <div>
-            <a ui-sref="product.repository.manage-content.module-streams({productId: repository.product.id, repositoryId: repository.id})">
+            <a ui-sref="product.repository.manage-content.module-streams({productId: repository.product.id, repositoryId: repository.library_instance_id})">
               {{ repository.content_counts.module_stream || 0 }} Module Streams
             </a>
           </div>
