@@ -20,7 +20,7 @@ module Katello
           search_hosts = search_hosts.where(:organization_id => organization_id) if params[:organization_id]
           search_hosts = search_hosts.search_for(bulk_params[:included][:search])
           if @hosts.any?
-            ::Host.where("id in (?) OR id in (?)", @hosts, search_hosts)
+            @hosts = ::Host.where(id: @hosts).or(::Host.where(id: search_hosts))
           else
             @hosts = search_hosts
           end

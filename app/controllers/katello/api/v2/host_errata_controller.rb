@@ -86,7 +86,7 @@ module Katello
         search_errata = @host.content_facet.installable_errata
         search_errata = search_errata.search_for(bulk_params[:included][:search])
         if @errata.any?
-          ::Katello::Erratum.where(errata_id: @errata).or(::Katello::Erratum.where(errata_id: search_errata))
+          @errata = ::Katello::Erratum.where(errata_id: @errata).or(::Katello::Erratum.where(errata_id: search_errata))
         else
           @errata = search_errata
         end
