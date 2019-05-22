@@ -70,9 +70,6 @@ module Katello
     end
 
     api :POST, '/organizations', N_('Create organization')
-    param :name, String, :desc => N_("name"), :required => true
-    param :label, String, :desc => N_("unique label")
-    param :description, String, :desc => N_("description")
     param_group :resource
     def create
       @organization = Organization.new(resource_params)
