@@ -13,9 +13,7 @@ module Katello
       @repo = Repository.find(katello_repositories(:redis).id)
 
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
-      ids = @manifests.map { |attrs| attrs[:_id] }
-      Katello::Pulp::DockerManifest.stubs(:ids_for_repository).returns(ids)
-      Katello::Pulp::DockerManifest.stubs(:fetch).returns(@manifests)
+      Katello::Pulp::DockerManifest.stubs(:pulp_units_batch_for_repo).returns([@manifests])
     end
 
     def test_import_for_repository

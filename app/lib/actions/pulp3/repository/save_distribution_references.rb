@@ -9,8 +9,8 @@ module Actions
         end
 
         def run
-          if input[:tasks] && input[:tasks].first
-            distribution_hrefs = input[:tasks].map { |task| task[:created_resources].first }
+          if input[:tasks] && input[:tasks][:pulp_tasks] && input[:tasks][:pulp_tasks].first
+            distribution_hrefs = input[:tasks][:pulp_tasks].map { |task| task[:created_resources].first }
             distribution_hrefs.compact!
             if distribution_hrefs.any?
               repo = ::Katello::Repository.find(input[:repository_id])

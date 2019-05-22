@@ -60,38 +60,38 @@ module Katello
     def test_import_all
       SETTINGS[:katello][:pulp][:bulk_load_size] = 10
       json = random_json(30)
+      count = Katello::Srpm.all.count
+      Katello::Pulp::Srpm.stubs(:pulp_units_batch_all).returns([json[0..29]])
+      Katello::Srpm.import_all
 
-      Katello::Pulp::Srpm.stubs(:fetch).with(0, 10).returns(json[0..10])
-      Katello::Pulp::Srpm.stubs(:fetch).with(11, 10).returns(json[11..21])
-      Katello::Pulp::Srpm.stubs(:fetch).with(22, 10).returns(json[21..29])
-      Katello::Pulp::Srpm.stubs(:fetch).with(31, 10).returns([])
-      Srpm.import_all
-      assert_equal 30, @repo.reload.srpms.count
+      assert_equal 30, Katello::Srpm.all.count - count
     end
 
     def test_import_all_pulp_ids
       json = random_json(10)
       pulp_ids = json.map { |obj| obj['_id'] }
-      Katello::Pulp::Srpm.stubs(:fetch).with(0, 10, pulp_ids).returns(json)
+      Katello::Pulp::Srpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
 
       Katello::Srpm.import_all(pulp_ids)
-      pulp_ids_in_repo = @repo.reload.srpms.pluck(:pulp_id)
+      pulp_ids_imported = Katello::Srpm.all.pluck(:pulp_id)
 
       pulp_ids.each do |pulp_id|
-        assert_includes pulp_ids_in_repo, pulp_id
+        assert_includes pulp_ids_imported, pulp_id
       end
     end
 
     def test_import_all_pulp_ids_no_assoc
       json = random_json(10)
       pulp_ids = json.map { |obj| obj['_id'] }
-      Katello::Pulp::Srpm.stubs(:fetch).with(0, 10, pulp_ids).returns(json)
+      Katello::Pulp::Srpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
 
-      Katello::Srpm.import_all(pulp_ids, :index_repository_association => false)
+      Katello::Srpm.import_all(pulp_ids)
       pulp_ids_in_repo = @repo.reload.srpms.pluck(:pulp_id)
+      pulp_ids_imported = Katello::Srpm.all.pluck(:pulp_id)
 
       pulp_ids.each do |pulp_id|
         refute_includes pulp_ids_in_repo, pulp_id
+        assert_includes pulp_ids_imported, pulp_id
       end
     end
 
@@ -111,8 +111,7 @@ module Katello
         package.merge!(:repoids => [@repo.pulp_id])
       end
 
-      Katello::Pulp::Srpm.stubs(:ids_for_repository).returns(@packages.map { |p| p['_id'] })
-      Katello::Pulp::Srpm.stubs(:fetch).returns(@packages)
+      Katello::Pulp::Srpm.stubs(:pulp_units_batch_all).returns([@packages])
       Katello::Srpm.import_for_repository(@repo)
 
       @all_ids = @repo.reload.srpms.pluck(:pulp_id).sort

@@ -8,8 +8,8 @@ module Actions
         end
 
         def run
-          if input[:tasks] && input[:tasks].first
-            publication_href = input[:tasks].first[:created_resources].first
+          if input[:tasks] && input[:tasks][:pulp_tasks] && input[:tasks][:pulp_tasks].first
+            publication_href = input[:tasks][:pulp_tasks].first[:created_resources].first
             if publication_href
               repo = ::Katello::Repository.find(input[:repository_id])
               repo.update_attributes(:publication_href => publication_href)

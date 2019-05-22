@@ -1,116 +1,6 @@
 ---
 http_interactions:
 - request:
-    method: post
-    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJpZCI6IkZlZG9yYV8xNyIsImRpc3BsYXlfbmFtZSI6IkZlZG9yYSAxNyB4
-        ODZfNjQiLCJpbXBvcnRlcl90eXBlX2lkIjoieXVtX2ltcG9ydGVyIiwiaW1w
-        b3J0ZXJfY29uZmlnIjp7ImRvd25sb2FkX3BvbGljeSI6ImltbWVkaWF0ZSIs
-        InJlbW92ZV9taXNzaW5nIjp0cnVlLCJmZWVkIjoiZmlsZTovLy92YXIvd3d3
-        L3Rlc3RfcmVwb3Mvem9vIiwidHlwZV9za2lwX2xpc3QiOm51bGwsInByb3h5
-        X2hvc3QiOm51bGwsImJhc2ljX2F1dGhfdXNlcm5hbWUiOm51bGwsImJhc2lj
-        X2F1dGhfcGFzc3dvcmQiOm51bGwsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJz
-        c2xfY2xpZW50X2NlcnQiOm51bGwsInNzbF9jbGllbnRfa2V5IjpudWxsLCJz
-        c2xfY2FfY2VydCI6bnVsbH0sIm5vdGVzIjp7Il9yZXBvLXR5cGUiOiJycG0t
-        cmVwbyJ9LCJkaXN0cmlidXRvcnMiOlt7ImRpc3RyaWJ1dG9yX3R5cGVfaWQi
-        OiJ5dW1fZGlzdHJpYnV0b3IiLCJkaXN0cmlidXRvcl9jb25maWciOnsicmVs
-        YXRpdmVfdXJsIjoiQUNNRV9Db3Jwb3JhdGlvbi9saWJyYXJ5L2ZlZG9yYV8x
-        N19sYWJlbCIsImh0dHAiOmZhbHNlLCJodHRwcyI6dHJ1ZSwicHJvdGVjdGVk
-        Ijp0cnVlLCJjaGVja3N1bV90eXBlIjpudWxsfSwiYXV0b19wdWJsaXNoIjp0
-        cnVlLCJkaXN0cmlidXRvcl9pZCI6IkZlZG9yYV8xNyJ9LHsiZGlzdHJpYnV0
-        b3JfdHlwZV9pZCI6Inl1bV9jbG9uZV9kaXN0cmlidXRvciIsImRpc3RyaWJ1
-        dG9yX2NvbmZpZyI6eyJkZXN0aW5hdGlvbl9kaXN0cmlidXRvcl9pZCI6IkZl
-        ZG9yYV8xNyJ9LCJhdXRvX3B1Ymxpc2giOmZhbHNlLCJkaXN0cmlidXRvcl9p
-        ZCI6IkZlZG9yYV8xN19jbG9uZSJ9LHsiZGlzdHJpYnV0b3JfdHlwZV9pZCI6
-        ImV4cG9ydF9kaXN0cmlidXRvciIsImRpc3RyaWJ1dG9yX2NvbmZpZyI6eyJo
-        dHRwIjpmYWxzZSwiaHR0cHMiOmZhbHNlLCJyZWxhdGl2ZV91cmwiOiJBQ01F
-        X0NvcnBvcmF0aW9uL2xpYnJhcnkvZmVkb3JhXzE3X2xhYmVsIn0sImF1dG9f
-        cHVibGlzaCI6ZmFsc2UsImRpc3RyaWJ1dG9yX2lkIjoiZXhwb3J0X2Rpc3Ry
-        aWJ1dG9yIn1dfQ==
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '1045'
-  response:
-    status:
-      code: 201
-      message: CREATED
-    headers:
-      Date:
-      - Tue, 15 Jan 2019 20:55:30 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '320'
-      Location:
-      - "/pulp/api/v2/repositories/Fedora_17/"
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiRmVkb3JhIDE3
-        IHg4Nl82NCIsICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRk
-        ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
-        fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
-        b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
-        NWMzZTQ4YzJiMDJlNTM3NjhkYWJlOTJkIn0sICJpZCI6ICJGZWRvcmFfMTci
-        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
-        MTcvIn0=
-    http_version: 
-  recorded_at: Tue, 15 Jan 2019 20:55:30 GMT
-- request:
-    method: post
-    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/Fedora_17/actions/sync/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJvdmVycmlkZV9jb25maWciOnsibnVtX3RocmVhZHMiOjQsInZhbGlkYXRl
-        Ijp0cnVlfX0=
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '53'
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Tue, 15 Jan 2019 20:55:30 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '172'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzkyZDkxZDZmLWU3NDAtNDAxZC05ODFiLThlODZlZTczNGNjNy8iLCAi
-        dGFza19pZCI6ICI5MmQ5MWQ2Zi1lNzQwLTQwMWQtOTgxYi04ZTg2ZWU3MzRj
-        YzcifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Tue, 15 Jan 2019 20:55:30 GMT
-- request:
     method: get
     uri: https://devel.balmora.example.com/pulp/api/v2/tasks/92d91d6f-e740-401d-981b-8e86ee734cc7/
     body:
@@ -2292,60 +2182,6 @@ http_interactions:
   recorded_at: Tue, 15 Jan 2019 20:55:31 GMT
 - request:
     method: post
-    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/Fedora_17/search/units/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcml0ZXJpYSI6eyJ0eXBlX2lkcyI6WyJlcnJhdHVtIl0sImZpZWxkcyI6
-        eyJ1bml0IjpbXSwiYXNzb2NpYXRpb24iOlsidW5pdF9pZCJdfX19
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '84'
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 15 Jan 2019 20:55:31 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
-      Content-Length:
-      - '651'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICIxOGFjNjIxYi1jOGJhLTQ1ZDUtODgw
-        Ni1iZWJhNDVjN2VkODQiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJlcnJhdHVt
-        In0sICJfaWQiOiB7IiRvaWQiOiAiNWMzZTQ4YzI0NTVhZjM3MzUyMDMwMzc1
-        In0sICJ1bml0X2lkIjogIjE4YWM2MjFiLWM4YmEtNDVkNS04ODA2LWJlYmE0
-        NWM3ZWQ4NCIsICJ1bml0X3R5cGVfaWQiOiAiZXJyYXR1bSJ9LCB7Im1ldGFk
-        YXRhIjogeyJfaWQiOiAiODQ1ZGYxMTEtMTcwMy00MTk0LWJjM2MtYWRmMDI4
-        ZDhjNzM5IiwgIl9jb250ZW50X3R5cGVfaWQiOiAiZXJyYXR1bSJ9LCAiX2lk
-        IjogeyIkb2lkIjogIjVjM2U0OGMyNDU1YWYzNzM1MjAzMDM5MyJ9LCAidW5p
-        dF9pZCI6ICI4NDVkZjExMS0xNzAzLTQxOTQtYmMzYy1hZGYwMjhkOGM3Mzki
-        LCAidW5pdF90eXBlX2lkIjogImVycmF0dW0ifSwgeyJtZXRhZGF0YSI6IHsi
-        X2lkIjogImMzYTA1NzcxLWJiNDQtNDc2Yi1iMjVjLTAwNmExZDc5M2E2YSIs
-        ICJfY29udGVudF90eXBlX2lkIjogImVycmF0dW0ifSwgIl9pZCI6IHsiJG9p
-        ZCI6ICI1YzNlNDhjMjQ1NWFmMzczNTIwMzAzNWEifSwgInVuaXRfaWQiOiAi
-        YzNhMDU3NzEtYmI0NC00NzZiLWIyNWMtMDA2YTFkNzkzYTZhIiwgInVuaXRf
-        dHlwZV9pZCI6ICJlcnJhdHVtIn1d
-    http_version: 
-  recorded_at: Tue, 15 Jan 2019 20:55:31 GMT
-- request:
-    method: post
     uri: https://devel.balmora.example.com/pulp/api/v2/content/units/erratum/search/
     body:
       encoding: UTF-8
@@ -2608,43 +2444,6 @@ http_interactions:
     http_version: 
   recorded_at: Tue, 15 Jan 2019 20:55:31 GMT
 - request:
-    method: delete
-    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/Fedora_17/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Tue, 15 Jan 2019 20:55:31 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '172'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzL2VmOWQ4YzE5LTkwNTItNDM2My1hYmFjLTM5YjAyMTZjNTliZS8iLCAi
-        dGFza19pZCI6ICJlZjlkOGMxOS05MDUyLTQzNjMtYWJhYy0zOWIwMjE2YzU5
-        YmUifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Tue, 15 Jan 2019 20:55:31 GMT
-- request:
     method: get
     uri: https://devel.balmora.example.com/pulp/api/v2/tasks/ef9d8c19-9052-4363-abac-39b0216c59be/
     body:
@@ -2799,4 +2598,2245 @@ http_interactions:
         NTIwMzA0ZWEifQ==
     http_version: 
   recorded_at: Tue, 15 Jan 2019 20:55:31 GMT
+- request:
+    method: post
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJpZCI6IkZlZG9yYV8xNyIsImRpc3BsYXlfbmFtZSI6IkZlZG9yYSAxNyB4
+        ODZfNjQiLCJpbXBvcnRlcl90eXBlX2lkIjoieXVtX2ltcG9ydGVyIiwiaW1w
+        b3J0ZXJfY29uZmlnIjp7ImRvd25sb2FkX3BvbGljeSI6ImltbWVkaWF0ZSIs
+        InJlbW92ZV9taXNzaW5nIjp0cnVlLCJmZWVkIjoiZmlsZTovLy92YXIvd3d3
+        L3Rlc3RfcmVwb3Mvem9vIiwidHlwZV9za2lwX2xpc3QiOm51bGwsInByb3h5
+        X2hvc3QiOm51bGwsImJhc2ljX2F1dGhfdXNlcm5hbWUiOm51bGwsImJhc2lj
+        X2F1dGhfcGFzc3dvcmQiOm51bGwsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJz
+        c2xfY2xpZW50X2NlcnQiOm51bGwsInNzbF9jbGllbnRfa2V5IjpudWxsLCJz
+        c2xfY2FfY2VydCI6bnVsbH0sIm5vdGVzIjp7Il9yZXBvLXR5cGUiOiJycG0t
+        cmVwbyJ9LCJkaXN0cmlidXRvcnMiOlt7ImRpc3RyaWJ1dG9yX3R5cGVfaWQi
+        OiJ5dW1fZGlzdHJpYnV0b3IiLCJkaXN0cmlidXRvcl9jb25maWciOnsicmVs
+        YXRpdmVfdXJsIjoiQUNNRV9Db3Jwb3JhdGlvbi9saWJyYXJ5L2ZlZG9yYV8x
+        N19sYWJlbCIsImh0dHAiOmZhbHNlLCJodHRwcyI6dHJ1ZSwicHJvdGVjdGVk
+        Ijp0cnVlLCJjaGVja3N1bV90eXBlIjpudWxsfSwiYXV0b19wdWJsaXNoIjp0
+        cnVlLCJkaXN0cmlidXRvcl9pZCI6IkZlZG9yYV8xNyJ9LHsiZGlzdHJpYnV0
+        b3JfdHlwZV9pZCI6Inl1bV9jbG9uZV9kaXN0cmlidXRvciIsImRpc3RyaWJ1
+        dG9yX2NvbmZpZyI6eyJkZXN0aW5hdGlvbl9kaXN0cmlidXRvcl9pZCI6IkZl
+        ZG9yYV8xNyJ9LCJhdXRvX3B1Ymxpc2giOmZhbHNlLCJkaXN0cmlidXRvcl9p
+        ZCI6IkZlZG9yYV8xN19jbG9uZSJ9LHsiZGlzdHJpYnV0b3JfdHlwZV9pZCI6
+        ImV4cG9ydF9kaXN0cmlidXRvciIsImRpc3RyaWJ1dG9yX2NvbmZpZyI6eyJo
+        dHRwIjpmYWxzZSwiaHR0cHMiOmZhbHNlLCJyZWxhdGl2ZV91cmwiOiJBQ01F
+        X0NvcnBvcmF0aW9uL2xpYnJhcnkvZmVkb3JhXzE3X2xhYmVsIn0sImF1dG9f
+        cHVibGlzaCI6ZmFsc2UsImRpc3RyaWJ1dG9yX2lkIjoiZXhwb3J0X2Rpc3Ry
+        aWJ1dG9yIn1dfQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1045'
+  response:
+    status:
+      code: 201
+      message: CREATED
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:13 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '320'
+      Location:
+      - "/pulp/api/v2/repositories/Fedora_17/"
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiRmVkb3JhIDE3
+        IHg4Nl82NCIsICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRk
+        ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
+        fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
+        b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
+        NWNlN2ZlNTEwNWY1ZWUwODg4MDU0MWJiIn0sICJpZCI6ICJGZWRvcmFfMTci
+        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
+        MTcvIn0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:13 GMT
+- request:
+    method: post
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/repositories/Fedora_17/actions/sync/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJvdmVycmlkZV9jb25maWciOnsibnVtX3RocmVhZHMiOjQsInZhbGlkYXRl
+        Ijp0cnVlfX0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '53'
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:13 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzE2YzJkNTlmLWJhYTQtNDIyMC05ODc0LTZhYmJkY2NhMmY3Zi8iLCAi
+        dGFza19pZCI6ICIxNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:13 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:13 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"c35a7c88f4c65a6861ee15583370dbd5-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '540'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBudWxsLCAi
+        dHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dy
+        ZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAiIiwgInN0YXRlIjogIndhaXRp
+        bmciLCAid29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVy
+        cm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1Y2U3ZmU1MTMwOGYyNmU0
+        OTJhZTlhZjkifSwgImlkIjogIjVjZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:13 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"8e1e9d9567a69f281c49a5183538050e-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1187'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJO
+        T1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJOT1RfU1RBUlRFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90
+        YWwiOiAwLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0YWls
+        cyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiTk9UX1NU
+        QVJURUQifSwgIm1ldGFkYXRhIjogeyJzdGF0ZSI6ICJJTl9QUk9HUkVTUyJ9
+        fX0sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50
+        b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAi
+        cnVubmluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJy
+        ZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjog
+        IjVjZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEz
+        MDhmMjZlNDkyYWU5YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"8e1e9d9567a69f281c49a5183538050e-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1187'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJO
+        T1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJOT1RfU1RBUlRFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90
+        YWwiOiAwLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0YWls
+        cyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiTk9UX1NU
+        QVJURUQifSwgIm1ldGFkYXRhIjogeyJzdGF0ZSI6ICJJTl9QUk9HUkVTUyJ9
+        fX0sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50
+        b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAi
+        cnVubmluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJy
+        ZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjog
+        IjVjZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEz
+        MDhmMjZlNDkyYWU5YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"1e1aeea3eb470bf9ef65c502111aad30-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1184'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJJ
+        Tl9QUk9HUkVTUyIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJOT1RfU1RBUlRFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90
+        YWwiOiAwLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0YWls
+        cyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiTk9UX1NU
+        QVJURUQifSwgIm1ldGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0s
+        ICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3
+        LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVu
+        bmluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3Jr
+        ZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJyZXN1
+        bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVj
+        ZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEzMDhm
+        MjZlNDkyYWU5YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"1e1aeea3eb470bf9ef65c502111aad30-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1184'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJJ
+        Tl9QUk9HUkVTUyIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJOT1RfU1RBUlRFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90
+        YWwiOiAwLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0YWls
+        cyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiTk9UX1NU
+        QVJURUQifSwgIm1ldGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0s
+        ICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3
+        LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVu
+        bmluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3Jr
+        ZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJyZXN1
+        bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVj
+        ZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEzMDhm
+        MjZlNDkyYWU5YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"1e1aeea3eb470bf9ef65c502111aad30-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1184'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJJ
+        Tl9QUk9HUkVTUyIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJOT1RfU1RBUlRFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90
+        YWwiOiAwLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0YWls
+        cyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUi
+        OiAiTk9UX1NUQVJURUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiTk9UX1NU
+        QVJURUQifSwgIm1ldGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0s
+        ICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3
+        LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVu
+        bmluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3Jr
+        ZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJyZXN1
+        bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVj
+        ZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEzMDhm
+        MjZlNDkyYWU5YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"46e5524c49eb2458ceff7b8ac2a7492f-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1181'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJG
+        SU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjogeyJy
+        cG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6IDAs
+        ICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9sZWZ0
+        IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJO
+        T1RfU1RBUlRFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAi
+        Tk9UX1NUQVJURUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwi
+        OiAzLCAic3RhdGUiOiAiSU5fUFJPR1JFU1MiLCAiZXJyb3JfZGV0YWlscyI6
+        IFtdLCAiaXRlbXNfbGVmdCI6IDJ9LCAibW9kdWxlcyI6IHsic3RhdGUiOiAi
+        Tk9UX1NUQVJURUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiTk9UX1NUQVJU
+        RUQifSwgIm1ldGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJx
+        dWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRl
+        dmVsMi5zYW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVubmlu
+        ZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVjZTdm
+        ZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEzMDhmMjZl
+        NDkyYWU5YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"09ff9db34b63c9211276431ae03313fc-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1175'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJG
+        SU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjogeyJy
+        cG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6IDAs
+        ICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9sZWZ0
+        IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJO
+        T1RfU1RBUlRFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAi
+        Tk9UX1NUQVJURUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwi
+        OiAzLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtd
+        LCAiaXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUiOiAiRklO
+        SVNIRUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiSU5fUFJPR1JFU1MifSwg
+        Im1ldGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6
+        ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5z
+        YW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVubmluZyIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50
+        b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxs
+        LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVjZTdmZTUxMzA4
+        ZjI2ZTQ5MmFlOWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEzMDhmMjZlNDkyYWU5
+        YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"1d10dcef5b40c68126772314b1bd1ba7-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1169'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJG
+        SU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjogeyJy
+        cG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6IDAs
+        ICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9sZWZ0
+        IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJG
+        SU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAiSU5f
+        UFJPR1JFU1MifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAz
+        LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAi
+        aXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUiOiAiRklOSVNI
+        RUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFk
+        YXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5l
+        eGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVubmluZyIsICJ3b3JrZXJf
+        bmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRl
+        dmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAiZXJy
+        b3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVjZTdmZTUxMzA4ZjI2ZTQ5
+        MmFlOWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEzMDhmMjZlNDkyYWU5YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"6e1566f1c6a220c954c8398dcd7d2ab4-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1166'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0w
+        NS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJG
+        SU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjogeyJy
+        cG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6IDAs
+        ICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9sZWZ0
+        IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJG
+        SU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAiRklO
+        SVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAzLCAi
+        c3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiaXRl
+        bXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUiOiAiRklOSVNIRUQi
+        fSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFkYXRh
+        IjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNlcnZl
+        ZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFt
+        cGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVubmluZyIsICJ3b3JrZXJfbmFt
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVs
+        Mi5zYW1pci5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAiZXJyb3Ii
+        OiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVjZTdmZTUxMzA4ZjI2ZTQ5MmFl
+        OWFmOSJ9LCAiaWQiOiAiNWNlN2ZlNTEzMDhmMjZlNDkyYWU5YWY5In0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"5e2558f56645688edcfb90729deeed37-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '2415'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        OS0wNS0yNFQxNDoyMzoxNFoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxOS0wNS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvYTljYWVjNDMtZjdiMy00OWMwLTkyMTYtMDYzZjg3NDUx
+        Y2Y5LyIsICJ0YXNrX2lkIjogImE5Y2FlYzQzLWY3YjMtNDljMC05MjE2LTA2
+        M2Y4NzQ1MWNmOSJ9XSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9y
+        dGVyIjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6
+        ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJGSU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAi
+        RklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAz
+        LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAi
+        aXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUiOiAiRklOSVNI
+        RUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFk
+        YXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5l
+        eGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29ya2Vy
+        X25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1k
+        ZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJyZXN1bHQi
+        OiAic3VjY2VzcyIsICJpbXBvcnRlcl9pZCI6ICJ5dW1faW1wb3J0ZXIiLCAi
+        ZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQiOiAiRmVkb3JhXzE3IiwgInRy
+        YWNlYmFjayI6IG51bGwsICJzdGFydGVkIjogIjIwMTktMDUtMjRUMTQ6MjM6
+        MTNaIiwgIl9ucyI6ICJyZXBvX3N5bmNfcmVzdWx0cyIsICJjb21wbGV0ZWQi
+        OiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAiaW1wb3J0ZXJfdHlwZV9pZCI6
+        ICJ5dW1faW1wb3J0ZXIiLCAiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJzdW1t
+        YXJ5IjogeyJtb2R1bGVzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAiY29u
+        dGVudCI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImNvbXBzIjogeyJzdGF0
+        ZSI6ICJGSU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiRklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsic3RhdGUiOiAiRklO
+        SVNIRUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1l
+        dGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fSwgImFkZGVkX2NvdW50
+        IjogMTUsICJyZW1vdmVkX2NvdW50IjogMCwgInVwZGF0ZWRfY291bnQiOiAw
+        LCAiaWQiOiAiNWNlN2ZlNTIwNWY1ZWUwYTI3OWEyZDE4IiwgImRldGFpbHMi
+        OiB7Im1vZHVsZXMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJjb250ZW50
+        IjogeyJzaXplX3RvdGFsIjogMCwgIml0ZW1zX2xlZnQiOiAwLCAiaXRlbXNf
+        dG90YWwiOiAwLCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6ZV9sZWZ0Ijog
+        MCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDAsICJycG1fZG9uZSI6IDAs
+        ICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAiZXJyb3JfZGV0
+        YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAi
+        cHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImRp
+        c3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAzLCAic3RhdGUiOiAiRklO
+        SVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9
+        LCAiZXJyYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAibWV0YWRhdGEi
+        OiB7InN0YXRlIjogIkZJTklTSEVEIn19fSwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1Y2U3ZmU1MTMwOGYyNmU0OTJhZTlhZjkifSwgImlk
+        IjogIjVjZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/a9caec43-f7b3-49c0-9216-063f87451cf9/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"264d03e374ef222ff417586b7dc853a2-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '4303'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi90YXNrcy9hOWNhZWM0My1mN2IzLTQ5YzAtOTIxNi0wNjNm
+        ODc0NTFjZjkvIiwgInRhc2tfaWQiOiAiYTljYWVjNDMtZjdiMy00OWMwLTky
+        MTYtMDYzZjg3NDUxY2Y5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpG
+        ZWRvcmFfMTciLCAicHVscDphY3Rpb246cHVibGlzaCJdLCAiZmluaXNoX3Rp
+        bWUiOiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUi
+        OiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAidHJhY2ViYWNrIjogbnVsbCwg
+        InNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsiRmVk
+        b3JhXzE3IjogW3sibnVtX3N1Y2Nlc3MiOiAxLCAiZGVzY3JpcHRpb24iOiAi
+        SW5pdGlhbGl6aW5nIHJlcG8gbWV0YWRhdGEiLCAic3RlcF90eXBlIjogImlu
+        aXRpYWxpemVfcmVwb19tZXRhZGF0YSIsICJpdGVtc190b3RhbCI6IDEsICJz
+        dGF0ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRh
+        aWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICIwMDY3
+        MjIzNy1lNGRiLTQxMDQtYWU3MS1kMDc0Y2FmODk2ZmEiLCAibnVtX3Byb2Nl
+        c3NlZCI6IDF9LCB7Im51bV9zdWNjZXNzIjogMSwgImRlc2NyaXB0aW9uIjog
+        IlB1Ymxpc2hpbmcgRGlzdHJpYnV0aW9uIGZpbGVzIiwgInN0ZXBfdHlwZSI6
+        ICJkaXN0cmlidXRpb24iLCAiaXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAi
+        SU5fUFJPR1JFU1MiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6
+        ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiOTQ3ZjY5NjUt
+        M2RiYS00NWNhLWI3YzQtYmEwZTIwNGUzMTBjIiwgIm51bV9wcm9jZXNzZWQi
+        OiAxfSwgeyJudW1fc3VjY2VzcyI6IDAsICJkZXNjcmlwdGlvbiI6ICJQdWJs
+        aXNoaW5nIFJQTXMiLCAic3RlcF90eXBlIjogInJwbXMiLCAiaXRlbXNfdG90
+        YWwiOiAxLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0YWls
+        cyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0
+        ZXBfaWQiOiAiNWVkMjY3YWYtNzhhZS00Mjc2LTk0ZTItN2Y5M2FmYjdhNmU4
+        IiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1fc3VjY2VzcyI6IDAsICJk
+        ZXNjcmlwdGlvbiI6ICJQdWJsaXNoaW5nIERlbHRhIFJQTXMiLCAic3RlcF90
+        eXBlIjogImRycG1zIiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIk5P
+        VF9TVEFSVEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAi
+        IiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogImYwMWE0MjE3LTBj
+        ZDAtNDUxYi05YjhjLTgyOWVmMDQ3OWY0MSIsICJudW1fcHJvY2Vzc2VkIjog
+        MH0sIHsibnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAiUHVibGlz
+        aGluZyBFcnJhdGEiLCAic3RlcF90eXBlIjogImVycmF0YSIsICJpdGVtc190
+        b3RhbCI6IDEsICJzdGF0ZSI6ICJOT1RfU1RBUlRFRCIsICJlcnJvcl9kZXRh
+        aWxzIjogW10sICJkZXRhaWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAi
+        c3RlcF9pZCI6ICJlZWEzM2JlMS03NTVjLTRlMjMtYWQ1Ny1kNDM2MDUyMmI5
+        OGMiLCAibnVtX3Byb2Nlc3NlZCI6IDB9LCB7Im51bV9zdWNjZXNzIjogMCwg
+        ImRlc2NyaXB0aW9uIjogIlB1Ymxpc2hpbmcgTW9kdWxlcyIsICJzdGVwX3R5
+        cGUiOiAibW9kdWxlcyIsICJpdGVtc190b3RhbCI6IDEsICJzdGF0ZSI6ICJO
+        T1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        IiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICI3YTdmYmYwYS05
+        NjM5LTRjZjgtOGNjNC1jM2VkYzYyMzRkNjUiLCAibnVtX3Byb2Nlc3NlZCI6
+        IDB9LCB7Im51bV9zdWNjZXNzIjogMCwgImRlc2NyaXB0aW9uIjogIlB1Ymxp
+        c2hpbmcgQ29tcHMgZmlsZSIsICJzdGVwX3R5cGUiOiAiY29tcHMiLCAiaXRl
+        bXNfdG90YWwiOiAxLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3Jf
+        ZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjog
+        MCwgInN0ZXBfaWQiOiAiZDNmNDg0M2EtOTY3Ny00MWJjLTgwNmUtM2ZhNzk5
+        NGViYmQ4IiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1fc3VjY2VzcyI6
+        IDAsICJkZXNjcmlwdGlvbiI6ICJQdWJsaXNoaW5nIE1ldGFkYXRhLiIsICJz
+        dGVwX3R5cGUiOiAibWV0YWRhdGEiLCAiaXRlbXNfdG90YWwiOiAxLCAic3Rh
+        dGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0
+        YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiNzAy
+        YTc2ZGItNjc4ZC00Y2VhLWJlNDItMDI5OWZiYjUzNGNiIiwgIm51bV9wcm9j
+        ZXNzZWQiOiAwfSwgeyJudW1fc3VjY2VzcyI6IDAsICJkZXNjcmlwdGlvbiI6
+        ICJDbG9zaW5nIHJlcG8gbWV0YWRhdGEiLCAic3RlcF90eXBlIjogImNsb3Nl
+        X3JlcG9fbWV0YWRhdGEiLCAiaXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAi
+        Tk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6
+        ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiODQ4NGI5ODIt
+        MmFmNC00OWZkLWI2MmQtYjNlNTk1YWRjMjMwIiwgIm51bV9wcm9jZXNzZWQi
+        OiAwfSwgeyJudW1fc3VjY2VzcyI6IDAsICJkZXNjcmlwdGlvbiI6ICJHZW5l
+        cmF0aW5nIHNxbGl0ZSBmaWxlcyIsICJzdGVwX3R5cGUiOiAiZ2VuZXJhdGUg
+        c3FsaXRlIiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIk5PVF9TVEFS
+        VEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51
+        bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogImU5MDVlMzUyLTgzYWItNDhj
+        YS05MmI0LWZhZTkzNDlhYTkyNSIsICJudW1fcHJvY2Vzc2VkIjogMH0sIHsi
+        bnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAiUmVtb3Zpbmcgb2xk
+        IHJlcG9kYXRhIiwgInN0ZXBfdHlwZSI6ICJyZW1vdmVfb2xkX3JlcG9kYXRh
+        IiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIk5PVF9TVEFSVEVEIiwg
+        ImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWls
+        dXJlcyI6IDAsICJzdGVwX2lkIjogIjFhYTViMGI4LTAwZjItNDcwMS05YzU4
+        LTU0MzE0YTNkYjcxZSIsICJudW1fcHJvY2Vzc2VkIjogMH0sIHsibnVtX3N1
+        Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAiR2VuZXJhdGluZyBIVE1MIGZp
+        bGVzIiwgInN0ZXBfdHlwZSI6ICJyZXBvdmlldyIsICJpdGVtc190b3RhbCI6
+        IDEsICJzdGF0ZSI6ICJOT1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxzIjog
+        W10sICJkZXRhaWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9p
+        ZCI6ICI3YTliODQ5ZS1lM2I0LTQwNjktYjdkOC05NjllNGM3MDNkY2YiLCAi
+        bnVtX3Byb2Nlc3NlZCI6IDB9LCB7Im51bV9zdWNjZXNzIjogMCwgImRlc2Ny
+        aXB0aW9uIjogIlB1Ymxpc2hpbmcgZmlsZXMgdG8gd2ViIiwgInN0ZXBfdHlw
+        ZSI6ICJwdWJsaXNoX2RpcmVjdG9yeSIsICJpdGVtc190b3RhbCI6IDEsICJz
+        dGF0ZSI6ICJOT1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJk
+        ZXRhaWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICJh
+        YmJiOWMzZi0yMmU0LTRhNjQtYTFiNC00YTZhMzhiZDNhMWUiLCAibnVtX3By
+        b2Nlc3NlZCI6IDB9LCB7Im51bV9zdWNjZXNzIjogMCwgImRlc2NyaXB0aW9u
+        IjogIldyaXRpbmcgTGlzdGluZ3MgRmlsZSIsICJzdGVwX3R5cGUiOiAiaW5p
+        dGlhbGl6ZV9yZXBvX21ldGFkYXRhIiwgIml0ZW1zX3RvdGFsIjogMSwgInN0
+        YXRlIjogIk5PVF9TVEFSVEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRl
+        dGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogIjcy
+        MWRiYmU5LWNhZTItNDc5Zi1hYWZjLTExODE0OTcxMTQwMyIsICJudW1fcHJv
+        Y2Vzc2VkIjogMH1dfSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dv
+        cmtlci0wQGNlbnRvczctZGV2ZWwyLnNhbWlyLmV4YW1wbGUuY29tLmRxMiIs
+        ICJzdGF0ZSI6ICJydW5uaW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVk
+        X3Jlc291cmNlX3dvcmtlci0wQGNlbnRvczctZGV2ZWwyLnNhbWlyLmV4YW1w
+        bGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQi
+        OiB7IiRvaWQiOiAiNWNlN2ZlNTIzMDhmMjZlNDkyYWU5YzcwIn0sICJpZCI6
+        ICI1Y2U3ZmU1MjMwOGYyNmU0OTJhZTljNzAifQ==
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"5e2558f56645688edcfb90729deeed37-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '2415'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        OS0wNS0yNFQxNDoyMzoxNFoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxOS0wNS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvYTljYWVjNDMtZjdiMy00OWMwLTkyMTYtMDYzZjg3NDUx
+        Y2Y5LyIsICJ0YXNrX2lkIjogImE5Y2FlYzQzLWY3YjMtNDljMC05MjE2LTA2
+        M2Y4NzQ1MWNmOSJ9XSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9y
+        dGVyIjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6
+        ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJGSU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAi
+        RklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAz
+        LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAi
+        aXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUiOiAiRklOSVNI
+        RUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFk
+        YXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5l
+        eGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29ya2Vy
+        X25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1k
+        ZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJyZXN1bHQi
+        OiAic3VjY2VzcyIsICJpbXBvcnRlcl9pZCI6ICJ5dW1faW1wb3J0ZXIiLCAi
+        ZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQiOiAiRmVkb3JhXzE3IiwgInRy
+        YWNlYmFjayI6IG51bGwsICJzdGFydGVkIjogIjIwMTktMDUtMjRUMTQ6MjM6
+        MTNaIiwgIl9ucyI6ICJyZXBvX3N5bmNfcmVzdWx0cyIsICJjb21wbGV0ZWQi
+        OiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAiaW1wb3J0ZXJfdHlwZV9pZCI6
+        ICJ5dW1faW1wb3J0ZXIiLCAiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJzdW1t
+        YXJ5IjogeyJtb2R1bGVzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAiY29u
+        dGVudCI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImNvbXBzIjogeyJzdGF0
+        ZSI6ICJGSU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiRklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsic3RhdGUiOiAiRklO
+        SVNIRUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1l
+        dGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fSwgImFkZGVkX2NvdW50
+        IjogMTUsICJyZW1vdmVkX2NvdW50IjogMCwgInVwZGF0ZWRfY291bnQiOiAw
+        LCAiaWQiOiAiNWNlN2ZlNTIwNWY1ZWUwYTI3OWEyZDE4IiwgImRldGFpbHMi
+        OiB7Im1vZHVsZXMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJjb250ZW50
+        IjogeyJzaXplX3RvdGFsIjogMCwgIml0ZW1zX2xlZnQiOiAwLCAiaXRlbXNf
+        dG90YWwiOiAwLCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6ZV9sZWZ0Ijog
+        MCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDAsICJycG1fZG9uZSI6IDAs
+        ICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAiZXJyb3JfZGV0
+        YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAi
+        cHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImRp
+        c3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAzLCAic3RhdGUiOiAiRklO
+        SVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9
+        LCAiZXJyYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAibWV0YWRhdGEi
+        OiB7InN0YXRlIjogIkZJTklTSEVEIn19fSwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1Y2U3ZmU1MTMwOGYyNmU0OTJhZTlhZjkifSwgImlk
+        IjogIjVjZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/a9caec43-f7b3-49c0-9216-063f87451cf9/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"78a0f9b4b9823b70341af811651a5bfc-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '4293'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi90YXNrcy9hOWNhZWM0My1mN2IzLTQ5YzAtOTIxNi0wNjNm
+        ODc0NTFjZjkvIiwgInRhc2tfaWQiOiAiYTljYWVjNDMtZjdiMy00OWMwLTky
+        MTYtMDYzZjg3NDUxY2Y5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpG
+        ZWRvcmFfMTciLCAicHVscDphY3Rpb246cHVibGlzaCJdLCAiZmluaXNoX3Rp
+        bWUiOiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUi
+        OiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAidHJhY2ViYWNrIjogbnVsbCwg
+        InNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsiRmVk
+        b3JhXzE3IjogW3sibnVtX3N1Y2Nlc3MiOiAxLCAiZGVzY3JpcHRpb24iOiAi
+        SW5pdGlhbGl6aW5nIHJlcG8gbWV0YWRhdGEiLCAic3RlcF90eXBlIjogImlu
+        aXRpYWxpemVfcmVwb19tZXRhZGF0YSIsICJpdGVtc190b3RhbCI6IDEsICJz
+        dGF0ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRh
+        aWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICIwMDY3
+        MjIzNy1lNGRiLTQxMDQtYWU3MS1kMDc0Y2FmODk2ZmEiLCAibnVtX3Byb2Nl
+        c3NlZCI6IDF9LCB7Im51bV9zdWNjZXNzIjogMSwgImRlc2NyaXB0aW9uIjog
+        IlB1Ymxpc2hpbmcgRGlzdHJpYnV0aW9uIGZpbGVzIiwgInN0ZXBfdHlwZSI6
+        ICJkaXN0cmlidXRpb24iLCAiaXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAi
+        RklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIi
+        LCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiOTQ3ZjY5NjUtM2Ri
+        YS00NWNhLWI3YzQtYmEwZTIwNGUzMTBjIiwgIm51bV9wcm9jZXNzZWQiOiAx
+        fSwgeyJudW1fc3VjY2VzcyI6IDgsICJkZXNjcmlwdGlvbiI6ICJQdWJsaXNo
+        aW5nIFJQTXMiLCAic3RlcF90eXBlIjogInJwbXMiLCAiaXRlbXNfdG90YWwi
+        OiA4LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtd
+        LCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQi
+        OiAiNWVkMjY3YWYtNzhhZS00Mjc2LTk0ZTItN2Y5M2FmYjdhNmU4IiwgIm51
+        bV9wcm9jZXNzZWQiOiA4fSwgeyJudW1fc3VjY2VzcyI6IDAsICJkZXNjcmlw
+        dGlvbiI6ICJQdWJsaXNoaW5nIERlbHRhIFJQTXMiLCAic3RlcF90eXBlIjog
+        ImRycG1zIiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIlNLSVBQRUQi
+        LCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2Zh
+        aWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiZjAxYTQyMTctMGNkMC00NTFiLTli
+        OGMtODI5ZWYwNDc5ZjQxIiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1f
+        c3VjY2VzcyI6IDAsICJkZXNjcmlwdGlvbiI6ICJQdWJsaXNoaW5nIEVycmF0
+        YSIsICJzdGVwX3R5cGUiOiAiZXJyYXRhIiwgIml0ZW1zX3RvdGFsIjogMywg
+        InN0YXRlIjogIklOX1BST0dSRVNTIiwgImVycm9yX2RldGFpbHMiOiBbXSwg
+        ImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjog
+        ImVlYTMzYmUxLTc1NWMtNGUyMy1hZDU3LWQ0MzYwNTIyYjk4YyIsICJudW1f
+        cHJvY2Vzc2VkIjogMH0sIHsibnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRp
+        b24iOiAiUHVibGlzaGluZyBNb2R1bGVzIiwgInN0ZXBfdHlwZSI6ICJtb2R1
+        bGVzIiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIk5PVF9TVEFSVEVE
+        IiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9m
+        YWlsdXJlcyI6IDAsICJzdGVwX2lkIjogIjdhN2ZiZjBhLTk2MzktNGNmOC04
+        Y2M0LWMzZWRjNjIzNGQ2NSIsICJudW1fcHJvY2Vzc2VkIjogMH0sIHsibnVt
+        X3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAiUHVibGlzaGluZyBDb21w
+        cyBmaWxlIiwgInN0ZXBfdHlwZSI6ICJjb21wcyIsICJpdGVtc190b3RhbCI6
+        IDEsICJzdGF0ZSI6ICJOT1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxzIjog
+        W10sICJkZXRhaWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9p
+        ZCI6ICJkM2Y0ODQzYS05Njc3LTQxYmMtODA2ZS0zZmE3OTk0ZWJiZDgiLCAi
+        bnVtX3Byb2Nlc3NlZCI6IDB9LCB7Im51bV9zdWNjZXNzIjogMCwgImRlc2Ny
+        aXB0aW9uIjogIlB1Ymxpc2hpbmcgTWV0YWRhdGEuIiwgInN0ZXBfdHlwZSI6
+        ICJtZXRhZGF0YSIsICJpdGVtc190b3RhbCI6IDEsICJzdGF0ZSI6ICJOT1Rf
+        U1RBUlRFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjogIiIs
+        ICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICI3MDJhNzZkYi02Nzhk
+        LTRjZWEtYmU0Mi0wMjk5ZmJiNTM0Y2IiLCAibnVtX3Byb2Nlc3NlZCI6IDB9
+        LCB7Im51bV9zdWNjZXNzIjogMCwgImRlc2NyaXB0aW9uIjogIkNsb3Npbmcg
+        cmVwbyBtZXRhZGF0YSIsICJzdGVwX3R5cGUiOiAiY2xvc2VfcmVwb19tZXRh
+        ZGF0YSIsICJpdGVtc190b3RhbCI6IDEsICJzdGF0ZSI6ICJOT1RfU1RBUlRF
+        RCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjogIiIsICJudW1f
+        ZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICI4NDg0Yjk4Mi0yYWY0LTQ5ZmQt
+        YjYyZC1iM2U1OTVhZGMyMzAiLCAibnVtX3Byb2Nlc3NlZCI6IDB9LCB7Im51
+        bV9zdWNjZXNzIjogMCwgImRlc2NyaXB0aW9uIjogIkdlbmVyYXRpbmcgc3Fs
+        aXRlIGZpbGVzIiwgInN0ZXBfdHlwZSI6ICJnZW5lcmF0ZSBzcWxpdGUiLCAi
+        aXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJy
+        b3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVz
+        IjogMCwgInN0ZXBfaWQiOiAiZTkwNWUzNTItODNhYi00OGNhLTkyYjQtZmFl
+        OTM0OWFhOTI1IiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1fc3VjY2Vz
+        cyI6IDAsICJkZXNjcmlwdGlvbiI6ICJSZW1vdmluZyBvbGQgcmVwb2RhdGEi
+        LCAic3RlcF90eXBlIjogInJlbW92ZV9vbGRfcmVwb2RhdGEiLCAiaXRlbXNf
+        dG90YWwiOiAxLCAic3RhdGUiOiAiTk9UX1NUQVJURUQiLCAiZXJyb3JfZGV0
+        YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwg
+        InN0ZXBfaWQiOiAiMWFhNWIwYjgtMDBmMi00NzAxLTljNTgtNTQzMTRhM2Ri
+        NzFlIiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1fc3VjY2VzcyI6IDAs
+        ICJkZXNjcmlwdGlvbiI6ICJHZW5lcmF0aW5nIEhUTUwgZmlsZXMiLCAic3Rl
+        cF90eXBlIjogInJlcG92aWV3IiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRl
+        IjogIk5PVF9TVEFSVEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFp
+        bHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogIjdhOWI4
+        NDllLWUzYjQtNDA2OS1iN2Q4LTk2OWU0YzcwM2RjZiIsICJudW1fcHJvY2Vz
+        c2VkIjogMH0sIHsibnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAi
+        UHVibGlzaGluZyBmaWxlcyB0byB3ZWIiLCAic3RlcF90eXBlIjogInB1Ymxp
+        c2hfZGlyZWN0b3J5IiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIk5P
+        VF9TVEFSVEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAi
+        IiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogImFiYmI5YzNmLTIy
+        ZTQtNGE2NC1hMWI0LTRhNmEzOGJkM2ExZSIsICJudW1fcHJvY2Vzc2VkIjog
+        MH0sIHsibnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAiV3JpdGlu
+        ZyBMaXN0aW5ncyBGaWxlIiwgInN0ZXBfdHlwZSI6ICJpbml0aWFsaXplX3Jl
+        cG9fbWV0YWRhdGEiLCAiaXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAiTk9U
+        X1NUQVJURUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIi
+        LCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiNzIxZGJiZTktY2Fl
+        Mi00NzlmLWFhZmMtMTE4MTQ5NzExNDAzIiwgIm51bV9wcm9jZXNzZWQiOiAw
+        fV19LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2Vu
+        dG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20uZHEyIiwgInN0YXRlIjog
+        InJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vf
+        d29ya2VyLTBAY2VudG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20iLCAi
+        cmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6
+        ICI1Y2U3ZmU1MjMwOGYyNmU0OTJhZTljNzAifSwgImlkIjogIjVjZTdmZTUy
+        MzA4ZjI2ZTQ5MmFlOWM3MCJ9
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"5e2558f56645688edcfb90729deeed37-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '2415'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        OS0wNS0yNFQxNDoyMzoxNFoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxOS0wNS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvYTljYWVjNDMtZjdiMy00OWMwLTkyMTYtMDYzZjg3NDUx
+        Y2Y5LyIsICJ0YXNrX2lkIjogImE5Y2FlYzQzLWY3YjMtNDljMC05MjE2LTA2
+        M2Y4NzQ1MWNmOSJ9XSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9y
+        dGVyIjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6
+        ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJGSU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAi
+        RklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAz
+        LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAi
+        aXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUiOiAiRklOSVNI
+        RUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFk
+        YXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5l
+        eGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29ya2Vy
+        X25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1k
+        ZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJyZXN1bHQi
+        OiAic3VjY2VzcyIsICJpbXBvcnRlcl9pZCI6ICJ5dW1faW1wb3J0ZXIiLCAi
+        ZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQiOiAiRmVkb3JhXzE3IiwgInRy
+        YWNlYmFjayI6IG51bGwsICJzdGFydGVkIjogIjIwMTktMDUtMjRUMTQ6MjM6
+        MTNaIiwgIl9ucyI6ICJyZXBvX3N5bmNfcmVzdWx0cyIsICJjb21wbGV0ZWQi
+        OiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAiaW1wb3J0ZXJfdHlwZV9pZCI6
+        ICJ5dW1faW1wb3J0ZXIiLCAiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJzdW1t
+        YXJ5IjogeyJtb2R1bGVzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAiY29u
+        dGVudCI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImNvbXBzIjogeyJzdGF0
+        ZSI6ICJGSU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiRklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsic3RhdGUiOiAiRklO
+        SVNIRUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1l
+        dGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fSwgImFkZGVkX2NvdW50
+        IjogMTUsICJyZW1vdmVkX2NvdW50IjogMCwgInVwZGF0ZWRfY291bnQiOiAw
+        LCAiaWQiOiAiNWNlN2ZlNTIwNWY1ZWUwYTI3OWEyZDE4IiwgImRldGFpbHMi
+        OiB7Im1vZHVsZXMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJjb250ZW50
+        IjogeyJzaXplX3RvdGFsIjogMCwgIml0ZW1zX2xlZnQiOiAwLCAiaXRlbXNf
+        dG90YWwiOiAwLCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6ZV9sZWZ0Ijog
+        MCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDAsICJycG1fZG9uZSI6IDAs
+        ICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAiZXJyb3JfZGV0
+        YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAi
+        cHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImRp
+        c3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAzLCAic3RhdGUiOiAiRklO
+        SVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9
+        LCAiZXJyYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAibWV0YWRhdGEi
+        OiB7InN0YXRlIjogIkZJTklTSEVEIn19fSwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1Y2U3ZmU1MTMwOGYyNmU0OTJhZTlhZjkifSwgImlk
+        IjogIjVjZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/a9caec43-f7b3-49c0-9216-063f87451cf9/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"a6f1cd74d211eda0e69a3fd2f9d37c6d-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '4260'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi90YXNrcy9hOWNhZWM0My1mN2IzLTQ5YzAtOTIxNi0wNjNm
+        ODc0NTFjZjkvIiwgInRhc2tfaWQiOiAiYTljYWVjNDMtZjdiMy00OWMwLTky
+        MTYtMDYzZjg3NDUxY2Y5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpG
+        ZWRvcmFfMTciLCAicHVscDphY3Rpb246cHVibGlzaCJdLCAiZmluaXNoX3Rp
+        bWUiOiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUi
+        OiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAidHJhY2ViYWNrIjogbnVsbCwg
+        InNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsiRmVk
+        b3JhXzE3IjogW3sibnVtX3N1Y2Nlc3MiOiAxLCAiZGVzY3JpcHRpb24iOiAi
+        SW5pdGlhbGl6aW5nIHJlcG8gbWV0YWRhdGEiLCAic3RlcF90eXBlIjogImlu
+        aXRpYWxpemVfcmVwb19tZXRhZGF0YSIsICJpdGVtc190b3RhbCI6IDEsICJz
+        dGF0ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRh
+        aWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICIwMDY3
+        MjIzNy1lNGRiLTQxMDQtYWU3MS1kMDc0Y2FmODk2ZmEiLCAibnVtX3Byb2Nl
+        c3NlZCI6IDF9LCB7Im51bV9zdWNjZXNzIjogMSwgImRlc2NyaXB0aW9uIjog
+        IlB1Ymxpc2hpbmcgRGlzdHJpYnV0aW9uIGZpbGVzIiwgInN0ZXBfdHlwZSI6
+        ICJkaXN0cmlidXRpb24iLCAiaXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAi
+        RklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIi
+        LCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiOTQ3ZjY5NjUtM2Ri
+        YS00NWNhLWI3YzQtYmEwZTIwNGUzMTBjIiwgIm51bV9wcm9jZXNzZWQiOiAx
+        fSwgeyJudW1fc3VjY2VzcyI6IDgsICJkZXNjcmlwdGlvbiI6ICJQdWJsaXNo
+        aW5nIFJQTXMiLCAic3RlcF90eXBlIjogInJwbXMiLCAiaXRlbXNfdG90YWwi
+        OiA4LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtd
+        LCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQi
+        OiAiNWVkMjY3YWYtNzhhZS00Mjc2LTk0ZTItN2Y5M2FmYjdhNmU4IiwgIm51
+        bV9wcm9jZXNzZWQiOiA4fSwgeyJudW1fc3VjY2VzcyI6IDAsICJkZXNjcmlw
+        dGlvbiI6ICJQdWJsaXNoaW5nIERlbHRhIFJQTXMiLCAic3RlcF90eXBlIjog
+        ImRycG1zIiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIlNLSVBQRUQi
+        LCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2Zh
+        aWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiZjAxYTQyMTctMGNkMC00NTFiLTli
+        OGMtODI5ZWYwNDc5ZjQxIiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1f
+        c3VjY2VzcyI6IDMsICJkZXNjcmlwdGlvbiI6ICJQdWJsaXNoaW5nIEVycmF0
+        YSIsICJzdGVwX3R5cGUiOiAiZXJyYXRhIiwgIml0ZW1zX3RvdGFsIjogMywg
+        InN0YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRl
+        dGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogImVl
+        YTMzYmUxLTc1NWMtNGUyMy1hZDU3LWQ0MzYwNTIyYjk4YyIsICJudW1fcHJv
+        Y2Vzc2VkIjogM30sIHsibnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24i
+        OiAiUHVibGlzaGluZyBNb2R1bGVzIiwgInN0ZXBfdHlwZSI6ICJtb2R1bGVz
+        IiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIlNLSVBQRUQiLCAiZXJy
+        b3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVz
+        IjogMCwgInN0ZXBfaWQiOiAiN2E3ZmJmMGEtOTYzOS00Y2Y4LThjYzQtYzNl
+        ZGM2MjM0ZDY1IiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1fc3VjY2Vz
+        cyI6IDMsICJkZXNjcmlwdGlvbiI6ICJQdWJsaXNoaW5nIENvbXBzIGZpbGUi
+        LCAic3RlcF90eXBlIjogImNvbXBzIiwgIml0ZW1zX3RvdGFsIjogMywgInN0
+        YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFp
+        bHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogImQzZjQ4
+        NDNhLTk2NzctNDFiYy04MDZlLTNmYTc5OTRlYmJkOCIsICJudW1fcHJvY2Vz
+        c2VkIjogM30sIHsibnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAi
+        UHVibGlzaGluZyBNZXRhZGF0YS4iLCAic3RlcF90eXBlIjogIm1ldGFkYXRh
+        IiwgIml0ZW1zX3RvdGFsIjogMCwgInN0YXRlIjogIkZJTklTSEVEIiwgImVy
+        cm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJl
+        cyI6IDAsICJzdGVwX2lkIjogIjcwMmE3NmRiLTY3OGQtNGNlYS1iZTQyLTAy
+        OTlmYmI1MzRjYiIsICJudW1fcHJvY2Vzc2VkIjogMH0sIHsibnVtX3N1Y2Nl
+        c3MiOiAxLCAiZGVzY3JpcHRpb24iOiAiQ2xvc2luZyByZXBvIG1ldGFkYXRh
+        IiwgInN0ZXBfdHlwZSI6ICJjbG9zZV9yZXBvX21ldGFkYXRhIiwgIml0ZW1z
+        X3RvdGFsIjogMSwgInN0YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2RldGFp
+        bHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJz
+        dGVwX2lkIjogIjg0ODRiOTgyLTJhZjQtNDlmZC1iNjJkLWIzZTU5NWFkYzIz
+        MCIsICJudW1fcHJvY2Vzc2VkIjogMX0sIHsibnVtX3N1Y2Nlc3MiOiAwLCAi
+        ZGVzY3JpcHRpb24iOiAiR2VuZXJhdGluZyBzcWxpdGUgZmlsZXMiLCAic3Rl
+        cF90eXBlIjogImdlbmVyYXRlIHNxbGl0ZSIsICJpdGVtc190b3RhbCI6IDEs
+        ICJzdGF0ZSI6ICJTS0lQUEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRl
+        dGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogImU5
+        MDVlMzUyLTgzYWItNDhjYS05MmI0LWZhZTkzNDlhYTkyNSIsICJudW1fcHJv
+        Y2Vzc2VkIjogMH0sIHsibnVtX3N1Y2Nlc3MiOiAxLCAiZGVzY3JpcHRpb24i
+        OiAiUmVtb3Zpbmcgb2xkIHJlcG9kYXRhIiwgInN0ZXBfdHlwZSI6ICJyZW1v
+        dmVfb2xkX3JlcG9kYXRhIiwgIml0ZW1zX3RvdGFsIjogMCwgInN0YXRlIjog
+        IkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAi
+        IiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogIjFhYTViMGI4LTAw
+        ZjItNDcwMS05YzU4LTU0MzE0YTNkYjcxZSIsICJudW1fcHJvY2Vzc2VkIjog
+        MX0sIHsibnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAiR2VuZXJh
+        dGluZyBIVE1MIGZpbGVzIiwgInN0ZXBfdHlwZSI6ICJyZXBvdmlldyIsICJp
+        dGVtc190b3RhbCI6IDEsICJzdGF0ZSI6ICJTS0lQUEVEIiwgImVycm9yX2Rl
+        dGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAs
+        ICJzdGVwX2lkIjogIjdhOWI4NDllLWUzYjQtNDA2OS1iN2Q4LTk2OWU0Yzcw
+        M2RjZiIsICJudW1fcHJvY2Vzc2VkIjogMH0sIHsibnVtX3N1Y2Nlc3MiOiAx
+        LCAiZGVzY3JpcHRpb24iOiAiUHVibGlzaGluZyBmaWxlcyB0byB3ZWIiLCAi
+        c3RlcF90eXBlIjogInB1Ymxpc2hfZGlyZWN0b3J5IiwgIml0ZW1zX3RvdGFs
+        IjogMSwgInN0YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBb
+        XSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lk
+        IjogImFiYmI5YzNmLTIyZTQtNGE2NC1hMWI0LTRhNmEzOGJkM2ExZSIsICJu
+        dW1fcHJvY2Vzc2VkIjogMX0sIHsibnVtX3N1Y2Nlc3MiOiAxLCAiZGVzY3Jp
+        cHRpb24iOiAiV3JpdGluZyBMaXN0aW5ncyBGaWxlIiwgInN0ZXBfdHlwZSI6
+        ICJpbml0aWFsaXplX3JlcG9fbWV0YWRhdGEiLCAiaXRlbXNfdG90YWwiOiAx
+        LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAi
+        ZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAi
+        NzIxZGJiZTktY2FlMi00NzlmLWFhZmMtMTE4MTQ5NzExNDAzIiwgIm51bV9w
+        cm9jZXNzZWQiOiAxfV19LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vf
+        d29ya2VyLTBAY2VudG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20uZHEy
+        IiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAicmVzZXJ2
+        ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1kZXZlbDIuc2FtaXIuZXhh
+        bXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1Y2U3ZmU1MjMwOGYyNmU0OTJhZTljNzAifSwgImlk
+        IjogIjVjZTdmZTUyMzA4ZjI2ZTQ5MmFlOWM3MCJ9
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/16c2d59f-baa4-4220-9874-6abbdcca2f7f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"5e2558f56645688edcfb90729deeed37-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '2415'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xNmMyZDU5Zi1iYWE0LTQyMjAtOTg3NC02YWJiZGNjYTJm
+        N2YvIiwgInRhc2tfaWQiOiAiMTZjMmQ1OWYtYmFhNC00MjIwLTk4NzQtNmFi
+        YmRjY2EyZjdmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        OS0wNS0yNFQxNDoyMzoxNFoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxOS0wNS0yNFQxNDoyMzoxM1oiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvYTljYWVjNDMtZjdiMy00OWMwLTkyMTYtMDYzZjg3NDUx
+        Y2Y5LyIsICJ0YXNrX2lkIjogImE5Y2FlYzQzLWY3YjMtNDljMC05MjE2LTA2
+        M2Y4NzQ1MWNmOSJ9XSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9y
+        dGVyIjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6
+        ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
+        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
+        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
+        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJGSU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAi
+        RklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAz
+        LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAi
+        aXRlbXNfbGVmdCI6IDB9LCAibW9kdWxlcyI6IHsic3RhdGUiOiAiRklOSVNI
+        RUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFk
+        YXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5l
+        eGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29ya2Vy
+        X25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1k
+        ZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJyZXN1bHQi
+        OiAic3VjY2VzcyIsICJpbXBvcnRlcl9pZCI6ICJ5dW1faW1wb3J0ZXIiLCAi
+        ZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQiOiAiRmVkb3JhXzE3IiwgInRy
+        YWNlYmFjayI6IG51bGwsICJzdGFydGVkIjogIjIwMTktMDUtMjRUMTQ6MjM6
+        MTNaIiwgIl9ucyI6ICJyZXBvX3N5bmNfcmVzdWx0cyIsICJjb21wbGV0ZWQi
+        OiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAiaW1wb3J0ZXJfdHlwZV9pZCI6
+        ICJ5dW1faW1wb3J0ZXIiLCAiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJzdW1t
+        YXJ5IjogeyJtb2R1bGVzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAiY29u
+        dGVudCI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImNvbXBzIjogeyJzdGF0
+        ZSI6ICJGSU5JU0hFRCJ9LCAicHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUi
+        OiAiRklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsic3RhdGUiOiAiRklO
+        SVNIRUQifSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1l
+        dGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fSwgImFkZGVkX2NvdW50
+        IjogMTUsICJyZW1vdmVkX2NvdW50IjogMCwgInVwZGF0ZWRfY291bnQiOiAw
+        LCAiaWQiOiAiNWNlN2ZlNTIwNWY1ZWUwYTI3OWEyZDE4IiwgImRldGFpbHMi
+        OiB7Im1vZHVsZXMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJjb250ZW50
+        IjogeyJzaXplX3RvdGFsIjogMCwgIml0ZW1zX2xlZnQiOiAwLCAiaXRlbXNf
+        dG90YWwiOiAwLCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6ZV9sZWZ0Ijog
+        MCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDAsICJycG1fZG9uZSI6IDAs
+        ICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAiZXJyb3JfZGV0
+        YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAi
+        cHVyZ2VfZHVwbGljYXRlcyI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImRp
+        c3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwiOiAzLCAic3RhdGUiOiAiRklO
+        SVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9
+        LCAiZXJyYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAibWV0YWRhdGEi
+        OiB7InN0YXRlIjogIkZJTklTSEVEIn19fSwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1Y2U3ZmU1MTMwOGYyNmU0OTJhZTlhZjkifSwgImlk
+        IjogIjVjZTdmZTUxMzA4ZjI2ZTQ5MmFlOWFmOSJ9
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/a9caec43-f7b3-49c0-9216-063f87451cf9/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:14 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"192b1fbbd8afd86690e6c89e22ddd957-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '8530'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi90YXNrcy9hOWNhZWM0My1mN2IzLTQ5YzAtOTIxNi0wNjNm
+        ODc0NTFjZjkvIiwgInRhc2tfaWQiOiAiYTljYWVjNDMtZjdiMy00OWMwLTky
+        MTYtMDYzZjg3NDUxY2Y5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpG
+        ZWRvcmFfMTciLCAicHVscDphY3Rpb246cHVibGlzaCJdLCAiZmluaXNoX3Rp
+        bWUiOiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAiX25zIjogInRhc2tfc3Rh
+        dHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wNS0yNFQxNDoyMzoxNFoiLCAi
+        dHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dy
+        ZXNzX3JlcG9ydCI6IHsiRmVkb3JhXzE3IjogW3sibnVtX3N1Y2Nlc3MiOiAx
+        LCAiZGVzY3JpcHRpb24iOiAiSW5pdGlhbGl6aW5nIHJlcG8gbWV0YWRhdGEi
+        LCAic3RlcF90eXBlIjogImluaXRpYWxpemVfcmVwb19tZXRhZGF0YSIsICJp
+        dGVtc190b3RhbCI6IDEsICJzdGF0ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9k
+        ZXRhaWxzIjogW10sICJkZXRhaWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAw
+        LCAic3RlcF9pZCI6ICIwMDY3MjIzNy1lNGRiLTQxMDQtYWU3MS1kMDc0Y2Fm
+        ODk2ZmEiLCAibnVtX3Byb2Nlc3NlZCI6IDF9LCB7Im51bV9zdWNjZXNzIjog
+        MSwgImRlc2NyaXB0aW9uIjogIlB1Ymxpc2hpbmcgRGlzdHJpYnV0aW9uIGZp
+        bGVzIiwgInN0ZXBfdHlwZSI6ICJkaXN0cmlidXRpb24iLCAiaXRlbXNfdG90
+        YWwiOiAxLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6
+        IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBf
+        aWQiOiAiOTQ3ZjY5NjUtM2RiYS00NWNhLWI3YzQtYmEwZTIwNGUzMTBjIiwg
+        Im51bV9wcm9jZXNzZWQiOiAxfSwgeyJudW1fc3VjY2VzcyI6IDgsICJkZXNj
+        cmlwdGlvbiI6ICJQdWJsaXNoaW5nIFJQTXMiLCAic3RlcF90eXBlIjogInJw
+        bXMiLCAiaXRlbXNfdG90YWwiOiA4LCAic3RhdGUiOiAiRklOSVNIRUQiLCAi
+        ZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1
+        cmVzIjogMCwgInN0ZXBfaWQiOiAiNWVkMjY3YWYtNzhhZS00Mjc2LTk0ZTIt
+        N2Y5M2FmYjdhNmU4IiwgIm51bV9wcm9jZXNzZWQiOiA4fSwgeyJudW1fc3Vj
+        Y2VzcyI6IDAsICJkZXNjcmlwdGlvbiI6ICJQdWJsaXNoaW5nIERlbHRhIFJQ
+        TXMiLCAic3RlcF90eXBlIjogImRycG1zIiwgIml0ZW1zX3RvdGFsIjogMSwg
+        InN0YXRlIjogIlNLSVBQRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0
+        YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiZjAx
+        YTQyMTctMGNkMC00NTFiLTliOGMtODI5ZWYwNDc5ZjQxIiwgIm51bV9wcm9j
+        ZXNzZWQiOiAwfSwgeyJudW1fc3VjY2VzcyI6IDMsICJkZXNjcmlwdGlvbiI6
+        ICJQdWJsaXNoaW5nIEVycmF0YSIsICJzdGVwX3R5cGUiOiAiZXJyYXRhIiwg
+        Iml0ZW1zX3RvdGFsIjogMywgInN0YXRlIjogIkZJTklTSEVEIiwgImVycm9y
+        X2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6
+        IDAsICJzdGVwX2lkIjogImVlYTMzYmUxLTc1NWMtNGUyMy1hZDU3LWQ0MzYw
+        NTIyYjk4YyIsICJudW1fcHJvY2Vzc2VkIjogM30sIHsibnVtX3N1Y2Nlc3Mi
+        OiAwLCAiZGVzY3JpcHRpb24iOiAiUHVibGlzaGluZyBNb2R1bGVzIiwgInN0
+        ZXBfdHlwZSI6ICJtb2R1bGVzIiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRl
+        IjogIlNLSVBQRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6
+        ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiN2E3ZmJmMGEt
+        OTYzOS00Y2Y4LThjYzQtYzNlZGM2MjM0ZDY1IiwgIm51bV9wcm9jZXNzZWQi
+        OiAwfSwgeyJudW1fc3VjY2VzcyI6IDMsICJkZXNjcmlwdGlvbiI6ICJQdWJs
+        aXNoaW5nIENvbXBzIGZpbGUiLCAic3RlcF90eXBlIjogImNvbXBzIiwgIml0
+        ZW1zX3RvdGFsIjogMywgInN0YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2Rl
+        dGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAs
+        ICJzdGVwX2lkIjogImQzZjQ4NDNhLTk2NzctNDFiYy04MDZlLTNmYTc5OTRl
+        YmJkOCIsICJudW1fcHJvY2Vzc2VkIjogM30sIHsibnVtX3N1Y2Nlc3MiOiAw
+        LCAiZGVzY3JpcHRpb24iOiAiUHVibGlzaGluZyBNZXRhZGF0YS4iLCAic3Rl
+        cF90eXBlIjogIm1ldGFkYXRhIiwgIml0ZW1zX3RvdGFsIjogMCwgInN0YXRl
+        IjogIkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMi
+        OiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogIjcwMmE3NmRi
+        LTY3OGQtNGNlYS1iZTQyLTAyOTlmYmI1MzRjYiIsICJudW1fcHJvY2Vzc2Vk
+        IjogMH0sIHsibnVtX3N1Y2Nlc3MiOiAxLCAiZGVzY3JpcHRpb24iOiAiQ2xv
+        c2luZyByZXBvIG1ldGFkYXRhIiwgInN0ZXBfdHlwZSI6ICJjbG9zZV9yZXBv
+        X21ldGFkYXRhIiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIkZJTklT
+        SEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51
+        bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogIjg0ODRiOTgyLTJhZjQtNDlm
+        ZC1iNjJkLWIzZTU5NWFkYzIzMCIsICJudW1fcHJvY2Vzc2VkIjogMX0sIHsi
+        bnVtX3N1Y2Nlc3MiOiAwLCAiZGVzY3JpcHRpb24iOiAiR2VuZXJhdGluZyBz
+        cWxpdGUgZmlsZXMiLCAic3RlcF90eXBlIjogImdlbmVyYXRlIHNxbGl0ZSIs
+        ICJpdGVtc190b3RhbCI6IDEsICJzdGF0ZSI6ICJTS0lQUEVEIiwgImVycm9y
+        X2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6
+        IDAsICJzdGVwX2lkIjogImU5MDVlMzUyLTgzYWItNDhjYS05MmI0LWZhZTkz
+        NDlhYTkyNSIsICJudW1fcHJvY2Vzc2VkIjogMH0sIHsibnVtX3N1Y2Nlc3Mi
+        OiAxLCAiZGVzY3JpcHRpb24iOiAiUmVtb3Zpbmcgb2xkIHJlcG9kYXRhIiwg
+        InN0ZXBfdHlwZSI6ICJyZW1vdmVfb2xkX3JlcG9kYXRhIiwgIml0ZW1zX3Rv
+        dGFsIjogMCwgInN0YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMi
+        OiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVw
+        X2lkIjogIjFhYTViMGI4LTAwZjItNDcwMS05YzU4LTU0MzE0YTNkYjcxZSIs
+        ICJudW1fcHJvY2Vzc2VkIjogMX0sIHsibnVtX3N1Y2Nlc3MiOiAwLCAiZGVz
+        Y3JpcHRpb24iOiAiR2VuZXJhdGluZyBIVE1MIGZpbGVzIiwgInN0ZXBfdHlw
+        ZSI6ICJyZXBvdmlldyIsICJpdGVtc190b3RhbCI6IDEsICJzdGF0ZSI6ICJT
+        S0lQUEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwg
+        Im51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjogIjdhOWI4NDllLWUzYjQt
+        NDA2OS1iN2Q4LTk2OWU0YzcwM2RjZiIsICJudW1fcHJvY2Vzc2VkIjogMH0s
+        IHsibnVtX3N1Y2Nlc3MiOiAxLCAiZGVzY3JpcHRpb24iOiAiUHVibGlzaGlu
+        ZyBmaWxlcyB0byB3ZWIiLCAic3RlcF90eXBlIjogInB1Ymxpc2hfZGlyZWN0
+        b3J5IiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIkZJTklTSEVEIiwg
+        ImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiAiIiwgIm51bV9mYWls
+        dXJlcyI6IDAsICJzdGVwX2lkIjogImFiYmI5YzNmLTIyZTQtNGE2NC1hMWI0
+        LTRhNmEzOGJkM2ExZSIsICJudW1fcHJvY2Vzc2VkIjogMX0sIHsibnVtX3N1
+        Y2Nlc3MiOiAxLCAiZGVzY3JpcHRpb24iOiAiV3JpdGluZyBMaXN0aW5ncyBG
+        aWxlIiwgInN0ZXBfdHlwZSI6ICJpbml0aWFsaXplX3JlcG9fbWV0YWRhdGEi
+        LCAiaXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJy
+        b3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVz
+        IjogMCwgInN0ZXBfaWQiOiAiNzIxZGJiZTktY2FlMi00NzlmLWFhZmMtMTE4
+        MTQ5NzExNDAzIiwgIm51bV9wcm9jZXNzZWQiOiAxfV19LCAicXVldWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1kZXZlbDIuc2Ft
+        aXIuZXhhbXBsZS5jb20uZHEyIiwgInN0YXRlIjogImZpbmlzaGVkIiwgIndv
+        cmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQGNlbnRv
+        czctZGV2ZWwyLnNhbWlyLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IHsicmVz
+        dWx0IjogInN1Y2Nlc3MiLCAiZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQi
+        OiAiRmVkb3JhXzE3IiwgInN0YXJ0ZWQiOiAiMjAxOS0wNS0yNFQxNDoyMzox
+        NFoiLCAiX25zIjogInJlcG9fcHVibGlzaF9yZXN1bHRzIiwgImNvbXBsZXRl
+        ZCI6ICIyMDE5LTA1LTI0VDE0OjIzOjE0WiIsICJ0cmFjZWJhY2siOiBudWxs
+        LCAiZGlzdHJpYnV0b3JfdHlwZV9pZCI6ICJ5dW1fZGlzdHJpYnV0b3IiLCAi
+        c3VtbWFyeSI6IHsiZ2VuZXJhdGUgc3FsaXRlIjogIlNLSVBQRUQiLCAicnBt
+        cyI6ICJGSU5JU0hFRCIsICJpbml0aWFsaXplX3JlcG9fbWV0YWRhdGEiOiAi
+        RklOSVNIRUQiLCAicmVtb3ZlX29sZF9yZXBvZGF0YSI6ICJGSU5JU0hFRCIs
+        ICJtb2R1bGVzIjogIlNLSVBQRUQiLCAiY2xvc2VfcmVwb19tZXRhZGF0YSI6
+        ICJGSU5JU0hFRCIsICJkcnBtcyI6ICJTS0lQUEVEIiwgImNvbXBzIjogIkZJ
+        TklTSEVEIiwgImRpc3RyaWJ1dGlvbiI6ICJGSU5JU0hFRCIsICJyZXBvdmll
+        dyI6ICJTS0lQUEVEIiwgInB1Ymxpc2hfZGlyZWN0b3J5IjogIkZJTklTSEVE
+        IiwgImVycmF0YSI6ICJGSU5JU0hFRCIsICJtZXRhZGF0YSI6ICJGSU5JU0hF
+        RCJ9LCAiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJkaXN0cmlidXRvcl9pZCI6
+        ICJGZWRvcmFfMTciLCAiaWQiOiAiNWNlN2ZlNTIwNWY1ZWUwYTI3OWEyZDE5
+        IiwgImRldGFpbHMiOiBbeyJudW1fc3VjY2VzcyI6IDEsICJkZXNjcmlwdGlv
+        biI6ICJJbml0aWFsaXppbmcgcmVwbyBtZXRhZGF0YSIsICJzdGVwX3R5cGUi
+        OiAiaW5pdGlhbGl6ZV9yZXBvX21ldGFkYXRhIiwgIml0ZW1zX3RvdGFsIjog
+        MSwgInN0YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwg
+        ImRldGFpbHMiOiAiIiwgIm51bV9mYWlsdXJlcyI6IDAsICJzdGVwX2lkIjog
+        IjAwNjcyMjM3LWU0ZGItNDEwNC1hZTcxLWQwNzRjYWY4OTZmYSIsICJudW1f
+        cHJvY2Vzc2VkIjogMX0sIHsibnVtX3N1Y2Nlc3MiOiAxLCAiZGVzY3JpcHRp
+        b24iOiAiUHVibGlzaGluZyBEaXN0cmlidXRpb24gZmlsZXMiLCAic3RlcF90
+        eXBlIjogImRpc3RyaWJ1dGlvbiIsICJpdGVtc190b3RhbCI6IDEsICJzdGF0
+        ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxz
+        IjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICI5NDdmNjk2
+        NS0zZGJhLTQ1Y2EtYjdjNC1iYTBlMjA0ZTMxMGMiLCAibnVtX3Byb2Nlc3Nl
+        ZCI6IDF9LCB7Im51bV9zdWNjZXNzIjogOCwgImRlc2NyaXB0aW9uIjogIlB1
+        Ymxpc2hpbmcgUlBNcyIsICJzdGVwX3R5cGUiOiAicnBtcyIsICJpdGVtc190
+        b3RhbCI6IDgsICJzdGF0ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxz
+        IjogW10sICJkZXRhaWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3Rl
+        cF9pZCI6ICI1ZWQyNjdhZi03OGFlLTQyNzYtOTRlMi03ZjkzYWZiN2E2ZTgi
+        LCAibnVtX3Byb2Nlc3NlZCI6IDh9LCB7Im51bV9zdWNjZXNzIjogMCwgImRl
+        c2NyaXB0aW9uIjogIlB1Ymxpc2hpbmcgRGVsdGEgUlBNcyIsICJzdGVwX3R5
+        cGUiOiAiZHJwbXMiLCAiaXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAiU0tJ
+        UFBFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjogIiIsICJu
+        dW1fZmFpbHVyZXMiOiAwLCAic3RlcF9pZCI6ICJmMDFhNDIxNy0wY2QwLTQ1
+        MWItOWI4Yy04MjllZjA0NzlmNDEiLCAibnVtX3Byb2Nlc3NlZCI6IDB9LCB7
+        Im51bV9zdWNjZXNzIjogMywgImRlc2NyaXB0aW9uIjogIlB1Ymxpc2hpbmcg
+        RXJyYXRhIiwgInN0ZXBfdHlwZSI6ICJlcnJhdGEiLCAiaXRlbXNfdG90YWwi
+        OiAzLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtd
+        LCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQi
+        OiAiZWVhMzNiZTEtNzU1Yy00ZTIzLWFkNTctZDQzNjA1MjJiOThjIiwgIm51
+        bV9wcm9jZXNzZWQiOiAzfSwgeyJudW1fc3VjY2VzcyI6IDAsICJkZXNjcmlw
+        dGlvbiI6ICJQdWJsaXNoaW5nIE1vZHVsZXMiLCAic3RlcF90eXBlIjogIm1v
+        ZHVsZXMiLCAiaXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAiU0tJUFBFRCIs
+        ICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjogIiIsICJudW1fZmFp
+        bHVyZXMiOiAwLCAic3RlcF9pZCI6ICI3YTdmYmYwYS05NjM5LTRjZjgtOGNj
+        NC1jM2VkYzYyMzRkNjUiLCAibnVtX3Byb2Nlc3NlZCI6IDB9LCB7Im51bV9z
+        dWNjZXNzIjogMywgImRlc2NyaXB0aW9uIjogIlB1Ymxpc2hpbmcgQ29tcHMg
+        ZmlsZSIsICJzdGVwX3R5cGUiOiAiY29tcHMiLCAiaXRlbXNfdG90YWwiOiAz
+        LCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAi
+        ZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAi
+        ZDNmNDg0M2EtOTY3Ny00MWJjLTgwNmUtM2ZhNzk5NGViYmQ4IiwgIm51bV9w
+        cm9jZXNzZWQiOiAzfSwgeyJudW1fc3VjY2VzcyI6IDAsICJkZXNjcmlwdGlv
+        biI6ICJQdWJsaXNoaW5nIE1ldGFkYXRhLiIsICJzdGVwX3R5cGUiOiAibWV0
+        YWRhdGEiLCAiaXRlbXNfdG90YWwiOiAwLCAic3RhdGUiOiAiRklOSVNIRUQi
+        LCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2Zh
+        aWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiNzAyYTc2ZGItNjc4ZC00Y2VhLWJl
+        NDItMDI5OWZiYjUzNGNiIiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1f
+        c3VjY2VzcyI6IDEsICJkZXNjcmlwdGlvbiI6ICJDbG9zaW5nIHJlcG8gbWV0
+        YWRhdGEiLCAic3RlcF90eXBlIjogImNsb3NlX3JlcG9fbWV0YWRhdGEiLCAi
+        aXRlbXNfdG90YWwiOiAxLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3Jf
+        ZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjog
+        MCwgInN0ZXBfaWQiOiAiODQ4NGI5ODItMmFmNC00OWZkLWI2MmQtYjNlNTk1
+        YWRjMjMwIiwgIm51bV9wcm9jZXNzZWQiOiAxfSwgeyJudW1fc3VjY2VzcyI6
+        IDAsICJkZXNjcmlwdGlvbiI6ICJHZW5lcmF0aW5nIHNxbGl0ZSBmaWxlcyIs
+        ICJzdGVwX3R5cGUiOiAiZ2VuZXJhdGUgc3FsaXRlIiwgIml0ZW1zX3RvdGFs
+        IjogMSwgInN0YXRlIjogIlNLSVBQRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtd
+        LCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQi
+        OiAiZTkwNWUzNTItODNhYi00OGNhLTkyYjQtZmFlOTM0OWFhOTI1IiwgIm51
+        bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1fc3VjY2VzcyI6IDEsICJkZXNjcmlw
+        dGlvbiI6ICJSZW1vdmluZyBvbGQgcmVwb2RhdGEiLCAic3RlcF90eXBlIjog
+        InJlbW92ZV9vbGRfcmVwb2RhdGEiLCAiaXRlbXNfdG90YWwiOiAwLCAic3Rh
+        dGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtdLCAiZGV0YWls
+        cyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0ZXBfaWQiOiAiMWFhNWIw
+        YjgtMDBmMi00NzAxLTljNTgtNTQzMTRhM2RiNzFlIiwgIm51bV9wcm9jZXNz
+        ZWQiOiAxfSwgeyJudW1fc3VjY2VzcyI6IDAsICJkZXNjcmlwdGlvbiI6ICJH
+        ZW5lcmF0aW5nIEhUTUwgZmlsZXMiLCAic3RlcF90eXBlIjogInJlcG92aWV3
+        IiwgIml0ZW1zX3RvdGFsIjogMSwgInN0YXRlIjogIlNLSVBQRUQiLCAiZXJy
+        b3JfZGV0YWlscyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVz
+        IjogMCwgInN0ZXBfaWQiOiAiN2E5Yjg0OWUtZTNiNC00MDY5LWI3ZDgtOTY5
+        ZTRjNzAzZGNmIiwgIm51bV9wcm9jZXNzZWQiOiAwfSwgeyJudW1fc3VjY2Vz
+        cyI6IDEsICJkZXNjcmlwdGlvbiI6ICJQdWJsaXNoaW5nIGZpbGVzIHRvIHdl
+        YiIsICJzdGVwX3R5cGUiOiAicHVibGlzaF9kaXJlY3RvcnkiLCAiaXRlbXNf
+        dG90YWwiOiAxLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWls
+        cyI6IFtdLCAiZGV0YWlscyI6ICIiLCAibnVtX2ZhaWx1cmVzIjogMCwgInN0
+        ZXBfaWQiOiAiYWJiYjljM2YtMjJlNC00YTY0LWExYjQtNGE2YTM4YmQzYTFl
+        IiwgIm51bV9wcm9jZXNzZWQiOiAxfSwgeyJudW1fc3VjY2VzcyI6IDEsICJk
+        ZXNjcmlwdGlvbiI6ICJXcml0aW5nIExpc3RpbmdzIEZpbGUiLCAic3RlcF90
+        eXBlIjogImluaXRpYWxpemVfcmVwb19tZXRhZGF0YSIsICJpdGVtc190b3Rh
+        bCI6IDEsICJzdGF0ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjog
+        W10sICJkZXRhaWxzIjogIiIsICJudW1fZmFpbHVyZXMiOiAwLCAic3RlcF9p
+        ZCI6ICI3MjFkYmJlOS1jYWUyLTQ3OWYtYWFmYy0xMTgxNDk3MTE0MDMiLCAi
+        bnVtX3Byb2Nlc3NlZCI6IDF9XX0sICJlcnJvciI6IG51bGwsICJfaWQiOiB7
+        IiRvaWQiOiAiNWNlN2ZlNTIzMDhmMjZlNDkyYWU5YzcwIn0sICJpZCI6ICI1
+        Y2U3ZmU1MjMwOGYyNmU0OTJhZTljNzAifQ==
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:14 GMT
+- request:
+    method: post
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/repositories/Fedora_17/search/units/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcml0ZXJpYSI6eyJ0eXBlX2lkcyI6WyJlcnJhdHVtIl0sImZpZWxkcyI6
+        eyJ1bml0IjpbXSwiYXNzb2NpYXRpb24iOlsidW5pdF9pZCJdfX19
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '84'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:15 GMT
+      Server:
+      - Apache
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '651'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICI5NWEzMTVkZS01ZmIwLTQ1NDUtYTg1
+        OS00ZDY4ZTliZWY5NmEiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJlcnJhdHVt
+        In0sICJfaWQiOiB7IiRvaWQiOiAiNWNlN2ZlNTIzMDhmMjZlNDkyYWU5YmZj
+        In0sICJ1bml0X2lkIjogIjk1YTMxNWRlLTVmYjAtNDU0NS1hODU5LTRkNjhl
+        OWJlZjk2YSIsICJ1bml0X3R5cGVfaWQiOiAiZXJyYXR1bSJ9LCB7Im1ldGFk
+        YXRhIjogeyJfaWQiOiAiZTA1MjZiMzktNmMzOS00Zjc3LWFhMDgtMTdlM2Vh
+        MTMxYzE4IiwgIl9jb250ZW50X3R5cGVfaWQiOiAiZXJyYXR1bSJ9LCAiX2lk
+        IjogeyIkb2lkIjogIjVjZTdmZTUyMzA4ZjI2ZTQ5MmFlOWMxYSJ9LCAidW5p
+        dF9pZCI6ICJlMDUyNmIzOS02YzM5LTRmNzctYWEwOC0xN2UzZWExMzFjMTgi
+        LCAidW5pdF90eXBlX2lkIjogImVycmF0dW0ifSwgeyJtZXRhZGF0YSI6IHsi
+        X2lkIjogImZhMTc3YTlmLTM1ODItNGNhZS1iNjViLTg3NTNiM2UwMzA0NCIs
+        ICJfY29udGVudF90eXBlX2lkIjogImVycmF0dW0ifSwgIl9pZCI6IHsiJG9p
+        ZCI6ICI1Y2U3ZmU1MjMwOGYyNmU0OTJhZTliZTEifSwgInVuaXRfaWQiOiAi
+        ZmExNzdhOWYtMzU4Mi00Y2FlLWI2NWItODc1M2IzZTAzMDQ0IiwgInVuaXRf
+        dHlwZV9pZCI6ICJlcnJhdHVtIn1d
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:15 GMT
+- request:
+    method: post
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/content/units/erratum/search/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcml0ZXJpYSI6eyJsaW1pdCI6Mywic2tpcCI6MCwiZmlsdGVycyI6eyJf
+        aWQiOnsiJGluIjpbIjk1YTMxNWRlLTVmYjAtNDU0NS1hODU5LTRkNjhlOWJl
+        Zjk2YSIsImUwNTI2YjM5LTZjMzktNGY3Ny1hYTA4LTE3ZTNlYTEzMWMxOCIs
+        ImZhMTc3YTlmLTM1ODItNGNhZS1iNjViLTg3NTNiM2UwMzA0NCJdfX19LCJp
+        bmNsdWRlX3JlcG9zIjp0cnVlfQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '199'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:15 GMT
+      Server:
+      - Apache
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '5215'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        W3sicmVwb3NpdG9yeV9tZW1iZXJzaGlwcyI6IFsiRmVkb3JhXzE3Il0sICJf
+        aHJlZiI6ICIvcHVscC9hcGkvdjIvY29udGVudC91bml0cy9lcnJhdHVtLzk1
+        YTMxNWRlLTVmYjAtNDU0NS1hODU5LTRkNjhlOWJlZjk2YS8iLCAiaXNzdWVk
+        IjogIjIwMTAtMTEtMTAgMDA6MDA6MDAiLCAicmVsb2dpbl9zdWdnZXN0ZWQi
+        OiBmYWxzZSwgInJlZmVyZW5jZXMiOiBbeyJocmVmIjogImh0dHBzOi8vcmhu
+        LnJlZGhhdC5jb20vZXJyYXRhL1JIU0EtMjAxMC0wODU4Lmh0bWwiLCAidHlw
+        ZSI6ICJzZWxmIiwgImlkIjogbnVsbCwgInRpdGxlIjogIlJIU0EtMjAxMDow
+        ODU4In0sIHsiaHJlZiI6ICJodHRwczovL2J1Z3ppbGxhLnJlZGhhdC5jb20v
+        YnVnemlsbGEvc2hvd19idWcuY2dpP2lkPTYyNzg4MiIsICJ0eXBlIjogImJ1
+        Z3ppbGxhIiwgImlkIjogIjYyNzg4MiIsICJ0aXRsZSI6ICJDVkUtMjAxMC0w
+        NDA1IGJ6aXAyOiBpbnRlZ2VyIG92ZXJmbG93IGZsYXcgaW4gQloyX2RlY29t
+        cHJlc3MifSwgeyJocmVmIjogImh0dHBzOi8vd3d3LnJlZGhhdC5jb20vc2Vj
+        dXJpdHkvZGF0YS9jdmUvQ1ZFLTIwMTAtMDQwNS5odG1sIiwgInR5cGUiOiAi
+        Y3ZlIiwgImlkIjogIkNWRS0yMDEwLTA0MDUiLCAidGl0bGUiOiAiQ1ZFLTIw
+        MTAtMDQwNSJ9LCB7ImhyZWYiOiAiaHR0cDovL3d3dy5yZWRoYXQuY29tL3Nl
+        Y3VyaXR5L3VwZGF0ZXMvY2xhc3NpZmljYXRpb24vI2ltcG9ydGFudCIsICJ0
+        eXBlIjogIm90aGVyIiwgImlkIjogbnVsbCwgInRpdGxlIjogbnVsbH1dLCAi
+        cHVscF91c2VyX21ldGFkYXRhIjoge30sICJfY29udGVudF90eXBlX2lkIjog
+        ImVycmF0dW0iLCAiaWQiOiAiUkhTQS0yMDEwOjA4NTgiLCAiZnJvbSI6ICJz
+        ZWN1cml0eUByZWRoYXQuY29tIiwgInNldmVyaXR5IjogIkltcG9ydGFudCIs
+        ICJ0aXRsZSI6ICJJbXBvcnRhbnQ6IGJ6aXAyIHNlY3VyaXR5IHVwZGF0ZSIs
+        ICJjaGlsZHJlbiI6IHt9LCAidmVyc2lvbiI6ICIzIiwgInJlYm9vdF9zdWdn
+        ZXN0ZWQiOiBmYWxzZSwgInR5cGUiOiAic2VjdXJpdHkiLCAicGtnbGlzdCI6
+        IFt7InBhY2thZ2VzIjogW3sic3JjIjogImJ6aXAyLTEuMC41LTcuZWw2XzAu
+        c3JjLnJwbSIsICJuYW1lIjogImJ6aXAyLWRldmVsIiwgInN1bSI6IFsic2hh
+        MjU2IiwgImVhNjdjNjY0ZGExZmY5NmE2ZGM5NGQzMzAwOWI3M2Q4ZmFiMzFi
+        NTk4MjQxODNmYjQ1ZTliYTJlYmY4MmQ1ODMiXSwgImZpbGVuYW1lIjogImJ6
+        aXAyLWRldmVsLTEuMC41LTcuZWw2XzAuaTY4Ni5ycG0iLCAiZXBvY2giOiAi
+        MCIsICJ2ZXJzaW9uIjogIjEuMC41IiwgInJlbGVhc2UiOiAiNy5lbDZfMCIs
+        ICJhcmNoIjogImk2ODYifSwgeyJzcmMiOiAiYnppcDItMS4wLjUtNy5lbDZf
+        MC5zcmMucnBtIiwgIm5hbWUiOiAiYnppcDItbGlicyIsICJzdW0iOiBbInNo
+        YTI1NiIsICJjOWYwNjRhNjg2MjU3M2ZiOWYyYTZhZmY3YzM2MjFmMTk0MGI0
+        OTJkZjJlZGZjMmViYmRjMGI4MzA1ZjUxMTQ3Il0sICJmaWxlbmFtZSI6ICJi
+        emlwMi1saWJzLTEuMC41LTcuZWw2XzAuaTY4Ni5ycG0iLCAiZXBvY2giOiAi
+        MCIsICJ2ZXJzaW9uIjogIjEuMC41IiwgInJlbGVhc2UiOiAiNy5lbDZfMCIs
+        ICJhcmNoIjogImk2ODYifSwgeyJzcmMiOiAiYnppcDItMS4wLjUtNy5lbDZf
+        MC5zcmMucnBtIiwgIm5hbWUiOiAiYnppcDIiLCAic3VtIjogWyJzaGEyNTYi
+        LCAiYjhhM2Y3MmJjMmIwZDg5YmE3MzcwOTlhYzk4YmY4ZDJhZjRiZWEwMmQz
+        MTg4NGMwMmRiOTdmN2Y2NmMzZDVjMiJdLCAiZmlsZW5hbWUiOiAiYnppcDIt
+        MS4wLjUtNy5lbDZfMC54ODZfNjQucnBtIiwgImVwb2NoIjogIjAiLCAidmVy
+        c2lvbiI6ICIxLjAuNSIsICJyZWxlYXNlIjogIjcuZWw2XzAiLCAiYXJjaCI6
+        ICJ4ODZfNjQifSwgeyJzcmMiOiAiYnppcDItMS4wLjUtNy5lbDZfMC5zcmMu
+        cnBtIiwgIm5hbWUiOiAiYnppcDItZGV2ZWwiLCAic3VtIjogWyJzaGEyNTYi
+        LCAiN2Y2MzEyNGU0NjU1YjdjOTJkMjNlYzRjMzgyMjZmNWQzNzQ2NTY4ODUz
+        ZGZmNzUwZmM4NWUwNThlNzRiNWNmNiJdLCAiZmlsZW5hbWUiOiAiYnppcDIt
+        ZGV2ZWwtMS4wLjUtNy5lbDZfMC54ODZfNjQucnBtIiwgImVwb2NoIjogIjAi
+        LCAidmVyc2lvbiI6ICIxLjAuNSIsICJyZWxlYXNlIjogIjcuZWw2XzAiLCAi
+        YXJjaCI6ICJ4ODZfNjQifSwgeyJzcmMiOiAiYnppcDItMS4wLjUtNy5lbDZf
+        MC5zcmMucnBtIiwgIm5hbWUiOiAiYnppcDItbGlicyIsICJzdW0iOiBbInNo
+        YTI1NiIsICI4MDJmNDM5OWRiZGQwMTQ3NmUyNTRjM2IzMmM0MGFmZjU5Y2Y1
+        ZDIzYTQ1ZmE0ODhjNjkxN2NlODkwNGQ2YjRkIl0sICJmaWxlbmFtZSI6ICJi
+        emlwMi1saWJzLTEuMC41LTcuZWw2XzAueDg2XzY0LnJwbSIsICJlcG9jaCI6
+        ICIwIiwgInZlcnNpb24iOiAiMS4wLjUiLCAicmVsZWFzZSI6ICI3LmVsNl8w
+        IiwgImFyY2giOiAieDg2XzY0In1dLCAibmFtZSI6ICJjb2xsZWN0aW9uLTAi
+        LCAic2hvcnQiOiAiIn1dLCAic3RhdHVzIjogImZpbmFsIiwgInVwZGF0ZWQi
+        OiAiMjAxMC0xMS0xMCAwMDowMDowMCIsICJkZXNjcmlwdGlvbiI6ICJiemlw
+        MiBpcyBhIGZyZWVseSBhdmFpbGFibGUsIGhpZ2gtcXVhbGl0eSBkYXRhIGNv
+        bXByZXNzb3IuIEl0IHByb3ZpZGVzIGJvdGhcbmxpYmJ6MiBsaWJyYXJ5IG11
+        c3QgYmUgcmVzdGFydGVkIGZvciB0aGUgdXBkYXRlIHRvIHRha2UgZWZmZWN0
+        LiIsICJfbGFzdF91cGRhdGVkIjogIjIwMTktMDUtMjRUMTQ6MjM6MTRaIiwg
+        InJlc3RhcnRfc3VnZ2VzdGVkIjogZmFsc2UsICJwdXNoY291bnQiOiAiIiwg
+        InJpZ2h0cyI6ICJDb3B5cmlnaHQgMjAxMCBSZWQgSGF0IEluYyIsICJzb2x1
+        dGlvbiI6ICJCZWZvcmUgYXBwbHlpbmcgdGhpcyB1cGRhdGUsIG1ha2Ugc3Vy
+        ZSBhbGwgcHJldmlvdXNseS1yZWxlYXNlZCBlcnJhdGFcbnJlbGV2YW50IHRv
+        IHlvdXIgc3lzdGVtIGhhdmUgYmVlbiBhcHBsaWVkLlxuXG5UaGlzIHVwZGF0
+        ZSBpcyBhdmFpbGFibGUgdmlhIHRoZSBSZWQgSGF0IE5ldHdvcmsuIERldGFp
+        bHMgb24gaG93IHRvXG51c2UgdGhlIFJlZCBIYXQgTmV0d29yayB0byBhcHBs
+        eSB0aGlzIHVwZGF0ZSBhcmUgYXZhaWxhYmxlIGF0XG5odHRwOi8va2Jhc2Uu
+        cmVkaGF0LmNvbS9mYXEvZG9jcy9ET0MtMTEyNTkiLCAic3VtbWFyeSI6ICJV
+        cGRhdGVkIGJ6aXAyIHBhY2thZ2VzIHRoYXQgZml4IG9uZSBzZWN1cml0eSBp
+        c3N1ZSIsICJyZWxlYXNlIjogIiIsICJfaWQiOiAiOTVhMzE1ZGUtNWZiMC00
+        NTQ1LWE4NTktNGQ2OGU5YmVmOTZhIn0sIHsicmVwb3NpdG9yeV9tZW1iZXJz
+        aGlwcyI6IFsiMWY3NGJmYzQtZmM3ZC00MjE5LTljYzMtN2YzNGY0ZDIxZWUx
+        IiwgImQxMjNlMjVhLTk4OTMtNDk4Ny05MWUyLWE1NzRlY2M2MjAwZSIsICJm
+        MzYyMWE2ZS1kMmNjLTQ4NDItODUzYi04MzE0OTYxNDU4ZGEiLCAiNmEwMjkx
+        ZjctMDRmNi00Mzc1LTg5NmEtMzYyMTVhMzg5NTJlIiwgIkZlZG9yYV8xNyJd
+        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL2NvbnRlbnQvdW5pdHMvZXJyYXR1
+        bS9lMDUyNmIzOS02YzM5LTRmNzctYWEwOC0xN2UzZWExMzFjMTgvIiwgImlz
+        c3VlZCI6ICIyMDEwLTAxLTAxIDAxOjAxOjAxIiwgInJlbG9naW5fc3VnZ2Vz
+        dGVkIjogZmFsc2UsICJyZWZlcmVuY2VzIjogW10sICJwdWxwX3VzZXJfbWV0
+        YWRhdGEiOiB7fSwgIl9jb250ZW50X3R5cGVfaWQiOiAiZXJyYXR1bSIsICJp
+        ZCI6ICJSSEVBLTIwMTA6MDAwMiIsICJmcm9tIjogImx6YXArcHViQHJlZGhh
+        dC5jb20iLCAic2V2ZXJpdHkiOiAiIiwgInRpdGxlIjogIk9uZSBwYWNrYWdl
+        IGVycmF0YSIsICJjaGlsZHJlbiI6IHt9LCAidmVyc2lvbiI6ICIxIiwgInJl
+        Ym9vdF9zdWdnZXN0ZWQiOiBmYWxzZSwgInR5cGUiOiAic2VjdXJpdHkiLCAi
+        cGtnbGlzdCI6IFt7InBhY2thZ2VzIjogW3sic3JjIjogImh0dHA6Ly93d3cu
+        ZmVkb3JhcHJvamVjdC5vcmciLCAibmFtZSI6ICJlbGVwaGFudCIsICJzdW0i
+        OiBudWxsLCAiZmlsZW5hbWUiOiAiZWxlcGhhbnQtMC4zLTAuOC5ub2FyY2gu
+        cnBtIiwgImVwb2NoIjogIjAiLCAidmVyc2lvbiI6ICIwLjMiLCAicmVsZWFz
+        ZSI6ICIwLjgiLCAiYXJjaCI6ICJub2FyY2gifV0sICJuYW1lIjogImNvbGxl
+        Y3Rpb24tMCIsICJzaG9ydCI6ICIifV0sICJzdGF0dXMiOiAic3RhYmxlIiwg
+        InVwZGF0ZWQiOiAiIiwgImRlc2NyaXB0aW9uIjogIk9uZSBwYWNrYWdlIGVy
+        cmF0YSIsICJfbGFzdF91cGRhdGVkIjogIjIwMTktMDUtMjRUMTQ6MjM6MTRa
+        IiwgInJlc3RhcnRfc3VnZ2VzdGVkIjogZmFsc2UsICJwdXNoY291bnQiOiAi
+        IiwgInJpZ2h0cyI6ICIiLCAic29sdXRpb24iOiAiIiwgInN1bW1hcnkiOiAi
+        IiwgInJlbGVhc2UiOiAiMSIsICJfaWQiOiAiZTA1MjZiMzktNmMzOS00Zjc3
+        LWFhMDgtMTdlM2VhMTMxYzE4In0sIHsicmVwb3NpdG9yeV9tZW1iZXJzaGlw
+        cyI6IFsiMWY3NGJmYzQtZmM3ZC00MjE5LTljYzMtN2YzNGY0ZDIxZWUxIiwg
+        ImQxMjNlMjVhLTk4OTMtNDk4Ny05MWUyLWE1NzRlY2M2MjAwZSIsICJmMzYy
+        MWE2ZS1kMmNjLTQ4NDItODUzYi04MzE0OTYxNDU4ZGEiLCAiNmEwMjkxZjct
+        MDRmNi00Mzc1LTg5NmEtMzYyMTVhMzg5NTJlIiwgIkZlZG9yYV8xNyJdLCAi
+        X2hyZWYiOiAiL3B1bHAvYXBpL3YyL2NvbnRlbnQvdW5pdHMvZXJyYXR1bS9m
+        YTE3N2E5Zi0zNTgyLTRjYWUtYjY1Yi04NzUzYjNlMDMwNDQvIiwgImlzc3Vl
+        ZCI6ICIyMDEwLTAxLTAxIDAxOjAxOjAxIiwgInJlbG9naW5fc3VnZ2VzdGVk
+        IjogZmFsc2UsICJyZWZlcmVuY2VzIjogW10sICJwdWxwX3VzZXJfbWV0YWRh
+        dGEiOiB7fSwgIl9jb250ZW50X3R5cGVfaWQiOiAiZXJyYXR1bSIsICJpZCI6
+        ICJSSEVBLTIwMTA6MDAwMSIsICJmcm9tIjogImx6YXArcHViQHJlZGhhdC5j
+        b20iLCAic2V2ZXJpdHkiOiAiIiwgInRpdGxlIjogIkVtcHR5IGVycmF0YSIs
+        ICJjaGlsZHJlbiI6IHt9LCAidmVyc2lvbiI6ICIxIiwgInJlYm9vdF9zdWdn
+        ZXN0ZWQiOiBmYWxzZSwgInR5cGUiOiAic2VjdXJpdHkiLCAicGtnbGlzdCI6
+        IFtdLCAic3RhdHVzIjogInN0YWJsZSIsICJ1cGRhdGVkIjogIiIsICJkZXNj
+        cmlwdGlvbiI6ICJFbXB0eSBlcnJhdGEiLCAiX2xhc3RfdXBkYXRlZCI6ICIy
+        MDE5LTA1LTI0VDE0OjIzOjE0WiIsICJyZXN0YXJ0X3N1Z2dlc3RlZCI6IGZh
+        bHNlLCAicHVzaGNvdW50IjogIiIsICJyaWdodHMiOiAiIiwgInNvbHV0aW9u
+        IjogIiIsICJzdW1tYXJ5IjogIiIsICJyZWxlYXNlIjogIjEiLCAiX2lkIjog
+        ImZhMTc3YTlmLTM1ODItNGNhZS1iNjViLTg3NTNiM2UwMzA0NCJ9XQ==
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:15 GMT
+- request:
+    method: post
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/content/units/erratum/search/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcml0ZXJpYSI6eyJmaWx0ZXJzIjp7Il9pZCI6eyIkaW4iOlsiOTVhMzE1
+        ZGUtNWZiMC00NTQ1LWE4NTktNGQ2OGU5YmVmOTZhIl19fX0sImluY2x1ZGVf
+        cmVwb3MiOnRydWV9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '102'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:15 GMT
+      Server:
+      - Apache
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '3219'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        W3sicmVwb3NpdG9yeV9tZW1iZXJzaGlwcyI6IFsiRmVkb3JhXzE3Il0sICJf
+        aHJlZiI6ICIvcHVscC9hcGkvdjIvY29udGVudC91bml0cy9lcnJhdHVtLzk1
+        YTMxNWRlLTVmYjAtNDU0NS1hODU5LTRkNjhlOWJlZjk2YS8iLCAiaXNzdWVk
+        IjogIjIwMTAtMTEtMTAgMDA6MDA6MDAiLCAicmVsb2dpbl9zdWdnZXN0ZWQi
+        OiBmYWxzZSwgInJlZmVyZW5jZXMiOiBbeyJocmVmIjogImh0dHBzOi8vcmhu
+        LnJlZGhhdC5jb20vZXJyYXRhL1JIU0EtMjAxMC0wODU4Lmh0bWwiLCAidHlw
+        ZSI6ICJzZWxmIiwgImlkIjogbnVsbCwgInRpdGxlIjogIlJIU0EtMjAxMDow
+        ODU4In0sIHsiaHJlZiI6ICJodHRwczovL2J1Z3ppbGxhLnJlZGhhdC5jb20v
+        YnVnemlsbGEvc2hvd19idWcuY2dpP2lkPTYyNzg4MiIsICJ0eXBlIjogImJ1
+        Z3ppbGxhIiwgImlkIjogIjYyNzg4MiIsICJ0aXRsZSI6ICJDVkUtMjAxMC0w
+        NDA1IGJ6aXAyOiBpbnRlZ2VyIG92ZXJmbG93IGZsYXcgaW4gQloyX2RlY29t
+        cHJlc3MifSwgeyJocmVmIjogImh0dHBzOi8vd3d3LnJlZGhhdC5jb20vc2Vj
+        dXJpdHkvZGF0YS9jdmUvQ1ZFLTIwMTAtMDQwNS5odG1sIiwgInR5cGUiOiAi
+        Y3ZlIiwgImlkIjogIkNWRS0yMDEwLTA0MDUiLCAidGl0bGUiOiAiQ1ZFLTIw
+        MTAtMDQwNSJ9LCB7ImhyZWYiOiAiaHR0cDovL3d3dy5yZWRoYXQuY29tL3Nl
+        Y3VyaXR5L3VwZGF0ZXMvY2xhc3NpZmljYXRpb24vI2ltcG9ydGFudCIsICJ0
+        eXBlIjogIm90aGVyIiwgImlkIjogbnVsbCwgInRpdGxlIjogbnVsbH1dLCAi
+        cHVscF91c2VyX21ldGFkYXRhIjoge30sICJfY29udGVudF90eXBlX2lkIjog
+        ImVycmF0dW0iLCAiaWQiOiAiUkhTQS0yMDEwOjA4NTgiLCAiZnJvbSI6ICJz
+        ZWN1cml0eUByZWRoYXQuY29tIiwgInNldmVyaXR5IjogIkltcG9ydGFudCIs
+        ICJ0aXRsZSI6ICJJbXBvcnRhbnQ6IGJ6aXAyIHNlY3VyaXR5IHVwZGF0ZSIs
+        ICJjaGlsZHJlbiI6IHt9LCAidmVyc2lvbiI6ICIzIiwgInJlYm9vdF9zdWdn
+        ZXN0ZWQiOiBmYWxzZSwgInR5cGUiOiAic2VjdXJpdHkiLCAicGtnbGlzdCI6
+        IFt7InBhY2thZ2VzIjogW3sic3JjIjogImJ6aXAyLTEuMC41LTcuZWw2XzAu
+        c3JjLnJwbSIsICJuYW1lIjogImJ6aXAyLWRldmVsIiwgInN1bSI6IFsic2hh
+        MjU2IiwgImVhNjdjNjY0ZGExZmY5NmE2ZGM5NGQzMzAwOWI3M2Q4ZmFiMzFi
+        NTk4MjQxODNmYjQ1ZTliYTJlYmY4MmQ1ODMiXSwgImZpbGVuYW1lIjogImJ6
+        aXAyLWRldmVsLTEuMC41LTcuZWw2XzAuaTY4Ni5ycG0iLCAiZXBvY2giOiAi
+        MCIsICJ2ZXJzaW9uIjogIjEuMC41IiwgInJlbGVhc2UiOiAiNy5lbDZfMCIs
+        ICJhcmNoIjogImk2ODYifSwgeyJzcmMiOiAiYnppcDItMS4wLjUtNy5lbDZf
+        MC5zcmMucnBtIiwgIm5hbWUiOiAiYnppcDItbGlicyIsICJzdW0iOiBbInNo
+        YTI1NiIsICJjOWYwNjRhNjg2MjU3M2ZiOWYyYTZhZmY3YzM2MjFmMTk0MGI0
+        OTJkZjJlZGZjMmViYmRjMGI4MzA1ZjUxMTQ3Il0sICJmaWxlbmFtZSI6ICJi
+        emlwMi1saWJzLTEuMC41LTcuZWw2XzAuaTY4Ni5ycG0iLCAiZXBvY2giOiAi
+        MCIsICJ2ZXJzaW9uIjogIjEuMC41IiwgInJlbGVhc2UiOiAiNy5lbDZfMCIs
+        ICJhcmNoIjogImk2ODYifSwgeyJzcmMiOiAiYnppcDItMS4wLjUtNy5lbDZf
+        MC5zcmMucnBtIiwgIm5hbWUiOiAiYnppcDIiLCAic3VtIjogWyJzaGEyNTYi
+        LCAiYjhhM2Y3MmJjMmIwZDg5YmE3MzcwOTlhYzk4YmY4ZDJhZjRiZWEwMmQz
+        MTg4NGMwMmRiOTdmN2Y2NmMzZDVjMiJdLCAiZmlsZW5hbWUiOiAiYnppcDIt
+        MS4wLjUtNy5lbDZfMC54ODZfNjQucnBtIiwgImVwb2NoIjogIjAiLCAidmVy
+        c2lvbiI6ICIxLjAuNSIsICJyZWxlYXNlIjogIjcuZWw2XzAiLCAiYXJjaCI6
+        ICJ4ODZfNjQifSwgeyJzcmMiOiAiYnppcDItMS4wLjUtNy5lbDZfMC5zcmMu
+        cnBtIiwgIm5hbWUiOiAiYnppcDItZGV2ZWwiLCAic3VtIjogWyJzaGEyNTYi
+        LCAiN2Y2MzEyNGU0NjU1YjdjOTJkMjNlYzRjMzgyMjZmNWQzNzQ2NTY4ODUz
+        ZGZmNzUwZmM4NWUwNThlNzRiNWNmNiJdLCAiZmlsZW5hbWUiOiAiYnppcDIt
+        ZGV2ZWwtMS4wLjUtNy5lbDZfMC54ODZfNjQucnBtIiwgImVwb2NoIjogIjAi
+        LCAidmVyc2lvbiI6ICIxLjAuNSIsICJyZWxlYXNlIjogIjcuZWw2XzAiLCAi
+        YXJjaCI6ICJ4ODZfNjQifSwgeyJzcmMiOiAiYnppcDItMS4wLjUtNy5lbDZf
+        MC5zcmMucnBtIiwgIm5hbWUiOiAiYnppcDItbGlicyIsICJzdW0iOiBbInNo
+        YTI1NiIsICI4MDJmNDM5OWRiZGQwMTQ3NmUyNTRjM2IzMmM0MGFmZjU5Y2Y1
+        ZDIzYTQ1ZmE0ODhjNjkxN2NlODkwNGQ2YjRkIl0sICJmaWxlbmFtZSI6ICJi
+        emlwMi1saWJzLTEuMC41LTcuZWw2XzAueDg2XzY0LnJwbSIsICJlcG9jaCI6
+        ICIwIiwgInZlcnNpb24iOiAiMS4wLjUiLCAicmVsZWFzZSI6ICI3LmVsNl8w
+        IiwgImFyY2giOiAieDg2XzY0In1dLCAibmFtZSI6ICJjb2xsZWN0aW9uLTAi
+        LCAic2hvcnQiOiAiIn1dLCAic3RhdHVzIjogImZpbmFsIiwgInVwZGF0ZWQi
+        OiAiMjAxMC0xMS0xMCAwMDowMDowMCIsICJkZXNjcmlwdGlvbiI6ICJiemlw
+        MiBpcyBhIGZyZWVseSBhdmFpbGFibGUsIGhpZ2gtcXVhbGl0eSBkYXRhIGNv
+        bXByZXNzb3IuIEl0IHByb3ZpZGVzIGJvdGhcbmxpYmJ6MiBsaWJyYXJ5IG11
+        c3QgYmUgcmVzdGFydGVkIGZvciB0aGUgdXBkYXRlIHRvIHRha2UgZWZmZWN0
+        LiIsICJfbGFzdF91cGRhdGVkIjogIjIwMTktMDUtMjRUMTQ6MjM6MTRaIiwg
+        InJlc3RhcnRfc3VnZ2VzdGVkIjogZmFsc2UsICJwdXNoY291bnQiOiAiIiwg
+        InJpZ2h0cyI6ICJDb3B5cmlnaHQgMjAxMCBSZWQgSGF0IEluYyIsICJzb2x1
+        dGlvbiI6ICJCZWZvcmUgYXBwbHlpbmcgdGhpcyB1cGRhdGUsIG1ha2Ugc3Vy
+        ZSBhbGwgcHJldmlvdXNseS1yZWxlYXNlZCBlcnJhdGFcbnJlbGV2YW50IHRv
+        IHlvdXIgc3lzdGVtIGhhdmUgYmVlbiBhcHBsaWVkLlxuXG5UaGlzIHVwZGF0
+        ZSBpcyBhdmFpbGFibGUgdmlhIHRoZSBSZWQgSGF0IE5ldHdvcmsuIERldGFp
+        bHMgb24gaG93IHRvXG51c2UgdGhlIFJlZCBIYXQgTmV0d29yayB0byBhcHBs
+        eSB0aGlzIHVwZGF0ZSBhcmUgYXZhaWxhYmxlIGF0XG5odHRwOi8va2Jhc2Uu
+        cmVkaGF0LmNvbS9mYXEvZG9jcy9ET0MtMTEyNTkiLCAic3VtbWFyeSI6ICJV
+        cGRhdGVkIGJ6aXAyIHBhY2thZ2VzIHRoYXQgZml4IG9uZSBzZWN1cml0eSBp
+        c3N1ZSIsICJyZWxlYXNlIjogIiIsICJfaWQiOiAiOTVhMzE1ZGUtNWZiMC00
+        NTQ1LWE4NTktNGQ2OGU5YmVmOTZhIn1d
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:15 GMT
+- request:
+    method: delete
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/repositories/Fedora_17/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:15 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzU4M2UwODg2LWRkNTItNGJlZC1iMjZiLTRiNGEzODFiMGEwMi8iLCAi
+        dGFza19pZCI6ICI1ODNlMDg4Ni1kZDUyLTRiZWQtYjI2Yi00YjRhMzgxYjBh
+        MDIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:15 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/583e0886-dd52-4bed-b26b-4b4a381b0a02/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:15 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"a800eab317965da6941cfa3d568a0c50-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '662'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy81ODNlMDg4Ni1kZDUyLTRiZWQtYjI2Yi00YjRhMzgxYjBh
+        MDIvIiwgInRhc2tfaWQiOiAiNTgzZTA4ODYtZGQ1Mi00YmVkLWIyNmItNGI0
+        YTM4MWIwYTAyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
+        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
+        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJj
+        ZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbS5k
+        cTIiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5zYW1pci5l
+        eGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjVjZTdmZTUzMzA4ZjI2ZTQ5MmFlOWQ1MyJ9LCAi
+        aWQiOiAiNWNlN2ZlNTMzMDhmMjZlNDkyYWU5ZDUzIn0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:15 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/583e0886-dd52-4bed-b26b-4b4a381b0a02/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:15 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"97242fca496522f00678fc3cdbee4e05-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '680'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy81ODNlMDg4Ni1kZDUyLTRiZWQtYjI2Yi00YjRhMzgxYjBh
+        MDIvIiwgInRhc2tfaWQiOiAiNTgzZTA4ODYtZGQ1Mi00YmVkLWIyNmItNGI0
+        YTM4MWIwYTAyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6ICIyMDE5
+        LTA1LTI0VDE0OjIzOjE1WiIsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25l
+        ZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6
+        ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsMi5z
+        YW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVubmluZyIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50
+        b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxs
+        LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVjZTdmZTUzMzA4
+        ZjI2ZTQ5MmFlOWQ1MyJ9LCAiaWQiOiAiNWNlN2ZlNTMzMDhmMjZlNDkyYWU5
+        ZDUzIn0=
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:15 GMT
+- request:
+    method: get
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/583e0886-dd52-4bed-b26b-4b4a381b0a02/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 24 May 2019 14:23:15 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"36d54f9d529af9bdb68e938bb8c11413-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '699'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy81ODNlMDg4Ni1kZDUyLTRiZWQtYjI2Yi00YjRhMzgxYjBh
+        MDIvIiwgInRhc2tfaWQiOiAiNTgzZTA4ODYtZGQ1Mi00YmVkLWIyNmItNGI0
+        YTM4MWIwYTAyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE5LTA1LTI0VDE0OjIzOjE1WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE5LTA1LTI0VDE0OjIzOjE1WiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MEBjZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbS5kcTIiLCAic3Rh
+        dGUiOiAiZmluaXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVz
+        b3VyY2Vfd29ya2VyLTBAY2VudG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5j
+        b20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsi
+        JG9pZCI6ICI1Y2U3ZmU1MzMwOGYyNmU0OTJhZTlkNTMifSwgImlkIjogIjVj
+        ZTdmZTUzMzA4ZjI2ZTQ5MmFlOWQ1MyJ9
+    http_version: 
+  recorded_at: Fri, 24 May 2019 14:23:15 GMT
 recorded_with: VCR 3.0.3
