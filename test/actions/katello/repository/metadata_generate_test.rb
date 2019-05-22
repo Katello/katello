@@ -15,8 +15,8 @@ module Actions
     let(:content_view_puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
     let(:action_options) do
       { :force => false,
-        :matching_content => nil,
         :source_repository => nil,
+        :matching_content => false,
         :dependency => nil,
         :repository_creation => false
       }
