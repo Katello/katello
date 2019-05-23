@@ -42,7 +42,7 @@ Gem::Specification.new do |gem|
   # Pulp
   gem.add_dependency "runcible", ">= 2.11.0", "< 3.0.0"
   gem.add_dependency "anemone"
-  gem.add_dependency "pulpcore_client"
+  gem.add_dependency "pulpcore_client", "< 3.0.0rc2"
   gem.add_dependency "pulp_file_client", "< 1.0"
 
   # UI
