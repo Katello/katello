@@ -81,4 +81,73 @@ module Katello
       assert_equal({status: 'FAIL', message: 'Candlepin is not running properly'}, Katello::Ping.ping_candlepin_without_auth({}))
     end
   end
+
+  class PingTestPulp3 < ActiveSupport::TestCase
+    def run_exception_test(json, message)
+      Katello::Ping.expects(:backend_status).returns(json)
+      exception = assert_raises Exception do
+        Katello::Ping.pulp3_without_auth(@url)
+      end
+      assert_match message, exception.message
+    end
+
+    def setup
+      @ok_pulp_status = {"versions" =>
+                        [{"component" => "pulpcore", "version" => "3.0.0rc2"},
+                         {"component" => "pulpcore-plugin", "version" => "0.1.0rc2"},
+                         {"component" => "pulp_file", "version" => "0.0.1b11"}],
+                         "online_workers" =>
+                        [{"_href" => "/pulp/api/v3/workers/366b15e7-3b0c-458a-aafd-542f10f08387/",
+                          "_created" => "2019-05-22T18:09:43.652407Z",
+                          "name" => "resource-manager@centos7-pulp3.example.com",
+                          "last_heartbeat" => "2019-05-23T19:53:27.081467Z",
+                          "online" => true,
+                          "missing" => false}],
+                         "missing_workers" => [],
+                         "database_connection" => {"connected" => true},
+                         "redis_connection" => {"connected" => true}}
+
+      @url = "http://pulp3/api"
+    end
+
+    def test_failure_on_empty_json
+      run_exception_test({}, /Pulp does not appear to be running/)
+    end
+
+    def test_failure_on_bad_db
+      run_exception_test({"database_connection" => {"connected" => false}},
+                           /Pulp database connection issue/)
+    end
+
+    def test_failure_on_bad_redis
+      run_exception_test({ "database_connection" => {"connected" => true},
+                           "redis_connection" => {"connected" => false}},
+                           /Pulp redis connection issue/)
+    end
+
+    def test_failure_on_all_workers
+      run_exception_test({ "database_connection" => {"connected" => true},
+                           "redis_connection" => {"connected" => true}
+                          }, /Not all necessary pulp workers running/)
+    end
+
+    def test_failure_on_all_workers_empty
+      run_exception_test({ "database_connection" => {"connected" => true},
+                           "redis_connection" => {"connected" => true},
+                           "online_workers" => []
+                          }, /Not all necessary pulp workers running/)
+    end
+
+    def test_failure_on_all_workers_not_online
+      run_exception_test({ "database_connection" => {"connected" => true},
+                           "redis_connection" => {"connected" => true},
+                           "online_workers" => [{"online" => true}, {"online" => false}]
+                          }, /Not all necessary pulp workers running/)
+    end
+
+    def test_all_workers_present_ok_status
+      Katello::Ping.expects(:backend_status).returns(@ok_pulp_status)
+      assert_equal @ok_pulp_status, Katello::Ping.pulp3_without_auth(@url)
+    end
+  end
 end
