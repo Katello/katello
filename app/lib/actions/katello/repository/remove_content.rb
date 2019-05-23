@@ -43,6 +43,7 @@ module Actions
         end
 
         def finalize
+          byebug
           if (input[:content_unit_class] && input[:content_unit_ids])
             content_units = input[:content_unit_class].constantize.where(:id => input[:content_unit_ids])
             content_units.each do |content_unit|
