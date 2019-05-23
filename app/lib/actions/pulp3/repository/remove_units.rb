@@ -10,7 +10,7 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find(input[:repository_id])
-          content_unit_ids = input[:options][:content_unit_ids]
+          content_unit_ids = input[:options][:contents]
           file_units = ::Katello::RepositoryFile.find(content_unit_ids)
           content_units = ::Katello::FileUnit.find(file_units.map(&:file_id))
           output[:response] = repo.backend_service(smart_proxy).remove_content(content_units)
