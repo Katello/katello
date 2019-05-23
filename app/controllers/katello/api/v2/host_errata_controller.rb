@@ -18,7 +18,8 @@ module Katello
     end
 
     def_param_group :bulk_errata_ids do
-      param :included, Hash, :required => true, :action_aware => true do
+      param :included, Hash, :required => true, :desc => N_("Search on errata based on included items."\
+                                                            " Note:This can be combined with excluded"), :action_aware => true do
         param :search, String, :required => false, :desc => N_("Search string for erratum to perform an action on")
         param :ids, Array, :required => false, :desc => N_("List of errata ids to perform an action on, (ex: RHSA-2019:1168)")
       end
