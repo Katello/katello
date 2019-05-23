@@ -32,7 +32,7 @@ module ::Actions::Pulp3
       @repo.reload
       content_unit = @repo.repository_files.first
       refute_empty @repo.repository_files
-      remove_content_args = {content_unit_ids: [content_unit.id]}
+      remove_content_args = {contents: [content_unit.id]}
       remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       assert_equal "success", remove_action.result
     end
