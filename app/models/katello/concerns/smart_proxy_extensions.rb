@@ -184,7 +184,7 @@ module Katello
         end
 
         #this will rely on smart proxy capabilities when available
-        content_pulp3_support?(content_type)? content_type.pulp3_service_class : content_type.pulp2_service_class
+        content_pulp3_support?(content_type) ? content_type.pulp3_service_class : content_type.pulp2_service_class
       end
 
       def set_default_download_policy

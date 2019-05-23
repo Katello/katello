@@ -100,7 +100,7 @@ module Katello
 
         def content_list
           PagedResults.fetch_paged_results(pulp3_api, :content_file_files_list,
-                                           ({repository_version: repo.version_href, page_size: SETTINGS[:katello][:pulp][:bulk_load_size]}))
+                                           repository_version: repo.version_href, page_size: SETTINGS[:katello][:pulp][:bulk_load_size])
         end
 
         def remove_content(content_units)

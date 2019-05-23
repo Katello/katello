@@ -16,7 +16,7 @@ module Katello
         self.uuid = uuid
       end
 
-      def self.pulp_data(uuid)
+      def self.pulp_data(_uuid)
         fail NotImplemented
       end
 
