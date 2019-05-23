@@ -82,7 +82,14 @@ module Actions
       end
 
       def cancel
-        fail "Cancelling not supported"
+        output[:pulp_tasks].each do |pulp_task|
+          data = PulpcoreClient::Task.new(state: 'canceled')
+          pulp3_api.tasks_api.tasks_cancel(pulp_task['_href'], data)
+          if pulp_task['spawned_tasks']
+            #the main task may have completed, so cancel spawned tasks too
+            pulp_task['spawned_tasks'].each { |spawned| pulp3_api.tasks_api.tasks_cancel(spawned['_href'], data) }
+          end
+        end
       end
 
       def rescue_external_task(error)
