@@ -25,9 +25,9 @@
 
       <div bst-form-group label="{{ 'Description' | translate }}">
         <textarea id="description"
-	       name="description"
-	       ng-model="repository.description"
-	       type="text"/>
+                  name="description"
+                  ng-model="repository.description"
+                  type="text"/>
       </div>
 
       <div bst-form-group label="{{ 'Type' | translate }}">
@@ -233,7 +233,7 @@
         </select>
       </div>
 
-      <div bst-form-group label="{{ 'SSL CA Cert' | translate }}" ng-show="repository.content_type === 'yum'">
+      <div bst-form-group label="{{ 'SSL CA Cert' | translate }}">
         <select id="ssl_ca_cert_id"
                 name="ssl_ca_cert_id"
                 ng-model="repository.ssl_ca_cert_id"
@@ -242,7 +242,7 @@
         </select>
       </div>
 
-      <div bst-form-group label="{{ 'SSL Client Cert' | translate }}" ng-show="repository.content_type === 'yum'">
+      <div bst-form-group label="{{ 'SSL Client Cert' | translate }}">
         <select id="ssl_client_cert_id"
                 name="ssl_client_cert_id"
                 ng-model="repository.ssl_client_cert_id"
@@ -251,7 +251,7 @@
         </select>
       </div>
 
-      <div bst-form-group label="{{ 'SSL Client Key' | translate }}" ng-show="repository.content_type === 'yum'">
+      <div bst-form-group label="{{ 'SSL Client Key' | translate }}">
         <select id="ssl_client_key_id"
                 name="ssl_client_key_id"
                 ng-model="repository.ssl_client_key_id"
