@@ -7,8 +7,7 @@ module Actions
     include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::MetadataGenerate }
-    let(:select_class) { ::Actions::Katello::PulpSelector }
-    let(:pulp_publish_classes) { [::Actions::Pulp::Repository::DistributorPublish, Pulp3::Orchestration::Repository::GenerateMetadata] }
+    let(:pulp_publish_class) { ::Actions::Pulp::Repository::DistributorPublish }
     let(:yum_repo) { katello_repositories(:fedora_17_x86_64) }
     let(:yum_repo2) { katello_repositories(:fedora_17_x86_64_dev) }
     let(:puppet_repo) { katello_repositories(:p_forge) }
@@ -30,7 +29,7 @@ module Actions
       action = create_action(action_class)
       plan_action(action, yum_repo)
 
-      assert_action_planed_with(action, select_class, pulp_publish_classes, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
             action_options)
     end
 
@@ -40,7 +39,7 @@ module Actions
 
       plan_action(action, content_view_puppet_env)
 
-      assert_action_planed_with(action, select_class, pulp_publish_classes, content_view_puppet_env, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, content_view_puppet_env, SmartProxy.pulp_master,
               action_options)
     end
 
@@ -50,7 +49,7 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:force] = true
-      assert_action_planed_with(action, select_class, pulp_publish_classes, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
             yum_action_options)
     end
 
@@ -60,7 +59,7 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:source_repository] = yum_repo2
-      assert_action_planed_with(action, select_class, pulp_publish_classes, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
             yum_action_options)
     end
   end

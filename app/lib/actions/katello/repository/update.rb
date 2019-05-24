@@ -2,6 +2,8 @@ module Actions
   module Katello
     module Repository
       class Update < Actions::EntryAction
+        include Actions::Katello::PulpSelector
+
         def plan(root, repo_params)
           repository = root.library_instance
           action_subject root.library_instance
@@ -29,10 +31,10 @@ module Actions
                                        gpg_url: repository.yum_gpg_key_url)
           end
           if root.pulp_update_needed?
-            plan_action(PulpSelector,
-                        [::Actions::Pulp::Repository::Refresh,
-                         Pulp3::Orchestration::Repository::Update],
-                        repository, SmartProxy.pulp_master)
+            plan_pulp_action([::Actions::Pulp::Repository::Refresh,
+                              ::Actions::Pulp3::Orchestration::Repository::Update],
+                             repository,
+                             SmartProxy.pulp_master)
             plan_self(:repository_id => root.library_instance.id)
           end
         end

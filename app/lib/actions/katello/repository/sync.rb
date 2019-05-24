@@ -4,6 +4,7 @@ module Actions
     module Repository
       class Sync < Actions::EntryAction
         include Helpers::Presenter
+        include Actions::Katello::PulpSelector
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
         input_format do
@@ -37,10 +38,11 @@ module Actions
           sequence do
             plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents
             sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :repo_id => repo.id, :source_url => source_url, :options => pulp_sync_options}
-            sync_action = plan_action(PulpSelector,
-                        [Actions::Pulp::Orchestration::Repository::Sync,
-                         Actions::Pulp3::Orchestration::Repository::Sync],
-                        repo, SmartProxy.pulp_master, sync_args)
+            sync_action = plan_pulp_action([Actions::Pulp::Orchestration::Repository::Sync,
+                                            Actions::Pulp3::Orchestration::Repository::Sync],
+                                           repo,
+                                           SmartProxy.pulp_master,
+                                           sync_args)
             output = sync_action.output
 
             contents_changed = skip_metadata_check || output[:contents_changed]

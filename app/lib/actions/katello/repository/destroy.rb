@@ -2,6 +2,7 @@ module Actions
   module Katello
     module Repository
       class Destroy < Actions::EntryAction
+        include Actions::Katello::PulpSelector
         middleware.use ::Actions::Middleware::RemoteAction
 
         # options:
@@ -18,10 +19,10 @@ module Actions
           end
 
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
-          plan_action(PulpSelector,
-            [Actions::Pulp::Orchestration::Repository::Delete,
-             Actions::Pulp3::Orchestration::Repository::Delete],
-            repository, SmartProxy.pulp_master)
+          plan_pulp_action([Actions::Pulp::Orchestration::Repository::Delete,
+                            Actions::Pulp3::Orchestration::Repository::Delete],
+                           repository,
+                           SmartProxy.pulp_master)
 
           plan_self(:user_id => ::User.current.id)
           sequence do

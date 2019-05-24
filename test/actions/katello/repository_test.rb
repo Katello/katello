@@ -86,8 +86,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
 
       plan_action action, repository.root, :unprotected => true
-      assert_action_planed_with action, Actions::Katello::PulpSelector,
-        [pulp_action_class, pulp3_action_class],
+      assert_action_planed_with action, pulp_action_class,
         repository, proxy
       assert_action_planed action, candlepin_action_class
     end
@@ -113,8 +112,7 @@ module ::Actions::Katello::Repository
 
       action.expects(:plan_self)
       plan_action action, in_use_repository
-      assert_action_planed_with action, Actions::Katello::PulpSelector,
-        [pulp_action_class, pulp3_action_class],
+      assert_action_planed_with action, pulp_action_class,
         in_use_repository, proxy
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
@@ -333,7 +331,7 @@ module ::Actions::Katello::Repository
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
-      assert_action_planed_with(action, ::Actions::Katello::PulpSelector, [pulp2_action_class, pulp3_action_class], repository, proxy,
+      assert_action_planed_with(action, pulp2_action_class, repository, proxy,
                                 smart_proxy_id: proxy.id, repo_id: repository.id, source_url: nil, options: {})
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent
       assert_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
@@ -359,7 +357,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, nil, :source_url => 'file:///tmp/'
 
-      assert_action_planed_with(action, ::Actions::Katello::PulpSelector, [pulp2_action_class, pulp3_action_class], repository, proxy,
+      assert_action_planed_with(action, pulp2_action_class, repository, proxy,
                                 smart_proxy_id: proxy.id, repo_id: repository.id,
                                 source_url: 'file:///tmp/', options: {})
     end
@@ -369,7 +367,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, nil, :skip_metadata_check => true
 
-      assert_action_planed_with(action, ::Actions::Katello::PulpSelector, [pulp2_action_class, pulp3_action_class], repository, proxy,
+      assert_action_planed_with(action, pulp2_action_class, repository, proxy,
                                 smart_proxy_id: proxy.id, repo_id: repository.id,
                                 source_url: nil, options: {force_full: true})
       assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
@@ -380,7 +378,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, nil, :validate_contents => true
 
-      assert_action_planed_with(action, ::Actions::Katello::PulpSelector, [pulp2_action_class, pulp3_action_class], repository, proxy,
+      assert_action_planed_with(action, pulp2_action_class, repository, proxy,
                                 smart_proxy_id: proxy.id, repo_id: repository.id,
                                 source_url: nil, options: {download_policy: 'on_demand', force_full: true})
 
