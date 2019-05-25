@@ -46,7 +46,7 @@ FactoryBot.define do
 
     trait :puppet do
       association :root, :puppet_root, :factory => :katello_root_repository, :strategy => :build
-      download_policy ""
+      download_policy { "" }
     end
 
     trait :iso do
