@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :katello_organization, :class => "Organization" do
-    type "Organization"
+    type { "Organization" }
     sequence(:name) { |n| "Organization#{n}" }
     sequence(:label) { |n| "org#{n}" }
     sequence(:id) { |n| n }
