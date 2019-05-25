@@ -36,7 +36,7 @@ FactoryBot.define do
       label { "fedora_17_dev_label" }
       pulp_id { "2" }
       content_id { "1" }
-      relative_path { "/ACME_Corporation/DEV/fedora_17_el6_label"  }
+      relative_path { "/ACME_Corporation/DEV/fedora_17_el6_label" }
     end
 
     trait :docker do
