@@ -1,38 +1,38 @@
 FactoryBot.define do
   factory :katello_pool, :class => Katello::Pool do
-    active true
-    end_date Date.today + 1.year
+    active { true }
+    end_date { Date.today + 1.year }
 
     trait :active do
-      active true
+      active { true }
     end
 
     trait :inactive do
-      active false
+      active { false }
     end
 
     trait :unexpired do
-      end_date Date.today + 1.day
+      end_date { Date.today + 1.day }
     end
 
     trait :expired do
-      end_date Date.today
+      end_date { Date.today }
     end
 
     trait :expiring_soon do
-      end_date Date.today + (Setting[:expire_soon_days] || 120)
+      end_date { Date.today + (Setting[:expire_soon_days] || 120) }
     end
 
     trait :not_expiring_soon do
-      end_date Date.today + (Setting[:expire_soon_days] || 120) + 1
+      end_date { Date.today + (Setting[:expire_soon_days] || 120) + 1 }
     end
 
     trait :recently_expired do
-      end_date Date.today - Katello::Pool::DAYS_RECENTLY_EXPIRED
+      end_date { Date.today - Katello::Pool::DAYS_RECENTLY_EXPIRED }
     end
 
     trait :long_expired do
-      end_date Date.today - Katello::Pool::DAYS_RECENTLY_EXPIRED - 1
+      end_date { Date.today - Katello::Pool::DAYS_RECENTLY_EXPIRED - 1 }
     end
   end
 end

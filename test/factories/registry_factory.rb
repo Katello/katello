@@ -1,20 +1,20 @@
 FactoryBot.define do
   factory :registry_organization, class: "Organization" do
-    type "Organization"
+    type { "Organization" }
     association :library, factory: :katello_library
 
     trait :headquarters do
-      name "Headquarters, Ltd."
-      type "Organization"
-      description "This is the registry headquarters."
-      label "headquarters"
+      name { "Headquarters, Ltd." }
+      type { "Organization" }
+      description { "This is the registry headquarters." }
+      label { "headquarters" }
     end
 
     trait :fieldoffice do
-      name "Field Office"
-      type "Organization"
-      description "This is the registry field office."
-      label "fieldoffice"
+      name { "Field Office" }
+      type { "Organization" }
+      description { "This is the registry field office." }
+      label { "fieldoffice" }
     end
   end
 
@@ -26,44 +26,44 @@ FactoryBot.define do
     end
 
     trait :hq_env_dev do
-      name "Headquarters DEV"
-      description "Headquarters DEV environment"
-      label "hq_env_dev"
+      name { "Headquarters DEV" }
+      description { "Headquarters DEV environment" }
+      label { "hq_env_dev" }
       association :organization, factory: [:registry_organization, :headquarters]
     end
 
     trait :fo_env_dev do
-      name "Field Office DEV"
-      description "Field Office DEV environment"
-      label "fo_env_dev"
+      name { "Field Office DEV" }
+      description { "Field Office DEV environment" }
+      label { "fo_env_dev" }
       association :organization, factory: [:registry_organization, :fieldoffice]
     end
   end
 
   factory :registry_content_view, class: Katello::ContentView do
     trait :hq_cv_single_repo do
-      name "Headquarters Single Repo"
-      label "hq_cv_single_repo"
-      composite false
+      name { "Headquarters Single Repo" }
+      label { "hq_cv_single_repo" }
+      composite { false }
       association :organization, factory: [:registry_organization, :headquarters]
     end
     trait :hq_cv_multi_repo do
-      name "Headquarters Multi Repo"
-      label "hq_cv_multi_repo"
-      composite false
+      name { "Headquarters Multi Repo" }
+      label { "hq_cv_multi_repo" }
+      composite { false }
       association :organization, factory: [:registry_organization, :headquarters]
     end
 
     trait :fo_cv_single_repo do
-      name "Field Office Single Repo"
-      label "fo_cv_single_repo"
-      composite false
+      name { "Field Office Single Repo" }
+      label { "fo_cv_single_repo" }
+      composite { false }
       association :organization, factory: [:registry_organization, :fieldoffice]
     end
     trait :fo_cv_multi_repo do
-      name "Field Office Multi Repo"
-      label "fo_cv_multi_repo"
-      composite false
+      name { "Field Office Multi Repo" }
+      label { "fo_cv_multi_repo" }
+      composite { false }
       association :organization, factory: [:registry_organization, :fieldoffice]
     end
   end
@@ -88,13 +88,13 @@ FactoryBot.define do
 
   factory :registry_product, class: Katello::Product do
     trait :hq_product do
-      name "Headquarters Product"
-      label "hq_product"
+      name { "Headquarters Product" }
+      label { "hq_product" }
     end
 
     trait :fo_product do
-      name "Field Office Product"
-      label "fo_product"
+      name { "Field Office Product" }
+      label { "fo_product" }
     end
   end
 
@@ -103,13 +103,13 @@ FactoryBot.define do
     sequence(:pulp_id) { |n| "pulp-#{n}" }
 
     transient do
-      product nil
-      content_id nil
-      content_type nil
-      label nil
-      name nil
-      docker_upstream_name nil
-      url nil
+      product { nil }
+      content_id { nil }
+      content_type { nil }
+      label { nil }
+      name { nil }
+      docker_upstream_name { nil }
+      url { nil }
     end
 
     after(:build) do |repo, evaluator|
@@ -121,37 +121,37 @@ FactoryBot.define do
     end
 
     trait :hq_repo_alpha do
-      content_type "docker"
-      name "Alpha Image"
-      label "alpha_image"
-      relative_path "headquarters-hq_product-alpha_image"
-      url "http://devel.example.com:5000/alpha"
-      docker_upstream_name "registry/alpha"
+      content_type { "docker" }
+      name { "Alpha Image" }
+      label { "alpha_image" }
+      relative_path { "headquarters-hq_product-alpha_image" }
+      url { "http://devel.example.com:5000/alpha" }
+      docker_upstream_name { "registry/alpha" }
     end
     trait :hq_repo_beta do
-      content_type "docker"
-      name "Beta Image"
-      label "beta_image"
-      relative_path "headquarters-hq_product-beta_image"
-      url "http://devel.example.com:5000/beta"
-      docker_upstream_name "registry/beta"
+      content_type { "docker" }
+      name { "Beta Image" }
+      label { "beta_image" }
+      relative_path { "headquarters-hq_product-beta_image" }
+      url { "http://devel.example.com:5000/beta" }
+      docker_upstream_name { "registry/beta" }
     end
 
     trait :fo_repo_alpha do
-      content_type "docker"
-      name "Alpha Image2"
-      label "alpha_image2"
-      relative_path "fieldoffice-fo_product-alpha_image"
-      url "http://devel.example.com:5000/alpha"
-      docker_upstream_name "registry/alpha"
+      content_type { "docker" }
+      name { "Alpha Image2" }
+      label { "alpha_image2" }
+      relative_path { "fieldoffice-fo_product-alpha_image" }
+      url { "http://devel.example.com:5000/alpha" }
+      docker_upstream_name { "registry/alpha" }
     end
     trait :fo_repo_beta do
-      content_type "docker"
-      name "Beta Image2"
-      label "beta_image2"
-      relative_path "fieldoffice-fo_product-beta_image"
-      url "http://devel.example.com:5000/beta"
-      docker_upstream_name "registry/beta"
+      content_type { "docker" }
+      name { "Beta Image2" }
+      label { "beta_image2" }
+      relative_path { "fieldoffice-fo_product-beta_image" }
+      url { "http://devel.example.com:5000/beta" }
+      docker_upstream_name { "registry/beta" }
     end
   end
 end

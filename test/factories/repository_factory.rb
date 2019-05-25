@@ -6,16 +6,16 @@ FactoryBot.define do
     sequence(:relative_path) { |n| "/ACME_Corporation/DEV/Repo#{n}" }
 
     transient do
-      product nil
-      product_id nil
-      content_id nil
-      content_type nil
-      label nil
-      name nil
-      docker_upstream_name nil
-      url nil
-      unprotected nil
-      download_policy nil
+      product { nil }
+      product_id { nil }
+      content_id { nil }
+      content_type { nil }
+      label { nil }
+      name { nil }
+      docker_upstream_name { nil }
+      url { nil }
+      unprotected { nil }
+      download_policy { nil }
     end
 
     after(:build) do |repo, evaluator|
@@ -26,27 +26,27 @@ FactoryBot.define do
 
     trait :fedora_17_el6 do
       association :root, :factory => :katello_root_repository, :trait => :fedora_17_el6_root, :strategy => :build
-      pulp_id "Fedora_17_el6"
-      relative_path "/ACME_Corporation/Library/fedora_17_el6_label"
+      pulp_id { "Fedora_17_el6" }
+      relative_path { "/ACME_Corporation/Library/fedora_17_el6_label" }
     end
 
     trait :fedora_17_x86_64_dev do
       association :root, :fedora_17_x86_64_dev_root, :factory => :katello_root_repository, :strategy => :build
-      name "Fedora 17"
-      label "fedora_17_dev_label"
-      pulp_id "2"
-      content_id "1"
-      relative_path "/ACME_Corporation/DEV/fedora_17_el6_label"
+      name { "Fedora 17" }
+      label { "fedora_17_dev_label" }
+      pulp_id { "2" }
+      content_id { "1" }
+      relative_path { "/ACME_Corporation/DEV/fedora_17_el6_label" }
     end
 
     trait :docker do
       association :root, :docker_root, :factory => :katello_root_repository, :strategy => :build
-      relative_path "empty_organization-fedora_label-dockeruser_repo"
+      relative_path { "empty_organization-fedora_label-dockeruser_repo" }
     end
 
     trait :puppet do
       association :root, :puppet_root, :factory => :katello_root_repository, :strategy => :build
-      download_policy ""
+      download_policy { "" }
     end
 
     trait :iso do
