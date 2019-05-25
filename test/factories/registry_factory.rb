@@ -57,13 +57,13 @@ FactoryBot.define do
     trait :fo_cv_single_repo do
       name { "Field Office Single Repo" }
       label { "fo_cv_single_repo" }
-      composite false
+      composite { false }
       association :organization, factory: [:registry_organization, :fieldoffice]
     end
     trait :fo_cv_multi_repo do
       name { "Field Office Multi Repo" }
       label { "fo_cv_multi_repo" }
-      composite false
+      composite { false }
       association :organization, factory: [:registry_organization, :fieldoffice]
     end
   end
