@@ -1,7 +1,7 @@
 FactoryBot.modify do
   factory :smart_proxy do
     transient do
-      download_policy 'on_demand'
+      download_policy { 'on_demand' }
     end
 
     trait :default_smart_proxy do

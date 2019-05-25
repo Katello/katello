@@ -8,7 +8,7 @@ FactoryBot.define do
       association :docker_taggable, :factory => [:docker_manifest, :schema1]
     end
     trait :latest do
-      name "latest"
+      name { "latest" }
     end
 
     trait :with_uuid do

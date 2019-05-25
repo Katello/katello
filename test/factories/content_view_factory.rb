@@ -5,7 +5,7 @@ FactoryBot.define do
     association :organization, :factory => :katello_organization
 
     trait :composite do
-      composite true
+      composite { true }
     end
   end
 end

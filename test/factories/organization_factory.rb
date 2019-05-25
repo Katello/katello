@@ -6,10 +6,10 @@ FactoryBot.define do
     sequence(:id) { |n| n }
 
     trait :acme_corporation do
-      name "ACME_Corporation"
-      type "Organization"
-      description "This is the first Organization."
-      label "acme_corporation_label"
+      name { "ACME_Corporation" }
+      type { "Organization" }
+      description { "This is the first Organization." }
+      label { "acme_corporation_label" }
     end
 
     trait :with_library do

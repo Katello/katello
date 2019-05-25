@@ -1,9 +1,9 @@
 FactoryBot.modify do
   factory :host do
     transient do
-      content_view nil
-      lifecycle_environment nil
-      content_source nil
+      content_view { nil }
+      lifecycle_environment { nil }
+      content_source { nil }
     end
 
     trait :with_content do
