@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :puppet_module, :class => Katello::PuppetModule do
-    name "trystero"
-    author "tpynchon"
+    name { "trystero" }
+    author { "tpynchon" }
     sequence(:version) { |n| "1.2.#{n}" }
     sequence(:pulp_id)
   end

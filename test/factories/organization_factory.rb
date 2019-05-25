@@ -1,15 +1,15 @@
 FactoryBot.define do
   factory :katello_organization, :class => "Organization" do
-    type "Organization"
+    type { "Organization" }
     sequence(:name) { |n| "Organization#{n}" }
     sequence(:label) { |n| "org#{n}" }
     sequence(:id) { |n| n }
 
     trait :acme_corporation do
-      name "ACME_Corporation"
-      type "Organization"
-      description "This is the first Organization."
-      label "acme_corporation_label"
+      name { "ACME_Corporation" }
+      type { "Organization" }
+      description { "This is the first Organization." }
+      label { "acme_corporation_label" }
     end
 
     trait :with_library do

@@ -1,7 +1,7 @@
 FactoryBot.modify do
   factory :feature do
     factory :pulp do
-      name 'Pulp'
+      name { 'Pulp' }
     end
   end
 end

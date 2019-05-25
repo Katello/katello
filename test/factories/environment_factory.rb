@@ -9,10 +9,10 @@ FactoryBot.define do
     end
 
     trait :library do
-      name "Library"
-      description "This is the Library"
+      name { "Library" }
+      description { "This is the Library" }
       sequence(:label) { |n| "library_label_#{n}" }
-      library true
+      library { true }
 
       after(:build) do |lib|
         lib.organization.library = lib
@@ -31,16 +31,16 @@ FactoryBot.define do
     factory :katello_environment_with_library, :traits => [:with_library]
 
     trait :dev do
-      name "Dev"
-      description "Dev environment."
-      label "dev_label"
+      name { "Dev" }
+      description { "Dev environment." }
+      label { "dev_label" }
       association :priors
     end
 
     trait :staging do
-      name "Staging"
-      description "Staging environment."
-      label "staging_label"
+      name { "Staging" }
+      description { "Staging environment." }
+      label { "staging_label" }
       association :priors
     end
   end
