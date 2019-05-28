@@ -82,7 +82,7 @@
           readonly="denied('edit_products', product)">
       </dd>
 
-      <span ng-show="!product.redhat">
+      <span ng-if="!product.redhat">
         <dt translate>Upstream Authorization</dt>
         <dd bst-edit-custom="repository.upstream_auth_exists"
             readonly="denied('edit_products', product)"
@@ -95,11 +95,13 @@
           <input id="upstream_username"
                  name="upstream_username"
                  type="name"
+                 autocomplete="off"
                  ng-model="repository.upstream_username"/>
           <div translate>Upstream Password</div>
           <input id="upstream_password"
                  name="upstream_password"
                  type="password"
+                 autocomplete="off"
                  ng-model="repository.upstream_password"/>
         </dd>
       </span>
