@@ -1,125 +1,8 @@
 ---
 http_interactions:
 - request:
-    method: get
-    uri: https://centos7-devel2.samir.example.com:8443/candlepin/pools/4028f96668b959e70168b9c9227e0005
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Authorization:
-      - OAuth oauth_consumer_key="zjp7BihWXTQRyEHyjMDCmiFfK3zaUYzk", oauth_nonce="2KboibBHfmQ1xltl2hyTXK09uYmAXqd9wkKPdqwoCe4",
-        oauth_signature="4t6dgwhnbC8%2BAo6vGEnyiWK3wrs%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1549305193", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 3554c079-df23-4c00-8352-ca2d0ad63873
-      X-Version:
-      - 2.5.9-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Mon, 04 Feb 2019 18:33:12 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOS0wMi0wNFQxODozMzoxMyswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTktMDItMDRUMTg6MzM6MTMrMDAwMCIsImlkIjoiNDAyOGY5NjY2
-        OGI5NTllNzAxNjhiOWM5MjI3ZTAwMDUiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4Zjk2NjY4Yjk1OWU3MDE2OGI5YzkxY2JlMDAwMCIs
-        ImtleSI6InNjZW5hcmlvX3Rlc3QiLCJkaXNwbGF5TmFtZSI6InNjZW5hcmlv
-        X3Rlc3QiLCJocmVmIjoiL293bmVycy9zY2VuYXJpb190ZXN0In0sImFjdGl2
-        ZVN1YnNjcmlwdGlvbiI6dHJ1ZSwic291cmNlRW50aXRsZW1lbnQiOm51bGws
-        InF1YW50aXR5IjotMSwic3RhcnREYXRlIjoiMjAxNy0wMS0wMVQyMDoxNTow
-        MSswMDAwIiwiZW5kRGF0ZSI6IjIwNDYtMTItMjVUMjA6MTU6MDErMDAwMCIs
-        ImF0dHJpYnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwi
-        Y29udHJhY3ROdW1iZXIiOm51bGwsImFjY291bnROdW1iZXIiOm51bGwsIm9y
-        ZGVyTnVtYmVyIjpudWxsLCJjb25zdW1lZCI6MCwiZXhwb3J0ZWQiOjAsImJy
-        YW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0ZXMiOnsiY29tcGxpYW5j
-        ZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Qb29sSWQiOm51bGwsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6bnVsbCwidXBzdHJlYW1Db25zdW1lcklk
-        IjpudWxsLCJwcm9kdWN0TmFtZSI6IlNjZW5hcmlvIFByb2R1Y3QiLCJwcm9k
-        dWN0SWQiOiI3YzgyNTAxM2NhYjAxMzQ5YWU4Y2I4ZGIxODdkZTM5MSIsInBy
-        b2R1Y3RBdHRyaWJ1dGVzIjpbeyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiQUxM
-        In1dLCJzdGFja0lkIjpudWxsLCJzdGFja2VkIjpmYWxzZSwic291cmNlU3Rh
-        Y2tJZCI6bnVsbCwiZGV2ZWxvcG1lbnRQb29sIjpmYWxzZSwiZGVyaXZlZFBy
-        b2R1Y3RBdHRyaWJ1dGVzIjpbXSwiZGVyaXZlZFByb2R1Y3RJZCI6bnVsbCwi
-        ZGVyaXZlZFByb2R1Y3ROYW1lIjpudWxsLCJwcm92aWRlZFByb2R1Y3RzIjpb
-        XSwiZGVyaXZlZFByb3ZpZGVkUHJvZHVjdHMiOltdLCJzdWJzY3JpcHRpb25T
-        dWJLZXkiOm51bGwsInN1YnNjcmlwdGlvbklkIjpudWxsLCJocmVmIjoiL3Bv
-        b2xzLzQwMjhmOTY2NjhiOTU5ZTcwMTY4YjljOTIyN2UwMDA1In0=
-    http_version: 
-  recorded_at: Mon, 04 Feb 2019 18:33:13 GMT
-- request:
-    method: get
-    uri: https://centos7-devel2.samir.example.com:8443/candlepin/pools/4028f96668b959e70168b9c9227e0005/entitlements/consumer_uuids
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Authorization:
-      - OAuth oauth_consumer_key="zjp7BihWXTQRyEHyjMDCmiFfK3zaUYzk", oauth_nonce="e5AaTsU19uEkqNc7qNRB4XBuyPME3abrH0KJ9Q4bwM",
-        oauth_signature="mG7gv3aTkqBrQxLcHzbc1sjCAX8%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1549305193", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - eccdb83f-fd12-485b-a5d2-03e410606e82
-      X-Version:
-      - 2.5.9-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Mon, 04 Feb 2019 18:33:12 GMT
-    body:
-      encoding: UTF-8
-      base64_string: 'W10=
-
-'
-    http_version: 
-  recorded_at: Mon, 04 Feb 2019 18:33:13 GMT
-- request:
     method: post
-    uri: https://theta.partello.example.com:8443/candlepin/owners/scenario_test/products/
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/products/
     body:
       encoding: UTF-8
       base64_string: |
@@ -134,9 +17,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="jAxTjRjZQ7yDaaSwD6cYjZLXGgzg3ZSt",
-        oauth_nonce="P0GCtZa8oJvl3pln6njuGgmH0jlQ8s4vYW2jGui4", oauth_signature="Obf4DlbndUelLh85zpJN5s8oILQ%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1552949001", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD",
+        oauth_nonce="3qmGFAQ0IN3ZKr0NHwUrvFkiNSmCBHTtbKBLPycIkE", oauth_signature="WHzzNngKrOf7jsg0qhwU005kokI%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1559211614", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -153,31 +36,31 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 133cd745-f67f-4198-8a6d-aeadcc90fff8
+      - 4f2ef085-11fb-430c-945f-354ac8754f09
       X-Version:
-      - 2.5.9-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Mon, 18 Mar 2019 22:43:21 GMT
+      - Thu, 30 May 2019 10:20:14 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOS0wMy0xOFQyMjo0MzoyMSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTktMDMtMThUMjI6NDM6MjErMDAwMCIsInV1aWQiOiI0MDI4Zjlm
-        ODY5OTEwYjMwMDE2OTkyZjkzY2I0MDAwNCIsImlkIjoiN2M4MjUwMTNjYWIw
+        eyJjcmVhdGVkIjoiMjAxOS0wNS0zMFQxMDoyMDoxNCswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTktMDUtMzBUMTA6MjA6MTQrMDAwMCIsInV1aWQiOiI0MDI4Zjlm
+        NzZiMDQzMGE5MDE2YjA4NDEyMTQxMDBhMCIsImlkIjoiN2M4MjUwMTNjYWIw
         MTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJuYW1lIjoiU2NlbmFyaW8gUHJvZHVj
         dCIsIm11bHRpcGxpZXIiOjEsImF0dHJpYnV0ZXMiOlt7Im5hbWUiOiJhcmNo
         IiwidmFsdWUiOiJBTEwifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJo
-        cmVmIjoiL3Byb2R1Y3RzLzQwMjhmOWY4Njk5MTBiMzAwMTY5OTJmOTNjYjQw
-        MDA0IiwicHJvZHVjdENvbnRlbnQiOltdfQ==
+        cmVmIjoiL3Byb2R1Y3RzLzQwMjhmOWY3NmIwNDMwYTkwMTZiMDg0MTIxNDEw
+        MGEwIiwicHJvZHVjdENvbnRlbnQiOltdfQ==
     http_version: 
-  recorded_at: Mon, 18 Mar 2019 22:43:21 GMT
+  recorded_at: Thu, 30 May 2019 10:20:14 GMT
 - request:
     method: post
-    uri: https://theta.partello.example.com:8443/candlepin/owners/scenario_test/pools
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/pools
     body:
       encoding: UTF-8
       base64_string: |
@@ -194,9 +77,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="jAxTjRjZQ7yDaaSwD6cYjZLXGgzg3ZSt",
-        oauth_nonce="rbpPbwzwYh6nHKADZm6Ca0M2kPo7T52lRKPVXEjXuY", oauth_signature="yyi%2BtORpCV7LehH38UxdTHfO5j8%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1552949001", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD",
+        oauth_nonce="9bD0VxP4tvSztNqdWl8lfXdk1TFeCZxlsOkMoKGyoQ", oauth_signature="7JeR2ui5fDPVqBGeBpAgSuqz3bc%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1559211614", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -213,22 +96,22 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 9cf18676-49cf-4a11-ae10-8766c632625d
+      - 40d16daa-035f-48ef-bbf0-0acc64c57af3
       X-Version:
-      - 2.5.9-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Mon, 18 Mar 2019 22:43:21 GMT
+      - Thu, 30 May 2019 10:20:14 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOS0wMy0xOFQyMjo0MzoyMSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTktMDMtMThUMjI6NDM6MjErMDAwMCIsImlkIjoiNDAyOGY5Zjg2
-        OTkxMGIzMDAxNjk5MmY5M2QyNjAwMDUiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZjlmODY5OTEwYjMwMDE2OTkyZjkzOWU3MDAwMCIs
+        eyJjcmVhdGVkIjoiMjAxOS0wNS0zMFQxMDoyMDoxNCswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTktMDUtMzBUMTA6MjA6MTQrMDAwMCIsImlkIjoiNDAyOGY5Zjc2
+        YjA0MzBhOTAxNmIwODQxMjE2NTAwYTEiLCJ0eXBlIjoiTk9STUFMIiwib3du
+        ZXIiOnsiaWQiOiI0MDI4ZjlmNzZiMDQzMGE5MDE2YjA4NDExOWY2MDA5YyIs
         ImtleSI6InNjZW5hcmlvX3Rlc3QiLCJkaXNwbGF5TmFtZSI6InNjZW5hcmlv
         X3Rlc3QiLCJocmVmIjoiL293bmVycy9zY2VuYXJpb190ZXN0In0sImFjdGl2
         ZVN1YnNjcmlwdGlvbiI6dHJ1ZSwic291cmNlRW50aXRsZW1lbnQiOm51bGws
@@ -248,13 +131,13 @@ http_interactions:
         ZWRQcm9kdWN0SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwi
         cHJvdmlkZWRQcm9kdWN0cyI6W10sImRlcml2ZWRQcm92aWRlZFByb2R1Y3Rz
         IjpbXSwic3Vic2NyaXB0aW9uU3ViS2V5IjpudWxsLCJzdWJzY3JpcHRpb25J
-        ZCI6bnVsbCwiaHJlZiI6Ii9wb29scy80MDI4ZjlmODY5OTEwYjMwMDE2OTky
-        ZjkzZDI2MDAwNSJ9
+        ZCI6bnVsbCwiaHJlZiI6Ii9wb29scy80MDI4ZjlmNzZiMDQzMGE5MDE2YjA4
+        NDEyMTY1MDBhMSJ9
     http_version: 
-  recorded_at: Mon, 18 Mar 2019 22:43:21 GMT
+  recorded_at: Thu, 30 May 2019 10:20:14 GMT
 - request:
     method: get
-    uri: https://theta.partello.example.com:8443/candlepin/owners/scenario_test/products/7c825013cab01349ae8cb8db187de391/
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/products/7c825013cab01349ae8cb8db187de391/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -266,9 +149,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="jAxTjRjZQ7yDaaSwD6cYjZLXGgzg3ZSt", oauth_nonce="g5kBJmw4gyBZW2V2sM1FiNynrTVxuJ9jlR5sDJAKyE",
-        oauth_signature="yZcXMpqDTux6Dmo8Bsj4LiHjNBU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1552949001", oauth_version="1.0"
+      - OAuth oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD", oauth_nonce="T7wGqOq9oQmJjiNpCk2gRO43TawoA4Bu6P8SzfYBJ5o",
+        oauth_signature="XZfDKtFZ5ljdN8cgmGmE15L1zy0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1559211614", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -283,31 +166,31 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 920da473-ad65-4616-b2b4-ffafa4469e71
+      - 5964f107-557e-4ad7-ad7a-8fc96779add2
       X-Version:
-      - 2.5.9-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Mon, 18 Mar 2019 22:43:21 GMT
+      - Thu, 30 May 2019 10:20:14 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOS0wMy0xOFQyMjo0MzoyMSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTktMDMtMThUMjI6NDM6MjErMDAwMCIsInV1aWQiOiI0MDI4Zjlm
-        ODY5OTEwYjMwMDE2OTkyZjkzY2I0MDAwNCIsImlkIjoiN2M4MjUwMTNjYWIw
+        eyJjcmVhdGVkIjoiMjAxOS0wNS0zMFQxMDoyMDoxNCswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTktMDUtMzBUMTA6MjA6MTQrMDAwMCIsInV1aWQiOiI0MDI4Zjlm
+        NzZiMDQzMGE5MDE2YjA4NDEyMTQxMDBhMCIsImlkIjoiN2M4MjUwMTNjYWIw
         MTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJuYW1lIjoiU2NlbmFyaW8gUHJvZHVj
         dCIsIm11bHRpcGxpZXIiOjEsImF0dHJpYnV0ZXMiOlt7Im5hbWUiOiJhcmNo
         IiwidmFsdWUiOiJBTEwifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJo
-        cmVmIjoiL3Byb2R1Y3RzLzQwMjhmOWY4Njk5MTBiMzAwMTY5OTJmOTNjYjQw
-        MDA0IiwicHJvZHVjdENvbnRlbnQiOltdfQ==
+        cmVmIjoiL3Byb2R1Y3RzLzQwMjhmOWY3NmIwNDMwYTkwMTZiMDg0MTIxNDEw
+        MGEwIiwicHJvZHVjdENvbnRlbnQiOltdfQ==
     http_version: 
-  recorded_at: Mon, 18 Mar 2019 22:43:21 GMT
+  recorded_at: Thu, 30 May 2019 10:20:14 GMT
 - request:
     method: get
-    uri: https://theta.partello.example.com:8443/candlepin/owners/scenario_test/pools?add_future=true
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/pools?add_future=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -319,9 +202,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="jAxTjRjZQ7yDaaSwD6cYjZLXGgzg3ZSt", oauth_nonce="JD0qEMq65KgxOueX1MpTTsvg5wlihvGrNLpjTM0FkBo",
-        oauth_signature="R7JWfX4RCaQ8KjLJqD8FWi0mGpU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1552949001", oauth_version="1.0"
+      - OAuth oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD", oauth_nonce="WiqQKEHxrJVUwGzxlsxYaRCxgYm4GBIm0RxhC6m8",
+        oauth_signature="D4zG0L1aYXd6ia4T8XdmbOGvb6Q%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1559211614", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -336,22 +219,22 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 89f75474-947d-42ae-9f6a-00785a4838e0
+      - 3a29f09b-52a5-4646-9f52-4e89d00e5733
       X-Version:
-      - 2.5.9-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Mon, 18 Mar 2019 22:43:21 GMT
+      - Thu, 30 May 2019 10:20:14 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        W3siY3JlYXRlZCI6IjIwMTktMDMtMThUMjI6NDM6MjErMDAwMCIsInVwZGF0
-        ZWQiOiIyMDE5LTAzLTE4VDIyOjQzOjIxKzAwMDAiLCJpZCI6IjQwMjhmOWY4
-        Njk5MTBiMzAwMTY5OTJmOTNkMjYwMDA1IiwidHlwZSI6Ik5PUk1BTCIsIm93
-        bmVyIjp7ImlkIjoiNDAyOGY5Zjg2OTkxMGIzMDAxNjk5MmY5MzllNzAwMDAi
+        W3siY3JlYXRlZCI6IjIwMTktMDUtMzBUMTA6MjA6MTQrMDAwMCIsInVwZGF0
+        ZWQiOiIyMDE5LTA1LTMwVDEwOjIwOjE0KzAwMDAiLCJpZCI6IjQwMjhmOWY3
+        NmIwNDMwYTkwMTZiMDg0MTIxNjUwMGExIiwidHlwZSI6Ik5PUk1BTCIsIm93
+        bmVyIjp7ImlkIjoiNDAyOGY5Zjc2YjA0MzBhOTAxNmIwODQxMTlmNjAwOWMi
         LCJrZXkiOiJzY2VuYXJpb190ZXN0IiwiZGlzcGxheU5hbWUiOiJzY2VuYXJp
         b190ZXN0IiwiaHJlZiI6Ii9vd25lcnMvc2NlbmFyaW9fdGVzdCJ9LCJhY3Rp
         dmVTdWJzY3JpcHRpb24iOnRydWUsInNvdXJjZUVudGl0bGVtZW50IjpudWxs
@@ -372,12 +255,12 @@ http_interactions:
         ImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQcm9kdWN0cyI6
         W10sImRlcml2ZWRQcm92aWRlZFByb2R1Y3RzIjpbXSwic3Vic2NyaXB0aW9u
         U3ViS2V5IjpudWxsLCJzdWJzY3JpcHRpb25JZCI6bnVsbCwiaHJlZiI6Ii9w
-        b29scy80MDI4ZjlmODY5OTEwYjMwMDE2OTkyZjkzZDI2MDAwNSJ9XQ==
+        b29scy80MDI4ZjlmNzZiMDQzMGE5MDE2YjA4NDEyMTY1MDBhMSJ9XQ==
     http_version: 
-  recorded_at: Mon, 18 Mar 2019 22:43:21 GMT
+  recorded_at: Thu, 30 May 2019 10:20:14 GMT
 - request:
     method: get
-    uri: https://theta.partello.example.com:8443/candlepin/pools/4028f9f869910b30016992f93d260005
+    uri: https://devel.balmora.example.com:8443/candlepin/pools/4028f9f76b0430a9016b0841216500a1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -389,9 +272,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="jAxTjRjZQ7yDaaSwD6cYjZLXGgzg3ZSt", oauth_nonce="mAje2UgmjlFvogtIPEY17KowO1pQwzAOMzmu0K9CI",
-        oauth_signature="UGLrcELek2sIAGh9%2Bps5ZU2dH%2BU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1552949001", oauth_version="1.0"
+      - OAuth oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD", oauth_nonce="k4RcwntFa4wM22qz9lWcmei2mvmMdUTV52x3mz1p4",
+        oauth_signature="Mj6RH2bAN5rr46EHefANtNqmAn0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1559211614", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -406,22 +289,22 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - e229c1f4-3f33-45b2-8b93-17752e06514a
+      - 7659db85-d5a4-4eae-b5ce-635a49766169
       X-Version:
-      - 2.5.9-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Mon, 18 Mar 2019 22:43:21 GMT
+      - Thu, 30 May 2019 10:20:14 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOS0wMy0xOFQyMjo0MzoyMSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTktMDMtMThUMjI6NDM6MjErMDAwMCIsImlkIjoiNDAyOGY5Zjg2
-        OTkxMGIzMDAxNjk5MmY5M2QyNjAwMDUiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZjlmODY5OTEwYjMwMDE2OTkyZjkzOWU3MDAwMCIs
+        eyJjcmVhdGVkIjoiMjAxOS0wNS0zMFQxMDoyMDoxNCswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTktMDUtMzBUMTA6MjA6MTQrMDAwMCIsImlkIjoiNDAyOGY5Zjc2
+        YjA0MzBhOTAxNmIwODQxMjE2NTAwYTEiLCJ0eXBlIjoiTk9STUFMIiwib3du
+        ZXIiOnsiaWQiOiI0MDI4ZjlmNzZiMDQzMGE5MDE2YjA4NDExOWY2MDA5YyIs
         ImtleSI6InNjZW5hcmlvX3Rlc3QiLCJkaXNwbGF5TmFtZSI6InNjZW5hcmlv
         X3Rlc3QiLCJocmVmIjoiL293bmVycy9zY2VuYXJpb190ZXN0In0sImFjdGl2
         ZVN1YnNjcmlwdGlvbiI6dHJ1ZSwic291cmNlRW50aXRsZW1lbnQiOm51bGws
@@ -442,12 +325,12 @@ http_interactions:
         ZGVyaXZlZFByb2R1Y3ROYW1lIjpudWxsLCJwcm92aWRlZFByb2R1Y3RzIjpb
         XSwiZGVyaXZlZFByb3ZpZGVkUHJvZHVjdHMiOltdLCJzdWJzY3JpcHRpb25T
         dWJLZXkiOm51bGwsInN1YnNjcmlwdGlvbklkIjpudWxsLCJocmVmIjoiL3Bv
-        b2xzLzQwMjhmOWY4Njk5MTBiMzAwMTY5OTJmOTNkMjYwMDA1In0=
+        b2xzLzQwMjhmOWY3NmIwNDMwYTkwMTZiMDg0MTIxNjUwMGExIn0=
     http_version: 
-  recorded_at: Mon, 18 Mar 2019 22:43:21 GMT
+  recorded_at: Thu, 30 May 2019 10:20:14 GMT
 - request:
     method: get
-    uri: https://theta.partello.example.com:8443/candlepin/owners/scenario_test/activation_keys/?include=pools.pool.id
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/activation_keys/?include=pools.pool.id
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -459,9 +342,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="jAxTjRjZQ7yDaaSwD6cYjZLXGgzg3ZSt", oauth_nonce="78t7CpVc1aT6VT6VWaKnOCqM1fD26GKIijPu1Ozjs",
-        oauth_signature="OVCTdmcIkVehJltOItBHs2FEX40%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1552949001", oauth_version="1.0"
+      - OAuth oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD", oauth_nonce="arLzcGwBwfapNKocTCsRdAUx3SBcoyG4Y55Mjdr6E",
+        oauth_signature="QDiaIAhownlj2TLWHC5jfPooZDM%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1559211614", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -476,25 +359,25 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - a0aeeaeb-a28e-43ed-8ca3-6af23ab3d9a1
+      - 578e7e03-3131-476d-9bc0-cbf2c347a48d
       X-Version:
-      - 2.5.9-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Mon, 18 Mar 2019 22:43:21 GMT
+      - Thu, 30 May 2019 10:20:14 GMT
     body:
       encoding: UTF-8
       base64_string: 'W10=
 
 '
     http_version: 
-  recorded_at: Mon, 18 Mar 2019 22:43:21 GMT
+  recorded_at: Thu, 30 May 2019 10:20:14 GMT
 - request:
     method: get
-    uri: https://theta.partello.example.com:8443/candlepin/pools/4028f9f869910b30016992f93d260005/entitlements/consumer_uuids
+    uri: https://devel.balmora.example.com:8443/candlepin/pools/4028f9f76b0430a9016b0841216500a1/entitlements/consumer_uuids
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -506,9 +389,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="jAxTjRjZQ7yDaaSwD6cYjZLXGgzg3ZSt", oauth_nonce="9VFKFryFmcDiaLJbYYYk6F3XcUPBkchkK10g0mNuR0",
-        oauth_signature="Op95gx9D023IX1eyzV80YDh2txM%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1552949001", oauth_version="1.0"
+      - OAuth oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD", oauth_nonce="kl2zIVhThssOadryNfZ3PdtYsu13X56bz6b7RkY6Jg",
+        oauth_signature="hBrPhbachz%2FxLJKlhNBgL8PC4TQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1559211614", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -523,20 +406,20 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 667ac491-87ae-458e-b428-979a6347660d
+      - f47df280-dd23-4c2e-bed5-2dc4179e3bd4
       X-Version:
-      - 2.5.9-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Mon, 18 Mar 2019 22:43:21 GMT
+      - Thu, 30 May 2019 10:20:14 GMT
     body:
       encoding: UTF-8
       base64_string: 'W10=
 
 '
     http_version: 
-  recorded_at: Mon, 18 Mar 2019 22:43:21 GMT
+  recorded_at: Thu, 30 May 2019 10:20:14 GMT
 recorded_with: VCR 3.0.3
