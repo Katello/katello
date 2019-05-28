@@ -34,6 +34,23 @@ class Actions::Candlepin::Product::ContentUpdateTest < ActiveSupport::TestCase
   end
 end
 
+class Actions::Candlepin::Product::UpdateTest < ActiveSupport::TestCase
+  include Dynflow::Testing
+  include Support::Actions::RemoteAction
+
+  describe 'Update' do
+    let(:action_class) { ::Actions::Candlepin::Product::Update }
+    let(:planned_action) do
+      create_and_plan_action action_class, owner: 'Default_Organization', name: 'Animal Product', id: 123
+    end
+
+    it 'runs' do
+      ::Katello::Resources::Candlepin::Product.expects(:update).with('Default_Organization', :name => 'Animal Product', :id => 123)
+      run_action planned_action
+    end
+  end
+end
+
 class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
   include Dynflow::Testing
   include Support::Actions::RemoteAction
