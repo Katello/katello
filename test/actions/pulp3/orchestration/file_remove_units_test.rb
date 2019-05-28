@@ -16,8 +16,8 @@ module ::Actions::Pulp3
         ::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       contents_changed = sync_action.output[:contents_changed]
       ForemanTasks.sync_task(
-        ::Actions::Pulp3::Repository::Index,
-        @repo, @master,
+        ::Actions::Katello::Repository::IndexContent,
+        id: @repo.id, dependency: {},
         contents_changed: contents_changed,
         full_index: true)
     end
