@@ -9,6 +9,7 @@ module Katello
     param :content_view_id, :number, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
+    param :uuid, String, :desc => N_("uuid of the puppet module"), :deprecated => true
     param_group :search, ::Katello::Api::V2::ApiController
     def index
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc))
