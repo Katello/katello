@@ -26,10 +26,15 @@ class ScenarioSupport
   def create_repo(repo)
     record("support/destroy_repo_if_exists") { destroy_repo_if_exists(repo) }
     record("repo_create") { ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo, false, true) }
+    repo.root.reload
   end
 
   def sync_repo(repo)
     record("repo_sync") { ForemanTasks.sync_task(::Actions::Katello::Repository::Sync, repo) }
+  end
+
+  def update_repo(repo, params)
+    record("repo_update") { ForemanTasks.sync_task(::Actions::Katello::Repository::Update, repo, params) }
   end
 
   def sleep_if_needed

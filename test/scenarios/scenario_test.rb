@@ -33,6 +33,9 @@ module Scenarios
       @support.sleep_if_needed
       @support.sync_repo(repo)
       @support.sleep_if_needed
+
+      @support.update_repo(repo.root, :mirror_on_sync => false)
+      @support.sleep_if_needed
       @support.destroy_org(org, repo)
     end
   end

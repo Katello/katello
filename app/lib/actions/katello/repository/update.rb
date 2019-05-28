@@ -31,7 +31,7 @@ module Actions
                                        gpg_url: repository.yum_gpg_key_url)
           end
           if root.pulp_update_needed?
-            plan_pulp_action([::Actions::Pulp::Repository::Refresh,
+            plan_pulp_action([::Actions::Pulp::Orchestration::Repository::Refresh,
                               ::Actions::Pulp3::Orchestration::Repository::Update],
                              repository,
                              SmartProxy.pulp_master)

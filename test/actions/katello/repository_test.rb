@@ -71,7 +71,7 @@ module ::Actions::Katello::Repository
 
   class UpdateTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Update }
-    let(:pulp_action_class) { ::Actions::Pulp::Repository::Refresh }
+    let(:pulp_action_class) { ::Actions::Pulp::Orchestration::Repository::Refresh }
     let(:candlepin_action_class) { ::Actions::Candlepin::Product::ContentUpdate }
     let(:repository) { katello_repositories(:fedora_17_unpublished) }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Update }
