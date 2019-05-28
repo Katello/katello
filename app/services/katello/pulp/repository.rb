@@ -151,7 +151,8 @@ module Katello
         {
           ssl_client_cert: ueber_cert[:cert],
           ssl_client_key: ueber_cert[:key],
-          ssl_ca_cert: ::Cert::Certs.ca_cert
+          ssl_ca_cert: ::Cert::Certs.ca_cert,
+          ssl_validation: true
         }
       end
 
