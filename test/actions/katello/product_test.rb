@@ -116,10 +116,15 @@ module ::Actions::Katello::Product
     it 'plans' do
       action.expects(:action_subject).with(product)
       product.expects(:reload)
-      plan_action action, product, :gpg_key_id => key.id
-      assert_action_planed_with(action,
-                                ::Actions::Katello::Product::RepositoriesGpgReset,
-                                product)
+      plan_action action, product, :gpg_key_id => key.id, :name => "Animal Product"
+      assert_action_planed_with(action, ::Actions::Katello::Product::RepositoriesGpgReset, product)
+
+      assert_action_planed_with(action, ::Actions::Candlepin::Product::Update, owner: product.organization.label, name: product.name, id: product.cp_id)
+
+      assert(product.subscriptions.length > 0)
+      product.subscriptions.each do |subscription|
+        assert_action_planed_with(action, ::Actions::Katello::Subscription::Update, subscription, name: product.name)
+      end
     end
 
     it 'raises error when validation fails' do

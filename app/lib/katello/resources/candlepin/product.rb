@@ -110,6 +110,10 @@ module Katello
           def path(owner_label, id = nil)
             "/candlepin/owners/#{owner_label}/products/#{id}"
           end
+
+          def update(owner_label, attrs)
+            JSON.parse(self.put(path(owner_label, attrs[:id] || attrs['id']), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
+          end
         end
       end
     end

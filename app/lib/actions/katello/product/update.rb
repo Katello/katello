@@ -13,6 +13,14 @@ module Actions
               product.previous_changes.key?('ssl_client_key_id'))
             plan_action(::Actions::Katello::Product::RepositoriesCertsReset, product)
           end
+
+          if product.previous_changes.key?('name')
+            plan_action(::Actions::Candlepin::Product::Update, owner: product.organization.label, name: product.name, id: product.cp_id)
+            product.subscriptions.each do |subscription|
+              plan_action(::Actions::Katello::Subscription::Update, subscription, name: product.name)
+            end
+          end
+
           product.reload
         end
       end
