@@ -20,7 +20,7 @@ FactoryBot.modify do
 
         smart_proxy_feature = proxy.smart_proxy_features.select { |spf| spf.feature_id == v3_feature.id }.first
         smart_proxy_feature.capabilities = plugins
-        smart_proxy_feature.settings = {pulp_url: 'http://dev.pulp3/pulp/'}
+        smart_proxy_feature.settings = {pulp_url: 'http://192.168.121.31'}
         smart_proxy_feature.save!
       end
     end
