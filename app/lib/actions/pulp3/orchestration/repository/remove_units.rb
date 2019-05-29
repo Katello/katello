@@ -3,9 +3,12 @@ module Actions
     module Orchestration
       module Repository
         class RemoveUnits < Pulp3::Abstract
+          include Actions::Helpers::OutputPropagator
+
           def plan(repository, smart_proxy, options)
             sequence do
-              plan_action(Actions::Pulp3::Repository::RemoveUnits, repository, smart_proxy, options)
+              action_output = plan_action(Actions::Pulp3::Repository::RemoveUnits, repository, smart_proxy, options).output
+              plan_action(Pulp3::Repository::SaveVersion, repository, action_output[:pulp_tasks])
             end
           end
         end

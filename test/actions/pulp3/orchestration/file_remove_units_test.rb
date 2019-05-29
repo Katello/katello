@@ -41,6 +41,16 @@ module ::Actions::Pulp3
       assert_equal "success", remove_action.result
     end
 
+    def test_remove_file_unit_updates_version_href
+      @repo.reload
+      content_unit = @repo.repository_files.first
+      refute_empty @repo.repository_files
+      version_href = @repo.version_href
+      remove_content_args = {contents: [content_unit.id]}
+      remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
+      refute_equal version_href, @repo.reload.version_href
+    end
+
     def test_empty_content_args
       remove_content_args = {contents: []}
       remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
