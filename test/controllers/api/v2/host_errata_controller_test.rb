@@ -100,9 +100,8 @@ module Katello
       exception = assert_raises(HttpErrors::BadRequest) do
         @controller.find_bulk_errata_ids(bulk_params)
       end
-      assert_match /No errata has been specified/, exception.message
+      assert_match(/No errata has been specified/, exception.message)
     end
-
   end
 
   class Api::V2::HostErrataControllerTest < HostErrataControllerTestBase
