@@ -155,7 +155,7 @@ module Katello
           fail _("Pulp redis connection issue at %s.") % url
         end
 
-        if json["online_workers"].empty? || json["online_workers"]&.any? { |w| w["online"] != true }
+        if json["online_workers"].empty?
           fail _("Not all necessary pulp workers running at %s.") % url
         end
 

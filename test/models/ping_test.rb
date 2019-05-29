@@ -138,13 +138,6 @@ module Katello
                           }, /Not all necessary pulp workers running/)
     end
 
-    def test_failure_on_all_workers_not_online
-      run_exception_test({ "database_connection" => {"connected" => true},
-                           "redis_connection" => {"connected" => true},
-                           "online_workers" => [{"online" => true}, {"online" => false}]
-                          }, /Not all necessary pulp workers running/)
-    end
-
     def test_all_workers_present_ok_status
       Katello::Ping.expects(:backend_status).returns(@ok_pulp_status)
       assert_equal @ok_pulp_status, Katello::Ping.pulp3_without_auth(@url)
