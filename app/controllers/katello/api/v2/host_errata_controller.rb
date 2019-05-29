@@ -18,12 +18,13 @@ module Katello
     end
 
     def_param_group :bulk_errata_ids do
-      param :included, Hash, :required => true, :desc => N_("Search on errata based on included items."\
-                                                            " Note:This can be combined with excluded"), :action_aware => true do
+      param :included, Hash, :desc => N_("Errata to exclusively include in the action"), :required => true, :action_aware => true do
         param :search, String, :required => false, :desc => N_("Search string for erratum to perform an action on")
         param :ids, Array, :required => false, :desc => N_("List of errata ids to perform an action on, (ex: RHSA-2019:1168)")
       end
-      param :excluded, Hash, :required => true, :action_aware => true do
+      param :excluded, Hash, :desc => N_("Errata to explicitly exclude in the action."\
+                                         " All other applicable errata will be included in the action,"\
+                                         " unless an included parameter is passed as well."), :required => true, :action_aware => true do
         param :ids, Array, :required => false, :desc => N_("List of errata ids to exclude and not run an action on, (ex: RHSA-2019:1168)")
       end
     end
@@ -97,7 +98,7 @@ module Katello
       @errata = @errata.where.not(errata_id: bulk_params[:excluded][:ids]) unless @errata.empty? || bulk_params[:excluded][:ids].blank?
 
       if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
-        fail HttpErrors::BadRequest, _("No errata have been specified.")
+        fail HttpErrors::BadRequest, _("No errata has been specified.")
       end
       @errata.pluck(:errata_id)
     end
