@@ -47,7 +47,7 @@ module ::Actions::Pulp3
       refute_empty @repo.repository_files
       version_href = @repo.version_href
       remove_content_args = {contents: [content_unit.id]}
-      remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       refute_equal version_href, @repo.reload.version_href
     end
 
