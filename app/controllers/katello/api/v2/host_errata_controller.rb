@@ -50,7 +50,8 @@ module Katello
 
     api :PUT, "/hosts/:host_id/errata/apply", N_("Schedule errata for installation")
     param :host_id, :number, :desc => N_("Host ID"), :required => true
-    param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => false
+    param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => false, :deprecated => true
+
     param_group :bulk_errata_ids
     def apply
       task = async_task(::Actions::Katello::Host::Erratum::Install, @host, @errata_ids)
