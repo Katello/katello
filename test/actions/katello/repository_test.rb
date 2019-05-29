@@ -178,8 +178,11 @@ module ::Actions::Katello::Repository
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, to_remove
 
-      assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveUnits,
-                                repo_id: custom_repository.id, contents: uuids, content_unit_type: "rpm"
+      assert_action_planed_with action, ::Actions::Katello::PulpSelector,
+        [::Actions::Pulp::Orchestration::Repository::RemoveUnits,
+         ::Actions::Pulp3::Orchestration::Repository::RemoveUnits],
+        custom_repository, proxy,
+        repo_id: custom_repository.id, contents: uuids, content_unit_type: "rpm"
     end
 
     it "does run capsule sync for custom repository" do
@@ -212,8 +215,10 @@ module ::Actions::Katello::Repository
       action.expects(:action_subject).with(docker_repo)
       plan_action action, docker_repo, docker_repo.docker_manifests
 
-      assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveUnits,
-                                repo_id: docker_repo.id, contents: docker_repo.docker_manifests.pluck(:id), content_unit_type: "docker_manifest"
+      assert_action_planed_with action, ::Actions::Katello::PulpSelector,
+       [Actions::Pulp::Orchestration::Repository::RemoveUnits, Actions::Pulp3::Orchestration::Repository::RemoveUnits],
+       docker_repo, proxy,
+       repo_id: docker_repo.id, contents: docker_repo.docker_manifests.pluck(:id), content_unit_type: "docker_manifest"
     end
   end
 
