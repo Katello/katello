@@ -93,7 +93,7 @@ module Katello
         end
       end
 
-      @errata = @errata.where.not(errata_id: bulk_params[:excluded][:ids]) unless bulk_params[:excluded][:ids].blank?
+      @errata = @errata.where.not(errata_id: bulk_params[:excluded][:ids]) unless @errata.empty? || bulk_params[:excluded][:ids].blank?
 
       if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
         fail HttpErrors::BadRequest, _("No errata have been specified.")

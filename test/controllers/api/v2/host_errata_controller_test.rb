@@ -90,6 +90,19 @@ module Katello
       refute_includes result, @bugfix.errata_id
       assert_includes result, @errata.errata_id
     end
+
+    def test_excludes_only_case
+      bulk_params = {
+        :excluded => {
+          :ids => [@bugfix.errata_id]
+        }
+      }
+      exception = assert_raises(HttpErrors::BadRequest) do
+        @controller.find_bulk_errata_ids(bulk_params)
+      end
+      assert_match /No errata have been specified/, exception.message
+    end
+
   end
 
   class Api::V2::HostErrataControllerTest < HostErrataControllerTestBase
