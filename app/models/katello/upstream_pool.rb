@@ -13,11 +13,18 @@ module Katello
           included_fields: included_field_params(quantities_only)
         )
 
-        upstream_response = CP_POOL.get(params: cp_params)
+        upstream_response = fetch_upstream_with_error_handling(cp_params)
         pools = response_to_pools(upstream_response, pool_id_map: pool_id_map)
         total = upstream_response.headers[total_count_header] || pools.count
 
         respond(pools, total)
+      end
+
+      def fetch_upstream_with_error_handling(cp_params)
+        CP_POOL.get(params: cp_params)
+      rescue RestClient::Gone
+        raise "The Subscription Allocation providing the imported manifest has been removed. " \
+              "Please create a new Subscription Allocation and import the new manifest."
       end
 
       def respond(pools, total)
