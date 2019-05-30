@@ -5,9 +5,9 @@ module Katello
     belongs_to :repository, :inverse_of => :yum_metadata_files, :class_name => "Katello::Repository"
     CONTENT_TYPE = "yum_repo_metadata_file".freeze
 
-    def self.import_for_repository(repository, _force = true)
+    def self.import_for_repository(repository)
       ::Katello::YumMetadataFile.where(:repository_id => repository).destroy_all
-      super(repository, true)
+      super(repository)
     end
 
     def self.manage_repository_association

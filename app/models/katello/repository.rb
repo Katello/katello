@@ -750,12 +750,12 @@ module Katello
       end
     end
 
-    def index_content(full_index = false)
+    def index_content
       if self.yum? && !self.master?
         index_linked_repo
       else
         repository_type.content_types_to_index.each do |type|
-          type.model_class.import_for_repository(self, full_index)
+          type.model_class.import_for_repository(self)
         end
         repository_type.index_additional_data_proc&.call(self)
       end

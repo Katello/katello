@@ -22,8 +22,49 @@ module Katello
         unit_handler.find_by_unit_id(uuid)
       end
 
+      def self.model_class
+        Katello::RepositoryTypeManager.model_class(self)
+      end
+
+      def self.unit_identifier
+        "_id"
+      end
+
       def self.unit_handler
         Katello.pulp_server.extensions.send(self.name.demodulize.underscore)
+      end
+
+      def self.pulp_units_batch_all(unit_ids = nil, page_size = SETTINGS[:katello][:pulp][:bulk_load_size])
+        fields = self.const_get(:PULP_INDEXED_FIELDS) if self.constants.include?(:PULP_INDEXED_FIELDS)
+        criteria = {:limit => page_size, :skip => 0}
+        criteria[:fields] = fields if fields
+        criteria[:filters] = {'_id' => {'$in' => unit_ids}} if unit_ids
+
+        pulp_units_batch(criteria, page_size) do
+          Katello.pulp_server.resources.unit.search(self::CONTENT_TYPE, criteria, :include_repos => true)
+        end
+      end
+
+      def self.pulp_units_batch_for_repo(repository, page_size = SETTINGS[:katello][:pulp][:bulk_load_size])
+        fields = self.const_get(:PULP_INDEXED_FIELDS) if self.constants.include?(:PULP_INDEXED_FIELDS)
+        criteria = {:type_ids => [const_get(:CONTENT_TYPE)], :limit => page_size, :skip => 0}
+        criteria[:fields] = {:unit => fields} if fields
+
+        pulp_units_batch(criteria, page_size) do
+          Katello.pulp_server.resources.repository.unit_search(repository.pulp_id, criteria).pluck(:metadata)
+        end
+      end
+
+      def self.pulp_units_batch(criteria, page_size = SETTINGS[:katello][:pulp][:bulk_load_size], &block)
+        response = {}
+        Enumerator.new do |yielder|
+          loop do
+            break if (response.blank? && criteria[:skip] != 0)
+            response = block.call
+            yielder.yield response
+            criteria[:skip] += page_size
+          end
+        end
       end
 
       def self.fetch_all

@@ -12,6 +12,7 @@ module ::Actions::Katello::Repository
 
     let(:action) { create_action action_class }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
+    let(:repository_pulp3) { katello_repositories(:pulp3_file_1) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:puppet_repository) { katello_repositories(:p_forge) }
     let(:docker_repository) { katello_repositories(:redis) }
@@ -326,6 +327,7 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::Sync }
     let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::Sync }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Sync }
+    let(:pulp3_metadata_generate_action_class) { ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata }
 
     it 'plans' do
       action = create_action action_class
@@ -385,6 +387,24 @@ module ::Actions::Katello::Repository
       assert_action_planed_with(action, Actions::Pulp::Repository::Download, pulp_id: repository.pulp_id,
                                 options: {:verify_all_units => true})
       assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
+    end
+
+    it 'plans pulp3 orchestration actions with file repo' do
+      action = create_action pulp3_action_class
+      action.stubs(:action_subject).with(repository_pulp3)
+      plan_action action, repository_pulp3, proxy, {}
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::Sync, repository_pulp3, proxy, {})
+      assert_action_planed action, ::Actions::Pulp3::Repository::SaveVersion
+      assert_action_planed action, ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata
+    end
+
+    it 'plans pulp3 metadata generate with contents_changed' do
+      action = create_action pulp3_metadata_generate_action_class
+      action.stubs(:action_subject).with(repository_pulp3)
+      plan_action action, repository_pulp3, proxy, :contents_changed => true
+      refute_action_planed action, ::Actions::Pulp3::Repository::CreateVersion
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_pulp3, proxy, :contents_changed => true)
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_pulp3, proxy, :contents_changed => true)
     end
 
     describe 'progress' do

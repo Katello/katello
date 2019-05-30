@@ -2,13 +2,14 @@ module Actions
   module Pulp3
     module Repository
       class SavePublication < Pulp3::Abstract
-        def plan(repository, tasks)
-          plan_self(:repository_id => repository.id, :tasks => tasks)
+        middleware.use Actions::Middleware::ExecuteIfContentsChanged
+        def plan(repository, tasks, options = {})
+          plan_self(:repository_id => repository.id, :tasks => tasks, :contents_changed => options[:contents_changed])
         end
 
         def run
-          if input[:tasks] && input[:tasks].first
-            publication_href = input[:tasks].first[:created_resources].first
+          if input[:tasks] && input[:tasks][:pulp_tasks] && input[:tasks][:pulp_tasks].first
+            publication_href = input[:tasks][:pulp_tasks].first[:created_resources].first
             if publication_href
               repo = ::Katello::Repository.find(input[:repository_id])
               repo.update_attributes(:publication_href => publication_href)

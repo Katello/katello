@@ -59,12 +59,13 @@ module Katello
     end
 
     class ContentType
-      attr_accessor :model_class, :priority, :pulp2_service_class, :index, :user_removable
+      attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :user_removable
 
       def initialize(options)
         self.model_class = options[:model_class]
         self.priority = options[:priority] || 99
         self.pulp2_service_class = options[:pulp2_service_class]
+        self.pulp3_service_class = options[:pulp3_service_class]
         self.index = options[:index].nil? ? true : options[:index]
         self.user_removable = options[:user_removable] || false
       end

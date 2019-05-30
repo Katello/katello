@@ -11,9 +11,7 @@ module Katello
       @manifest_lists = YAML.load_file(MANIFESTS).values.map(&:deep_symbolize_keys)
       @repo = Repository.find(katello_repositories(:redis).id)
 
-      ids = @manifest_lists.map { |attrs| attrs[:_id] }
-      Katello::Pulp::DockerManifestList.stubs(:ids_for_repository).returns(ids)
-      Katello::Pulp::DockerManifestList.stubs(:fetch).returns(@manifest_lists)
+      Katello::Pulp::DockerManifestList.stubs(:pulp_units_batch_for_repo).returns([@manifest_lists])
     end
 
     def test_import_for_repository

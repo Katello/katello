@@ -48,21 +48,22 @@ module Katello
       where(:id => ids)
     end
 
-    def self.import_all(pulp_ids = nil, options = {})
-      ::Katello::DockerTag.destroy_all if pulp_ids.blank?
-      super
-      ::Katello::DockerTag.where(:repository_id => nil).destroy_all
+    def self.import_for_repository(repository)
+      self.where(:repository_id => repository).destroy_all
+      super(repository)
+      pulp_ids = self.where(:repository_id => repository.id).pluck(:pulp_id)
+      import_all(pulp_ids) unless pulp_ids.blank?
+    end
+
+    def self.import_all(pulp_ids = nil)
+      self.destroy_all if pulp_ids.blank?
+      self.where(:repository_id => nil).destroy_all
       if pulp_ids
         repos = ::Katello::Repository.joins(:docker_tags).where("katello_docker_tags.pulp_id" => pulp_ids).distinct
         ::Katello::DockerMetaTag.import_meta_tags(repos)
       else
         ::Katello::DockerMetaTag.import_meta_tags(::Katello::Repository.docker_type)
       end
-    end
-
-    def self.import_for_repository(repository, _force)
-      ::Katello::DockerTag.where(:repository_id => repository).destroy_all
-      super(repository, true)
     end
 
     def self.manage_repository_association

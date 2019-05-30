@@ -4,7 +4,7 @@ module Katello
       include LazyAccessor
 
       PULP_SELECT_FIELDS = %w(name epoch version release arch checksumtype checksum).freeze
-      PULP_INDEXED_FIELDS = %w(name version release arch epoch summary sourcerpm checksum filename _id is_modular).freeze
+      PULP_INDEXED_FIELDS = %w(name version release arch epoch summary sourcerpm checksum filename is_modular).freeze
       CONTENT_TYPE = "rpm".freeze
 
       lazy_accessor :description, :license, :buildhost, :vendor, :relativepath, :children, :checksumtype,

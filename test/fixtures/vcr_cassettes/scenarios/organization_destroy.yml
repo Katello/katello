@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: delete
-    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/scenario_test/
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/repositories/scenario_test/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Content-Type:
       - application/json
   response:
@@ -21,9 +21,9 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Thu, 30 May 2019 10:21:19 GMT
+      - Thu, 30 May 2019 15:33:38 GMT
       Server:
-      - Apache/2.4.6 (CentOS)
+      - Apache
       Content-Length:
       - '172'
       Content-Type:
@@ -32,14 +32,14 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzkxMDdlNmJhLWU3MWItNGUzOS1iYmMyLTVmNzcwZDc5MmVhOC8iLCAi
-        dGFza19pZCI6ICI5MTA3ZTZiYS1lNzFiLTRlMzktYmJjMi01Zjc3MGQ3OTJl
-        YTgifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzLzU1MTVlMDBhLTQ5ZTUtNGFiOC1iZjlkLWQzNTBmYzA2MGUyZi8iLCAi
+        dGFza19pZCI6ICI1NTE1ZTAwYS00OWU1LTRhYjgtYmY5ZC1kMzUwZmMwNjBl
+        MmYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 10:21:19 GMT
+  recorded_at: Thu, 30 May 2019 15:33:38 GMT
 - request:
     method: get
-    uri: https://devel.balmora.example.com/pulp/api/v2/tasks/9107e6ba-e71b-4e39-bbc2-5f770d792ea8/
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/5515e00a-49e5-4ab8-bf9d-d350fc060e2f/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -49,7 +49,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Content-Type:
       - application/json
   response:
@@ -58,15 +58,15 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 30 May 2019 10:21:19 GMT
+      - Thu, 30 May 2019 15:33:38 GMT
       Server:
-      - Apache/2.4.6 (CentOS)
+      - Apache
       Etag:
-      - '"391b94627763dc985e8e9438d563e964-gzip"'
+      - '"900d81e3bdf87397ac0309bc15d833e7-gzip"'
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '652'
+      - '546'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -74,24 +74,22 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy85MTA3ZTZiYS1lNzFiLTRlMzktYmJjMi01Zjc3MGQ3OTJl
-        YTgvIiwgInRhc2tfaWQiOiAiOTEwN2U2YmEtZTcxYi00ZTM5LWJiYzItNWY3
-        NzBkNzkyZWE4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        aS92Mi90YXNrcy81NTE1ZTAwYS00OWU1LTRhYjgtYmY5ZC1kMzUwZmMwNjBl
+        MmYvIiwgInRhc2tfaWQiOiAiNTUxNWUwMGEtNDllNS00YWI4LWJmOWQtZDM1
+        MGZjMDYwZTJmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
         b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
         OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBu
         dWxsLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwg
-        InByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVz
-        b3VyY2Vfd29ya2VyLTBAZGV2ZWwuYmFsbW9yYS5leGFtcGxlLmNvbS5kcTIi
-        LCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZl
-        ZF9yZXNvdXJjZV93b3JrZXItMEBkZXZlbC5iYWxtb3JhLmV4YW1wbGUuY29t
-        IiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRv
-        aWQiOiAiNWNlZmFlOWZjMzhlYjVjOGY5ZmY1ZmZhIn0sICJpZCI6ICI1Y2Vm
-        YWU5ZmMzOGViNWM4ZjlmZjVmZmEifQ==
+        InByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAiIiwgInN0YXRlIjog
+        IndhaXRpbmciLCAid29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0IjogbnVs
+        bCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1Y2VmZjdkMmRm
+        OTY5NGJiMTViOWZhMTgifSwgImlkIjogIjVjZWZmN2QyZGY5Njk0YmIxNWI5
+        ZmExOCJ9
     http_version: 
-  recorded_at: Thu, 30 May 2019 10:21:19 GMT
+  recorded_at: Thu, 30 May 2019 15:33:38 GMT
 - request:
     method: get
-    uri: https://devel.balmora.example.com/pulp/api/v2/tasks/9107e6ba-e71b-4e39-bbc2-5f770d792ea8/
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/5515e00a-49e5-4ab8-bf9d-d350fc060e2f/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -101,7 +99,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Content-Type:
       - application/json
   response:
@@ -110,15 +108,15 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 30 May 2019 10:21:19 GMT
+      - Thu, 30 May 2019 15:33:38 GMT
       Server:
-      - Apache/2.4.6 (CentOS)
+      - Apache
       Etag:
-      - '"f54a48b4810b2ee214bbe35dd51a76ab-gzip"'
+      - '"bb76a5fa5b9d5cc1e4024982694de39e-gzip"'
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '670'
+      - '684'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -126,24 +124,25 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy85MTA3ZTZiYS1lNzFiLTRlMzktYmJjMi01Zjc3MGQ3OTJl
-        YTgvIiwgInRhc2tfaWQiOiAiOTEwN2U2YmEtZTcxYi00ZTM5LWJiYzItNWY3
-        NzBkNzkyZWE4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        aS92Mi90YXNrcy81NTE1ZTAwYS00OWU1LTRhYjgtYmY5ZC1kMzUwZmMwNjBl
+        MmYvIiwgInRhc2tfaWQiOiAiNTUxNWUwMGEtNDllNS00YWI4LWJmOWQtZDM1
+        MGZjMDYwZTJmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
         b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
         OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAi
-        MjAxOS0wNS0zMFQxMDoyMToxOVoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
+        MjAxOS0wNS0zMFQxNTozMzozOFoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
         YXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVl
-        dWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZGV2ZWwuYmFsbW9y
-        YS5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAicnVubmluZyIsICJ3b3Jr
-        ZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBkZXZlbC5i
-        YWxtb3JhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6
-        IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWNlZmFlOWZjMzhlYjVjOGY5ZmY1
-        ZmZhIn0sICJpZCI6ICI1Y2VmYWU5ZmMzOGViNWM4ZjlmZjVmZmEifQ==
+        dWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1kZXZl
+        bDIuc2FtaXIuZXhhbXBsZS5jb20uZHEyIiwgInN0YXRlIjogInJ1bm5pbmci
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBA
+        Y2VudG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20iLCAicmVzdWx0Ijog
+        bnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1Y2VmZjdk
+        MmRmOTY5NGJiMTViOWZhMTgifSwgImlkIjogIjVjZWZmN2QyZGY5Njk0YmIx
+        NWI5ZmExOCJ9
     http_version: 
-  recorded_at: Thu, 30 May 2019 10:21:19 GMT
+  recorded_at: Thu, 30 May 2019 15:33:38 GMT
 - request:
     method: get
-    uri: https://devel.balmora.example.com/pulp/api/v2/tasks/9107e6ba-e71b-4e39-bbc2-5f770d792ea8/
+    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/5515e00a-49e5-4ab8-bf9d-d350fc060e2f/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -153,7 +152,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Content-Type:
       - application/json
   response:
@@ -162,15 +161,15 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 30 May 2019 10:21:19 GMT
+      - Thu, 30 May 2019 15:33:38 GMT
       Server:
-      - Apache/2.4.6 (CentOS)
+      - Apache
       Etag:
-      - '"0a687b5628ff5d87f28adfeb48a77d1f-gzip"'
+      - '"3aa40868e75868998bf43b9787a779d5-gzip"'
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '689'
+      - '703'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -178,25 +177,25 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy85MTA3ZTZiYS1lNzFiLTRlMzktYmJjMi01Zjc3MGQ3OTJl
-        YTgvIiwgInRhc2tfaWQiOiAiOTEwN2U2YmEtZTcxYi00ZTM5LWJiYzItNWY3
-        NzBkNzkyZWE4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        aS92Mi90YXNrcy81NTE1ZTAwYS00OWU1LTRhYjgtYmY5ZC1kMzUwZmMwNjBl
+        MmYvIiwgInRhc2tfaWQiOiAiNTUxNWUwMGEtNDllNS00YWI4LWJmOWQtZDM1
+        MGZjMDYwZTJmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
         b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
-        OiAiMjAxOS0wNS0zMFQxMDoyMToxOVoiLCAiX25zIjogInRhc2tfc3RhdHVz
-        IiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wNS0zMFQxMDoyMToxOVoiLCAidHJh
+        OiAiMjAxOS0wNS0zMFQxNTozMzozOFoiLCAiX25zIjogInRhc2tfc3RhdHVz
+        IiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wNS0zMFQxNTozMzozOFoiLCAidHJh
         Y2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNz
         X3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTBAZGV2ZWwuYmFsbW9yYS5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUi
-        OiAiZmluaXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3Vy
-        Y2Vfd29ya2VyLTBAZGV2ZWwuYmFsbW9yYS5leGFtcGxlLmNvbSIsICJyZXN1
-        bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVj
-        ZWZhZTlmYzM4ZWI1YzhmOWZmNWZmYSJ9LCAiaWQiOiAiNWNlZmFlOWZjMzhl
-        YjVjOGY5ZmY1ZmZhIn0=
+        a2VyLTBAY2VudG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5jb20uZHEyIiwg
+        InN0YXRlIjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVk
+        X3Jlc291cmNlX3dvcmtlci0wQGNlbnRvczctZGV2ZWwyLnNhbWlyLmV4YW1w
+        bGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQi
+        OiB7IiRvaWQiOiAiNWNlZmY3ZDJkZjk2OTRiYjE1YjlmYTE4In0sICJpZCI6
+        ICI1Y2VmZjdkMmRmOTY5NGJiMTViOWZhMTgifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 10:21:19 GMT
+  recorded_at: Thu, 30 May 2019 15:33:38 GMT
 - request:
     method: delete
-    uri: https://devel.balmora.example.com:8443/candlepin/environments/d80a5783c502f0f969e23089437bb7ce
+    uri: https://centos7-devel2.samir.example.com:8443/candlepin/environments/d80a5783c502f0f969e23089437bb7ce
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -206,11 +205,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD", oauth_nonce="8FUVhLGliBoQ0YuhBc6XvgsZdmySKtPzbfplFN9VUo",
-        oauth_signature="ZB0mRw7H0h0cEHiHioPbj3wA8Ic%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1559211679", oauth_version="1.0"
+      - OAuth oauth_consumer_key="7AHaN3UJsZubdCVAxCja8wTLotxnwNG3", oauth_nonce="QBPEGQ1rEe5A2gnbg1q9J43KDN9gh5TqyJrCh39dMQ",
+        oauth_signature="8A9bq5JDLSS85%2Fu45yJ1KiEHkac%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1559230418", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -221,19 +220,19 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 92c0dc29-96ae-4200-b423-56ab729844de
+      - 2227d06d-ec47-4cf7-957d-14411e770ada
       X-Version:
       - 2.6.5-1
       Date:
-      - Thu, 30 May 2019 10:21:19 GMT
+      - Thu, 30 May 2019 15:33:38 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Thu, 30 May 2019 10:21:19 GMT
+  recorded_at: Thu, 30 May 2019 15:33:38 GMT
 - request:
     method: delete
-    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/content/1559211615167
+    uri: https://centos7-devel2.samir.example.com:8443/candlepin/owners/scenario_test/content/1559230354273
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -243,11 +242,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD", oauth_nonce="odeL3TM1ELMPBhFj99oFhEFeVL4QSUtiddKootxZxg",
-        oauth_signature="qJopRU%2FXCDc7o8MBWWfoZ4%2FAECg%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1559211679", oauth_version="1.0"
+      - OAuth oauth_consumer_key="7AHaN3UJsZubdCVAxCja8wTLotxnwNG3", oauth_nonce="ti4vUeceaq5DtD3Pz7CkwXFhcRSXxiBN7irbjnVW0g",
+        oauth_signature="A1uSM075PGzPzq7ZUscjYPVwzs0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1559230418", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -262,19 +261,19 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 51e90160-e03f-41f8-af01-7afe628545db
+      - 9b3fc227-15ae-41c3-8c4a-dc05f7ce5ffc
       X-Version:
       - 2.6.5-1
       Date:
-      - Thu, 30 May 2019 10:21:19 GMT
+      - Thu, 30 May 2019 15:33:38 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Thu, 30 May 2019 10:21:19 GMT
+  recorded_at: Thu, 30 May 2019 15:33:38 GMT
 - request:
     method: delete
-    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test
+    uri: https://centos7-devel2.samir.example.com:8443/candlepin/owners/scenario_test
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -284,11 +283,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="AE992kqHucTXo8KrGY9nA4HyiPVvHbYD", oauth_nonce="ClypwnBCvr1oJKdn4F1nXUEu1T65llqIw5TFCbThQg",
-        oauth_signature="QdtKayS7gl3Aswa3u78BbmX8VXs%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1559211679", oauth_version="1.0"
+      - OAuth oauth_consumer_key="7AHaN3UJsZubdCVAxCja8wTLotxnwNG3", oauth_nonce="BCU6SDhFoxMdk2skKpkgTvWXzBdSEGLTUiB2QerjtzA",
+        oauth_signature="01AogJTeZ%2BEOTzoI%2B1ENHVpG4iU%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1559230418", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -299,14 +298,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 8698a1f2-146e-40c7-8043-7cba386b438f
+      - 7865dc48-af21-4906-9108-3fb1f7c7ac07
       X-Version:
       - 2.6.5-1
       Date:
-      - Thu, 30 May 2019 10:21:19 GMT
+      - Thu, 30 May 2019 15:33:38 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Thu, 30 May 2019 10:21:19 GMT
+  recorded_at: Thu, 30 May 2019 15:33:39 GMT
 recorded_with: VCR 3.0.3

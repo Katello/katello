@@ -30,6 +30,15 @@ module Katello
         repository_types[repository_type.to_s]
       end
 
+      def find_repository_type(katello_label)
+        repository_types.values.each do |repo_type|
+          repo_type.content_types.each do |content_type|
+            return repo_type if content_type.model_class::CONTENT_TYPE == katello_label.to_s
+          end
+        end
+        nil
+      end
+
       def find_content_type(katello_label)
         repository_types.values.each do |repo_type|
           repo_type.content_types.each do |content_type|
@@ -37,6 +46,14 @@ module Katello
           end
         end
         nil
+      end
+
+      def model_class(pulp_service_class)
+        repository_types.values.each do |repo_type|
+          repo_type.content_types.each do |content_type|
+            return content_type.model_class if (content_type.pulp2_service_class == pulp_service_class || content_type.pulp3_service_class == pulp_service_class)
+          end
+        end
       end
 
       def find_content_type!(katello_label)

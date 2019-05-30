@@ -133,6 +133,13 @@ module Katello
           {}
         end
       end
+
+      def lookup_version(href)
+        pulp3_api.repositories_versions_read href
+      rescue PulpcoreClient::ApiError => e
+        Rails.logger.error "Exception when calling RepositoriesApi->repositories_versions_read: #{e}"
+        nil
+      end
     end
   end
 end

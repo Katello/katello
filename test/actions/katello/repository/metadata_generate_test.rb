@@ -14,7 +14,7 @@ module Actions
     let(:content_view_puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
     let(:action_options) do
       { :force => false,
-        :matching_content => nil,
+        :matching_content => false,
         :source_repository => nil,
         :dependency => nil,
         :repository_creation => false
@@ -61,6 +61,16 @@ module Actions
       yum_action_options[:source_repository] = yum_repo2
       assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
             yum_action_options)
+    end
+
+    it 'plans a yum refresh with matching content true' do
+      action = create_action(action_class)
+      plan_action(action, yum_repo, :matching_content => true)
+
+      yum_action_options = action_options.clone
+      yum_action_options[:matching_content] = true
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+                                yum_action_options)
     end
   end
 end

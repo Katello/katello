@@ -55,85 +55,49 @@ module Katello
         content_unit_class.new(pulp_id)
       end
 
-      # Import all units of a single type and refresh their repository associations
-      def import_all(pulp_ids = nil, options = {})
-        index_repository_association = options.fetch(:index_repository_association, true) && self.manage_repository_association
-        service_class = SmartProxy.pulp_master!.content_service(content_type)
-
-        process_block = lambda do |units|
-          units.each do |unit|
-            unit = unit.with_indifferent_access
-            model = Katello::Util::Support.active_record_retry do
-              self.where(:pulp_id => unit['_id']).first_or_create
-            end
-
-            service = service_class.new(model.pulp_id)
-            service.backend_data = unit
-            service.update_model(model)
-          end
-          if index_repository_association
-            units.map { |unit| unit.slice('_id', 'repository_memberships') }
-          else
-            units.count
-          end
-        end
-
-        if pulp_ids
-          results = content_unit_class.fetch_by_uuids(pulp_ids, &process_block).flatten
-          update_repository_associations(results, true) if index_repository_association
-        else
-          results = content_unit_class.fetch_all(&process_block).flatten
-          update_repository_associations(results) if index_repository_association
-        end
-      end
-
-      def import_for_repository(repository, force = false)
-        ids = content_unit_class.ids_for_repository(repository.pulp_id)
-        # Rpms cannot change in Pulp so we do not index them if they are already present
-        # in our database. Errata and Package Groups can change in Pulp, so we index
-        # all of them in the repository on each sync.
-        if immutable_unit_types.include?(self) && !force
-          ids_to_import = ids - repository.rpms.map(&:pulp_id)
-        else
-          ids_to_import = ids
-        end
-        self.import_all(ids_to_import, :index_repository_association => false) if repository.content_view.default? || force
-        self.sync_repository_associations(repository, :pulp_ids => ids) if self.manage_repository_association
-      end
-
       def unit_id_field
         "#{self.name.demodulize.underscore}_id"
       end
 
-      def copy_repository_associations(source_repo, dest_repo)
-        if manage_repository_association
-          delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
-                         #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
-
-          insert_query = "insert into #{repository_association_class.table_name} (repository_id, #{unit_id_field})
-                          select #{dest_repo.id} as repository_id, #{unit_id_field} from #{repository_association_class.table_name}
-                          where repository_id = #{source_repo.id} and #{unit_id_field} not in (select #{unit_id_field}
-                          from #{repository_association_class.table_name} where repository_id = #{dest_repo.id})"
-        else
-          columns = column_names - ["id", "pulp_id", "created_at", "updated_at", "repository_id"]
-
-          delete_query = "delete from #{self.table_name} where repository_id = #{dest_repo.id} and
-                          pulp_id not in (select pulp_id from #{self.table_name} where repository_id = #{source_repo.id})"
-          insert_query = "insert into #{self.table_name} (repository_id, pulp_id, #{columns.join(',')})
-                    select #{dest_repo.id} as repository_id, pulp_id, #{columns.join(',')} from #{self.table_name}
-                    where repository_id = #{source_repo.id} and pulp_id not in (select pulp_id
-                    from #{self.table_name} where repository_id = #{dest_repo.id})"
-
+      def import_all(pulp_ids = nil, repository = nil)
+        ids_to_associate = []
+        service_class = SmartProxy.pulp_master!.content_service(content_type)
+        service_class.pulp_units_batch_all(pulp_ids).each do |units|
+          units.each do |unit|
+            unit = unit.with_indifferent_access
+            model = Katello::Util::Support.active_record_retry do
+              self.where(:pulp_id => unit[service_class.unit_identifier]).first_or_create
+            end
+            service = service_class.new(model.pulp_id)
+            service.backend_data = unit
+            service.update_model(model)
+            ids_to_associate << model.pulp_id
+          end
         end
-        ActiveRecord::Base.connection.execute(delete_query)
-        ActiveRecord::Base.connection.execute(insert_query)
+        sync_repository_associations(repository, :pulp_ids => ids_to_associate, :additive => true) if self.manage_repository_association && repository && ids_to_associate.present?
+      end
+
+      def import_for_repository(repository)
+        pulp_ids = []
+        service_class = SmartProxy.pulp_master!.content_service(content_type)
+        service_class.pulp_units_batch_for_repo(repository).each do |units|
+          units.each do |unit|
+            unit = unit.with_indifferent_access
+            model = Katello::Util::Support.active_record_retry do
+              self.where(:pulp_id => unit[service_class.unit_identifier]).first_or_create
+            end
+            service = service_class.new(model.pulp_id)
+            service.backend_data = unit
+            service.update_model(model)
+            pulp_ids << model.pulp_id
+          end
+        end
+        sync_repository_associations(repository, :pulp_ids => pulp_ids) if self.manage_repository_association
       end
 
       def sync_repository_associations(repository, options = {})
         additive = options.fetch(:additive, false)
-        associated_ids = options.fetch(:ids, nil)
-        pulp_ids = options.fetch(:pulp_ids) if associated_ids.nil?
-
+        pulp_ids = options.fetch(:pulp_ids)
         associated_ids = with_pulp_id(pulp_ids).pluck(:id) if pulp_ids
 
         table_name = self.repository_association_class.table_name
@@ -163,27 +127,32 @@ module Katello
         end
       end
 
-      def with_pulp_id(unit_pulp_ids)
-        where(:pulp_id => unit_pulp_ids)
+      def copy_repository_associations(source_repo, dest_repo)
+        if manage_repository_association
+          delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
+                         #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
+
+          insert_query = "insert into #{repository_association_class.table_name} (repository_id, #{unit_id_field})
+                          select #{dest_repo.id} as repository_id, #{unit_id_field} from #{repository_association_class.table_name}
+                          where repository_id = #{source_repo.id} and #{unit_id_field} not in (select #{unit_id_field}
+                          from #{repository_association_class.table_name} where repository_id = #{dest_repo.id})"
+        else
+          columns = column_names - ["id", "pulp_id", "created_at", "updated_at", "repository_id"]
+
+          delete_query = "delete from #{self.table_name} where repository_id = #{dest_repo.id} and
+                          pulp_id not in (select pulp_id from #{self.table_name} where repository_id = #{source_repo.id})"
+          insert_query = "insert into #{self.table_name} (repository_id, pulp_id, #{columns.join(',')})
+                    select #{dest_repo.id} as repository_id, pulp_id, #{columns.join(',')} from #{self.table_name}
+                    where repository_id = #{source_repo.id} and pulp_id not in (select pulp_id
+                    from #{self.table_name} where repository_id = #{dest_repo.id})"
+
+        end
+        ActiveRecord::Base.connection.execute(delete_query)
+        ActiveRecord::Base.connection.execute(insert_query)
       end
 
-      def update_repository_associations(units_json, additive = false)
-        ActiveRecord::Base.transaction do
-          repo_unit_id = {}
-          repo_cache = {}
-          units_json.each do |unit_json|
-            unit_json['repository_memberships'].each do |repo_pulp_id|
-              if (repo_cache[repo_pulp_id] ||= Repository.exists?(:pulp_id => repo_pulp_id))
-                repo_unit_id[repo_pulp_id] ||= []
-                repo_unit_id[repo_pulp_id] << unit_json['_id']
-              end
-            end
-          end
-
-          repo_unit_id.each do |repo_pulp_id, unit_pulp_ids|
-            sync_repository_associations(Repository.find_by(:pulp_id => repo_pulp_id), :pulp_ids => unit_pulp_ids, :additive => additive)
-          end
-        end
+      def with_pulp_id(unit_pulp_ids)
+        where(:pulp_id => unit_pulp_ids)
       end
     end
   end
