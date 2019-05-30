@@ -59,20 +59,22 @@ module Katello
         "#{self.name.demodulize.underscore}_id"
       end
 
-      # Don't know if this makes any sense anymore if we do not update repository associations?
-      def import_all(pulp_ids = nil)
+      def import_all(pulp_ids = nil, repository = nil)
+        ids_to_associate = []
         service_class = SmartProxy.pulp_master!.content_service(content_type)
         service_class.pulp_units_batch_all(pulp_ids).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
             model = Katello::Util::Support.active_record_retry do
-              self.where(:pulp_id => unit['_id']).first_or_create
+              self.where(:pulp_id => unit[service_class.unit_identifier]).first_or_create
             end
             service = service_class.new(model.pulp_id)
             service.backend_data = unit
             service.update_model(model)
+            ids_to_associate << model.pulp_id
           end
         end
+        sync_repository_associations(repository, :pulp_ids => ids_to_associate, :additive => true) if self.manage_repository_association && repository && ids_to_associate.present?
       end
 
       def import_for_repository(repository)
@@ -81,9 +83,8 @@ module Katello
         service_class.pulp_units_batch_for_repo(repository).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
-            unit['_id'] = unit[service_class.unit_identifier]
             model = Katello::Util::Support.active_record_retry do
-              self.where(:pulp_id => unit['_id']).first_or_create
+              self.where(:pulp_id => unit[service_class.unit_identifier]).first_or_create
             end
             service = service_class.new(model.pulp_id)
             service.backend_data = unit
@@ -95,6 +96,7 @@ module Katello
       end
 
       def sync_repository_associations(repository, options = {})
+        additive = options.fetch(:additive, false)
         pulp_ids = options.fetch(:pulp_ids)
         associated_ids = with_pulp_id(pulp_ids).pluck(:id) if pulp_ids
 
@@ -109,7 +111,7 @@ module Katello
 
         queries = []
 
-        if delete_ids.any?
+        if delete_ids.any? && !additive
           queries << "DELETE FROM #{table_name} WHERE repository_id=#{repository.id} AND #{attribute_name} IN (#{delete_ids.join(', ')})"
         end
 

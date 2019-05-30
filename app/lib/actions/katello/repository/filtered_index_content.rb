@@ -20,9 +20,9 @@ module Actions
           elsif repo.file?
             ::Katello::FileUnit.import_for_repository(repo)
           elsif repo.deb?
-            ::Katello::Deb.import_all(unit_ids)
+            ::Katello::Deb.import_all(unit_ids, repo)
           else
-            ::Katello::Rpm.import_all(unit_ids)
+            ::Katello::Rpm.import_all(unit_ids, repo)
           end
         end
 
