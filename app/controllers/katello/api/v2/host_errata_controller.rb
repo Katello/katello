@@ -17,6 +17,18 @@ module Katello
       Erratum
     end
 
+    def_param_group :bulk_errata_ids do
+      param :included, Hash, :desc => N_("Errata to exclusively include in the action"), :required => true, :action_aware => true do
+        param :search, String, :required => false, :desc => N_("Search string for erratum to perform an action on")
+        param :ids, Array, :required => false, :desc => N_("List of errata ids to perform an action on, (ex: RHSA-2019:1168)")
+      end
+      param :excluded, Hash, :desc => N_("Errata to explicitly exclude in the action."\
+                                         " All other applicable errata will be included in the action,"\
+                                         " unless an included parameter is passed as well."), :required => true, :action_aware => true do
+        param :ids, Array, :required => false, :desc => N_("List of errata ids to exclude and not run an action on, (ex: RHSA-2019:1168)")
+      end
+    end
+
     api :GET, "/hosts/:host_id/errata", N_("List errata available for the content host")
     param :host_id, :number, :desc => N_("UUID of the content host"), :required => true
     param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
@@ -39,9 +51,11 @@ module Katello
 
     api :PUT, "/hosts/:host_id/errata/apply", N_("Schedule errata for installation")
     param :host_id, :number, :desc => N_("Host ID"), :required => true
-    param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => true
+    param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => false, :deprecated => true
+
+    param_group :bulk_errata_ids
     def apply
-      task = async_task(::Actions::Katello::Host::Erratum::Install, @host, params[:errata_ids])
+      task = async_task(::Actions::Katello::Host::Erratum::Install, @host, @errata_ids)
       respond_for_async :resource => task
     end
 
@@ -59,6 +73,34 @@ module Katello
     def applicability
       task = async_task(::Actions::Katello::Host::GenerateApplicability, [@host], false)
       respond_for_async :resource => task
+    end
+
+    def find_bulk_errata_ids(bulk_params)
+      #works on a structure of param_group bulk_params and transforms it into a list of errata_ids
+      bulk_params[:included] ||= {}
+      bulk_params[:excluded] ||= {}
+      @errata = []
+
+      unless bulk_params[:included][:ids].blank?
+        @errata = @host.content_facet.installable_errata.where(:errata_id => bulk_params[:included][:ids])
+      end
+
+      if bulk_params[:included][:search]
+        search_errata = @host.content_facet.installable_errata
+        search_errata = search_errata.search_for(bulk_params[:included][:search])
+        if @errata.any?
+          @errata = ::Katello::Erratum.where(errata_id: @errata).or(::Katello::Erratum.where(errata_id: search_errata))
+        else
+          @errata = search_errata
+        end
+      end
+
+      @errata = @errata.where.not(errata_id: bulk_params[:excluded][:ids]) unless @errata.empty? || bulk_params[:excluded][:ids].blank?
+
+      if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
+        fail HttpErrors::BadRequest, _("No errata has been specified.")
+      end
+      @errata.pluck(:errata_id)
     end
 
     protected
@@ -94,8 +136,13 @@ module Katello
     end
 
     def find_errata_ids
-      missing = params[:errata_ids] - Erratum.where(:errata_id => params[:errata_ids]).pluck(:errata_id)
-      fail HttpErrors::NotFound, _("Couldn't find errata ids '%s'") % missing.to_sentence if missing.any?
+      if params[:errata_ids]
+        missing = params[:errata_ids] - Erratum.where(:errata_id => params[:errata_ids]).pluck(:errata_id)
+        fail HttpErrors::NotFound, _("Couldn't find errata ids '%s'") % missing.to_sentence if missing.any?
+        @errata_ids = params[:errata_ids]
+      else
+        @errata_ids = find_bulk_errata_ids(params[:bulk_errata_ids])
+      end
     end
   end
 end

@@ -37,6 +37,7 @@ describe('Controller: ContentHostErrataController', function() {
             $promise: {then: function(callback) {callback(host)}}
         };
         Nutupane = function() {
+
             this.table = {
                 showColumns: function() {},
                 getSelected: function() {return [mockErratum];},
@@ -47,6 +48,7 @@ describe('Controller: ContentHostErrataController', function() {
             this.refresh = function() {nutupaneMock.refresh()};
             this.load = function () {nutupaneMock.load()};
             this.enableSelectAllResults = function () {};
+            this.getAllSelectedResults = function() {return [mockErratum];}
         };
         HostErratum = {
             get: function() {return []},
@@ -97,7 +99,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn($scope.table, "selectAll");
         spyOn($scope, "transitionTo");
         $scope.applySelected();
-        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, errata_ids: [mockErratum.errata_id]},
+        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, bulk_errata_ids: [{errata_id: mockErratum.errata_id}]},
                                                          jasmine.any(Function));
         expect($scope.transitionTo).toHaveBeenCalledWith('content-host.tasks.details', {taskId: mockTask.id});
         expect($scope.table.selectAll).toHaveBeenCalledWith(false);
