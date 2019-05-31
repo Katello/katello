@@ -51,17 +51,24 @@ module ::Actions::Pulp3
       refute_equal version_href, @repo.reload.version_href
     end
 
+    def test_empty_content_args_doesnt_update_version_href
+      version_href = @repo.reload.version_href
+      remove_content_args = {contents: []}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
+      assert_equal version_href, @repo.reload.version_href
+    end
+
     def test_empty_content_args
       remove_content_args = {contents: []}
       remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       assert_equal "success", remove_action.result
     end
 
-    def test_incorrect_content_units
+    def test_incorrect_content_units_doesnt_update_version_href
+      version_href = @repo.reload.version_href
       remove_content_args = {contents: [ "not an id"]}
-      assert_raises ForemanTasks::TaskError do
-        ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
-      end
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
+      assert_equal version_href, @repo.reload.version_href
     end
   end
 end
