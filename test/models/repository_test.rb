@@ -86,7 +86,7 @@ module Katello
       @fedora_17_x86_64_dev.errata << erratum
       @fedora_17_x86_64_dev.save!
 
-      errata = @fedora_17_x86_64_dev.test_remove_partial_errata!
+      errata = @fedora_17_x86_64_dev.remove_partial_errata!
       assert_includes errata, erratum
       assert_not_includes @fedora_17_x86_64_dev.reload.errata, erratum
     end
