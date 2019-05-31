@@ -21,7 +21,6 @@ module Actions
 
           sequence do
             remove_content_args = {
-              :repo_id => repository.id,
               :contents => content_unit_ids,
               :content_unit_type => content_unit_type}
 
