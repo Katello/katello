@@ -1,0 +1,169 @@
+---
+document: modulemd
+version: 2
+data:
+  name: kangaroo
+  stream: 0
+  version: 20180730223407
+  context: deadbeef
+  arch: noarch
+  summary: Kangaroo 0.3 module
+  description: >-
+    A module for the kangaroo 0.3 package
+  license:
+    module:
+      - MIT
+  profiles:
+    default:
+      rpms:
+        - kangaroo
+  artifacts:
+    rpms:
+      - kangaroo-0:0.3-1.noarch
+...
+---
+document: modulemd
+version: 2
+data:
+  name: kangaroo
+  stream: 0
+  version: 20180704111719
+  context: deadbeef
+  arch: noarch
+  summary: Kangaroo 0.2 module
+  description: >-
+    A module for the kangaroo 0.2 package
+  license:
+    module:
+      - MIT
+  profiles:
+    default:
+      rpms:
+        - kangaroo
+  artifacts:
+    rpms:
+      - kangaroo-0:0.2-1.noarch
+...
+---
+document: modulemd
+version: 2
+data:
+  name: duck
+  stream: 0
+  version: 20180730233102
+  context: deadbeef
+  arch: noarch
+  summary: Duck 0.7 module
+  description: >-
+    A module for the duck 0.7 package
+  license:
+    module:
+      - MIT
+  profiles:
+    default:
+      rpms:
+        - duck
+  artifacts:
+    rpms:
+      - duck-0:0.7-1.noarch
+...
+---
+document: modulemd
+version: 2
+data:
+  name: duck
+  stream: 0
+  version: 20180704244205
+  context: deadbeef
+  arch: noarch
+  summary: Duck 0.6 module
+  description: >-
+    A module for the duck 0.6 package
+  license:
+    module:
+      - MIT
+  profiles:
+    default:
+      rpms:
+        - duck
+  artifacts:
+    rpms:
+      - duck-0:0.6-1.noarch
+...
+---
+document: modulemd
+version: 2
+data:
+  name: walrus
+  stream: 5.21
+  version: 20180704144203
+  context: deadbeef
+  arch: x86_64
+  summary: Walrus 5.21 module
+  description: >-
+    A module for the walrus 5.21 package
+  license:
+    module:
+      - MIT
+  profiles:
+    default:
+      rpms:
+        - walrus
+  artifacts:
+    rpms:
+      - walrus-0:5.21-1.noarch
+...
+---
+document: modulemd
+version: 2
+data:
+  name: walrus
+  stream: 0.71
+  version: 20180707144203
+  context: c0ffee42
+  arch: x86_64
+  summary: Walrus 0.71 module
+  description: >-
+    A module for the walrus 0.71 package
+  license:
+    module:
+      - MIT
+  profiles:
+    default:
+      rpms:
+        - walrus
+    flipper:
+      rpms:
+        - walrus
+  artifacts:
+    rpms:
+      - walrus-0:0.71-1.noarch
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+  module: walrus
+  stream: 0.71
+  profiles:
+    5.21: [default]
+    0.71: [flipper]
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+  module: duck
+  stream: 0
+  profiles:
+    0: [default]
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+  module: kangaroo
+  stream: 0
+  profiles:
+    0: [default]
+...
