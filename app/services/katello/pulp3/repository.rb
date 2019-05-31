@@ -146,6 +146,12 @@ module Katello
         Rails.logger.error "Exception when calling RepositoriesApi->repositories_versions_read: #{e}"
         nil
       end
+
+      def remove_content(content_units)
+        data = PulpcoreClient::RepositoryVersionCreate.new(
+          remove_content_units: content_units.map(&:pulp_id))
+        pulp3_api.repositories_versions_create(repository_reference.repository_href, data)
+      end
     end
   end
 end
