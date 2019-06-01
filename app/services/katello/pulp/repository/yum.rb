@@ -132,8 +132,6 @@ module Katello
           true
         end
 
-        private
-
         def purge_partial_errata
           task = nil
           repo.remove_partial_errata! do |errata_to_delete|
@@ -143,6 +141,7 @@ module Katello
           task
         end
 
+        private
         def purge_empty_package_groups
           rpm_names = repo.rpms.pluck(:name).uniq
 
