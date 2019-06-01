@@ -185,21 +185,26 @@ module Katello
         end
 
         def test_copy_rpm_filenames
-          TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv, :rpm_filenames => ['walrus-0.3-0.8.noarch.rpm']))
+          @custom.index_content
+          TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv, :rpm_filenames => [@custom.rpms.non_modular.first.filename]))
           counts = SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
 
-          assert_equal 1, counts[:rpm]
-          assert_equal 3, counts[:erratum]
+          assert_equal 1 + @custom.rpms.modular.count, counts[:rpm]
+          assert_equal @custom.errata.count, counts[:erratum]
         end
 
         def test_errata_filter
           @custom.index_content
           filter = Katello::ContentViewErratumFilter.create!(:inclusion => true, :content_view_id => @custom_cv.content_view.id, :name => 'asdf')
-          filter.erratum_rules << Katello::ContentViewErratumFilterRule.new(:errata_id => 'RHEA-2010:0002')
+          filter.erratum_rules << Katello::ContentViewErratumFilterRule.new(:errata_id => 'KATELLO-RHEA-2010:0002')
           TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv, :filters => Katello::ContentViewErratumFilter.where(:id => filter.id)))
+          @custom_cv.index_content
+          @custom_cv = @custom_cv.reload
+          TaskSupport.wait_on_tasks(@custom_cv.backend_service(@master).purge_empty_contents)
           counts = SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
-          assert_equal 1, counts[:rpm]
-          assert_equal 3, counts[:erratum]
+
+          assert_equal 1 + @custom.rpms.modular.count, counts[:rpm]
+          assert_equal 1 + @custom.errata.modular.count, counts[:erratum]
         end
       end
     end

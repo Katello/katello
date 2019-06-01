@@ -51,7 +51,7 @@ module Katello
     scope :security, -> { of_type(Erratum::SECURITY) }
     scope :bugfix, -> { of_type(Erratum::BUGZILLA) }
     scope :enhancement, -> { of_type(Erratum::ENHANCEMENT) }
-    scope :modular, -> { joins(:packages => :module_stream_errata_packages) }
+    scope :modular, -> { where(:id => Erratum.joins(:packages => :module_stream_errata_packages)) }
     scope :non_modular, -> { where.not(:id => modular) }
 
     def self.repository_association_class
