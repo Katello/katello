@@ -38,5 +38,10 @@ module Katello
       assert_includes FileUnit.with_identifiers([@file_one.id]), @file_one
       assert_includes FileUnit.with_identifiers(@file_one.pulp_id), @file_one
     end
+
+    def test_large_query
+      ids = ['href'] * 70_000 + [@file_one.pulp_id]
+      assert_equal 1, FileUnit.with_pulp_id(ids).count
+    end
   end
 end

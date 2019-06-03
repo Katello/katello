@@ -8,6 +8,8 @@ module Katello
       delegate :root, to: :repo
       delegate :pulp3_api, to: :smart_proxy
 
+      COPY_UNIT_PAGE_SIZE = 10_000
+
       def initialize(repo, smart_proxy)
         @repo = repo
         @smart_proxy = smart_proxy
@@ -197,8 +199,20 @@ module Katello
         nil
       end
 
-      def create_version
-        repository_versions_api.create(repository_reference.repository_href, {})
+      def create_version(options = {})
+        repository_versions_api.create(repository_reference.repository_href, options)
+      end
+
+      def copy_units_by_href(unit_hrefs)
+        tasks = []
+        unit_hrefs.each_slice(COPY_UNIT_PAGE_SIZE) do |slice|
+          tasks << create_version(:add_content_units => slice)
+        end
+        tasks
+      end
+
+      def copy_version(from_repository)
+        create_version(:base_version => from_repository.version_href)
       end
 
       def save_distribution_references(hrefs)

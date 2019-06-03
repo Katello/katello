@@ -93,5 +93,41 @@ module Actions
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil, :copy_contents => true,
                                 :metadata_generate => true, :solve_dependencies => false)
     end
+
+    it 'fully plans out a clone with pulp3' do
+      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+
+      cloned_repo = file_repo.build_clone(content_view: version.content_view,
+                                            version: version)
+      file_repo.expects(:build_clone).returns(cloned_repo)
+      options = {}
+
+      tree = plan_action_tree(action_class, [file_repo], version, options)
+      assert_tree_planned_with(tree, Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
+                               :source_version_repo_id => file_repo.id, :target_repo_id => cloned_repo.id)
+    end
+
+    it 'fully plans out unit copying with multiple source repositories' do
+      master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+
+      file_repo2 = katello_repositories(:generic_file_dev)
+      cloned_repo = file_repo.build_clone(content_view: version.content_view,
+                                            version: version)
+      file_repo.expects(:build_clone).returns(cloned_repo)
+      options = {}
+
+      tree = plan_action_tree(action_class, [file_repo, file_repo2], version, options)
+      refute_tree_planned(tree, Actions::Pulp3::Orchestration::Repository::CopyAllUnits)
+
+      assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyVersion,
+                               :source_repository_id => file_repo.id,
+                               :target_repository_id => cloned_repo.id,
+                               :smart_proxy_id => master.id)
+      assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyContent,
+                               :source_repository_id => file_repo2.id,
+                               :target_repository_id => cloned_repo.id,
+                               :smart_proxy_id => master.id,
+                               :filter_ids => [], :solve_dependencies => false, :rpm_filenames => nil)
+    end
   end
 end

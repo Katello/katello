@@ -174,11 +174,65 @@ class ActionController::TestCase
   end
 end
 
+module DynflowFullTreePlanning
+  IGNORED_INPUT = [:remote_user, :remote_cp_user].freeze
+
+  def plan_action_tree(action_class, *args)
+    Rails.application.dynflow.world.plan(action_class, *args)
+  end
+
+  def assert_tree_planned_with(execution_plan, action_class, expected_input)
+    found_steps = execution_plan.run_steps.select { |step| action_class == step.action_class }
+    assert found_steps.any?, "Action #{action_class} was not planned, there were only #{execution_plan.run_steps.map { |s| s.action_class }}"
+
+    input_matched = found_steps.select do |step|
+      step.action(execution_plan).input.except(*IGNORED_INPUT) == expected_input.with_indifferent_access
+    end
+
+    assert input_matched.any?, pretty_print_differences(execution_plan, expected_input, found_steps)
+  end
+
+  def refute_tree_planned(execution_plan, action_class)
+    found_steps = execution_plan.run_steps.select { |step| action_class == step.action_class }
+    assert found_steps.empty?, "Found enexpected action: #{action_class}"
+  end
+
+  def pretty_print_differences(execution_plan, expected_input, steps)
+    output = steps.map do |step|
+      pretty_print_difference(expected_input, step.action(execution_plan).input)
+    end
+    output.join("\n")
+  end
+
+  def pretty_print_value(value)
+    value.nil? ? 'nil' : value
+  end
+
+  def pretty_print_difference(expected_input, actual_input)
+    output = []
+
+    missing_keys = expected_input.keys.map(&:to_sym) - actual_input.keys.map(&:to_sym)
+    output << "Missing input #{missing_keys}, but were missing." if missing_keys.any?
+
+    unexpected_keys = actual_input.keys.map(&:to_sym) - expected_input.keys.map(&:to_sym) - [:remote_user, :remote_cp_user]
+    output << "Unexpected input #{unexpected_keys} present." if unexpected_keys.any?
+
+    expected_input.each do |key, value|
+      if value != actual_input[key]
+        output << "Input #{key} was expected to be #{pretty_print_value(value)}, but instead was #{pretty_print_value(actual_input[key])}."
+      end
+    end
+
+    output.join('  ')
+  end
+end
+
 class ActiveSupport::TestCase
   extend Robottelo::Reporter::TestAttributes
   include FactoryBot::Syntax::Methods
   include FixtureTestCase
   include ForemanTasks::TestHelpers::WithInThreadExecutor
+  include DynflowFullTreePlanning
 
   before do
     stub_ping

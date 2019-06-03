@@ -7,7 +7,7 @@ module Actions
         end
 
         def run
-          version_href = input[:tasks].first[:created_resources].first
+          version_href = input[:tasks].last[:created_resources].first
           repo = ::Katello::Repository.find(input[:repository_id])
           repo_version = repo.backend_service(::SmartProxy.pulp_master).lookup_version version_href
           content_summary = send(:eval, repo_version.content_summary)

@@ -11,7 +11,7 @@ module Actions
       end
 
       def smart_proxy
-        SmartProxy.find(input[:smart_proxy_id])
+        SmartProxy.unscoped.find(input[:smart_proxy_id])
       end
     end
   end
