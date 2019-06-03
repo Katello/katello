@@ -200,7 +200,7 @@ module Katello
           TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv, :filters => Katello::ContentViewErratumFilter.where(:id => filter.id)))
           @custom_cv.index_content
           @custom_cv = @custom_cv.reload
-          TaskSupport.wait_on_tasks(@custom_cv.backend_service(@master).purge_empty_contents)
+          TaskSupport.wait_on_tasks(@custom_cv.backend_service(@master).purge_partial_errata)
           counts = SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
 
           assert_equal 1 + @custom.rpms.modular.count, counts[:rpm]

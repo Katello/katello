@@ -142,6 +142,7 @@ module Katello
         end
 
         private
+
         def purge_empty_package_groups
           rpm_names = repo.rpms.pluck(:name).uniq
 
