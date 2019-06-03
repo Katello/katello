@@ -180,7 +180,7 @@ module ::Actions::Katello::Repository
 
       assert_action_planed_with action, ::Actions::Pulp::Orchestration::Repository::RemoveUnits,
         custom_repository, proxy,
-        repo_id: custom_repository.id, contents: uuids, content_unit_type: "rpm"
+        contents: uuids, content_unit_type: "rpm"
     end
 
     it "does run capsule sync for custom repository" do
@@ -216,7 +216,7 @@ module ::Actions::Katello::Repository
       assert_action_planed_with action,
        Actions::Pulp::Orchestration::Repository::RemoveUnits,
        docker_repo, proxy,
-       repo_id: docker_repo.id, contents: docker_repo.docker_manifests.pluck(:id), content_unit_type: "docker_manifest"
+       contents: docker_repo.docker_manifests.pluck(:id), content_unit_type: "docker_manifest"
     end
   end
 
