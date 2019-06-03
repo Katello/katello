@@ -15,6 +15,7 @@ const Table = ({
   rows,
   editing,
   groupedSubscriptions,
+  toggleSubscriptionGroup,
 }) => {
   const allSubscriptionResults = subscriptions.results;
 
@@ -30,7 +31,7 @@ const Table = ({
       // the group contains more then one subscription
       groupedSubscriptions[rowData.product_id].subscriptions.length > 1,
     isCollapsed: ({ rowData }) => !groupedSubscriptions[rowData.product_id].open,
-    toggle: ({ rowData }) => this.toggleSubscriptionGroup(rowData.product_id),
+    toggle: ({ rowData }) => toggleSubscriptionGroup(rowData.product_id),
   };
 
   const alwaysDisplayColumns = ['select'];
@@ -95,6 +96,7 @@ Table.propTypes = {
     results: PropTypes.array,
   }).isRequired,
   loadSubscriptions: PropTypes.func.isRequired,
+  toggleSubscriptionGroup: PropTypes.func.isRequired,
   selectionController: PropTypes.shape({}).isRequired,
   inlineEditController: PropTypes.shape({
     onCancel: PropTypes.func,
