@@ -45,7 +45,9 @@ module Katello
         end
       end
 
-      def self.pulp_units_batch_for_repo(repository, page_size = SETTINGS[:katello][:pulp][:bulk_load_size])
+      def self.pulp_units_batch_for_repo(repository, options = {})
+        page_size = options.fetch(:page_size, SETTINGS[:katello][:pulp][:bulk_load_size])
+
         fields = self.const_get(:PULP_INDEXED_FIELDS) if self.constants.include?(:PULP_INDEXED_FIELDS)
         criteria = {:type_ids => [const_get(:CONTENT_TYPE)], :limit => page_size, :skip => 0}
         criteria[:fields] = {:unit => fields} if fields

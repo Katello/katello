@@ -36,6 +36,10 @@ module Katello
           PulpFileClient::DistributionsFileApi.new(api_client)
         end
 
+        def copy_content_for_source(source_repository, _options = {})
+          copy_units_by_href(source_repository.files.pluck(:pulp_id))
+        end
+
         def distribution_options(path)
           {
             base_path: path,

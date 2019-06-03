@@ -80,16 +80,21 @@ module Katello
       def import_for_repository(repository)
         pulp_ids = []
         service_class = SmartProxy.pulp_master!.content_service(content_type)
-        service_class.pulp_units_batch_for_repo(repository).each do |units|
+        fetch_only_ids = !repository.content_view.default?
+
+        service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
-            model = Katello::Util::Support.active_record_retry do
-              self.where(:pulp_id => unit[service_class.unit_identifier]).first_or_create
+            pulp_id = unit[service_class.unit_identifier]
+            unless fetch_only_ids
+              model = Katello::Util::Support.active_record_retry do
+                self.where(:pulp_id => pulp_id).first_or_create
+              end
+              service = service_class.new(model.pulp_id)
+              service.backend_data = unit
+              service.update_model(model)
             end
-            service = service_class.new(model.pulp_id)
-            service.backend_data = unit
-            service.update_model(model)
-            pulp_ids << model.pulp_id
+            pulp_ids << pulp_id
           end
         end
         sync_repository_associations(repository, :pulp_ids => pulp_ids) if self.manage_repository_association
@@ -152,7 +157,7 @@ module Katello
       end
 
       def with_pulp_id(unit_pulp_ids)
-        where(:pulp_id => unit_pulp_ids)
+        where('pulp_id in (?)', unit_pulp_ids)
       end
     end
   end

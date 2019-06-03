@@ -30,9 +30,12 @@ module Katello
         "_href"
       end
 
-      def self.pulp_units_batch_for_repo(repository, page_size = SETTINGS[:katello][:pulp][:bulk_load_size])
+      def self.pulp_units_batch_for_repo(repository, options = {})
+        fetch_identifiers = options.fetch(:fetch_identifiers, false)
+        page_size = options.fetch(:page_size, SETTINGS[:katello][:pulp][:bulk_load_size])
         repository_version_href = repository.version_href
         page_opts = { "page" => 1, repository_version: repository_version_href, page_size: page_size}
+        page_opts[:fields] = '_href' if fetch_identifiers
         response = {}
         Enumerator.new do |yielder|
           loop do

@@ -13,13 +13,11 @@ module Actions
 
           sequence do
             if copy_contents
-              source_repositories.each do |repository|
-                plan_pulp_action([Pulp3::Orchestration::Repository::CopyAllUnits, Pulp::Repository::CopyAllUnits],
-                            repository,
-                            SmartProxy.pulp_master,
-                            new_repository,
-                            filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
-              end
+              plan_pulp_action([Pulp3::Orchestration::Repository::CopyAllUnits, Pulp::Orchestration::Repository::CopyAllUnits],
+                          new_repository,
+                          SmartProxy.pulp_master,
+                          source_repositories,
+                          filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
             end
 
             metadata_generate(source_repositories, new_repository, filters, rpm_filenames) if generate_metadata

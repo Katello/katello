@@ -35,7 +35,7 @@ module ::Actions::Pulp3
       assert_equal 1, Katello::Pulp3::DistributionReference.where(root_repository_id: @clone.root.id).count
       ensure_creatable(@clone, @master)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @clone, @master, source_repository: @repo)
-      assert_equal @repo.publication_href, @clone.publication_href
+      assert_equal @repo.publication_href, @clone.reload.publication_href
       assert_equal 2, Katello::Pulp3::DistributionReference.where(root_repository_id: @clone.root.id).count
     end
   end
