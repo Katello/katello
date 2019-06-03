@@ -3,8 +3,8 @@ module Actions
     module Orchestration
       module Repository
         class RemoveUnits < Pulp::Abstract
-          def plan(_repository, _smart_proxy, options)
-            options[:repo_id] = repository_id
+          def plan(repository, _smart_proxy, options)
+            options[:repo_id] = repository.id
             plan_action(Actions::Pulp::Repository::RemoveUnits, options)
           end
         end
