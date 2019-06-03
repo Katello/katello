@@ -130,6 +130,7 @@ class SubscriptionsTable extends Component {
       rows,
       subscriptions,
       tableColumns,
+      toggleSubscriptionGroup: this.toggleSubscriptionGroup,
       inlineEditController: this.getInlineEditController(),
       selectionController: this.getSelectionController(),
     };
