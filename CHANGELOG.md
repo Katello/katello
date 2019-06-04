@@ -1,4 +1,4 @@
-# 3.12.0 Iron Stout (2019-04-29)
+# 3.12.0 Iron Stout (2019-06-04)
 
 ## Features
 
@@ -12,7 +12,7 @@
  * Dependency Resolution within content views + associated UI constructs. ([#26206](https://projects.theforeman.org/issues/26206), [7474c9d7](https://github.com/Katello/katello.git/commit/7474c9d72928d3d539c2e0f5cd85a06017c465c2))
 
 ### Hosts
- * Generate report for success/failed patching of content hosts between date ranges ([#25973](https://projects.theforeman.org/issues/25973), [76ca4f85](https://github.com/Katello/katello.git/commit/76ca4f85f2dddabcedabef8b5528c3f5ca75ef00))
+ * Generate report for success/failed patching of content hosts between date ranges ([#25973](https://projects.theforeman.org/issues/25973), [76ca4f85](https://github.com/Katello/katello.git/commit/76ca4f85f2dddabcedabef8b5528c3f5ca75ef00), [98b033bc](https://github.com/Katello/katello.git/commit/98b033bcb5c569abf4554de0dd44cb94ffeff324))
 
 ### Repositories
  * Add Red Hat Satellite Maintenance 6 in recommended repositories ([#25920](https://projects.theforeman.org/issues/25920), [c5fe7210](https://github.com/Katello/katello.git/commit/c5fe7210a12df9103a980edb9ed3902f5d94743d))
@@ -21,6 +21,40 @@
  * Don't duplicate host record when hypervisor_id changes in virt-who report ([#26600](https://projects.theforeman.org/issues/26600), [86c91f89](https://github.com/Katello/katello.git/commit/86c91f89eaffed8f8b8ce2fe56fdeb0c9571d583), [1d0d2370](https://github.com/Katello/katello.git/commit/1d0d2370cf51c02439eb092d9a59073180437e70))
 
 ## Bug Fixes
+
+### Content Views
+ * 'uuid' option removed from command "hammer content-view puppet-module list" ([#26902](https://projects.theforeman.org/issues/26902), [c58e1825](https://github.com/Katello/katello.git/commit/c58e182509499a46f74a1d2c612999b427e6563e))
+ * Installable Errata not recalculated after CV publish/promote ([#26624](https://projects.theforeman.org/issues/26624), [64ed269e](https://github.com/Katello/katello.git/commit/64ed269ea64595dc12a1355f1a5125c81095e102))
+ * Unable to promote content view version ([#26515](https://projects.theforeman.org/issues/26515), [7abd0cfc](https://github.com/Katello/katello.git/commit/7abd0cfc38aaa2796996aec20fc5626ca7c20518))
+ * Distributor publish happening even if "matching_content" is true ([#26422](https://projects.theforeman.org/issues/26422), [6ebf1e36](https://github.com/Katello/katello.git/commit/6ebf1e36fac8f8b9ca83dec4fbfb27ec5eaa88df))
+ * Docker tag content view filters are ignored ([#26407](https://projects.theforeman.org/issues/26407), [c317cce9](https://github.com/Katello/katello.git/commit/c317cce980982603f8c2ac78a955e329e87de497))
+
+### ElasticSearch
+ * ActionController::RoutingError (No route matches [POST] "/katello/api/v2/repositories/sync_complete") ([#26836](https://projects.theforeman.org/issues/26836), [0d1f772b](https://github.com/Katello/katello.git/commit/0d1f772b6f0934889057f1522cb0bb128912ffc7))
+
+### Sync Plans
+ * No syncable repositories found for selected products and options. (RuntimeError) ([#26734](https://projects.theforeman.org/issues/26734), [e3fec828](https://github.com/Katello/katello.git/commit/e3fec8286e138cad755aa0403148d4a9fb0d5094))
+ * Save sync plan after new rec logic is added ([#26503](https://projects.theforeman.org/issues/26503), [db91b404](https://github.com/Katello/katello.git/commit/db91b404f763a85e54c1823f541627ffeb50fc5d))
+ * Downstream CP: Allow enabling/disabling at recurring logic for sync plan 6.5 ([#26305](https://projects.theforeman.org/issues/26305), [71f4d4a8](https://github.com/Katello/katello.git/commit/71f4d4a8871dc0448db674604f074a16b539804f))
+ * hammer sync-plan update does not work with custom cron ([#26283](https://projects.theforeman.org/issues/26283), [bdab6e48](https://github.com/Katello/katello.git/commit/bdab6e48551683ab4cc834344e450bc1463360e1))
+ * "Working" text on sync plan interval custom cron can be confusing ([#26242](https://projects.theforeman.org/issues/26242), [1ad6c49e](https://github.com/Katello/katello.git/commit/1ad6c49ef87b4581cc212001119013e1fe9a1db2))
+ * Allow enabling/disabling at recurring logic for sync plan ([#26219](https://projects.theforeman.org/issues/26219), [de8e0f09](https://github.com/Katello/katello.git/commit/de8e0f097b11ad685de95111ab3f9b316a5684a3))
+ * [Recurring logic/Sync Plan] - Associated Resources are not shown in Recurring Logic created using sync plan ([#25934](https://projects.theforeman.org/issues/25934), [591e9386](https://github.com/Katello/katello.git/commit/591e93860941116312aea17df1307b9c3773fadf))
+
+### Repositories
+ * Support one to one content url changes ([#26694](https://projects.theforeman.org/issues/26694), [fafb8f6b](https://github.com/Katello/katello.git/commit/fafb8f6bcf26cab8f6f66b4ae833a13b3aebe24f))
+ * [Repositories] - Product link should be present in Packages -> Repositories ([#26501](https://projects.theforeman.org/issues/26501), [f0b8cd2a](https://github.com/Katello/katello.git/commit/f0b8cd2aa38569a6ae1a1496e36d46ad49cd417e), [832c13ec](https://github.com/Katello/katello.git/commit/832c13ecbedb4e81c148ac105733cf1f651b6d09))
+ * Remove dead code on pulp-2.19 upgrade ([#26478](https://projects.theforeman.org/issues/26478), [dc8776cf](https://github.com/Katello/katello.git/commit/dc8776cfbe29a3e9b8dbc5551bd5316e8773ffa2))
+ * Allow for removal of repo and cv puppet env ([#26397](https://projects.theforeman.org/issues/26397), [a2bc3e2b](https://github.com/Katello/katello.git/commit/a2bc3e2b58efe7203d72582854a5d7159d9ffe2f))
+ * Please add  Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.x into recommended list ([#26345](https://projects.theforeman.org/issues/26345), [d5a90515](https://github.com/Katello/katello.git/commit/d5a90515711d25ebaef65fd531463dbf41b84097))
+ * Recommended repositories page listing some non-relevant repositories ([#26303](https://projects.theforeman.org/issues/26303), [0f54fcaa](https://github.com/Katello/katello.git/commit/0f54fcaa4245e3c6ec1db41241e88cf32fa32f0d))
+ * [webUI, Repo-Discovery]- Failed to discover the repository from Repo Discovery Page  ([#26251](https://projects.theforeman.org/issues/26251), [7a81aa84](https://github.com/Katello/katello.git/commit/7a81aa84639352685aa7e5048bb71a8370e9a297))
+ * arch and release for RHEL8 does not seem right on "Sync Status" page ([#26075](https://projects.theforeman.org/issues/26075), [36cd944e](https://github.com/Katello/katello.git/commit/36cd944e643ca316d9c55f23123a18a0c5685c11))
+ * [Container Admin] Changing repository of any type through web UI changes "Container Image Tags Filter" field value ([#25980](https://projects.theforeman.org/issues/25980), [098bc257](https://github.com/Katello/katello.git/commit/098bc257aef291e575d1035a47bf97f562189332))
+ * Red Hat Repositories does not show enabled repositories list with search criteria 'Enabled/Both' ([#25946](https://projects.theforeman.org/issues/25946), [9e770370](https://github.com/Katello/katello.git/commit/9e7703705eabd7809c9f0019d8934f0b667f129c))
+ * [Container Admin] docker pull does not work ([#25922](https://projects.theforeman.org/issues/25922), [1af93f7f](https://github.com/Katello/katello.git/commit/1af93f7fa376f9a86dfc9e046ba25d51b2dd9028))
+ * [Subscription] - Not able to add RHEL8 repositories into Katello ([#25901](https://projects.theforeman.org/issues/25901), [53e88d8a](https://github.com/Katello/katello.git/commit/53e88d8a47384246696b0084d958b5397c74cc64))
+ * Repo filtering is inconsistent ([#25875](https://projects.theforeman.org/issues/25875), [7d6135a6](https://github.com/Katello/katello.git/commit/7d6135a62437c49fba10b8ace9ebb8a59a6f794c))
 
 ### Errata Management
  * Errata counts aren't similar between the content-hosts view and the export csv ([#26678](https://projects.theforeman.org/issues/26678), [6696f876](https://github.com/Katello/katello.git/commit/6696f8768431b7f14ce8739665f629c1efd4487b))
@@ -50,39 +84,13 @@
  * Katello::Content uses removed Katello::Glue::Candlepin::Product.import_product_content ([#26535](https://projects.theforeman.org/issues/26535), [1a4660e9](https://github.com/Katello/katello.git/commit/1a4660e9ff71165f7ce0c07df62a855ea166ab55))
 
 ### Hosts
+ * System Purpose: Updating host SLA or usage type resets addons ([#26530](https://projects.theforeman.org/issues/26530), [3bc4f54a](https://github.com/Katello/katello.git/commit/3bc4f54accf4cf4b6444b2f1970f0c9bc08f0fa6))
  * Update syspurpose status handling to match Candlepin ([#26516](https://projects.theforeman.org/issues/26516), [4401f8cf](https://github.com/Katello/katello.git/commit/4401f8cf89144304f91651718482894cab21734f))
  * Registering a system fails randomly (409 Conflict) ([#26191](https://projects.theforeman.org/issues/26191), [94fdc445](https://github.com/Katello/katello.git/commit/94fdc4456bffe91590be2294e90cad548f8dae24), [7f880082](https://github.com/Katello/katello.git/commit/7f8800822c7d43414347d3e33e3d3ab704afa48e), [40f4927b](https://github.com/Katello/katello.git/commit/40f4927bf53ee6b42fb6c1517e1961adf48d86f1))
  * Tracer rex templates don't handle reboot properly ([#26185](https://projects.theforeman.org/issues/26185), [0432d0ec](https://github.com/Katello/katello.git/commit/0432d0ec16772dfd4eddf0adb9b79a426fd94e69), [9067e372](https://github.com/Katello/katello.git/commit/9067e3722e6d5182ad372f739d82d4c7169f60e1))
  * Missing timeout for "Actions::Katello::Host::Package::Update" task ([#25965](https://projects.theforeman.org/issues/25965), [7949d971](https://github.com/Katello/katello.git/commit/7949d971aabd65cd4d4f5dc765fcc961092a745f))
  * custom system purpose values not shown in content host details dropdowns ([#25832](https://projects.theforeman.org/issues/25832), [6c317ff9](https://github.com/Katello/katello.git/commit/6c317ff98ab3f4e2ed58b632dcb4209a8c6acbf3))
  * Virt-who reported host type is blank, under Hosts---> Content Hosts shows "Type" as blank ([#25818](https://projects.theforeman.org/issues/25818), [9b38ba7b](https://github.com/Katello/katello.git/commit/9b38ba7b74f52375d68780c039247108d49d706f))
-
-### Content Views
- * Unable to promote content view version ([#26515](https://projects.theforeman.org/issues/26515), [7abd0cfc](https://github.com/Katello/katello.git/commit/7abd0cfc38aaa2796996aec20fc5626ca7c20518))
- * Distributor publish happening even if "matching_content" is true ([#26422](https://projects.theforeman.org/issues/26422), [6ebf1e36](https://github.com/Katello/katello.git/commit/6ebf1e36fac8f8b9ca83dec4fbfb27ec5eaa88df))
- * Docker tag content view filters are ignored ([#26407](https://projects.theforeman.org/issues/26407), [c317cce9](https://github.com/Katello/katello.git/commit/c317cce980982603f8c2ac78a955e329e87de497))
-
-### Sync Plans
- * Save sync plan after new rec logic is added ([#26503](https://projects.theforeman.org/issues/26503), [db91b404](https://github.com/Katello/katello.git/commit/db91b404f763a85e54c1823f541627ffeb50fc5d))
- * Downstream CP: Allow enabling/disabling at recurring logic for sync plan 6.5 ([#26305](https://projects.theforeman.org/issues/26305), [71f4d4a8](https://github.com/Katello/katello.git/commit/71f4d4a8871dc0448db674604f074a16b539804f))
- * hammer sync-plan update does not work with custom cron ([#26283](https://projects.theforeman.org/issues/26283), [bdab6e48](https://github.com/Katello/katello.git/commit/bdab6e48551683ab4cc834344e450bc1463360e1))
- * "Working" text on sync plan interval custom cron can be confusing ([#26242](https://projects.theforeman.org/issues/26242), [1ad6c49e](https://github.com/Katello/katello.git/commit/1ad6c49ef87b4581cc212001119013e1fe9a1db2))
- * Allow enabling/disabling at recurring logic for sync plan ([#26219](https://projects.theforeman.org/issues/26219), [de8e0f09](https://github.com/Katello/katello.git/commit/de8e0f097b11ad685de95111ab3f9b316a5684a3))
- * [Recurring logic/Sync Plan] - Associated Resources are not shown in Recurring Logic created using sync plan ([#25934](https://projects.theforeman.org/issues/25934), [591e9386](https://github.com/Katello/katello.git/commit/591e93860941116312aea17df1307b9c3773fadf))
-
-### Repositories
- * [Repositories] - Product link should be present in Packages -> Repositories ([#26501](https://projects.theforeman.org/issues/26501), [f0b8cd2a](https://github.com/Katello/katello.git/commit/f0b8cd2aa38569a6ae1a1496e36d46ad49cd417e), [832c13ec](https://github.com/Katello/katello.git/commit/832c13ecbedb4e81c148ac105733cf1f651b6d09))
- * Remove dead code on pulp-2.19 upgrade ([#26478](https://projects.theforeman.org/issues/26478), [dc8776cf](https://github.com/Katello/katello.git/commit/dc8776cfbe29a3e9b8dbc5551bd5316e8773ffa2))
- * Allow for removal of repo and cv puppet env ([#26397](https://projects.theforeman.org/issues/26397), [a2bc3e2b](https://github.com/Katello/katello.git/commit/a2bc3e2b58efe7203d72582854a5d7159d9ffe2f))
- * Please add  Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.x into recommended list ([#26345](https://projects.theforeman.org/issues/26345), [d5a90515](https://github.com/Katello/katello.git/commit/d5a90515711d25ebaef65fd531463dbf41b84097))
- * Recommended repositories page listing some non-relevant repositories ([#26303](https://projects.theforeman.org/issues/26303), [0f54fcaa](https://github.com/Katello/katello.git/commit/0f54fcaa4245e3c6ec1db41241e88cf32fa32f0d))
- * [webUI, Repo-Discovery]- Failed to discover the repository from Repo Discovery Page  ([#26251](https://projects.theforeman.org/issues/26251), [7a81aa84](https://github.com/Katello/katello.git/commit/7a81aa84639352685aa7e5048bb71a8370e9a297))
- * arch and release for RHEL8 does not seem right on "Sync Status" page ([#26075](https://projects.theforeman.org/issues/26075), [36cd944e](https://github.com/Katello/katello.git/commit/36cd944e643ca316d9c55f23123a18a0c5685c11))
- * [Container Admin] Changing repository of any type through web UI changes "Container Image Tags Filter" field value ([#25980](https://projects.theforeman.org/issues/25980), [098bc257](https://github.com/Katello/katello.git/commit/098bc257aef291e575d1035a47bf97f562189332))
- * Red Hat Repositories does not show enabled repositories list with search criteria 'Enabled/Both' ([#25946](https://projects.theforeman.org/issues/25946), [9e770370](https://github.com/Katello/katello.git/commit/9e7703705eabd7809c9f0019d8934f0b667f129c))
- * [Container Admin] docker pull does not work ([#25922](https://projects.theforeman.org/issues/25922), [1af93f7f](https://github.com/Katello/katello.git/commit/1af93f7fa376f9a86dfc9e046ba25d51b2dd9028))
- * [Subscription] - Not able to add RHEL8 repositories into Katello ([#25901](https://projects.theforeman.org/issues/25901), [53e88d8a](https://github.com/Katello/katello.git/commit/53e88d8a47384246696b0084d958b5397c74cc64))
- * Repo filtering is inconsistent ([#25875](https://projects.theforeman.org/issues/25875), [7d6135a6](https://github.com/Katello/katello.git/commit/7d6135a62437c49fba10b8ace9ebb8a59a6f794c))
 
 ### Hammer
  * hammer package info not showing if a package is modular ([#26469](https://projects.theforeman.org/issues/26469), [da0589a5](https://github.com/Katello/hammer-cli-katello.git/commit/da0589a548926534b1593cc6906b1630cf02cfc1))
@@ -142,11 +150,16 @@
 ### Dashboard
  * slow errata query on dashboard ([#25884](https://projects.theforeman.org/issues/25884), [227f1ab0](https://github.com/Katello/katello.git/commit/227f1ab0de9cda4a557e12099ac5967fdf40236f))
 
+### Documentation
+ * docs still refer to 'gpg keys' instead of content credentials  ([#25841](https://projects.theforeman.org/issues/25841))
+
 ### Lifecycle Environments
  * Repositories drop downs show duplicate named repositories ([#25034](https://projects.theforeman.org/issues/25034), [9ee1692f](https://github.com/Katello/katello.git/commit/9ee1692f90af61b5a57e8a439db3071dfc570f08))
 
 ### Other
+ * Errata details overflows into affected packages column ([#26683](https://projects.theforeman.org/issues/26683), [ad4e4f19](https://github.com/Katello/katello.git/commit/ad4e4f19909b863f5235bb6222e8d1dadb0702da))
  * Don't ship katello-host-tools-fact-plugin in rhel8 sat-tools ([#26661](https://projects.theforeman.org/issues/26661))
+ * Registering a host with the same hostname as another host unregisters the original host ([#26640](https://projects.theforeman.org/issues/26640), [cf57e0d0](https://github.com/Katello/katello.git/commit/cf57e0d065fbb39b9f7787c5907a9bfb6f554b64))
  * Rubocop 0.66 updates ([#26570](https://projects.theforeman.org/issues/26570), [c1ca09b2](https://github.com/Katello/katello.git/commit/c1ca09b23a768f2599306c27a738f153ec14c7e8))
  * Unauthenticated pull not working for Head requests ([#26549](https://projects.theforeman.org/issues/26549), [dddaaade](https://github.com/Katello/katello.git/commit/dddaaadeedfd93ddf7c07d48f7c4c4c85a345091))
  * registration fails if puppet fact with dmi::system::uuid exists in foreman ([#26480](https://projects.theforeman.org/issues/26480), [75452bf9](https://github.com/Katello/katello.git/commit/75452bf9867fbf3b40c2f581a347bff99d210875))
