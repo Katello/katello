@@ -3181,257 +3181,6 @@ http_interactions:
     http_version: 
   recorded_at: Fri, 31 May 2019 12:58:00 GMT
 - request:
-    method: get
-    uri: http://192.168.121.31/pulp/api/v3/repositories/?name=org_default_label-Pulp3_File%201
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Fri, 31 May 2019 12:59:40 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '52'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Fri, 31 May 2019 12:59:40 GMT
-- request:
-    method: get
-    uri: http://192.168.121.31/pulp/api/v3/remotes/file/file/?name=org_default_label-Pulp3_File%201
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Fri, 31 May 2019 12:59:40 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '52'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Fri, 31 May 2019 12:59:40 GMT
-- request:
-    method: get
-    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/pulp3_File_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Fri, 31 May 2019 12:59:40 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '52'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Fri, 31 May 2019 12:59:40 GMT
-- request:
-    method: post
-    uri: http://192.168.121.31/pulp/api/v3/repositories/
-    body:
-      encoding: UTF-8
-      base64_string: 'eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtUHVscDNfRmlsZSAxIn0=
-
-'
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 201
-      message: Created
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Fri, 31 May 2019 12:59:41 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '295'
-      Connection:
-      - keep-alive
-      Location:
-      - "/pulp/api/v3/repositories/0c44c2ad-90e4-44ae-9d9a-711c6d3f7979/"
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvMGM0NGMyYWQt
-        OTBlNC00NGFlLTlkOWEtNzExYzZkM2Y3OTc5LyIsIl9jcmVhdGVkIjoiMjAx
-        OS0wNS0zMVQxMjo1OTo0MS4wODE3NzdaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
-        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzBjNDRjMmFkLTkwZTQtNDRhZS05
-        ZDlhLTcxMWM2ZDNmNzk3OS92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
-        aHJlZiI6bnVsbCwibmFtZSI6Im9yZ19kZWZhdWx0X2xhYmVsLVB1bHAzX0Zp
-        bGUgMSIsImRlc2NyaXB0aW9uIjpudWxsfQ==
-    http_version: 
-  recorded_at: Fri, 31 May 2019 12:59:41 GMT
-- request:
-    method: post
-    uri: http://192.168.121.31/pulp/api/v3/remotes/file/file/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtUHVscDNfRmlsZSAxIiwidXJs
-        IjoiaHR0cHM6Ly9yZXBvcy5mZWRvcmFwZW9wbGUub3JnL3B1bHAvcHVscC9k
-        ZW1vX3JlcG9zL3Rlc3RfZmlsZV9yZXBvLy9QVUxQX01BTklGRVNUIiwidmFs
-        aWRhdGUiOnRydWUsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJwb2xpY3kiOiJp
-        bW1lZGlhdGUifQ==
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 201
-      message: Created
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Fri, 31 May 2019 12:59:41 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '497'
-      Connection:
-      - keep-alive
-      Location:
-      - "/pulp/api/v3/remotes/file/file/dba2a40c-ee69-4d5c-842f-d0a4c86bfbed/"
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS9kYmEy
-        YTQwYy1lZTY5LTRkNWMtODQyZi1kMGE0Yzg2YmZiZWQvIiwiX2NyZWF0ZWQi
-        OiIyMDE5LTA1LTMxVDEyOjU5OjQxLjI0NDE0NVoiLCJfdHlwZSI6ImZpbGUu
-        ZmlsZSIsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1QdWxwM19GaWxlIDEi
-        LCJ1cmwiOiJodHRwczovL3JlcG9zLmZlZG9yYXBlb3BsZS5vcmcvcHVscC9w
-        dWxwL2RlbW9fcmVwb3MvdGVzdF9maWxlX3JlcG8vL1BVTFBfTUFOSUZFU1Qi
-        LCJ2YWxpZGF0ZSI6dHJ1ZSwic3NsX2NhX2NlcnRpZmljYXRlIjpudWxsLCJz
-        c2xfY2xpZW50X2NlcnRpZmljYXRlIjpudWxsLCJzc2xfY2xpZW50X2tleSI6
-        bnVsbCwic3NsX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6bnVsbCwi
-        X2xhc3RfdXBkYXRlZCI6IjIwMTktMDUtMzFUMTI6NTk6NDEuMjQ0MTc3WiIs
-        ImRvd25sb2FkX2NvbmN1cnJlbmN5IjoyMCwicG9saWN5IjoiaW1tZWRpYXRl
-        In0=
-    http_version: 
-  recorded_at: Fri, 31 May 2019 12:59:41 GMT
-- request:
     method: post
     uri: http://192.168.121.31/pulp/api/v3/repositories/0c44c2ad-90e4-44ae-9d9a-711c6d3f7979/versions/
     body:
@@ -4849,60 +4598,6 @@ http_interactions:
     http_version: 
   recorded_at: Fri, 31 May 2019 12:59:46 GMT
 - request:
-    method: get
-    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/pulp3_File_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Fri, 31 May 2019 12:59:47 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '470'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZmls
-        ZS9maWxlLzI1OTBjZmNlLTM4NWUtNGYwNC1hZDI3LWY4ZWU3NzE0MzQzZi8i
-        LCJfY3JlYXRlZCI6IjIwMTktMDUtMzFUMTI6NTk6NDIuODkyMDc5WiIsImJh
-        c2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvcHVscDNf
-        RmlsZV8xIiwiYmFzZV91cmwiOiJsb2NhbGhvc3Q6MjQ4MTYvcHVscC9jb250
-        ZW50L0RlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvcHVscDNfRmlsZV8x
-        IiwiY29udGVudF9ndWFyZCI6bnVsbCwibmFtZSI6Im9yZ19kZWZhdWx0X2xh
-        YmVsLVB1bHAzX0ZpbGUgMSIsInB1YmxpY2F0aW9uIjoiL3B1bHAvYXBpL3Yz
-        L3B1YmxpY2F0aW9ucy9maWxlL2ZpbGUvMWI0NzQ2YjQtMGZjNC00Y2I2LWJl
-        YTktZmEyMjNiMTU4ZjQ0LyJ9XX0=
-    http_version: 
-  recorded_at: Fri, 31 May 2019 12:59:47 GMT
-- request:
     method: delete
     uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/2590cfce-385e-4f04-ad27-f8ee7714343f/
     body:
@@ -5098,4 +4793,1981 @@ http_interactions:
         cmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdfQ==
     http_version: 
   recorded_at: Fri, 31 May 2019 12:59:47 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/repositories/?name=org_default_label-Pulp3_File%201
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:54 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '52'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:54 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/remotes/file/file/?name=org_default_label-Pulp3_File%201
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:54 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '52'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:54 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/?name=org_default_label-Pulp3_File%201
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:55 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '52'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:55 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/pulp3_File_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:55 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '52'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:55 GMT
+- request:
+    method: post
+    uri: http://192.168.121.31/pulp/api/v3/repositories/
+    body:
+      encoding: UTF-8
+      base64_string: 'eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtUHVscDNfRmlsZSAxIn0=
+
+'
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:55 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '295'
+      Connection:
+      - keep-alive
+      Location:
+      - "/pulp/api/v3/repositories/5a16a4f5-16bd-4807-b83c-5d37a7d98629/"
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNWExNmE0ZjUt
+        MTZiZC00ODA3LWI4M2MtNWQzN2E3ZDk4NjI5LyIsIl9jcmVhdGVkIjoiMjAx
+        OS0wNi0wNFQxNDowNTo1NS40NTk5NzZaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
+        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzVhMTZhNGY1LTE2YmQtNDgwNy1i
+        ODNjLTVkMzdhN2Q5ODYyOS92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
+        aHJlZiI6bnVsbCwibmFtZSI6Im9yZ19kZWZhdWx0X2xhYmVsLVB1bHAzX0Zp
+        bGUgMSIsImRlc2NyaXB0aW9uIjpudWxsfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:55 GMT
+- request:
+    method: post
+    uri: http://192.168.121.31/pulp/api/v3/remotes/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtUHVscDNfRmlsZSAxIiwidXJs
+        IjoiaHR0cHM6Ly9yZXBvcy5mZWRvcmFwZW9wbGUub3JnL3B1bHAvcHVscC9k
+        ZW1vX3JlcG9zL3Rlc3RfZmlsZV9yZXBvLy9QVUxQX01BTklGRVNUIiwidmFs
+        aWRhdGUiOnRydWUsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJwb2xpY3kiOiJp
+        bW1lZGlhdGUifQ==
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:55 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '497'
+      Connection:
+      - keep-alive
+      Location:
+      - "/pulp/api/v3/remotes/file/file/a1262763-420b-4200-b0bc-994d71474b03/"
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS9hMTI2
+        Mjc2My00MjBiLTQyMDAtYjBiYy05OTRkNzE0NzRiMDMvIiwiX2NyZWF0ZWQi
+        OiIyMDE5LTA2LTA0VDE0OjA1OjU1LjYyNDQ0M1oiLCJfdHlwZSI6ImZpbGUu
+        ZmlsZSIsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1QdWxwM19GaWxlIDEi
+        LCJ1cmwiOiJodHRwczovL3JlcG9zLmZlZG9yYXBlb3BsZS5vcmcvcHVscC9w
+        dWxwL2RlbW9fcmVwb3MvdGVzdF9maWxlX3JlcG8vL1BVTFBfTUFOSUZFU1Qi
+        LCJ2YWxpZGF0ZSI6dHJ1ZSwic3NsX2NhX2NlcnRpZmljYXRlIjpudWxsLCJz
+        c2xfY2xpZW50X2NlcnRpZmljYXRlIjpudWxsLCJzc2xfY2xpZW50X2tleSI6
+        bnVsbCwic3NsX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6bnVsbCwi
+        X2xhc3RfdXBkYXRlZCI6IjIwMTktMDYtMDRUMTQ6MDU6NTUuNjI0NDU3WiIs
+        ImRvd25sb2FkX2NvbmN1cnJlbmN5IjoyMCwicG9saWN5IjoiaW1tZWRpYXRl
+        In0=
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:55 GMT
+- request:
+    method: post
+    uri: http://192.168.121.31/pulp/api/v3/repositories/5a16a4f5-16bd-4807-b83c-5d37a7d98629/versions/
+    body:
+      encoding: UTF-8
+      base64_string: 'e30=
+
+'
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:55 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzY1ODJkODgxLTcwOTQtNGMy
+        Zi04YThmLWIxOWFlNDZhMmYxYS8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:55 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/6582d881-7094-4c2f-8a8f-b19ae46a2f1a/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:56 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '529'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy82NTgyZDg4MS03MDk0LTRj
+        MmYtOGE4Zi1iMTlhZTQ2YTJmMWEvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU1Ljk4NzIwMFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA1OjU2LjA4NzIzNFoi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDU6NTYuMTM3MjQ2WiIs
+        Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvMGM2OTZkMTEtYjMyZi00NDFhLWE4NmEt
+        MzU5ODUxNTc4MDAyLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzVhMTZhNGY1LTE2YmQtNDgw
+        Ny1iODNjLTVkMzdhN2Q5ODYyOS92ZXJzaW9ucy8xLyJdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:56 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/repositories/5a16a4f5-16bd-4807-b83c-5d37a7d98629/versions/1/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:56 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '215'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNWExNmE0ZjUt
+        MTZiZC00ODA3LWI4M2MtNWQzN2E3ZDk4NjI5L3ZlcnNpb25zLzEvIiwiX2Ny
+        ZWF0ZWQiOiIyMDE5LTA2LTA0VDE0OjA1OjU2LjExNDIwMFoiLCJudW1iZXIi
+        OjEsImJhc2VfdmVyc2lvbiI6bnVsbCwiY29udGVudF9zdW1tYXJ5Ijp7ImFk
+        ZGVkIjp7fSwicmVtb3ZlZCI6e30sInByZXNlbnQiOnt9fX0=
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:56 GMT
+- request:
+    method: post
+    uri: http://192.168.121.31/pulp/api/v3/publications/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
+        aWVzLzVhMTZhNGY1LTE2YmQtNDgwNy1iODNjLTVkMzdhN2Q5ODYyOS92ZXJz
+        aW9ucy8xLyIsIm1hbmlmZXN0IjoiUFVMUF9NQU5JRkVTVCJ9
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:56 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA2YWM3MjY3LTdiYmEtNGU4
+        Yy1iODJhLWYwMGRiOWFhOTUzYS8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:56 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/06ac7267-7bba-4e8c-b82a-f00db9aa953a/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:56 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '522'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wNmFjNzI2Ny03YmJhLTRl
+        OGMtYjgyYS1mMDBkYjlhYTk1M2EvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU2LjQ5NTQyMloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA1OjU2LjYwMzczNVoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDU6NTYuNjUyODgyWiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvNDM4ZTg0ODMtNTlhOC00ZjU3LThlMjQtNjA1NWVj
+        MzM1M2JiLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS9kMDljOTY1OC0wNGI1
+        LTRkZjUtYTJjYS1kZWJkMTg0YTQ3OGQvIl19
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:56 GMT
+- request:
+    method: post
+    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJiYXNlX3BhdGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L3B1
+        bHAzX0ZpbGVfMSIsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1QdWxwM19G
+        aWxlIDEiLCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlv
+        bnMvZmlsZS9maWxlL2QwOWM5NjU4LTA0YjUtNGRmNS1hMmNhLWRlYmQxODRh
+        NDc4ZC8ifQ==
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:56 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2YwYjRlNGU3LTQwMmQtNDIy
+        Yi1hOGJmLWIzN2QxYjhiZTI0Ny8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:56 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/f0b4e4e7-402d-422b-a8bf-b37d1b8be247/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:57 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '420'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mMGI0ZTRlNy00MDJkLTQy
+        MmItYThiZi1iMzdkMWI4YmUyNDcvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU2Ljg5MTczNloiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJhbF9jcmVhdGUiLCJzdGFy
+        dGVkX2F0IjoiMjAxOS0wNi0wNFQxNDowNTo1Ni45OTY1NTNaIiwiZmluaXNo
+        ZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVs
+        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvNDM4ZTg0ODMtNTlh
+        OC00ZjU3LThlMjQtNjA1NWVjMzM1M2JiLyIsInBhcmVudCI6bnVsbCwic3Bh
+        d25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVk
+        X3Jlc291cmNlcyI6W119
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:57 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/f0b4e4e7-402d-422b-a8bf-b37d1b8be247/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:57 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '523'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mMGI0ZTRlNy00MDJkLTQy
+        MmItYThiZi1iMzdkMWI4YmUyNDcvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU2Ljg5MTczNloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2NyZWF0ZSIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA1OjU2Ljk5NjU1M1oiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDU6NTcuMjAxODYwWiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvNDM4ZTg0ODMtNTlhOC00ZjU3LThlMjQtNjA1NWVj
+        MzM1M2JiLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
+        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9maWxlL2ZpbGUvNjVkNDYzMjEtN2Zi
+        MS00Y2RhLTkxOGMtMDFmZmIzNDc0NjYxLyJdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:57 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/65d46321-7fb1-4cda-918c-01ffb3474661/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:57 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '418'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL2ZpbGUvZmls
+        ZS82NWQ0NjMyMS03ZmIxLTRjZGEtOTE4Yy0wMWZmYjM0NzQ2NjEvIiwiX2Ny
+        ZWF0ZWQiOiIyMDE5LTA2LTA0VDE0OjA1OjU3LjE4OTczMloiLCJiYXNlX3Bh
+        dGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L3B1bHAzX0ZpbGVf
+        MSIsImJhc2VfdXJsIjoibG9jYWxob3N0OjI0ODE2L3B1bHAvY29udGVudC9E
+        ZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L3B1bHAzX0ZpbGVfMSIsImNv
+        bnRlbnRfZ3VhcmQiOm51bGwsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1Q
+        dWxwM19GaWxlIDEiLCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJs
+        aWNhdGlvbnMvZmlsZS9maWxlL2QwOWM5NjU4LTA0YjUtNGRmNS1hMmNhLWRl
+        YmQxODRhNDc4ZC8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:57 GMT
+- request:
+    method: post
+    uri: http://192.168.121.31/pulp/api/v3/remotes/file/file/a1262763-420b-4200-b0bc-994d71474b03/sync/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvc2l0b3J5IjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy81YTE2
+        YTRmNS0xNmJkLTQ4MDctYjgzYy01ZDM3YTdkOTg2MjkvIn0=
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:57 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - POST, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzY0OWYzOGMwLTNiYmItNGZh
+        Mi1iMjZiLTc1MzRmZGNkZDBjOC8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:57 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/649f38c0-3bbb-4fa2-b26b-7534fdcdd0c8/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:57 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '895'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRm
+        YTItYjI2Yi03NTM0ZmRjZGQwYzgvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU3Ljc5MzkwM1oiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscF9maWxlLmFwcC50YXNrcy5zeW5jaHJvbml6aW5nLnN5bmNocm9uaXpl
+        Iiwic3RhcnRlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDU6NTcuODkzMjY2WiIs
+        ImZpbmlzaGVkX2F0IjpudWxsLCJub25fZmF0YWxfZXJyb3JzIjpbXSwiZXJy
+        b3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJzLzBjNjk2
+        ZDExLWIzMmYtNDQxYS1hODZhLTM1OTg1MTU3ODAwMi8iLCJwYXJlbnQiOm51
+        bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRzIjpbeyJt
+        ZXNzYWdlIjoiQXNzb2NpYXRpbmcgQ29udGVudCIsInN0YXRlIjoicnVubmlu
+        ZyIsInRvdGFsIjpudWxsLCJkb25lIjowLCJzdWZmaXgiOm51bGwsInRhc2si
+        OiIvcHVscC9hcGkvdjMvdGFza3MvNjQ5ZjM4YzAtM2JiYi00ZmEyLWIyNmIt
+        NzUzNGZkY2RkMGM4LyJ9LHsibWVzc2FnZSI6IkRvd25sb2FkaW5nIEFydGlm
+        YWN0cyIsInN0YXRlIjoicnVubmluZyIsInRvdGFsIjpudWxsLCJkb25lIjow
+        LCJzdWZmaXgiOm51bGwsInRhc2siOiIvcHVscC9hcGkvdjMvdGFza3MvNjQ5
+        ZjM4YzAtM2JiYi00ZmEyLWIyNmItNzUzNGZkY2RkMGM4LyJ9LHsibWVzc2Fn
+        ZSI6IkRvd25sb2FkaW5nIE1ldGFkYXRhIiwic3RhdGUiOiJydW5uaW5nIiwi
+        dG90YWwiOm51bGwsImRvbmUiOjAsInN1ZmZpeCI6bnVsbCwidGFzayI6Ii9w
+        dWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRmYTItYjI2Yi03NTM0
+        ZmRjZGQwYzgvIn1dLCJjcmVhdGVkX3Jlc291cmNlcyI6W251bGxdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:57 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/649f38c0-3bbb-4fa2-b26b-7534fdcdd0c8/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:58 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '895'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRm
+        YTItYjI2Yi03NTM0ZmRjZGQwYzgvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU3Ljc5MzkwM1oiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscF9maWxlLmFwcC50YXNrcy5zeW5jaHJvbml6aW5nLnN5bmNocm9uaXpl
+        Iiwic3RhcnRlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDU6NTcuODkzMjY2WiIs
+        ImZpbmlzaGVkX2F0IjpudWxsLCJub25fZmF0YWxfZXJyb3JzIjpbXSwiZXJy
+        b3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJzLzBjNjk2
+        ZDExLWIzMmYtNDQxYS1hODZhLTM1OTg1MTU3ODAwMi8iLCJwYXJlbnQiOm51
+        bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRzIjpbeyJt
+        ZXNzYWdlIjoiQXNzb2NpYXRpbmcgQ29udGVudCIsInN0YXRlIjoicnVubmlu
+        ZyIsInRvdGFsIjpudWxsLCJkb25lIjowLCJzdWZmaXgiOm51bGwsInRhc2si
+        OiIvcHVscC9hcGkvdjMvdGFza3MvNjQ5ZjM4YzAtM2JiYi00ZmEyLWIyNmIt
+        NzUzNGZkY2RkMGM4LyJ9LHsibWVzc2FnZSI6IkRvd25sb2FkaW5nIEFydGlm
+        YWN0cyIsInN0YXRlIjoicnVubmluZyIsInRvdGFsIjpudWxsLCJkb25lIjow
+        LCJzdWZmaXgiOm51bGwsInRhc2siOiIvcHVscC9hcGkvdjMvdGFza3MvNjQ5
+        ZjM4YzAtM2JiYi00ZmEyLWIyNmItNzUzNGZkY2RkMGM4LyJ9LHsibWVzc2Fn
+        ZSI6IkRvd25sb2FkaW5nIE1ldGFkYXRhIiwic3RhdGUiOiJydW5uaW5nIiwi
+        dG90YWwiOm51bGwsImRvbmUiOjAsInN1ZmZpeCI6bnVsbCwidGFzayI6Ii9w
+        dWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRmYTItYjI2Yi03NTM0
+        ZmRjZGQwYzgvIn1dLCJjcmVhdGVkX3Jlc291cmNlcyI6W251bGxdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:58 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/649f38c0-3bbb-4fa2-b26b-7534fdcdd0c8/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:58 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1123'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRm
+        YTItYjI2Yi03NTM0ZmRjZGQwYzgvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU3Ljc5MzkwM1oiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscF9maWxlLmFwcC50YXNrcy5zeW5jaHJvbml6aW5nLnN5bmNocm9uaXpl
+        Iiwic3RhcnRlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDU6NTcuODkzMjY2WiIs
+        ImZpbmlzaGVkX2F0IjpudWxsLCJub25fZmF0YWxfZXJyb3JzIjpbXSwiZXJy
+        b3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJzLzBjNjk2
+        ZDExLWIzMmYtNDQxYS1hODZhLTM1OTg1MTU3ODAwMi8iLCJwYXJlbnQiOm51
+        bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRzIjpbeyJt
+        ZXNzYWdlIjoiUGFyc2luZyBNZXRhZGF0YSBMaW5lcyIsInN0YXRlIjoiY29t
+        cGxldGVkIiwidG90YWwiOjMsImRvbmUiOjMsInN1ZmZpeCI6bnVsbCwidGFz
+        ayI6Ii9wdWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRmYTItYjI2
+        Yi03NTM0ZmRjZGQwYzgvIn0seyJtZXNzYWdlIjoiQXNzb2NpYXRpbmcgQ29u
+        dGVudCIsInN0YXRlIjoiY29tcGxldGVkIiwidG90YWwiOjMsImRvbmUiOjMs
+        InN1ZmZpeCI6bnVsbCwidGFzayI6Ii9wdWxwL2FwaS92My90YXNrcy82NDlm
+        MzhjMC0zYmJiLTRmYTItYjI2Yi03NTM0ZmRjZGQwYzgvIn0seyJtZXNzYWdl
+        IjoiRG93bmxvYWRpbmcgQXJ0aWZhY3RzIiwic3RhdGUiOiJjb21wbGV0ZWQi
+        LCJ0b3RhbCI6bnVsbCwiZG9uZSI6MCwic3VmZml4IjpudWxsLCJ0YXNrIjoi
+        L3B1bHAvYXBpL3YzL3Rhc2tzLzY0OWYzOGMwLTNiYmItNGZhMi1iMjZiLTc1
+        MzRmZGNkZDBjOC8ifSx7Im1lc3NhZ2UiOiJEb3dubG9hZGluZyBNZXRhZGF0
+        YSIsInN0YXRlIjoiY29tcGxldGVkIiwidG90YWwiOjEsImRvbmUiOjEsInN1
+        ZmZpeCI6bnVsbCwidGFzayI6Ii9wdWxwL2FwaS92My90YXNrcy82NDlmMzhj
+        MC0zYmJiLTRmYTItYjI2Yi03NTM0ZmRjZGQwYzgvIn1dLCJjcmVhdGVkX3Jl
+        c291cmNlcyI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzVhMTZhNGY1
+        LTE2YmQtNDgwNy1iODNjLTVkMzdhN2Q5ODYyOS92ZXJzaW9ucy8yLyJdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:58 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/649f38c0-3bbb-4fa2-b26b-7534fdcdd0c8/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:58 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1150'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRm
+        YTItYjI2Yi03NTM0ZmRjZGQwYzgvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU3Ljc5MzkwM1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnN5bmNocm9uaXppbmcuc3luY2hyb25p
+        emUiLCJzdGFydGVkX2F0IjoiMjAxOS0wNi0wNFQxNDowNTo1Ny44OTMyNjZa
+        IiwiZmluaXNoZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA1OjU4LjI5NTcyMloi
+        LCJub25fZmF0YWxfZXJyb3JzIjpbXSwiZXJyb3IiOm51bGwsIndvcmtlciI6
+        Ii9wdWxwL2FwaS92My93b3JrZXJzLzBjNjk2ZDExLWIzMmYtNDQxYS1hODZh
+        LTM1OTg1MTU3ODAwMi8iLCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3Mi
+        OltdLCJwcm9ncmVzc19yZXBvcnRzIjpbeyJtZXNzYWdlIjoiUGFyc2luZyBN
+        ZXRhZGF0YSBMaW5lcyIsInN0YXRlIjoiY29tcGxldGVkIiwidG90YWwiOjMs
+        ImRvbmUiOjMsInN1ZmZpeCI6bnVsbCwidGFzayI6Ii9wdWxwL2FwaS92My90
+        YXNrcy82NDlmMzhjMC0zYmJiLTRmYTItYjI2Yi03NTM0ZmRjZGQwYzgvIn0s
+        eyJtZXNzYWdlIjoiQXNzb2NpYXRpbmcgQ29udGVudCIsInN0YXRlIjoiY29t
+        cGxldGVkIiwidG90YWwiOjMsImRvbmUiOjMsInN1ZmZpeCI6bnVsbCwidGFz
+        ayI6Ii9wdWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRmYTItYjI2
+        Yi03NTM0ZmRjZGQwYzgvIn0seyJtZXNzYWdlIjoiRG93bmxvYWRpbmcgQXJ0
+        aWZhY3RzIiwic3RhdGUiOiJjb21wbGV0ZWQiLCJ0b3RhbCI6bnVsbCwiZG9u
+        ZSI6MCwic3VmZml4IjpudWxsLCJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tz
+        LzY0OWYzOGMwLTNiYmItNGZhMi1iMjZiLTc1MzRmZGNkZDBjOC8ifSx7Im1l
+        c3NhZ2UiOiJEb3dubG9hZGluZyBNZXRhZGF0YSIsInN0YXRlIjoiY29tcGxl
+        dGVkIiwidG90YWwiOjEsImRvbmUiOjEsInN1ZmZpeCI6bnVsbCwidGFzayI6
+        Ii9wdWxwL2FwaS92My90YXNrcy82NDlmMzhjMC0zYmJiLTRmYTItYjI2Yi03
+        NTM0ZmRjZGQwYzgvIn1dLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVscC9h
+        cGkvdjMvcmVwb3NpdG9yaWVzLzVhMTZhNGY1LTE2YmQtNDgwNy1iODNjLTVk
+        MzdhN2Q5ODYyOS92ZXJzaW9ucy8yLyJdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:58 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/repositories/5a16a4f5-16bd-4807-b83c-5d37a7d98629/versions/2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:58 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '539'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNWExNmE0ZjUt
+        MTZiZC00ODA3LWI4M2MtNWQzN2E3ZDk4NjI5L3ZlcnNpb25zLzIvIiwiX2Ny
+        ZWF0ZWQiOiIyMDE5LTA2LTA0VDE0OjA1OjU3LjkyMDgxNFoiLCJudW1iZXIi
+        OjIsImJhc2VfdmVyc2lvbiI6bnVsbCwiY29udGVudF9zdW1tYXJ5Ijp7ImFk
+        ZGVkIjp7ImZpbGUuZmlsZSI6eyJjb3VudCI6MywiaHJlZiI6Ii9wdWxwL2Fw
+        aS92My9jb250ZW50L2ZpbGUvZmlsZXMvP3JlcG9zaXRvcnlfdmVyc2lvbl9h
+        ZGRlZD0vcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzVhMTZhNGY1LTE2YmQt
+        NDgwNy1iODNjLTVkMzdhN2Q5ODYyOS92ZXJzaW9ucy8yLyJ9fSwicmVtb3Zl
+        ZCI6e30sInByZXNlbnQiOnsiZmlsZS5maWxlIjp7ImNvdW50IjozLCJocmVm
+        IjoiL3B1bHAvYXBpL3YzL2NvbnRlbnQvZmlsZS9maWxlcy8/cmVwb3NpdG9y
+        eV92ZXJzaW9uPS9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNWExNmE0ZjUt
+        MTZiZC00ODA3LWI4M2MtNWQzN2E3ZDk4NjI5L3ZlcnNpb25zLzIvIn19fX0=
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:58 GMT
+- request:
+    method: post
+    uri: http://192.168.121.31/pulp/api/v3/publications/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
+        aWVzLzVhMTZhNGY1LTE2YmQtNDgwNy1iODNjLTVkMzdhN2Q5ODYyOS92ZXJz
+        aW9ucy8yLyIsIm1hbmlmZXN0IjoiUFVMUF9NQU5JRkVTVCJ9
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:58 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA3NDk0ZGE2LTgyOGUtNDc3
+        Yi04ZmE3LTNmOTU3YzljYzRlYi8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:58 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/07494da6-828e-477b-8fa7-3f957c9cc4eb/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:58 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '522'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wNzQ5NGRhNi04MjhlLTQ3
+        N2ItOGZhNy0zZjk1N2M5Y2M0ZWIvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU4Ljc5NDU3NFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA1OjU4Ljg4NTIyMVoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDU6NTguOTUxMDE5WiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvMGM2OTZkMTEtYjMyZi00NDFhLWE4NmEtMzU5ODUx
+        NTc4MDAyLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS80ODAzODM5OS1kN2Zk
+        LTRlMTMtYTIxMC1kNTkyM2E0NWFhMmMvIl19
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:58 GMT
+- request:
+    method: patch
+    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/65d46321-7fb1-4cda-918c-01ffb3474661/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvZmls
+        ZS9maWxlLzQ4MDM4Mzk5LWQ3ZmQtNGUxMy1hMjEwLWQ1OTIzYTQ1YWEyYy8i
+        fQ==
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:59 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzE2NmU5NjlmLTM2ZGEtNGRm
+        Ny05MjJiLWY4YjU5ZmJlNTE4Ni8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:59 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/166e969f-36da-4df7-922b-f8b59fbe5186/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:59 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '420'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8xNjZlOTY5Zi0zNmRhLTRk
+        ZjctOTIyYi1mOGI1OWZiZTUxODYvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU5LjE4NDA1MVoiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJhbF91cGRhdGUiLCJzdGFy
+        dGVkX2F0IjoiMjAxOS0wNi0wNFQxNDowNTo1OS4zMTczOTFaIiwiZmluaXNo
+        ZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVs
+        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvNDM4ZTg0ODMtNTlh
+        OC00ZjU3LThlMjQtNjA1NWVjMzM1M2JiLyIsInBhcmVudCI6bnVsbCwic3Bh
+        d25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVk
+        X3Jlc291cmNlcyI6W119
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:59 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/166e969f-36da-4df7-922b-f8b59fbe5186/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:59 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '447'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8xNjZlOTY5Zi0zNmRhLTRk
+        ZjctOTIyYi1mOGI1OWZiZTUxODYvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA1OjU5LjE4NDA1MVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX3VwZGF0ZSIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA1OjU5LjMxNzM5MVoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDU6NTkuMzk3NjI5WiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvNDM4ZTg0ODMtNTlhOC00ZjU3LThlMjQtNjA1NWVj
+        MzM1M2JiLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6W119
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:59 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/content/file/files/?page=1&page_size=2000&repository_version=/pulp/api/v3/repositories/5a16a4f5-16bd-4807-b83c-5d37a7d98629/versions/2/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:05:59 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2237'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MywibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7Il9jcmVhdGVkIjoiMjAxOS0wNS0yMlQyMjo0NDo0Mi4wMTQwMDla
+        IiwiX2FydGlmYWN0IjoiL3B1bHAvYXBpL3YzL2FydGlmYWN0cy8zZDYwOTA3
+        MS04ODY0LTQ4ZmMtOTYxYi00NGY0ZDQ2Yzc3ZTYvIiwiX3R5cGUiOiJmaWxl
+        LmZpbGUiLCJfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50L2ZpbGUvZmls
+        ZXMvZDAxNTgxMDUtMmNiYy00ZmE3LWE4NTktMTJlM2JlZDIwY2JhLyIsIm1k
+        NSI6IjMwYjJhZGM4NDA2NTM5YjgyYTA2YWIzZmRmNGIzMTIwIiwic2hhMSI6
+        ImZkYzVhOTdkOTcxMDNiOWIxMDAxOTU3ZGYxNmIxZWIxMTA1ODEwYTkiLCJz
+        aGEyMjQiOiIwOWRmNWQ3ODJjMDg3ODFlOWM0ZTYzNDY3ODAxNmJhMjZmNDZk
+        YmNjYmYwMjU2YjdhMDM3YjkyZiIsInNoYTI1NiI6ImY1NmUwODg5ODI4N2U2
+        MGIzMTY5MzkyMzUxZTkyOTZiYmUyODQxN2RiMWY4ZTM0ZTgwNThkMTI0YmU4
+        OWI5M2EiLCJzaGEzODQiOiJkYWE5MTZjNzg5YTY2NjQyNTY1NTBlM2U5YzRl
+        OTAxOTYwNTQ1MDhjZTlkMmI3MTRkYTQ1MTM1OTYwMjFiMDMwZTBmMzc5NmNi
+        MjAyZTBkYjNlYTNhOGFkNmJhMWQyNDkiLCJzaGE1MTIiOiI1YmRmYzY3YTFi
+        NzAzOGI2ZDhjZDQ1YWUyNTk5NDU5ZTA5ZDA4YTczNDkwMjdhY2YzNTRkZWY2
+        ODcxMWMxNTc3ODcxNTgwMzFiYjYwMGRmZTlhNTkyNmMwNjNiNjRhNWNmODJj
+        NzZiMjIwYjhmMWQ0Y2Q0OGUwY2IzZDI4OWE0YyIsInJlbGF0aXZlX3BhdGgi
+        OiJ0ZXN0My5pc28ifSx7Il9jcmVhdGVkIjoiMjAxOS0wNS0yMlQyMjo0NDo0
+        Mi4wMTYzOTlaIiwiX2FydGlmYWN0IjoiL3B1bHAvYXBpL3YzL2FydGlmYWN0
+        cy9hM2U2MDhhZC1iNjc1LTQ4ZjgtODA5YS01ZTcyYzk4YmZmYjUvIiwiX3R5
+        cGUiOiJmaWxlLmZpbGUiLCJfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50
+        L2ZpbGUvZmlsZXMvMmU2Njc2ODgtOGI4OC00ZTM2LTgxYTEtNjUwNTgyMzli
+        MTliLyIsIm1kNSI6IjRiOTJjOWFjZTU5NGVhOWQ0ODkyM2M3OWEwOGJjMDk0
+        Iiwic2hhMSI6IjliYjY4MzcyNWEzNDNkOTJhOGYxYWZlYTE5NDEyMTQwYzE5
+        MjMyZjgiLCJzaGEyMjQiOiI0OTAxNmRkMjI4YjYzMWIzMzY5NmZmZGE4ZmY4
+        ZjdiMDBlOGExOTVhZjQ1NGQ3YjI3NGRjMDA4NiIsInNoYTI1NiI6IjA0MmMy
+        NTlkNTQ2MzMxNTg4ZTFkZmY4M2E0NmY2MmEyN2ZiN2NmM2RlNDA1MDkyNDQ3
+        MGQ5OWZkOGQyYTA0NmYiLCJzaGEzODQiOiI5NDY5OGZkYmNkMGFkYjhlYzRl
+        ZjIwNzllNDljOWQ2MjAzODJlMmMyMWQ2ODhlOGRiYTNhYTc2Y2E3NTI5ZDFk
+        MTE2NmFlYzhiMzk2YjRmZDRmMjdlNzRkZTJhNDhlMTciLCJzaGE1MTIiOiI2
+        ODgzZmQ3NDNkNWNmNWI0OWVjNmVlNTkyODBiMDlhZDZmZjM4MmRkMmM1MDQw
+        ZWQzYTc1ODQzMjc0NTA2ODMxYzYwOWYzNGE4MTMzYzIzYzk0MmQwZjM5NTI0
+        NzMxMjAzMmMzZGE2MzBiZTlhNzJiNDU2NTU0ZjFlOTBiNDUxNiIsInJlbGF0
+        aXZlX3BhdGgiOiJ0ZXN0Mi5pc28ifSx7Il9jcmVhdGVkIjoiMjAxOS0wNS0y
+        MlQyMjo0NDo0Mi4wMTEzNjBaIiwiX2FydGlmYWN0IjoiL3B1bHAvYXBpL3Yz
+        L2FydGlmYWN0cy8xYWY5OGY5Yi1mMmVmLTRmZjgtOWNiNy1jMGU4MGI5Y2E4
+        N2QvIiwiX3R5cGUiOiJmaWxlLmZpbGUiLCJfaHJlZiI6Ii9wdWxwL2FwaS92
+        My9jb250ZW50L2ZpbGUvZmlsZXMvNjhiYTlmNTItMDcwNC00MjIyLWI4ODMt
+        ZWExNGYwNjkxYWM0LyIsIm1kNSI6ImY0ZTRlZTg5NzM4N2Q5MDYxZTVkNmEx
+        N2QzOTkxZmYzIiwic2hhMSI6IjA4ZTI4Mjg4M2EwZjIwYjI0NDE0ZTllNWUx
+        ZjIxYWVkYmEwMDhmZjIiLCJzaGEyMjQiOiJmODBmNDkzNTYxZTU3OTM1MmNl
+        MjRiZWViOWEyYzcxZDFmMWE4Zjc1MjU3ODJjOWJhOGUxZjI0NCIsInNoYTI1
+        NiI6IjU4MmYxNzI5YjBjMTVlYWNiYjdkMDJhNTUzYzBhOTZhMzlmODE3MTM1
+        YzE1YWM0MTkwYWVmOTZlNDVjNGI2NWQiLCJzaGEzODQiOiJhZDNlNGNiNDE0
+        ZWUzNjA0NzdjNTRkMGRiMzM2OTQ5N2ZiMmI4ODU4ZjYzMjhjNzkyMTEyZjU0
+        MzI3YjM5NDcxNmMyZTVhODZjYWEzOTg5OTYwZTRmMjdlYzI3NGE0OWYiLCJz
+        aGE1MTIiOiI0ZjNjYTgwZDUxMmZhODZhZjc2MmExODgzYTMxYjZhNDdkYTgy
+        NTM2OGE0MmJmY2FkZWI4MjRlODQ5Zjc2MjAyZWJlOTUyOWU1YmUxYTkxMWVj
+        NGE5MmI1ZGEzZjRlZWNjZTk1Y2Q2YTVkMmI1Y2RhM2I1ZGRjY2Y1YWFkZjVj
+        NCIsInJlbGF0aXZlX3BhdGgiOiJ0ZXN0LmlzbyJ9XX0=
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:05:59 GMT
+- request:
+    method: post
+    uri: http://192.168.121.31/pulp/api/v3/repositories/5a16a4f5-16bd-4807-b83c-5d37a7d98629/versions/
+    body:
+      encoding: UTF-8
+      base64_string: 'eyJyZW1vdmVfY29udGVudF91bml0cyI6W119
+
+'
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:00 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I5NDBiYWU2LWMwOTYtNDA4
+        ZS1hNGIyLWVjZDIzNmVjMDc5Ni8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:00 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/b940bae6-c096-408e-a4b2-ecd236ec0796/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:00 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '529'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9iOTQwYmFlNi1jMDk2LTQw
+        OGUtYTRiMi1lY2QyMzZlYzA3OTYvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA2OjAwLjMwNzcwNVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA2OjAwLjQyMDQwNloi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDY6MDAuNDkxMDUyWiIs
+        Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvMGM2OTZkMTEtYjMyZi00NDFhLWE4NmEt
+        MzU5ODUxNTc4MDAyLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzVhMTZhNGY1LTE2YmQtNDgw
+        Ny1iODNjLTVkMzdhN2Q5ODYyOS92ZXJzaW9ucy8zLyJdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:00 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/repositories/5a16a4f5-16bd-4807-b83c-5d37a7d98629/versions/3/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:00 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '374'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNWExNmE0ZjUt
+        MTZiZC00ODA3LWI4M2MtNWQzN2E3ZDk4NjI5L3ZlcnNpb25zLzMvIiwiX2Ny
+        ZWF0ZWQiOiIyMDE5LTA2LTA0VDE0OjA2OjAwLjQ1MjcyNloiLCJudW1iZXIi
+        OjMsImJhc2VfdmVyc2lvbiI6bnVsbCwiY29udGVudF9zdW1tYXJ5Ijp7ImFk
+        ZGVkIjp7fSwicmVtb3ZlZCI6e30sInByZXNlbnQiOnsiZmlsZS5maWxlIjp7
+        ImNvdW50IjozLCJocmVmIjoiL3B1bHAvYXBpL3YzL2NvbnRlbnQvZmlsZS9m
+        aWxlcy8/cmVwb3NpdG9yeV92ZXJzaW9uPS9wdWxwL2FwaS92My9yZXBvc2l0
+        b3JpZXMvNWExNmE0ZjUtMTZiZC00ODA3LWI4M2MtNWQzN2E3ZDk4NjI5L3Zl
+        cnNpb25zLzMvIn19fX0=
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:00 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.31/pulp/api/v3/remotes/file/file/a1262763-420b-4200-b0bc-994d71474b03/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:01 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzJhODYyY2I4LTdlNWMtNGY5
+        NC1iNTdmLWFiMzJhNmRmM2I2Zi8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:01 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/2a862cb8-7e5c-4f94-b57f-ab32a6df3b6f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:01 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '447'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8yYTg2MmNiOC03ZTVjLTRm
+        OTQtYjU3Zi1hYjMyYTZkZjNiNmYvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA2OjAxLjA0ODcyM1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2RlbGV0ZSIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA2OjAxLjE2MTkyN1oiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDY6MDEuMjAwMjQxWiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvNDM4ZTg0ODMtNTlhOC00ZjU3LThlMjQtNjA1NWVj
+        MzM1M2JiLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6W119
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:01 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/pulp3_File_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:01 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '470'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZmls
+        ZS9maWxlLzY1ZDQ2MzIxLTdmYjEtNGNkYS05MThjLTAxZmZiMzQ3NDY2MS8i
+        LCJfY3JlYXRlZCI6IjIwMTktMDYtMDRUMTQ6MDU6NTcuMTg5NzMyWiIsImJh
+        c2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvcHVscDNf
+        RmlsZV8xIiwiYmFzZV91cmwiOiJsb2NhbGhvc3Q6MjQ4MTYvcHVscC9jb250
+        ZW50L0RlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvcHVscDNfRmlsZV8x
+        IiwiY29udGVudF9ndWFyZCI6bnVsbCwibmFtZSI6Im9yZ19kZWZhdWx0X2xh
+        YmVsLVB1bHAzX0ZpbGUgMSIsInB1YmxpY2F0aW9uIjoiL3B1bHAvYXBpL3Yz
+        L3B1YmxpY2F0aW9ucy9maWxlL2ZpbGUvNDgwMzgzOTktZDdmZC00ZTEzLWEy
+        MTAtZDU5MjNhNDVhYTJjLyJ9XX0=
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:01 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.31/pulp/api/v3/distributions/file/file/65d46321-7fb1-4cda-918c-01ffb3474661/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2.dev.1558441126/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:01 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA0ZjUyYjI0LWZkNmEtNGJl
+        OC04NDJkLWQ4MTBlZDk3ZDJkNi8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:01 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.31/pulp/api/v3/repositories/5a16a4f5-16bd-4807-b83c-5d37a7d98629/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:01 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2RiZTgxODg5LTlhMTktNDY5
+        Mi1hZjNmLTllOTQzMWRlOTJmZi8ifQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:01 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/dbe81889-9a19-4692-af3f-9e9431de92ff/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:01 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '418'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9kYmU4MTg4OS05YTE5LTQ2
+        OTItYWYzZi05ZTk0MzFkZTkyZmYvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA2OjAxLjc0MDQ5NloiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscGNvcmUuYXBwLnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwic3RhcnRl
+        ZF9hdCI6IjIwMTktMDYtMDRUMTQ6MDY6MDEuODg5MjIyWiIsImZpbmlzaGVk
+        X2F0IjpudWxsLCJub25fZmF0YWxfZXJyb3JzIjpbXSwiZXJyb3IiOm51bGws
+        IndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJzLzBjNjk2ZDExLWIzMmYt
+        NDQxYS1hODZhLTM1OTg1MTU3ODAwMi8iLCJwYXJlbnQiOm51bGwsInNwYXdu
+        ZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9y
+        ZXNvdXJjZXMiOltdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:01 GMT
+- request:
+    method: get
+    uri: http://192.168.121.31/pulp/api/v3/tasks/dbe81889-9a19-4692-af3f-9e9431de92ff/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Tue, 04 Jun 2019 14:06:02 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '445'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9kYmU4MTg4OS05YTE5LTQ2
+        OTItYWYzZi05ZTk0MzFkZTkyZmYvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTA0
+        VDE0OjA2OjAxLjc0MDQ5NloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5kZWxldGUiLCJzdGFy
+        dGVkX2F0IjoiMjAxOS0wNi0wNFQxNDowNjowMS44ODkyMjJaIiwiZmluaXNo
+        ZWRfYXQiOiIyMDE5LTA2LTA0VDE0OjA2OjAxLjk2MTYxMFoiLCJub25fZmF0
+        YWxfZXJyb3JzIjpbXSwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2Fw
+        aS92My93b3JrZXJzLzBjNjk2ZDExLWIzMmYtNDQxYS1hODZhLTM1OTg1MTU3
+        ODAwMi8iLCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9n
+        cmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdfQ==
+    http_version: 
+  recorded_at: Tue, 04 Jun 2019 14:06:02 GMT
 recorded_with: VCR 3.0.3
