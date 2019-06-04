@@ -19,7 +19,7 @@ module Actions
                      id: input[:content_id],
                      name: input[:name],
                      contentUrl: input[:content_url],
-                     gpgUrl: input[:gpg_key_url],
+                     gpgUrl: input[:gpg_key_url] || '', #candlepin ignores nil
                      type: input[:type],
                      arches: input[:arches],
                      label: input[:label],
