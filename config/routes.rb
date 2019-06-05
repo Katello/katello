@@ -29,4 +29,6 @@ Katello::Engine.routes.draw do
   match '/xui' => 'react#index', :via => [:get]
   match '/xui/*page' => 'react#index', :via => [:get]
   match '/organization_select' => 'react#index', :via => [:get]
+
+  match '/angular_test' => 'angular#index', :via => [:get]
 end

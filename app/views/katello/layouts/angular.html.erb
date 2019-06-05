@@ -1,0 +1,14 @@
+<!--<% content_for(:stylesheets) do %>
+    <%= webpacked_plugins_css_for :katello %>
+<% end %>
+
+<% content_for(:javascripts) do %>
+    <%= webpacked_plugins_js_for :katello %>
+<% end %>-->
+
+<% content_for(:content) do %>
+    <div ng-app="bastion">
+      <div ui-view></div>
+    </div>
+<% end %>
+<%= render file: "layouts/base" %>
