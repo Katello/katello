@@ -17,14 +17,14 @@ module Actions
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
                         :owner => repository.organization.label,
                         :content_id => root.content_id,
-                        :name => content.name,
+                        :name => root.name,
                         :content_url => root.custom_content_path,
                         :gpg_key_url => repository.yum_gpg_key_url,
                         :label => content.label,
                         :type => root.content_type,
                         :arches => root.arch == "noarch" ? nil : root.arch)
 
-            content.update_attributes!(name: content.name,
+            content.update_attributes!(name: root.name,
                                        content_url: root.custom_content_path,
                                        content_type: repository.content_type,
                                        label: content.label,
