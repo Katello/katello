@@ -18,4 +18,5 @@ componentRegistry.register({
   type: Application,
 });
 
-const bastionModule = angular.module('bastion', [uirouter, angularTest]).config(routes)
+angular.module('bastion', [uirouter, angularTest])
+       .config(routes)
