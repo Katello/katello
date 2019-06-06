@@ -28,7 +28,7 @@ module Katello
           'label' => host.content_view.try(:label),
           'latest-version' => host.content_view.try(:latest_version),
           'version' => content_version.try(:version),
-          'published' => content_version.try(:created_at).try(:time),
+          'published' => content_version.try(:created_at).try(:time).to_s,
           'components' => content_view_components
         }
 
@@ -43,7 +43,7 @@ module Katello
           cv_label = cv.component_version.content_view.label
           components[cv_label] = {}
           components[cv_label]['version'] = cv.component_version.try(:version)
-          components[cv_label]['published'] = cv.component_version.try(:created_at).try(:time)
+          components[cv_label]['published'] = cv.component_version.try(:created_at).try(:time).to_s
         end
         components
       end
