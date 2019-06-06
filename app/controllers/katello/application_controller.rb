@@ -9,6 +9,7 @@ module Katello
 
     helper ::TaxonomyHelper
     helper ::ApplicationHelper
+    helper ::PaginationHelper
 
     before_action :set_gettext_locale
     helper_method :current_organization_object
