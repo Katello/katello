@@ -1,0 +1,1 @@
+export default angular.module('Bastion.components', []).name
