@@ -1,5 +1,4 @@
-const nutupane = angular.module('Bastion.components').factory('Nutupane',
-    ['$location', '$q', '$stateParams', 'entriesPerPage', 'TableCache', 'Notification',
+export default ['$location', '$q', '$stateParams', 'entriesPerPage', 'TableCache', 'Notification',
     function ($location, $q, $stateParams, entriesPerPage, TableCache, Notification) {
         var Nutupane = function (resource, params, action, nutupaneParams) {
             var self = this;
@@ -460,7 +459,4 @@ const nutupane = angular.module('Bastion.components').factory('Nutupane',
         };
 
         return Nutupane;
-    }]
-);
-
-export default nutupane
+    }];

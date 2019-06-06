@@ -9,6 +9,7 @@ import angular from 'angular'
 import uirouter from 'angular-ui-router'
 import routes from './angular/app.routes'
 import angularTest from './angular/angular_test'
+import bastionComponents from './angular/bastion/components'
 import './redux';
 // Not currently mocking anything
 // import './services/api/setupMocks';
@@ -18,5 +19,11 @@ componentRegistry.register({
   type: Application,
 });
 
-angular.module('Bastion', [uirouter, angularTest])
+const ANGULAR_MODULES = [
+  uirouter,
+  angularTest,
+  bastionComponents
+];
+
+angular.module('Bastion', ANGULAR_MODULES)
        .config(routes)
