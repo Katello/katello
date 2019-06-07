@@ -6,6 +6,28 @@
     <%= webpacked_plugins_js_for :katello %>
 <% end %>-->
 
+<% content_for(:javascripts) do %>
+  <script type="text/javascript">
+//    angular.module('Bastion.features').value('FeatureSettings', angular.fromJson(<%= SETTINGS[:features].nil? ? {} : SETTINGS[:features].to_json.html_safe %>));
+    angular.module('Bastion').value('currentLocale', '<%= I18n.locale %>');
+    angular.module('Bastion').value('CurrentOrganization', "<%= Organization.current.id if Organization.current %>");
+    angular.module('Bastion').value('contentAccessMode', "<%= Organization.current.try(:content_access_mode) if Organization.current %>");
+    angular.module('Bastion').value('foreman', tfm);
+    angular.module('Bastion').value('repositoryTypes', angular.fromJson('<%= Katello::RepositoryTypeManager.repository_types.values.to_json.html_safe %>'));
+    angular.module('Bastion').value('deleteHostOnUnregister', angular.fromJson('<%= Setting[:unregister_delete_host] %>'));
+    angular.module('Bastion').value('contentDisconnected', angular.fromJson('<%= Setting[:content_disconnected] %>'));
+    angular.module('Bastion').value('entriesPerPage', "<%= Setting[:entries_per_page] %>");
+    angular.module('Bastion').value('contentViewSolveDependencies', "<%= Setting[:content_view_solve_dependencies] %>");
+    angular.module('Bastion').constant('BastionConfig', angular.fromJson('<%= Bastion.config.to_json.html_safe %>'));
+ //   angular.module('Bastion.auth').value('CurrentUser', {
+ //       id: <%= User.current.id %>,
+ //       admin: <%= User.current.admin || User.current.usergroups.any? { |group| group.admin } %>
+ //   });
+ //   angular.module('Bastion.auth').value('Permissions', angular.fromJson('<%= User.current.cached_roles.collect { |role| role.permissions }.flatten.to_json.html_safe %>'));
+
+  </script>
+<% end %>
+
 <% content_for(:content) do %>
     <div ng-app="Bastion">
       <div ui-view></div>
