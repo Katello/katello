@@ -106,11 +106,13 @@ module Katello
     end
 
     def test_fetch_pools_401_gone
-      Resources::Candlepin::UpstreamPool.expects(:get).raises(RestClient::Gone)
+      set_organization(Organization.first)
+
+      RestClient::Resource.any_instance.expects(:get).raises(RestClient::Gone)
       error_message = "The Subscription Allocation providing the imported manifest has been removed. " \
                       "Please create a new Subscription Allocation and import the new manifest."
 
-      assert_raises_with_message(RuntimeError, error_message) do
+      assert_raises_with_message(Katello::Errors::UpstreamConsumerGone, error_message) do
         UpstreamPool.fetch_pools({})
       end
     end
