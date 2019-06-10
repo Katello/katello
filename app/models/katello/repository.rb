@@ -265,30 +265,40 @@ module Katello
       redhat? ? "redhat" : "custom"
     end
 
-    def empty_errata
+    def self.errata_with_package_counts(repo)
       repository_rpm = Katello::RepositoryRpm.table_name
       repository_errata = Katello::RepositoryErratum.table_name
       rpm = Katello::Rpm.table_name
       errata = Katello::Erratum.table_name
       erratum_package = Katello::ErratumPackage.table_name
-
-      errata_with_packages = Erratum.joins(
+      ::Katello::Erratum.joins(
         "INNER JOIN #{erratum_package} on #{erratum_package}.erratum_id = #{errata}.id",
         "INNER JOIN #{repository_errata} on #{repository_errata}.erratum_id = #{errata}.id",
         "INNER JOIN #{rpm} on #{rpm}.filename = #{erratum_package}.filename",
         "INNER JOIN #{repository_rpm} on #{repository_rpm}.rpm_id = #{rpm}.id").
-        where("#{repository_rpm}.repository_id" => self.id).
-        where("#{repository_errata}.repository_id" => self.id)
-
-      if errata_with_packages.any?
-        self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_with_packages.pluck("#{errata}.id"))
-      else
-        self.errata
-      end
+        where("#{repository_rpm}.repository_id" => repo.id).
+        where("#{repository_errata}.repository_id" => repo.id).
+        group("#{errata}.id").count
     end
 
-    def empty_errata!
-      found = empty_errata.to_a
+    def partial_errata
+      return [] if library_instance?
+
+      errata_with_package_counts = ::Katello::Repository.errata_with_package_counts(self)
+      partial_errata = self.errata
+      if errata_with_package_counts.any?
+        errata_with_packages_in_library = ::Katello::Repository.errata_with_package_counts(library_instance)
+        errata_with_package_counts.keep_if { |id| errata_with_package_counts[id] == errata_with_packages_in_library[id] }
+        unless errata_with_package_counts.empty?
+          partial_errata = self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_with_package_counts.keys)
+        end
+      end
+
+      partial_errata
+    end
+
+    def remove_partial_errata!
+      found = partial_errata.to_a
       yield(found) if block_given?
       self.repository_errata.where(:erratum_id => found.map(&:id)).delete_all
       found

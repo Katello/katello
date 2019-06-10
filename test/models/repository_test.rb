@@ -23,37 +23,72 @@ module Katello
       assert @repo.full_path =~ /abc123/
     end
 
-    def test_empty_errata
-      @fedora_17_x86_64.errata.destroy_all
+    def test_partial_errata_package_counts
+      @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
+      source_repo = @fedora_17_x86_64_dev.library_instance
+      source_repo.errata.destroy_all
+      @fedora_17_x86_64_dev.errata.destroy_all
       filename = 'much-rpm.much-wow'
 
-      erratum = @fedora_17_x86_64.errata.create! do |new_erratum|
+      erratum = source_repo.errata.create! do |new_erratum|
         new_erratum.pulp_id = "foo"
         new_erratum.packages = [ErratumPackage.new(:filename => filename, :nvrea => 'foo', :name => 'foo')]
       end
 
-      assert_includes @fedora_17_x86_64.empty_errata, erratum
+      @fedora_17_x86_64_dev.errata << erratum
+      @fedora_17_x86_64_dev.save!
 
-      @fedora_17_x86_64.rpms.create! do |rpm|
-        rpm.pulp_id = 'its the pulp_id that never ends oh wait it does'
-        rpm.filename = filename
+      assert_includes @fedora_17_x86_64_dev.partial_errata, erratum
+
+      rpm = source_repo.rpms.create! do |new_rpm|
+        new_rpm.pulp_id = 'its the pulp_id that never ends oh wait it does'
+        new_rpm.filename = filename
       end
 
-      refute_includes @fedora_17_x86_64.empty_errata, erratum
+      @fedora_17_x86_64_dev.rpms << rpm
+      @fedora_17_x86_64_dev.save!
+
+      refute_includes @fedora_17_x86_64_dev.partial_errata, erratum
+
+      # Now lets test the case where the Errata in the library/source repo has 2 packages
+      # While the dest repo only has Errata with one package
+      # Expected Behavior -
+      # "Errata should get deleted if its partial"
+      # i.e only a subset of errata packages are present in the destination repo
+      filename = 'much-rpm123.rpm'
+      new_rpm = source_repo.rpms.create! do |another_rpm|
+        another_rpm.pulp_id = 'its the NEW pulp_id that never ends oh wait it does'
+        another_rpm.filename = filename
+      end
+
+      erratum.packages << [ErratumPackage.new(:filename => new_rpm.filename, :nvrea => 'bar', :name => 'bar')]
+      erratum.save!
+
+      assert_includes @fedora_17_x86_64_dev.partial_errata, erratum
+
+      @fedora_17_x86_64_dev.rpms << new_rpm
+      @fedora_17_x86_64_dev.save!
+      refute_includes @fedora_17_x86_64_dev.partial_errata, erratum
     end
 
-    def test_empty_errata!
-      @fedora_17_x86_64.errata.destroy_all
+    def test_remove_partial_errata!
+      @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
+      source_repo = @fedora_17_x86_64_dev.library_instance
+      source_repo.errata.destroy_all
+      @fedora_17_x86_64_dev.errata.destroy_all
       filename = 'much-rpm.much-wow'
 
-      erratum = @fedora_17_x86_64.errata.create! do |new_erratum|
+      erratum = source_repo.errata.create! do |new_erratum|
         new_erratum.pulp_id = "foo"
         new_erratum.packages = [ErratumPackage.new(:filename => filename, :nvrea => 'foo', :name => 'foo')]
       end
 
-      errata = @fedora_17_x86_64.empty_errata!
+      @fedora_17_x86_64_dev.errata << erratum
+      @fedora_17_x86_64_dev.save!
+
+      errata = @fedora_17_x86_64_dev.remove_partial_errata!
       assert_includes errata, erratum
-      assert_not_includes @fedora_17_x86_64.reload.errata, erratum
+      assert_not_includes @fedora_17_x86_64_dev.reload.errata, erratum
     end
 
     def test_archived_instance

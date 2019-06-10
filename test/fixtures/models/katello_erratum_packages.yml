@@ -3,3 +3,9 @@ security_package:
   filename: "foobar-1.3.4.rpm"
   name: "foobar"
   nvrea: "foobar-1.2.3"
+
+modular_package:
+  erratum_id: <%= ActiveRecord::FixtureSet.identify(:modular) %>
+  filename: "foobarmod-1.3.4.rpm"
+  name: "foobarmod"
+  nvrea: "foobarmod-1.2.3"

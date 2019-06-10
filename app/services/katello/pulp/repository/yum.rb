@@ -89,7 +89,7 @@ module Katello
 
           # always copy modular rpms
           modular_includes = {filters: {unit: { 'filename' => { '$in' => repo.rpms.modular.pluck(:filename) } }}}
-          smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id, modular_includes)
+          tasks << smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id, modular_includes)
 
           [:srpm, :errata, :package_group, :yum_repo_metadata_file, :distribution, :module, :module_default].each do |type|
             tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
@@ -125,23 +125,23 @@ module Katello
         end
 
         def purge_empty_contents
-          [purge_empty_errata, purge_empty_package_groups]
+          [purge_partial_errata, purge_empty_package_groups]
         end
 
         def should_purge_empty_contents?
           true
         end
 
-        private
-
-        def purge_empty_errata
+        def purge_partial_errata
           task = nil
-          repo.empty_errata! do |errata_to_delete|
+          repo.remove_partial_errata! do |errata_to_delete|
             task = repo.unassociate_by_filter(::Katello::ContentViewErratumFilter::CONTENT_TYPE,
                                                 "id" => { "$in" => errata_to_delete.map(&:errata_id) })
           end
           task
         end
+
+        private
 
         def purge_empty_package_groups
           rpm_names = repo.rpms.pluck(:name).uniq
