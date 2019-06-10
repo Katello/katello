@@ -118,8 +118,11 @@ module Katello
         client = ::Pulp::V3::Api.new
         client.configure(
           host: pulp3_host!,
+          scheme: 'https',
           username: 'admin',
           password: 'password',
+          cert_file: ::Cert::Certs.ssl_client_cert,
+          key_file: ::Cert::Certs.ssl_client_key,
           debugging: true,
           logger: ::Foreman::Logging.logger('katello/pulp_rest'))
         client
