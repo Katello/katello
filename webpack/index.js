@@ -7,9 +7,12 @@ import componentRegistry from 'foremanReact/components/componentRegistry';
 import Application from './containers/Application/index';
 import angular from 'angular'
 import uirouter from 'angular-ui-router'
+import angularResource from 'angular-resource'
 import routes from './angular/app.routes'
-import angularTest from './angular/angular_test'
 import bastionComponents from './angular/bastion/components'
+import bastionUtils from './angular/bastion/utils'
+import angularTest from './angular/angular_test'
+import contentCredentials from './angular/content-credentials'
 import './redux';
 // Not currently mocking anything
 // import './services/api/setupMocks';
@@ -21,8 +24,11 @@ componentRegistry.register({
 
 const ANGULAR_MODULES = [
   uirouter,
+  angularResource,
   angularTest,
-  bastionComponents
+  bastionComponents,
+  bastionUtils,
+  contentCredentials
 ];
 
 angular.module('Bastion', ANGULAR_MODULES)

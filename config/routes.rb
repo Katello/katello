@@ -31,5 +31,5 @@ Katello::Engine.routes.draw do
   match '/organization_select' => 'react#index', :via => [:get]
 
   match '/angular_test' => 'angular#index', :via => [:get]
-  match '/content-credentials2' => 'angular#index', :via => [:get]
+  match '/content_credentials2' => 'angular#index', :via => [:get]
 end

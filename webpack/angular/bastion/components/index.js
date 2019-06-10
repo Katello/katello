@@ -1,3 +1,4 @@
+import angular from 'angular';
 import Nutupane from './nutupane.factory';
 import TableCache from './table-cache.service';
 import Notification from './notification.service';
