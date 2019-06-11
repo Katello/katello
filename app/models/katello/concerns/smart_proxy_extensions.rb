@@ -145,12 +145,11 @@ module Katello
       end
 
       def pulp_mirror?
-        self.features.map(&:name).include?(PULP_NODE_FEATURE)
+        self.has_feature? PULP_NODE_FEATURE
       end
 
       def pulp_master?
-        # use map instead of pluck in case the features aren't saved yet during create
-        self.features.map(&:name).include?(PULP_FEATURE)
+        self.has_feature? PULP_FEATURE
       end
 
       #deprecated methods
@@ -162,7 +161,7 @@ module Katello
       end
 
       def associate_default_locations
-        return unless pulp_master?
+        return unless self.pulp_master?
         ['puppet_content', 'subscribed_hosts'].each do |type|
           default_location = ::Location.unscoped.find_by_title(
             ::Setting[:"default_location_#{type}"])

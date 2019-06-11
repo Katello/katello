@@ -7,7 +7,8 @@ module Katello
     def setup
       @library = katello_environments(:library)
       @view = katello_content_views(:library_dev_view)
-      @proxy = FactoryBot.build(:smart_proxy, :url => 'http://fakepath.com/foo')
+      @proxy = FactoryBot.build(:smart_proxy, :default_smart_proxy, :url => 'http://fakepath.com/foo')
+      @proxy_mirror = FactoryBot.build(:smart_proxy, :pulp_mirror, :url => 'http://fakemirrorpath.com/foo')
       ::SmartProxy.any_instance.stubs(:associate_features)
     end
 
@@ -34,6 +35,29 @@ module Katello
       host.save!
 
       assert @proxy.destroy!
+    end
+
+    def test_save_with_organization_location
+      set_default_location
+      @proxy.save!
+      @proxy_mirror.save!
+
+      assert @proxy.pulp_master?
+      assert !@proxy_mirror.pulp_master?
+      assert !@proxy.pulp_mirror?
+      assert @proxy_mirror.pulp_mirror?
+
+      assert_not_equal ::Organization.all.count, 0
+      assert_equal @proxy.organizations.all, ::Organization.all
+      assert_equal 0, @proxy_mirror.organizations.all.count
+
+      assert_equal @proxy.locations.first.title, Setting[:default_location_subscribed_hosts]
+      assert_equal @proxy.locations.first.title, Setting[:default_location_puppet_content]
+      assert_equal @proxy_mirror.locations.all.count, 0
+
+      assert_not_equal Katello::KTEnvironment.all.count, 0
+      assert_equal @proxy.lifecycle_environments.all, Katello::KTEnvironment.all
+      assert_equal @proxy_mirror.lifecycle_environments.all.count, 0
     end
   end
 end
