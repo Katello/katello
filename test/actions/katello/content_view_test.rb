@@ -307,6 +307,8 @@ module ::Actions::Katello::ContentView
   end
 
   class IncrementalUpdatesTest < TestBase
+    include Support::CapsuleSupport
+
     let(:action_class) { ::Actions::Katello::ContentView::IncrementalUpdates }
 
     let(:content_view) do
@@ -321,13 +323,43 @@ module ::Actions::Katello::ContentView
       katello_content_view_versions(:composite_view_version_1)
     end
 
-    it 'plans' do
+    before(:all) do
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version).returns(::Katello::ContentViewVersion.first)
+    end
 
+    it 'plans' do
       plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}], [],
                   {:errata_ids => ["FOO"]}, true, [], "BadDescription")
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],
                                 :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
+      refute_action_planed(action, ::Actions::BulkAction)
+    end
+
+    it 'plans capsule syncs when needed' do
+      host = hosts(:one)
+      hosts = ::Host::Managed.where(id: host.id) # action needs a relation
+      errata_ids = [katello_errata(:security).id]
+      smart_proxy = FactoryBot.create(:smart_proxy, features: [FactoryBot.create(:feature, name: SmartProxy::PULP_NODE_FEATURE)])
+      host.content_facet.update_attributes(:content_source_id => smart_proxy.id)
+      smart_proxy.add_lifecycle_environment(library) # just test one proxy will get the content
+      smart_proxies = ::SmartProxy.where(id: smart_proxy.id)
+
+      plan_action(action, [{content_view_version: content_view.version(library), environments: [library]}], [],
+                  {errata_ids: errata_ids}, true, hosts, "BadDescription")
+
+      assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync, smart_proxies.to_a, content_view_id: content_view.id, environment_id: library.id)
+      assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, hosts.to_a, errata_ids)
+    end
+
+    it 'plans applicable errata installation on hosts' do
+      host = hosts(:one)
+      hosts = ::Host::Managed.where(id: host.id) # action needs a relation
+      errata_ids = [katello_errata(:security).id]
+
+      plan_action(action, [{content_view_version: content_view.version(library), environments: [library]}], [],
+                  {errata_ids: errata_ids}, true, hosts, "BadDescription")
+
+      assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, hosts.to_a, errata_ids)
     end
 
     it 'plans with composite' do

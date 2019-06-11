@@ -7,20 +7,26 @@ module Actions
         def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description)
           old_new_version_map = {}
           output_for_version_ids = []
+          hosts, smart_proxies = find_applicable_hosts_and_smart_proxies(hosts, content)
 
           sequence do
             concurrence do
               version_environments.each do |version_environment|
                 version = version_environment[:content_view_version]
+                environment = version_environment[:environments]
                 if version.content_view.composite?
                   fail _("Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}") %
                     {:name => version.content_view.name, :version => version.version}
                 end
 
-                action = plan_action(ContentViewVersion::IncrementalUpdate, version,
-                            version_environment[:environments], :resolve_dependencies => dep_solve, :content => content, :description => description)
-                old_new_version_map[version] = action.new_content_view_version
-                output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
+                sequence do
+                  action = plan_action(ContentViewVersion::IncrementalUpdate, version,
+                              environment, :resolve_dependencies => dep_solve, :content => content, :description => description)
+                  # if some hosts are registered via Capsules, sync the Capsules before applying the errata
+                  plan_smart_proxy_sync(smart_proxies, environment, version)
+                  old_new_version_map[version] = action.new_content_view_version
+                  output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
+                end
               end
             end
 
@@ -28,12 +34,35 @@ module Actions
               handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description, content[:puppet_module_ids])
             end
 
-            if hosts.any? && !content[:errata_ids].blank?
-              errata = ::Katello::Erratum.with_identifiers(content[:errata_ids])
-              hosts = hosts.where(:id => ::Katello::Host::ContentFacet.with_applicable_errata(errata).pluck(:host_id))
+            if hosts.any? && content[:errata_ids].present?
               plan_action(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, hosts, content[:errata_ids])
             end
             plan_self(:version_outputs => output_for_version_ids)
+          end
+        end
+
+        def find_applicable_hosts_and_smart_proxies(hosts, content)
+          smart_proxies = []
+          if hosts.any? && content[:errata_ids].present?
+            errata = ::Katello::Erratum.with_identifiers(content[:errata_ids])
+            facets = ::Katello::Host::ContentFacet.with_applicable_errata(errata)
+            hosts = hosts.where(id: facets.pluck(:host_id))
+            smart_proxies = SmartProxy.non_default.where(content_facets: facets)
+          end
+          return hosts, smart_proxies
+        end
+
+        def plan_smart_proxy_sync(smart_proxies, environment, version)
+          return if smart_proxies.empty?
+
+          concurrence do
+            environment.each do |env|
+              environment_proxies = smart_proxies.with_environment(env)
+              if environment_proxies.any?
+                plan_action(::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync, environment_proxies,
+                            :content_view_id => version.content_view.id, :environment_id => env.id)
+              end
+            end
           end
         end
 

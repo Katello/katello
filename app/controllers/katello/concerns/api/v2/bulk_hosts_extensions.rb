@@ -8,7 +8,7 @@ module Katello
         organization = find_organization
         bulk_params[:included] ||= {}
         bulk_params[:excluded] ||= {}
-        @hosts = []
+        @hosts = ::Host::Managed.none
 
         unless bulk_params[:included][:ids].blank?
           @hosts = ::Host::Managed.authorized(permission).where(:id => bulk_params[:included][:ids])

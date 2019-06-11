@@ -147,7 +147,7 @@ module Katello
       if params[:add_content] && params[:add_content].key?(:errata_ids) && params[:update_hosts] && any_environments
         hosts = calculate_hosts_for_incremental(params[:update_hosts], params[:propagate_to_composites])
       else
-        hosts = []
+        hosts = ::Host::Managed.none
       end
 
       validate_content(params[:add_content])
