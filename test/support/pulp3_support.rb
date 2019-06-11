@@ -14,7 +14,7 @@ module Katello
 
     def ensure_creatable(repo, smart_proxy)
       service = repo.backend_service(smart_proxy)
-      service.class.any_instance.stubs(:backend_object_name).returns("#{repo.content_view.label}-#{repo.label}")
+      service.class.any_instance.stubs(:backend_object_name).returns(repo.pulp_id)
 
       tasks = []
 
