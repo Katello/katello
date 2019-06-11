@@ -9,6 +9,7 @@ FactoryBot.modify do
         proxy.features << Feature.find_or_create_by(:name => 'Pulp')
         proxy.url = "https://#{Socket.gethostname}:9090"
         proxy.puppet_path = '/etc/puppet/environments'
+        proxy.locations = proxy.organizations = proxy.lifecycle_environments = []
       end
     end
 
@@ -27,6 +28,7 @@ FactoryBot.modify do
 
     trait :pulp_mirror do
       after(:build) do |proxy, _evaluator|
+        proxy.locations = proxy.organizations = proxy.lifecycle_environments = []
         proxy.features << Feature.find_or_create_by(:name => 'Pulp Node')
       end
     end
