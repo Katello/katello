@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 export default ['$location', '$q', '$stateParams', 'entriesPerPage', 'TableCache', 'Notification',
     function ($location, $q, $stateParams, entriesPerPage, TableCache, Notification) {
         var Nutupane = function (resource, params, action, nutupaneParams) {
@@ -396,7 +398,7 @@ export default ['$location', '$q', '$stateParams', 'entriesPerPage', 'TableCache
                 }
             };
 
-            self.table.pageSizes = _.uniq(_([25, 50, 75, 100, entriesPerPage]).sortBy().value());
+            self.table.pageSizes = Array.from(new Set([25, 50, 75, 100, entriesPerPage].sort((a, b) => a - b)));
 
             self.table.updatePageSize = function () {
                 params.page = 1;
