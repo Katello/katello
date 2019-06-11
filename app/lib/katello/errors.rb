@@ -116,5 +116,12 @@ module Katello
         end
       end
     end
+
+    class UpstreamConsumerGone < StandardError
+      def message
+        _("The Subscription Allocation providing the imported manifest has been removed. " \
+          "Please create a new Subscription Allocation and import the new manifest.")
+      end
+    end
   end
 end
