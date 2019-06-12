@@ -9,9 +9,10 @@ module Katello
       @name = 'content_default_http_proxy'
     end
 
-    def test_default_setting_accepts_proxy_url
+    def test_default_setting_accepts_proxy_name
       setting = Setting.where(name: @name).first
-      FactoryBot.create(:http_proxy)
+      proxy = FactoryBot.create(:http_proxy)
+      setting.value = proxy.name
       assert setting.valid?
     end
 
@@ -23,7 +24,7 @@ module Katello
     def test_collection_includes_defined_proxy
       proxy = FactoryBot.create(:http_proxy)
       children = TestAppController.helpers.send("#{@name}_collection").last[:children]
-      assert_includes children, proxy.url
+      assert_includes children, proxy.name
     end
   end
 end
