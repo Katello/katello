@@ -2,7 +2,6 @@ require 'katello_test_helper'
 
 module Katello
   class DefaultHTTPProxySettingTest < ActiveSupport::TestCase
-
     class TestAppController < ApplicationController
     end
 
