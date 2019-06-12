@@ -11,8 +11,8 @@ module ::Actions::Pulp3
     end
 
     def test_create
+      @repo.update_attributes(:version_href => "my/custom/path")
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits, @repo, @master, @clone)
-
       assert_equal @repo.version_href, @clone.version_href
     end
   end

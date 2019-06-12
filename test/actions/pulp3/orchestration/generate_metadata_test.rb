@@ -29,12 +29,14 @@ module ::Actions::Pulp3
     end
 
     def test_generate_with_source_repo
-      clone = katello_repositories(:generic_file_dev)
-
-      assert_equal 0, Katello::Pulp3::DistributionReference.where(root_repository_id: clone.root.id).count
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, clone, @master, source_repository: @repo)
-      assert_equal @repo.publication_href, clone.publication_href
-      assert_equal 1, Katello::Pulp3::DistributionReference.where(root_repository_id: clone.root.id).count
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @repo, @master, repository_creation: true)
+      @repo.reload
+      @clone = katello_repositories(:generic_file_dev)
+      assert_equal 1, Katello::Pulp3::DistributionReference.where(root_repository_id: @clone.root.id).count
+      ensure_creatable(@clone, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @clone, @master, source_repository: @repo)
+      assert_equal @repo.publication_href, @clone.publication_href
+      assert_equal 2, Katello::Pulp3::DistributionReference.where(root_repository_id: @clone.root.id).count
     end
   end
 end

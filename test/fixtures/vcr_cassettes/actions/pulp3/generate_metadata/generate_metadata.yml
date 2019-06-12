@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/repositories/?name=org_default_label-My_Files
+    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -22,91 +22,38 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:42 GMT
+      - Wed, 12 Jun 2019 02:33:21 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '415'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9iZGFk
-        YjI1Zi1lOWFkLTQzY2UtOGQxYy05NGM2YjY3NTAyYWEvIiwiX2NyZWF0ZWQi
-        OiIyMDE5LTA1LTMwVDIwOjMyOjM2LjE2MTIxMloiLCJfdmVyc2lvbnNfaHJl
-        ZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvYmRhZGIyNWYtZTlhZC00
-        M2NlLThkMWMtOTRjNmI2NzUwMmFhL3ZlcnNpb25zLyIsIl9sYXRlc3RfdmVy
-        c2lvbl9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9iZGFkYjI1
-        Zi1lOWFkLTQzY2UtOGQxYy05NGM2YjY3NTAyYWEvdmVyc2lvbnMvMS8iLCJu
-        YW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMiLCJkZXNjcmlwdGlv
-        biI6bnVsbH1dfQ==
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:42 GMT
-- request:
-    method: delete
-    uri: http://dev.pulp3/pulp/api/v3/repositories/bdadb25f-e9ad-43ce-8d1c-94c6b67502aa/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:43 GMT
-      Content-Type:
-      - application/json
       Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
+      - '52'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2RiMjFhZmQxLTNmNDgtNGQ0
-        ZC05NzEzLTA0ZWRlNmJhYjIwNi8ifQ==
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:43 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:21 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/remotes/file/file/?name=org_default_label-My_Files
+    uri: https://zeta.partello.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
       Content-Type:
       - application/json
       Accept:
@@ -120,526 +67,416 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:43 GMT
+      - Wed, 12 Jun 2019 02:33:21 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '681'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlbW90ZXMvZmlsZS9maWxl
-        L2Y3MzI3NDAwLWFhYzEtNGVkNC04YjcxLTEzY2UzMGI0ZjlkNi8iLCJfY3Jl
-        YXRlZCI6IjIwMTktMDUtMzBUMjA6MzI6MzYuMzY4MTk2WiIsIl90eXBlIjoi
-        ZmlsZS5maWxlIiwibmFtZSI6Im9yZ19kZWZhdWx0X2xhYmVsLU15X0ZpbGVz
-        IiwidXJsIjoiaHR0cDovL3Rlc3QvdGVzdC8vUFVMUF9NQU5JRkVTVCIsInZh
-        bGlkYXRlIjp0cnVlLCJzc2xfY2FfY2VydGlmaWNhdGUiOiIyODZkYmVlZjRl
-        MjA2ZjMwYjliNTM4YjE1YWQxZTMyODlkMzBlNzJiOGUwZjU4NzZhZTMzNDkz
-        OTdmZWI5MWNkIiwic3NsX2NsaWVudF9jZXJ0aWZpY2F0ZSI6IjI4NmRiZWVm
-        NGUyMDZmMzBiOWI1MzhiMTVhZDFlMzI4OWQzMGU3MmI4ZTBmNTg3NmFlMzM0
-        OTM5N2ZlYjkxY2QiLCJzc2xfY2xpZW50X2tleSI6IjI4NmRiZWVmNGUyMDZm
-        MzBiOWI1MzhiMTVhZDFlMzI4OWQzMGU3MmI4ZTBmNTg3NmFlMzM0OTM5N2Zl
-        YjkxY2QiLCJzc2xfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjpudWxs
-        LCJfbGFzdF91cGRhdGVkIjoiMjAxOS0wNS0zMFQyMDozMjo0MC41NDg5OTha
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:21 GMT
+- request:
+    method: get
+    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:21 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:21 GMT
+- request:
+    method: get
+    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:21 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:21 GMT
+- request:
+    method: get
+    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:21 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:21 GMT
+- request:
+    method: get
+    uri: https://zeta.partello.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:21 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:21 GMT
+- request:
+    method: get
+    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:22 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:22 GMT
+- request:
+    method: get
+    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:22 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:22 GMT
+- request:
+    method: post
+    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1NeV9GaWxl
+        cyJ9
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc2/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:22 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Location:
+      - "/pulp/api/v3/repositories/353505bf-82a0-478d-ab4a-fc75ee9587ae/"
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '302'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvMzUzNTA1YmYt
+        ODJhMC00NzhkLWFiNGEtZmM3NWVlOTU4N2FlLyIsIl9jcmVhdGVkIjoiMjAx
+        OS0wNi0xMlQwMjozMzoyMi40MDM5ODRaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
+        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzM1MzUwNWJmLTgyYTAtNDc4ZC1h
+        YjRhLWZjNzVlZTk1ODdhZS92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
+        aHJlZiI6bnVsbCwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
+        ZXQtTXlfRmlsZXMiLCJkZXNjcmlwdGlvbiI6bnVsbH0=
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:22 GMT
+- request:
+    method: post
+    uri: https://zeta.partello.example.com/pulp/api/v3/remotes/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1NeV9GaWxl
+        cyIsInVybCI6Imh0dHA6Ly90ZXN0L3Rlc3QvL1BVTFBfTUFOSUZFU1QiLCJ2
+        YWxpZGF0ZSI6dHJ1ZSwic3NsX3ZhbGlkYXRpb24iOnRydWUsInBvbGljeSI6
+        ImltbWVkaWF0ZSJ9
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:22 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Location:
+      - "/pulp/api/v3/remotes/file/file/8e1fd195-edd6-497e-afa4-4675b032cdba/"
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '454'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS84ZTFm
+        ZDE5NS1lZGQ2LTQ5N2UtYWZhNC00Njc1YjAzMmNkYmEvIiwiX2NyZWF0ZWQi
+        OiIyMDE5LTA2LTEyVDAyOjMzOjIyLjU3MTMzNVoiLCJfdHlwZSI6ImZpbGUu
+        ZmlsZSIsIm5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15
+        X0ZpbGVzIiwidXJsIjoiaHR0cDovL3Rlc3QvdGVzdC8vUFVMUF9NQU5JRkVT
+        VCIsInZhbGlkYXRlIjp0cnVlLCJzc2xfY2FfY2VydGlmaWNhdGUiOm51bGws
+        InNzbF9jbGllbnRfY2VydGlmaWNhdGUiOm51bGwsInNzbF9jbGllbnRfa2V5
+        IjpudWxsLCJzc2xfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjpudWxs
+        LCJfbGFzdF91cGRhdGVkIjoiMjAxOS0wNi0xMlQwMjozMzoyMi41NzEzNDla
         IiwiZG93bmxvYWRfY29uY3VycmVuY3kiOjIwLCJwb2xpY3kiOiJpbW1lZGlh
-        dGUifV19
+        dGUifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:43 GMT
-- request:
-    method: delete
-    uri: http://dev.pulp3/pulp/api/v3/remotes/file/file/f7327400-aac1-4ed4-8b71-13ce30b4f9d6/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzkyODc0OWU5LTJiYTYtNDJj
-        Yi04NjQ2LWM0ODQ0M2NhNWZjYy8ifQ==
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:43 GMT
-- request:
-    method: get
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/?name=org_default_label-My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '387'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZmls
-        ZS9maWxlL2IzMTg5NWEwLWYwZjEtNGRkOS1hOTNkLTRjMjY2MWM5MzM4Yi8i
-        LCJfY3JlYXRlZCI6IjIwMTktMDUtMzBUMjA6MzI6MzkuMTQ0NDUzWiIsImJh
-        c2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvTXlfRmls
-        ZXMiLCJiYXNlX3VybCI6ImxvY2FsaG9zdDoyNDgxNi9wdWxwL2NvbnRlbnQv
-        RGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFyeS9NeV9GaWxlcyIsImNvbnRl
-        bnRfZ3VhcmQiOm51bGwsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1NeV9G
-        aWxlcyIsInB1YmxpY2F0aW9uIjpudWxsfV19
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:43 GMT
-- request:
-    method: delete
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/b31895a0-f0f1-4dd9-a93d-4c2661c9338b/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBmYzI0Y2Y5LWQ5YTUtNDNm
-        MC1iN2Q1LTc2YzQxZDc4ZWYzMC8ifQ==
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:43 GMT
-- request:
-    method: get
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '52'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:43 GMT
-- request:
-    method: get
-    uri: http://dev.pulp3/pulp/api/v3/repositories/?name=org_default_label-My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '52'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:44 GMT
-- request:
-    method: get
-    uri: http://dev.pulp3/pulp/api/v3/remotes/file/file/?name=org_default_label-My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '52'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:44 GMT
-- request:
-    method: get
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/?name=org_default_label-My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '52'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:44 GMT
-- request:
-    method: get
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '52'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:44 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:22 GMT
 - request:
     method: post
-    uri: http://dev.pulp3/pulp/api/v3/repositories/
-    body:
-      encoding: UTF-8
-      base64_string: 'eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMifQ==
-
-'
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 201
-      message: Created
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '291'
-      Connection:
-      - keep-alive
-      Location:
-      - "/pulp/api/v3/repositories/d8f82613-123f-4a50-99da-9283747bb7fc/"
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZDhmODI2MTMt
-        MTIzZi00YTUwLTk5ZGEtOTI4Mzc0N2JiN2ZjLyIsIl9jcmVhdGVkIjoiMjAx
-        OS0wNS0zMFQyMDozMzo0NC43NzMxODlaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
-        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2Q4ZjgyNjEzLTEyM2YtNGE1MC05
-        OWRhLTkyODM3NDdiYjdmYy92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
-        aHJlZiI6bnVsbCwibmFtZSI6Im9yZ19kZWZhdWx0X2xhYmVsLU15X0ZpbGVz
-        IiwiZGVzY3JpcHRpb24iOm51bGx9
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:44 GMT
-- request:
-    method: post
-    uri: http://dev.pulp3/pulp/api/v3/remotes/file/file/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMiLCJ1cmwiOiJo
-        dHRwOi8vdGVzdC90ZXN0Ly9QVUxQX01BTklGRVNUIiwidmFsaWRhdGUiOnRy
-        dWUsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJwb2xpY3kiOiJpbW1lZGlhdGUi
-        fQ==
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 201
-      message: Created
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '443'
-      Connection:
-      - keep-alive
-      Location:
-      - "/pulp/api/v3/remotes/file/file/52348170-d565-4fa9-8dac-51acb24d5cd6/"
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS81MjM0
-        ODE3MC1kNTY1LTRmYTktOGRhYy01MWFjYjI0ZDVjZDYvIiwiX2NyZWF0ZWQi
-        OiIyMDE5LTA1LTMwVDIwOjMzOjQ0Ljk3ODk5N1oiLCJfdHlwZSI6ImZpbGUu
-        ZmlsZSIsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1NeV9GaWxlcyIsInVy
-        bCI6Imh0dHA6Ly90ZXN0L3Rlc3QvL1BVTFBfTUFOSUZFU1QiLCJ2YWxpZGF0
-        ZSI6dHJ1ZSwic3NsX2NhX2NlcnRpZmljYXRlIjpudWxsLCJzc2xfY2xpZW50
-        X2NlcnRpZmljYXRlIjpudWxsLCJzc2xfY2xpZW50X2tleSI6bnVsbCwic3Ns
-        X3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6bnVsbCwiX2xhc3RfdXBk
-        YXRlZCI6IjIwMTktMDUtMzBUMjA6MzM6NDQuOTc5MDI0WiIsImRvd25sb2Fk
-        X2NvbmN1cnJlbmN5IjoyMCwicG9saWN5IjoiaW1tZWRpYXRlIn0=
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:44 GMT
-- request:
-    method: post
-    uri: http://dev.pulp3/pulp/api/v3/repositories/d8f82613-123f-4a50-99da-9283747bb7fc/versions/
+    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/353505bf-82a0-478d-ab4a-fc75ee9587ae/versions/
     body:
       encoding: UTF-8
       base64_string: 'e30=
@@ -661,32 +498,32 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:45 GMT
+      - Wed, 12 Jun 2019 02:33:22 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '67'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzk5MWEyNjg5LTQ0ZmItNGZm
-        Yi04MmE1LTAyNjVjZGJlNTQ2MC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBiZGRiNGRlLTRlMjctNDEx
+        Yy04MTg4LWQyYzZlZmQ0MGE1NS8ifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:45 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:22 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/tasks/991a2689-44fb-4ffb-82a5-0265cdbe5460/
+    uri: https://zeta.partello.example.com/pulp/api/v3/tasks/0bddb4de-4e27-411c-8188-d2c6efd40a55/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -706,42 +543,42 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:45 GMT
+      - Wed, 12 Jun 2019 02:33:23 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
       Content-Length:
       - '529'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy85OTFhMjY4OS00NGZiLTRm
-        ZmItODJhNS0wMjY1Y2RiZTU0NjAvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTMw
-        VDIwOjMzOjQ1LjQ1ODUzNloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wYmRkYjRkZS00ZTI3LTQx
+        MWMtODE4OC1kMmM2ZWZkNDBhNTUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTEy
+        VDAyOjMzOjIyLjkzMTMzMloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
-        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA1LTMwVDIwOjMzOjQ1LjU0ODQxMFoi
-        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDUtMzBUMjA6MzM6NDUuNjE2NTA3WiIs
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA2LTEyVDAyOjMzOjIzLjAxMDkxNloi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDYtMTJUMDI6MzM6MjMuMDU5OTcyWiIs
         Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
-        L3B1bHAvYXBpL3YzL3dvcmtlcnMvNzM0ZDhkMDEtMzI1OS00MTNmLWIyYTIt
-        NDRlNjVmMTZhNmZlLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvYjA3MGJhMmItNTBmYy00NDc1LWI4YWQt
+        NDNiZTlkZmNmM2I2LyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
         W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
-        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2Q4ZjgyNjEzLTEyM2YtNGE1
-        MC05OWRhLTkyODM3NDdiYjdmYy92ZXJzaW9ucy8xLyJdfQ==
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzM1MzUwNWJmLTgyYTAtNDc4
+        ZC1hYjRhLWZjNzVlZTk1ODdhZS92ZXJzaW9ucy8xLyJdfQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:45 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:23 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/repositories/d8f82613-123f-4a50-99da-9283747bb7fc/versions/1/
+    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/353505bf-82a0-478d-ab4a-fc75ee9587ae/versions/1/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -761,44 +598,44 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:45 GMT
+      - Wed, 12 Jun 2019 02:33:23 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '215'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
       - GET, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '215'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZDhmODI2MTMt
-        MTIzZi00YTUwLTk5ZGEtOTI4Mzc0N2JiN2ZjL3ZlcnNpb25zLzEvIiwiX2Ny
-        ZWF0ZWQiOiIyMDE5LTA1LTMwVDIwOjMzOjQ1LjU3NzcwMFoiLCJudW1iZXIi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvMzUzNTA1YmYt
+        ODJhMC00NzhkLWFiNGEtZmM3NWVlOTU4N2FlL3ZlcnNpb25zLzEvIiwiX2Ny
+        ZWF0ZWQiOiIyMDE5LTA2LTEyVDAyOjMzOjIzLjAzNjk3NVoiLCJudW1iZXIi
         OjEsImJhc2VfdmVyc2lvbiI6bnVsbCwiY29udGVudF9zdW1tYXJ5Ijp7ImFk
         ZGVkIjp7fSwicmVtb3ZlZCI6e30sInByZXNlbnQiOnt9fX0=
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:45 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:23 GMT
 - request:
     method: post
-    uri: http://dev.pulp3/pulp/api/v3/publications/file/file/
+    uri: https://zeta.partello.example.com/pulp/api/v3/publications/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL2Q4ZjgyNjEzLTEyM2YtNGE1MC05OWRhLTkyODM3NDdiYjdmYy92ZXJz
+        aWVzLzM1MzUwNWJmLTgyYTAtNDc4ZC1hYjRhLWZjNzVlZTk1ODdhZS92ZXJz
         aW9ucy8xLyIsIm1hbmlmZXN0IjoiUFVMUF9NQU5JRkVTVCJ9
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
       Content-Type:
       - application/json
       Accept:
@@ -812,32 +649,32 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:46 GMT
+      - Wed, 12 Jun 2019 02:33:23 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '67'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzFkODEyNzNhLTcxNDEtNGE0
-        My1iNjM0LTY1MWI1YzllY2E1YS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzI2NWNlNzA3LWYxMTItNGRk
+        ZS1hYjExLTczYjM4MGFmYzdhZi8ifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:46 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:23 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/tasks/1d81273a-7141-4a43-b634-651b5c9eca5a/
+    uri: https://zeta.partello.example.com/pulp/api/v3/tasks/265ce707-f112-4dde-ab11-73b380afc7af/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -857,106 +694,53 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:46 GMT
+      - Wed, 12 Jun 2019 02:33:23 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '495'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
-      - GET, DELETE, HEAD, OPTIONS
+      - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8xZDgxMjczYS03MTQxLTRh
-        NDMtYjYzNC02NTFiNWM5ZWNhNWEvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTMw
-        VDIwOjMzOjQ1Ljk5OTM2MFoiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
-        cHVscF9maWxlLmFwcC50YXNrcy5wdWJsaXNoaW5nLnB1Ymxpc2giLCJzdGFy
-        dGVkX2F0IjoiMjAxOS0wNS0zMFQyMDozMzo0Ni4xMTA1NzZaIiwiZmluaXNo
-        ZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVs
-        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvNzM0ZDhkMDEtMzI1
-        OS00MTNmLWIyYTItNDRlNjVmMTZhNmZlLyIsInBhcmVudCI6bnVsbCwic3Bh
-        d25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVk
-        X3Jlc291cmNlcyI6WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUv
-        ZmlsZS81YzNmNWE1NS03OTE2LTRjNWMtYmVmZC0yMWYxNzlmNmU1NGYvIl19
-    http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:46 GMT
-- request:
-    method: get
-    uri: http://dev.pulp3/pulp/api/v3/tasks/1d81273a-7141-4a43-b634-651b5c9eca5a/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.14.2
-      Date:
-      - Thu, 30 May 2019 20:33:46 GMT
-      Content-Type:
-      - application/json
       Content-Length:
       - '522'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8xZDgxMjczYS03MTQxLTRh
-        NDMtYjYzNC02NTFiNWM5ZWNhNWEvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTMw
-        VDIwOjMzOjQ1Ljk5OTM2MFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8yNjVjZTcwNy1mMTEyLTRk
+        ZGUtYWIxMS03M2IzODBhZmM3YWYvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTEy
+        VDAyOjMzOjIzLjQwMTAzMVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA1LTMwVDIwOjMzOjQ2LjExMDU3NloiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDUtMzBUMjA6MzM6NDYuMTkyMDc3WiIsIm5vbl9m
+        YXJ0ZWRfYXQiOiIyMDE5LTA2LTEyVDAyOjMzOjIzLjQ4NDQwOVoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDYtMTJUMDI6MzM6MjMuNTM5NzUxWiIsIm5vbl9m
         YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvNzM0ZDhkMDEtMzI1OS00MTNmLWIyYTItNDRlNjVm
-        MTZhNmZlLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        YXBpL3YzL3dvcmtlcnMvYTE1OGM2OTItNmIyZS00YjkxLTkzOWItZjBiMTg3
+        OGQ5MGUzLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
         b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS81YzNmNWE1NS03OTE2
-        LTRjNWMtYmVmZC0yMWYxNzlmNmU1NGYvIl19
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS9jNmIzYTczYS0xZThl
+        LTRlYWUtOWNiZi1kODA2NjVkYmJmMzcvIl19
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:46 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:23 GMT
 - request:
     method: post
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/
+    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJiYXNlX3BhdGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L015
-        X0ZpbGVzIiwibmFtZSI6Im9yZ19kZWZhdWx0X2xhYmVsLU15X0ZpbGVzIiwi
-        cHVibGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUv
-        ZmlsZS81YzNmNWE1NS03OTE2LTRjNWMtYmVmZC0yMWYxNzlmNmU1NGYvIn0=
+        X0ZpbGVzIiwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQt
+        TXlfRmlsZXMiLCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNh
+        dGlvbnMvZmlsZS9maWxlL2M2YjNhNzNhLTFlOGUtNGVhZS05Y2JmLWQ4MDY2
+        NWRiYmYzNy8ifQ==
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
       Content-Type:
       - application/json
       Accept:
@@ -970,32 +754,32 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:46 GMT
+      - Wed, 12 Jun 2019 02:33:23 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '67'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2Y5YjU4MDFjLTUxYTQtNDIy
-        Yy04Mzc4LTFmMGI5NmU5MjJhZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBiYTI0OWFiLWRmYWEtNDI2
+        YS1hMTIzLTY3MzU4Y2E2YjMzZS8ifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:46 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:23 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/tasks/f9b5801c-51a4-422c-8378-1f0b96e922ae/
+    uri: https://zeta.partello.example.com/pulp/api/v3/tasks/0ba249ab-dfaa-426a-a123-67358ca6b33e/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1015,40 +799,40 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:46 GMT
+      - Wed, 12 Jun 2019 02:33:23 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '420'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
-      - GET, DELETE, HEAD, OPTIONS
+      - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '420'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mOWI1ODAxYy01MWE0LTQy
-        MmMtODM3OC0xZjBiOTZlOTIyYWUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTMw
-        VDIwOjMzOjQ2LjU2Njc5NFoiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wYmEyNDlhYi1kZmFhLTQy
+        NmEtYTEyMy02NzM1OGNhNmIzM2UvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTEy
+        VDAyOjMzOjIzLjc1MDU1NloiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
         cHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJhbF9jcmVhdGUiLCJzdGFy
-        dGVkX2F0IjoiMjAxOS0wNS0zMFQyMDozMzo0Ni43MjQ2NTRaIiwiZmluaXNo
+        dGVkX2F0IjoiMjAxOS0wNi0xMlQwMjozMzoyMy44NjEwMzJaIiwiZmluaXNo
         ZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVs
-        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvNzM0ZDhkMDEtMzI1
-        OS00MTNmLWIyYTItNDRlNjVmMTZhNmZlLyIsInBhcmVudCI6bnVsbCwic3Bh
+        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvYTE1OGM2OTItNmIy
+        ZS00YjkxLTkzOWItZjBiMTg3OGQ5MGUzLyIsInBhcmVudCI6bnVsbCwic3Bh
         d25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVk
         X3Jlc291cmNlcyI6W119
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:46 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:23 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/tasks/f9b5801c-51a4-422c-8378-1f0b96e922ae/
+    uri: https://zeta.partello.example.com/pulp/api/v3/tasks/0ba249ab-dfaa-426a-a123-67358ca6b33e/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1068,48 +852,48 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:46 GMT
+      - Wed, 12 Jun 2019 02:33:24 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '523'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
-      - GET, DELETE, HEAD, OPTIONS
+      - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '496'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mOWI1ODAxYy01MWE0LTQy
-        MmMtODM3OC0xZjBiOTZlOTIyYWUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTMw
-        VDIwOjMzOjQ2LjU2Njc5NFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2NyZWF0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA1LTMwVDIwOjMzOjQ2LjcyNDY1NFoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDUtMzBUMjA6MzM6NDYuOTE5MzQxWiIsIm5vbl9m
-        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvNzM0ZDhkMDEtMzI1OS00MTNmLWIyYTItNDRlNjVm
-        MTZhNmZlLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
-        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9maWxlL2ZpbGUvOTI3MDVlMDktYTcw
-        ZC00N2Q4LWI0OGItNTg2NDgwZjE5N2Q4LyJdfQ==
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wYmEyNDlhYi1kZmFhLTQy
+        NmEtYTEyMy02NzM1OGNhNmIzM2UvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTEy
+        VDAyOjMzOjIzLjc1MDU1NloiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJhbF9jcmVhdGUiLCJzdGFy
+        dGVkX2F0IjoiMjAxOS0wNi0xMlQwMjozMzoyMy44NjEwMzJaIiwiZmluaXNo
+        ZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVs
+        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvYTE1OGM2OTItNmIy
+        ZS00YjkxLTkzOWItZjBiMTg3OGQ5MGUzLyIsInBhcmVudCI6bnVsbCwic3Bh
+        d25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVk
+        X3Jlc291cmNlcyI6WyIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9maWxl
+        L2ZpbGUvNDhhNWMwMmItNWRmZC00MmMyLWJlMGYtOGRhMjM1ZWRkMDlmLyJd
+        fQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:46 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:24 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/92705e09-a70d-47d8-b48b-586480f197d8/
+    uri: https://zeta.partello.example.com/pulp/api/v3/tasks/0ba249ab-dfaa-426a-a123-67358ca6b33e/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
+      - OpenAPI-Generator/3.0.0rc2/ruby
       Content-Type:
       - application/json
       Accept:
@@ -1123,46 +907,101 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:47 GMT
+      - Wed, 12 Jun 2019 02:33:24 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '406'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '523'
+      Via:
+      - 1.1 zeta.partello.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wYmEyNDlhYi1kZmFhLTQy
+        NmEtYTEyMy02NzM1OGNhNmIzM2UvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTEy
+        VDAyOjMzOjIzLjc1MDU1NloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2NyZWF0ZSIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA2LTEyVDAyOjMzOjIzLjg2MTAzMloiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDYtMTJUMDI6MzM6MjQuMDQ0NjUxWiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvYTE1OGM2OTItNmIyZS00YjkxLTkzOWItZjBiMTg3
+        OGQ5MGUzLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
+        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9maWxlL2ZpbGUvNDhhNWMwMmItNWRm
+        ZC00MmMyLWJlMGYtOGRhMjM1ZWRkMDlmLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 12 Jun 2019 02:33:24 GMT
+- request:
+    method: get
+    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/48a5c02b-5dfd-42c2-be0f-8da235edd09f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 12 Jun 2019 02:33:24 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
       Allow:
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '427'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL2ZpbGUvZmls
-        ZS85MjcwNWUwOS1hNzBkLTQ3ZDgtYjQ4Yi01ODY0ODBmMTk3ZDgvIiwiX2Ny
-        ZWF0ZWQiOiIyMDE5LTA1LTMwVDIwOjMzOjQ2LjkwNDYzMVoiLCJiYXNlX3Bh
+        ZS80OGE1YzAyYi01ZGZkLTQyYzItYmUwZi04ZGEyMzVlZGQwOWYvIiwiX2Ny
+        ZWF0ZWQiOiIyMDE5LTA2LTEyVDAyOjMzOjI0LjAzNDc1N1oiLCJiYXNlX3Bh
         dGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L015X0ZpbGVzIiwi
-        YmFzZV91cmwiOiJsb2NhbGhvc3Q6MjQ4MTYvcHVscC9jb250ZW50L0RlZmF1
-        bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvTXlfRmlsZXMiLCJjb250ZW50X2d1
-        YXJkIjpudWxsLCJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMi
-        LCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvZmls
-        ZS9maWxlLzVjM2Y1YTU1LTc5MTYtNGM1Yy1iZWZkLTIxZjE3OWY2ZTU0Zi8i
-        fQ==
+        YmFzZV91cmwiOiJ6ZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tL3B1bHAvY29u
+        dGVudC9EZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L015X0ZpbGVzIiwi
+        Y29udGVudF9ndWFyZCI6bnVsbCwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0
+        aW9uLUNhYmluZXQtTXlfRmlsZXMiLCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2Fw
+        aS92My9wdWJsaWNhdGlvbnMvZmlsZS9maWxlL2M2YjNhNzNhLTFlOGUtNGVh
+        ZS05Y2JmLWQ4MDY2NWRiYmYzNy8ifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:47 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:24 GMT
 - request:
     method: delete
-    uri: http://dev.pulp3/pulp/api/v3/remotes/file/file/52348170-d565-4fa9-8dac-51acb24d5cd6/
+    uri: https://zeta.partello.example.com/pulp/api/v3/remotes/file/file/8e1fd195-edd6-497e-afa4-4675b032cdba/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
       Content-Type:
       - application/json
       Accept:
@@ -1176,32 +1015,32 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:47 GMT
+      - Wed, 12 Jun 2019 02:33:24 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '67'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2QyMDJmNGRmLWE4YTMtNDdi
-        Ny1hZTQ3LTBiMzQxYWRhOTE1OS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzRiYmYyNDQyLWI0OWMtNDY2
+        Mi05MjcwLTc1M2JiZTVmMDgxMy8ifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:47 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:24 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/tasks/d202f4df-a8a3-47b7-ae47-0b341ada9159/
+    uri: https://zeta.partello.example.com/pulp/api/v3/tasks/4bbf2442-b49c-4662-9270-753bbe5f0813/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1221,46 +1060,46 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:47 GMT
+      - Wed, 12 Jun 2019 02:33:24 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '447'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
-      - GET, DELETE, HEAD, OPTIONS
+      - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '447'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9kMjAyZjRkZi1hOGEzLTQ3
-        YjctYWU0Ny0wYjM0MWFkYTkxNTkvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTMw
-        VDIwOjMzOjQ3LjQ5MTQwNFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy80YmJmMjQ0Mi1iNDljLTQ2
+        NjItOTI3MC03NTNiYmU1ZjA4MTMvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTEy
+        VDAyOjMzOjI0LjYyMDIwMFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2RlbGV0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA1LTMwVDIwOjMzOjQ3LjU3NzI4M1oiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDUtMzBUMjA6MzM6NDcuNjI3NTgzWiIsIm5vbl9m
+        YXJ0ZWRfYXQiOiIyMDE5LTA2LTEyVDAyOjMzOjI0LjcwNTU1MloiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDYtMTJUMDI6MzM6MjQuNzMzMDYxWiIsIm5vbl9m
         YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvODYzYmZkZGUtNjEzYS00NWEyLTg0NmQtOTM3YTRj
-        ODRmYjRlLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        YXBpL3YzL3dvcmtlcnMvYTE1OGM2OTItNmIyZS00YjkxLTkzOWItZjBiMTg3
+        OGQ5MGUzLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
         b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6W119
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:47 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:24 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
       Content-Type:
       - application/json
       Accept:
@@ -1274,47 +1113,47 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:47 GMT
+      - Wed, 12 Jun 2019 02:33:24 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '458'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '479'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZmls
-        ZS9maWxlLzkyNzA1ZTA5LWE3MGQtNDdkOC1iNDhiLTU4NjQ4MGYxOTdkOC8i
-        LCJfY3JlYXRlZCI6IjIwMTktMDUtMzBUMjA6MzM6NDYuOTA0NjMxWiIsImJh
+        ZS9maWxlLzQ4YTVjMDJiLTVkZmQtNDJjMi1iZTBmLThkYTIzNWVkZDA5Zi8i
+        LCJfY3JlYXRlZCI6IjIwMTktMDYtMTJUMDI6MzM6MjQuMDM0NzU3WiIsImJh
         c2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvTXlfRmls
-        ZXMiLCJiYXNlX3VybCI6ImxvY2FsaG9zdDoyNDgxNi9wdWxwL2NvbnRlbnQv
-        RGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFyeS9NeV9GaWxlcyIsImNvbnRl
-        bnRfZ3VhcmQiOm51bGwsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1NeV9G
-        aWxlcyIsInB1YmxpY2F0aW9uIjoiL3B1bHAvYXBpL3YzL3B1YmxpY2F0aW9u
-        cy9maWxlL2ZpbGUvNWMzZjVhNTUtNzkxNi00YzVjLWJlZmQtMjFmMTc5ZjZl
-        NTRmLyJ9XX0=
+        ZXMiLCJiYXNlX3VybCI6InpldGEucGFydGVsbG8uZXhhbXBsZS5jb20vcHVs
+        cC9jb250ZW50L0RlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvTXlfRmls
+        ZXMiLCJjb250ZW50X2d1YXJkIjpudWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdh
+        bml6YXRpb24tQ2FiaW5ldC1NeV9GaWxlcyIsInB1YmxpY2F0aW9uIjoiL3B1
+        bHAvYXBpL3YzL3B1YmxpY2F0aW9ucy9maWxlL2ZpbGUvYzZiM2E3M2EtMWU4
+        ZS00ZWFlLTljYmYtZDgwNjY1ZGJiZjM3LyJ9XX0=
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:47 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:24 GMT
 - request:
     method: delete
-    uri: http://dev.pulp3/pulp/api/v3/distributions/file/file/92705e09-a70d-47d8-b48b-586480f197d8/
+    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/48a5c02b-5dfd-42c2-be0f-8da235edd09f/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2.dev.1558641473/ruby
+      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
       Content-Type:
       - application/json
       Accept:
@@ -1328,32 +1167,32 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:48 GMT
+      - Wed, 12 Jun 2019 02:33:25 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '67'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2IxNjhjN2EwLTEwZTUtNDQ4
-        MC05ZDkyLWIzOGRkNTYzYmMxMy8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzYyODcyMTA5LTE5ODYtNDVi
+        OS04NDRmLTQ0ZmI2MjY5MDgxOC8ifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:48 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:25 GMT
 - request:
     method: delete
-    uri: http://dev.pulp3/pulp/api/v3/repositories/d8f82613-123f-4a50-99da-9283747bb7fc/
+    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/353505bf-82a0-478d-ab4a-fc75ee9587ae/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1373,32 +1212,32 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:48 GMT
+      - Wed, 12 Jun 2019 02:33:25 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie
       Allow:
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '67'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2UwMTQwMmJhLWYwMWUtNGFj
-        YS04MmMxLWQ1ZjUyNTk4ODNhZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzk0MGYzZWMzLTk5MmEtNGJj
+        Zi1hMmIyLWRkYTQwZWRjZmYyOS8ifQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:48 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:25 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/tasks/e01402ba-f01e-4aca-82c1-d5f5259883ae/
+    uri: https://zeta.partello.example.com/pulp/api/v3/tasks/940f3ec3-992a-4bcf-a2b2-dda40edcff29/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1418,40 +1257,40 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:48 GMT
+      - Wed, 12 Jun 2019 02:33:25 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '418'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
-      - GET, DELETE, HEAD, OPTIONS
+      - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '418'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9lMDE0MDJiYS1mMDFlLTRh
-        Y2EtODJjMS1kNWY1MjU5ODgzYWUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTMw
-        VDIwOjMzOjQ4LjIyMjU5MloiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy85NDBmM2VjMy05OTJhLTRi
+        Y2YtYTJiMi1kZGE0MGVkY2ZmMjkvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTEy
+        VDAyOjMzOjI1LjIxMjUzMloiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
         cHVscGNvcmUuYXBwLnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwic3RhcnRl
-        ZF9hdCI6IjIwMTktMDUtMzBUMjA6MzM6NDguMzQwMDM3WiIsImZpbmlzaGVk
+        ZF9hdCI6IjIwMTktMDYtMTJUMDI6MzM6MjUuMzUwODIyWiIsImZpbmlzaGVk
         X2F0IjpudWxsLCJub25fZmF0YWxfZXJyb3JzIjpbXSwiZXJyb3IiOm51bGws
-        IndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJzLzg2M2JmZGRlLTYxM2Et
-        NDVhMi04NDZkLTkzN2E0Yzg0ZmI0ZS8iLCJwYXJlbnQiOm51bGwsInNwYXdu
+        IndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJzL2ExNThjNjkyLTZiMmUt
+        NGI5MS05MzliLWYwYjE4NzhkOTBlMy8iLCJwYXJlbnQiOm51bGwsInNwYXdu
         ZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9y
         ZXNvdXJjZXMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:48 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:25 GMT
 - request:
     method: get
-    uri: http://dev.pulp3/pulp/api/v3/tasks/e01402ba-f01e-4aca-82c1-d5f5259883ae/
+    uri: https://zeta.partello.example.com/pulp/api/v3/tasks/940f3ec3-992a-4bcf-a2b2-dda40edcff29/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1471,35 +1310,35 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.14.2
       Date:
-      - Thu, 30 May 2019 20:33:48 GMT
+      - Wed, 12 Jun 2019 02:33:25 GMT
+      Server:
+      - gunicorn/19.9.0
       Content-Type:
       - application/json
-      Content-Length:
-      - '445'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
-      - GET, DELETE, HEAD, OPTIONS
+      - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
+      Content-Length:
+      - '445'
+      Via:
+      - 1.1 zeta.partello.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9lMDE0MDJiYS1mMDFlLTRh
-        Y2EtODJjMS1kNWY1MjU5ODgzYWUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTMw
-        VDIwOjMzOjQ4LjIyMjU5MloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy85NDBmM2VjMy05OTJhLTRi
+        Y2YtYTJiMi1kZGE0MGVkY2ZmMjkvIiwiX2NyZWF0ZWQiOiIyMDE5LTA2LTEy
+        VDAyOjMzOjI1LjIxMjUzMloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5kZWxldGUiLCJzdGFy
-        dGVkX2F0IjoiMjAxOS0wNS0zMFQyMDozMzo0OC4zNDAwMzdaIiwiZmluaXNo
-        ZWRfYXQiOiIyMDE5LTA1LTMwVDIwOjMzOjQ4LjQ1NTE5MVoiLCJub25fZmF0
+        dGVkX2F0IjoiMjAxOS0wNi0xMlQwMjozMzoyNS4zNTA4MjJaIiwiZmluaXNo
+        ZWRfYXQiOiIyMDE5LTA2LTEyVDAyOjMzOjI1LjQyMzcxMloiLCJub25fZmF0
         YWxfZXJyb3JzIjpbXSwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2Fw
-        aS92My93b3JrZXJzLzg2M2JmZGRlLTYxM2EtNDVhMi04NDZkLTkzN2E0Yzg0
-        ZmI0ZS8iLCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9n
+        aS92My93b3JrZXJzL2ExNThjNjkyLTZiMmUtNGI5MS05MzliLWYwYjE4Nzhk
+        OTBlMy8iLCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9n
         cmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 30 May 2019 20:33:48 GMT
+  recorded_at: Wed, 12 Jun 2019 02:33:25 GMT
 recorded_with: VCR 3.0.3
