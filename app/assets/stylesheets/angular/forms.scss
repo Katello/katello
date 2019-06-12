@@ -1,0 +1,43 @@
+@import 'patternfly/variables';
+
+.required {
+  .control-label {
+    color: inherit;
+
+    &:after {
+      content: "\00a0 *";
+    }
+  }
+}
+
+.form-control {
+
+  &[readonly], &[readonly="readonly"] {
+    border: none;
+    background: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+    color: $input-color;
+  }
+
+}
+
+.datepicker-selector {
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+.form-group textarea.form-control {
+  height: auto;
+  max-width: 100%;
+}
+
+.editable-value {
+  white-space: pre-line;
+}

@@ -1,0 +1,61 @@
+@import "variables";
+
+.table {
+  table-layout: fixed;
+
+  .number-cell {
+    text-align: right;
+  }
+
+  .action-cell {
+    text-align: center;
+  }
+
+  td, th {
+    word-wrap: break-word;
+  }
+
+  tr.clickable-row,
+  th.sortable {
+    cursor: pointer;
+  }
+
+  th.row-select,
+  td.row-select {
+    width: $row-select-width;
+    max-width: $row-select-width;
+  }
+
+  tr.active td,
+  tr:hover td,
+  tr.focus td,
+  tr.selected-row td {
+    background-color: $hover-bg-color;
+
+    button, select {
+      color: #000;
+    }
+
+    .bst-edit:hover {
+      color: #000;
+    }
+  }
+}
+
+.table-view-pf-toolbar-external .toolbar-pf-actions .form-group.toolbar-pf-search-filter {
+  border-right: none;
+  padding-left: 0;
+
+  select {
+    display: inline;
+    width: 150px;
+  }
+}
+
+.table-mask {
+  opacity: 0.4;
+}
+
+.pagination-pf-pagesize {
+  margin-right: 5px;
+}
