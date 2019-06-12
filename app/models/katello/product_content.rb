@@ -36,7 +36,7 @@ module Katello
 
     # used by Katello::Api::V2::RepositorySetsController#index
     def repositories
-      Katello::Repository.where(:root_id => product.root_repositories.has_url.where(:content_id => content.cp_content_id))
+      Katello::Repository.in_default_view.where(:root_id => product.root_repositories.has_url.where(:content_id => content.cp_content_id))
     end
   end
 end
