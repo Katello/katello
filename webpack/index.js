@@ -5,20 +5,21 @@
 
 import componentRegistry from 'foremanReact/components/componentRegistry';
 import Application from './containers/Application/index';
-import angular from 'angular'
-import uirouter from 'angular-ui-router'
-import angularResource from 'angular-resource'
-//import angularBlocks from 'angular-blocks';
-import routes from './angular/app.routes'
-import bastionComponents from './angular/bastion/components'
-import bastionUtils from './angular/bastion/utils'
-import angularTest from './angular/angular_test'
-import contentCredentials from './angular/content-credentials'
+import angular from 'angular';
+import uirouter from 'angular-ui-router';
+import angularResource from 'angular-resource';
+import angularUiBootstrap from 'angular-ui-bootstrap';
+import 'angular-blocks';
+import routes from './angular/app.routes';
+import bastionComponents from './angular/bastion/components';
+import bastionUtils from './angular/bastion/utils';
+import i18n from './angular/bastion/i18n';
+import angularTest from './angular/angular_test';
+import contentCredentials from './angular/content-credentials';
 import './redux';
 // Not currently mocking anything
 // import './services/api/setupMocks';
 
-require('angular-blocks');
 
 componentRegistry.register({
   name: 'katello',
@@ -29,9 +30,11 @@ const ANGULAR_MODULES = [
   uirouter,
   angularResource,
   angularTest,
+  angularUiBootstrap,
   'angular-blocks',
-  bastionComponents,
   bastionUtils,
+  i18n,
+  bastionComponents,
   contentCredentials
 ];
 
