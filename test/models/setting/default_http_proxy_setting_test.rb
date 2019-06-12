@@ -26,5 +26,15 @@ module Katello
       children = TestAppController.helpers.send("#{@name}_collection").last[:children]
       assert_includes children, proxy.name
     end
+
+    def test_changing_proxy_name_updates_setting
+      proxy = FactoryBot.create(:http_proxy)
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+
+      proxy.update_attribute(:name, "Some other proxy name")
+      assert_equal "Some other proxy name", setting.reload.name
+    end
+
   end
 end
