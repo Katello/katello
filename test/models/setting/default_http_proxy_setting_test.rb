@@ -33,7 +33,7 @@ module Katello
       setting.update_attribute(:value, proxy.name)
 
       proxy.update_attribute(:name, "Some other proxy name")
-      assert_equal "Some other proxy name", setting.reload.name
+      assert_equal "Some other proxy name", setting.reload.value
     end
 
   end
