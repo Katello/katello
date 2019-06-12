@@ -33,9 +33,12 @@ module Katello
       repo = katello_repositories(:fedora_17_x86_64)
       repo.root.update_attributes!(product: @product, content_id: @content_id)
 
-      assert_equal repo.clones.count + 1, @product_content.repositories.size
-
       assert_includes @product_content.repositories, repo
+
+      @product_content.repositories.each do |repository|
+        assert repository.in_default_view?
+        assert_equal @product_content.product, repository.product
+      end
     end
 
     def test_enabled
