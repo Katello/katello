@@ -1,3 +1,12 @@
+# 3.10.2 Belgian Tripel (2019-06-13)
+
+## Bug Fixes
+
+### Hosts
+ * Foreman/Katello node.rb Issue with Puppet 6 ([#26763](https://projects.theforeman.org/issues/26763), [e2cbcd5b](https://github.com/Katello/katello.git/commit/e2cbcd5be621c2fe588119a33096367beb164d0d))
+
+### Other
+ * Unable to retrieve gpg_keys through smart proxy ([#25823](https://projects.theforeman.org/issues/25823), [81f1a08b](https://github.com/Katello/katello.git/commit/81f1a08b907fa4b2ae6e743cadb7d459b0813b42))
 # 3.10.1 Belgian Tripel (2019-04-17)
 
 ## Bug Fixes
