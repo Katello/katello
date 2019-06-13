@@ -153,6 +153,11 @@ module Katello
         URI.parse(url).host
       end
 
+      def pulp3_url(path = nil)
+        pulp_url = self.setting('Pulp3', 'pulp_url')
+        path.blank? ? pulp_url : "#{pulp_url.sub(%r|/$|, '')}/#{path.sub(%r|^/|, '')}"
+      end
+
       def pulp_mirror?
         self.has_feature? PULP_NODE_FEATURE
       end

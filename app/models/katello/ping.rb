@@ -4,7 +4,7 @@ module Katello
     FAIL_RETURN_CODE = 'FAIL'.freeze
     PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer).freeze
 
-    SERVICES = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks].freeze
+    SERVICES = [:pulp3, :pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks].freeze
 
     class << self
       #
@@ -13,7 +13,7 @@ module Katello
       def ping(services: SERVICES, capsule_id: nil)
         result = {}
         services.each { |service| result[service] = {} }
-
+        ping_pulp3_without_auth(result[:pulp3], capsule_id) if result.include?(:pulp3)
         ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
         ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
 
@@ -27,6 +27,12 @@ module Katello
           result[:status] = v[:status] == OK_RETURN_CODE ? OK_RETURN_CODE : FAIL_RETURN_CODE
         end
         result
+      end
+
+      def ping_pulp3_without_auth(service_result, capsule_id)
+        exception_watch(service_result) do
+          Ping.pulp3_without_auth(SmartProxy.find(capsule_id).pulp3_url("api/v3"))
+        end
       end
 
       def ping_pulp_without_auth(service_result, capsule_id)
@@ -131,6 +137,29 @@ module Katello
         end
 
         unless all_pulp_workers_present?(json)
+          fail _("Not all necessary pulp workers running at %s.") % url
+        end
+
+        json
+      end
+
+      def pulp3_without_auth(url)
+        json = backend_status(url, :pulp)
+        fail _("Pulp does not appear to be running at %s.") % url if json.empty?
+
+        if json['database_connection'] && json['database_connection']['connected'] != true
+          fail _("Pulp database connection issue at %s.") % url
+        end
+
+        if json['redis_connection'] && json['redis_connection']['connected'] != true
+          fail _("Pulp redis connection issue at %s.") % url
+        end
+
+        workers = json["online_workers"] || []
+        resource_manager_exists = workers.any? { |worker| worker["name"].include?("resource-manager@") }
+        reservered_resource_worker_exists = workers.any? { |worker| worker["name"] =~ /reserved-resource-worker-./ }
+
+        unless resource_manager_exists && reservered_resource_worker_exists
           fail _("Not all necessary pulp workers running at %s.") % url
         end
 

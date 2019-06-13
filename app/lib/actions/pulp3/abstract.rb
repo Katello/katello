@@ -2,6 +2,7 @@ module Actions
   module Pulp3
     class Abstract < Actions::Base
       middleware.use ::Actions::Middleware::RemoteAction
+      middleware.use Actions::Middleware::Pulp3ServicesCheck
 
       BACKEND_SERVICE_TYPE = 'pulp3'.freeze
 

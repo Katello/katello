@@ -26,8 +26,16 @@ module Actions
       protected
 
       def capsule_id(args)
-        capsule_hash = args.select { |x| x[:capsule_id] if x.is_a? Hash }
-        capsule_hash[0] ? capsule_hash[0][:capsule_id] : nil
+        capsule_id = nil
+        args.each do |arg|
+          if arg.is_a? SmartProxy
+            capsule_id = arg.id
+          elsif arg.is_a? Hash
+            capsule_id = arg[:capsule_id] || arg[:smart_proxy_id]
+          end
+          break if capsule_id
+        end
+        capsule_id
       end
 
       def source_action
