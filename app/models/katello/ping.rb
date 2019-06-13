@@ -175,7 +175,6 @@ module Katello
         scheduler && resource_manager && reservered_resource_worker
       end
 
-
       private
 
       def backend_status(url, backend)
