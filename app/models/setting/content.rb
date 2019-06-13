@@ -15,7 +15,13 @@ class Setting::Content < Setting
     download_policies = proc { hashify_parameters(::Runcible::Models::YumImporter::DOWNLOAD_POLICIES) }
     proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }
     dependency_solving_options = proc { hashify_parameters(['conservative', 'greedy']) }
-    http_proxy_select = [{ name: _("HTTP Proxies"), class: 'HttpProxy', scope: 'all', value_method: 'name', text_method: 'name'}]
+    http_proxy_select = [{
+      name: _("HTTP Proxies"),
+      class: 'HttpProxy',
+      scope: 'all',
+      value_method: 'name',
+      text_method: 'name_and_url'
+    }]
 
     self.transaction do
       [

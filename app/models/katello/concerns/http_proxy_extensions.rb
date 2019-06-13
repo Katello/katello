@@ -14,6 +14,10 @@ module Katello
           setting.update_attribute(:value, self.name)
         end
       end
+
+      def name_and_url
+        "#{name} (#{url})"
+      end
     end
   end
 end
