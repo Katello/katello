@@ -12,7 +12,7 @@ module Katello
     end
 
     def test_update_proxy_with_missing_proxy
-      result = Rake.application.invoke_task('katello:update_default_http_proxy[some proxy]')
+      Rake.application.invoke_task('katello:update_default_http_proxy[some proxy]')
       refute_equal "some proxy", @setting.reload.value
     end
 
@@ -20,7 +20,7 @@ module Katello
       current_default_proxy = FactoryBot.create(:http_proxy)
       @setting.update_attribute(:value, current_default_proxy.name)
       proxy = FactoryBot.create(:http_proxy)
-      result = Rake.application.invoke_task("katello:update_default_http_proxy[#{proxy.url}]")
+      Rake.application.invoke_task("katello:update_default_http_proxy[#{proxy.url}]")
       assert_equal current_default_proxy.name, @setting.reload.value
     end
 
@@ -28,7 +28,7 @@ module Katello
       current_default_proxy = FactoryBot.create(:http_proxy)
       @setting.update_attribute(:value, current_default_proxy.name)
       proxy = FactoryBot.create(:http_proxy)
-      result = Rake.application.invoke_task("katello:update_default_http_proxy[#{proxy.name}]")
+      Rake.application.invoke_task("katello:update_default_http_proxy[#{proxy.name}]")
       assert_equal proxy.name, @setting.reload.value
     end
 
@@ -43,4 +43,3 @@ module Katello
     end
   end
 end
-
