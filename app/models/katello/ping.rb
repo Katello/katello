@@ -155,7 +155,11 @@ module Katello
           fail _("Pulp redis connection issue at %s.") % url
         end
 
-        if json["online_workers"].empty?
+        workers = json["online_workers"] || []
+        resource_manager_exists = workers.any? { |worker| worker["name"].include?("resource-manager@") }
+        reservered_resource_worker_exists = workers.any? { |worker| worker["name"] =~ /reserved-resource-worker-./ }
+
+        unless resource_manager_exists && reservered_resource_worker_exists
           fail _("Not all necessary pulp workers running at %s.") % url
         end
 
@@ -170,6 +174,7 @@ module Katello
         reservered_resource_worker = worker_ids.any? { |worker| worker =~ /reserved_resource_worker-./ }
         scheduler && resource_manager && reservered_resource_worker
       end
+
 
       private
 

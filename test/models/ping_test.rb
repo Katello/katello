@@ -97,12 +97,19 @@ module Katello
                          {"component" => "pulpcore-plugin", "version" => "0.1.0rc2"},
                          {"component" => "pulp_file", "version" => "0.0.1b11"}],
                          "online_workers" =>
-                        [{"_href" => "/pulp/api/v3/workers/366b15e7-3b0c-458a-aafd-542f10f08387/",
-                          "_created" => "2019-05-22T18:09:43.652407Z",
-                          "name" => "resource-manager@centos7-pulp3.example.com",
-                          "last_heartbeat" => "2019-05-23T19:53:27.081467Z",
-                          "online" => true,
-                          "missing" => false}],
+                        [{"_href"=>"/pulp/api/v3/workers/34f275cd-3df6-4a75-89a3-a00398e667f5/",
+                            "_created"=>"2019-06-12T02:23:03.609253Z",
+                            "name"=>"resource-manager@zeta.partello.example.com",
+                            "last_heartbeat"=>"2019-06-13T18:59:39.653124Z",
+                            "online"=>true,
+                            "missing"=>false},
+                           {"_href"=>"/pulp/api/v3/workers/a158c692-6b2e-4b91-939b-f0b1878d90e3/",
+                            "_created"=>"2019-06-12T02:22:56.379511Z",
+                            "name"=>"reserved-resource-worker-1@zeta.partello.example.com",
+                            "last_heartbeat"=>"2019-06-13T18:59:40.006524Z",
+                            "online"=>true,
+                            "missing"=>false}
+                        ],
                          "missing_workers" => [],
                          "database_connection" => {"connected" => true},
                          "redis_connection" => {"connected" => true}}
@@ -135,6 +142,20 @@ module Katello
       run_exception_test({ "database_connection" => {"connected" => true},
                            "redis_connection" => {"connected" => true},
                            "online_workers" => []
+                          }, /Not all necessary pulp workers running/)
+    end
+
+    def test_failure_on_no_resource_manager
+      run_exception_test({ "database_connection" => {"connected" => true},
+                           "redis_connection" => {"connected" => true},
+                           "online_workers" => [{"name" => "reserved_resource_worker-1"}]
+                          }, /Not all necessary pulp workers running/)
+    end
+
+    def test_failure_on_no_reserved_resource_worker
+      run_exception_test({ "database_connection" => {"connected" => true},
+                           "redis_connection" => {"connected" => true},
+                           "online_workers" => [{"name" => "resource_manager"}]
                           }, /Not all necessary pulp workers running/)
     end
 
