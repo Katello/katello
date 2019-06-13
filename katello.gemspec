@@ -44,7 +44,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
   gem.add_dependency "pulpcore_client"
   gem.add_dependency "pulp_file_client", "< 1.0"
-  gem.add_dependency "pulp_docker_client"
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
