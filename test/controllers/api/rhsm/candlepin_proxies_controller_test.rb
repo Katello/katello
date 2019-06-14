@@ -101,8 +101,6 @@ module Katello
         User.stubs(:consumer?).returns(true)
         uuid = @host.subscription_facet.uuid
         stub_cp_consumer_with_uuid(uuid)
-        Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new(:pulp_id => 'a')])
-        Repository.stubs(:where).with(:relative_path => 'bar').returns([OpenStruct.new(:pulp_id => 'b')])
       end
       let(:enabled_repos) do
         {
@@ -112,14 +110,41 @@ module Katello
             },
             {
               "baseurl" => ["https://hostname/pulp/repos/bar"]
+            },
+            {
+              "baseurl" => ["https://hostname/pulp/deb/bar"]
+            },
+            {
+              "baseurl" => ["https://hostname/pulp/deb/baz"]
             }
           ]
         }
       end
 
       it "should bind all" do
-        Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with(["/pulp/repos/foo", "/pulp/repos/bar"])
+        Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with([
+          "/pulp/repos/foo",
+          "/pulp/repos/bar",
+          "/pulp/deb/bar",
+          "/pulp/deb/baz"
+        ])
         put :enabled_repos, params: { :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos }
+        assert_equal 200, response.status
+      end
+
+      it "should fail with missing attribute 1" do
+        put :enabled_repos, params: { :id => @host.subscription_facet.uuid }
+        assert_equal 400, response.status
+      end
+
+      it "should fail with missing attribute 2" do
+        put :enabled_repos, params: { :id => @host.subscription_facet.uuid, :enabled_repos => {} }
+        assert_equal 400, response.status
+      end
+
+      it "should unbind all" do
+        Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with([])
+        put :enabled_repos, params: { :id => @host.subscription_facet.uuid, :enabled_repos => {"repos" => []}}
         assert_equal 200, response.status
       end
 
