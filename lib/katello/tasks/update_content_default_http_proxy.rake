@@ -15,6 +15,7 @@ namespace :katello do
     end
   end
 
+  desc "Displays the current defined http proxies."
   task http_proxy_list: [:environment] do
     ::HttpProxy.all.each { |proxy| puts "#{proxy.name_and_url}" }
   end
