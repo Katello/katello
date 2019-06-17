@@ -123,5 +123,7 @@ module Katello
           "Please create a new Subscription Allocation and import the new manifest.")
       end
     end
+
+    class UpstreamEntitlementGone < StandardError; end
   end
 end

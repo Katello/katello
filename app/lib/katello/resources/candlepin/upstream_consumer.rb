@@ -9,10 +9,21 @@ module Katello
             super(id)
           end
 
+          # Overrides the HttpResource get method to check if the upstream
+          # consumer exists.
+          def get(params)
+            includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
+            JSON.parse(super(path + hash_to_query(params) + includes, self.default_headers).body)
+          rescue RestClient::Gone
+            raise ::Katello::Errors::UpstreamConsumerGone
+          end
+
           def remove_entitlement(entitlement_id)
             fail ArgumentError, "No entitlement ID given to remove." if entitlement_id.blank?
 
             self["entitlements/#{entitlement_id}"].delete
+          rescue RestClient::NotFound
+            raise ::Katello::Errors::UpstreamEntitlementGone
           end
 
           def export(url, client_cert, client_key, ca_file)
