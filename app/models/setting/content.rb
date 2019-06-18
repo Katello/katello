@@ -28,7 +28,7 @@ class Setting::Content < Setting
         self.set('content_default_http_proxy', N_("Default HTTP Proxy for syncing content"),
                         nil, N_('Default http proxy'),
                         nil,
-                        collection: proc { http_proxy_select }, include_blank: "no global default"
+                        collection: proc { http_proxy_select }, include_blank: N_("no global default")
                 ),
         self.set('katello_default_provision', N_("Default provisioning template for Operating Systems created from synced content"),
                  'Kickstart default', N_('Default synced OS provisioning template'),
