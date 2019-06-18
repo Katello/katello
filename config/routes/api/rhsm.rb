@@ -47,6 +47,7 @@ Katello::Engine.routes.draw do
       match '/consumers/:id/profiles/' => 'candlepin_dynflow_proxy#upload_profiles', :via => :put
       match '/consumers/:id/profile/' => 'candlepin_dynflow_proxy#upload_package_profile', :via => :put
       match '/consumers/:id/packages/' => 'candlepin_dynflow_proxy#upload_package_profile', :via => :put
+      match '/systems/:id/deb_package_profile' => 'candlepin_dynflow_proxy#deb_package_profile', :via => :put
       match '/consumers/:id/tracer/' => 'candlepin_proxies#upload_tracer_profile', :via => :put
       match '/consumers/:id/checkin/' => 'candlepin_proxies#checkin', :via => :put
       match '/consumers/:id' => 'candlepin_proxies#facts', :via => :put
@@ -60,7 +61,6 @@ Katello::Engine.routes.draw do
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_content_overrides_delete_path
       match '/consumers/:id/available_releases' => 'candlepin_proxies#available_releases', :via => :get
       match '/systems/:id/enabled_repos' => 'candlepin_proxies#enabled_repos', :via => :put
-      match '/systems/:id/deb_package_profile' => 'candlepin_proxies#deb_package_profile', :via => :put
       match '/jobs/:jobId' => 'candlepin_proxies#get', :via => :get, :as => :proxy_jobs_get_path
       match '/status' => 'candlepin_proxies#server_status', :via => :get
     end

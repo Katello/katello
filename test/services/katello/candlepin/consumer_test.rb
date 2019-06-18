@@ -56,6 +56,10 @@ module Katello
 
         assert_equal 'SLES', Candlepin::Consumer.distribution_to_puppet_os('SLES')
         assert_equal 'SLES', Candlepin::Consumer.distribution_to_puppet_os('SUSE Linux Enterprise Server')
+
+        assert_equal 'Ubuntu', Candlepin::Consumer.distribution_to_puppet_os('Ubuntu')
+        assert_equal 'Debian', Candlepin::Consumer.distribution_to_puppet_os('Debian')
+
         assert_equal nil, Candlepin::Consumer.distribution_to_puppet_os('RedHot')
       end
     end

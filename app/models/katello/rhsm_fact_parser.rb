@@ -54,8 +54,14 @@ module Katello
       os_name = ::Katello::Candlepin::Consumer.distribution_to_puppet_os(name)
       major, minor = version.split('.')
       if os_name && !invalid_centos_os?(os_name, minor)
-        os_attributes = {:major => major, :minor => minor || '', :name => os_name}
+        os_attributes = {:major => major, :minor => minor || '', :name => os_name, :release_name => os_release_name(os_name)}
         ::Operatingsystem.find_by(os_attributes) || ::Operatingsystem.create!(os_attributes)
+      end
+    end
+
+    def os_release_name(os_name)
+      if os_name.match(::Operatingsystem::FAMILIES['Debian'])
+        facts['distribution.id']
       end
     end
 

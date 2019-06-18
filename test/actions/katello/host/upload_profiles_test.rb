@@ -8,7 +8,7 @@ module Katello::Host
 
     before :all do
       User.current = users(:admin)
-      @host = FactoryBot.build(:host, :with_content, :with_subscription, :content_view => katello_content_views(:library_dev_view),
+      @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => katello_content_views(:library_dev_view),
                                  :lifecycle_environment => katello_environments(:library), :id => 343)
     end
 
@@ -16,7 +16,6 @@ module Katello::Host
       let(:action_class) { ::Actions::Katello::Host::UploadProfiles }
       let(:rpm_profiles) { [{"name" => "foo", "version" => "1", "release" => "3"}] }
       let(:enabled_repos) { [{"repositoryid" => "foo", "baseurl" => "http://foo.com"}] }
-
       let(:modumd_inventory) do
         [{"name" => "foo", "stream" => "1.1", "arch" => "x86_64",
           "context" => "cccc", "version" => "11111", "status" => "enabled"}]
@@ -150,6 +149,60 @@ module Katello::Host
         @host.expects(:import_module_streams).with(modumd_inventory)
         plan_action action, @host, profile.to_json
         run_action action
+      end
+
+      describe "Debian Profile Upload" do
+        let(:deb_package) { {"name" => "pi", "architecture" => "transcendent", "version" => "3.14159"} }
+        let(:deb_package_profile) do
+          {
+            "deb_package_profile" => {
+              "deb_packages" => [deb_package]
+            }
+          }
+        end
+
+        it 'plans' do
+          action = create_action action_class
+          action.stubs(:action_subject).with(@host)
+
+          plan_action action, @host, deb_package_profile.to_json
+
+          assert_action_planed_with action, Actions::Katello::Host::GenerateApplicability, [@host]
+        end
+
+        it 'runs' do
+          action = create_action action_class
+          action.stubs(:action_subject).with(@host)
+
+          plan_action action, @host, deb_package_profile.to_json
+          run_action action
+
+          deb = @host.installed_debs.first
+
+          assert_equal deb_package["name"], deb.name
+          assert_equal deb_package["architecture"], deb.architecture
+          assert_equal deb_package["version"], deb.version
+          assert_equal 1, @host.installed_debs.size
+        end
+
+        it 'runs with new combined profile' do
+          action = create_action action_class
+          action.stubs(:action_subject).with(@host)
+
+          deb_profile = [
+            {"content_type" => "deb", "profile" => [deb_package]}
+          ]
+
+          plan_action action, @host, deb_profile.to_json
+          run_action action
+
+          deb = @host.installed_debs.first
+
+          assert_equal deb_package["name"], deb.name
+          assert_equal deb_package["architecture"], deb.architecture
+          assert_equal deb_package["version"], deb.version
+          assert_equal 1, @host.installed_debs.size
+        end
       end
     end
   end
