@@ -34,6 +34,7 @@ module Katello
 
         has_many :activation_keys, :through => :subscription_facet
         has_many :pools, :through => :subscription_facet
+        has_many :purpose_addons, :through => :subscription_facet
         has_many :subscriptions, :through => :pools
         has_one :subscription_status_object, :class_name => 'Katello::SubscriptionStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :purpose_sla_status_object, :class_name => 'Katello::PurposeSlaStatus', :foreign_key => 'host_id', :dependent => :destroy
@@ -68,12 +69,18 @@ module Katello
         scoped_search :on => :id, :relation => :pools, :rename => :subscription_id, :complete_value => true, :ext_method => :find_by_subscription_id, :only_explicit => true
         scoped_search :on => :purpose_role, :rename => :role, :relation => :subscription_facet, :complete_value => true
         scoped_search :on => :purpose_usage, :rename => :usage, :relation => :subscription_facet, :complete_value => true
-        scoped_search :on => :purpose_addons, :rename => :addon, :relation => :subscription_facet, :complete_value => true
+        scoped_search :on => :name, :rename => :addon, :relation => :purpose_addons, :complete_value => true, :ext_method => :find_by_purpose_addon
       end
 
       module ClassMethods
         def purpose_status_map
           ::Katello::PurposeStatus.status_map
+        end
+
+        def find_by_purpose_addon(_key, operator, value)
+          conditions = sanitize_sql_for_conditions(["#{Katello::PurposeAddon.table_name}.name #{operator} ?", value_to_sql(operator, value)])
+          hosts = ::Host::Managed.joins(:purpose_addons).where(conditions)
+          return_hosts(hosts)
         end
 
         def find_by_activation_key(_key, operator, value)

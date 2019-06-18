@@ -25,6 +25,7 @@ module Katello
       :katello_product_contents => Katello::ProductContent,
       :katello_providers => Katello::Provider,
       :katello_puppet_modules => Katello::PuppetModule,
+      :katello_purpose_addons => Katello::PurposeAddon,
       :katello_repository_puppet_modules => Katello::RepositoryPuppetModule,
       :katello_root_repositories => Katello::RootRepository,
       :katello_repositories => Katello::Repository,

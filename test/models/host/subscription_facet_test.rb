@@ -22,16 +22,8 @@ module Katello
 
   class SubscriptionFacetSystemPurposeTest < SubscriptionFacetBase
     def test_update_addons
-      subscription_facet.purpose_addons = %w(EUS AUS)
-      assert_valid subscription_facet
-      assert subscription_facet.backend_update_needed?
-    end
-
-    def test_update_addons_nil
-      subscription_facet.update_attributes(purpose_addons: ['EUS'])
-      subscription_facet.purpose_addons = nil
-      assert_valid subscription_facet
-      assert subscription_facet.backend_update_needed?
+      host.subscription_facet.purpose_addons << katello_purpose_addons(:addon)
+      assert_valid host.subscription_facet
     end
 
     def test_search_role
@@ -40,8 +32,8 @@ module Katello
     end
 
     def test_search_addon
-      subscription_facet.update_attributes(purpose_addons: ['EUS'])
-      assert_includes ::Host.search_for("addon ~ EUS"), host
+      host.subscription_facet.purpose_addons << katello_purpose_addons(:addon)
+      assert_includes ::Host.search_for("addon = \"Test Addon\""), host
     end
 
     def test_search_usage
@@ -54,7 +46,7 @@ module Katello
       Katello::Resources::Candlepin::Consumer.stubs(:virtual_host).returns(nil)
 
       # set intial values
-      params = { role: 'satellite', addOns: %w(one two), usage: 'DR' }
+      params = { role: 'satellite', usage: 'DR', addOns: ["Test1", "Test2"] }
       subscription_facet.update_from_consumer_attributes(params.with_indifferent_access)
 
       # purpose attributes are preserved when not sent to us
@@ -62,10 +54,10 @@ module Katello
 
       assert_equal params[:role], subscription_facet.purpose_role
       assert_equal params[:usage], subscription_facet.purpose_usage
-      assert_equal params[:addOns], subscription_facet.purpose_addons
+      assert_equal params[:addOns], subscription_facet.purpose_addons.pluck(:name)
 
       # purpose attributes can be cleared
-      subscription_facet.update_from_consumer_attributes({role: '', addOns: [], usage: ''}.with_indifferent_access)
+      subscription_facet.update_from_consumer_attributes({role: '', usage: '', addOns: []}.with_indifferent_access)
 
       assert_empty subscription_facet.purpose_role
       assert_empty subscription_facet.purpose_usage
@@ -357,6 +349,13 @@ module Katello
       refute subscription_facet.backend_update_needed?
 
       subscription_facet.host.content_facet.lifecycle_environment_id = dev.id
+      assert subscription_facet.backend_update_needed?
+    end
+
+    def test_backend_update_needed_purpose_addons?
+      refute subscription_facet.backend_update_needed?
+
+      subscription_facet.purpose_addon_ids = [katello_purpose_addons(:addon).id]
       assert subscription_facet.backend_update_needed?
     end
 
