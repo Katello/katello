@@ -8,10 +8,17 @@ module Katello
       end
 
       def update_default_proxy_setting
-        setting = Setting.where(name: "content_default_http_proxy").first
+        changes = self.previous_changes
+        if changes.key?(:name)
+          previous_name = changes[:name].first
+          setting = Setting.
+            where(name: "content_default_http_proxy").
+            where(value: previous_name.to_yaml).
+            first
 
-        if setting
-          setting.update_attribute(:value, self.name)
+          if setting and not previous_name.blank?
+            setting.update_attribute(:value, self.name)
+          end
         end
       end
 

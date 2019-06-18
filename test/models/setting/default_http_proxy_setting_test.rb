@@ -35,5 +35,15 @@ module Katello
       proxy.update_attribute(:name, "Some other proxy name")
       assert_equal "Some other proxy name", setting.reload.value
     end
+
+    def test_adding_new_proxy_does_not_change_setting
+      proxy = FactoryBot.create(:http_proxy)
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+
+      new_proxy = FactoryBot.create(:http_proxy, name: "second proxy")
+      assert_equal proxy.name, setting.reload.value
+      refute_equal new_proxy.name, setting.reload.value
+    end
   end
 end
