@@ -25,6 +25,7 @@ module Katello
     PUPPET_TYPE = 'puppet'.freeze
     DOCKER_TYPE = 'docker'.freeze
     OSTREE_TYPE = 'ostree'.freeze
+    ANSIBLE_COLLECTION_TYPE = 'ansible_collection'.freeze
 
     define_model_callbacks :sync, :only => :after
 
@@ -90,6 +91,9 @@ module Katello
     has_many :repository_module_streams, class_name: "Katello::RepositoryModuleStream", dependent: :delete_all
     has_many :module_streams, through: :repository_module_streams
 
+    has_many :repository_ansible_collections, :class_name => "Katello::RepositoryAnsibleCollection", :dependent => :delete_all
+    has_many :ansible_collections, :through => :repository_ansible_collections
+
     # rubocop:disable HasAndBelongsToMany
     # TODO: change this into has_many :through association
     has_and_belongs_to_many :filters, :class_name => "Katello::ContentViewFilter",
@@ -116,6 +120,7 @@ module Katello
     scope :puppet_type, -> { with_type(PUPPET_TYPE) }
     scope :docker_type, -> { with_type(DOCKER_TYPE) }
     scope :ostree_type, -> { with_type(OSTREE_TYPE) }
+    scope :ansible_collection_type, -> { with_type(ANSIBLE_COLLECTION_TYPE) }
     scope :non_puppet, -> { with_type(RepositoryTypeManager.repository_types.keys - [PUPPET_TYPE]) }
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
@@ -145,7 +150,7 @@ module Katello
     scoped_search :on => :content_label, :ext_method => :search_by_content_label
 
     delegate :product, :redhat?, :custom?, :to => :root
-    delegate :yum?, :docker?, :puppet?, :deb?, :file?, :ostree?, :to => :root
+    delegate :yum?, :docker?, :puppet?, :deb?, :file?, :ostree?, :ansible_collection?, :to => :root
     delegate :name, :label, :docker_upstream_name, :url, :to => :root
 
     delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :content_id, :arch, :label, :url, :unprotected,
@@ -153,7 +158,7 @@ module Katello
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
              :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases, :deb_components, :deb_architectures,
              :ignore_global_proxy, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id,
-             :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :to => :root
+             :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :ansible_collection_whitelist, :to => :root
 
     def self.with_type(content_type)
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)

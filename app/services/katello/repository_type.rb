@@ -12,7 +12,7 @@ module Katello
       end
     end
 
-    def_field :allow_creation_by_user, :service_class, :pulp3_service_class, :pulp3_plugin
+    def_field :allow_creation_by_user, :service_class, :pulp3_service_class, :pulp3_plugin, :pulp3_skip_publication
     attr_accessor :metadata_publish_matching_check, :index_additional_data_proc
     attr_reader :id
 

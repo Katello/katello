@@ -62,6 +62,17 @@
         </p>
 
       </div>
+
+      <div ng-show="repository.content_type === 'ansible_collection'" bst-form-group label="{{ 'Whitelist' | translate }}">
+        <input id="collection_whitelist"
+               name="collection_whitelists"
+               ng-model="repository.ansible_collection_whitelist"
+               type="text"/>
+        <p class="help-block" translate>
+          Name of ansible collection you want to sync. ex: testing.ansible_testing_content
+        </p>
+      </div>
+
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Releases' | translate }}">
         <input id="deb_releases"
                name="deb_releases"
