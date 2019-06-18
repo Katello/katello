@@ -99,7 +99,7 @@
           Tasks
         </a>
       </li>
-      <li uib-dropdown
+      <li uib-dropdown ng-if="host.isRpmEnabled()"
           ng-class="{active: stateIncludes('content-host.packages-actions') || stateIncludes('content-host.packages-installed') || stateIncludes('content-host.packages-upgradeable')}" >
         <a uib-dropdown-toggle>
           <span translate>Packages</span>
@@ -123,7 +123,7 @@
           </li>
         </ul>
       </li>
-      <li uib-dropdown
+      <li uib-dropdown ng-if="host.isDebEnabled()"
           ng-class="{active: stateIncludes('content-host.debs-actions') || stateIncludes('content-host.debs-installed') || stateIncludes('content-host.debs-upgradeable')}" >
         <a uib-dropdown-toggle>
           <span translate>Deb Packages</span>

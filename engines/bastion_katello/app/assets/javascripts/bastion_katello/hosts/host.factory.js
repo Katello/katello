@@ -21,6 +21,15 @@ angular.module('Bastion.hosts').factory('Host',
         resource.prototype.hasSubscription = function () {
             return angular.isDefined(this.subscription_facet_attributes) && angular.isDefined(this.subscription_facet_attributes.uuid);
         };
+
+        resource.prototype.isRpmEnabled = function() {
+            return !this.isDebEnabled();
+        };
+
+        resource.prototype.isDebEnabled = function() {
+            return angular.isDefined(this.operatingsystem_name) && (this.operatingsystem_name.includes("Debian") || this.operatingsystem_name.includes("Ubuntu"));
+        };
+
         return resource;
     }]
 );

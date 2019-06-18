@@ -152,6 +152,10 @@ module Katello
           'Fedora'
         elsif name =~ /sles/ || name =~ /suse.*enterprise.*/
           'SLES'
+        elsif name =~ /debian/
+          'Debian'
+        elsif name =~ /ubuntu/
+          'Ubuntu'
         end
       end
     end

@@ -18,6 +18,32 @@ module Katello
                                  :lifecycle_environment => @environment, :organization => @content_view.organization)
     end
 
+    describe "update deb_package_profile" do
+      let(:deb_package_profile) do
+        {
+          "deb_packages" => [
+            {
+              "name" => "pi",
+              "architecture" => "transcendent",
+              "version" => "3.14159"
+            }
+          ]
+        }
+      end
+
+      it "should update the package profile" do
+        Resources::Candlepin::Consumer.stubs(:get)
+        assert_async_task(::Actions::Katello::Host::UploadProfiles) do |host, package_profile|
+          assert_equal host, @host
+          assert_equal deb_package_profile, JSON.parse(package_profile)["deb_package_profile"]
+        end
+
+        put :deb_package_profile, params: { :id => @host.subscription_facet.uuid, :deb_package_profile => deb_package_profile}
+
+        assert_response :success
+      end
+    end
+
     it "test_upload_package_profile_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
       assert_protected_action(:upload_package_profile, :edit_hosts) do

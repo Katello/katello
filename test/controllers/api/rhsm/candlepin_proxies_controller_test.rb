@@ -122,12 +122,13 @@ module Katello
       end
 
       it "should bind all" do
-        Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with([
-          "/pulp/repos/foo",
-          "/pulp/repos/bar",
-          "/pulp/deb/bar",
-          "/pulp/deb/baz"
-        ])
+        Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with(
+          [
+            "/pulp/repos/foo",
+            "/pulp/repos/bar",
+            "/pulp/deb/bar",
+            "/pulp/deb/baz"
+          ])
         put :enabled_repos, params: { :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos }
         assert_equal 200, response.status
       end
@@ -153,30 +154,6 @@ module Katello
         assert_async_task(::Actions::Katello::Host::Update)
 
         put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts }
-        assert_equal 200, response.status
-      end
-    end
-
-    describe "update deb_package_profile" do
-      before do
-        User.stubs(:consumer?).returns(true)
-        uuid = @host.subscription_facet.uuid
-        stub_cp_consumer_with_uuid(uuid)
-      end
-      let(:deb_package_profile) do
-        {
-          "deb_packages" => [
-            {
-              "name" => "pi",
-              "architecture" => "transcendent",
-              "version" => "3.14159"
-            }
-          ]
-        }
-      end
-
-      it "should update the package profile" do
-        put :deb_package_profile, params: { :id => @host.subscription_facet.uuid, :deb_package_profile => deb_package_profile}
         assert_equal 200, response.status
       end
     end

@@ -2,7 +2,7 @@ module Katello
   class Api::V2::HostDebsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_host, :only => :index
+    before_action :find_host
 
     resource_description do
       api_version 'v2'
