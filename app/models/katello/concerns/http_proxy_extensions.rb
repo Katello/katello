@@ -16,7 +16,7 @@ module Katello
             where(value: previous_name.to_yaml).
             first
 
-          if setting and not previous_name.blank?
+          if setting && !previous_name.blank?
             setting.update_attribute(:value, self.name)
           end
         end
