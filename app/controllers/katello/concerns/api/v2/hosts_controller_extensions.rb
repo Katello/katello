@@ -17,6 +17,8 @@ module Katello
 
       included do
         prepend Overrides
+        before_action :purpose_addon_params, only: [:create, :update]
+
         def destroy
           Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
           process_response(:object => @host)
@@ -29,6 +31,13 @@ module Katello
           @host.host_collection_ids = params[:host_collection_ids]
           @host.save!
           render(:locals => { :resource => @host }, :template => 'katello/api/v2/hosts/show', :status => :ok)
+        end
+
+        def purpose_addon_params
+          addons = params.dig(:host, :subscription_facet_attributes, :purpose_addons)
+          return if addons.nil?
+          params[:host][:subscription_facet_attributes][:purpose_addon_ids] = addons.map { |addon_name| ::Katello::PurposeAddon.find_or_create_by(name: addon_name).id }
+          params[:host][:subscription_facet_attributes].delete(:purpose_addons)
         end
       end
     end
