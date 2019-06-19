@@ -46,6 +46,18 @@ class DashboardHelperTest < ActiveSupport::TestCase
     assert_equal 1, unknown
   end
 
+  def test_unregistered_consumer_count
+    @host.subscription_facet.update_attributes!(uuid: nil)
+    unknown = unknown_consumer_count
+    assert_equal 1, unknown
+  end
+
+  def test_unsubscribed_hypervisor_consumer_count
+    @host.subscription_facet.update_subscription_status('unsubscribed_hypervisor')
+    unknown = unsubscribed_hypervisor_count
+    assert_equal 1, unknown
+  end
+
   def test_partial_consumer_count_nil
     partial = partial_consumer_count
     assert !partial.nil?

@@ -10,9 +10,9 @@
   <% valid_consumer_count = valid_consumer_count()%>
   <% invalid_consumer_count = invalid_consumer_count()%>
   <% unknown_consumer_count = unknown_consumer_count() %>
-  <% unregistered_consumer_count = total_count-partial_consumer_count-valid_consumer_count-invalid_consumer_count%>
   <% subscription_status_url = '/content_hosts?search='%>
   <% registered_subscription_url = subscription_status_url + ERB::Util.url_encode('subscription_status = ') %>
+  <% unknown_search_url = registered_subscription_url + 'unknown or (null? subscription_uuid)' %>
 
   <table class="table table-fixed table-striped table-bordered">
     <thead>
@@ -54,22 +54,22 @@
       </tr>
       <tr>
         <td>
-          <%= link_to("#{registered_subscription_url}" + 'unknown') do %>
-              <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Unknown") %>
+          <%= link_to("#{registered_subscription_url}" + 'unsubscribed_hypervisor') do %>
+              <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Unsubscribed Hypervisor") %>
           <% end %>
         </td>
         <td style="text-align:right">
-          <%= link_to( "#{unknown_consumer_count}", "#{registered_subscription_url}" + 'unknown')%>
+          <%= link_to( "#{unsubscribed_hypervisor_count}", "#{registered_subscription_url}" + 'unsubscribed_hypervisor')%>
         </td>
       </tr>
       <tr>
         <td>
-          <%= link_to("#{subscription_status_url}" + 'null? subscription_uuid') do %>
-              <i class="label label-danger" style="margin-right: 6px">&nbsp;</i><%= _("Unregistered") %>
+          <%= link_to(unknown_search_url) do %>
+              <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Unknown or Unregistered") %>
           <% end %>
         </td>
         <td style="text-align:right">
-          <%= link_to( "#{unregistered_consumer_count}", "#{subscription_status_url}" + 'null? subscription_uuid')%>
+          <%= link_to("#{unknown_consumer_count}", unknown_search_url)%>
         </td>
       </tr>
       <tr>

@@ -1,29 +1,32 @@
 module Katello
   module Concerns
     module DashboardHelperExtensions
+      def host_query
+        ::Host::Managed.authorized('view_hosts', ::Host::Managed).where(:organization => Organization.current)
+      end
+
       def total_host_count
-        total_host_count = ::Host::Managed.authorized('view_hosts', ::Host::Managed).where(:organization => Organization.current).size
-        return total_host_count || 0
+        host_query.size
       end
 
       def partial_consumer_count
-        partial_consumer_count = ::Host::Managed.authorized('view_hosts', ::Host::Managed).where(:organization => Organization.current).search_for("subscription_status = partial").size
-        return partial_consumer_count || 0
+        host_query.search_for("subscription_status = partial").size
       end
 
       def valid_consumer_count
-        valid_consumer_count = ::Host::Managed.authorized('view_hosts', ::Host::Managed).where(:organization => Organization.current).search_for("subscription_status = valid").size
-        return valid_consumer_count || 0
+        host_query.search_for("subscription_status = valid").size
       end
 
       def invalid_consumer_count
-        invalid_consumer_count = ::Host::Managed.authorized('view_hosts', ::Host::Managed).where(:organization => Organization.current).search_for("subscription_status = invalid").size
-        return invalid_consumer_count || 0
+        host_query.search_for("subscription_status = invalid").size
       end
 
       def unknown_consumer_count
-        unknown_consumer_count = ::Host::Managed.authorized('view_hosts', ::Host::Managed).where(:organization => Organization.current).search_for("subscription_status = unknown").size
-        return unknown_consumer_count || 0
+        host_query.search_for("subscription_status = unknown or (null? subscription_uuid)").size
+      end
+
+      def unsubscribed_hypervisor_count
+        host_query.search_for("subscription_status = unsubscribed_hypervisor").size
       end
     end
   end
