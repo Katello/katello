@@ -10,14 +10,26 @@ class Setting::Content < Setting
     return unless super
 
     BLANK_ATTRS.concat %w(register_hostname_fact default_location_subscribed_hosts
-                          default_location_puppet_content)
+                          default_location_puppet_content content_default_http_proxy)
 
     download_policies = proc { hashify_parameters(::Runcible::Models::YumImporter::DOWNLOAD_POLICIES) }
     proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }
     dependency_solving_options = proc { hashify_parameters(['conservative', 'greedy']) }
+    http_proxy_select = [{
+      name: _("HTTP Proxies"),
+      class: 'HttpProxy',
+      scope: 'all',
+      value_method: 'name',
+      text_method: 'name_and_url'
+    }]
 
     self.transaction do
       [
+        self.set('content_default_http_proxy', N_("Default HTTP Proxy for syncing content"),
+                        nil, N_('Default http proxy'),
+                        nil,
+                        collection: proc { http_proxy_select }, include_blank: N_("no global default")
+                ),
         self.set('katello_default_provision', N_("Default provisioning template for Operating Systems created from synced content"),
                  'Kickstart default', N_('Default synced OS provisioning template'),
                  nil, :collection => proc { katello_template_setting_values("provision") }
@@ -50,9 +62,7 @@ class Setting::Content < Setting
         self.set('katello_default_ptable', N_("Default partitioning table for new Operating Systems created from synced content"),
                  'Kickstart default', N_('Default synced OS partition table'),
                  nil, :collection => proc { Hash[Template.all.where(:type => "Ptable").map { |tmp| [tmp[:name], tmp[:name]] }] }
-                ),
-        self.set('katello_default_kexec', N_("Default kexec template for new Operating Systems created from synced content"),
-                 'Discovery Red Hat kexec', N_('Default synced OS kexec template'),
+                ), self.set('katello_default_kexec', N_("Default kexec template for new Operating Systems created from synced content"), 'Discovery Red Hat kexec', N_('Default synced OS kexec template'),
                  nil, :collection => proc { katello_template_setting_values("kexec") }
                 ),
         self.set('katello_default_atomic_provision', N_("Default provisioning template for new Atomic Operating Systems created from synced content"),

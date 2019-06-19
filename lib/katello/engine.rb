@@ -146,6 +146,7 @@ module Katello
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
       ::Setting.send :include, Katello::Concerns::SettingExtensions
+      ::HttpProxy.send :include, Katello::Concerns::HttpProxyExtensions
       ForemanTasks::RecurringLogic.send :include, Katello::Concerns::RecurringLogicExtensions
 
       #Controller extensions
