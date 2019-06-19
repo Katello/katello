@@ -13,7 +13,8 @@ module Katello
       def ping(services: SERVICES, capsule_id: nil)
         result = {}
         services.each { |service| result[service] = {} }
-        if capsule_id && SmartProxy.find(capsule_id).pulp3_enabled?
+
+        if fetch_proxy(capsule_id).pulp3_enabled?
           result[:pulp3] = {}
         end
 
@@ -35,7 +36,7 @@ module Katello
 
       def ping_pulp3_without_auth(service_result, capsule_id)
         exception_watch(service_result) do
-          Ping.pulp3_without_auth(SmartProxy.find(capsule_id).pulp3_url("api/v3"))
+          Ping.pulp3_without_auth(fetch_proxy(capsule_id).pulp3_url("api/v3"))
         end
       end
 
@@ -115,12 +116,9 @@ module Katello
       end
 
       def pulp_url(capsule_id)
-        if capsule_id
-          uri = URI.parse(SmartProxy.find(capsule_id).pulp_url)
-          "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
-        else
-          SETTINGS[:katello][:pulp][:url]
-        end
+        proxy = fetch_proxy(capsule_id)
+        uri = URI.parse(proxy.pulp_url)
+        "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
       end
 
       # this checks Pulp is running and responding without need
@@ -180,6 +178,10 @@ module Katello
       end
 
       private
+
+      def fetch_proxy(capsule_id)
+        capsule_id ? SmartProxy.find(capsule_id) : SmartProxy.pulp_master
+      end
 
       def backend_status(url, backend)
         ca_file = SETTINGS[:katello][backend][:ca_cert_file]

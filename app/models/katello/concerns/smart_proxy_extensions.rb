@@ -15,6 +15,7 @@ module Katello
         end
       end
 
+      PULP3_FEATURE = "Pulp3".freeze
       PULP_FEATURE = "Pulp".freeze
       PULP_NODE_FEATURE = "Pulp Node".freeze
 
@@ -137,7 +138,7 @@ module Katello
       end
 
       def pulp3_enabled?
-        !self.capabilities('Pulp3').nil?
+        self.has_feature? PULP3_FEATURE
       end
 
       def pulp3_support?(repository)
