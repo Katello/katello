@@ -37,11 +37,11 @@ module Katello
     end
 
     def test_proxy_name_partial_match_does_not_update_setting
-      proxy = FactoryBot.create(:http_proxy, 'foo')
+      proxy = FactoryBot.create(:http_proxy, name: 'foo')
       setting = Setting.where(name: @name).first
       setting.update_attribute(:value, proxy.name)
 
-      new_poxy = FactoryBot.create(:http_proxy, name: 'foobar')
+      FactoryBot.create(:http_proxy, name: 'foobar')
       assert_equal proxy.name, Setting.where(name: @name).first.value
     end
 
