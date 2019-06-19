@@ -11,13 +11,11 @@ module Katello
         changes = self.previous_changes
         if changes.key?(:name)
           previous_name = changes[:name].first
-          content_settings = Setting::Content.arel_table
           setting = Setting::Content.unscoped.
             where(name: "content_default_http_proxy").
-            where(content_settings[:value].matches("%#{previous_name}%")).
             first
 
-          if setting && !previous_name.blank?
+          if setting && setting.value == previous_name && !previous_name.blank?
             setting.update_attribute(:value, self.name)
           end
         end
