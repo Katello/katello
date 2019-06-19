@@ -4,7 +4,7 @@ module Katello
     FAIL_RETURN_CODE = 'FAIL'.freeze
     PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer).freeze
 
-    SERVICES = [:pulp3, :pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks].freeze
+    SERVICES = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks].freeze
 
     class << self
       #
@@ -13,6 +13,10 @@ module Katello
       def ping(services: SERVICES, capsule_id: nil)
         result = {}
         services.each { |service| result[service] = {} }
+        if capsule_id && SmartProxy.find(capsule_id).pulp3_enabled?
+          result[:pulp3] = {}
+        end
+
         ping_pulp3_without_auth(result[:pulp3], capsule_id) if result.include?(:pulp3)
         ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
         ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
