@@ -3,20 +3,20 @@ module Katello
     OK_RETURN_CODE = 'ok'.freeze
     FAIL_RETURN_CODE = 'FAIL'.freeze
     PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer).freeze
-
-    SERVICES = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks].freeze
-
     class << self
+      def services(capsule_id = nil)
+        services = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks]
+        services += [:pulp3] if fetch_proxy(capsule_id)&.pulp3_enabled?
+        services
+      end
+
       #
       # Calls "status" services in all backend engines.
       #
-      def ping(services: SERVICES, capsule_id: nil)
+      def ping(services: nil, capsule_id: nil)
+        services ||= self.services(capsule_id)
         result = {}
         services.each { |service| result[service] = {} }
-
-        if fetch_proxy(capsule_id).pulp3_enabled?
-          result[:pulp3] = {}
-        end
 
         ping_pulp3_without_auth(result[:pulp3], capsule_id) if result.include?(:pulp3)
         ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
