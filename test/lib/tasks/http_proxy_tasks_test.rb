@@ -82,12 +82,22 @@ module Katello
 
     def test_proxy_list_when_no_proxies
       assert_empty HttpProxy.all.to_a
-      Rake.application.invoke_task("katello:http_proxy_list")
+      assert_output('') do
+        Rake.application.invoke_task("katello:http_proxy_list")
+      end
     end
 
     def test_proxy_list_with_defined_proxies
       3.times { FactoryBot.create(:http_proxy) }
-      Rake.application.invoke_task("katello:http_proxy_list")
+      assert 3, HttpProxy.count
+      expected_output = ""
+      HttpProxy.all.each do |proxy|
+        expected_output += "#{proxy.name_and_url}\n"
+      end
+
+      assert_output(expected_output) do
+        Rake.application.invoke_task("katello:http_proxy_list")
+      end
     end
   end
 end
