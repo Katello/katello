@@ -2,7 +2,7 @@ require File.expand_path("../engine", File.dirname(__FILE__))
 
 namespace :katello do
   desc "Sets the content default http proxy to an existing http proxy based on supplied URL."
-  task :update_default_http_proxy => :environment do |_task, args|
+  task :update_default_http_proxy => :environment do
     setting = ::Setting::Content.where(name: 'content_default_http_proxy').first
     options = {}
     o = OptionParser.new
@@ -17,7 +17,7 @@ namespace :katello do
       puts o
       exit
     end
-    ordered_args = o.order!(args.to_a) {}
+    ordered_args = o.order!(ARGV) {}
     o.parse!(ordered_args)
 
     unless options.key?(:name)
