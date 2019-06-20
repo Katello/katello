@@ -15,6 +15,7 @@ module Katello
         end
       end
 
+      PULP3_FEATURE = "Pulp3".freeze
       PULP_FEATURE = "Pulp".freeze
       PULP_NODE_FEATURE = "Pulp Node".freeze
 
@@ -134,6 +135,10 @@ module Katello
         else
           Actions::Pulp::Abstract::BACKEND_SERVICE_TYPE
         end
+      end
+
+      def pulp3_enabled?
+        self.has_feature? PULP3_FEATURE
       end
 
       def pulp3_support?(repository)

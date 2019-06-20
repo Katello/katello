@@ -3,16 +3,21 @@ module Katello
     OK_RETURN_CODE = 'ok'.freeze
     FAIL_RETURN_CODE = 'FAIL'.freeze
     PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer).freeze
-
-    SERVICES = [:pulp3, :pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks].freeze
-
     class << self
+      def services(capsule_id = nil)
+        services = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks]
+        services += [:pulp3] if fetch_proxy(capsule_id)&.pulp3_enabled?
+        services
+      end
+
       #
       # Calls "status" services in all backend engines.
       #
-      def ping(services: SERVICES, capsule_id: nil)
+      def ping(services: nil, capsule_id: nil)
+        services ||= self.services(capsule_id)
         result = {}
         services.each { |service| result[service] = {} }
+
         ping_pulp3_without_auth(result[:pulp3], capsule_id) if result.include?(:pulp3)
         ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
         ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
@@ -31,7 +36,7 @@ module Katello
 
       def ping_pulp3_without_auth(service_result, capsule_id)
         exception_watch(service_result) do
-          Ping.pulp3_without_auth(SmartProxy.find(capsule_id).pulp3_url("api/v3"))
+          Ping.pulp3_without_auth(fetch_proxy(capsule_id).pulp3_url("api/v3"))
         end
       end
 
@@ -111,12 +116,9 @@ module Katello
       end
 
       def pulp_url(capsule_id)
-        if capsule_id
-          uri = URI.parse(SmartProxy.find(capsule_id).pulp_url)
-          "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
-        else
-          SETTINGS[:katello][:pulp][:url]
-        end
+        proxy = fetch_proxy(capsule_id)
+        uri = URI.parse(proxy.pulp_url)
+        "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
       end
 
       # this checks Pulp is running and responding without need
@@ -176,6 +178,10 @@ module Katello
       end
 
       private
+
+      def fetch_proxy(capsule_id)
+        capsule_id ? SmartProxy.find(capsule_id) : SmartProxy.pulp_master
+      end
 
       def backend_status(url, backend)
         ca_file = SETTINGS[:katello][backend][:ca_cert_file]
