@@ -38,5 +38,10 @@ module Katello
       assert_includes FileUnit.with_identifiers([@file_one.id]), @file_one
       assert_includes FileUnit.with_identifiers(@file_one.pulp_id), @file_one
     end
+
+    def test_bad_query
+      assert_empty FileUnit.where(:pulp_id => ['']*70000)
+    end
+
   end
 end
