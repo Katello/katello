@@ -67,13 +67,17 @@ module Katello
       assert_equal 'http://someurl', HttpProxy.last.url
     end
 
-    def test_update_proxy_by_proxy_name_and_url_set_default_proxy
-      assert_nil @setting.value
+    def test_update_proxy_by_proxy_name_and_short_url_opton_creates_new_proxy
+      assert 0, HttpProxy.all.count
+
       assert_raises SystemExit do
-        ARGV.concat(['--', '--name', 'new_proxy', '--url', 'http://someurl'])
+        ARGV.concat(['--', '--name', 'new_proxy', '-u', 'http://someurl'])
         Rake::Task['katello:update_default_http_proxy'].invoke
       end
-      assert_equal 'new_proxy', @setting.reload.value
+
+      assert_equal 1, HttpProxy.count
+      assert_equal 'new_proxy', HttpProxy.last.name
+      assert_equal 'http://someurl', HttpProxy.last.url
     end
 
     def test_proxy_list_when_no_proxies
