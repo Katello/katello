@@ -5,27 +5,27 @@ namespace :katello do
   task :update_default_http_proxy => :environment do |_task, args|
     setting = ::Setting::Content.where(name: 'content_default_http_proxy').first
     options = {}
-
     o = OptionParser.new
     o.banner = "Usage: rake katello:update_content_default_http_proxy [options]"
-    o.on("-n", "--name HTTP_PROXY_NAME") { |name|
+    o.on("-n", "--name HTTP_PROXY_NAME") do |name|
       options[:name] = name
-    }
-    o.on("-u", "--url HTTP_PROXY_URL") { |url|
+    end
+    o.on("-u", "--url HTTP_PROXY_URL") do |url|
       options[:url] = url
-    }
+    end
     o.on("-h, --help", "Prints this help") do
       puts o
       exit
     end
-    args = o.order!(ARGV) {}
-    o.parse!(args)
+    ordered_args = o.order!(args.to_a) {}
+    o.parse!(ordered_args)
 
-    if !options.key?(:name)
+    unless options.key?(:name)
       $stderr.print("ERROR: Missing required option for --name HTTP_PROXY_NAME")
       exit 2
     end
 
+    User.current = User.anonymous_api_admin
     http_proxy = HttpProxy.where(name: options[:name]).first
 
     if http_proxy
@@ -37,15 +37,19 @@ namespace :katello do
         username = uri.user
         password = uri.password
         new_proxy = ::HttpProxy.new(name: options[:name], url: options[:url],
-                                  username: username, password: password)
-        setting.update_attribute(:value, new_proxy.name) if new_proxy.save!
-        puts "Default content http proxy set to \"#{setting.value}\"."
+                                  username: username, password: password,
+                                  organizations: Organization.all,
+                                  locations: Location.all)
+        if new_proxy.save!
+          setting.update_attribute(:value, new_proxy.name)
+          puts "Default content http proxy set to \"#{new_proxy.name_and_url}\"."
+        end
       else
         $stderr.print("ERROR: No http proxy found with name \"#{options[:name]}\".")
         exit 1
       end
-      exit
     end
+    exit
   end
 
   desc "Displays the current defined http proxies."

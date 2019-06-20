@@ -12,7 +12,10 @@ module Katello
     end
 
     def test_update_proxy_with_missing_proxy
-      Rake.application.invoke_task('katello:update_default_http_proxy[some proxy]')
+      exit_code = assert_raises SystemExit do
+        Rake::Task['katello:update_default_http_proxy'].invoke('--', '--name', 'foobar')
+      end
+      assert_equal 1, exit_code.status, "Task didn't exit with expected exit code."
       refute_equal "some proxy", @setting.reload.value
     end
 
@@ -20,7 +23,10 @@ module Katello
       current_default_proxy = FactoryBot.create(:http_proxy)
       @setting.update_attribute(:value, current_default_proxy.name)
       proxy = FactoryBot.create(:http_proxy)
-      Rake.application.invoke_task("katello:update_default_http_proxy[#{proxy.url}]")
+      exit_code = assert_raises SystemExit do
+        Rake::Task['katello:update_default_http_proxy'].invoke('--', '-u', proxy.url)
+      end
+      assert_equal 2, exit_code.status, "Task didn't exit with expected exit code."
       assert_equal current_default_proxy.name, @setting.reload.value
     end
 
@@ -28,7 +34,9 @@ module Katello
       current_default_proxy = FactoryBot.create(:http_proxy)
       @setting.update_attribute(:value, current_default_proxy.name)
       proxy = FactoryBot.create(:http_proxy)
-      Rake.application.invoke_task("katello:update_default_http_proxy[#{proxy.name}]")
+      assert_raises SystemExit do
+        Rake::Task['katello:update_default_http_proxy'].invoke('--', '--name', proxy.name)
+      end
       assert_equal proxy.name, @setting.reload.value
     end
 
