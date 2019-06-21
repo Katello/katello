@@ -33,7 +33,6 @@ namespace :katello do
     User.current = User.anonymous_api_admin
     http_proxy = HttpProxy.where(name: options[:name]).first
 
-
     if http_proxy
       setting.update_attribute(:value, http_proxy.name)
       http_proxy.update_attribute(:url, options[:url])

@@ -87,6 +87,5 @@ module Katello
       assert_equal 'new_proxy', HttpProxy.last.name
       assert_equal 'http://someurl', HttpProxy.last.url
     end
-
   end
 end
