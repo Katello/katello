@@ -33,15 +33,15 @@ namespace :katello do
     User.current = User.anonymous_api_admin
     http_proxy = HttpProxy.where(name: options[:name]).first
 
+    uri = URI(options[:url])
+    username = uri.user
+    password = uri.password
+
     if http_proxy
       setting.update_attribute(:value, http_proxy.name)
-      http_proxy.update_attribute(:url, options[:url])
+      http_proxy.update_attributes(url: options[:url], username: username, password: password)
       puts "Content default http proxy set to #{http_proxy.name_and_url}."
     else
-
-      uri = URI(options[:url])
-      username = uri.user
-      password = uri.password
       new_proxy = ::HttpProxy.new(name: options[:name], url: options[:url],
                                 username: username, password: password,
                                 organizations: Organization.all,
