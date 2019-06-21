@@ -22,7 +22,10 @@ module Katello
       end
 
       def name_and_url
-        "#{name} (#{url})"
+        uri = URI(url)
+        uri.password = nil
+        uri.user = nil
+        "#{name} (#{uri})"
       end
     end
   end
