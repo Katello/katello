@@ -11,44 +11,52 @@ module Katello
       assert @setting
     end
 
-    def test_update_proxy_with_missing_proxy
+    def test_without_name_fails
+      assert_equal 0, HttpProxy.all.count
       exit_code = assert_raises SystemExit do
-        ARGV.concat(['--', '--name', 'foobar'])
-        Rake::Task['katello:update_default_http_proxy'].invoke
-      end
-      assert_equal 1, exit_code.status, "Task didn't exit with expected exit code."
-      refute_equal "some proxy", @setting.reload.value
-    end
-
-    def test_update_proxy_by_proxy_url_fails
-      current_default_proxy = FactoryBot.create(:http_proxy)
-      @setting.update_attribute(:value, current_default_proxy.name)
-      proxy = FactoryBot.create(:http_proxy)
-      exit_code = assert_raises SystemExit do
-        ARGV.concat(['--', '-u', proxy.url])
+        ARGV.concat(['--', '-u', 'http://someurl'])
         Rake::Task['katello:update_default_http_proxy'].invoke
       end
       assert_equal 2, exit_code.status, "Task didn't exit with expected exit code."
-      assert_equal current_default_proxy.name, @setting.reload.value
+      assert_equal 0, HttpProxy.all.count
     end
 
-    def test_update_proxy_by_proxy_name_sets_default
+    def test_without_url_fails
+      assert_equal 0, HttpProxy.all.count
+      exit_code = assert_raises SystemExit do
+        ARGV.concat(['--', '-n', 'a new proxy'])
+        Rake::Task['katello:update_default_http_proxy'].invoke
+      end
+      assert_equal 2, exit_code.status, "Task didn't exit with expected exit code."
+      assert_equal 0, HttpProxy.all.count
+    end
+
+    def test_update_proxy_sets_default
       current_default_proxy = FactoryBot.create(:http_proxy)
       @setting.update_attribute(:value, current_default_proxy.name)
       proxy = FactoryBot.create(:http_proxy)
       assert_raises SystemExit do
-        ARGV.concat(['--', '--name', proxy.name])
+        ARGV.concat(['--', '--name', proxy.name, '--url', 'http://someurl'])
         Rake::Task['katello:update_default_http_proxy'].invoke
       end
       assert_equal proxy.name, @setting.reload.value
     end
 
-    def test_update_proxy_by_proxy_short_option_name_sets_default
+    def test_update_proxy_updates_url
+      proxy = FactoryBot.create(:http_proxy, url: 'http://someurl')
+      assert_raises SystemExit do
+        ARGV.concat(['--', '--name', proxy.name, '--url', 'http://someotherurl'])
+        Rake::Task['katello:update_default_http_proxy'].invoke
+      end
+      assert_equal 'http://someotherurl', proxy.reload.url
+    end
+
+    def test_update_proxy_by_short_option_name_sets_default
       current_default_proxy = FactoryBot.create(:http_proxy)
       @setting.update_attribute(:value, current_default_proxy.name)
       proxy = FactoryBot.create(:http_proxy)
       assert_raises SystemExit do
-        ARGV.concat(['--', '-n', proxy.name])
+        ARGV.concat(['--', '-n', proxy.name, '-url', proxy.url])
         Rake::Task['katello:update_default_http_proxy'].invoke
       end
       assert_equal proxy.name, @setting.reload.value
@@ -67,7 +75,7 @@ module Katello
       assert_equal 'http://someurl', HttpProxy.last.url
     end
 
-    def test_update_proxy_by_proxy_name_and_short_url_opton_creates_new_proxy
+    def test_update_proxy_by_proxy_name_and_short_url_option_creates_new_proxy
       assert 0, HttpProxy.all.count
 
       assert_raises SystemExit do
@@ -80,24 +88,5 @@ module Katello
       assert_equal 'http://someurl', HttpProxy.last.url
     end
 
-    def test_proxy_list_when_no_proxies
-      assert_empty HttpProxy.all.to_a
-      assert_output('') do
-        Rake.application.invoke_task("katello:http_proxy_list")
-      end
-    end
-
-    def test_proxy_list_with_defined_proxies
-      3.times { FactoryBot.create(:http_proxy) }
-      assert 3, HttpProxy.count
-      expected_output = ""
-      HttpProxy.all.each do |proxy|
-        expected_output += "#{proxy.name_and_url}\n"
-      end
-
-      assert_output(expected_output) do
-        Rake.application.invoke_task("katello:http_proxy_list")
-      end
-    end
   end
 end
