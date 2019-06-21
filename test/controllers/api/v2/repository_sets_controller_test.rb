@@ -117,6 +117,29 @@ module Katello
       assert_response :success
     end
 
+    def test_hides_kickstart_repos
+      task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn
+
+      ks_path = '/foobar/kickstart/'
+      ks_7server = { :substitutions => { :releasever => '7Server', :basearch => '' }, :path => ks_path }.with_indifferent_access
+      ks_7_1 = { :substitutions => { :releasever => '7.1', :basearch => '' }, :path => ks_path }.with_indifferent_access
+      ks_8_0 = { :substitutions => { :releasever => '8.0', :basearch => ''}, :path => ks_path }.with_indifferent_access
+      ks_8 = { :substitutions => { :releasever => '8', :basearch => '' }, :path => ks_path }.with_indifferent_access
+      rpm_8 = { :substitutions => { :releasever => '8', :basearch => '' }, :path => '/foobar/' }.with_indifferent_access
+
+      task.expects(:output).at_least_once.returns(results: [ks_7server, ks_7_1, ks_8_0, ks_8, rpm_8])
+
+      get :available_repositories, params: { product_id: @product.id, id: @content_id }
+      results = JSON.parse(response.body)['results']
+
+      assert_includes results, ks_7_1
+      assert_includes results, ks_8_0
+      assert_includes results, rpm_8
+
+      refute_includes results, ks_7server
+      refute_includes results, ks_8
+    end
+
     def test_available_repo_sort
       task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn
 
