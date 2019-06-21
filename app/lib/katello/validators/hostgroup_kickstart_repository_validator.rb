@@ -11,7 +11,7 @@ module Katello
         return unless hostgroup.kickstart_repository_id
 
         msg = if hostgroup.content_source.blank?
-                hostgroup.errors.add(:base, _("Please select a content source before assigning a kickstart repository"))
+                _("Please select a content source before assigning a kickstart repository")
               elsif hostgroup.operatingsystem.blank?
                 _("Please select an operating system before assigning a kickstart repository")
               elsif !hostgroup.operatingsystem.is_a?(Redhat)
