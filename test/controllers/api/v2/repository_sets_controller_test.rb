@@ -126,8 +126,9 @@ module Katello
       ks_8_0 = { :substitutions => { :releasever => '8.0', :basearch => ''}, :path => ks_path }.with_indifferent_access
       ks_8 = { :substitutions => { :releasever => '8', :basearch => '' }, :path => ks_path }.with_indifferent_access
       rpm_8 = { :substitutions => { :releasever => '8', :basearch => '' }, :path => '/foobar/' }.with_indifferent_access
+      nil_release = { :substitutions => { :releasever => nil, :basearch => '' }, :path => ks_path }.with_indifferent_access
 
-      task.expects(:output).at_least_once.returns(results: [ks_7server, ks_7_1, ks_8_0, ks_8, rpm_8])
+      task.expects(:output).at_least_once.returns(results: [ks_7server, ks_7_1, ks_8_0, ks_8, rpm_8, nil_release])
 
       get :available_repositories, params: { product_id: @product.id, id: @content_id }
       results = JSON.parse(response.body)['results']
@@ -135,6 +136,7 @@ module Katello
       assert_includes results, ks_7_1
       assert_includes results, ks_8_0
       assert_includes results, rpm_8
+      assert_includes results, nil_release
 
       refute_includes results, ks_7server
       refute_includes results, ks_8
