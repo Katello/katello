@@ -43,7 +43,7 @@ module Katello
       repos = scan_cdn.output[:results]
 
       repos = repos.select do |repo|
-        if repo[:path].include?('kickstart')
+        if repo[:path].include?('kickstart') && repo[:substitutions][:releasever].present?
           repo[:substitutions][:releasever].include?('.') || repo[:enabled]
         else
           true
