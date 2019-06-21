@@ -6,7 +6,7 @@ namespace :katello do
     setting = ::Setting::Content.where(name: 'content_default_http_proxy').first
     options = {}
     o = OptionParser.new
-    o.banner = "Usage: rake katello:update_content_default_http_proxy [options]"
+    o.banner = "Usage: rake katello:update_content_default_http_proxy -- --name HTTP_PROXY_NAME --url HTTP_PROXY_URL"
     o.on("-n", "--name HTTP_PROXY_NAME") do |name|
       options[:name] = name
     end
