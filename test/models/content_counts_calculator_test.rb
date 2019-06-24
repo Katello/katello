@@ -4,6 +4,20 @@ module Katello
   class ContentCountsCalculator < ActiveSupport::TestCase
     let(:repositories_data) do
       [{
+        "display_name" => "deb repo 1",
+        "notes" => {"_repo-type" => "deb-repo"},
+        "content_unit_counts" => {
+          "deb" => 64
+        },
+        "id" => "deb-repo-1"
+      }, {
+        "display_name" => "deb repo 2",
+        "notes" => {"_repo-type" => "deb-repo"},
+        "content_unit_counts" => {
+          "deb" => 21
+        },
+        "id" => "deb-repo-2"
+      }, {
         "display_name" => "rpm repo 1",
         "notes" => {"_repo-type" => "rpm-repo"},
         "content_unit_counts" => {
@@ -48,6 +62,8 @@ module Katello
     test 'count calculation' do
       calculator = Katello::Pulp::ContentCountsCalculator.new(repositories_data)
       expected_counts = {
+        :apt_repositories => 2,
+        :deb_packages => 85,
         :yum_repositories => 2,
         :packages => 38,
         :package_groups => 5,
@@ -64,6 +80,8 @@ module Katello
     test 'return zero counts for empty repos' do
       calculator = Katello::Pulp::ContentCountsCalculator.new([])
       expected_counts = {
+        :apt_repositories => 0,
+        :deb_packages => 0,
         :yum_repositories => 0,
         :packages => 0,
         :package_groups => 0,

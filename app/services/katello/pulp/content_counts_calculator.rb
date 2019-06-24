@@ -5,8 +5,11 @@ module Katello
         @repos = repos
       end
 
+      # rubocop:disable Metrics/MethodLength
       def calculate
         counts = {
+          :apt_repositories => 0,
+          :deb_packages => 0,
           :yum_repositories => 0,
           :packages => 0,
           :package_groups => 0,
@@ -19,6 +22,9 @@ module Katello
 
         @repos.each do |repo|
           case
+          when repo_type?(repo, 'deb')
+            counts[:apt_repositories] += 1
+            counts[:deb_packages] += get_unit_count(repo, 'deb')
           when repo_type?(repo, 'rpm')
             counts[:yum_repositories] += 1
             counts[:packages] += get_unit_count(repo, 'rpm')
