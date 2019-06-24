@@ -295,13 +295,26 @@ ManageManifestModal.propTypes = {
   refresh: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
   loadManifestHistory: PropTypes.func.isRequired,
-  organization: PropTypes.shape({}).isRequired,
+  organization: PropTypes.shape({
+    loading: PropTypes.bool,
+    redhat_repository_url: PropTypes.string,
+    owner_details: PropTypes.shape({
+      upstreamConsumer: PropTypes.shape({
+        uuid: PropTypes.string,
+        name: PropTypes.string,
+        webUrl: PropTypes.string,
+      }),
+    }),
+  }).isRequired,
   disableManifestActions: PropTypes.bool,
   disabledReason: PropTypes.string,
   loadOrganization: PropTypes.func.isRequired,
   saveOrganization: PropTypes.func.isRequired,
   taskInProgress: PropTypes.bool.isRequired,
-  manifestHistory: PropTypes.shape({}).isRequired,
+  manifestHistory: PropTypes.shape({
+    loading: PropTypes.bool,
+    results: PropTypes.array,
+  }).isRequired,
   showModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
 };

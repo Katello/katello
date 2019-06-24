@@ -16,7 +16,9 @@ const SubscriptionDetailProducts = ({ subscriptionDetails }) => (
 );
 
 SubscriptionDetailProducts.propTypes = {
-  subscriptionDetails: PropTypes.shape({}).isRequired,
+  subscriptionDetails: PropTypes.shape({
+    provided_products: PropTypes.array,
+  }).isRequired,
 };
 
 export default SubscriptionDetailProducts;

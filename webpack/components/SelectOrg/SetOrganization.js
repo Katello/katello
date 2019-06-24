@@ -96,7 +96,9 @@ SetOrganization.propTypes = {
   list: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool.isRequired,
   changeCurrentOrganization: PropTypes.func.isRequired,
-  history: PropTypes.shape({}).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   redirectPath: PropTypes.string.isRequired,
   getOrganiztionsList: PropTypes.func.isRequired,
 };
