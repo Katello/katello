@@ -6,12 +6,18 @@ namespace :katello do
     setting = ::Setting::Content.where(name: 'content_default_http_proxy').first
     options = {}
     o = OptionParser.new
-    o.banner = "Usage: rake katello:update_content_default_http_proxy -- --name HTTP_PROXY_NAME --url HTTP_PROXY_URL"
+    o.banner = "Usage: rake katello:update_content_default_http_proxy -- --name HTTP_PROXY_NAME --url HTTP_PROXY_URL [--user HTTP_PROXY_USER] [--password HTTP_PROXY_PASSWORD]"
     o.on("-n", "--name HTTP_PROXY_NAME") do |name|
       options[:name] = name
     end
     o.on("-u", "--url HTTP_PROXY_URL") do |url|
       options[:url] = url
+    end
+    o.on("-p", "--password HTTP_PROXY_PASSWORD") do |password|
+      options[:password] = password
+    end
+    o.on("-s", "--user HTTP_PROXY_USER") do |username|
+      options[:username] = username
     end
     o.on("-h, --help", "Prints this help") do
       puts o
@@ -34,16 +40,18 @@ namespace :katello do
     http_proxy = HttpProxy.where(name: options[:name]).first
 
     uri = URI(options[:url])
-    username = uri.user
-    password = uri.password
+    uri.user = nil
+    uri.password = nil
+    sanitized_url = uri.to_s
 
     if http_proxy
       setting.update_attribute(:value, http_proxy.name)
-      http_proxy.update_attributes(url: options[:url], username: username, password: password)
+      http_proxy.update_attributes(url: sanitized_url,
+                                   username: options[:username], password: options[:password])
       puts "Content default http proxy set to #{http_proxy.name_and_url}."
     else
-      new_proxy = ::HttpProxy.new(name: options[:name], url: options[:url],
-                                username: username, password: password,
+      new_proxy = ::HttpProxy.new(name: options[:name], url: sanitized_url,
+                                username: options[:username], password: options[:password],
                                 organizations: Organization.all,
                                 locations: Location.all)
       if new_proxy.save!
