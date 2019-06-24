@@ -94,8 +94,15 @@ RedHatRepositoriesPage.propTypes = {
   loadEnabledRepos: PropTypes.func.isRequired,
   loadRepositorySets: PropTypes.func.isRequired,
   updateRecommendedRepositorySets: PropTypes.func.isRequired,
-  enabledRepositories: PropTypes.shape({}).isRequired,
-  repositorySets: PropTypes.shape({}).isRequired,
+  enabledRepositories: PropTypes.shape({
+    loading: PropTypes.bool,
+    search: PropTypes.string,
+  }).isRequired,
+  repositorySets: PropTypes.shape({
+    recommended: PropTypes.array,
+    loading: PropTypes.bool,
+    search: PropTypes.string,
+  }).isRequired,
 };
 
 const mapStateToProps = ({

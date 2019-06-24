@@ -89,11 +89,17 @@ Table.propTypes = {
   emptyState: PropTypes.shape({}).isRequired,
   tableColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
   subscriptions: PropTypes.shape({
+    searchIsActive: PropTypes.bool,
+    itemCount: PropTypes.number,
+    pagination: PropTypes.shape({}),
     results: PropTypes.array,
   }).isRequired,
   loadSubscriptions: PropTypes.func.isRequired,
   selectionController: PropTypes.shape({}).isRequired,
-  inlineEditController: PropTypes.shape({}).isRequired,
+  inlineEditController: PropTypes.shape({
+    onCancel: PropTypes.func,
+    onConfirm: PropTypes.func,
+  }).isRequired,
   groupedSubscriptions: PropTypes.shape({}).isRequired,
   editing: PropTypes.bool.isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
