@@ -22,6 +22,7 @@ module Katello
     param :organization_id, :number, :desc => N_("Organization identifier")
     param :triggered_by_id, :number, :desc => N_("Filter composite versions whose publish was triggered by the specified component version"), :required => false
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(ContentViewVersion)
     def index
       options = {
         :includes => [:content_view, :environments, :composite_content_views, :history => :task]

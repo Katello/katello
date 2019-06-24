@@ -41,6 +41,7 @@ module Katello
 
     api :GET, '/organizations', N_('List all organizations')
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(Organization)
     def index
       @render_template = 'katello/api/v2/organizations/index'
       super

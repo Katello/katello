@@ -11,6 +11,7 @@ module Katello
       param :host_ids, Array, :desc => N_("List of host id to list available module streams for")
       param :name_stream_only, :boolean, :desc => N_("Return name and stream information only)")
     end
+    add_scoped_search_description_for(ModuleStream)
     def index
       if @name_stream_only
         sort_by, sort_order, options = sort_options

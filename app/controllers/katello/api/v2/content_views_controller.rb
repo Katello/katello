@@ -32,6 +32,7 @@ module Katello
     param :without, Array, :desc => N_("Do not include this array of content views")
     param :name, String, :desc => N_("Name of the content view"), :required => false
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(ContentView)
     def index
       content_view_includes = [:activation_keys, :content_view_puppet_modules, :content_view_versions,
                                :environments, :organization, :repositories]

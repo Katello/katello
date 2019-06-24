@@ -24,6 +24,7 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("name of the GPG key"), :required => false
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(GpgKey)
     def index
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc))
     end

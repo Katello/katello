@@ -20,6 +20,7 @@ module Katello
     param :with_active_subscription, :bool, :required => false, :desc => N_("If true, only return repository sets that are associated with an active subscriptions")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(Katello::ProductContent)
     def index
       respond(:collection => scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent))
     end

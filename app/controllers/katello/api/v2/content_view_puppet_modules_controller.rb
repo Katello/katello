@@ -11,6 +11,7 @@ module Katello
     param :author, String, :desc => N_("author of the puppet module")
     param :uuid, String, :desc => N_("uuid of the puppet module"), :deprecated => true
     param_group :search, ::Katello::Api::V2::ApiController
+    add_scoped_search_description_for(ContentViewPuppetModule)
     def index
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc))
     end

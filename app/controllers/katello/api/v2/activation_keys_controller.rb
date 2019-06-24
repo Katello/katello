@@ -22,6 +22,7 @@ module Katello
     param :content_view_id, :number, :desc => N_("content view identifier")
     param :name, String, :desc => N_("activation key name to filter by")
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(ActivationKey)
     def index
       activation_key_includes = [:content_view, :environment, :host_collections, :organization]
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc, :includes => activation_key_includes))

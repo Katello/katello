@@ -87,6 +87,7 @@ module Katello
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."),
           :required => false
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(Repository)
     def index
       base_args = [index_relation.distinct, :name, :asc]
       options = {:includes => [:environment, {:root => [:gpg_key, :product]}]}
