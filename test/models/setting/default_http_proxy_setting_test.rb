@@ -89,5 +89,37 @@ module Katello
       setting.update_attribute(:value, proxy.name)
       assert_equal location_count, proxy.locations.count
     end
+
+    def test_new_organization_is_added_to_current_global_http_proxy
+      proxy = FactoryBot.create(:http_proxy)
+      other_proxy = FactoryBot.create(:http_proxy, name: 'another_proxy')
+      organization = FactoryBot.build(:organization)
+
+      refute_includes proxy.organizations, organization
+      refute_includes other_proxy.organizations, organization
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+      organization.save
+
+      assert_includes proxy.reload.organizations, organization
+      refute_includes other_proxy.reload.organizations, organization
+    end
+
+    def test_new_location_is_added_to_current_global_http_proxy
+      proxy = FactoryBot.create(:http_proxy)
+      other_proxy = FactoryBot.create(:http_proxy, name: 'another_proxy')
+      location = FactoryBot.build(:location)
+
+      refute_includes proxy.locations, location
+      refute_includes other_proxy.locations, location
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+      location.save
+
+      assert_includes proxy.reload.locations, location
+      refute_includes other_proxy.reload.locations, location
+    end
   end
 end
