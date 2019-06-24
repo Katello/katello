@@ -8,7 +8,7 @@ module Actions
           def plan(host, packages)
             Type! host, ::Host::Managed
 
-            action_subject(host, :packages => packages)
+            action_subject(host, :hostname => host.name, :packages => packages)
             plan_action(Pulp::Consumer::ContentUpdate,
                         consumer_uuid: host.content_facet.uuid,
                         type:          'rpm',
@@ -17,7 +17,11 @@ module Actions
           end
 
           def humanized_name
-            _("Update package")
+            if input.try(:[], :hostname)
+              _("Update package for %s") % input[:hostname]
+            else
+              _("Update package")
+            end
           end
 
           def humanized_input
