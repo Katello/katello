@@ -6,7 +6,7 @@ module Actions
           include Helpers::Presenter
 
           def plan(host, packages)
-            action_subject(host, :packages => packages)
+            action_subject(host, :hostname => host.name, :packages => packages)
             plan_action(Pulp::Consumer::ContentUninstall,
                         consumer_uuid: host.content_facet.uuid,
                         type:          'rpm',
@@ -15,7 +15,11 @@ module Actions
           end
 
           def humanized_name
-            _("Remove package")
+            if input.try(:[], :hostname)
+              _("Remove package for %s") % input[:hostname]
+            else
+              _("Remove package")
+            end
           end
 
           def humanized_input
