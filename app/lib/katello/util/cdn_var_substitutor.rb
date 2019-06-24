@@ -68,9 +68,6 @@ module Katello
         futures.each do |future|
           begin
             resolved << future.value
-          rescue StandardError => e
-            Rails.logger.error("Error Recieved: #{e.to_s}")
-            Rails.logger.error("Error Recieved: #{e.backtrace.join("\n")}")
           end
         end
 

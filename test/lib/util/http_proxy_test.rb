@@ -5,21 +5,20 @@ module Katello
     class HttpProxyTest < ActiveSupport::TestCase
       include Katello::Util::HttpProxy
 
+      def setup_default_proxy(url, user, pass)
+        proxy = ::HttpProxy.create!(:url => url, :username => user, :password => pass, :name => url)
+        Setting[:content_default_http_proxy] = proxy.name
+      end
+
       def test_handles_no_username_test
-        SETTINGS[:katello][:cdn_proxy] = {
-          host: 'http://foobar.com',
-          username: nil,
-          password: nil
-        }
+        setup_default_proxy('http://foobar.com', nil, nil)
+
         assert_equal 'proxy://foobar.com', proxy_uri
       end
 
       def test_properly_escapes_username
-        SETTINGS[:katello][:cdn_proxy] = {
-          host: 'http://foobar.com',
-          user: 'red!hat',
-          password: 'red@hat'
-        }
+        setup_default_proxy('http://foobar.com', 'red!hat', 'red@hat')
+
         assert_equal 'proxy://red%21hat:red%40hat@foobar.com', proxy_uri
 
         uri = URI.parse(proxy_uri)

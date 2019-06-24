@@ -18,7 +18,6 @@ module Katello
         CDN_DOCKER_CONTAINER_LISTING = "CONTAINER_REGISTRY_LISTING".freeze
 
         attr_reader :url, :product, :options
-        attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_password
 
         def substitutor(logger = nil)
           @logger = logger
@@ -39,7 +38,6 @@ module Katello
             options.reverse_merge!(:cert_store => store)
           end
 
-          load_proxy_settings
           @product = options[:product]
 
           @url = url
@@ -137,23 +135,12 @@ module Katello
         end
 
         def net_http_class
-          if proxy_host
-            Net::HTTP::Proxy(proxy_host, proxy_port, proxy_user, proxy_password)
+          if (proxy = ::HttpProxy.default_global_content_proxy)
+            uri = URI(proxy.url) #Net::HTTP::Proxy ignores port as part of the url
+            Net::HTTP::Proxy("#{uri.host}#{uri.path}", uri.port, proxy.username, proxy.password)
           else
             Net::HTTP
           end
-        end
-
-        def load_proxy_settings
-          if SETTINGS[:katello][:cdn_proxy] && SETTINGS[:katello][:cdn_proxy][:host]
-            self.proxy_host = parse_host(SETTINGS[:katello][:cdn_proxy][:host])
-            self.proxy_port = SETTINGS[:katello][:cdn_proxy][:port]
-            self.proxy_user = SETTINGS[:katello][:cdn_proxy][:user]
-            self.proxy_password = SETTINGS[:katello][:cdn_proxy][:password]
-          end
-        rescue URI::Error => e
-          Rails.logger.error "Could not parse cdn_proxy:"
-          Rails.logger.error e.to_s
         end
 
         def parse_host(host_or_url)

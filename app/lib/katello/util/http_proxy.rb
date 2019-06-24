@@ -11,29 +11,29 @@ module Katello
           scheme = 'proxys' if proxy_scheme == 'https'
 
           uri = URI("#{scheme}://#{proxy_host}:#{proxy_port}")
-          if proxy_config && proxy_config[:user]
-            uri.user = CGI.escape(proxy_config[:user])
-            uri.password = CGI.escape(proxy_config[:password])
+          if proxy && proxy.username.present?
+            uri.user = CGI.escape(proxy.username)
+            uri.password = CGI.escape(proxy.password)
           end
 
           uri.to_s
         end
       end
 
-      def proxy_config
-        SETTINGS[:katello][:cdn_proxy]
+      def proxy
+        ::HttpProxy.default_global_content_proxy
       end
 
       def proxy_host
-        proxy_config && URI.parse(proxy_config[:host]).host
+        URI(proxy.url).host
       end
 
       def proxy_scheme
-        proxy_config && URI.parse(proxy_config[:host]).scheme
+        URI(proxy.url).scheme
       end
 
       def proxy_port
-        proxy_config && proxy_config[:port]
+        URI(proxy.url).port
       end
     end # HttpProxy
   end # Util
