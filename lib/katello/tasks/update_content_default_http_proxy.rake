@@ -48,7 +48,7 @@ namespace :katello do
                                 locations: Location.all)
       if new_proxy.save!
         setting.update_attribute(:value, new_proxy.name)
-        puts "Default content http proxy set to \"#{new_proxy.name_and_url}\"."
+        puts "Default content http proxy set to #{new_proxy.name_and_url}."
       end
     end
 

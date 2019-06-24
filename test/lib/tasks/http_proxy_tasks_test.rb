@@ -105,5 +105,15 @@ module Katello
       assert_equal 'new_proxy', HttpProxy.last.name
       assert_equal 'http://someurl', HttpProxy.last.url
     end
+
+    def test_password_is_not_displayed_when_part_of_url
+      proxy = FactoryBot.build(:http_proxy, url: 'http://admin:redhat@http://someurl.com:8888')
+      refute_match /redhat/, proxy.name_and_url, "Name and url included password in displayed string."
+    end
+
+    def test_password_is_not_display_when_specified_in_model
+      proxy = FactoryBot.build(:http_proxy, url: 'http://someurl.com:8888', password: 'redhat')
+      refute_match /redhat/, proxy.name_and_url, "Name and url included password in displayed string."
+    end
   end
 end
