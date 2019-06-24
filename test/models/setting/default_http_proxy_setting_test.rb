@@ -63,5 +63,31 @@ module Katello
       assert_equal proxy.name, setting.reload.value
       refute_equal new_proxy.name, setting.reload.value
     end
+
+    def test_assigning_setting_associates_all_organizations
+      3.times.each { FactoryBot.create(:organization) }
+      organization_count = Organization.count
+      refute_equal 0, organization_count
+
+      proxy = FactoryBot.create(:http_proxy)
+      assert_equal 0, proxy.organizations.count
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+      assert_equal organization_count, proxy.organizations.count
+    end
+
+    def test_assigning_setting_associates_all_locations
+      3.times.each { FactoryBot.create(:location) }
+      location_count = Location.count
+      refute_equal 0, location_count
+
+      proxy = FactoryBot.create(:http_proxy)
+      assert_equal 0, proxy.locations.count
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+      assert_equal location_count, proxy.locations.count
+    end
   end
 end
