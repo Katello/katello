@@ -309,8 +309,13 @@ SubscriptionsPage.propTypes = {
   updateQuantity: PropTypes.func.isRequired,
   loadTableColumns: PropTypes.func.isRequired,
   taskDetails: PropTypes.shape({}),
-  subscriptions: PropTypes.shape({}).isRequired,
+  subscriptions: PropTypes.shape({
+    disconnected: PropTypes.bool,
+    tableColumns: PropTypes.array,
+    selectedTableColumns: PropTypes.array,
+  }).isRequired,
   organization: PropTypes.shape({
+    id: PropTypes.number,
     owner_details: PropTypes.shape({
       displayName: PropTypes.string,
     }),

@@ -289,6 +289,8 @@ SubscriptionsTable.propTypes = {
   updateQuantity: PropTypes.func.isRequired,
   emptyState: PropTypes.shape({}).isRequired,
   subscriptions: PropTypes.shape({
+    loading: PropTypes.bool,
+    availableQuantities: PropTypes.shape({}),
     results: PropTypes.array,
   }).isRequired,
   subscriptionDeleteModalOpen: PropTypes.bool.isRequired,

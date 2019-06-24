@@ -31,7 +31,12 @@ const ModuleStreamsTable = ({ moduleStreams, onPaginationChange }) => {
 };
 
 ModuleStreamsTable.propTypes = {
-  moduleStreams: PropTypes.shape({}).isRequired,
+  moduleStreams: PropTypes.shape({
+    loading: PropTypes.bool,
+    results: PropTypes.array,
+    pagination: PropTypes.shape({}),
+    itemCount: PropTypes.number,
+  }).isRequired,
   onPaginationChange: PropTypes.func.isRequired,
 };
 

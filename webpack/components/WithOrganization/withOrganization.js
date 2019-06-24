@@ -62,7 +62,10 @@ function withOrganization(WrappedComponent, redirectPath) {
   CheckOrg.propTypes = {
     location: PropTypes.shape({}),
     loadOrganization: PropTypes.func.isRequired,
-    organization: PropTypes.shape({}).isRequired,
+    organization: PropTypes.shape({
+      label: PropTypes.string,
+      loading: PropTypes.bool,
+    }).isRequired,
   };
 
   CheckOrg.defaultProps = {
