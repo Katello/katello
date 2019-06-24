@@ -6,12 +6,16 @@ module ::Actions::Katello::Host::Package
     include Support::Actions::Fixtures
 
     let(:content_facet) { mock('a_system', uuid: 'uuid').mimic!(::Katello::Host::ContentFacet) }
-    let(:host) { mock('a_host', content_facet: content_facet, id: 42).mimic!(::Host::Managed) }
+    let(:host) do
+      host_mock = mock('a_host', content_facet: content_facet, id: 42).mimic!(::Host::Managed)
+      host_mock.stubs('name').returns('foobar')
+      host_mock
+    end
 
     let(:action) do
       action = create_action action_class
       action.expects(:plan_self)
-      action.stubs(:action_subject).with(host, :packages => packages = %w(vim vi))
+      action.stubs(:action_subject).with(host, :hostname => host.name, :packages => packages = %w(vim vi))
       plan_action action, host, packages
     end
   end
