@@ -60,15 +60,9 @@ module Katello
       end
 
       def associate_default_http_proxy
-        setting = Setting::Content.find_by(name: 'content_default_http_proxy')
-
-        if setting
-          default_proxy = HttpProxy.find_by(name: setting.value)
-
-          if default_proxy
-            default_proxy.locations << self
-            default_proxy.save
-          end
+        if (default_proxy = ::HttpProxy.default_global_content_proxy)
+          default_proxy.locations << self
+          default_proxy.save
         end
       end
 

@@ -5,6 +5,12 @@ module Katello
 
       included do
         after_save :update_default_proxy_setting
+
+        def self.default_global_content_proxy
+          if Setting[:content_default_http_proxy]
+            HttpProxy.unscoped.find_by(name: Setting[:content_default_http_proxy])
+          end
+        end
       end
 
       def update_default_proxy_setting

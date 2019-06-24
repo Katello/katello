@@ -53,16 +53,16 @@ module Actions
         end
 
         def proxy
-          proxy = {}
-
-          if (config = SETTINGS[:katello][:cdn_proxy])
-            proxy[:proxy_host] = URI.parse(config[:host]).host if config.key?(:host)
-            proxy[:proxy_port] = config[:port] if config.key?(:port)
-            proxy[:proxy_user] = config[:user] if config.key?(:user)
-            proxy[:proxy_password] = config[:password] if config.key?(:password)
+          proxy_details = {}
+          if (proxy = ::HttpProxy.default_global_content_proxy)
+            uri = URI(proxy.url)
+            proxy_details[:proxy_host] = "#{uri.host}#{uri.path}"
+            proxy_details[:proxy_port] = uri.port
+            proxy_details[:proxy_user] = proxy.username
+            proxy_details[:proxy_password] = proxy.password
           end
 
-          proxy
+          proxy_details
         end
       end
     end
