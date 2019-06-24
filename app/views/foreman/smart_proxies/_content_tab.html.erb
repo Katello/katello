@@ -8,9 +8,11 @@
       <th translate>Last Published</th>
       <th translate>Hosts</th>
       <th translate>Products</th>
+      <th translate>Apt repos</th>
       <th translate>Yum repos</th>
       <th translate>Container Image repos</th>
-      <th translate>Packages</th>
+      <th translate>Deb Packages</th>
+      <th translate>RPM Packages</th>
       <th translate>Errata</th>
       <th translate>Puppet modules</th>
     </tr>
@@ -34,8 +36,10 @@
       <td>{{ cv.last_published }}</td>
       <td>{{ cv.counts.content_hosts }}</td>
       <td>{{ cv.counts.products }}</td>
+      <td>{{ cv.counts.apt_repositories }}</td>
       <td>{{ cv.counts.yum_repositories }}</td>
       <td>{{ cv.counts.docker_repositories }}</td>
+      <td>{{ cv.counts.deb_packages }}</td>
       <td>{{ cv.counts.packages }}</td>
       <td>{{ cv.counts.errata }}</td>
       <td>{{ cv.counts.puppet_modules }}</td>
