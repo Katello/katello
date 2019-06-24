@@ -81,6 +81,9 @@ RepositorySetRepositories.propTypes = {
   data: PropTypes.shape({
     loading: PropTypes.bool.isRequired,
     repositories: PropTypes.arrayOf(PropTypes.object),
+    error: PropTypes.shape({
+      displayMessage: PropTypes.string,
+    }),
   }).isRequired,
 };
 

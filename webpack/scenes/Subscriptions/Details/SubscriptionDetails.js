@@ -134,7 +134,12 @@ class SubscriptionDetails extends Component {
 SubscriptionDetails.propTypes = {
   loadSubscriptionDetails: PropTypes.func.isRequired,
   loadProducts: PropTypes.func.isRequired,
-  subscriptionDetails: PropTypes.shape({}).isRequired,
+  subscriptionDetails: PropTypes.shape({
+    error: PropTypes.shape({}),
+    loading: PropTypes.bool,
+    name: PropTypes.string,
+    productContent: PropTypes.shape({}),
+  }).isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({

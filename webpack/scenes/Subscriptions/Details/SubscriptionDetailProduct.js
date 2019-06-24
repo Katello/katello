@@ -30,7 +30,15 @@ const SubscriptionDetailProduct = ({ content }) => (
 );
 
 SubscriptionDetailProduct.propTypes = {
-  content: PropTypes.shape({}).isRequired,
+  content: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    enabled: PropTypes.bool,
+    content_url: PropTypes.string,
+    gpg_url: PropTypes.string,
+    type: PropTypes.string,
+    enable: PropTypes.bool,
+  }).isRequired,
 };
 
 export default SubscriptionDetailProduct;

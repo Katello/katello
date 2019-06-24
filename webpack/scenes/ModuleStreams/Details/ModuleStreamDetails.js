@@ -141,7 +141,14 @@ ModuleStreamDetails.propTypes = {
       id: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
-  moduleStreamDetails: PropTypes.shape({}).isRequired,
+  moduleStreamDetails: PropTypes.shape({
+    loading: PropTypes.bool,
+    name: PropTypes.string,
+    profiles: PropTypes.array,
+    repositories: PropTypes.array,
+    artifacts: PropTypes.array,
+    stream: PropTypes.string,
+  }).isRequired,
 };
 
 export default ModuleStreamDetails;

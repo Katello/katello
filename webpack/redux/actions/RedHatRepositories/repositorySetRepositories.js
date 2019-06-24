@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import api from '../../../services/api';
 import { apiError, apiSuccess } from '../../../move_to_foreman/common/helpers.js';
 import { getArchFromPath } from './helpers.js';
@@ -74,6 +75,14 @@ const loadRepositorySetRepos = (contentId, productId) => (dispatch) => {
         error,
       });
     });
+};
+
+loadRepositorySetRepos.propTypes = {
+  data: PropTypes.shape({
+    error: PropTypes.shape({
+      displayMessage: PropTypes.string,
+    }),
+  }),
 };
 
 export default loadRepositorySetRepos;

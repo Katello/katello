@@ -48,7 +48,9 @@ const SubscriptionDetailProductContent = ({ productContent }) => {
 };
 
 SubscriptionDetailProductContent.propTypes = {
-  productContent: PropTypes.shape({}).isRequired,
+  productContent: PropTypes.shape({
+    results: PropTypes.array,
+  }).isRequired,
 };
 
 export default SubscriptionDetailProductContent;

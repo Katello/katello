@@ -261,7 +261,13 @@ UpstreamSubscriptionsPage.propTypes = {
   loadUpstreamSubscriptions: PropTypes.func.isRequired,
   saveUpstreamSubscriptions: PropTypes.func.isRequired,
   upstreamSubscriptions: PropTypes.shape({
-    task: PropTypes.shape({}),
+    loading: PropTypes.bool,
+    itemCount: PropTypes.number,
+    results: PropTypes.array,
+    pagination: PropTypes.shape({}),
+    task: PropTypes.shape({
+      id: PropTypes.number,
+    }),
   }).isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };

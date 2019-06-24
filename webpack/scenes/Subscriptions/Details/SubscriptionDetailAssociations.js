@@ -42,7 +42,11 @@ const SubscriptionDetailAssociations = ({ subscriptionDetails }) => {
 };
 
 SubscriptionDetailAssociations.propTypes = {
-  subscriptionDetails: PropTypes.shape({}).isRequired,
+  subscriptionDetails: PropTypes.shape({
+    id: PropTypes.number,
+    host_count: PropTypes.number,
+    activation_keys: PropTypes.array,
+  }).isRequired,
 };
 
 export default SubscriptionDetailAssociations;
