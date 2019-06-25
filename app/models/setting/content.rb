@@ -146,8 +146,8 @@ class Setting::Content < Setting
       proxy = HttpProxy.where(name: value).first
 
       if proxy
-        proxy.update_attribute(:organizations, Organization.all)
-        proxy.update_attribute(:locations, Location.all)
+        proxy.update_attribute(:organizations, Organization.unscoped.all)
+        proxy.update_attribute(:locations, Location.unscoped.all)
       end
     end
   end
