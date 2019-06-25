@@ -96,12 +96,12 @@ RedHatRepositoriesPage.propTypes = {
   updateRecommendedRepositorySets: PropTypes.func.isRequired,
   enabledRepositories: PropTypes.shape({
     loading: PropTypes.bool,
-    search: PropTypes.string,
+    search: PropTypes.shape({}),
   }).isRequired,
   repositorySets: PropTypes.shape({
     recommended: PropTypes.array,
     loading: PropTypes.bool,
-    search: PropTypes.string,
+    search: PropTypes.shape({}),
   }).isRequired,
 };
 
