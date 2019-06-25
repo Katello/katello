@@ -7,6 +7,7 @@ module Katello
         after_initialize :set_default_overrides, :if => :new_record?
         after_save :reset_settings
         before_destroy :assert_deletable
+        after_create :associate_default_http_proxy
       end
 
       def set_default_overrides
@@ -55,6 +56,19 @@ module Katello
           false
         else
           true
+        end
+      end
+
+      def associate_default_http_proxy
+        setting = Setting::Content.find_by(name: 'content_default_http_proxy')
+
+        if setting
+          default_proxy = HttpProxy.find_by(name: setting.value)
+
+          if default_proxy
+            default_proxy.locations << self
+            default_proxy.save
+          end
         end
       end
 

@@ -2,6 +2,8 @@ class Setting::Content < Setting
   #rubocop:disable Metrics/MethodLength
   #rubocop:disable Metrics/AbcSize
 
+  after_save :add_organizations_and_locations_if_global_http_proxy
+
   def self.hashify_parameters(parameters)
     Hash[parameters.map { |p| [p, p] }]
   end
@@ -137,6 +139,17 @@ class Setting::Content < Setting
   def self.katello_template_setting_values(name)
     templates = ProvisioningTemplate.where(:template_kind => TemplateKind.where(:name => name))
     templates.each_with_object({}) { |tmpl, hash| hash[tmpl.name] = tmpl.name }
+  end
+
+  def add_organizations_and_locations_if_global_http_proxy
+    if name == 'content_default_http_proxy'
+      proxy = HttpProxy.where(name: value).first
+
+      if proxy
+        proxy.update_attribute(:organizations, Organization.unscoped.all)
+        proxy.update_attribute(:locations, Location.unscoped.all)
+      end
+    end
   end
 end
 

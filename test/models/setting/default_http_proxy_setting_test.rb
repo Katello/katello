@@ -63,5 +63,63 @@ module Katello
       assert_equal proxy.name, setting.reload.value
       refute_equal new_proxy.name, setting.reload.value
     end
+
+    def test_assigning_setting_associates_all_organizations
+      3.times.each { FactoryBot.create(:organization) }
+      organization_count = Organization.count
+      refute_equal 0, organization_count
+
+      proxy = FactoryBot.create(:http_proxy)
+      assert_equal 0, proxy.organizations.count
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+      assert_equal organization_count, proxy.organizations.count
+    end
+
+    def test_assigning_setting_associates_all_locations
+      3.times.each { FactoryBot.create(:location) }
+      location_count = Location.count
+      refute_equal 0, location_count
+
+      proxy = FactoryBot.create(:http_proxy)
+      assert_equal 0, proxy.locations.count
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+      assert_equal location_count, proxy.locations.count
+    end
+
+    def test_new_organization_is_added_to_current_global_http_proxy
+      proxy = FactoryBot.create(:http_proxy)
+      other_proxy = FactoryBot.create(:http_proxy, name: 'another_proxy')
+      organization = FactoryBot.build(:organization)
+
+      refute_includes proxy.organizations, organization
+      refute_includes other_proxy.organizations, organization
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+      organization.save
+
+      assert_includes proxy.reload.organizations, organization
+      refute_includes other_proxy.reload.organizations, organization
+    end
+
+    def test_new_location_is_added_to_current_global_http_proxy
+      proxy = FactoryBot.create(:http_proxy)
+      other_proxy = FactoryBot.create(:http_proxy, name: 'another_proxy')
+      location = FactoryBot.build(:location)
+
+      refute_includes proxy.locations, location
+      refute_includes other_proxy.locations, location
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+      location.save
+
+      assert_includes proxy.reload.locations, location
+      refute_includes other_proxy.reload.locations, location
+    end
   end
 end

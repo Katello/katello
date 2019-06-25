@@ -41,6 +41,8 @@ module Katello
         scoped_search :on => :label, :complete_value => :true
 
         after_create :associate_default_capsule
+        after_create :associate_default_http_proxy
+
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
         validates :label, :uniqueness => true
 
@@ -94,6 +96,19 @@ module Katello
         def associate_default_capsule
           smart_proxy = SmartProxy.pulp_master
           smart_proxy.organizations << self if smart_proxy
+        end
+
+        def associate_default_http_proxy
+          setting = Setting::Content.where(name: 'content_default_http_proxy').first
+
+          if setting
+            default_proxy = HttpProxy.where(name: setting.value).first
+
+            if default_proxy
+              default_proxy.organizations << self
+              default_proxy.save
+            end
+          end
         end
 
         def create_anonymous_provider
