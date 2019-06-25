@@ -33,6 +33,7 @@ module Katello
     param :host_id, :number, :desc => N_("Filter products by host id")
     param :available_for, String, :required => false,
           :desc => N_("Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.")
+    add_scoped_search_description_for(HostCollection)
     def index
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc))
     end

@@ -20,6 +20,7 @@ module Katello
     param :errata_restrict_installable, :bool, :desc => N_("Return errata that are upgradable on one or more hosts")
     param :available_for, String, :desc => N_("Return errata that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported.")
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(Erratum)
     def index
       super
     end

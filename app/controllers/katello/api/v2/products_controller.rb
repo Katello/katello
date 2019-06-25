@@ -41,6 +41,7 @@ module Katello
     param :available_for, String, :desc => N_("Interpret specified object to return only Products that can be associated with specified object.  Only 'sync_plan' is supported."),
           :required => false
     param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(Product)
     def index
       options = {:includes => [:sync_plan, :provider]}
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc, options))

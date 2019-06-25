@@ -13,6 +13,7 @@ module Katello
     param :content_view_id, :number, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("filter content view filters by name")
     param :types, Array, :desc => N_("types of filters")
+    add_scoped_search_description_for(ContentViewFilter)
     def index
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc))
     end
