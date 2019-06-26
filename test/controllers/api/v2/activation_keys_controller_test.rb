@@ -44,7 +44,7 @@ module Katello
       assert_template 'api/v2/activation_keys/index'
 
       assert_equal results.keys.sort, ['error', 'page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
-      assert_equal results['results'].size, 6
+      assert_equal results['results'].size, 7
       assert_includes results['results'].collect { |item| item['id'] }, @activation_key.id
     end
 
@@ -61,7 +61,7 @@ module Katello
       results = JSON.parse(get(:index, params: { :organization_id => @organization.id, :content_view_id => @acme_view.id }).body)
 
       assert_response :success
-      assert_equal results["results"].size, 4
+      assert_equal results["results"].size, 5
     end
 
     def test_show

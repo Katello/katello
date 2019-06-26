@@ -11,11 +11,12 @@ class Actions::Candlepin::ActivationKey::CreateTest < ActiveSupport::TestCase
   describe 'Create' do
     let(:action_class) { ::Actions::Candlepin::ActivationKey::Create }
     let(:planned_action) do
-      create_and_plan_action(action_class, uuid: 123)
+      create_and_plan_action action_class, organization_label: nil, auto_attach: true, purpose_role: "role", purpose_usage: "usage", purpose_addons: ["Test"]
     end
 
     it 'runs' do
-      ::Katello::Resources::Candlepin::ActivationKey.expects(:create)
+      ::Katello::Util::Model.stubs(:uuid).returns(123)
+      ::Katello::Resources::Candlepin::ActivationKey.expects(:create).with(123, nil, true, "role", "usage", ["Test"])
       run_action planned_action
     end
   end
@@ -31,14 +32,13 @@ class Actions::Candlepin::ActivationKey::UpdateTest < ActiveSupport::TestCase
 
   describe 'Update' do
     let(:action_class) { ::Actions::Candlepin::ActivationKey::Update }
-    let(:input) { { :cp_id => 'foo_boo', :auto_attach => 'false' } }
 
     let(:planned_action) do
-      create_and_plan_action(action_class, input)
+      create_and_plan_action(action_class, cp_id: "foo", :release_version => 1, :service_level => "Premium", :auto_attach => true, :purpose_role => "test role", :purpose_usage => "test usage", :purpose_addons => ["test1"])
     end
 
     it 'runs' do
-      ::Katello::Resources::Candlepin::ActivationKey.expects(:update)
+      ::Katello::Resources::Candlepin::ActivationKey.expects(:update).with("foo", 1, "Premium", true, "test role", "test usage", ["test1"])
       run_action planned_action
     end
   end

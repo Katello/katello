@@ -22,9 +22,14 @@ module Katello
     has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy
     has_many :subscription_facets, :through => :subscription_facet_activation_keys
 
+    has_many :activation_key_purpose_addons, :class_name => "Katello::ActivationKeyPurposeAddon", :dependent => :destroy, :inverse_of => :activation_key
+    has_many :purpose_addons, :class_name => "Katello::PurposeAddon", :through => :activation_key_purpose_addons
+
     alias_method :lifecycle_environment, :environment
 
     before_validation :set_default_content_view, :unless => :persisted?
+
+    accepts_nested_attributes_for :purpose_addons
 
     validates_lengths_from_database
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -61,6 +66,9 @@ module Katello
     scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
     scoped_search :on => :id, :relation => :subscriptions, :rename => :subscription_id, :complete_value => true,
                   :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER, :ext_method => :find_by_subscription_id
+    scoped_search :on => :purpose_usage, :rename => :usage, :complete_value => true
+    scoped_search :on => :purpose_role, :rename => :role, :complete_value => true
+    scoped_search :on => :name, :rename => :addon, :relation => :purpose_addon, :complete_value => true, :ext_method => :find_by_purpose_addons
 
     def environment_exists
       if environment_id && environment.nil?
@@ -160,6 +168,12 @@ module Katello
       else
         {:conditions => "#{Katello::ActivationKey.table_name}.id IN (#{activation_key_ids.join(',')})"}
       end
+    end
+
+    def self.find_by_purpose_addons(_key, operator, value)
+      conditions = sanitize_sql_for_conditions(["#{Katello::PurposeAddon.table_name}.name #{operator} ?", value_to_sql(operator, value)])
+      activation_keys = ::Katello::ActivationKey.joins(:purpose_addons).where(conditions)
+      return_activation_keys_by_id(activation_keys.pluck(:id))
     end
 
     private

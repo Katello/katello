@@ -45,3 +45,14 @@ library_dev_staging_view_key:
   environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view) %>
   auto_attach: true
+
+purpose_attributes_key:
+  name: Activation Key
+  description: A simple activation key.
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
+  auto_attach: true
+  purpose_role: role name
+  purpose_usage: usage name
+

@@ -8,20 +8,26 @@ module ::Actions::Katello::ActivationKey
     include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
-    let(:activation_key) { katello_activation_keys(:simple_key) }
+    let(:activation_key) { katello_activation_keys(:purpose_attributes_key) }
   end
 
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::ActivationKey::Create }
-
+    let(:candlepin_input) do
+      {  :organization_label => activation_key.organization.label,
+         :auto_attach => true,
+         :purpose_usage => katello_activation_keys(:purpose_attributes_key).purpose_usage,
+         :purpose_role => katello_activation_keys(:purpose_attributes_key).purpose_role,
+         :purpose_addons => [katello_purpose_addons(:addon).name]
+      }
+    end
     it 'plans' do
       activation_key.expects(:save!)
       action.expects(:action_subject)
+
       plan_action action, activation_key
-      assert_action_planed_with(action,
-                                ::Actions::Candlepin::ActivationKey::Create,
-                                :organization_label => activation_key.organization.label,
-                                :auto_attach => true)
+
+      assert_action_planed_with(action, ::Actions::Candlepin::ActivationKey::Create, candlepin_input)
     end
 
     it 'raises error when validation fails' do
@@ -32,13 +38,18 @@ module ::Actions::Katello::ActivationKey
 
   class UpdateTest < TestBase
     let(:action_class) { ::Actions::Katello::ActivationKey::Update }
-    let(:input) { { :auto_attach => 'false' } }
+    let(:input) { { :auto_attach => 'false', :purpose_usage => "usage", :purpose_role => "role", :purpose_addon_ids => [katello_purpose_addons(:addon).id]} }
 
     it 'plans' do
       action.expects(:action_subject).with(activation_key)
-      activation_key.expects(:update_attributes!).with(input)
+
       plan_action(action, activation_key, input)
+
       assert_action_planed(action, ::Actions::Candlepin::ActivationKey::Update)
+      assert_equal(activation_key.purpose_usage, "usage")
+      assert_equal(activation_key.purpose_role, "role")
+      assert_equal(activation_key.purpose_addon_ids, [katello_purpose_addons(:addon).id])
+      assert_equal(activation_key.auto_attach, false)
     end
   end
 
@@ -48,9 +59,9 @@ module ::Actions::Katello::ActivationKey
 
     it 'plans' do
       action.expects(:action_subject).with(activation_key)
-      activation_key.expects(:update_attributes!).with(input)
       plan_action(action, activation_key, input)
       refute_action_planed(action, ::Actions::Candlepin::ActivationKey::Update)
+      assert_equal(activation_key.name, 'newName')
     end
   end
 
