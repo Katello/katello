@@ -60,6 +60,16 @@ module Katello
       assert_equal 'admin', proxy.reload.username
     end
 
+    def test_creates_with_port
+      name = 'foo'
+      assert_raises SystemExit do
+        ARGV.concat(['--', '--name', name, '--url', 'http://someurl', '--user', 'admin', '--port', '8080'])
+        Rake::Task['katello:update_default_http_proxy'].invoke
+      end
+      assert HttpProxy.find_by(name: name)
+      assert_equal 'http://someurl:8080', HttpProxy.find_by(name: name).url
+    end
+
     def test_update_proxy_updates_password
       proxy = FactoryBot.create(:http_proxy, url: 'http://someurl')
       assert_raises SystemExit do
@@ -74,7 +84,7 @@ module Katello
       @setting.update_attribute(:value, current_default_proxy.name)
       proxy = FactoryBot.create(:http_proxy)
       assert_raises SystemExit do
-        ARGV.concat(['--', '-n', proxy.name, '-url', proxy.url])
+        ARGV.concat(['--', '-n', proxy.name, '--url', proxy.url])
         Rake::Task['katello:update_default_http_proxy'].invoke
       end
       assert_equal proxy.name, @setting.reload.value

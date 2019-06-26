@@ -13,6 +13,9 @@ namespace :katello do
     o.on("-u", "--url HTTP_PROXY_URL") do |url|
       options[:url] = url
     end
+    o.on("-o", "--port port") do |port|
+      options[:port] = port
+    end
     o.on("-p", "--password HTTP_PROXY_PASSWORD") do |password|
       options[:password] = password
     end
@@ -42,11 +45,12 @@ namespace :katello do
     uri = URI(options[:url])
     uri.user = nil
     uri.password = nil
+    uri.port = options[:port] if options[:port]
     sanitized_url = uri.to_s
 
     if http_proxy
       setting.update_attribute(:value, http_proxy.name)
-      http_proxy.update_attributes(url: sanitized_url,
+      http_proxy.update_attributes!(url: sanitized_url,
                                    username: options[:username], password: options[:password])
       puts "Content default http proxy set to #{http_proxy.name_and_url}."
     else
