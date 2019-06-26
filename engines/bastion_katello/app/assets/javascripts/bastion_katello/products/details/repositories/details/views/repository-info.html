@@ -77,7 +77,7 @@
 
       <span ng-if="repository.content_type == 'ansible_collection'">
         <dt translate>Whitelist</dt>
-        <dd bst-edit-text="repository.ansible_collection_whitelist"
+        <dd bst-edit-textarea="repository.ansible_collection_whitelist"
             on-save="save(repository)"
             readonly="denied('edit_products', product)">
         </dd>

@@ -48,6 +48,7 @@ module Katello
     validates_with Validators::ContainerImageNameValidator, :attributes => :docker_upstream_name, :allow_blank => true, :if => :docker?
 
     validate :ensure_valid_docker_attributes, :if => :docker?
+    validate :ensure_valid_ansible_collection_attributes, :if => :ansible_collection?
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
@@ -192,6 +193,10 @@ module Katello
       unless docker_tags_whitelist.is_a?(Array)
         errors.add(:docker_tags_whitelist, N_("Invalid value specified for Container Image repositories."))
       end
+    end
+
+    def ensure_valid_ansible_collection_attributes
+      errors.add(:base, N_("Whitelist cannot be blank.")) if ansible_collection_whitelist.blank?
     end
 
     def ensure_valid_upstream_authorization

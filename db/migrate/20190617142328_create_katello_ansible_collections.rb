@@ -10,7 +10,6 @@ class CreateKatelloAnsibleCollections < ActiveRecord::Migration[5.2]
     end
 
     add_index :katello_ansible_collections, :pulp_id, :unique => true, :name => 'katello_ansible_collections_pulp_id_index'
-    add_index :katello_ansible_collections, [:id, :pulp_id, :name, :version, :namespace], :name => 'katello_ansible_collections_fields_index'
 
     create_table "katello_repository_ansible_collections" do |t|
       t.references :ansible_collection, :null => false, index: { :name => 'index_katello_repo_ansible_collections' }
