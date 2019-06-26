@@ -7,7 +7,10 @@ module Actions
           if ::SETTINGS[:katello][:use_cp]
             cp_create = plan_action(Candlepin::ActivationKey::Create,
                                     organization_label: activation_key.organization.label,
-                                    auto_attach: activation_key.auto_attach)
+                                    auto_attach: activation_key.auto_attach,
+                                    purpose_role: activation_key.purpose_role,
+                                    purpose_usage: activation_key.purpose_usage,
+                                    purpose_addons: activation_key.purpose_addons.pluck(:name))
             cp_id = cp_create.output[:response][:id]
           end
           action_subject(activation_key, :cp_id => cp_id)

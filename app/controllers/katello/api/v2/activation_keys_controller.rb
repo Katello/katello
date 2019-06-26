@@ -12,7 +12,7 @@ module Katello
                                                   :subscriptions]
     before_action :authorize
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach content_view_environment))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage purpose_addons content_view_environment))
 
     api :GET, "/activation_keys", N_("List activation keys")
     api :GET, "/environments/:environment_id/activation_keys"
@@ -304,24 +304,34 @@ module Katello
       end
     end
 
+    def permitted_params
+      params.require(:activation_key).permit(:name,
+                                             :description,
+                                             :environment_id,
+                                             :organization_id,
+                                             :content_view_id,
+                                             :release_version,
+                                             :service_level,
+                                             :auto_attach,
+                                             :max_hosts,
+                                             :unlimited_hosts,
+                                             :purpose_role,
+                                             :purpose_usage,
+                                             :purpose_addon_ids,
+                                             # For deep_munge; Remove for Rails 5
+                                             :host_collection_ids,
+                                             :content_overrides => [],
+                                             :host_collection_ids => []).to_h
+    end
+
     def activation_key_params
-      key_params = params.require(:activation_key).permit(:name,
-                                                          :description,
-                                                          :environment_id,
-                                                          :organization_id,
-                                                          :content_view_id,
-                                                          :release_version,
-                                                          :service_level,
-                                                          :auto_attach,
-                                                          :max_hosts,
-                                                          :unlimited_hosts,
-                                                          # For deep_munge; Remove for Rails 5
-                                                          :host_collection_ids,
-                                                          :content_overrides => [],
-                                                          :host_collection_ids => []).to_h
+      key_params = permitted_params
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
       key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)
+      unless params[:purpose_addons].nil?
+        key_params[:purpose_addon_ids] = params[:purpose_addons].map { |addon| ::Katello::PurposeAddon.find_or_create_by(name: addon).id }
+      end
       unlimited = params[:activation_key].try(:[], :unlimited_hosts)
       max_hosts = params[:activation_key].try(:[], :max_hosts)
 

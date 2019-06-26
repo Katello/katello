@@ -8,6 +8,7 @@ module Katello
       @dev_view = katello_content_views(:library_dev_view)
       @lib_view = katello_content_views(:library_view)
       @pool_one = katello_pools(:pool_one)
+      @purpose_key = katello_activation_keys(:purpose_attributes_key)
     end
 
     should allow_values(*valid_name_list).for(:name)
@@ -187,6 +188,22 @@ module Katello
       assert @dev_key.available_subscriptions.include? pool_one
       assert @dev_key.available_subscriptions.include? pool_two
       assert_equal @dev_key.available_subscriptions.length, 2
+    end
+
+    def test_search_role
+      activation_keys = ActivationKey.search_for("role = \"#{@purpose_key.purpose_role}\"")
+      assert_includes activation_keys, @purpose_key
+    end
+
+    def test_search_addon
+      @purpose_key.purpose_addons << katello_purpose_addons(:addon)
+      activation_keys = ActivationKey.search_for("addon = \"Test Addon\"")
+      assert_includes activation_keys, @purpose_key
+    end
+
+    def test_search_usage
+      activation_keys = ActivationKey.search_for("usage = \"#{@purpose_key.purpose_usage}\"")
+      assert_includes activation_keys, @purpose_key
     end
 
     context 'host_collection' do

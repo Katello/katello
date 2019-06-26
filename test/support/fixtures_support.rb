@@ -2,6 +2,7 @@ module Katello
   module FixturesSupport
     FIXTURE_CLASSES = {
       :katello_activation_keys => Katello::ActivationKey,
+      :katello_activation_key_purpose_addons => Katello::ActivationKeyPurposeAddon,
       :katello_contents => Katello::Content,
       :katello_content_views => Katello::ContentView,
       :katello_content_view_environments => Katello::ContentViewEnvironment,

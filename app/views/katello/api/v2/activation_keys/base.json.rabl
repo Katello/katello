@@ -14,7 +14,11 @@ child :environment => :environment do
 end
 attributes :environment_id
 
-attributes :usage_count, :user_id, :max_hosts, :system_template_id, :release_version
+attributes :usage_count, :user_id, :max_hosts, :system_template_id, :release_version, :purpose_usage, :purpose_role
+
+node :purpose_addons do |key|
+  key.purpose_addons.pluck(:name)
+end
 
 node :permissions do |activation_key|
   {

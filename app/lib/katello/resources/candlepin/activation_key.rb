@@ -10,13 +10,14 @@ module Katello
             ::Katello::Util::Data.array_with_indifferent_access akeys
           end
 
-          def create(name, owner_key, auto_attach)
+          def create(name, owner_key, auto_attach, purpose_role, purpose_usage, purpose_addons)
             url = "/candlepin/owners/#{owner_key}/activation_keys"
-            JSON.parse(self.post(url, {:name => name, :autoAttach => auto_attach}.to_json, self.default_headers).body).with_indifferent_access
+            JSON.parse(self.post(url, {:name => name, :autoAttach => auto_attach, :role => purpose_role, :usage => purpose_usage, :addOns => purpose_addons}.to_json, self.default_headers).body).with_indifferent_access
           end
 
-          def update(id, release_version, service_level, auto_attach)
-            attrs = { :releaseVer => release_version, :serviceLevel => service_level, :autoAttach => auto_attach }.delete_if { |_k, v| v.nil? }
+          # rubocop:disable Metrics/ParameterLists
+          def update(id, release_version, service_level, auto_attach, purpose_role, purpose_usage, purpose_addons)
+            attrs = { :releaseVer => release_version, :serviceLevel => service_level, :autoAttach => auto_attach, :role => purpose_role, :usage => purpose_usage, :addOns => purpose_addons }.delete_if { |_k, v| v.nil? }
             JSON.parse(self.put(path(id), attrs.to_json, self.default_headers).body).with_indifferent_access
           end
 
