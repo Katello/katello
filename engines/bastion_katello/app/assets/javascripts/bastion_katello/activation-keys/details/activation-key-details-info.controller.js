@@ -112,6 +112,21 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
             $scope.save($scope.activationKey);
         };
 
+        $scope.clearRole = function () {
+            $scope.activationKey['purpose_role'] = '';
+            $scope.save($scope.activationKey);
+        };
+
+        $scope.clearUsage = function () {
+            $scope.activationKey['purpose_usage'] = '';
+            $scope.save($scope.activationKey);
+        };
+
+        $scope.clearAddOns = function () {
+            $scope.activationKey['purpose_addons'] = [];
+            $scope.save($scope.activationKey);
+        };
+
         $scope.contentViews = function () {
             var deferred = $q.defer();
 

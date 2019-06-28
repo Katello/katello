@@ -54,6 +54,10 @@
         </div>
       </dd>
 
+
+      <div class="divider"></div>
+      <h4 translate>System Purpose</h4>
+
       <dt translate>Service Level</dt>
       <dd bst-edit-select="activationKey.service_level"
           readonly="denied('edit_activation_keys', activationKey)"
@@ -64,6 +68,41 @@
           on-delete="clearServiceLevel()"
           on-save="save(activationKey)">
       </dd>
+
+      <dt translate>Usage Type</dt>
+      <dd bst-edit-select="activationKey.purpose_usage"
+          readonly="denied('edit_activation_keys', activationKey)"
+          selector="activationKey.purpose_usage"
+          options="purposeUsages()"
+          options-format="option for option in options"
+          deletable="true"
+          on-delete="clearUsage()"
+          on-save="save(activationKey)">
+      </dd>
+
+
+      <dt translate>Role</dt>
+      <dd bst-edit-select="activationKey.purpose_role"
+          readonly="denied('edit_activation_keys', activationKey)"
+          selector="activationKey.purpose_role"
+          options="purposeRoles()"
+          options-format="option for option in options"
+          deletable="true"
+          on-delete="clearRole()"
+          on-save="save(activationKey)">
+      </dd>
+
+      <dt translate>Add ons</dt>
+      <dd bst-edit-multiselect="activationKey.purpose_addons"
+          readonly="denied('edit_activation_keys', activationKey) || purposeAddonsCount === 0"
+          options="purposeAddons()"
+          formatter="arrayToString"
+          deletable="true"
+          on-delete="clearAddOns()"
+          selector="activationKey.purpose_addons"
+          on-save="savePurposeAddons(activationKey)">
+      </dd>
+
     </dl>
   </div>
 
