@@ -72,7 +72,7 @@ module ::Actions::Katello::Organization
 
       organization.expects(:label).returns("ACME_Corporation")
       organization.expects(:validate_destroy).returns([])
-      organization.expects(:products).twice.returns([])
+      organization.expects(:products).returns([])
       where_clause = mock
       where_clause.expects(:where).returns([])
       ::Host.expects(:unscoped).returns(where_clause)

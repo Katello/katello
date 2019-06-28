@@ -6,7 +6,7 @@ module Actions
           param :label
         end
 
-        def run
+        def finalize
           output[:response] = ::Katello::Resources::Candlepin::Owner.destroy(input[:label])
         end
       end
