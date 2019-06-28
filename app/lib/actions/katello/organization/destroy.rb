@@ -16,7 +16,6 @@ module Actions
             remove_products(organization)
             remove_providers(organization)
             remove_environments(organization)
-            destroy_contents(organization)
             plan_self
             plan_action(Candlepin::Owner::Destroy, label: organization.label) if ::SETTINGS[:katello][:use_cp]
           end
@@ -89,16 +88,6 @@ module Actions
           organization.default_content_view.tap do |view|
             view.content_view_environments.each { |cve| remove_content_view_environment(cve) }
             plan_action(ContentView::Destroy, organization.default_content_view, :check_ready_to_destroy => false, :organization_destroy => true)
-          end
-        end
-
-        def destroy_contents(organization)
-          repositories = organization.products.map(&:repositories).flatten
-          content_ids = repositories.map(&:content_id).uniq
-          content_ids.each do |content_id|
-            plan_action(Candlepin::Product::ContentDestroy,
-                        owner: organization.label,
-                        content_id: content_id)
           end
         end
       end
