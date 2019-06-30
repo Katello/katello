@@ -72,6 +72,10 @@ module Katello
     def ipmi_interface
     end
 
+    def boot_timestamp
+      facts['proc_stat.btime']&.to_i
+    end
+
     private
 
     def get_rhsm_ip(interface)
