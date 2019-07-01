@@ -14,15 +14,28 @@ module Katello
       end
 
       def create_remote
-        fail NotImplementedError
+        repo.update_attributes!(:remote_href => create_content_remote)
       end
 
       def remote_options
-        fail NotImplementedError
+        common_remote_options.delete(:url)
+        common_remote_options
       end
 
       def update_remote
-        fail NotImplementedError
+        if remote_options[:url].blank?
+          if repo.remote_href
+            href = repo.remote_href
+            repo.update_attributes(remote_href: nil)
+            delete_remote href
+          end
+        else
+          if repo.remote_href?
+            remote_partial_update
+          else
+            create_remote
+          end
+        end
       end
 
       def sync
@@ -106,6 +119,14 @@ module Katello
             DistributionReference.create!(path: path, href: href, root_repository_id: repo.root.id)
           end
         end
+      end
+
+      def delete_distributions
+        path = repo.relative_path.sub(/^\//, '')
+        dists = lookup_distributions(base_path: path)
+        delete_distribution(dists.first._href) if dists.first
+        dist_ref = distribution_reference(path)
+        dist_ref.destroy! if dist_ref
       end
 
       def common_remote_options

@@ -75,6 +75,14 @@
         </dd>
       </span>
 
+      <span ng-if="repository.content_type == 'ansible_collection'">
+        <dt translate>Whitelist</dt>
+        <dd bst-edit-textarea="repository.ansible_collection_whitelist"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product)">
+        </dd>
+      </span>
+
       <dt translate>Verify SSL</dt>
       <dd bst-edit-checkbox="repository.verify_ssl_on_sync"
           formatter="booleanToYesNo"
@@ -380,6 +388,14 @@
           <td class="align-center">
             <a ui-sref="product.repository.manage-content.debs({productId: product.id, repositoryId: repository.id})">
               {{ repository.content_counts.deb || 0 }}
+            </a>
+          </td>
+        </tr>
+        <tr ng-show="repository.content_type === 'ansible_collection'">
+          <td translate>Ansible Collections</td>
+          <td class="align-center">
+            <a ui-sref="product.repository.manage-content.ansible-collections({productId: product.id, repositoryId: repository.id})">
+              {{ repository.content_counts.ansible_collection || 0 }}
             </a>
           </td>
         </tr>

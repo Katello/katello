@@ -13,6 +13,7 @@ module ::Actions::Katello::Repository
     let(:action) { create_action action_class }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
     let(:repository_pulp3) { katello_repositories(:pulp3_file_1) }
+    let(:repository_ansible_collection_pulp3) { katello_repositories(:pulp3_ansible_collection_1) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:puppet_repository) { katello_repositories(:p_forge) }
     let(:docker_repository) { katello_repositories(:redis) }
@@ -408,6 +409,15 @@ module ::Actions::Katello::Repository
       refute_action_planed action, ::Actions::Pulp3::Repository::CreateVersion
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_pulp3, proxy, :contents_changed => true)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_pulp3, proxy, :contents_changed => true)
+    end
+
+    it 'plans pulp3 ansible collection metadata generate without publication ' do
+      action = create_action pulp3_metadata_generate_action_class
+      action.stubs(:action_subject).with(repository_ansible_collection_pulp3)
+      plan_action action, repository_ansible_collection_pulp3, proxy, :contents_changed => true
+      refute_action_planed action, ::Actions::Pulp3::Repository::CreateVersion
+      refute_action_planed action, ::Actions::Pulp3::Repository::CreatePublication
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_ansible_collection_pulp3, proxy, :contents_changed => true)
     end
 
     describe 'progress' do

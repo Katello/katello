@@ -345,3 +345,10 @@ pulp3_file_1:
   relative_path:        '/Default_Organization/library/pulp3_File_1'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
+pulp3_ansible_collection_1:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:pulp3_ansible_collection_root_1) %>
+  pulp_id:              "Default_Organization-Cabinet-pulp3_Ansible_collection_1"
+  relative_path:        '/Default_Organization/library/pulp3_Ansible_collection_1'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>

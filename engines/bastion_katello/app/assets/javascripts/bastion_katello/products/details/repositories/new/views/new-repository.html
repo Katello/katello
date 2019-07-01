@@ -60,8 +60,22 @@
         <p class="help-block" ng-show="repository.content_type === 'docker'" translate>
           URL of the registry you want to sync. Example: https://registry-1.docker.io/
         </p>
+        <p class="help-block" ng-show="repository.content_type === 'ansible_collection'" translate>
+          URL of the ansible content sharing hub you want to sync. Example: https://galaxy.ansible.com
+        </p>
 
       </div>
+
+      <div ng-show="repository.content_type === 'ansible_collection'" bst-form-group label="{{ 'Whitelist' | translate }}">
+        <textarea id="collection_whitelist"
+               name="collection_whitelists"
+               ng-model="repository.ansible_collection_whitelist"
+               type="text"/>
+        <p class="help-block" translate>
+          Name / Comma-separated names of ansible collection(s) you want to sync from the galaxy. ex: newswangerd.collection_demo, devoperate.base
+        </p>
+      </div>
+
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Releases' | translate }}">
         <input id="deb_releases"
                name="deb_releases"

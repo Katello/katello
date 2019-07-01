@@ -1,0 +1,32 @@
+module Katello
+  class AnsibleCollection < ApplicationRecord
+    include Concerns::PulpDatabaseUnit
+
+    self.table_name = 'katello_ansible_collections'
+
+    CONTENT_TYPE = 'ansible collection'.freeze
+
+    has_many :repository_ansible_collections, :class_name => "Katello::RepositoryAnsibleCollection", :dependent => :destroy, :inverse_of => :ansible_collection, :foreign_key => :ansible_collection_id
+    has_many :repositories, :through => :repository_ansible_collections, :class_name => "Katello::Repository"
+
+    scoped_search :on => :name, :complete_value => true
+    scoped_search :on => :namespace, :complete_value => true
+    scoped_search :on => :version, :complete_value => true
+
+    def self.default_sort
+      order(:name)
+    end
+
+    def self.repository_association_class
+      RepositoryAnsibleCollection
+    end
+
+    def self.unit_id_field
+      'ansible_collection_id'
+    end
+
+    def self.total_for_repositories(repos)
+      self.in_repositories(repos).count
+    end
+  end
+end

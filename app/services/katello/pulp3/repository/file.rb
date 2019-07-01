@@ -4,36 +4,23 @@ module Katello
   module Pulp3
     class Repository
       class File < ::Katello::Pulp3::Repository
-        def create_remote
+        def create_content_remote
           remote_file_data = PulpFileClient::FileRemote.new(remote_options)
           response = pulp3_api.remotes_file_file_create(remote_file_data)
-          repo.update_attributes!(:remote_href => response._href)
+          response._href
         end
 
         def remote_options
           #TODO: move to user specifying PULP_MANIFEST
           if root.url.blank?
-            common_remote_options.delete(:url)
-            common_remote_options
+            super
           else
             common_remote_options.merge(url: root.url + '/PULP_MANIFEST')
           end
         end
 
-        def update_remote
-          if remote_options[:url].blank?
-            if repo.remote_href
-              href = repo.remote_href
-              repo.update_attributes(remote_href: nil)
-              pulp3_api.remotes_file_file_delete(href)
-            end
-          else
-            if repo.remote_href?
-              pulp3_api.remotes_file_file_partial_update(repo.remote_href, remote_options)
-            else
-              create_remote
-            end
-          end
+        def remote_partial_update
+          pulp3_api.remotes_file_file_partial_update(repo.remote_href, remote_options)
         end
 
         def delete_remote(href = repo.remote_href)
@@ -62,14 +49,6 @@ module Katello
           pulp3_api.distributions_file_file_create(distribution_data)
         end
 
-        def delete_distributions
-          path = repo.relative_path.sub(/^\//, '')
-          dists = lookup_distributions(base_path: path)
-          delete_distribution(dists.first._href) if dists.first
-          dist_ref = distribution_reference(path)
-          dist_ref.destroy! if dist_ref
-        end
-
         def delete_distribution(href)
           pulp3_api.distributions_file_file_delete(href)
         end
@@ -87,13 +66,6 @@ module Katello
 
         def get_distribution(href)
           pulp3_api.distributions_file_file_read(href)
-        rescue PulpFileClient::ApiError => e
-          raise e if e.code != 404
-          nil
-        end
-
-        def version_details
-          pulp3_api.repositories_versions_read(repo.version_href)
         rescue PulpFileClient::ApiError => e
           raise e if e.code != 404
           nil

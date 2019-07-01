@@ -48,6 +48,7 @@ module Katello
     validates_with Validators::ContainerImageNameValidator, :attributes => :docker_upstream_name, :allow_blank => true, :if => :docker?
 
     validate :ensure_valid_docker_attributes, :if => :docker?
+    validate :ensure_valid_ansible_collection_attributes, :if => :ansible_collection?
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
@@ -82,6 +83,7 @@ module Katello
     scope :puppet_type, -> { where(:content_type => Repository::PUPPET_TYPE) }
     scope :docker_type, -> { where(:content_type => Repository::DOCKER_TYPE) }
     scope :ostree_type, -> { where(:content_type => Repository::OSTREE_TYPE) }
+    scope :ansible_collection_type, -> { where(:content_type => Repository::ANSIBLE_COLLECTION_TYPE) }
     delegate :redhat?, :provider, :organization, to: :product
 
     def library_instance
@@ -193,6 +195,10 @@ module Katello
       end
     end
 
+    def ensure_valid_ansible_collection_attributes
+      errors.add(:base, N_("Whitelist cannot be blank.")) if ansible_collection_whitelist.blank?
+    end
+
     def ensure_valid_upstream_authorization
       return if (self.upstream_username.blank? && self.upstream_password.blank?)
       if redhat?
@@ -247,6 +253,10 @@ module Katello
       self.content_type == Repository::DEB_TYPE
     end
 
+    def ansible_collection?
+      self.content_type == Repository::ANSIBLE_COLLECTION_TYPE
+    end
+
     def metadata_generate_needed?
       (%w(unprotected checksum_type container_repsoitory_name) & previous_changes.keys).any?
     end
@@ -261,6 +271,7 @@ module Katello
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id)
       changeable_attributes += %w(name container_repository_name docker_tags_whitelist) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
+      changeable_attributes += %w(ansible_collection_whitelist) if ansible_collection?
       changeable_attributes.any? { |key| previous_changes.key?(key) }
     end
 

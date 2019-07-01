@@ -37,7 +37,8 @@ node :content_counts do |repo|
     :puppet_module => repo.puppet_modules.count,
     :file => repo.files.count,
     :deb => repo.debs.count,
-    :module_stream => repo.module_streams.count
+    :module_stream => repo.module_streams.count,
+    :ansible_collection => repo.ansible_collections.count
   }
 end
 
