@@ -2,9 +2,10 @@ module Katello
   module Pulp3
     class AnsibleCollection < PulpContentUnit
       include LazyAccessor
-      CONTENT_TYPE = "ansible collection".freeze
 
-      lazy_accessor :pulp_facts, :initializer => :backend_data
+      def self.content_api
+        PulpAnsibleClient::ContentCollectionsApi.new(Katello::Pulp3::Repository::AnsibleCollection.api_client(SmartProxy.pulp_master!))
+      end
 
       def self.ids_for_repository(repo_id)
         repo = Katello::Pulp3::Repository::AnsibleCollection.new(Katello::Repository.find(repo_id), SmartProxy.pulp_master)
@@ -24,10 +25,6 @@ module Katello
         custom_json['version'] = backend_data['version']
         custom_json['name'] = backend_data['name']
         model.update_attributes!(custom_json)
-      end
-
-      def self.content_unit_list(page_opts)
-        SmartProxy.pulp_master!.pulp3_api.content_ansible_collections_list page_opts
       end
     end
   end

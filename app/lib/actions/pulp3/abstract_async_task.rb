@@ -84,10 +84,10 @@ module Actions
       def cancel
         output[:pulp_tasks].each do |pulp_task|
           data = PulpcoreClient::Task.new(state: 'canceled')
-          pulp3_api.tasks_api.tasks_cancel(pulp_task['_href'], data)
+          tasks_api.cancel(pulp_task['_href'], data)
           if pulp_task['spawned_tasks']
             #the main task may have completed, so cancel spawned tasks too
-            pulp_task['spawned_tasks'].each { |spawned| pulp3_api.tasks_api.tasks_cancel(spawned['_href'], data) }
+            pulp_task['spawned_tasks'].each { |spawned| tasks_api.cancel(spawned['_href'], data) }
           end
         end
       end
@@ -120,13 +120,14 @@ module Actions
         end
       end
 
-      def pulp3_api
-        SmartProxy.find(input[:smart_proxy_id]).pulp3_api
+      def tasks_api
+        api_client = PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
+        PulpcoreClient::TasksApi.new(api_client)
       end
 
       def poll_external_task
         external_task.map do |task|
-          task = pulp3_api.tasks_read(task['_href'] || task['task'])
+          task = tasks_api.read(task['_href'] || task['task'])
           task.as_json
         end
       end

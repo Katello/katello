@@ -13,13 +13,46 @@ module Katello
         @smart_proxy = smart_proxy
       end
 
-      def create_remote
-        repo.update_attributes!(:remote_href => create_content_remote)
+      def remote_class
+        fail NotImplementedError
+      end
+
+      def publications_api
+        fail NotImplementedError
+      end
+
+      def publication_class
+        fail NotImplementedError
+      end
+
+      def distribution_class
+        fail NotImplementedError
+      end
+
+      def distributions_api_class
+        fail NotImplementedError
+      end
+
+      def distribution_options
+        fail NotImplementedError
       end
 
       def remote_options
-        common_remote_options.delete(:url)
-        common_remote_options
+        fail NotImplementedError
+      end
+
+      def self.api_client(_smart_proxy)
+        fail NotImplementedError
+      end
+
+      def api_client
+        self.class.api_client(smart_proxy)
+      end
+
+      def create_remote
+        remote_file_data = remote_class.new(remote_options)
+        response = remotes_api.create(remote_file_data)
+        repo.update_attributes!(:remote_href => response._href)
       end
 
       def update_remote
@@ -38,16 +71,28 @@ module Katello
         end
       end
 
-      def sync
-        fail NotImplementedError
+      def remote_partial_update
+        remotes_api.partial_update(repo.remote_href, remote_options)
       end
 
-      def create_publication
-        fail NotImplementedError
+      def delete_remote(href = repo.remote_href)
+        remotes_api.delete(href) if href
       end
 
-      def delete_publication
-        fail NotImplementedError
+      def list_remotes(args)
+        remotes_api.list(args).results
+      end
+
+      def core_api_client
+        PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
+      end
+
+      def repositories_api
+        PulpcoreClient::RepositoriesApi.new(core_api_client)
+      end
+
+      def repository_versions_api
+        PulpcoreClient::RepositoriesVersionsApi.new(core_api_client)
       end
 
       def self.instance_for_type(repo, smart_proxy)
@@ -72,7 +117,7 @@ module Katello
 
       def create
         unless repository_reference
-          response = pulp3_api.repositories_create(
+          response = repositories_api.create(
             name: backend_object_name)
           RepositoryReference.create!(
            root_repository_id: repo.root_id,
@@ -83,19 +128,28 @@ module Katello
       end
 
       def update
-        pulp3_api.repositories_update(repository_reference.repository_href, name: backend_object_name)
+        repositories_api.update(repository_reference.repository_href, name: backend_object_name)
       end
 
       def list(args)
-        pulp3_api.repositories_list(args).results
+        repositories_api.list(args).results
       end
 
       def delete(href = repository_reference.try(:repository_href))
         repository_reference.try(:destroy)
         if href
-          response = pulp3_api.repositories_delete(href)
+          response = repositories_api.delete(href)
           response
         end
+      end
+
+      def sync
+        [remotes_api.sync(repo.remote_href, repository: repository_reference.repository_href)]
+      end
+
+      def create_publication
+        publication_data = publication_class.new(repository_version: repo.version_href)
+        publications_api.create(publication_data)
       end
 
       def refresh_distributions
@@ -108,8 +162,39 @@ module Katello
         end
       end
 
+      def create_distribution(path)
+        distribution_data = distribution_class.new(distribution_options(path))
+        distributions_api.create(distribution_data)
+      end
+
+      def delete_distribution(href)
+        distributions_api.delete(href)
+      rescue PulpFileClient::ApiError => e
+        raise e if e.code != 404
+        nil
+      end
+
+      def lookup_distributions(args)
+        distributions_api.list(args).results
+      end
+
+      def update_distribution(path)
+        distribution_reference = distribution_reference(path)
+        if distribution_reference
+          options = distribution_options(path).except(:name, :base_path)
+          distributions_api.partial_update(distribution_reference.href, options)
+        end
+      end
+
+      def get_distribution(href)
+        distributions_api.read(href)
+      rescue PulpFileClient::ApiError => e
+        raise e if e.code != 404
+        nil
+      end
+
       def create_version
-        pulp3_api.repositories_versions_create(repository_reference.repository_href, {})
+        repository_versions_api.create(repository_reference.repository_href, {})
       end
 
       def save_distribution_references(hrefs)
@@ -131,7 +216,6 @@ module Katello
 
       def common_remote_options
         remote_options = {
-          validate: true,
           ssl_validation: root.verify_ssl_on_sync,
           name: backend_object_name,
           url: root.url
@@ -162,7 +246,7 @@ module Katello
       end
 
       def lookup_version(href)
-        pulp3_api.repositories_versions_read href
+        repository_versions_api.read(href)
       rescue PulpcoreClient::ApiError => e
         Rails.logger.error "Exception when calling RepositoriesApi->repositories_versions_read: #{e}"
         nil
@@ -171,7 +255,7 @@ module Katello
       def remove_content(content_units)
         data = PulpcoreClient::RepositoryVersionCreate.new(
           remove_content_units: content_units.map(&:pulp_id))
-        pulp3_api.repositories_versions_create(repository_reference.repository_href, data)
+        repository_versions_api.create(repository_reference.repository_href, data)
       end
     end
   end
