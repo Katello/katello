@@ -74,6 +74,15 @@ module Katello
       assert_response :success
     end
 
+    def test_index_org_with_custom
+      get :index, params: { :organization_id => @organization.id, :with_custom => true }
+
+      body = JSON.parse(response.body)
+
+      assert_empty body['error']
+      assert_response :success
+    end
+
     def test_index_org
       get :index, params: { :organization_id => @organization.id}
 

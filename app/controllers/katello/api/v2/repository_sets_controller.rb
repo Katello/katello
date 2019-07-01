@@ -19,6 +19,7 @@ module Katello
     param :enabled, :bool, :required => false, :desc => N_("If true, only return repository sets that have been enabled. Defaults to false")
     param :with_active_subscription, :bool, :required => false, :desc => N_("If true, only return repository sets that are associated with an active subscriptions")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
+    param :with_custom, :bool, :required => false, :desc => N_("If true, return custom repository sets along with redhat repos")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::ProductContent)
     def index
@@ -116,7 +117,8 @@ module Katello
       end
 
       relation = relation.where(Katello::Content.table_name => {:name => params[:name]}) if params[:name].present?
-      relation.redhat
+      relation = relation.redhat unless ::Foreman::Cast.to_bool(params[:with_custom])
+      relation
     end
 
     def find_product_content
