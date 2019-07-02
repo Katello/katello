@@ -33,5 +33,46 @@ module Katello
         assert_equal srpm.reload.updated_at, last_updated
       end
     end
+
+    class RpmTestBase < ActiveSupport::TestCase
+      include RepositorySupport
+
+      def setup
+        User.current = users(:admin)
+
+        @repo = katello_repositories(:fedora_17_x86_64)
+
+        RepositorySupport.create_and_sync_repo(@repo)
+        Katello::Rpm.import_for_repository(@repo)
+        @package_id = @repo.rpms.find_by_name('cheetah').id
+      end
+
+      def teardown
+        RepositorySupport.destroy_repo(@repo)
+        User.current = nil
+      end
+    end
+
+    class RpmTest < RpmTestBase
+      def test_find
+        package = Rpm.find(@package_id)
+
+        refute_nil package
+        refute_empty Katello::Pulp::Rpm.new(package.pulp_id).backend_data
+      end
+
+      def test_requires
+        package = Rpm.find(@package_id)
+        backend_rpm = Katello::Pulp::Rpm.new(package.pulp_id)
+        refute_empty backend_rpm .requires, "Backend (pulp) rpm requires was empty"
+        refute_empty backend_rpm .provides, "Backend (pulp) rpm provides was empty"
+      end
+
+      def test_ignored_fields
+        refute_includes Katello::Pulp::Rpm::PULP_SELECT_FIELDS, 'changelog'
+        refute_includes Katello::Pulp::Rpm::PULP_SELECT_FIELDS, 'repodata'
+        refute_includes Katello::Pulp::Rpm::PULP_SELECT_FIELDS, 'filelist'
+      end
+    end
   end
 end

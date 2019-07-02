@@ -51,7 +51,7 @@ module Katello
         def remote_options
           #TODO: move to user specifying PULP_MANIFEST
           if root.url.blank?
-            super
+            common_remote_options.merge(url: nil)
           else
             common_remote_options.merge(url: root.url + '/PULP_MANIFEST')
           end

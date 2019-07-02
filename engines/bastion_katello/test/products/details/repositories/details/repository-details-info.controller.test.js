@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, Notification, repository, DownloadPolicy, OstreeUpstreamSyncPolicy, YumContentUnits;
+    var $scope, $state, translate, Notification, repository, DownloadPolicy, OstreeUpstreamSyncPolicy, YumContentUnits, HttpProxy, HttpProxyPolicy;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -10,12 +10,14 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
             ContentCredential = $injector.get('MockResource').$new(),
-            Repository = $injector.get('MockResource').$new();
+            Repository = $injector.get('MockResource').$new(),
+            HttpProxy = $injector.get('MockResource').$new();
 
         repository = new Repository();
         DownloadPolicy = $injector.get("DownloadPolicy");
         OstreeUpstreamSyncPolicy = $injector.get("OstreeUpstreamSyncPolicy");
         YumContentUnits = $injector.get("YumContentUnits");
+        HttpProxyPolicy = $injector.get("HttpProxyPolicy");
         $scope = $injector.get('$rootScope').$new();
         $state = $injector.get('$state');
 
@@ -45,7 +47,9 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             translate: translate,
             Notification: Notification,
             Repository: Repository,
-            ContentCredential: ContentCredential
+            ContentCredential: ContentCredential,
+            HttpProxyPolicy: HttpProxyPolicy,
+            HttpProxy: HttpProxy
         });
     }));
 

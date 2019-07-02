@@ -4,10 +4,15 @@ require 'rake'
 module Katello
   class UpdateContentHttpProxyTest < ActiveSupport::TestCase
     def setup
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       Rake.application.rake_require 'katello/tasks/update_content_default_http_proxy'
       Rake::Task['katello:update_default_http_proxy'].reenable
       Rake::Task.define_task(:environment)
-      @setting = Setting::Content.where(name: 'content_default_http_proxy').first
+      unless Setting.find_by_name('content_default_http_proxy')
+        Setting[:content_default_http_proxy] = FactoryBot.create(
+          :setting, category: 'Setting::Content', name: 'content_default_http_proxy')
+      end
+      @setting = Setting.find_by_name('content_default_http_proxy')
       assert @setting
     end
 

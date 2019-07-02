@@ -17,13 +17,14 @@
  * @requires Architecture
  * @requires RepositoryTypesService
  * @requires YumContentUnits
+ * #requires HttpProxyPolicy
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService',
-    function ($scope, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService) {
+    ['$scope', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy',
+    function ($scope, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy) {
 
         function success() {
             Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -118,5 +119,20 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             repository.$save(success, error);
         };
 
+        $scope.repository['http_proxy_policy'] = HttpProxyPolicy.policies[0].label;
+        $scope.policies = HttpProxyPolicy.policies;
+        $scope.proxies = [];
+
+        $scope.displayHttpProxyPolicyName = function (policy) {
+            return HttpProxyPolicy.displayHttpProxyPolicyName(policy);
+        };
+
+        $scope.displayHttpProxyName = function (proxyId) {
+            return HttpProxyPolicy.displayHttpProxyName($scope.proxies, proxyId);
+        };
+
+        HttpProxy.queryUnpaged(function (proxies) {
+            $scope.proxies = proxies.results;
+        });
     }]
 );

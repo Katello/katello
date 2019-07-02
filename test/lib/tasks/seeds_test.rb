@@ -26,6 +26,10 @@ module Katello
     end
 
     class PulpProxyTest < ActiveSupport::TestCase
+      setup do
+        FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      end
+
       test "Make sure Pulp Proxy features exist" do
         load "#{Katello::Engine.root}/db/seeds.d/104-proxy.rb"
 
@@ -55,6 +59,7 @@ module Katello
     class HttpProxyTest < ActiveSupport::TestCase
       def setup
         Setting[:content_default_http_proxy] = ""
+        FactoryBot.create(:smart_proxy, :default_smart_proxy)
       end
 
       def run_proxy_seed

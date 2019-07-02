@@ -57,26 +57,29 @@ module ::Actions::Pulp::Repository
     def setup
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
       super
+      @repo_count = 18 # this will break if the test repo "zoo" changes
       ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :repo_id => repo.id).main_action
     end
 
     def test_remove_with_repo
-      assert_equal 8, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length
+      assert_equal @repo_count, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length,
+        "Rpm count before sync was wrong."
       ForemanTasks.sync_task(::Actions::Pulp::Repository::RemoveUnits, :repo_id => repo.id).main_action
       assert_equal 0, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length
     end
 
     def test_remove_with_contents
       ForemanTasks.sync_task(::Actions::Katello::Repository::Sync, repo).main_action
-      contents = ::Katello::Rpm.where(:pulp_id => ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id)).pluck(:id)
-      assert_equal 8, contents.length
+      contents = ::Katello::Rpm.where(:pulp_id => ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id)).pluck(:id).sort
+      assert_equal @repo_count, contents.length, "Rpm count before sync was wrong."
       set_user
       ForemanTasks.sync_task(::Actions::Pulp::Repository::RemoveUnits, :repo_id => repo.id, :contents => contents, :content_unit_type => "rpm").main_action
       assert_equal 0, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length
     end
 
     def test_remove_with_content_type
-      assert_equal 8, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length
+      assert_equal @repo_count, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length,
+        "Rpm count before sync was wrong."
       ForemanTasks.sync_task(::Actions::Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => "rpm").main_action
       assert_equal 0, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length
     end

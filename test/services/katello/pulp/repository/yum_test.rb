@@ -163,6 +163,47 @@ module Katello
         end
       end
 
+      class RpmTestWithProxy < ActiveSupport::TestCase
+        include RepositorySupport
+
+        def setup
+          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+          User.current = users(:admin)
+
+          @default_proxy = FactoryBot.create(:http_proxy, name: 'best proxy',
+                                             url: "http://url_1")
+          Setting.find_by(name: 'content_default_http_proxy').update(
+            value: @default_proxy.name)
+          @repo = katello_repositories(:fedora_17_x86_64)
+        end
+
+        def test_create_with_global_http_proxy
+          @repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+          RepositorySupport.create_repo(@repo)
+          backend_data = @repo.backend_service(@master).backend_data
+          importers = backend_data['importers']
+          config = importers.first['config']
+          uri = URI(@default_proxy.url)
+          assert_equal uri.host, config['proxy_host']
+        end
+
+        def test_sync_with_global_http_proxy
+          @repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+          RepositorySupport.create_repo(@repo)
+          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :repo_id => @repo.id)
+          backend_data = @repo.backend_service(@master).backend_data
+          importers = backend_data['importers']
+          config = importers.first['config']
+          uri = URI(@default_proxy.url)
+          assert_equal uri.host, config['proxy_host']
+        end
+
+        def teardown
+          RepositorySupport.destroy_repo(@repo)
+          User.current = nil
+        end
+      end
+
       class YumVcrCopyTest < YumBaseTest
         def setup
           super

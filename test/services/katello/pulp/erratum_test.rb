@@ -6,7 +6,7 @@ module Katello
     class ErratumVcrTestBase < ActiveSupport::TestCase
       include RepositorySupport
 
-      ERRATA_ID = 'RHSA-2010:0858'.freeze
+      ERRATA_ID = 'KATELLO-RHSA-2010:0858'.freeze
 
       def setup
         User.current = users(:admin)

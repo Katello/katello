@@ -90,8 +90,11 @@ module Katello
       end
 
       def create
-        smart_proxy.pulp_api.extensions.repository.create_with_importer_and_distributors(repo.pulp_id, generate_importer,
-                                                                              generate_distributors, display_name: root.name)
+        smart_proxy.pulp_api.extensions.repository.create_with_importer_and_distributors(
+          repo.pulp_id,
+          generate_importer,
+          generate_distributors,
+          display_name: root.name)
       end
 
       def delete
@@ -120,12 +123,12 @@ module Katello
 
       def master_importer_connection_options
         options = {
-          proxy_host: self.proxy_host_importer_value,
           basic_auth_username: root.upstream_username,
           basic_auth_password: root.upstream_password,
           ssl_validation: root.verify_ssl_on_sync?
         }
-        options.merge(master_importer_ssl_options)
+        options.merge!(proxy_options)
+        options.merge!(master_importer_ssl_options)
       end
 
       def master_importer_ssl_options
@@ -246,6 +249,29 @@ module Katello
         content_unit_types.each do |content_type|
           content_type.pulp2_service_class
         end
+      end
+
+      def proxy_options
+        if repo.root.http_proxy_policy == RootRepository::NO_DEFAULT_HTTP_PROXY
+          return { proxy_host: '' }
+        end
+
+        proxy = repo.root.http_proxy
+        if repo.root.http_proxy_policy == RootRepository::GLOBAL_DEFAULT_HTTP_PROXY
+          proxy = HttpProxy.default_global_content_proxy
+        end
+
+        if proxy
+          uri = URI(proxy.url)
+          proxy_options = {
+            proxy_host: uri.host,
+            proxy_port: uri.port,
+            proxy_username: proxy.username,
+            proxy_password: proxy.password
+          }
+          return proxy_options
+        end
+        { proxy_host: '' }
       end
     end
   end

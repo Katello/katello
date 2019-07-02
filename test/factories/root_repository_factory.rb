@@ -6,6 +6,7 @@ FactoryBot.define do
     url { "http://localhost/foo" }
     download_policy { "on_demand" }
     association :product, :factory => :katello_product, :strategy => :build
+    http_proxy_policy { Katello::RootRepository::NO_DEFAULT_HTTP_PROXY }
 
     trait :fedora_17_el6_root do
       name { "Fedora 17 el6" }

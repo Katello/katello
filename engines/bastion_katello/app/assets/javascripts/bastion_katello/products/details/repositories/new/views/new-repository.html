@@ -180,7 +180,6 @@
         </p>
       </div>
 
-
       <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'yum'">
         <select id="download_policy"
                 name="download_policy"
@@ -206,16 +205,28 @@
         </p>
       </div>
 
-      <div class="checkbox">
-        <label>
-          <input id="ignore_global_proxy" name="ignore_global_proxy" ng-model="repository.ignore_global_proxy" type="checkbox"/>
-          <span translate>Ignore Global Http Proxy</span>
-        </label>
-
-        <p class="help-block" translate>
-          Selecting this option will result in the globally configured http proxy from not being used.
-        </p>
+      <div bst-form-group label="{{ 'Http Proxy Policy' | translate }}">
+        <select required
+                id="http_proxy_policy"
+                name="http_proxy_policy"
+                ng-model="repository.http_proxy_policy"
+                ng-options="type.label as type.name for type in policies">
+        </select>
       </div>
+      <span ng-show="repository.http_proxy_policy === 'use_selected_http_proxy'">
+        <div bst-form-group label="{{ 'Http Proxy' | translate }}">
+          <span translate ng-show="proxies.length == 0">
+            No HTTP Proxies found
+          </span>
+          <select
+              id="http_proxy"
+              name="http_proxy"
+              ng-model="repository.http_proxy_id"
+              ng-options="proxy.id as proxy.name for proxy in proxies"
+              ng-show="proxies.length > 0">
+          </select>
+        </div>
+      </span>
     </div>
 
     <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet' || repository.content_type === 'deb' || repository.content_type === 'file'">

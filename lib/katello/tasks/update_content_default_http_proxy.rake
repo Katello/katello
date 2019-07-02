@@ -3,7 +3,7 @@ require File.expand_path("../engine", File.dirname(__FILE__))
 namespace :katello do
   desc "Sets the content default http proxy to an existing http proxy based on supplied URL."
   task :update_default_http_proxy => :environment do
-    setting = ::Setting::Content.where(name: 'content_default_http_proxy').first
+    setting = ::Setting.find_by(name: 'content_default_http_proxy')
     options = {}
     o = OptionParser.new
     o.banner = "Usage: rake katello:update_content_default_http_proxy -- --name HTTP_PROXY_NAME --url HTTP_PROXY_URL [--user HTTP_PROXY_USER] [--password HTTP_PROXY_PASSWORD]"
