@@ -79,6 +79,14 @@ module Katello
         false
       end
 
+      def create_mirror_artifacts
+        create
+      end
+
+      def mirror_needs_updates?
+        needs_importer_updates? || needs_distributor_updates?
+      end
+
       def sync(overrides = {})
         sync_options = {}
         sync_options[:max_speed] = SETTINGS.dig(:katello, :pulp, :sync_KBlimit)
@@ -119,6 +127,19 @@ module Katello
         else #content view repositories don't need any importer configuration
           importer_class.new
         end
+      end
+
+      def needs_importer_updates?
+        repo_details = backend_data
+        return unless repo_details
+        capsule_importer = repo_details["importers"][0]
+        !importer_matches?(capsule_importer)
+      end
+
+      def needs_distributor_updates?
+        repo_details = backend_data
+        return unless repo_details
+        !distributors_match?(repo_details["distributors"])
       end
 
       def master_importer_connection_options
@@ -183,6 +204,10 @@ module Katello
         tasks += update_or_associate_distributors
         tasks += remove_unnecessary_distributors
         tasks
+      end
+
+      def refresh_mirror_artifacts
+        refresh
       end
 
       def update_or_associate_importer
@@ -272,6 +297,34 @@ module Katello
           return proxy_options
         end
         { proxy_host: '' }
+      end
+
+      private
+
+      def filtered_distribution_config_equal?(generated_config, actual_config)
+        generated = generated_config.clone
+        actual = actual_config.clone
+        #We store 'default' checksum type as nil, but pulp will default to sha256, so if we haven't set it, ignore it
+        if generated.keys.include?('checksum_type') && generated['checksum_type'].nil?
+          generated.delete('checksum_type')
+          actual.delete('checksum_type')
+        end
+        generated.compact == actual.compact
+      end
+
+      def importer_matches?(capsule_importer)
+        generated_importer = generate_importer
+        capsule_importer.try(:[], 'importer_type_id') == generated_importer.id &&
+            generated_importer.config.compact == capsule_importer['config'].compact
+      end
+
+      def distributors_match?(capsule_distributors)
+        generated_distributor_configs = generate_distributors
+        generated_distributor_configs.all? do |gen_dist|
+          type = gen_dist.class.type_id
+          found_on_capsule = capsule_distributors.find { |dist| dist['distributor_type_id'] == type }
+          found_on_capsule && filtered_distribution_config_equal?(gen_dist.config, found_on_capsule['config'])
+        end
       end
     end
   end

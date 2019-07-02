@@ -56,6 +56,10 @@ module Katello
             common_remote_options.merge(url: root.url + '/PULP_MANIFEST')
           end
         end
+
+        def partial_repo_path
+          "/pulp/isos/#{repo.relative_path}/PULP_MANIFEST"
+        end
       end
     end
   end

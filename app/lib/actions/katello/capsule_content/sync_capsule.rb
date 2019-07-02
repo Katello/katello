@@ -1,25 +1,8 @@
 module Actions
   module Katello
     module CapsuleContent
-      class Sync < ::Actions::EntryAction
+      class SyncCapsule < ::Actions::EntryAction
         include Actions::Katello::PulpSelector
-
-        def resource_locks
-          :link
-        end
-
-        input_format do
-          param :name
-        end
-
-        def humanized_name
-          _("Synchronize smart proxy")
-        end
-
-        def humanized_input
-          ["'#{input['smart_proxy']['name']}'"] + super
-        end
-
         def available_repositories(smart_proxy, environment, content_view, repository)
           smart_proxy_service = ::Katello::Pulp::SmartProxyRepository.new(smart_proxy)
           repository_ids = smart_proxy_service.get_repository_ids(environment, content_view, repository)
@@ -29,7 +12,6 @@ module Actions
         # rubocop:disable MethodLength
         def plan(smart_proxy, options = {})
           action_subject(smart_proxy)
-          smart_proxy.verify_ueber_certs
           environment_id = options.fetch(:environment_id, nil)
           environment = ::Katello::KTEnvironment.find(environment_id) if environment_id
           content_view_id = options.fetch(:content_view_id, nil)
@@ -38,13 +20,24 @@ module Actions
           repository = ::Katello::Repository.find(repository_id) if repository_id
           skip_metadata_check = options.fetch(:skip_metadata_check, false)
 
-          fail _("Action not allowed for the default smart proxy.") if smart_proxy.pulp_master?
+          concurrence do
+            available_repositories(smart_proxy, environment, content_view, repository).each do |repo|
+              plan_pulp_action([Actions::Pulp::Orchestration::Repository::SmartProxySync,
+                                Actions::Pulp3::CapsuleContent::Sync],
+                                 repo, smart_proxy,
+                                 content_view: content_view,
+                                 environment: environment,
+                                 skip_metadata_check: skip_metadata_check)
 
-          repositories = available_repositories(smart_proxy, environment, content_view, repository)
-          smart_proxy.ping_pulp3 if repositories.any? { |repo| smart_proxy.pulp3_support?(repo) }
-          smart_proxy.ping_pulp if repositories.any? { |repo| !smart_proxy.pulp3_support?(repo) }
-          plan_action(RefreshRepos, smart_proxy, options)
-          plan_action(SyncCapsule, smart_proxy, options)
+              if repo.is_a?(::Katello::Repository) &&
+                repo.distribution_bootable? &&
+                repo.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+                plan_action(Katello::Repository::FetchPxeFiles,
+                            id: repository.id,
+                            capsule_id: smart_proxy_service.smart_proxy.id)
+              end
+            end
+          end
         end
 
         def rescue_strategy

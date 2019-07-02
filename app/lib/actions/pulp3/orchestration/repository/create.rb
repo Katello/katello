@@ -6,7 +6,9 @@ module Actions
           def plan(repository, smart_proxy)
             sequence do
               plan_action(Actions::Pulp3::Repository::Create, repository, smart_proxy)
-              plan_action(Actions::Pulp3::Repository::CreateRemote, repository, smart_proxy) if repository.content_view.default?
+              if repository.content_view.default? || !smart_proxy.pulp_master?
+                plan_action(Actions::Pulp3::Repository::CreateRemote, repository, smart_proxy)
+              end
             end
           end
         end

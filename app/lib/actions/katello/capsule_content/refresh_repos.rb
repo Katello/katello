@@ -1,7 +1,7 @@
 module Actions
-  module Pulp
-    module Repository
-      class RefreshNeeded < Pulp::AbstractAsyncTask
+  module Katello
+    module CapsuleContent
+      class RefreshRepos < Pulp::AbstractAsyncTask
         input_format do
           param :smart_proxy_id
           param :environment_id
@@ -25,9 +25,20 @@ module Actions
           smart_proxy = SmartProxy.find(input[:smart_proxy_id])
           smart_proxy_service = ::Katello::Pulp::SmartProxyRepository.new(smart_proxy)
 
-          need_updates = smart_proxy_service.repos_needing_updates(environment, content_view, repository)
-          need_updates.each do |repo|
-            tasks += repo.backend_service(smart_proxy).refresh
+          current_repos_on_capsule = smart_proxy_service.current_repositories(environment, content_view)
+          current_repos_on_capsule_ids = current_repos_on_capsule.pluck(:id)
+
+          list_of_repos_to_sync = smart_proxy_service.repos_available_to_capsule(environment, content_view)
+          list_of_repos_to_sync.each do |repo|
+            if repo.is_a?(Katello::ContentViewPuppetEnvironment)
+              repo = repo.nonpersisted_repository
+            end
+            pulp_repo = repo.backend_service(smart_proxy)
+            if !current_repos_on_capsule_ids.include?(repo.id)
+              pulp_repo.create_mirror_artifacts
+            elsif pulp_repo.mirror_needs_updates?
+              tasks += pulp_repo.refresh_mirror_artifacts
+            end
           end
           tasks
         end

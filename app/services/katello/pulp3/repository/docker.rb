@@ -29,17 +29,13 @@ module Katello
         end
 
         def remote_options
-          if root.url.blank?
-            super
+          options = {url: root.url, upstream_name: root.docker_upstream_name}
+          if root.docker_tags_whitelist && root.docker_tags_whitelist.any?
+            options[:whitelist_tags] = root.docker_tags_whitelist.join(",")
           else
-            options = {url: root.url, upstream_name: root.docker_upstream_name}
-            if root.docker_tags_whitelist && root.docker_tags_whitelist.any?
-              options[:whitelist_tags] = root.docker_tags_whitelist.join(",")
-            else
-              options[:whitelist_tags] = nil
-            end
-            common_remote_options.merge(options)
+            options[:whitelist_tags] = nil
           end
+          common_remote_options.merge(options)
         end
 
         def distribution_options(path)

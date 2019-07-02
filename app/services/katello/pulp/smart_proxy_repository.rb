@@ -25,7 +25,7 @@ module Katello
         environments = @smart_proxy.lifecycle_environments if environments.nil?
         yum_repos = Katello::Repository.in_environment(environments)
         yum_repos = yum_repos.in_content_views([content_view]) if content_view
-        yum_repos.find_all { |repo| repo.node_syncable? }
+        yum_repos.select(&:node_syncable?)
       end
 
       def puppet_environments_available_to_capsule(environments = nil, content_view = nil)
@@ -43,13 +43,6 @@ module Katello
         end
       end
 
-      def repos_needing_updates(environment, content_view, repository)
-        repos = affected_repositories(environment, content_view, repository)
-        need_importer_update = needs_importer_updates(repos)
-        need_distributor_update = needs_distributor_updates(repos)
-        (need_distributor_update + need_importer_update).uniq
-      end
-
       def current_repositories(environment_id = nil, content_view_id = nil)
         yum_repos = current_yum_repos(environment_id, content_view_id) || []
         puppet_envs = current_puppet_environments(environment_id, content_view_id) || []
@@ -61,9 +54,14 @@ module Katello
         katello_repos = katello_repos.where(:environment_id => environment_id) if environment_id
         katello_repos = katello_repos.in_content_views([content_view_id]) if content_view_id
 
-        pulp_repos = self.smart_proxy.pulp_api.extensions.repository.search_by_repository_ids(katello_repos.pluck(:pulp_id))
+        pulp2_repos = self.smart_proxy.pulp_api.extensions.repository.search_by_repository_ids(katello_repos.pluck(:pulp_id))
+        pulp_repo_ids = pulp2_repos.map { |pulp_repo| pulp_repo['id'] }
+        if smart_proxy.pulp3_enabled?
+          pulp3_repos = ::Katello::Pulp3::Repository.new(nil, smart_proxy).list(name_in: katello_repos.pluck(:pulp_id))
+          pulp_repo_ids.concat(pulp3_repos.map(&:name))
+        end
 
-        katello_repos.where(:pulp_id => pulp_repos.map { |pulp_repo| pulp_repo['id'] })
+        katello_repos.where(:pulp_id => pulp_repo_ids)
       end
 
       def current_puppet_environments(environment_id = nil, content_view_id = nil)
@@ -99,38 +97,6 @@ module Katello
         orphaned_repos.map { |repo| self.smart_proxy.pulp_api.extensions.repository.delete(repo) }.compact
       end
 
-      def needs_importer_updates(repos)
-        repos.select do |repo|
-          repo_details = repo.backend_service(self.smart_proxy).backend_data
-          next unless repo_details
-          capsule_importer = repo_details["importers"][0]
-          !importer_matches?(repo, capsule_importer)
-        end
-      end
-
-      def needs_distributor_updates(repos)
-        repos.select do |repo|
-          repo_details = repo.backend_service(smart_proxy).backend_data
-          next unless repo_details
-          !distributors_match?(repo, repo_details["distributors"])
-        end
-      end
-
-      def importer_matches?(repo, capsule_importer)
-        generated_importer = repo.backend_service(self.smart_proxy).generate_importer
-        capsule_importer.try(:[], 'importer_type_id') == generated_importer.id &&
-            generated_importer.config.compact == capsule_importer['config'].compact
-      end
-
-      def distributors_match?(repo, capsule_distributors)
-        generated_distributor_configs = repo.backend_service(self.smart_proxy).generate_distributors
-        generated_distributor_configs.all? do |gen_dist|
-          type = gen_dist.class.type_id
-          found_on_capsule = capsule_distributors.find { |dist| dist['distributor_type_id'] == type }
-          found_on_capsule && filtered_distribution_config_equal?(gen_dist.config, found_on_capsule['config'])
-        end
-      end
-
       def get_repository_ids(environment, content_view, repository)
         if environment
           repository_ids = repos_available_to_capsule(environment, content_view).map(&:pulp_id)
@@ -146,19 +112,6 @@ module Katello
         end
 
         repository_ids
-      end
-
-      private
-
-      def filtered_distribution_config_equal?(generated_config, actual_config)
-        generated = generated_config.clone
-        actual = actual_config.clone
-        #We store 'default' checksum type as nil, but pulp will default to sha256, so if we haven't set it, ignore it
-        if generated.keys.include?('checksum_type') && generated['checksum_type'].nil?
-          generated.delete('checksum_type')
-          actual.delete('checksum_type')
-        end
-        generated.compact == actual.compact
       end
     end
   end

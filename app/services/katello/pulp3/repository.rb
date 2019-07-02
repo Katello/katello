@@ -45,8 +45,22 @@ module Katello
         fail NotImplementedError
       end
 
+      def distribution_mirror_options(path, options = {})
+        ret  = {
+            base_path: path,
+            name: "#{backend_object_name}"
+        }
+        ret[:publication] = options[:publication] if options.key? :publication
+        ret[:repository_version] = options[:repository_version] if options.key? :repository_version
+        ret
+      end
+
       def remote_options
-        fail NotImplementedError
+        common_remote_options
+      end
+
+      def mirror_remote_options
+        common_mirror_remote_options
       end
 
       def self.api_client(_smart_proxy)
@@ -57,21 +71,26 @@ module Katello
         self.class.api_client(smart_proxy)
       end
 
+      def create_mirror_remote
+        remote_file_data = remote_class.new(mirror_remote_options)
+        response = remotes_api.create(remote_file_data)
+      end
+
       def create_remote
         remote_file_data = remote_class.new(remote_options)
         response = remotes_api.create(remote_file_data)
-        repo.update_attributes!(:remote_href => response._href)
+        repo.update_attributes!(:remote_href => response._href) if @smart_proxy.pulp_master?
       end
 
       def update_remote
+        href = repo.remote_href
         if remote_options[:url].blank?
-          if repo.remote_href
-            href = repo.remote_href
+          if href
             repo.update_attributes(remote_href: nil)
             delete_remote href
           end
         else
-          if repo.remote_href?
+          if href
             remote_partial_update
           else
             create_remote
@@ -81,6 +100,11 @@ module Katello
 
       def remote_partial_update
         remotes_api.partial_update(repo.remote_href, remote_options)
+      end
+
+      def delete_mirror_remote
+        remote = list_remotes(name: backend_object_name).first
+        remotes_api.delete(remote._href) if remote
       end
 
       def delete_remote(href = repo.remote_href)
@@ -112,7 +136,12 @@ module Katello
       end
 
       def backend_object_name
-        "#{root.label}-#{repo.id}#{rand(9999)}"
+        if @smart_proxy.pulp_master?
+          "#{root.label}-#{repo.id}#{rand(9999)}"
+        else
+          # this is a capsule. Create repos in pulp3 instance with the name as this repo's pulp_id
+          repo.pulp_id
+        end
       end
 
       def repository_reference
@@ -123,8 +152,36 @@ module Katello
         DistributionReference.find_by(:path => path)
       end
 
+      def refresh_mirror_artifacts
+        remotes_api.partial_update(mirror_remote_href, mirror_remote_options)
+      end
+
+      def mirror_needs_updates?
+        remote = fetch_remote
+        return false if remote.blank?
+        options = compute_mirror_remote_options
+        options.keys.any? {|key| remote.send(key) != options[key]}
+      end
+
+      def compute_mirror_remote_options
+        computed_options = mirror_remote_options
+        [:ssl_client_certificate, :ssl_client_key, :ssl_ca_certificate].each do |key|
+          computed_options[key] = Digest::SHA256.hexdigest(computed_options[key].chomp)
+        end
+        computed_options
+      end
+
+      def create_mirror_artifacts
+        create_mirror
+        create_mirror_remote
+      end
+
+      def create_mirror
+        repositories_api.create(name: backend_object_name)
+      end
+
       def create
-        unless repository_reference
+        unless  repository_reference
           response = repositories_api.create(
             name: backend_object_name)
           RepositoryReference.create!(
@@ -135,39 +192,97 @@ module Katello
         end
       end
 
+      def update_mirror
+        repositories_api.update(mirror_repository_href, name: backend_object_name)
+      end
+
       def update
-        repositories_api.update(repository_reference.repository_href, name: backend_object_name)
+        repositories_api.update(repository_reference.try(:repository_href), name: backend_object_name)
       end
 
       def list(args)
         repositories_api.list(args).results
       end
 
-      def delete(href = repository_reference.try(:repository_href))
-        repository_reference.try(:destroy)
-        if href
-          response = repositories_api.delete(href)
-          response
-        end
+      def self.list(smart_proxy, args)
+        ::Katello::Pulp3::Repository.new(nil, smart_proxy).list(args)
+      end
+
+      def delete_mirror(href = mirror_repository_href)
+        repositories_api.delete(href) if href
+      end
+
+      def delete(href = repository_reference.repository_href)
+        repositories_api.delete(href) if href
+      end
+
+      def sync_mirror
+        [remotes_api.sync(mirror_remote_href, repository: mirror_repository_href)]
       end
 
       def sync
-        [remotes_api.sync(repo.remote_href, repository: repository_reference.repository_href)]
+        [remotes_api.sync(repo.remote_href, repository: repository_reference.try(:repository_href))]
+      end
+
+      def mirror_version_href
+        if @smart_proxy.pulp_master?
+          repo.version_href
+        else
+          repository = fetch_repository
+          repository._latest_version_href if repository
+        end
       end
 
       def create_publication
-        publication_data = publication_class.new(repository_version: repo.version_href)
-        publications_api.create(publication_data)
+        href = repo.version_href
+        if href
+          publication_data = publication_class.new(repository_version: href)
+          publications_api.create(publication_data)
+        end
+      end
+
+      def create_mirror_publication
+        href = mirror_version_href
+        if href
+          publication_data = publication_class.new(repository_version: href)
+          publications_api.create(publication_data)
+        end
+      end
+
+      def relative_path
+        repo.relative_path.sub(/^\//, '')
+      end
+
+      def refresh_mirror_distributions(options = {})
+        path = relative_path
+        dist_params = {}
+        dist_params[:publication] = options[:publication] if options[:publication]
+        dist_params[:repository_version] = mirror_version_href if options[:use_repository_version]
+        dist_options = distribution_mirror_options(path, dist_params)
+        if distro = lookup_distributions(base_path: path).first
+          # update dist
+          dist_options = dist_options.except(:name, :base_path)
+          distributions_api.partial_update(distro._href, dist_options)
+        else
+          # create dist
+          distribution_data = distribution_class.new(dist_options)
+          distributions_api.create(distribution_data)
+        end
       end
 
       def refresh_distributions
-        path = repo.relative_path.sub(/^\//, '')
+        path = relative_path
         dist_ref = distribution_reference(path)
         if dist_ref
           update_distribution(path)
         else
           create_distribution(path)
         end
+      end
+
+      def create_mirror_distribution(path)
+        distribution_data = distribution_class.new(distribution_mirror_options(path))
+        distributions_api.create(distribution_data)
       end
 
       def create_distribution(path)
@@ -201,10 +316,6 @@ module Katello
         nil
       end
 
-      def create_version(options = {})
-        repository_versions_api.create(repository_reference.repository_href, options)
-      end
-
       def copy_units_by_href(unit_hrefs)
         tasks = []
         unit_hrefs.each_slice(COPY_UNIT_PAGE_SIZE) do |slice|
@@ -215,6 +326,23 @@ module Katello
 
       def copy_version(from_repository)
         create_version(:base_version => from_repository.version_href)
+      end
+
+      def mirror_repository_href
+        fetch_repository.try(:_href)
+      end
+
+      def mirror_remote_href
+        fetch_remote.try(:_href)
+      end
+
+      def create_mirror_version(options = {})
+        href = mirror_repository_href
+        repository_versions_api.create(href, options) if href
+      end
+
+      def create_version(options = {})
+        repository_versions_api.create(repository_reference.repository_href, options)
       end
 
       def save_distribution_references(hrefs)
@@ -241,11 +369,12 @@ module Katello
           url: root.url,
           proxy_url: root.http_proxy&.full_url
         }
+        remote_options[:url] = root.url unless root.url.blank?
         if root.upstream_username && root.upstream_password
-          remote_options.merge(username: root.upstream_username,
+          remote_options.merge!(username: root.upstream_username,
                                password: root.upstream_password)
         end
-        remote_options.merge(ssl_remote_options)
+        remote_options.merge!(ssl_remote_options)
       end
 
       def ssl_remote_options
@@ -266,11 +395,63 @@ module Katello
         end
       end
 
+      def common_mirror_remote_options
+        remote_options = {
+          name: backend_object_name,
+          url: external_url
+        }
+        remote_options.merge!(ssl_mirror_remote_options)
+      end
+
+      def ssl_mirror_remote_options
+        ueber_cert = ::Cert::Certs.ueber_cert(root.organization)
+        {
+          ssl_client_certificate: ueber_cert[:cert],
+          ssl_client_key: ueber_cert[:key],
+          ssl_ca_certificate: ::Cert::Certs.ca_cert,
+          ssl_validation: true
+        }
+      end
+
+      def external_url(force_https = false)
+        uri = URI.parse(::SmartProxy.pulp_master.pulp3_url)
+        uri.scheme = (root.unprotected && !force_https) ? 'http' : 'https'
+        uri.path = partial_repo_path
+        uri.to_s
+      end
+
+      def partial_repo_path
+        "/api/v3"
+      end
+
+      def needs_importer_updates?
+        false
+      end
+
+      def needs_distributor_updates?
+        false
+      end
+
       def lookup_version(href)
-        repository_versions_api.read(href)
+        repository_versions_api.read(href) if href
       rescue PulpcoreClient::ApiError => e
-        Rails.logger.error "Exception when calling RepositoriesApi->repositories_versions_read: #{e}"
+        Rails.logger.error "Exception when calling repository_versions_api->read: #{e}"
         nil
+      end
+
+      def lookup_publication(href)
+        publications_api.read(href) if href
+      rescue PulpcoreClient::ApiError => e
+        Rails.logger.error "Exception when calling publications_api->read: #{e}"
+        nil
+      end
+
+      def fetch_repository
+        list(name: backend_object_name).first
+      end
+
+      def fetch_remote
+        list_remotes(name: backend_object_name).first
       end
 
       def remove_content(content_units)
