@@ -4,6 +4,10 @@ module Katello
   module Pulp3
     class Repository
       class File < ::Katello::Pulp3::Repository
+        def api_exception_class
+          PulpFileClient::ApiError
+        end
+
         def remote_class
           PulpFileClient::FileRemote
         end

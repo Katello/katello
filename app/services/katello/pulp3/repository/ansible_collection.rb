@@ -4,8 +4,12 @@ module Katello
   module Pulp3
     class Repository
       class AnsibleCollection < ::Katello::Pulp3::Repository
-        def api_client
+        def self.api_client(smart_proxy)
           PulpAnsibleClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpAnsibleClient::Configuration))
+        end
+
+        def api_exception_class
+          PulpAnsibleClient::ApiError
         end
 
         def remote_class

@@ -13,6 +13,10 @@ module Katello
         @smart_proxy = smart_proxy
       end
 
+      def api_exception_class
+        fail NotImplementedError
+      end
+
       def remote_class
         fail NotImplementedError
       end
@@ -169,7 +173,7 @@ module Katello
 
       def delete_distribution(href)
         distributions_api.delete(href)
-      rescue PulpFileClient::ApiError => e
+      rescue api_exception_class => e
         raise e if e.code != 404
         nil
       end
@@ -188,7 +192,7 @@ module Katello
 
       def get_distribution(href)
         distributions_api.read(href)
-      rescue PulpFileClient::ApiError => e
+      rescue api_exception_class => e
         raise e if e.code != 404
         nil
       end
