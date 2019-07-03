@@ -1,72 +1,108 @@
 require 'katello_test_helper'
 
 module Katello
-  class SeedsTest < ActiveSupport::TestCase
-    setup do
-      Setting.stubs(:[]).with(:administrator).returns("root@localhost")
-      Setting.stubs(:[]).with(:send_welcome_email).returns(false)
-      Setting.stubs(:[]).with(regexp_matches(/katello_default_/)).returns("Crazy Template")
-      Setting.stubs(:[]).with(:default_location_subscribed_hosts).returns('')
-      Setting.stubs(:[]).with(:default_location_puppet_content).returns('')
-      Setting.stubs(:[]).with(:authorize_login_delegation_auth_source_user_autocreate).returns('EXTERNAL')
-      Setting.stubs(:[]).with(:entries_per_page).returns(20)
-      Setting.stubs(:[]).with(:bcrypt_cost).returns(5)
-      Setting.stubs(:[]).with(:default_locale).returns(nil)
-      Setting.stubs(:[]).with(:default_timezone).returns(nil)
+  module Seed
+    class LocationsTest < ActiveSupport::TestCase
+      setup do
+        Location.destroy_all
+      end
+
+      def seed_location
+        load "#{Katello::Engine.root}/db/seeds.d/101-locations.rb"
+      end
+
+      test 'with SEED_LOCATION' do
+        with_env('SEED_LOCATION' => 'test_location_seed') { seed_location }
+        assert Location.find_by_title('test_location_seed').present?
+      end
+
+      test 'without SEED_LOCATION' do
+        seed_location
+        # check that default_location_subscribed_hosts gets set
+        assert_equal Setting.find_by_name('default_location_subscribed_hosts').value, Location.first.title
+        # check that default_location_puppet_content gets set
+        assert_equal Setting.find_by_name('default_location_puppet_content').value, Location.first.title
+      end
     end
 
-    def seed
-      # Authorisation is disabled usually when run from a rake db:* task
-      User.current = FactoryBot.build(:user, :admin => true,
-                                       :organizations => [], :locations => [])
-      load File.expand_path("#{Rails.root}/db/seeds.rb", __FILE__)
+    class PulpProxyTest < ActiveSupport::TestCase
+      test "Make sure Pulp Proxy features exist" do
+        load "#{Katello::Engine.root}/db/seeds.d/104-proxy.rb"
+
+        assert Feature.find_by_name('Pulp').present?
+        assert Feature.find_by_name('Pulp Node').present?
+      end
     end
 
-    teardown do
-      User.current = nil
-    end
-  end
+    class MailNotificationsTest < ActiveSupport::TestCase
+      test "Make sure mail notification got setup" do
+        load "#{Katello::Engine.root}/db/seeds.d/106-mail_notifications.rb"
 
-  class LocationsTest < SeedsTest
-    setup do
-      Location.destroy_all
-    end
-
-    test 'with SEED_LOCATION' do
-      with_env('SEED_LOCATION' => 'test_location_seed') { seed }
-      assert Location.find_by_title('test_location_seed').present?
+        assert MailNotification[:host_errata_advisory]
+        assert MailNotification[:promote_errata]
+        assert MailNotification[:sync_errata]
+      end
     end
 
-    test 'without SEED_LOCATION' do
-      seed
-      # check that default_location_subscribed_hosts gets set
-      assert_equal Setting.find_by_name('default_location_subscribed_hosts').value, Location.first.title
-      # check that default_location_puppet_content gets set
-      assert_equal Setting.find_by_name('default_location_puppet_content').value, Location.first.title
-    end
-  end
+    class SubscriptionBookmarkstest < ActiveSupport::TestCase
+      test "Ensure hypervisor bookmark is created" do
+        load "#{Katello::Engine.root}/db/seeds.d/108-subcription-bookmarks.rb"
 
-  class PulpProxyTest < SeedsTest
-    test "Make sure Pulp Proxy features exist" do
-      seed
-      assert Feature.find_by_name('Pulp').present?
-      assert Feature.find_by_name('Pulp Node').present?
+        refute Bookmark.where(:name => "list hypervisors").empty?
+      end
     end
-  end
 
-  class MailNotificationsTest < SeedsTest
-    test "Make sure mail notification got setup" do
-      seed
-      assert MailNotification[:host_errata_advisory]
-      assert MailNotification[:promote_errata]
-      assert MailNotification[:sync_errata]
-    end
-  end
+    class HttpProxyTest < ActiveSupport::TestCase
+      def setup
+        Setting[:content_default_http_proxy] = ""
+      end
 
-  class SubscriptionBookmarkstest < SeedsTest
-    test "Ensure hypervisor bookmark is created" do
-      seed
-      refute Bookmark.where(:name => "list hypervisors").empty?
+      def run_proxy_seed
+        load "#{Katello::Engine.root}/db/seeds.d/115-http_proxy.rb"
+      end
+
+      test "Clears out default setting if not configured" do
+        SETTINGS[:katello][:cdn_proxy] = nil
+        Setting[:content_default_http_proxy] = "the proxy that shouldn't exist"
+        run_proxy_seed
+
+        assert_empty Setting[:content_default_http_proxy]
+      end
+
+      test "Creates proxy and assigns if not existing" do
+        refute ::HttpProxy.find_by(:name => 'foo.com')
+
+        SETTINGS[:katello][:cdn_proxy] = {
+          host: 'http://foo.com/',
+          port: 1234
+        }
+        run_proxy_seed
+
+        proxy = ::HttpProxy.find_by(:name => 'foo.com')
+        assert proxy
+        assert_equal 'http://foo.com:1234/', proxy.url
+
+        assert_equal 'foo.com', Setting[:content_default_http_proxy]
+      end
+
+      test "Updates existing" do
+        ::HttpProxy.create!(name: 'foo.com', url: 'http://foo.com')
+        assert_empty Setting[:content_default_http_proxy]
+
+        SETTINGS[:katello][:cdn_proxy] = {
+          host: 'http://foo.com/',
+          port: 5678,
+          user: 'angry',
+          password: 'sun'
+        }
+        run_proxy_seed
+
+        proxy = ::HttpProxy.find_by(:name => 'foo.com')
+        assert_equal 'angry', proxy.username
+        assert_equal 'sun', proxy.password
+        assert_equal 'http://foo.com:5678/', proxy.url
+        assert_equal 'foo.com', Setting[:content_default_http_proxy]
+      end
     end
   end
 end
