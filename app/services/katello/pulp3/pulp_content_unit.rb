@@ -5,12 +5,15 @@ module Katello
   module Pulp3
     class PulpContentUnit
       # Any class that extends this class should define:
-      # Class::CONTENT_TYPE
       # Class#update_model
 
-      # Any class that extends this class can define:
-      # Class.unit_handler (optional)
-      # Class::PULP_INDEXED_FIELDS (optional)
+      def self.content_api
+        fail NotImplementedError
+      end
+
+      def update_model
+        fail NotImplementedError
+      end
 
       attr_accessor :uuid
       attr_writer :backend_data
@@ -43,16 +46,13 @@ module Katello
         end
       end
 
-      def self.pulp_data(_href)
-        fail NotImplementedError
+      def self.pulp_data(href)
+        content_unit = self.class.content_api.read(href)
+        content_unit.as_json
       end
 
-      def self.fetch_all
-        fail NotImplementedError
-      end
-
-      def self.fetch_by_href(_href)
-        fail NotImplementedError
+      def self.content_unit_list(page_opts)
+        self.content_api.list page_opts
       end
 
       def backend_data

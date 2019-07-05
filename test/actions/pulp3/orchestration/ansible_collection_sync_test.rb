@@ -5,6 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
+      skip 'Waiting on ansible syncing to work reliably'
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:pulp3_ansible_collection_1)
       create_repo(@repo, @master)

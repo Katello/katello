@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-My_Files
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
+      - OpenAPI-Generator/3.0.0rc3/ruby
       Content-Type:
       - application/json
       Accept:
@@ -23,203 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 12 Jun 2019 02:30:23 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '354'
-      Via:
-      - 1.1 zeta.partello.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy81OWE3
-        MWZkOC1jOGM4LTQ0NjAtYTc5Mi05Nzk5MmYwNDhlYTMvIiwiX2NyZWF0ZWQi
-        OiIyMDE5LTA2LTEyVDAyOjI3OjE1LjExMzI5MloiLCJfdmVyc2lvbnNfaHJl
-        ZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNTlhNzFmZDgtYzhjOC00
-        NDYwLWE3OTItOTc5OTJmMDQ4ZWEzL3ZlcnNpb25zLyIsIl9sYXRlc3RfdmVy
-        c2lvbl9ocmVmIjpudWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24t
-        Q2FiaW5ldC1NeV9GaWxlcyIsImRlc2NyaXB0aW9uIjpudWxsfV19
-    http_version: 
-  recorded_at: Wed, 12 Jun 2019 02:30:23 GMT
-- request:
-    method: delete
-    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/59a71fd8-c8c8-4460-a792-97992f048ea3/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Wed, 12 Jun 2019 02:30:23 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '67'
-      Via:
-      - 1.1 zeta.partello.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2ExZGU2MDQ4LWFjZWUtNGU0
-        MS1iYWYwLThkMmRkN2I3ZDNjMC8ifQ==
-    http_version: 
-  recorded_at: Wed, 12 Jun 2019 02:30:23 GMT
-- request:
-    method: get
-    uri: https://zeta.partello.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Wed, 12 Jun 2019 02:30:23 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '506'
-      Via:
-      - 1.1 zeta.partello.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlbW90ZXMvZmlsZS9maWxl
-        LzkyMjAxMmU2LWEyMjctNDE3OS04ZmM5LWJkYjY5OGMyMTJmNC8iLCJfY3Jl
-        YXRlZCI6IjIwMTktMDYtMTJUMDI6Mjc6MTUuMzQwMDA4WiIsIl90eXBlIjoi
-        ZmlsZS5maWxlIiwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
-        ZXQtTXlfRmlsZXMiLCJ1cmwiOiJodHRwOi8vdGVzdC90ZXN0Ly9QVUxQX01B
-        TklGRVNUIiwidmFsaWRhdGUiOnRydWUsInNzbF9jYV9jZXJ0aWZpY2F0ZSI6
-        bnVsbCwic3NsX2NsaWVudF9jZXJ0aWZpY2F0ZSI6bnVsbCwic3NsX2NsaWVu
-        dF9rZXkiOm51bGwsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJwcm94eV91cmwi
-        Om51bGwsIl9sYXN0X3VwZGF0ZWQiOiIyMDE5LTA2LTEyVDAyOjI3OjE1LjM0
-        MDAzMVoiLCJkb3dubG9hZF9jb25jdXJyZW5jeSI6MjAsInBvbGljeSI6Imlt
-        bWVkaWF0ZSJ9XX0=
-    http_version: 
-  recorded_at: Wed, 12 Jun 2019 02:30:23 GMT
-- request:
-    method: delete
-    uri: https://zeta.partello.example.com/pulp/api/v3/remotes/file/file/922012e6-a227-4179-8fc9-bdb698c212f4/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Wed, 12 Jun 2019 02:30:23 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '67'
-      Via:
-      - 1.1 zeta.partello.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzQxODhkOTE0LTJkOWYtNDk0
-        Yi1hYTBjLWU2NzI0MzM0N2Y5ZS8ifQ==
-    http_version: 
-  recorded_at: Wed, 12 Jun 2019 02:30:23 GMT
-- request:
-    method: get
-    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Wed, 12 Jun 2019 02:30:24 GMT
+      - Mon, 01 Jul 2019 17:36:55 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -233,23 +37,23 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 zeta.partello.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Wed, 12 Jun 2019 02:30:24 GMT
+  recorded_at: Mon, 01 Jul 2019 17:36:55 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      - OpenAPI-Generator/0.1.0b1.dev01561831654/ruby
       Content-Type:
       - application/json
       Accept:
@@ -264,7 +68,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 12 Jun 2019 02:30:24 GMT
+      - Mon, 01 Jul 2019 17:36:55 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -278,17 +82,107 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 zeta.partello.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Wed, 12 Jun 2019 02:30:24 GMT
+  recorded_at: Mon, 01 Jul 2019 17:36:55 GMT
+- request:
+    method: get
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev01561831654/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 01 Jul 2019 17:36:55 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 devel2.balmora.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Mon, 01 Jul 2019 17:36:55 GMT
+- request:
+    method: get
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - OpenAPI-Generator/0.1.0b1.dev01561831654/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 01 Jul 2019 17:36:55 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 devel2.balmora.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Mon, 01 Jul 2019 17:36:55 GMT
 - request:
     method: post
-    uri: https://zeta.partello.example.com/pulp/api/v3/repositories/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/
     body:
       encoding: UTF-8
       base64_string: |
@@ -296,7 +190,7 @@ http_interactions:
         cyJ9
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc2/ruby
+      - OpenAPI-Generator/3.0.0rc3/ruby
       Content-Type:
       - application/json
       Accept:
@@ -311,13 +205,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Wed, 12 Jun 2019 02:30:24 GMT
+      - Mon, 01 Jul 2019 17:36:55 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/ede84d1f-93dd-4481-85fe-b3ff59d6c2fa/"
+      - "/pulp/api/v3/repositories/9d1a5f8f-d88a-45d4-9928-4d9723a6328f/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -327,32 +221,31 @@ http_interactions:
       Content-Length:
       - '302'
       Via:
-      - 1.1 zeta.partello.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZWRlODRkMWYt
-        OTNkZC00NDgxLTg1ZmUtYjNmZjU5ZDZjMmZhLyIsIl9jcmVhdGVkIjoiMjAx
-        OS0wNi0xMlQwMjozMDoyNC40ODUzMzNaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
-        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2VkZTg0ZDFmLTkzZGQtNDQ4MS04
-        NWZlLWIzZmY1OWQ2YzJmYS92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvOWQxYTVmOGYt
+        ZDg4YS00NWQ0LTk5MjgtNGQ5NzIzYTYzMjhmLyIsIl9jcmVhdGVkIjoiMjAx
+        OS0wNy0wMVQxNzozNjo1NS45NTY5NDlaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
+        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzlkMWE1ZjhmLWQ4OGEtNDVkNC05
+        OTI4LTRkOTcyM2E2MzI4Zi92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
         aHJlZiI6bnVsbCwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
         ZXQtTXlfRmlsZXMiLCJkZXNjcmlwdGlvbiI6bnVsbH0=
     http_version: 
-  recorded_at: Wed, 12 Jun 2019 02:30:24 GMT
+  recorded_at: Mon, 01 Jul 2019 17:36:55 GMT
 - request:
     method: post
-    uri: https://zeta.partello.example.com/pulp/api/v3/remotes/file/file/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1NeV9GaWxl
-        cyIsInVybCI6Imh0dHA6Ly90ZXN0L3Rlc3QvL1BVTFBfTUFOSUZFU1QiLCJ2
-        YWxpZGF0ZSI6dHJ1ZSwic3NsX3ZhbGlkYXRpb24iOnRydWUsInBvbGljeSI6
-        ImltbWVkaWF0ZSJ9
+        cyIsInVybCI6Imh0dHA6Ly90ZXN0L3Rlc3QvL1BVTFBfTUFOSUZFU1QiLCJz
+        c2xfdmFsaWRhdGlvbiI6dHJ1ZSwicG9saWN5IjoiaW1tZWRpYXRlIn0=
     headers:
       User-Agent:
-      - OpenAPI-Generator/0.1.0b1.dev.1560274132/ruby
+      - OpenAPI-Generator/0.1.0b1.dev01561831654/ruby
       Content-Type:
       - application/json
       Accept:
@@ -367,13 +260,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Wed, 12 Jun 2019 02:30:24 GMT
+      - Mon, 01 Jul 2019 17:36:56 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/file/file/0869a657-d13b-40ef-a82f-2426c3e4ec66/"
+      - "/pulp/api/v3/remotes/file/file/a7c76d89-609b-4d63-a7d5-932f6bfa8496/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -383,21 +276,21 @@ http_interactions:
       Content-Length:
       - '454'
       Via:
-      - 1.1 zeta.partello.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS8wODY5
-        YTY1Ny1kMTNiLTQwZWYtYTgyZi0yNDI2YzNlNGVjNjYvIiwiX2NyZWF0ZWQi
-        OiIyMDE5LTA2LTEyVDAyOjMwOjI0LjY2MTUyNVoiLCJfdHlwZSI6ImZpbGUu
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS9hN2M3
+        NmQ4OS02MDliLTRkNjMtYTdkNS05MzJmNmJmYTg0OTYvIiwiX2NyZWF0ZWQi
+        OiIyMDE5LTA3LTAxVDE3OjM2OjU2LjE0NDUwNFoiLCJfdHlwZSI6ImZpbGUu
         ZmlsZSIsIm5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15
         X0ZpbGVzIiwidXJsIjoiaHR0cDovL3Rlc3QvdGVzdC8vUFVMUF9NQU5JRkVT
         VCIsInZhbGlkYXRlIjp0cnVlLCJzc2xfY2FfY2VydGlmaWNhdGUiOm51bGws
         InNzbF9jbGllbnRfY2VydGlmaWNhdGUiOm51bGwsInNzbF9jbGllbnRfa2V5
         IjpudWxsLCJzc2xfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjpudWxs
-        LCJfbGFzdF91cGRhdGVkIjoiMjAxOS0wNi0xMlQwMjozMDoyNC42NjE1Mzla
+        LCJfbGFzdF91cGRhdGVkIjoiMjAxOS0wNy0wMVQxNzozNjo1Ni4xNDQ1MjNa
         IiwiZG93bmxvYWRfY29uY3VycmVuY3kiOjIwLCJwb2xpY3kiOiJpbW1lZGlh
         dGUifQ==
     http_version: 
-  recorded_at: Wed, 12 Jun 2019 02:30:24 GMT
+  recorded_at: Mon, 01 Jul 2019 17:36:56 GMT
 recorded_with: VCR 3.0.3

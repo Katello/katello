@@ -115,18 +115,17 @@ module Katello
         @pulp_api ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
       end
 
-      def pulp3_api
-        client = ::Pulp::V3::Api.new
-        client.configure(
-          host: pulp3_host!,
-          scheme: 'https',
-          username: 'admin',
-          password: 'password',
-          cert_file: ::Cert::Certs.ssl_client_cert,
-          key_file: ::Cert::Certs.ssl_client_key,
-          debugging: true,
-          logger: ::Foreman::Logging.logger('katello/pulp_rest'))
-        client
+      def pulp3_configuration(config_class)
+        config_class.new do |config|
+          config.host = pulp3_host!
+          config.scheme = 'https'
+          config.username = 'admin'
+          config.password = 'password'
+          config.cert_file = ::Cert::Certs.ssl_client_cert
+          config.key_file = ::Cert::Certs.ssl_client_key
+          config.debugging = true
+          config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
+        end
       end
 
       def backend_service_type(repository)
