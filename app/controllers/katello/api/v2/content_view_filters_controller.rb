@@ -62,6 +62,8 @@ module Katello
                                                        "(package filter only)")
     param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
     param :repository_ids, Array, :desc => N_("list of repository ids")
+    param :description, String, :desc => N_("description of the filter"), :required => false
+
     def update
       @filter.update_attributes!(filter_params)
       respond :resource => @filter

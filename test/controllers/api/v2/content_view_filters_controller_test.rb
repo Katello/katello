@@ -112,6 +112,13 @@ module Katello
       assert_equal @filter.reload.name, "New Filter Name"
     end
 
+    def test_update_description
+      put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter, :description => "New Description" }
+      assert_response :success
+      assert_template 'api/v2/common/update'
+      assert_equal @filter.reload.description, "New Description"
+    end
+
     def test_update_repositories
       repository = Repository.find(katello_repositories(:fedora_17_x86_64).id)
       assert_includes @content_view.repositories.map(&:id), repository.id
