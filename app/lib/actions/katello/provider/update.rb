@@ -15,22 +15,21 @@ module Actions
         private
 
         def update_url(provider, base_url)
-          current_base_url = provider.repository_url
           provider.update_attributes!(:repository_url => base_url)
 
           if provider.redhat_provider?
             provider.products.enabled.each do |product|
-              update_repository_urls(product, current_base_url, base_url)
+              update_repository_urls(product)
             end
           end
         end
 
-        def update_repository_urls(product, current_base_url, new_base_url)
-          product.repositories.each do |repository|
+        def update_repository_urls(product)
+          product.repositories.where(:library_instance_id => nil).each do |repository|
             next unless repository.url
-            path = repository.url.split(current_base_url)[1]
-            url = "#{new_base_url}#{path}"
-            plan_action(::Actions::Katello::Repository::Update, repository.root, :url => url)
+            root = repository.root
+            url = root.repo_mapper.feed_url
+            plan_action(::Actions::Katello::Repository::Update, root, :url => url)
           end
         end
       end

@@ -4,10 +4,11 @@ some_content:
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
   label:        fedora
   cp_content_id: 1
+  content_url: /pub/fedora/linux/releases/$releasever/Everything/$basearch/os
 
 rhel_content:
   name:         rhel
   label:        rhel
   cp_content_id: 69
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
-
+  content_url: /content/dist/rhel/server/$releasever/$basearch/os

@@ -279,16 +279,20 @@ module Katello
       self.content.content_url
     end
 
+    def repo_mapper
+      Katello::Candlepin::RepositoryMapper.new(self.product, self.content, self.substitutions)
+    end
+
     def calculate_updated_name
       fail _("Cannot calculate name for custom repos") if custom?
-      Katello::Candlepin::RepositoryMapper.new(self.product, self.content, self.substitutions).name
+      repo_mapper.name
     end
 
     def substitutions
       {
         :releasever => self.minor,
         :basearch => self.arch
-      }
+      }.compact
     end
 
     class Jail < ::Safemode::Jail
