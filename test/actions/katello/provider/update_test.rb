@@ -19,14 +19,24 @@ module Actions
       plan_action(action, @provider, :redhat_repository_url => 'http://localhost')
       repositories = @provider.products.enabled.collect { |product| product.repositories }
       repositories.flatten!
-      root_repositories = repositories.collect do |repository|
-        next unless repository.url
-        [repository.root, {:url => "http://localhost"}]
+      root_repositories = repositories.reject { |r| r.url.blank? }.group_by(&:root).collect do |root, _|
+        content_url = root.content.content_url
+        assert_not_empty content_url
+
+        path = root.repo_mapper.path
+        assert_match(/#{content_url.gsub(/\$[^\/]+/, "[^\/]+")}/, path)
+
+        [root, {:url => "http://localhost" + path}]
       end
 
+      actual_repositories = []
       assert_action_planed_with(action, repository_update_class) do |repository|
         assert_includes root_repositories, repository
+        actual_repositories << repository
       end
+
+      # Make sure we don't update the same repo multiple times
+      assert_equal root_repositories.uniq.sort, actual_repositories.sort
     end
   end
 end
