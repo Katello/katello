@@ -1,4 +1,6 @@
 module Katello
+  HOST_TASKS_QUEUE = :hosts_queue
+
   class Engine < ::Rails::Engine
     isolate_namespace Katello
 
@@ -63,6 +65,10 @@ module Katello
 
     initializer "katello.register_actions", :before => :finisher_hook do |_app|
       ForemanTasks.dynflow.require!
+      if (Setting.table_exists? rescue(false)) && Setting['host_tasks_workers_pool_size'].to_i > 0
+        ForemanTasks.dynflow.config.queues.add(HOST_TASKS_QUEUE, :pool_size => Setting['host_tasks_workers_pool_size'])
+      end
+
       action_paths = %W(#{Katello::Engine.root}/app/lib/actions
                         #{Katello::Engine.root}/app/lib/headpin/actions
                         #{Katello::Engine.root}/app/lib/katello/actions)
