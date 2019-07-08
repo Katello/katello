@@ -2,6 +2,10 @@ module Actions
   module Katello
     module Host
       class UploadPackageProfile < Actions::EntryAction
+        def queue
+          ::Katello::HOST_TASKS_QUEUE
+        end
+
         def plan(host, profile_string)
           action_subject host
 
