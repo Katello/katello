@@ -4,6 +4,10 @@ module Actions
       class UploadProfiles < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
 
+        def queue
+          ::Katello::HOST_TASKS_QUEUE
+        end
+
         def plan(host, profile_string)
           action_subject host
 
