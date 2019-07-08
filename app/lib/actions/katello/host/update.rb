@@ -4,6 +4,10 @@ module Actions
       class Update < Actions::EntryAction
         middleware.use ::Actions::Middleware::RemoteAction
 
+        def queue
+          ::Katello::HOST_TASKS_QUEUE
+        end
+
         def plan(host, consumer_params = nil)
           input[:hostname] = host.name
           action_subject host

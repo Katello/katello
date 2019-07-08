@@ -136,7 +136,9 @@ class Setting::Content < Setting
         self.set('host_dmi_uuid_duplicates',
                  N_("If hosts fail to register because of duplicate DMI UUIDs " \
                     "add their comma-separated values here. Subsequent registrations will generate a unique DMI UUID for the affected hosts."),
-                 [], N_('Host Duplicate DMI UUIDs'))
+                 [], N_('Host Duplicate DMI UUIDs')),
+        self.set('host_tasks_workers_pool_size', N_("Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required."),
+                 5, N_('Host Tasks Workers Pool Size'))
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end
     true

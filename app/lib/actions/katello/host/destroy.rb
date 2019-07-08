@@ -4,6 +4,10 @@ module Actions
       class Destroy < Actions::EntryAction
         middleware.use ::Actions::Middleware::RemoteAction
 
+        def queue
+          ::Katello::HOST_TASKS_QUEUE
+        end
+
         def plan(host, options = {})
           action_subject(host)
           # normalize options before passing through to run phase
