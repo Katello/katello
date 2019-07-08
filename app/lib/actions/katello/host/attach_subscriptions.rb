@@ -2,6 +2,10 @@ module Actions
   module Katello
     module Host
       class AttachSubscriptions < Actions::EntryAction
+        def queue
+          ::Katello::HOST_TASKS_QUEUE
+        end
+
         def plan(host, pools_with_quantities_params)
           action_subject(host)
           sequence do
