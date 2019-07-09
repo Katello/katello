@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://centos7-katello-vcr.area51.example.com:8443/candlepin/owners/scenario_test
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.5p157
+      Authorization:
+      - OAuth oauth_consumer_key="jbxQLXDhV7AtJn2jfUZyxZx7pMymN8QJ", oauth_nonce="p7w0hx7pvNE6suTzb5ACWX6P3IGHlZ1ne8xqob3w",
+        oauth_signature="4XBdi2V%2FbAAkAxNgRIBgzOcLGR8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1562688704", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 22153c9f-2d75-416f-b53c-24ea274b2e11
+      X-Version:
+      - 2.7.1-1
+      - 2.7.1-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 09 Jul 2019 16:11:44 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIHNjZW5h
+        cmlvX3Rlc3QgY291bGQgbm90IGJlIGZvdW5kLiIsInJlcXVlc3RVdWlkIjoi
+        MjIxNTNjOWYtMmQ3NS00MTZmLWI1M2MtMjRlYTI3NGIyZTExIn0=
+    http_version: 
+  recorded_at: Tue, 09 Jul 2019 16:11:44 GMT
+recorded_with: VCR 3.0.3

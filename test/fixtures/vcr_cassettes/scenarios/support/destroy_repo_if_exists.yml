@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://centos7-katello-vcr.area51.example.com/pulp/api/v2/repositories/scenario_test/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Tue, 09 Jul 2019 16:11:48 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '422'
+      Etag:
+      - '"5ac546ec21028925462ba3914390e451"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PXNjZW5hcmlvX3Rlc3QiLCAiX2hyZWYiOiAiL3B1bHAvYXBp
+        L3YyL3JlcG9zaXRvcmllcy9zY2VuYXJpb190ZXN0Lz8iLCAiaHR0cF9zdGF0
+        dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEi
+        OiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJzY2VuYXJpb190ZXN0
+        In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVw
+        b3NpdG9yeT1zY2VuYXJpb190ZXN0IiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
+        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
+        InNjZW5hcmlvX3Rlc3QifX0=
+    http_version: 
+  recorded_at: Tue, 09 Jul 2019 16:11:48 GMT
+recorded_with: VCR 3.0.3
