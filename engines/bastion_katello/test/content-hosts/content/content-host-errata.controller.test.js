@@ -48,7 +48,11 @@ describe('Controller: ContentHostErrataController', function() {
             this.refresh = function() {nutupaneMock.refresh()};
             this.load = function () {nutupaneMock.load()};
             this.enableSelectAllResults = function () {};
-            this.getAllSelectedResults = function() {return [mockErratum];}
+            this.getAllSelectedResults = function() {
+                return {
+                    included: { ids: [mockErratum.errata_id] }
+                };
+            };
         };
         HostErratum = {
             get: function() {return []},
@@ -99,10 +103,20 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn($scope.table, "selectAll");
         spyOn($scope, "transitionTo");
         $scope.applySelected();
-        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, bulk_errata_ids: [{errata_id: mockErratum.errata_id}]},
+        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, bulk_errata_ids: {included: { ids: [mockErratum.errata_id]}}},
                                                          jasmine.any(Function));
         expect($scope.transitionTo).toHaveBeenCalledWith('content-host.tasks.details', {taskId: mockTask.id});
         expect($scope.table.selectAll).toHaveBeenCalledWith(false);
+    });
+
+    it("can apply errata with remote execution", function() {
+        $scope.remoteExecutionByDefault = true;
+
+        $scope.applySelected();
+
+        expect($scope.errataActionFormValues.hostIds).toEqual(host.id);
+        expect($scope.errataActionFormValues.customize).toEqual(false);
+        expect($scope.errataActionFormValues.errata).toEqual(mockErratum.errata_id);
     });
 
     it("provide a way to regenerate applicability", function() {
