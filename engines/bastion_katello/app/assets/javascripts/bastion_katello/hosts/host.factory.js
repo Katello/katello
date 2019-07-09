@@ -27,7 +27,7 @@ angular.module('Bastion.hosts').factory('Host',
         };
 
         resource.prototype.isDebEnabled = function() {
-            return angular.isDefined(this.operatingsystem_name) && (this.operatingsystem_name.includes("Debian") || this.operatingsystem_name.includes("Ubuntu"));
+            return _.isString(this.operatingsystem_name) && (this.operatingsystem_name.indexOf("Debian") >= 0 || this.operatingsystem_name.indexOf("Ubuntu") >= 0);
         };
 
         return resource;
