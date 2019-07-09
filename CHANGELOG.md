@@ -1,3 +1,30 @@
+# 3.12.1 Iron Stout (2019-07-09)
+
+## Features
+
+## Bug Fixes
+
+### Inter Server Sync
+ * content-view version export fail for "Default Organization View 1.0" ([#27187](https://projects.theforeman.org/issues/27187), [ebf4e689](https://github.com/Katello/hammer-cli-katello.git/commit/ebf4e68969d7885741178edeebed65abe5fde9ce))
+
+### Organizations and Locations
+ * 'initial organization' and 'initial location' does not assign to Satellite/Integral Capsule ([#27014](https://projects.theforeman.org/issues/27014), [8dbaa7e7](https://github.com/Katello/katello.git/commit/8dbaa7e78793c57380b9f472bad43cc8c7275b0a))
+
+### Hosts
+ * Can't register systems without a UUID ([#26825](https://projects.theforeman.org/issues/26825), [a1911c7b](https://github.com/Katello/katello.git/commit/a1911c7b68208c54d0f8667dfbc12a17bebf240c))
+
+### Web UI
+ * Show system purpose attributes on Subscription Details page ([#26685](https://projects.theforeman.org/issues/26685), [5181e54a](https://github.com/Katello/katello.git/commit/5181e54a6e53fa5f66a894e9cb5089fde654deec))
+
+### API
+ * Sequential Actions::Katello::Host::Update calls from subscription-manager can fail under load ([#25422](https://projects.theforeman.org/issues/25422), [ae116f7f](https://github.com/Katello/katello.git/commit/ae116f7fbd1210717368fd74af60829717f25302))
+
+### Other
+ * "Multi-entitlement" is missing on Subscription Details page ([#26794](https://projects.theforeman.org/issues/26794), [6594adaf](https://github.com/Katello/katello.git/commit/6594adaf0d3c71e61cb8f7568fef9360b2ce5cda), [1b0ecba1](https://github.com/Katello/katello.git/commit/1b0ecba1ce15770c82e185e6cc83e446ca73af0f))
+ * Display issues with SUSE-errata ([#26776](https://projects.theforeman.org/issues/26776), [e0ec6f66](https://github.com/Katello/katello.git/commit/e0ec6f66f6af28b2fe1e1adced60b2ba73b6b9e1))
+ * Don't fail repo destroy when Content is missing ([#26774](https://projects.theforeman.org/issues/26774), [f8da2944](https://github.com/Katello/katello.git/commit/f8da294408b308a9252246817f669e11ce010cd7))
+ * Foreign-key violation on upgrade - AddContentConstraints ([#26733](https://projects.theforeman.org/issues/26733), [6f45d27e](https://github.com/Katello/katello.git/commit/6f45d27e46e226a07f40e0ffe2c9103114860269))
+ * changing gpg key on a repository has no effect ([#26443](https://projects.theforeman.org/issues/26443), [a6196edf](https://github.com/Katello/katello.git/commit/a6196edf11fbbdd6a14720a3c6f32f6b906c62f2))
 # 3.12.0 Iron Stout (2019-06-04)
 
 ## Features
