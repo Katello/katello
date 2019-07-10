@@ -21,12 +21,7 @@ module Actions
             end
           end
 
-          if options[:minor] && options[:major]
-            version = content_view.create_new_version(options[:major], options[:minor])
-          else
-            version = content_view.create_new_version
-          end
-
+          version = version_for_publish(content_view, options)
           library = content_view.organization.library
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
@@ -60,6 +55,8 @@ module Actions
             plan_action(Katello::Foreman::ContentUpdate, library, content_view)
             plan_action(ContentView::ErrataMail, content_view, library)
             plan_self(history_id: history.id, content_view_id: content_view.id,
+                      auto_publish_composite_ids: auto_publish_composite_ids(content_view),
+                      content_view_version_name: version.name,
                       content_view_version_id: version.id,
                       environment_id: library.id, user_id: ::User.current.id)
           end
@@ -70,34 +67,13 @@ module Actions
         end
 
         def run
-          view = ::Katello::ContentView.find(input[:content_view_id])
-          version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-          output[:content_view_id] = view.id
-          output[:content_view_version_id] = version.id
-          unless view.composite?
-            output[:composite_version_auto_published] = []
-            output[:composite_view_publish_failed] = []
-            output[:composite_auto_publish_task_id] = []
-
-            # Iterate through the list of composites
-            # this component belongs to
-            view.component_composites.each do |cv_component|
-              if cv_component.latest? && cv_component.composite_content_view.auto_publish?
-                description = _("Auto Publish - Triggered by '%{component}'") %
-                                { :component => version.name }
-                begin
-                  task = ForemanTasks.async_task(::Actions::Katello::ContentView::Publish,
-                                          cv_component.composite_content_view,
-                                          description,
-                                          :triggered_by => version)
-                  output[:composite_auto_publish_task_id] << task.id
-                  output[:composite_version_auto_published] << task.input[:content_view_version_id]
-                rescue StandardError
-                  ::Katello::UINotifications::ContentView::AutoPublishFailure.deliver!(
-                                              cv_component.composite_content_view)
-                  output[:composite_view_publish_failed] << cv_component.composite_content_view.id
-                end
-              end
+          metadata = {
+            description: _("Auto Publish - Triggered by '%s'") % input[:content_view_version_name],
+            triggered_by: input[:content_view_version_id]
+          }
+          input[:auto_publish_composite_ids].each do |composite_id|
+            ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id) do |attrs|
+              attrs[:metadata] = metadata
             end
           end
         end
@@ -136,6 +112,18 @@ module Actions
           end
           content_view.repos(content_view.organization.library).find_all do |repo|
             !library_instances.include?(repo.library_instance_id)
+          end
+        end
+
+        def auto_publish_composite_ids(content_view)
+          content_view.auto_publish_components.pluck(:composite_content_view_id)
+        end
+
+        def version_for_publish(content_view, options)
+          if options[:minor] && options[:major]
+            content_view.create_new_version(options[:major], options[:minor])
+          else
+            content_view.create_new_version
           end
         end
       end

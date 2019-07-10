@@ -7,9 +7,53 @@ module ::Actions::Katello::ContentView
     include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
+    let(:success_task) { ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good") }
 
     before(:all) do
       set_user
+    end
+  end
+
+  class PublishTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::Publish }
+    let(:content_view) { katello_content_views(:no_environment_view) }
+
+    it 'plans' do
+      action.stubs(:task).returns(success_task)
+
+      action.expects(:plan_self)
+
+      plan_action(action, content_view)
+    end
+
+    context 'run phase' do
+      it 'creates auto-publish events for non-composite views' do
+        composite_view = katello_content_views(:composite_view)
+        action.stubs(:task).returns(success_task)
+
+        FactoryBot.create(:katello_content_view_component,
+                          latest: true,
+                          composite_content_view: composite_view,
+                          content_view: content_view)
+
+        plan_action action, content_view
+        run_action action
+
+        event = Katello::Event.find_by(event_type: Katello::Events::AutoPublishCompositeView::EVENT_TYPE, object_id: composite_view.id)
+        version = content_view.versions.last
+
+        assert_equal event.metadata[:triggered_by], version.id
+        assert_equal event.metadata[:description], "Auto Publish - Triggered by '#{version.name}'"
+      end
+
+      it 'does nothing for non-composite view' do
+        action.stubs(:task).returns(success_task)
+
+        plan_action action, katello_content_views(:no_environment_view)
+        run_action action
+
+        assert_empty Katello::Event.all
+      end
     end
   end
 
@@ -26,9 +70,8 @@ module ::Actions::Katello::ContentView
 
     it 'plans' do
       assert_empty content_view_version.history
-      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
-      ::Actions::Katello::ContentView::PromoteToEnvironment.any_instance.stubs(:task).returns(task)
-      create_and_plan_action(action_class, content_view_version, environment, 'description')
+      action.stubs(:task).returns(success_task)
+      plan_action(action, content_view_version, environment, 'description')
       refute_empty content_view_version.history
     end
   end
@@ -116,8 +159,7 @@ module ::Actions::Katello::ContentView
       cve.hosts.each { |host| host.content_facet.destroy }
       Katello::ContentViewEnvironment.stubs(:where).returns([cve])
 
-      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
-      action.stubs(:task).returns(task)
+      action.stubs(:task).returns(success_task)
 
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, environment)
@@ -134,8 +176,7 @@ module ::Actions::Katello::ContentView
 
     it 'fails to plan for a promoted version' do
       version = content_view.versions.first
-      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
-      action.stubs(:task).returns(task)
+      action.stubs(:task).returns(success_task)
 
       assert_raises(RuntimeError) do
         plan_action(action, version)
@@ -145,8 +186,7 @@ module ::Actions::Katello::ContentView
     it 'plans' do
       version = Katello::ContentViewVersion.create!(:major => 2,
                                                     :content_view => content_view)
-      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
-      action.stubs(:task).returns(task)
+      action.stubs(:task).returns(success_task)
 
       action.expects(:action_subject).with(version.content_view)
       plan_action(action, version)
@@ -156,8 +196,7 @@ module ::Actions::Katello::ContentView
 
   class RemoveTest < TestBase
     before(:all) do
-      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
-      ::Actions::Katello::ContentView::Remove.any_instance.stubs(:task).returns(task)
+      action.stubs(:task).returns(success_task)
       User.current = User.first
     end
 

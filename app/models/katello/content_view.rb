@@ -318,6 +318,10 @@ module Katello
       components.select { |component| component.repositories.where(:library_instance => library_instance).any? }
     end
 
+    def auto_publish_components
+      component_composites.where(latest: true).joins(:composite_content_view).where(self.class.table_name => {auto_publish: true})
+    end
+
     def publish_repositories
       repositories = composite? ? repositories_to_publish_by_library_instance.values : repositories_to_publish
       repositories.each do |repos|
