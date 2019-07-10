@@ -1,5 +1,5 @@
 module Katello
-  class PermissionCreator
+  class PermissionCreator # rubocop:disable Metrics/ClassLength
     def initialize(plugin)
       @plugin = plugin
     end
@@ -78,6 +78,7 @@ module Katello
                    'katello/api/v2/errata' => [:index, :show, :auto_complete_search, :compare, :available_errata],
                    'katello/api/v2/puppet_modules' => [:index, :show, :auto_complete_search, :compare],
                    'katello/api/v2/module_streams' => [:index, :show, :auto_complete_search, :compare],
+                   'katello/api/v2/ansible_collections' => [:index, :show, :auto_complete_search, :compare],
                    'katello/content_views' => [:auto_complete, :auto_complete_search],
                    'katello/errata' => [:short_details, :auto_complete],
                    'katello/packages' => [:details, :auto_complete],
@@ -93,6 +94,7 @@ module Katello
                                                 :errata_items,
                                                 :puppet_modules_items,
                                                 :module_streams,
+                                                :ansible_collections,
                                                 :view_packages,
                                                 :view_puppet_modules,
                                                 :repo_packages,
@@ -261,6 +263,7 @@ module Katello
                            'katello/api/v2/errata' => [:index, :show, :auto_complete_search, :compare],
                            'katello/api/v2/puppet_modules' => [:index, :show, :auto_complete_search, :compare],
                            'katello/api/v2/module_streams' => [:index, :show, :auto_complete_search, :compare, :auto_complete_name],
+                           'katello/api/v2/ansible_collections' => [:index, :show, :auto_complete_search, :compare],
                            'katello/errata' => [:short_details, :auto_complete],
                            'katello/packages' => [:details, :auto_complete],
                            'katello/puppet_modules' => [:show],
@@ -276,6 +279,7 @@ module Katello
                                                         :errata_items,
                                                         :puppet_modules_items,
                                                         :module_streams,
+                                                        :ansible_collections,
                                                         :repo_packages,
                                                         :repo_errata,
                                                         :repo_puppet_modules,

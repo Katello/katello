@@ -56,7 +56,9 @@ module Katello
       :katello_repository_module_streams => Katello::RepositoryModuleStream,
       :katello_content_facet_applicable_module_streams => Katello::ContentFacetApplicableModuleStream,
       :katello_available_module_streams => Katello::AvailableModuleStream,
-      :katello_host_available_module_streams => Katello::HostAvailableModuleStream
+      :katello_host_available_module_streams => Katello::HostAvailableModuleStream,
+      :katello_ansible_collections => Katello::AnsibleCollection,
+      :katello_repository_ansible_collections => Katello::RepositoryAnsibleCollection
     }.freeze
 
     # rubocop:disable Naming/AccessorMethodName

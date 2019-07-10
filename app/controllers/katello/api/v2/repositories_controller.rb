@@ -78,6 +78,7 @@ module Katello
     param :erratum_id, String, :desc => N_("Id of an erratum to find repositories that contain the erratum")
     param :rpm_id, String, :desc => N_("Id of a rpm package to find repositories that contain the rpm")
     param :file_id, String, :desc => N_("Id of a file to find repositories that contain the file")
+    param :ansible_collection_id, String, :desc => N_("Id of an ansible collection to find repositories that contain the ansible collection")
     param :ostree_branch_id, String, :desc => N_("Id of an ostree branch to find repositories that contain that branch")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :archived, :bool, :desc => N_("show archived repositories")
@@ -182,6 +183,11 @@ module Katello
       if params[:file_id]
         query = query.joins(:files)
           .where("#{FileUnit.table_name}.id" => FileUnit.with_identifiers(params[:file_id]))
+      end
+
+      if params[:ansible_collection_id]
+        query = query.joins(:ansible_collections)
+                    .where("#{AnsibleCollection.table_name}.id" => AnsibleCollection.with_identifiers(params[:ansible_collection_id]))
       end
 
       if params[:ostree_branch_id]

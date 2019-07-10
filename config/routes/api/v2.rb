@@ -122,6 +122,13 @@ Katello::Engine.routes.draw do
           end
         end
 
+        api_resources :ansible_collections, :only => [:index, :show] do
+          collection do
+            get :auto_complete_search
+            get :compare
+          end
+        end
+
         api_resources :ostree_branches, :only => [:index, :show] do
           collection do
             get :auto_complete_search
@@ -355,6 +362,7 @@ Katello::Engine.routes.draw do
           api_resources :docker_tags, :only => [:index, :show]
           api_resources :debs, :only => [:index, :show]
           api_resources :module_streams, :only => [:index, :show]
+          api_resources :ansible_collections, :only => [:index, :show]
 
           api_resources :ostree_branches, :only => [:index, :show]
 
