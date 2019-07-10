@@ -32,7 +32,12 @@ const ModalProgressBar = (props) => {
 ModalProgressBar.propTypes = {
   show: PropTypes.bool.isRequired,
   container: PropTypes.shape({}),
-  task: PropTypes.shape({}),
+  task: PropTypes.shape({
+    progress: PropTypes.number,
+    humanized: PropTypes.shape({
+      action: PropTypes.string,
+    }),
+  }),
 };
 
 ModalProgressBar.defaultProps = {
