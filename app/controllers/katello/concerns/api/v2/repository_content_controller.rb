@@ -227,6 +227,8 @@ module Katello
           _("File")
         when "Katello::ModuleStream"
           _("Module Stream")
+        when "Katello::AnsibleCollection"
+          _("Ansible Collection")
         else
           fail "Can't find resource class: #{resource_class}"
         end
