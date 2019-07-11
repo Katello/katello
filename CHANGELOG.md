@@ -1,7 +1,5 @@
 # 3.12.1 Iron Stout (2019-07-09)
 
-## Features
-
 ## Bug Fixes
 
 ### Inter Server Sync
