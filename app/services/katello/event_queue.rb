@@ -50,7 +50,7 @@ module Katello
     end
 
     def self.reschedule_event(event)
-      return if event.created_at <= MAX_RETRY_AGE.ago
+      return :expired if event.created_at <= MAX_RETRY_AGE.ago
 
       retry_seconds = event_class(event.event_type).try(:retry_seconds)
       if retry_seconds

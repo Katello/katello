@@ -170,7 +170,7 @@ module Katello
       event = EventQueue.next_event
 
       MockEvent.stubs(:retry_seconds)
-      refute Katello::EventQueue.reschedule_event(event)
+      assert_nil Katello::EventQueue.reschedule_event(event)
       event.reload
 
       assert event.in_progress
@@ -181,7 +181,7 @@ module Katello
       event = EventQueue.push_event(@type, 1)
 
       travel_to 7.hours.from_now do
-        refute Katello::EventQueue.reschedule_event(event)
+        assert_equal :expired, Katello::EventQueue.reschedule_event(event)
       end
     end
   end
