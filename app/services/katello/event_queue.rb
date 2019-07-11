@@ -1,6 +1,6 @@
 module Katello
   class EventQueue
-    MAX_AGE = 6.hours
+    MAX_RETRY_AGE = 6.hours
 
     @event_types = {}
 
@@ -18,7 +18,6 @@ module Katello
 
     def self.clear_events(event_type, object_id, on_or_earlier_than)
       Katello::Event.where(:in_progress => true, :object_id => object_id, :event_type => event_type).where('created_at <= ?', on_or_earlier_than).delete_all
-      Katello::Event.where('created_at <= ?', MAX_AGE.ago).delete_all
     end
 
     def self.next_event
@@ -51,6 +50,8 @@ module Katello
     end
 
     def self.reschedule_event(event)
+      return if event.created_at <= MAX_RETRY_AGE.ago
+
       retry_seconds = event_class(event.event_type).try(:retry_seconds)
       if retry_seconds
         Katello::Event.update(event.id, in_progress: false, process_after: Time.zone.now + retry_seconds)

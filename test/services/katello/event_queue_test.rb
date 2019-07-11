@@ -93,20 +93,6 @@ module Katello
       assert_empty Event.all
     end
 
-    def test_clear_events_expired
-      event = EventQueue.push_event(@type, 1)
-
-      EventQueue.clear_events(@type, 1, event.created_at)
-
-      assert Katello::Event.find(event.id)
-
-      travel_to 7.hours.from_now do
-        EventQueue.clear_events(@type, 1, event.created_at)
-
-        refute Katello::Event.find_by_id(event.id)
-      end
-    end
-
     def test_event_class
       assert_equal MockEvent, EventQueue.event_class(@type)
     end
@@ -189,6 +175,14 @@ module Katello
 
       assert event.in_progress
       refute event.process_after
+    end
+
+    def test_reschedule_event_expired
+      event = EventQueue.push_event(@type, 1)
+
+      travel_to 7.hours.from_now do
+        refute Katello::EventQueue.reschedule_event(event)
+      end
     end
   end
 end
