@@ -94,7 +94,7 @@
         <dt translate>Upstream Authorization</dt>
         <dd bst-edit-custom="repository.upstream_auth_exists"
             readonly="denied('edit_products', product)"
-            on-save="save(repository)"
+            on-save="save(repository, true)"
             formatter="upstreamPasswordFilter"
             formatter-options="repository"
             deletable="repository.upstream_auth_exists"

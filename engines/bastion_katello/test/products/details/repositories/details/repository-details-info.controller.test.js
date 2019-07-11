@@ -98,6 +98,31 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect(Notification.setSuccessMessage).toHaveBeenCalledWith('Repository Saved.');
     });
 
+    it('should ignore upstream auth on save unless specified', function() {
+        var repo = new Repository({
+            upstream_username: 'autofilled',
+            upstream_password: 'autofilled'
+        })
+
+        $scope.save(repo);
+
+        expect(repo.upstream_username).toBe(undefined);
+        expect(repo.upstream_password).toBe(undefined);
+    });
+
+    it('should not ignore upstream auth on save unless specified', function() {
+        var repo = new Repository({
+            upstream_username: 'autofilled',
+            upstream_password: 'autofilled'
+        })
+
+        $scope.save(repo, true);
+
+        expect(repo.upstream_username).toBe('autofilled');
+        expect(repo.upstream_password).toBe('autofilled');
+    });
+
+
     it('should fail to save the repository', function() {
         spyOn(Notification, 'setErrorMessage');
 

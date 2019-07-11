@@ -85,8 +85,14 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return deferred.promise;
         };
 
-        $scope.save = function (repository) {
+        $scope.save = function (repository, saveUpstreamAuth) {
             var deferred = $q.defer();
+
+            if (!saveUpstreamAuth) {
+                delete repository.upstream_username;
+                delete repository.upstream_password;
+            }
+
             if (!_.isEmpty(repository.commaTagsWhitelist)) {
                 repository["docker_tags_whitelist"] = repository.commaTagsWhitelist.split(",").map(function(tag) {
                     return tag.trim();
