@@ -142,7 +142,7 @@ class Setting::Content < Setting
   end
 
   def add_organizations_and_locations_if_global_http_proxy
-    if name == 'content_default_http_proxy'
+    if name == 'content_default_http_proxy' && (::HttpProxy.table_exists? rescue(false))
       proxy = HttpProxy.where(name: value).first
 
       if proxy
