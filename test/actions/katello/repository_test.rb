@@ -465,6 +465,95 @@ module ::Actions::Katello::Repository
         end
       end
     end
+
+    describe 'pulp3 progress' do
+      let(:pulp3_action_class) { ::Actions::Pulp3::Repository::Sync }
+      let(:pulp3_action) { fixture_action(pulp3_action_class, input: {repo_id: repository.id}, output: fixture_variant) }
+      let :action do
+        create_action(action_class).tap do |action|
+          action.stubs(all_planned_actions: [pulp3_action])
+        end
+      end
+
+      describe 'successfully synchronized pulp3 file' do
+        let(:fixture_variant) { :success_file }
+
+        specify do
+          action.humanized_output.must_equal "Total tasks: : 5/5\n"\
+                                             "--------------------------------\n"\
+                                             "Downloading Metadata: 1/1\n"\
+                                             "Downloading Artifacts: 0/0\n"\
+                                             "Associating Content: 1/1\n"\
+                                             "Parsing Metadata Lines: 3/3"
+        end
+
+        specify do
+          pulp3_action.run_progress.must_be_within_delta 1
+        end
+      end
+
+      describe 'successfully synchronized pulp3 ansible collection' do
+        let(:fixture_variant) { :success_ansible_collection }
+
+        specify do
+          action.humanized_output.must_equal "Total tasks: : 2/2\n"\
+                                             "--------------------------------\n"\
+                                             "Importing Collections: 1/1\n"\
+                                             "Downloading Collections: 1/1"
+        end
+
+        specify do
+          pulp3_action.run_progress.must_be_within_delta 1
+        end
+      end
+
+      describe 'successfully synchronized pulp3 docker repo' do
+        let(:fixture_variant) { :success_docker }
+
+        specify do
+          action.humanized_output.must_equal "Total tasks: : 1192/1192\n"\
+                                             "--------------------------------\n"\
+                                             "Downloading tag list: 1/1\n"\
+                                             "Downloading Artifacts: 415/415\n"\
+                                             "Associating Content: 641/641\n"\
+                                             "Processing Tags: 135/135"
+        end
+
+        specify do
+          pulp3_action.run_progress.must_be_within_delta 1
+        end
+      end
+
+      describe 'syncing files in progress' do
+        let(:fixture_variant) { :progress_units_file }
+
+        specify do
+          action.humanized_output.must_equal "Total tasks: : 15/30\n"\
+                                             "--------------------------------\n"\
+                                             "Downloading Metadata: 5/10\n"\
+                                             "Downloading Artifacts: 5/10\n"\
+                                             "Associating Content: 5/10"
+        end
+
+        specify do
+          pulp3_action.run_progress.must_be_within_delta 0.50
+        end
+      end
+
+      describe 'syncing ansible collections in progress' do
+        let(:fixture_variant) { :progress_units_ansible_collection }
+
+        specify do
+          action.humanized_output.must_equal "Total tasks: : 1/2\n"\
+                                             "--------------------------------\n"\
+                                             "Downloading Collections: 1/2"
+        end
+
+        specify do
+          pulp3_action.run_progress.must_be_within_delta 0.5
+        end
+      end
+    end
   end
 
   class CapsuleSyncTest < TestBase

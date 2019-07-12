@@ -4,7 +4,7 @@ module Actions
       module Presenters
         class ContentUnitPresenter < AbstractSyncPresenter
           def progress
-            total_units == 0 ? 0.01 : finished_units.to_f / total_units
+            total_units == 0 ? 0.1 : finished_units.to_f / total_units
           end
 
           private
@@ -12,31 +12,43 @@ module Actions
           def humanized_details
             ret = []
             ret << _("Cancelled.") if cancelled?
-            ret << _("New Content Units: %s") % finished_units
+            ret << _("Total tasks: ") + ": #{finished_units}/#{total_units}"
+            ret << "--------------------------------"
+            progress_reports = sync_task.try(:[], 'progress_reports') || []
+            progress_reports.each do |pr|
+              done = pr.try(:[], 'done')
+              total = pr.try(:[], 'total') || pr.try(:[], 'done')
+              unless done.nil? || total.nil?
+                ret << _(pr.try(:[], 'message') + ": #{done}/#{total}")
+              end
+            end
+
             ret.join("\n")
           end
 
           def total_units
-            task_progress_details.try(:[], 'total') || 1
+            total_unit = 0
+            progress_reports = sync_task.try(:[], 'progress_reports') || []
+            progress_reports.each do |pr|
+              total = pr.try(:[], 'total')
+              total = pr.try(:[], 'done') if total.nil?
+              unless total.nil?
+                total_unit += total.to_i
+              end
+            end
+            total_unit
           end
 
           def finished_units
-            task_progress_details.try(:[], 'done') || 0
-          end
-
-          def task_progress_details
-            task_progress_report
-          end
-
-          def task_progress_report
-            return nil unless sync_task
-            progress_reports = sync_task['progress_reports']
-            progress_reports.select! do |progress_report|
-              if progress_report.key? 'message'
-                progress_report['message'].include?("Parsing Metadata") # Decide which to track
+            finished_unit = 0
+            progress_reports = sync_task.try(:[], 'progress_reports') || []
+            progress_reports.each do |pr|
+              done = pr.try(:[], 'done')
+              unless done.nil?
+                finished_unit += done.to_i
               end
             end
-            progress_reports.first
+            finished_unit
           end
         end
       end

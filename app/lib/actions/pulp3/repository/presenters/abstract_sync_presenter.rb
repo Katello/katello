@@ -18,7 +18,7 @@ module Actions
           def sync_task
             tasks = action.external_task.select do |task|
               if task.key? 'name'
-                task['name'].include?("synchronizing.synchronize")
+                task['name'].include?("sync")
               end
             end
             tasks.first
