@@ -7,6 +7,10 @@ module Katello
       super
       User.current = @admin
       @repo = katello_repositories(:rhel_6_x86_64)
+      @rpm_one = katello_rpms(:one)
+      @rpm_two = katello_rpms(:two)
+      @errata_security = katello_errata(:security)
+      @errata_bugfix = katello_errata(:bugfix)
     end
 
     def test_create
@@ -144,6 +148,17 @@ module Katello
       #now add a 2nd component to make the archive a "master", due to 'conflicting' repos
       version.components << katello_content_view_versions(:library_view_version_2)
       assert version_archive_repo.master?
+
+      # composite environment repo should stay as a linked repo
+      assert version_env_repo.link?
+
+      version_archive_repo.rpms = [@rpm_one, @rpm_two]
+      version_archive_repo.errata = [@errata_security, @errata_bugfix]
+      version_archive_repo.save!
+
+      version_env_repo.index_content
+      assert_equal version_archive_repo.rpms.sort, version_env_repo.rpms.sort
+      assert_equal version_archive_repo.errata.sort, version_env_repo.errata.sort
     end
   end
 

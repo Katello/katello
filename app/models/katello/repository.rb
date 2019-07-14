@@ -643,7 +643,7 @@ module Katello
       !self.yum? || # non-yum repos
           self.in_default_view? || # default content view repos
           (self.archive? && !self.content_view.composite) || # non-composite content view archive repos
-          (self.content_view.composite? && self.component_source_repositories.count > 1) # composite archive repo with more than 1 source repository
+          (self.archive? && self.content_view.composite? && self.component_source_repositories.count > 1) # composite archive repo with more than 1 source repository
     end
 
     # a link repository has no content in the pulp repository and serves as a shell.  It will always be empty.  Only the YumCloneDistributor can be used
