@@ -21,6 +21,18 @@ module Katello
           assert(e.message == "Current organization has no manifest imported.",
                  "Invalid message: #{e.message}")
         end
+
+        def test_global_proxy_nil
+          Setting[:content_default_http_proxy] = nil
+          assert_nil UpstreamCandlepinResource.proxy_uri
+        end
+
+        def test_global_proxy
+          proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000', :username => 'admin', :password => 'password')
+          Setting[:content_default_http_proxy] = proxy.name
+
+          assert_equal 'proxy://admin:password@foo.com:1000', UpstreamCandlepinResource.proxy_uri
+        end
       end
     end
   end
