@@ -12,6 +12,7 @@ import { reducers as organizationProductsReducers } from '../OrganizationProduct
 import { moduleStreamDetails } from '../../scenes/ModuleStreams/Details';
 import { reducers as systemStatuses } from '../../components/extensions/about';
 import { ansibleCollections } from '../../scenes/AnsibleCollections';
+import { ansibleCollectionDetails } from '../../scenes/AnsibleCollections/Details';
 
 export default combineReducers({
   organization,
@@ -25,6 +26,7 @@ export default combineReducers({
   moduleStreams,
   moduleStreamDetails,
   ansibleCollections,
+  ansibleCollectionDetails,
   ...organizationProductsReducers,
   ...systemStatuses,
 });

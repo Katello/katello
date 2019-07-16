@@ -15,7 +15,7 @@ const displayMap = new Map([
   ['uuid', __('UUID')],
 ]);
 
-const createRows = (details, mapping) => {
+export const createRows = (details, mapping) => {
   const rows = [];
   /* eslint-disable no-restricted-syntax, react/jsx-closing-tag-location */
   for (const key of mapping.keys()) {

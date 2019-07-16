@@ -8,6 +8,7 @@ import WithOrganization from '../../components/WithOrganization/withOrganization
 import ModuleStreams from '../../scenes/ModuleStreams';
 import ModuleStreamDetails from '../../scenes/ModuleStreams/Details';
 import AnsibleCollections from '../../scenes/AnsibleCollections';
+import AnsibleCollectionDetails from '../../scenes/AnsibleCollections/Details';
 import withHeader from './withHeaders';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -44,5 +45,9 @@ export const links = [
   {
     path: 'ansible_collections',
     component: withHeader(AnsibleCollections, { title: __('Ansible Collections') }),
+  },
+  {
+    path: 'ansible_collections/:id([0-9]+)',
+    component: withHeader(AnsibleCollectionDetails, { title: __('Ansible Collection Details') }),
   },
 ];

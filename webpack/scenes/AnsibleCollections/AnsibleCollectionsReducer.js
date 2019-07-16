@@ -21,8 +21,7 @@ export default (state = initialState, action) => {
         loading: false,
         pagination: {
           page: Number(page),
-          // eslint-disable-line camelcase
-          perPage: Number(per_page || state.pagination.perPage),
+          perPage: Number(per_page || state.pagination.perPage), // eslint-disable-line camelcase
         },
         itemCount: Number(subtotal),
       });

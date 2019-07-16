@@ -8,6 +8,7 @@ BASTION_MODULES.push(
     'Bastion.debs',
     'Bastion.docker-tags',
     'Bastion.files',
+    'Bastion.ansible-collections',
     'Bastion.ostree-branches',
     'Bastion.hosts',
     'Bastion.puppet-modules',

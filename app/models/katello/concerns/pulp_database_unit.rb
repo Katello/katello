@@ -15,6 +15,10 @@ module Katello
       self.class.repository_association_class.where(:repository_id => repo_id, self.class.unit_id_field.to_sym => self.id).delete_all
     end
 
+    def library_repositories
+      self.repositories.where(library_instance: nil)
+    end
+
     module ClassMethods
       def content_type
         self::CONTENT_TYPE

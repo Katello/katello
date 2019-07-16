@@ -161,6 +161,15 @@
                 label: "{{'Debs' | translate }}",
                 parent: 'product.repository.info'
             }
+        })
+        .state('product.repository.manage-content.ansible-collections', {
+            url: '/content/ansible_collections',
+            permission: 'view_products',
+            templateUrl: 'products/details/repositories/details/views/repository-manage-ansible-collections.html',
+            ncyBreadcrumb: {
+              label: "{{'Ansible Collections' | translate }}",
+              parent: 'product.repository.info'
+            }
         });
 
         $stateProvider.state('product.repository.tasks', {
