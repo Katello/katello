@@ -13,7 +13,8 @@ angular.module('Bastion.products').factory('ProductBulkAction',
         return BastionResource('katello/api/v2/products/bulk/:action', {}, {
             removeProducts: {method: 'PUT', params: {action: 'destroy'}},
             syncProducts: {method: 'PUT', params: {action: 'sync'}},
-            updateProductSyncPlan: {method: 'PUT', params: {action: 'sync_plan'}}
+            updateProductSyncPlan: {method: 'PUT', params: {action: 'sync_plan'}},
+            updateProductHttpProxy: {method: 'PUT', params: {action: 'http_proxy'}}
         });
     }]
 );

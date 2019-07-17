@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::ProductsBulkActionsController < Api::V2::ApiController
     before_action :find_products
+    before_action :find_optional_proxy, :only => :update_http_proxy
 
     api :PUT, "/products/bulk/destroy", N_("Destroy one or more products")
     param :ids, Array, :desc => N_("List of product ids"), :required => true
@@ -49,6 +50,19 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :PUT, "/products/bulk/http_proxy", N_("Update the http proxy configuration on the repositories of one or more products.")
+    param :ids, Array, :desc => N_("List of product ids"), :required => true
+    param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policy for http proxy for content sync")
+    param :http_proxy_id, :number, :desc => N_("Http Proxy identifier to associated"), :required => false
+    def update_http_proxy
+      task = async_task(::Actions::Katello::Product::UpdateHttpProxy,
+                        @products.editable,
+                        params[:http_proxy_policy],
+                        @http_proxy)
+
+      respond_for_async :resource => task
+    end
+
     api :PUT, "/products/bulk/sync_plan", N_("Sync one or more products")
     param :ids, Array, :desc => N_("List of product ids"), :required => true
     param :plan_id, :number, :desc => N_("Sync plan identifier to attach"), :required => true
@@ -71,6 +85,10 @@ module Katello
     end
 
     private
+
+    def find_optional_proxy
+      @http_proxy = ::HttpProxy.find(params[:http_proxy_id]) if params[:http_proxy_id]
+    end
 
     def find_products
       params.require(:ids)

@@ -125,6 +125,22 @@ angular.module('Bastion.products').controller('ProductsController',
             });
         };
 
+        $scope.openHttpProxyModal = function () {
+            nutupane.invalidate();
+            $uibModal.open({
+                templateUrl: 'products/bulk/views/products-bulk-http-proxy-modal.html',
+                controller: 'ProductsBulkHttpProxyModalController',
+                size: 'lg',
+                resolve: {
+                    bulkParams: function () {
+                        return getBulkParams();
+                    }
+                }
+            }).closed.then(function () {
+                nutupane.refresh();
+            });
+        };
+
         $scope.openAdvancedSyncModal = function () {
             nutupane.invalidate();
             $uibModal.open({

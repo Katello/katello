@@ -1,0 +1,57 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header">Http Proxy Management</h4>
+
+  <div data-block="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <div bst-alert="info" ng-show="confirm">
+      <span translate>
+        Are you sure you want to set the HTTP Proxy to the selected products(s)?
+      </span>
+      <div>
+        <button type="button" class="btn btn-default" ng-click="updateHttpProxy()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="confirm = false" translate>No</button>
+      </div>
+    </div>
+
+    <form name="proxyForm" class="col-sm-5" novalidate role="form">
+
+      <div class="form-group">
+        <label translate>Http Proxy Policy:</label>
+        <select required
+                id="http_proxy_policy"
+                name="http_proxy_policy"
+                ng-model="proxyOptions.httpProxyPolicy"
+                ng-options="type.label as type.name for type in policies">
+        </select>
+      </div>
+
+      <span ng-show="proxyOptions.httpProxyPolicy === 'use_selected_http_proxy'">
+        <div class="form-group">
+          <label translate>Http Proxy:</label>
+          <span translate ng-show="proxies.length == 0">
+            No HTTP Proxies found
+          </span>
+          <select required
+                  id="http_proxy"
+                  name="http_proxy"
+                  ng-model="proxyOptions.httpProxyId"
+                  ng-options="proxy.id as proxy.name for proxy in proxies"
+                  ng-show="proxies.length > 0">
+          </select>
+        </div>
+      </span>
+    </form>
+
+  </div>
+
+  <div data-block="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="update()" ng-disabled="working" translate>
+      Update
+    </button>
+  </div>
+</div>

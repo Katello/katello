@@ -42,6 +42,12 @@
           </a>
         </li>
 
+        <li role="menuitem" ng-show="permitted('edit_products')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openHttpProxyModal()" disable-link="table.numSelected === 0" translate>
+            Manage Http Proxy
+          </a>
+        </li>
+
         <li class="divider"></li>
 
         <li role="menuitem" ng-show="permitted('destroy_products')" ng-class="{disabled: table.numSelected === 0}">

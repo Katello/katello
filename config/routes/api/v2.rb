@@ -412,6 +412,7 @@ Katello::Engine.routes.draw do
             match '/bulk/destroy' => 'products_bulk_actions#destroy_products', :via => :put
             match '/bulk/sync' => 'products_bulk_actions#sync_products', :via => :put
             match '/bulk/sync_plan' => 'products_bulk_actions#update_sync_plans', :via => :put
+            match '/bulk/http_proxy' => 'products_bulk_actions#update_http_proxy', :via => :put
           end
         end
 
