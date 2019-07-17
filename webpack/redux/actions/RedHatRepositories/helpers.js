@@ -35,7 +35,7 @@ const recommendedRepositoriesSatTools = [
 const recommendedRepositoriesMisc = [
   'rhel-server-rhscl-7-rpms',
   'rhel-7-server-satellite-capsule-6.5-rpms',
-  'rhel-7-server-ansible-2.6-rpms',
+  'rhel-7-server-ansible-2.8-rpms',
 ];
 
 const recommendedRepositorySetLables = recommendedRepositoriesRHEL
