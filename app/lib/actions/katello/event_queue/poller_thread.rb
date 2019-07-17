@@ -24,16 +24,29 @@ module Actions
         end
 
         def run_event(event)
-          @logger.debug("event_queue_event: #{event.event_type}, #{event.object_id}")
-          ::User.as_anonymous_admin do
-            ::Katello::EventQueue.event_class(event.event_type).new(event.object_id).run
+          @logger.debug("event_queue_event: type=#{event.event_type}, object_id=#{event.object_id}")
+
+          event_instance = nil
+          begin
+            ::User.as_anonymous_admin do
+              event_instance = ::Katello::EventQueue.create_instance(event)
+              event_instance.run
+            end
+          rescue => e
+            @logger.error("event_queue_error: type=#{event.event_type}, object_id=#{event.object_id}")
+            @logger.error(e.message)
+            @logger.error(e.backtrace.join("\n"))
+          ensure
+            if event_instance.try(:retry)
+              result = ::Katello::EventQueue.reschedule_event(event)
+              if result == :expired
+                @logger.warn("event_queue_event_expired: type=#{event.event_type} object_id=#{event.object_id}")
+              elsif !result.nil?
+                @logger.warn("event_queue_rescheduled: type=#{event.event_type} object_id=#{event.object_id}")
+              end
+            end
+            ::Katello::EventQueue.clear_events(event.event_type, event.object_id, event.created_at)
           end
-        rescue => e
-          @logger.error("event_queue_error: #{event.event_type}, #{event.object_id}")
-          @logger.error(e.message)
-          @logger.error(e.backtrace.join("\n"))
-        ensure
-          ::Katello::EventQueue.clear_events(event.event_type, event.object_id, event.created_at)
         end
 
         def poll_for_events(suspended_action)
