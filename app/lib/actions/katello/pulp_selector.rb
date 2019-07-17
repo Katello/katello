@@ -2,6 +2,7 @@ module Actions
   module Katello
     module PulpSelector
       def plan_pulp_action(backend_actions, repository, smart_proxy, *args)
+        fail "nil smart_proxy passed to PulpSelector" if smart_proxy.nil?
         planned = plan_optional_pulp_action(backend_actions, repository, smart_proxy, *args)
         fail "Could not locate an action for type #{smart_proxy.backend_service_type(repository)}" unless planned
         planned

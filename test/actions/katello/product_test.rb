@@ -133,6 +133,48 @@ module ::Actions::Katello::Product
     end
   end
 
+  class UpdateHttpProxyTest < TestBase
+    let(:action_class) { ::Actions::Katello::Product::UpdateHttpProxy }
+
+    let(:product) do
+      katello_products(:fedora)
+    end
+
+    let(:empty_product) do
+      katello_products(:empty_product)
+    end
+
+    let(:http_proxy) do
+      FactoryBot.build(:http_proxy)
+    end
+
+    it 'plans' do
+      plan_action(action, [product], 'use_selected_http_proxy', http_proxy)
+
+      assert_action_planned_with(action,
+                                ::Actions::BulkAction,
+                                ::Actions::Katello::Repository::Update,
+                                product.repositories.map(&:root),
+                                http_proxy_policy: 'use_selected_http_proxy',
+                                http_proxy_id: http_proxy.id)
+    end
+
+    it 'plans with empty product' do
+      plan_action(action, [empty_product], 'use_selected_http_proxy', http_proxy)
+      refute_action_planned(action, ::Actions::BulkAction)
+    end
+
+    it 'plans with global status' do
+      plan_action(action, [product], 'global_default_http_proxy', nil)
+      assert_action_planned_with(action,
+                                ::Actions::BulkAction,
+                                ::Actions::Katello::Repository::Update,
+                                product.repositories.map(&:root),
+                                http_proxy_policy: 'global_default_http_proxy',
+                                http_proxy_id: nil)
+    end
+  end
+
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Product::Destroy }
     let(:candlepin_destroy_class) { ::Actions::Candlepin::Product::Destroy }

@@ -101,6 +101,37 @@ module Katello
       end
     end
 
+    def test_update_http_proxy
+      prod = @products.first
+      assert_async_task(::Actions::Katello::Product::UpdateHttpProxy, [prod], 'global_default_http_proxy', nil)
+
+      put :update_http_proxy, params: { :ids => [prod.id], :organization_id => @organization.id,
+                                        :http_proxy_policy => 'global_default_http_proxy' }
+
+      assert_response :success
+    end
+
+    def test_update_http_proxy_specific
+      proxy = FactoryBot.create(:http_proxy)
+      prod = @products.first
+      assert_async_task(::Actions::Katello::Product::UpdateHttpProxy, [prod], 'use_selected_http_proxy', proxy)
+
+      put :update_http_proxy, params: { :ids => [prod.id], :organization_id => @organization.id,
+                                        :http_proxy_policy => 'use_selected_http_proxy',
+                                        :http_proxy_id => proxy.id}
+
+      assert_response :success
+    end
+
+    def test_update_http_proxy_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@sync_permission, @create_permission, @destroy_permission, @view_permission]
+
+      assert_protected_action(:update_http_proxy, allowed_perms, denied_perms, [@organization]) do
+        put :update_http_proxy, params: { :ids => @products.collect(&:id) }
+      end
+    end
+
     def test_update_sync_plans
       Product.any_instance.expects(:save!).times(@products.length).returns([{}])
 
