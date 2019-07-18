@@ -47,7 +47,7 @@ module Katello
         @repo = katello_repositories(:fedora_17_x86_64)
 
         RepositorySupport.create_and_sync_repo(@repo)
-        Katello::Rpm.import_for_repository(@repo, true)
+        Katello::Rpm.import_for_repository(@repo)
         @package_id = @repo.rpms.first.id
       end
 

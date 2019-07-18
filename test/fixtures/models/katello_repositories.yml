@@ -310,7 +310,7 @@ rhel_6_x86_64_composite_view_version_1_archive:
 ostree:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:ostree_root) %>
   pulp_id:              100
-  relative_path:        '/ACME_Corporation/library/ostree'
+  relative_path:        'ACME_Corporation/library/ostree'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
 
@@ -318,7 +318,7 @@ ostree_view1:
   library_instance:     ostree
   root_id:              <%= ActiveRecord::FixtureSet.identify(:ostree_root) %>
   pulp_id:              "Default_Organization-Test-ostree"
-  relative_path:        '/ACME_Corporation/library/ostree'
+  relative_path:        'ACME_Corporation/library/ostree'
   environment_id:
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
@@ -327,7 +327,7 @@ ostree_view1:
 generic_file:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:generic_file_root) %>
   pulp_id:              "Default_Organization-Cabinet-My_Files"
-  relative_path:        '/Default_Organization/library/My_Files'
+  relative_path:        'Default_Organization/library/My_Files'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
 
@@ -335,21 +335,21 @@ generic_file_dev:
   library_instance:     generic_file
   root_id:              <%= ActiveRecord::FixtureSet.identify(:generic_file_root) %>
   pulp_id:              "Default_Organization-Cabinet-My_Files_Dev"
-  relative_path:        '/Default_Organization/dev/My_Files'
+  relative_path:        'Default_Organization/dev/My_Files'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
 
 pulp3_file_1:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:pulp3_file_root_1) %>
   pulp_id:              "Default_Organization-Cabinet-pulp3_File_1"
-  relative_path:        '/Default_Organization/library/pulp3_File_1'
+  relative_path:        'Default_Organization/library/pulp3_File_1'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
 
 pulp3_ansible_collection_1:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:pulp3_ansible_collection_root_1) %>
   pulp_id:              "Default_Organization-Cabinet-pulp3_Ansible_collection_1"
-  relative_path:        '/Default_Organization/library/pulp3_Ansible_collection_1'
+  relative_path:        'Default_Organization/library/pulp3_Ansible_collection_1'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
 

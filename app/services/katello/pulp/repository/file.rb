@@ -21,7 +21,12 @@ module Katello
         end
 
         def generate_distributors
-          [Runcible::Models::IsoDistributor.new(repo.relative_path, repo.unprotected, true, auto_publish: true)]
+          yum_dist_id = repo.pulp_id
+          options = {
+            id: yum_dist_id,
+            auto_publish: true
+          }
+          [Runcible::Models::IsoDistributor.new(repo.relative_path, repo.unprotected, true, options)]
         end
 
         def partial_repo_path

@@ -22,7 +22,13 @@ module Katello
 
         def test_mirrored_importer
           service = Katello::Pulp::Repository::Ostree.new(@repo, @mirror)
-
+          Cert::Certs.stubs(:ueber_cert).returns({})
+          Katello::Pulp::Repository::Ostree.any_instance.stubs(:mirror_importer_connection_options).returns(
+                                                                                                         ssl_client_cert: nil,
+                                                                                                           ssl_client_key: nil,
+                                                                                                           ssl_ca_cert: nil,
+                                                                                                           ssl_validation: false
+          )
           assert_include service.generate_mirror_importer.feed, URI(SmartProxy.pulp_master.pulp_url).host
         end
       end
