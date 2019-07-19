@@ -8,8 +8,6 @@ module Katello
 
     class NotFound < StandardError; end
 
-    class RegistrationError < StandardError; end
-
     # unauthorized access
     class SecurityViolation < StandardError; end
 
