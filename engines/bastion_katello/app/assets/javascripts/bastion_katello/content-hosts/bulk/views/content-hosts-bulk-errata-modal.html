@@ -28,12 +28,6 @@
     </div>
 
     <div ng-show="showTable()" data-extend-template="layouts/partials/table.html">
-      <div data-block="search">
-        <input type="text" class="form-control" stop-event="click"
-               placeholder="{{ 'Filter...' | translate }}"
-               ng-model="errataFilter"/>
-      </div>
-
       <div data-block="list-actions">
         <button class="btn btn-default" type="button"
                 ng-disabled="table.numSelected === 0 || table.working"
@@ -53,7 +47,7 @@
                   type="button" id="use-remote-execution">
             <span class="caret"></span>
           </button>
-          
+
           <ul uib-dropdown-menu class="dropdown-menu-right" role="menu" aria-labelledby="use-remote-execution">
             <li role="presentation"><a ng-click="installErrataViaKatelloAgent()" role="menuitem" translate>via Katello agent</a></li>
             <li role="presentation"><a ng-click="installErrataViaRemoteExecution(false)" role="menuitem" translate>via remote execution</a></li>
