@@ -12,18 +12,6 @@ const displayMap = new Map([
   ['pulp_id', __('Pulp ID')],
 ]);
 
-// const createRows = (details, mapping) => {
-//   const rows = [];
-//   /* eslint-disable no-restricted-syntax, react/jsx-closing-tag-location */
-//   for (const key of mapping.keys()) {
-//     rows.push(<tr key={key}>
-//       <td><b>{mapping.get(key)}</b></td>
-//       <td>{details[key]}</td>
-//     </tr>);
-//   }
-//   /* eslint-enable no-restricted-syntax, react/jsx-closing-tag-location */
-//   return rows;
-// };
 
 const AnsibleCollectionDetailInfo = ({ ansibleCollectionDetails }) => (
   <Table>

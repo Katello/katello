@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import qs from 'query-string';
 import { translate as __ } from 'foremanReact/common/I18n';
-
-import Search from '../../components/Search/index';
-import ModuleStreamsTable from './ModuleStreamsTable';
 import { orgId } from '../../services/api';
+import TableSchema from '../ModuleStreams/ModuleStreamsTableSchema';
+import ContentPage from '../../components/Content/ContentPage';
 
 class ModuleStreamsPage extends Component {
   constructor(props) {
@@ -49,35 +47,16 @@ class ModuleStreamsPage extends Component {
   render() {
     const { moduleStreams } = this.props;
     return (
-      <Grid bsClass="container-fluid">
-        <Row>
-          <Col sm={12}>
-            <h1>{__('Module Streams')}</h1>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={6}>
-            <Form className="toolbar-pf-actions">
-              <FormGroup className="toolbar-pf toolbar-pf-filter">
-                <Search
-                  onSearch={this.onSearch}
-                  getAutoCompleteParams={this.getAutoCompleteParams}
-                  updateSearchQuery={this.updateSearchQuery}
-                  initialInputValue={this.state.searchQuery}
-                />
-              </FormGroup>
-            </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={12}>
-            <ModuleStreamsTable
-              moduleStreams={moduleStreams}
-              onPaginationChange={this.onPaginationChange}
-            />
-          </Col>
-        </Row>
-      </Grid>
+      <ContentPage
+        header={__('Module Streams')}
+        content={moduleStreams}
+        tableSchema={TableSchema}
+        onSearch={this.onSearch}
+        getAutoCompleteParams={this.getAutoCompleteParams}
+        updateSearchQuery={this.updateSearchQuery}
+        initialInputValue={this.state.searchQuery}
+        onPaginationChange={this.onPaginationChange}
+      />
     );
   }
 }

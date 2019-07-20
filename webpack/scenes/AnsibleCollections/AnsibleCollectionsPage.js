@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Col, Row, Form, FormGroup } from 'react-bootstrap';
 import qs from 'query-string';
-import Search from '../../components/Search/index';
-import AnsibleCollectionsTable from './AnsibleCollectionsTable';
 import { orgId } from '../../services/api';
+import TableSchema from './AnsibleCollectionsTableSchema';
+import ContentPage from '../../components/Content/ContentPage';
 
 class AnsibleCollectionsPage extends Component {
   constructor(props) {
@@ -47,35 +46,16 @@ class AnsibleCollectionsPage extends Component {
   render() {
     const { ansibleCollections } = this.props;
     return (
-      <Grid bsClass="container-fluid">
-        <Row>
-          <Col sm={12}>
-            <h1>{__('Ansible Collections')}</h1>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={6}>
-            <Form className="toolbar-pf-actions">
-              <FormGroup className="toolbar-pf toolbar-pf-filter">
-                <Search
-                  onSearch={this.onSearch}
-                  getAutoCompleteParams={this.getAutoCompleteParams}
-                  updateSearchQuery={this.updateSearchQuery}
-                  initialInputValue={this.state.searchQuery}
-                />
-              </FormGroup>
-            </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={12}>
-            <AnsibleCollectionsTable
-              ansibleCollections={ansibleCollections}
-              onPaginationChange={this.onPaginationChange}
-            />
-          </Col>
-        </Row>
-      </Grid>
+      <ContentPage
+        header={__('Ansible Collections')}
+        content={ansibleCollections}
+        tableSchema={TableSchema}
+        onSearch={this.onSearch}
+        getAutoCompleteParams={this.getAutoCompleteParams}
+        updateSearchQuery={this.updateSearchQuery}
+        initialInputValue={this.state.searchQuery}
+        onPaginationChange={this.onPaginationChange}
+      />
     );
   }
 }
