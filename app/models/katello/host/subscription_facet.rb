@@ -264,8 +264,11 @@ module Katello
                    {:org_name => organization.name, :host_name => host_name }
         end
 
-        if hosts_size == 1 && hosts.joins(:subscription_facet).empty?
-          return hosts.first
+        if hosts_size == 1
+          host = hosts.first
+          found_uuid = host.fact_values.find { |fv| fv.fact_name_id == uuid_fact_id }
+
+          return host if host.name == host_name && (host.build || found_uuid&.value == host_uuid)
         end
 
         hostnames = hosts.pluck(:name).sort.join(', ')
