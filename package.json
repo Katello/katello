@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "license": "GPL-2.0",
   "scripts": {
-    "storybook": "start-storybook -p 6007",
-    "storybook:deploy": "storybook-to-ghpages",
+    "storybook": "cross-env NODE_ENV=storybook start-storybook -p 6007",
+    "storybook:deploy": "cross-env NODE_ENV=storybook storybook-to-ghpages",
     "test": "jest webpack",
     "test:watch": "jest webpack --watchAll",
     "test:current": "jest webpack --watch",
@@ -25,6 +25,8 @@
   "devDependencies": {
     "@storybook/react": "^3.2.17",
     "@storybook/storybook-deployer": "^2.0.0",
+    "@theforeman/vendor-dev": "^0.1.1",
+    "axios-mock-adapter": "^1.10.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
     "babel-jest": "^23.4.0",
@@ -34,6 +36,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "coveralls": "^3.0.0",
+    "cross-env": "^5.2.0",
     "enzyme": "^3.4.0",
     "enzyme-adapter-react-16": "^1.4.0",
     "enzyme-to-json": "^3.1.2",
@@ -48,34 +51,19 @@
     "jest": "^23.4.1",
     "prettier": "^1.7.4",
     "react-redux-test-utils": "^0.1.1",
-    "react-router-dom": "^4.2.2",
     "react-test-renderer": "^16.0.0",
-    "redux-mock-store": "^1.3.0",
-    "redux-thunk": "^2.2.0"
+    "redux-mock-store": "^1.3.0"
   },
   "dependencies": {
-    "axios": "^0.19.0",
-    "axios-mock-adapter": "^1.10.0",
+    "@theforeman/vendor": "^0.1.1",
+    "angular": "1.5.5",
     "bootstrap-select": "1.12.4",
-    "classnames": "^2.2.5",
     "downshift": "^1.28.0",
     "jed": "^1.1.1",
-    "lodash": "^4.17.5",
-    "patternfly": "^3.41.1",
-    "patternfly-react": "^2.5.1",
-    "angular": "1.5.5",
     "ngreact": "^0.5.0",
-    "prop-types": "^15.6.0",
     "query-string": "^6.1.0",
-    "react": "^16.4.0",
     "react-bootstrap": "^0.32.1",
-    "react-dom": "^16.4.0",
-    "react-ellipsis-with-tooltip": "^1.0.7",
-    "react-helmet": "^5.2.0",
-    "react-redux": "^5.0.6",
-    "react-router-bootstrap": "0.24.4",
-    "redux": "^3.7.2",
-    "seamless-immutable": "^7.1.2"
+    "react-helmet": "^5.2.0"
   },
   "jest": {
     "collectCoverage": true,
@@ -98,6 +86,7 @@
       "<rootDir>/.+fixtures.+",
       "<rootDir>/engines"
     ],
+    "moduleDirectories": ["node_modules/@theforeman/vendor-core/node_modules", "node_modules"],
     "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy"
     }
