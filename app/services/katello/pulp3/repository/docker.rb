@@ -4,7 +4,7 @@ module Katello
   module Pulp3
     class Repository
       class Docker < ::Katello::Pulp3::Repository
-        def api_client
+        def self.api_client(smart_proxy)
           PulpDockerClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpDockerClient::Configuration))
         end
 

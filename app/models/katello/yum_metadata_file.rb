@@ -10,7 +10,7 @@ module Katello
       super(repository)
     end
 
-    def self.manage_repository_association
+    def self.many_repository_associations
       false
     end
 

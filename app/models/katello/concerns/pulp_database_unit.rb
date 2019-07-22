@@ -24,7 +24,7 @@ module Katello
         "::Katello::Pulp::#{self.name.demodulize}".constantize
       end
 
-      def manage_repository_association
+      def many_repository_associations
         true
       end
 
@@ -44,7 +44,7 @@ module Katello
       end
 
       def in_repositories(repos)
-        if manage_repository_association
+        if many_repository_associations
           where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field))
         else
           where(:repository_id => repos)
@@ -74,7 +74,7 @@ module Katello
             ids_to_associate << model.pulp_id
           end
         end
-        sync_repository_associations(repository, :pulp_ids => ids_to_associate, :additive => true) if self.manage_repository_association && repository && ids_to_associate.present?
+        sync_repository_associations(repository, :pulp_ids => ids_to_associate, :additive => true) if self.many_repository_associations && repository && ids_to_associate.present?
       end
 
       def import_for_repository(repository)
@@ -92,12 +92,13 @@ module Katello
               end
               service = service_class.new(model.pulp_id)
               service.backend_data = unit
+              model.repository_id = repository.id unless many_repository_associations
               service.update_model(model)
             end
             pulp_ids << pulp_id
           end
         end
-        sync_repository_associations(repository, :pulp_ids => pulp_ids) if self.manage_repository_association
+        sync_repository_associations(repository, :pulp_ids => pulp_ids) if self.many_repository_associations
       end
 
       def sync_repository_associations(repository, options = {})
@@ -133,7 +134,7 @@ module Katello
       end
 
       def copy_repository_associations(source_repo, dest_repo)
-        if manage_repository_association
+        if many_repository_associations
           delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
                          #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
 
