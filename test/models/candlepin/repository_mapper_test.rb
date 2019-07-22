@@ -15,5 +15,14 @@ module Katello
       mapper.expects(:path).returns("/special/redhat")
       assert_equal mapper.unprotected?, false
     end
+
+    def test_download_policy
+      mapper = Candlepin::RepositoryMapper.new(@product1, @repo1, {})
+
+      Setting[:default_download_policy] = 'on_demand'
+      Setting[:default_redhat_download_policy] = 'immediate'
+
+      assert_equal 'immediate', mapper.download_policy
+    end
   end
 end
