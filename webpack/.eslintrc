@@ -5,7 +5,8 @@
   },
   "extends": [
     "airbnb",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "../node_modules/@theforeman/vendor-dev/eslint.extends.js"
   ],
   "globals": {
     "__": true
@@ -19,13 +20,6 @@
   "rules": {
     "babel/semi": 1,
     "react/jsx-filename-extension": "off",
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        // Allow importing devDependencies like @storybook
-        "devDependencies": true
-      }
-    ],
     // Import rules off for now due to HoundCI issue
     "import/no-unresolved": "off",
     "import/extensions": "off",

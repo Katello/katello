@@ -6,5 +6,13 @@
   "plugins": [
     "transform-object-rest-spread",
     "transform-class-properties"
-  ]
+  ],
+  "env": {
+    "test": {
+      "presets": ["@theforeman/vendor-dev/babel.preset.js"]
+    },
+    "storybook": {
+      "presets": ["@theforeman/vendor-dev/babel.preset.js"]
+    }
+  }
 }
