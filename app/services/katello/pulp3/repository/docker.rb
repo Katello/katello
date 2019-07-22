@@ -12,6 +12,10 @@ module Katello
           PulpDockerClient::ApiError
         end
 
+        def client_class
+          PulpDockerClient
+        end
+
         def remote_class
           PulpDockerClient::DockerRemote
         end
