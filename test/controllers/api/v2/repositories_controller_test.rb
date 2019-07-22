@@ -199,7 +199,7 @@ module Katello
     def test_index_with_library
       ids = @organization.default_content_view.versions.first.repositories.pluck(:id)
 
-      response = get :index, params: { :library => true, :organization_id => @organization.id }
+      response = get :index, params: { :library => true, :organization_id => @organization.id, :per_page => 100 }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
