@@ -4,7 +4,7 @@
  */
 
 export default function roundUp() {
-    return function (value) {
-        return Math.ceil(value);
-    };
+  return function (value) {
+    return Math.ceil(value);
+  };
 }
