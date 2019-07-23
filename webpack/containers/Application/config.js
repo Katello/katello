@@ -13,26 +13,20 @@ import withHeader from './withHeaders';
 export const links = [
   {
     path: 'redhat_repositories',
-    component: WithOrganization(
-      withHeader(Repos, { title: __('RH Repos') }),
-      '/redhat_repositories',
-    ),
+    component: WithOrganization(withHeader(Repos, { title: __('RH Repos') })),
   },
   {
     path: 'subscriptions',
-    component: WithOrganization(
-      withHeader(Subscriptions, { title: __('Subscriptions') }),
-      '/subscriptions',
-    ),
+    component: WithOrganization(withHeader(Subscriptions, { title: __('Subscriptions') })),
   },
   {
     path: 'subscriptions/add',
-    component: withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') }),
+    component: WithOrganization(withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') })),
   },
   {
     // eslint-disable-next-line no-useless-escape
     path: 'subscriptions/:id([0-9]+)',
-    component: withHeader(SubscriptionDetails, { title: __('Subscription Details') }),
+    component: WithOrganization(withHeader(SubscriptionDetails, { title: __('Subscription Details') })),
   },
   {
     path: 'organization_select',

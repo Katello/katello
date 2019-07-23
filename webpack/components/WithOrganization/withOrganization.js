@@ -15,7 +15,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({ ...organizationActions }, dispatch);
 
-function withOrganization(WrappedComponent, redirectPath) {
+function withOrganization(WrappedComponent) {
   class CheckOrg extends Component {
     constructor(props) {
       super(props);
@@ -52,7 +52,7 @@ function withOrganization(WrappedComponent, redirectPath) {
         return (
           <React.Fragment>
             <Header title={__('Select Organization')} />
-            <SetOrganization redirectPath={redirectPath} />
+            <SetOrganization />
           </React.Fragment>);
       }
       return <WrappedComponent {...this.props} />;
