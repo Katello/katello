@@ -93,12 +93,9 @@ module Katello
 
     has_many :repository_ansible_collections, :class_name => "Katello::RepositoryAnsibleCollection", :dependent => :delete_all
     has_many :ansible_collections, :through => :repository_ansible_collections
+    has_many :repository_content_view_filters, :class_name => "Katello::RepositoryContentViewFilter", :dependent => :delete_all
+    has_many :filters, :through => :repository_content_view_filters
 
-    # rubocop:disable HasAndBelongsToMany
-    # TODO: change this into has_many :through association
-    has_and_belongs_to_many :filters, :class_name => "Katello::ContentViewFilter",
-                                      :join_table => :katello_content_view_filters_repositories,
-                                      :foreign_key => :content_view_filter_id
     belongs_to :content_view_version, :inverse_of => :repositories, :class_name => "Katello::ContentViewVersion"
 
     validates_with Validators::ContainerImageNameValidator, :attributes => :container_repository_name, :allow_blank => false, :if => :docker?
