@@ -3,13 +3,14 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 
-import componentRegistry from 'foremanReact/components/componentRegistry';
-import Application from './containers/Application/index';
 import angular from 'angular';
 import uirouter from 'angular-ui-router';
 import angularResource from 'angular-resource';
 import angularUiBootstrap from 'angular-ui-bootstrap';
+import componentRegistry from 'foremanReact/components/componentRegistry';
 import 'angular-blocks';
+
+import Application from './containers/Application/index';
 import routes from './angular/app.routes';
 import bastionComponents from './angular/bastion/components';
 import bastionUtils from './angular/bastion/utils';
@@ -35,8 +36,8 @@ const ANGULAR_MODULES = [
   bastionUtils,
   i18n,
   bastionComponents,
-  contentCredentials
+  contentCredentials,
 ];
 
 angular.module('Bastion', ANGULAR_MODULES)
-       .config(routes)
+  .config(routes);

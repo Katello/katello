@@ -1,5 +1,3 @@
-routes.$inject = ['$urlRouterProvider', '$locationProvider'];
-
 export default function routes($urlRouterProvider, $locationProvider) {
   $locationProvider.html5Mode({
     enabled: true,
@@ -7,3 +5,5 @@ export default function routes($urlRouterProvider, $locationProvider) {
   });
   $urlRouterProvider.otherwise('/');
 }
+
+routes.$inject = ['$urlRouterProvider', '$locationProvider'];

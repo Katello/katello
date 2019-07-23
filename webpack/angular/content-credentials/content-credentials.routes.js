@@ -1,7 +1,5 @@
 import ContentCredentialsController from './content-credentials.controller';
 
-routes.$inject = ['$stateProvider'];
-
 export default function routes($stateProvider) {
   $stateProvider.state('content-credentials', {
     url: '/content_credentials2',
@@ -13,3 +11,5 @@ export default function routes($stateProvider) {
     }
   });
 }
+
+routes.$inject = ['$stateProvider'];

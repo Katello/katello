@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default ['$interpolate', 'foreman', function ($interpolate, foreman) {
   function interpolateIfNeeded(message, context) {
     var result = message;
