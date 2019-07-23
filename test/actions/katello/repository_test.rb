@@ -656,4 +656,17 @@ module ::Actions::Katello::Repository
       end
     end
   end
+
+  class CloneContentsFinalizeTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::CloneContents }
+
+    it 'plans' do
+      custom_repository.saved_checksum_type = "sha1"
+      repository.saved_checksum_type = "sha256"
+      planned_action = plan_action action, [repository], custom_repository, :copy_contents => false
+
+      assert_equal planned_action.execution_plan.planned_finalize_steps.first.class, ::Actions::Katello::Repository::CloneContents
+      assert_equal planned_action.execution_plan.planned_finalize_steps.first.input, "source_checksum_type" => "sha256", "target_repo_id" => custom_repository.id
+    end
+  end
 end
