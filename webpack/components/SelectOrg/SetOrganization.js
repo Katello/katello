@@ -25,25 +25,15 @@ class SetOrganization extends Component {
 
   onSelectItem(e) {
     this.setState({
-      item: e.target.options[e.target.selectedIndex].text,
       id: e.target.value,
       disabled: false,
     });
   }
 
   onSend() {
-    const {
-      history,
-      changeCurrentOrganization,
-      redirectPath,
-    } = this.props;
-    const { id } = this.state;
-
-    changeCurrentOrganization(`${id}`).then(() =>
-      history.push({
-        pathname: redirectPath,
-        state: { orgChanged: this.state.item },
-      }));
+    this.setState({
+      disabled: true,
+    });
   }
 
   render() {
@@ -51,6 +41,8 @@ class SetOrganization extends Component {
       list,
       loading,
     } = this.props;
+
+    const { id } = this.state;
 
     return (
       <div id="select-org" className="well col-sm-6 col-sm-offset-3">
@@ -79,9 +71,11 @@ class SetOrganization extends Component {
               </div>
 
               <div className="col-sm-3">
-                <Button disabled={this.state.disabled} className="btn btn-primary" onClick={this.onSend}>
-                  {__('Select')}
-                </Button>
+                <a href={`/organizations/${id}/select`}>
+                  <Button disabled={this.state.disabled} className="btn btn-primary" onClick={this.onSend}>
+                    {__('Select')}
+                  </Button>
+                </a>
               </div>
             </div>
           </Form>
@@ -95,11 +89,9 @@ class SetOrganization extends Component {
 SetOrganization.propTypes = {
   list: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool.isRequired,
-  changeCurrentOrganization: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-  redirectPath: PropTypes.string.isRequired,
   getOrganiztionsList: PropTypes.func.isRequired,
 };
 
