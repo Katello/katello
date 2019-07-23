@@ -23,7 +23,9 @@ child :root_repositories => :gpg_key_repos do
   attribute :id
   attribute :name
   attribute :content_type
-
+  node :library_instance_id do |root|
+    root.library_instance.id
+  end
   child :product do |_product|
     attributes :id, :cp_id, :name
   end
@@ -44,7 +46,9 @@ child :ssl_ca_root_repos => :ssl_ca_root_repos do
   attribute :id
   attribute :name
   attribute :content_type
-
+  node :library_instance_id do |root|
+    root.library_instance.id
+  end
   child :product do |_product|
     attributes :id, :cp_id, :name
   end
@@ -65,7 +69,9 @@ child :ssl_client_root_repos => :ssl_client_root_repos do
   attribute :id
   attribute :name
   attribute :content_type
-
+  node :library_instance_id do |root|
+    root.library_instance.id
+  end
   child :product do |_product|
     attributes :id, :cp_id, :name
   end
@@ -86,7 +92,9 @@ child :ssl_key_root_repos => :ssl_key_root_repos do
   attribute :id
   attribute :name
   attribute :content_type
-
+  node :library_instance_id do |root|
+    root.library_instance.id
+  end
   child :product do |_product|
     attributes :id, :cp_id, :name
   end
