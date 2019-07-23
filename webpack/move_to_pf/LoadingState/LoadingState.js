@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { Spinner } from 'patternfly-react';
 import './LoadingState.scss';
 

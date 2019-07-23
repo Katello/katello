@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MessageDialog } from 'patternfly-react';
-import { sprintf } from 'foremanReact/common/I18n';
+import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 
 const DeleteDialog = ({
   show, selectedRows, onDeleteSubscriptions, onSubscriptionDeleteModalClose,

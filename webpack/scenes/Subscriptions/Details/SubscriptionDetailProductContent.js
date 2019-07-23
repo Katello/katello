@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, ListView } from 'patternfly-react';
+import { translate as __ } from 'foremanReact/common/I18n';
 import SubscriptionDetailProduct from './SubscriptionDetailProduct';
 
 const SubscriptionDetailProductContent = ({ productContent }) => {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Alert, Spinner } from 'patternfly-react';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 import loadRepositorySetRepos from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
 import RepositorySetRepository from './RepositorySetRepository/';

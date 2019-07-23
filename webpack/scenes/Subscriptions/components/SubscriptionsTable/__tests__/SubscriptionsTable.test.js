@@ -2,6 +2,7 @@ import React from 'react';
 import { render, mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import { MemoryRouter } from 'react-router-dom';
+import { translate as __ } from 'foremanReact/common/I18n';
 import SubscriptionsTable from '../SubscriptionsTable';
 import { successState, loadingState, emptyState } from '../../../__tests__/subscriptions.fixtures';
 import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions';
