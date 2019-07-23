@@ -13,12 +13,8 @@ module Katello
                :class_name => "Katello::ContentView",
                :inverse_of => :filters
 
-    # rubocop:disable HasAndBelongsToMany
-    # TODO: change these into has_many :through associations
-    has_and_belongs_to_many :repositories,
-                            :uniq => true,
-                            :class_name => "Katello::Repository",
-                            :join_table => :katello_content_view_filters_repositories
+    has_many :repository_content_view_filters, :class_name => "Katello::RepositoryContentViewFilter", :dependent => :delete_all, :inverse_of => :filter, :foreign_key => :content_view_filter_id
+    has_many :repositories, :through => :repository_content_view_filters, :class_name => "Katello::Repository"
 
     validates_lengths_from_database
     validate :validate_content_view
@@ -124,8 +120,8 @@ module Katello
     end
 
     def self.applicable(repo)
-      query = %{ (katello_content_view_filters.id in (select content_view_filter_id from katello_content_view_filters_repositories where repository_id = #{repo.id})) or
-                 (katello_content_view_filters.id not in (select content_view_filter_id from katello_content_view_filters_repositories))
+      query = %{ (katello_content_view_filters.id in (select content_view_filter_id from katello_repository_content_view_filters where repository_id = #{repo.id})) or
+                 (katello_content_view_filters.id not in (select content_view_filter_id from katello_repository_content_view_filters))
                }
       where(query).select("DISTINCT katello_content_view_filters.id")
     end
