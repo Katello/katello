@@ -35,5 +35,24 @@ module Actions
 
       assert_equal true, run.output[:matching_content]
     end
+
+    def test_check_matching_content_false_checksum
+      action = create_action(action_class)
+      action_class.any_instance.stubs(:srpms_match?).returns(true)
+      action_class.any_instance.stubs(:rpms_match?).returns(true)
+      action_class.any_instance.stubs(:errata_match?).returns(true)
+      action_class.any_instance.stubs(:package_groups_match?).returns(true)
+      action_class.any_instance.stubs(:distributions_match?).returns(true)
+      action_class.any_instance.stubs(:yum_metadata_files_match?).returns(true)
+      ::Katello::Repository.any_instance.expects(:published?).returns(true)
+
+      yum_repo.update_attribute(:saved_checksum_type, "sha1")
+      yum_repo2.update_attribute(:saved_checksum_type, "sha256")
+
+      plan = plan_action(action, :source_repo_id => yum_repo.id, :target_repo_id => yum_repo2.id)
+      run = run_action plan
+
+      assert_equal false, run.output[:matching_content]
+    end
   end
 end

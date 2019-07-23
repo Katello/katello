@@ -21,8 +21,10 @@ module Actions
             package_groups = package_groups_match?(source_repo, target_repo)
             distributions = distributions_match?(source_repo, target_repo)
             yum_metadata_files = yum_metadata_files_match?(source_repo, target_repo)
+            checksum_match = (target_repo.saved_checksum_type == source_repo.saved_checksum_type)
 
-            output[:matching_content] = yum_metadata_files && srpms_match && rpms && errata && package_groups && distributions && target_repo.published?
+            output[:checksum_match] = checksum_match
+            output[:matching_content] = yum_metadata_files && srpms_match && rpms && errata && package_groups && distributions && target_repo.published? && checksum_match
           end
 
           if source_repo.content_type == ::Katello::Repository::DEB_TYPE
