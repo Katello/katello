@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from 'patternfly-react';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { PropTypes } from 'prop-types';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import api from '../../../services/api';

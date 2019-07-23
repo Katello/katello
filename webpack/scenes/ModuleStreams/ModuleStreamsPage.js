@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import qs from 'query-string';
+import { translate as __ } from 'foremanReact/common/I18n';
+
 import Search from '../../components/Search/index';
 import ModuleStreamsTable from './ModuleStreamsTable';
 import { orgId } from '../../services/api';

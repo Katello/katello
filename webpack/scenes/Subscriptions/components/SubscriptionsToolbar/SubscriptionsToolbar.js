@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Row, Col, Form, FormGroup, Button } from 'patternfly-react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { noop } from 'foremanReact/common/helpers';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 import Search from '../../../../components/Search/index';
 import TooltipButton from '../../../../move_to_pf/TooltipButton';

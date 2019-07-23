@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { sprintf } from 'foremanReact/common/I18n';
+import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { MessageDialog } from 'patternfly-react';
 import { buildPools } from '../../SubscriptionsTableHelpers';
 import { renderTaskStartedToast } from '../../../../../Tasks/helpers';

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 const EnabledRepositoryContent = ({ loading, disableTooltipId, disableRepository }) => (
   <Spinner loading={loading} inline>

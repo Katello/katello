@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { LoadingState } from '../../../../move_to_pf/LoadingState';
 import { recordsValid } from '../../SubscriptionValidations';
 import { buildTableRows, groupSubscriptionsByProductId } from './SubscriptionsTableHelpers';

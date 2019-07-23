@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 // using Map to preserve order
 const displayMap = new Map([

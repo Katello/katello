@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { ListView, Spinner, OverlayTrigger, Tooltip, Icon, FieldLevelHelp } from 'patternfly-react';
 
-import { sprintf } from 'foremanReact/common/I18n';
+import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { yStream } from '../RepositorySetRepositoriesHelpers';
 import '../../index.scss';
 

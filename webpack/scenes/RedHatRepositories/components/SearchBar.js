@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { Form, FormGroup } from 'react-bootstrap';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 import { selectOrganizationProducts }
   from '../../../redux/OrganizationProducts/OrganizationProductsSelectors';
