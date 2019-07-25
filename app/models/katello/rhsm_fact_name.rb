@@ -7,7 +7,11 @@ module Katello
     end
 
     def origin
-      'Redhat'
+      'RHSM'
+    end
+
+    def icon_path
+      "icons16x16/redhat.png"
     end
   end
 end
