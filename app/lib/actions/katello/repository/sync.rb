@@ -17,27 +17,30 @@ module Actions
         #   of Katello and we just need to finish the rest of the orchestration
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/PerceivedComplexity
+        # rubocop:disable Metrics/AbcSize
         def plan(repo, _pulp_sync_task_id = nil, options = {})
           action_subject(repo)
 
           source_url = options.fetch(:source_url, nil)
           incremental = options.fetch(:incremental, false)
           validate_contents = options.fetch(:validate_contents, false)
-          skip_metadata_check = options.fetch(:skip_metadata_check, false) || validate_contents
+          skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && repo.yum?)
           # TODO: Remove the check for Pulp 3 once Pulp 3 errata is working fully
           generate_applicability = repo.yum? && !SmartProxy.pulp_master.pulp3_support?(repo)
 
-          pulp_sync_options = {}
-          pulp_sync_options[:download_policy] = ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND if validate_contents
-          pulp_sync_options[:force_full] = true if skip_metadata_check
-          pulp_sync_options[:remove_missing] = false if incremental
-
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
-          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum repositories.") if validate_contents && !repo.yum?
+          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum/deb repositories.") if validate_contents && !repo.yum? && !repo.deb?
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
 
+          pulp_sync_options = {}
+          pulp_sync_options[:download_policy] = ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
+          pulp_sync_options[:force_full] = true if skip_metadata_check && repo.yum?
+          pulp_sync_options[:repair_sync] = true if validate_contents && repo.deb?
+          pulp_sync_options[:remove_missing] = false if incremental
+
           sequence do
-            plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents
+            plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents && repo.yum?
             sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :repo_id => repo.id, :source_url => source_url, :options => pulp_sync_options}
             sync_action = plan_pulp_action([Actions::Pulp::Orchestration::Repository::Sync,
                                             Actions::Pulp3::Orchestration::Repository::Sync],
@@ -53,8 +56,8 @@ module Actions
             plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
             plan_action(Katello::Repository::CorrectChecksum, repo)
             concurrence do
-              plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents
-              plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check
+              plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents && repo.yum?
+              plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check && repo.yum?
               plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
               plan_action(Pulp::Repository::RegenerateApplicability, :repository_id => repo.id, :contents_changed => contents_changed) if generate_applicability
             end

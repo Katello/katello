@@ -55,7 +55,7 @@
         $scope.hideSyncButton = function(repository, advancedSync) {
             var result = $scope.syncInProgress(repository.last_sync) || !repository.url || $scope.denied('sync_products', $scope.product);
             if (advancedSync) {
-                result = result || repository.content_type !== 'yum';
+                result = result || (repository.content_type !== 'yum' && repository.content_type !== 'deb');
             }
             return result;
         };
