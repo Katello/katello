@@ -20,6 +20,7 @@ module Actions
           elsif repo.file?
             ::Katello::FileUnit.import_for_repository(repo)
           elsif repo.deb?
+            unit_ids = search_units(repo)
             ::Katello::Deb.import_all(unit_ids, repo)
           elsif repo.yum?
             unit_ids = search_units(repo)

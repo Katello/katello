@@ -11,6 +11,10 @@ module Katello
         fail NotImplementedError
       end
 
+      def self.content_class
+        fail NotImplementedError
+      end
+
       def update_model
         fail NotImplementedError
       end

@@ -7,6 +7,10 @@ module Katello
         PulpFileClient::ContentFilesApi.new(Katello::Pulp3::Repository::File.api_client(SmartProxy.pulp_master!))
       end
 
+      def self.content_class
+        PulpFileClient::FileContent
+      end
+
       def self.ids_for_repository(repo_id)
         repo = Katello::Pulp3::Repository::File.new(Katello::Repository.find(repo_id), SmartProxy.pulp_master)
         repo_content_list = repo.content_list

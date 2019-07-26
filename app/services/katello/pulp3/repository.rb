@@ -103,6 +103,14 @@ module Katello
         PulpcoreClient::RepositoriesVersionsApi.new(core_api_client)
       end
 
+      def uploads_api
+        PulpcoreClient::UploadsApi.new(core_api_client)
+      end
+
+      def upload_class
+        PulpcoreClient::Upload
+      end
+
       def self.instance_for_type(repo, smart_proxy)
         Katello::RepositoryTypeManager.repository_types[repo.root.content_type].pulp3_service_class.new(repo, smart_proxy)
       end
@@ -276,6 +284,13 @@ module Katello
       def remove_content(content_units)
         data = PulpcoreClient::RepositoryVersionCreate.new(
           remove_content_units: content_units.map(&:pulp_id))
+        repository_versions_api.create(repository_reference.repository_href, data)
+      end
+
+      def add_content(content_unit_href)
+        content_unit_href = [content_unit_href] unless content_unit_href.is_a?(Array)
+        data = PulpcoreClient::RepositoryVersionCreate.new(
+            add_content_units: content_unit_href)
         repository_versions_api.create(repository_reference.repository_href, data)
       end
     end
