@@ -22,5 +22,5 @@ child :subscription_facet => :subscription_facet_attributes do |_facet|
     attributes :id, :name
   end
 
-  attributes :host_type
+  attributes :host_type, :dmi_system_uuid
 end

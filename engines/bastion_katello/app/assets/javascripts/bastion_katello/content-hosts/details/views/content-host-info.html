@@ -16,8 +16,11 @@
             on-save="save(host)">
         </dd>
 
-        <dt translate>UUID</dt>
+        <dt translate>Subscription UUID</dt>
         <dd>{{ host.subscription_facet_attributes.uuid }}</dd>
+
+        <dt translate>System UUID</dt>
+        <dd>{{ host.subscription_facet_attributes.dmi_system_uuid }}</dd>
 
         <dt translate>Description</dt>
         <dd bst-edit-textarea="host.comment"
