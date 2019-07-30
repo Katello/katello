@@ -8,6 +8,7 @@ module ::Actions::Pulp3
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:pulp3_file_1)
       create_and_sync_repo(@repo, @master)
+      @repo.reload
     end
 
     def create_and_sync_repo(repo, proxy)
@@ -33,40 +34,40 @@ module ::Actions::Pulp3
     end
 
     def test_remove_file_unit
-      @repo.reload
-      content_unit = @repo.repository_files.first
-      refute_empty @repo.repository_files
-      remove_content_args = {contents: [content_unit.id]}
+      content_unit = @repo.files.first
+      refute_empty @repo.files
+
+      remove_content_args = {contents: [content_unit.id], content_unit_type: 'file'}
       remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       assert_equal "success", remove_action.result
     end
 
     def test_remove_file_unit_updates_version_href
-      @repo.reload
-      content_unit = @repo.repository_files.first
-      refute_empty @repo.repository_files
+      content_unit = @repo.files.first
+      refute_empty @repo.files
+
       version_href = @repo.version_href
-      remove_content_args = {contents: [content_unit.id]}
+      remove_content_args = {contents: [content_unit.id], content_unit_type: 'file'}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       refute_equal version_href, @repo.reload.version_href
     end
 
     def test_empty_content_args_doesnt_update_version_href
       version_href = @repo.reload.version_href
-      remove_content_args = {contents: []}
+      remove_content_args = {contents: [], content_unit_type: 'file'}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       assert_equal version_href, @repo.reload.version_href
     end
 
     def test_empty_content_args
-      remove_content_args = {contents: []}
+      remove_content_args = {contents: [], content_unit_type: 'file'}
       remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       assert_equal "success", remove_action.result
     end
 
     def test_incorrect_content_units_doesnt_update_version_href
       version_href = @repo.reload.version_href
-      remove_content_args = {contents: [ "not an id"]}
+      remove_content_args = {contents: [ "not an id"], content_unit_type: 'file'}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       assert_equal version_href, @repo.reload.version_href
     end
