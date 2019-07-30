@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table } from 'patternfly-react';
 import TableSchema from './TableSchema';
 
-const ModuleStreamDetailRepositories = ({ repositories }) => (
+const ContentDetailRepositories = ({ repositories }) => (
   <div>
     <Table.PfProvider columns={TableSchema}>
       <Table.Header />
@@ -12,8 +12,8 @@ const ModuleStreamDetailRepositories = ({ repositories }) => (
   </div>
 );
 
-ModuleStreamDetailRepositories.propTypes = {
+ContentDetailRepositories.propTypes = {
   repositories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
-export default ModuleStreamDetailRepositories;
+export default ContentDetailRepositories;

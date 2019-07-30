@@ -4,18 +4,8 @@ import { Table } from 'react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 // using Map to preserve order
-const displayMap = new Map([
-  ['name', __('Name')],
-  ['summary', __('Summary')],
-  ['description', __('Description')],
-  ['stream', __('Stream')],
-  ['version', __('Version')],
-  ['arch', __('Arch')],
-  ['context', __('Context')],
-  ['uuid', __('UUID')],
-]);
 
-export const createRows = (details, mapping) => {
+const createRows = (details, mapping) => {
   const rows = [];
   /* eslint-disable no-restricted-syntax, react/jsx-closing-tag-location */
   for (const key of mapping.keys()) {
@@ -28,16 +18,16 @@ export const createRows = (details, mapping) => {
   return rows;
 };
 
-const ModuleStreamDetailInfo = ({ moduleStreamDetails }) => (
+const ContentDetailInfo = ({ contentDetails, displayMap }) => (
   <Table>
     <tbody>
-      {createRows(moduleStreamDetails, displayMap)}
+    {createRows(contentDetails, displayMap)}
     </tbody>
   </Table>
 );
 
-ModuleStreamDetailInfo.propTypes = {
-  moduleStreamDetails: PropTypes.shape({
+ContentDetailInfo.propTypes = {
+  contentDetails: PropTypes.shape({
     name: PropTypes.string,
     summary: PropTypes.string,
     description: PropTypes.string,
@@ -49,4 +39,4 @@ ModuleStreamDetailInfo.propTypes = {
   }).isRequired,
 };
 
-export default ModuleStreamDetailInfo;
+export default ContentDetailInfo;
