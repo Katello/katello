@@ -50,8 +50,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
 
         $scope.errataActionFormValues = {
-            authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
-            search: hostIds.included.search
+            authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
         };
 
         if (hostIds.included.ids) {
