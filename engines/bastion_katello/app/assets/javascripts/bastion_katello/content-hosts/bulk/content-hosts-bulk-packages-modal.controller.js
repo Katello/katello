@@ -138,8 +138,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
                 $scope.packageActionFormValues.hostIds = selectedHosts.included.ids.join(',');
             }
 
-            $scope.packageActionFormValues.search = selectedHosts.included.search;
-
             $timeout(function () {
                 angular.element('#packageActionForm').submit();
             }, 0);

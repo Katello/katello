@@ -38,8 +38,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
 
         $scope.moduleStreamActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
-            remoteAction: 'module_stream_action',
-            search: hostIds.included.search
+            remoteAction: 'module_stream_action'
         };
 
         if (hostIds.included.ids) {
