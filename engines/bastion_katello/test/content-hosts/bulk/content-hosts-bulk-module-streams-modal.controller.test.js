@@ -62,7 +62,6 @@ describe('Controller: ContentHostsBulkModuleStreamsModalController', function() 
         formValues = {
             authenticityToken: 'secret_token', 
             remoteAction: 'module_stream_action', 
-            search: undefined, 
             hostIds: '1,2,3', 
             moduleSpec: 'django:1.9', 
             moduleStreamAction: 'enable'
