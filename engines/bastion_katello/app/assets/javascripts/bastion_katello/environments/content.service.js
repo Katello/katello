@@ -28,7 +28,8 @@
                 state: 'content-views',
                 resource: 'ContentView',
                 display: translate('Content Views'),
-                params: {nondefault: true}
+                params: {nondefault: true},
+                autoLoad: true
             }, {
                 state: 'repositories',
                 resource: 'Repository',
@@ -87,11 +88,13 @@
         };
 
         this.buildNutupane = function (params) {
-            var nutupane;
+            var nutupane, type;
+
+            type = this.getCurrentContentType();
 
             params = params || {};
-            params = angular.extend(params, getContentType(currentState()).params);
-            nutupane = new Nutupane($injector.get(getContentType(currentState()).resource), params, 'queryPaged', { 'disableAutoLoad': true });
+            params = angular.extend(params, type.params);
+            nutupane = new Nutupane($injector.get(type.resource), params, 'queryPaged', { 'disableAutoLoad': !type.autoLoad });
 
             return nutupane;
         };
