@@ -3,6 +3,7 @@ module Katello
     include Glue::Candlepin::CandlepinObject
     include Glue::Candlepin::Subscription
     include Katello::Authorization::Subscription
+    include AuthorizeHelper
 
     has_many :pools, :class_name => "Katello::Pool", :inverse_of => :subscription, :dependent => :destroy
 
