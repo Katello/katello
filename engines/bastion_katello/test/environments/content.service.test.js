@@ -16,8 +16,8 @@ describe('Service: ContentService', function() {
         $state.current = {name: 'environment.packages'};
         var nutupane = ContentService.buildNutupane({environmentId: 1});
 
-        expect(nutupane).toBeDefined();
         expect(nutupane.getParams()['environmentId']).toBe(1);
+        expect(nutupane.disableAutoLoad).toBe(true);
     });
 
     describe ('Package', function() {
@@ -33,8 +33,8 @@ describe('Service: ContentService', function() {
         it("should provide a method to build a nutupane based on the current state", function () {
             var nutupane = ContentService.buildNutupane();
 
-            expect(nutupane).toBeDefined();
             expect(nutupane.table.resource).toBe(Package);
+            expect(nutupane.disableAutoLoad).toBe(true);
         });
     });
 
@@ -51,8 +51,22 @@ describe('Service: ContentService', function() {
         it("should provide a method to build a nutupane based on the current state", function () {
             var nutupane = ContentService.buildNutupane();
 
-            expect(nutupane).toBeDefined();
             expect(nutupane.table.resource).toBe(ModuleStream);
+            expect(nutupane.disableAutoLoad).toBe(true);
+        });
+    });
+
+    describe('Content Views', function() {
+        beforeEach(inject(function ($injector) {
+            $state.current = {name: 'environment.content-views'};
+            ContentView = $injector.get('ContentView');
+        }));
+
+        it("auto loads nutupane", function () {
+            var nutupane = ContentService.buildNutupane();
+
+            expect(nutupane.disableAutoLoad).toBe(false);
+            expect(nutupane.table.resource).toBe(ContentView);
         });
     });
 });
