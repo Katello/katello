@@ -4,11 +4,15 @@ import { Grid, Col, Row, Form, FormGroup } from 'react-bootstrap';
 import Search from '../../components/Search/index';
 import ContentTable from './ContentTable';
 
-const ContentPage = props => (
+const ContentPage = ({
+  header, onSearch, getAutoCompleteParams,
+  updateSearchQuery, initialInputValue,
+  content, tableSchema, onPaginationChange,
+}) => (
   <Grid bsClass="container-fluid">
     <Row>
       <Col sm={12}>
-        <h1>{props.header}</h1>
+        <h1>{header}</h1>
       </Col>
     </Row>
     <Row>
@@ -16,10 +20,10 @@ const ContentPage = props => (
         <Form className="toolbar-pf-actions">
           <FormGroup className="toolbar-pf toolbar-pf-filter">
             <Search
-              onSearch={props.onSearch}
-              getAutoCompleteParams={props.getAutoCompleteParams}
-              updateSearchQuery={props.updateSearchQuery}
-              initialInputValue={props.initialInputValue}
+              onSearch={onSearch}
+              getAutoCompleteParams={getAutoCompleteParams}
+              updateSearchQuery={updateSearchQuery}
+              initialInputValue={initialInputValue}
             />
           </FormGroup>
         </Form>
@@ -28,9 +32,9 @@ const ContentPage = props => (
     <Row>
       <Col sm={12}>
         <ContentTable
-          content={props.content}
-          tableSchema={props.tableSchema}
-          onPaginationChange={props.onPaginationChange}
+          content={content}
+          tableSchema={tableSchema}
+          onPaginationChange={onPaginationChange}
         />
       </Col>
     </Row>
@@ -38,7 +42,6 @@ const ContentPage = props => (
 );
 
 ContentPage.propTypes = {
-  props: PropTypes.shape({}).isRequired,
   header: PropTypes.string.isRequired,
   content: PropTypes.shape({}).isRequired,
   tableSchema: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

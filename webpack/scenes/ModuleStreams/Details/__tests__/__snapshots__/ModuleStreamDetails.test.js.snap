@@ -2,166 +2,91 @@
 
 exports[`Module stream details page rendering renders with loading state 1`] = `
 <div>
-  <LoadingState
-    loading={true}
-    loadingText="Loading"
-    timeout={300}
-  >
-    <Uncontrolled(TabContainer)
-      defaultActiveKey={1}
-      id="module-stream-tabs-container"
-    >
-      <Grid
-        bsClass="container-fluid"
-        componentClass="div"
-        fluid={false}
-      >
-        <Row
-          bsClass="row"
-          componentClass="div"
-        >
-          <Col
-            bsClass="col"
-            componentClass="div"
-            sm={12}
-          >
-            <Nav
-              bsClass="nav nav-tabs"
-              justified={false}
-              pullLeft={false}
-              pullRight={false}
-              stacked={false}
-            >
-              <NavItem
-                active={false}
-                disabled={false}
-                eventKey={1}
-              >
-                <div>
-                  Details
-                </div>
-              </NavItem>
-              <NavItem
-                active={false}
-                disabled={false}
-                eventKey={2}
-              >
-                <div>
-                  Repositories
-                </div>
-              </NavItem>
-              <NavItem
-                active={false}
-                disabled={false}
-                eventKey={3}
-              >
-                <div>
-                  Profiles
-                </div>
-              </NavItem>
-              <NavItem
-                active={false}
-                disabled={false}
-                eventKey={4}
-              >
-                <div>
-                  Artifacts
-                </div>
-              </NavItem>
-            </Nav>
-          </Col>
-        </Row>
-        <TabContent
-          animation={false}
-          bsClass="tab"
-          componentClass="div"
-          mountOnEnter={false}
-          unmountOnExit={false}
-        >
-          <TabPane
-            bsClass="tab-pane"
-            eventKey={1}
-          >
-            <Row
-              bsClass="row"
-              componentClass="div"
-            >
-              <Col
-                bsClass="col"
-                componentClass="div"
-                sm={12}
-              >
-                <ModuleStreamDetailInfo
-                  moduleStreamDetails={
-                    Object {
-                      "itemCount": 0,
-                      "loading": true,
-                      "pagination": Object {
-                        "page": 0,
-                        "perPage": 20,
-                      },
-                      "results": Array [],
-                    }
-                  }
-                />
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            bsClass="tab-pane"
-            eventKey={2}
-          >
-            <Row
-              bsClass="row"
-              componentClass="div"
-            >
-              <Col
-                bsClass="col"
-                componentClass="div"
-                sm={12}
-              >
-                No repositories to show
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            bsClass="tab-pane"
-            eventKey={3}
-          >
-            <Row
-              bsClass="row"
-              componentClass="div"
-            >
-              <Col
-                bsClass="col"
-                componentClass="div"
-                sm={12}
-              >
-                No profiles to show
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            bsClass="tab-pane"
-            eventKey={4}
-          >
-            <Row
-              bsClass="row"
-              componentClass="div"
-            >
-              <Col
-                bsClass="col"
-                componentClass="div"
-                sm={12}
-              >
-                No artifacts to show
-              </Col>
-            </Row>
-          </TabPane>
-        </TabContent>
-      </Grid>
-    </Uncontrolled(TabContainer)>
-  </LoadingState>
+  <ContentDetails
+    contentDetails={
+      Object {
+        "itemCount": 0,
+        "loading": true,
+        "pagination": Object {
+          "page": 0,
+          "perPage": 20,
+        },
+        "results": Array [],
+      }
+    }
+    schema={
+      Array [
+        Object {
+          "key": 1,
+          "tabContent": <ContentDetailInfo
+            contentDetails={
+              Object {
+                "itemCount": 0,
+                "loading": true,
+                "pagination": Object {
+                  "page": 0,
+                  "perPage": 20,
+                },
+                "results": Array [],
+              }
+            }
+            displayMap={
+              Array [
+                Array [
+                  "name",
+                  "Name",
+                ],
+                Array [
+                  "summary",
+                  "Summary",
+                ],
+                Array [
+                  "description",
+                  "Description",
+                ],
+                Array [
+                  "stream",
+                  "Stream",
+                ],
+                Array [
+                  "version",
+                  "Version",
+                ],
+                Array [
+                  "arch",
+                  "Arch",
+                ],
+                Array [
+                  "context",
+                  "Context",
+                ],
+                Array [
+                  "uuid",
+                  "UUID",
+                ],
+              ]
+            }
+          />,
+          "tabHeader": "Details",
+        },
+        Object {
+          "key": 2,
+          "tabContent": "No repositories to show",
+          "tabHeader": "Repositories",
+        },
+        Object {
+          "key": 3,
+          "tabContent": "No profiles to show",
+          "tabHeader": "Profiles",
+        },
+        Object {
+          "key": 4,
+          "tabContent": "No artifacts to show",
+          "tabHeader": "Artifacts",
+        },
+      ]
+    }
+  />
 </div>
 `;
 
@@ -189,364 +114,385 @@ exports[`Module stream details page rendering renders with module stream provide
     }
     onSwitcherItemClick={[Function]}
   />
-  <LoadingState
-    loading={false}
-    loadingText="Loading"
-    timeout={300}
-  >
-    <Uncontrolled(TabContainer)
-      defaultActiveKey={1}
-      id="module-stream-tabs-container"
-    >
-      <Grid
-        bsClass="container-fluid"
-        componentClass="div"
-        fluid={false}
-      >
-        <Row
-          bsClass="row"
-          componentClass="div"
-        >
-          <Col
-            bsClass="col"
-            componentClass="div"
-            sm={12}
-          >
-            <Nav
-              bsClass="nav nav-tabs"
-              justified={false}
-              pullLeft={false}
-              pullRight={false}
-              stacked={false}
-            >
-              <NavItem
-                active={false}
-                disabled={false}
-                eventKey={1}
-              >
-                <div>
-                  Details
-                </div>
-              </NavItem>
-              <NavItem
-                active={false}
-                disabled={false}
-                eventKey={2}
-              >
-                <div>
-                  Repositories
-                </div>
-              </NavItem>
-              <NavItem
-                active={false}
-                disabled={false}
-                eventKey={3}
-              >
-                <div>
-                  Profiles
-                </div>
-              </NavItem>
-              <NavItem
-                active={false}
-                disabled={false}
-                eventKey={4}
-              >
-                <div>
-                  Artifacts
-                </div>
-              </NavItem>
-            </Nav>
-          </Col>
-        </Row>
-        <TabContent
-          animation={false}
-          bsClass="tab"
-          componentClass="div"
-          mountOnEnter={false}
-          unmountOnExit={false}
-        >
-          <TabPane
-            bsClass="tab-pane"
-            eventKey={1}
-          >
-            <Row
-              bsClass="row"
-              componentClass="div"
-            >
-              <Col
-                bsClass="col"
-                componentClass="div"
-                sm={12}
-              >
-                <ModuleStreamDetailInfo
-                  moduleStreamDetails={
+  <ContentDetails
+    contentDetails={
+      Object {
+        "arch": "x86_64",
+        "artifacts": Array [
+          Object {
+            "id": 208,
+            "name": "python3-avocado-plugins-varianter-yaml-to-mux-0:63.0-2.module_2037+1b0ad681.noarch",
+          },
+          Object {
+            "id": 207,
+            "name": "python3-avocado-plugins-varianter-pict-0:63.0-2.module_2037+1b0ad681.noarch",
+          },
+        ],
+        "context": "a5b0195c",
+        "description": "Avocado is a set of tools and libraries (what people call these days a framework) to perform automated testing.",
+        "id": 22,
+        "name": "avocado",
+        "profiles": Array [
+          Object {
+            "id": 37,
+            "name": "default",
+            "rpms": Array [
+              Object {
+                "id": 108,
+                "name": "perl",
+              },
+              Object {
+                "id": 110,
+                "name": "foo",
+              },
+              Object {
+                "id": 111,
+                "name": "rpm_0",
+              },
+              Object {
+                "id": 112,
+                "name": "rpm_1",
+              },
+              Object {
+                "id": 113,
+                "name": "rpm_2",
+              },
+              Object {
+                "id": 114,
+                "name": "rpm_3",
+              },
+              Object {
+                "id": 115,
+                "name": "rpm_4",
+              },
+              Object {
+                "id": 116,
+                "name": "rpm_5",
+              },
+              Object {
+                "id": 117,
+                "name": "rpm_6",
+              },
+              Object {
+                "id": 118,
+                "name": "rpm_7",
+              },
+              Object {
+                "id": 119,
+                "name": "rpm_8",
+              },
+              Object {
+                "id": 120,
+                "name": "rpm_9",
+              },
+              Object {
+                "id": 121,
+                "name": "rpm_10",
+              },
+            ],
+          },
+          Object {
+            "id": 38,
+            "name": "minimal",
+            "rpms": Array [
+              Object {
+                "id": 84,
+                "name": "python2-avocado",
+              },
+            ],
+          },
+        ],
+        "repositories": Array [
+          Object {
+            "id": 1,
+            "name": "rawhide_wtih_modules",
+            "product_id": 1,
+            "product_name": "fedora",
+          },
+          Object {
+            "id": 4,
+            "name": "rawhide_wtih_modules_dup",
+            "product_id": 1,
+            "product_name": "fedora",
+          },
+        ],
+        "stream": "latest",
+        "summary": "Framework with tools and libraries for Automated Testing",
+        "uuid": "8ae7f190-0a48-41a2-93e0-7bc3e4734355",
+        "version": "20180816135607",
+      }
+    }
+    schema={
+      Array [
+        Object {
+          "key": 1,
+          "tabContent": <ContentDetailInfo
+            contentDetails={
+              Object {
+                "arch": "x86_64",
+                "artifacts": Array [
+                  Object {
+                    "id": 208,
+                    "name": "python3-avocado-plugins-varianter-yaml-to-mux-0:63.0-2.module_2037+1b0ad681.noarch",
+                  },
+                  Object {
+                    "id": 207,
+                    "name": "python3-avocado-plugins-varianter-pict-0:63.0-2.module_2037+1b0ad681.noarch",
+                  },
+                ],
+                "context": "a5b0195c",
+                "description": "Avocado is a set of tools and libraries (what people call these days a framework) to perform automated testing.",
+                "id": 22,
+                "name": "avocado",
+                "profiles": Array [
+                  Object {
+                    "id": 37,
+                    "name": "default",
+                    "rpms": Array [
+                      Object {
+                        "id": 108,
+                        "name": "perl",
+                      },
+                      Object {
+                        "id": 110,
+                        "name": "foo",
+                      },
+                      Object {
+                        "id": 111,
+                        "name": "rpm_0",
+                      },
+                      Object {
+                        "id": 112,
+                        "name": "rpm_1",
+                      },
+                      Object {
+                        "id": 113,
+                        "name": "rpm_2",
+                      },
+                      Object {
+                        "id": 114,
+                        "name": "rpm_3",
+                      },
+                      Object {
+                        "id": 115,
+                        "name": "rpm_4",
+                      },
+                      Object {
+                        "id": 116,
+                        "name": "rpm_5",
+                      },
+                      Object {
+                        "id": 117,
+                        "name": "rpm_6",
+                      },
+                      Object {
+                        "id": 118,
+                        "name": "rpm_7",
+                      },
+                      Object {
+                        "id": 119,
+                        "name": "rpm_8",
+                      },
+                      Object {
+                        "id": 120,
+                        "name": "rpm_9",
+                      },
+                      Object {
+                        "id": 121,
+                        "name": "rpm_10",
+                      },
+                    ],
+                  },
+                  Object {
+                    "id": 38,
+                    "name": "minimal",
+                    "rpms": Array [
+                      Object {
+                        "id": 84,
+                        "name": "python2-avocado",
+                      },
+                    ],
+                  },
+                ],
+                "repositories": Array [
+                  Object {
+                    "id": 1,
+                    "name": "rawhide_wtih_modules",
+                    "product_id": 1,
+                    "product_name": "fedora",
+                  },
+                  Object {
+                    "id": 4,
+                    "name": "rawhide_wtih_modules_dup",
+                    "product_id": 1,
+                    "product_name": "fedora",
+                  },
+                ],
+                "stream": "latest",
+                "summary": "Framework with tools and libraries for Automated Testing",
+                "uuid": "8ae7f190-0a48-41a2-93e0-7bc3e4734355",
+                "version": "20180816135607",
+              }
+            }
+            displayMap={
+              Array [
+                Array [
+                  "name",
+                  "Name",
+                ],
+                Array [
+                  "summary",
+                  "Summary",
+                ],
+                Array [
+                  "description",
+                  "Description",
+                ],
+                Array [
+                  "stream",
+                  "Stream",
+                ],
+                Array [
+                  "version",
+                  "Version",
+                ],
+                Array [
+                  "arch",
+                  "Arch",
+                ],
+                Array [
+                  "context",
+                  "Context",
+                ],
+                Array [
+                  "uuid",
+                  "UUID",
+                ],
+              ]
+            }
+          />,
+          "tabHeader": "Details",
+        },
+        Object {
+          "key": 2,
+          "tabContent": <ContentDetailRepositories
+            repositories={
+              Array [
+                Object {
+                  "id": 1,
+                  "name": "rawhide_wtih_modules",
+                  "product_id": 1,
+                  "product_name": "fedora",
+                },
+                Object {
+                  "id": 4,
+                  "name": "rawhide_wtih_modules_dup",
+                  "product_id": 1,
+                  "product_name": "fedora",
+                },
+              ]
+            }
+          />,
+          "tabHeader": "Repositories",
+        },
+        Object {
+          "key": 3,
+          "tabContent": <ModuleStreamDetailProfiles
+            profiles={
+              Array [
+                Object {
+                  "id": 37,
+                  "name": "default",
+                  "rpms": Array [
                     Object {
-                      "arch": "x86_64",
-                      "artifacts": Array [
-                        Object {
-                          "id": 208,
-                          "name": "python3-avocado-plugins-varianter-yaml-to-mux-0:63.0-2.module_2037+1b0ad681.noarch",
-                        },
-                        Object {
-                          "id": 207,
-                          "name": "python3-avocado-plugins-varianter-pict-0:63.0-2.module_2037+1b0ad681.noarch",
-                        },
-                      ],
-                      "context": "a5b0195c",
-                      "description": "Avocado is a set of tools and libraries (what people call these days a framework) to perform automated testing.",
-                      "id": 22,
-                      "name": "avocado",
-                      "profiles": Array [
-                        Object {
-                          "id": 37,
-                          "name": "default",
-                          "rpms": Array [
-                            Object {
-                              "id": 108,
-                              "name": "perl",
-                            },
-                            Object {
-                              "id": 110,
-                              "name": "foo",
-                            },
-                            Object {
-                              "id": 111,
-                              "name": "rpm_0",
-                            },
-                            Object {
-                              "id": 112,
-                              "name": "rpm_1",
-                            },
-                            Object {
-                              "id": 113,
-                              "name": "rpm_2",
-                            },
-                            Object {
-                              "id": 114,
-                              "name": "rpm_3",
-                            },
-                            Object {
-                              "id": 115,
-                              "name": "rpm_4",
-                            },
-                            Object {
-                              "id": 116,
-                              "name": "rpm_5",
-                            },
-                            Object {
-                              "id": 117,
-                              "name": "rpm_6",
-                            },
-                            Object {
-                              "id": 118,
-                              "name": "rpm_7",
-                            },
-                            Object {
-                              "id": 119,
-                              "name": "rpm_8",
-                            },
-                            Object {
-                              "id": 120,
-                              "name": "rpm_9",
-                            },
-                            Object {
-                              "id": 121,
-                              "name": "rpm_10",
-                            },
-                          ],
-                        },
-                        Object {
-                          "id": 38,
-                          "name": "minimal",
-                          "rpms": Array [
-                            Object {
-                              "id": 84,
-                              "name": "python2-avocado",
-                            },
-                          ],
-                        },
-                      ],
-                      "repositories": Array [
-                        Object {
-                          "id": 1,
-                          "name": "rawhide_wtih_modules",
-                          "product_id": 1,
-                          "product_name": "fedora",
-                        },
-                        Object {
-                          "id": 4,
-                          "name": "rawhide_wtih_modules_dup",
-                          "product_id": 1,
-                          "product_name": "fedora",
-                        },
-                      ],
-                      "stream": "latest",
-                      "summary": "Framework with tools and libraries for Automated Testing",
-                      "uuid": "8ae7f190-0a48-41a2-93e0-7bc3e4734355",
-                      "version": "20180816135607",
-                    }
-                  }
-                />
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            bsClass="tab-pane"
-            eventKey={2}
-          >
-            <Row
-              bsClass="row"
-              componentClass="div"
-            >
-              <Col
-                bsClass="col"
-                componentClass="div"
-                sm={12}
-              >
-                <ModuleStreamDetailRepositories
-                  repositories={
-                    Array [
-                      Object {
-                        "id": 1,
-                        "name": "rawhide_wtih_modules",
-                        "product_id": 1,
-                        "product_name": "fedora",
-                      },
-                      Object {
-                        "id": 4,
-                        "name": "rawhide_wtih_modules_dup",
-                        "product_id": 1,
-                        "product_name": "fedora",
-                      },
-                    ]
-                  }
-                />
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            bsClass="tab-pane"
-            eventKey={3}
-          >
-            <Row
-              bsClass="row"
-              componentClass="div"
-            >
-              <Col
-                bsClass="col"
-                componentClass="div"
-                sm={12}
-              >
-                <ModuleStreamDetailProfiles
-                  profiles={
-                    Array [
-                      Object {
-                        "id": 37,
-                        "name": "default",
-                        "rpms": Array [
-                          Object {
-                            "id": 108,
-                            "name": "perl",
-                          },
-                          Object {
-                            "id": 110,
-                            "name": "foo",
-                          },
-                          Object {
-                            "id": 111,
-                            "name": "rpm_0",
-                          },
-                          Object {
-                            "id": 112,
-                            "name": "rpm_1",
-                          },
-                          Object {
-                            "id": 113,
-                            "name": "rpm_2",
-                          },
-                          Object {
-                            "id": 114,
-                            "name": "rpm_3",
-                          },
-                          Object {
-                            "id": 115,
-                            "name": "rpm_4",
-                          },
-                          Object {
-                            "id": 116,
-                            "name": "rpm_5",
-                          },
-                          Object {
-                            "id": 117,
-                            "name": "rpm_6",
-                          },
-                          Object {
-                            "id": 118,
-                            "name": "rpm_7",
-                          },
-                          Object {
-                            "id": 119,
-                            "name": "rpm_8",
-                          },
-                          Object {
-                            "id": 120,
-                            "name": "rpm_9",
-                          },
-                          Object {
-                            "id": 121,
-                            "name": "rpm_10",
-                          },
-                        ],
-                      },
-                      Object {
-                        "id": 38,
-                        "name": "minimal",
-                        "rpms": Array [
-                          Object {
-                            "id": 84,
-                            "name": "python2-avocado",
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                />
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            bsClass="tab-pane"
-            eventKey={4}
-          >
-            <Row
-              bsClass="row"
-              componentClass="div"
-            >
-              <Col
-                bsClass="col"
-                componentClass="div"
-                sm={12}
-              >
-                <ModuleStreamDetailArtifacts
-                  artifacts={
-                    Array [
-                      Object {
-                        "id": 208,
-                        "name": "python3-avocado-plugins-varianter-yaml-to-mux-0:63.0-2.module_2037+1b0ad681.noarch",
-                      },
-                      Object {
-                        "id": 207,
-                        "name": "python3-avocado-plugins-varianter-pict-0:63.0-2.module_2037+1b0ad681.noarch",
-                      },
-                    ]
-                  }
-                />
-              </Col>
-            </Row>
-          </TabPane>
-        </TabContent>
-      </Grid>
-    </Uncontrolled(TabContainer)>
-  </LoadingState>
+                      "id": 108,
+                      "name": "perl",
+                    },
+                    Object {
+                      "id": 110,
+                      "name": "foo",
+                    },
+                    Object {
+                      "id": 111,
+                      "name": "rpm_0",
+                    },
+                    Object {
+                      "id": 112,
+                      "name": "rpm_1",
+                    },
+                    Object {
+                      "id": 113,
+                      "name": "rpm_2",
+                    },
+                    Object {
+                      "id": 114,
+                      "name": "rpm_3",
+                    },
+                    Object {
+                      "id": 115,
+                      "name": "rpm_4",
+                    },
+                    Object {
+                      "id": 116,
+                      "name": "rpm_5",
+                    },
+                    Object {
+                      "id": 117,
+                      "name": "rpm_6",
+                    },
+                    Object {
+                      "id": 118,
+                      "name": "rpm_7",
+                    },
+                    Object {
+                      "id": 119,
+                      "name": "rpm_8",
+                    },
+                    Object {
+                      "id": 120,
+                      "name": "rpm_9",
+                    },
+                    Object {
+                      "id": 121,
+                      "name": "rpm_10",
+                    },
+                  ],
+                },
+                Object {
+                  "id": 38,
+                  "name": "minimal",
+                  "rpms": Array [
+                    Object {
+                      "id": 84,
+                      "name": "python2-avocado",
+                    },
+                  ],
+                },
+              ]
+            }
+          />,
+          "tabHeader": "Profiles",
+        },
+        Object {
+          "key": 4,
+          "tabContent": <ModuleStreamDetailArtifacts
+            artifacts={
+              Array [
+                Object {
+                  "id": 208,
+                  "name": "python3-avocado-plugins-varianter-yaml-to-mux-0:63.0-2.module_2037+1b0ad681.noarch",
+                },
+                Object {
+                  "id": 207,
+                  "name": "python3-avocado-plugins-varianter-pict-0:63.0-2.module_2037+1b0ad681.noarch",
+                },
+              ]
+            }
+          />,
+          "tabHeader": "Artifacts",
+        },
+      ]
+    }
+  />
 </div>
 `;

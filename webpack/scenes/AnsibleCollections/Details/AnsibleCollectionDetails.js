@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from 'patternfly-react';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import { PropTypes } from 'prop-types';
-import { LoadingState } from '../../../move_to_pf/LoadingState';
+import { translate as __ } from 'foremanReact/common/I18n';
 import api from '../../../services/api';
-import { displayMap } from './AnsibleCollectionsSchema';
 import ContentDetails from '../../../components/Content/Details/ContentDetails';
 import ansibleCollectionsSchema from './AnsibleCollectionsSchema';
 
@@ -34,7 +32,7 @@ class AnsibleCollectionDetails extends Component {
   render() {
     const { ansibleCollectionDetails } = this.props;
     const {
-      loading, name, namespace, version, repositories,
+      loading, name, namespace, version,
     } = ansibleCollectionDetails;
 
     const resource = {

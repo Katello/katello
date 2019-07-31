@@ -1,20 +1,20 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
-import ModuleStreamsPage from '../ModuleStreamsPage';
+import AnsibleCollectionsPage from '../AnsibleCollectionsPage';
 import ContentPage from '../../../components/Content/ContentPage';
 
 jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
 
-describe('Module streams page', () => {
+describe('Ansible Collections page', () => {
   it('should render and contain appropiate components', async () => {
-    const moduleStreams = {};
+    const ansibleCollections = {};
     const mockLocation = { search: '' };
-    const getModuleStreams = () => {};
+    const getAnsibleCollections = () => {};
 
-    const wrapper = shallow(<ModuleStreamsPage
-      moduleStreams={moduleStreams}
-      getModuleStreams={getModuleStreams}
+    const wrapper = shallow(<AnsibleCollectionsPage
+      ansibleCollections={ansibleCollections}
+      getAnsibleCollections={getAnsibleCollections}
       location={mockLocation}
     />);
 

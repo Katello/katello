@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { orgId } from '../../services/api';
 import TableSchema from './AnsibleCollectionsTableSchema';
 import ContentPage from '../../components/Content/ContentPage';

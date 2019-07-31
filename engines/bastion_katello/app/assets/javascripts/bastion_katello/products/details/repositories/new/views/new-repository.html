@@ -35,7 +35,7 @@
                 id="content_type"
                 name="content_type"
                 ng-model="repository.content_type"
-                ng-options="type.name as type.name for type in repositoryTypes">
+                ng-options="type.name as type.name.replace('_',' ') for type in repositoryTypes">
         </select>
       </div>
 

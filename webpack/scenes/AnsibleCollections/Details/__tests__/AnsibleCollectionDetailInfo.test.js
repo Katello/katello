@@ -1,16 +1,16 @@
 import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
 import ContentDetailInfo from '../../../../components/Content/Details/ContentDetailInfo';
-import { details } from './moduleStreamDetails.fixtures';
-import { displayMap } from '../ModuleDetailsSchema';
+import { details } from './AnsibleCollectionDetails.fixtures';
+import { displayMap } from '../AnsibleCollectionsSchema';
 
 const fixtures = {
-  'renders with module stream info': {
+  'renders with ansible collection info': {
     contentDetails: details,
     displayMap,
   },
 };
 
-describe('Module stream detail info component', () => {
+describe('Ansible Collection detail info component', () => {
   describe('rendering', () =>
     testComponentSnapshotsWithFixtures(ContentDetailInfo, fixtures));
 });

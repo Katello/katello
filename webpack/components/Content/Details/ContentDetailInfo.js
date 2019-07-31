@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
-import { translate as __ } from 'foremanReact/common/I18n';
 
 // using Map to preserve order
 
@@ -21,22 +20,14 @@ const createRows = (details, mapping) => {
 const ContentDetailInfo = ({ contentDetails, displayMap }) => (
   <Table>
     <tbody>
-    {createRows(contentDetails, displayMap)}
+      {createRows(contentDetails, displayMap)}
     </tbody>
   </Table>
 );
 
 ContentDetailInfo.propTypes = {
-  contentDetails: PropTypes.shape({
-    name: PropTypes.string,
-    summary: PropTypes.string,
-    description: PropTypes.string,
-    stream: PropTypes.string,
-    version: PropTypes.string,
-    arch: PropTypes.string,
-    context: PropTypes.string,
-    uuid: PropTypes.string,
-  }).isRequired,
+  contentDetails: PropTypes.shape({}).isRequired,
+  displayMap: PropTypes.instanceOf(Map).isRequired,
 };
 
 export default ContentDetailInfo;

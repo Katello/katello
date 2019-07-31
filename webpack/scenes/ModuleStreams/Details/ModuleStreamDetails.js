@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from 'patternfly-react';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { PropTypes } from 'prop-types';
 import api from '../../../services/api';
 import ContentDetails from '../../../components/Content/Details/ContentDetails';
-import moduleDetailsSchema, { displayMap } from './ModuleDetailsSchema';
+import moduleDetailsSchema from './ModuleDetailsSchema';
 
 class ModuleStreamDetails extends Component {
   componentDidMount() {
@@ -33,7 +32,7 @@ class ModuleStreamDetails extends Component {
   render() {
     const { moduleStreamDetails } = this.props;
     const {
-      loading, name, stream
+      loading, name, stream,
     } = moduleStreamDetails;
 
     const resource = {
