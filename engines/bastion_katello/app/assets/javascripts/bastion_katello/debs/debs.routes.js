@@ -36,7 +36,7 @@
             permission: ['view_products', 'view_content_views'],
             templateUrl: 'debs/details/views/deb-info.html',
             ncyBreadcrumb: {
-                label: "{{ deb.name }}",
+                label: "{{ deb.nva }}",
                 parent: 'debs'
             }
         })

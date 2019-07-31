@@ -26,6 +26,16 @@ module ::Actions::Katello::Applicability::Repository
         ForemanTasks.sync_task(action_class, :repo_ids => [@repo.id])
       end
 
+      it 'runs on deb-repo' do
+        repo = katello_repositories(:debian_10_amd64)
+        repo.update(last_contents_changed: DateTime.now, last_applicability_regen: Time.at(0).to_datetime)
+        Katello::RootRepository.stubs(:hosts_with_applicability).returns([@host])
+        Katello::ApplicableHostQueue.expects(:push_hosts).with([@host.id])
+        Katello::EventQueue.expects(:push_event).with(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, 0)
+
+        ForemanTasks.sync_task(action_class, :repo_ids => [repo.id])
+      end
+
       it 'skips applicability triggering if not needed' do
         @repo.update(last_contents_changed: Time.at(0).to_datetime, last_applicability_regen: DateTime.now)
         Katello::RootRepository.stubs(:hosts_with_applicability).returns([@host])

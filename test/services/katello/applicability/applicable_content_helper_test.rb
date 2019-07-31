@@ -20,6 +20,18 @@ module Katello
           end
         end
 
+        def init_deb_fixtures
+          @apt_repo = katello_repositories(:debian_10_amd64)
+          @deb_one = katello_debs(:one)
+          @deb_two = katello_debs(:two)
+          @deb_three = katello_debs(:three)
+          @deb_one_new = katello_debs(:one_new)
+          @installed_deb1 = InstalledDeb.find_or_create_by(name: @deb_one.name, version: @deb_one.version, architecture: @deb_one.architecture)
+
+          HostInstalledDeb.find_or_create_by(host_id: @host2.id, installed_deb_id: @installed_deb1.id)
+          Katello::ContentFacetRepository.find_or_create_by(content_facet_id: @host2.content_facet.id, repository_id: @apt_repo.id)
+        end
+
         def setup
           @repo = katello_repositories(:fedora_17_x86_64)
           @host = FactoryBot.create(:host, :with_content, :with_subscription,
@@ -34,10 +46,14 @@ module Katello
           @erratum = Erratum.find_by(errata_id: "RHBA-2014-013")
           @module_stream = ModuleStream.find_by(name: "Ohio")
 
+          @host2 = FactoryBot.create(:host, :with_content, :with_subscription,
+                                   :content_view => katello_content_views(:library_dev_view),
+                                   :lifecycle_environment => katello_environments(:library))
+          init_deb_fixtures
+
           HostAvailableModuleStream.create(host_id: @host.id,
                                            available_module_stream_id: AvailableModuleStream.find_by(name: "Ohio").id,
                                            status: "enabled")
-
           @installed_package1 = InstalledPackage.create(name: @rpm_one.name, nvra: @rpm_one.nvra, epoch: @rpm_one.epoch,
                                                                    version: @rpm_one.version, release: @rpm_one.release,
                                                                    arch: @rpm_one.arch, nvrea: @rpm_one.nvrea)
@@ -51,6 +67,44 @@ module Katello
 
           Katello::ContentFacetRepository.create(content_facet_id: @host.content_facet.id, repository_id: @repo.id)
           Katello::RepositoryErratum.create(erratum_id: @erratum.id, repository_id: @repo.id)
+        end
+
+        def test_older_dup_installed_debs_are_ignored
+          @installed_deb1.destroy
+          installed_deb2 = InstalledDeb.create(name: @deb_one_new.name, version: @deb_one_new.version, architecture: @deb_one_new.architecture)
+          HostInstalledDeb.create(host_id: @host2.id, installed_deb_id: installed_deb2.id)
+          deb_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).applicable_differences
+          assert_equal [[], []], deb_differences
+        end
+
+        def test_deb_content_ids_returns_something
+          deb_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).fetch_content_ids
+          assert_equal [@deb_one_new.id], deb_content_ids
+        end
+
+        def test_deb_content_ids_returns_nothing
+          @installed_deb1.destroy!
+          ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).calculate_and_import
+          deb_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).fetch_content_ids
+          assert_empty deb_content_ids
+        end
+
+        def test_applicable_differences_adds_deb_id
+          deb_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).applicable_differences
+          assert_equal [[@deb_one_new.id], []], deb_differences
+        end
+
+        def test_applicable_differences_adds_and_removes_no_deb_ids
+          ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).calculate_and_import
+          deb_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).applicable_differences
+          assert_equal [[], []], deb_differences
+        end
+
+        def test_applicable_differences_removes_deb_id
+          ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).calculate_and_import
+          @installed_deb1.destroy!
+          deb_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host2.content_facet, ::Katello::Deb, bound_repos(@host2)).applicable_differences
+          assert_equal [[], [@deb_one_new.id]], deb_differences
         end
 
         def test_older_dup_installed_rpms_are_ignored

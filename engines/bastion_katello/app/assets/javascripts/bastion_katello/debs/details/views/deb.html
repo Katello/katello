@@ -1,9 +1,9 @@
-<span page-title ng-model="deb">{{ 'Deb: ' | translate }} {{ deb.name }}</span>
+<span page-title ng-model="deb">{{ 'Deb: ' | translate }} {{ deb.nva }}</span>
 
 <div data-extend-template="layouts/details-page-with-breadcrumbs.html">
-  <div data-block="header" translate>
-    {{ deb.name }}
-  </div>
+  <header data-block="header">
+    <h2>{{ deb.nva }}</h2>
+  </header>
 
   <nav data-block="navigation">
     <ul class="nav nav-tabs">

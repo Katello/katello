@@ -20,6 +20,9 @@ module Katello
       has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facet
       has_many :bound_repositories, :through => :content_facet_repositories, :class_name => "Katello::Repository", :source => :repository
 
+      has_many :content_facet_applicable_debs, :class_name => "Katello::ContentFacetApplicableDeb", :dependent => :delete_all, :inverse_of => :content_facet
+      has_many :applicable_debs, :through => :content_facet_applicable_debs, :class_name => "Katello::Deb", :source => :deb
+
       has_many :content_facet_applicable_rpms, :class_name => "Katello::ContentFacetApplicableRpm", :dependent => :delete_all, :inverse_of => :content_facet
       has_many :applicable_rpms, :through => :content_facet_applicable_rpms, :class_name => "Katello::Rpm", :source => :rpm
 
@@ -65,6 +68,10 @@ module Katello
         Erratum.installable_for_content_facet(self, env, content_view)
       end
 
+      def installable_debs(env = nil, content_view = nil)
+        Deb.installable_for_content_facet(self, env, content_view)
+      end
+
       def installable_rpms(env = nil, content_view = nil)
         Rpm.installable_for_content_facet(self, env, content_view)
       end
@@ -95,6 +102,7 @@ module Katello
           repo.library_instance_id.nil? ? repo.id : repo.library_instance_id
         end
 
+        ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::Deb, bound_repos).calculate_and_import
         ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::Rpm, bound_repos).calculate_and_import
         ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::Erratum, bound_repos).calculate_and_import
         ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::ModuleStream, bound_repos).calculate_and_import
@@ -105,6 +113,7 @@ module Katello
       def import_applicability(partial = false)
         import_module_stream_applicability(partial)
         import_errata_applicability(partial)
+        import_deb_applicability(partial)
         import_rpm_applicability(partial)
         update_applicability_counts
       end
@@ -114,12 +123,18 @@ module Katello
             :installable_security_errata_count => self.installable_errata.security.count,
             :installable_bugfix_errata_count => self.installable_errata.bugfix.count,
             :installable_enhancement_errata_count => self.installable_errata.enhancement.count,
+            :applicable_deb_count => self.content_facet_applicable_debs.count,
+            :upgradable_deb_count => self.installable_debs.count,
             :applicable_rpm_count => self.content_facet_applicable_rpms.count,
             :upgradable_rpm_count => self.installable_rpms.count,
             :applicable_module_stream_count => self.content_facet_applicable_module_streams.count,
             :upgradable_module_stream_count => self.installable_module_streams.count
         )
         self.save!(:validate => false)
+      end
+
+      def import_deb_applicability(partial)
+        ApplicableContentHelper.new(Deb, self).import(partial)
       end
 
       def import_rpm_applicability(partial)
@@ -178,6 +193,10 @@ module Katello
 
       def self.joins_installable_errata
         joins_installable_relation(Katello::Erratum, Katello::ContentFacetErratum)
+      end
+
+      def self.joins_installable_debs
+        joins_installable_relation(Katello::Deb, Katello::ContentFacetApplicableDeb)
       end
 
       def self.joins_installable_rpms
@@ -243,6 +262,8 @@ module Katello
         property :uuid, String, desc: 'Returns UUID of the facet'
         property :applicable_module_stream_count, Integer, desc: 'Returns applicable Module Stream count'
         property :upgradable_module_stream_count, Integer, desc: 'Returns upgradable Module Stream count'
+        property :applicable_deb_count, Integer, desc: 'Returns applicable DEB count'
+        property :upgradable_deb_count, Integer, desc: 'Returns upgradable DEB count'
         property :applicable_rpm_count, Integer, desc: 'Returns applicable RPM count'
         property :upgradable_rpm_count, Integer, desc: 'Returns upgradable RPM count'
         property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source'
@@ -254,9 +275,9 @@ module Katello
         prop_group :katello_idname_props, Katello::Model, meta: { resource: 'lifecycle_environment' }
       end
       class Jail < ::Safemode::Jail
-        allow :applicable_module_stream_count, :applicable_rpm_count, :content_source, :content_source_id, :content_source_name, :content_view_id,
+        allow :applicable_deb_count, :applicable_module_stream_count, :applicable_rpm_count, :content_source, :content_source_id, :content_source_name, :content_view_id,
               :content_view_name, :errata_counts, :id, :kickstart_repository, :kickstart_repository_id, :kickstart_repository_name,
-              :lifecycle_environment_id, :lifecycle_environment_name, :upgradable_module_stream_count, :upgradable_rpm_count, :uuid
+              :lifecycle_environment_id, :lifecycle_environment_name, :upgradable_deb_count, :upgradable_module_stream_count, :upgradable_rpm_count, :uuid
       end
     end
   end

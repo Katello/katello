@@ -112,18 +112,34 @@
               <span class="aligned-errata-count" errata-counts="host.content_facet_attributes.errata_counts"></span>
             </a>
 
-            <a ui-sref="content-host.packages.applicable({hostId: host.id})">
-            <span class="aligned-errata-count">
-              <span class="errata-count"
-                 ng-class="{black: !host.content_facet_attributes.upgradable_package_count,
-                            green: host.content_facet_attributes.upgradable_package_count > 0}">
-                <span>
-                  {{ host.content_facet_attributes.upgradable_package_count || 0 }}
+            <span ng-if="host.content_facet_attributes.upgradable_package_count > 0">
+              <a ui-sref="content-host.packages.applicable({hostId: host.id})">
+              <span class="aligned-errata-count">
+                <span class="errata-count"
+                   ng-class="{black: !host.content_facet_attributes.upgradable_package_count,
+                              green: host.content_facet_attributes.upgradable_package_count > 0}">
+                  <span>
+                    {{ host.content_facet_attributes.upgradable_package_count || 0 }}
+                  </span>
+                  <i class="fa fa-cube inline-icon" title="{{ 'rpm Package Updates' | translate }}"></i>
                 </span>
-                <i class="fa fa-cube inline-icon" title="{{ 'Package Updates' | translate }}"></i>
               </span>
+              </a>
             </span>
-            </a>
+            <span ng-if="host.content_facet_attributes.upgradable_deb_count > 0">
+              <a ui-sref="content-host.debs.applicable({hostId: host.id})">
+              <span class="aligned-errata-count">
+                <span class="errata-count"
+                   ng-class="{black: !host.content_facet_attributes.upgradable_deb_count,
+                              green: host.content_facet_attributes.upgradable_deb_count > 0}">
+                  <span>
+                    {{ host.content_facet_attributes.upgradable_deb_count || 0 }}
+                  </span>
+                  <i class="fa fa-cube inline-icon" title="{{ 'deb Package Updates' | translate }}"></i>
+                </span>
+              </span>
+              </a>
+            </span>
           </td>
           <td bst-table-cell>{{ host.operatingsystem_name }}</td>
           <td bst-table-cell>{{ host.content_facet_attributes.lifecycle_environment.name }}</td>

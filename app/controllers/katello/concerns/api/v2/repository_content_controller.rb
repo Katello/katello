@@ -44,7 +44,7 @@ module Katello
         respond :resource => @resource
       end
 
-      api :GET, "/:resource_id/compare/", N_("List :resource_id")
+      api :GET, "/:resource_id/compare/", N_("List :resource")
       param :content_view_version_ids, Array, :desc => N_("content view versions to compare")
       param :repository_id, :number, :desc => N_("Library repository id to restrict comparisons to")
       def compare
