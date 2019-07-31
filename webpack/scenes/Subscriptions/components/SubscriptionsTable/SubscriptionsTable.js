@@ -50,9 +50,7 @@ class SubscriptionsTable extends Component {
       const editedValue = this.state.updatedQuantity[rowData.id];
       return this.hasQuantityChanged(rowData, editedValue);
     },
-    onActivate: () => {
-      this.enableEditing(true);
-    },
+    onActivate: () => this.enableEditing(true),
     onConfirm: () => {
       if (recordsValid(this.state.rows)) {
         this.showUpdateConfirm(true);
@@ -119,7 +117,7 @@ class SubscriptionsTable extends Component {
 
   getTableProps = () => {
     const {
-      subscriptions, emptyState, tableColumns, loadSubscriptions,
+      subscriptions, emptyState, tableColumns, loadSubscriptions, canManageSubscriptionAllocations,
     } = this.props;
     const { groupedSubscriptions, rows, editing } = this.state;
 
@@ -131,6 +129,7 @@ class SubscriptionsTable extends Component {
       rows,
       subscriptions,
       tableColumns,
+      canManageSubscriptionAllocations,
       toggleSubscriptionGroup: this.toggleSubscriptionGroup,
       inlineEditController: this.getInlineEditController(),
       selectionController: this.getSelectionController(),
@@ -289,6 +288,7 @@ SubscriptionsTable.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
   emptyState: PropTypes.shape({}).isRequired,
+  canManageSubscriptionAllocations: PropTypes.bool,
   subscriptions: PropTypes.shape({
     loading: PropTypes.bool,
     availableQuantities: PropTypes.shape({}),
@@ -311,6 +311,7 @@ SubscriptionsTable.defaultProps = {
   task: { humanized: {} },
   bulkSearch: undefined,
   organization: undefined,
+  canManageSubscriptionAllocations: false,
 };
 
 export default SubscriptionsTable;
