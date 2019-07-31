@@ -58,11 +58,22 @@ export default (state = initialState, action) => {
         .set('selectedTableColumns', action.payload.enabledColumns);
     case SUBSCRIPTIONS_SUCCESS: {
       const {
-        page, per_page, subtotal, results, // eslint-disable-line camelcase
+        page,
+        per_page, // eslint-disable-line camelcase
+        subtotal,
+        results,
+        can_import_manifest, // eslint-disable-line camelcase
+        can_delete_manifest, // eslint-disable-line camelcase
+        can_manage_subscription_allocatons, // eslint-disable-line camelcase
       } = action.response;
 
       return state.merge({
         results,
+        activePermissions: {
+          can_import_manifest,
+          can_delete_manifest,
+          can_manage_subscription_allocatons,
+        },
         loading: false,
         searchIsActive: !!action.search,
         search: action.search,
