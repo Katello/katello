@@ -17,6 +17,7 @@ const Table = ({
   editing,
   groupedSubscriptions,
   toggleSubscriptionGroup,
+  canManageSubscriptionAllocations,
 }) => {
   const allSubscriptionResults = subscriptions.results;
 
@@ -40,6 +41,7 @@ const Table = ({
     inlineEditController,
     selectionController,
     groupingController,
+    canManageSubscriptionAllocations
   ).filter(column => tableColumns.includes(column.property) ||
     alwaysDisplayColumns.includes(column.property));
 

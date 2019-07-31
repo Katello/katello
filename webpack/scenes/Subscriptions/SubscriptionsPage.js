@@ -279,6 +279,7 @@ class SubscriptionsPage extends Component {
 
             <div id="subscriptions-table" className="modal-container">
               <SubscriptionsTable
+                canManageSubscriptionAllocations={canManageSubscriptionAllocations}
                 loadSubscriptions={this.props.loadSubscriptions}
                 tableColumns={columns}
                 updateQuantity={this.props.updateQuantity}
