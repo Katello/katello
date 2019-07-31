@@ -34,7 +34,10 @@ import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from
 import { apiError } from '../../move_to_foreman/common/helpers.js';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
-  ...{ organization_id: orgId() },
+  ...{
+    organization_id: orgId(),
+    include_permissions: true,
+  },
   ...propsToSnakeCase(extendedParams),
 });
 
