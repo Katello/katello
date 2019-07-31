@@ -15,6 +15,7 @@ import {
   selectTaskModalOpened,
   selectDeleteButtonDisabled,
   selectSubscriptionsTasks,
+  selectActivePermissions,
   selectTableSettings,
 } from './SubscriptionsSelectors';
 
@@ -30,6 +31,7 @@ const mapStateToProps = (state) => {
   return {
     subscriptions,
     subscriptionTableSettings,
+    activePermissions: selectActivePermissions(state),
     tasks: selectSubscriptionsTasks(state),
     searchQuery: selectSearchQuery(state),
     manifestModalOpened: selectManifestModalOpened(state),

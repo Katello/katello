@@ -10,6 +10,7 @@ import TooltipButton from '../../../../move_to_pf/TooltipButton';
 import OptionTooltip from '../../../../move_to_pf/OptionTooltip';
 
 const SubscriptionsToolbar = ({
+  canManageSubscriptionAllocations,
   disableManifestActions,
   disableManifestReason,
   disableDeleteButton,
@@ -40,19 +41,21 @@ const SubscriptionsToolbar = ({
         </div>
         <div className="toolbar-pf-action-right">
           <FormGroup>
-            <LinkContainer
-              to="subscriptions/add"
-              disabled={disableManifestActions || disableAddButton}
-            >
-              <TooltipButton
-                tooltipId="add-subscriptions-button-tooltip"
-                tooltipText={disableManifestReason}
-                tooltipPlacement="top"
-                title={__('Add Subscriptions')}
-                disabled={disableManifestActions}
-                bsStyle="primary"
-              />
-            </LinkContainer>
+            {canManageSubscriptionAllocations &&
+              <LinkContainer
+                to="subscriptions/add"
+                disabled={disableManifestActions || disableAddButton}
+              >
+                <TooltipButton
+                  tooltipId="add-subscriptions-button-tooltip"
+                  tooltipText={disableManifestReason}
+                  tooltipPlacement="top"
+                  title={__('Add Subscriptions')}
+                  disabled={disableManifestActions}
+                  bsStyle="primary"
+                />
+              </LinkContainer>
+            }
 
             <Button onClick={onManageManifestButtonClick}>
               {__('Manage Manifest')}
@@ -63,17 +66,18 @@ const SubscriptionsToolbar = ({
             >
               {__('Export CSV')}
             </Button>
+            {canManageSubscriptionAllocations &&
 
-            <TooltipButton
-              bsStyle="danger"
-              onClick={onDeleteButtonClick}
-              tooltipId="delete-subscriptions-button-tooltip"
-              tooltipText={disableDeleteReason}
-              tooltipPlacement="top"
-              title={__('Delete')}
-              disabled={disableManifestActions || disableDeleteButton}
-            />
-
+              <TooltipButton
+                bsStyle="danger"
+                onClick={onDeleteButtonClick}
+                tooltipId="delete-subscriptions-button-tooltip"
+                tooltipText={disableDeleteReason}
+                tooltipPlacement="top"
+                title={__('Delete')}
+                disabled={disableManifestActions || disableDeleteButton}
+              />
+            }
           </FormGroup>
         </div>
       </Form>
@@ -84,6 +88,7 @@ const SubscriptionsToolbar = ({
 SubscriptionsToolbar.propTypes = {
   ...Search.propTypes,
   tableColumns: OptionTooltip.propTypes.options,
+  canManageSubscriptionAllocations: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
   disableManifestReason: PropTypes.string,
   disableDeleteButton: PropTypes.bool,

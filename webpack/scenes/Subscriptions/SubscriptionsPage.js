@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { isEmpty, isEqual } from 'lodash';
 import { Grid, Row, Col } from 'patternfly-react';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
@@ -168,8 +169,10 @@ class SubscriptionsPage extends Component {
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
       searchQuery, updateSearchQuery,
       taskModalOpened,
-      tasks = [], subscriptions, organization, subscriptionTableSettings,
+      tasks = [], activePermissions, subscriptions, organization, subscriptionTableSettings,
     } = this.props;
+    const permissions = propsToCamelCase(activePermissions);
+    const { canDeleteManifest, canManageSubscriptionAllocations } = permissions;
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;
@@ -246,6 +249,7 @@ class SubscriptionsPage extends Component {
             <h1>{__('Subscriptions')}</h1>
 
             <SubscriptionsToolbar
+              canManageSubscriptionAllocations={canManageSubscriptionAllocations}
               disableManifestActions={disableManifestActions}
               disableManifestReason={this.getDisabledReason()}
               disableDeleteButton={deleteButtonDisabled}
@@ -314,6 +318,10 @@ SubscriptionsPage.propTypes = {
     tableColumns: PropTypes.array,
     selectedTableColumns: PropTypes.array,
   }).isRequired,
+  activePermissions: PropTypes.shape({
+    can_delete_manifest: PropTypes.bool,
+    can_manage_subscription_allocations: PropTypes.bool,
+  }),
   organization: PropTypes.shape({
     id: PropTypes.number,
     owner_details: PropTypes.shape({
@@ -358,6 +366,10 @@ SubscriptionsPage.defaultProps = {
   taskModalOpened: false,
   deleteButtonDisabled: true,
   subscriptionTableSettings: {},
+  activePermissions: {
+    can_import_manifest: false,
+    can_manage_subscription_allocations: false,
+  },
 };
 
 export default SubscriptionsPage;
