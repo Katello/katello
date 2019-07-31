@@ -192,6 +192,57 @@ module Katello
     end
   end
 
+  class ContentFacetDebTest < ContentFacetBase
+    let(:host_one) { hosts(:one) }
+    let(:host_two) { hosts(:two) }
+    let(:repo) { katello_repositories(:debian_10_amd64) }
+    let(:deb_one) { katello_debs(:one) }
+    let(:deb_two) { katello_debs(:two) }
+    let(:deb_three) { katello_debs(:three) }
+
+    def test_applicable_debs_searchable
+      assert_includes ::Host.search_for("applicable_debs = \"#{deb_one.nav}\""), host_one
+      refute_includes ::Host.search_for("applicable_debs = \"#{deb_one.nav}\""), host_two
+      refute_includes ::Host.search_for("applicable_debs = \"#{deb_three.nav}\""), host_one
+    end
+
+    def test_upgradable_debs_searchable
+      assert_includes deb_one.repositories, repo
+      deb_two.repositories = []
+      host_one.content_facet.bound_repositories << repo
+
+      assert_includes ::Host.search_for("upgradable_debs = \"#{deb_one.nav}\""), host_one
+      refute_includes ::Host.search_for("upgradable_debs = \"#{deb_two.nav}\""), host_one
+    end
+
+    def test_update_applicability_counts
+      assert_includes deb_one.repositories, repo
+      deb_two.repositories = []
+      host_one.content_facet.bound_repositories << repo
+
+      #shouldn't matter if facet is invalid
+      host_one.content_facet.lifecycle_environment = katello_environments(:qa_path2)
+      refute host_one.valid?
+
+      host_one.content_facet.update_applicability_counts
+
+      assert_equal 2, host_one.content_facet.applicable_deb_count
+      assert_equal 1, host_one.content_facet.upgradable_deb_count
+    end
+
+    def test_installable_debs
+      lib_applicable = host_one.applicable_debs
+      cf_one = host_one.content_facet
+
+      cf_one.bound_repositories = []
+      cf_one.save!
+
+      assert_equal_arrays lib_applicable, cf_one.applicable_debs
+      refute_equal_arrays lib_applicable, cf_one.installable_debs
+      refute_includes cf_one.installable_debs, deb_one
+    end
+  end
+
   class ContentFacetRpmTest < ContentFacetBase
     let(:host_one) { hosts(:one) }
     let(:host_two) { hosts(:two) }

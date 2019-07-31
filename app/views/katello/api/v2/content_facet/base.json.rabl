@@ -4,6 +4,8 @@ attributes :lifecycle_environment_id, :lifecycle_environment_name
 attributes :content_source_id, :content_source_name
 attributes :kickstart_repository_id, :kickstart_repository_name
 attributes :errata_counts
+attributes :applicable_deb_count => :applicable_deb_count
+attributes :upgradable_deb_count => :upgradable_deb_count
 attributes :applicable_rpm_count => :applicable_package_count
 attributes :upgradable_rpm_count => :upgradable_package_count
 attributes :applicable_module_stream_count, :upgradable_module_stream_count

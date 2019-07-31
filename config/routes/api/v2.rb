@@ -172,6 +172,8 @@ Katello::Engine.routes.draw do
         api_resources :debs, :only => [:index, :show] do
           collection do
             get :auto_complete_search
+            get :auto_complete_name
+            get :auto_complete_arch
             get :compare
           end
         end

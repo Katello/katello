@@ -174,6 +174,16 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
             label: "{{ 'Installed Deb Packages' | translate }}",
             parent: 'content-host.info'
         }
+    })
+    .state('content-host.debs.applicable', {
+        url: '/debs/applicable',
+        permission: 'view_hosts',
+        controller: 'ContentHostDebsApplicableController',
+        templateUrl: 'content-hosts/content/views/content-host-debs-applicable.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Applicable Deb Packages' | translate }}",
+            parent: 'content-host.info'
+        }
     });
 
     $stateProvider.state('content-host.packages', {

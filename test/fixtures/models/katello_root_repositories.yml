@@ -18,6 +18,18 @@ debian_9_amd64_root:
   deb_components:       main
   deb_architectures:    amd64
 
+debian_10_amd64_root:
+  name:                 Debian 10 amd64
+  content_type:         deb
+  description:          'My description'
+  label:                debian_10_amd64_label
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:debian) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:debian_gpg_key) %>
+  url:                  "http://myrepo.com"
+  deb_releases:         buster
+  deb_components:       main,contrib
+  deb_architectures:    amd64
+
 fedora_17_x86_64_root:
   name:                 Fedora 17 x86_64
   content_id:           1

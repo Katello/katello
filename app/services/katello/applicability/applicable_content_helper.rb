@@ -22,6 +22,8 @@ module Katello
       def fetch_content_ids
         if self.content_unit_class == ::Katello::Erratum
           fetch_errata_content_ids
+        elsif self.content_unit_class == ::Katello::Deb
+          fetch_deb_content_ids
         elsif self.content_unit_class == ::Katello::ModuleStream
           fetch_module_stream_content_ids
         else
@@ -57,6 +59,24 @@ module Katello
                         AND katello_repository_module_streams.repository_id IN (:repo_ids)'
 
         return Katello::ModuleStream.find_by_sql([query, { content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos }]).map(&:id)
+      end
+
+      def fetch_deb_content_ids
+        repo_deb = ::Katello::RepositoryDeb.arel_table
+        deb = ::Katello::Deb.arel_table
+        installed_deb = Katello::InstalledDeb.arel_table
+        host_installed_deb = Katello::HostInstalledDeb.arel_table
+        deb_version_compare = Arel::Nodes::NamedFunction.new('deb_version_cmp', [deb[:version], installed_deb[:version]]).gt(0)
+
+        content = deb.join(repo_deb).on(repo_deb[:deb_id].eq(deb[:id]))
+                     .join(installed_deb).on(installed_deb[:name].eq(deb[:name]))
+                     .join(host_installed_deb).on(host_installed_deb[:installed_deb_id].eq(installed_deb[:id]))
+                     .where(deb_version_compare)
+                     .where(host_installed_deb[:host_id].eq(self.content_facet.host.id))
+                     .distinct
+                     .project(deb[Arel.star])
+
+        ::Katello::Deb.find_by_sql(content.to_sql).pluck(:id)
       end
 
       def fetch_rpm_content_ids
