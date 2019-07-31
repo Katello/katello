@@ -5,6 +5,16 @@ debian_9_amd64:
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
 
+debian_10_amd64:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_root) %>
+  pulp_id:              Debian_10
+  relative_path:        'ACME_Corporation/library/debian_10_label'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+  distribution_arch:    'amd64'
+  distribution_version: '10.1'
+  distribution_family:  'Debian'
+
 fedora_17_x86_64:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
   pulp_id:              Fedora_17

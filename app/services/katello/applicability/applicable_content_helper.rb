@@ -22,6 +22,8 @@ module Katello
       def fetch_content_ids
         if self.content_unit_class == ::Katello::Erratum
           fetch_errata_content_ids
+        elsif self.content_unit_class == ::Katello::Deb
+          fetch_deb_content_ids
         elsif self.content_unit_class == ::Katello::ModuleStream
           fetch_module_stream_content_ids
         else
@@ -57,6 +59,16 @@ module Katello
                         AND katello_repository_module_streams.repository_id IN (:repo_ids)'
 
         return Katello::ModuleStream.find_by_sql([query, { content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos }]).map(&:id)
+      end
+
+      def fetch_deb_content_ids
+        ::Katello::Deb.joins(:repositories,
+                           "INNER JOIN #{Katello::InstalledDeb.table_name} ON #{Katello::InstalledDeb.table_name}.name = #{Katello::Deb.table_name}.name",
+                           "INNER JOIN #{Katello::HostInstalledDeb.table_name} ON #{Katello::HostInstalledDeb.table_name}.installed_deb_id = #{Katello::InstalledDeb.table_name}.id")
+                    .where("deb_version_cmp(#{Katello::Deb.table_name}.version, #{Katello::InstalledDeb.table_name}.version) > 0")
+                    .where("#{Katello::HostInstalledDeb.table_name}.host_id": self.content_facet.host.id)
+                    .where("#{Katello::RepositoryDeb.table_name}.repository_id" => self.bound_library_instance_repos)
+                    .distinct.pluck(:id)
       end
 
       def fetch_rpm_content_ids
