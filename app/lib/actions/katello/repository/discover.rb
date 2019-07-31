@@ -1,8 +1,9 @@
 module Actions
   module Katello
     module Repository
-      class Discover < Actions::Base
+      class Discover < Actions::EntryAction
         include Dynflow::Action::Cancellable
+        include EncryptValue
 
         input_format do
           param :url, String
@@ -17,7 +18,8 @@ module Actions
         end
 
         def plan(url, content_type, upstream_username, upstream_password, search)
-          plan_self(url: url, content_type: content_type, upstream_username: upstream_username, upstream_password: upstream_password, search: search)
+          password = encrypt_field(upstream_password)
+          plan_self(url: url, content_type: content_type, upstream_username: upstream_username, upstream_password: password, search: search)
         end
 
         def run(event = nil)
@@ -25,14 +27,15 @@ module Actions
           output[:crawled] = output[:crawled] || []
           output[:to_follow] = output[:to_follow] || [input[:url]]
 
-          repo_discovery = ::Katello::RepoDiscovery.new(input[:url], input[:content_type],
-                                                        input[:upstream_username], input[:upstream_password],
-                                                        input[:search], proxy,
-                                                        output[:crawled], output[:repo_urls], output[:to_follow])
-
           match(event,
             (on nil do
               unless output[:to_follow].empty?
+                password = decrypt_field(input[:upstream_password])
+                repo_discovery = ::Katello::RepoDiscovery.new(input[:url], input[:content_type],
+                                                              input[:upstream_username], password,
+                                                              input[:search], proxy,
+                                                              output[:crawled], output[:repo_urls], output[:to_follow])
+
                 repo_discovery.run(output[:to_follow].shift)
                 suspend { |suspended_action| world.clock.ping suspended_action, 0.001 }
               end
@@ -40,11 +43,6 @@ module Actions
             (on Dynflow::Action::Cancellable::Cancel do
               output[:repo_urls] = []
             end))
-        end
-
-        # @return <String> urls found by the action
-        def task_input
-          input[:url]
         end
 
         # @return [Array<String>] urls found by the action
