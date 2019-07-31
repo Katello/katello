@@ -1,3 +1,20 @@
+# 3.12.2 Iron Stout (2019-07-31)
+
+## Features
+
+## Bug Fixes
+
+### GPG Keys
+ * ContentCredential's Repository links use wrong id ([#27390](https://projects.theforeman.org/issues/27390), [fce76653](https://github.com/Katello/katello.git/commit/fce7665379e68d1dd96afc1fd05fcb5717e9cec6))
+
+### Repositories
+ * backend_identifier is not shown on repository details ([#27328](https://projects.theforeman.org/issues/27328), [fe0cface](https://github.com/Katello/katello.git/commit/fe0cface3f5fdb3840598e240b0113db1630f5fc))
+
+### Content Views
+ * Composite content view doesn't show installable errata/rpms for hosts in non Library lifecycle environment ([#27288](https://projects.theforeman.org/issues/27288), [26d445b5](https://github.com/Katello/katello.git/commit/26d445b5e2d02fffcada2732b0908ac1ff82b738))
+
+### Other
+ * subscription-manager fails: HTTP error (422 - Unknown): Please unregister or remove hosts which match this host before registering: <hostname> ([#27251](https://projects.theforeman.org/issues/27251), [d94e83f9](https://github.com/Katello/katello.git/commit/d94e83f9f854392efc773b0e419958fc62e293f8))
 # 3.12.1 Iron Stout (2019-07-09)
 
 ## Bug Fixes
