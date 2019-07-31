@@ -20,13 +20,12 @@ module Actions
             upload_href = response._href
             chunksize = upload_chunk_size
             offset = 0
-            sha256 = Digest::SHA256.new
+            sha256 = Digest::SHA256.hexdigest(File.read(file))
 
             until file.eof?
               chunk = file.read(chunksize)
-              sha256.update(chunk)
               begin
-                filechunk = Tempfile.new('fred')
+                filechunk = Tempfile.new('filechunk', :encoding => 'ascii-8bit')
                 filechunk.write(chunk)
                 filechunk.flush()
                 actual_chunk_size = File.size(filechunk)
@@ -40,7 +39,7 @@ module Actions
 
             if response
               upload_href = response._href
-              pulp_tasks = uploads_api.commit(upload_href, {sha256: sha256.hexdigest})
+              pulp_tasks = uploads_api.commit(upload_href, {sha256: sha256})
               output[:pulp_tasks] = pulp_tasks
             end
           end
