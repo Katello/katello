@@ -172,7 +172,12 @@ class SubscriptionsPage extends Component {
       tasks = [], activePermissions, subscriptions, organization, subscriptionTableSettings,
     } = this.props;
     const permissions = propsToCamelCase(activePermissions);
-    const { canDeleteManifest, canManageSubscriptionAllocations } = permissions;
+    const {
+      canDeleteManifest,
+      canManageSubscriptionAllocations,
+      canImportManifest,
+      canEditOrganizations,
+    } = permissions;
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;
@@ -267,6 +272,9 @@ class SubscriptionsPage extends Component {
             />
 
             <ManageManifestModal
+              canImportManifest={canImportManifest}
+              canDeleteManifest={canDeleteManifest}
+              canEditOrganizations={canEditOrganizations}
               showModal={manifestModalOpened}
               taskInProgress={taskInProgress}
               disableManifestActions={disableManifestActions}
