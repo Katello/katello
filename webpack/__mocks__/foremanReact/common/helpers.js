@@ -1,4 +1,4 @@
-import { snakeCase } from 'lodash';
+import { snakeCase, camelCase } from 'lodash';
 
 export const stringIsPositiveNumber = (value) => {
   const reg = new RegExp('^[0-9]+$');
@@ -16,3 +16,6 @@ const propsToCase = (casingFn, errorMsg, ob) => {
 
 export const propsToSnakeCase = ob =>
   propsToCase(snakeCase, 'propsToSnakeCase only takes objects', ob);
+
+export const propsToCamelCase = ob =>
+  propsToCase(camelCase, 'propsToSnakeCase only takes objects', ob);

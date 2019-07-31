@@ -16,6 +16,9 @@ export const selectTaskModalOpened = state =>
 export const selectDeleteButtonDisabled = state =>
   selectSubscriptionsState(state).deleteButtonDisabled;
 
+export const selectActivePermissions = state =>
+  selectSubscriptionsState(state).activePermissions;
+
 export const selectSubscriptionsTasks = state =>
   selectSubscriptionsState(state).tasks;
 
