@@ -64,7 +64,7 @@ export default (state = initialState, action) => {
         results,
         can_import_manifest, // eslint-disable-line camelcase
         can_delete_manifest, // eslint-disable-line camelcase
-        can_manage_subscription_allocatons, // eslint-disable-line camelcase
+        can_manage_subscription_allocations, // eslint-disable-line camelcase
       } = action.response;
 
       return state.merge({
@@ -72,7 +72,7 @@ export default (state = initialState, action) => {
         activePermissions: {
           can_import_manifest,
           can_delete_manifest,
-          can_manage_subscription_allocatons,
+          can_manage_subscription_allocations,
         },
         loading: false,
         searchIsActive: !!action.search,
