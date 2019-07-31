@@ -263,6 +263,14 @@ module Katello
       Katello::Deb.in_repositories(self.repositories.archived)
     end
 
+    def library_debs
+      Katello::Deb.in_repositories(library_repos)
+    end
+
+    def available_debs
+      library_packages.where.not(:id => debs)
+    end
+
     def errata(errata_type = nil)
       errata = Erratum.in_repositories(archived_repos)
       errata = errata.of_type(errata_type) if errata_type

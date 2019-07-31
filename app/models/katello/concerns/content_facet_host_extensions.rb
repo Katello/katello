@@ -30,6 +30,7 @@ module Katello
         has_one :content_source, :through => :content_facet
         has_many :content_facet_errata, :through => :content_facet, :class_name => 'Katello::ContentFacetErratum'
         has_many :applicable_errata, :through => :content_facet_errata, :source => :erratum
+        has_many :applicable_debs, :through => :content_facet
         has_many :applicable_rpms, :through => :content_facet
         has_many :applicable_module_streams, :through => :content_facet
 
@@ -40,6 +41,8 @@ module Katello
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata, :only_explicit => true
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata, :only_explicit => true
         scoped_search :relation => :applicable_errata, :on => :issued, :rename => :applicable_errata_issued, :complete_value => true, :only_explicit => true
+        scoped_search :relation => :applicable_debs, :on => :nav, :rename => :applicable_debs, :complete_value => true, :ext_method => :find_by_applicable_debs, :only_explicit => true, :operators => ['=']
+        scoped_search :relation => :applicable_debs, :on => :nav, :rename => :upgradable_debs, :complete_value => true, :ext_method => :find_by_installable_debs, :only_explicit => true, :operators => ['=']
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source
@@ -88,6 +91,24 @@ module Katello
           end
         end
 
+        def find_by_applicable_debs(_key, operator, value)
+          hosts = find_by_debs(::Host::Managed.joins(:applicable_debs), operator, value)
+          if hosts.empty?
+            { :conditions => "1=0" }
+          else
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
+          end
+        end
+
+        def find_by_installable_debs(_key, operator, value)
+          facets = find_by_debs(Katello::Host::ContentFacet.joins_installable_debs, operator, value)
+          if facets.empty?
+            { :conditions => "1=0" }
+          else
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
+          end
+        end
+
         def find_by_applicable_rpms(_key, operator, value)
           conditions = sanitize_sql_for_conditions(["#{Katello::Rpm.table_name}.nvra #{operator} ?", value_to_sql(operator, value)])
           hosts = ::Host::Managed.joins(:applicable_rpms).where(conditions)
@@ -117,6 +138,25 @@ module Katello
 
         def in_environment(lifecycle_environment)
           in_content_view_environment(:lifecycle_environment => lifecycle_environment)
+        end
+
+        private
+
+        def find_by_debs(base, operator, value)
+          table = Katello::Deb.table_name
+
+          name, architecture, version = Katello::Deb.split_nav(value)
+          if name.nil?
+            return []
+          end
+
+          res = base.where(sanitize_sql_for_conditions(["#{table}.name #{operator} ?", value_to_sql(operator, name)]))
+
+          res = res.where(sanitize_sql_for_conditions(["#{table}.architecture #{operator} ?", value_to_sql(operator, architecture)])) unless architecture.nil?
+
+          res = res.where(sanitize_sql_for_conditions(["#{table}.version #{operator} ?", value_to_sql(operator, version)])) unless version.nil?
+
+          res
         end
       end
     end

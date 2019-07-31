@@ -62,9 +62,10 @@ module Katello
         scoped_search :relation => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
         scoped_search :relation => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
         scoped_search :relation => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
+        scoped_search :relation => :installed_debs, :on => :name, :rename => :installed_deb, :only_explicit => true, :ext_method => :find_by_installed_debs, operators: ['=']
+        scoped_search :relation => :installed_debs, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
         scoped_search :relation => :available_module_streams, :on => :name, :complete_value => true, :rename => :available_module_stream_name, :only_explicit => true
         scoped_search :relation => :available_module_streams, :on => :stream, :complete_value => true, :rename => :available_module_stream_stream, :only_explicit => true
-        scoped_search :relation => :installed_debs, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
@@ -121,6 +122,25 @@ module Katello
       def should_reset_content_host_status?
         return false unless self.is_a?(::Host::Base)
         !new_record? && build && self.changes.key?('build')
+      end
+
+      module ClassMethods
+        def find_by_installed_debs(_key, _operator, value)
+          name, architecture, version = Katello::Deb.split_nav(value)
+          debs = Katello::InstalledDeb.where(:name => name)
+          debs = debs.where(:architecture => architecture) unless architecture.nil?
+          debs = debs.where(:version => version) unless version.nil?
+          hosts = debs.joins(:host_installed_debs).select("#{Katello::HostInstalledDeb.table_name}.host_id as host_id").pluck(:host_id)
+          if hosts.empty?
+            {
+              :conditions => "1=0"
+            }
+          else
+            {
+              :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.join(',')})"
+            }
+          end
+        end
       end
 
       def correct_kickstart_repository

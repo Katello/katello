@@ -6,6 +6,14 @@ fedora_gpg_key:
   updated_at: <%= Time.now %>
   content_type: "gpg_key"
 
+debian_gpg_key:
+  name:         Debian GPG Key
+  content:      ADF#FCSFASDF$@$@ZFDDSG$#%#%ADS
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_type: "gpg_key"
+
 unassigned_gpg_key:
   name:         Unassigned GPG Key
   content:      KJL:KDF*(DF&*(*$&(*#$JLKJD(D((D

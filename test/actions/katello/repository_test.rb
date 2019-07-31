@@ -16,6 +16,7 @@ module ::Actions::Katello::Repository
     let(:repository_ansible_collection_pulp3) { katello_repositories(:pulp3_ansible_collection_1) }
     let(:repository_apt_pulp3) { katello_repositories(:pulp3_deb_1) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
+    let(:deb_repository) { katello_repositories(:debian_10_amd64) }
     let(:docker_repository) { katello_repositories(:redis) }
     let(:proxy) { smart_proxies(:one) }
     let(:capsule_content) { ::Katello::Pulp::SmartProxyRepository.new(proxy) }
@@ -374,7 +375,7 @@ module ::Actions::Katello::Repository
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Sync }
     let(:pulp3_metadata_generate_action_class) { ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata }
 
-    it 'skips applicability if non-yum' do
+    it 'skips applicability if non-yum and non-deb' do
       action = create_action action_class
       docker_repository.root.url = 'http://foo.com/foo'
       action.stubs(:action_subject).with(docker_repository)

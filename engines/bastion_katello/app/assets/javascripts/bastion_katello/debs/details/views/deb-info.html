@@ -1,21 +1,53 @@
-<span page-title ng-model="deb">{{ 'Deb: ' | translate }} {{ deb.name }}_{{ deb.version }}_{{ deb.architecture }}</span>
+<span page-title ng-model="deb">{{ 'Deb: ' | translate }} {{ deb.nva }}</span>
 
 <div data-extend-template="layouts/full-page-details.html">
   <div data-block="content">
     <h4 translate>Basic Information</h4>
 
     <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Installed On</dt>
+      <dd>
+        <i class="fa fa-spinner fa-spin" ng-show="installedDebCount === undefined"></i>
+        <span ng-show="installedDebCount !== undefined">
+          <a href="{{ '/content_hosts?search=' + createSearchString('installed_deb') }}" translate>
+            {{ installedDebCount }} Host(s)
+          </a>
+        </span>
+      </dd>
+
+      <dt translate>Applicable To</dt>
+      <dd>
+        <a href="{{ '/content_hosts?search=' + createSearchString('applicable_debs') }}" translate>
+          {{ deb.hosts_applicable_count }} Host(s)
+        </a>
+      </dd>
+
+      <dt translate>Upgradable For</dt>
+      <dd>
+        <a href="{{ '/content_hosts?search=' + createSearchString('upgradable_debs') }}" translate>
+          {{ deb.hosts_available_count }} Host(s)
+        </a>
+      </dd>
+
       <dt translate>Version</dt>
       <dd>{{ deb.version }}</dd>
 
       <dt translate>Architecture</dt>
       <dd>{{ deb.architecture }}</dd>
 
-      <dt translate>Checksum</dt>
-      <dd>{{ deb.checksum }}</dd>
-
       <dt translate>Description</dt>
       <dd>{{ deb.description }}</dd>
+    </dl>
+    <div class="divider"></div>
+
+    <h4 translate>File Information</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Filename</dt>
+      <dd>{{ deb.filename}}</dd>
+
+      <dt translate>Checksum</dt>
+      <dd>{{ deb.checksum }}</dd>
     </dl>
   </div>
 </div>
