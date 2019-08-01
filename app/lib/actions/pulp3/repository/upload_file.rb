@@ -12,25 +12,20 @@ module Actions
           upload_class = repo_backend_service.upload_class
           uploads_api = repo_backend_service.uploads_api
           offset = 0
-          response = ""
+          response = nil
           File.open(input[:file], "rb") do |file|
             total_size = File.size(file)
-            upload_data = upload_class.new({size: total_size})
-            response = uploads_api.create(upload_data)
-            upload_href = response._href
-            chunksize = upload_chunk_size
-            offset = 0
+            upload_href = uploads_api.create(upload_class.new(size: total_size))._href
             sha256 = Digest::SHA256.hexdigest(File.read(file))
-
             until file.eof?
-              chunk = file.read(chunksize)
+              chunk = file.read(upload_chunk_size)
               begin
                 filechunk = Tempfile.new('filechunk', :encoding => 'ascii-8bit')
                 filechunk.write(chunk)
-                filechunk.flush()
+                filechunk.flush
                 actual_chunk_size = File.size(filechunk)
-                response = uploads_api.update(upload_href, content_range(offset, offset + actual_chunk_size -1, total_size), filechunk)
-                offset += actual_chunk_size -1
+                response = uploads_api.update(upload_href, content_range(offset, offset + actual_chunk_size - 1, total_size), filechunk)
+                offset += actual_chunk_size - 1
               ensure
                 filechunk.close
                 filechunk.unlink
@@ -39,8 +34,7 @@ module Actions
 
             if response
               upload_href = response._href
-              pulp_tasks = uploads_api.commit(upload_href, {sha256: sha256})
-              output[:pulp_tasks] = pulp_tasks
+              output[:pulp_tasks] = [uploads_api.commit(upload_href, sha256: sha256)]
             end
           end
         end
@@ -61,7 +55,6 @@ module Actions
             end
           end
         end
-
 
         private
 

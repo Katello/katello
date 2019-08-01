@@ -235,23 +235,54 @@ module ::Actions::Katello::Repository
 
   class UploadFilesTest < TestBase
     setup { FactoryBot.create(:smart_proxy, :default_smart_proxy) }
-    let(:action_class) { ::Actions::Katello::Repository::UploadFiles }
-
-    it 'plans' do
+    let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::UploadContent }
+    let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
+    it 'plans for Pulp' do
+      action = create_action pulp2_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
-      action.expects(:action_subject).with(puppet_repository)
       action.execution_plan.stub_planned_action(::Actions::Pulp::Repository::CreateUploadRequest) do |content_create|
         content_create.stubs(output: { upload_id: 123 })
       end
 
-      plan_action action, puppet_repository, [{:path => file, :filename => 'puppet_module.tar.gz'}]
+      plan_action action, puppet_repository, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'puppet_module'
       assert_action_planed(action, ::Actions::Pulp::Repository::CreateUploadRequest)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::UploadFile,
-                                upload_id: 123, file: File.join(Rails.root, 'tmp', 'uploads', 'puppet_module.tar.gz'))
+                                upload_id: 123, file: file)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::ImportUpload,
+                  pulp_id: puppet_repository.pulp_id,
+                  unit_type_id: "puppet_module",
+                  unit_key: {},
+                  upload_id: 123)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::DeleteUploadRequest,
                                 upload_id: 123)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::FinishUpload,
-                                puppet_repository, :content_type => 'puppet_module')
+    end
+
+    it 'plans for Pulp3' do
+      action = create_action pulp3_action_class
+      file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::UploadFile) do |content_create|
+        content_create.stubs(output: { pulp_tasks: [{href: "demo_task/href"}] })
+      end
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::SaveArtifact) do |save_artifact|
+        save_artifact.stubs(output: { content_unit_href: "demo_task/artifact_href" })
+      end
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
+        import_upload.stubs(output: { pulp_tasks: [{href: "demo_task/version_href"}] })
+      end
+
+      plan_action action, repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'file'
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::UploadFile,
+                                repository_pulp3, proxy, file)
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
+                                {:path => file, :filename => 'puppet_module.tar.gz'},
+                                repository_pulp3,
+                                [{href: "demo_task/href"}],
+                                "file")
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+                                "demo_task/artifact_href", repository_pulp3, proxy)
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
+                                repository_pulp3,
+                                [{href: "demo_task/version_href"}])
     end
   end
 

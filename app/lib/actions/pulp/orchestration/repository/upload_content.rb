@@ -3,7 +3,7 @@ module Actions
     module Orchestration
       module Repository
         class UploadContent < Pulp::Abstract
-          def plan(repository, smart_proxy, file, unit_type_id)
+          def plan(repository, _smart_proxy, file, unit_type_id)
             sequence do
               upload_request = plan_action(Pulp::Repository::CreateUploadRequest)
               plan_action(Pulp::Repository::UploadFile,
@@ -11,7 +11,7 @@ module Actions
                           file: file[:path])
               plan_action(Pulp::Repository::ImportUpload,
                           pulp_id: repository.pulp_id,
-                          unit_type_id: repository.unit_type_id,
+                          unit_type_id: unit_type_id,
                           unit_key: unit_key(file, repository),
                           upload_id: upload_request.output[:upload_id])
               plan_action(Pulp::Repository::DeleteUploadRequest,
@@ -22,9 +22,9 @@ module Actions
           def unit_key(file, repository)
             return {} unless repository.file?
             {
-                :checksum => Digest::SHA256.hexdigest(File.read(file[:path])),
-                :name => file[:filename],
-                :size => File.size(file[:path])
+              :checksum => Digest::SHA256.hexdigest(File.read(file[:path])),
+              :name => file[:filename],
+              :size => File.size(file[:path])
             }
           end
         end

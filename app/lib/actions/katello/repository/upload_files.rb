@@ -18,8 +18,8 @@ module Actions
             concurrence do
               tmp_files.each do |file|
                 sequence do
-                  create_action = plan_pulp_action([Pulp::Orchestration::Repository::UploadContent,
-                                                    Pulp3::Orchestration::Repository::UploadContent],
+                  plan_pulp_action([Pulp::Orchestration::Repository::UploadContent,
+                                    Pulp3::Orchestration::Repository::UploadContent],
                                                    repository, SmartProxy.pulp_master!, file, unit_type_id)
                 end
               end
