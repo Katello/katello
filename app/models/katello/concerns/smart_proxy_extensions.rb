@@ -121,8 +121,6 @@ module Katello
           config.scheme = 'https'
           config.username = 'admin'
           config.password = 'password'
-          config.cert_file = ::Cert::Certs.ssl_client_cert
-          config.key_file = ::Cert::Certs.ssl_client_key
           config.debugging = true
           config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
         end
