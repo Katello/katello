@@ -26,6 +26,7 @@ module Katello
 
     def self.any_task_running(async_tasks)
       async_tasks.each do |t|
+        next if t.finished?
         t.refresh
         sleep 0.5 # do not overload backend engines
         if !t.finished?

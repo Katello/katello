@@ -137,21 +137,6 @@ module Katello
         content_unit_counts
       end
 
-      def sync(options = {})
-        sync_options = {}
-        sync_options[:max_speed] ||= SETTINGS[:katello][:pulp][:sync_KBlimit] if SETTINGS[:katello][:pulp][:sync_KBlimit] # set bandwidth limit
-        sync_options[:num_threads] ||= SETTINGS[:katello][:pulp][:sync_threads] if SETTINGS[:katello][:pulp][:sync_threads] # set threads per sync
-        pulp_tasks = Katello.pulp_server.extensions.repository.sync(self.pulp_id, :override_config => sync_options)
-
-        task = PulpSyncStatus.using_pulp_task(pulp_tasks) do |t|
-          t.organization = organization
-          t.parameters ||= {}
-          t.parameters[:options] = options
-        end
-        task.save!
-        return [task]
-      end
-
       def clone_file_metadata(to_repo)
         Katello.pulp_server.extensions.yum_repo_metadata_file.copy(self.pulp_id, to_repo.pulp_id)
       end

@@ -8,6 +8,7 @@ module Katello
         include RepositorySupport
 
         def setup
+          set_ca_file
           @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           @mirror = FactoryBot.build(:smart_proxy, :pulp_mirror)
 
