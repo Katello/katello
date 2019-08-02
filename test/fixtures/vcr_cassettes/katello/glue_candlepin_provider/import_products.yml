@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://dev.example.com:8443/candlepin/pools/4028f95163b16e440163bc8c25da0e4e
+    uri: https://devel2.balmora.example.com:8443/candlepin/owners/GlueCandlepinProviderTest
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -12,1353 +12,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="19PAnOD8iKmhTbvuMl0aDhxt5JVO4yGa4XDM6g7Oc",
-        oauth_signature="MHqTowJPc7YnTMs7lC5EYpg50aY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1527876691", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 190d7000-c59f-4f0b-9dcb-9822b7147098
-      X-Version:
-      - 2.3.8-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Fri, 01 Jun 2018 18:11:31 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wNi0wMVQxODoxMTozMSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDYtMDFUMTg6MTE6MzErMDAwMCIsImlkIjoiNDAyOGY5NTE2
-        M2IxNmU0NDAxNjNiYzhjMjVkYTBlNGUiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4Zjk1MTYzYjE2ZTQ0MDE2M2JjOGMyNTQ2MGU0MCIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUi
-        fSx7Im5hbWUiOiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7
-        Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7Im5hbWUiOiJu
-        YW1lIiwidmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxv
-        cGVyIFN1aXRlIn0seyJuYW1lIjoidmFyaWFudCIsInZhbHVlIjoiRGV2ZWxv
-        cGVyIn0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiaWE2NCxwcGMscHBjNjQs
-        cHBjNjRsZSxzMzkwLHMzOTB4LHg4Nix4ODZfNjQifSx7Im5hbWUiOiJzb2Nr
-        ZXRzIiwidmFsdWUiOiI4In0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFs
-        dWUiOiJMMS1MMyJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiYWY3NWE5Yjk5ZDU3NDU5YWJhMjZlNzhhZGI2
-        MDdiODMiLCJocmVmIjoiL3Bvb2xzLzQwMjhmOTUxNjNiMTZlNDQwMTYzYmM4
-        YzI1ZGEwZTRlIn0=
-    http_version: 
-  recorded_at: Fri, 01 Jun 2018 18:11:31 GMT
-- request:
-    method: get
-    uri: https://dev.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/activation_keys/?include=pools.pool.id
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="t0Z9HIglZWjWsZp4v8rPWtowv7SaMyFv91kBxdZDjHg",
-        oauth_signature="Y%2F4qCvxfRJRllgY9HFFu%2BuJP6BY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1527876691", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - dbc05ed2-e37a-4cd7-98b8-4521765f27af
-      X-Version:
-      - 2.3.8-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Fri, 01 Jun 2018 18:11:31 GMT
-    body:
-      encoding: UTF-8
-      base64_string: 'W10=
-
-'
-    http_version: 
-  recorded_at: Fri, 01 Jun 2018 18:11:31 GMT
-- request:
-    method: get
-    uri: https://dev.example.com:8443/candlepin/pools/4028f95163b16e440163bc8c25da0e4e/entitlements?include=consumer.uuid
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="WCnDaCuyoHFfeqolaTksXGyj86cU327qspP7vW2Bw",
-        oauth_signature="%2B0qD3SkBZ8T5Oj3Dywou4dlkksY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1527876691", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - fadb5de6-2bb5-4a76-b060-a79bcc5acd81
-      X-Version:
-      - 2.3.8-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Fri, 01 Jun 2018 18:11:31 GMT
-    body:
-      encoding: UTF-8
-      base64_string: 'W10=
-
-'
-    http_version: 
-  recorded_at: Fri, 01 Jun 2018 18:11:31 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e944653ec32101653f1f62670163
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="lBEhLysKDWePpYLkqLcJ3CkBmZOzYoL954vXGIPDBQ",
-        oauth_signature="pYpoKF3dC4129krtnxKQXQFMFgs%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534362346", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - e3fdc72c-11dd-4e5d-9312-498271a81419
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Wed, 15 Aug 2018 19:45:45 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNVQxOTo0NTo0NiswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTVUMTk6NDU6NDYrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTNlYzMyMTAxNjUzZjFmNjI2NzAxNjMiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1M2VjMzIxMDE2NTNmMWY2MTg3MDE1MCIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiN2E0YTExOWQ5OTliNGM4NGE5MWFiNWI4MTg1
-        MTNjODkiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjUzZWMzMjEwMTY1M2Yx
-        ZjYyNjcwMTYzIn0=
-    http_version: 
-  recorded_at: Wed, 15 Aug 2018 19:45:46 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e944653ec32101653f31c5580191
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="kDVbeSEh5XUNMVynw26ww0SxXIgykaXsdHykJiMoCkw",
-        oauth_signature="tAGfRFOloSySS91FC8B%2FQJQz8mg%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534363551", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - '028a1b0f-7a2b-432c-8dd9-87302aeb9f68'
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Wed, 15 Aug 2018 20:05:50 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNVQyMDowNTo1MSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTVUMjA6MDU6NTErMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTNlYzMyMTAxNjUzZjMxYzU1ODAxOTEiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1M2VjMzIxMDE2NTNmMzFjNDhjMDE3ZSIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiZDVlMDI2MWQxYzVmNDM2NDhiZmNhYjM0NDVm
-        MjhmNmQiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjUzZWMzMjEwMTY1M2Yz
-        MWM1NTgwMTkxIn0=
-    http_version: 
-  recorded_at: Wed, 15 Aug 2018 20:05:51 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e944653ec32101653f93a2370203
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="qJ5XMLwJoO8SxbfC1bgAZMRFOv3XQwEoDR2S97PCEg",
-        oauth_signature="hAREAK2yHLm0QUgCN0URl3oHMpQ%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534369964", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 4fad1e90-bca6-42b3-9f1c-d60172441f30
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Wed, 15 Aug 2018 21:52:44 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNVQyMTo1Mjo0NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTVUMjE6NTI6NDQrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTNlYzMyMTAxNjUzZjkzYTIzNzAyMDMiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1M2VjMzIxMDE2NTNmOTNhMTdhMDFmMCIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiYmI3OGYyZTAzM2ZmNDdlNWE5MGYzYjgwZGUy
-        NDYwNmMiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjUzZWMzMjEwMTY1M2Y5
-        M2EyMzcwMjAzIn0=
-    http_version: 
-  recorded_at: Wed, 15 Aug 2018 21:52:45 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e944653ec32101653f9e2b360261
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="Kio7wcCniczeRR9B3eqBm93JGV5i1Leu2yNxwlqdPw",
-        oauth_signature="awbdqqT1DeIMPst04%2FWbcD44Gt8%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534370655", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 8bf09e8e-43cd-49a5-b2c6-a439f9004e66
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Wed, 15 Aug 2018 22:04:14 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNVQyMjowNDoxNSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTVUMjI6MDQ6MTUrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTNlYzMyMTAxNjUzZjllMmIzNjAyNjEiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1M2VjMzIxMDE2NTNmOWUyYTgzMDI0ZSIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiNmVjZGRhZDEwMGFiNGFjNWEwN2ZiNGJjYzE5
-        MzljMGYiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjUzZWMzMjEwMTY1M2Y5
-        ZTJiMzYwMjYxIn0=
-    http_version: 
-  recorded_at: Wed, 15 Aug 2018 22:04:15 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446540a5d5016540ae1fa70018
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="48baNU5N5h58zvhL9urQZ2yGAYaVpDZJ1xhPP60qkU",
-        oauth_signature="Q5e7FscKkkO4iuhsGm9gIpcYivY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534388478", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - c69a9889-be44-4695-8eb4-21aadddb8738
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 03:01:18 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQwMzowMToxNyswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMDM6MDE6MTcrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQwYTVkNTAxNjU0MGFlMWZhNzAwMTgiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDBhNWQ1MDE2NTQwYWUxY2NmMDAwNSIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiNjA1ZWEyM2EzNzRhNDExZjkyMmZiOGE3ODcx
-        NGY2OTUiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0MGE1ZDUwMTY1NDBh
-        ZTFmYTcwMDE4In0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 03:01:18 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446540a5d5016540b4f1220076
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="TiBuRbBWtq4EqMgwuZEV815FPFv5j8gdQS3qSFIh2Y",
-        oauth_signature="l7WQc51%2F1bdJyg7Jszh12%2FDtcuY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534388925", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - f95d906b-7f47-4d0d-88d9-ea138c614a98
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 03:08:44 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQwMzowODo0NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMDM6MDg6NDQrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQwYTVkNTAxNjU0MGI0ZjEyMjAwNzYiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDBhNWQ1MDE2NTQwYjRmMDRiMDA2MyIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiOGQxY2RjNDAzMDlkNGVlZGFlYThiMDVkM2Ew
-        YzQ2ZjAiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0MGE1ZDUwMTY1NDBi
-        NGYxMjIwMDc2In0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 03:08:45 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446543d91b01654429b20b0055
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="SiR5mEiA24kmCgmxtQ4tjljzmjaf91qEC8C99Zu9g",
-        oauth_signature="LkXkcEj2B22k0FDyICEHwXvGx3I%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534446908", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 582a6599-d4a9-42f3-b270-ec1cae80abc8
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 19:15:08 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQxOToxNTowNyswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMTk6MTU6MDcrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDI5YjIwYjAwNTUiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0MjlhZjJjMDAwNSIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUi
-        fSx7Im5hbWUiOiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7
-        Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7Im5hbWUiOiJu
-        YW1lIiwidmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxv
-        cGVyIFN1aXRlIn0seyJuYW1lIjoidmFyaWFudCIsInZhbHVlIjoiRGV2ZWxv
-        cGVyIn0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiaWE2NCxwcGMscHBjNjQs
-        cHBjNjRsZSxzMzkwLHMzOTB4LHg4Nix4ODZfNjQifSx7Im5hbWUiOiJzb2Nr
-        ZXRzIiwidmFsdWUiOiI4In0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFs
-        dWUiOiJMMS1MMyJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiY2U2YjI4NGY3MmJmNDQ2ZDg0OTY1ZTg4ODQy
-        NWVhZDkiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQy
-        OWIyMGIwMDU1In0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 19:15:08 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446543d91b0165442c7ab900e6
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="J03MZ25mt5pWEWZcGq3pa5dRbTg7mBKLjmsTICNb9xQ",
-        oauth_signature="goGGLPMDvuTnD0%2FhiV6RXDDPhiE%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534447090", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - c56889b9-a0e5-4887-bf3e-0a9af0036e7c
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 19:18:10 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQxOToxODoxMCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMTk6MTg6MTArMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDJjN2FiOTAwZTYiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0MmM3OTdlMDBkMyIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiZDdmODJhZTBhNzgyNDBjZTk3MzgzOTFjZjA3
-        MWRjMzQiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQy
-        YzdhYjkwMGU2In0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 19:18:10 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446543d91b0165442dc199010c
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="WPYDKCG2gJ4RCiAA20nD5RQPmOyqVml3FshI8xPs",
-        oauth_signature="8rvembBxbk2pfd6bzt1eE3RWE0U%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534447174", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - aacdfd69-658a-4b78-8977-3b77478409ee
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 19:19:33 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQxOToxOTozNCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMTk6MTk6MzQrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDJkYzE5OTAxMGMiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0MmRjMDU3MDBmOSIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiOGZjNDk4YTI3OGNiNDlmMGFkMmU0NDAzZTkw
-        OGU0NDIiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQy
-        ZGMxOTkwMTBjIn0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 19:19:34 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446543d91b0165443658da016a
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="ytWiVVE3qN5DkEJaluZV9rwOVsdXASYiFTLYpee9GdU",
-        oauth_signature="EuHKFJ5zU2coe0M33xTdG7gp4iw%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534447737", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - b0e81275-f134-48a5-a4e9-1b70d4c09692
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 19:28:56 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQxOToyODo1NyswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMTk6Mjg6NTcrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDM2NThkYTAxNmEiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0MzY1ODQ5MDE1NyIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiZjNmNjVmY2Y4NjY2NGY3YTlmYWQ3YmFkYjFl
-        NDhlM2YiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQz
-        NjU4ZGEwMTZhIn0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 19:28:57 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446543d91b01654489afdf01e1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="IPGuMzWHgeZmlYXSeFONO8BdScvSRP5bTMSy49fIls",
-        oauth_signature="Kz7nOrgCLJ5KPyquHvIyzNs3syo%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453199", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 9a68f70c-6c4a-4e3b-8148-ba4b30f47f36
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 20:59:58 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMDo1OTo1OCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjA6NTk6NTgrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDg5YWZkZjAxZTEiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0ODlhZTlhMDFjZSIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUi
-        OiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2
-        YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUiOiJuYW1lIiwi
-        dmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1
-        aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiNWRjM2MwNzE4MTJkNDcwNmI2OWRjY2FkYTU2
-        NTEyMTYiLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4
-        OWFmZGYwMWUxIn0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 20:59:59 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446543d91b0165448b7464023a
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="x2Rpp2DYq5IppYUmXHDolBn7ibPTtwNLH2pFwcprU",
-        oauth_signature="4%2BEOgTUowqPEpbCzxXIfouZhpKY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453314", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 3e49fc64-bc28-4621-8059-6226fb753cd0
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiNzQ2NDAyM2EiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0OGI3M2QxMDIyNyIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUi
-        fSx7Im5hbWUiOiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7
-        Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7Im5hbWUiOiJu
-        YW1lIiwidmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxv
-        cGVyIFN1aXRlIn0seyJuYW1lIjoidmFyaWFudCIsInZhbHVlIjoiRGV2ZWxv
-        cGVyIn0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiaWE2NCxwcGMscHBjNjQs
-        cHBjNjRsZSxzMzkwLHMzOTB4LHg4Nix4ODZfNjQifSx7Im5hbWUiOiJzb2Nr
-        ZXRzIiwidmFsdWUiOiI4In0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFs
-        dWUiOiJMMS1MMyJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiYmE1NDRjMGRiNTgwNGFkY2IyMDMwN2IzOGY3
-        NGIzMjciLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4
-        Yjc0NjQwMjNhIn0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
-- request:
-    method: get
-    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Authorization:
-      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="ajuZDOjStunHuZvUR4Uw2d1BVXTHffBMfxli0f6OFw0",
-        oauth_signature="nA02KmUtGJiOTsMHP4EuHzDeM3o%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1537884703", oauth_version="1.0"
+      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="okafp2gaFJpPBxz7fWEby1xv8L1wVHtcd10efliRaM",
+        oauth_signature="vrQtIZPKM63T6dhY8Nr4wW2o5dQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1564777222", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -1369,28 +27,28 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 0106abd3-c182-4e4b-a98e-70642414db8c
+      - 7abc1824-3522-42eb-a6e1-77353d219fda
       X-Version:
-      - 2.5.6-1
-      - 2.5.6-1
+      - 2.6.5-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Tue, 25 Sep 2018 14:11:43 GMT
+      - Fri, 02 Aug 2019 20:20:22 GMT
     body:
       encoding: UTF-8
       base64_string: |
         eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIEdsdWVD
         YW5kbGVwaW5Qcm92aWRlclRlc3QgY291bGQgbm90IGJlIGZvdW5kLiIsInJl
-        cXVlc3RVdWlkIjoiMDEwNmFiZDMtYzE4Mi00ZTRiLWE5OGUtNzA2NDI0MTRk
-        YjhjIn0=
+        cXVlc3RVdWlkIjoiN2FiYzE4MjQtMzUyMi00MmViLWE2ZTEtNzczNTNkMjE5
+        ZmRhIn0=
     http_version: 
-  recorded_at: Tue, 25 Sep 2018 14:11:43 GMT
+  recorded_at: Fri, 02 Aug 2019 20:20:22 GMT
 - request:
     method: post
-    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/
+    uri: https://devel2.balmora.example.com:8443/candlepin/owners/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1403,11 +61,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE",
-        oauth_nonce="IHlPTRJ83iWV7e6mCV2ULSFYDTNxCCcR5E0Qlw6ug", oauth_signature="r2dVjscDWc2wDBUj%2Fs5gGA9UcqU%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1537884703", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x",
+        oauth_nonce="QX0RSTwZBItW5XdQlKEbJ9M7Hi2PGZJizm5IBGlM", oauth_signature="ktWKxn0Y7y7FpVW2xgvPtDBcALQ%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1564777222", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -1424,21 +82,21 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - af40dba0-ccb9-45d6-b723-17866b4da4c6
+      - 3386d25e-6173-4686-853d-7b365529e258
       X-Version:
-      - 2.5.6-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Tue, 25 Sep 2018 14:11:43 GMT
+      - Fri, 02 Aug 2019 20:20:22 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsImlkIjoiNDAyOGY5YWI2
-        NjExMGZkYjAxNjYxMTEyNGFhYTAwMzciLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        eyJjcmVhdGVkIjoiMjAxOS0wOC0wMlQyMDoyMDoyMiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTktMDgtMDJUMjA6MjA6MjIrMDAwMCIsImlkIjoiNDAyOGY5MGI2
+        YzUzNzIyNDAxNmM1M2ZkOTJlNTAwMGEiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
         UHJvdmlkZXJUZXN0IiwiZGlzcGxheU5hbWUiOiJHbHVlQ2FuZGxlcGluUHJv
         dmlkZXJUZXN0IiwicGFyZW50T3duZXIiOm51bGwsImNvbnRlbnRQcmVmaXgi
         OiIvR2x1ZUNhbmRsZXBpblByb3ZpZGVyVGVzdC8kZW52IiwiZGVmYXVsdFNl
@@ -1448,14 +106,14 @@ http_interactions:
         aXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVzaGVkIjpudWxsLCJocmVm
         IjoiL293bmVycy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0=
     http_version: 
-  recorded_at: Tue, 25 Sep 2018 14:11:43 GMT
+  recorded_at: Fri, 02 Aug 2019 20:20:22 GMT
 - request:
     method: post
-    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/imports?force=MANIFEST_SAME
+    uri: https://devel2.balmora.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/imports?force=MANIFEST_SAME
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        LS0tLS0tUnVieUZvcm1Cb3VuZGFyeXpnbEFaZ29HUGQzQ1F5MksNCkNvbnRl
+        LS0tLS0tUnVieUZvcm1Cb3VuZGFyeWlMWGpOUlZLRUJTNlY4elANCkNvbnRl
         bnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iaW1wb3J0IjsgZmls
         ZW5hbWU9Im1hbmlmZXN0X3NtYWxsLnppcCINCkNvbnRlbnQtVHlwZTogYXBw
         bGljYXRpb24vemlwDQoNClBLAwQUAAAACADXeXtLnDwnurSXAQA7pAEAEwAA
@@ -3794,25 +2452,25 @@ http_interactions:
         MUGbiWgmznVQSwECNAMUAAAACADXeXtLnDwnurSXAQA7pAEAEwAAAAAAAAAB
         AAAAtIEAAAAAY29uc3VtZXJfZXhwb3J0LnppcFBLAQI0AxQAAAAIANd5e0ux
         HaR9BQIAAAACAAAJAAAAAAAAAAEAAAC0geWXAQBzaWduYXR1cmVQSwUGAAAA
-        AAIAAgB4AAAAEZoBAAAADQotLS0tLS1SdWJ5Rm9ybUJvdW5kYXJ5emdsQVpn
-        b0dQZDNDUXkySy0tDQo=
+        AAIAAgB4AAAAEZoBAAAADQotLS0tLS1SdWJ5Rm9ybUJvdW5kYXJ5aUxYak5S
+        VktFQlM2Vjh6UC0tDQo=
     headers:
       Accept:
       - application/json
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE",
-        oauth_nonce="fRsSFbLMoMKZkoiP1sWNgkf9QRxyP7lvbgZOZRkodo", oauth_signature="SFqg2RhGt25X1G2DJWi38wS9xoU%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1537884703", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x",
+        oauth_nonce="pUAdhoovYMPkGxmdpzEUwlvMqtZQBS8X6kE4ARlZDZU", oauth_signature="S1XP7mw7yJKpa2Y6z0sQRA0Pe7M%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1564777222", oauth_version="1.0"
       Cp-User:
       - foreman_admin
       Content-Length:
       - '105314'
       Content-Type:
-      - multipart/form-data; boundary=----RubyFormBoundaryzglAZgoGPd3CQy2K
+      - multipart/form-data; boundary=----RubyFormBoundaryiLXjNRVKEBS6V8zP
   response:
     status:
       code: 200
@@ -3821,42 +2479,42 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - c1340627-f27f-4c96-b7d6-bf01cddedba7
+      - 263238d1-2146-4cef-b96d-3254a348c316
       X-Version:
-      - 2.5.6-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Tue, 25 Sep 2018 14:11:43 GMT
+      - Fri, 02 Aug 2019 20:20:22 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDQrMDAwMCIsImlkIjoiNDAyOGY5YWI2
-        NjExMGZkYjAxNjYxMTEyNGQxOTAwNDkiLCJzdGF0dXMiOiJTVUNDRVNTX1dJ
+        eyJjcmVhdGVkIjoiMjAxOS0wOC0wMlQyMDoyMDoyMyswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsImlkIjoiNDAyOGY5MGI2
+        YzUzNzIyNDAxNmM1M2ZkOTVlMDAwMWMiLCJzdGF0dXMiOiJTVUNDRVNTX1dJ
         VEhfV0FSTklORyIsInN0YXR1c01lc3NhZ2UiOiJHbHVlQ2FuZGxlcGluUHJv
         dmlkZXJUZXN0IGZpbGUgaW1wb3J0ZWQgZm9yY2libHkuTm8gYWN0aXZlIHN1
         YnNjcmlwdGlvbnMgZm91bmQgaW4gdGhlIGZpbGUuIiwiZ2VuZXJhdGVkQnki
         OiJjYW5kbGVwaW5fYWRtaW4iLCJnZW5lcmF0ZWREYXRlIjoiMjAxNy0xMS0y
         MVQxNjowMTowNSswMDAwIiwidXBzdHJlYW1Db25zdW1lciI6eyJjcmVhdGVk
-        IjoiMjAxOC0wOS0yNVQxNDoxMTo0NCswMDAwIiwidXBkYXRlZCI6IjIwMTgt
-        MDktMjVUMTQ6MTE6NDQrMDAwMCIsImlkIjoiNDAyOGY5YWI2NjExMGZkYjAx
-        NjYxMTEyNGQxOTAwNGEiLCJ1dWlkIjoiMmY1Nzg4ZWYtMWVhMy00MGM1LTlh
+        IjoiMjAxOS0wOC0wMlQyMDoyMDoyMyswMDAwIiwidXBkYXRlZCI6IjIwMTkt
+        MDgtMDJUMjA6MjA6MjMrMDAwMCIsImlkIjoiNDAyOGY5MGI2YzUzNzIyNDAx
+        NmM1M2ZkOTVlMDAwMWQiLCJ1dWlkIjoiMmY1Nzg4ZWYtMWVhMy00MGM1LTlh
         ZjgtOWI5ZTc3NjcwNWU3IiwibmFtZSI6Imp0dXJlbC1rYXRlbGxvLTIiLCJh
         cGlVcmwiOiJodHRwczovL3N1YnNjcmlwdGlvbi5yaG4ucmVkaGF0LmNvbS9z
         dWJzY3JpcHRpb24vY29uc3VtZXJzLyIsIndlYlVybCI6ImFjY2Vzcy5yZWRo
         YXQuY29tL21hbmFnZW1lbnQvZGlzdHJpYnV0b3JzLyIsIm93bmVySWQiOiI0
-        MDI4ZjlhYjY2MTEwZmRiMDE2NjExMTI0YWFhMDAzNyIsImNvbnRlbnRBY2Nl
-        c3NNb2RlIjpudWxsLCJ0eXBlIjp7ImlkIjoiNDAyOGY5YWI2NWM5NzUwYzAx
-        NjVjOTg0ZTI4NzAwMDMiLCJsYWJlbCI6InNhdGVsbGl0ZSIsIm1hbmlmZXN0
+        MDI4ZjkwYjZjNTM3MjI0MDE2YzUzZmQ5MmU1MDAwYSIsImNvbnRlbnRBY2Nl
+        c3NNb2RlIjpudWxsLCJ0eXBlIjp7ImlkIjoiNDAyOGY5MGM2YzQ4MzcyYjAx
+        NmM1MzA0OWMzZjAxY2UiLCJsYWJlbCI6InNhdGVsbGl0ZSIsIm1hbmlmZXN0
         Ijp0cnVlfX0sImZpbGVOYW1lIjoibWFuaWZlc3Rfc21hbGwuemlwIn0=
     http_version: 
-  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
+  recorded_at: Fri, 02 Aug 2019 20:20:23 GMT
 - request:
     method: get
-    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/?include=productContent
+    uri: https://devel2.balmora.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/?include=productContent
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -3866,11 +2524,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="cdEQW9EZ9in0XEk8GMnXn5rUee9TMVKOahRRWjutE",
-        oauth_signature="E9CA6E85bTi9idEe7TAW0BmwcDQ%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1537884704", oauth_version="1.0"
+      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="nBbLgSwjQgQaaRG5bDz0E0NI6p3TvzbMlkTqdd0tr9c",
+        oauth_signature="Dt0mk8%2FHs96Zoi8Qslstvlh2OHo%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1564777223", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -3885,23 +2543,23 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 1dc90e33-5680-47af-8dff-33e36419ac14
+      - 851b6107-9e07-4436-b97c-535dfb56061b
       X-Version:
-      - 2.5.6-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Tue, 25 Sep 2018 14:11:44 GMT
+      - Fri, 02 Aug 2019 20:20:23 GMT
     body:
       encoding: UTF-8
       base64_string: |
         W3siaWQiOiIxNzIiLCJuYW1lIjoiTVJHIFJlYWx0aW1lIiwibXVsdGlwbGll
         ciI6MSwicHJvZHVjdENvbnRlbnQiOlt7ImNvbnRlbnQiOnsiY3JlYXRlZCI6
-        IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0ZWQiOiIyMDE4LTA5
-        LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5YWI2NjExMGZkYjAx
-        NjYxMTEyNGM3OTAwM2QiLCJpZCI6IjE1NDMiLCJ0eXBlIjoieXVtIiwibGFi
+        IjIwMTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsInVwZGF0ZWQiOiIyMDE5LTA4
+        LTAyVDIwOjIwOjIzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5MGI2YzUzNzIyNDAx
+        NmM1M2ZkOTUyOTAwMTAiLCJpZCI6IjE1NDMiLCJ0eXBlIjoieXVtIiwibGFi
         ZWwiOiJyaGVsLTYtc2VydmVyLXJlYWx0aW1lLXNvdXJjZS1ycG1zIiwibmFt
         ZSI6Ik1SRyBSZWFsdGltZSAoU291cmNlIFJQTXMpIiwidmVuZG9yIjoiUmVk
         IEhhdCIsImNvbnRlbnRVcmwiOiIvY29udGVudC9kaXN0L3JoZWwvc2VydmVy
@@ -3911,9 +2569,9 @@ http_interactions:
         YXNlIiwibW9kaWZpZWRQcm9kdWN0SWRzIjpbXSwiYXJjaGVzIjpudWxsLCJy
         ZXF1aXJlZFByb2R1Y3RJZHMiOltdLCJtZXRhZGF0YUV4cGlyZSI6MSwicmVs
         ZWFzZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfSx7ImNvbnRlbnQiOnsi
-        Y3JlYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0ZWQi
-        OiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5YWI2
-        NjExMGZkYjAxNjYxMTEyNGM3OTAwM2UiLCJpZCI6IjE1NDIiLCJ0eXBlIjoi
+        Y3JlYXRlZCI6IjIwMTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsInVwZGF0ZWQi
+        OiIyMDE5LTA4LTAyVDIwOjIwOjIzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5MGI2
+        YzUzNzIyNDAxNmM1M2ZkOTUyYTAwMTEiLCJpZCI6IjE1NDIiLCJ0eXBlIjoi
         eXVtIiwibGFiZWwiOiJyaGVsLTYtc2VydmVyLXJlYWx0aW1lLWRlYnVnLXJw
         bXMiLCJuYW1lIjoiTVJHIFJlYWx0aW1lIChEZWJ1ZyBSUE1zKSIsInZlbmRv
         ciI6IlJlZCBIYXQiLCJjb250ZW50VXJsIjoiL2NvbnRlbnQvZGlzdC9yaGVs
@@ -3923,9 +2581,9 @@ http_interactions:
         YXNlIiwibW9kaWZpZWRQcm9kdWN0SWRzIjpbXSwiYXJjaGVzIjpudWxsLCJy
         ZXF1aXJlZFByb2R1Y3RJZHMiOltdLCJtZXRhZGF0YUV4cGlyZSI6MSwicmVs
         ZWFzZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfSx7ImNvbnRlbnQiOnsi
-        Y3JlYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0ZWQi
-        OiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5YWI2
-        NjExMGZkYjAxNjYxMTEyNGM3OTAwNDAiLCJpZCI6IjE1NDEiLCJ0eXBlIjoi
+        Y3JlYXRlZCI6IjIwMTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsInVwZGF0ZWQi
+        OiIyMDE5LTA4LTAyVDIwOjIwOjIzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5MGI2
+        YzUzNzIyNDAxNmM1M2ZkOTUyYTAwMTMiLCJpZCI6IjE1NDEiLCJ0eXBlIjoi
         eXVtIiwibGFiZWwiOiJyaGVsLTYtc2VydmVyLXJlYWx0aW1lLXJwbXMiLCJu
         YW1lIjoiTVJHIFJlYWx0aW1lIChSUE1zKSIsInZlbmRvciI6IlJlZCBIYXQi
         LCJjb250ZW50VXJsIjoiL2NvbnRlbnQvZGlzdC9yaGVsL3NlcnZlci82LyRy
@@ -3939,9 +2597,9 @@ http_interactions:
         bHRpcGxpZXIiOjEsInByb2R1Y3RDb250ZW50IjpbXX0seyJpZCI6IjI3MyIs
         Im5hbWUiOiJSZWQgSGF0IENvbnRhaW5lciBJbWFnZXMiLCJtdWx0aXBsaWVy
         IjoxLCJwcm9kdWN0Q29udGVudCI6W3siY29udGVudCI6eyJjcmVhdGVkIjoi
-        MjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXBkYXRlZCI6IjIwMTgtMDkt
-        MjVUMTQ6MTE6NDMrMDAwMCIsInV1aWQiOiI0MDI4ZjlhYjY2MTEwZmRiMDE2
-        NjExMTI0Yzc5MDAzYyIsImlkIjoiNTU4MiIsInR5cGUiOiJjb250YWluZXJp
+        MjAxOS0wOC0wMlQyMDoyMDoyMyswMDAwIiwidXBkYXRlZCI6IjIwMTktMDgt
+        MDJUMjA6MjA6MjMrMDAwMCIsInV1aWQiOiI0MDI4ZjkwYjZjNTM3MjI0MDE2
+        YzUzZmQ5NTI3MDAwZiIsImlkIjoiNTU4MiIsInR5cGUiOiJjb250YWluZXJp
         bWFnZSIsImxhYmVsIjoicmhlbC03LXNlcnZlci1jb250YWluZXJzIiwibmFt
         ZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCA3IFNlcnZlciAoQ29udGFp
         bmVycykiLCJ2ZW5kb3IiOiJSZWQgSGF0IiwiY29udGVudFVybCI6Ii9jb250
@@ -3951,9 +2609,9 @@ http_interactions:
         ZWxlYXNlIiwibW9kaWZpZWRQcm9kdWN0SWRzIjpbXSwiYXJjaGVzIjpudWxs
         LCJyZXF1aXJlZFByb2R1Y3RJZHMiOltdLCJtZXRhZGF0YUV4cGlyZSI6MSwi
         cmVsZWFzZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfSx7ImNvbnRlbnQi
-        OnsiY3JlYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0
-        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5
-        YWI2NjExMGZkYjAxNjYxMTEyNGM3OTAwM2YiLCJpZCI6IjM4NzciLCJ0eXBl
+        OnsiY3JlYXRlZCI6IjIwMTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsInVwZGF0
+        ZWQiOiIyMDE5LTA4LTAyVDIwOjIwOjIzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5
+        MGI2YzUzNzIyNDAxNmM1M2ZkOTUyYTAwMTIiLCJpZCI6IjM4NzciLCJ0eXBl
         IjoiY29udGFpbmVyaW1hZ2UiLCJsYWJlbCI6InJoZWwtNi1zZXJ2ZXItY29u
         dGFpbmVycyIsIm5hbWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggNiBT
         ZXJ2ZXIgKENvbnRhaW5lcnMpIiwidmVuZG9yIjoiUmVkIEhhdCIsImNvbnRl
@@ -3965,10 +2623,10 @@ http_interactions:
         dGFFeHBpcmUiOjEsInJlbGVhc2VWZXIiOm51bGx9LCJlbmFibGVkIjpmYWxz
         ZX1dfV0=
     http_version: 
-  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
+  recorded_at: Fri, 02 Aug 2019 20:20:23 GMT
 - request:
     method: get
-    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/
+    uri: https://devel2.balmora.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -3978,11 +2636,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="MRE3piCyh60CkBYDwKp11rAYe1xHtLejiK9FJhxYt4",
-        oauth_signature="%2FK4YZNXY%2Fjuri0LUkPytf6K1Gwo%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1537884704", oauth_version="1.0"
+      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="n9qVN9F3nKONezATvHR4kdAHmztt5JTvGe3ufIjZUY",
+        oauth_signature="cYOOdXPlsl8tjp98h5mZY8xgxbw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1564777223", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -3997,30 +2655,30 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 6e486292-ffab-4714-99a3-2ce79e7568b3
+      - b1ab9b14-7da4-4cd6-95a1-4d804708d807
       X-Version:
-      - 2.5.6-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Tue, 25 Sep 2018 14:11:44 GMT
+      - Fri, 02 Aug 2019 20:20:23 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        W3siY3JlYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0
-        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5
-        YWI2NjExMGZkYjAxNjYxMTEyNGNhNDAwNDEiLCJpZCI6IjE3MiIsIm5hbWUi
+        W3siY3JlYXRlZCI6IjIwMTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsInVwZGF0
+        ZWQiOiIyMDE5LTA4LTAyVDIwOjIwOjIzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5
+        MGI2YzUzNzIyNDAxNmM1M2ZkOTU0ZjAwMTQiLCJpZCI6IjE3MiIsIm5hbWUi
         OiJNUkcgUmVhbHRpbWUiLCJtdWx0aXBsaWVyIjoxLCJhdHRyaWJ1dGVzIjpb
         eyJuYW1lIjoibmFtZSIsInZhbHVlIjoiTVJHIFJlYWx0aW1lIn0seyJuYW1l
         IjoiYXJjaCIsInZhbHVlIjoieDg2XzY0In0seyJuYW1lIjoidHlwZSIsInZh
         bHVlIjoiU1ZDIn1dLCJkZXBlbmRlbnRQcm9kdWN0SWRzIjpbXSwiaHJlZiI6
-        Ii9wcm9kdWN0cy80MDI4ZjlhYjY2MTEwZmRiMDE2NjExMTI0Y2E0MDA0MSIs
-        InByb2R1Y3RDb250ZW50IjpbeyJjb250ZW50Ijp7ImNyZWF0ZWQiOiIyMDE4
-        LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1cGRhdGVkIjoiMjAxOC0wOS0yNVQx
-        NDoxMTo0MyswMDAwIiwidXVpZCI6IjQwMjhmOWFiNjYxMTBmZGIwMTY2MTEx
-        MjRjNzkwMDNkIiwiaWQiOiIxNTQzIiwidHlwZSI6Inl1bSIsImxhYmVsIjoi
+        Ii9wcm9kdWN0cy80MDI4ZjkwYjZjNTM3MjI0MDE2YzUzZmQ5NTRmMDAxNCIs
+        InByb2R1Y3RDb250ZW50IjpbeyJjb250ZW50Ijp7ImNyZWF0ZWQiOiIyMDE5
+        LTA4LTAyVDIwOjIwOjIzKzAwMDAiLCJ1cGRhdGVkIjoiMjAxOS0wOC0wMlQy
+        MDoyMDoyMyswMDAwIiwidXVpZCI6IjQwMjhmOTBiNmM1MzcyMjQwMTZjNTNm
+        ZDk1MjkwMDEwIiwiaWQiOiIxNTQzIiwidHlwZSI6Inl1bSIsImxhYmVsIjoi
         cmhlbC02LXNlcnZlci1yZWFsdGltZS1zb3VyY2UtcnBtcyIsIm5hbWUiOiJN
         UkcgUmVhbHRpbWUgKFNvdXJjZSBSUE1zKSIsInZlbmRvciI6IlJlZCBIYXQi
         LCJjb250ZW50VXJsIjoiL2NvbnRlbnQvZGlzdC9yaGVsL3NlcnZlci82LyRy
@@ -4030,9 +2688,9 @@ http_interactions:
         Im1vZGlmaWVkUHJvZHVjdElkcyI6W10sImFyY2hlcyI6bnVsbCwicmVxdWly
         ZWRQcm9kdWN0SWRzIjpbXSwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVhc2VW
         ZXIiOm51bGx9LCJlbmFibGVkIjpmYWxzZX0seyJjb250ZW50Ijp7ImNyZWF0
-        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
-        OC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXVpZCI6IjQwMjhmOWFiNjYxMTBm
-        ZGIwMTY2MTExMjRjNzkwMDNlIiwiaWQiOiIxNTQyIiwidHlwZSI6Inl1bSIs
+        ZWQiOiIyMDE5LTA4LTAyVDIwOjIwOjIzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
+        OS0wOC0wMlQyMDoyMDoyMyswMDAwIiwidXVpZCI6IjQwMjhmOTBiNmM1Mzcy
+        MjQwMTZjNTNmZDk1MmEwMDExIiwiaWQiOiIxNTQyIiwidHlwZSI6Inl1bSIs
         ImxhYmVsIjoicmhlbC02LXNlcnZlci1yZWFsdGltZS1kZWJ1Zy1ycG1zIiwi
         bmFtZSI6Ik1SRyBSZWFsdGltZSAoRGVidWcgUlBNcykiLCJ2ZW5kb3IiOiJS
         ZWQgSGF0IiwiY29udGVudFVybCI6Ii9jb250ZW50L2Rpc3QvcmhlbC9zZXJ2
@@ -4042,9 +2700,9 @@ http_interactions:
         Im1vZGlmaWVkUHJvZHVjdElkcyI6W10sImFyY2hlcyI6bnVsbCwicmVxdWly
         ZWRQcm9kdWN0SWRzIjpbXSwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVhc2VW
         ZXIiOm51bGx9LCJlbmFibGVkIjpmYWxzZX0seyJjb250ZW50Ijp7ImNyZWF0
-        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
-        OC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXVpZCI6IjQwMjhmOWFiNjYxMTBm
-        ZGIwMTY2MTExMjRjNzkwMDQwIiwiaWQiOiIxNTQxIiwidHlwZSI6Inl1bSIs
+        ZWQiOiIyMDE5LTA4LTAyVDIwOjIwOjIzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
+        OS0wOC0wMlQyMDoyMDoyMyswMDAwIiwidXVpZCI6IjQwMjhmOTBiNmM1Mzcy
+        MjQwMTZjNTNmZDk1MmEwMDEzIiwiaWQiOiIxNTQxIiwidHlwZSI6Inl1bSIs
         ImxhYmVsIjoicmhlbC02LXNlcnZlci1yZWFsdGltZS1ycG1zIiwibmFtZSI6
         Ik1SRyBSZWFsdGltZSAoUlBNcykiLCJ2ZW5kb3IiOiJSZWQgSGF0IiwiY29u
         dGVudFVybCI6Ii9jb250ZW50L2Rpc3QvcmhlbC9zZXJ2ZXIvNi8kcmVsZWFz
@@ -4053,9 +2711,9 @@ http_interactions:
         Zy9SUE0tR1BHLUtFWS1yZWRoYXQtcmVsZWFzZSIsIm1vZGlmaWVkUHJvZHVj
         dElkcyI6W10sImFyY2hlcyI6bnVsbCwicmVxdWlyZWRQcm9kdWN0SWRzIjpb
         XSwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVhc2VWZXIiOm51bGx9LCJlbmFi
-        bGVkIjpmYWxzZX1dfSx7ImNyZWF0ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQz
-        KzAwMDAiLCJ1cGRhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwi
-        dXVpZCI6IjQwMjhmOWFiNjYxMTBmZGIwMTY2MTExMjRjYTUwMDQ1IiwiaWQi
+        bGVkIjpmYWxzZX1dfSx7ImNyZWF0ZWQiOiIyMDE5LTA4LTAyVDIwOjIwOjIz
+        KzAwMDAiLCJ1cGRhdGVkIjoiMjAxOS0wOC0wMlQyMDoyMDoyMyswMDAwIiwi
+        dXVpZCI6IjQwMjhmOTBiNmM1MzcyMjQwMTZjNTNmZDk1NTMwMDE1IiwiaWQi
         OiJSSDIyNjI0NzQiLCJuYW1lIjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4
         IERldmVsb3BlciBTdWl0ZSIsIm11bHRpcGxpZXIiOjEsImF0dHJpYnV0ZXMi
         Olt7Im5hbWUiOiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBF
@@ -4071,26 +2729,26 @@ http_interactions:
         UkhFTCBEZXZlbG9wZXIifSx7Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFs
         dWUiOiIzNjUifSx7Im5hbWUiOiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1
         cHBvcnQifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
-        Im5hbWUiOiJuYW1lIiwidmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGlu
-        dXggRGV2ZWxvcGVyIFN1aXRlIn0seyJuYW1lIjoidmFyaWFudCIsInZhbHVl
-        IjoiRGV2ZWxvcGVyIn0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiaWE2NCxw
-        cGMscHBjNjQscHBjNjRsZSxzMzkwLHMzOTB4LHg4Nix4ODZfNjQifSx7Im5h
-        bWUiOiJzb2NrZXRzIiwidmFsdWUiOiI4In0seyJuYW1lIjoic3VwcG9ydF90
-        eXBlIiwidmFsdWUiOiJMMS1MMyJ9XSwiZGVwZW5kZW50UHJvZHVjdElkcyI6
-        W10sImhyZWYiOiIvcHJvZHVjdHMvNDAyOGY5YWI2NjExMGZkYjAxNjYxMTEy
-        NGNhNTAwNDUiLCJwcm9kdWN0Q29udGVudCI6W119LHsiY3JlYXRlZCI6IjIw
-        MTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0ZWQiOiIyMDE4LTA5LTI1
-        VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5YWI2NjExMGZkYjAxNjYx
-        MTEyNGNhNTAwNDYiLCJpZCI6IjI3MyIsIm5hbWUiOiJSZWQgSGF0IENvbnRh
+        Im5hbWUiOiJ2YXJpYW50IiwidmFsdWUiOiJEZXZlbG9wZXIifSx7Im5hbWUi
+        OiJuYW1lIiwidmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2
+        ZWxvcGVyIFN1aXRlIn0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUi
+        OiJMMS1MMyJ9LHsibmFtZSI6InNvY2tldHMiLCJ2YWx1ZSI6IjgifSx7Im5h
+        bWUiOiJhcmNoIiwidmFsdWUiOiJpYTY0LHBwYyxwcGM2NCxwcGM2NGxlLHMz
+        OTAsczM5MHgseDg2LHg4Nl82NCJ9XSwiZGVwZW5kZW50UHJvZHVjdElkcyI6
+        W10sImhyZWYiOiIvcHJvZHVjdHMvNDAyOGY5MGI2YzUzNzIyNDAxNmM1M2Zk
+        OTU1MzAwMTUiLCJwcm9kdWN0Q29udGVudCI6W119LHsiY3JlYXRlZCI6IjIw
+        MTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsInVwZGF0ZWQiOiIyMDE5LTA4LTAy
+        VDIwOjIwOjIzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5MGI2YzUzNzIyNDAxNmM1
+        M2ZkOTU1MzAwMTYiLCJpZCI6IjI3MyIsIm5hbWUiOiJSZWQgSGF0IENvbnRh
         aW5lciBJbWFnZXMiLCJtdWx0aXBsaWVyIjoxLCJhdHRyaWJ1dGVzIjpbeyJu
         YW1lIjoibmFtZSIsInZhbHVlIjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2Vz
         In0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoieDg2XzY0In0seyJuYW1lIjoi
         dHlwZSIsInZhbHVlIjoiU1ZDIn1dLCJkZXBlbmRlbnRQcm9kdWN0SWRzIjpb
-        XSwiaHJlZiI6Ii9wcm9kdWN0cy80MDI4ZjlhYjY2MTEwZmRiMDE2NjExMTI0
-        Y2E1MDA0NiIsInByb2R1Y3RDb250ZW50IjpbeyJjb250ZW50Ijp7ImNyZWF0
-        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
-        OC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXVpZCI6IjQwMjhmOWFiNjYxMTBm
-        ZGIwMTY2MTExMjRjNzkwMDNjIiwiaWQiOiI1NTgyIiwidHlwZSI6ImNvbnRh
+        XSwiaHJlZiI6Ii9wcm9kdWN0cy80MDI4ZjkwYjZjNTM3MjI0MDE2YzUzZmQ5
+        NTUzMDAxNiIsInByb2R1Y3RDb250ZW50IjpbeyJjb250ZW50Ijp7ImNyZWF0
+        ZWQiOiIyMDE5LTA4LTAyVDIwOjIwOjIzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
+        OS0wOC0wMlQyMDoyMDoyMyswMDAwIiwidXVpZCI6IjQwMjhmOTBiNmM1Mzcy
+        MjQwMTZjNTNmZDk1MjcwMDBmIiwiaWQiOiI1NTgyIiwidHlwZSI6ImNvbnRh
         aW5lcmltYWdlIiwibGFiZWwiOiJyaGVsLTctc2VydmVyLWNvbnRhaW5lcnMi
         LCJuYW1lIjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4IDcgU2VydmVyIChD
         b250YWluZXJzKSIsInZlbmRvciI6IlJlZCBIYXQiLCJjb250ZW50VXJsIjoi
@@ -4100,9 +2758,9 @@ http_interactions:
         aGF0LXJlbGVhc2UiLCJtb2RpZmllZFByb2R1Y3RJZHMiOltdLCJhcmNoZXMi
         Om51bGwsInJlcXVpcmVkUHJvZHVjdElkcyI6W10sIm1ldGFkYXRhRXhwaXJl
         IjoxLCJyZWxlYXNlVmVyIjpudWxsfSwiZW5hYmxlZCI6ZmFsc2V9LHsiY29u
-        dGVudCI6eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwi
-        dXBkYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInV1aWQiOiI0
-        MDI4ZjlhYjY2MTEwZmRiMDE2NjExMTI0Yzc5MDAzZiIsImlkIjoiMzg3NyIs
+        dGVudCI6eyJjcmVhdGVkIjoiMjAxOS0wOC0wMlQyMDoyMDoyMyswMDAwIiwi
+        dXBkYXRlZCI6IjIwMTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsInV1aWQiOiI0
+        MDI4ZjkwYjZjNTM3MjI0MDE2YzUzZmQ5NTJhMDAxMiIsImlkIjoiMzg3NyIs
         InR5cGUiOiJjb250YWluZXJpbWFnZSIsImxhYmVsIjoicmhlbC02LXNlcnZl
         ci1jb250YWluZXJzIiwibmFtZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51
         eCA2IFNlcnZlciAoQ29udGFpbmVycykiLCJ2ZW5kb3IiOiJSZWQgSGF0Iiwi
@@ -4114,10 +2772,10 @@ http_interactions:
         ZXRhZGF0YUV4cGlyZSI6MSwicmVsZWFzZVZlciI6bnVsbH0sImVuYWJsZWQi
         OmZhbHNlfV19XQ==
     http_version: 
-  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
+  recorded_at: Fri, 02 Aug 2019 20:20:23 GMT
 - request:
     method: get
-    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/RH2262474/
+    uri: https://devel2.balmora.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/RH2262474/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -4127,11 +2785,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="BdtapxCwJBPpFLdbapkDtrtEJc9jt51csO3mB5rmcE",
-        oauth_signature="KqHqnvRIjLouGzVsRJlpIBLvlvI%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1537884704", oauth_version="1.0"
+      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="Z8hFxKM9cuDP4OqEn8dwEz9NqBOqiOKIr19WH4Xl8w",
+        oauth_signature="PFMJzkn%2B086GnpsIABetILiUdNY%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1564777223", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -4146,21 +2804,21 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - cc1328a4-00ad-498e-a02f-03776e9b034d
+      - def11b16-8007-46eb-bfa0-72a7e19669d6
       X-Version:
-      - 2.5.6-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Tue, 25 Sep 2018 14:11:44 GMT
+      - Fri, 02 Aug 2019 20:20:23 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInV1aWQiOiI0MDI4Zjlh
-        YjY2MTEwZmRiMDE2NjExMTI0Y2E1MDA0NSIsImlkIjoiUkgyMjYyNDc0Iiwi
+        eyJjcmVhdGVkIjoiMjAxOS0wOC0wMlQyMDoyMDoyMyswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTktMDgtMDJUMjA6MjA6MjMrMDAwMCIsInV1aWQiOiI0MDI4Zjkw
+        YjZjNTM3MjI0MDE2YzUzZmQ5NTUzMDAxNSIsImlkIjoiUkgyMjYyNDc0Iiwi
         bmFtZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCBEZXZlbG9wZXIgU3Vp
         dGUiLCJtdWx0aXBsaWVyIjoxLCJhdHRyaWJ1dGVzIjpbeyJuYW1lIjoicHJv
         ZHVjdF9mYW1pbHkiLCJ2YWx1ZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51
@@ -4175,20 +2833,20 @@ http_interactions:
         bWUiOiJwaF9wcm9kdWN0X25hbWUiLCJ2YWx1ZSI6IlJIRUwgRGV2ZWxvcGVy
         In0seyJuYW1lIjoiZXhwaXJlc19hZnRlciIsInZhbHVlIjoiMzY1In0seyJu
         YW1lIjoic3VidHlwZSIsInZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1l
-        IjoidmlydF9saW1pdCIsInZhbHVlIjoiMTAwIn0seyJuYW1lIjoibmFtZSIs
-        InZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4IERldmVsb3BlciBT
-        dWl0ZSJ9LHsibmFtZSI6InZhcmlhbnQiLCJ2YWx1ZSI6IkRldmVsb3BlciJ9
-        LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0LHBwYzY0
-        bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
-        InZhbHVlIjoiOCJ9LHsibmFtZSI6InN1cHBvcnRfdHlwZSIsInZhbHVlIjoi
-        TDEtTDMifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJocmVmIjoiL3By
-        b2R1Y3RzLzQwMjhmOWFiNjYxMTBmZGIwMTY2MTExMjRjYTUwMDQ1IiwicHJv
+        IjoidmlydF9saW1pdCIsInZhbHVlIjoiMTAwIn0seyJuYW1lIjoidmFyaWFu
+        dCIsInZhbHVlIjoiRGV2ZWxvcGVyIn0seyJuYW1lIjoibmFtZSIsInZhbHVl
+        IjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4IERldmVsb3BlciBTdWl0ZSJ9
+        LHsibmFtZSI6InN1cHBvcnRfdHlwZSIsInZhbHVlIjoiTDEtTDMifSx7Im5h
+        bWUiOiJzb2NrZXRzIiwidmFsdWUiOiI4In0seyJuYW1lIjoiYXJjaCIsInZh
+        bHVlIjoiaWE2NCxwcGMscHBjNjQscHBjNjRsZSxzMzkwLHMzOTB4LHg4Nix4
+        ODZfNjQifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJocmVmIjoiL3By
+        b2R1Y3RzLzQwMjhmOTBiNmM1MzcyMjQwMTZjNTNmZDk1NTMwMDE1IiwicHJv
         ZHVjdENvbnRlbnQiOltdfQ==
     http_version: 
-  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
+  recorded_at: Fri, 02 Aug 2019 20:20:24 GMT
 - request:
     method: get
-    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/pools?add_future=true&attribute=unmapped_guests_only:!true
+    uri: https://devel2.balmora.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/pools?add_future=true&attribute=unmapped_guests_only:!true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -4198,11 +2856,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="xbxveFKtJIsieNpQZzAjXGAKiXGNlEPAwHi9VOclBc",
-        oauth_signature="miW%2BmeWFzR44kRd5GRpiqDI2v3o%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1537884704", oauth_version="1.0"
+      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="EZCHreSMjnHFoazCfbrFcnA4qTmfZd8iO26NexZOo",
+        oauth_signature="SYUNTegw%2F4NCnguwL68WMOhYpps%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1564777224", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -4217,25 +2875,25 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 331bbf89-87cb-4eab-8b46-96f3c4a0a3be
+      - 27ca96f3-4b70-4c9e-96f2-301a8cb44695
       X-Version:
-      - 2.5.6-1
+      - 2.6.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Tue, 25 Sep 2018 14:11:44 GMT
+      - Fri, 02 Aug 2019 20:20:23 GMT
     body:
       encoding: UTF-8
       base64_string: 'W10=
 
 '
     http_version: 
-  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
+  recorded_at: Fri, 02 Aug 2019 20:20:24 GMT
 - request:
     method: delete
-    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest
+    uri: https://devel2.balmora.example.com:8443/candlepin/owners/GlueCandlepinProviderTest
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -4245,11 +2903,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
       Authorization:
-      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="T1inDBNNhU30yLN1uqoPbqDVK3WWKg8WY6L7Q84",
-        oauth_signature="93I9VEiqX6mFzOzfTzqJcCHCTJw%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1537884704", oauth_version="1.0"
+      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="UarwjOKzXW0iyrmD75pb6RD9sYTlAYeojPURAU6KU",
+        oauth_signature="fnRnYEx9QGhJsvSp8Zcm3ID%2FYh8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1564777224", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -4260,14 +2918,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 7d48b4f3-6c7e-43e6-af4d-0ec1cf59f529
+      - 90f739c2-145f-4a2f-a150-1c044113c5c1
       X-Version:
-      - 2.5.6-1
+      - 2.6.5-1
       Date:
-      - Tue, 25 Sep 2018 14:11:44 GMT
+      - Fri, 02 Aug 2019 20:20:23 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
+  recorded_at: Fri, 02 Aug 2019 20:20:24 GMT
 recorded_with: VCR 3.0.3
