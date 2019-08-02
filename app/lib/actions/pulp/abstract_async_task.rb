@@ -125,8 +125,15 @@ module Actions
       end
 
       def get_new_tasks(current_list, spawned_task_ids)
-        (spawned_task_ids - current_list.map { |task| task['task_id'] }).map do |task_id|
+        new_tasks = (spawned_task_ids - current_list.map { |task| task['task_id'] }).map do |task_id|
           task_resource.poll(task_id)
+        end
+
+        if new_tasks.empty?
+          []
+        else
+          spawned = new_tasks.map { |t| t['spawned_tasks'].map { |st| st['task_id'] } }.flatten
+          new_tasks + get_new_tasks(current_list + new_tasks, spawned)
         end
       end
 

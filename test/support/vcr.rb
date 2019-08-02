@@ -20,6 +20,7 @@ module VCR
     module Overrides
       def run
         value = nil
+        remove_cassette if VCR.live?
         VCR.use_cassette(cassette_name, :match_requests_on => vcr_matches) do
           value = super
         end
@@ -31,8 +32,16 @@ module VCR
       [:method, :path, :params, :body_json]
     end
 
+    def remove_cassette
+      File.delete(cassette_file) if File.exist?(cassette_file)
+    end
+
+    def cassette_file
+      File.join(VCR.cassette_path, cassette_name + '.yml')
+    end
+
     def cassette_name
-      test_name = self.method_name.downcase.gsub("test_", "")
+      test_name = self.method_name.downcase.gsub("test_", "").gsub(/[^0-9a-z ]/i, '_')
       self_class = self.class.name.split("::")[-1].underscore.gsub("_test", "")
       class_path = self.class.name.split("::")[0...-1].map(&:underscore).join("/")
       "#{class_path}/#{self_class}/#{test_name}"
@@ -42,6 +51,13 @@ module VCR
       prepend Overrides
     end
   end
+end
+
+def ignore_pending_tasks(request, response)
+  return false unless request.uri.include?('/tasks/')
+  body = JSON.parse(response.body) rescue nil
+  finish_states = Actions::Pulp::AbstractAsyncTask::FINISHED_STATES + Actions::Pulp3::AbstractAsyncTask::FINISHED_STATES
+  body.is_a?(Hash) && body['state'].present? && !finish_states.include?(body['state'])
 end
 
 # rubocop:disable Metrics/MethodLength
@@ -59,6 +75,11 @@ def configure_vcr
   VCR.configure do |c|
     c.cassette_library_dir = VCR.cassette_path
     c.hook_into :webmock
+    c.before_record do |i|
+      if ignore_pending_tasks(i.request, i.response)
+        i.ignore!
+      end
+    end
 
     if ENV['record'] == "false" && mode != :none
       uri = URI.parse(SETTINGS[:katello][:pulp][:url])

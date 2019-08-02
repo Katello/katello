@@ -1,5 +1,6 @@
 require 'katello_test_helper'
 require 'support/pulp/task_support'
+require 'support/pulp/repository_support'
 
 module Katello
   class GluePulpRepoTestBase < ActiveSupport::TestCase
@@ -7,6 +8,7 @@ module Katello
     include TaskSupport
     include Dynflow::Testing
     include Support::CapsuleSupport
+    include RepositorySupport
 
     def setup
       set_user
@@ -27,23 +29,6 @@ module Katello
     def backend_stubs
       Product.any_instance.stubs(:certificate).returns(nil)
       Product.any_instance.stubs(:key).returns(nil)
-    end
-
-    def self.delete_repo(repo)
-      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_master
-      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :repository_id => repo.id, :capsule_id => ::SmartProxy.pulp_master.id)
-    end
-
-    def delete_repo(repo)
-      GluePulpRepoTestBase.delete_repo(repo)
-    end
-
-    def create_repo(repo)
-      GluePulpRepoTestBase.create_repo(repo)
-    end
-
-    def self.create_repo(repository)
-      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create, repository)
     end
   end
 
@@ -248,14 +233,14 @@ module Katello
   class GluePulpRepoTest < GluePulpRepoTestBase
     def setup
       super
-      self.create_repo(@fedora_17_x86_64)
+      RepositorySupport.create_repo(@fedora_17_x86_64)
       @fedora_17_x86_64 = @fedora_17_x86_64
       @fedora_17_x86_64.relative_path = 'test_path/'
       @mirror_proxy = FactoryBot.build(:smart_proxy, :pulp_mirror)
     end
 
     def teardown
-      delete_repo(@fedora_17_x86_64)
+      RepositorySupport.destroy_repo(@fedora_17_x86_64)
     end
 
     def test_delete_orphaned_content
@@ -283,13 +268,6 @@ module Katello
       refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
     end
 
-    def test_sync
-      task_list = @fedora_17_x86_64.sync
-      refute_empty task_list
-      assert_kind_of PulpSyncStatus, task_list.first
-      TaskSupport.wait_on_tasks(task_list)
-    end
-
     def test_custom_repo_path
       @fedora_17_x86_64.organization.stubs(:label).returns("ACME")
       @fedora_17_x86_64.root.label = 'test'
@@ -302,7 +280,7 @@ module Katello
 
     def test_pulp_scratchpad_checksum_type
       repo = katello_repositories(:rhel_7_x86_64)
-      create_repo(repo)
+      RepositorySupport.create_repo(repo)
 
       assert_nil repo.pulp_scratchpad_checksum_type
 
@@ -314,13 +292,12 @@ module Katello
   class GluePulpRepoContentsTest < GluePulpRepoTestBase
     def setup
       super
-      create_repo(@fedora_17_x86_64)
-      task_list = @fedora_17_x86_64.sync
-      TaskSupport.wait_on_tasks(task_list)
+      RepositorySupport.create_repo(@fedora_17_x86_64)
+      RepositorySupport.sync_repo(@fedora_17_x86_64)
     end
 
     def teardown
-      delete_repo(@fedora_17_x86_64)
+      RepositorySupport.destroy_repo(@fedora_17_x86_64)
     end
 
     def test_sync_status
@@ -367,13 +344,12 @@ module Katello
 
       @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
 
-      create_repo(@fedora_17_x86_64)
-      task_list = @fedora_17_x86_64.sync
-      TaskSupport.wait_on_tasks(task_list)
+      RepositorySupport.create_repo(@fedora_17_x86_64)
+      RepositorySupport.sync_repo(@fedora_17_x86_64)
     end
 
     def teardown
-      delete_repo(@fedora_17_x86_64)
+      RepositorySupport.destroy_repo(@fedora_17_x86_64)
     end
 
     def test_published

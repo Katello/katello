@@ -2,7 +2,7 @@ require 'katello_test_helper'
 require 'support/pulp/repository_support'
 
 module Katello
-  module Services
+  module Service
     class RpmNonVcrTest < ActiveSupport::TestCase
       def setup
         @rpm_one = katello_rpms(:one)

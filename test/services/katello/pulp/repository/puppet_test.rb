@@ -20,6 +20,10 @@ module Katello
         def delete_repo(repo)
           ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :repository_id => repo.id) rescue ''
         end
+
+        def delete_cvpe(cvpe)
+          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :content_view_puppet_environment_id => cvpe.id) rescue ''
+        end
       end
 
       class PuppetVcrTest < PuppetBaseTest
@@ -70,7 +74,7 @@ module Katello
 
         def test_create_puppet_environment_archive
           cvpe = katello_content_view_puppet_environments(:archive_view_puppet_environment)
-          delete_repo(cvpe)
+          delete_cvpe(cvpe)
 
           repo = Katello::Pulp::Repository::Puppet.new(cvpe.nonpersisted_repository, @master)
           response = repo.create
