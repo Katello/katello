@@ -60,6 +60,23 @@ module Katello
       end
     end
 
+    def test_include_permissions
+      get :index, params: {
+        organization_id: @organization.id,
+        include_permissions: true
+      }
+      nodes = JSON.parse(response.body).keys
+      expected_permissions = %w[
+        can_manage_subscription_allocations
+        can_import_manifest
+        can_delete_manifest
+        can_edit_organizations
+      ]
+      expected_permissions.each do |permission|
+        assert_includes(nodes, permission)
+      end
+    end
+
     def test_index_with_activation_key_id
       activation_key = katello_activation_keys(:dev_key)
       get :index, params: { activation_key_id: activation_key.id }
