@@ -244,6 +244,8 @@ class ManageManifestModal extends Component {
                             />
                           }
                           {canDeleteManifest &&
+                          <React.Fragment>
+                            <br />
                             <TooltipButton
                               renderedButton={(
                                 <Button
@@ -260,7 +262,8 @@ class ManageManifestModal extends Component {
                               tooltipPlacement="top"
 
                             />
-                          }
+                          </React.Fragment>
+                        }
 
                           <MessageDialog
                             show={this.state.showDeleteManifestModalDialog}
