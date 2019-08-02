@@ -6,6 +6,8 @@ describe('Controller: NewRepositoryController', function() {
         OstreeUpstreamSyncPolicy,
         YumContentUnits,
         $httpBackend,
+        HttpProxyPolicy,
+        HttpProxy,
         RepositoryTypesService;
 
     beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
@@ -17,7 +19,8 @@ describe('Controller: NewRepositoryController', function() {
             Product = $injector.get('MockResource').$new(),
             Setting = $injector.get('MockResource').$new(),
             ContentCredential = $injector.get('MockResource').$new(),
-            Architecture = $injector.get('MockResource').$new();
+            Architecture = $injector.get('MockResource').$new(),
+            HttpProxy = $injector.get('MockResource').$new();
 
         DownloadPolicy = $injector.get('DownloadPolicy');
         OstreeUpstreamSyncPolicy = $injector.get('OstreeUpstreamSyncPolicy');
@@ -26,6 +29,7 @@ describe('Controller: NewRepositoryController', function() {
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
         Notification = $injector.get('Notification');
+        HttpProxyPolicy = $injector.get('HttpProxyPolicy');
 
         $scope.detailsTable = {rows: []};
         $scope.$stateParams = {productId: 1};
@@ -49,7 +53,9 @@ describe('Controller: NewRepositoryController', function() {
             Architecture: Architecture,
             Notification: Notification,
             Setting: Setting,
-            RepositoryTypesService: RepositoryTypesService
+            RepositoryTypesService: RepositoryTypesService,
+            HttpProxyPolicy: HttpProxyPolicy,
+            HttpProxy: HttpProxy
         });
     }));
 

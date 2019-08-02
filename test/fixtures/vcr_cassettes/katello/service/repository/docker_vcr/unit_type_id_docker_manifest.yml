@@ -1,0 +1,49 @@
+---
+http_interactions:
+- request:
+    method: delete
+    uri: https://centos7-katello-devel.jjeffers.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox-library/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 15 Jul 2019 15:48:47 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '564'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkRFTEVURSIsICJleGNlcHRpb24i
+        OiBudWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMp
+        OiByZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJv
+        eC1saWJyYXJ5IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3Jp
+        ZXMvRGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94LWxpYnJhcnkv
+        IiwgImh0dHBfc3RhdHVzIjogNDA0LCAiZXJyb3IiOiB7ImNvZGUiOiAiUExQ
+        MDAwOSIsICJkYXRhIjogeyJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAi
+        RGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94LWxpYnJhcnkifX0s
+        ICJkZXNjcmlwdGlvbiI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiByZXBvc2l0
+        b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveC1saWJyYXJ5
+        IiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVz
+        b3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9u
+        LVRlc3QtYnVzeWJveC1saWJyYXJ5In19
+    http_version: 
+  recorded_at: Mon, 15 Jul 2019 15:48:47 GMT
+recorded_with: VCR 3.0.3

@@ -28,6 +28,18 @@ module ::Actions::Katello::Repository
     end
   end
 
+  class UpdateHttpProxyTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::UpdateHttpProxyDetails }
+
+    it 'plans' do
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      plan_action action, repository
+      assert_action_planned_with action,
+        ::Actions::Pulp::Orchestration::Repository::Refresh,
+        repository, proxy
+    end
+  end
+
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Create }
     let(:candlepin_action_class) { ::Actions::Candlepin::Environment::AddContentToEnvironment }

@@ -10,6 +10,9 @@
 //= require "bastion_katello/hosts/hosts.module.js"
 //= require_tree "./hosts"
 
+//= require "bastion_katello/http-proxies/http-proxies.module.js"
+//= require_tree "./http-proxies"
+
 //= require "bastion_katello/subscriptions/subscriptions.module.js"
 //= require_tree "./subscriptions"
 

@@ -2,7 +2,7 @@ module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController # rubocop:disable Metrics/ClassLength
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    wrap_parameters :repository, :include => RootRepository.attribute_names
+    wrap_parameters :repository, :include => RootRepository.attribute_names.concat([:ignore_global_proxy])
 
     CONTENT_CREDENTIAL_GPG_KEY_TYPE = "gpg_key".freeze
     CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE = "ssl_ca_cert".freeze
@@ -24,7 +24,7 @@ module Katello
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE }
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE }
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_KEY_TYPE }
-
+    before_action :check_ignore_global_proxy, :only => [ :update, :create ]
     skip_before_action :authorize, :only => [:gpg_key_content]
     skip_before_action :check_content_type, :only => [:upload_content]
 
@@ -52,9 +52,11 @@ module Katello
       param :deb_releases, String, :desc => N_("comma separated list of releases to be synched from deb-archive")
       param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
       param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
-      param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing")
+      param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing"), :deprecated => true
       param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % RootRepository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
       param :ansible_collection_whitelist, String, :desc => N_("Name of collection to sync from URL")
+      param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for http proxy for content sync")
+      param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
     end
 
     def_param_group :repo_create do
@@ -320,6 +322,7 @@ module Katello
     param_group :repo
     def update
       repo_params = repository_params
+
       sync_task(::Actions::Katello::Repository::Update, @repository.root, repo_params)
       respond_for_show(:resource => @repository)
     end
@@ -457,8 +460,9 @@ module Katello
 
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
-              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy,
-              :deb_releases, :deb_components, :deb_architectures, :description, {:ignorable_content => []}
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy,
+              :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
+              {:ignorable_content => []}
              ]
 
       keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
@@ -469,6 +473,17 @@ module Katello
                  :checksum_type]
       end
       params.require(:repository).permit(*keys).to_h.with_indifferent_access
+    end
+
+    def check_ignore_global_proxy
+      if params.key?(:ignore_global_proxy)
+        ::Foreman::Deprecation.api_deprecation_warning("The parameter ignore_global_proxy will be removed in a future Katello release. Please update to use the http_proxy_policy parameter.")
+        if ::Foreman::Cast.to_bool(params[:ignore_global_proxy])
+          params[:repository][:http_proxy_policy] = RootRepository::NO_DEFAULT_HTTP_PROXY
+        else
+          params[:repository][:http_proxy_policy] = RootRepository::GLOBAL_DEFAULT_HTTP_PROXY
+        end
+      end
     end
 
     def get_content_credential(repo_params, content_type)
@@ -485,16 +500,17 @@ module Katello
     def construct_repo_from_params(repo_params)
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
-                                                            :checksum_type, :download_policy).to_h.with_indifferent_access)
+                                                            :checksum_type, :download_policy, :http_proxy_policy).to_h.with_indifferent_access)
       root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       root.docker_tags_whitelist = repo_params.fetch(:docker_tags_whitelist, []) if root.docker?
       root.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
-      root.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       root.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
       root.ignorable_content = repo_params[:ignorable_content] if root.yum? && repo_params.key?(:ignorable_content)
       root.ansible_collection_whitelist = repo_params[:ansible_collection_whitelist] if root.ansible_collection?
+      root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
+      root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
 
       if root.ostree?
         root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]

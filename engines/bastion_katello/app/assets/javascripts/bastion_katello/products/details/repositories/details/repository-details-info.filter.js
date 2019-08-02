@@ -5,11 +5,11 @@
  * @requires translate
  * @requires OstreeUpstreamSyncPolicy
  * @requires YumContentUnits
+ * @requires HttpProxyPolicy
  *
  * @description
  *   Provides the Ostree Upstream Sync policy filter functionality for the repository details info page.
  */
-
 angular.module('Bastion.components.formatters').filter('ostreeUpstreamSyncPolicyFilter', ['translate', 'OstreeUpstreamSyncPolicy', function (translate, OstreeUpstreamSyncPolicy) {
     return function (displayValue, repository) {
         var policy = repository["ostree_upstream_sync_policy"];
@@ -26,6 +26,18 @@ angular.module('Bastion.components.formatters').filter('upstreamPasswordFilter',
             return '%(username) / ********'.replace('%(username)', repository["upstream_username"]);
         }
         return null;
+    };
+}]);
+
+angular.module('Bastion.components.formatters').filter('httpProxyDetailsFilter', ['HttpProxyPolicy', function (HttpProxyPolicy) {
+    return function (displayValue, repository) {
+        var message = '%(proxyPolicy)'.replace('%(proxyPolicy)', HttpProxyPolicy.displayHttpProxyPolicyName(repository["http_proxy_policy"]));
+
+        if (repository["http_proxy_policy"] === 'use_selected_http_proxy' && repository["http_proxy"]) {
+            message += " (" + repository["http_proxy"].name + ")";
+        }
+
+        return message;
     };
 }]);
 

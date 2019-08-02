@@ -23,7 +23,6 @@ module Actions
           else
             repo = ::Katello::ContentViewPuppetEnvironment.find(input[:content_view_puppet_environment_id]).nonpersisted_repository
           end
-
           output[:response] = repo.backend_service(smart_proxy(input[:capsule_id])).create
         rescue RestClient::Conflict
           Rails.logger.warn("Tried to add repository #{input[:pulp_id]} that already exists.")

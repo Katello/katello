@@ -7,6 +7,7 @@ module Katello
 
     def setup
       @name = 'content_default_http_proxy'
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
 
     def test_default_setting_accepts_proxy_name
@@ -120,6 +121,35 @@ module Katello
 
       assert_includes proxy.reload.locations, location
       refute_includes other_proxy.reload.locations, location
+    end
+
+    def changing_default_proxy_updates_repos_using_global_proxy
+      ForemanTasks.stubs(:async_task)
+
+      proxy = FactoryBot.create(:http_proxy)
+      other_proxy = FactoryBot.create(:http_proxy, name: 'another_proxy')
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, proxy.name)
+
+      @no_proxy_repo = katello_repositories(:fedora_17_x86_64_acme_dev)
+      @no_proxy_repo.root.update(http_proxy_policy: RootRepository::NO_DEFAULT_HTTP_PROXY)
+
+      repo = katello_repositories(:rhel_6_x86_64)
+      repo.root.update(http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+
+      setting = Setting.where(name: @name).first
+      setting.update_attribute(:value, other_proxy.name)
+
+      ForemanTasks.expects(:async_task).with(
+        ::Actions::BulkAction,
+        ::Actions::Katello::Repository::UpdateHttpProxyDetails,
+        [repo])
+
+      ForemanTasks.expects(:async_task).with(
+        ::Actions::BulkAction,
+        ::Actions::Katello::Repository::UpdateHttpProxyDetails,
+        [@no_proxy_repo]).never
     end
   end
 end

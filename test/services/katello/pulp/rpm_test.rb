@@ -48,7 +48,7 @@ module Katello
 
         RepositorySupport.create_and_sync_repo(@repo)
         Katello::Rpm.import_for_repository(@repo)
-        @package_id = @repo.rpms.first.id
+        @package_id = @repo.rpms.find_by(:name => 'giraffe').id
       end
 
       def teardown

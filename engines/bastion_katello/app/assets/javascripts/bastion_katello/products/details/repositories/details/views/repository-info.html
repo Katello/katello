@@ -131,12 +131,42 @@
             readonly="denied('edit_products', product)">
         </dd>
       </span>
+
       <span>
-        <dt translate>Ignore Global HTTP Proxy</dt>
-        <dd bst-edit-checkbox="repository.ignore_global_proxy"
-            formatter="booleanToYesNo"
+        <dt translate>Http Proxy</dt>
+        <dd bst-edit-custom="repository.http_proxy_policy"
+            readonly="denied('edit_products', product)"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            formatter="httpProxyDetailsFilter"
+            formatter-options="repository"
+            >
+          <div translate>HttpProxyPolicy</div>
+          <form role="form">
+            <div class="form-group">
+              <select class="form-control"
+                ng-options="type.label as type.name for type in policies"
+                ng-model="repository.http_proxy_policy">
+              </select>
+            </div>
+          </form>
+
+          <span ng-show="repository.http_proxy_policy === 'use_selected_http_proxy'">
+            <div translate>Http Proxy</div>
+            <span translate ng-show="proxies.length == 0">
+              No HTTP Proxies found
+            </span>
+            <span ng-show="proxies.length > 0">
+              <form role="form">
+                <div class="form-group">
+                  <select class="form-control"
+                    ng-model="repository.http_proxy_id"
+                    ng-options="proxy.id as proxy.name for proxy in proxies"
+                    ng-show="proxies.length > 0">
+                  </select>
+                </div>
+              </form>
+            </span>
+          </span>
         </dd>
       </span>
 

@@ -364,7 +364,6 @@ module Katello
 
     def run_test_individual_attribute(params)
       product = mock
-
       product.expects(:add_repo).returns(@repository.root)
       product.expects(:gpg_key).returns(nil)
       product.expects(:ssl_ca_cert).returns(nil)
@@ -409,6 +408,31 @@ module Katello
       run_test_individual_attribute(:upstream_username => upstream_username, :upstream_password => upstream_password) do |_, repo|
         repo.root.expects(:upstream_username=).with(upstream_username)
         repo.root.expects(:upstream_password=).with(upstream_password)
+      end
+    end
+
+    def test_create_with_http_proxy_policy
+      run_test_individual_attribute(:http_proxy_policy => RootRepository::GLOBAL_DEFAULT_HTTP_PROXY) do |_, repo|
+        repo.root.expects(:http_proxy_policy=).with(RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+      end
+    end
+
+    def test_create_with_ignore_global_proxy_true
+      run_test_individual_attribute(:ignore_global_proxy => true) do |_, repo|
+        repo.root.expects(:http_proxy_policy=).with(RootRepository::NO_DEFAULT_HTTP_PROXY)
+      end
+    end
+
+    def test_create_with_ignore_global_proxy_false
+      run_test_individual_attribute(:ignore_global_proxy => false) do |_, repo|
+        repo.root.expects(:http_proxy_policy=).with(RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+      end
+    end
+
+    def test_create_with_http_proxy_id
+      proxy = FactoryBot.create(:http_proxy)
+      run_test_individual_attribute(:http_proxy_id => proxy.id) do |_, repo|
+        repo.root.expects(:http_proxy_id=).with(proxy.id)
       end
     end
 
@@ -533,6 +557,41 @@ module Katello
         attributes[:docker_upstream_name].must_equal "helloworld"
       end
       put :update, params: { :id => repo.id, :docker_upstream_name => "helloworld" }
+    end
+
+    def test_update_with_http_proxy_policy
+      repo = katello_repositories(:busybox)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:http_proxy_policy].must_equal RootRepository::GLOBAL_DEFAULT_HTTP_PROXY
+      end
+      put :update, params: { :id => repo.id, :http_proxy_policy => RootRepository::GLOBAL_DEFAULT_HTTP_PROXY }
+    end
+
+    def test_update_with_ignore_global_proxy_true
+      repo = katello_repositories(:busybox)
+      repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:http_proxy_policy].must_equal RootRepository::NO_DEFAULT_HTTP_PROXY
+      end
+      put :update, params: { :id => repo.id, :ignore_global_proxy => true }
+    end
+
+    def test_update_with_ignore_global_proxy_false
+      repo = katello_repositories(:busybox)
+      repo.root.update(http_proxy_policy: RootRepository::NO_DEFAULT_HTTP_PROXY)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:http_proxy_policy].must_equal RootRepository::GLOBAL_DEFAULT_HTTP_PROXY
+      end
+      put :update, params: { :id => repo.id, :ignore_global_proxy => false }
+    end
+
+    def test_update_with_http_proxy_id
+      repo = katello_repositories(:busybox)
+      proxy = FactoryBot.create(:http_proxy)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:http_proxy_id].must_equal proxy.id
+      end
+      put :update, params: { :id => repo.id, :http_proxy_id => proxy.id }
     end
 
     def test_update_false_download_policy

@@ -22,6 +22,7 @@ BASTION_MODULES.push(
     'Bastion.repositories',
     'Bastion.subscriptions',
     'Bastion.sync-plans',
+    'Bastion.http-proxies',
     'Bastion.host-collections',
     'Bastion.content-hosts',
     'Bastion.tasks',

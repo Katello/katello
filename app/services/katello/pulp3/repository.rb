@@ -3,6 +3,8 @@ require "pulpcore_client"
 module Katello
   module Pulp3
     class Repository
+      include Katello::Util::HttpProxy
+
       attr_accessor :repo, :input
       attr_accessor :smart_proxy
       delegate :root, to: :repo
@@ -236,7 +238,8 @@ module Katello
         remote_options = {
           ssl_validation: root.verify_ssl_on_sync,
           name: backend_object_name,
-          url: root.url
+          url: root.url,
+          proxy_url: root.http_proxy&.full_url
         }
         if root.upstream_username && root.upstream_password
           remote_options.merge(username: root.upstream_username,

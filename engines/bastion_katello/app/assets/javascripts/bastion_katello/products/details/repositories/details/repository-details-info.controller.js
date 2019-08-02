@@ -13,13 +13,14 @@
  * @requires OstreeUpstreamSyncPolicy
  * @requires Architecture
  * @requires YumContentUnits
+ * @requires HttpProxyPolicy
  *
  * @description
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'YumContentUnits', 'OstreeUpstreamSyncPolicy', 'Architecture',
-    function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, YumContentUnits, OstreeUpstreamSyncPolicy, Architecture) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'YumContentUnits', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy',
+    function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, YumContentUnits, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy) {
         $scope.organization = CurrentOrganization;
 
         $scope.progress = {uploading: false};
@@ -175,5 +176,20 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.repository['upstream_username'] = null;
             $scope.save($scope.repository);
         };
+
+        $scope.policies = HttpProxyPolicy.policies;
+        $scope.proxies = [];
+
+        $scope.displayHttpProxyPolicyName = function (policy) {
+            return HttpProxyPolicy.displayHttpProxyPolicyName(policy);
+        };
+
+        $scope.displayHttpProxyName = function (proxyId) {
+            return HttpProxyPolicy.displayHttpProxyName($scope.proxies, proxyId);
+        };
+
+        HttpProxy.queryUnpaged(function (proxies) {
+            $scope.proxies = proxies.results;
+        });
     }]
 );

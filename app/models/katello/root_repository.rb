@@ -23,11 +23,20 @@ module Katello
 
     }.freeze
 
+    NO_DEFAULT_HTTP_PROXY = 'none'.freeze
+    GLOBAL_DEFAULT_HTTP_PROXY = 'global_default_http_proxy'.freeze
+    USE_SELECTED_HTTP_PROXY = 'use_selected_http_proxy'.freeze
+    HTTP_PROXY_POLICIES = [
+      GLOBAL_DEFAULT_HTTP_PROXY,
+      NO_DEFAULT_HTTP_PROXY,
+      USE_SELECTED_HTTP_PROXY].freeze
+
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
     belongs_to :gpg_key, :inverse_of => :root_repositories, :class_name => "Katello::GpgKey"
     belongs_to :ssl_ca_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_ca_root_repos
     belongs_to :ssl_client_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_client_root_repos
     belongs_to :ssl_client_key, :class_name => "Katello::GpgKey", :inverse_of => :ssl_key_root_repos
+    belongs_to :http_proxy, :inverse_of => :root_repositories
     has_many :repositories, :class_name => "Katello::Repository", :foreign_key => :root_id,
                           :inverse_of => :root, :dependent => :destroy
 
@@ -72,7 +81,10 @@ module Katello
       :in => ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES,
       :message => _("must be one of the following: %s") % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
     }, if: :yum?
-
+    validates :http_proxy_policy, inclusion: {
+      :in => HTTP_PROXY_POLICIES,
+      :message => _("must be one of the following: %s") % HTTP_PROXY_POLICIES.join(', ')
+    }
     scope :subscribable, -> { where(content_type: RootRepository::SUBSCRIBABLE_TYPES) }
     scope :has_url, -> { where.not(:url => nil) }
     scope :with_repository_attribute, ->(attr, value) { joins(:repositories).where("#{Katello::Repository.table_name}.#{attr}" => value) }
@@ -84,6 +96,12 @@ module Katello
     scope :docker_type, -> { where(:content_type => Repository::DOCKER_TYPE) }
     scope :ostree_type, -> { where(:content_type => Repository::OSTREE_TYPE) }
     scope :ansible_collection_type, -> { where(:content_type => Repository::ANSIBLE_COLLECTION_TYPE) }
+    scope :with_global_proxy, -> { where(:http_proxy_policy => RootRepository::GLOBAL_DEFAULT_HTTP_PROXY) }
+    scope :with_no_proxy, -> { where(:http_proxy_policy => RootRepository::NO_DEFAULT_HTTP_PROXY) }
+    scope :with_selected_proxy, ->(http_proxy_id) {
+      where(:http_proxy_policy => RootRepository::USE_SELECTED_HTTP_PROXY).
+      where("http_proxy_id = ?", http_proxy_id)
+    }
     delegate :redhat?, :provider, :organization, to: :product
 
     def library_instance
@@ -268,7 +286,7 @@ module Katello
     def pulp_update_needed?
       changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
                                  upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy ignorable_content
-                                 ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id)
+                                 ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id)
       changeable_attributes += %w(name container_repository_name docker_tags_whitelist) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
       changeable_attributes += %w(ansible_collection_whitelist) if ansible_collection?
@@ -293,6 +311,15 @@ module Katello
         :releasever => self.minor,
         :basearch => self.arch
       }.compact
+    end
+
+    def http_proxy
+      if http_proxy_policy == NO_DEFAULT_HTTP_PROXY
+        return nil
+      elsif http_proxy_policy == GLOBAL_DEFAULT_HTTP_PROXY
+        return HttpProxy.default_global_content_proxy
+      end
+      super
     end
 
     class Jail < ::Safemode::Jail
