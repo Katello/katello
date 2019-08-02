@@ -111,7 +111,7 @@ class ManageManifestModal extends Component {
 
     const showRedHatProviderDetails = canEditOrganizations;
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
-    const showManifestTab = (showRedHatProviderDetails || showSubscriptionManifest)
+    const showManifestTab = (showRedHatProviderDetails || showSubscriptionManifest);
 
     const { actionInProgress } = this.state;
 
@@ -204,6 +204,7 @@ class ManageManifestModal extends Component {
                         <ControlLabel
                           className="col-sm-3 control-label"
                           htmlFor="usmaFile"
+                          style={{ paddingTop: '0' }}
                         >
                           <OverlayTrigger
                             overlay={
@@ -232,38 +233,39 @@ class ManageManifestModal extends Component {
                               onChange={e => this.uploadManifest(e.target.files)}
                             />
                           }
-                          {canImportManifest &&
-                            <TooltipButton
-                              onClick={this.refreshManifest}
-                              tooltipId="refresh-manifest-button-tooltip"
-                              tooltipText={disabledReason}
-                              tooltipPlacement="top"
-                              title={__('Refresh')}
-                              disabled={!manifestExists(organization) ||
-                                actionInProgress || disableManifestActions}
-                            />
-                          }
-                          {canDeleteManifest &&
-                          <React.Fragment>
-                            <br />
-                            <TooltipButton
-                              renderedButton={(
-                                <Button
-                                  disabled={!manifestExists(organization) || actionInProgress}
-                                  bsStyle="danger"
-                                  onClick={() => this.showDeleteManifestModal(true)}
-                                >
-                                  {__('Delete')}
-                                </Button>
-                                )}
+                          <div id="manifest-actions-row">
+                            {canImportManifest &&
+                              <TooltipButton
+                                onClick={this.refreshManifest}
+                                tooltipId="refresh-manifest-button-tooltip"
+                                tooltipText={disabledReason}
+                                tooltipPlacement="top"
+                                title={__('Refresh')}
+                                disabled={!manifestExists(organization) ||
+                                  actionInProgress || disableManifestActions}
+                              />
+                            }
+                            {canDeleteManifest &&
+                            <React.Fragment>
+                              <TooltipButton
+                                renderedButton={(
+                                  <Button
+                                    disabled={!manifestExists(organization) || actionInProgress}
+                                    bsStyle="danger"
+                                    onClick={() => this.showDeleteManifestModal(true)}
+                                  >
+                                    {__('Delete')}
+                                  </Button>
+                                  )}
 
-                              tooltipId="delete-manifest-button-tooltip"
-                              tooltipText={this.disabledTooltipText()}
-                              tooltipPlacement="top"
+                                tooltipId="delete-manifest-button-tooltip"
+                                tooltipText={this.disabledTooltipText()}
+                                tooltipPlacement="top"
 
-                            />
-                          </React.Fragment>
-                        }
+                              />
+                            </React.Fragment>
+                            }
+                          </div>
 
                           <MessageDialog
                             show={this.state.showDeleteManifestModalDialog}
