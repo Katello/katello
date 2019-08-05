@@ -19,6 +19,7 @@ exports[`subscriptions page should render 1`] = `
         Subscriptions
       </h1>
       <SubscriptionsToolbar
+        canManageSubscriptionAllocations={false}
         disableAddButton={false}
         disableDeleteButton={true}
         disableDeleteReason="This is disabled because no subscriptions are selected."
@@ -36,6 +37,7 @@ exports[`subscriptions page should render 1`] = `
         updateSearchQuery={[Function]}
       />
       <Connect(ManageManifestModal)
+        canImportManifest={false}
         delete={[Function]}
         disabledReason={null}
         onClose={[Function]}
@@ -49,6 +51,7 @@ exports[`subscriptions page should render 1`] = `
         id="subscriptions-table"
       >
         <SubscriptionsTable
+          canManageSubscriptionAllocations={false}
           emptyState={
             Object {
               "action": Object {
