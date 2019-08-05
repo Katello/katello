@@ -264,7 +264,7 @@ module Katello
         if proxy
           uri = URI(proxy.url)
           proxy_options = {
-            proxy_host: uri.host,
+            proxy_host: uri.scheme + '://' + uri.host,
             proxy_port: uri.port,
             proxy_username: proxy.username,
             proxy_password: proxy.password
