@@ -18,4 +18,4 @@ export const propsToSnakeCase = ob =>
   propsToCase(snakeCase, 'propsToSnakeCase only takes objects', ob);
 
 export const propsToCamelCase = ob =>
-  propsToCase(camelCase, 'propsToSnakeCase only takes objects', ob);
+  propsToCase(camelCase, 'propsToCamelCase only takes objects', ob);
