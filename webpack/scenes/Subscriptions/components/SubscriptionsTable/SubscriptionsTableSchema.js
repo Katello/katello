@@ -24,7 +24,7 @@ export const createSubscriptionsTableSchema = (
   inlineEditController,
   selectionController,
   groupingController,
-  canManageSubscriptionAllocations,
+  hasPermission,
 ) => [
   {
     property: 'select',
@@ -146,7 +146,7 @@ export const createSubscriptionsTableSchema = (
       formatters: [headerFormatter],
     },
     cell: {
-      formatters: [getEntitlementsFormatter(inlineEditController, canManageSubscriptionAllocations)],
+      formatters: [getEntitlementsFormatter(inlineEditController, hasPermission)],
     },
   },
 ];
