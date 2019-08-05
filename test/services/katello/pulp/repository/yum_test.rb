@@ -184,7 +184,7 @@ module Katello
           importers = backend_data['importers']
           config = importers.first['config']
           uri = URI(@default_proxy.url)
-          assert_equal uri.host, config['proxy_host']
+          assert_equal "http://" + uri.host, config['proxy_host']
         end
 
         def test_sync_with_global_http_proxy
@@ -195,7 +195,7 @@ module Katello
           importers = backend_data['importers']
           config = importers.first['config']
           uri = URI(@default_proxy.url)
-          assert_equal uri.host, config['proxy_host']
+          assert_equal "http://" + uri.host, config['proxy_host']
         end
 
         def teardown
