@@ -45,22 +45,8 @@ module Katello
         fail NotImplementedError
       end
 
-      def distribution_mirror_options(path, options = {})
-        ret  = {
-            base_path: path,
-            name: "#{backend_object_name}"
-        }
-        ret[:publication] = options[:publication] if options.key? :publication
-        ret[:repository_version] = options[:repository_version] if options.key? :repository_version
-        ret
-      end
-
       def remote_options
-        common_remote_options
-      end
-
-      def mirror_remote_options
-        common_mirror_remote_options
+        fail NotImplementedError
       end
 
       def self.api_client(_smart_proxy)
@@ -71,6 +57,20 @@ module Katello
         self.class.api_client(smart_proxy)
       end
 
+      def distribution_mirror_options(path, options = {})
+        ret  = {
+            base_path: path,
+            name: "#{backend_object_name}"
+        }
+        ret[:publication] = options[:publication] if options.key? :publication
+        ret[:repository_version] = options[:repository_version] if options.key? :repository_version
+        ret
+      end
+
+      def mirror_remote_options
+        common_mirror_remote_options
+      end
+
       def create_mirror_remote
         remote_file_data = remote_class.new(mirror_remote_options)
         response = remotes_api.create(remote_file_data)
@@ -79,7 +79,7 @@ module Katello
       def create_remote
         remote_file_data = remote_class.new(remote_options)
         response = remotes_api.create(remote_file_data)
-        repo.update_attributes!(:remote_href => response._href) if @smart_proxy.pulp_master?
+        repo.update_attributes!(:remote_href => response._href)
       end
 
       def update_remote
@@ -100,11 +100,6 @@ module Katello
 
       def remote_partial_update
         remotes_api.partial_update(repo.remote_href, remote_options)
-      end
-
-      def delete_mirror_remote
-        remote = list_remotes(name: backend_object_name).first
-        remotes_api.delete(remote._href) if remote
       end
 
       def delete_remote(href = repo.remote_href)
@@ -152,8 +147,8 @@ module Katello
         DistributionReference.find_by(:path => path)
       end
 
-      def refresh_mirror_artifacts
-        remotes_api.partial_update(mirror_remote_href, mirror_remote_options)
+      def refresh_mirror_entities
+        [remotes_api.partial_update(mirror_remote_href, mirror_remote_options)]
       end
 
       def mirror_needs_updates?
@@ -171,7 +166,7 @@ module Katello
         computed_options
       end
 
-      def create_mirror_artifacts
+      def create_mirror_entities
         create_mirror
         create_mirror_remote
       end
@@ -181,7 +176,7 @@ module Katello
       end
 
       def create
-        unless  repository_reference
+        unless repository_reference
           response = repositories_api.create(
             name: backend_object_name)
           RepositoryReference.create!(
@@ -225,12 +220,8 @@ module Katello
       end
 
       def mirror_version_href
-        if @smart_proxy.pulp_master?
-          repo.version_href
-        else
-          repository = fetch_repository
-          repository._latest_version_href if repository
-        end
+        repository = fetch_repository
+        repository._latest_version_href
       end
 
       def create_publication
@@ -398,7 +389,7 @@ module Katello
       def common_mirror_remote_options
         remote_options = {
           name: backend_object_name,
-          url: external_url
+          url: mirror_remote_feed_url
         }
         remote_options.merge!(ssl_mirror_remote_options)
       end
@@ -413,9 +404,9 @@ module Katello
         }
       end
 
-      def external_url(force_https = false)
+      def mirror_remote_feed_url
         uri = URI.parse(::SmartProxy.pulp_master.pulp3_url)
-        uri.scheme = (root.unprotected && !force_https) ? 'http' : 'https'
+        uri.scheme = 'https'
         uri.path = partial_repo_path
         uri.to_s
       end

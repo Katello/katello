@@ -2,8 +2,6 @@ module Actions
   module Katello
     module CapsuleContent
       class Sync < ::Actions::EntryAction
-        include Actions::Katello::PulpSelector
-
         def resource_locks
           :link
         end
@@ -20,31 +18,33 @@ module Actions
           ["'#{input['smart_proxy']['name']}'"] + super
         end
 
-        def available_repositories(smart_proxy, environment, content_view, repository)
-          smart_proxy_service = ::Katello::Pulp::SmartProxyRepository.new(smart_proxy)
-          repository_ids = smart_proxy_service.get_repository_ids(environment, content_view, repository)
-          ::Katello::Repository.where(pulp_id: repository_ids) + ::Katello::ContentViewPuppetEnvironment.where(pulp_id: repository_ids)
-        end
-
         # rubocop:disable MethodLength
         def plan(smart_proxy, options = {})
           action_subject(smart_proxy)
           smart_proxy.verify_ueber_certs
+
           environment_id = options.fetch(:environment_id, nil)
           environment = ::Katello::KTEnvironment.find(environment_id) if environment_id
-          content_view_id = options.fetch(:content_view_id, nil)
-          content_view = ::Katello::ContentView.find(content_view_id) if content_view_id
           repository_id = options.fetch(:repository_id, nil)
           repository = ::Katello::Repository.find(repository_id) if repository_id
+          content_view_id = options.fetch(:content_view_id, nil)
+          content_view = ::Katello::ContentView.find(content_view_id) if content_view_id
+
           skip_metadata_check = options.fetch(:skip_metadata_check, false)
 
           fail _("Action not allowed for the default smart proxy.") if smart_proxy.pulp_master?
 
-          repositories = available_repositories(smart_proxy, environment, content_view, repository)
+          smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
+          repositories =  smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository)
           smart_proxy.ping_pulp3 if repositories.any? { |repo| smart_proxy.pulp3_support?(repo) }
           smart_proxy.ping_pulp if repositories.any? { |repo| !smart_proxy.pulp3_support?(repo) }
-          plan_action(RefreshRepos, smart_proxy, options)
-          plan_action(SyncCapsule, smart_proxy, options)
+
+          refresh_options =  options.merge({ content_view: content_view,
+                                         environment:environment,
+                                         repository: repository })
+          plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+          plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+          plan_action(SyncCapsule, smart_proxy, refresh_options)
         end
 
         def rescue_strategy

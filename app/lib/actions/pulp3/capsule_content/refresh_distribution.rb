@@ -13,7 +13,7 @@ module Actions
 
         def run
           repository = ::Katello::Repository.find(input[:repository_id])
-          smart_proxy = ::SmartProxy.find(input[:smart_proxy_id])
+          smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
           options = input[:options]
           tasks = options[:tasks]
           if options[:use_repository_version]

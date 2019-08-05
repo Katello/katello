@@ -79,7 +79,7 @@ module Katello
         false
       end
 
-      def create_mirror_artifacts
+      def create_mirror_entities
         create
       end
 
@@ -206,7 +206,7 @@ module Katello
         tasks
       end
 
-      def refresh_mirror_artifacts
+      def refresh_mirror_entities
         refresh
       end
 
