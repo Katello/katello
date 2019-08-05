@@ -77,12 +77,14 @@ module Katello
 
     def test_operatingsystem_ubuntu
       @facts['distribution.name'] = 'Ubuntu GNU/Linux'
-      @facts['distribution.version'] = '19'
-      @facts['distribution.id'] = 'disco'
+      @facts['distribution.version'] = '19.04'
+      @facts['distribution.id'] = 'Disco Dingo'
 
       assert_equal parser.operatingsystem.release_name, 'disco'
       assert_equal parser.operatingsystem.name, 'Ubuntu'
       assert_equal parser.operatingsystem.type, 'Debian'
+      assert_equal parser.operatingsystem.major, '19'
+      assert_equal parser.operatingsystem.minor, '04'
     end
 
     def test_uname_architecture
