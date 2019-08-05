@@ -22,9 +22,150 @@ module Katello
         @activation_key = katello_activation_keys(:library_dev_staging_view_key)
         @host_collection = katello_host_collections(:simple_host_collection)
         @activation_key.host_collections << @host_collection
+        @org = @library.organization
+        @facts = {'network.hostname' => 'foo.example.com'}
+        @host = FactoryBot.create(:host, organization: @org)
+        @uuid_fact_name = RhsmFactName.create(name: 'dmi::system::uuid')
       end
 
-      let(:rhsm_params) { {:name => 'foobar', :facts => {'a' => 'b'}, :type => 'system'} }
+      let(:rhsm_params) { {:name => 'foobar', :facts => @facts, :type => 'system'} }
+
+      class ValidateHostsTest < ActiveSupport::TestCase
+        def setup
+          @org = get_organization
+          @klass = Katello::RegistrationManager
+          @host = FactoryBot.create(:host, organization: @org)
+          @uuid_fact_name = RhsmFactName.create(name: 'dmi::system::uuid')
+        end
+
+        let(:hosts) { ::Host.where(id: [@host.id]) }
+
+        def test_different_org
+          org2 = taxonomies(:organization2)
+
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, org2, nil, nil) }
+
+          assert_match(/different org/, error.message)
+        end
+
+        def test_multiple_hosts
+          assert ::Host.all.size > 1
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(::Host.all, @org, nil, nil) }
+          assert_match(/match this host/, error.message)
+        end
+
+        def test_new_host_existing_uuid
+          existing_uuid = 'existing_system_uuid'
+          FactValue.create(value: existing_uuid, host: @host, fact_name: @uuid_fact_name)
+
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, 'new_host_name', existing_uuid) }
+          assert_match(/match this host/, error.message)
+        end
+
+        def test_existing_host_mismatch_uuid
+          FactValue.create(value: "existing_system_uuid", host: @host, fact_name: @uuid_fact_name)
+
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
+          assert_match(/DMI UUID that differs/, error.message)
+        end
+
+        def test_existing_uuid_and_name
+          FactValue.create(value: 'host3-uuid', host: @host, fact_name: @uuid_fact_name)
+
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'host3-uuid')
+        end
+
+        def test_find_host_build_matching_hostname_new_uuid
+          @host = FactoryBot.create(:host, :managed, organization: @org, build: true)
+          FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
+
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
+        end
+
+        def test_dmi_uuid_override_match_override
+          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_system_uuid', value: 'my-custom-uuid')
+          FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
+
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'my-custom-uuid')
+        end
+
+        def test_dmi_uuid_override_match_existing
+          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_system_uuid', value: 'my-custom-uuid')
+          FactValue.create(value: 'existing-uuid', host: @host, fact_name: @uuid_fact_name)
+
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'existing-uuid')
+        end
+
+        def test_dmi_uuid_override_no_match
+          # the uuid input didn't match the current uuid or the override param
+          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_system_uuid', value: 'my-custom-uuid')
+          FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
+
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
+          assert_match(/DMI UUID that differs/, error.message)
+        end
+
+        def test_find_host_dmi_uuid_override_existing
+          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_system_uuid', value: 'override-uuid')
+
+          # a host exists with a fact matching that override
+          existing_host_with_overridden_fact = FactoryBot.create(:host, organization: @org)
+          FactValue.create(value: 'override-uuid', host: existing_host_with_overridden_fact, fact_name: @uuid_fact_name)
+
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, nil) }
+          assert_match(/DMI UUID override/, error.message)
+        end
+      end
+
+      def test_find_existing_hosts
+        fact_host = FactoryBot.create(:host)
+
+        # doesn't match PuppetFactName
+        puppet_fact_name = PuppetFactName.find_or_create_by(name: 'dmi::system::uuid')
+        fv = FactValue.create!(value: 'puppet-dmi-uuid', host: fact_host, fact_name: puppet_fact_name)
+        result = Katello::RegistrationManager.find_existing_hosts('inexistent_host', 'puppet-dmi-uuid')
+        assert_empty result
+
+        # matching dmi.system.uuid OR hostname
+        fv = FactValue.create!(value: 'some-uuid', host: fact_host, fact_name: @uuid_fact_name)
+        result = Katello::RegistrationManager.find_existing_hosts(@host.name, 'some-uuid')
+
+        assert_equal [@host, fact_host].sort, result.sort
+
+        # nil & allowed duplicate uuids
+        [nil] + Katello::RegistrationManager::DMI_UUID_ALLOWED_DUPS.each do |dup|
+          fv.update_attributes!(value: dup)
+          result = Katello::RegistrationManager.find_existing_hosts('inexistent_host', dup)
+          assert_empty result
+        end
+      end
+
+      def test_process_registration_activation_keys
+        Location.expects(:default_host_subscribe_location!).returns(nil)
+        host = mock(organization: @org)
+        ::Katello::RegistrationManager.expects(:new_host_from_facts).with(rhsm_params[:facts], @org, nil).returns(host)
+        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, nil, [@activation_key])
+
+        ::Katello::RegistrationManager.process_registration(rhsm_params, nil, [@activation_key])
+      end
+
+      def test_process_registration_new_host
+        Location.expects(:default_host_subscribe_location!).returns(nil)
+        host = mock(organization: @org)
+        ::Katello::RegistrationManager.expects(:new_host_from_facts).with(rhsm_params[:facts], @org, nil).returns(host)
+        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, @content_view_environment, [])
+
+        ::Katello::RegistrationManager.process_registration(rhsm_params, @content_view_environment)
+      end
+
+      def test_process_registration_existing_host
+        host = FactoryBot.create(:host, :organization_id => @org.id)
+        @facts = {'network.hostname' => host.name}
+
+        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, @content_view_environment, [])
+
+        ::Katello::RegistrationManager.process_registration(rhsm_params, @content_view_environment)
+      end
 
       def test_registration
         new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @library.organization)

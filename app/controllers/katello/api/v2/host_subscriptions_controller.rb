@@ -82,8 +82,7 @@ module Katello
     def create
       rhsm_params = params_to_rhsm_params
 
-      host = Katello::Host::SubscriptionFacet.find_or_create_host(@content_view_environment.environment.organization, rhsm_params)
-      Katello::RegistrationManager.register_host(host, rhsm_params, @content_view_environment)
+      host = Katello::RegistrationManager.process_registration(rhsm_params, @content_view_environment)
       host.reload
       ::Katello::Host::SubscriptionFacet.update_facts(host, rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 

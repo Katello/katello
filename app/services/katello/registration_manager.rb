@@ -1,7 +1,91 @@
 module Katello
   class RegistrationManager
+    DMI_UUID_ALLOWED_DUPS = ['', 'Not Settable', 'Not Present'].freeze
+    DMI_UUID_HOST_PARAM = 'dmi_system_uuid'.freeze
+
     class << self
       private :new
+      delegate :propose_existing_hostname, :new_host_from_facts, to: Katello::Host::SubscriptionFacet
+
+      def determine_organization(content_view_environment, activation_key)
+        content_view_environment.try(:environment).try(:organization) || activation_key.try(:organization)
+      end
+
+      def process_registration(rhsm_params, content_view_environment, activation_keys = [])
+        host_name = propose_existing_hostname(rhsm_params[:facts])
+        host_uuid = rhsm_params[:facts]['dmi.system.uuid']
+        organization = determine_organization(content_view_environment, activation_keys.first)
+
+        hosts = find_existing_hosts(host_name, host_uuid)
+
+        validate_hosts(hosts, organization, host_name, host_uuid) if hosts.any?
+
+        host = hosts.first || new_host_from_facts(
+          rhsm_params[:facts],
+          organization,
+          Location.default_host_subscribe_location!
+        )
+        host.organization = organization unless host.organization
+
+        register_host(host, rhsm_params, content_view_environment, activation_keys)
+      end
+
+      def dmi_uuid_fact_id
+        RhsmFactName.find_or_create_by(name: 'dmi::system::uuid').id
+      end
+
+      def find_existing_hosts(host_name, host_uuid)
+        ::Host.unscoped.distinct.left_outer_joins(:fact_values)
+          .where("#{::Host.table_name}.name = ? OR (#{FactValue.table_name}.fact_name_id = ?
+          AND #{FactValue.table_name}.value = ? AND #{FactValue.table_name}.value NOT IN (?))", host_name, dmi_uuid_fact_id, host_uuid, DMI_UUID_ALLOWED_DUPS)
+      end
+
+      def validate_hosts(hosts, organization, host_name, host_uuid)
+        hosts = hosts.where(organization_id: [organization.id, nil])
+        hosts_size = hosts.size
+
+        if hosts_size == 0 # not in the correct org
+          #TODO: http://projects.theforeman.org/issues/11532
+          registration_error("Host with name %{host_name} is currently registered to a different org, please migrate host to %{org_name}.",
+                             org_name: organization.name, host_name: host_name)
+        end
+
+        if hosts_size == 1
+          host = hosts.first
+          uuid_param = host.parameters.where(name: DMI_UUID_HOST_PARAM).first # what if they set multiple?
+
+          if uuid_param
+            duplicate_override_dmi_hosts = ::Host.unscoped.distinct.left_outer_joins(:fact_values)
+                    .where("#{FactValue.table_name}.fact_name_id = ? AND #{FactValue.table_name}.value = ?", dmi_uuid_fact_id, uuid_param.value).where.not("#{::Host.table_name}.id = ?", host.id)
+
+            if duplicate_override_dmi_hosts.any?
+              registration_error("The DMI UUID override of this host matches another host(s) in your organization: %{existing}", existing: joined_hostnames(duplicate_override_dmi_hosts))
+            end
+          end
+
+          if host.name == host_name
+            unless host.build # doesn't matter if any of the uuids match
+              found_uuid = host.fact_values.find { |fv| fv.fact_name_id == dmi_uuid_fact_id }
+              # if the host already has a dmi.uuid it needs to match what came from facts *or* the overriden value
+              unless [found_uuid&.value, uuid_param&.value].include?(host_uuid)
+                registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
+              end
+            end
+
+            return true
+          end
+        end
+
+        registration_error("Please unregister or remove hosts which match this host before registering: %{existing}", existing: joined_hostnames(hosts))
+      end
+
+      def registration_error(message, meta = {})
+        fail(Katello::Errors::RegistrationError, _(message) % meta)
+      end
+
+      def joined_hostnames(hosts)
+        hosts.pluck(:name).sort.join(', ')
+      end
 
       # options:
       #  * organization_destroy: destroy some data associated with host, but
