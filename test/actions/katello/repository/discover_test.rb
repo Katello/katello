@@ -13,6 +13,7 @@ module Actions
     let(:action_class) { ::Actions::Katello::Repository::Discover }
 
     def setup
+      SETTINGS[:katello][:cdn_proxy] = {}
       get_organization #ensure we have an org label
     end
 
