@@ -38,7 +38,7 @@ module Katello
         assert @repo.root.http_proxy_id
         uri = URI(@default_proxy.url)
         expected_options = {
-          proxy_host: uri.host,
+          proxy_host: uri.scheme + '://' + uri.host,
           proxy_port: uri.port,
           proxy_username: @default_proxy.username,
           proxy_password: @default_proxy.password
@@ -51,7 +51,7 @@ module Katello
         assert_nil @repo.root.http_proxy_id
         uri = URI(@default_proxy.url)
         expected_options = {
-          proxy_host: uri.host,
+          proxy_host: uri.scheme + '://' + uri.host,
           proxy_port: uri.port,
           proxy_username: @default_proxy.username,
           proxy_password: @default_proxy.password
@@ -66,7 +66,7 @@ module Katello
         assert @repo.root.http_proxy_id
         uri = URI(another_proxy.url)
         expected_options = {
-          proxy_host: uri.host,
+          proxy_host: uri.scheme + '://' + uri.host,
           proxy_port: uri.port,
           proxy_username: another_proxy.username,
           proxy_password: another_proxy.password
