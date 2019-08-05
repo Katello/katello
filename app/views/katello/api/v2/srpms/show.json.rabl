@@ -1,5 +1,5 @@
 object @resource
 
-attributes :id, :pulp_id
+attributes :id, :pulp_id, :name, :filename
 attributes :created_at, :updated, :version, :arch, :release
-attributes :epoch, :filname, :sourcerpm, :checksum, :summary, :nvra
+attributes :epoch, :checksum, :summary, :nvra
