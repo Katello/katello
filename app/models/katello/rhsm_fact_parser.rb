@@ -61,7 +61,7 @@ module Katello
 
     def os_release_name(os_name)
       if os_name.match(::Operatingsystem::FAMILIES['Debian'])
-        facts['distribution.id']
+        facts['distribution.id']&.split&.first&.downcase
       end
     end
 
