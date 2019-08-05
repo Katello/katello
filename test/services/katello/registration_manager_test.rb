@@ -83,14 +83,14 @@ module Katello
         end
 
         def test_dmi_uuid_override_match_override
-          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_system_uuid', value: 'my-custom-uuid')
+          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_uuid_override', value: 'my-custom-uuid')
           FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
 
           assert @klass.validate_hosts(hosts, @org, @host.name, 'my-custom-uuid')
         end
 
         def test_dmi_uuid_override_match_existing
-          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_system_uuid', value: 'my-custom-uuid')
+          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_uuid_override', value: 'my-custom-uuid')
           FactValue.create(value: 'existing-uuid', host: @host, fact_name: @uuid_fact_name)
 
           assert @klass.validate_hosts(hosts, @org, @host.name, 'existing-uuid')
@@ -98,7 +98,7 @@ module Katello
 
         def test_dmi_uuid_override_no_match
           # the uuid input didn't match the current uuid or the override param
-          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_system_uuid', value: 'my-custom-uuid')
+          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_uuid_override', value: 'my-custom-uuid')
           FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
 
           error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
@@ -106,7 +106,7 @@ module Katello
         end
 
         def test_find_host_dmi_uuid_override_existing
-          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_system_uuid', value: 'override-uuid')
+          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_uuid_override', value: 'override-uuid')
 
           # a host exists with a fact matching that override
           existing_host_with_overridden_fact = FactoryBot.create(:host, organization: @org)
@@ -133,7 +133,7 @@ module Katello
         assert_equal [@host, fact_host].sort, result.sort
 
         # nil & allowed duplicate uuids
-        [nil] + Katello::RegistrationManager::DMI_UUID_ALLOWED_DUPS.each do |dup|
+        [nil] + Katello::Host::SubscriptionFacet::DMI_UUID_ALLOWED_DUPS.each do |dup|
           fv.update_attributes!(value: dup)
           result = Katello::RegistrationManager.find_existing_hosts('inexistent_host', dup)
           assert_empty result

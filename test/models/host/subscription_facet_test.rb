@@ -215,6 +215,15 @@ module Katello
       assert_includes values.map(&:name), '_timestamp'
     end
 
+    def test_filter_host_consumer_params
+      consumer_params = {name: 'whatever'}
+      ::HostParameter.create!(reference_id: host.id, name: 'dmi_uuid_override', value: 'overridden-value')
+
+      Katello::Host::SubscriptionFacet.filter_host_consumer_params(host, consumer_params)
+
+      assert_equal 'overridden-value', consumer_params[:facts]['dmi.system.uuid']
+    end
+
     def test_subscription_status
       status = Katello::SubscriptionStatus.new(:host => host)
       status.status = Katello::SubscriptionStatus::INVALID

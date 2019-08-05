@@ -1,8 +1,5 @@
 module Katello
   class RegistrationManager
-    DMI_UUID_ALLOWED_DUPS = ['', 'Not Settable', 'Not Present'].freeze
-    DMI_UUID_HOST_PARAM = 'dmi_system_uuid'.freeze
-
     class << self
       private :new
       delegate :propose_existing_hostname, :new_host_from_facts, to: Katello::Host::SubscriptionFacet
@@ -28,16 +25,22 @@ module Katello
         host.organization = organization unless host.organization
 
         register_host(host, rhsm_params, content_view_environment, activation_keys)
+
+        host
       end
 
       def dmi_uuid_fact_id
         RhsmFactName.find_or_create_by(name: 'dmi::system::uuid').id
       end
 
+      def dmi_uuid_allowed_dups
+        Katello::Host::SubscriptionFacet::DMI_UUID_ALLOWED_DUPS
+      end
+
       def find_existing_hosts(host_name, host_uuid)
         ::Host.unscoped.distinct.left_outer_joins(:fact_values)
           .where("#{::Host.table_name}.name = ? OR (#{FactValue.table_name}.fact_name_id = ?
-          AND #{FactValue.table_name}.value = ? AND #{FactValue.table_name}.value NOT IN (?))", host_name, dmi_uuid_fact_id, host_uuid, DMI_UUID_ALLOWED_DUPS)
+          AND #{FactValue.table_name}.value = ? AND #{FactValue.table_name}.value NOT IN (?))", host_name, dmi_uuid_fact_id, host_uuid, dmi_uuid_allowed_dups)
       end
 
       def validate_hosts(hosts, organization, host_name, host_uuid)
@@ -52,7 +55,7 @@ module Katello
 
         if hosts_size == 1
           host = hosts.first
-          uuid_param = host.parameters.where(name: DMI_UUID_HOST_PARAM).first # what if they set multiple?
+          uuid_param = host.parameters.find_by_name(Katello::Host::SubscriptionFacet::DMI_UUID_HOST_PARAM)
 
           if uuid_param
             duplicate_override_dmi_hosts = ::Host.unscoped.distinct.left_outer_joins(:fact_values)
@@ -184,6 +187,8 @@ module Katello
       end
 
       def create_in_cp_and_pulp(host, content_view_environment, consumer_params, activation_keys)
+        ::Katello::Host::SubscriptionFacet.filter_host_consumer_params(host, consumer_params)
+
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environment.cp_id, consumer_params, activation_keys.map(&:cp_name))
         ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?

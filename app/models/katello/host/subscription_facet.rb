@@ -33,6 +33,9 @@ module Katello
 
       attr_accessor :facts
 
+      DMI_UUID_ALLOWED_DUPS = ['', 'Not Settable', 'Not Present'].freeze
+      DMI_UUID_HOST_PARAM = 'dmi_uuid_override'.freeze
+
       def host_type
         host_facts = self.host.facts
         host_facts["virt::host_type"] || host_facts["hypervisor::type"]
@@ -183,6 +186,16 @@ module Katello
       def self.new_host_from_facts(facts, org, location)
         name = propose_name_from_facts(facts)
         ::Host::Managed.new(:name => name, :organization => org, :location => location, :managed => false)
+      end
+
+      def self.filter_host_consumer_params(host, consumer_params)
+        dmi_uuid_override_param = host.parameters.find_by_name(DMI_UUID_HOST_PARAM)
+
+        if dmi_uuid_override_param
+          facts = consumer_params[:facts] || {}
+          facts['dmi.system.uuid'] = dmi_uuid_override_param.value
+          consumer_params[:facts] = facts
+        end
       end
 
       def self.update_facts(host, rhsm_facts)
