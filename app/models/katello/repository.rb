@@ -772,7 +772,7 @@ module Katello
 
       if self.yum? && !self.master?
         index_linked_repo
-      elsif source_repository
+      elsif source_repository && !repository_type.unique_content_per_repo
         copy_indexed_data(source_repository)
       else
         repository_type.content_types_to_index.each do |type|
