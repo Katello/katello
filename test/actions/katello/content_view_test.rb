@@ -333,6 +333,7 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
+      Location.current = taxonomies(:location2)
       smart_proxy_service_1 = new_capsule_content(:three)
       smart_proxy_service_2 = new_capsule_content(:four)
       smart_proxy_service_1.smart_proxy.add_lifecycle_environment(library)

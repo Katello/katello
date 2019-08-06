@@ -83,12 +83,12 @@ module Katello
           features = [PULP_NODE_FEATURE]
           features << PULP_FEATURE if include_default
 
-          with_features(features).joins(:capsule_lifecycle_environments).
+          unscoped.with_features(features).joins(:capsule_lifecycle_environments).
               where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
         end
 
         def self.sync_needed?(environment)
-          with_environment(environment).any?
+          unscoped.with_environment(environment).any?
         end
       end
 
