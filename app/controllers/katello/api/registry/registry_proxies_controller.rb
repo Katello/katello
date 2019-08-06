@@ -79,10 +79,7 @@ module Katello
 
     def authorize_repository_write
       @repository = find_writable_repository
-      unless @repository
-        not_found params[:repository]
-        return false
-      end
+      return item_not_found(params[:repository]) unless @repository
       true
     end
 
@@ -110,18 +107,15 @@ module Katello
 
     def authorize_repository_read
       @repository = find_readable_repository
-      unless @repository
-        not_found params[:repository]
-        return false
-      end
+      return item_not_found(params[:repository]) unless @repository
 
       if params[:tag]
         if params[:tag][0..6] == 'sha256:'
           manifest = Katello::DockerManifestList.where(digest: params[:tag]).first || Katello::DockerManifest.where(digest: params[:tag]).first
-          not_found params[:tag] unless manifest
+          return item_not_found(params[:tag]) unless manifest
         else
           tag = DockerMetaTag.where(repository_id: @repository.id, name: params[:tag]).first
-          not_found params[:tag] unless tag
+          return item_not_found(params[:tag]) unless tag
         end
       end
 
@@ -486,6 +480,12 @@ module Katello
     def process_action(method_name, *args)
       ::Api::V2::BaseController.instance_method(:process_action).bind(self).call(method_name, *args)
       Rails.logger.debug "With body: #{response.body}\n" unless route_name == 'pull_blob'
+    end
+
+    def item_not_found(item)
+      msg = "#{item} was not found!"
+      # returning errors based on registry specifications in https://docs.docker.com/registry/spec/api/#errors
+      render json: {errors: [code: :invalid_request, message: msg, details: msg]}, status: :not_found
     end
   end
 end

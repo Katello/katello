@@ -384,6 +384,30 @@ module Katello
         assert response.header['Content-Type'] =~ /MEDIATYPE/
         assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
       end
+
+      it "pull manifest repo not found" do
+        @controller.stubs(:registry_authorize).returns(true)
+        @controller.stubs(:find_readable_repository).returns(nil)
+
+        get :pull_manifest, params: { repository: "doesnotexist", tag: "latest" }
+        assert_response 404
+        response_body = JSON.parse(response.body)
+        assert response_body['errors'].length >= 1
+        response_body['errors'].first.assert_valid_keys('code', 'message', 'details')
+      end
+
+      it "pull manifest repo tag not found" do
+        manifest = '{"mediaType":"MEDIATYPE"}'
+        @controller.stubs(:registry_authorize).returns(true)
+        @controller.stubs(:find_readable_repository).returns(@docker_repo)
+        Resources::Registry::Proxy.stubs(:get).returns(manifest)
+
+        get :pull_manifest, params: { repository: @docker_repo.name, tag: "doesnotexist" }
+        assert_response 404
+        response_body = JSON.parse(response.body)
+        assert response_body['errors'].length >= 1
+        response_body['errors'].first.assert_valid_keys('code', 'message', 'details')
+      end
     end
 
     describe "docker push" do
