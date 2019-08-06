@@ -5,6 +5,8 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
   pulp3_skip_publication true
   pulp3_plugin 'pulp_docker'
 
+  set_unique_content_per_repo
+
   content_type Katello::DockerManifest,
                :priority => 1,
                :pulp2_service_class => ::Katello::Pulp::DockerManifest,
