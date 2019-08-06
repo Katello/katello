@@ -1,4 +1,4 @@
-# 3.13.0 Baltic Porter (2019-08-06)
+# 3.13.0-RC1 Baltic Porter (2019-08-06)
 
 ## Features
 
