@@ -80,7 +80,8 @@ module Katello
       def import_for_repository(repository)
         pulp_ids = []
         service_class = SmartProxy.pulp_master!.content_service(content_type)
-        fetch_only_ids = !repository.content_view.default?
+        fetch_only_ids = !repository.content_view.default? &&
+                         !repository.repository_type.unique_content_per_repo
 
         service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids).each do |units|
           units.each do |unit|
