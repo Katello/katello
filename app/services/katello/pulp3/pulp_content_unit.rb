@@ -11,7 +11,7 @@ module Katello
         fail NotImplementedError
       end
 
-      def self.content_class
+      def self.create_content
         fail NotImplementedError
       end
 
