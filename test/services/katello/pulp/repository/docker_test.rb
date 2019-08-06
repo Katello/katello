@@ -12,6 +12,7 @@ module Katello
           @mirror = FactoryBot.build(:smart_proxy, :pulp_mirror)
 
           @repo = katello_repositories(:busybox)
+          @repo_copy = katello_repositories(:busybox2)
         end
 
         def delete_repo(repo)
@@ -23,6 +24,7 @@ module Katello
         def setup
           super
           delete_repo(@repo)
+          delete_repo(@repo_copy)
         end
 
         def test_create
@@ -40,6 +42,26 @@ module Katello
           assert_equal 1, service.backend_data['distributors'].count
         ensure
           delete_repo(@repo)
+        end
+
+        def test_index_content
+          @repo.root.mirror_on_sync = true
+
+          service = Katello::Pulp::Repository::Docker.new(@repo, @master)
+          service.create
+          service2 = Katello::Pulp::Repository::Docker.new(@repo_copy, @master)
+          service2.create
+          RepositorySupport.create_and_sync_repo(@repo)
+          RepositorySupport.create_repo(@repo_copy)
+
+          @repo.index_content
+          assert @repo.docker_tags.count > 0
+          TaskSupport.wait_on_tasks(service.copy_contents(@repo_copy))
+          @repo_copy.index_content(:source_repository => @repo)
+          assert_equal @repo_copy.docker_tags.count, @repo.docker_tags.count
+        ensure
+          delete_repo(@repo)
+          delete_repo(@repo_copy)
         end
 
         def test_unit_keys
