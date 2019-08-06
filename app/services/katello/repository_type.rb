@@ -14,11 +14,16 @@ module Katello
 
     def_field :allow_creation_by_user, :service_class, :pulp3_service_class, :pulp3_plugin, :pulp3_skip_publication
     attr_accessor :metadata_publish_matching_check, :index_additional_data_proc
-    attr_reader :id
+    attr_reader :id, :unique_content_per_repo
 
     def initialize(id)
       @id = id.to_sym
       allow_creation_by_user(true)
+      @unique_content_per_repo = false
+    end
+
+    def set_unique_content_per_repo
+      @unique_content_per_repo = true
     end
 
     def content_types
