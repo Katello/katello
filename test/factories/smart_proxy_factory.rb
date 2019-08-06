@@ -21,7 +21,8 @@ FactoryBot.modify do
 
         smart_proxy_feature = proxy.smart_proxy_features.select { |spf| spf.feature_id == v3_feature.id }.first
         smart_proxy_feature.capabilities = plugins
-        smart_proxy_feature.settings = {pulp_url: "https://#{Socket.gethostname}"}
+        smart_proxy_feature.settings = { pulp_url: "https://#{Socket.gethostname}",
+                                         content_app_url: "http://localhost:24816" }
         smart_proxy_feature.save!
       end
     end

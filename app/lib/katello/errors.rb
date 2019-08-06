@@ -140,5 +140,11 @@ module Katello
     end
 
     class UpstreamEntitlementGone < StandardError; end
+
+    class ContainerRegistryNotConfigured < StandardError
+      def message
+        _("No URL found for a container registry. Please check the configuration.")
+      end
+    end
   end
 end
