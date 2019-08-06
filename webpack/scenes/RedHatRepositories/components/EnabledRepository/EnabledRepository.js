@@ -100,7 +100,7 @@ EnabledRepository.propTypes = {
   pagination: PropTypes.shape({
     page: PropTypes.number,
     perPage: PropTypes.number,
-  }).isRequired,
+  }),
   loading: PropTypes.bool,
   releasever: PropTypes.string,
   orphaned: PropTypes.bool,
@@ -114,6 +114,10 @@ EnabledRepository.defaultProps = {
   orphaned: false,
   search: {},
   loading: false,
+  pagination: PropTypes.shape({
+    page: 0,
+    perPage: 0,
+  }),
 };
 
 export default EnabledRepository;
