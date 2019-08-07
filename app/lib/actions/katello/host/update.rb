@@ -14,7 +14,6 @@ module Actions
 
             if host.subscription_facet
               consumer_params ||= host.subscription_facet.consumer_attributes
-              ::Katello::Host::SubscriptionFacet.filter_host_consumer_params(host, consumer_params)
               cp_update = plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
             end
 

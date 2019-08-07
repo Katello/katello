@@ -8,14 +8,27 @@ module Katello
         content_view_environment.try(:environment).try(:organization) || activation_key.try(:organization)
       end
 
+      def determine_host_dmi_uuid(rhsm_params)
+        host_uuid = rhsm_params.dig(:facts, 'dmi.system.uuid')
+
+        if Setting[:host_dmi_uuid_duplicates].include?(host_uuid)
+          return [SecureRandom.uuid, true]
+        end
+
+        [host_uuid, false]
+      end
+
       def process_registration(rhsm_params, content_view_environment, activation_keys = [])
         host_name = propose_existing_hostname(rhsm_params[:facts])
-        host_uuid = rhsm_params[:facts]['dmi.system.uuid']
+        host_uuid, host_uuid_overridden = determine_host_dmi_uuid(rhsm_params)
+
+        rhsm_params[:facts]['dmi.system.uuid'] = host_uuid # ensure we find & validate against a potentially overridden UUID
+
         organization = determine_organization(content_view_environment, activation_keys.first)
 
         hosts = find_existing_hosts(host_name, host_uuid)
 
-        validate_hosts(hosts, organization, host_name, host_uuid) if hosts.any?
+        validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden) if hosts.any?
 
         host = hosts.first || new_host_from_facts(
           rhsm_params[:facts],
@@ -43,7 +56,7 @@ module Katello
           AND #{FactValue.table_name}.value = ? AND #{FactValue.table_name}.value NOT IN (?))", host_name, dmi_uuid_fact_id, host_uuid, dmi_uuid_allowed_dups)
       end
 
-      def validate_hosts(hosts, organization, host_name, host_uuid)
+      def validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden = false)
         hosts = hosts.where(organization_id: [organization.id, nil])
         hosts_size = hosts.size
 
@@ -55,22 +68,11 @@ module Katello
 
         if hosts_size == 1
           host = hosts.first
-          uuid_param = host.parameters.find_by_name(Katello::Host::SubscriptionFacet::DMI_UUID_HOST_PARAM)
-
-          if uuid_param
-            duplicate_override_dmi_hosts = ::Host.unscoped.distinct.left_outer_joins(:fact_values)
-                    .where("#{FactValue.table_name}.fact_name_id = ? AND #{FactValue.table_name}.value = ?", dmi_uuid_fact_id, uuid_param.value).where.not("#{::Host.table_name}.id = ?", host.id)
-
-            if duplicate_override_dmi_hosts.any?
-              registration_error("The DMI UUID override of this host matches another host(s) in your organization: %{existing}", existing: joined_hostnames(duplicate_override_dmi_hosts))
-            end
-          end
 
           if host.name == host_name
-            unless host.build # doesn't matter if any of the uuids match
-              found_uuid = host.fact_values.find { |fv| fv.fact_name_id == dmi_uuid_fact_id }
-              # if the host already has a dmi.uuid it needs to match what came from facts *or* the overriden value
-              unless [found_uuid&.value, uuid_param&.value].include?(host_uuid)
+            unless host.build || host_uuid_overridden
+              found_uuid = host.fact_values.where(fact_name_id: dmi_uuid_fact_id).first
+              if found_uuid && found_uuid.value != host_uuid
                 registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
               end
             end
@@ -187,8 +189,6 @@ module Katello
       end
 
       def create_in_cp_and_pulp(host, content_view_environment, consumer_params, activation_keys)
-        ::Katello::Host::SubscriptionFacet.filter_host_consumer_params(host, consumer_params)
-
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environment.cp_id, consumer_params, activation_keys.map(&:cp_name))
         ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?

@@ -81,40 +81,22 @@ module Katello
 
           assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
         end
+      end
 
-        def test_dmi_uuid_override_match_override
-          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_uuid_override', value: 'my-custom-uuid')
-          FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
+      def test_determine_host_dmi_uuid_unique
+        result = Katello::RegistrationManager.determine_host_dmi_uuid(facts: {'dmi.system.uuid' => 'unique-dmi-uuid'})
 
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'my-custom-uuid')
-        end
+        assert_equal ['unique-dmi-uuid', false], result
+      end
 
-        def test_dmi_uuid_override_match_existing
-          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_uuid_override', value: 'my-custom-uuid')
-          FactValue.create(value: 'existing-uuid', host: @host, fact_name: @uuid_fact_name)
+      def test_determine_host_dmi_uuid_duplicate
+        Setting[:host_dmi_uuid_duplicates] = ['duplicate-dmi-uuid']
 
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'existing-uuid')
-        end
+        SecureRandom.stubs(:uuid).returns('generated-uuid')
 
-        def test_dmi_uuid_override_no_match
-          # the uuid input didn't match the current uuid or the override param
-          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_uuid_override', value: 'my-custom-uuid')
-          FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
+        result = Katello::RegistrationManager.determine_host_dmi_uuid(facts: {'dmi.system.uuid' => 'duplicate-dmi-uuid'})
 
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
-          assert_match(/DMI UUID that differs/, error.message)
-        end
-
-        def test_find_host_dmi_uuid_override_existing
-          ::HostParameter.create!(reference_id: @host.id, name: 'dmi_uuid_override', value: 'override-uuid')
-
-          # a host exists with a fact matching that override
-          existing_host_with_overridden_fact = FactoryBot.create(:host, organization: @org)
-          FactValue.create(value: 'override-uuid', host: existing_host_with_overridden_fact, fact_name: @uuid_fact_name)
-
-          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, nil) }
-          assert_match(/DMI UUID override/, error.message)
-        end
+        assert_equal ['generated-uuid', true], result
       end
 
       def test_find_existing_hosts
