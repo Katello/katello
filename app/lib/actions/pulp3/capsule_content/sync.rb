@@ -1,7 +1,7 @@
 module Actions
   module Pulp3
     module CapsuleContent
-      class Sync < Pulp3::Abstract
+      class Sync < Pulp3::AbstractAsyncTask
         def plan(repository, smart_proxy, options = {})
           sequence do
             plan_self(:repo_id => repository.id, :smart_proxy_id => smart_proxy.id, :options => options)

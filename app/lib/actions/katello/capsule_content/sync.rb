@@ -39,9 +39,11 @@ module Actions
           refresh_options = options.merge(content_view: content_view,
                                              environment:  environment,
                                              repository: repository)
-          plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
-          plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
-          plan_action(SyncCapsule, smart_proxy, refresh_options)
+          sequence do
+            plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+            plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+            plan_action(SyncCapsule, smart_proxy, refresh_options)
+          end
         end
 
         def rescue_strategy

@@ -148,12 +148,18 @@ module Katello
       end
 
       def refresh_mirror_entities
-        [remotes_api.partial_update(mirror_remote_href, mirror_remote_options)]
+        href = mirror_remote_href
+        if href
+          [remotes_api.partial_update(href, mirror_remote_options)]
+        else
+          create_mirror_remote
+          []
+        end
       end
 
       def mirror_needs_updates?
         remote = fetch_remote
-        return false if remote.blank?
+        return true if remote.blank?
         options = compute_mirror_remote_options
         options.keys.any? { |key| remote.send(key) != options[key] }
       end
@@ -168,7 +174,7 @@ module Katello
 
       def create_mirror_entities
         create_mirror
-        create_mirror_remote
+        create_mirror_remote unless mirror_remote_href
       end
 
       def create_mirror
