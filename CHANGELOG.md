@@ -1,7 +1,5 @@
 # 3.12.2 Iron Stout (2019-07-31)
 
-## Features
-
 ## Bug Fixes
 
 ### GPG Keys
