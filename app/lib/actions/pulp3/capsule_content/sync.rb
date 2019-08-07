@@ -4,13 +4,13 @@ module Actions
       class Sync < Pulp3::AbstractAsyncTask
         def plan(repository, smart_proxy, options = {})
           sequence do
-            plan_self(:repo_id => repository.id, :smart_proxy_id => smart_proxy.id, :options => options)
+            plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :options => options)
             plan_action(GenerateMetadata, repository, smart_proxy, options)
           end
         end
 
         def invoke_external_task
-          repo = ::Katello::Repository.find(input[:repo_id])
+          repo = ::Katello::Repository.find(input[:repository_id])
           output[:pulp_tasks] = repo.backend_service(::SmartProxy.unscoped.find(input[:smart_proxy_id])).sync_mirror
         end
 

@@ -44,6 +44,12 @@ module ::Actions::Katello::CapsuleContent
 
       assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+      end
+
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::GenerateMetadata) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -61,6 +67,11 @@ module ::Actions::Katello::CapsuleContent
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       repo = katello_repositories(:pulp3_docker_1)
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+      end
 
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
@@ -167,6 +178,12 @@ module ::Actions::Katello::CapsuleContent
           cvpe = Katello::ContentViewPuppetEnvironment.find_by(pulp_id: input[:repo_pulp_id])
           refute capsule_content.smart_proxy.pulp3_support?(cvpe.nonpersisted_repository)
         end
+      end
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        repo = Katello::Repository.find(input[:repository_id])
+        assert_includes repos_in_dev, repo.pulp_id
       end
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::GenerateMetadata) do |input|
