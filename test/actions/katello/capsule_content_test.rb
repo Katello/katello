@@ -35,7 +35,7 @@ module ::Actions::Katello::CapsuleContent
     it 'plans correctly for a pulp3 file repo' do
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       repo = katello_repositories(:pulp3_file_1)
-      tree = plan_action_tree(action_class, capsule_content.smart_proxy, {:repository_id => repo.id})
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
       options = { smart_proxy_id: capsule_content.smart_proxy.id,
                   content_view_id: nil,
                   repository_id: repo.id,
@@ -59,8 +59,8 @@ module ::Actions::Katello::CapsuleContent
 
     it 'plans correctly for a pulp3 docker repo' do
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
-      repo =  katello_repositories(:pulp3_docker_1)
-      tree = plan_action_tree(action_class, capsule_content.smart_proxy, {:repository_id => repo.id})
+      repo = katello_repositories(:pulp3_docker_1)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
 
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
@@ -74,8 +74,8 @@ module ::Actions::Katello::CapsuleContent
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
 
-      repo =  katello_repositories(:pulp3_ansible_collection_1)
-      tree = plan_action_tree(action_class, capsule_content.smart_proxy, {:repository_id => repo.id})
+      repo = katello_repositories(:pulp3_ansible_collection_1)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -87,8 +87,8 @@ module ::Actions::Katello::CapsuleContent
     it 'plans correctly for a pulp2 yum repo' do
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
-      repo =  katello_repositories(:fedora_17_x86_64)
-      tree = plan_action_tree(action_class, capsule_content.smart_proxy, {:repository_id => repo.id})
+      repo = katello_repositories(:fedora_17_x86_64)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
       options = { smart_proxy_id: capsule_content.smart_proxy.id,
                   content_view_id: nil,
                   repository_id: repo.id,
@@ -109,7 +109,7 @@ module ::Actions::Katello::CapsuleContent
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
       repo = katello_repositories(:generic_file)
-      tree = plan_action_tree(action_class, capsule_content.smart_proxy, {:repository_id => repo.id})
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
       options = { smart_proxy_id: capsule_content.smart_proxy.id,
                   content_view_id: nil,
                   repository_id: repo.id,
@@ -131,7 +131,7 @@ module ::Actions::Katello::CapsuleContent
       repos_in_dev = Katello::Repository.in_environment(dev_environment).pluck(:pulp_id)
       cvpes_in_dev = Katello::ContentViewPuppetEnvironment.in_environment(dev_environment).pluck(:pulp_id)
 
-      tree = plan_action_tree(action_class, capsule_content.smart_proxy, {:environment_id => dev_environment.id})
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :environment_id => dev_environment.id)
       options = { smart_proxy_id: capsule_content.smart_proxy.id,
                   content_view_id: nil,
                   repository_id: nil,

@@ -2,11 +2,11 @@ module Actions
   module Katello
     module CapsuleContent
       module RefreshRepos
-        def fetch_proxy_service(smart_proxy)
+        def fetch_proxy_service(_smart_proxy)
           fail NotImplementedError
         end
 
-        def act_on_repo?(repo)
+        def act_on_repo?(_repo)
           fail NotImplementedError
         end
 
@@ -33,7 +33,7 @@ module Actions
           current_repos_on_capsule = smart_proxy_service.current_repositories(environment, content_view)
           current_repos_on_capsule_ids = current_repos_on_capsule.pluck(:id)
 
-          list_of_repos_to_sync = smart_proxy_helper.repos_available_to_capsule(environment, content_view)
+          list_of_repos_to_sync = smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository)
 
           list_of_repos_to_sync.each do |repo|
             if repo.is_a?(Katello::ContentViewPuppetEnvironment)

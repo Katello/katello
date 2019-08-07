@@ -20,9 +20,7 @@ module Actions
           # in the warning state, but not locking further syncs
           Dynflow::Action::Rescue::Skip
         end
-
       end
     end
   end
 end
-

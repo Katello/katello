@@ -15,10 +15,10 @@ module Katello
         katello_repos = Katello::Repository.all
         katello_repos = katello_repos.where(:environment_id => environment_id) if environment_id
         katello_repos = katello_repos.in_content_views([content_view_id]) if content_view_id
-        katello_repos = katello_repos.select {|repo| smart_proxy.pulp3_support?(repo)}
+        katello_repos = katello_repos.select { |repo| smart_proxy.pulp3_support?(repo) }
         repos_on_capsule = ::Katello::Pulp3::Repository.new(nil, smart_proxy).list(name_in: katello_repos.map(&:pulp_id))
         repo_ids = repos_on_capsule.map(&:name)
-        katello_repos.select {|repo| repo_ids.include? repo.pulp_id }
+        katello_repos.select { |repo| repo_ids.include? repo.pulp_id }
       end
     end
   end

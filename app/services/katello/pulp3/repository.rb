@@ -58,9 +58,9 @@ module Katello
       end
 
       def distribution_mirror_options(path, options = {})
-        ret  = {
-            base_path: path,
-            name: "#{backend_object_name}"
+        ret = {
+          base_path: path,
+          name: "#{backend_object_name}"
         }
         ret[:publication] = options[:publication] if options.key? :publication
         ret[:repository_version] = options[:repository_version] if options.key? :repository_version
@@ -73,7 +73,7 @@ module Katello
 
       def create_mirror_remote
         remote_file_data = remote_class.new(mirror_remote_options)
-        response = remotes_api.create(remote_file_data)
+        remotes_api.create(remote_file_data)
       end
 
       def create_remote
@@ -155,7 +155,7 @@ module Katello
         remote = fetch_remote
         return false if remote.blank?
         options = compute_mirror_remote_options
-        options.keys.any? {|key| remote.send(key) != options[key]}
+        options.keys.any? { |key| remote.send(key) != options[key] }
       end
 
       def compute_mirror_remote_options
@@ -250,7 +250,7 @@ module Katello
         dist_params[:publication] = options[:publication] if options[:publication]
         dist_params[:repository_version] = mirror_version_href if options[:use_repository_version]
         dist_options = distribution_mirror_options(path, dist_params)
-        if distro = lookup_distributions(base_path: path).first
+        if (distro = lookup_distributions(base_path: path).first)
           # update dist
           dist_options = dist_options.except(:name, :base_path)
           distributions_api.partial_update(distro._href, dist_options)
