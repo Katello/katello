@@ -1,5 +1,5 @@
 import Immutable from 'seamless-immutable';
-import { isEmpty } from 'lodash';
+import { isEmpty, get } from 'lodash';
 
 import {
   REPOSITORY_SETS_REQUEST,
@@ -40,6 +40,7 @@ export default (state = initialState, action) => {
       return Immutable({
         error: payload,
         loading: false,
+        missingPermissions: get(payload, ['response', 'data', 'error', 'missing_permissions']),
       });
 
     default:

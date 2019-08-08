@@ -1,5 +1,5 @@
 import { propsToSnakeCase } from 'foremanReact/common/helpers';
-
+import { get } from 'lodash';
 import api, { orgId } from '../../../services/api';
 import {
   normalizeRepositorySets,
@@ -34,7 +34,7 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
   ]);
 
   const repoParams = {
-    ...{ organization_id: orgId(), enabled: 'true' },
+    ...{ organization_id: orgId(), enabled: 'true', include_permissions: 'true' },
     ...propsToSnakeCase(extendedParams),
     search,
   };
@@ -75,9 +75,11 @@ export const loadEnabledRepos = (extendedParams = {}, silent = false) => async (
       search: searchParams,
     });
   } catch (error) {
+    const missingPermissions = get(error, ['response', 'data', 'error', 'missing_permissions']);
     return dispatch({
       type: ENABLED_REPOSITORIES_FAILURE,
       result: error,
+      missingPermissions,
     });
   }
 };

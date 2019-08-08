@@ -6,13 +6,13 @@ import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { isEmpty, isEqual } from 'lodash';
 import { Grid, Row, Col } from 'patternfly-react';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
+import PermissionDenied from 'foremanReact/components/PermissionDenied';
 import { renderTaskFinishedToast, renderTaskStartedToast } from '../Tasks/helpers';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
 import { manifestExists } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
-
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
 import {
@@ -27,6 +27,7 @@ class SubscriptionsPage extends Component {
   componentDidMount() {
     this.props.resetTasks();
     this.props.loadSetting('content_disconnected');
+    this.props.loadSubscriptions();
   }
 
   componentDidUpdate(prevProps) {
@@ -165,6 +166,11 @@ class SubscriptionsPage extends Component {
       taskModalOpened,
       tasks = [], activePermissions, subscriptions, organization, subscriptionTableSettings,
     } = this.props;
+    // Basic permissions - should we even show this page?
+    if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
+      return <PermissionDenied missingPermissions={subscriptions.missingPermissions} />;
+    }
+    // Granular permissions
     const permissions = propsToCamelCase(activePermissions);
     const {
       canDeleteManifest,
@@ -320,6 +326,7 @@ SubscriptionsPage.propTypes = {
     disconnected: PropTypes.bool,
     tableColumns: PropTypes.array,
     selectedTableColumns: PropTypes.array,
+    missingPermissions: PropTypes.array,
   }).isRequired,
   activePermissions: PropTypes.shape({
     can_delete_manifest: PropTypes.bool,

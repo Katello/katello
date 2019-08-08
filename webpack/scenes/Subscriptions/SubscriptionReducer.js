@@ -1,6 +1,8 @@
 import Immutable from 'seamless-immutable';
+import { get } from 'lodash';
 import { GET_SETTING_SUCCESS } from 'foremanReact/components/Settings/SettingsConstants';
 import { initialApiState } from '../../services/api';
+
 import { TASK_BULK_SEARCH_SUCCESS, RESET_TASKS, GET_TASK_SUCCESS } from '../Tasks/TaskConstants';
 
 import {
@@ -98,7 +100,11 @@ export default (state = initialState, action) => {
       return state
         .set('loading', false)
         .set('results', [])
-        .set('itemCount', 0);
+        .set('itemCount', 0)
+        .set(
+          'missingPermissions',
+          get(action, ['payload', 'messages', 0, 'missing_permissions']),
+        );
 
     case UPDATE_QUANTITY_FAILURE:
     case DELETE_SUBSCRIPTIONS_FAILURE:

@@ -158,6 +158,7 @@ export const errorState = Immutable({
   loading: false,
   repositories: [],
   error: 'Unable to process request.',
+  missingPermissions: ['unknown'],
 });
 
 export const disablingState = successState.setIn(

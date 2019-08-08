@@ -38,7 +38,7 @@ describe('sets reducer', () => {
   it('should have error on REPOSITORY_SETS_FAILURE', () => {
     expect(reducer(initialState, {
       type: types.REPOSITORY_SETS_FAILURE,
-      payload: 'Unable to process request.',
+      payload: { response: { data: { error: { missing_permissions: ['unknown'] } } } },
     })).toEqual(errorState);
   });
 });
