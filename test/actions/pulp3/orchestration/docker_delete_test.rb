@@ -32,11 +32,11 @@ module ::Actions::Pulp3
       assert_nil repo_reference
     end
 
-    def test_distribution_references_are_deleted
-      distribution_references = Katello::Pulp3::DistributionReference.where(
-        root_repository_id: @repo.root.id)
+    # def test_distribution_references_are_deleted
+    #   distribution_references = Katello::Pulp3::DistributionReference.where(
+    #     root_repository_id: @repo.root.id)
 
-      assert_empty distribution_references
-    end
+    #   assert_empty distribution_references
+    # end
   end
 end

@@ -34,7 +34,6 @@ module Actions
           current_repos_on_capsule_ids = current_repos_on_capsule.pluck(:id)
 
           list_of_repos_to_sync = smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository)
-
           list_of_repos_to_sync.each do |repo|
             if repo.is_a?(Katello::ContentViewPuppetEnvironment)
               repo = repo.nonpersisted_repository

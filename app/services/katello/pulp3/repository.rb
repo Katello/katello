@@ -213,7 +213,8 @@ module Katello
         repositories_api.delete(href) if href
       end
 
-      def delete(href = repository_reference.repository_href)
+      def delete(href = repository_reference.try(:repository_href))
+        repository_reference.try(:destroy)
         repositories_api.delete(href) if href
       end
 
@@ -231,11 +232,8 @@ module Katello
       end
 
       def create_publication
-        href = repo.version_href
-        if href
-          publication_data = publication_class.new(repository_version: href)
-          publications_api.create(publication_data)
-        end
+        publication_data = publication_class.new(repository_version: repo.version_href)
+        publications_api.create(publication_data)
       end
 
       def create_mirror_publication
