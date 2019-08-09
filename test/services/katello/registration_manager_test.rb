@@ -75,9 +75,17 @@ module Katello
           assert @klass.validate_hosts(hosts, @org, @host.name, 'host3-uuid')
         end
 
-        def test_find_host_build_matching_hostname_new_uuid
+        def test_build_matching_hostname_new_uuid
           @host = FactoryBot.create(:host, :managed, organization: @org, build: true)
           FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
+
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
+        end
+
+        def test_existing_host_null_uuid
+          # this test case is critical for bootstrap.py which creates a host via API (which lacks the dmi uuid fact)
+          # and *then* registers to it with subscription-manager
+          assert_empty @host.fact_values
 
           assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
         end
