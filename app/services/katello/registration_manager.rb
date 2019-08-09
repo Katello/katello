@@ -11,7 +11,7 @@ module Katello
       def determine_host_dmi_uuid(rhsm_params)
         host_uuid = rhsm_params.dig(:facts, 'dmi.system.uuid')
 
-        if Setting[:host_dmi_uuid_duplicates].include?(host_uuid)
+        if Katello::Host::SubscriptionFacet.override_dmi_uuid?(host_uuid)
           return [SecureRandom.uuid, true]
         end
 
@@ -28,7 +28,7 @@ module Katello
 
         hosts = find_existing_hosts(host_name, host_uuid)
 
-        validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden) if hosts.any?
+        validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden)
 
         host = hosts.first || new_host_from_facts(
           rhsm_params[:facts],
@@ -38,6 +38,10 @@ module Katello
         host.organization = organization unless host.organization
 
         register_host(host, rhsm_params, content_view_environment, activation_keys)
+
+        if host_uuid_overridden
+          host.subscription_facet.update_dmi_uuid_override(host_uuid)
+        end
 
         host
       end
@@ -57,6 +61,8 @@ module Katello
       end
 
       def validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden = false)
+        return if hosts.empty?
+
         hosts = hosts.where(organization_id: [organization.id, nil])
         hosts_size = hosts.size
 

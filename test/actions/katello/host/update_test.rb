@@ -95,5 +95,20 @@ module Katello::Host
         assert_action_planed_with action, ::Actions::Candlepin::Consumer::Update, @host.subscription_facet.uuid, @host.subscription_facet.consumer_attributes
       end
     end
+
+    describe 'Host update with overridden DMI UUID' do
+      it 'overrides the value sent to candlepin' do
+        ::Setting[:host_dmi_uuid_duplicates] = ['duplicate-dmi-uuid']
+        consumer_params = {facts: {'dmi.system.uuid' => 'duplicate-dmi-uuid'}}
+        action.stubs(:action_subject).with(@host)
+
+        plan_action action, @host, consumer_params
+
+        override = @host.subscription_facet.dmi_uuid_override
+        assert_equal override.value, consumer_params[:facts]['dmi.system.uuid']
+
+        assert_action_planed_with action, ::Actions::Candlepin::Consumer::Update, @host.subscription_facet.uuid, consumer_params
+      end
+    end
   end
 end

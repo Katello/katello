@@ -34,6 +34,7 @@ module Katello
       attr_accessor :facts
 
       DMI_UUID_ALLOWED_DUPS = ['', 'Not Settable', 'Not Present'].freeze
+      DMI_UUID_OVERRIDE_PARAM = 'dmi_uuid_override'.freeze
 
       def host_type
         host_facts = self.host.facts
@@ -164,6 +165,17 @@ module Katello
         self.host.organization
       end
 
+      def dmi_uuid_override
+        HostParameter.find_by(name: DMI_UUID_OVERRIDE_PARAM, host: host)
+      end
+
+      def update_dmi_uuid_override(host_uuid = nil)
+        host_uuid ||= SecureRandom.uuid
+        param = HostParameter.find_or_create_by(name: DMI_UUID_OVERRIDE_PARAM, host: host)
+        param.update_attributes!(value: host_uuid)
+        param
+      end
+
       def update_subscription_status(status_override = nil)
         update_status(::Katello::SubscriptionStatus, status_override: status_override)
 
@@ -180,6 +192,10 @@ module Katello
         update_status(::Katello::PurposeStatus, status_override: purpose_status)
 
         host.refresh_global_status!
+      end
+
+      def self.override_dmi_uuid?(host_uuid)
+        Setting[:host_dmi_uuid_duplicates].include?(host_uuid)
       end
 
       def self.new_host_from_facts(facts, org, location)

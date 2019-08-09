@@ -149,6 +149,19 @@ module Katello
         ::Katello::RegistrationManager.process_registration(rhsm_params, @content_view_environment)
       end
 
+      def test_process_registration_uuid_override
+        host = FactoryBot.create(:host, :with_subscription, :organization_id => @org.id)
+        @facts = {'network.hostname' => host.name, 'dmi.system.uuid' => 'duplicate-dmi-uuid'}
+
+        Setting[:host_dmi_uuid_duplicates] = ['duplicate-dmi-uuid']
+
+        ::Katello::RegistrationManager.expects(:register_host).with(host, rhsm_params, @content_view_environment, [])
+
+        ::Katello::RegistrationManager.process_registration(rhsm_params, @content_view_environment)
+
+        assert host.subscription_facet.dmi_uuid_override
+      end
+
       def test_registration
         new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @library.organization)
 
