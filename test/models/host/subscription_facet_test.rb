@@ -244,6 +244,14 @@ module Katello
       assert_equal find_host_error % host.name, error.message
     end
 
+    def test_find_host_null_uuid_existing_host
+      # this test case is critical for bootstrap.py which creates a host via API (which lacks the dmi uuid fact)
+      # and *then* registers to it with subscription-manager
+      assert_empty host.fact_values
+
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name, 'dmi.system.uuid' => 'actual-uuid'}, org)
+    end
+
     def test_find_host_nil_uuid
       # hostname does not match existing record, and the dmi.system.uuid is nil.
       fv = FactValue.create(value: nil, host: host, fact_name: uuid_fact_name)
@@ -253,7 +261,7 @@ module Katello
       fv.value = "something"
       fv.save!
       error = assert_raises(Katello::Errors::RegistrationError) { Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name, 'dmi.system.uuid' => nil}, org) }
-      assert_equal find_host_error % host.name, error.message
+      assert_match(/DMI UUID that differs/, error.message)
     end
 
     def test_find_host_existing_uuid_and_name_multiple
@@ -276,7 +284,7 @@ module Katello
       facts = {'dmi.system.uuid' => 'inexistent_uuid', 'network.hostname' => host.name}
 
       error = assert_raises(Katello::Errors::RegistrationError) { Katello::Host::SubscriptionFacet.find_host(facts, org) }
-      assert_equal find_host_error % host.name, error.message
+      assert_match(/DMI UUID that differs/, error.message)
     end
 
     def test_find_host_existing_uuid_and_name
