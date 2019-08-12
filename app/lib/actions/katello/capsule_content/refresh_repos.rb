@@ -13,7 +13,7 @@ module Actions
         def plan(smart_proxy, options = {})
           plan_self(:smart_proxy_id => smart_proxy.id,
                     :environment_id => options[:environment]&.id,
-                    :content_view_id => options[:content_view_id]&.id,
+                    :content_view_id => options[:content_view]&.id,
                     :repository_id => options[:repository]&.id)
         end
 
