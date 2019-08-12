@@ -173,6 +173,10 @@ module Katello
       backend_service(smart_proxy).content_service
     end
 
+    def backend_content_unit_service(smart_proxy, content_unit_type)
+      backend_service(smart_proxy).content_service(content_unit_type)
+    end
+
     def organization
       if self.environment
         self.environment.organization

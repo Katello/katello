@@ -12,11 +12,7 @@ module Actions
 
         def invoke_external_task
           repository = ::Katello::Repository.find(input[:repository_id])
-          if repository.publication_href.nil? || input[:options][:force]
-            output[:response] = repository.backend_service(smart_proxy).create_publication
-          else
-            []
-          end
+          output[:response] = repository.backend_service(smart_proxy).create_publication
         end
       end
     end
