@@ -14,7 +14,7 @@ module Katello
 
     api :PUT, "/repositories/:repository_id/content_uploads/:id", N_("Upload a chunk of the file's content")
     param :repository_id, :number, :required => true, :desc => N_("Repository id")
-    param :id, :number, :required => true, :desc => N_("Upload request id")
+    param :id, String, :required => true, :desc => N_("Upload request id")
     param :offset, :number, :required => true, :desc => N_("The offset in the file where the content starts")
     param :content, File, :required => true, :desc => N_("The actual file contents")
     def update
@@ -25,7 +25,7 @@ module Katello
 
     api :DELETE, "/repositories/:repository_id/content_uploads/:id", N_("Delete an upload request")
     param :repository_id, :number, :required => true, :desc => N_("Repository id")
-    param :id, :number, :required => true, :desc => N_("Upload request id")
+    param :id, String, :required => true, :desc => N_("Upload request id")
     def destroy
       @repository.backend_content_service(::SmartProxy.pulp_master).delete_upload(params[:id])
       head :no_content
