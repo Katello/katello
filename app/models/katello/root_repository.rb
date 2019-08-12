@@ -57,7 +57,8 @@ module Katello
     validates_with Validators::ContainerImageNameValidator, :attributes => :docker_upstream_name, :allow_blank => true, :if => :docker?
 
     validate :ensure_valid_docker_attributes, :if => :docker?
-    validate :ensure_valid_ansible_collection_attributes, :if => :ansible_collection?
+    # To temporarily handle https://pulp.plan.io/issues/5250 and https://pulp.plan.io/issues/5251
+    #validate :ensure_valid_ansible_collection_attributes, :if => :ansible_collection?
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
