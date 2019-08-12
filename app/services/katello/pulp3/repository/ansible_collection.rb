@@ -32,7 +32,7 @@ module Katello
           if root.url.blank?
             super
           else
-            common_remote_options.merge(url: root.url, whitelist: root.ansible_collection_whitelist)
+            common_remote_options.merge(url: root.url) # whitelist: root.ansible_collection_whitelist)
           end
         end
 

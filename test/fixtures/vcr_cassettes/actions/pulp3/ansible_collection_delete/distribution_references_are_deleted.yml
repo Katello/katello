@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -23,205 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:56 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '240'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy80YmFk
-        YzAwZC01ZDIyLTQ4OTAtYjYwYy03YzBiZTRhNjg1M2MvIiwiX2NyZWF0ZWQi
-        OiIyMDE5LTA4LTAyVDIwOjIyOjA5LjgwODIzOFoiLCJfdmVyc2lvbnNfaHJl
-        ZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNGJhZGMwMGQtNWQyMi00
-        ODkwLWI2MGMtN2MwYmU0YTY4NTNjL3ZlcnNpb25zLyIsIl9sYXRlc3RfdmVy
-        c2lvbl9ocmVmIjpudWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24t
-        Q2FiaW5ldC1wdWxwM19BbnNpYmxlX2NvbGxlY3Rpb25fMSIsImRlc2NyaXB0
-        aW9uIjpudWxsfV19
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:56 GMT
-- request:
-    method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/4badc00d-5d22-4890-b60c-7c0be4a6853c/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:28:57 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '67'
-      Via:
-      - 1.1 devel2.balmora.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBiN2QyMDRlLTczMjItNGI2
-        OS05NDFhLTc2NjQzZjU3MmRkNC8ifQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:57 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/ansible/collection/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:28:57 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '354'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlbW90ZXMvYW5zaWJsZS9j
-        b2xsZWN0aW9uL2MyOTY5MjdmLTYxOTYtNDZjZS1hZDRhLTViNDQyYjg1YzM5
-        ZS8iLCJfY3JlYXRlZCI6IjIwMTktMDgtMDJUMjA6MjI6MDkuOTg0MDk5WiIs
-        Il90eXBlIjoiYW5zaWJsZS5jb2xsZWN0aW9uIiwibmFtZSI6IkRlZmF1bHRf
-        T3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNfQW5zaWJsZV9jb2xsZWN0aW9u
-        XzEiLCJ1cmwiOiJodHRwczovL2dhbGF4eS5hbnNpYmxlLmNvbSIsInNzbF9j
-        YV9jZXJ0aWZpY2F0ZSI6bnVsbCwic3NsX2NsaWVudF9jZXJ0aWZpY2F0ZSI6
-        bnVsbCwic3NsX2NsaWVudF9rZXkiOm51bGwsInNzbF92YWxpZGF0aW9uIjp0
-        cnVlLCJwcm94eV91cmwiOm51bGwsIl9sYXN0X3VwZGF0ZWQiOiIyMDE5LTA4
-        LTAyVDIwOjIyOjA5Ljk4NDExM1oiLCJkb3dubG9hZF9jb25jdXJyZW5jeSI6
-        MjAsInBvbGljeSI6ImltbWVkaWF0ZSIsIndoaXRlbGlzdCI6InJvYmVydGRl
-        Ym9jay5ydW5kZWNrX2NvbGxlY3Rpb24ifV19
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:57 GMT
-- request:
-    method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/ansible/collection/c296927f-6196-46ce-ad4a-5b442b85c39e/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:28:57 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '67'
-      Via:
-      - 1.1 devel2.balmora.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzI1Zjg1MTk3LWJkZjctNDM5
-        My1hYWFmLWFmYjBiZDY0Y2FjYy8ifQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:57 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/ansible/ansible/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:28:57 GMT
+      - Mon, 12 Aug 2019 20:57:25 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -235,17 +37,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:57 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:25 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/ansible/ansible/?base_path=Default_Organization/library/pulp3_Ansible_collection_1
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/remotes/ansible/collection/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -253,7 +55,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
+      - OpenAPI-Generator/0.2.0b2/ruby
       Accept:
       - application/json
       Authorization:
@@ -266,7 +68,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:57 GMT
+      - Mon, 12 Aug 2019 20:57:25 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -280,17 +82,107 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:57 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:25 GMT
+- request:
+    method: get
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/0.2.0b2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 12 Aug 2019 20:57:25 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 ansible-demo.samir.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Mon, 12 Aug 2019 20:57:25 GMT
+- request:
+    method: get
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/?base_path=Default_Organization/library/pulp3_Ansible_collection_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/0.2.0b2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 12 Aug 2019 20:57:26 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 ansible-demo.samir.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Mon, 12 Aug 2019 20:57:26 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/
     body:
       encoding: UTF-8
       base64_string: |
@@ -300,7 +192,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -313,13 +205,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:58 GMT
+      - Mon, 12 Aug 2019 20:57:26 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/b2dfa26c-d2ea-4c61-a9cf-12d5930934ac/"
+      - "/pulp/api/v3/repositories/645330d6-61a0-447c-8fa4-19bdfa9c9982/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -329,36 +221,36 @@ http_interactions:
       Content-Length:
       - '320'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvYjJkZmEyNmMt
-        ZDJlYS00YzYxLWE5Y2YtMTJkNTkzMDkzNGFjLyIsIl9jcmVhdGVkIjoiMjAx
-        OS0wOC0wMlQyMDoyODo1OC4wNTA0MDRaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
-        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2IyZGZhMjZjLWQyZWEtNGM2MS1h
-        OWNmLTEyZDU5MzA5MzRhYy92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNjQ1MzMwZDYt
+        NjFhMC00NDdjLThmYTQtMTliZGZhOWM5OTgyLyIsIl9jcmVhdGVkIjoiMjAx
+        OS0wOC0xMlQyMDo1NzoyNi40MTY3NzFaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
+        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzY0NTMzMGQ2LTYxYTAtNDQ3Yy04
+        ZmE0LTE5YmRmYTljOTk4Mi92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
         aHJlZiI6bnVsbCwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
         ZXQtcHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEiLCJkZXNjcmlwdGlvbiI6
         bnVsbH0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:58 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:26 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/ansible/collection/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/remotes/ansible/collection/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1wdWxwM19B
         bnNpYmxlX2NvbGxlY3Rpb25fMSIsInVybCI6Imh0dHBzOi8vZ2FsYXh5LmFu
-        c2libGUuY29tIiwic3NsX3ZhbGlkYXRpb24iOnRydWUsInBvbGljeSI6Imlt
-        bWVkaWF0ZSIsIndoaXRlbGlzdCI6InJvYmVydGRlYm9jay5ydW5kZWNrX2Nv
-        bGxlY3Rpb24ifQ==
+        c2libGUuY29tL2FwaS92Mi9jb2xsZWN0aW9ucy9yb2JlcnRkZWJvY2svcnVu
+        ZGVja19jb2xsZWN0aW9uIiwic3NsX3ZhbGlkYXRpb24iOnRydWUsInBvbGlj
+        eSI6ImltbWVkaWF0ZSJ9
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
+      - OpenAPI-Generator/0.2.0b2/ruby
       Accept:
       - application/json
       Authorization:
@@ -371,13 +263,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:58 GMT
+      - Mon, 12 Aug 2019 20:57:26 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/ansible/collection/1ec6220e-7270-42ad-b787-a15d1689f218/"
+      - "/pulp/api/v3/remotes/ansible/collection/c308e786-1109-40dc-8486-3a4ea4fe39dc/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -385,29 +277,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '515'
+      - '520'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2Fuc2libGUvY29sbGVj
-        dGlvbi8xZWM2MjIwZS03MjcwLTQyYWQtYjc4Ny1hMTVkMTY4OWYyMTgvIiwi
-        X2NyZWF0ZWQiOiIyMDE5LTA4LTAyVDIwOjI4OjU4LjIxODc4MloiLCJfdHlw
+        dGlvbi9jMzA4ZTc4Ni0xMTA5LTQwZGMtODQ4Ni0zYTRlYTRmZTM5ZGMvIiwi
+        X2NyZWF0ZWQiOiIyMDE5LTA4LTEyVDIwOjU3OjI2LjYwMzc1MVoiLCJfdHlw
         ZSI6ImFuc2libGUuY29sbGVjdGlvbiIsIm5hbWUiOiJEZWZhdWx0X09yZ2Fu
         aXphdGlvbi1DYWJpbmV0LXB1bHAzX0Fuc2libGVfY29sbGVjdGlvbl8xIiwi
-        dXJsIjoiaHR0cHM6Ly9nYWxheHkuYW5zaWJsZS5jb20iLCJzc2xfY2FfY2Vy
-        dGlmaWNhdGUiOm51bGwsInNzbF9jbGllbnRfY2VydGlmaWNhdGUiOm51bGws
-        InNzbF9jbGllbnRfa2V5IjpudWxsLCJzc2xfdmFsaWRhdGlvbiI6dHJ1ZSwi
-        cHJveHlfdXJsIjpudWxsLCJfbGFzdF91cGRhdGVkIjoiMjAxOS0wOC0wMlQy
-        MDoyODo1OC4yMTg3OTdaIiwiZG93bmxvYWRfY29uY3VycmVuY3kiOjIwLCJw
-        b2xpY3kiOiJpbW1lZGlhdGUiLCJ3aGl0ZWxpc3QiOiJyb2JlcnRkZWJvY2su
-        cnVuZGVja19jb2xsZWN0aW9uIn0=
+        dXJsIjoiaHR0cHM6Ly9nYWxheHkuYW5zaWJsZS5jb20vYXBpL3YyL2NvbGxl
+        Y3Rpb25zL3JvYmVydGRlYm9jay9ydW5kZWNrX2NvbGxlY3Rpb24iLCJzc2xf
+        Y2FfY2VydGlmaWNhdGUiOm51bGwsInNzbF9jbGllbnRfY2VydGlmaWNhdGUi
+        Om51bGwsInNzbF9jbGllbnRfa2V5IjpudWxsLCJzc2xfdmFsaWRhdGlvbiI6
+        dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJfbGFzdF91cGRhdGVkIjoiMjAxOS0w
+        OC0xMlQyMDo1NzoyNi42MDM3NjhaIiwiZG93bmxvYWRfY29uY3VycmVuY3ki
+        OjIwLCJwb2xpY3kiOiJpbW1lZGlhdGUifQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:58 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:26 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/b2dfa26c-d2ea-4c61-a9cf-12d5930934ac/versions/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/645330d6-61a0-447c-8fa4-19bdfa9c9982/versions/
     body:
       encoding: UTF-8
       base64_string: 'e30=
@@ -417,7 +309,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -430,7 +322,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:58 GMT
+      - Mon, 12 Aug 2019 20:57:27 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -444,17 +336,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2QyOTU1Y2Q0LTU2MjktNDli
-        My05NGUxLWM1ODMyZjdjMzg5MS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2QxYWQ5ZTI3LTUwMDEtNGQ3
+        OC04YmRjLTE4YzhiOGMwNWNjMi8ifQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:58 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:27 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/d2955cd4-5629-49b3-94e1-c5832f7c3891/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/tasks/d1ad9e27-5001-4d78-8bdc-18c8b8c05cc2/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -462,7 +354,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -475,7 +367,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:58 GMT
+      - Mon, 12 Aug 2019 20:57:27 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -487,29 +379,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
       Content-Length:
-      - '336'
+      - '334'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9kMjk1NWNkNC01NjI5LTQ5
-        YjMtOTRlMS1jNTgzMmY3YzM4OTEvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTAy
-        VDIwOjI4OjU4LjU2NjkwNFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9kMWFkOWUyNy01MDAxLTRk
+        NzgtOGJkYy0xOGM4YjhjMDVjYzIvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTEy
+        VDIwOjU3OjI3LjAxMzEzM1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
-        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA4LTAyVDIwOjI4OjU4LjY1MjkxNFoi
-        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDgtMDJUMjA6Mjg6NTguNzE3MDI1WiIs
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA4LTEyVDIwOjU3OjI3LjEyNjgxMFoi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDgtMTJUMjA6NTc6MjcuMTgyMDIyWiIs
         Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
-        L3B1bHAvYXBpL3YzL3dvcmtlcnMvOTRhZjhhNzctYWJiYy00NWI5LWI0NTUt
-        YjhkZjU3MWZkMTI1LyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvZjAxMjI0NjAtNWE3ZS00NTZlLTg2ZDgt
+        YWE0MWNjZDAxZTMyLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
         W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
-        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2IyZGZhMjZjLWQyZWEtNGM2
-        MS1hOWNmLTEyZDU5MzA5MzRhYy92ZXJzaW9ucy8xLyJdfQ==
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzY0NTMzMGQ2LTYxYTAtNDQ3
+        Yy04ZmE0LTE5YmRmYTljOTk4Mi92ZXJzaW9ucy8xLyJdfQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:58 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:27 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/b2dfa26c-d2ea-4c61-a9cf-12d5930934ac/versions/1/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/645330d6-61a0-447c-8fa4-19bdfa9c9982/versions/1/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -517,7 +409,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -530,7 +422,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:58 GMT
+      - Mon, 12 Aug 2019 20:57:27 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -542,22 +434,22 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
       Content-Length:
       - '186'
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvYjJkZmEyNmMt
-        ZDJlYS00YzYxLWE5Y2YtMTJkNTkzMDkzNGFjL3ZlcnNpb25zLzEvIiwiX2Ny
-        ZWF0ZWQiOiIyMDE5LTA4LTAyVDIwOjI4OjU4LjY4NjM5M1oiLCJudW1iZXIi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNjQ1MzMwZDYt
+        NjFhMC00NDdjLThmYTQtMTliZGZhOWM5OTgyL3ZlcnNpb25zLzEvIiwiX2Ny
+        ZWF0ZWQiOiIyMDE5LTA4LTEyVDIwOjU3OjI3LjE1MzQxMloiLCJudW1iZXIi
         OjEsImJhc2VfdmVyc2lvbiI6bnVsbCwiY29udGVudF9zdW1tYXJ5Ijp7ImFk
         ZGVkIjp7fSwicmVtb3ZlZCI6e30sInByZXNlbnQiOnt9fX0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:58 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:27 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/ansible/ansible/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/
     body:
       encoding: UTF-8
       base64_string: |
@@ -565,13 +457,13 @@ http_interactions:
         bHAzX0Fuc2libGVfY29sbGVjdGlvbl8xIiwibmFtZSI6IkRlZmF1bHRfT3Jn
         YW5pemF0aW9uLUNhYmluZXQtcHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEi
         LCJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL2IyZGZhMjZjLWQyZWEtNGM2MS1hOWNmLTEyZDU5MzA5MzRhYy92ZXJz
+        aWVzLzY0NTMzMGQ2LTYxYTAtNDQ3Yy04ZmE0LTE5YmRmYTljOTk4Mi92ZXJz
         aW9ucy8xLyJ9
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
+      - OpenAPI-Generator/0.2.0b2/ruby
       Accept:
       - application/json
       Authorization:
@@ -584,7 +476,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:59 GMT
+      - Mon, 12 Aug 2019 20:57:27 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -598,17 +490,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA0YThkMjgzLWMzNjAtNGY2
-        MS04ODgwLWQ4ODBmOGZlZGJlOS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2Q3MWQ2YWZiLTk1ZjQtNGVj
+        Mi1iZjViLTdjMjcxZDZmODI3MC8ifQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:59 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:27 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/04a8d283-c360-4f61-8880-d880f8fedbe9/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/tasks/d71d6afb-95f4-4ec2-bf5b-7c271d6f8270/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -616,7 +508,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -629,7 +521,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:59 GMT
+      - Mon, 12 Aug 2019 20:57:28 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -641,29 +533,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
       Content-Length:
       - '331'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wNGE4ZDI4My1jMzYwLTRm
-        NjEtODg4MC1kODgwZjhmZWRiZTkvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTAy
-        VDIwOjI4OjU5LjA5NDEyNloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9kNzFkNmFmYi05NWY0LTRl
+        YzItYmY1Yi03YzI3MWQ2ZjgyNzAvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTEy
+        VDIwOjU3OjI3LjU4Nzg5N1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2NyZWF0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA4LTAyVDIwOjI4OjU5LjIxNzYyMFoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDgtMDJUMjA6Mjg6NTkuNDI5NzU5WiIsIm5vbl9m
+        YXJ0ZWRfYXQiOiIyMDE5LTA4LTEyVDIwOjU3OjI3LjcyMDUwOVoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDgtMTJUMjA6NTc6MjcuOTgyNDgyWiIsIm5vbl9m
         YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvOTRhZjhhNzctYWJiYy00NWI5LWI0NTUtYjhkZjU3
-        MWZkMTI1LyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        YXBpL3YzL3dvcmtlcnMvZjZkNmVjNmEtM2EyYi00NTA2LWIwMWUtNmY3NWM4
+        NzA5ZjZjLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
         b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9hbnNpYmxlL2Fuc2libGUvZDgyNWYx
-        ZWEtYjhiMS00ZGMzLWExY2YtNTE4YWI1ODI3NTI1LyJdfQ==
+        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9hbnNpYmxlL2Fuc2libGUvNDM5OWU4
+        ZjUtMTFkZi00OWYzLWIyZjItNDIwYWExZWJjZWY3LyJdfQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:59 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:28 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/ansible/ansible/d825f1ea-b8b1-4dc3-a1cf-518ab5827525/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/4399e8f5-11df-49f3-b2f2-420aa1ebcef7/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -671,7 +563,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
+      - OpenAPI-Generator/0.2.0b2/ruby
       Accept:
       - application/json
       Authorization:
@@ -684,7 +576,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:28:59 GMT
+      - Mon, 12 Aug 2019 20:57:28 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -696,29 +588,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
       Content-Length:
-      - '308'
+      - '306'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL2Fuc2libGUv
-        YW5zaWJsZS9kODI1ZjFlYS1iOGIxLTRkYzMtYTFjZi01MThhYjU4Mjc1MjUv
-        IiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTAyVDIwOjI4OjU5LjQxNTAzNVoiLCJi
+        YW5zaWJsZS80Mzk5ZThmNS0xMWRmLTQ5ZjMtYjJmMi00MjBhYTFlYmNlZjcv
+        IiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTEyVDIwOjU3OjI3Ljk2ODkxMVoiLCJi
         YXNlX3BhdGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L3B1bHAz
         X0Fuc2libGVfY29sbGVjdGlvbl8xIiwiY29udGVudF9ndWFyZCI6bnVsbCwi
         bmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNfQW5z
         aWJsZV9jb2xsZWN0aW9uXzEiLCJyZXBvc2l0b3J5IjpudWxsLCJyZXBvc2l0
-        b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2IyZGZh
-        MjZjLWQyZWEtNGM2MS1hOWNmLTEyZDU5MzA5MzRhYy92ZXJzaW9ucy8xLyIs
-        Im1hemVyX3VybCI6ImRldmVsMi5iYWxtb3JhLmV4YW1wbGUuY29tL3B1bHBf
-        YW5zaWJsZS9nYWxheHkvRGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFyeS9w
-        dWxwM19BbnNpYmxlX2NvbGxlY3Rpb25fMSJ9
+        b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzY0NTMz
+        MGQ2LTYxYTAtNDQ3Yy04ZmE0LTE5YmRmYTljOTk4Mi92ZXJzaW9ucy8xLyIs
+        Im1hemVyX3VybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MjQ4MTcvcHVscF9hbnNp
+        YmxlL2dhbGF4eS9EZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L3B1bHAz
+        X0Fuc2libGVfY29sbGVjdGlvbl8xIn0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:28:59 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:28 GMT
 - request:
     method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/ansible/collection/1ec6220e-7270-42ad-b787-a15d1689f218/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/remotes/ansible/collection/c308e786-1109-40dc-8486-3a4ea4fe39dc/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -726,7 +618,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
+      - OpenAPI-Generator/0.2.0b2/ruby
       Accept:
       - application/json
       Authorization:
@@ -739,7 +631,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:29:00 GMT
+      - Mon, 12 Aug 2019 20:57:28 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -753,17 +645,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2E4Njg3OTQ4LWJiODUtNGJk
-        OS1hNzE4LTE1MjMzZjY3NDYyMS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2NhYTY2NjMzLTE5ZmEtNGJl
+        Yi04NDdkLWJkZWM3MTMzNzU4Ny8ifQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:29:00 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:28 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/a8687948-bb85-4bd9-a718-15233f674621/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/tasks/caa66633-19fa-4beb-847d-bdec71337587/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -771,7 +663,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -784,7 +676,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:29:00 GMT
+      - Mon, 12 Aug 2019 20:57:28 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -796,27 +688,27 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
       Content-Length:
-      - '287'
+      - '288'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9hODY4Nzk0OC1iYjg1LTRi
-        ZDktYTcxOC0xNTIzM2Y2NzQ2MjEvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTAy
-        VDIwOjI5OjAwLjA3MTgzM1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9jYWE2NjYzMy0xOWZhLTRi
+        ZWItODQ3ZC1iZGVjNzEzMzc1ODcvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTEy
+        VDIwOjU3OjI4Ljc2MjU2NloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2RlbGV0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA4LTAyVDIwOjI5OjAwLjE1Mzg0MVoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDgtMDJUMjA6Mjk6MDAuMjE1ODMzWiIsIm5vbl9m
+        YXJ0ZWRfYXQiOiIyMDE5LTA4LTEyVDIwOjU3OjI4Ljg2Mzc3NFoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDgtMTJUMjA6NTc6MjguOTMxMjI0WiIsIm5vbl9m
         YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvNmZkYWM3ZWQtNGI5My00MzZmLWE4MDUtYjM3MWRj
-        ZGRjNDJhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        YXBpL3YzL3dvcmtlcnMvZjZkNmVjNmEtM2EyYi00NTA2LWIwMWUtNmY3NWM4
+        NzA5ZjZjLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
         b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6W119
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:29:00 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:28 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/ansible/ansible/?base_path=Default_Organization/library/pulp3_Ansible_collection_1
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/?base_path=Default_Organization/library/pulp3_Ansible_collection_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -824,7 +716,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
+      - OpenAPI-Generator/0.2.0b2/ruby
       Accept:
       - application/json
       Authorization:
@@ -837,7 +729,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:29:00 GMT
+      - Mon, 12 Aug 2019 20:57:29 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -849,30 +741,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
       Content-Length:
-      - '336'
+      - '335'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvYW5z
-        aWJsZS9hbnNpYmxlL2Q4MjVmMWVhLWI4YjEtNGRjMy1hMWNmLTUxOGFiNTgy
-        NzUyNS8iLCJfY3JlYXRlZCI6IjIwMTktMDgtMDJUMjA6Mjg6NTkuNDE1MDM1
+        aWJsZS9hbnNpYmxlLzQzOTllOGY1LTExZGYtNDlmMy1iMmYyLTQyMGFhMWVi
+        Y2VmNy8iLCJfY3JlYXRlZCI6IjIwMTktMDgtMTJUMjA6NTc6MjcuOTY4OTEx
         WiIsImJhc2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkv
         cHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEiLCJjb250ZW50X2d1YXJkIjpu
         dWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1wdWxw
         M19BbnNpYmxlX2NvbGxlY3Rpb25fMSIsInJlcG9zaXRvcnkiOm51bGwsInJl
         cG9zaXRvcnlfdmVyc2lvbiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        YjJkZmEyNmMtZDJlYS00YzYxLWE5Y2YtMTJkNTkzMDkzNGFjL3ZlcnNpb25z
-        LzEvIiwibWF6ZXJfdXJsIjoiZGV2ZWwyLmJhbG1vcmEuZXhhbXBsZS5jb20v
-        cHVscF9hbnNpYmxlL2dhbGF4eS9EZWZhdWx0X09yZ2FuaXphdGlvbi9saWJy
-        YXJ5L3B1bHAzX0Fuc2libGVfY29sbGVjdGlvbl8xIn1dfQ==
+        NjQ1MzMwZDYtNjFhMC00NDdjLThmYTQtMTliZGZhOWM5OTgyL3ZlcnNpb25z
+        LzEvIiwibWF6ZXJfdXJsIjoiaHR0cDovL2xvY2FsaG9zdDoyNDgxNy9wdWxw
+        X2Fuc2libGUvZ2FsYXh5L0RlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkv
+        cHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEifV19
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:29:00 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:29 GMT
 - request:
     method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/ansible/ansible/d825f1ea-b8b1-4dc3-a1cf-518ab5827525/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/4399e8f5-11df-49f3-b2f2-420aa1ebcef7/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -880,7 +772,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b2.dev01564669083/ruby
+      - OpenAPI-Generator/0.2.0b2/ruby
       Accept:
       - application/json
       Authorization:
@@ -893,7 +785,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:29:00 GMT
+      - Mon, 12 Aug 2019 20:57:29 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -907,17 +799,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2EwZmMwMTYwLTU2NWEtNGZk
-        NS1iNTVhLWViMWUxZmVmMjU2ZC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBhMGI1Y2NlLWYzY2YtNGU2
+        My04OWMwLTgwOWIyNGI5OWM2ZS8ifQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:29:00 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:29 GMT
 - request:
     method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/b2dfa26c-d2ea-4c61-a9cf-12d5930934ac/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/645330d6-61a0-447c-8fa4-19bdfa9c9982/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -925,7 +817,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -938,7 +830,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:29:00 GMT
+      - Mon, 12 Aug 2019 20:57:29 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -952,17 +844,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2NiYTI2ZGU4LTM1ZDUtNDQ0
-        YS04ZjRlLTNhMTZlOTA1MzIwNi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2Y1ZDY0NWZmLTNkMjUtNGRi
+        Yy1hZDlkLWY5MDU3ZjVmM2Q1OS8ifQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:29:00 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:29 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/cba26de8-35d5-444a-8f4e-3a16e9053206/
+    uri: https://ansible-demo.samir.example.com/pulp/api/v3/tasks/f5d645ff-3d25-4dbc-ad9d-f9057f5f3d59/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -970,7 +862,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01564590949/ruby
+      - OpenAPI-Generator/3.0.0rc5.dev01565627917/ruby
       Accept:
       - application/json
       Authorization:
@@ -983,7 +875,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:29:01 GMT
+      - Mon, 12 Aug 2019 20:57:29 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -995,22 +887,22 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 ansible-demo.samir.example.com
       Content-Length:
       - '288'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9jYmEyNmRlOC0zNWQ1LTQ0
-        NGEtOGY0ZS0zYTE2ZTkwNTMyMDYvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTAy
-        VDIwOjI5OjAwLjc0NDEwOVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mNWQ2NDVmZi0zZDI1LTRk
+        YmMtYWQ5ZC1mOTA1N2Y1ZjNkNTkvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTEy
+        VDIwOjU3OjI5LjUyNDI2N1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5kZWxldGUiLCJzdGFy
-        dGVkX2F0IjoiMjAxOS0wOC0wMlQyMDoyOTowMC44NjI3NzlaIiwiZmluaXNo
-        ZWRfYXQiOiIyMDE5LTA4LTAyVDIwOjI5OjAwLjk0OTYyM1oiLCJub25fZmF0
+        dGVkX2F0IjoiMjAxOS0wOC0xMlQyMDo1NzoyOS42NTkxMTFaIiwiZmluaXNo
+        ZWRfYXQiOiIyMDE5LTA4LTEyVDIwOjU3OjI5Ljc1MDE1NVoiLCJub25fZmF0
         YWxfZXJyb3JzIjpbXSwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2Fw
-        aS92My93b3JrZXJzLzk0YWY4YTc3LWFiYmMtNDViOS1iNDU1LWI4ZGY1NzFm
-        ZDEyNS8iLCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9n
+        aS92My93b3JrZXJzL2Y2ZDZlYzZhLTNhMmItNDUwNi1iMDFlLTZmNzVjODcw
+        OWY2Yy8iLCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9n
         cmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdfQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:29:01 GMT
+  recorded_at: Mon, 12 Aug 2019 20:57:29 GMT
 recorded_with: VCR 3.0.3
