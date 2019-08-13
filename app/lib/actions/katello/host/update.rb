@@ -18,6 +18,15 @@ module Actions
 
             if host.subscription_facet
               consumer_params ||= host.subscription_facet.consumer_attributes
+
+              host_uuid = consumer_params.dig(:facts, 'dmi.system.uuid')
+              if ::Katello::Host::SubscriptionFacet.override_dmi_uuid?(host_uuid)
+                # if host reported a dmi uuid to treat as a duplicate, override it with the stored host param
+                override_value = host.subscription_facet.dmi_uuid_override&.value
+                override_value ||= host.subscription_facet.update_dmi_uuid_override&.value
+                consumer_params[:facts]['dmi.system.uuid'] = override_value
+              end
+
               cp_update = plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
             end
 

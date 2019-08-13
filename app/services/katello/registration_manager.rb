@@ -2,6 +2,102 @@ module Katello
   class RegistrationManager
     class << self
       private :new
+      delegate :propose_existing_hostname, :new_host_from_facts, to: Katello::Host::SubscriptionFacet
+
+      def determine_organization(content_view_environment, activation_key)
+        content_view_environment.try(:environment).try(:organization) || activation_key.try(:organization)
+      end
+
+      def determine_host_dmi_uuid(rhsm_params)
+        host_uuid = rhsm_params.dig(:facts, 'dmi.system.uuid')
+
+        if Katello::Host::SubscriptionFacet.override_dmi_uuid?(host_uuid)
+          return [SecureRandom.uuid, true]
+        end
+
+        [host_uuid, false]
+      end
+
+      def process_registration(rhsm_params, content_view_environment, activation_keys = [])
+        host_name = propose_existing_hostname(rhsm_params[:facts])
+        host_uuid, host_uuid_overridden = determine_host_dmi_uuid(rhsm_params)
+
+        rhsm_params[:facts]['dmi.system.uuid'] = host_uuid # ensure we find & validate against a potentially overridden UUID
+
+        organization = determine_organization(content_view_environment, activation_keys.first)
+
+        hosts = find_existing_hosts(host_name, host_uuid)
+
+        validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden)
+
+        host = hosts.first || new_host_from_facts(
+          rhsm_params[:facts],
+          organization,
+          Location.default_host_subscribe_location!
+        )
+        host.organization = organization unless host.organization
+
+        register_host(host, rhsm_params, content_view_environment, activation_keys)
+
+        if host_uuid_overridden
+          host.subscription_facet.update_dmi_uuid_override(host_uuid)
+        end
+
+        host
+      end
+
+      def dmi_uuid_fact_id
+        RhsmFactName.find_or_create_by(name: 'dmi::system::uuid').id
+      end
+
+      def dmi_uuid_allowed_dups
+        Katello::Host::SubscriptionFacet::DMI_UUID_ALLOWED_DUPS
+      end
+
+      def find_existing_hosts(host_name, host_uuid)
+        ::Host.unscoped.distinct.left_outer_joins(:fact_values)
+          .where("#{::Host.table_name}.name = ? OR (#{FactValue.table_name}.fact_name_id = ?
+          AND #{FactValue.table_name}.value = ? AND #{FactValue.table_name}.value NOT IN (?))", host_name, dmi_uuid_fact_id, host_uuid, dmi_uuid_allowed_dups)
+      end
+
+      def validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden = false)
+        return if hosts.empty?
+
+        hosts = hosts.where(organization_id: [organization.id, nil])
+        hosts_size = hosts.size
+
+        if hosts_size == 0 # not in the correct org
+          #TODO: http://projects.theforeman.org/issues/11532
+          registration_error("Host with name %{host_name} is currently registered to a different org, please migrate host to %{org_name}.",
+                             org_name: organization.name, host_name: host_name)
+        end
+
+        if hosts_size == 1
+          host = hosts.first
+
+          if host.name == host_name
+            unless host.build || host_uuid_overridden
+              found_uuid = host.fact_values.where(fact_name_id: dmi_uuid_fact_id).first
+              if found_uuid && found_uuid.value != host_uuid
+                registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
+              end
+            end
+
+            return true
+          end
+        end
+
+        hosts = hosts.where.not(name: host_name)
+        registration_error("The DMI UUID of this host (%{uuid}) matches other registered hosts: %{existing}", uuid: host_uuid, existing: joined_hostnames(hosts))
+      end
+
+      def registration_error(message, meta = {})
+        fail(Katello::Errors::RegistrationError, _(message) % meta)
+      end
+
+      def joined_hostnames(hosts)
+        hosts.pluck(:name).sort.join(', ')
+      end
 
       # options:
       #  * organization_destroy: destroy some data associated with host, but
