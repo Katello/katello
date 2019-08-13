@@ -2,6 +2,7 @@
 
 require "katello_test_helper"
 
+# rubocop:disable Metrics/ClassLength
 module Katello
   class Api::V2::ActivationKeysControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
@@ -386,24 +387,18 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:content_override, allowed_perms, denied_perms) do
-        put(:content_override, params: { :id => @activation_key.id, :content_label => 'some-content', :name => 'enabled', :value => 1 })
+        put(:content_override,
+            params: { id: @activation_key.id,
+                      content_overrides: [{:content_label => 'fedora', :name => "enabled", :value => true}]
+                    }
+           )
       end
     end
 
-    def test_content_override
-      ActivationKey.any_instance.expects(:set_content_overrides).returns(true)
-
-      put(:content_override, params: { :id => @activation_key.id, :content_override => {:content_label => 'some-content',
-                                                                                        :value => 1} })
-
-      assert_response :success
-      assert_template 'api/v2/activation_keys/show'
-    end
-
-    def test_content_override_bulk
-      overrides = [{:content_label => 'some-content', :name => "enabled", :value => true},
-                   {:content_label => 'some-content1', :value => 0},
-                   {:content_label => 'some-content3', :name => "mirrorlist", :remove => true}
+    def test_bulk_content_override
+      overrides = [{:content_label => 'fedora', :name => "enabled", :value => true},
+                   {:content_label => 'fedora', :value => 0},
+                   {:content_label => 'fedora', :name => "mirrorlist", :remove => true}
                   ]
 
       expected_content_labels = overrides.map { |o| o[:content_label] }
@@ -424,10 +419,20 @@ module Katello
       assert_template 'api/v2/activation_keys/show'
     end
 
-    def test_content_override_empty
-      put(:content_override, params: { :id => @activation_key.id, :content_override => {:content_label => 'some-content'} })
+    def test_bulk_content_override_non_existent_content_label_fails
+      overrides = [{:content_label => 'fedora', :name => "enabled", :value => true},
+                   {:content_label => 'fedora', :value => 0},
+                   {:content_label => 'croissant', :name => "mirrorlist", :remove => true},
+                   {:content_label => 'crepe', :name => "mirrorlist", :remove => true}
+                  ]
 
+      put(:content_override, params: { :id => @activation_key.id, :content_overrides => overrides })
+
+      response_body = JSON.parse(@response.body).with_indifferent_access
       assert_response 400
+      assert response_body[:errors].count > 0
+      assert_match "not found in the Organization", response_body[:displayMessage]
+      ["croissant", "crepe"].map { |label| assert response_body[:displayMessage].include? label }
     end
 
     def test_add_subscriptions_protected
@@ -455,3 +460,4 @@ module Katello
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
