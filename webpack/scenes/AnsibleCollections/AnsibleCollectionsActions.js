@@ -8,7 +8,7 @@ import {
 } from './AnsibleCollectionsConstants';
 import { apiError } from '../../move_to_foreman/common/helpers';
 
-export const getAnsibleCollections = (extendedParams = {}) => (dispatch) => {
+export const getAnsibleCollections = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: ANSIBLE_COLLECTIONS_REQUEST });
 
   const params = {
@@ -16,16 +16,15 @@ export const getAnsibleCollections = (extendedParams = {}) => (dispatch) => {
     ...propsToSnakeCase(extendedParams),
   };
 
-  return api
-    .get('/ansible_collections', {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: ANSIBLE_COLLECTIONS_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(ANSIBLE_COLLECTIONS_ERROR, result)));
+  try {
+    const { data } = await api.get('/ansible_collections', {}, params);
+    return dispatch({
+      type: ANSIBLE_COLLECTIONS_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(ANSIBLE_COLLECTIONS_ERROR, error));
+  }
 };
 
 export default getAnsibleCollections;
-

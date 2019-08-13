@@ -41,57 +41,60 @@ export const createSubscriptionParams = (extendedParams = {}) => ({
   ...propsToSnakeCase(extendedParams),
 });
 
-export const loadAvailableQuantities = (extendedParams = {}) => (dispatch) => {
+export const loadAvailableQuantities = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: SUBSCRIPTIONS_QUANTITIES_REQUEST });
 
   const params = createSubscriptionParams(extendedParams);
-  return api
-    .get(`/organizations/${orgId()}/upstream_subscriptions`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: SUBSCRIPTIONS_QUANTITIES_SUCCESS,
-        payload: selectSubscriptionsQuantitiesFromResponse(data),
-      });
-    })
-    .catch(result => dispatch(apiError(SUBSCRIPTIONS_QUANTITIES_FAILURE, result)));
+
+  try {
+    const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions`, {}, params);
+    return dispatch({
+      type: SUBSCRIPTIONS_QUANTITIES_SUCCESS,
+      payload: selectSubscriptionsQuantitiesFromResponse(data),
+    });
+  } catch (error) {
+    return dispatch(apiError(SUBSCRIPTIONS_QUANTITIES_FAILURE, error));
+  }
 };
 
-export const loadSubscriptions = (extendedParams = {}) => (dispatch) => {
+export const loadSubscriptions = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: SUBSCRIPTIONS_REQUEST });
 
   const params = createSubscriptionParams(extendedParams);
-  return api
-    .get('/subscriptions', {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: SUBSCRIPTIONS_SUCCESS,
-        response: data,
-        search: extendedParams.search,
-      });
-      const poolIds = filterRHSubscriptions(data.results).map(subs => subs.id);
-      if (poolIds.length > 0) {
-        dispatch(loadAvailableQuantities({ poolIds }));
-      }
-    })
-    .catch(result => dispatch(apiError(SUBSCRIPTIONS_FAILURE, result)));
+
+  try {
+    const { data } = await api.get('/subscriptions', {}, params);
+    const result = dispatch({
+      type: SUBSCRIPTIONS_SUCCESS,
+      response: data,
+      search: extendedParams.search,
+    });
+    const poolIds = filterRHSubscriptions(data.results).map(subs => subs.id);
+    if (poolIds.length > 0) {
+      dispatch(loadAvailableQuantities({ poolIds }));
+    }
+    return result;
+  } catch (error) {
+    return dispatch(apiError(SUBSCRIPTIONS_FAILURE, error));
+  }
 };
 
-export const updateQuantity = (quantities = {}) => (dispatch) => {
+export const updateQuantity = (quantities = {}) => async (dispatch) => {
   dispatch({ type: UPDATE_QUANTITY_REQUEST, quantities });
 
   const params = {
     pools: quantities,
   };
 
-  return api
-    .put(`/organizations/${orgId()}/upstream_subscriptions`, params)
-    .then(({ data }) => {
-      dispatch({
-        type: UPDATE_QUANTITY_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(UPDATE_QUANTITY_FAILURE, result)));
+  try {
+    const { data } = await api.put(`/organizations/${orgId()}/upstream_subscriptions`, params);
+    return dispatch({
+      type: UPDATE_QUANTITY_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(UPDATE_QUANTITY_FAILURE, error));
+  }
 };
 
 export const loadTableColumns = selectedColumns => (dispatch) => {
@@ -115,22 +118,22 @@ export const loadTableColumns = selectedColumns => (dispatch) => {
   });
 };
 
-export const deleteSubscriptions = poolIds => (dispatch) => {
+export const deleteSubscriptions = poolIds => async (dispatch) => {
   dispatch({ type: DELETE_SUBSCRIPTIONS_REQUEST });
 
   const params = {
     pool_ids: poolIds,
   };
 
-  return api
-    .delete(`/organizations/${(orgId())}/upstream_subscriptions`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: DELETE_SUBSCRIPTIONS_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(DELETE_SUBSCRIPTIONS_FAILURE, result)));
+  try {
+    const { data } = await api.delete(`/organizations/${(orgId())}/upstream_subscriptions`, {}, params);
+    return dispatch({
+      type: DELETE_SUBSCRIPTIONS_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(DELETE_SUBSCRIPTIONS_FAILURE, error));
+  }
 };
 
 export const updateSearchQuery = query => ({

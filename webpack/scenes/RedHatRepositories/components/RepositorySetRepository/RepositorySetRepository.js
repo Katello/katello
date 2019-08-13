@@ -10,56 +10,55 @@ import '../../index.scss';
 class RepositorySetRepository extends Component {
   constructor(props) {
     super(props);
-
     this.state = {};
-
-    this.repoForAction = () => {
-      const {
-        productId, contentId, arch, displayArch, releasever, label,
-      } = this.props;
-
-      const derivedArch = arch || displayArch;
-      return {
-        arch: derivedArch,
-        productId,
-        contentId,
-        releasever,
-        label,
-      };
-    };
-
-    this.setEnabled = () => {
-      this.props.setRepositoryEnabled(this.repoForAction());
-    };
-
-    this.reloadEnabledRepos = () => (
-      this.props.loadEnabledRepos({
-        ...this.props.enabledPagination,
-        search: this.props.enabledSearch,
-      }, true)
-    );
-
-    this.notifyEnabled = (data) => {
-      const repoName = data.output.repository.name;
-      window.tfm.toastNotifications.notify({
-        message: sprintf(__("Repository '%(repoName)s' has been enabled."), { repoName }),
-        type: 'success',
-      });
-    };
-
-    this.reloadAndNotify = (result) => {
-      if (result.success) {
-        this.reloadEnabledRepos()
-          .then(this.setEnabled)
-          .then(() => this.notifyEnabled(result.data));
-      }
-    };
-
-    this.enableRepository = () => {
-      this.props.enableRepository(this.repoForAction())
-        .then(this.reloadAndNotify);
-    };
   }
+
+  setEnabled = () => {
+    this.props.setRepositoryEnabled(this.repoForAction());
+  };
+
+  repoForAction = () => {
+    const {
+      productId, contentId, arch, displayArch, releasever, label,
+    } = this.props;
+
+    const derivedArch = arch || displayArch;
+    return {
+      arch: derivedArch,
+      productId,
+      contentId,
+      releasever,
+      label,
+    };
+  };
+
+  reloadEnabledRepos = () => (
+    this.props.loadEnabledRepos({
+      ...this.props.enabledPagination,
+      search: this.props.enabledSearch,
+    }, true)
+  );
+
+  notifyEnabled = (data) => {
+    const repoName = data.output.repository.name;
+    window.tfm.toastNotifications.notify({
+      message: sprintf(__("Repository '%(repoName)s' has been enabled."), { repoName }),
+      type: 'success',
+    });
+  };
+
+  reloadAndNotify = async (result) => {
+    if (result.success) {
+      await this.reloadEnabledRepos();
+      await this.setEnabled();
+      await this.notifyEnabled(result.data);
+    }
+  };
+
+  enableRepository = async () => {
+    await this.props.enableRepository(this.repoForAction());
+    this.reloadAndNotify();
+  };
 
   render() {
     const { displayArch, releasever, type } = this.props;

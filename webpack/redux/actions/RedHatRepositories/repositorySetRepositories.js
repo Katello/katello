@@ -31,7 +31,7 @@ export function normalizeContentSetRepositories(repos, contentId, productId) {
   }));
 }
 
-export const enableRepository = repository => (dispatch) => {
+export const enableRepository = repository => async (dispatch) => {
   const {
     productId, contentId, arch, releasever,
   } = repository;
@@ -46,35 +46,36 @@ export const enableRepository = repository => (dispatch) => {
   dispatch({ type: ENABLE_REPOSITORY_REQUEST, repository });
 
   const url = `/products/${productId}/repository_sets/${contentId}/enable`;
-  return api
-    .put(url, repoData)
-    .then(result => dispatch(apiSuccess(ENABLE_REPOSITORY_SUCCESS, result)))
-    .catch(result => dispatch(apiError(ENABLE_REPOSITORY_FAILURE, result, { repository })));
+  try {
+    const result = await api.put(url, repoData);
+    return dispatch(apiSuccess(ENABLE_REPOSITORY_SUCCESS, result));
+  } catch (error) {
+    return dispatch(apiError(ENABLE_REPOSITORY_FAILURE, error, { repository }));
+  }
 };
 
-const loadRepositorySetRepos = (contentId, productId) => (dispatch) => {
+const loadRepositorySetRepos = (contentId, productId) => async (dispatch) => {
   dispatch({
     type: REPOSITORY_SET_REPOSITORIES_REQUEST,
     contentId,
   });
 
-  api
-    .get(`/products/${productId}/repository_sets/${contentId}/available_repositories`)
-    .then(({ data }) => {
-      dispatch({
-        type: REPOSITORY_SET_REPOSITORIES_SUCCESS,
-        contentId,
-        productId,
-        results: data.results,
-      });
-    })
-    .catch(({ response: { data: error } }) => {
-      dispatch({
-        type: REPOSITORY_SET_REPOSITORIES_FAILURE,
-        contentId,
-        error,
-      });
+  try {
+    const { data } = await api.get(`/products/${productId}/repository_sets/${contentId}/available_repositories`);
+    return dispatch({
+      type: REPOSITORY_SET_REPOSITORIES_SUCCESS,
+      contentId,
+      productId,
+      results: data.results,
     });
+  } catch (response) {
+    const error = response && response.data && response.data.error;
+    return dispatch({
+      type: REPOSITORY_SET_REPOSITORIES_FAILURE,
+      contentId,
+      error,
+    });
+  }
 };
 
 loadRepositorySetRepos.propTypes = {

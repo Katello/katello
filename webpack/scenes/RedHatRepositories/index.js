@@ -100,7 +100,7 @@ RedHatRepositoriesPage.propTypes = {
     search: PropTypes.shape({}),
   }).isRequired,
   repositorySets: PropTypes.shape({
-    recommended: PropTypes.array,
+    recommended: PropTypes.bool,
     loading: PropTypes.bool,
     search: PropTypes.shape({}),
   }).isRequired,

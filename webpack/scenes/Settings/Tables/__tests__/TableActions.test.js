@@ -32,53 +32,53 @@ beforeEach(() => {
 });
 
 describe('table actions', () => {
-  it('creates TABLES_REQUEST with success', () => {
+  it('creates TABLES_REQUEST with success', async () => {
     mockRequest({
       url: '/api/v2/users/1/table_preferences',
       status: 200,
       response: requestSuccessResponse,
     });
-    return store.dispatch(loadTables())
-      .then(() => expect(store.getActions()).toEqual(getSuccessActions));
+    await store.dispatch(loadTables());
+    expect(store.getActions()).toEqual(getSuccessActions);
   });
-  it('creates TABLES_REQUEST with failure', () => {
+  it('creates TABLES_REQUEST with failure', async () => {
     mockRequest({
       url: '/api/v2/users/1/table_preferences',
       status: 403,
       response: accessDenied,
     });
-    return store.dispatch(loadTables())
-      .then(() => expect(store.getActions()).toEqual(getFailureActions));
+    await store.dispatch(loadTables());
+    expect(store.getActions()).toEqual(getFailureActions);
   });
 
-  it('creates SAVE_CREATE_TABLE and ends with success', () => {
+  it('creates SAVE_CREATE_TABLE and ends with success', async () => {
     const mock = new MockAdapter(axios);
     mock.onPost('/api/v2/users/1/table_preferences').reply(200, tableRecord);
 
-    return store.dispatch(createColumns())
-      .then(() => expect(store.getActions()).toEqual(createSuccessActions));
+    await store.dispatch(createColumns());
+    expect(store.getActions()).toEqual(createSuccessActions);
   });
 
-  it('creates CREATE_TABLE with failure', () => {
+  it('creates CREATE_TABLE with failure', async () => {
     const mock = new MockAdapter(axios);
     mock.onPost('/api/v2/users/1/table_preferences').reply(403, accessDenied);
 
-    return store.dispatch(createColumns({ name: 'Test', columns: [] }))
-      .then(() => expect(store.getActions()).toEqual(createFailureActions));
+    await store.dispatch(createColumns({ name: 'Test', columns: [] }));
+    expect(store.getActions()).toEqual(createFailureActions);
   });
 
-  it('creates UPDATE_TABLE and ends with success', () => {
+  it('creates UPDATE_TABLE and ends with success', async () => {
     const mock = new MockAdapter(axios);
     mock.onPut(`/api/v2/users/1/table_preferences/${testTableName}`).reply(200, tableRecord);
 
-    return store.dispatch(updateColumns(tableRecord))
-      .then(() => expect(store.getActions()).toEqual(updateSuccessActions));
+    await store.dispatch(updateColumns(tableRecord));
+    expect(store.getActions()).toEqual(updateSuccessActions);
   });
-  it('creates UPDATE_TABLE with failure', () => {
+  it('creates UPDATE_TABLE with failure', async () => {
     const mock = new MockAdapter(axios);
     mock.onPut(`/api/v2/users/1/table_preferences/${testTableName}`).reply(403, accessDenied);
 
-    return store.dispatch(updateColumns(tableRecord))
-      .then(() => expect(store.getActions()).toEqual(updateFailureActions));
+    await store.dispatch(updateColumns(tableRecord));
+    expect(store.getActions()).toEqual(updateFailureActions);
   });
 });

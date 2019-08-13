@@ -6,20 +6,18 @@ import {
 } from './AnsibleCollectionDetailsConstants';
 import { apiError } from '../../../move_to_foreman/common/helpers';
 
-export const getAnsibleCollectionDetails = ansibleCollectionId => (dispatch) => {
+export const getAnsibleCollectionDetails = ansibleCollectionId => async (dispatch) => {
   dispatch({ type: ANSIBLE_COLLECTION_DETAILS_REQUEST });
 
-  return api
-    .get(`/ansible_collections/${ansibleCollectionId}`)
-    .then(({ data }) => {
-      dispatch({
-        type: ANSIBLE_COLLECTION_DETAILS_SUCCESS,
-        response: data,
-      });
-    })
-    .catch((result) => {
-      dispatch(apiError(ANSIBLE_COLLECTION_DETAILS_ERROR, result));
+  try {
+    const { data } = await api.get(`/ansible_collections/${ansibleCollectionId}`);
+    return dispatch({
+      type: ANSIBLE_COLLECTION_DETAILS_SUCCESS,
+      response: data,
     });
+  } catch (error) {
+    return dispatch(apiError(ANSIBLE_COLLECTION_DETAILS_ERROR, error));
+  }
 };
 
 export default getAnsibleCollectionDetails;

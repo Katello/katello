@@ -17,11 +17,10 @@ import {
 } from '../../consts';
 
 // eslint-disable-next-line import/prefer-default-export
-export const loadRepositorySets = (extendedParams = {}) => (dispatch, getState) => {
-  const { recommended } = getState().katello.redHatRepositories.sets;
-
+export const loadRepositorySets = (extendedParams = {}) => async (dispatch, getState) => {
   dispatch({ type: REPOSITORY_SETS_REQUEST, params: extendedParams });
-
+  // Assemble params
+  const { recommended } = getState().katello.redHatRepositories.sets;
   const searchParams = extendedParams.search || {};
   const search = joinSearchQueries([
     repoTypeFilterToSearchQuery(searchParams.filters || []),
@@ -29,30 +28,27 @@ export const loadRepositorySets = (extendedParams = {}) => (dispatch, getState) 
     searchParams.query,
     recommended ? recommendedRepositorySetsQuery : '',
   ]);
-
   const params = {
     ...{ organization_id: orgId(), with_active_subscription: true },
     ...propsToSnakeCase(extendedParams),
     search,
   };
 
-  api
-    .get('/repository_sets', {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: REPOSITORY_SETS_SUCCESS,
-        payload: {
-          response: normalizeRepositorySets(data),
-          search: searchParams,
-        },
-      });
-    })
-    .catch((result) => {
-      dispatch({
-        type: REPOSITORY_SETS_FAILURE,
-        payload: result,
-      });
+  try {
+    const { data } = await api.get('/repository_sets', {}, params);
+    return dispatch({
+      type: REPOSITORY_SETS_SUCCESS,
+      payload: {
+        response: normalizeRepositorySets(data),
+        search: searchParams,
+      },
     });
+  } catch (error) {
+    return dispatch({
+      type: REPOSITORY_SETS_FAILURE,
+      payload: error,
+    });
+  }
 };
 
 export const updateRecommendedRepositorySets = value => (dispatch, getState) => {

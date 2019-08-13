@@ -12,7 +12,7 @@ import {
   SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE,
 } from './UpstreamSubscriptionsContstants';
 
-export const loadUpstreamSubscriptions = (extendedParams = {}) => (dispatch) => {
+export const loadUpstreamSubscriptions = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: UPSTREAM_SUBSCRIPTIONS_REQUEST });
 
   const params = {
@@ -20,34 +20,34 @@ export const loadUpstreamSubscriptions = (extendedParams = {}) => (dispatch) => 
     ...propsToSnakeCase(extendedParams),
   };
 
-  return api
-    .get(`/organizations/${orgId()}/upstream_subscriptions`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: UPSTREAM_SUBSCRIPTIONS_SUCCESS,
-        response: data,
-        search: extendedParams.search,
-      });
-    })
-    .catch(result => dispatch(apiError(UPSTREAM_SUBSCRIPTIONS_FAILURE, result)));
+  try {
+    const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions`, {}, params);
+    return dispatch({
+      type: UPSTREAM_SUBSCRIPTIONS_SUCCESS,
+      response: data,
+      search: extendedParams.search,
+    });
+  } catch (error) {
+    return dispatch(apiError(UPSTREAM_SUBSCRIPTIONS_FAILURE, error));
+  }
 };
 
-export const saveUpstreamSubscriptions = upstreamSubscriptions => (dispatch) => {
+export const saveUpstreamSubscriptions = upstreamSubscriptions => async (dispatch) => {
   dispatch({ type: SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST });
 
   const params = {
     ...propsToSnakeCase(upstreamSubscriptions),
   };
 
-  return api
-    .post(`/organizations/${orgId()}/upstream_subscriptions`, params)
-    .then(({ data }) => {
-      dispatch({
-        type: SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE, result)));
+  try {
+    const { data } = await api.post(`/organizations/${orgId()}/upstream_subscriptions`, params);
+    return dispatch({
+      type: SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE, error));
+  }
 };
 
 export default loadUpstreamSubscriptions;

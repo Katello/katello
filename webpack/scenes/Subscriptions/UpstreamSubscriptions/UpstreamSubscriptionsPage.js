@@ -78,7 +78,6 @@ class UpstreamSubscriptionsPage extends Component {
     );
   }
 
-
   quantityValidationInput = (pool) => {
     if (!pool || pool.updatedQuantity === undefined) return null;
     if (this.quantityValidation(pool)[0]) {
@@ -91,7 +90,7 @@ class UpstreamSubscriptionsPage extends Component {
     this.state.selectedRows.length &&
     this.state.selectedRows.every(pool => this.quantityValidation(pool)[0]);
 
-  saveUpstreamSubscriptions = () => {
+  saveUpstreamSubscriptions = async () => {
     const updatedPools = _.map(
       this.state.selectedRows,
       pool => ({ ...pool, quantity: parseInt(pool.updatedQuantity, 10) }),
@@ -99,24 +98,23 @@ class UpstreamSubscriptionsPage extends Component {
 
     const updatedSubscriptions = { pools: updatedPools };
 
-    this.props.saveUpstreamSubscriptions(updatedSubscriptions).then(() => {
-      const { task } = this.props.upstreamSubscriptions;
+    await this.props.saveUpstreamSubscriptions(updatedSubscriptions);
+    const { task } = this.props.upstreamSubscriptions;
 
-      // TODO: could probably factor this out into a task response component
-      if (task) {
-        const message = (
-          <span>
-            <span>{__('Subscriptions have been saved and are being updated. ')}</span>
-            <a href={urlBuilder('foreman_tasks/tasks', '', task.id)}>
-              {__('Click here to go to the tasks page for the task.')}
-            </a>
-          </span>
-        );
+    // TODO: could probably factor this out into a task response component
+    if (task) {
+      const message = (
+        <span>
+          <span>{__('Subscriptions have been saved and are being updated. ')}</span>
+          <a href={urlBuilder('foreman_tasks/tasks', '', task.id)}>
+            {__('Click here to go to the tasks page for the task.')}
+          </a>
+        </span>
+      );
 
-        window.tfm.toastNotifications.notify({ message, type: 'success' });
-        this.props.history.push('/subscriptions');
-      }
-    });
+      window.tfm.toastNotifications.notify({ message, type: 'success' });
+      this.props.history.push('/subscriptions');
+    }
   };
 
   loadData() {

@@ -18,7 +18,7 @@ import {
   MANIFEST_HISTORY_FAILURE,
 } from './ManifestConstants';
 
-export const uploadManifest = file => (dispatch) => {
+export const uploadManifest = file => async (dispatch) => {
   dispatch({ type: UPLOAD_MANIFEST_REQUEST });
 
   const formData = new FormData();
@@ -28,69 +28,69 @@ export const uploadManifest = file => (dispatch) => {
     'Content-Type': 'multipart/form-data',
   };
 
-  return api
-    .post(`/organizations/${orgId()}/subscriptions/upload`, formData, config)
-    .then(({ data }) => {
-      dispatch({
-        type: UPLOAD_MANIFEST_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(UPLOAD_MANIFEST_FAILURE, result)));
+  try {
+    const { data } = await api.post(`/organizations/${orgId()}/subscriptions/upload`, formData, config);
+    return dispatch({
+      type: UPLOAD_MANIFEST_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(UPLOAD_MANIFEST_FAILURE, error));
+  }
 };
 
-export const refreshManifest = (extendedParams = {}) => (dispatch) => {
+export const refreshManifest = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: REFRESH_MANIFEST_REQUEST });
 
   const params = {
     ...propsToSnakeCase(extendedParams),
   };
 
-  return api
-    .put(`/organizations/${orgId()}/subscriptions/refresh_manifest`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: REFRESH_MANIFEST_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(REFRESH_MANIFEST_FAILURE, result)));
+  try {
+    const { data } = await api.put(`/organizations/${orgId()}/subscriptions/refresh_manifest`, {}, params);
+    return dispatch({
+      type: REFRESH_MANIFEST_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(REFRESH_MANIFEST_FAILURE, error));
+  }
 };
 
-export const deleteManifest = (extendedParams = {}) => (dispatch) => {
+export const deleteManifest = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: DELETE_MANIFEST_REQUEST });
 
   const params = {
     ...propsToSnakeCase(extendedParams),
   };
 
-  return api
-    .post(`/organizations/${orgId()}/subscriptions/delete_manifest`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: DELETE_MANIFEST_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(DELETE_MANIFEST_FAILURE, result)));
+  try {
+    const { data } = await api.post(`/organizations/${orgId()}/subscriptions/delete_manifest`, {}, params);
+    return dispatch({
+      type: DELETE_MANIFEST_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(DELETE_MANIFEST_FAILURE, error));
+  }
 };
 
-export const loadManifestHistory = (extendedParams = {}) => (dispatch) => {
+export const loadManifestHistory = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: MANIFEST_HISTORY_REQUEST });
 
   const params = {
     ...propsToSnakeCase(extendedParams),
   };
 
-  return api
-    .get(`/organizations/${orgId()}/subscriptions/manifest_history`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: MANIFEST_HISTORY_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(MANIFEST_HISTORY_FAILURE, result)));
+  try {
+    const { data } = await api.get(`/organizations/${orgId()}/subscriptions/manifest_history`, {}, params);
+    return dispatch({
+      type: MANIFEST_HISTORY_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(MANIFEST_HISTORY_FAILURE, error));
+  }
 };
 
 export default loadManifestHistory;

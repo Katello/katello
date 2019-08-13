@@ -10,55 +10,54 @@ import EnabledRepositoryContent from './EnabledRepositoryContent';
 class EnabledRepository extends Component {
   constructor(props) {
     super(props);
-
-    this.repoForAction = () => {
-      const {
-        productId, contentId, arch, releasever, name, type,
-      } = this.props;
-
-      return {
-        contentId,
-        productId,
-        name,
-        type,
-        arch,
-        releasever,
-      };
-    };
-
-    this.setDisabled = () => {
-      this.props.setRepositoryDisabled(this.repoForAction());
-    };
-
-    this.reload = () => (
-      this.props.loadEnabledRepos({
-        ...this.props.pagination,
-        search: this.props.search,
-      }, true)
-    );
-
-    this.notifyDisabled = () => {
-      window.tfm.toastNotifications.notify({
-        message: sprintf(__("Repository '%(repoName)s' has been disabled."), { repoName: this.props.name }),
-        type: 'success',
-      });
-    };
-
-    this.reloadAndNotify = (result) => {
-      if (result.success) {
-        this.reload()
-          .then(this.setDisabled)
-          .then(this.notifyDisabled);
-      }
-    };
-
-    this.disableRepository = () => {
-      this.props.disableRepository(this.repoForAction())
-        .then(this.reloadAndNotify);
-    };
-
     this.disableTooltipId = `disable-${props.id}`;
   }
+
+  setDisabled = () => {
+    this.props.setRepositoryDisabled(this.repoForAction());
+  };
+
+  repoForAction = () => {
+    const {
+      productId, contentId, arch, releasever, name, type,
+    } = this.props;
+
+    return {
+      contentId,
+      productId,
+      name,
+      type,
+      arch,
+      releasever,
+    };
+  };
+
+  reload = () => (
+    this.props.loadEnabledRepos({
+      ...this.props.pagination,
+      search: this.props.search,
+    }, true)
+  );
+
+  notifyDisabled = () => {
+    window.tfm.toastNotifications.notify({
+      message: sprintf(__("Repository '%(repoName)s' has been disabled."), { repoName: this.props.name }),
+      type: 'success',
+    });
+  };
+
+  reloadAndNotify = async (result) => {
+    if (result && result.success) {
+      await this.reload();
+      await this.setDisabled();
+      await this.notifyDisabled();
+    }
+  };
+
+  disableRepository = async () => {
+    await this.props.disableRepository(this.repoForAction());
+    this.reloadAndNotify();
+  };
 
   render() {
     const {
