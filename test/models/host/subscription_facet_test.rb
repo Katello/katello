@@ -234,7 +234,6 @@ module Katello
       assert_equal '6', host.operatingsystem.minor
     end
 
-
     def test_update_foreman_facts_with_no_centos_different_major_and_no_minor_version
       host.operatingsystem = ::Operatingsystem.create(
         name: 'CentOS',
