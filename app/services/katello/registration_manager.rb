@@ -87,7 +87,8 @@ module Katello
           end
         end
 
-        registration_error("Please unregister or remove hosts which match this host before registering: %{existing}", existing: joined_hostnames(hosts))
+        hosts = hosts.where.not(name: host_name)
+        registration_error("The DMI UUID of this host (%{uuid}) matches other registered hosts: %{existing}", uuid: host_uuid, existing: joined_hostnames(hosts))
       end
 
       def registration_error(message, meta = {})

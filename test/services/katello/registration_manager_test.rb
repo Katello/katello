@@ -51,7 +51,7 @@ module Katello
         def test_multiple_hosts
           assert ::Host.all.size > 1
           error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(::Host.all, @org, nil, nil) }
-          assert_match(/match this host/, error.message)
+          assert_match(/matches other registered/, error.message)
         end
 
         def test_new_host_existing_uuid
@@ -59,7 +59,7 @@ module Katello
           FactValue.create(value: existing_uuid, host: @host, fact_name: @uuid_fact_name)
 
           error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, 'new_host_name', existing_uuid) }
-          assert_match(/match this host/, error.message)
+          assert_match(/matches other registered/, error.message)
         end
 
         def test_existing_host_mismatch_uuid
