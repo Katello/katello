@@ -19,22 +19,22 @@ beforeEach(() => {
 
 describe('product actions', () => {
   describe('loadProducts', () => {
-    it('handles failed PRODUCTS_REQUEST', () => {
+    it('handles failed PRODUCTS_REQUEST', async () => {
       mockErrorRequest({
         url: '/katello/api/v2/organizations/1/products/',
         status: 422,
       });
-      return store.dispatch(loadProducts())
-        .then(() => expect(store.getActions()).toEqual(failureActions));
+      await store.dispatch(loadProducts());
+      expect(store.getActions()).toEqual(failureActions);
     });
 
-    it('handles successful PRODUCTS_REQUEST', () => {
+    it('handles successful PRODUCTS_REQUEST', async () => {
       mockRequest({
         url: '/katello/api/v2/organizations/1/products/',
         response: requestSuccessResponse,
       });
-      return store.dispatch(loadProducts())
-        .then(() => expect(store.getActions()).toEqual(successActions));
+      await store.dispatch(loadProducts());
+      expect(store.getActions()).toEqual(successActions);
     });
   });
 });

@@ -22,28 +22,27 @@ describe('module stream actions', () => {
   describe('getModuleStreams', () => {
     it(
       'creates MODULE_STREAMS_REQUEST and then fails with 500 on bad request',
-      () => {
+      async () => {
         mockErrorRequest({
           url: endpoint,
         });
-        return store.dispatch(getModuleStreams())
-          .then(() => expect(store.getActions())
-            .toEqual(moduleStreamsFailureActions));
+        await store.dispatch(getModuleStreams());
+        expect(store.getActions())
+          .toEqual(moduleStreamsFailureActions);
       },
     );
 
     it(
       'creates MODULE_STREAMS_REQUEST and then return successfully',
-      () => {
+      async () => {
         mockRequest({
           url: endpoint,
           response: results,
         });
-        return store.dispatch(getModuleStreams())
-          .then(() => expect(store.getActions())
-            .toEqual(moduleStreamsSuccessActions));
+        await store.dispatch(getModuleStreams());
+        expect(store.getActions())
+          .toEqual(moduleStreamsSuccessActions);
       },
     );
   });
 });
-

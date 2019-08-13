@@ -24,14 +24,6 @@ import {
 import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.uploadManifest = this.uploadManifest.bind(this);
-    this.deleteManifest = this.deleteManifest.bind(this);
-    this.refreshManifest = this.refreshManifest.bind(this);
-  }
-
   componentDidMount() {
     this.props.resetTasks();
     this.props.loadSetting('content_disconnected');
@@ -101,7 +93,7 @@ class SubscriptionsPage extends Component {
     return disabledReason;
   }
 
-  pollTasks() {
+  async pollTasks() {
     const { pollBulkSearch, organization } = this.props;
 
     if (organization && organization.owner_details) {
@@ -114,51 +106,53 @@ class SubscriptionsPage extends Component {
 
     this.props.loadSetting('content_disconnected');
     this.props.loadSubscriptions();
-    this.props.loadTables().then(() => {
-      const { subscriptionTableSettings, loadTableColumns } = this.props;
-      loadTableColumns(subscriptionTableSettings);
-    });
+    await this.props.loadTables();
+    const { subscriptionTableSettings, loadTableColumns } = this.props;
+    loadTableColumns(subscriptionTableSettings);
   }
 
-  handleDoneTask(taskToPoll) {
+  async handleDoneTask(taskToPoll) {
     const POLL_TASK_INTERVAL = 5000;
     const { pollTaskUntilDone, loadSubscriptions, organization } = this.props;
 
-    pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL, organization.id)
-      .then((task) => {
-        renderTaskFinishedToast(task);
-        loadSubscriptions();
-        this.setState({ pollingATask: false });
-      });
+    const task = await pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL, organization.id);
+    renderTaskFinishedToast(task);
+    loadSubscriptions();
+    this.setState({ pollingATask: false });
   }
 
-  manifestAction(callback, file = undefined) {
-    const { openTaskModal } = this.props;
-
-    openTaskModal();
-
+  startManifestTask = () => {
+    this.props.openTaskModal();
     this.setState({
       pollingATask: true,
     });
-    callback(file)
-      .then(() => renderTaskStartedToast(this.props.taskDetails))
-      .then(() =>
-        setTimeout(() => this.props.bulkSearch({
-          action: `organization '${this.props.organization.owner_details.displayName}'`,
-          result: 'pending',
-          label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-        })), 100);
-  }
-  uploadManifest = (file) => {
-    this.manifestAction(this.props.uploadManifest, file);
   };
 
-  deleteManifest = () => {
-    this.manifestAction(this.props.deleteManifest);
+  cleanUpManifestTask = async () => {
+    await renderTaskStartedToast(this.props.taskDetails);
+    setTimeout(() => this.props.bulkSearch({
+      action: `organization '${this.props.organization.owner_details.displayName}'`,
+      result: 'pending',
+      label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
+    }), 100);
   };
 
-  refreshManifest = () => {
-    this.manifestAction(this.props.refreshManifest);
+  uploadManifest = async (file) => {
+    this.startManifestTask();
+    await this.props.uploadManifest(file);
+    this.cleanUpManifestTask();
+  };
+
+  deleteManifest = async () => {
+    this.startManifestTask();
+    await this.props.deleteManifest();
+    this.cleanUpManifestTask();
+  };
+
+  refreshManifest = async () => {
+    this.startManifestTask();
+    await this.props.refreshManifest();
+    this.cleanUpManifestTask();
   };
 
   render() {

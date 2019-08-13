@@ -8,23 +8,22 @@ import {
 } from './ModuleStreamsConstants';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
 
-export const getModuleStreams = (extendedParams = {}) => (dispatch) => {
+export const getModuleStreams = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: MODULE_STREAMS_REQUEST });
 
   const params = {
     organization_id: orgId(),
     ...propsToSnakeCase(extendedParams),
   };
-
-  return api
-    .get('/module_streams', {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: MODULE_STREAMS_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(MODULE_STREAMS_FAILURE, result)));
+  try {
+    const { data } = await api.get('/module_streams', {}, params);
+    return dispatch({
+      type: MODULE_STREAMS_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(MODULE_STREAMS_FAILURE, error));
+  }
 };
 
 export default getModuleStreams;

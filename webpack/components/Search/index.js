@@ -19,7 +19,7 @@ class Search extends Component {
     this.onInputUpdate();
   }
 
-  onInputUpdate(searchTerm = '') {
+  async onInputUpdate(searchTerm = '') {
     const items = this.state.items.filter(({ text }) => stringIncludes(text, searchTerm));
 
     if (items.length !== this.state.items.length) {
@@ -34,12 +34,11 @@ class Search extends Component {
     ];
 
     if (autoCompleteParams[0] !== '') {
-      api.get(...autoCompleteParams).then(({ data }) => {
-        this.setState({
-          items: data.filter(({ error }) => !error).map(({ label }) => ({
-            text: label.trim(),
-          })),
-        });
+      const { data } = await api.get(...autoCompleteParams);
+      this.setState({
+        items: data.filter(({ error }) => !error).map(({ label }) => ({
+          text: label.trim(),
+        })),
       });
     }
   }

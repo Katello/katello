@@ -39,87 +39,87 @@ describe('manifest actions', () => {
   describe('creates GET_MANIFEST_HISTORY_REQUEST', () => {
     const url = '/katello/api/v2/organizations/1/subscriptions/manifest_history';
 
-    it('and then fails with 422', () => {
+    it('and then fails with 422', async () => {
       mockErrorRequest({
         url,
         status: 422,
       });
 
-      return store.dispatch(loadManifestHistory())
-        .then(() => expect(store.getActions()).toEqual(manifestHistoryFailureActions));
+      await store.dispatch(loadManifestHistory());
+      expect(store.getActions()).toEqual(manifestHistoryFailureActions);
     });
 
-    it('and ends with success', () => {
+    it('and ends with success', async () => {
       mockApi.onGet(url).reply(200, manifestHistorySuccessResponse);
 
-      return store.dispatch(loadManifestHistory())
-        .then(() => expect(store.getActions()).toEqual(manifestHistorySuccessActions));
+      await store.dispatch(loadManifestHistory());
+      expect(store.getActions()).toEqual(manifestHistorySuccessActions);
     });
   });
 
   describe('creates UPLOAD_MANIFEST_REQUEST', () => {
     const url = '/katello/api/v2/organizations/1/subscriptions/upload';
 
-    it('and then fails with 422', () => {
+    it('and then fails with 422', async () => {
       mockErrorRequest({
         url,
         status: 422,
         method: 'POST',
       });
 
-      return store.dispatch(uploadManifest())
-        .then(() => expect(store.getActions()).toEqual(uploadManifestFailureActions));
+      await store.dispatch(uploadManifest());
+      expect(store.getActions()).toEqual(uploadManifestFailureActions);
     });
 
-    it('and ends with success', () => {
+    it('and ends with success', async () => {
       mockApi.onPost(url).reply(200, taskSuccessResponse);
 
-      return store.dispatch(uploadManifest())
-        .then(() => expect(store.getActions()).toEqual(uploadManifestSuccessActions));
+      await store.dispatch(uploadManifest());
+      expect(store.getActions()).toEqual(uploadManifestSuccessActions);
     });
   });
 
   describe('creates REFRESH_MANIFEST_REQUEST', () => {
     const url = '/katello/api/v2/organizations/1/subscriptions/refresh_manifest';
 
-    it('and then fails with 422', () => {
+    it('and then fails with 422', async () => {
       mockErrorRequest({
         url,
         status: 422,
         method: 'PUT',
       });
 
-      return store.dispatch(refreshManifest())
-        .then(() => expect(store.getActions()).toEqual(refreshManifestFailureActions));
+      await store.dispatch(refreshManifest());
+      expect(store.getActions()).toEqual(refreshManifestFailureActions);
     });
 
-    it('and ends with success', () => {
+    it('and ends with success', async () => {
       mockApi.onPut(url).reply(200, taskSuccessResponse);
 
-      return store.dispatch(refreshManifest())
-        .then(() => expect(store.getActions()).toEqual(refreshManifestSuccessActions));
+      await store.dispatch(refreshManifest());
+      expect(store.getActions()).toEqual(refreshManifestSuccessActions);
     });
   });
 
   describe('creates DELETE_MANIFEST_REQUEST', () => {
     const url = '/katello/api/v2/organizations/1/subscriptions/delete_manifest';
 
-    it('and then fails with 422', () => {
+    it('and then fails with 422', async () => {
       mockErrorRequest({
         url,
         status: 422,
         method: 'POST',
       });
 
-      return store.dispatch(deleteManifest())
-        .then(() => expect(store.getActions()).toEqual(deleteManifestFailureActions));
+      await store.dispatch(deleteManifest());
+      expect(store.getActions()).toEqual(deleteManifestFailureActions);
     });
 
-    it('and ends with success', () => {
+    it('and ends with success', async () => {
       mockApi.onPost(url).reply(200, taskSuccessResponse);
 
-      return store.dispatch(deleteManifest())
-        .then(() => expect(store.getActions()).toEqual(deleteManifestSuccessActions));
+      await store.dispatch(deleteManifest());
+      expect(store.getActions()).toEqual(deleteManifestSuccessActions);
     });
   });
 });

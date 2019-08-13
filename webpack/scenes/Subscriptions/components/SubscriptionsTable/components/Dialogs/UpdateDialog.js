@@ -17,20 +17,20 @@ const UpdateDialog = ({
   enableEditing,
 }) => {
   const quantityLength = Object.keys(updatedQuantity).length;
-  const confirmEdit = () => {
+  const confirmEdit = async () => {
     showUpdateConfirm(false);
     if (quantityLength > 0) {
-      updateQuantity(buildPools(updatedQuantity))
-        .then(() =>
-          bulkSearch({
-            action: `organization '${organization.owner_details.displayName}'`,
-            result: 'pending',
-            label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-          }))
-        .then(() => renderTaskStartedToast(task));
+      await updateQuantity(buildPools(updatedQuantity));
+      await bulkSearch({
+        action: `organization '${organization.owner_details.displayName}'`,
+        result: 'pending',
+        label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
+      });
+      renderTaskStartedToast(task);
     }
     enableEditing(false);
   };
+
   return (
     <MessageDialog
       show={show}

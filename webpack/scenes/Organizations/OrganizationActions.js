@@ -11,54 +11,49 @@ import {
   SAVE_ORGANIZATION_FAILURE,
 } from './OrganizationConstants';
 
-export const loadOrganization = (extendedParams = {}) => (dispatch) => {
+export const loadOrganization = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: GET_ORGANIZATION_REQUEST });
 
   const params = {
     ...propsToSnakeCase(extendedParams),
   };
 
-  return api
-    .get(`/organizations/${orgId()}`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: GET_ORGANIZATION_SUCCESS,
-        response: data,
-      });
-    })
-    .catch((result) => {
-      dispatch({
-        type: GET_ORGANIZATION_FAILURE,
-        result,
-      });
+  try {
+    const { data } = await api.get(`/organizations/${orgId()}`, {}, params);
+    return dispatch({
+      type: GET_ORGANIZATION_SUCCESS,
+      response: data,
     });
+  } catch (error) {
+    return dispatch({
+      type: GET_ORGANIZATION_FAILURE,
+      error,
+    });
+  }
 };
 
-export const saveOrganization = (extendedParams = {}) => (dispatch) => {
+export const saveOrganization = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: SAVE_ORGANIZATION_REQUEST });
 
   const params = {
     ...{ id: orgId() },
     ...propsToSnakeCase(extendedParams),
   };
-
-  return api
-    .put(`/organizations/${orgId()}`, params)
-    .then(({ data }) => {
-      dispatch({
-        type: SAVE_ORGANIZATION_SUCCESS,
-        response: data,
-      });
-
-      // TODO: Necessary because of https://projects.theforeman.org/issues/26420
-      dispatch(loadOrganization());
-    })
-    .catch((result) => {
-      dispatch({
-        type: SAVE_ORGANIZATION_FAILURE,
-        result,
-      });
+  try {
+    const { data } = await api.put(`/organizations/${orgId()}`, params);
+    const result = dispatch({
+      type: SAVE_ORGANIZATION_SUCCESS,
+      response: data,
     });
+    // TODO: Necessary because of https://projects.theforeman.org/issues/26420
+    dispatch(loadOrganization());
+    return result;
+  } catch (error) {
+    return dispatch({
+      type: SAVE_ORGANIZATION_FAILURE,
+      result: error,
+    });
+  }
 };
 
 export default loadOrganization;

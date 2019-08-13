@@ -22,28 +22,27 @@ describe('ansible collections actions', () => {
   describe('getAnsibleCollections', () => {
     it(
       'creates ANSIBLE_COLLECTIONS_REQUEST and then fails with 500 on bad request',
-      () => {
+      async () => {
         mockErrorRequest({
           url: endpoint,
         });
-        return store.dispatch(getAnsibleCollections())
-          .then(() => expect(store.getActions())
-            .toEqual(ansibleCollectionsErrorActions));
+        await store.dispatch(getAnsibleCollections());
+        expect(store.getActions())
+          .toEqual(ansibleCollectionsErrorActions);
       },
     );
 
     it(
       'creates ANSIBLE_COLLECTIONS_REQUEST and then return successfully',
-      () => {
+      async () => {
         mockRequest({
           url: endpoint,
           response: results,
         });
-        return store.dispatch(getAnsibleCollections())
-          .then(() => expect(store.getActions())
-            .toEqual(ansibleCollectionsSuccessActions));
+        await store.dispatch(getAnsibleCollections());
+        expect(store.getActions())
+          .toEqual(ansibleCollectionsSuccessActions);
       },
     );
   });
 });
-

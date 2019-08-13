@@ -7,35 +7,33 @@ import {
   GET_ORGANIZATIONS_LIST_REQUEST,
 } from '../../redux/consts';
 
-export const getOrganiztionsList = () => (dispatch) => {
+export const getOrganiztionsList = () => async (dispatch) => {
   dispatch({ type: GET_ORGANIZATIONS_LIST_REQUEST });
-  foremanApi
-    .get('/organizations')
-    .then(({ data }) => {
-      dispatch({
-        type: GET_ORGANIZATIONS_LIST_SUCCESS,
-        payload: data,
-      });
-    })
-    .catch((result) => {
-      dispatch({
-        type: GET_ORGANIZATIONS_LIST_FAILURE,
-        payload: result,
-      });
+  try {
+    const { data } = await foremanApi.get('/organizations');
+    return dispatch({
+      type: GET_ORGANIZATIONS_LIST_SUCCESS,
+      payload: data,
     });
+  } catch (error) {
+    return dispatch({
+      type: GET_ORGANIZATIONS_LIST_FAILURE,
+      payload: error,
+    });
+  }
 };
 
-export const changeCurrentOrganization = orgID => dispatch => foremanEndpoint
-  .get(`organizations/${orgID}/select`)
-  .then(() => {
-    dispatch({
+export const changeCurrentOrganization = orgID => async (dispatch) => {
+  try {
+    await foremanEndpoint.get(`organizations/${orgID}/select`);
+    return dispatch({
       type: CHANGE_CURRENT_ORGANIZATION_SUCCESS,
       payload: orgID,
     });
-  })
-  .catch(() => {
-    dispatch({
+  } catch (e) {
+    return dispatch({
       type: CHANGE_CURRENT_ORGANIZATION_FAILURE,
       payload: orgID,
     });
-  });
+  }
+};

@@ -7,18 +7,18 @@ import {
 } from './ProductConstants';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
 
-export const loadProducts = (params = {}) => (dispatch) => {
+export const loadProducts = (params = {}) => async (dispatch) => {
   dispatch({ type: PRODUCTS_REQUEST });
 
-  return api
-    .get(`/organizations/${orgId()}/products/`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: PRODUCTS_SUCCESS,
-        response: data,
-      });
-    })
-    .catch(result => dispatch(apiError(PRODUCTS_FAILURE, result)));
+  try {
+    const { data } = await api.get(`/organizations/${orgId()}/products/`, {}, params);
+    return dispatch({
+      type: PRODUCTS_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(PRODUCTS_FAILURE, error));
+  }
 };
 
 export default loadProducts;

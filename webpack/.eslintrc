@@ -11,7 +11,8 @@
   "plugins": [
     "jest",
     "react",
-    "babel"
+    "babel",
+    "promise"
   ],
   "parser": "babel-eslint",
   "rules": {
@@ -23,6 +24,8 @@
     "jsx-a11y/anchor-is-valid": [ "error", {
       "components": [ "Link", "LinkContainer" ],
       "specialLink": [ "to" ]
-    }]
+    }],
+    "promise/prefer-await-to-then": "error",
+    "promise/prefer-await-to-callbacks": "error"
   }
 }

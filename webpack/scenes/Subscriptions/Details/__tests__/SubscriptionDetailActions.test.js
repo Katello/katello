@@ -22,25 +22,25 @@ describe('subscription detail actions', () => {
   describe('loadSubscriptionDetails', () => {
     it(
       'creates SUBSCRIPTION_DETAILS_REQUEST and then fails with 500',
-      () => {
+      async () => {
         mockErrorRequest({
           url: endpoint,
         });
-        return store.dispatch(loadSubscriptionDetails(1))
-          .then(() => expect(store.getActions())
-            .toEqual(loadSubscriptionsDetailsFailureActions));
+        await store.dispatch(loadSubscriptionDetails(1));
+        expect(store.getActions())
+          .toEqual(loadSubscriptionsDetailsFailureActions);
       },
     );
     it(
       'creates SUBSCRIPTION_DETAILS_SUCCESS and ends with success',
-      () => {
+      async () => {
         mockRequest({
           url: endpoint,
           response: subDetails,
         });
-        return store.dispatch(loadSubscriptionDetails(1))
-          .then(() => expect(store.getActions())
-            .toEqual(loadSubscriptionsDetailsSuccessActions));
+        await store.dispatch(loadSubscriptionDetails(1));
+        expect(store.getActions())
+          .toEqual(loadSubscriptionsDetailsSuccessActions);
       },
     );
   });

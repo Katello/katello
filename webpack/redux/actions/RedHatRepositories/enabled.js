@@ -42,7 +42,7 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
   return { searchParams, repoParams };
 };
 
-export const disableRepository = repository => (dispatch) => {
+export const disableRepository = repository => async (dispatch) => {
   const {
     productId, contentId, arch, releasever,
   } = repository;
@@ -53,33 +53,31 @@ export const disableRepository = repository => (dispatch) => {
     basearch: arch,
     releasever,
   };
-
   dispatch({ type: DISABLE_REPOSITORY_REQUEST, repository });
-
   const url = `/products/${productId}/repository_sets/${contentId}/disable`;
-  return api
-    .put(url, repoData)
-    .then(result => dispatch(apiSuccess(DISABLE_REPOSITORY_SUCCESS, result)))
-    .catch(result => dispatch(apiError(DISABLE_REPOSITORY_FAILURE, result, { repository })));
+  try {
+    const result = await api.put(url, repoData);
+    return dispatch(apiSuccess(DISABLE_REPOSITORY_SUCCESS, result));
+  } catch (error) {
+    return dispatch(apiError(DISABLE_REPOSITORY_FAILURE, error, { repository }));
+  }
 };
 
-export const loadEnabledRepos = (extendedParams = {}, silent = false) => (dispatch) => {
+export const loadEnabledRepos = (extendedParams = {}, silent = false) => async (dispatch) => {
   dispatch({ type: ENABLED_REPOSITORIES_REQUEST, params: extendedParams, silent });
   const { searchParams, repoParams } = createEnabledRepoParams(extendedParams);
 
-  return api
-    .get('/repositories', {}, repoParams)
-    .then(({ data }) => {
-      dispatch({
-        type: ENABLED_REPOSITORIES_SUCCESS,
-        response: normalizeRepositorySets(data),
-        search: searchParams,
-      });
-    })
-    .catch((result) => {
-      dispatch({
-        type: ENABLED_REPOSITORIES_FAILURE,
-        result,
-      });
+  try {
+    const { data } = await api.get('/repositories', {}, repoParams);
+    return dispatch({
+      type: ENABLED_REPOSITORIES_SUCCESS,
+      response: normalizeRepositorySets(data),
+      search: searchParams,
     });
+  } catch (error) {
+    return dispatch({
+      type: ENABLED_REPOSITORIES_FAILURE,
+      result: error,
+    });
+  }
 };

@@ -7,18 +7,18 @@ import {
 } from './OrganizationProductsConstants';
 import { apiError } from '../../move_to_foreman/common/helpers';
 
-export const loadOrganizationProducts = (params = {}, orgId = getOrgId()) => (dispatch) => {
+export const loadOrganizationProducts = (params = {}, orgId = getOrgId()) => async (dispatch) => {
   dispatch({ type: ORGANIZATION_PRODUCTS_REQUEST });
 
-  return api
-    .get(`/organizations/${orgId}/products/`, {}, params)
-    .then(({ data }) => {
-      dispatch({
-        type: ORGANIZATION_PRODUCTS_SUCCESS,
-        payload: { orgId, ...data },
-      });
-    })
-    .catch(result => dispatch(apiError(ORGANIZATION_PRODUCTS_FAILURE, result)));
+  try {
+    const { data } = await api.get(`/organizations/${orgId}/products/`, {}, params);
+    return dispatch({
+      type: ORGANIZATION_PRODUCTS_SUCCESS,
+      payload: { orgId, ...data },
+    });
+  } catch (error) {
+    return dispatch(apiError(ORGANIZATION_PRODUCTS_FAILURE, error));
+  }
 };
 
 export default loadOrganizationProducts;

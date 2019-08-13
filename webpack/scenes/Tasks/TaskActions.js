@@ -11,7 +11,7 @@ import {
   RESET_TASKS,
 } from './TaskConstants';
 
-export const bulkSearch = (extendedParams = {}) => (dispatch) => {
+export const bulkSearch = (extendedParams = {}) => async (dispatch) => {
   const params = {
     search: Object.entries(propsToSnakeCase(extendedParams))
       .map((item) => {
@@ -23,22 +23,20 @@ export const bulkSearch = (extendedParams = {}) => (dispatch) => {
       .join(' and '),
   };
 
-
-  const onBulkSearchSuccess = ({ data }) => dispatch({
-    type: TASK_BULK_SEARCH_SUCCESS,
-    response: data,
-  });
-
-  const onBulkSearchFailure = result => dispatch({
-    type: TASK_BULK_SEARCH_FAILURE,
-    result,
-  });
-
   dispatch({ type: TASK_BULK_SEARCH_REQUEST });
-  return api
-    .get('/tasks', {}, params)
-    .then(onBulkSearchSuccess)
-    .catch(onBulkSearchFailure);
+
+  try {
+    const { data } = await api.get('/tasks', {}, params);
+    return dispatch({
+      type: TASK_BULK_SEARCH_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch({
+      type: TASK_BULK_SEARCH_FAILURE,
+      result: error,
+    });
+  }
 };
 
 export const resetTasks = () => (dispatch) => {
@@ -47,30 +45,35 @@ export const resetTasks = () => (dispatch) => {
   });
 };
 
-export const loadTask = (taskId, extendedParams = {}) => (dispatch) => {
+export const loadTask = (taskId, extendedParams = {}) => async (dispatch) => {
   dispatch({ type: GET_TASK_REQUEST });
 
   const params = {
     ...propsToSnakeCase(extendedParams),
   };
 
-  return api
-    .get(`/tasks/${taskId}`, {}, params)
-    .then(({ data }) => dispatch({
+  try {
+    const { data } = await api.get(`/tasks/${taskId}`, {}, params);
+    return dispatch({
       type: GET_TASK_SUCCESS,
       response: data,
-    }))
-    .catch(result => dispatch({
+    });
+  } catch (error) {
+    return dispatch({
       type: GET_TASK_FAILURE,
-      result,
-    }));
+      result: error,
+    });
+  }
 };
 
-const isUnauthorized = action =>
-  (action.result && action.result.response && action.result.response.status === 401);
+const isUnauthorized = (action = {}) => (action.result
+    && action.result
+    && action.result.response
+    && action.result.response.status === 401);
+
 
 export const pollBulkSearch = (extendedParams = {}, interval, orgId) =>
-  (dispatch, getState) => {
+  async (dispatch, getState) => {
     const triggerPolling = (action) => {
       const { id } = getState().katello.organization;
       if (!isUnauthorized(action)) {
@@ -80,9 +83,10 @@ export const pollBulkSearch = (extendedParams = {}, interval, orgId) =>
       }
     };
     const { id, loading } = getState().katello.organization;
-
     if (id === orgId && !loading) {
-      return dispatch(bulkSearch(extendedParams)).then(triggerPolling);
+      const dispatchedAction = await dispatch(await bulkSearch(extendedParams));
+      triggerPolling(dispatchedAction);
+      return dispatchedAction;
     }
 
     return dispatch({ type: 'POLLING_IS_SKIPPED' });
@@ -95,12 +99,13 @@ export const pollTaskUntilDone = (taskId, extendedParams = {}, interval, orgId) 
 
       if (isUnauthorized(action) || id !== orgId || loading) {
         reject(action.result);
-      } else if (action.response.pending) {
+      } else if (action.response && action.response.pending) {
+        // eslint-disable-next-line promise/prefer-await-to-then
         setTimeout(() => dispatch(loadTask(taskId, extendedParams)).then(pollUntilDone), interval);
       } else {
         resolve(action.response);
       }
     };
-
+    // eslint-disable-next-line promise/prefer-await-to-then
     return dispatch(loadTask(taskId, extendedParams)).then(pollUntilDone);
   });

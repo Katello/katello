@@ -73,7 +73,7 @@ export const getFailureActions = [
     type: 'GET_ORGANIZATION_REQUEST',
   },
   {
-    result: new Error('Request failed with status code 422'),
+    error: new Error('Request failed with status code 422'),
     type: 'GET_ORGANIZATION_FAILURE',
   },
 ];
