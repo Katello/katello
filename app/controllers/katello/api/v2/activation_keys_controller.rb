@@ -213,36 +213,31 @@ module Katello
 
     api :PUT, "/activation_keys/:id/content_override", N_("Override content for activation_key")
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
-    param :content_override, Hash, :desc => N_("Content override parameters"), :deprecated => true do
-      param :content_label, String, :desc => N_("Label of the content"), :required => true
-      param :value, String, :desc => N_("Override to a boolean value or 'default'"), :required => true
-    end
-    param :content_overrides, Array, :desc => N_("Array of Content override parameters") do
+    param :content_overrides, Array, :desc => N_("Array of Content override parameters to be added in bulk") do
       param :content_label, String, :desc => N_("Label of the content"), :required => true
       param :value, String, :desc => N_("Override value. Provide a boolean value if name is 'enabled'"), :required => false
       param :name, String, :desc => N_("Override parameter key or name. Note if name is not provided the default name will be 'enabled'"), :required => false
       param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
     end
     def content_override
-      content_overrides = []
-      if params[:content_override]
-        ::Foreman::Deprecation.api_deprecation_warning("The parameter content_override will be removed in Katello 3.5. Please update to use the content_overrides parameter.")
-        content_override_params = {:content_label => params[:content_override][:content_label]}
-        value = params[:content_override][:value]
-        if value == "default"
-          content_override_params[:remove] = true
-        elsif value
-          content_override_params[:value] = ::Foreman::Cast.to_bool(value)
+      if params[:content_overrides]
+        organization = @activation_key.organization
+        specified_labels = []
+        content_override_values = params[:content_overrides].map do |override|
+          specified_labels << override[:content_label]
+          validate_content_overrides_enabled(override)
         end
-        content_overrides << content_override_params
-      elsif params[:content_overrides]
-        content_overrides = params[:content_overrides]
-      end
+        specified_labels.uniq!
+        existing_labels = organization.contents.where(label: specified_labels).uniq
 
-      content_override_values = content_overrides.map do |override_params|
-        validate_content_overrides_enabled(override_params)
+        unless specified_labels.size == existing_labels.size
+          missing_labels = specified_labels - existing_labels.pluck(:label)
+          msg = "Content label(s) \"#{missing_labels.join(", ")}\" were not found in the Organization \"#{organization}\""
+          fail HttpErrors::BadRequest, _(msg)
+        end
+
+        @activation_key.set_content_overrides(content_override_values)
       end
-      @activation_key.set_content_overrides(content_override_values)
       respond_for_show(:resource => @activation_key)
     end
 
