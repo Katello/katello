@@ -123,6 +123,7 @@ module Katello
     scope :archived, -> { where('environment_id is NULL') }
     scope :in_published_environments, -> { in_content_views(Katello::ContentView.non_default).where.not(:environment_id => nil) }
     scope :order_by_root, ->(attr) { joins(:root).order("#{Katello::RootRepository.table_name}.#{attr}") }
+    scope :with_content, ->(content) { joins(Katello::RepositoryTypeManager.find_content_type(content).model_class.repository_association_class.name.demodulize.underscore.pluralize.to_sym).distinct }
 
     scoped_search :on => :name, :relation => :root, :complete_value => true
     scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true

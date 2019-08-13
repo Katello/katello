@@ -40,7 +40,7 @@ angular.module('Bastion.errata').controller('ErrataController',
 
         $scope.repository = {name: translate('All Repositories'), id: 'all'};
 
-        Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum'}, function (response) {
+        Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum', 'with_content': 'erratum'}, function (response) {
             $scope.repositories = [$scope.repository];
             $scope.repositories = $scope.repositories.concat(response.results);
 
