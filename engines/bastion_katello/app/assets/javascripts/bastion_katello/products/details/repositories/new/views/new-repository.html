@@ -66,7 +66,7 @@
 
       </div>
 
-      <div ng-show="repository.content_type === 'ansible_collection'" bst-form-group label="{{ 'Whitelist' | translate }}">
+      <div ng-show="repository.content_type === 'ansible_collection' && false" bst-form-group label="{{ 'Whitelist' | translate }}">
         <textarea id="collection_whitelist"
                name="collection_whitelists"
                ng-model="repository.ansible_collection_whitelist"

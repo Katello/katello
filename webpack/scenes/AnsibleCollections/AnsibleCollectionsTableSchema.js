@@ -27,7 +27,7 @@ const TableSchema = [
   {
     property: 'namespace',
     header: {
-      label: __('NameSpace'),
+      label: __('Author'),
       formatters: [headerFormatter],
     },
     cell: {

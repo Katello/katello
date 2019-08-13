@@ -5,7 +5,7 @@ import ContentDetailRepositories from '../../../components/Content/Details/Conte
 
 export const displayMap = new Map([
   ['name', __('Name')],
-  ['namespace', __('Namespace')],
+  ['namespace', __('Author')],
   ['version', __('Version')],
   ['checksum', __('Checksum')],
 ]);
