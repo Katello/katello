@@ -49,8 +49,7 @@ module Katello
       it "should register" do
         Resources::Candlepin::Consumer.stubs(:get)
 
-        ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
-        ::Katello::RegistrationManager.expects(:register_host).with(@host, {'facts' => @facts}, nil, [@activation_key])
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts}, nil, [@activation_key]).returns(@host)
 
         post(:consumer_activate, params: { :organization_id => @activation_key.organization.label, :activation_keys => @activation_key.name, :facts => @facts })
 
@@ -59,7 +58,7 @@ module Katello
 
       it "should not register with dead services" do
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
-        ::Katello::RegistrationManager.expects(:register_host).never
+        ::Katello::RegistrationManager.expects(:process_registration).never
 
         post(:consumer_activate, params: { :organization_id => @activation_key.organization.label,
                                            :activation_keys => @activation_key.name, :facts => @facts })
@@ -77,8 +76,7 @@ module Katello
       it "should register" do
         Resources::Candlepin::Consumer.stubs(:get)
 
-        ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
-        ::Katello::RegistrationManager.expects(:register_host).with(@host, {'facts' => @facts }, @content_view_environment)
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts }, @content_view_environment).returns(@host)
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environment_id => @content_view_environment.cp_id, :facts => @facts })
 
@@ -87,7 +85,7 @@ module Katello
 
       it "should not register" do
         ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
-        ::Katello::RegistrationManager.expects(:register_host).never
+        ::Katello::RegistrationManager.expects(:process_registration).never
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label,
                                          :environment_id => @content_view_environment.cp_id, :facts => @facts })
