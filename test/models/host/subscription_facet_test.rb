@@ -215,6 +215,185 @@ module Katello
       assert_includes values.map(&:name), '_timestamp'
     end
 
+    def test_update_foreman_facts_with_centos_no_minor_version
+      host.operatingsystem = ::Operatingsystem.create(
+        name: 'CentOS',
+        major: 7,
+        minor: 6,
+        type: "Redhat",
+        architectures: [architectures(:x86_64)],
+        title: "CentOS 7.6")
+
+      Katello::Host::SubscriptionFacet.update_facts(
+        host,
+        'distribution.name' => 'CentOS',
+        'distribution.version' => '7')
+
+      assert_equal 'CentOS', host.operatingsystem.name
+      assert_equal '7', host.operatingsystem.major
+      assert_equal '6', host.operatingsystem.minor
+    end
+
+
+    def test_update_foreman_facts_with_no_centos_different_major_and_no_minor_version
+      host.operatingsystem = ::Operatingsystem.create(
+        name: 'CentOS',
+        major: 7,
+        minor: 6,
+        type: "Redhat",
+        architectures: [architectures(:x86_64)],
+        title: "CentOS 7.6")
+
+      Katello::Host::SubscriptionFacet.update_facts(
+        host,
+        'distribution.name' => 'CentOS',
+        'distribution.version' => '8')
+
+      assert_equal 'CentOS', host.operatingsystem.name
+      assert_equal '8', host.operatingsystem.major
+      assert_equal "", host.operatingsystem.minor
+    end
+
+    def test_update_foreman_facts_with_os_version
+      ::Operatingsystem.create(
+        name: 'Redhat',
+        major: 8,
+        minor: 2,
+        type: "Redhat",
+        architectures: [architectures(:x86_64)],
+        title: "RHEL 8.2")
+
+      host.operatingsystem = ::Operatingsystem.create(
+        name: 'CentOS',
+        major: 7,
+        minor: 6,
+        type: "Redhat",
+        architectures: [architectures(:x86_64)],
+        title: "CentOS 7.6")
+
+      Katello::Host::SubscriptionFacet.update_facts(
+        host,
+        'distribution.name' => 'Redhat',
+        'distribution.version' => '8.2')
+
+      assert_equal 'RedHat', host.operatingsystem.name
+      assert_equal '8', host.operatingsystem.major
+      assert_equal '2', host.operatingsystem.minor
+    end
+
+    def test_find_host
+      host = FactoryBot.create(:host, organization: org)
+      PuppetFactName.where(:name => 'dmi::system::uuid').first_or_create
+      org2 = taxonomies(:organization2)
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name}, host.organization)
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name.upcase}, host.organization)
+
+      Organization.current = org # simulate user setting default org
+      assert_equal host_without_org, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host_without_org.name.upcase}, org)
+
+      Organization.current = nil
+      assert_nil Host::SubscriptionFacet.find_host({'network.hostname' => "the hostest with the mostest"}, host.organization)
+      error = assert_raises(Katello::Errors::RegistrationError) { Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name.upcase}, org2) }
+      assert_equal "Host with name %s is currently registered to a different org, please migrate host to %s." % [host.name, org2.name], error.message
+    end
+
+    def test_find_host_existing_uuid
+      # find host by dmi.system.uuid, no hostname match
+      FactValue.create(value: "existing_system_uuid", host: host, fact_name: uuid_fact_name)
+
+      facts = {'dmi.system.uuid' => 'existing_system_uuid', 'network.hostname' => 'inexistent'}
+
+      error = assert_raises(Katello::Errors::RegistrationError) { Katello::Host::SubscriptionFacet.find_host(facts, org) }
+      assert_equal find_host_error % host.name, error.message
+    end
+
+    def test_find_host_null_uuid_existing_host
+      # this test case is critical for bootstrap.py which creates a host via API (which lacks the dmi uuid fact)
+      # and *then* registers to it with subscription-manager
+      assert_empty host.fact_values
+
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name, 'dmi.system.uuid' => 'actual-uuid'}, org)
+    end
+
+    def test_find_host_nil_uuid
+      # hostname does not match existing record, and the dmi.system.uuid is nil.
+      fv = FactValue.create(value: nil, host: host, fact_name: uuid_fact_name)
+      assert_nil Katello::Host::SubscriptionFacet.find_host({'network.hostname' => 'inexistent'}, org)
+
+      # hostname matches existing record, but existing has a UUID and we passed nothing
+      fv.value = "something"
+      fv.save!
+      error = assert_raises(Katello::Errors::RegistrationError) { Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name, 'dmi.system.uuid' => nil}, org) }
+      assert_match(/DMI UUID that differs/, error.message)
+    end
+
+    def test_find_host_existing_uuid_and_name_multiple
+      host2 = FactoryBot.create(:host, organization: org)
+
+      FactValue.create(value: "existing_system_uuid", host: host2, fact_name: uuid_fact_name)
+
+      facts = {'dmi.system.uuid' => 'existing_system_uuid', 'network.hostname' => host.name}
+
+      # if we get two matches, raise an error
+      error = assert_raises(Katello::Errors::RegistrationError) { Katello::Host::SubscriptionFacet.find_host(facts, org) }
+      expected = find_host_error % [host.name, host2.name].sort.join(', ')
+      assert_equal expected, error.message
+    end
+
+    def test_find_host_existing_name_new_uuid
+      # make sure existing host has a UUID
+      FactValue.create(value: "existing_system_uuid", host: host, fact_name: uuid_fact_name)
+
+      facts = {'dmi.system.uuid' => 'inexistent_uuid', 'network.hostname' => host.name}
+
+      error = assert_raises(Katello::Errors::RegistrationError) { Katello::Host::SubscriptionFacet.find_host(facts, org) }
+      assert_match(/DMI UUID that differs/, error.message)
+    end
+
+    def test_find_host_existing_uuid_and_name
+      # if we get a single match uuid + hostname, return it
+      host3 = FactoryBot.create(:host, organization: org)
+
+      FactValue.create(value: 'host3-uuid', host: host3, fact_name: uuid_fact_name)
+      facts = {'dmi.system.uuid' => 'host3-uuid', 'network.hostname' => host3.name}
+
+      assert_equal host3, Katello::Host::SubscriptionFacet.find_host(facts, org)
+    end
+
+    def test_find_host_multiple_existing_empty_uuid
+      allowed_dups = ['', 'Not Settable', 'Not Present']
+      allowed_dups.each do |dup|
+        host = FactoryBot.create(:host, organization: org)
+        FactValue.create(value: dup, host: host, fact_name: uuid_fact_name)
+
+        facts = {'network.hostname' => 'inexistent_hostname', 'dmi.system.uuid' => dup}
+
+        assert_nil Katello::Host::SubscriptionFacet.find_host(facts, org)
+      end
+    end
+
+    def test_find_host_build_matching_hostname_new_uuid
+      host = FactoryBot.create(:host, :managed, organization: org, build: true)
+      FactValue.create(value: SecureRandom.uuid, host: host, fact_name: uuid_fact_name)
+
+      facts = {'network.hostname' => host.name, 'dmi.system.uuid' => SecureRandom.uuid}
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host(facts, org)
+    end
+
+    def test_find_or_create_host_with_org
+      created_host = FactoryBot.create(:host, :organization_id => org.id)
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(org, :facts => {'network.hostname' => created_host.name})
+
+      assert_equal created_host, host
+    end
+
+    def test_find_or_create_host_no_org
+      no_org_host = FactoryBot.create(:host, :organization_id => nil)
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(org, :facts => {'network.hostname' => no_org_host.name})
+
+      assert_equal org, host.organization
+    end
+
     def test_subscription_status
       status = Katello::SubscriptionStatus.new(:host => host)
       status.status = Katello::SubscriptionStatus::INVALID

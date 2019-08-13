@@ -212,7 +212,38 @@ module Katello
         return if host.build? || rhsm_facts.nil?
         rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
         rhsm_facts[:_timestamp] = Time.now.to_s
+        if ignore_os?(host.operatingsystem, rhsm_facts)
+          rhsm_facts[:ignore_os] = true
+        end
         host.import_facts(rhsm_facts)
+      end
+
+      def self.ignore_os?(host_os, rhsm_facts)
+
+        if host_os.nil?
+          return false
+        end
+
+        name = rhsm_facts['distribution.name']
+        version = rhsm_facts['distribution.version']
+        os_name = ::Katello::Candlepin::Consumer.distribution_to_puppet_os(name)
+        major, minor = version.split('.')
+        return host_os.name == 'CentOS' &&
+          host_os.major != nil &&
+          name == 'CentOS' &&
+          minor.blank? &&
+          host_os.major == major
+      end
+
+      def self.find_or_create_host(organization, rhsm_params)
+        host = find_host(rhsm_params[:facts], organization)
+        host ||= Katello::Host::SubscriptionFacet.new_host_from_facts(
+          rhsm_params[:facts],
+          organization,
+          Location.default_host_subscribe_location!
+        )
+        host.organization = organization unless host.organization
+        host
       end
 
       def self.propose_name_from_facts(facts)
