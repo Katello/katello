@@ -181,15 +181,19 @@ module DynflowFullTreePlanning
     Rails.application.dynflow.world.plan(action_class, *args)
   end
 
-  def assert_tree_planned_with(execution_plan, action_class, expected_input)
+  def assert_tree_planned_with(execution_plan, action_class, expected_input = nil)
     found_steps = execution_plan.run_steps.select { |step| action_class == step.action_class }
     assert found_steps.any?, "Action #{action_class} was not planned, there were only #{execution_plan.run_steps.map { |s| s.action_class }}"
-
-    input_matched = found_steps.select do |step|
-      step.action(execution_plan).input.except(*IGNORED_INPUT) == expected_input.with_indifferent_access
+    if expected_input
+      input_matched = found_steps.select do |step|
+        step.action(execution_plan).input.except(*IGNORED_INPUT) == expected_input.with_indifferent_access
+      end
+      assert input_matched.any?, pretty_print_differences(execution_plan, expected_input, found_steps)
+    elsif block_given?
+      found_steps.each do |step|
+        yield step.action(execution_plan).input.except(*IGNORED_INPUT)
+      end
     end
-
-    assert input_matched.any?, pretty_print_differences(execution_plan, expected_input, found_steps)
   end
 
   def refute_tree_planned(execution_plan, action_class)

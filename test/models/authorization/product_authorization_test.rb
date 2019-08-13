@@ -47,7 +47,7 @@ module Katello
     end
 
     def test_readable_repositories_with_ids
-      refute_empty Product.readable_repositories([Repository.first.id])
+      refute_empty Product.readable_repositories([@fedora_17_x86_64.id])
     end
   end
 
@@ -100,10 +100,11 @@ module Katello
     end
 
     def test_readable_repositories_with_search
+      repo = @fedora_17_x86_64
       setup_current_user_with_permissions(:name => "view_products",
-                                          :search => "name=\"#{Repository.first.product.name}\"")
+                                          :search => "name=\"#{repo.product.name}\"")
 
-      assert_equal([Repository.first], Product.readable_repositories([Repository.first.id]))
+      assert_equal([repo], Product.readable_repositories([repo.id]))
       assert_empty(Product.readable_repositories(
           [Repository.joins(:root).where("#{RootRepository.table_name}.product_id != ?", Katello::Product.readable.pluck(:id)).first]))
     end

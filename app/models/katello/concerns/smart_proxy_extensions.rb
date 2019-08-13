@@ -140,7 +140,7 @@ module Katello
 
       def pulp3_support?(repository)
         type = Katello::RepositoryTypeManager.repository_types[repository.content_type]
-        type.pulp3_plugin && self.capabilities('Pulp3').try(:include?, type.pulp3_plugin)
+        type.pulp3_plugin.present? && pulp3_enabled?
       end
 
       def content_pulp3_support?(content_type)
@@ -250,6 +250,12 @@ module Katello
 
       def ping_pulp
         ::Katello::Ping.pulp_without_auth(self.pulp_url)
+      rescue Errno::EHOSTUNREACH, Errno::ECONNREFUSED, RestClient::Exception => error
+        raise ::Katello::Errors::CapsuleCannotBeReached, _("%s is unreachable. %s" % [self.name, error])
+      end
+
+      def ping_pulp3
+        ::Katello::Ping.pulp3_without_auth(self.pulp3_url("api/v3"))
       rescue Errno::EHOSTUNREACH, Errno::ECONNREFUSED, RestClient::Exception => error
         raise ::Katello::Errors::CapsuleCannotBeReached, _("%s is unreachable. %s" % [self.name, error])
       end

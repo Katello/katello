@@ -23,16 +23,7 @@ module ::Actions::Katello::CapsuleContent
     before do
       set_user
       SmartProxy.any_instance.stubs(:ping_pulp).returns({})
-    end
-
-    def synced_repos(action, repos)
-      synced_repos = []
-      repos.each do |_repo|
-        assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncCapsule) do |(input)|
-          synced_repos << input[:repo_pulp_id]
-        end
-      end
-      synced_repos
+      SmartProxy.any_instance.stubs(:ping_pulp3).returns({})
     end
   end
 
@@ -40,88 +31,195 @@ module ::Actions::Katello::CapsuleContent
     let(:action_class) { ::Actions::Katello::CapsuleContent::Sync }
     let(:staging_environment) { katello_environments(:staging) }
     let(:dev_environment) { katello_environments(:dev) }
-    let(:action) { create_action(action_class) }
 
-    before do
-      action.expects(:action_subject).with(capsule_content.smart_proxy)
+    it 'plans correctly for a pulp3 file repo' do
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      repo = katello_repositories(:pulp3_file_1)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+      options = { smart_proxy_id: capsule_content.smart_proxy.id,
+                  content_view_id: nil,
+                  repository_id: repo.id,
+                  environment_id: nil
+                }
+
+      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
+      assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+      end
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::GenerateMetadata) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+      end
+
+      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+        assert_equal false, input[:options][:use_repository_version]
+        assert input[:options][:tasks].present?
+      end
     end
 
-    it 'plans' do
+    it 'plans correctly for a pulp3 docker repo' do
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
-      capsule_content_sync = plan_action(action, capsule_content.smart_proxy)
+      repo = katello_repositories(:pulp3_docker_1)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
 
-      synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+      end
 
-      assert_equal synced_repos.sort.uniq, capsule_content.repos_available_to_capsule.map { |repo| repo.pulp_id }.sort.uniq
-      assert_action_planed_with(action,
-                                ::Actions::Pulp::Repository::RefreshNeeded,
-                                capsule_content.smart_proxy,
-                                {}
-                               )
+      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+        assert_equal true, input[:options][:use_repository_version]
+        refute input[:options][:tasks].present?
+      end
+    end
+
+    it 'plans correctly for a pulp3 ansible collection repo' do
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
+
+      repo = katello_repositories(:pulp3_ansible_collection_1)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+        assert_equal true, input[:options][:use_repository_version]
+        refute input[:options][:tasks].present?
+      end
+    end
+
+    it 'plans correctly for a pulp2 yum repo' do
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
+      repo = katello_repositories(:fedora_17_x86_64)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+      options = { smart_proxy_id: capsule_content.smart_proxy.id,
+                  content_view_id: nil,
+                  repository_id: repo.id,
+                  environment_id: nil
+                }
+
+      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
+      assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+
+      assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
+        assert_equal repo.pulp_id, input[:repo_pulp_id]
+        assert_equal true, input[:sync_options][:remove_missing]
+      end
+    end
+
+    it 'plans correctly for a pulp2 file repo' do
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
+      repo = katello_repositories(:generic_file)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+      options = { smart_proxy_id: capsule_content.smart_proxy.id,
+                  content_view_id: nil,
+                  repository_id: repo.id,
+                  environment_id: nil
+                }
+
+      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
+      assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+      assert_tree_planned_with(tree, Actions::Pulp::Consumer::UnassociateUnits, capsule_id: capsule_content.smart_proxy.id, repo_pulp_id: repo.pulp_id)
+      assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
+        assert_equal repo.pulp_id, input[:repo_pulp_id]
+        assert_equal false, input[:sync_options][:remove_missing]
+      end
     end
 
     it 'allows limiting scope of the syncing to one environment' do
       capsule_content.smart_proxy.add_lifecycle_environment(dev_environment)
-      capsule_content_sync = plan_action(action, capsule_content.smart_proxy, :environment_id => dev_environment.id)
-      synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
-      assert_equal 9, synced_repos.uniq.count
+      repos_in_dev = Katello::Repository.in_environment(dev_environment).pluck(:pulp_id)
+      cvpes_in_dev = Katello::ContentViewPuppetEnvironment.in_environment(dev_environment).pluck(:pulp_id)
+
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :environment_id => dev_environment.id)
+      options = { smart_proxy_id: capsule_content.smart_proxy.id,
+                  content_view_id: nil,
+                  repository_id: nil,
+                  environment_id: dev_environment.id
+                }
+      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
+      assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+
+      assert_tree_planned_with(tree, Actions::Pulp::Consumer::UnassociateUnits) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
+        assert_includes repos_in_dev, input[:repo_pulp_id]
+        repo = ::Katello::Repository.find_by(pulp_id: input[:repo_pulp_id])
+        refute_includes ['yum', 'puppet'], repo.content_type
+        refute capsule_content.smart_proxy.pulp3_support?(repo)
+      end
+
+      assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
+        assert_includes (repos_in_dev + cvpes_in_dev), input[:repo_pulp_id]
+        if repos_in_dev.include?(input[:repo_pulp_id])
+          repo = ::Katello::Repository.find_by(pulp_id: input[:repo_pulp_id])
+          if ["deb", "yum", "puppet"].include?(repo.content_type)
+            assert_equal true, input[:sync_options][:remove_missing]
+          else
+            assert_equal false, input[:sync_options][:remove_missing]
+          end
+          refute capsule_content.smart_proxy.pulp3_support?(repo)
+          repos_in_dev.delete(input[:repo_pulp_id])
+        else
+          # test cvpe's
+          assert_equal true, input[:sync_options][:remove_missing]
+          cvpes_in_dev.delete(input[:repo_pulp_id])
+          cvpe = Katello::ContentViewPuppetEnvironment.find_by(pulp_id: input[:repo_pulp_id])
+          refute capsule_content.smart_proxy.pulp3_support?(cvpe.nonpersisted_repository)
+        end
+      end
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        repo = Katello::Repository.find(input[:repository_id])
+        assert_includes repos_in_dev, repo.pulp_id
+      end
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::GenerateMetadata) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        repo = Katello::Repository.find(input[:repository_id])
+        assert_includes repos_in_dev, repo.pulp_id
+      end
+
+      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        repo = Katello::Repository.find(input[:repository_id])
+        assert_includes repos_in_dev, repo.pulp_id
+        repos_in_dev.delete(repo.pulp_id)
+      end
+
+      assert_empty repos_in_dev
+      assert_empty cvpes_in_dev
     end
 
     it 'fails when trying to sync to the default capsule' do
       SmartProxy.any_instance.stubs(:pulp_master?).returns(true)
+      action = create_action(action_class)
+      action.expects(:action_subject).with(capsule_content.smart_proxy)
       assert_raises(RuntimeError) do
-        plan_action(action, capsule_content.smart_proxy, :environment_id => dev_environment.id)
+        plan_action(action, capsule_content.smart_proxy)
       end
     end
 
     it 'fails when trying to sync a lifecyle environment that is not attached' do
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      action = create_action(action_class)
+      action.expects(:action_subject).with(capsule_content.smart_proxy)
 
       Katello::Pulp::SmartProxyRepository.any_instance.stubs(:lifecycle_environments).returns([])
       assert_raises(RuntimeError) do
         plan_action(action, capsule_content.smart_proxy, :environment_id => staging_environment.id)
-      end
-    end
-  end
-
-  class CreateReposTest < TestBase
-    include VCR::TestCase
-
-    let(:action_class) { ::Actions::Katello::CapsuleContent::CreateRepos }
-
-    let(:cert) do
-      {
-        :key => "this is a key",
-        :cert => "this is a cert",
-        :id => "123",
-        :serial => {
-          :id => 132,
-          :revoked => false,
-          :collected => false,
-          :expiration => "2116-01-28t19:43:26.317+0000",
-          :serial => 53,
-          :created => "2016-01-28t19:43:26.770+0000",
-          :updated => "2016-01-28T19:43:26.770+0000"
-        },
-        :created => "2016-01-28T19:43:26.780+0000",
-        :updated => "2016-01-28T19:43:26.780+0000"
-      }
-    end
-
-    before do
-      capsule_content.smart_proxy.add_lifecycle_environment(environment)
-      ::Cert::Certs.stubs(:ca_cert).returns(cert)
-      ::Cert::Certs.stubs(:ueber_cert).with(repository.organization).returns(cert)
-    end
-
-    it 'creates repos needed on the capsule' do
-      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:current_repositories).returns([custom_repository])
-      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:repos_available_to_capsule).returns([custom_repository, repository])
-
-      action = create_and_plan_action(action_class, capsule_content.smart_proxy)
-
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::Create) do |input|
-        input[0].must_equal(repository)
       end
     end
   end

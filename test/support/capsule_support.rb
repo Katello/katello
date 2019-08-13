@@ -1,14 +1,18 @@
 module Support
   module CapsuleSupport
-    def pulp_feature
-      @pulp_feature ||= Feature.create(name: SmartProxy::PULP_NODE_FEATURE)
+    def pulp_features
+      @pulp_node_feature ||= Feature.create(name: SmartProxy::PULP_NODE_FEATURE)
+      @pulp3_feature ||= Feature.create(name: SmartProxy::PULP3_FEATURE)
+      [@pulp_node_feature, @pulp3_feature]
     end
 
     def proxy_with_pulp(proxy_resource = nil)
       proxy_resource ||= :four
       smart_proxies(proxy_resource).tap do |proxy|
-        unless proxy.features.include?(pulp_feature)
-          proxy.features << pulp_feature
+        pulp_features.each do |pulp_feature|
+          unless proxy.features.include?(pulp_feature)
+            proxy.features << pulp_feature
+          end
         end
       end
     end

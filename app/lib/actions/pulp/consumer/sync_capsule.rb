@@ -8,6 +8,10 @@ module Actions
           param :sync_options
         end
 
+        def plan(repository, smart_proxy, options)
+          plan_self(:capsule_id => smart_proxy.id, :repo_pulp_id => repository.pulp_id, :sync_options => options)
+        end
+
         def humanized_name
           _("Synchronize capsule content")
         end
