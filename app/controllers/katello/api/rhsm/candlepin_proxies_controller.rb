@@ -198,10 +198,8 @@ module Katello
 
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
-      content_view_environment = find_content_view_environment
-      host = Katello::Host::SubscriptionFacet.find_or_create_host(content_view_environment.environment.organization, rhsm_params)
+      host = Katello::RegistrationManager.process_registration(rhsm_params, find_content_view_environment)
 
-      Katello::RegistrationManager.register_host(host, rhsm_params, content_view_environment)
       host.reload
 
       update_host_registered_through(host, request.headers)
@@ -227,9 +225,8 @@ module Katello
       User.current = User.anonymous_admin
       additional_set_taxonomy
       activation_keys = find_activation_keys
-      host = Katello::Host::SubscriptionFacet.find_or_create_host(activation_keys.first.organization, rhsm_params)
 
-      Katello::RegistrationManager.register_host(host, rhsm_params, nil, activation_keys)
+      host = Katello::RegistrationManager.process_registration(rhsm_params, nil, activation_keys)
 
       update_host_registered_through(host, request.headers)
       host.reload
