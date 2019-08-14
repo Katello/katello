@@ -15,6 +15,15 @@ module Katello
                                      :lifecycle_environment => library, :organization => org)
     end
     let(:subscription_facet) { host.subscription_facet }
+    let(:centos_76) do
+      FactoryBot.create(:operatingsystem,
+        :with_os_defaults, :with_associations,
+        name: 'CentOS',
+        major: 7,
+        minor: 6,
+        type: "Redhat",
+        title: "CentOS 7.6")
+    end
   end
 
   class SubscriptionFacetSystemPurposeTest < SubscriptionFacetBase
@@ -215,15 +224,8 @@ module Katello
       assert_includes values.map(&:name), '_timestamp'
     end
 
-    def test_update_foreman_facts_with_centos_no_minor_version
-      host.operatingsystem = ::Operatingsystem.create(
-        name: 'CentOS',
-        major: 7,
-        minor: 6,
-        type: "Redhat",
-        architectures: [architectures(:x86_64)],
-        title: "CentOS 7.6")
-
+    def test_update_facts_with_centos_no_minor_version
+      host.operatingsystem = centos_76
       Katello::Host::SubscriptionFacet.update_facts(
         host,
         'distribution.name' => 'CentOS',
@@ -235,13 +237,7 @@ module Katello
     end
 
     def test_update_foreman_facts_with_no_centos_different_major_and_no_minor_version
-      host.operatingsystem = ::Operatingsystem.create(
-        name: 'CentOS',
-        major: 7,
-        minor: 6,
-        type: "Redhat",
-        architectures: [architectures(:x86_64)],
-        title: "CentOS 7.6")
+      host.operatingsystem = centos_76
 
       Katello::Host::SubscriptionFacet.update_facts(
         host,
@@ -254,21 +250,15 @@ module Katello
     end
 
     def test_update_foreman_facts_with_os_version
-      ::Operatingsystem.create(
+      FactoryBot.create(:operatingsystem,
+        :with_os_defaults, :with_associations,
         name: 'Redhat',
         major: 8,
         minor: 2,
         type: "Redhat",
-        architectures: [architectures(:x86_64)],
         title: "RHEL 8.2")
 
-      host.operatingsystem = ::Operatingsystem.create(
-        name: 'CentOS',
-        major: 7,
-        minor: 6,
-        type: "Redhat",
-        architectures: [architectures(:x86_64)],
-        title: "CentOS 7.6")
+      host.operatingsystem = centos_76
 
       Katello::Host::SubscriptionFacet.update_facts(
         host,
