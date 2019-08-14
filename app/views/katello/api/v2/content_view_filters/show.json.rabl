@@ -21,7 +21,8 @@ child :content_view => :content_view do
         :package => repo.rpms.count,
         :package_group => repo.package_groups.count,
         :erratum => repo.errata.count,
-        :puppet_module => repo.puppet_modules.count
+        :puppet_module => repo.puppet_modules.count,
+        :module_stream => repo.module_streams.count
       }
     end
   end

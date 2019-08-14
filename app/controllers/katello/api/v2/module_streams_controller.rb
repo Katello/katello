@@ -35,6 +35,26 @@ module Katello
       %w(name asc)
     end
 
+    def available_for_content_view_filter(filter, _collection)
+      collection_name_streams = []
+      current_name_streams = filter.module_stream_rules.pluck(:name, :stream)
+      filter.applicable_repos.each do |repo|
+        collection_name_streams.concat(repo.module_streams.pluck(:name, :stream))
+      end
+      ModuleStream.in_repositories(filter.applicable_repos).
+                    uniquify_by_name_streams(collection_name_streams - current_name_streams)
+    end
+
+    def filter_by_content_view(filter, collection)
+      repos = Katello::ContentView.find(filter.content_view_id).repositories
+      ids = repos.map { |r| r.send(:module_stream_ids) }.flatten
+      filter_by_ids(ids, collection)
+    end
+
+    def filter_by_content_view_filter(filter, collection)
+      collection.uniquify_by_name_streams(filter.module_stream_rules.pluck(:name, :stream))
+    end
+
     private
 
     def check_params

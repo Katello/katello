@@ -22,4 +22,11 @@ FactoryBot.define do
     sequence(:name) { |n| "docker #{n}" }
     association :filter, :factory => :katello_content_view_docker_filter
   end
+
+  factory :katello_content_view_module_stream_filter_rule,
+          :class => Katello::ContentViewModuleStreamFilterRule do
+    sequence(:name) { |n| "Module#{n}" }
+    sequence(:stream) { |n| "Stream#{n}" }
+    association :filter, :factory => :katello_content_view_module_stream_filter
+  end
 end

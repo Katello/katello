@@ -14,6 +14,11 @@ FactoryBot.define do
           :parent => :katello_content_view_filter do
   end
 
+  factory :katello_content_view_module_stream_filter,
+          :class => Katello::ContentViewModuleStreamFilter,
+          :parent => :katello_content_view_filter do
+  end
+
   factory :katello_content_view_package_group_filter,
           :class => Katello::ContentViewPackageGroupFilter,
           :parent => :katello_content_view_filter do

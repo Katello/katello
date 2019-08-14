@@ -56,6 +56,10 @@
                ui-sref="content-view.yum.filter.rpm.details({filterId: filter.id})">
               {{ filter.name }}
             </a>
+            <a ng-if="filter.type === 'modulemd'"
+               ui-sref="content-view.yum.filter.module-stream.list({filterId: filter.id})">
+              {{ filter.name }}
+            </a>
             <a ng-if="filter.type === 'package_group'"
                ui-sref="content-view.yum.filter.package_group.list({filterId: filter.id})">
               {{ filter.name }}

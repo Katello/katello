@@ -4,9 +4,6 @@
   <h3>{{ filter.name }}</h3>
   <small translate>Type: {{ filter.inclusion | filterType }} {{ filter.type | filterContentType }}</small>
   <br/>
-  <i class="fa fa-warning inline-icon" ng-if="filter.type === 'rpm' || filter.type === 'errata'"></i>&nbsp;<span translate>
-RPMs belonging to Module Streams will not be affected by filters. These RPMs will automatically be 
-included in a Content View Version along with the associated Module Streams.</span>
 </header>
 
 <div ui-view></div>

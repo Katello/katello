@@ -56,6 +56,22 @@ module Katello
             merge(::Katello::Host::ContentFacet.where(host_id: hosts)))
     end
 
+    def self.with_name_streams(name_streams)
+      return where("1=0") if name_streams.blank?
+      ns = name_streams.shift
+      query = where(name: ns.first, stream: ns.last)
+      name_streams.each do |name, stream|
+        query = query.or(where(name: name, stream: stream))
+      end
+      query
+    end
+
+    def self.uniquify_by_name_streams(name_streams)
+      where(:id => with_name_streams(name_streams).
+                    group(:name, :stream).
+                    select("max(#{self.table_name}.id)"))
+    end
+
     def module_spec
       # NAME:STREAM:VERSION:CONTEXT:ARCH
       items = []

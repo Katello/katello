@@ -31,7 +31,7 @@ angular.module('Bastion.content-views').controller('FiltersController',
         }
 
         if ($scope.stateIncludes('content-view.yum')) {
-            filterTypes = ['rpm', 'package_group', 'erratum'];
+            filterTypes = ['rpm', 'package_group', 'erratum', 'modulemd'];
         } else {
             filterTypes = ['docker'];
         }
@@ -70,6 +70,9 @@ angular.module('Bastion.content-views').controller('FiltersController',
                 break;
             case "rpm":
                 state = "content-view.yum.filter.rpm({filterId: filter.id})";
+                break;
+            case "modulemd":
+                state = "content-view.yum.filter.module-streams({filterId: filter.id})";
                 break;
             case "package_group":
                 state = "content-view.yum.filter.package_group.list({filterId: filter.id})";

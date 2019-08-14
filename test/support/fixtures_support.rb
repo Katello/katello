@@ -10,6 +10,7 @@ module Katello
       :katello_content_view_erratum_filter_rules => Katello::ContentViewErratumFilterRule,
       :katello_content_view_package_filter_rules => Katello::ContentViewPackageFilterRule,
       :katello_content_view_package_group_filter_rules => Katello::ContentViewPackageGroupFilterRule,
+      :katello_content_view_module_stream_filter_rules => Katello::ContentViewModuleStreamFilterRule,
       :katello_content_view_puppet_modules => Katello::ContentViewPuppetModule,
       :katello_content_view_puppet_environments => Katello::ContentViewPuppetEnvironment,
       :katello_content_view_repositories => Katello::ContentViewRepository,

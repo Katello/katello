@@ -18,6 +18,11 @@ populated_erratum_filter:
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
   type:            <%= Katello::ContentViewErratumFilter.name %>
 
+populated_module_stream_filter:
+  name:            Populated Module Stream Filter
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
+  type:            <%= Katello::ContentViewModuleStreamFilter.name %>
+
 populated_filter_with_repos_and_filters:
   name:            Populated Filter
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
@@ -27,4 +32,4 @@ extra_filter:
   name:            Extra Filter
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   type:            <%= Katello::ContentViewErratumFilter.name %>
-  
+

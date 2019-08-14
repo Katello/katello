@@ -107,6 +107,11 @@
                   {{ repository.content_counts.erratum }} Errata
                 </a>
               </div>
+              <div ng-if="repository.content_counts.module_stream && repository.content_counts.module_stream > 0">
+                <a ui-sref="product.repository.manage-content.module-streams({productId: repository.product.id, repositoryId: repository.id})" translate>
+                  {{ repository.content_counts.module_stream || 0 }} Module Streams
+                </a>
+              </div>
             </td>
           </tr>
         </tbody>

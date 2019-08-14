@@ -77,7 +77,7 @@ module Katello
 
         def copy_contents(destination_repo, options = {})
           override_config = Katello::Repository.build_override_config(options)
-          rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(options[:filters], options[:rpm_filenames])
+          rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(options[:filters]&.yum(false), options[:rpm_filenames])
           tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id,
                    rpm_copy_clauses.merge(:override_config => override_config))]
 
@@ -87,12 +87,9 @@ module Katello
                                                                           filters: {unit: rpm_remove_clauses})
           end
 
-          # always copy modular rpms
-          modular_includes = {filters: {unit: { 'filename' => { '$in' => repo.rpms.modular.pluck(:filename) } }}}
-          tasks << smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id, modular_includes)
-
+          tasks.concat(copy_module_contents(destination_repo, options[:filters]&.module_stream, override_config))
           [:srpm, :errata, :package_group, :package_environment,
-           :yum_repo_metadata_file, :distribution, :module, :module_default].each do |type|
+           :yum_repo_metadata_file, :distribution, :module_default].each do |type|
             tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
           end
           tasks
@@ -158,12 +155,22 @@ module Katello
           smart_proxy.pulp_api.extensions.repository.unassociate_units(repo.pulp_id, :filters => criteria)
         end
 
-        def generate_copy_clauses(filters, rpm_filenames)
-          if rpm_filenames&.any?
-            copy_clauses = {filters: {unit: { 'filename' => { '$in' => rpm_filenames } }}}
-            remove_clauses = nil
-          elsif filters
-            clause_gen = ::Katello::Util::PackageClauseGenerator.new(repo, filters.yum)
+        def copy_module_contents(destination_repo, filters, override_config)
+          copy_clauses, remove_clauses = generate_module_stream_copy_clauses(filters)
+          tasks = [smart_proxy.pulp_api.extensions.module.copy(repo.pulp_id, destination_repo.pulp_id,
+                   copy_clauses.merge(:override_config => override_config))]
+
+          if remove_clauses
+            tasks << smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
+                                                                         type_ids: [::Katello::Pulp::ModuleStream::CONTENT_TYPE],
+                                                                          filters: {unit: remove_clauses})
+          end
+          tasks
+        end
+
+        def generate_module_stream_copy_clauses(filters)
+          if filters&.any?
+            clause_gen = ::Katello::Util::ModuleStreamClauseGenerator.new(repo, filters.module_stream)
             clause_gen.generate
 
             copy = clause_gen.copy_clause
@@ -175,6 +182,27 @@ module Katello
             copy_clauses = {}
             remove_clauses = nil
           end
+          [copy_clauses, remove_clauses]
+        end
+
+        def generate_copy_clauses(filters, rpm_filenames)
+          if rpm_filenames&.any?
+            copy_clauses = {filters: {unit: { 'filename' => { '$in' => rpm_filenames } }}}
+            remove_clauses = nil
+          elsif filters&.any?
+            clause_gen = ::Katello::Util::PackageClauseGenerator.new(repo, filters.yum(false))
+            clause_gen.generate
+
+            copy = clause_gen.copy_clause
+            copy_clauses = {filters: {unit: copy }} if copy
+
+            remove = clause_gen.remove_clause
+            remove_clauses = {filters: {unit: remove}} if remove
+          else
+            copy_clauses = {filters: {unit: ContentViewPackageFilter.generate_rpm_clauses(::Katello::Rpm.in_repositories(repo).non_modular.pluck(:filename))}}
+            remove_clauses = nil
+          end
+
           copy_clauses.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS)
           [copy_clauses, remove_clauses]
         end
