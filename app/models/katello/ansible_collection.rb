@@ -10,7 +10,7 @@ module Katello
     has_many :repositories, :through => :repository_ansible_collections, :class_name => "Katello::Repository"
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :namespace, :complete_value => true
+    scoped_search :on => :namespace, :complete_value => true, :rename => :author
     scoped_search :on => :version, :complete_value => true
     scoped_search :on => :checksum, :complete_value => true
 
