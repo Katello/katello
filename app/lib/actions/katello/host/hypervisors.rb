@@ -2,6 +2,10 @@ module Actions
   module Katello
     module Host
       class Hypervisors < Actions::EntryAction
+        def queue
+          ::Katello::HOST_TASKS_QUEUE
+        end
+
         def plan(hypervisor_params, options = {})
           task_id = options.fetch(:task_id, nil)
           sequence do
