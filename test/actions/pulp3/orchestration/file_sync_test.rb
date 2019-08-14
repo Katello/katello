@@ -47,7 +47,7 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
       pre_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
-      @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/', :mirror_on_sync => false)
+      @repo.root.update_attributes(:url => "file:///var/www/test_repos/file2", :mirror_on_sync => false)
 
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
@@ -67,7 +67,7 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
       pre_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
-      @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
+      @repo.root.update_attributes(:url => "file:///var/www/test_repos/file2")
 
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,

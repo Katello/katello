@@ -179,7 +179,7 @@ pulp3_file_root_1:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
-  url:                  "https://repos.fedorapeople.org/pulp/pulp/demo_repos/test_file_repo/"
+  url:                  "file:///var/www/test_repos/file1"
 
 pulp3_ansible_collection_root_1:
   name:                 Pulp3 Ansible Collection 1
