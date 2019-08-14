@@ -5,7 +5,6 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      skip 'Waiting on ansible syncing to work reliably'
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:pulp3_ansible_collection_1)
       create_repo(@repo, @master)
@@ -40,6 +39,56 @@ module ::Actions::Pulp3
           :content_view_id => @repo.content_view.id)
 
       assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+    end
+
+    def test_sync_mirror_false
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      repository_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+
+      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+      @repo.index_content
+      pre_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
+      @repo.root.update_attributes!(:url => 'https://galaxy.ansible.com/api/v2/collections/testing/k8s_demo_collection/?version=0.0.3', :mirror_on_sync => false)
+
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Update,
+          @repo,
+          @master)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      @repo.index_content
+      post_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
+      repository_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+
+      assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
+      assert_equal pre_count_content + 1, post_count_content
+    end
+
+    def test_sync_mirror_true
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      @repo.index_content
+      pre_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
+      @repo.root.update_attributes(:ansible_collection_whitelist => 'newswangerd.collection_demo')
+
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Update,
+          @repo,
+          @master)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      @repo.index_content
+      post_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
+      assert_equal pre_count_content, post_count_content
     end
   end
 end

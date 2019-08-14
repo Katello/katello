@@ -232,7 +232,8 @@ module Katello
       end
 
       def sync
-        [remotes_api.sync(repo.remote_href, repository: repository_reference.try(:repository_href))]
+        repository_sync_url_data = client_class::RepositorySyncURL.new(repository: repository_reference.repository_href, mirror: repo.root.mirror_on_sync)
+        [remotes_api.sync(repo.remote_href, repository_sync_url_data)]
       end
 
       def mirror_version_href

@@ -40,5 +40,45 @@ module ::Actions::Pulp3
 
       assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
     end
+
+    def test_sync_with_mirror_false
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      @repo.index_content
+      pre_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
+      @repo.root.update_attributes(:url => "file:///var/www/test_repos/file2", :mirror_on_sync => false)
+
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Update,
+          @repo,
+          @master)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      @repo.index_content
+      post_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
+      assert_equal pre_count_content + 3, post_count_content
+    end
+
+    def test_sync_with_mirror_true
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      @repo.index_content
+      pre_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
+      @repo.root.update_attributes(:url => "file:///var/www/test_repos/file2")
+
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Update,
+          @repo,
+          @master)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      @repo.index_content
+      post_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
+      assert_equal pre_count_content, post_count_content
+    end
   end
 end

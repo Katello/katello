@@ -8,6 +8,10 @@ module Katello
           PulpAnsibleClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpAnsibleClient::Configuration))
         end
 
+        def client_class
+          PulpAnsibleClient
+        end
+
         def api_exception_class
           PulpAnsibleClient::ApiError
         end
