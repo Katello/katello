@@ -215,6 +215,71 @@ module Katello
       assert_includes values.map(&:name), '_timestamp'
     end
 
+    def test_update_foreman_facts_with_centos_no_minor_version
+      host.operatingsystem = ::Operatingsystem.create(
+        name: 'CentOS',
+        major: 7,
+        minor: 6,
+        type: "Redhat",
+        architectures: [architectures(:x86_64)],
+        title: "CentOS 7.6")
+
+      Katello::Host::SubscriptionFacet.update_facts(
+        host,
+        'distribution.name' => 'CentOS',
+        'distribution.version' => '7')
+
+      assert_equal 'CentOS', host.operatingsystem.name
+      assert_equal '7', host.operatingsystem.major
+      assert_equal '6', host.operatingsystem.minor
+    end
+
+    def test_update_foreman_facts_with_no_centos_different_major_and_no_minor_version
+      host.operatingsystem = ::Operatingsystem.create(
+        name: 'CentOS',
+        major: 7,
+        minor: 6,
+        type: "Redhat",
+        architectures: [architectures(:x86_64)],
+        title: "CentOS 7.6")
+
+      Katello::Host::SubscriptionFacet.update_facts(
+        host,
+        'distribution.name' => 'CentOS',
+        'distribution.version' => '8')
+
+      assert_equal 'CentOS', host.operatingsystem.name
+      assert_equal '8', host.operatingsystem.major
+      assert_equal "", host.operatingsystem.minor
+    end
+
+    def test_update_foreman_facts_with_os_version
+      ::Operatingsystem.create(
+        name: 'Redhat',
+        major: 8,
+        minor: 2,
+        type: "Redhat",
+        architectures: [architectures(:x86_64)],
+        title: "RHEL 8.2")
+
+      host.operatingsystem = ::Operatingsystem.create(
+        name: 'CentOS',
+        major: 7,
+        minor: 6,
+        type: "Redhat",
+        architectures: [architectures(:x86_64)],
+        title: "CentOS 7.6")
+
+      Katello::Host::SubscriptionFacet.update_facts(
+        host,
+        'distribution.name' => 'Redhat',
+        'distribution.version' => '8.2')
+
+      assert_equal 'RedHat', host.operatingsystem.name
+      assert_equal '8', host.operatingsystem.major
+      assert_equal '2', host.operatingsystem.minor
+    end
+
     def test_subscription_status
       status = Katello::SubscriptionStatus.new(:host => host)
       status.status = Katello::SubscriptionStatus::INVALID
