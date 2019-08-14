@@ -41,7 +41,7 @@ module Actions
                                              repository: repository)
           sequence do
             plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
-            plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+            plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options) if smart_proxy.pulp3_enabled?
             plan_action(SyncCapsule, smart_proxy, refresh_options)
           end
         end
