@@ -1,7 +1,6 @@
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import {
   headerFormatter,
   cellFormatter,
@@ -32,7 +31,7 @@ export const columns = (controller, selectionController) => [
       formatters: [
         (value, { rowData }) => (
           <td>
-            <a href={urlBuilder('subscriptions', '', rowData.id)}>
+            <a href={`https://access.redhat.com/management/subscriptions/${rowData.subscription_id}`} rel="noopener noreferrer" target="_blank">
               {rowData.product_name}
             </a>
           </td>
