@@ -93,7 +93,7 @@ module Actions
       end
 
       def rescue_external_task(error)
-        if error.is_a?(::Katello::Errors::PulpError)
+        if error.is_a?(::Katello::Errors::Pulp3Error)
           fail error
         else
           super
@@ -114,7 +114,7 @@ module Actions
       def external_task=(external_task_data)
         output[:pulp_tasks] = transform_task_response(external_task_data)
         output[:pulp_tasks].each do |pulp_task|
-          if (pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task))
+          if (pulp_exception = ::Katello::Errors::Pulp3Error.from_task(pulp_task))
             fail pulp_exception
           end
         end

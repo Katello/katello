@@ -100,6 +100,21 @@ module Katello
       end
     end
 
+    class Pulp3Error < StandardError
+      def self.from_task(task)
+        if task[:state] == 'canceled'
+          self.new(_("Task canceled"))
+        elsif task[:state] == 'failed'
+          message = if task[:error][:description].blank?
+                      _("Pulp task error")
+                    else
+                      task[:error][:description]
+                    end
+          self.new(message)
+        end
+      end
+    end
+
     class PulpError < StandardError
       def self.from_task(task)
         if %w(error canceled).include?(task[:state])
