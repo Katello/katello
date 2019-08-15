@@ -32,6 +32,7 @@ module Katello
         end
 
         def test_global_proxy
+          ForemanTasks.stubs(:async_task) #prevent global proxy setting callback
           proxy = FactoryBot.create(:http_proxy, :url => 'http://foo.com:1000', :username => 'admin', :password => 'password')
           Setting[:content_default_http_proxy] = proxy.name
 

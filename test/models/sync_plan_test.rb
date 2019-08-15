@@ -8,6 +8,10 @@ module Katello
       @plan_to_audit = SyncPlan.new(:name => 'Test Prod Sync', :organization => @organization, :sync_date => Time.now, :interval => 'daily')
     end
 
+    def teardown
+      SyncPlan.destroy_all
+    end
+
     def valid_attributes
       {:name => 'Sync plan', :organization => @organization, :sync_date => Time.now, :interval => 'daily'}
     end
