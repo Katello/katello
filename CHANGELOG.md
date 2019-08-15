@@ -1,3 +1,13 @@
+# 3.12.3 Iron Stout (2019-08-15)
+
+## Bug Fixes
+
+### Hosts
+* Katello fails to register hosts that were "pre-registered" via the API ([27580](https://projects.theforeman.org/issues/27580), [5f6d1cfe](https://github.com/Katello/katello/pull/8263/commits/cb39671347dd27e3cc48709ed217320b5f6d1cfe))
+
+### Subscriptions
+* Expanding Subscription row results in a JS error ([27560](https://projects.theforeman.org/issues/27560), [cbb37cb3](https://github.com/Katello/katello/pull/8140/commits/b78f516006a2f6a334d0962996f9a304cbb37cb3))
+
 # 3.12.2 Iron Stout (2019-07-31)
 
 ## Bug Fixes
