@@ -212,7 +212,25 @@ module Katello
         return if host.build? || rhsm_facts.nil?
         rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
         rhsm_facts[:_timestamp] = Time.now.to_s
+        if ignore_os?(host.operatingsystem, rhsm_facts)
+          rhsm_facts[:ignore_os] = true
+        end
         host.import_facts(rhsm_facts)
+      end
+
+      def self.ignore_os?(host_os, rhsm_facts)
+        if host_os.nil?
+          return false
+        end
+
+        name = rhsm_facts['distribution.name']
+        version = rhsm_facts['distribution.version']
+        major, minor = version.split('.')
+        return host_os.name == 'CentOS' &&
+          !host_os.major.nil? &&
+          name == 'CentOS' &&
+          minor.blank? &&
+          host_os.major == major
       end
 
       def self.propose_name_from_facts(facts)

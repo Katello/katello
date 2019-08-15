@@ -59,6 +59,7 @@ module Katello
     end
 
     def test_invalid_centos_os
+      @facts['ignore_os'] = true
       @facts['distribution.name'] = 'CentOS'
       @facts['distribution.version'] = '7'
 
