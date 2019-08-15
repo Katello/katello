@@ -27,6 +27,10 @@ module Katello
       @update_products_permission = :edit_products
     end
 
+    def teardown
+      SyncPlan.destroy_all
+    end
+
     def setup
       setup_controller_defaults_api
       login_user(users(:admin))
