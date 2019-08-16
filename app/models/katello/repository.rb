@@ -156,7 +156,7 @@ module Katello
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
              :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases, :deb_components, :deb_architectures,
              :ignore_global_proxy, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id,
-             :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :ansible_collection_whitelist, :http_proxy_policy, :http_proxy_id, :to => :root
+             :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :ansible_collection_requirements, :http_proxy_policy, :http_proxy_id, :to => :root
 
     def self.with_type(content_type)
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)

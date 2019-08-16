@@ -215,7 +215,7 @@ module Katello
     end
 
     def ensure_valid_ansible_collection_attributes
-      errors.add(:base, N_("Whitelist cannot be blank.")) if ansible_collection_whitelist.blank?
+      errors.add(:base, N_("Requirements cannot be blank.")) if ansible_collection_requirements.blank?
     end
 
     def ensure_valid_upstream_authorization
@@ -290,7 +290,7 @@ module Katello
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id)
       changeable_attributes += %w(name container_repository_name docker_tags_whitelist) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
-      changeable_attributes += %w(ansible_collection_whitelist) if ansible_collection?
+      changeable_attributes += %w(ansible_collection_requirements) if ansible_collection?
       changeable_attributes.any? { |key| previous_changes.key?(key) }
     end
 

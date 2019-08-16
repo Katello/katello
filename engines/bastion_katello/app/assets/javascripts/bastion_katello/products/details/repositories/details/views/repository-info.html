@@ -75,9 +75,9 @@
         </dd>
       </span>
 
-      <span ng-if="repository.content_type == 'ansible_collection' && false"><!-- && false to temporarily hide this field. https://pulp.plan.io/issues/5250 -->
-        <dt translate>Whitelist</dt>
-        <dd bst-edit-textarea="repository.ansible_collection_whitelist"
+      <span ng-if="repository.content_type == 'ansible_collection'">
+        <dt translate>Requirements</dt>
+        <dd bst-edit-textarea="repository.ansible_collection_requirements"
             on-save="save(repository)"
             readonly="denied('edit_products', product)">
         </dd>

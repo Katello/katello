@@ -67,14 +67,21 @@
 
       </div>
 
-      <div ng-show="repository.content_type === 'ansible_collection' && false" bst-form-group label="{{ 'Whitelist' | translate }}"> <!-- && false to temporarily hide this field. https://pulp.plan.io/issues/5250 -->
-        <textarea id="collection_whitelist"
-               name="collection_whitelists"
-               ng-model="repository.ansible_collection_whitelist"
+      <div ng-show="repository.content_type === 'ansible_collection'" bst-form-group label="{{ 'Requirements' | translate }}">
+        <textarea id="ansible_collection_requirements"
+               name="ansible_collection_requirements"
+               ng-model="repository.ansible_collection_requirements"
+               rows="10"
                type="text"/>
         <p class="help-block" translate>
-          Name / Comma-separated names of ansible collection(s) you want to sync from the galaxy. ex: newswangerd.collection_demo, devoperate.base
+          Contents of requirement.yml specifying what you want to sync from the galaxy.
+          Alternatively, you can upload a requirements.yml file below.
         </p>
+      </div>
+
+      <div class="form-group" ng-show="repository.content_type === 'ansible_collection'">
+        <input id="requirementFile" type="file" name="file_path" onclick="this.value = null" onchange="angular.element(this).scope().handleFiles(this)"/>
+        <p class="help-block" translate>Upload Requirements.yml file</p>
       </div>
 
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Releases' | translate }}">
