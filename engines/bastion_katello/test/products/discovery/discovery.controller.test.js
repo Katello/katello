@@ -135,7 +135,7 @@ describe('Controller: DiscoveryController', function() {
 
         $scope.discover();
 
-        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'https://registry.redhat.io', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined, search: 'search'},
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://registry.access.redhat.com/', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined, search: 'search'},
                                                                jasmine.any(Function));
     });
 
