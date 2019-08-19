@@ -87,15 +87,16 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             }
         });
 
-      $scope.handleFiles = function (element) {
-        var  reader = new FileReader();
-        reader.addEventListener("loadend", function() {
-          var data = reader.result;
-          $scope.repository.ansible_collection_requirements = data;
-          $scope.$apply();
-        });
-        reader.readAsText(element.files[0]);
-      };
+        $scope.handleFiles = function (element) {
+            var reader = new FileReader();
+            reader.addEventListener("loadend", function() {
+                var data = reader.result;
+              /* eslint-disable camelcase */
+                $scope.repository.ansible_collection_requirements = data;
+                $scope.$apply();
+            });
+            reader.readAsText(element.files[0]);
+        };
 
         ContentCredential.queryUnpaged(function (contentCredentials) {
             $scope.contentCredentials = contentCredentials.results;
