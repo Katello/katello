@@ -264,11 +264,10 @@ module Actions
           ::Katello::PuppetModule.with_identifiers(ids)
         end
 
-        def copy_puppet_modules(new_repo, module_id)
+        def copy_puppet_module(new_repo, module_id)
           puppet_module = find_puppet_modules([module_id]).first
-          possible_repos = puppet_module.repositories.in_organization(new_repo.organization).in_default_vie
-          plan_action(Pulp::Repository::CopyUnits, possible_repos.first, new_repo,
-                                                  [puppet_module])
+          possible_repos = puppet_module.repositories.in_organization(new_repo.organization).in_default_view
+          plan_action(Pulp::ContentViewPuppetEnvironment::CopyContents, new_repo, source_repository_id: possible_repos.first.id, puppet_modules: [puppet_module])
         end
 
         def plan_copy(action_class, source_repo, target_repo, clauses = nil, override_config = nil)
