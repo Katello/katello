@@ -21,6 +21,13 @@ module Katello
         end
       end
 
+      def enabled_content_types
+        list = repository_types.values.map do |type|
+          type.content_types.map(&:model_class).flatten.map { |ct| ct::CONTENT_TYPE }
+        end
+        list.flatten
+      end
+
       def creatable_by_user?(repository_type)
         return false unless (type = find(repository_type))
         type.allow_creation_by_user

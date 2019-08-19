@@ -229,6 +229,18 @@ module Katello
       assert_response_ids response, ids
     end
 
+    def test_index_with_content
+      ids = Katello::Repository.joins(:repository_rpms).where(
+          :content_view_version_id => @organization.default_content_view.versions.first.id
+      ).pluck(:id).uniq
+
+      response = get :index, params: { :with_content => 'rpm' }
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+      assert_response_ids response, ids
+    end
+
     def test_index_protected
       allowed_perms = [@read_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]

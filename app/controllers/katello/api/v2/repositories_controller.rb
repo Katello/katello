@@ -90,6 +90,7 @@ module Katello
     param :description, String, :desc => N_("description of the repository")
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."),
           :required => false
+    param :with_content, RepositoryTypeManager.enabled_content_types, :desc => N_("only repositories having at least one of the specified content type ex: rpm , erratum")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Repository)
     def index
@@ -119,6 +120,7 @@ module Katello
 
     def index_relation
       query = Repository.readable
+      query = query.with_content(params[:with_content]) if params[:with_content]
       query = index_relation_product(query)
       query = query.with_type(params[:content_type]) if params[:content_type]
       query = query.where(:root_id => RootRepository.where(:name => params[:name])) if params[:name]

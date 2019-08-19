@@ -32,7 +32,7 @@ angular.module('Bastion.packages').controller('PackagesController',
 
         $scope.repository = {name: translate('All Repositories'), id: 'all'};
 
-        Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum'}, function (response) {
+        Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum', 'with_content': 'rpm'}, function (response) {
             $scope.repositories = [$scope.repository];
             $scope.repositories = $scope.repositories.concat(response.results);
 
