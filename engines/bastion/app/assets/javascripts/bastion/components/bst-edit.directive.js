@@ -189,7 +189,8 @@ angular.module('Bastion.components')
                 model: '=bstEditTextarea',
                 readonly: '=',
                 handleSave: '&onSave',
-                handleCancel: '&onCancel'
+                handleCancel: '&onCancel',
+                editTrigger: '='
             },
             templateUrl: 'components/views/bst-edit-textarea.html'
         };

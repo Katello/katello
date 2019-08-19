@@ -79,7 +79,15 @@
         <dt translate>Requirements</dt>
         <dd bst-edit-textarea="repository.ansible_collection_requirements"
             on-save="save(repository)"
-            readonly="denied('edit_products', product)">
+            readonly="denied('edit_products', product)"
+            edit-trigger="uploadedFile">
+        </dd>
+      </span>
+
+      <span ng-if="repository.content_type == 'ansible_collection'">
+      <dt translate>Upload Requirements</dt>
+        <dd>
+          <input id="requirementFile" type="file" name="file_path" onclick="this.value = null" onchange="angular.element(this).scope().handleFiles(this)"/>
         </dd>
       </span>
 
