@@ -28,10 +28,6 @@ module Katello
       end
     end
 
-    def self.validate_name(name)
-      name.gsub(/[^a-z0-9\-_ ]/i, "")
-    end
-
     def self.engineering_product_id?(id)
       id.match(/^\d+$/) #engineering products are numeric
     end
@@ -39,7 +35,7 @@ module Katello
     def self.import_from_cp(attrs, organization)
       import_logger = attrs[:import_logger]
 
-      product_attrs = {'name' => validate_name(attrs['name']),
+      product_attrs = {'name' => attrs['name'],
                        'cp_id' => attrs['id'],
                        'label' => Util::Model.labelize(attrs['name']),
                        'multiplier' => attrs['multiplier'],
