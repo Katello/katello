@@ -66,9 +66,11 @@ module Katello
 
     has_many :yum_metadata_files, :dependent => :destroy, :class_name => "Katello::YumMetadataFile"
 
-    has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
+    has_many :repository_docker_tags, :class_name => "Katello::RepositoryDockerTag", :dependent => :delete_all
+    has_many :docker_tags, :through => :repository_docker_tags
 
-    has_many :docker_meta_tags, :dependent => :destroy, :class_name => "Katello::DockerMetaTag"
+    has_many :repository_docker_meta_tags, :class_name => "Katello::RepositoryDockerMetaTag", :dependent => :delete_all
+    has_many :docker_meta_tags, :through => :repository_docker_meta_tags
 
     has_many :repository_ostree_branches, :class_name => "Katello::RepositoryOstreeBranch", :dependent => :delete_all
     has_many :ostree_branches, :through => :repository_ostree_branches

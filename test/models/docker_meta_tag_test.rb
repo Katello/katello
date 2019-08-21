@@ -8,8 +8,8 @@ module Katello
 
     def setup
       @repo = Repository.find(katello_repositories(:busybox).id)
-      @tag_schema2 = create(:docker_tag, :with_manifest_list, :repository => @repo, :name => "latest")
-      @tag_schema1 = create(:docker_tag, :schema1, :repository => @repo, :name => "latest")
+      @tag_schema2 = create(:docker_tag, :with_manifest_list, :repositories => [@repo], :name => "latest")
+      @tag_schema1 = create(:docker_tag, :schema1, :repositories => [@repo], :name => "latest")
 
       @repo.library_instances_inverse.each do |repo|
         repo.docker_tags << @tag_schema2.dup
@@ -23,8 +23,8 @@ module Katello
     end
 
     def test_with_uuid
-      meta_one = DockerMetaTag.create!(:name => @tag_schema1.name, :schema1 => @tag_schema1, :repository => @repo)
-      DockerMetaTag.create!(:name => @tag_schema2.name, :schema2 => @tag_schema2, :repository => @repo)
+      meta_one = DockerMetaTag.create!(:name => @tag_schema1.name, :schema1 => @tag_schema1, :repositories => [@repo])
+      DockerMetaTag.create!(:name => @tag_schema2.name, :schema2 => @tag_schema2, :repositories => [@repo])
 
       result = DockerMetaTag.with_pulp_id(meta_one.id)
 
@@ -43,20 +43,20 @@ module Katello
 
       meta = DockerMetaTag.find_by(:schema1 => @tag_schema1.id)
       assert_equal @tag_schema2, meta.schema2
-      assert_equal @repo, meta.repository
+      assert_equal @repo, meta.repositories.first
 
       DockerTag.where(:id => @tag_schema1.id).delete_all
       DockerMetaTag.import_meta_tags([@repo])
       assert_empty DockerMetaTag.where(:schema1 => @tag_schema1.id)
       assert_equal 1, DockerMetaTag.where(:schema2 => @tag_schema2.id).count
 
-      @tag_schema1 = create(:docker_tag, :schema1, :repository => @repo, :name => "latest")
+      @tag_schema1 = create(:docker_tag, :schema1, :repositories => [@repo], :name => "latest")
       DockerMetaTag.import_meta_tags([@repo])
       old_meta = meta
 
       meta = DockerMetaTag.find_by(:schema1 => @tag_schema1.id)
       assert_equal @tag_schema2, meta.schema2
-      assert_equal @repo, meta.repository
+      assert_equal @repo, meta.repositories.first
 
       refute_equal old_meta.id, meta.id
 
@@ -68,10 +68,10 @@ module Katello
     def test_in_repositories
       DockerMetaTag.import_meta_tags([@repo])
       tags = DockerMetaTag.in_repositories(@repo)
-      assert_equal @tag_schema1.repository, tags.first.repository
+      assert_equal @tag_schema1.repositories.first, tags.first.repositories.first
       assert_equal 1, tags.count
 
-      new_tag = create(:docker_tag, :schema1, :repository => @repo)
+      new_tag = create(:docker_tag, :schema1, :repositories => [@repo])
       DockerMetaTag.import_meta_tags([@repo])
 
       tags = DockerMetaTag.in_repositories(@repo, true).pluck(:name)
@@ -122,7 +122,7 @@ module Katello
       assert_includes DockerMetaTag.search_for("tag = #{dmt.name}"), dmt
       refute_includes DockerMetaTag.search_for("tag = #{dmt.name}00009s"), dmt
 
-      assert_includes DockerMetaTag.search_for("repository = #{dmt.repository.name}"), dmt
+      assert_includes DockerMetaTag.search_for("repository = #{dmt.repositories.first.name}"), dmt
     end
   end
 end

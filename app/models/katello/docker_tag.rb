@@ -6,7 +6,8 @@ module Katello
     CONTENT_TYPE = 'docker_tag'.freeze
 
     belongs_to :docker_taggable, :polymorphic => true, :inverse_of => :docker_tags
-    belongs_to :repository, :inverse_of => :docker_tags, :class_name => "Katello::Repository"
+    has_many :repository_docker_tags, :class_name => "Katello::RepositoryDockerTag", :dependent => :delete_all, :inverse_of => :docker_tag
+    has_many :repositories, :through => :repository_docker_tags, :inverse_of => :docker_tags
 
     has_one :schema1_meta_tag, :class_name => "Katello::DockerMetaTag", :foreign_key => "schema1_id",
                                :inverse_of => :schema1, :dependent => :nullify
@@ -16,7 +17,29 @@ module Katello
 
     before_destroy :cleanup_meta_tags
 
-    delegate :relative_path, :environment, :content_view_version, :product, :to => :repository
+    def self.repository_association_class
+      RepositoryDockerTag
+    end
+
+    def repository
+      repositories.first
+    end
+
+    def relative_path
+      repositories.first.relative_path
+    end
+
+    def environment
+      repositories.first.environment
+    end
+
+    def content_view_version
+      repositories.first.content_view_version
+    end
+
+    def product
+      repositories.first.product
+    end
 
     def associated_meta_tag
       schema1_meta_tag || schema2_meta_tag
@@ -42,42 +65,15 @@ module Katello
       docker_taggable_id
     end
 
-    def self.grouped
-      grouped_fields = "#{table_name}.name, #{Repository.table_name}.root_id, #{Product.table_name}.name"
-      ids = distinct.select("ON (#{grouped_fields}) #{table_name}.id").joins(:repository => :product)
-      where(:id => ids)
-    end
-
     def self.import_for_repository(repository)
-      self.where(:repository_id => repository).destroy_all
       super(repository)
-      pulp_ids = self.where(:repository_id => repository.id).pluck(:pulp_id)
-      import_all(pulp_ids) unless pulp_ids.blank?
-    end
-
-    def self.import_all(pulp_ids = nil)
-      self.destroy_all if pulp_ids.blank?
-      self.where(:repository_id => nil).destroy_all
-      if pulp_ids
-        repos = ::Katello::Repository.joins(:docker_tags).where("katello_docker_tags.pulp_id" => pulp_ids).distinct
-        ::Katello::DockerMetaTag.import_meta_tags(repos)
-      else
-        ::Katello::DockerMetaTag.import_meta_tags(::Katello::Repository.docker_type)
-      end
-    end
-
-    def self.many_repository_associations
-      false
-    end
-
-    # docker tag only has one repo
-    def repositories
-      [repository]
+      ::Katello::DockerMetaTag.import_meta_tags([repository])
     end
 
     def related_tags
       # tags in the same repo group with the same name
-      self.class.where(:repository_id => repository.group, :name => name)
+      self.class.where(:id => RepositoryDockerTag.where(:repository_id => repositories.first.group).select(:docker_tag_id),
+                       :name => name)
     end
 
     def self.with_identifiers(ids)

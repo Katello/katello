@@ -297,7 +297,9 @@ module Katello
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(stubbed: true)
-        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
 
         allowed_perms = [:create_personal_access_tokens]
         denied_perms = []
@@ -311,7 +313,9 @@ module Katello
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
-        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
 
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200
@@ -334,7 +338,9 @@ module Katello
         expected_headers['AUTHORIZATION'] = request.env['HTTP_AUTHORIZATION']
 
         Resources::Registry::Proxy.stubs(:get).with('/v2/busybox/manifests/one', expected_headers).returns(manifest)
-        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
 
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200
@@ -348,7 +354,9 @@ module Katello
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
-        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
 
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200
@@ -362,7 +370,9 @@ module Katello
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
-        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
 
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200
@@ -376,7 +386,9 @@ module Katello
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
-        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+        DockerMetaTag.stubs(:where).with(id: RepositoryDockerMetaTag.
+                                         where(repository_id: @docker_repo.id).
+                                         select(:docker_meta_tag_id), name: @tag.name).returns([@tag])
 
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
         assert_response 200

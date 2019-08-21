@@ -294,11 +294,11 @@ module Katello
     end
 
     def docker_tag_count
-      ::Katello::DockerMetaTag.where(:repository_id => repositories.archived.docker_type).count
+      docker_tags.count
     end
 
     def docker_tags
-      ::Katello::DockerMetaTag.where(:repository_id => repositories.docker_type)
+      ::Katello::DockerMetaTag.where(:id => RepositoryDockerMetaTag.where(:repository_id => repositories.docker_type).select(:docker_meta_tag_id))
     end
 
     def debs
