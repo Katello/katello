@@ -210,12 +210,66 @@ module Katello
         repositories_api.update(repository_reference.try(:repository_href), name: backend_object_name)
       end
 
-      def list(args)
-        repositories_api.list(args).results
+      def list(options)
+        repositories_api.list(options).results
       end
 
-      def self.list(smart_proxy, args)
-        ::Katello::Pulp3::Repository.new(nil, smart_proxy).list(args)
+      def self.versions_list(smart_proxy, href, options)
+        repository_versions_api = ::Katello::Pulp3::Repository.new(nil, smart_proxy).repository_versions_api
+        fetch_from_list { |page_opts| repository_versions_api.list(href, page_opts.merge(options)) }
+      end
+
+      def self.list(smart_proxy, options)
+        repositories_api = ::Katello::Pulp3::Repository.new(nil, smart_proxy).repositories_api
+        fetch_from_list do |page_opts|
+          repositories_api.list(page_opts.merge(options))
+        end
+      end
+
+      def self.fetch_from_list
+        page_size = SETTINGS[:katello][:pulp][:bulk_load_size]
+        page_opts = { "offset" => 0, limit: page_size }
+        response = {}
+
+        results = []
+
+        loop do
+          page_opts = page_opts.with_indifferent_access
+          break unless (
+            (response["count"] && (page_opts["offset"] < response["count"])) ||
+            page_opts["offset"] == 0)
+          response = yield page_opts
+          response = response.as_json.with_indifferent_access
+          results = results.concat(response[:results])
+          page_opts[:offset] += page_size
+        end
+
+        results
+      end
+
+      def self.repository_versions(smart_proxy, options)
+        current_pulp_repositories = ::Katello::Pulp3::Repository.list(smart_proxy, options)
+        repo_hrefs = current_pulp_repositories.collect { |repo| repo[:_href] }.uniq
+
+        version_hrefs = repo_hrefs.collect do |href|
+          ::Katello::Pulp3::Repository.versions_list(smart_proxy, href, options).pluck(:_href)
+        end
+
+        version_hrefs.flatten.uniq
+      end
+
+      def self.orphan_repository_versions(smart_proxy)
+        version_hrefs = repository_versions(smart_proxy, {})
+
+        version_hrefs - ::Katello::Repository.where(version_href: version_hrefs).pluck(:version_href)
+      end
+
+      def self.delete_orphan_repository_versions(smart_proxy)
+        orphans = orphan_repository_versions(smart_proxy)
+        orphans.collect do |href|
+          ::Katello::Pulp3::Repository.new(nil, smart_proxy).
+            repository_versions_api.delete(href)
+        end
       end
 
       def delete_mirror(href = mirror_repository_href)
