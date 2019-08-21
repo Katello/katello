@@ -9,7 +9,7 @@ module Katello
     def setup
       @repo = Repository.find(katello_repositories(:busybox).id)
       @manifest = create(:docker_manifest)
-      @tag = create(:docker_tag, :repository => @repo)
+      @tag = create(:docker_tag, :repositories => [@repo])
 
       @repo.clones.each do |repo|
         repo.docker_tags << @tag.dup
@@ -25,13 +25,6 @@ module Katello
       @tag.update_attributes(:pulp_id => 'ksdjfkdjkfjdk')
       tag = DockerTag.with_pulp_id(@tag.pulp_id).first
       refute_nil tag
-    end
-
-    def test_grouped
-      assert_equal 1, DockerTag.grouped.where(:name => @tag.name).count
-
-      create(:docker_tag, :latest, :repository => @repo)
-      assert_equal 2, DockerTag.grouped.where(:name => [@tag.name, "latest"]).count
     end
 
     def test_related_tags

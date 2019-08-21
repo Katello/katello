@@ -2,7 +2,8 @@ module Katello
   class DockerMetaTag < Katello::Model
     include ScopedSearchExtensions
 
-    belongs_to :repository, :inverse_of => :docker_meta_tags, :class_name => "Katello::Repository"
+    has_many :repository_docker_meta_tags, :class_name => "Katello::RepositoryDockerMetaTag", :dependent => :delete_all, :inverse_of => :docker_meta_tag
+    has_many :repositories, :through => :repository_docker_meta_tags, :inverse_of => :docker_meta_tags
 
     belongs_to :schema1, :class_name => "Katello::DockerTag",
                           :inverse_of => :schema1_meta_tag
@@ -22,9 +23,17 @@ module Katello
     scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true,
                   :ext_method => :search_by_repo_name, :only_explicit => true
 
+    def self.repository_association_class
+      RepositoryDockerMetaTag
+    end
+
+    def repository
+      repositories.first
+    end
+
     def self.search_by_repo_name(_key, operator, value)
       conditions = sanitize_sql_for_conditions(["#{Katello::RootRepository.table_name}.name #{operator} ?", value_to_sql(operator, value)])
-      query = self.joins(:repository => :root).where(conditions).select('id')
+      query = self.joins(:repositories => :root).where(conditions).select('id')
       {:conditions => "#{self.table_name}.id IN (#{query.to_sql})"}
     end
 
@@ -79,25 +88,29 @@ module Katello
     delegate_to_tags :docker_manifest
     delegate_to_tags :product, :environment, :content_view_version
 
-    def repositories
-      [self.repository]
-    end
-
     def related_tags
-      self.class.where(:repository_id => repository.group, :name => name)
+      self.class.where(:id => ::Katello::RepositoryDockerMetaTag.where(:repository_id => repositories.first.group).
+                       select(:docker_meta_tag_id), :name => name)
     end
 
     def self.in_repositories(repos, grouped = false)
       if grouped
-        search_in_tags(DockerTag.in_repositories(repos).grouped)
+        search_in_tags(DockerTag.in_repositories(repos), grouped)
       else
-        search_in_tags(DockerTag.in_repositories(repos))
+        search_in_tags(DockerTag.in_repositories(repos)).where(:id => repository_association_class.where(:repository_id => repos).select(:docker_meta_tag_id))
       end
     end
 
-    def self.search_in_tags(tags)
+    def self.search_in_tags(tags, grouped = false)
       sql = tags.select("#{::Katello::DockerTag.table_name}.id").to_sql
-      self.where("#{self.table_name}.schema1_id in (#{sql}) or #{self.table_name}.schema2_id in (#{sql})")
+
+      if grouped
+        grouped_fields = "#{table_name}.name, katello_repositories.root_id"
+        ids = distinct.select("ON (#{grouped_fields}) #{table_name}.id").joins(:repositories)
+        where(:id => ids).where("#{self.table_name}.schema1_id in (#{sql}) or #{self.table_name}.schema2_id in (#{sql})")
+      else
+        self.where("#{self.table_name}.schema1_id in (#{sql}) or #{self.table_name}.schema2_id in (#{sql})")
+      end
     end
 
     def schema1_manifest
@@ -123,7 +136,7 @@ module Katello
     def self.import_meta_tags(repositories)
       repositories.each do |repo|
         tag_table_values = get_tag_table_values(repo)
-        meta_tag_table_values = DockerMetaTag.where(:repository => repo).
+        meta_tag_table_values = DockerMetaTag.where(:id => repository_association_class.where(:repository_id => repo.id).select(:docker_meta_tag_id)).
                                   select(:schema1_id, :schema2_id, :name).map do |meta_tag|
           [meta_tag.schema1_id, meta_tag.schema2_id, meta_tag.name]
         end
@@ -140,22 +153,27 @@ module Katello
         end
 
         unless params_to_query_for_delete.empty?
-          ::Katello::DockerMetaTag.where(:repository => repo).
-                                   where(params_to_query_for_delete.join(" OR ")).delete_all
+          DockerMetaTag.where(:id => repository_association_class.
+                              where(:repository_id => repo.id).
+                              select(:docker_meta_tag_id)).
+                              where(params_to_query_for_delete.join(" OR ")).delete_all
         end
 
+        metatags = []
         (tag_table_values - meta_tag_table_values).each do |schema1, schema2, name|
-          DockerMetaTag.where(:schema1_id => schema1,
+          metatags << DockerMetaTag.where(:schema1_id => schema1,
                               :schema2_id => schema2,
-                              :name => name,
-                              :repository => repo).create!
+                              :name => name).create!
         end
+        repo.docker_meta_tags += metatags
       end
     end
 
     def self.get_tag_table_values(repo)
       # queries DockerTags for a repo and retuns a [schema1, schema2 , name] tuple combination
-      tags = ::Katello::DockerTag.where(:repository_id => repo.id)
+      tags = ::Katello::DockerTag.where(:id => RepositoryDockerTag.
+                                        where(:repository_id => repo.id).
+                                        select(:docker_tag_id))
       dups = tags.group_by(&:name)
 
       dups.map do |name, values|

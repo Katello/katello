@@ -6,7 +6,7 @@ module Katello
       @repo = Repository.find(katello_repositories(:redis).id)
       @manifest = @repo.docker_manifests.create!(:digest => "abc123", :pulp_id => "123xyz")
       @tag = @repo.docker_tags.create!(:name => "wat", :docker_taggable => @manifest)
-      @meta_tag = DockerMetaTag.create!(:name => @tag.name, :schema1 => @tag, :repository => @repo)
+      @meta_tag = DockerMetaTag.create!(:name => @tag.name, :schema1 => @tag, :repositories => [@repo])
     end
 
     def setup

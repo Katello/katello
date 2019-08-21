@@ -114,7 +114,8 @@ module Katello
           manifest = Katello::DockerManifestList.where(digest: params[:tag]).first || Katello::DockerManifest.where(digest: params[:tag]).first
           return item_not_found(params[:tag]) unless manifest
         else
-          tag = DockerMetaTag.where(repository_id: @repository.id, name: params[:tag]).first
+          tag = ::Katello::DockerMetaTag.where(id: ::Katello::RepositoryDockerMetaTag.
+                                    where(repository_id: @repository.id).select(:docker_meta_tag_id), name: params[:tag]).first
           return item_not_found(params[:tag]) unless tag
         end
       end
