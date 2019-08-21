@@ -3,6 +3,7 @@ module Actions
   module Katello
     module Repository
       class ImportUpload < Actions::EntryAction
+        include Actions::Katello::PulpSelector
         def plan(repository, uploads, options = {})
           action_subject(repository)
           repo_service = repository.backend_service(::SmartProxy.pulp_master)
@@ -22,13 +23,18 @@ module Actions
                 if unit_type_id == 'docker_tag'
                   unit_metadata = unit_key
                 end
-                import_upload = plan_action(Pulp::Repository::ImportUpload,
-                                            pulp_id: repository.pulp_id,
-                                            unit_type_id: unit_type_id,
-                                            unit_key: unit_key,
-                                            upload_id: upload_id,
-                                            unit_metadata: unit_metadata)
-
+                import_upload_args = {
+                    pulp_id: repository.pulp_id,
+                    unit_type_id: unit_type_id,
+                    unit_key: unit_key,
+                    upload_id: upload_id,
+                    unit_metadata: unit_metadata
+                }
+                import_upload = plan_pulp_action([Actions::Pulp::Repository::ImportUpload,
+                                  Actions::Pulp3::Orchestration::Repository::ImportUpload],
+                                  repository,
+                                  SmartProxy.pulp_master,
+                                  import_upload_args)
                 plan_action(FinishUpload, repository, :dependency => import_upload.output,
                             generate_metadata: false, content_type: options[:content_type])
                 import_upload.output
