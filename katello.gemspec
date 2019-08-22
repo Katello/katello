@@ -42,10 +42,12 @@ Gem::Specification.new do |gem|
   # Pulp
   gem.add_dependency "runcible", ">= 2.11.0", "< 3.0.0"
   gem.add_dependency "anemone"
-  gem.add_dependency "pulpcore_client"
-  gem.add_dependency "pulp_file_client", "< 3.0.0"
-  gem.add_dependency "pulp_ansible_client"
-  gem.add_dependency "pulp_docker_client"
+
+  #pulp3
+  gem.add_dependency "pulpcore_client", "<= 3.0.0rc5.dev01566405557"
+  gem.add_dependency "pulp_file_client", "<= 0.1.0b2.dev01566325827"
+  gem.add_dependency "pulp_ansible_client", "<= 0.2.0b3.dev01566484022"
+  gem.add_dependency "pulp_docker_client", "<= 4.0.0b6.dev01566480729"
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
