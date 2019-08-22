@@ -76,18 +76,23 @@
       </span>
 
       <span ng-if="repository.content_type == 'ansible_collection'">
+      <dt translate>Upload Requirements</dt>
+        <dd>
+          <input id="requirementFile" type="file" name="file_path" onclick="this.value = null" onchange="angular.element(this).scope().handleFiles(this)"/>
+          <p bst-alert='info' ng-show="repository.content_type == 'ansible_collection'">
+          <span translate>
+            You can upload a requirements.yml file above to auto-fill contents <b>OR</b> paste contents of <a ng-href="https://docs.ansible.com/ansible/devel/dev_guide/collections_tech_preview.html#install-multiple-collections-with-a-requirements-file" target="_blank"> Requirements.yml </a>below.
+          </span>
+      </p>
+        </dd>
+      </span>
+
+      <span ng-if="repository.content_type == 'ansible_collection'">
         <dt translate>Requirements</dt>
         <dd class="overflow-span" bst-edit-textarea="repository.ansible_collection_requirements"
             on-save="save(repository)"
             readonly="denied('edit_products', product)"
             edit-trigger="uploadedFile">
-        </dd>
-      </span>
-
-      <span ng-if="repository.content_type == 'ansible_collection'">
-      <dt translate>Upload Requirements</dt>
-        <dd>
-          <input id="requirementFile" type="file" name="file_path" onclick="this.value = null" onchange="angular.element(this).scope().handleFiles(this)"/>
         </dd>
       </span>
 

@@ -3,6 +3,7 @@
  * @name  Bastion.repositories.controller:NewRepositoryController
  *
  * @requires $scope
+ * @requires $sce
  * @requires Repository
  * @requires Product
  * @requires ContentCredential
@@ -23,8 +24,8 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy',
-    function ($scope, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy) {
+    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy',
+    function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy) {
 
         function success() {
             Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -133,6 +134,16 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         $scope.repository['http_proxy_policy'] = HttpProxyPolicy.policies[0].label;
         $scope.policies = HttpProxyPolicy.policies;
         $scope.proxies = [];
+
+        $scope.collectionURLPopover = $sce.trustAsHtml("You can sync collections utilizing just the url:<br/>" +
+          "<b>1. For all collections in Ansible Galaxy:</b><br/>" +
+          "https://galaxy.ansible.com/api/v2/collections <br/>" +
+          "<b>2. For specific collection with URL filtering:</b><br/>" +
+          "https://galaxy.ansible.com/api/v2/collections/testing/k8s_demo_collection <br/>" +
+          "<b>3. For specific collections with Requirements.yml:</b><br/>" +
+          "Use base URL https://galaxy.ansible.com/ and specify requirements.yml below to specify collections");
+
+        $scope.requirementPopover = $sce.trustAsHtml("To learn more about requirement.yml specification, visit <a href='https://docs.ansible.com/ansible/devel/dev_guide/collections_tech_preview.html#install-multiple-collections-with-a-requirements-file' target=\"_blank\">documentation </a>");
 
         $scope.displayHttpProxyPolicyName = function (policy) {
             return HttpProxyPolicy.displayHttpProxyPolicyName(policy);
