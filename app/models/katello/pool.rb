@@ -83,6 +83,16 @@ module Katello
       ).save!
     end
 
+    # Note - Audit hook added to find records based on column except associations to display audit information
+    def self.audit_hook_to_find_records(keyname, change, _audit)
+      if keyname =~ /_ids$/
+        case keyname
+        when 'host_ids'
+          ::Host.where(:id => change)&.index_by(&:id)
+        end
+      end
+    end
+
     private
 
     def default_sort
