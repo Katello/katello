@@ -192,6 +192,7 @@ module Katello
       ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
       ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
       ::Api::V2::SmartProxiesController.send :include, Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
+      ::Api::V2::OrganizationsController.send :include, Katello::Concerns::Api::V2::OrganizationsControllerExtensions
 
       Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
       Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
