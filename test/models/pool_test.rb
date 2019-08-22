@@ -197,5 +197,17 @@ module Katello
       key.pools << @pool_one
       assert_includes Pool.for_activation_key(key), @pool_one
     end
+
+    def test_audit_hook_to_find_records_should_return_hosts
+      # Note - creating audit record manually
+      pool_host_ids = @pool_one.hosts.map(&:id)
+      @pool_one.import_audit_record([], pool_host_ids)
+      audit_record = Audited::Audit.find_by(:auditable_id => @pool_one.id, :auditable_type => 'Katello::Pool')
+
+      refute_nil audit_record
+      hosts_list = Katello::Pool.audit_hook_to_find_records('host_ids', audit_record.audited_changes['host_ids'][1], audit_record)
+
+      assert_equal pool_host_ids.length, hosts_list.keys.length
+    end
   end
 end
