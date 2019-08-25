@@ -25,10 +25,10 @@
   "devDependencies": {
     "@storybook/react": "^3.2.17",
     "@storybook/storybook-deployer": "^2.0.0",
-    "@theforeman/vendor-dev": "^0.1.1",
+    "@theforeman/vendor-dev": "^1.4.0",
     "axios-mock-adapter": "^1.10.0",
     "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.6",
+    "babel-eslint": "^10.0.3",
     "babel-jest": "^23.4.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -40,7 +40,7 @@
     "enzyme": "^3.4.0",
     "enzyme-adapter-react-16": "^1.4.0",
     "enzyme-to-json": "^3.1.2",
-    "eslint": "^4.19.1",
+    "eslint": "^6.2.2",
     "eslint-config-airbnb": "^16.0.0",
     "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-import": "^2.7.0",
@@ -55,7 +55,7 @@
     "redux-mock-store": "^1.3.0"
   },
   "dependencies": {
-    "@theforeman/vendor": "^0.1.1",
+    "@theforeman/vendor": "^1.4.0",
     "angular": "1.5.5",
     "bootstrap-select": "1.12.4",
     "downshift": "^1.28.0",
@@ -86,7 +86,10 @@
       "<rootDir>/.+fixtures.+",
       "<rootDir>/engines"
     ],
-    "moduleDirectories": ["node_modules/@theforeman/vendor-core/node_modules", "node_modules"],
+    "moduleDirectories": [
+      "node_modules/@theforeman/vendor-core/node_modules",
+      "node_modules"
+    ],
     "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy"
     }
