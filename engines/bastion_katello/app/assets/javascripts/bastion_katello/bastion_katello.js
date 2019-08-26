@@ -34,6 +34,9 @@
 //= require "bastion_katello/files/files.module"
 //= require_tree "./files"
 
+//= require "bastion_katello/ansible-collections/ansible-collections.module.js"
+//= require_tree "./ansible-collections"
+
 //= require "bastion_katello/ostree-branches/ostree-branches.module.js"
 //= require_tree "./ostree-branches"
 

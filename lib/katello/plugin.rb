@@ -164,6 +164,17 @@ Foreman::Plugin.register :katello do
            :turbolinks => false
     end
 
+    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::ANSIBLE_COLLECTION_TYPE)
+      menu :top_menu,
+           :ansible_collections,
+           :caption => N_('Ansible Collections'),
+           :url => '/ansible_collections',
+           :url_hash => {:controller => 'katello/api/v2/ansible_collections',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
+
     if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::PUPPET_TYPE)
       menu :top_menu,
            :puppet_modules,

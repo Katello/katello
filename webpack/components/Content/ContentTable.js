@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import { Table } from '../../move_to_foreman/components/common/table';
-import TableSchema from './ModuleStreamsTableSchema';
 import { LoadingState } from '../../move_to_pf/LoadingState';
 
-const ModuleStreamsTable = ({ moduleStreams, onPaginationChange }) => {
+const ContentTable = ({ content, tableSchema, onPaginationChange }) => {
   const {
     loading, results, pagination, itemCount,
-  } = moduleStreams;
+  } = content;
 
   const emptyStateData = {
-    header: __('No Module Streams found'),
+    header: __('No Content found'),
   };
 
   return (
@@ -21,7 +20,7 @@ const ModuleStreamsTable = ({ moduleStreams, onPaginationChange }) => {
       loadingText={__('Loading')}
     >
       <Table
-        columns={TableSchema}
+        columns={tableSchema}
         rows={results}
         pagination={pagination}
         onPaginationChange={onPaginationChange}
@@ -32,14 +31,16 @@ const ModuleStreamsTable = ({ moduleStreams, onPaginationChange }) => {
   );
 };
 
-ModuleStreamsTable.propTypes = {
-  moduleStreams: PropTypes.shape({
+ContentTable.propTypes = {
+  content: PropTypes.shape({
     loading: PropTypes.bool,
     results: PropTypes.array,
     pagination: PropTypes.shape({}),
     itemCount: PropTypes.number,
   }).isRequired,
   onPaginationChange: PropTypes.func.isRequired,
+  tableSchema: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
-export default ModuleStreamsTable;
+
+export default ContentTable;

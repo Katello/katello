@@ -35,7 +35,7 @@
                 id="content_type"
                 name="content_type"
                 ng-model="repository.content_type"
-                ng-options="type.name as type.name for type in repositoryTypes">
+                ng-options="type.name as type.name.replace('_',' ') for type in repositoryTypes">
         </select>
       </div>
 
@@ -61,12 +61,13 @@
           URL of the registry you want to sync. Example: https://registry-1.docker.io/
         </p>
         <p class="help-block" ng-show="repository.content_type === 'ansible_collection'" translate>
-          URL of the ansible content sharing hub you want to sync. Example: https://galaxy.ansible.com
+          URL of the ansible collection you want to sync.
+          Example: https://galaxy.ansible.com/api/v2/collections/testing/k8s_demo_collection
         </p>
 
       </div>
 
-      <div ng-show="repository.content_type === 'ansible_collection'" bst-form-group label="{{ 'Whitelist' | translate }}">
+      <div ng-show="repository.content_type === 'ansible_collection' && false" bst-form-group label="{{ 'Whitelist' | translate }}"> <!-- && false to temporarily hide this field. https://pulp.plan.io/issues/5250 -->
         <textarea id="collection_whitelist"
                name="collection_whitelists"
                ng-model="repository.ansible_collection_whitelist"

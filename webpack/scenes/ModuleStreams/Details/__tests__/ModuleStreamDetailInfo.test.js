@@ -1,14 +1,16 @@
 import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
-import ModuleStreamDetailInfo from '../ModuleStreamDetailInfo';
+import ContentDetailInfo from '../../../../components/Content/Details/ContentDetailInfo';
 import { details } from './moduleStreamDetails.fixtures';
+import { displayMap } from '../ModuleDetailsSchema';
 
 const fixtures = {
   'renders with module stream info': {
-    moduleStreamDetails: details,
+    contentDetails: details,
+    displayMap,
   },
 };
 
 describe('Module stream detail info component', () => {
   describe('rendering', () =>
-    testComponentSnapshotsWithFixtures(ModuleStreamDetailInfo, fixtures));
+    testComponentSnapshotsWithFixtures(ContentDetailInfo, fixtures));
 });

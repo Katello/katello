@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from 'patternfly-react';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { PropTypes } from 'prop-types';
-import { LoadingState } from '../../../move_to_pf/LoadingState';
 import api from '../../../services/api';
-import ModuleStreamDetailInfo from './ModuleStreamDetailInfo';
-import ModuleStreamDetailRepositories from './Repositories/ModuleStreamDetailRepositories';
-import ModuleStreamDetailArtifacts from './ModuleStreamDetailArtifacts';
-import ModuleStreamDetailProfiles from './Profiles/ModuleStreamDetailProfiles';
+import ContentDetails from '../../../components/Content/Details/ContentDetails';
+import moduleDetailsSchema from './ModuleDetailsSchema';
 
 class ModuleStreamDetails extends Component {
   componentDidMount() {
@@ -36,7 +32,7 @@ class ModuleStreamDetails extends Component {
   render() {
     const { moduleStreamDetails } = this.props;
     const {
-      loading, name, stream, profiles, repositories, artifacts,
+      loading, name, stream,
     } = moduleStreamDetails;
 
     const resource = {
@@ -64,70 +60,10 @@ class ModuleStreamDetails extends Component {
             resource,
           }}
         />}
-
-        <LoadingState
-          loading={loading}
-          loadingText={__('Loading')}
-        >
-          <TabContainer id="module-stream-tabs-container" defaultActiveKey={1}>
-            <Grid bsClass="container-fluid">
-              <Row>
-                <Col sm={12}>
-                  <Nav bsClass="nav nav-tabs">
-                    <NavItem eventKey={1}>
-                      <div>{__('Details')}</div>
-                    </NavItem>
-                    <NavItem eventKey={2}>
-                      <div>{__('Repositories')}</div>
-                    </NavItem>
-                    <NavItem eventKey={3}>
-                      <div>{__('Profiles')}</div>
-                    </NavItem>
-                    <NavItem eventKey={4}>
-                      <div>{__('Artifacts')}</div>
-                    </NavItem>
-                  </Nav>
-                </Col>
-              </Row>
-              <TabContent animation={false}>
-                <TabPane eventKey={1}>
-                  <Row>
-                    <Col sm={12}>
-                      <ModuleStreamDetailInfo moduleStreamDetails={moduleStreamDetails} />
-                    </Col>
-                  </Row>
-                </TabPane>
-                <TabPane eventKey={2}>
-                  <Row>
-                    <Col sm={12}>
-                      {repositories && repositories.length ?
-                        <ModuleStreamDetailRepositories repositories={repositories} /> :
-                        __('No repositories to show')}
-                    </Col>
-                  </Row>
-                </TabPane>
-                <TabPane eventKey={3}>
-                  <Row>
-                    <Col sm={12}>
-                      {profiles && profiles.length ?
-                        <ModuleStreamDetailProfiles profiles={profiles} /> :
-                        __('No profiles to show')}
-                    </Col>
-                  </Row>
-                </TabPane>
-                <TabPane eventKey={4}>
-                  <Row>
-                    <Col sm={12}>
-                      {artifacts && artifacts.length ?
-                        <ModuleStreamDetailArtifacts artifacts={artifacts} /> :
-                        __('No artifacts to show')}
-                    </Col>
-                  </Row>
-                </TabPane>
-              </TabContent>
-            </Grid>
-          </TabContainer>
-        </LoadingState>
+        <ContentDetails
+          contentDetails={moduleStreamDetails}
+          schema={moduleDetailsSchema(moduleStreamDetails)}
+        />
       </div>
     );
   }
