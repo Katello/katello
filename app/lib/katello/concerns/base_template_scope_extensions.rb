@@ -39,9 +39,10 @@ module Katello
       end
 
       # rubocop:disable Metrics/MethodLength
-      def load_errata_applications(filter_errata_type: 'all', include_last_reboot: 'yes', since: nil, up_to: nil, status: nil)
+      def load_errata_applications(filter_errata_type: nil, include_last_reboot: 'yes', since: nil, up_to: nil, status: nil)
         result = []
 
+        filter_errata_type = filter_errata_type.presence || 'all'
         search_up_to = up_to.present? ? "ended_at < \"#{up_to}\"" : nil
         search_since = since.present? ? "ended_at > \"#{since}\"" : nil
         search_result = status.present? ? "result = #{status}" : nil
