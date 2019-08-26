@@ -72,7 +72,7 @@ angular.module('Bastion.content-views').controller('FiltersController',
                 state = "content-view.yum.filter.rpm({filterId: filter.id})";
                 break;
             case "modulemd":
-                state = "content-view.yum.filter.module-streams({filterId: filter.id})";
+                state = "content-view.yum.filter.module-stream.list({filterId: filter.id})";
                 break;
             case "package_group":
                 state = "content-view.yum.filter.package_group.list({filterId: filter.id})";

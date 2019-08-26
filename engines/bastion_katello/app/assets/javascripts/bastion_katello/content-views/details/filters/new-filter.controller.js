@@ -21,12 +21,12 @@ angular.module('Bastion.content-views').controller('NewFilterController',
                 state = 'content-view.yum.filter.erratum.available';
             } else if (filterType === 'erratumDateType') {
                 state = 'content-view.yum.filter.erratum.dateType';
-            } else if (filterType === 'modulemd') {
-                state = 'content-view.yum.filter.module-streams';
             } else if (filterType === 'rpm') {
                 state = 'content-view.yum.filter.rpm.details';
             } else if (filterType === 'package_group') {
                 state = 'content-view.yum.filter.package_group.available';
+            } else if (filterType === 'modulemd') {
+                state = 'content-view.yum.filter.module-stream.available';
             } else if (filterType === 'docker') {
                 state = 'content-view.docker.filter.tag.details';
             }
