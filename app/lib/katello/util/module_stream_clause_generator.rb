@@ -17,7 +17,7 @@ module Katello
         query_clauses = module_streams.map do |clause|
           "(#{clause.to_sql})"
         end
-        return unless query_clauses.any?
+        return [] unless query_clauses.any?
 
         statement = query_clauses.join(" OR ")
         [{'_id' => { "$in" => ModuleStream.where(statement).pluck(:pulp_id)}}]
