@@ -59,7 +59,7 @@ module Katello
     def index_relation
       puppet_modules = ContentViewPuppetModule.where(:content_view_id => @view)
       puppet_modules = puppet_modules.where(:name => params[:name]) if params[:name]
-      puppet_modules = puppet_modules.where(:pulp_id => params[:uuid]) if params[:uuid]
+      puppet_modules = puppet_modules.where(:uuid => params[:uuid]) if params[:uuid]
       puppet_modules = puppet_modules.where(:author => params[:author]) if params[:author]
       puppet_modules
     end
