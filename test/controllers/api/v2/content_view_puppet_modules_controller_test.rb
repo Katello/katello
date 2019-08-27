@@ -31,6 +31,14 @@ module Katello
       assert_template 'api/v2/content_view_puppet_modules/index'
     end
 
+    def test_index_with_uuid
+      @cv_puppet_module.uuid = 123
+      get :index, params: { :content_view_id => @content_view.id, :uuid => @cv_puppet_module.uuid }
+
+      assert_response :success
+      assert_template 'api/v2/content_view_puppet_modules/index'
+    end
+
     def test_index_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
