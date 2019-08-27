@@ -35,7 +35,6 @@ module BastionKatello
           lifecycle_environments
           products
           puppet_modules
-          legacy_subscriptions
           sync_plans
           host_collections
           katello_tasks
