@@ -20,6 +20,7 @@ module Katello
     end
 
     def stub_fetch_pools(response, base_params: {}, extra_params: [], included_fields: UpstreamPool.all_fields)
+      base_params = base_params.merge(:sort_by => 'Product.name', :order => "asc")
       Katello::UpstreamPool.expects(:request_params)
                            .with(base_params: base_params,
                                  extra_params: extra_params,
@@ -90,7 +91,7 @@ module Katello
     def test_fetch_pools_quantities_only_true
       stub_fetch_pools(@response, included_fields: ["id", "quantity"])
 
-      params = {quantities_only: true}.with_indifferent_access
+      params = {quantities_only: true}
       pools = UpstreamPool.fetch_pools(params)
 
       assert_equal 1, pools[:total]
@@ -99,7 +100,7 @@ module Katello
     def test_fetch_pools_quantities_only_false
       stub_fetch_pools(@response, included_fields: UpstreamPool.all_fields)
 
-      params = {quantities_only: false}.with_indifferent_access
+      params = {quantities_only: false}
       pools = UpstreamPool.fetch_pools(params)
 
       assert_equal 1, pools[:total]
