@@ -10,7 +10,7 @@ module Katello
         before_action :find_optional_organization, :only => [:index, :auto_complete_search]
         before_action :find_environment, :only => [:index, :auto_complete_search]
         before_action :find_content_view_version, :only => [:index, :auto_complete_search]
-        before_action :find_filter, :only => [:index, :auto_complete_search]
+        before_action :find_filter, :find_filter_rule, :only => [:index, :auto_complete_search]
         before_action :find_content_resource, :only => [:show]
       end
 
@@ -23,6 +23,7 @@ module Katello
       param :organization_id, :number, :desc => N_("organization identifier")
       param :content_view_version_id, :number, :desc => N_("content view version identifier")
       param :content_view_filter_id, :number, :desc => N_("content view filter identifier")
+      param :content_view_filter_rule_id, :number, :desc => N_("content view filter rule identifier")
       param :repository_id, :number, :desc => N_("repository identifier")
       param :environment_id, :number, :desc => N_("environment identifier")
       param :ids, Array, :desc => N_("ids to filter content by")
@@ -79,12 +80,20 @@ module Katello
 
         collection = filter_by_repos(repos, collection)
         collection = filter_by_ids(params[:ids], collection) if params[:ids]
+
         @filter = ContentViewFilter.find(params[:filterId]) if params[:filterId]
         if params[:available_for] == "content_view_filter" && self.respond_to?(:available_for_content_view_filter)
           collection = self.available_for_content_view_filter(@filter, collection) if @filter
         else
-          collection = filter_by_content_view_filter(@filter, collection) if @filter
+          # Filtering by the CV filter rule makes filtering by the CV filter redundant, keeping these
+          # exclusive to keep the queries simple.
+          if @filter_rule
+            collection = filter_by_content_view_filter_rule(@filter_rule, collection)
+          elsif @filter
+            collection = filter_by_content_view_filter(@filter, collection)
+          end
         end
+
         collection = self.custom_index_relation(collection) if self.respond_to?(:custom_index_relation)
         collection
       end
@@ -105,9 +114,12 @@ module Katello
         end
       end
 
-      def filter_by_content_view_filter(filter, collection)
-        ids = filter.send("#{singular_resource_name}_rules").pluck(:uuid)
-        filter_by_ids(ids, collection)
+      def filter_by_content_view_filter(_filter, _collection)
+        fail NotImplementedError, "Unsupported content type for content view filter parameter"
+      end
+
+      def filter_by_content_view_filter_rule(_filter, _collection)
+        fail NotImplementedError, "Unsupported content type for content view filter rule parameter"
       end
 
       def repos
@@ -193,6 +205,19 @@ module Katello
         end
       end
 
+      def find_filter_rule
+        filter_rule_id = params[:content_view_filter_rule_id]
+
+        if filter_rule_id
+          @filter_rule = filter_rule_class_name.constantize.find_by(:id => filter_rule_id)
+
+          unless @filter_rule
+            fail HttpErrors::NotFound, _("Couldn't find %{type} Filter with id %{id}") %
+              {:type => resource_name, :id => filter_rule_id}
+          end
+        end
+      end
+
       def resource_class
         "Katello::#{controller_name.classify}".constantize
       end
@@ -203,6 +228,10 @@ module Katello
 
       def filter_class_name
         "Katello::ContentView#{controller_name.classify}Filter"
+      end
+
+      def filter_rule_class_name
+        "Katello::ContentView#{controller_name.classify}FilterRule"
       end
 
       def resource_name(_i18n = true)

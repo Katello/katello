@@ -32,10 +32,10 @@
 angular.module('Bastion.components').factory('Nutupane',
     ['$location', '$q', '$stateParams', 'entriesPerPage', 'TableCache', 'Notification', function ($location, $q, $stateParams, entriesPerPage, TableCache, Notification) {
         var Nutupane = function (resource, params, action, nutupaneParams) {
-            var self = this;
+            var locationPage, self = this;
 
             function getTableName() {
-                return $location.path().split('/').join('-').slice(1);
+                return self.tableName || $location.path().split('/').join('-').slice(1);
             }
 
             function setQueryStrings() {
@@ -64,7 +64,14 @@ angular.module('Bastion.components').factory('Nutupane',
 
             params = params || {};
             params.paged = true;
-            params.page = $location.search().page || 1;
+
+            locationPage = $location.search().page;
+            // the $location page can return NaN as a String, explicitly checking for that here
+            if (!locationPage || isNaN(locationPage)) {
+                params.page = 1;
+            } else {
+                params.page = locationPage;
+            }
             params['per_page'] = $location.search()['per_page'] || entriesPerPage;
 
             nutupaneParams = nutupaneParams || {};
@@ -89,6 +96,7 @@ angular.module('Bastion.components').factory('Nutupane',
 
             self.load = function () {
                 var deferred = $q.defer(),
+                    responsePage,
                     resourceCall,
                     table = self.table,
                     existingTable = TableCache.getTable(getTableName());
@@ -118,8 +126,9 @@ angular.module('Bastion.components').factory('Nutupane',
 
                     table.rows = response.results;
 
-                    table.resource.page = parseInt(response.page, 10);
-                    params.page = table.params.page = parseInt(response.page, 10);
+                    responsePage = response.page || 1;
+                    table.resource.page = parseInt(responsePage, 10);
+                    params.page = table.params.page = parseInt(responsePage, 10);
 
                     if (table.initialSelectAll) {
                         table.selectAll(true);
@@ -128,7 +137,7 @@ angular.module('Bastion.components').factory('Nutupane',
 
                     deferred.resolve(response);
                     table.resource = response;
-                    table.resource.page = parseInt(response.page, 10);
+                    table.resource.page = parseInt(responsePage, 10);
 
                     if (self.selectAllMode) {
                         table.selectAll(true);
@@ -482,6 +491,11 @@ angular.module('Bastion.components').factory('Nutupane',
             self.setSearchKey = function (newKey) {
                 self.searchKey = newKey;
                 self.table.searchTerm = $location.search()[self.searchKey];
+            };
+
+            // Useful when there are multiple tables in one location
+            self.setTableName = function(name) {
+                self.tableName = name;
             };
 
             if (!self.disableAutoLoad) {

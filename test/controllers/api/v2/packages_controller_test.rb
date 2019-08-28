@@ -7,6 +7,8 @@ module Katello
       @version = ContentViewVersion.first
       @rpm = katello_rpms(:one)
       @host = hosts(:one)
+      @simple_filter = katello_content_view_filters(:simple_filter)
+      @one_package_rule = katello_content_view_package_filter_rules(:one_package_rule)
       Pulp::Rpm.any_instance.stubs(:backend_data).returns({})
     end
 
@@ -96,6 +98,24 @@ module Katello
       assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions) do
         get :index, params: { :content_view_version_id => @version.id, :available_for => 'content_view_version' }
       end
+    end
+
+    def test_index_with_content_view_filter_id
+      response = get :index, params: { content_view_filter_id: @simple_filter.id }
+      response_body = JSON.parse(response.body, symbolize_names: true)
+
+      assert_response :success
+      assert response_body[:results].length > 0
+      assert_includes response_body[:results].pluck(:id), @rpm.id
+    end
+
+    def test_index_with_content_view_filter_rule_id
+      response = get :index, params: { content_view_filter_rule_id: @one_package_rule.id }
+      response_body = JSON.parse(response.body, symbolize_names: true)
+
+      assert_response :success
+      assert response_body[:results].length > 0
+      assert_includes response_body[:results].pluck(:id), @rpm.id
     end
 
     def test_autocomplete_name
