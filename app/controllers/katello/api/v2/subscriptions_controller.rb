@@ -22,7 +22,7 @@ module Katello
     api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
     api :GET, "/subscriptions"
     param_group :search, Api::V2::ApiController
-    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => false
     param :host_id, String, :desc => N_("id of a host"), :required => false
     param :activation_key_id, String, :desc => N_("Activation key ID"), :required => false
     param :available_for, String, :desc => N_("Object to show subscriptions available for, either 'host' or 'activation_key'"), :required => false
