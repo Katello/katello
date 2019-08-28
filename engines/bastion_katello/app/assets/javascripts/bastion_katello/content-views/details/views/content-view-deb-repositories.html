@@ -1,6 +1,6 @@
 <span page-title ng-model="contentView">{{ 'Repositories for Content View:' | translate }} {{ contentView.name }}</span>
 
-<h3 translate>Deb Repositories</h3>
+<h3 translate>Apt Repositories</h3>
 
 <nav data-block="navigation">
   <ul class="nav nav-tabs nav-tabs-pf" ng-show="permitted('edit_content_views', contentView)">
@@ -38,10 +38,10 @@
 
   <span data-block="no-rows-message">
     <span ng-show="isState('content-view.repositories.deb.list')" translate>
-      There are currently no Deb Repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
+      There are currently no Apt Repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
     </span>
     <span ng-show="isState('content-view.repositories.deb.available')">
-      <span translate>There are currently no Deb Repositories to add to this Content View,</span>
+      <span translate>There are currently no Apt Repositories to add to this Content View,</span>
       <a ui-sref="products" translate>add some repositories.</a>
     </span>
   </span>

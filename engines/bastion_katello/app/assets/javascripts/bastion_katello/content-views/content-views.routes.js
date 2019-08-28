@@ -318,7 +318,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewDebRepositoriesListController',
         templateUrl: 'content-views/details/views/content-view-deb-repositories.html',
         ncyBreadcrumb: {
-            label: '{{ "Deb Repositories" | translate }}',
+            label: '{{ "Apt Repositories" | translate }}',
             parent: 'content-view.info'
         }
     })
@@ -328,7 +328,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewAvailableDebRepositoriesController',
         templateUrl: 'content-views/details/views/content-view-deb-repositories.html',
         ncyBreadcrumb: {
-            label: '{{ "Add Deb Repositories" | translate }}',
+            label: '{{ "Add Apt Repositories" | translate }}',
             parent: 'content-view.info'
         }
     })
