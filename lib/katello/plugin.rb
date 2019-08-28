@@ -290,6 +290,10 @@ Foreman::Plugin.register :katello do
     extend_model ::Katello::Concerns::SubscriptionFacetHostExtensions
   end
 
+  describe_host do
+    overview_buttons_provider :content_host_overview_button
+  end
+
   if Katello.with_remote_execution?
     RemoteExecutionFeature.register(:katello_package_install, N_("Katello: Install Package"), :description => N_("Install package via Katello interface"), :provided_inputs => ['package'])
     RemoteExecutionFeature.register(:katello_package_update, N_("Katello: Update Package"), :description => N_("Update package via Katello interface"), :provided_inputs => ['package'])
