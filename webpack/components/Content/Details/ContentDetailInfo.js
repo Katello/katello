@@ -10,7 +10,7 @@ const createRows = (details, mapping) => {
   for (const key of mapping.keys()) {
     rows.push(<tr key={key}>
       <td><b>{mapping.get(key)}</b></td>
-      <td>{details[key]}</td>
+      <td>{Array.isArray(details[key]) ? details[key].join(', ') : details[key]}</td>
     </tr>);
   }
   /* eslint-enable no-restricted-syntax, react/jsx-closing-tag-location */

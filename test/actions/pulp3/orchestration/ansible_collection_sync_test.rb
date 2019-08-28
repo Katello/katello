@@ -90,8 +90,13 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       @repo.index_content
-      post_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
+
+      collections = ::Katello::AnsibleCollection.in_repositories(@repo)
+      post_count_content = collections.count
       assert_equal pre_count_content + 1, post_count_content
+
+      refute_nil collections.first.description
+      refute_empty collections.first.tags
     end
   end
 end

@@ -9,10 +9,14 @@ module Katello
     has_many :repository_ansible_collections, :class_name => "Katello::RepositoryAnsibleCollection", :dependent => :destroy, :inverse_of => :ansible_collection, :foreign_key => :ansible_collection_id
     has_many :repositories, :through => :repository_ansible_collections, :class_name => "Katello::Repository"
 
+    has_many :ansible_collection_tags, :class_name => "Katello::AnsibleCollectionTag", :dependent => :delete_all
+    has_many :tags, :through => :ansible_collection_tags
+
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :namespace, :complete_value => true, :rename => :author
     scoped_search :on => :version, :complete_value => true
     scoped_search :on => :checksum, :complete_value => true
+    scoped_search :on => :name, :complete_value => true, :relation => :tags, :rename => :tag
 
     def self.default_sort
       order(:name)
