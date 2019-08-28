@@ -8,6 +8,7 @@ module Katello
       @library = katello_environments(:library)
       @view = katello_content_views(:library_dev_view)
       @proxy = FactoryBot.build(:smart_proxy, :default_smart_proxy, :url => 'http://fakepath.com/foo')
+      @proxy_2 = FactoryBot.build(:smart_proxy, :default_smart_proxy, :url => 'http://fakepath.com/foo2')
       @proxy_mirror = FactoryBot.build(:smart_proxy, :pulp_mirror, :url => 'http://fakemirrorpath.com/foo')
       ::SmartProxy.any_instance.stubs(:associate_features)
     end
@@ -58,6 +59,13 @@ module Katello
       assert_not_equal Katello::KTEnvironment.all.count, 0
       assert_equal @proxy.lifecycle_environments.all, Katello::KTEnvironment.all
       assert_equal @proxy_mirror.lifecycle_environments.all.count, 0
+    end
+
+    def test_fail_mutiple_pulp_master
+      @proxy.save!
+      @proxy_2.url = "http://fakeduppath.com/foo"
+      error = assert_raises(ActiveRecord::RecordInvalid) { @proxy_2.save! }
+      assert_match(/Only one default capsule is allowed/, error.message)
     end
   end
 end

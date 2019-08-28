@@ -56,6 +56,9 @@ module Katello
           :in => DOWNLOAD_POLICIES,
           :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', ')
         }
+
+        validates_with Katello::Validators::SmartProxyDefaultCapsuleValidator
+
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE) }
 
         def self.with_repo(repo)
