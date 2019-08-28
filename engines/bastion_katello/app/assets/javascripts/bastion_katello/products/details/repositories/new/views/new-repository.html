@@ -118,9 +118,9 @@
                ng-model="repository.ostree_upstream_sync_depth"
                type="number"
                ng-disabled="repository.ostree_upstream_sync_policy !== 'custom'"/>
-        <h6 translate>
+        <p class="help-block" translate>
           Choose one of the policy selections for downloading ostree content from upstream url during synchronization. Choose "Latest" for downloading the latest version of the upstream branch. Choose "All History" to download all available versions of the upstream repository (this may take a large amount of space). Choose "Custom Depth" and provide an number to indicate the number of prior versions of the upstream branch to download.
-        </h6>
+        </p>
 
       </div>
 
@@ -144,9 +144,9 @@
                 ng-options="id as name for (id, name) in ignorableYumContentUnits">
         </select>
 
-        <h6 translate>
+        <p class="help-block" translate>
           Select content units to ignore while synchronizing this repository.
-        </h6>
+        </p>
       </div>
 
       <div class="checkbox">
