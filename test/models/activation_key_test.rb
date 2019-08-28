@@ -216,7 +216,7 @@ module Katello
 
       test 'should audit when a host_collection is added to a activation_key' do
         recent_audit = @sample_key.audits.last
-        audited_changes = recent_audit.audited_changes[:host_collection_ids]
+        audited_changes = recent_audit.audited_changes['host_collection_ids']
         assert audited_changes, 'No audits found for activation_keys'
         assert_empty audited_changes.first
         assert_equal [@host_collection.id], audited_changes.last
