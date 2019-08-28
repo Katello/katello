@@ -70,6 +70,11 @@ module Katello
       %w(name asc)
     end
 
+    def filter_by_content_view_filter(filter, collection)
+      ids = filter.send("#{singular_resource_name}_rules").pluck(:uuid)
+      filter_by_ids(ids, collection)
+    end
+
     private
 
     def repo_association

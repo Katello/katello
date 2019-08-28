@@ -31,11 +31,18 @@ module Katello
       { 'filename' => { "$in" => package_filenames } } unless package_filenames.empty?
     end
 
-    protected
+    def applicable_rpms
+      Rpm.in_repositories(self.applicable_repos)
+    end
 
     def query_rpms(repo, rule)
+      rpms = Rpm.in_repositories(repo)
+      query_rpms_from_collection(rpms, rule).pluck("#{Rpm.table_name}.filename")
+    end
+
+    def query_rpms_from_collection(collection, rule)
       query_name = rule.name.tr("*", "%")
-      query = Rpm.in_repositories(repo).non_modular.where("#{Rpm.table_name}.name ilike ?", query_name)
+      query = collection.non_modular.where("#{Rpm.table_name}.name ilike ?", query_name)
       if rule.architecture.present?
         query_arch = rule.architecture.tr("*", "%")
         query = query.where("#{Rpm.table_name}.arch ilike ?", query_arch)
@@ -45,7 +52,7 @@ module Katello
       elsif rule.min_version.present? || rule.max_version.present?
         query = query.search_version_range(rule.min_version, rule.max_version)
       end
-      query.pluck("#{Rpm.table_name}.filename")
+      query.default_sort
     end
   end
 end

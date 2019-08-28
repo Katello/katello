@@ -1,5 +1,5 @@
 describe('Controller: PackageFilterController', function() {
-    var $scope, Rule, Package, Notification;
+    var $scope, Rule, Package, Notification, $uibModal;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -9,6 +9,13 @@ describe('Controller: PackageFilterController', function() {
             $q = $injector.get('$q');
 
         Rule = $injector.get('MockResource').$new();
+
+        Rule.matchingContent = function() {
+          return {
+            $promise: $q.defer().promise,
+          }
+        };
+
         Package = $injector.get('MockResource').$new();
 
         Notification = {
@@ -40,12 +47,23 @@ describe('Controller: PackageFilterController', function() {
             return string;
         };
 
+        $uibModal = {
+            open: function () {
+                return {
+                    closed: {
+                        then: function () {}
+                    }
+                }
+            }
+        };
+
         $controller('PackageFilterController', {
             $scope: $scope,
             translate: translate,
             Rule: Rule,
             Package: Package,
-            Notification: Notification
+            Notification: Notification,
+            $uibModal: $uibModal
         });
 
         $scope.table.getSelected = function () {};
@@ -233,5 +251,18 @@ describe('Controller: PackageFilterController', function() {
         expect(result.length).toBe(2);
         expect(result[0].id).toBe(1);
         expect(result[1].id).toBe(2);
+    });
+
+    it("can show matching content", function () {
+        var result, rule;
+        spyOn($uibModal, 'open').and.callThrough();
+        rule = {};
+
+        $scope.getMatchingContent(rule);
+
+        result = $uibModal.open.calls.argsFor(0)[0];
+
+        expect(result.templateUrl).toContain('content-views/details/filters/views/filter-rule-matching-package-modal.html');
+        expect(result.controller).toBe('FilterRuleMatchingPackageModal');
     });
 });

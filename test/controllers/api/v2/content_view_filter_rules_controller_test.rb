@@ -6,8 +6,12 @@ module Katello
   class Api::V2::ContentViewFilterRulesControllerTest < ActionController::TestCase
     def models
       @filter = katello_content_view_filters(:simple_filter)
+      @package_group_filter = katello_content_view_filters(:populated_package_group_filter)
       @rule = katello_content_view_package_filter_rules(:test_package)
       @rule_for_different_filter = katello_content_view_package_filter_rules(:package_rule)
+      @one_package_rule = katello_content_view_package_filter_rules(:one_package_rule)
+      @package_group_rule = katello_content_view_package_group_filter_rules(:package_group_rule)
+      @rpm = katello_rpms(:one)
     end
 
     def permissions
@@ -46,8 +50,8 @@ module Katello
 
       assert_template :layout => 'katello/api/v2/layouts/resource'
       assert_template 'katello/api/v2/common/create'
-      assert_equal @filter.reload.package_rules.second.name, "testpkg"
-      assert_equal @filter.package_rules.second.version, "10.0"
+      assert @filter.reload.package_rules.pluck(:name).include? "testpkg"
+      assert @filter.package_rules.pluck(:version).include? "10.0"
     end
 
     def test_create_with_name_array
@@ -57,8 +61,8 @@ module Katello
 
       assert_template layout: 'katello/api/v2/layouts/collection'
       assert_template 'katello/api/v2/content_view_filter_rules/index'
-      assert_equal @filter.reload.package_rules.sort.map(&:name), %w(package\ def testpkg testpkg2)
-      assert_equal @filter.package_rules.map(&:version), %w(1.0 10.0 10.0)
+      assert_equal @filter.reload.package_rules.sort.map(&:name).uniq.sort, %w(package\ def testpkg testpkg2 one).sort
+      assert_equal @filter.package_rules.map(&:version).compact.sort, ["", "1.0", "10.0", "10.0"].sort
     end
 
     def test_create_protected
@@ -88,6 +92,8 @@ module Katello
 
       assert_response :success
       assert_template 'api/v2/content_view_filter_rules/show'
+      body = JSON.parse(response.body)
+      assert_nil body["matching_content"] # should only show up with the matching_content parameter
     end
 
     def test_mismatched_filter_and_rule

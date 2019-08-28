@@ -163,6 +163,10 @@
               <span translate>Edit</span>
             </button>
 
+            <button type="button" class="btn btn-default" ng-click="getMatchingContent(rule)" ng-hide="rule.editMode">
+              <span translate>Show Matching Content</span>
+            </button>
+
             <button bst-save-control
                     on-cancel="restorePrevious(rule); rule.editMode = false"
                     on-save="saveRule(rule)"

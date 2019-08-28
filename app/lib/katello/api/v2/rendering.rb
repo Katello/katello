@@ -43,8 +43,7 @@ module Katello
 
           render :template => "katello/api/v2/#{resource_name}/#{action}",
                  :status => status,
-                 :locals => { :object_name => options[:object_name],
-                              :root_name => options[:root_name] },
+                 :locals => options.slice(:object_name, :root_name, :locals),
                  :layout => "katello/api/v2/layouts/#{options[:layout]}"
         end
 

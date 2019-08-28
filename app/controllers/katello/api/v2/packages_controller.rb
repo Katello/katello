@@ -75,6 +75,22 @@ module Katello
       collection
     end
 
+    def filter_by_content_view_filter(filter, collection)
+      filtered_rpms = []
+      filter.package_rules.each do |rule|
+        filtered_rpms += filter.query_rpms_from_collection(collection, rule).pluck(:id)
+      end
+
+      collection.where(id: filter.applicable_rpms.pluck(:id) & filtered_rpms)
+    end
+
+    def filter_by_content_view_filter_rule(rule, collection)
+      filter = rule.filter
+      filtered_rpms = filter.query_rpms_from_collection(collection, rule).pluck(:id)
+
+      collection.where(id: filter.applicable_rpms.pluck(:id) & filtered_rpms)
+    end
+
     private
 
     def find_host

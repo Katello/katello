@@ -74,6 +74,17 @@ module Katello
       assert response_ids.length > 0
     end
 
+    def test_index_with_content_view_filter_id
+      get :index, params: { content_view_filter_id: @package_group_filter }
+      body = JSON.parse(response.body, symbolize_names: true)
+      response_uuids = body[:results].map { |result| result[:uuid] }
+      package_group_uuids = @package_group_filter.package_group_rules.map(&:uuid)
+
+      assert_response :success
+      assert body[:results].length > 0
+      assert_equal response_uuids, package_group_uuids
+    end
+
     def test_show
       Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
       get :show, params: { :id => @repo.package_groups.first.id }

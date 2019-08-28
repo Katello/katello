@@ -11,12 +11,14 @@
  * @requires Rule
  * @requires Package
  * @requires Notification
+ * @requires $uibModal
  *
  * @description
  *   Handles package filter rules for a content view.
  */
 angular.module('Bastion.content-views').controller('PackageFilterController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Filter', 'Rule', 'Package', 'Notification', function ($scope, $location, translate, Nutupane, CurrentOrganization, Filter, Rule, Package, Notification) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Filter', 'Rule', 'Package', 'Notification', '$uibModal',
+     function ($scope, $location, translate, Nutupane, CurrentOrganization, Filter, Rule, Package, Notification, $uibModal) {
         var nutupane, params;
 
         function failure(response) {
@@ -135,6 +137,17 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             angular.forEach($scope.table.getSelected(), function (rule) {
                 removeRule(rule);
             });
+        };
+
+        $scope.getMatchingContent = function (rule) {
+            $uibModal.open({
+                templateUrl: 'content-views/details/filters/views/filter-rule-matching-package-modal.html',
+                controller: 'FilterRuleMatchingPackageModal',
+                size: 'lg',
+                resolve: {
+                    filterRuleId: rule.id
+                }
+            }).closed.then(function () {});
         };
 
         $scope.fetchAutocompleteName = function (term) {
