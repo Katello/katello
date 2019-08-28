@@ -4,23 +4,9 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import {
   headerFormatter,
   cellFormatter,
-  selectionHeaderCellFormatter,
-  selectionCellFormatter,
 } from '../../../move_to_foreman/components/common/table';
 
-export const columns = (controller, selectionController) => [
-  {
-    property: 'select',
-    header: {
-      label: __('Select all rows'),
-      formatters: [label => selectionHeaderCellFormatter(selectionController, label)],
-    },
-    cell: {
-      formatters: [
-        (value, additionalData) => selectionCellFormatter(selectionController, additionalData),
-      ],
-    },
-  },
+export const columns = controller => [
   {
     property: 'id',
     header: {

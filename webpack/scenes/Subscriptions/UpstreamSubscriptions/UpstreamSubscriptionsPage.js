@@ -134,6 +134,7 @@ class UpstreamSubscriptionsPage extends Component {
           <Row>
             <Col sm={12}>
               <Button
+                style={{ marginTop: '10px', marginRight: '5px' }}
                 bsStyle="primary"
                 type="submit"
                 disabled={upstreamSubscriptions.loading ||
@@ -143,7 +144,7 @@ class UpstreamSubscriptionsPage extends Component {
                 {__('Submit')}
               </Button>
 
-              <LinkContainer to="/subscriptions">
+              <LinkContainer to="/subscriptions" style={{ marginTop: '10px' }}>
                 <Button>
                   {__('Cancel')}
                 </Button>
