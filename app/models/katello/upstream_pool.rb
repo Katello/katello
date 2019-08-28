@@ -31,6 +31,8 @@ module Katello
       def base_params(params)
         attachable = ::Foreman::Cast.to_bool(params.delete(:attachable))
         params[:consumer] = upstream_consumer_id if attachable
+        params[:sort_by] = 'Product.name'
+        params[:order] = 'asc'
         params
       end
 
