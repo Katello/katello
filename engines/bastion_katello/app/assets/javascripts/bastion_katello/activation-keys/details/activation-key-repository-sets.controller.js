@@ -20,10 +20,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
 
         params = {
             id: $scope.$stateParams.activationKeyId,
-            'organization_id': CurrentOrganization,
-            enabled: true,
-            'full_result': true,
-            'include_available_content': true
+            'organization_id': CurrentOrganization
         };
 
         $scope.controllerName = 'katello_products';
