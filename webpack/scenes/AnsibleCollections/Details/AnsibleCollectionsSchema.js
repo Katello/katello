@@ -5,9 +5,11 @@ import ContentDetailRepositories from '../../../components/Content/Details/Conte
 
 export const displayMap = new Map([
   ['name', __('Name')],
+  ['description', __('Description')],
   ['namespace', __('Author')],
   ['version', __('Version')],
   ['checksum', __('Checksum')],
+  ['tags', __('Tags')],
 ]);
 
 export default (detailInfo) => {

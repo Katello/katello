@@ -24,7 +24,11 @@ module Katello
         custom_json['namespace'] = backend_data['namespace']
         custom_json['version'] = backend_data['version']
         custom_json['name'] = backend_data['name']
+        custom_json['description'] = backend_data['description']
         model.update_attributes!(custom_json)
+
+        tags = backend_data['tags'].map { |tag| Katello::AnsibleTag.find_or_create_by(name: tag['name']) }
+        model.tags = tags
       end
     end
   end

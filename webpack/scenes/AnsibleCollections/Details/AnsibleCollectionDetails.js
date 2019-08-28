@@ -84,6 +84,7 @@ AnsibleCollectionDetails.propTypes = {
     namespace: PropTypes.string,
     version: PropTypes.string,
     repositories: PropTypes.array,
+    tags: PropTypes.array,
   }).isRequired,
 };
 
