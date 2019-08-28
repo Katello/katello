@@ -17,10 +17,6 @@ module Katello
     end
 
     module InstanceMethods
-      def owner_info
-        Glue::Candlepin::OwnerInfo.new(self)
-      end
-
       def owner_details
         @owner_details ||= Resources::Candlepin::Owner.find self.label
         @owner_details['virt_who'] ||= self.subscriptions.using_virt_who.any?
