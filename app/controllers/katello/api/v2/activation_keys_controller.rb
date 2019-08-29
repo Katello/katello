@@ -37,6 +37,9 @@ module Katello
     param :content_view_id, :number, :desc => N_("content view id")
     param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
     param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
+    param :release_version, String, :desc => N_("content release version")
+    param :service_level, String, :desc => N_("service level")
+    param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration")
     param :purpose_usage, String, :desc => N_("Sets the system purpose usage")
     param :purpose_role, String, :desc => N_("Sets the system purpose usage")
     param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
@@ -48,6 +51,13 @@ module Katello
       end
       sync_task(::Actions::Katello::ActivationKey::Create, @activation_key)
       @activation_key.reload
+
+      sync_task(::Actions::Katello::ActivationKey::Update, @activation_key,
+                  :service_level   => activation_key_params[:service_level],
+                  :release_version => activation_key_params[:release_version],
+                  :auto_attach     => activation_key_params[:auto_attach]
+               )
+
       respond_for_create(:resource => @activation_key)
     end
 
