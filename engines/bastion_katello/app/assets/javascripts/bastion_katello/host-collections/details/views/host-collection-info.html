@@ -62,47 +62,56 @@
 
   <div data-block="right-column">
     <h3 translate>Actions</h3>
+    <div ng-if="hostCollection.total_hosts === 0">
+      <p bst-alert='info'>
+          <span translate>
+            Add hosts to the host collection to see available actions.
+          </span>
+      </p>
+    </div>
 
-    <p translate>
-      The following actions can be performed on content hosts in this host collection:
-    </p>
+    <div ng-if="hostCollection.total_hosts > 0">
+      <p translate>
+        The following actions can be performed on content hosts in this host collection:
+      </p>
 
-    <ul class="list-unstyled">
-      <li bst-feature-flag="remote_actions">
-        <a translate ng-click ="openPackagesModal()">
-          Package Installation, Removal, and Update
-        </a>
-      </li>
+      <ul class="list-unstyled">
+        <li bst-feature-flag="remote_actions">
+          <a translate ng-click ="openPackagesModal()">
+            Package Installation, Removal, and Update
+          </a>
+        </li>
 
-      <li bst-feature-flag="remote_actions">
-        <a translate ng-click="openErrataModal()">
-          Errata Installation
-        </a>
-      </li>
+        <li bst-feature-flag="remote_actions">
+          <a translate ng-click="openErrataModal()">
+            Errata Installation
+          </a>
+        </li>
 
-      <li>
-        <a translate ng-click = "openHostCollectionsModal()">
-          Host Collection Membership
-        </a>
-      </li>
+        <li>
+          <a translate ng-click = "openHostCollectionsModal()">
+            Host Collection Membership
+          </a>
+        </li>
 
-      <li>
-        <a translate ng-click = "openModuleStreamsModal()">
-          Module Stream Management
-        </a>
-      </li>
+        <li>
+          <a translate ng-click = "openModuleStreamsModal()">
+            Module Stream Management
+          </a>
+        </li>
 
-      <li bst-feature-flag="lifecycle_environments">
-        <a translate ng-click="openEnvironmentModal()">
-          Change assigned Lifecycle Environment or Content View
-        </a>
-      </li>
+        <li bst-feature-flag="lifecycle_environments">
+          <a translate ng-click="openEnvironmentModal()">
+            Change assigned Lifecycle Environment or Content View
+          </a>
+        </li>
 
-      <li bst-feature-flag="subscription_management">
-        <a translate ng-click="openSubscriptionsModal()">
-          Subscription Management
-        </a>
-      </li>
-    </ul>
+        <li bst-feature-flag="subscription_management">
+          <a translate ng-click="openSubscriptionsModal()">
+            Subscription Management
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </section>
