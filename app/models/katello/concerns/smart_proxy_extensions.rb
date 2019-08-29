@@ -140,14 +140,22 @@ module Katello
       end
 
       def pulp3_support?(repository)
-        type = Katello::RepositoryTypeManager.repository_types[repository.content_type]
-        type.pulp3_plugin.present? && pulp3_enabled?
+        pulp3_repository_type_support?(repository.content_type)
       end
 
-      def content_pulp3_support?(content_type)
-        content_type = content_type.is_a?(String) ? content_type : content_type.model_class::CONTENT_TYPE
-        type = Katello::RepositoryTypeManager.find_repository_type content_type
-        type.pulp3_plugin && SmartProxy.pulp_master!.capabilities(PULP3_FEATURE).try(:include?, type.pulp3_plugin)
+      def pulp3_repository_type_support?(repository_type)
+        repository_type_obj = repository_type.is_a?(String) ? Katello::RepositoryTypeManager.repository_types[repository_type] : repository_type
+        fail "Cannot find repository type #{repository_type}, is it enabled?" unless repository_type_obj
+        repository_type_obj.pulp3_plugin.present? && pulp3_enabled? && self.capabilities(PULP3_FEATURE).try(:include?, repository_type_obj.pulp3_plugin)
+      end
+
+      def pulp3_content_support?(content_type)
+        content_type_obj = content_type.is_a?(String) ? Katello::RepositoryTypeManager.find_content_type(content_type) : content_type
+        fail "Cannot find content type #{content_type}." unless content_type_obj
+
+        found_type = Katello::RepositoryTypeManager.repository_types.values.find { |repo_type| repo_type.content_types.include?(content_type_obj) }
+        fail "Cannot find repository type for content_type #{content_type}, is it enabled?" unless found_type
+        pulp3_repository_type_support?(found_type)
       end
 
       def pulp3_uri!
@@ -193,12 +201,8 @@ module Katello
       end
 
       def content_service(content_type)
-        if content_type.is_a?(String)
-          content_type = RepositoryTypeManager.find_content_type(content_type)
-        end
-
-        #this will rely on smart proxy capabilities when available
-        content_pulp3_support?(content_type) ? content_type.pulp3_service_class : content_type.pulp2_service_class
+        content_type = RepositoryTypeManager.find_content_type(content_type) if content_type.is_a?(String)
+        pulp3_content_support?(content_type) ? content_type.pulp3_service_class : content_type.pulp2_service_class
       end
 
       def set_default_download_policy

@@ -25,7 +25,7 @@ module Katello
             pulp_master = ::SmartProxy.pulp_master
 
             # Pulp 3 has its own registry
-            if pulp_master && pulp_master.content_pulp3_support?(::Katello::DockerBlob::CONTENT_TYPE)
+            if pulp_master && pulp_master.pulp3_repository_type_support?(::Katello::Repository::DOCKER_TYPE)
               registry_url = pulp_master.setting('Pulp3', 'content_app_url')
               # Assume the registry uses the same CA as the Smart Proxy
               ca_cert_file = Setting[:ssl_ca_file]
