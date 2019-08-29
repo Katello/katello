@@ -34,7 +34,7 @@ module Katello
         def setup
           @org = get_organization
           @klass = Katello::RegistrationManager
-          @host = FactoryBot.create(:host, organization: @org)
+          @host = FactoryBot.create(:host, :with_subscription, organization: @org)
           @uuid_fact_name = RhsmFactName.create(name: 'dmi::system::uuid')
         end
 
@@ -86,6 +86,16 @@ module Katello
           # this test case is critical for bootstrap.py which creates a host via API (which lacks the dmi uuid fact)
           # and *then* registers to it with subscription-manager
           assert_empty @host.fact_values
+
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
+        end
+
+        def test_existing_uuid_mismatch_unregistered
+          # when a host is unregistered we don't clear out its facts
+          # if the same host is rebuilt, etc. and gets a new DMI UUID but has the same hostname
+          # we should allow the registration to proceed
+          FactValue.create(value: 'original-uuid', host: @host, fact_name: @uuid_fact_name)
+          @host.subscription_facet.destroy!
 
           assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
         end
