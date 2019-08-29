@@ -60,4 +60,27 @@ module Katello
       assert_equal @proxy_mirror.lifecycle_environments.all.count, 0
     end
   end
+
+  class SmartProxyPulp3Test < ActiveSupport::TestCase
+    def setup
+      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @file_repo = katello_repositories(:generic_file)
+      @puppet_repo = katello_repositories(:p_forge)
+    end
+
+    def test_pulp3_repository_support
+      refute @master.pulp3_support?(@puppet_repo)
+      assert @master.pulp3_support?(@file_repo)
+    end
+
+    def test_pulp3_repository_type_support
+      refute @master.pulp3_repository_type_support?(Katello::Repository::PUPPET_TYPE)
+      assert @master.pulp3_repository_type_support?(Katello::Repository::FILE_TYPE)
+    end
+
+    def test_pulp3_content_type_support
+      refute @master.pulp3_content_support?(Katello::PuppetModule::CONTENT_TYPE)
+      assert @master.pulp3_content_support?(Katello::DockerManifest::CONTENT_TYPE)
+    end
+  end
 end

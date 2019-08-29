@@ -50,6 +50,7 @@ module ::Actions::Pulp::Repository
       let(:action_class) { ::Actions::Pulp3::Orchestration::Repository::RefreshRepos }
 
       it 'creates' do
+        with_pulp3_features(@smart_proxy)
         repo = katello_repositories(:pulp3_file_1)
         pulp_repo = repo.backend_service(@smart_proxy)
         ::Katello::Repository.any_instance.expects(:backend_service).with(@smart_proxy).returns(pulp_repo)
@@ -64,6 +65,7 @@ module ::Actions::Pulp::Repository
       end
 
       it 'updates' do
+        with_pulp3_features(@smart_proxy)
         repo = katello_repositories(:pulp3_file_1)
         pulp_repo = repo.backend_service(@smart_proxy)
         ::Katello::Repository.any_instance.expects(:backend_service).with(@smart_proxy).returns(pulp_repo)

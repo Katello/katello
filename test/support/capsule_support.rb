@@ -17,6 +17,12 @@ module Support
       end
     end
 
+    def with_pulp3_features(smart_proxy)
+      spf = smart_proxy.smart_proxy_features.find_by(:feature_id => Feature.find_by(:name => SmartProxy::PULP3_FEATURE))
+      spf.capabilities = ['pulp_file', 'pulp_docker', 'pulp_ansible']
+      spf.save!
+    end
+
     def capsule_content
       # This helper is useful for tests that only need a single capsule
       @capsule_content ||= Katello::Pulp::SmartProxyRepository.new(proxy_with_pulp)

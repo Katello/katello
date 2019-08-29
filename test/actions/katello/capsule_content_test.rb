@@ -33,6 +33,7 @@ module ::Actions::Katello::CapsuleContent
     let(:dev_environment) { katello_environments(:dev) }
 
     it 'plans correctly for a pulp3 file repo' do
+      with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       repo = katello_repositories(:pulp3_file_1)
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
@@ -64,6 +65,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'plans correctly for a pulp3 docker repo' do
+      with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       repo = katello_repositories(:pulp3_docker_1)
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
@@ -82,9 +84,9 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'plans correctly for a pulp3 ansible collection repo' do
+      with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
-
       repo = katello_repositories(:pulp3_ansible_collection_1)
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
@@ -138,6 +140,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'allows limiting scope of the syncing to one environment' do
+      with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(dev_environment)
       repos_in_dev = Katello::Repository.in_environment(dev_environment).pluck(:pulp_id)
       cvpes_in_dev = Katello::ContentViewPuppetEnvironment.in_environment(dev_environment).pluck(:pulp_id)
