@@ -57,8 +57,6 @@ module Katello
     validates_with Validators::ContainerImageNameValidator, :attributes => :docker_upstream_name, :allow_blank => true, :if => :docker?
 
     validate :ensure_valid_docker_attributes, :if => :docker?
-    # To temporarily handle https://pulp.plan.io/issues/5250 and https://pulp.plan.io/issues/5251
-    #validate :ensure_valid_ansible_collection_attributes, :if => :ansible_collection?
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
@@ -214,10 +212,6 @@ module Katello
       end
     end
 
-    def ensure_valid_ansible_collection_attributes
-      errors.add(:base, N_("Whitelist cannot be blank.")) if ansible_collection_whitelist.blank?
-    end
-
     def ensure_valid_upstream_authorization
       return if (self.upstream_username.blank? && self.upstream_password.blank?)
       if redhat?
@@ -290,7 +284,7 @@ module Katello
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id)
       changeable_attributes += %w(name container_repository_name docker_tags_whitelist) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
-      changeable_attributes += %w(ansible_collection_whitelist) if ansible_collection?
+      changeable_attributes += %w(ansible_collection_requirements) if ansible_collection?
       changeable_attributes.any? { |key| previous_changes.key?(key) }
     end
 

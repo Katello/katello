@@ -54,7 +54,7 @@ module Katello
       param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
       param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing"), :deprecated => true
       param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % RootRepository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
-      param :ansible_collection_whitelist, String, :desc => N_("Name of collection to sync from URL")
+      param :ansible_collection_requirements, String, :desc => N_("Contents of requirement yaml file to sync from URL")
       param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for http proxy for content sync")
       param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
     end
@@ -468,7 +468,7 @@ module Katello
              ]
 
       keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
-      keys += [:ansible_collection_whitelist] if params[:action] == 'create' || @repository&.ansible_collection?
+      keys += [:ansible_collection_requirements] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
         keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name,
@@ -510,7 +510,7 @@ module Katello
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       root.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
       root.ignorable_content = repo_params[:ignorable_content] if root.yum? && repo_params.key?(:ignorable_content)
-      root.ansible_collection_whitelist = repo_params[:ansible_collection_whitelist] if root.ansible_collection?
+      root.ansible_collection_requirements = repo_params[:ansible_collection_requirements] if root.ansible_collection?
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
 

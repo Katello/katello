@@ -36,7 +36,7 @@ module Katello
           if root.url.blank?
             super
           else
-            common_remote_options.merge(url: root.url) # whitelist: root.ansible_collection_whitelist)
+            common_remote_options.merge(url: root.url.chomp("/"), requirements_file: root.ansible_collection_requirements.blank? ? nil : root.ansible_collection_requirements)
           end
         end
 

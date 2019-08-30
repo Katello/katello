@@ -157,6 +157,18 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.progress.uploading = false;
         };
 
+        $scope.handleFiles = function (element) {
+            var reader = new FileReader();
+            $scope.uploadedFile = true;
+            reader.addEventListener("loadend", function() {
+                var data = reader.result;
+                /* eslint-disable camelcase */
+                $scope.repository.ansible_collection_requirements = data;
+                $scope.$apply();
+            });
+            reader.readAsText(element.files[0]);
+        };
+
         $scope.checksums = Checksum.checksums;
         $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
         $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;

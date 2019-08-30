@@ -189,8 +189,10 @@ pulp3_ansible_collection_root_1:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
-  url:                  "https://galaxy.ansible.com/api/v2/collections/devoperate/base"
-  ansible_collection_whitelist: "robertdebock.rundeck_collection"
+  url:                  "https://galaxy.ansible.com"
+  ansible_collection_requirements: "---\n
+  collections:\n
+  - robertdebock.rundeck_collection"
 
 pulp3_docker_root_1:
   name:                 Pulp3 Docker 1

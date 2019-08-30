@@ -52,8 +52,9 @@ module ::Actions::Pulp3
       assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
       @repo.index_content
       pre_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
-      @repo.root.update_attributes!(:url => 'https://galaxy.ansible.com/api/v2/collections/testing/k8s_demo_collection/?version=0.0.3', :mirror_on_sync => false)
-
+      @repo.root.update_attributes(:ansible_collection_requirements => "---\n
+  collections:\n
+  - newswangerd.collection_demo", :mirror_on_sync => false)
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
           @repo,
@@ -68,7 +69,7 @@ module ::Actions::Pulp3
           :content_view_id => @repo.content_view.id)
 
       assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
-      assert_equal pre_count_content + 1, post_count_content
+      assert_equal pre_count_content + 6, post_count_content
     end
 
     def test_sync_mirror_true
@@ -77,7 +78,9 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
       pre_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
-      @repo.root.update_attributes(:ansible_collection_whitelist => 'newswangerd.collection_demo')
+      @repo.root.update_attributes(:ansible_collection_requirements => "---\n
+  collections:\n
+  - newswangerd.collection_demo")
 
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
@@ -88,7 +91,7 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
       post_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
-      assert_equal pre_count_content, post_count_content
+      assert_equal pre_count_content + 1, post_count_content
     end
   end
 end
