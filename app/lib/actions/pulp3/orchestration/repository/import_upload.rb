@@ -10,7 +10,6 @@ module Actions
               artifact_action_output = plan_action(Pulp3::Repository::SaveArtifact, file, repository, action_output[:pulp_tasks], args.dig(:unit_type_id)).output
               action_output = plan_action(Pulp3::Repository::ImportUpload, artifact_action_output[:content_unit_href], repository, smart_proxy).output
               plan_action(Pulp3::Repository::SaveVersion, repository, action_output[:pulp_tasks]).output
-
             end
           end
 

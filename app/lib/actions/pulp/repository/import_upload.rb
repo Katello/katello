@@ -2,7 +2,7 @@ module Actions
   module Pulp
     module Repository
       class ImportUpload < Pulp::AbstractAsyncTask
-        def plan(repo, smart_proxy, options)
+        def plan(_repo, _smart_proxy, options)
           plan_self(:options => options)
         end
 
