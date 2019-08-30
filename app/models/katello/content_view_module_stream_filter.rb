@@ -6,9 +6,11 @@ module Katello
 
     validates_lengths_from_database
 
-    def generate_clauses(repo)
+    def generate_clauses(_repo)
       return if module_stream_rules.blank?
-      module_streams_in(ModuleStream.in_repositories([repo]).with_name_streams(module_stream_rules.pluck(:name, :stream)).pluck(:id))
+
+      module_stream_ids = module_stream_rules.map(&:module_stream_id)
+      module_streams_in(module_stream_ids) unless module_stream_ids.empty?
     end
 
     private

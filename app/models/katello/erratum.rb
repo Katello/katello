@@ -120,6 +120,16 @@ module Katello
           where(statement).pluck(:filename)
     end
 
+    def self.list_modular_streams_by_clauses(repo, clauses)
+      query_clauses = clauses.map do |clause|
+        "(#{clause.to_sql})"
+      end
+      statement = query_clauses.join(" OR ")
+      ModuleStream.where(:id => ModuleStreamErratumPackage.joins(:erratum_package => {:erratum => :repository_errata}).
+          where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
+          where(statement).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id"))
+    end
+
     def module_streams
       # return something like
       # {module_stream => [packages]}

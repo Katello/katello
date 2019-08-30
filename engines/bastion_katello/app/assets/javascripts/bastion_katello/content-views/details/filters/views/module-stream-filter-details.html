@@ -23,6 +23,9 @@
         <tr bst-table-head row-select>
           <th bst-table-column><span translate>Name</span></th>
           <th bst-table-column><span translate>Stream</span></th>
+          <th bst-table-column><span translate>Version</span></th>
+          <th bst-table-column><span translate>Context</span></th>
+          <th bst-table-column><span translate>Description</span></th>
         </tr>
       </thead>
 
@@ -30,9 +33,11 @@
         <tr bst-table-row ng-repeat="moduleStream in table.rows" row-select="moduleStream">
           <td bst-table-cell>{{ moduleStream.name }}</td>
           <td bst-table-cell>{{ moduleStream.stream }}</td>
+          <td bst-table-cell>{{ moduleStream.version}}</td>
+          <td bst-table-cell>{{ moduleStream.context}}</td>
+          <td bst-table-cell>{{ moduleStream.description }}</td>
         </tr>
       </tbody>
     </table>
   </div>
-
 </div>

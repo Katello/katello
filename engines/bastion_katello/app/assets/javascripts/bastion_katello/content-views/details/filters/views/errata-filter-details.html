@@ -38,6 +38,7 @@
         <th bst-table-column translate>Issued</th>
         <th bst-table-column translate>Updated</th>
         <th bst-table-column translate>Title</th>
+        <th bst-table-column translate>Modular</th>
       </tr>
     </thead>
 
@@ -54,6 +55,8 @@
           <date date="errata.updated" />
         </td>
         <td bst-table-cell>{{ errata.title }}</td>
+        <td bst-table-cell ng-if="errata.module_streams.length > 0" translate> Yes </td>
+        <td bst-table-cell ng-if="errata.module_streams.length == 0" translate> No </td>
       </tr>
     </tbody>
   </table>

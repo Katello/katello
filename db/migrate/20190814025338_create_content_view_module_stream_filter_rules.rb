@@ -4,9 +4,9 @@ class CreateContentViewModuleStreamFilterRules < ActiveRecord::Migration[5.2]
       t.references :content_view_filter, index: { name: :index_cvmsfr_cv_filter_id }
       t.foreign_key 'katello_content_view_filters', :column => 'content_view_filter_id'
 
-      t.string :name, :limit => 255
-      t.string :stream, :limit => 255
-      t.index [:name, :stream, :content_view_filter_id], :unique => true, :name => :index_cvmsfr_ns_cv_filter_id
+      t.references :module_stream, index: { name: :index_cvmsfr_module_stream_id }
+      t.foreign_key 'katello_module_streams', :column => 'module_stream_id'
+
       t.timestamps
     end
   end

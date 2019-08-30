@@ -25,8 +25,6 @@ FactoryBot.define do
 
   factory :katello_content_view_module_stream_filter_rule,
           :class => Katello::ContentViewModuleStreamFilterRule do
-    sequence(:name) { |n| "Module#{n}" }
-    sequence(:stream) { |n| "Stream#{n}" }
     association :filter, :factory => :katello_content_view_module_stream_filter
   end
 end

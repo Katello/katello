@@ -24,13 +24,11 @@ module Katello
       @filter = FactoryBot.create(:katello_content_view_module_stream_filter, :content_view => @content_view)
       foo_rule = FactoryBot.create(:katello_content_view_module_stream_filter_rule,
                                    :filter => @filter,
-                                   :name => @module_stream1.name,
-                                   :stream => @module_stream1.stream)
+                                   :module_stream => @module_stream1)
 
       goo_rule = FactoryBot.create(:katello_content_view_module_stream_filter_rule,
                                    :filter => @filter,
-                                   :name => @module_stream2.name,
-                                   :stream => @module_stream2.stream)
+                                   :module_stream => @module_stream2)
 
       combined = {"_id" => {"$in" => [@module_stream1.pulp_id, @module_stream2.pulp_id]}}
 

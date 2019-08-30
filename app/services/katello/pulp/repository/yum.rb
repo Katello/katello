@@ -87,7 +87,8 @@ module Katello
                                                                           filters: {unit: rpm_remove_clauses})
           end
 
-          tasks.concat(copy_module_contents(destination_repo, options[:filters]&.module_stream, override_config))
+
+          tasks.concat(copy_module_contents(destination_repo, options[:filters], override_config))
           [:srpm, :errata, :package_group, :package_environment,
            :yum_repo_metadata_file, :distribution, :module_default].each do |type|
             tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
@@ -156,6 +157,10 @@ module Katello
         end
 
         def copy_module_contents(destination_repo, filters, override_config)
+          if filters
+            filters = filters.module_stream.or(filters.errata)
+          end
+
           copy_clauses, remove_clauses = generate_module_stream_copy_clauses(filters)
           tasks = [smart_proxy.pulp_api.extensions.module.copy(repo.pulp_id, destination_repo.pulp_id,
                    copy_clauses.merge(:override_config => override_config))]
@@ -170,7 +175,7 @@ module Katello
 
         def generate_module_stream_copy_clauses(filters)
           if filters&.any?
-            clause_gen = ::Katello::Util::ModuleStreamClauseGenerator.new(repo, filters.module_stream)
+            clause_gen = ::Katello::Util::ModuleStreamClauseGenerator.new(repo, filters)
             clause_gen.generate
 
             copy = clause_gen.copy_clause

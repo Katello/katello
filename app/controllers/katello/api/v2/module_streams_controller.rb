@@ -36,13 +36,14 @@ module Katello
     end
 
     def available_for_content_view_filter(filter, _collection)
-      collection_name_streams = []
-      current_name_streams = filter.module_stream_rules.pluck(:name, :stream)
+      collection_ids = []
+      current_ids = filter.module_stream_rules.map(&:module_stream_id)
       filter.applicable_repos.each do |repo|
-        collection_name_streams.concat(repo.module_streams.pluck(:name, :stream))
+        collection_ids.concat(repo.module_stream_ids)
       end
-      ModuleStream.in_repositories(filter.applicable_repos).
-                    uniquify_by_name_streams(collection_name_streams - current_name_streams)
+      collection = ModuleStream.where(:id => collection_ids)
+      collection = collection.where("id not in (?)", current_ids) unless current_ids.empty?
+      collection
     end
 
     def filter_by_content_view(filter, collection)
@@ -52,7 +53,7 @@ module Katello
     end
 
     def filter_by_content_view_filter(filter, collection)
-      collection.uniquify_by_name_streams(filter.module_stream_rules.pluck(:name, :stream))
+      collection.where(:id => filter.module_stream_rules.pluck(:module_stream_id))
     end
 
     private

@@ -55,7 +55,11 @@ module Katello
     end
 
     def self.module_stream
-      where(:type => [::Katello::ContentViewModuleStreamFilter.name])
+      where(:type => ::Katello::ContentViewModuleStreamFilter.name)
+    end
+
+    def self.errata
+      where(:type => ::Katello::ContentViewErratumFilter.name)
     end
 
     def params_format

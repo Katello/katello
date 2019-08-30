@@ -58,13 +58,9 @@ angular.module('Bastion.content-views').controller('AvailableModuleStreamFilterC
         }
 
         $scope.addModuleStreams = function (filter) {
-            var moduleStreams = nutupane.getAllSelectedResults().included.resources,
-                rules, nameStreams;
-            nameStreams = _.map(moduleStreams, function(moduleStream) {
-                return { name: moduleStream.name,
-                         stream: moduleStream.stream };
-            });
-            rules = new Rule({"module_streams": nameStreams});
+            var moduleStreams = nutupane.getAllSelectedResults().included.ids,
+                rules;
+            rules = new Rule({"module_stream_ids": moduleStreams});
             nutupane.table.working = true;
             saveRules(rules, filter);
         };
