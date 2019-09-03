@@ -38,17 +38,19 @@ module Katello
         fetch_identifiers = options.fetch(:fetch_identifiers, false)
         page_size = options.fetch(:page_size, SETTINGS[:katello][:pulp][:bulk_load_size])
         repository_version_href = repository.version_href
-        page_opts = { "page" => 1, repository_version: repository_version_href, page_size: page_size}
+        page_opts = { "offset" => 0, repository_version: repository_version_href, limit: page_size }
         page_opts[:fields] = '_href' if fetch_identifiers
         response = {}
         Enumerator.new do |yielder|
           loop do
             page_opts = page_opts.with_indifferent_access
-            break unless (response["next"] || page_opts["page"] == 1)
+            break unless (
+              (response["count"] && page_opts["offset"] < response["count"]) ||
+              page_opts["offset"] == 0)
             response = fetch_content_list page_opts
             response = response.as_json.with_indifferent_access
             yielder.yield response[:results]
-            page_opts[:page] += 1
+            page_opts[:offset] += page_size
           end
         end
       end

@@ -41,6 +41,30 @@ module ::Actions::Pulp3
       assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
     end
 
+    def test_sync_with_pagination
+      @repo.root.update_attributes(:url => "https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file-many/", :mirror_on_sync => false)
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Update,
+          @repo,
+          @master)
+
+      old_page_size = SETTINGS[:katello][:pulp][:bulk_load_size]
+      SETTINGS[:katello][:pulp][:bulk_load_size] = 10
+
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+
+      begin
+        @repo.reload
+        assert_equal 0, @repo.repository_files.count
+
+        @repo.index_content
+        assert_equal 250, @repo.repository_files.count
+      ensure
+        SETTINGS[:katello][:pulp][:bulk_load_size] = old_page_size
+      end
+    end
+
     def test_sync_with_mirror_false
       sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
