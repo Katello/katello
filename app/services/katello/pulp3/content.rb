@@ -31,10 +31,6 @@ module Katello
 
         private
 
-        def pulp_content
-          SmartProxy.pulp_master.pulp_api.resources.content
-        end
-
         def core_api_client
           PulpcoreClient::ApiClient.new(SmartProxy.pulp_master.pulp3_configuration(PulpcoreClient::Configuration))
         end

@@ -324,11 +324,16 @@ module ::Actions::Katello::Repository
       plan_action action, docker_repository, uploads,
               generate_metadata: true, sync_capsule: true
 
+      import_upload_args = {
+        pulp_id: docker_repository.pulp_id,
+        unit_type_id: 'docker_manifest',
+        unit_key: {'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'},
+        upload_id: 1,
+        unit_metadata: nil
+      }
       assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
-                                 pulp_id: docker_repository.pulp_id,
-                                 unit_type_id: 'docker_manifest',
-                                 unit_key: {'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'},
-                                 upload_id: 1, unit_metadata: nil
+                                 docker_repository, SmartProxy.pulp_master,
+                                 import_upload_args
                                 )
     end
 
@@ -342,11 +347,16 @@ module ::Actions::Katello::Repository
       plan_action action, docker_repository, uploads,
               generate_metadata: true, sync_capsule: true, content_type: 'docker_tag'
 
+      import_upload_args = {
+        pulp_id: docker_repository.pulp_id,
+        unit_type_id: 'docker_tag',
+        unit_key: unit_keys[0],
+        upload_id: 1,
+        unit_metadata: unit_keys[0]
+      }
       assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
-                                 pulp_id: docker_repository.pulp_id,
-                                 unit_type_id: 'docker_tag',
-                                 unit_key: unit_keys[0],
-                                 upload_id: 1, unit_metadata: unit_keys[0]
+                                 docker_repository, SmartProxy.pulp_master,
+                                 import_upload_args
                                 )
     end
   end

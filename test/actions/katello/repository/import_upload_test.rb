@@ -19,12 +19,17 @@ module Actions
       action = create_action(action_class)
       action.expects(:action_subject).with(repo)
       plan_action(action, repo, [upload])
+      import_upload_args = {
+        pulp_id: repo.pulp_id,
+        unit_type_id: repo.unit_type_id,
+        unit_key: upload.except('id', 'name'),
+        upload_id: '1',
+        unit_metadata: nil
+      }
 
-      assert_action_planed_with(action, pulp_import_class, :pulp_id => repo.pulp_id,
-                                unit_type_id: repo.unit_type_id,
-                                unit_key: upload.except('id', 'name'),
-                                upload_id: '1',
-                                unit_metadata: nil)
+      assert_action_planed_with(action, pulp_import_class,
+                                repo, SmartProxy.pulp_master,
+                                import_upload_args)
     end
   end
 end

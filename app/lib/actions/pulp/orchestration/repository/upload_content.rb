@@ -3,13 +3,14 @@ module Actions
     module Orchestration
       module Repository
         class UploadContent < Pulp::Abstract
-          def plan(repository, _smart_proxy, file, unit_type_id)
+          def plan(repository, smart_proxy, file, unit_type_id)
             sequence do
               upload_request = plan_action(Pulp::Repository::CreateUploadRequest)
               plan_action(Pulp::Repository::UploadFile,
                           upload_id: upload_request.output[:upload_id],
                           file: file[:path])
               plan_action(Pulp::Repository::ImportUpload,
+                          repository, smart_proxy,
                           pulp_id: repository.pulp_id,
                           unit_type_id: unit_type_id,
                           unit_key: unit_key(file, repository),
