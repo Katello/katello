@@ -38,7 +38,8 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
         $scope.getHostIds = function() {
             return {
                 included: {
-                    search: 'host_collection_id = %s'.replace('%s', $scope.$stateParams.hostCollectionId)
+                    search: 'host_collection_id = %s'.replace('%s', $scope.$stateParams.hostCollectionId),
+                    ids: $scope.hostCollection ? $scope.hostCollection.host_ids : []
                 }
             };
         };
