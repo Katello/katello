@@ -35,6 +35,7 @@ child @lifecycle_environments => :lifecycle_environments do
         :name => content_view.name,
         :composite => content_view.composite,
         :last_published => content_view.versions.empty? ? nil : content_view.versions.last.created_at,
+        :default => content_view.default,
         :counts => {
           :content_hosts => content_view.hosts.authorized("view_hosts").count,
           :products => content_view.products.enabled.count
