@@ -63,6 +63,10 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             }
         }
 
+        $scope.fetchUrl = function (cvIsDefault, cvId) {
+            return cvIsDefault ? '/products' : '/content_views/' + cvId + '/versions';
+        };
+
         function aggregateTasks(tasks) {
             var taskIds = _.map(tasks, function (task) {
                                 return task.id;
