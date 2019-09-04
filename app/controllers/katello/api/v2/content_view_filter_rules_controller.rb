@@ -34,7 +34,7 @@ module Katello
     param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
     param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
     param :date_type, String, :desc => N_("erratum: search using the 'Issued On' or 'Updated On' column of the errata. Values are 'issued'/'updated'")
-    param :module_stream_ids, String, :desc => N_("module stream ids")
+    param :module_stream_ids, Array, :desc => N_("module stream ids")
     def create
       rule_clazz = ContentViewFilter.rule_class_for(@filter)
 
