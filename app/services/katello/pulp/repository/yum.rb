@@ -87,7 +87,6 @@ module Katello
                                                                           filters: {unit: rpm_remove_clauses})
           end
 
-
           tasks.concat(copy_module_contents(destination_repo, options[:filters], override_config))
           [:srpm, :errata, :package_group, :package_environment,
            :yum_repo_metadata_file, :distribution, :module_default].each do |type|

@@ -7,12 +7,12 @@ describe('Controller: ModuleStreamFilterListController', function() {
         var $controller = $injector.get('$controller'),
             translate = $injector.get('translateMock'),
             ModuleStream = $injector.get('MockResource').$new(),
-            expected = {id: 1, name: "module",  stream: "stream"},
+            expected = {id: 1, module_stream_id: 3, name: "module",  stream: "stream"},
 
             Nutupane = function() {
                 this.table = {rows: [expected]};
                 this.getAllSelectedResults = function () {
-                    return {included: {resources: [expected]}};
+                    return {included: {ids: [expected["module_stream_id"]]}};
                 };
                 this.removeRow = function (item, field) {
                     return true;
