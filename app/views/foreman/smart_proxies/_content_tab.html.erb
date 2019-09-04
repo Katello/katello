@@ -28,7 +28,7 @@
     </tr>
     <tr ng-repeat-end ng-repeat="cv in env.content_views" ng-show="isEnvronmentExpanded(env)">
       <td>
-        <a href="/content_views/{{cv.id}}/versions" target="_self">
+        <a href="{{ fetchUrl(cv.default, cv.id) }}" target="_self">
           {{ cv.name }}
         </a>
       </td>

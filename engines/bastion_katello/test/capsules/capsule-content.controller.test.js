@@ -57,6 +57,18 @@ describe('Controller: CapsuleContentController', function() {
         syncState.set(syncState.DEFAULT);
     }));
 
+    describe('fetchUrl', function() {
+
+        it('returns the correct url if default CV', function() {
+            cvId = 1
+            expect($scope.fetchUrl(true, cvId)).toBe("/products")
+        });
+
+        it('returns the correct url if not default CV', function() {
+            cvId = 2
+            expect($scope.fetchUrl(false, cvId)).toBe("/content_views/2/versions")
+        });
+    });
 
     describe('syncCapsule', function() {
 
