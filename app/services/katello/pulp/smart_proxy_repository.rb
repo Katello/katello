@@ -58,7 +58,7 @@ module Katello
       end
 
       def orphaned_repos
-        @smart_proxy.pulp_repositories.map { |x| x["id"] } - current_repositories.map { |x| x.pulp_id }
+        @smart_proxy.pulp_repositories.map { |x| x["id"] } - repos_available_to_capsule.map { |x| x.pulp_id }
       end
 
       def delete_orphaned_repos
