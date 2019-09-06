@@ -474,14 +474,13 @@ module Katello
       end
 
       def mirror_remote_feed_url
-        uri = URI.parse(::SmartProxy.pulp_master.pulp3_url)
-        uri.scheme = 'https'
+        uri = ::SmartProxy.pulp_master.pulp3_uri!
         uri.path = partial_repo_path
         uri.to_s
       end
 
       def partial_repo_path
-        "/api/v3"
+        fail NotImplementedError
       end
 
       def needs_importer_updates?
