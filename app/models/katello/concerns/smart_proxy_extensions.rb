@@ -117,8 +117,9 @@ module Katello
 
       def pulp3_configuration(config_class)
         config_class.new do |config|
-          config.host = pulp3_host!
-          config.scheme = 'https'
+          uri = pulp3_uri!
+          config.host = uri.host
+          config.scheme = uri.scheme
           config.username = 'admin'
           config.password = 'password'
           config.debugging = true
@@ -149,10 +150,14 @@ module Katello
         type.pulp3_plugin && SmartProxy.pulp_master!.capabilities('Pulp3').try(:include?, type.pulp3_plugin)
       end
 
-      def pulp3_host!
+      def pulp3_uri!
         url = self.setting('Pulp3', 'pulp_url')
         fail "Cannot determine pulp3 url, check smart proxy configuration" unless url
-        URI.parse(url).host
+        URI.parse(url)
+      end
+
+      def pulp3_host!
+        pulp3_uri!.host
       end
 
       def pulp3_url(path = nil)
