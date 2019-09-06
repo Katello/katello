@@ -249,6 +249,7 @@ module ::Actions::Katello::Repository
       assert_action_planed_with(action, ::Actions::Pulp::Repository::UploadFile,
                                 upload_id: 123, file: file)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::ImportUpload,
+                                puppet_repository, proxy,
                   pulp_id: puppet_repository.pulp_id,
                   unit_type_id: "puppet_module",
                   unit_key: {},

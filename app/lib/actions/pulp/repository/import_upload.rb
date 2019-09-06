@@ -6,7 +6,7 @@ module Actions
           plan_self(:options => options)
         end
 
-        def run
+        def invoke_external_task
           output[:pulp_tasks] = [pulp_resources.content.import_into_repo(input[:options][:pulp_id],
                                                    input[:options][:unit_type_id],
                                                    input[:options][:upload_id],
