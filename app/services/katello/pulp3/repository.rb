@@ -73,7 +73,7 @@ module Katello
       end
 
       def mirror_remote_options
-        common_mirror_remote_options
+        common_mirror_remote_options.merge(url: mirror_remote_feed_url)
       end
 
       def create_mirror_remote
@@ -461,8 +461,7 @@ module Katello
 
       def common_mirror_remote_options
         remote_options = {
-          name: backend_object_name,
-          url: mirror_remote_feed_url
+          name: backend_object_name
         }
         remote_options.merge!(ssl_mirror_remote_options)
       end

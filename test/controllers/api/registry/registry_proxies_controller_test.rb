@@ -43,6 +43,20 @@ module Katello
     end
 
     describe "docker login" do
+      it "ping - with cert" do
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        get :ping
+        assert_response 401
+        assert_equal 'registry/2.0', response.headers['Docker-Distribution-API-Version']
+        assert_equal "Bearer realm=\"http://test.host/v2/token\"," \
+                     "service=\"test.host\"," \
+                     "scope=\"repository:registry:pull,push\"",
+                     response.headers['Www-Authenticate']
+      end
+
       it "ping - unauthorized" do
         User.current = nil
         session[:user] = nil
@@ -209,6 +223,21 @@ module Katello
 
         get :token, params: { scope: "repository:#{@docker_repo.container_repository_name}:pull" }
         assert_response 401
+      end
+
+      it "token - allow cert-based pull" do
+        @docker_repo.set_container_repository_name
+        @docker_repo.save!
+        @docker_repo.environment.registry_unauthenticated_pull = false
+        @docker_repo.environment.save!
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        request.headers.merge!(HTTP_SSL_CLIENT_VERIFY: 'SUCCESS', HTTP_SSL_CLIENT_S_DN: "O=#{@docker_repo.organization.label}")
+        get :token, params: { scope: "repository:#{@docker_repo.container_repository_name}:pull" }
+        assert_response 200
       end
 
       it "token - do not allow unauthenticated push" do

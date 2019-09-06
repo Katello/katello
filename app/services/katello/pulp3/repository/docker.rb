@@ -42,6 +42,14 @@ module Katello
           common_remote_options.merge(options)
         end
 
+        def mirror_remote_options
+          docker_options = {
+            url: "https://#{SmartProxy.pulp_master.pulp3_host!.downcase}",
+            upstream_name: repo.container_repository_name
+          }
+          common_mirror_remote_options.merge(docker_options)
+        end
+
         def distribution_options(path)
           {
             base_path: path,
