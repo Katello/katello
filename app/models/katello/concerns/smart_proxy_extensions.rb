@@ -147,11 +147,11 @@ module Katello
       def content_pulp3_support?(content_type)
         content_type = content_type.is_a?(String) ? content_type : content_type.model_class::CONTENT_TYPE
         type = Katello::RepositoryTypeManager.find_repository_type content_type
-        type.pulp3_plugin && SmartProxy.pulp_master!.capabilities('Pulp3').try(:include?, type.pulp3_plugin)
+        type.pulp3_plugin && SmartProxy.pulp_master!.capabilities(PULP3_FEATURE).try(:include?, type.pulp3_plugin)
       end
 
       def pulp3_uri!
-        url = self.setting('Pulp3', 'pulp_url')
+        url = self.setting(PULP3_FEATURE, 'pulp_url')
         fail "Cannot determine pulp3 url, check smart proxy configuration" unless url
         URI.parse(url)
       end
@@ -161,7 +161,7 @@ module Katello
       end
 
       def pulp3_url(path = nil)
-        pulp_url = self.setting('Pulp3', 'pulp_url')
+        pulp_url = self.setting(PULP3_FEATURE, 'pulp_url')
         path.blank? ? pulp_url : "#{pulp_url.sub(%r|/$|, '')}/#{path.sub(%r|^/|, '')}"
       end
 
