@@ -42,7 +42,7 @@ module Katello
 
     def optional_authorize
       @repository = find_scope_repository
-      if @repository && @repository.environment.registry_unauthenticated_pull
+      if @repository && (@repository.environment.registry_unauthenticated_pull || ssl_client_authorized?(@repository.organization.label))
         true
       else
         authorize
@@ -51,7 +51,7 @@ module Katello
 
     def registry_authorize
       @repository = find_readable_repository
-      return true if ['GET', 'HEAD'].include?(request.method) && @repository && @repository.environment.registry_unauthenticated_pull
+      return true if ['GET', 'HEAD'].include?(request.method) && @repository && !require_user_authorization?
 
       token = request.headers['Authorization']
       if token
@@ -99,10 +99,18 @@ module Katello
     def find_readable_repository
       return nil unless params[:repository]
       repository = Repository.docker_type.find_by(container_repository_name: params[:repository])
-      if repository && !repository.environment.registry_unauthenticated_pull
+      if require_user_authorization?(repository)
         repository = readable_repositories.docker_type.find_by(container_repository_name: params[:repository])
       end
       repository
+    end
+
+    def require_user_authorization?(repository = @repository)
+      !repository || (!repository.environment.registry_unauthenticated_pull && !ssl_client_authorized?(repository.organization.label))
+    end
+
+    def ssl_client_authorized?(org_label)
+      request.headers['HTTP_SSL_CLIENT_VERIFY'] == "SUCCESS" && request.headers['HTTP_SSL_CLIENT_S_DN'] == "O=#{org_label}"
     end
 
     def authorize_repository_read
@@ -124,7 +132,7 @@ module Katello
     end
 
     def token
-      if @repository && @repository.environment.registry_unauthenticated_pull
+      if !require_user_authorization?
         personal_token = OpenStruct.new(token: 'unauthenticated', issued_at: Time.now, expires_at: Time.now + 3)
       else
         personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').first
@@ -307,7 +315,7 @@ module Katello
     end
 
     def catalog
-      repositories = readable_repositories.where(content_type: 'docker').collect do |repository|
+      repositories = readable_repositories.docker_type.collect do |repository|
         repository.container_repository_name
       end
       render json: { repositories: repositories }
