@@ -32,7 +32,6 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::UpdateHttpProxyDetails }
 
     it 'plans' do
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       plan_action action, repository
       assert_action_planned_with action,
         ::Actions::Pulp::Orchestration::Repository::Refresh,
@@ -45,7 +44,6 @@ module ::Actions::Katello::Repository
     let(:candlepin_action_class) { ::Actions::Candlepin::Environment::AddContentToEnvironment }
 
     before do
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       repository.expects(:save!)
       action.expects(:action_subject).with(repository)
       action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
@@ -234,7 +232,6 @@ module ::Actions::Katello::Repository
   end
 
   class UploadFilesTest < TestBase
-    setup { FactoryBot.create(:smart_proxy, :default_smart_proxy) }
     let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::UploadContent }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
     it 'plans for Pulp' do

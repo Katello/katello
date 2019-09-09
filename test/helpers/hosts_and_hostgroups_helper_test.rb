@@ -52,7 +52,6 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
 
   def test_accessible_content_proxies_no_perms
     User.current = FactoryBot.create(:user)
-    FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
     @host.content_facet.content_source = @smart_proxy
 
     assert_equal [@smart_proxy], accessible_content_proxies(@host)
