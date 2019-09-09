@@ -18,7 +18,7 @@ module Katello
 
     api :GET, "/sync_plans", N_("List sync plans")
     api :GET, "/organizations/:organization_id/sync_plans"
-    param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label"), :required => true
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param :name, String, :desc => N_("filter by name")
     param :sync_date, String, :desc => N_("filter by sync date")
     param :interval, SyncPlan::TYPES, :desc => N_("filter by interval")
@@ -38,14 +38,14 @@ module Katello
 
     api :GET, "/organizations/:organization_id/sync_plans/:id", N_("Show a sync plan")
     api :GET, "/sync_plans/:id", N_("Show a sync plan")
-    param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label")
+    param :organization_id, :number, :desc => N_("Organization ID")
     param :id, :number, :desc => N_("sync plan numeric identifier"), :required => true
     def show
       respond_for_show(:resource => @sync_plan)
     end
 
     api :POST, "/organizations/:organization_id/sync_plans", N_("Create a sync plan")
-    param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label"), :required => true
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param_group :sync_plan
     def create
       if params[:sync_plan].key?(:enabled) || params.key?(:enabled)
@@ -62,7 +62,7 @@ module Katello
 
     api :PUT, "/organizations/:organization_id/sync_plans/:id", N_("Update a sync plan")
     api :PUT, "/sync_plans/:id", N_("Update a sync plan")
-    param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label")
+    param :organization_id, :number, :desc => N_("Organization ID")
     param :id, :number, :desc => N_("sync plan numeric identifier"), :required => true
     param_group :sync_plan
     def update
@@ -79,13 +79,14 @@ module Katello
 
     api :DELETE, "/organizations/:organization_id/sync_plans/:id", N_("Destroy a sync plan")
     api :DELETE, "/sync_plans/:id", N_("Destroy a sync plan")
-    param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label")
+    param :organization_id, :number, :desc => N_("Organization ID")
     param :id, :number, :desc => N_("sync plan numeric identifier")
     def destroy
       @sync_plan.destroy!
     end
 
     api :PUT, "/organizations/:organization_id/sync_plans/:id/add_products", N_("Add products to sync plan")
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param :id, String, :desc => N_("ID of the sync plan"), :required => true
     param :product_ids, Array, :desc => N_("List of product ids to add to the sync plan"), :required => true
     def add_products
@@ -96,6 +97,7 @@ module Katello
     end
 
     api :PUT, "/organizations/:organization_id/sync_plans/:id/remove_products", N_("Remove products from sync plan")
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param :id, String, :desc => N_("ID of the sync plan"), :required => true
     param :product_ids, Array, :desc => N_("List of product ids to remove from the sync plan"), :required => true
     def remove_products
