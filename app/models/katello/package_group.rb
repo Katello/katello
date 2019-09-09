@@ -3,17 +3,10 @@ module Katello
     include Concerns::PulpDatabaseUnit
 
     CONTENT_TYPE = "package_group".freeze
-
-    has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy, :inverse_of => :package_group
-    has_many :repositories, :through => :repository_package_groups, :class_name => "Katello::Repository"
     has_many :roots, :through => :repositories, :class_name => "Katello::RootRepository"
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :pulp_id, :rename => :id, :complete_value => true
-
-    def self.repository_association_class
-      RepositoryPackageGroup
-    end
 
     def repository
       self.repositories.first

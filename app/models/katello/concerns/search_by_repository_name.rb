@@ -5,7 +5,10 @@ module Katello
       include ScopedSearchExtensions
 
       included do
-        scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true, :ext_method => :search_by_repo_name, :only_explicit => true
+        has_many :root_repositories, through: :repositories, :source => :root, class_name: "Katello::RootRepository"
+        scoped_search :relation => :root_repositories, :on => :name, :rename => :repository,
+                      :complete_value => true,
+                      :ext_method => :search_by_repo_name, :only_explicit => true
       end
 
       module ClassMethods

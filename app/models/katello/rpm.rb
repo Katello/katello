@@ -3,10 +3,6 @@ module Katello
     include Concerns::PulpDatabaseUnit
 
     CONTENT_TYPE = 'rpm'.freeze
-
-    has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy, :inverse_of => :rpm
-    has_many :repositories, :through => :repository_rpms, :class_name => "Katello::Repository"
-
     has_many :content_facet_applicable_rpms, :class_name => "Katello::ContentFacetApplicableRpm",
              :dependent => :destroy, :inverse_of => :rpm
     has_many :content_facets, :through => :content_facet_applicable_rpms, :class_name => "Katello::Host::ContentFacet"
@@ -29,10 +25,6 @@ module Katello
 
     def self.default_sort
       order(:name).order(:epoch).order(:version_sortable).order(:release_sortable)
-    end
-
-    def self.repository_association_class
-      RepositoryRpm
     end
 
     def self.content_facet_association_class

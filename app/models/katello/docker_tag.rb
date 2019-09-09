@@ -6,9 +6,6 @@ module Katello
     CONTENT_TYPE = 'docker_tag'.freeze
 
     belongs_to :docker_taggable, :polymorphic => true, :inverse_of => :docker_tags
-    has_many :repository_docker_tags, :class_name => "Katello::RepositoryDockerTag", :dependent => :delete_all, :inverse_of => :docker_tag
-    has_many :repositories, :through => :repository_docker_tags, :inverse_of => :docker_tags
-
     has_one :schema1_meta_tag, :class_name => "Katello::DockerMetaTag", :foreign_key => "schema1_id",
                                :inverse_of => :schema1, :dependent => :nullify
 
@@ -16,10 +13,6 @@ module Katello
                                :inverse_of => :schema2, :dependent => :nullify
 
     before_destroy :cleanup_meta_tags
-
-    def self.repository_association_class
-      RepositoryDockerTag
-    end
 
     def repository
       repositories.first

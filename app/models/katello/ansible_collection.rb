@@ -3,11 +3,7 @@ module Katello
     include Concerns::PulpDatabaseUnit
 
     self.table_name = 'katello_ansible_collections'
-
     CONTENT_TYPE = 'ansible collection'.freeze
-
-    has_many :repository_ansible_collections, :class_name => "Katello::RepositoryAnsibleCollection", :dependent => :destroy, :inverse_of => :ansible_collection, :foreign_key => :ansible_collection_id
-    has_many :repositories, :through => :repository_ansible_collections, :class_name => "Katello::Repository"
 
     has_many :ansible_collection_tags, :class_name => "Katello::AnsibleCollectionTag", :dependent => :delete_all
     has_many :tags, :through => :ansible_collection_tags
@@ -20,10 +16,6 @@ module Katello
 
     def self.default_sort
       order(:name)
-    end
-
-    def self.repository_association_class
-      RepositoryAnsibleCollection
     end
 
     def self.unit_id_field

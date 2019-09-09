@@ -3,10 +3,6 @@ module Katello
     include Concerns::PulpDatabaseUnit
 
     CONTENT_TYPE = Pulp::Deb::CONTENT_TYPE
-
-    has_many :repositories, :through => :repository_debs, :class_name => "Katello::Repository"
-    has_many :repository_debs, :class_name => "Katello::RepositoryDeb", :dependent => :destroy, :inverse_of => :deb
-
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :version, :complete_value => true
     scoped_search :on => :architecture, :complete_value => true
@@ -17,10 +13,6 @@ module Katello
 
     def self.default_sort
       order(:name).order(:version).order(:architecture)
-    end
-
-    def self.repository_association_class
-      RepositoryDeb
     end
 
     def self.search_version_range(min = nil, max = nil)

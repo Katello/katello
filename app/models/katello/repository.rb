@@ -52,8 +52,8 @@ module Katello
     has_many :repository_srpms, :class_name => "Katello::RepositorySrpm", :dependent => :delete_all
     has_many :srpms, :through => :repository_srpms
 
-    has_many :repository_files, :class_name => "Katello::RepositoryFile", :dependent => :destroy
-    has_many :files, :through => :repository_files
+    has_many :repository_file_units, :class_name => "Katello::RepositoryFileUnit", :dependent => :destroy
+    has_many :files, :through => :repository_file_units, :source => :file_unit
 
     has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :delete_all
     has_many :puppet_modules, :through => :repository_puppet_modules
@@ -153,14 +153,12 @@ module Katello
     delegate :yum?, :docker?, :puppet?, :deb?, :file?, :ostree?, :ansible_collection?, :to => :root
     delegate :name, :label, :docker_upstream_name, :url, :to => :root
 
-    delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :arch, :label, :url, :unprotected,
+    delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :content_id, :arch, :label, :url, :unprotected,
              :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
              :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases, :deb_components, :deb_architectures,
              :ignore_global_proxy, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id,
              :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :ansible_collection_requirements, :http_proxy_policy, :http_proxy_id, :to => :root
-
-    delegate :content_id, to: :root, allow_nil: true
 
     def self.with_type(content_type)
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)

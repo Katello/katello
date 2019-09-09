@@ -25,7 +25,7 @@ module Katello
         @repo.reload
         @repo.index_content
         post_unit_count = Katello::FileUnit.all.count
-        post_unit_repository_count = Katello::RepositoryFile.where(:repository_id => @repo.id).count
+        post_unit_repository_count = Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
 
         assert_equal post_unit_count, 3
         assert_equal post_unit_repository_count, 3
@@ -39,7 +39,7 @@ module Katello
         ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
         @repo.reload
         post_unit_count = Katello::FileUnit.all.count
-        post_unit_repository_count = Katello::RepositoryFile.where(:repository_id => @repo.id).count
+        post_unit_repository_count = Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
 
         assert_equal post_unit_count, 3
         assert_equal post_unit_repository_count, 3
