@@ -170,24 +170,24 @@ module Katello
       end
 
       def sync_package_associations(new_installed_package_ids)
-        old_associated_ids = self.installed_package_ids
-        table_name = self.host_installed_packages.table_name
+        Katello::Util::Support.active_record_retry do
+          old_associated_ids = self.reload.installed_package_ids
+          table_name = self.host_installed_packages.table_name
 
-        new_ids = new_installed_package_ids - old_associated_ids
-        delete_ids = old_associated_ids - new_installed_package_ids
+          new_ids = new_installed_package_ids - old_associated_ids
+          delete_ids = old_associated_ids - new_installed_package_ids
 
-        queries = []
+          queries = []
 
-        if delete_ids.any?
-          queries << "DELETE FROM #{table_name} WHERE host_id=#{self.id} AND installed_package_id IN (#{delete_ids.join(', ')})"
-        end
+          if delete_ids.any?
+            queries << "DELETE FROM #{table_name} WHERE host_id=#{self.id} AND installed_package_id IN (#{delete_ids.join(', ')})"
+          end
 
-        unless new_ids.empty?
-          inserts = new_ids.map { |unit_id| "(#{unit_id.to_i}, #{self.id.to_i})" }
-          queries << "INSERT INTO #{table_name} (installed_package_id, host_id) VALUES #{inserts.join(', ')}"
-        end
+          unless new_ids.empty?
+            inserts = new_ids.map { |unit_id| "(#{unit_id.to_i}, #{self.id.to_i})" }
+            queries << "INSERT INTO #{table_name} (installed_package_id, host_id) VALUES #{inserts.join(', ')}"
+          end
 
-        ActiveRecord::Base.transaction do
           queries.each do |query|
             ActiveRecord::Base.connection.execute(query)
           end
