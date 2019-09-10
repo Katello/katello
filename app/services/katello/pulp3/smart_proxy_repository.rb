@@ -20,6 +20,19 @@ module Katello
         repo_ids = repos_on_capsule.map(&:name)
         katello_repos.select { |repo| repo_ids.include? repo.pulp_id }
       end
+
+      def orphaned_repositories_for_mirror_proxies
+        smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
+        katello_pulp_ids = smart_proxy_helper.repos_available_to_capsule.map(&:pulp_id)
+        repos_on_capsule = ::Katello::Pulp3::Repository.new(nil, smart_proxy).list({})
+        repos_on_capsule.reject { |capsule_repo| katello_pulp_ids.include? capsule_repo.name }
+      end
+
+      def delete_orphaned_repositories_for_mirror_proxies
+        orphaned_repositories_for_mirror_proxies.map do |repo|
+          ::Katello::Pulp3::Repository.new(nil, smart_proxy).repositories_api.delete(repo._href)
+        end
+      end
     end
   end
 end

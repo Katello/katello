@@ -39,7 +39,7 @@ module ::Actions::Pulp3
       sync_and_reload_repo(@repo, @master)
 
       ForemanTasks.sync_task(
-        ::Actions::Pulp3::Orchestration::Repository::RemoveOrphans, @master)
+        ::Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans, @master)
     end
 
     def teardown

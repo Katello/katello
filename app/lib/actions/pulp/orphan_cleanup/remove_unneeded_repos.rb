@@ -1,6 +1,6 @@
 module Actions
-  module Katello
-    module CapsuleContent
+  module Pulp
+    module OrphanCleanup
       class RemoveUnneededRepos < Pulp::AbstractAsyncTask
         def plan(smart_proxy)
           plan_self(:smart_proxy_id => smart_proxy.id)

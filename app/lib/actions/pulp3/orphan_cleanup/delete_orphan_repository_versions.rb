@@ -1,6 +1,6 @@
 module Actions
   module Pulp3
-    module Repository
+    module OrphanCleanup
       class DeleteOrphanRepositoryVersions < Pulp3::AbstractAsyncTask
         def plan(smart_proxy)
           plan_self(:smart_proxy_id => smart_proxy.id)
