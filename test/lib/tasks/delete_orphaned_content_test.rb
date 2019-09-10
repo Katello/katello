@@ -15,7 +15,7 @@ module Katello
       ENV.delete('SMART_PROXY_ID') if ENV['SMART_PROXY_ID']
       smart_proxies = [@master, @mirror]
       ForemanTasks.expects(:async_task).twice.with do |main_task, parsed_stack|
-        assert_equal(::Actions::Katello::CapsuleContent::RemoveOrphans, main_task)
+        assert_equal(::Actions::Katello::OrphanCleanup::RemoveOrphans, main_task)
         assert_includes smart_proxies, parsed_stack
         smart_proxies.delete parsed_stack
       end
@@ -25,7 +25,7 @@ module Katello
     def test_delete_orphaned_content_with_param
       ENV['SMART_PROXY_ID'] = @mirror.id.to_s
       ForemanTasks.expects(:async_task).once.with do |main_task, parsed_stack|
-        assert_equal(::Actions::Katello::CapsuleContent::RemoveOrphans, main_task)
+        assert_equal(::Actions::Katello::OrphanCleanup::RemoveOrphans, main_task)
         assert_equal @mirror, parsed_stack
       end
       Rake.application.invoke_task('katello:delete_orphaned_content')

@@ -15,7 +15,7 @@ namespace :katello do
   end
 
   def remove_orphan(proxy)
-    ForemanTasks.async_task(Actions::Katello::CapsuleContent::RemoveOrphans, proxy)
+    ForemanTasks.async_task(Actions::Katello::OrphanCleanup::RemoveOrphans, proxy)
     puts _("Orphaned content deletion started in background.")
   rescue RuntimeError => e
     Rails.logger.error "Smart proxy with ID #{proxy.id} may be down: #{e}"

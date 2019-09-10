@@ -223,26 +223,4 @@ module ::Actions::Katello::CapsuleContent
       end
     end
   end
-
-  class RemoveUnneededReposTest < TestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::RemoveUnneededRepos }
-
-    it "plans removal of unneeded repos" do
-      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:orphaned_repos).returns([])
-      action = create_action(action_class)
-      action.expects(:plan_self)
-      plan_action(action, capsule_content.smart_proxy)
-    end
-  end
-
-  class RemoveOrphansTest < TestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::RemoveOrphans }
-    it "Calls remove uneeded repos" do
-      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:orphaned_repos).returns([])
-      action = create_action(action_class)
-      action.expects(:plan_self)
-      plan_action(action, capsule_content.smart_proxy)
-      assert_action_planed(action, ::Actions::Katello::CapsuleContent::RemoveUnneededRepos)
-    end
-  end
 end
