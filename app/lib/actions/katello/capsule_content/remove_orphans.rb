@@ -9,8 +9,11 @@ module Actions
           sequence do
             plan_action(Actions::Katello::CapsuleContent::RemoveUnneededRepos, proxy) unless proxy.pulp_master?
 
-            if proxy.pulp3_enabled? && proxy == SmartProxy.pulp_master
-              plan_action(Actions::Pulp3::Orchestration::Repository::RemoveOrphans, proxy)
+            if proxy.pulp3_enabled?
+              if proxy == SmartProxy.pulp_master
+                plan_action(Actions::Katello::Pulp3::Orchestration::Repository::RemoveOrphans, proxy)
+              end
+              plan_action(Actions::Pulp3::CapsuleContent::RemoveUnneededRepos, proxy)
             end
 
             plan_self(:capsule_id => proxy.id)

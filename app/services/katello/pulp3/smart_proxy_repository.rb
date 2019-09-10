@@ -20,6 +20,16 @@ module Katello
         repo_ids = repos_on_capsule.map(&:name)
         katello_repos.select { |repo| repo_ids.include? repo.pulp_id }
       end
+
+      def orphaned_repos
+        repos_on_capsule = ::Katello::Pulp3::Repository.new(nil, smart_proxy).list({})
+        repo_ids = repos_on_capsule.map(&:name)
+        katello_repos.reject { |repo| repo_ids.include? repo.pulp_id }
+      end
+
+      def delete_orphaned_repos
+        orphaned_repos.map { |repo| ::Katello::Pulp3::Repository.new(repo).delete }.compact
+      end
     end
   end
 end
