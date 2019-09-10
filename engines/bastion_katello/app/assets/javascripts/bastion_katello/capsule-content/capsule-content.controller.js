@@ -63,7 +63,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             }
         }
 
-        $scope.fetchUrl = function (cvIsDefault, cvId) {
+        $scope.productsOrVersionUrl = function (cvIsDefault, cvId) {
             return cvIsDefault ? '/products' : '/content_views/' + cvId + '/versions';
         };
 

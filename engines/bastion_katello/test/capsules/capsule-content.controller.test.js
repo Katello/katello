@@ -57,21 +57,17 @@ describe('Controller: CapsuleContentController', function() {
         syncState.set(syncState.DEFAULT);
     }));
 
-    describe('fetchUrl', function() {
-
+    describe('productsOrVersionUrl', function() {
         it('returns the correct url if default CV', function() {
-            cvId = 1
-            expect($scope.fetchUrl(true, cvId)).toBe("/products")
+            expect($scope.productsOrVersionUrl(true, 1)).toBe("/products")
         });
 
         it('returns the correct url if not default CV', function() {
-            cvId = 2
-            expect($scope.fetchUrl(false, cvId)).toBe("/content_views/2/versions")
+            expect($scope.productsOrVersionUrl(false, 2)).toBe("/content_views/2/versions")
         });
     });
 
     describe('syncCapsule', function() {
-
         it('has no effect when sync is in progress', function() {
             spyOn(CapsuleContent, 'sync').and.callThrough();
             syncState.set(syncState.SYNCING);
@@ -122,11 +118,9 @@ describe('Controller: CapsuleContentController', function() {
 
             expect(syncState.is(syncState.DEFAULT)).toBeTruthy();
         });
-
     });
 
     describe('cancelSync', function() {
-
         it('has no effect when sync is not in progress', function() {
             spyOn(CapsuleContent, 'cancelSync').and.callThrough();
             $scope.cancelSync();
@@ -146,8 +140,5 @@ describe('Controller: CapsuleContentController', function() {
             $scope.cancelSync();
             expect(syncState.is(syncState.CANCEL_TRIGGERED)).toBeTruthy();
         });
-
     });
-
-
 });
