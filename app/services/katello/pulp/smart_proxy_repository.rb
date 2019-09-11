@@ -61,6 +61,19 @@ module Katello
         @smart_proxy.pulp_repositories.map { |x| x["id"] } - repos_available_to_capsule.map { |x| x.pulp_id }
       end
 
+      def repos_available_to_capsule
+        yum_repos_available_to_capsule + puppet_environments_available_to_capsule
+      end
+
+      def yum_repos_available_to_capsule
+        yum_repos = Katello::Repository.in_environment(@smart_proxy.lifecycle_environments)
+        yum_repos.find_all { |repo| repo.node_syncable? }
+      end
+
+      def puppet_environments_available_to_capsule
+        Katello::ContentViewPuppetEnvironment.in_environment(@smart_proxy.lifecycle_environments)
+      end
+
       def delete_orphaned_repos
         orphaned_repos.map { |repo| self.smart_proxy.pulp_api.extensions.repository.delete(repo) }.compact
       end
