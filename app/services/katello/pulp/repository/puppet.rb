@@ -18,8 +18,15 @@ module Katello
           importer_class.new(config.merge(mirror_importer_connection_options))
         end
 
+        def puppet_install_auto_publish?
+          (smart_proxy.try(:pulp_mirror?) && !@repo.library_instance?) || false
+        end
+
         def generate_distributors
-          puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(puppet_install_distributor_path, :subdir => 'modules', :id => repo.pulp_id, :auto_publish => smart_proxy.try(:pulp_mirror?) || false)
+          puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(puppet_install_distributor_path,
+                                                                               :subdir => 'modules',
+                                                                               :id => repo.pulp_id,
+                                                                               :auto_publish => puppet_install_auto_publish?)
           puppet_dist = Runcible::Models::PuppetDistributor.new(nil, (root.unprotected || false), true,
                                                                 :id => "#{repo.pulp_id}_puppet", :auto_publish => true)
           [puppet_dist, puppet_install_dist]
