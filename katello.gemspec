@@ -31,7 +31,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rest-client"
 
   gem.add_dependency "rabl"
-  gem.add_dependency "foreman-tasks", "~> 0.13", ">= 0.14.1"
+  gem.add_dependency "foreman-tasks", "< 0.17.0"
   gem.add_dependency "dynflow", ">= 1.2.0"
   gem.add_dependency "activerecord-import"
 
@@ -42,10 +42,10 @@ Gem::Specification.new do |gem|
   # Pulp
   gem.add_dependency "runcible", ">= 2.11.0", "< 3.0.0"
   gem.add_dependency "anemone"
-  gem.add_dependency "pulpcore_client", "3.0.0rc5.dev01564590949"
-  gem.add_dependency "pulp_file_client", "< 3.0.0"
-  gem.add_dependency "pulp_ansible_client", "0.2.0b2.dev01565014789"
-  gem.add_dependency "pulp_docker_client", "4.0.0b6.dev01564578980"
+  gem.add_dependency "pulpcore_client", "<= 3.0.0rc5.dev01564590949"
+  gem.add_dependency "pulp_file_client", "<= 0.1.0b2.dev01564597330"
+  gem.add_dependency "pulp_ansible_client", "<= 0.2.0b2.dev01565014789"
+  gem.add_dependency "pulp_docker_client", "<= 4.0.0b6.dev01564578980"
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
