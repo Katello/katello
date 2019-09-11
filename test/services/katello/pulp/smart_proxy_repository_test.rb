@@ -186,6 +186,14 @@ module Katello
 
           assert_equal expected_repo_ids, repo_ids
         end
+
+        test "orphaned repos" do
+          capsule_content.smart_proxy
+          assert_equal [repo_lib_cv1['id'], repo_lib_cv2['id'], repo_dev_cv2['id']].sort, capsule_content.orphaned_repos.sort
+
+          capsule_content.smart_proxy.lifecycle_environments << katello_environments(:dev)
+          assert_equal [repo_lib_cv1['id'], repo_lib_cv2['id']].sort, capsule_content.orphaned_repos.sort
+        end
       end
     end
   end
