@@ -3,7 +3,6 @@ module Actions
     module ContentViewEnvironment
       class Destroy < Actions::Base
         def plan(cv_env, options = {})
-          skip_cp_update = options.fetch(:skip_candlepin_update, false)
           skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
           organization_destroy = options.fetch(:organization_destroy, false)
           content_view = cv_env.content_view
@@ -25,7 +24,7 @@ module Actions
                 plan_action(ContentViewPuppetEnvironment::Destroy, puppet_env) unless organization_destroy
               end
             end
-            plan_action(Candlepin::Environment::Destroy, cp_id: cv_env.cp_id) unless skip_cp_update
+            plan_action(Candlepin::Environment::Destroy, cp_id: cv_env.cp_id) unless organization_destroy
             plan_self(:id => cv_env.id)
           end
         end
