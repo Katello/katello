@@ -37,6 +37,8 @@ module Katello
       'katello/api/v2/root/resource_list',
       'katello/api/v2/ping/index',
       'katello/api/v2/ping/server_status',
+      'katello/api/v2/katello_ping/index',
+      'katello/api/v2/katello_ping/server_status',
       'katello/api/v2/root/rhsm_resource_list',
       'katello/react/index'
     ].freeze

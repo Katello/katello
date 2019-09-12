@@ -3,7 +3,7 @@
 require "katello_test_helper"
 
 module Katello
-  class Api::V2::PingControllerTest < ActionController::TestCase
+  class Api::V2::KatelloPingControllerTest < ActionController::TestCase
     def setup
       setup_controller_defaults_api
     end
@@ -21,18 +21,18 @@ module Katello
                                                        :duration_ms => "0" },
                                   :katello_jobs => { :status => "ok",
                                                      :duration_ms => "0" } } }
-      Ping.stubs(:ping).returns(response)
+      Katello::Ping.stubs(:ping).returns(response)
       get :index
 
       assert_response(:success)
-      assert_template('api/v2/ping/show')
+      assert_template('api/v2/katello_ping/show')
     end
 
     def test_server_status
       get :server_status
 
       assert_response(:success)
-      assert_template('api/v2/ping/server_status')
+      assert_template('api/v2/katello_ping/server_status')
     end
   end
 end

@@ -257,8 +257,8 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :ping, :only => [:index]
-        match "/status" => "ping#server_status", :via => :get
+        match "/ping" => "katello_ping#index", :via => :get
+        match "/status" => "katello_ping#server_status", :via => :get
 
         api_resources :products, :only => [:index, :show, :create, :update, :destroy] do
           member do

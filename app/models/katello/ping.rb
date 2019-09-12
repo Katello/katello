@@ -34,15 +34,22 @@ module Katello
         result
       end
 
+      def status
+        {
+          version: Katello::VERSION,
+          timeUTC: Time.now.getutc
+        }
+      end
+
       def ping_pulp3_without_auth(service_result, capsule_id)
         exception_watch(service_result) do
-          Ping.pulp3_without_auth(fetch_proxy(capsule_id).pulp3_url("api/v3"))
+          Katello::Ping.pulp3_without_auth(fetch_proxy(capsule_id).pulp3_url("api/v3"))
         end
       end
 
       def ping_pulp_without_auth(service_result, capsule_id)
         exception_watch(service_result) do
-          Ping.pulp_without_auth(pulp_url(capsule_id))
+          Katello::Ping.pulp_without_auth(pulp_url(capsule_id))
         end
       end
 
