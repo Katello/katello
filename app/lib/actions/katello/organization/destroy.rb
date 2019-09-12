@@ -65,7 +65,7 @@ module Actions
         end
 
         def remove_content_view_environment(cv_env)
-          plan_action(ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => true, :skip_candlepin_update => true, :organization_destroy => true)
+          plan_action(ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => true, :organization_destroy => true)
         end
 
         def remove_content_views(organization)
