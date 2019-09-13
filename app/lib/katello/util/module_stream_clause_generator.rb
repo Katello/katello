@@ -26,41 +26,23 @@ module Katello
 
       def make_module_stream_clauses(repo, filters)
         content_type = filters.first.content_type
-        pulp_content_clauses = filters.collect do |filter|
+        clauses = filters.collect do |filter|
           filter.generate_clauses(repo)
         end
-        pulp_content_clauses.flatten!
-        pulp_content_clauses.compact!
-
-        unless pulp_content_clauses.empty?
-          module_stream_clauses_from_content(content_type, pulp_content_clauses)
-        end
+        clauses.flatten!
+        clauses.compact!
+        module_stream_clauses_from_content(content_type, clauses) unless clauses.empty?
       end
 
-      def module_stream_clauses_from_content(content_type, pulp_content_clauses)
+      def module_stream_clauses_from_content(content_type, clauses)
+        module_streams = []
         case content_type
         when ContentViewFilter::ERRATA
-          clauses_for_errata(pulp_content_clauses)
+          module_streams = Katello::Erratum.list_modular_streams_by_clauses(@repo, clauses)
         when ContentViewFilter::MODULE_STREAM
-          clauses_for_module_streams(pulp_content_clauses)
+          module_streams = ModuleStream.where(:id => clauses)
         end
-      end
-
-      # input ->  [{"type"=>{"$in"=>[:bugfix, :security]}}] <- Errata Pulp Clauses
-      # output -> {"_id" => {"$in" => [...]}} <- Module Streams belonging to those errata
-      def clauses_for_errata(errata_clauses = [])
-        module_streams = Katello::Erratum.list_modular_streams_by_clauses(@repo, errata_clauses)
         {'_id' => { "$in" => module_streams.pluck(:pulp_id)}} unless module_streams.empty?
-      end
-
-      def clauses_for_module_streams(module_stream_clauses = [])
-        query_clauses = module_stream_clauses.map do |clause|
-          "(#{clause.to_sql})"
-        end
-        return unless query_clauses.any?
-
-        statement = query_clauses.join(" OR ")
-        {'_id' => { "$in" => ModuleStream.where(statement).pluck(:pulp_id)}}
       end
     end
   end

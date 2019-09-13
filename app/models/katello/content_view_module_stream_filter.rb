@@ -8,19 +8,7 @@ module Katello
 
     def generate_clauses(_repo)
       return if module_stream_rules.blank?
-
-      module_stream_ids = module_stream_rules.map(&:module_stream_id)
-      module_streams_in(module_stream_ids) unless module_stream_ids.empty?
-    end
-
-    private
-
-    def module_stream_arel
-      ::Katello::ModuleStream.arel_table
-    end
-
-    def module_streams_in(ids)
-      module_stream_arel[:id].in(ids)
+      module_stream_rules.map(&:module_stream_id)
     end
   end
 end
