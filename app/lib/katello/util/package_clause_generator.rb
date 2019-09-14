@@ -6,7 +6,7 @@ module Katello
       protected
 
       def fetch_filters
-        ContentViewFilter.yum
+        ContentViewFilter.yum(false)
       end
 
       def collect_clauses(repo, filters)

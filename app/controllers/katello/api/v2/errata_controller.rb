@@ -43,7 +43,7 @@ module Katello
       collection = collection.where("#{date_type} >= ?", params[:start_date]) if params[:start_date]
       collection = collection.where("#{date_type} <= ?", params[:end_date]) if params[:end_date]
       collection = collection.of_type(params[:types]) if params[:types]
-      collection.non_modular
+      collection
     end
 
     def custom_index_relation(collection)

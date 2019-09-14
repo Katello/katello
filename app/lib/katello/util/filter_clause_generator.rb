@@ -54,7 +54,7 @@ module Katello
         filters = fetch_filters.send(list_type).where(:id => @filters) # abstract
         if filters.any?
           # generate the clauses from filters to be implemented by subclasses
-          clauses = collect_clauses(@repo, filters) # abstract
+          clauses = collect_clauses(@repo, filters) || [] # abstract
           clauses.delete_if { |cls| cls.blank? }
           if clauses.any?
             clauses

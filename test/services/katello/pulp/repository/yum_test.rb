@@ -208,6 +208,7 @@ module Katello
         def setup
           super
           @custom.root.update_attributes(:url => 'file:///var/www/test_repos/zoo')
+          delete_repo(@custom_cv)
           delete_repo(@custom)
           create_repo(@custom)
           sync_repo(@custom)
@@ -220,6 +221,7 @@ module Katello
         end
 
         def test_copy_no_filters
+          @custom.index_content
           TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv))
           assert_equal SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom.pulp_id)[:content_unit_counts].except('package_category'),
                        SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
@@ -244,8 +246,8 @@ module Katello
           TaskSupport.wait_on_tasks(@custom_cv.backend_service(@master).purge_partial_errata)
           counts = SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
 
-          assert_equal 1 + @custom.rpms.modular.count, counts[:rpm]
-          assert_equal 1 + @custom.errata.modular.count, counts[:erratum]
+          assert_equal 1, counts[:rpm]
+          assert_equal 1, counts[:erratum]
         end
       end
     end

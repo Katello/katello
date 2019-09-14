@@ -25,6 +25,8 @@ angular.module('Bastion.content-views').controller('NewFilterController',
                 state = 'content-view.yum.filter.rpm.details';
             } else if (filterType === 'package_group') {
                 state = 'content-view.yum.filter.package_group.available';
+            } else if (filterType === 'modulemd') {
+                state = 'content-view.yum.filter.module-stream.available';
             } else if (filterType === 'docker') {
                 state = 'content-view.docker.filter.tag.details';
             }
@@ -74,7 +76,8 @@ angular.module('Bastion.content-views').controller('NewFilterController',
                 {id: 'rpm', name: translate('Package')},
                 {id: 'package_group', name: translate('Package Group')},
                 {id: 'erratumId', name: translate('Erratum - by ID')},
-                {id: 'erratumDateType', name: translate('Erratum - Date and Type')}
+                {id: 'erratumDateType', name: translate('Erratum - Date and Type')},
+                {id: 'modulemd', name: translate('Module Stream')}
             ];
         } else {
             $scope.filter.type = "docker";

@@ -35,6 +35,27 @@ module Katello
       %w(name asc)
     end
 
+    def available_for_content_view_filter(filter, _collection)
+      collection_ids = []
+      current_ids = filter.module_stream_rules.map(&:module_stream_id)
+      filter.applicable_repos.each do |repo|
+        collection_ids.concat(repo.module_stream_ids)
+      end
+      collection = ModuleStream.where(:id => collection_ids)
+      collection = collection.where("id not in (?)", current_ids) unless current_ids.empty?
+      collection
+    end
+
+    def filter_by_content_view(filter, collection)
+      repos = Katello::ContentView.find(filter.content_view_id).repositories
+      ids = repos.map { |r| r.send(:module_stream_ids) }.flatten
+      filter_by_ids(ids, collection)
+    end
+
+    def filter_by_content_view_filter(filter, collection)
+      collection.where(:id => filter.module_stream_rules.pluck(:module_stream_id))
+    end
+
     private
 
     def check_params

@@ -614,7 +614,6 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             parent: 'content-view.yum.filter.package_group.edit'
         }
     })
-
     .state('content-view.yum.filter.erratum', {
         abstract: true,
         url: '/filters/:filterId/errata',
@@ -660,7 +659,6 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             label: '{{ filter.name }}',
             parent: 'content-view.yum.filters'
         }
-
     })
     .state('content-view.yum.filter.erratum.repositories', {
         url: '/repositories',
@@ -672,7 +670,51 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             parent: 'content-view.yum.filter.erratum.edit'
         }
     })
-
+    .state('content-view.yum.filter.module-stream', {
+        abstract: true,
+        url: '/filters/:filterId/module-stream',
+        templateUrl: 'content-views/details/filters/views/module-stream-filter.html'
+    })
+    .state('content-view.yum.filter.module-stream.edit', {
+        url: '/edit',
+        controller: 'FilterEditController',
+        permission: 'edit_content_views',
+        templateUrl: 'content-views/details/filters/views/edit-filter.html',
+        ncyBreadcrumb: {
+            label: '{{ "Edit" | translate }} {{ filter.name }}',
+            parent: 'content-view.yum.filters'
+        }
+    })
+    .state('content-view.yum.filter.module-stream.list', {
+        url: '/list',
+        permission: 'view_content_views',
+        controller: 'ModuleStreamFilterListController',
+        templateUrl: 'content-views/details/filters/views/module-stream-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ "Module Streams" | translate }}',
+            parent: 'content-view.yum.filter.module-stream.edit'
+        }
+    })
+    .state('content-view.yum.filter.module-stream.available', {
+        url: '/available',
+        permission: 'edit_content_views',
+        controller: 'AvailableModuleStreamFilterController',
+        templateUrl: 'content-views/details/filters/views/module-stream-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add Module Streams" | translate }}',
+            parent: 'content-view.yum.filter.module-stream.edit'
+        }
+    })
+    .state('content-view.yum.filter.module-stream.repositories', {
+        url: '/repositories',
+        permission: 'view_content_views',
+        controller: 'FilterRepositoriesController',
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Repositories | translate }}',
+            parent: 'content-view.yum.filter.module-stream.edit'
+        }
+    })
     .state('content-view.docker', {
         url: '/repositories/docker',
         abstract: true,

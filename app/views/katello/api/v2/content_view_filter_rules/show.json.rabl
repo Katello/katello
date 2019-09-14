@@ -14,5 +14,5 @@ attributes :end_date, :if => lambda { |rule| rule.respond_to?(:end_date) && !rul
 attributes :architecture, :if => lambda { |rule| rule.respond_to?(:architecture) && !rule.architecture.blank? }
 attributes :types, :if => lambda { |rule| rule.respond_to?(:types) && !rule.types.blank? }
 attributes :date_type, :if => lambda { |rule| rule.respond_to?(:date_type) }
-
+attributes :module_stream_id, :if => lambda { |rule| rule.respond_to?(:module_stream_id) && !rule.module_stream_id.blank? }
 extends 'katello/api/v2/common/timestamps'

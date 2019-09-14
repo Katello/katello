@@ -13,7 +13,7 @@ module Katello
     has_many :content_facet_applicable_module_streams, :class_name => "Katello::ContentFacetApplicableModuleStream",
              :dependent => :destroy, :inverse_of => :module_stream
     has_many :content_facets, :through => :content_facet_applicable_module_streams, :class_name => "Katello::Host::ContentFacet"
-
+    has_many :rules, :class_name => "Katello::ContentViewModuleStreamFilterRule", :inverse_of => :module_stream, dependent: :destroy
     scoped_search on: :name, complete_value: true
     scoped_search on: :pulp_id, complete_value: true, rename: :uuid
     scoped_search on: :stream, complete_value: true

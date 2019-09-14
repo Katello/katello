@@ -20,12 +20,15 @@ module Katello
       if self.original_packages
         package_filenames.concat(repo.packages_without_errata.map(&:filename))
       end
-
-      { 'filename' => { "$in" => package_filenames } } unless package_filenames.empty?
+      ContentViewPackageFilter.generate_rpm_clauses(package_filenames)
     end
 
     def original_packages=(value)
       self[:original_packages] = value
+    end
+
+    def self.generate_rpm_clauses(package_filenames = [])
+      { 'filename' => { "$in" => package_filenames } } unless package_filenames.empty?
     end
 
     protected

@@ -34,6 +34,7 @@ module Katello
     param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
     param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
     param :date_type, String, :desc => N_("erratum: search using the 'Issued On' or 'Updated On' column of the errata. Values are 'issued'/'updated'")
+    param :module_stream_ids, Array, :desc => N_("module stream ids")
     def create
       rule_clazz = ContentViewFilter.rule_class_for(@filter)
 
@@ -44,6 +45,12 @@ module Katello
       rules += (rule_params[:errata_ids] || []).map do |errata_id|
         rule_clazz.create!(rule_params.except(:errata_ids)
           .merge(filter: @filter, errata_id: errata_id))
+      end
+      if rule_params[:module_stream_ids]
+        rules += (rule_params[:module_stream_ids] || []).map do |module_stream_id|
+          rule_clazz.create!(rule_params.except(:module_stream_ids)
+            .merge(filter: @filter, module_stream_id: module_stream_id))
+        end
       end
 
       if rules.empty?
@@ -125,7 +132,7 @@ module Katello
       @rule_params ||= params.fetch(:content_view_filter_rule, {}).
             permit(:uuid, :version, :min_version, :max_version, :architecture,
                     :errata_id, :start_date, :end_date, :date_type,
-                    :types => [], :errata_ids => [], name: [])
+                    :types => [], :module_stream_ids => [], :errata_ids => [], name: [])
     end
 
     def process_errata_ids(select_all_params)

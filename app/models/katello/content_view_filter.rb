@@ -5,9 +5,10 @@ module Katello
     RPM = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
     ERRATA          = Erratum::CONTENT_TYPE
+    MODULE_STREAM   = ModuleStream::CONTENT_TYPE
     DEB             = Deb::CONTENT_TYPE
-    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA, DOCKER, DEB].freeze
-    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Container Images') => DOCKER, _('deb Packages') => DEB }.freeze
+    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA, DOCKER, DEB, MODULE_STREAM].freeze
+    CONTENT_OPTIONS = { _('Packages') => RPM, _('Module Streams') => ModuleStream, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Container Images') => DOCKER, _('deb Packages') => DEB }.freeze
 
     belongs_to :content_view,
                :class_name => "Katello::ContentView",
@@ -31,13 +32,17 @@ module Katello
                   :complete_value => {Rpm::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageFilter",
                                       PackageGroup::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageGroupFilter",
                                       Erratum::CONTENT_TYPE.to_sym => "Katello::ContentViewErratumFilter",
-                                      DOCKER.to_sym => "Katello::ContentViewDockerFilter"}
+                                      DOCKER.to_sym => "Katello::ContentViewDockerFilter",
+                                      MODULE_STREAM.to_sym => "Katello::ContentViewModuleStreamFilter"}
     scoped_search :on => :inclusion, :rename => :inclusion_type, :complete_value => {:include => true, :exclude => :false}
 
-    def self.yum
-      where(:type => [::Katello::ContentViewPackageGroupFilter.name,
-                      ::Katello::ContentViewErratumFilter.name,
-                      ::Katello::ContentViewPackageFilter.name])
+    def self.yum(include_module_streams = true)
+      types = [::Katello::ContentViewPackageGroupFilter.name,
+               ::Katello::ContentViewErratumFilter.name,
+               ::Katello::ContentViewPackageFilter.name
+              ]
+      types << ::Katello::ContentViewModuleStreamFilter.name if include_module_streams
+      where(:type => types)
     end
 
     def self.deb
@@ -49,6 +54,14 @@ module Katello
       where(:type => [::Katello::ContentViewDockerFilter.name])
     end
 
+    def self.module_stream
+      where(:type => ::Katello::ContentViewModuleStreamFilter.name)
+    end
+
+    def self.errata
+      where(:type => ::Katello::ContentViewErratumFilter.name)
+    end
+
     def params_format
       {}
     end
@@ -58,7 +71,8 @@ module Katello
         ContentViewPackageFilter => RPM,
         ContentViewErratumFilter => ERRATA,
         ContentViewPackageGroupFilter => PACKAGE_GROUP,
-        ContentViewDockerFilter => DOCKER
+        ContentViewDockerFilter => DOCKER,
+        ContentViewModuleStreamFilter => MODULE_STREAM
       }[self.class]
     end
 
@@ -72,6 +86,8 @@ module Katello
         ContentViewErratumFilter
       when DOCKER
         ContentViewDockerFilter
+      when MODULE_STREAM
+        ContentViewModuleStreamFilter
       else
         fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
                  { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
@@ -86,6 +102,8 @@ module Katello
         ContentViewPackageGroupFilterRule
       when ContentViewErratumFilter.name
         ContentViewErratumFilterRule
+      when ContentViewModuleStreamFilter.name
+        ContentViewModuleStreamFilterRule
       when ContentViewDockerFilter.name
         ContentViewDockerFilterRule
       else
@@ -102,6 +120,8 @@ module Katello
         filter.package_group_rule_ids
       when ContentViewErratumFilter.name
         filter.erratum_rule_ids
+      when ContentViewModuleStreamFilter.name
+        filter.module_stream_ids
       when ContentViewDockerFilter.name
         filter.docker_rule_ids
       else

@@ -70,6 +70,19 @@ module Katello
       end
     end
 
+    def test_create_module_stream
+      @filter = katello_content_view_filters(:populated_module_stream_filter)
+      module_stream = katello_module_streams(:one)
+      post :create, params: { :content_view_filter_id => @filter.id, :module_stream_ids => [module_stream.id] }
+
+      assert_response :success
+
+      assert_template :layout => 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/create'
+
+      assert_equal @filter.reload.module_stream_rules.last.module_stream, module_stream
+    end
+
     def test_show
       get :show, params: { :content_view_filter_id => @filter.id, :id => @rule.id }
 
