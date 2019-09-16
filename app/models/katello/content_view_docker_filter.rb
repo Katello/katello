@@ -21,6 +21,15 @@ module Katello
       { "_id" => { "$in" => manifest_tags } } unless manifest_tags.empty?
     end
 
+    def content_unit_pulp_ids(repo)
+      manifest_tags = []
+      self.docker_rules.each do |rule|
+        manifest_tags.concat(query_manifests(repo, rule))
+      end
+
+      manifest_tags
+    end
+
     protected
 
     def fetch_tag_pulp_ids(repo, rule, manifest_klass = DockerManifest)
