@@ -50,6 +50,10 @@ module Katello
         fail NotImplementedError
       end
 
+      def content_service
+        Katello::Pulp3::Content
+      end
+
       def self.api_client(_smart_proxy)
         fail NotImplementedError
       end
@@ -524,6 +528,12 @@ module Katello
         data = PulpcoreClient::RepositoryVersionCreate.new(
             add_content_units: content_unit_href)
         repository_versions_api.create(repository_reference.repository_href, data)
+      end
+
+      def unit_keys(uploads)
+        uploads.map do |upload|
+          upload.except('id')
+        end
       end
     end
   end

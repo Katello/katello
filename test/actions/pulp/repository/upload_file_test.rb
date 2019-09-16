@@ -5,6 +5,9 @@ module ::Actions::Pulp::Repository
   class UploadFileTest < VCRTestBase
     let(:repo) { katello_repositories(:p_forge) }
     let(:file) { File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz") }
+    before do
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+    end
 
     def test_upload_file
       upload_request = run_action(::Actions::Pulp::Repository::CreateUploadRequest)
@@ -15,10 +18,12 @@ module ::Actions::Pulp::Repository
       end
 
       run_action(::Actions::Pulp::Repository::ImportUpload,
-                  pulp_id: repo.pulp_id,
-                  unit_type_id: repo.unit_type_id,
-                  unit_key: {},
-                  upload_id: upload_request.output[:upload_id])
+                 repo, SmartProxy.pulp_master,
+                    pulp_id: repo.pulp_id,
+                     unit_type_id: repo.unit_type_id,
+                     unit_key: {},
+                     upload_id: upload_request.output[:upload_id]
+                  )
 
       run_action(::Actions::Pulp::Repository::DeleteUploadRequest,
                   upload_id: upload_request.output[:upload_id])

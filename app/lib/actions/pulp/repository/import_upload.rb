@@ -2,20 +2,16 @@ module Actions
   module Pulp
     module Repository
       class ImportUpload < Pulp::AbstractAsyncTask
-        input_format do
-          param :pulp_id
-          param :unit_type_id
-          param :upload_id
-          param :unit_key
-          param :unit_metadata
+        def plan(_repo, _smart_proxy, options)
+          plan_self(:options => options)
         end
 
         def invoke_external_task
-          output[:pulp_tasks] = [pulp_resources.content.import_into_repo(input[:pulp_id],
-                                                   input[:unit_type_id],
-                                                   input[:upload_id],
-                                                   input[:unit_key],
-                                                   unit_metadata: input[:unit_metadata] || {})]
+          output[:pulp_tasks] = [pulp_resources.content.import_into_repo(input[:options][:pulp_id],
+                                                   input[:options][:unit_type_id],
+                                                   input[:options][:upload_id],
+                                                   input[:options][:unit_key],
+                                                   unit_metadata: input[:options][:unit_metadata] || {})]
         end
       end
     end
