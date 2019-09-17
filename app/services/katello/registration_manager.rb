@@ -76,7 +76,7 @@ module Katello
           host = hosts.first
 
           if host.name == host_name
-            unless host.subscription_facet.nil? || host.build || host_uuid_overridden
+            unless Setting[:host_profile_assume] || host.subscription_facet.nil? || host.build || host_uuid_overridden
               found_uuid = host.fact_values.where(fact_name_id: dmi_uuid_fact_id).first
               if found_uuid && found_uuid.value != host_uuid
                 registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
