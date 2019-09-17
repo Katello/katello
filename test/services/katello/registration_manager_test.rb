@@ -64,9 +64,16 @@ module Katello
 
         def test_existing_host_mismatch_uuid
           FactValue.create(value: "existing_system_uuid", host: @host, fact_name: @uuid_fact_name)
+          Setting[:host_profile_assume] = false
 
           error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
           assert_match(/DMI UUID that differs/, error.message)
+
+          # if a registering client is matched by hostname to an existing profile
+          # but its UUID has changed *and* is still unique, allow the registration when enabled
+          Setting[:host_profile_assume] = true
+
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
         end
 
         def test_existing_uuid_and_name
