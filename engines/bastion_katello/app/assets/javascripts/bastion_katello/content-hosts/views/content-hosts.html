@@ -54,7 +54,7 @@
         <li class="divider"></li>
 
         <li role="menuitem" ng-show="permitted('destroy_hosts')" ng-class="{disabled: table.numSelected === 0}">
-          <a ng-click="openModal()" disable-link="table.numSelected === 0" translate>Remove Hosts</a>
+          <a ng-click="openModal()" disable-link="table.numSelected === 0" translate>Delete Hosts</a>
           <span bst-modal="performDestroyHosts()" template-url="content-hosts/bulk/views/content-hosts-bulk-destroy-modal.html"></span>
         </li>
       </ul>
