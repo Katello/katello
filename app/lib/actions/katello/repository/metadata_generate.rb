@@ -10,7 +10,7 @@ module Actions
           repository_creation = options.fetch(:repository_creation, false)
           source_repository = options.fetch(:source_repository, nil)
           source_repository ||= repository.target_repository if repository.link?
-          smart_proxy_id = options.fetch(:capsule_id, SmartProxy.pulp_master.id)
+          smart_proxy = options.fetch(:smart_proxy, SmartProxy.pulp_master)
           if repository_creation
             matching_content = false
           else
@@ -18,7 +18,7 @@ module Actions
           end
 
           plan_pulp_action([Pulp::Repository::DistributorPublish, Pulp3::Orchestration::Repository::GenerateMetadata],
-                        repository, SmartProxy.find(smart_proxy_id),
+                        repository, smart_proxy,
                         :force => force,
                         :source_repository => source_repository,
                         :matching_content => matching_content,

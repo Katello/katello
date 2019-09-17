@@ -33,6 +33,21 @@ module Actions
             action_options)
     end
 
+    it 'plans a yum refresh in other location' do
+      begin
+        old_location = Location.current
+        Location.current = taxonomies(:location1)
+
+        action = create_action(action_class)
+        plan_action(action, yum_repo)
+
+        assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+                                  action_options)
+      ensure
+        Location.current = old_location
+      end
+    end
+
     it 'plans with a content view puppet env' do
       action = create_action(action_class)
       content_view_puppet_env.puppet_environment = ::Environment.create(:name => 'foobar')
