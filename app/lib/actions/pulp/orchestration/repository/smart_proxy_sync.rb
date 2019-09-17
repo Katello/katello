@@ -22,7 +22,7 @@ module Actions
               if skip_metadata_check
                 plan_action(Katello::Repository::MetadataGenerate,
                             repository,
-                            capsule_id: smart_proxy.id,
+                            smart_proxy: smart_proxy,
                             force: true)
               end
             end
