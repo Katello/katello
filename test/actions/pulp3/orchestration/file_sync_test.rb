@@ -56,10 +56,10 @@ module ::Actions::Pulp3
 
       begin
         @repo.reload
-        assert_equal 0, @repo.repository_files.count
+        assert_equal 0, @repo.repository_file_units.count
 
         @repo.index_content
-        assert_equal 250, @repo.repository_files.count
+        assert_equal 250, @repo.repository_file_units.count
       ensure
         SETTINGS[:katello][:pulp][:bulk_load_size] = old_page_size
       end
@@ -70,7 +70,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       @repo.index_content
-      pre_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
+      pre_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
       @repo.root.update_attributes(:url => "file:///var/www/test_repos/file2", :mirror_on_sync => false)
 
       ForemanTasks.sync_task(
@@ -81,7 +81,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       @repo.index_content
-      post_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
+      post_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
       assert_equal pre_count_content + 3, post_count_content
     end
 
@@ -90,7 +90,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       @repo.index_content
-      pre_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
+      pre_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
       @repo.root.update_attributes(:url => "file:///var/www/test_repos/file2")
 
       ForemanTasks.sync_task(
@@ -101,7 +101,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       @repo.index_content
-      post_count_content = ::Katello::RepositoryFile.where(:repository_id => @repo.id).count
+      post_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
       assert_equal pre_count_content, post_count_content
     end
   end

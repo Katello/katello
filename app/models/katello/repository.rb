@@ -52,8 +52,8 @@ module Katello
     has_many :repository_srpms, :class_name => "Katello::RepositorySrpm", :dependent => :delete_all
     has_many :srpms, :through => :repository_srpms
 
-    has_many :repository_files, :class_name => "Katello::RepositoryFile", :dependent => :destroy
-    has_many :files, :through => :repository_files
+    has_many :repository_file_units, :class_name => "Katello::RepositoryFileUnit", :dependent => :destroy
+    has_many :files, :through => :repository_file_units, :source => :file_unit
 
     has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :delete_all
     has_many :puppet_modules, :through => :repository_puppet_modules

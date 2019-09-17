@@ -2,9 +2,6 @@ module Katello
   class ModuleStream < Katello::Model
     include Concerns::PulpDatabaseUnit
     include ScopedSearchExtensions
-    has_many :repository_module_streams, class_name: "Katello::RepositoryModuleStream",
-      dependent: :destroy, inverse_of: :module_stream
-    has_many :repositories, through: :repository_module_streams, class_name: "Katello::Repository"
     has_many :profiles, class_name: "Katello::ModuleProfile", dependent: :destroy, inverse_of: :module_stream
     has_many :artifacts, class_name: "Katello::ModuleStreamArtifact", dependent: :destroy, inverse_of: :module_stream
     has_many :module_stream_errata_packages, class_name: "Katello::ModuleStreamErratumPackage", dependent: :destroy, inverse_of: :module_stream
@@ -36,10 +33,6 @@ module Katello
 
     def self.default_sort
       order(:name)
-    end
-
-    def self.repository_association_class
-      RepositoryModuleStream
     end
 
     def self.content_facet_association_class

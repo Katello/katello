@@ -4,7 +4,7 @@ module Katello
 
     has_many :repository_docker_meta_tags, :class_name => "Katello::RepositoryDockerMetaTag", :dependent => :delete_all, :inverse_of => :docker_meta_tag
     has_many :repositories, :through => :repository_docker_meta_tags, :inverse_of => :docker_meta_tags
-
+    has_many :root_repositories, through: :repositories, :source => :root, class_name: "Katello::RootRepository"
     belongs_to :schema1, :class_name => "Katello::DockerTag",
                           :inverse_of => :schema1_meta_tag
 
@@ -20,7 +20,7 @@ module Katello
                   :complete_value => true, :only_explicit => true
     scoped_search :on => :digest, :rename => :digest, :complete_value => false,
                   :only_explicit => true, :ext_method => :find_by_digest, :operators => ["="]
-    scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true,
+    scoped_search :relation => :root_repositories, :on => :name, :rename => :repository, :complete_value => true,
                   :ext_method => :search_by_repo_name, :only_explicit => true
 
     def self.repository_association_class

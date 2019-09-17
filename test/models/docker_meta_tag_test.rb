@@ -17,6 +17,11 @@ module Katello
       end
     end
 
+    def test_complete_for
+      refute_nil DockerMetaTag.complete_for("repository=")
+      refute_nil DockerMetaTag.search_for("repository='foo'")
+    end
+
     def test_related_tags
       assert_equal 8, @tag_schema1.related_tags.count
       assert_equal 8, @tag_schema2.related_tags.count

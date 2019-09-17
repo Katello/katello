@@ -5,7 +5,7 @@ class CreateRepositoryRoot < ActiveRecord::Migration[5.1]
                      deb_releases deb_components deb_architectures ignore_global_proxy ssl_ca_cert_id
                      ssl_client_cert_id ssl_client_key_id ignorable_content description docker_tags_whitelist).freeze
 
-  REPO_ASSOCIATIONS = %w(RepositoryErratum ContentViewRepository RepositoryRpm RepositorySrpm RepositoryFile RepositoryPuppetModule
+  REPO_ASSOCIATIONS = %w(RepositoryErratum ContentViewRepository RepositoryRpm RepositorySrpm RepositoryFileUnit RepositoryPuppetModule
                          RepositoryDockerManifest RepositoryDockerManifestList DockerTag DockerMetaTag RepositoryOstreeBranch RepositoryDeb
                          ContentFacetRepository RepositoryPackageGroup RepositoryModuleStream).freeze
 

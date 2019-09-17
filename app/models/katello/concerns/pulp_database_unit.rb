@@ -3,9 +3,16 @@ require 'set'
 module Katello
   module Concerns::PulpDatabaseUnit
     extend ActiveSupport::Concern
-    include Katello::Concerns::SearchByRepositoryName
-
     #  Class.repository_association_class
+    included do
+      if many_repository_associations
+        # rubocop:disable Rails/ReflectionClassName
+        has_many repository_association.to_sym, class_name: repository_association_class_name,
+                 dependent: :delete_all, inverse_of: association_name
+        has_many :repositories, through: repository_association.to_sym, class_name: "Katello::Repository"
+        include ::Katello::Concerns::SearchByRepositoryName
+      end
+    end
 
     def backend_data
       self.class.pulp_data(pulp_id) || {}
@@ -20,6 +27,18 @@ module Katello
     end
 
     module ClassMethods
+      def association_name
+        self.name.demodulize.underscore
+      end
+
+      def repository_association_class_name
+        "::Katello::Repository#{self.name.demodulize}"
+      end
+
+      def repository_association_class
+        repository_association_class_name.constantize
+      end
+
       def content_type
         self::CONTENT_TYPE
       end
@@ -29,11 +48,11 @@ module Katello
       end
 
       def many_repository_associations
-        true
+        self != YumMetadataFile
       end
 
       def repository_association
-        repository_association_class.name.demodulize.pluralize.underscore
+        repository_association_class_name.demodulize.pluralize.underscore
       end
 
       def immutable_unit_types

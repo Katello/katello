@@ -10,10 +10,6 @@ module Katello
       super(repository)
     end
 
-    def self.many_repository_associations
-      false
-    end
-
     # yum metadata file only has one repo
     def repositories
       [repository]

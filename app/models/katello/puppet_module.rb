@@ -7,9 +7,6 @@ module Katello
 
     CONTENT_TYPE = "puppet_module".freeze
 
-    has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy, :inverse_of => :puppet_module
-    has_many :repositories, :through => :repository_puppet_modules, :class_name => "Katello::Repository"
-
     has_many :content_view_puppet_environment_puppet_modules,
              :class_name => "Katello::ContentViewPuppetEnvironmentPuppetModule",
              :dependent => :destroy,
@@ -33,10 +30,6 @@ module Katello
     def self.latest_module(name, author, repositories)
       in_repositories(repositories).where(:name => name, :author => author).
         order(:sortable_version => :desc).first
-    end
-
-    def self.repository_association_class
-      RepositoryPuppetModule
     end
 
     def self.parse_metadata(filepath)
