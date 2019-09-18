@@ -44,10 +44,10 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   #pulp3
-  gem.add_dependency "pulpcore_client", "<= 3.0.0rc5.dev01567443997"
-  gem.add_dependency "pulp_file_client", "<= 0.1.0b2.dev01567190410"
-  gem.add_dependency "pulp_ansible_client", "<= 0.2.0b3.dev01567175531"
-  gem.add_dependency "pulp_docker_client", "<= 4.0.0b6.dev01567171967"
+  gem.add_dependency "pulpcore_client", "<= 3.0.0rc6.dev01568814705"
+  gem.add_dependency "pulp_file_client", "<= 0.1.0b21568401409"
+  gem.add_dependency "pulp_ansible_client", "<= 0.2.0b3.dev01568826778"
+  gem.add_dependency "pulp_docker_client", "<= 4.0.0b7.dev01568815014"
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'

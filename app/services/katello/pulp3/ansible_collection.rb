@@ -4,7 +4,7 @@ module Katello
       include LazyAccessor
 
       def self.content_api
-        PulpAnsibleClient::ContentCollectionsApi.new(Katello::Pulp3::Repository::AnsibleCollection.api_client(SmartProxy.pulp_master!))
+        PulpAnsibleClient::ContentCollectionVersionsApi.new(Katello::Pulp3::Repository::AnsibleCollection.api_client(SmartProxy.pulp_master!))
       end
 
       def self.ids_for_repository(repo_id)

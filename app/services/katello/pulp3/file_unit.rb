@@ -9,8 +9,8 @@ module Katello
       end
 
       def self.create_content(options)
-        fail _("Artifact Id and relative path are needed to create content") unless options.dig(:file_name) && options.dig(:_artifact)
-        PulpFileClient::FileContent.new(relative_path: options[:file_name], _artifact: options[:_artifact])
+        fail _("Artifact Id and relative path are needed to create content") unless options.dig(:file_name) && options.dig(:artifact)
+        PulpFileClient::FileContent.new(relative_path: options[:file_name], artifact: options[:artifact])
       end
 
       def self.ids_for_repository(repo_id)
