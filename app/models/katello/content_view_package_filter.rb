@@ -36,13 +36,13 @@ module Katello
     def query_rpms(repo, rule)
       query_name = rule.name.tr("*", "%")
       query = Rpm.in_repositories(repo).non_modular.where("#{Rpm.table_name}.name ilike ?", query_name)
-      if rule.architecture
+      if rule.architecture.present?
         query_arch = rule.architecture.tr("*", "%")
         query = query.where("#{Rpm.table_name}.arch ilike ?", query_arch)
       end
-      if !rule.version.blank?
+      if rule.version.present?
         query = query.search_version_equal(rule.version)
-      elsif !rule.min_version.blank? || !rule.max_version.blank?
+      elsif rule.min_version.present? || rule.max_version.present?
         query = query.search_version_range(rule.min_version, rule.max_version)
       end
       query.pluck("#{Rpm.table_name}.filename")
