@@ -11,3 +11,16 @@ test_package:
   content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_filter) %>
   created_at:              <%= Time.now %>
   updated_at:              <%= Time.now %>
+
+one_package_rule:
+  name:                    one
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>
+
+one_package_rule_empty_string_arch:
+  name:                    one
+  architecture:            ""
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>
