@@ -1,4 +1,4 @@
-attributes :id, :uuid, :last_checkin, :service_level, :release_version, :autoheal, :registered_at, :registered_through, :purpose_role, :purpose_usage
+attributes :id, :uuid, :last_checkin, :service_level, :release_version, :autoheal, :registered_at, :registered_through, :purpose_role, :purpose_usage, :hypervisor
 
 child :user => :user do
   attributes :id, :login

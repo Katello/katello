@@ -54,8 +54,8 @@
           </a>
         </dd>
 
-        <dt translate>Registered Through</dt>
-        <dd>{{ host.subscription_facet_attributes.registered_through || "Unknown" | translate}}</dd>
+        <dt ng-show="!host.subscription_facet_attributes.hypervisor || host.subscription_facet_attributes.registered_through" translate>Registered Through</dt>
+        <dd ng-show="!host.subscription_facet_attributes.hypervisor || host.subscription_facet_attributes.registered_through">{{ host.subscription_facet_attributes.registered_through | translate}}</dd>
 
         <dt ng-show="host.subscription_facet_attributes.virtual_host" translate>Virtual Host</dt>
         <dd ng-show="host.subscription_facet_attributes.virtual_host">
