@@ -69,7 +69,7 @@ module ::Actions::Pulp3
           :content_view_id => @repo.content_view.id)
 
       assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
-      assert_equal pre_count_content + 6, post_count_content
+      assert_equal pre_count_content + 7, post_count_content
     end
 
     def test_sync_mirror_true
@@ -93,7 +93,7 @@ module ::Actions::Pulp3
 
       collections = ::Katello::AnsibleCollection.in_repositories(@repo)
       post_count_content = collections.count
-      assert_equal pre_count_content + 1, post_count_content
+      assert_equal pre_count_content + 2, post_count_content
 
       refute_nil collections.first.description
       refute_empty collections.first.tags
