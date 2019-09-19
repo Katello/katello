@@ -276,6 +276,27 @@ module Katello
         end
       end
 
+      def self.orphan_repository_versions_for_mirror(smart_proxy)
+        current_pulp_repositories = ::Katello::Pulp3::Repository.list(smart_proxy, {})
+
+        orphan_version_hrefs = current_pulp_repositories.collect do |pulp_repo|
+          mirror_repo_versions = ::Katello::Pulp3::Repository.versions_list(
+            smart_proxy, pulp_repo['_href'], ordering: :_created).pluck(:_href)
+
+          mirror_repo_versions - [pulp_repo['_latest_version_href']]
+        end
+
+        orphan_version_hrefs.flatten
+      end
+
+      def self.delete_orphan_repository_versions_for_mirror(smart_proxy)
+        orphans = orphan_repository_versions_for_mirror(smart_proxy)
+        orphans.collect do |href|
+          ::Katello::Pulp3::Repository.new(nil, smart_proxy).
+            repository_versions_api.delete(href)
+        end
+      end
+
       def delete_mirror(href = mirror_repository_href)
         repositories_api.delete(href) if href
       end

@@ -6,8 +6,10 @@ module Actions
           def plan(proxy)
             if proxy.pulp3_enabled?
               sequence do
-                plan_action(Actions::Pulp3::OrphanCleanup::RemoveUnneededRepos, proxy) if proxy.pulp_mirror?
-                plan_action(Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions, proxy) if proxy == SmartProxy.pulp_master
+                if proxy.pulp_mirror?
+                  plan_action(Actions::Pulp3::OrphanCleanup::RemoveUnneededRepos, proxy)
+                end
+                plan_action(Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions, proxy)
               end
             end
           end

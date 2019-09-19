@@ -8,7 +8,11 @@ module Actions
 
         def run
           smart_proxy = SmartProxy.find(input[:smart_proxy_id])
-          output[:pulp_tasks] = ::Katello::Pulp3::Repository.delete_orphan_repository_versions(smart_proxy)
+          if smart_proxy.pulp_mirror?
+            output[:pulp_tasks] = ::Katello::Pulp3::Repository.delete_orphan_repository_versions_for_mirror(smart_proxy)
+          else
+            output[:pulp_tasks] = ::Katello::Pulp3::Repository.delete_orphan_repository_versions(smart_proxy)
+          end
         end
       end
     end

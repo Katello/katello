@@ -46,6 +46,10 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, ::Actions::Pulp3::OrphanCleanup::RemoveUnneededRepos) do |input|
         assert_equal smart_proxy.id, input[:smart_proxy_id]
       end
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions) do |input|
+        assert_equal smart_proxy.id, input[:smart_proxy_id]
+      end
     end
   end
 
