@@ -101,5 +101,9 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("Host Collections")
     end
+
+    class Jail < ::Safemode::Jail
+      allow :name
+    end
   end
 end
