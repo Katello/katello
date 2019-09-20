@@ -183,15 +183,6 @@ module Katello
             end
           end
 
-          def events(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'events'), self.default_headers).body
-            if response.present?
-              ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-            else
-              return []
-            end
-          end
-
           def content_overrides(id)
             result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))

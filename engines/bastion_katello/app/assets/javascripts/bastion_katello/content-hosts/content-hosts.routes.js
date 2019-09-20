@@ -89,17 +89,6 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         }
     });
 
-    $stateProvider.state('content-host.events', {
-        url: '/events',
-        permission: 'view_hosts',
-        controller: 'ContentHostEventsController',
-        templateUrl: 'content-hosts/details/views/content-host-events.html',
-        ncyBreadcrumb: {
-            label: "{{ 'Events' | translate }}",
-            parent: 'content-host.info'
-        }
-    });
-
     $stateProvider.state('content-host.tasks', {
         abstract: true,
         template: '<div ui-view></div>'

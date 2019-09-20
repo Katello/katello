@@ -13,7 +13,6 @@ module Katello
       CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN].freeze
 
       lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
-      lazy_accessor :events, :initializer => lambda { |_s| Resources::Candlepin::Consumer.events(uuid) }
       lazy_accessor :consumer_attributes, :initializer => lambda { |_s| Resources::Candlepin::Consumer.get(uuid) }
       lazy_accessor :installed_products, :initializer => lambda { |_s| consumer_attributes['installedProducts'] }
       lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(owner_label, uuid, false) }
