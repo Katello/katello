@@ -223,6 +223,12 @@ module Katello
         facet_attributes[:content_source_id] ||= hostgroup.inherited_content_source_id
         facet_attributes
       end
+
+      class Jail < ::Safemode::Jail
+        allow :applicable_module_stream_count, :applicable_rpm_count, :content_source, :content_source_id, :content_source_name, :content_view_id,
+              :content_view_name, :errata_counts, :id, :kickstart_repository, :kickstart_repository_id, :kickstart_repository_name,
+              :lifecycle_environment_id, :lifecycle_environment_name, :upgradable_module_stream_count, :upgradable_rpm_count, :uuid
+      end
     end
   end
 end
