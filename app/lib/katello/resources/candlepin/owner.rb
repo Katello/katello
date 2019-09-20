@@ -101,11 +101,6 @@ module Katello
             OpenSSL::PKCS12.create(password, name, p, c, nil, "PBE-SHA1-3DES", "PBE-SHA1-3DES")
           end
 
-          def events(key)
-            response = self.get(join_path(path(key), 'events'), self.default_headers).body
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-          end
-
           def service_levels(uuid)
             response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'servicelevels'), self.default_headers).body
             if response.empty?

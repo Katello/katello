@@ -9,7 +9,6 @@ module Katello
             :presence => true,
             :format => { :with => /\A[\w-]*\z/ }
 
-        lazy_accessor :events, :initializer => lambda { |_s| Resources::Candlepin::Owner.events(label) }
         lazy_accessor :service_levels, :initializer => lambda { |_s| Resources::Candlepin::Owner.service_levels(label) }
         lazy_accessor :system_purposes, :initializer => lambda { |_s| Resources::Candlepin::Owner.system_purpose(label) }
         lazy_accessor :debug_cert, :initializer => lambda { |_s| load_debug_cert }

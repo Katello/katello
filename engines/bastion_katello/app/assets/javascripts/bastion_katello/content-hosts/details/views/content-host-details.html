@@ -69,23 +69,11 @@
         </a>
       </li>
       <li uib-dropdown
-          ng-class="{active: stateIncludes('content-host.subscriptions.list') || stateIncludes('content-host.subscriptions.add') || stateIncludes('content-host.events')}">
-        <a uib-dropdown-toggle>
-          <span translate>Subscriptions</span>
-          <i class="fa fa-chevron-down"></i>
+          ng-class="{active: stateIncludes('content-host.subscriptions.list') || stateIncludes('content-host.subscriptions.add')}">
+        <a translate
+           ui-sref="content-host.subscriptions.list">
+          Subscriptions
         </a>
-        <ul uib-dropdown-menu>
-          <li>
-            <a ui-sref="content-host.subscriptions.list" translate>
-              Subscriptions
-            </a>
-          </li>
-          <li>
-            <a ui-sref="content-host.events" translate>
-              Events
-            </a>
-          </li>
-        </ul>
       </li>
       <li ng-class="{active: $state.includes('content-host.host-collections')}">
         <a translate
