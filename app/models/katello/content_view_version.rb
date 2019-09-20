@@ -298,7 +298,8 @@ module Katello
     end
 
     def docker_tags
-      ::Katello::DockerMetaTag.where(:id => RepositoryDockerMetaTag.where(:repository_id => repositories.docker_type).select(:docker_meta_tag_id))
+      # Don't count tags from non-archived repos; this causes count errors
+      ::Katello::DockerMetaTag.where(:id => RepositoryDockerMetaTag.where(:repository_id => repositories.archived.docker_type).select(:docker_meta_tag_id))
     end
 
     def debs
