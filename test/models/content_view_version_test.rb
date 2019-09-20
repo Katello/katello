@@ -105,6 +105,15 @@ module Katello
       end
       DockerMetaTag.import_meta_tags(cvv.repositories.archived.docker_type)
 
+      # simulate another not-archived (env ID not nil) repo existing in the cvv.
+      # this repo should not count towards the cvv docker_tag_count.
+      archived_repo = cvv.repositories.archived.docker_type[0]
+      dup_repo = archived_repo.dup
+      dup_repo.save!
+      dup_repo.update_attributes(:environment_id => ::Katello::KTEnvironment.find_by(:name => "Dev").id)
+      dup_repo.docker_tags = [archived_repo.docker_tags[0]]
+      ::Katello::DockerMetaTag.import_meta_tags([dup_repo])
+
       assert cvv.repositories.archived.docker_type.count > 0
       assert_equal manifest_count, cvv.docker_manifest_count
       assert_equal tag_count, cvv.docker_tag_count
