@@ -84,10 +84,10 @@ module Actions
       def cancel
         output[:pulp_tasks].each do |pulp_task|
           data = PulpcoreClient::Task.new(state: 'canceled')
-          tasks_api.cancel(pulp_task['_href'], data)
+          tasks_api.tasks_cancel(pulp_task['_href'], data)
           if pulp_task['spawned_tasks']
             #the main task may have completed, so cancel spawned tasks too
-            pulp_task['spawned_tasks'].each { |spawned| tasks_api.cancel(spawned['_href'], data) }
+            pulp_task['spawned_tasks'].each { |spawned| tasks_api.tasks_cancel(spawned['_href'], data) }
           end
         end
       end
