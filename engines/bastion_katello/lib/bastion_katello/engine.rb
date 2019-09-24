@@ -40,13 +40,14 @@ module BastionKatello
           katello_tasks
           select_organization
         ),
-        :config => {
-          'consumerCertRPM' => consumer_cert_rpm,
-          'defaultDownloadPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_download_policy'],
-          'remoteExecutionPresent' => ::Katello.with_remote_execution?,
-          'remoteExecutionByDefault' => ::Katello.with_remote_execution? &&
-                                        db_migrated && Setting['remote_execution_by_default']
-        }
+        :config_generator =>  lambda do
+          { 'consumerCertRPM' => consumer_cert_rpm,
+            'defaultDownloadPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_download_policy'],
+            'remoteExecutionPresent' => ::Katello.with_remote_execution?,
+            'remoteExecutionByDefault' => ::Katello.with_remote_execution? &&
+                                          db_migrated && Setting['remote_execution_by_default']
+          }
+        end
       )
     end
   end
