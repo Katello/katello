@@ -6,7 +6,8 @@ module Katello
       module Overrides
         def allowed_helpers
           super + [:errata, :host_subscriptions, :host_applicable_errata_ids, :host_applicable_errata_filtered,
-                   :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications, :host_content_facet]
+                   :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications, :host_content_facet,
+                   :host_sla, :host_products, :sub_name, :sub_sku, :registered_through]
         end
       end
 
@@ -24,6 +25,28 @@ module Katello
 
       def host_content_facet(host)
         host.content_facet
+      end
+
+      def host_sla(host)
+        host_subscription_facet(host)&.service_level
+      end
+
+      def host_products(host)
+        host_subscription_facet(host)&.installed_products
+      end
+
+      def sub_name(pool)
+        return unless pool
+        pool.subscription&.name
+      end
+
+      def sub_sku(pool)
+        return unless pool
+        pool.subscription&.cp_id
+      end
+
+      def registered_through(host)
+        host_subscription_facet(host)&.registered_through
       end
 
       def host_applicable_errata_ids(host)
@@ -111,6 +134,10 @@ module Katello
       # rubocop:enable Metrics/MethodLength
 
       private
+
+      def host_subscription_facet(host)
+        host.subscription_facet
+      end
 
       def parse_errata(task)
         @_tasks_errata_cache[task.id] ||= if task.input['errata'].present?
