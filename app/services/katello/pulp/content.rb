@@ -3,7 +3,7 @@ module Katello
     class Content
       extend Katello::Abstract::Pulp::Content
       class << self
-        def create_upload(_size = 0)
+        def create_upload(_size = 0, _checksum = nil, _content_type = nil)
           pulp_content.create_upload_request
         end
 

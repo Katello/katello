@@ -387,6 +387,7 @@ module Katello
     param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     param :uploads, Array, :desc => N_("Array of uploads to import") do
       param 'id', String, :required => true
+      param 'content_unit_id', String
       param 'size', String
       param 'checksum', String
       param 'name', String, :desc => N_("Needs to only be set for file repositories or docker tags")
@@ -401,7 +402,7 @@ module Katello
       end
 
       uploads = (params[:uploads] || []).map do |upload|
-        upload.permit(:id, :size, :checksum, :name, :digest).to_h
+        upload.permit(:id, :content_unit_id, :size, :checksum, :name, :digest).to_h
       end
 
       if params.key?(:upload_ids)
