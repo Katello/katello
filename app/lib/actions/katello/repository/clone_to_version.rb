@@ -2,17 +2,10 @@ module Actions
   module Katello
     module Repository
       class CloneToVersion < Actions::Base
-        # allows accessing the build object from the superior action
-        attr_accessor :new_repository
-
-        def plan(repositories, content_view_version, options = {})
+        def plan(repositories, content_view_version, destination_repository, options = {})
           incremental = options.fetch(:incremental, false)
           content_view = content_view_version.content_view
           filters = incremental ? [] : content_view.filters.applicable(repositories.first)
-
-          self.new_repository = repositories.first.build_clone(content_view: content_view,
-                                                               version: content_view_version)
-
           rpm_filenames = extract_rpm_filenames(options.fetch(:repos_units, nil), repositories.first.label)
           fail _('Cannot publish a composite with rpm filenames') if content_view.composite? && rpm_filenames&.any?
           if rpm_filenames&.any?
@@ -20,12 +13,11 @@ module Actions
             Rails.logger.warn("Filters on content view have been overridden by passed-in filename list during publish") if filters.any?
           end
 
-          copy_contents = new_repository.master?
+          copy_contents = destination_repository.master?
           fail _('Cannot publish a link repository if multiple component clones are specified') if !copy_contents && repositories.count > 1
 
           sequence do
-            plan_action(Repository::Create, new_repository, true, false)
-            plan_action(::Actions::Katello::Repository::CloneContents, repositories, new_repository,
+            plan_action(::Actions::Katello::Repository::CloneContents, repositories, destination_repository,
                         purge_empty_contents: true,
                         filters: filters,
                         rpm_filenames: rpm_filenames,

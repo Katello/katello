@@ -35,15 +35,15 @@ module Katello
       combined = [{"filename" => {"$in" => [@rpm.filename, @rpm2.filename]}}]
 
       clause_gen = setup_whitelist_filter([foo_rule, goo_rule])
-      expected = {"$or" => combined}
+      expected = prepend_modular("$or" => combined)
       assert_equal expected, clause_gen.copy_clause
       assert_nil clause_gen.remove_clause
 
       blacklist_expected = {"$or" => combined}
       clause_gen = setup_blacklist_filter([foo_rule, goo_rule])
-      expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [blacklist_expected]}]}
+      expected = prepend_modular("$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [blacklist_expected]}])
       assert_equal expected, clause_gen.copy_clause
-      assert_equal blacklist_expected, clause_gen.remove_clause
+      assert_equal prepend_modular(blacklist_expected), clause_gen.remove_clause
     end
 
     def test_package_versions
@@ -56,15 +56,15 @@ module Katello
       combined = [{"filename" => {"$in" => [@rpm.filename, @rpm2.filename]}}]
 
       clause_gen = setup_whitelist_filter([foo_rule, goo_rule])
-      expected = {"$or" => combined}
+      expected = prepend_modular("$or" => combined)
       assert_equal deep_sort(expected), deep_sort(clause_gen.copy_clause)
       assert_nil clause_gen.remove_clause
 
       blacklist_expected = {"$or" => combined}
       clause_gen = setup_blacklist_filter([foo_rule, goo_rule])
-      expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [blacklist_expected]}]}
+      expected = prepend_modular("$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [blacklist_expected]}])
       assert_equal deep_sort(expected), deep_sort(clause_gen.copy_clause)
-      assert_equal deep_sort(blacklist_expected), deep_sort(clause_gen.remove_clause)
+      assert_equal deep_sort(prepend_modular(blacklist_expected)), deep_sort(clause_gen.remove_clause)
     end
 
     def deep_sort(obj)
@@ -96,16 +96,16 @@ module Katello
         gen.expects(:package_clauses_for_group).once.
                     with(expected_group_clause).returns(returned_packages)
       end
-      assert_equal returned_packages, clause_gen.copy_clause
+      assert_equal prepend_modular(returned_packages), clause_gen.copy_clause
       assert_nil clause_gen.remove_clause
 
       clause_gen = setup_blacklist_filter([foo_rule, goo_rule]) do |gen|
         gen.expects(:package_clauses_for_group).once.
                     with(expected_group_clause).returns(returned_packages)
       end
-      expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [returned_packages]}]}
+      expected = prepend_modular("$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [returned_packages]}])
       assert_equal expected, clause_gen.copy_clause
-      assert_equal returned_packages, clause_gen.remove_clause
+      assert_equal prepend_modular(returned_packages), clause_gen.remove_clause
     end
 
     def test_errata_ids
@@ -190,7 +190,7 @@ module Katello
                       clauses.map(&:to_sql).must_equal(expected_errata_clauses.map(&:to_sql))
                     end
       end
-      assert_equal returned_packages, clause_gen.copy_clause
+      assert_equal prepend_modular(returned_packages), clause_gen.copy_clause
       assert_nil clause_gen.remove_clause
 
       clause_gen = setup_blacklist_filter(rules) do |gen|
@@ -201,8 +201,12 @@ module Katello
       end
       expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [returned_packages]}]}
 
-      assert_equal expected, clause_gen.copy_clause
-      assert_equal returned_packages, clause_gen.remove_clause
+      assert_equal prepend_modular(expected), clause_gen.copy_clause
+      assert_equal prepend_modular(returned_packages), clause_gen.remove_clause
+    end
+
+    def prepend_modular(clause)
+      {"$and" => [{"is_modular" => false}, clause]}
     end
 
     def erratum_arel

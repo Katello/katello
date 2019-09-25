@@ -75,11 +75,45 @@ module Katello
           smart_proxy.pulp_api.extensions.repository.regenerate_applicability_by_ids([repo.pulp_id], true)
         end
 
-        def copy_contents(destination_repo, options = {})
-          override_config = Katello::Repository.build_override_config(options)
-          rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(options[:filters]&.yum(false), options[:rpm_filenames])
-          tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id,
-                   rpm_copy_clauses.merge(:override_config => override_config))]
+        def generate_mapping(destination_repo)
+          source_repo_map = {}
+          repo.siblings.yum_type.each do |sibling|
+            key = sibling.library_instance? ? sibling.id : sibling.library_instance_id
+            source_repo_map[key] = sibling.pulp_id
+          end
+
+          Hash[destination_repo.siblings.yum_type.map { |sibling| [source_repo_map[sibling.library_instance_id], sibling.pulp_id] }]
+        end
+
+        def build_override_config(destination_repo, incremental_update: false,
+                                                    solve_dependencies: false,
+                                                    filters: [])
+          config = {}
+          if incremental_update ||
+              (filters.present? && solve_dependencies)
+            if Setting[:dependency_solving_algorithm] == 'greedy'
+              config[:recursive] = true
+            else
+              config[:recursive_conservative] = true
+            end
+            config[:additional_repos] = generate_mapping(destination_repo)
+          end
+          config
+        end
+
+        def copy_contents(destination_repo, filters: nil,
+                                            solve_dependencies: false,
+                                            rpm_filenames: [])
+          rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(filters&.yum(false), rpm_filenames)
+          tasks = []
+          if rpm_copy_clauses
+            override_config = build_override_config(destination_repo,
+                                                    filters: filters,
+                                                    solve_dependencies: solve_dependencies)
+
+            tasks << smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id,
+                      rpm_copy_clauses.merge(:override_config => override_config))
+          end
 
           if rpm_remove_clauses
             tasks << smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
@@ -87,7 +121,10 @@ module Katello
                                                                           filters: {unit: rpm_remove_clauses})
           end
 
-          tasks.concat(copy_module_contents(destination_repo, options[:filters], override_config))
+          tasks.concat(copy_module_contents(destination_repo,
+                                              filters: filters,
+                                              solve_dependencies: solve_dependencies))
+
           [:srpm, :errata, :package_group, :package_environment,
            :yum_repo_metadata_file, :distribution, :module_default].each do |type|
             tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
@@ -155,10 +192,12 @@ module Katello
           smart_proxy.pulp_api.extensions.repository.unassociate_units(repo.pulp_id, :filters => criteria)
         end
 
-        def copy_module_contents(destination_repo, filters, override_config)
-          if filters
-            filters = filters.module_stream.or(filters.errata)
-          end
+        def copy_module_contents(destination_repo, filters:, solve_dependencies:)
+          override_config = build_override_config(destination_repo,
+                                                  filters: filters,
+                                                  solve_dependencies: solve_dependencies)
+
+          filters = filters.module_stream.or(filters.errata) if filters
 
           copy_clauses, remove_clauses = generate_module_stream_copy_clauses(filters)
           tasks = [smart_proxy.pulp_api.extensions.module.copy(repo.pulp_id, destination_repo.pulp_id,
@@ -203,11 +242,12 @@ module Katello
             remove = clause_gen.remove_clause
             remove_clauses = {filters: {unit: remove}} if remove
           else
-            copy_clauses = {filters: {unit: ContentViewPackageFilter.generate_rpm_clauses(::Katello::Rpm.in_repositories(repo).non_modular.pluck(:filename))}}
+            non_modular_rpms = ::Katello::Rpm.in_repositories(repo).non_modular.pluck(:filename)
+            copy_clauses = non_modular_rpms.blank? ? nil : {filters: {unit: ContentViewPackageFilter.generate_rpm_clauses(non_modular_rpms)}}
             remove_clauses = nil
           end
 
-          copy_clauses.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS)
+          copy_clauses.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS) if copy_clauses
           [copy_clauses, remove_clauses]
         end
       end

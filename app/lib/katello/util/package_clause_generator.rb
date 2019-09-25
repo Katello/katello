@@ -3,6 +3,16 @@ module Katello
     class PackageClauseGenerator
       include Util::FilterClauseGenerator
 
+      def copy_clause
+        clauses = super
+        {"$and" => [{"is_modular" => false}, clauses]} unless clauses.blank?
+      end
+
+      def remove_clause
+        clauses = super
+        {"$and" => [{"is_modular" => false}, clauses]} unless clauses.blank?
+      end
+
       protected
 
       def fetch_filters

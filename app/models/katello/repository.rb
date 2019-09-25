@@ -315,6 +315,10 @@ module Katello
       found
     end
 
+    def siblings
+      content_view_version.archived_repos.where.not(:id => id)
+    end
+
     def clones
       self.root.repositories.where.not(:id => library_instance_id || id)
     end

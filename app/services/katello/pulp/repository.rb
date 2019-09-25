@@ -259,10 +259,11 @@ module Katello
         tasks
       end
 
-      def copy_units(destination_repo, units, override_config = {})
+      def copy_units(destination_repo, units, incremental_update: false)
+        override_config = {}
+        override_config = build_override_config(destination_repo, incremental_update: incremental_update) if respond_to? :build_override_config
         content_type = units.first.class::CONTENT_TYPE
         unit_ids = units.pluck(:pulp_id)
-
         smart_proxy.pulp_api.extensions.send(content_type).copy(repo.pulp_id, destination_repo.pulp_id, ids: unit_ids, override_config: override_config)
       end
 
