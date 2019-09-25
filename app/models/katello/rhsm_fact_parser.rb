@@ -79,6 +79,22 @@ module Katello
       facts['proc_stat.btime']&.to_i
     end
 
+    def virtual
+      facts['virt.is_guest']
+    end
+
+    def ram
+      facts['memory.memtotal'].to_i / 1024 if facts['memory.memtotal']
+    end
+
+    def sockets
+      facts['cpu.cpu_socket(s)']
+    end
+
+    def cores
+      facts['cpu.core(s)_per_socket']
+    end
+
     private
 
     def get_rhsm_ip(interface)
