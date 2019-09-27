@@ -64,6 +64,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         $scope.performViaRemoteExecution = function(actionType, term, customize) {
             var terms = term.split(/ *, */);
+            $scope.working = true;
             $scope.packageActionFormValues.package = terms.join(' ');
             $scope.packageActionFormValues.remoteAction = actionType;
             $scope.packageActionFormValues.hostIds = $scope.host.id;
