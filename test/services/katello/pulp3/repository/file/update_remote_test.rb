@@ -13,6 +13,7 @@ module Katello
           @mock_pulp3_api.stubs(:create).returns(mock_remotes_create_response)
           @mock_smart_proxy = mock('smart_proxy')
           @mock_smart_proxy.stubs(:pulp3_support?).returns(true)
+          @mock_smart_proxy.stubs(:pulp2_preferred_for_type?).returns(false)
           @mock_smart_proxy.stubs(:pulp_master?).returns(true)
           @file_repo = katello_repositories(:generic_file)
           @file_repo_service = @file_repo.backend_service(@mock_smart_proxy)
