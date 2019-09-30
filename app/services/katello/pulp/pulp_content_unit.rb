@@ -30,6 +30,10 @@ module Katello
         "_id"
       end
 
+      def self.content_type
+        self::CONTENT_TYPE
+      end
+
       def self.unit_handler
         Katello.pulp_server.extensions.send(self.name.demodulize.underscore)
       end

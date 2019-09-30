@@ -4,7 +4,7 @@ module Katello
       class File < ::Katello::Pulp::Repository
         def unit_keys(uploads)
           uploads.map do |upload|
-            upload.except('id')
+            upload.except('id', 'content_unit_id')
           end
         end
 

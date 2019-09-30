@@ -7,14 +7,15 @@ module Actions
             file = {:filename => args.dig(:unit_key, :name)}
             content_unit_href = args.dig(:unit_key, :content_unit_id)
             sequence do
-              unless content_unit_href
+              if !content_unit_href
                 action_output = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :upload_href => "/pulp/api/v3/uploads/" + args.dig(:upload_id) + "/", :sha256 => args.dig(:unit_key, :checksum)).output
                 artifact_action_output = plan_action(Pulp3::Repository::SaveArtifact, file, repository, smart_proxy, action_output[:pulp_tasks], args.dig(:unit_type_id)).output
                 content_unit_href = artifact_action_output[:pulp_tasks]
+              else
+                plan_self(:skip => true)
               end
               action_output = plan_action(Pulp3::Repository::ImportUpload, content_unit_href, repository, smart_proxy).output
               plan_action(Pulp3::Repository::SaveVersion, repository, action_output[:pulp_tasks]).output
-              plan_self(:skip => true)
             end
           end
 

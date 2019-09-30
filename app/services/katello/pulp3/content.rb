@@ -9,11 +9,11 @@ module Katello
           if checksum && content_type
             content_backend_service = SmartProxy.pulp_master.content_service(content_type)
             content_list = content_backend_service.content_api.list("digest": checksum)
-            content_unit_href = content_list.results.first._href unless content_list.results.empty?
+            content_unit_href = content_list.results.first.pulp_href unless content_list.results.empty?
             return {"content_unit_href" => content_unit_href} if content_unit_href
           end
-          upload_href = uploads_api.create(upload_class.new(size: size))._href
-          return {"upload_id" => upload_href.split("/").last}
+          upload_href = uploads_api.create(upload_class.new(size: size)).pulp_href
+          {"upload_id" => upload_href.split("/").last}
         end
 
         def delete_upload(upload_href)

@@ -34,6 +34,10 @@ module Katello
         "pulp_href"
       end
 
+      def self.content_type
+        self::CONTENT_TYPE
+      end
+
       def self.pulp_units_batch_for_repo(repository, options = {})
         fetch_identifiers = options.fetch(:fetch_identifiers, false)
         page_size = options.fetch(:page_size, SETTINGS[:katello][:pulp][:bulk_load_size])
