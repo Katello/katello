@@ -49,6 +49,8 @@ module Katello::Host
         @host.subscription_facet.destroy!
         @host.destroy!
 
+        ::Katello::Resources::Candlepin::Consumer.expects(:virtual_guests).never
+
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
         plan_action(action, :hypervisors => @hypervisor_results)
@@ -59,6 +61,32 @@ module Katello::Host
         @host = Host.find_by(:name => @hypervisor_name)
         assert_not_nil @host.subscription_facet
         assert_equal @facts['hypervisor.type'], @host.facts['hypervisor::type']
+      end
+
+      it 'update guests hypervisor' do
+        guests = []
+        original_host = FactoryBot.create(:host, :with_subscription, :content_view => @content_view,
+                                          :lifecycle_environment => @content_view_environment, :organization => @organization)
+
+        3.times do
+          guests << FactoryBot.create(:host, :with_subscription, :content_view => @content_view,
+                                      :lifecycle_environment => @content_view_environment, :organization => @organization)
+        end
+
+        guests.first.subscription_facet.update_attributes!(:hypervisor_host_id => original_host.id)
+        guests.sort!
+        guest_uuids = guests.map { |guest| { 'uuid' => guest.subscription_facet.uuid } }
+
+        # Delete :guestIds to make katello to fetch the virtual guests from Candlepin
+        @consumer.delete(:guestIds)
+        ::Katello::Resources::Candlepin::Consumer.expects(:virtual_guests).once.returns(guest_uuids)
+
+        action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
+        plan_action(action, :hypervisors => @hypervisor_results)
+        action = run_action(action)
+
+        action.state.must_equal :success
+        assert_equal guests, @host.subscription_facet.virtual_guests.sort
       end
 
       it 'existing hypervisor, no facet' do
