@@ -2,6 +2,8 @@ module Katello
   module Pulp
     class Repository
       class File < ::Katello::Pulp::Repository
+        REPOSITORY_TYPE = 'iso'.freeze
+
         def unit_keys(uploads)
           uploads.map do |upload|
             upload.except('id', 'content_unit_id')

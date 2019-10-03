@@ -3,7 +3,6 @@ module Katello
     extend ActiveSupport::Concern
 
     included do
-      include TaskSupport
       include VCR::TestCase
     end
 
@@ -31,6 +30,22 @@ module Katello
         tasks << service.delete_distribution(dist.pulp_href)
       end
       service.delete_distributions
+    end
+
+    def wait_on_task(smart_proxy, task)
+      task = task.as_json
+      task = tasks_api(smart_proxy).read(task['pulp_href'] || task['task']).as_json.with_indifferent_access
+      if task[:finished_at] || Actions::Pulp3::AbstractAsyncTask::FINISHED_STATES.include?(task[:state])
+        return task
+      else
+        sleep(0.1)
+        wait_on_task(smart_proxy, task)
+      end
+    end
+
+    def tasks_api(smart_proxy)
+      api_client = PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
+      PulpcoreClient::TasksApi.new(api_client)
     end
 
     def create_repo(repo, smart_proxy)

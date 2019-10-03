@@ -2,6 +2,8 @@ module Katello
   module Pulp
     class Repository
       class Deb < ::Katello::Pulp::Repository
+        REPOSITORY_TYPE = 'deb'.freeze
+
         def generate_master_importer
           config = {
             feed: root.url,
