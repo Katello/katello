@@ -18,6 +18,8 @@ module Actions
               load_resources
             end
 
+            load_hosts_guests
+
             ActiveRecord::Base.transaction do
               @hosts.each do |uuid, host|
                 update_host(uuid, host)
@@ -27,6 +29,16 @@ module Actions
             @hosts.each do |uuid, host|
               update_facts(uuid, host)
             end
+          end
+        end
+
+        def load_hosts_guests
+          @hosts.each do |uuid, host|
+            host.subscription_facet ||= host.build_subscription_facet(uuid: uuid)
+            # Only preload the virtual guests if 'guestIds' is not returned by Candlepin
+            consumer = @candlepin_attributes[uuid]
+            next unless consumer && consumer.try(:[], 'guestIds').empty?
+            host.subscription_facet.candlepin_consumer.virtual_guests
           end
         end
 
@@ -136,7 +148,6 @@ module Actions
         end
 
         def update_subscription_facet(uuid, host)
-          host.subscription_facet ||= host.build_subscription_facet(uuid: uuid)
           if @candlepin_attributes.key?(uuid)
             host.subscription_facet.candlepin_consumer.consumer_attributes = @candlepin_attributes[uuid]
             host.subscription_facet.import_database_attributes
