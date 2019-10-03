@@ -2,6 +2,8 @@ module Katello
   module Pulp
     class Repository
       class Yum < ::Katello::Pulp::Repository
+        REPOSITORY_TYPE = 'yum'.freeze
+
         def generate_master_importer
           config = {
             download_policy: root.download_policy,

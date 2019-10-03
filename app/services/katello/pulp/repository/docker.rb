@@ -2,6 +2,8 @@ module Katello
   module Pulp
     class Repository
       class Docker < ::Katello::Pulp::Repository
+        REPOSITORY_TYPE = 'docker'.freeze
+
         def unit_type_id(uploads = [])
           uploads.pluck('digest').any? ? 'docker_tag' : super
         end
