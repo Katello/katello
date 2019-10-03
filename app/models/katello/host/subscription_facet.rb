@@ -127,7 +127,8 @@ module Katello
             guest_ids = self.candlepin_consumer.virtual_guests.pluck(:id)
           end
 
-          subscription_facets = SubscriptionFacet.where(:host_id => guest_ids)
+          subscription_facets = SubscriptionFacet.where(:host_id => guest_ids).
+                                                  where("hypervisor_host_id != ? OR hypervisor_host_id is NULL", self.host.id)
           subscription_facets.update_all(:hypervisor_host_id => self.host.id)
         elsif (virtual_host = self.candlepin_consumer.virtual_host)
           self.hypervisor_host = virtual_host
