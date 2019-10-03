@@ -1,4 +1,4 @@
-# 3.13.0 RC2 Baltic Porter (2019-08-27)
+# 3.13.0 Baltic Porter (2019-10-03)
 
 ## Features
 
@@ -21,6 +21,8 @@
  * Use debian style repositories with ssl certificates ([#26901](https://projects.theforeman.org/issues/26901), [ce3a4e6d](https://github.com/Katello/katello.git/commit/ce3a4e6d3558783affbc6be5c82512edf0e71840))
  * Support cancelling tasks on Pulp3 ([#26863](https://projects.theforeman.org/issues/26863), [70cd5ec2](https://github.com/Katello/katello.git/commit/70cd5ec2472ae2d7844296fc9191c288f8007f47))
  * Services check before running an action for pulp3  ([#26857](https://projects.theforeman.org/issues/26857), [41c6b6c9](https://github.com/Katello/katello.git/commit/41c6b6c9fc83ea62c4b749f8cff4a4037fcb8744))
+ * [RFE] Upload/delete/view SRPMs on a repo in API ([#26135](https://projects.theforeman.org/issues/26135), [1896305c](https://github.com/Katello/katello.git/commit/1896305c330ea133e61ca4233f2fbd3ca06731ad), [ded919dc](https://github.com/Katello/hammer-cli-katello.git/commit/ded919dc0fb7136c9419a0700a2d804980470671), [150e30a7](https://github.com/Katello/katello.git/commit/150e30a7287aad67662b99038725d4571cf8918a), [250f6452](https://github.com/Katello/hammer-cli-katello.git/commit/250f6452349baf40bf670f4cd7d358a30800f6cb))
+ * Unable to upload source RPM packages ([#16712](https://projects.theforeman.org/issues/16712))
 
 ### Tests
  * Add minitest reporter to identify slow tests ([#27222](https://projects.theforeman.org/issues/27222), [8d0c2fe1](https://github.com/Katello/katello.git/commit/8d0c2fe1dc1004f826512635c2ed165be3d34b46))
@@ -49,6 +51,16 @@
 
 ## Bug Fixes
 
+### Hammer
+ * hammer repository upload content failing on rpm uploads ([#27729](https://projects.theforeman.org/issues/27729), [d4a88c8a](https://github.com/Katello/hammer-cli-katello.git/commit/d4a88c8a37db5f0798f3031bccf428e7f8dba898))
+ * Remove --repositories flag from hammer content-view update  ([#27523](https://projects.theforeman.org/issues/27523), [29644390](https://github.com/Katello/hammer-cli-katello.git/commit/296443900cc2da0c36cbb2f3b62d598b26a92fd2))
+ * Hammer package list with environment flag uses wrong api ([#27508](https://projects.theforeman.org/issues/27508), [0b0b878e](https://github.com/Katello/hammer-cli-katello.git/commit/0b0b878e8c67a6f14eb0c00e1adf05a49ff0c45b))
+ * hammer package info does not show all returned data ([#27504](https://projects.theforeman.org/issues/27504), [3f90df4f](https://github.com/Katello/hammer-cli-katello.git/commit/3f90df4f504f1ae92aef1cb75ef92cc34018be1c))
+ * `hammer activation-key create` mixes lifecycle environment and puppet environment in hammer_cli_katello-0.18.0-1 ([#27428](https://projects.theforeman.org/issues/27428))
+ * `hammer content-view version export-legacy` should not be described as deprecated ([#27261](https://projects.theforeman.org/issues/27261), [1312b105](https://github.com/Katello/hammer-cli-katello.git/commit/1312b105395ea3b74d05123092a2c1617f162bbf))
+ * hammer content view version export does not returns correct repository.  ([#27101](https://projects.theforeman.org/issues/27101), [938591cd](https://github.com/Katello/hammer-cli-katello.git/commit/938591cd73153e73480c381c09d5ebf0d47792c2))
+ * hammer content view version export fails. ([#27039](https://projects.theforeman.org/issues/27039), [39aa28d1](https://github.com/Katello/hammer-cli-katello.git/commit/39aa28d11c30d2e8ab789759ebccdcadebcdbfa7))
+
 ### Content Views
  * Incremental update broken for puppet modules ([#27612](https://projects.theforeman.org/issues/27612), [97dfcfce](https://github.com/Katello/katello.git/commit/97dfcfce47a68a2df415726f556cb2cd6585cb13))
  * checksum-type does not updated on already synced repository at Satellite Capsule. ([#27394](https://projects.theforeman.org/issues/27394), [eabe6d86](https://github.com/Katello/katello.git/commit/eabe6d8688d43f52a74f5eca02ea3d7de5617ca9))
@@ -58,14 +70,6 @@
 
 ### API doc
  * Content Uploads API expects the content_upload id as an Integer, while it is a String (UUID) ([#27590](https://projects.theforeman.org/issues/27590), [cf1acc58](https://github.com/Katello/katello.git/commit/cf1acc58e4577e3cc577981d0fe39914e9bbb8f0))
-
-### Hammer
- * Remove --repositories flag from hammer content-view update  ([#27523](https://projects.theforeman.org/issues/27523), [29644390](https://github.com/Katello/hammer-cli-katello.git/commit/296443900cc2da0c36cbb2f3b62d598b26a92fd2))
- * hammer package info does not show all returned data ([#27504](https://projects.theforeman.org/issues/27504), [3f90df4f](https://github.com/Katello/hammer-cli-katello.git/commit/3f90df4f504f1ae92aef1cb75ef92cc34018be1c))
- * `hammer activation-key create` mixes lifecycle environment and puppet environment in hammer_cli_katello-0.18.0-1 ([#27428](https://projects.theforeman.org/issues/27428))
- * `hammer content-view version export-legacy` should not be described as deprecated ([#27261](https://projects.theforeman.org/issues/27261), [1312b105](https://github.com/Katello/hammer-cli-katello.git/commit/1312b105395ea3b74d05123092a2c1617f162bbf))
- * hammer content view version export does not returns correct repository.  ([#27101](https://projects.theforeman.org/issues/27101), [938591cd](https://github.com/Katello/hammer-cli-katello.git/commit/938591cd73153e73480c381c09d5ebf0d47792c2))
- * hammer content view version export fails. ([#27039](https://projects.theforeman.org/issues/27039), [39aa28d1](https://github.com/Katello/hammer-cli-katello.git/commit/39aa28d11c30d2e8ab789759ebccdcadebcdbfa7))
 
 ### Repositories
  * Pulp2 Sync operations fail with http proxy ([#27518](https://projects.theforeman.org/issues/27518), [a0207cd9](https://github.com/Katello/katello.git/commit/a0207cd99f12813e0b10e07d637a8e834fcb6def))
@@ -102,6 +106,10 @@
 ### foreman-debug
  * Foreman-debug katello_repositories SQL query no longer works ([#27401](https://projects.theforeman.org/issues/27401))
 
+### Installer
+ * remove pulp2 http proxy configuration in installer ([#27399](https://projects.theforeman.org/issues/27399))
+ * seed global http proxy based on configuration ([#27223](https://projects.theforeman.org/issues/27223), [9a926671](https://github.com/Katello/katello.git/commit/9a926671f29f351939d34005a65cda8b9d911f00))
+
 ### Hosts
  * javascript error on hosts page  Cannot read property 'includes' of null ([#27257](https://projects.theforeman.org/issues/27257), [bc46bff2](https://github.com/Katello/katello.git/commit/bc46bff284be3e4bf482a1d941a4b61fb1d7818a))
  * Applying errata through remote execution doesn't work ([#27256](https://projects.theforeman.org/issues/27256), [c88d3a85](https://github.com/Katello/katello.git/commit/c88d3a851d1ce108b33ffb6f28bf6d3ea3e930fa))
@@ -113,9 +121,6 @@
  * You cannot update a content-view filter's description using hammer ([#27213](https://projects.theforeman.org/issues/27213), [4283740c](https://github.com/Katello/hammer-cli-katello.git/commit/4283740c81a8aef0f32a6632e0d905abd8bfbc97), [e3e0f959](https://github.com/Katello/katello.git/commit/e3e0f9596358449141783e9f206cb67cc6affab3), [a9ddc074](https://github.com/Katello/hammer-cli-katello.git/commit/a9ddc074676158d7b98cf1d77c99f975032d07a5))
  * /katello/api/repository_sets/:id returns too many repositories ([#26981](https://projects.theforeman.org/issues/26981), [95b17ce4](https://github.com/Katello/katello.git/commit/95b17ce4afa848d61f0ffe40f9451918ed369759))
  * Organization create API requires the org name twice ([#26855](https://projects.theforeman.org/issues/26855), [ade64aa0](https://github.com/Katello/katello.git/commit/ade64aa07f45499cdb6889ee157362e65b1d6bc5))
-
-### Installer
- * seed global http proxy based on configuration ([#27223](https://projects.theforeman.org/issues/27223), [9a926671](https://github.com/Katello/katello.git/commit/9a926671f29f351939d34005a65cda8b9d911f00))
 
 ### Tooling
  * migrate to new pulp3 friendly method bindings ([#27204](https://projects.theforeman.org/issues/27204), [d38d1c22](https://github.com/Katello/katello.git/commit/d38d1c2200f47d6eb10c68407c8fbb51b96619f0))
