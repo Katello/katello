@@ -62,6 +62,16 @@ module Katello
 
         assert_equal nil, Candlepin::Consumer.distribution_to_puppet_os('RedHot')
       end
+
+      def test_virtual_guests
+        hosts = [hosts(:one), hosts(:two)]
+        guest_uuids = hosts.map { |host| { 'uuid' => host.subscription_facet.uuid } }
+
+        Resources::Candlepin::Consumer.expects(:virtual_guests).once.returns(guest_uuids)
+
+        assert_equal hosts, @consumer.virtual_guests.sort
+        assert_equal hosts, @consumer.virtual_guests.sort
+      end
     end
   end
 end
