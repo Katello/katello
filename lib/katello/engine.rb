@@ -152,7 +152,7 @@ module Katello
       ::HostsController.include Katello::Concerns::HostsControllerExtensions
       ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
       ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
-      ::FactImporter.register_fact_importer(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
+      ::Foreman::Plugin.fact_importer_registry.register(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
       ::FactParser.register_fact_parser(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactParser)
 
       #Helper Extensions
