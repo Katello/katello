@@ -22,10 +22,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesInstalled
 
             if (!$scope.working) {
                 $scope.working = true;
-                HostPackage.remove({
-                    id: $scope.host.id,
-                    packages: selected
-                }, $scope.openEventInfo, $scope.errorHandler);
+                $scope.performPackageAction("packageRemove", selected.join(","));
             }
         };
 

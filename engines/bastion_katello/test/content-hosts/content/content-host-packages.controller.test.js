@@ -1,5 +1,5 @@
 describe('Controller: ContentHostPackagesController', function() {
-    var $scope, Nutupane, HostPackage, mockHost, mockTask, translate, ContentHost;
+    var $scope, Nutupane, HostPackage, mockHost, mockTask, translate, ContentHost, $timeout;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.hosts', 'Bastion.test-mocks'));
 
@@ -44,7 +44,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope = $rootScope.$new();
         $scope.host = mockHost;
         $scope.$stateParams = {hostId: mockHost.id};
-
+        $timeout = function(data) {};
         $controller('ContentHostPackagesController', {$scope: $scope,
                                                HostPackage: HostPackage,
                                                translate:translate,
@@ -86,6 +86,26 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.updateAll();
         expect(HostPackage.updateAll).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function),
             jasmine.any(Function));
+        expect($scope.working).toBe(true);
+    });
+
+    it("performs a package install via remoteExecution", function() {
+        $scope.remoteExecutionPresent = true;
+        $scope.remoteExecutionByDefault = true;
+        spyOn(HostPackage, 'install');
+        $scope.performPackageAction('packageInstall', 'foo, bar, baz');
+        expect(HostPackage.install).not.toHaveBeenCalled();
+        expect($scope.packageActionFormValues.package).toEqual('foo bar baz');
+        expect($scope.packageActionFormValues.remoteAction).toEqual('packageInstall');
+        expect($scope.packageActionFormValues.hostIds).toEqual(mockHost.id);
+        expect($scope.working).toBe(true);
+    });
+
+    it("performs a multi package install via katello agent", function() {
+        spyOn(HostPackage, 'install');
+        $scope.performPackageAction('packageInstall', 'foo, bar, baz');
+        expect(HostPackage.install).toHaveBeenCalledWith({id: mockHost.id, packages: ["foo","bar","baz"]},
+                                                          jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
 });

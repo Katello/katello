@@ -24,6 +24,7 @@ module Bastion
     }
 
     Bastion.plugins.each do |_name, plugin|
+      base_config.merge!(plugin[:config_generator].call) if plugin[:config_generator]
       base_config.merge!(plugin[:config]) if plugin[:config]
     end
 

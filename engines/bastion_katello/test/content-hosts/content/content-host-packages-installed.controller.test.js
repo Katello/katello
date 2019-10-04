@@ -46,6 +46,7 @@ describe('Controller: ContentHostPackagesInstalledController', function() {
         $scope.$stateParams = {hostId: mockHost.id};
         $scope.openEventInfo = function(){};
         $scope.errorHandler = function(){};
+        $scope.performPackageAction = function(action, name) {};
 
         $controller('ContentHostPackagesInstalledController', {$scope: $scope,
                                                HostPackage: HostPackage,
@@ -57,17 +58,14 @@ describe('Controller: ContentHostPackagesInstalledController', function() {
         expect($scope.table).toBeTruthy();
     });
 
-
     it("performs a selected package removal", function() {
         var mockPackage, mockPackageClone;
         mockPackage = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
-        mockPackageClone = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
-        spyOn($scope.table,  'getSelected').and.returnValue([mockPackage]);
-
-        spyOn(HostPackage, 'remove');
+        mockOtherPackage = {name: 'bar', version: '3', release: '14', arch: 'noarch'};
+        spyOn($scope.table, 'getSelected').and.returnValue([mockPackage, mockOtherPackage]);
+        spyOn($scope, 'performPackageAction');
         $scope.removeSelectedPackages();
-        expect(HostPackage.remove).toHaveBeenCalledWith({id: mockHost.id, packages: ['foo']},
-                                                          jasmine.any(Function), jasmine.any(Function));
+        expect($scope.performPackageAction).toHaveBeenCalledWith("packageRemove", mockPackage['name'] + "," + mockOtherPackage['name']);
         expect($scope.working).toBe(true);
     });
 });
