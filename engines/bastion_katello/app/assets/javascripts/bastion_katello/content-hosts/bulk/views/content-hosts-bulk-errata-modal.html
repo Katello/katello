@@ -89,9 +89,7 @@
              <td bst-table-cell>{{ erratum.title }}</td>
              <td class="small" bst-table-cell>{{ erratum.issued }}</td>
              <td class="small" bst-table-cell class="number-cell">
-               <a ng-click="transitionToErrataContentHosts(erratum)">
-                {{ erratum.applicable_hosts.length }}
-               </a>
+               <span> {{ erratum.affected_hosts_count }} </span>
              </td>
            </tr>
          </tbody>
@@ -179,37 +177,7 @@
           </div>
         </section>
       </div>
-  </div>
-
-    <div name="errataHostsDetails" ng-show="showHosts">
-      <a ng-click="showHosts = false">
-        <i class="fa fa-double-angle-left"></i>
-        {{ "Back To Errata List" | translate }}
-      </a>
-
-      <h3 translate>Applicable hosts for {{ erratum.errata_id }} </h3>
-
-      <div class="details details-full">
-        <section>
-          <table class="table">
-            <thead>
-            <tr>
-              <th translate>
-                Name
-              </th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr ng-repeat="host in erratum.applicable_hosts">
-              <td>{{ host.name }}</td>
-            </tr>
-            </tbody>
-          </table>
-        </section>
-      </div>
-    </div>
-
+	</div>
   </div>
 
   <div data-block="modal-footer">

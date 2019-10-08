@@ -81,12 +81,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
             $scope.showErrata = true;
         };
 
-        $scope.transitionToErrataContentHosts = function (erratum) {
-            $scope.erratum = erratum;
-            $scope.showHosts = true;
-        };
-
-
         $scope.installErrata = function () {
             if ($scope.remoteExecutionByDefault) {
                 $scope.installErrataViaRemoteExecution();
