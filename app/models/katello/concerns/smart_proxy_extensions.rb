@@ -32,7 +32,7 @@ module Katello
         before_create :associate_default_locations
         before_create :associate_lifecycle_environments
         before_validation :set_default_download_policy
-        validates_with Katello::Validators::SmartProxyDefaultCapsuleValidator, on: :create
+        validates_with Katello::Validators::SmartProxyDefaultCapsuleValidator
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
         has_many :capsule_lifecycle_environments,
