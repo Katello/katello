@@ -6,7 +6,8 @@ module Katello
       module Overrides
         def allowed_helpers
           super + [:errata, :host_subscriptions, :host_applicable_errata_ids, :host_applicable_errata_filtered,
-                   :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications, :host_content_facet]
+                   :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications, :host_content_facet,
+                   :host_installed_package_names]
         end
       end
 
@@ -36,6 +37,10 @@ module Katello
 
       def host_latest_applicable_rpm_version(host, package)
         host.applicable_rpms.where(name: package).order(:version_sortable).limit(1).pluck(:nvra).first
+      end
+
+      def host_installed_package_names(host)
+        host.installed_packages.map(&:name)
       end
 
       def load_pools(search: '', includes: nil)
