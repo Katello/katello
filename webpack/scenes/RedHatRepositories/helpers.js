@@ -14,7 +14,7 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
     itemCount,
   } = repoSetsState;
 
-  if (itemCount === 0) {
+  if (itemCount === 0 || !results) {
     if (searchIsActive) {
       return <p>{__('No repository sets match your search criteria.')}</p>;
     }

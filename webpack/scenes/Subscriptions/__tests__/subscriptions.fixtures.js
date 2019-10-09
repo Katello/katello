@@ -253,6 +253,24 @@ export const successState = Immutable({
   tableColumns: [],
   selectedTableColumns: [],
 });
+export const permissionDeniedState = Immutable({
+  loading: false,
+  manifestModalOpened: false,
+  results: [],
+  searchIsActive: false,
+  search: undefined,
+  pagination: {
+    page: 1,
+    perPage: 2,
+  },
+  missingPermissions: ['view_subscriptions'],
+  itemCount: 0,
+  quantitiesLoading: false,
+  availableQuantities: null,
+  tasks: [],
+  tableColumns: [],
+  selectedTableColumns: [],
+});
 export const settingsSuccessState = Immutable({
   tables: {
     loading: false,

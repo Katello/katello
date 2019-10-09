@@ -41,6 +41,7 @@ describe('enabled reducer', () => {
     expect(reducer(initialState, {
       type: types.ENABLED_REPOSITORIES_FAILURE,
       error: 'Unable to process request.',
+      missingPermissions: ['unknown'],
     })).toEqual(errorState);
   });
 

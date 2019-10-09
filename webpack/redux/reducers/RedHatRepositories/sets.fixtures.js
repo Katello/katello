@@ -137,6 +137,7 @@ export const successState = Immutable({
 });
 
 export const errorState = Immutable({
+  error: { response: { data: { error: { missing_permissions: ['unknown'] } } } },
   loading: false,
-  error: 'Unable to process request.',
+  missingPermissions: ['unknown'],
 });
