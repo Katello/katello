@@ -12,7 +12,7 @@ module Katello
           PulpAnsibleClient
         end
 
-        def api_exception_class
+        def self.api_exception_class
           PulpAnsibleClient::ApiError
         end
 
@@ -20,16 +20,16 @@ module Katello
           PulpAnsibleClient::CollectionRemote
         end
 
-        def remotes_api
-          PulpAnsibleClient::RemotesCollectionApi.new(api_client)
+        def self.remotes_api(smart_proxy)
+          PulpAnsibleClient::RemotesCollectionApi.new(api_client(smart_proxy))
         end
 
         def distribution_class
           PulpAnsibleClient::AnsibleDistribution
         end
 
-        def distributions_api
-          PulpAnsibleClient::DistributionsAnsibleApi.new(api_client)
+        def self.distributions_api(smart_proxy)
+          PulpAnsibleClient::DistributionsAnsibleApi.new(api_client(smart_proxy))
         end
 
         def remote_options

@@ -8,7 +8,7 @@ module Katello
           PulpRpmClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpRpmClient::Configuration))
         end
 
-        def api_exception_class
+        def self.api_exception_class
           PulpRpmClient::ApiError
         end
 
@@ -20,8 +20,8 @@ module Katello
           PulpRpmClient::RpmRemote
         end
 
-        def remotes_api
-          PulpRpmClient::RemotesRpmApi.new(api_client)
+        def self.remotes_api(smart_proxy)
+          PulpRpmClient::RemotesRpmApi.new(api_client(smart_proxy))
         end
 
         def publication_class
@@ -36,8 +36,8 @@ module Katello
           PulpRpmClient::RpmDistribution
         end
 
-        def distributions_api
-          PulpRpmClient::DistributionsRpmApi.new(api_client)
+        def self.distributions_api(smart_proxy)
+          PulpRpmClient::DistributionsRpmApi.new(api_client(smart_proxy))
         end
 
         def remote_options

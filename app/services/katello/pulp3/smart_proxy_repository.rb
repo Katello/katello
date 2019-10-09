@@ -33,6 +33,14 @@ module Katello
           ::Katello::Pulp3::Repository.new(nil, smart_proxy).repositories_api.delete(repo.pulp_href)
         end
       end
+
+      def delete_orphaned_distributions_for_mirror_proxies
+        ::Katello::Pulp3::Repository.delete_orphan_distributions(smart_proxy)
+      end
+
+      def delete_orphaned_remotes_for_mirror_proxies
+        ::Katello::Pulp3::Repository.delete_orphan_remotes(smart_proxy)
+      end
     end
   end
 end

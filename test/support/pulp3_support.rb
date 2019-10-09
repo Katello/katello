@@ -17,12 +17,11 @@ module Katello
       service.class.any_instance.stubs(:backend_object_name).returns(repo.pulp_id)
 
       tasks = []
-
       if (repo = service.list(name: service.backend_object_name).first)
         tasks << service.delete(repo.pulp_href)
       end
 
-      if (remote = service.list_remotes(name: service.backend_object_name).first)
+      if (remote = service.remotes_list(name: service.backend_object_name).first)
         tasks << service.delete_remote(remote.pulp_href)
       end
 

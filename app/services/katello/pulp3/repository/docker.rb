@@ -8,7 +8,7 @@ module Katello
           PulpDockerClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpDockerClient::Configuration))
         end
 
-        def api_exception_class
+        def self.api_exception_class
           PulpDockerClient::ApiError
         end
 
@@ -20,16 +20,16 @@ module Katello
           PulpDockerClient::DockerRemote
         end
 
-        def remotes_api
-          PulpDockerClient::RemotesDockerApi.new(api_client)
+        def self.remotes_api(smart_proxy)
+          PulpDockerClient::RemotesDockerApi.new(api_client(smart_proxy))
         end
 
         def distribution_class
           PulpDockerClient::DockerDistribution
         end
 
-        def distributions_api
-          PulpDockerClient::DistributionsDockerApi.new(api_client)
+        def self.distributions_api(smart_proxy)
+          PulpDockerClient::DistributionsDockerApi.new(api_client(smart_proxy))
         end
 
         def recursive_manage_class

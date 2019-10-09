@@ -4,7 +4,7 @@ module Katello
   module Pulp3
     class Repository
       class File < ::Katello::Pulp3::Repository
-        def api_exception_class
+        def self.api_exception_class
           PulpFileClient::ApiError
         end
 
@@ -20,8 +20,8 @@ module Katello
           PulpFileClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpFileClient::Configuration))
         end
 
-        def remotes_api
-          PulpFileClient::RemotesFileApi.new(api_client)
+        def self.remotes_api(smart_proxy)
+          PulpFileClient::RemotesFileApi.new(api_client(smart_proxy))
         end
 
         def publication_class
@@ -36,8 +36,8 @@ module Katello
           PulpFileClient::FileDistribution
         end
 
-        def distributions_api
-          PulpFileClient::DistributionsFileApi.new(api_client)
+        def self.distributions_api(smart_proxy)
+          PulpFileClient::DistributionsFileApi.new(api_client(smart_proxy))
         end
 
         def copy_content_for_source(source_repository, _options = {})
