@@ -15,7 +15,7 @@ module Actions
         end
 
         def humanized_input
-          ["'#{input['smart_proxy']['name']}'"] + super
+          input['smart_proxy'].nil? || input['smart_proxy']['name'].nil? ? super : ["'#{input['smart_proxy']['name']}'"] + super
         end
 
         # rubocop:disable MethodLength
