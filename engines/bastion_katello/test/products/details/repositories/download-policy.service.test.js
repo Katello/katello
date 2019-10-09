@@ -14,7 +14,7 @@ describe('Service: DownloadPolicy', function() {
     it("provides a method to convert a download policy to a human readable version", function() {
         expect(DownloadPolicy.downloadPolicyName('on_demand')).toBe('On Demand');
         expect(DownloadPolicy.downloadPolicyName('immediate')).toBe('Immediate');
-        expect(DownloadPolicy.downloadPolicyName('background')).toBe('Background');
+        expect(DownloadPolicy.downloadPolicyName('background')).toBe('Background (Deprecated)');
     });
 
 });
