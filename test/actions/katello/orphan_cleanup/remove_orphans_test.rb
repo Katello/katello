@@ -34,22 +34,19 @@ module ::Actions::Katello::CapsuleContent
       smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       tree = plan_action_tree(action_class, smart_proxy)
 
-      assert_tree_planned_with(tree, ::Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions) do |input|
-        assert_equal smart_proxy.id, input[:smart_proxy_id]
-      end
+      assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveOrphans)
+      assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions)
     end
 
     it 'plans proxy orphans cleanup with pulp3 mirror' do
       smart_proxy = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
       tree = plan_action_tree(action_class, smart_proxy)
 
-      assert_tree_planned_with(tree, ::Actions::Pulp3::OrphanCleanup::RemoveUnneededRepos) do |input|
-        assert_equal smart_proxy.id, input[:smart_proxy_id]
-      end
-
-      assert_tree_planned_with(tree, ::Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions) do |input|
-        assert_equal smart_proxy.id, input[:smart_proxy_id]
-      end
+      assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveUnneededRepos)
+      assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveOrphans)
+      assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanDistributions)
+      assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRemotes)
+      assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions)
     end
   end
 

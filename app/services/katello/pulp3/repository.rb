@@ -19,7 +19,7 @@ module Katello
       end
 
       def api_exception_class
-        fail NotImplementedError
+        self.class.api_exception_class
       end
 
       def remote_class
@@ -103,6 +103,12 @@ module Katello
         end
       end
 
+      def self.remotes_list(smart_proxy, options)
+        fetch_from_list do |page_opts|
+          remotes_api(smart_proxy).list(page_opts.merge(options))
+        end
+      end
+
       def remote_partial_update
         remotes_api.partial_update(repo.remote_href, remote_options)
       end
@@ -111,8 +117,26 @@ module Katello
         remotes_api.delete(href) if href
       end
 
-      def list_remotes(args)
+      def self.delete_remote(smart_proxy, href)
+        remotes_api(smart_proxy).delete(href) if href
+      end
+
+      def remotes_list(args)
         remotes_api.list(args).results
+      end
+
+      def self.delete_orphan_remotes(smart_proxy, repo_types = pulp3_enabled_repo_types(smart_proxy))
+        tasks = []
+        repo_types.each do |repo_type|
+          pulp3_class = repo_type.pulp3_service_class
+          remotes = pulp3_class.remotes_list(smart_proxy, {})
+          repos_on_capsule = ::Katello::Pulp3::Repository.list(smart_proxy)
+          capsule_repo_names = repos_on_capsule.collect { |repo| repo['name'] }
+          remotes.each do |remote|
+            tasks << pulp3_class.delete_remote(smart_proxy, remote['pulp_href']) unless capsule_repo_names.include?(remote['name'])
+          end
+        end
+        tasks
       end
 
       def core_api_client
@@ -133,6 +157,14 @@ module Katello
 
       def upload_class
         PulpcoreClient::Upload
+      end
+
+      def distributions_api
+        self.class.distributions_api(smart_proxy)
+      end
+
+      def remotes_api
+        self.class.remotes_api(smart_proxy)
       end
 
       def self.instance_for_type(repo, smart_proxy)
@@ -223,7 +255,7 @@ module Katello
         fetch_from_list { |page_opts| repository_versions_api.list(href, page_opts.merge(options)) }
       end
 
-      def self.list(smart_proxy, options)
+      def self.list(smart_proxy, options = {})
         repositories_api = ::Katello::Pulp3::Repository.new(nil, smart_proxy).repositories_api
         fetch_from_list do |page_opts|
           repositories_api.list(page_opts.merge(options))
@@ -375,15 +407,68 @@ module Katello
         distributions_api.create(distribution_data)
       end
 
-      def delete_distribution(href)
-        distributions_api.delete(href)
+      def self.delete_distribution(smart_proxy, href)
+        distributions_api(smart_proxy).delete(href)
       rescue api_exception_class => e
         raise e if e.code != 404
         nil
       end
 
+      def delete_distribution(href)
+        self.class.delete_distribution(smart_proxy, href)
+      end
+
       def lookup_distributions(args)
         distributions_api.list(args).results
+      end
+
+      def self.distributions_list(smart_proxy, args = {})
+        fetch_from_list do |page_opts|
+          distributions_api(smart_proxy).list(page_opts.merge(args))
+        end
+      end
+
+      def distributions_list(args = {})
+        self.class.distributions_list(smart_proxy, args)
+      end
+
+      def self.pulp3_enabled_repo_types(smart_proxy, content_types = SETTINGS[:katello][:content_types].keys)
+        repository_types = content_types.collect do |content_type|
+          Katello::RepositoryTypeManager.find(content_type)
+        end
+
+        repository_types.select do |repository_type|
+          smart_proxy.pulp3_repository_type_support?(repository_type)
+        end
+      end
+
+      def self.delete_orphan_distributions(smart_proxy, repo_types = pulp3_enabled_repo_types(smart_proxy))
+        tasks = []
+        repo_types.each do |repo_type|
+          pulp3_class = repo_type.pulp3_service_class
+          orphan_distribution_hrefs = pulp3_class.orphan_distributions(smart_proxy)
+          orphan_distribution_hrefs.each do |distribution_href|
+            tasks << pulp3_class.delete_distribution(smart_proxy, distribution_href)
+          end
+        end
+        tasks
+      end
+
+      def self.orphan_distributions(smart_proxy)
+        distributions = distributions_list(smart_proxy, {})
+
+        distribution_hrefs = distributions.pluck(:pulp_href)
+
+        distribution_hrefs.select do |distribution_href|
+          dist = get_distribution(smart_proxy, distribution_href)
+          orphan_distribution?(dist)
+        end
+      end
+
+      def self.orphan_distribution?(distribution)
+        distribution.try(:publication).nil? &&
+        distribution.try(:repository).nil? &&
+        distribution.try(:repository_version).nil?
       end
 
       def update_distribution(path)
@@ -394,11 +479,15 @@ module Katello
         end
       end
 
-      def get_distribution(href)
-        distributions_api.read(href)
+      def self.get_distribution(smart_proxy, href)
+        distributions_api(smart_proxy).read(href)
       rescue api_exception_class => e
         raise e if e.code != 404
         nil
+      end
+
+      def get_distribution(href)
+        self.class.get_distribution(smart_proxy, href)
       end
 
       def copy_units_by_href(unit_hrefs)
@@ -534,7 +623,7 @@ module Katello
       end
 
       def fetch_remote
-        list_remotes(name: backend_object_name).first
+        remotes_list(name: backend_object_name).first
       end
 
       def remove_content(content_units)
