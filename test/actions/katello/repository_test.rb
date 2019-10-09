@@ -258,7 +258,8 @@ module ::Actions::Katello::Repository
                                 upload_id: 123)
     end
 
-    it 'plans for Pulp3' do
+    it 'plans for Pulp3 without duplicate' do
+      proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => nil))))
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
       action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::UploadFile) do |content_create|
@@ -281,6 +282,22 @@ module ::Actions::Katello::Repository
                                 "file")
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
                                 "demo_task/artifact_href", repository_pulp3, proxy)
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
+                                repository_pulp3,
+                                [{href: "demo_task/version_href"}])
+    end
+
+    it 'plans for Pulp3 with duplicate' do
+      proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => [stub(:_href => "demo_content/href")]))))
+      action = create_action pulp3_action_class
+      file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
+        import_upload.stubs(output: { pulp_tasks: [{href: "demo_task/version_href"}] })
+      end
+
+      plan_action action, repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'file'
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+                                "demo_content/href", repository_pulp3, proxy)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
                                 [{href: "demo_task/version_href"}])
