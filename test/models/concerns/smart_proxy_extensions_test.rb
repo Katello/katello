@@ -82,5 +82,14 @@ module Katello
       refute @master.pulp3_content_support?(Katello::PuppetModule::CONTENT_TYPE)
       assert @master.pulp3_content_support?(Katello::DockerManifest::CONTENT_TYPE)
     end
+
+    def test_pulp2_preferred_for_type
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
+      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
+      assert @master.pulp2_preferred_for_type?("file")
+      refute @master.pulp2_preferred_for_type?("docker")
+    ensure
+      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
+    end
   end
 end

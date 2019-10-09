@@ -143,10 +143,19 @@ module Katello
         pulp3_repository_type_support?(repository.content_type)
       end
 
+      def pulp2_preferred_for_type?(repository_type)
+        if SETTINGS[:katello][:use_pulp_2_for_content_type].nil? ||
+            SETTINGS[:katello][:use_pulp_2_for_content_type][repository_type.to_sym].nil?
+          return false
+        else
+          return SETTINGS[:katello][:use_pulp_2_for_content_type][repository_type.to_sym]
+        end
+      end
+
       def pulp3_repository_type_support?(repository_type)
         repository_type_obj = repository_type.is_a?(String) ? Katello::RepositoryTypeManager.repository_types[repository_type] : repository_type
         fail "Cannot find repository type #{repository_type}, is it enabled?" unless repository_type_obj
-        repository_type_obj.pulp3_plugin.present? && pulp3_enabled? && self.capabilities(PULP3_FEATURE).try(:include?, repository_type_obj.pulp3_plugin)
+        repository_type_obj.pulp3_plugin.present? && pulp3_enabled? && self.capabilities(PULP3_FEATURE).try(:include?, repository_type_obj.pulp3_plugin) && !pulp2_preferred_for_type?(repository_type_obj.id)
       end
 
       def pulp3_content_support?(content_type)
