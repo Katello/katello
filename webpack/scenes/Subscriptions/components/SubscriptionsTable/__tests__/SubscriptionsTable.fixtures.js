@@ -2,7 +2,7 @@ import Immutable from 'seamless-immutable';
 
 const groupedSubscriptions = Immutable({
   RH00001: {
-    open: false,
+    open: true,
     subscriptions: [
       {
         id: 1,
@@ -58,13 +58,37 @@ const groupedSubscriptions = Immutable({
   },
 });
 
-export const subOne = Immutable({
+export const genericRow = Immutable({
+  collapsible: true,
+  consumed: 'NA',
+  contract_number: 'NA',
+  end_date: 'NA',
+  hypervisor: undefined,
+  id: 0,
+  name: 'Alpha',
+  product_id: 'RH00001',
+  start_date: 'NA',
+  virt_only: undefined,
+});
+
+export const subOneRowOne = Immutable({
   consumed: 0,
   id: 1,
   maxQuantity: 60,
   name: 'Alpha',
   product_id: 'RH00001',
   quantity: 10,
+  upstreamAvailable: 50,
+  upstreamAvailableLoaded: true,
+});
+
+export const subOneRowTwo = Immutable({
+  consumed: 5,
+  id: 2,
+  maxQuantity: 65,
+  name: 'Alpha',
+  product_id: 'RH00001',
+  quantity: 15,
   upstreamAvailable: 50,
   upstreamAvailableLoaded: true,
 });
@@ -103,3 +127,4 @@ export const subFour = Immutable({
 });
 
 export default groupedSubscriptions;
+

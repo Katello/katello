@@ -28,10 +28,8 @@ const Table = ({
 
   const groupingController = {
     isCollapseable: ({ rowData }) =>
-      // it is the first subscription in the group
-      rowData.id === groupedSubscriptions[rowData.product_id].subscriptions[0].id &&
       // the group contains more then one subscription
-      groupedSubscriptions[rowData.product_id].subscriptions.length > 1,
+      rowData.collapsible,
     isCollapsed: ({ rowData }) => !groupedSubscriptions[rowData.product_id].open,
     toggle: ({ rowData }) => toggleSubscriptionGroup(rowData.product_id),
   };

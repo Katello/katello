@@ -1,4 +1,4 @@
-import groupedSubscriptions, { subOne, subTwo, subThree, subFour } from './SubscriptionsTable.fixtures';
+import groupedSubscriptions, { genericRow, subOneRowOne, subOneRowTwo, subTwo, subThree, subFour } from './SubscriptionsTable.fixtures';
 import { buildTableRows } from '../SubscriptionsTableHelpers';
 
 describe('Build Table Rows', () => {
@@ -11,7 +11,7 @@ describe('Build Table Rows', () => {
       5: 50,
     };
 
-    const rows = [subOne, subTwo, subThree, subFour];
+    const rows = [genericRow, subOneRowOne, subOneRowTwo, subTwo, subThree, subFour];
 
     expect(buildTableRows(groupedSubscriptions, availableQuantities, {}))
       .toEqual(rows);
@@ -31,8 +31,9 @@ describe('Build Table Rows', () => {
       4: 150,
     };
 
-    const rows = [
-      { ...subOne, entitlementsChanged: true, quantity: 20 },
+    const rows = [genericRow,
+      { ...subOneRowOne, entitlementsChanged: true, quantity: 20 },
+      subOneRowTwo,
       subTwo,
       { ...subThree, entitlementsChanged: true, quantity: 150 },
       subFour,
