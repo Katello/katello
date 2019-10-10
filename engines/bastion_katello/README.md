@@ -8,9 +8,8 @@ The only real difference, as far as the user is concerned, is that the applicati
 
 ```
 cd ./engines/bastion_katello
-sudo npm update -g grunt-cli
+sudo npm install -g grunt-cli
 npm install
-npm install ../bastion/
 ```
 
 ```
