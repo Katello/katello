@@ -30,18 +30,39 @@ const buildTableRow = (subscription, availableQuantities, updatedQuantity) => {
       quantity: updatedQuantity[subscription.id],
     };
   }
+
   return baseSubscription;
+};
+
+const buildTableCollapseRow = (subscriptionGroup) => {
+  const first = subscriptionGroup.subscriptions[0];
+  const heading = {
+    id: 0,
+    collapsible: true,
+    contract_number: 'NA',
+    start_date: 'NA',
+    end_date: 'NA',
+    consumed: 'NA',
+    product_id: first.product_id,
+    name: first.name,
+    virt_only: first.virt_only,
+    hypervisor: first.hypervisor,
+  };
+  return heading;
 };
 
 const buildTableRowsFromGroup = (subscriptionGroup, availableQuantities, updatedQuantity) => {
   const { open, subscriptions } = subscriptionGroup;
 
-  // build row for each subscription
-  if (open) {
-    return subscriptions.map(subscription =>
-      buildTableRow(subscription, availableQuantities, updatedQuantity));
+  if (subscriptions.length > 1) {
+    const rows = [];
+    rows.push(buildTableCollapseRow(subscriptionGroup));
+    if (open) {
+      subscriptions.forEach(sub =>
+        rows.push(buildTableRow(sub, availableQuantities, updatedQuantity)));
+    }
+    return rows;
   }
-
   // build row only for the first subscription in the group
   const [firstSubscription] = subscriptions;
   return [buildTableRow(firstSubscription, availableQuantities, updatedQuantity)];

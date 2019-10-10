@@ -4,8 +4,10 @@ import CollapseSubscriptionGroupButton from '../components/CollapseSubscriptionG
 
 export default (collapseableController, selectionController, additionalData) => {
   const shouldShowCollapseButton = collapseableController.isCollapseable(additionalData);
+  const isGenericRow = additionalData.rowData.collapsible;
 
   return selectionCellFormatter(
+    isGenericRow,
     selectionController,
     additionalData,
     shouldShowCollapseButton && (

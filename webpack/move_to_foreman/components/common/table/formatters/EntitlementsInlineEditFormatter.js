@@ -5,12 +5,18 @@ import { Table, FormControl, FormGroup, HelpBlock, Spinner } from 'patternfly-re
 import { validateQuantity } from '../../../../../scenes/Subscriptions/SubscriptionValidations';
 
 const renderValue = (value, additionalData, onActivate) => {
-  const { available, upstream_pool_id: upstreamPoolId } = additionalData.rowData;
-  if (available < 0 || !upstreamPoolId) {
+  const { available, upstream_pool_id: upstreamPoolId, collapsible } = additionalData.rowData;
+
+  if (collapsible) {
+    return (
+      <td>{__('NA')}</td>
+    );
+  } else if (available < 0 || !upstreamPoolId) {
     return (
       <td>{available < 0 ? __('Unlimited') : available}</td>
     );
   }
+
   return (
     <td className="editable">
       <div
@@ -34,6 +40,7 @@ const renderEdit = (hasChanged, onChange, value, additionalData) => {
   const {
     upstreamAvailable, upstreamAvailableLoaded, maxQuantity,
   } = additionalData.rowData;
+
   const className = hasChanged(additionalData)
     ? 'editable editing changed'
     : 'editable editing';
