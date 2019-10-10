@@ -10,6 +10,10 @@ module Actions
 
           action_subject(repository)
 
+          if repository.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
+            ::Foreman::Deprecation.api_deprecation_warning("Background download_policy will be removed in Katello 3.16.  Any background repositories will be converted to Immediate")
+          end
+
           org = repository.organization
           pulp2_create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do

@@ -4,12 +4,17 @@ module Actions
       class Update < Actions::EntryAction
         include Actions::Katello::PulpSelector
 
+        # rubocop:disable Metrics/MethodLength
         def plan(root, repo_params)
           repository = root.library_instance
           action_subject root.library_instance
 
           repo_params[:url] = nil if repo_params[:url] == ''
           root.update_attributes!(repo_params)
+
+          if root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
+            ::Foreman::Deprecation.api_deprecation_warning("Background download_policy will be removed in Katello 3.16.  Any background repositories will be converted to Immediate")
+          end
 
           if update_content?(repository)
             content = root.content
