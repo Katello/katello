@@ -47,7 +47,7 @@ module Katello
 
         def self.build_override_config(options)
           config = {}
-          if options[:solve_dependencies] || options[:resolve_dependencies]
+          if options[:filters].present? && (options[:solve_dependencies] || options[:resolve_dependencies])
             if Setting[:dependency_solving_algorithm] == 'greedy'
               config[:recursive] = true
             else
