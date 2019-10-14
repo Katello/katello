@@ -23,8 +23,6 @@ import {
   loadAvailableQuantities,
   loadTableColumns,
   updateSearchQuery,
-  openManageManifestModal,
-  closeManageManifestModal,
   openDeleteModal,
   closeDeleteModal,
   openTaskModal,
@@ -146,11 +144,6 @@ describe('subscription actions', () => {
       },
     );
   });
-
-  describe('manageManifestModal', () => testActionSnapshotWithFixtures({
-    'it should open manage-manifest modal': () => openManageManifestModal(),
-    'it should close manage-manifest modal': () => closeManageManifestModal(),
-  }));
 
   describe('deleteModal', () => testActionSnapshotWithFixtures({
     'it should open delete modal': () => openDeleteModal(),

@@ -21,8 +21,6 @@ import {
   SUBSCRIPTION_TABLE_DEFAULT_COLUMNS,
   SUBSCRIPTIONS_COLUMNS_REQUEST,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
-  SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
-  SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
   SUBSCRIPTIONS_OPEN_TASK_MODAL,
@@ -140,9 +138,6 @@ export const updateSearchQuery = query => ({
   type: SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   payload: query,
 });
-
-export const openManageManifestModal = () => ({ type: SUBSCRIPTIONS_OPEN_MANIFEST_MODAL });
-export const closeManageManifestModal = () => ({ type: SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL });
 
 export const openDeleteModal = () => ({ type: SUBSCRIPTIONS_OPEN_DELETE_MODAL });
 export const closeDeleteModal = () => ({ type: SUBSCRIPTIONS_CLOSE_DELETE_MODAL });

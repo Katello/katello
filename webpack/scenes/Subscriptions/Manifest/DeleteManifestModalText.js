@@ -1,3 +1,4 @@
+import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 const question = __('Are you sure you want to delete the manifest?');
@@ -11,14 +12,18 @@ const l4 = __(`Require you to upload the subscription-manifest and re-attach
 const debug = __(`This action should only be taken in extreme circumstances or
                   for debugging purposes.`);
 
-const DeleteManifestModalText = `<p>${question}</p>
-<p>${note}</p>
-<ul class="list-aligned">
-  <li>${l1}</li>
-  <li>${l2}</li>
-  <li>${l3}</li>
-  <li>${l4}</li>
-</ul>
-<p>${debug}</p>`;
+const DeleteManifestModalText = () => (
+  <React.Fragment>
+    <p>{question}</p>
+    <p>{note}</p>
+    <ul className="list-aligned">
+      <li>{l1}</li>
+      <li>{l2}</li>
+      <li>{l3}</li>
+      <li>{l4}</li>
+    </ul>
+    <p>{debug}</p>
+  </React.Fragment>
+);
 
 export default DeleteManifestModalText;

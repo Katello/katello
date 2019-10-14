@@ -9,6 +9,7 @@ import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
 import { renderTaskFinishedToast, renderTaskStartedToast } from '../Tasks/helpers';
 import ManageManifestModal from './Manifest/';
+import { MANAGE_MANIFEST_MODAL_ID } from './Manifest/ManifestConstants';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
 import { manifestExists } from './SubscriptionHelpers';
@@ -20,7 +21,6 @@ import {
   BULK_TASK_SEARCH_INTERVAL,
   SUBSCRIPTION_TABLE_NAME,
 } from './SubscriptionConstants';
-
 import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
@@ -159,7 +159,6 @@ class SubscriptionsPage extends Component {
   render() {
     const currentOrg = orgId();
     const {
-      manifestModalOpened, openManageManifestModal, closeManageManifestModal,
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
       searchQuery, updateSearchQuery,
@@ -182,6 +181,8 @@ class SubscriptionsPage extends Component {
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;
     let task = null;
+
+    const openManageManifestModal = () => this.props.setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
 
     if (taskInProgress) {
       [task] = tasks;
@@ -275,11 +276,9 @@ class SubscriptionsPage extends Component {
               canImportManifest={canImportManifest}
               canDeleteManifest={canDeleteManifest}
               canEditOrganizations={canEditOrganizations}
-              showModal={manifestModalOpened}
               taskInProgress={taskInProgress}
               disableManifestActions={disableManifestActions}
               disabledReason={this.getDisabledReason()}
-              onClose={closeManageManifestModal}
               upload={this.uploadManifest}
               delete={this.deleteManifest}
               refresh={this.refreshManifest}
@@ -351,9 +350,7 @@ SubscriptionsPage.propTypes = {
   refreshManifest: PropTypes.func.isRequired,
   searchQuery: PropTypes.string,
   updateSearchQuery: PropTypes.func.isRequired,
-  openManageManifestModal: PropTypes.func.isRequired,
-  closeManageManifestModal: PropTypes.func.isRequired,
-  manifestModalOpened: PropTypes.bool,
+  setModalOpen: PropTypes.func.isRequired,
   deleteModalOpened: PropTypes.bool,
   openDeleteModal: PropTypes.func.isRequired,
   closeDeleteModal: PropTypes.func.isRequired,
@@ -371,7 +368,6 @@ SubscriptionsPage.defaultProps = {
   taskDetails: {},
   organization: undefined,
   searchQuery: '',
-  manifestModalOpened: false,
   deleteModalOpened: false,
   taskModalOpened: false,
   deleteButtonDisabled: true,
