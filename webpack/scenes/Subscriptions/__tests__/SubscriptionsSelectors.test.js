@@ -2,7 +2,6 @@ import { testSelectorsSnapshotWithFixtures } from 'react-redux-test-utils';
 import {
   selectSubscriptionsState,
   selectSearchQuery,
-  selectManifestModalOpened,
   selectDeleteModalOpened,
   selectDeleteButtonDisabled,
   selectSubscriptionsTasks,
@@ -13,7 +12,6 @@ const state = {
   katello: {
     subscriptions: {
       searchQuery: 'some-query',
-      manifestModalOpened: false,
       deleteModalOpened: false,
       taskModalOpened: false,
       deleteButtonDisabled: true,
@@ -25,7 +23,6 @@ const state = {
 const fixtures = {
   'should select the subscriptions state': () => selectSubscriptionsState(state),
   'should select search-query': () => selectSearchQuery(state),
-  'should select manifest-modal-opened': () => selectManifestModalOpened(state),
   'should select delete-modal-opened': () => selectDeleteModalOpened(state),
   'should select task-modal-opened': () => selectTaskModalOpened(state),
   'should select delete-button-disabled': () => selectDeleteButtonDisabled(state),
