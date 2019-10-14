@@ -9,6 +9,7 @@ import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/Ta
 
 jest.mock('foremanReact/components/PermissionDenied');
 jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
+jest.mock('foremanReact/components/ForemanModal', () => (<div>ForemanModal Mock</div>));
 
 const loadTables = () => new Promise((resolve) => {
   resolve();
@@ -18,6 +19,8 @@ describe('subscriptions page', () => {
   const noop = () => {};
   const organization = { owner_details: { upstreamConsumer: 'blah' } };
   const page = shallow(<SubscriptionsPage
+    setModalOpen={noop}
+    setModalClosed={noop}
     organization={organization}
     subscriptions={successState}
     subscriptionTableSettings={settingsSuccessState}
@@ -47,6 +50,8 @@ describe('subscriptions page', () => {
   />);
 
   const permissionDeniedPage = shallow(<SubscriptionsPage
+    setModalOpen={noop}
+    setModalClosed={noop}
     organization={organization}
     subscriptions={permissionDeniedState}
     subscriptionTableSettings={settingsSuccessState}

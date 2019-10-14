@@ -3,7 +3,6 @@ import { toastErrorAction, failureAction } from '../../../services/api/testHelpe
 
 export const initialState = Immutable({
   loading: true,
-  manifestModalOpened: false,
   results: [],
   pagination: {
     page: 0,
@@ -256,7 +255,6 @@ export const groupedSubscriptions = Immutable({
 
 export const successState = Immutable({
   loading: false,
-  manifestModalOpened: false,
   results: [
     {
       id: 3,
@@ -326,7 +324,6 @@ export const successState = Immutable({
 });
 export const permissionDeniedState = Immutable({
   loading: false,
-  manifestModalOpened: false,
   results: [],
   searchIsActive: false,
   search: undefined,
@@ -361,7 +358,6 @@ export const settingsSuccessState = Immutable({
 
 export const errorState = Immutable({
   loading: false,
-  manifestModalOpened: false,
   pagination: {
     page: 0,
     perPage: 20,

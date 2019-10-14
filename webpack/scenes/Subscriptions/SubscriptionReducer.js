@@ -21,8 +21,6 @@ import {
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
-  SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
-  SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
   SUBSCRIPTIONS_OPEN_TASK_MODAL,
@@ -35,7 +33,6 @@ const initialState = Immutable({
   ...initialApiState,
   disconnected: false,
   searchQuery: '',
-  manifestModalOpened: false,
   deleteModalOpened: false,
   taskModalOpened: false,
   deleteButtonDisabled: true,
@@ -162,11 +159,6 @@ export default (state = initialState, action) => {
 
     case SUBSCRIPTIONS_UPDATE_SEARCH_QUERY:
       return state.set('searchQuery', action.payload);
-
-    case SUBSCRIPTIONS_OPEN_MANIFEST_MODAL:
-      return state.set('manifestModalOpened', true);
-    case SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL:
-      return state.set('manifestModalOpened', false);
 
     case SUBSCRIPTIONS_OPEN_DELETE_MODAL:
       return state.set('deleteModalOpened', true);
