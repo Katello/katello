@@ -84,7 +84,7 @@ module Katello
       def create_remote
         remote_file_data = remote_class.new(remote_options)
         response = remotes_api.create(remote_file_data)
-        repo.update_attributes!(:remote_href => response._href)
+        repo.update_attributes!(:remote_href => response.pulp_href)
       end
 
       def update_remote
@@ -201,7 +201,7 @@ module Katello
           RepositoryReference.create!(
            root_repository_id: repo.root_id,
            content_view_id: repo.content_view.id,
-           repository_href: response._href)
+           repository_href: response.pulp_href)
           response
         end
       end
@@ -253,10 +253,10 @@ module Katello
 
       def self.repository_versions(smart_proxy, options)
         current_pulp_repositories = ::Katello::Pulp3::Repository.list(smart_proxy, options)
-        repo_hrefs = current_pulp_repositories.collect { |repo| repo[:_href] }.uniq
+        repo_hrefs = current_pulp_repositories.collect { |repo| repo[:pulp_href] }.uniq
 
         version_hrefs = repo_hrefs.collect do |href|
-          ::Katello::Pulp3::Repository.versions_list(smart_proxy, href, options).pluck(:_href)
+          ::Katello::Pulp3::Repository.versions_list(smart_proxy, href, options).pluck(:pulp_href)
         end
 
         version_hrefs.flatten.uniq
@@ -281,9 +281,9 @@ module Katello
 
         orphan_version_hrefs = current_pulp_repositories.collect do |pulp_repo|
           mirror_repo_versions = ::Katello::Pulp3::Repository.versions_list(
-            smart_proxy, pulp_repo['_href'], ordering: :_created).pluck(:_href)
+            smart_proxy, pulp_repo['pulp_href'], ordering: :_created).pluck(:pulp_href)
 
-          mirror_repo_versions - [pulp_repo['_latest_version_href']]
+          mirror_repo_versions - [pulp_repo['latest_version_href']]
         end
 
         orphan_version_hrefs.flatten
@@ -318,7 +318,7 @@ module Katello
 
       def mirror_version_href
         repository = fetch_repository
-        repository._latest_version_href
+        repository.latest_version_href
       end
 
       def create_publication
@@ -347,7 +347,7 @@ module Katello
         if (distro = lookup_distributions(base_path: path).first)
           # update dist
           dist_options = dist_options.except(:name, :base_path)
-          distributions_api.partial_update(distro._href, dist_options)
+          distributions_api.partial_update(distro.pulp_href, dist_options)
         else
           # create dist
           distribution_data = distribution_class.new(dist_options)
@@ -414,11 +414,11 @@ module Katello
       end
 
       def mirror_repository_href
-        fetch_repository.try(:_href)
+        fetch_repository.try(:pulp_href)
       end
 
       def mirror_remote_href
-        fetch_remote.try(:_href)
+        fetch_remote.try(:pulp_href)
       end
 
       def create_mirror_version(options = {})
@@ -442,7 +442,7 @@ module Katello
       def delete_distributions
         path = repo.relative_path.sub(/^\//, '')
         dists = lookup_distributions(base_path: path)
-        delete_distribution(dists.first._href) if dists.first
+        delete_distribution(dists.first.pulp_href) if dists.first
         dist_ref = distribution_reference(path)
         dist_ref.destroy! if dist_ref
       end

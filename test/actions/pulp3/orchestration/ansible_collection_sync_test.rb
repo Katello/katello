@@ -51,7 +51,8 @@ module ::Actions::Pulp3
 
       assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
       @repo.index_content
-      pre_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
+      pre_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id)
+      pre_content_count = pre_content.count
       @repo.root.update_attributes(:ansible_collection_requirements => "---\n
   collections:\n
   - newswangerd.collection_demo", :mirror_on_sync => false)
@@ -63,13 +64,14 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       @repo.index_content
-      post_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
+      post_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id)
       repository_reference = Katello::Pulp3::RepositoryReference.find_by(
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
 
       assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
-      assert_equal pre_count_content + 7, post_count_content
+      assert_operator pre_content_count, :<, post_content.count
+      assert_empty pre_content - post_content
     end
 
     def test_sync_mirror_true
@@ -77,7 +79,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       @repo.index_content
-      pre_count_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id).count
+      pre_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id)
       @repo.root.update_attributes(:ansible_collection_requirements => "---\n
   collections:\n
   - newswangerd.collection_demo")
@@ -91,12 +93,11 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
 
-      collections = ::Katello::AnsibleCollection.in_repositories(@repo)
-      post_count_content = collections.count
-      assert_equal pre_count_content + 2, post_count_content
+      post_content = ::Katello::AnsibleCollection.in_repositories(@repo)
+      assert_equal pre_content - post_content, pre_content
 
-      refute_nil collections.first.description
-      refute_empty collections.first.tags
+      refute_nil post_content.first.description
+      refute_empty post_content.first.tags
     end
   end
 end

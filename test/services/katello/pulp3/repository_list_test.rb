@@ -34,10 +34,10 @@ module Katello
         create_repo(repo2, @master)
         sync_and_reload_repo(repo2, @master)
 
-        repository_list = ::Katello::Pulp3::Repository.list(@master, :limit => 1)
+        repository_list = ::Katello::Pulp3::Repository.list(@master, :limit => 3)
 
         Katello::Pulp3::RepositoryReference.all.each do |repo_reference|
-          assert_includes repository_list.pluck(:_href), repo_reference.repository_href
+          assert_includes repository_list.pluck(:pulp_href), repo_reference.repository_href
         end
       end
     end

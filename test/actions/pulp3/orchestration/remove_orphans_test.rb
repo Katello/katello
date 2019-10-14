@@ -50,7 +50,7 @@ module ::Actions::Pulp3
 
     def test_orphans_are_removed
       repository_reference = repo_reference(@repo)
-      versions = ::Katello::Pulp3::Repository.new(@repo, @master).repository_versions_api.list(repository_reference.repository_href, {}).results.collect(&:_href)
+      versions = ::Katello::Pulp3::Repository.new(@repo, @master).repository_versions_api.list(repository_reference.repository_href, {}).results.collect(&:pulp_href)
       refute_includes versions, repository_reference.repository_href + "versions/1/"
       assert_includes versions, repository_reference.repository_href + "versions/2/"
     end

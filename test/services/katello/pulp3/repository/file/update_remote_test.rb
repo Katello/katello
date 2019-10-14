@@ -8,7 +8,7 @@ module Katello
 
         def setup
           mock_remotes_create_response = mock('response')
-          mock_remotes_create_response.stubs(:_href).returns('http://someurl')
+          mock_remotes_create_response.stubs(:pulp_href).returns('http://someurl')
           @mock_pulp3_api = mock('pulp3_api')
           @mock_pulp3_api.stubs(:create).returns(mock_remotes_create_response)
           @mock_smart_proxy = mock('smart_proxy')

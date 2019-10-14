@@ -14,7 +14,7 @@ module Actions
           upload_options = {artifact: artifact_href}.merge(input[:options])
           content = content_backend_service.create_content(upload_options.with_indifferent_access)
           content_unit = content_backend_service.content_api.create(content)
-          output[:content_unit_href] = content_unit._href
+          output[:content_unit_href] = content_unit.pulp_href
         end
       end
     end

@@ -15,8 +15,8 @@ module Actions
 
       # A call report Looks like:  {"task":"/pulp/api/v3/tasks/5/"}
       # {
-      #    "_href":"/pulp/api/v3/tasks/4/",
-      #    "_created":"2019-02-21T19:50:40.476767Z",
+      #    "pulp_href":"/pulp/api/v3/tasks/4/",
+      #    "pulp_created":"2019-02-21T19:50:40.476767Z",
       #    "job_id":"d0359658-d926-47a2-b430-1b2092b3bd86",
       #    "state":"completed",
       #    "name":"pulp_file.app.tasks.publishing.publish",
@@ -84,10 +84,10 @@ module Actions
       def cancel
         output[:pulp_tasks].each do |pulp_task|
           data = PulpcoreClient::Task.new(state: 'canceled')
-          tasks_api.tasks_cancel(pulp_task['_href'], data)
+          tasks_api.tasks_cancel(pulp_task['pulp_href'], data)
           if pulp_task['spawned_tasks']
             #the main task may have completed, so cancel spawned tasks too
-            pulp_task['spawned_tasks'].each { |spawned| tasks_api.tasks_cancel(spawned['_href'], data) }
+            pulp_task['spawned_tasks'].each { |spawned| tasks_api.tasks_cancel(spawned['pulp_href'], data) }
           end
         end
       end
@@ -127,7 +127,7 @@ module Actions
 
       def poll_external_task
         external_task.map do |task|
-          task = tasks_api.read(task['_href'] || task['task'])
+          task = tasks_api.read(task['pulp_href'] || task['task'])
           task.as_json
         end
       end

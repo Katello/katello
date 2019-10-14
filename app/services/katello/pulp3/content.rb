@@ -5,7 +5,7 @@ module Katello
       extend Katello::Abstract::Pulp::Content
       class << self
         def create_upload(size = 0)
-          upload_href = uploads_api.create(upload_class.new(size: size))._href
+          upload_href = uploads_api.create(upload_class.new(size: size)).pulp_href
           {"upload_id" => upload_href.split("/").last}
         end
 
