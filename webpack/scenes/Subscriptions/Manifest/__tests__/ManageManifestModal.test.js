@@ -5,13 +5,16 @@ import ManageManifestModal from '../ManageManifestModal';
 import { manifestHistorySuccessState } from './manifest.fixtures';
 
 jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
+jest.mock('foremanReact/components/ForemanModal');
 
 describe('manage manifest modal', () => {
-  const noop = () => { };
+  const noop = jest.fn();
   const organization = { id: 1, redhat_repository_url: 'https://redhat.com' };
 
-  it('should render', async () => {
+  it('should render', () => {
     const page = shallow(<ManageManifestModal
+      setModalOpen={noop}
+      setModalClosed={noop}
       upload={noop}
       refresh={noop}
       delete={noop}
@@ -22,7 +25,6 @@ describe('manage manifest modal', () => {
       bulkSearch={noop}
       manifestHistory={manifestHistorySuccessState}
       taskInProgress={false}
-      showModal
     />);
     expect(toJson(page)).toMatchSnapshot();
   });
