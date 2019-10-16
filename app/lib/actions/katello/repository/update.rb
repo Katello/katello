@@ -16,6 +16,10 @@ module Actions
             ::Foreman::Deprecation.api_deprecation_warning("Background download_policy will be removed in Katello 3.16.  Any background repositories will be converted to Immediate")
           end
 
+          if root['content_type'] == 'puppet' || root['content_type'] == 'ostree'
+            ::Foreman::Deprecation.api_deprecation_warning("Repository types of 'Puppet' and 'OSTree' will no longer be supported in Katello 3.16.")
+          end
+
           if update_content?(repository)
             content = root.content
 
