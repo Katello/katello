@@ -5,3 +5,5 @@ node :applicable_hosts do |erratum|
   select(["#{::Host.table_name}.id", "#{::Host.table_name}.name"]).
   collect { |host| {:name => host.name, :id => host.id} }
 end
+
+node(:affected_hosts_count) { |erratum| erratum.hosts_available(params[:organization_id]).where("#{::Host.table_name}.id" => @hosts).count }
