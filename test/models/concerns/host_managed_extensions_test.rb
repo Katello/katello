@@ -23,6 +23,14 @@ module Katello
   end
 
   class HostManagedExtensionsTest < HostManagedExtensionsTestBase
+    def test_rhsm_fact_values
+      assert_empty @foreman_host.rhsm_fact_values
+
+      fv = FactValue.create!(value: 'something', host: @foreman_host, fact_name: RhsmFactName.create(name: 'some-fact'))
+
+      assert_equal [fv], @foreman_host.rhsm_fact_values
+    end
+
     def test_destroy_host
       assert @foreman_host.destroy
     end
