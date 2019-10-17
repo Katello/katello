@@ -29,7 +29,7 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
                 taskTypes = $scope.taskTypes,
                 taskType = history.task ? history.task.label : taskTypes[history.action];
 
-            if (taskType === taskTypes.deletion) {
+            if (taskType === taskTypes.removal) {
                 message = translate("Deleted from %s").replace('%s', history.environment.name);
             } else if (taskType === taskTypes.promotion) {
                 message = translate("Promoted to %s").replace('%s', history.environment.name);
