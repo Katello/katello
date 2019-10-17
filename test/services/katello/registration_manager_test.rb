@@ -257,6 +257,14 @@ module Katello
         ::Katello::RegistrationManager.unregister_host(@host)
       end
 
+      def test_unregister_host_rhsm_facts
+        FactValue.create!(value: 'something', host: @host, fact_name: RhsmFactName.create(name: 'some-fact'))
+
+        ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
+
+        assert_empty @host.rhsm_fact_values
+      end
+
       def test_destroy_host_not_found
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
