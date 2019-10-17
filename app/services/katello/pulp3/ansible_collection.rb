@@ -10,10 +10,10 @@ module Katello
       def self.ids_for_repository(repo_id)
         repo = Katello::Pulp3::Repository::AnsibleCollection.new(Katello::Repository.find(repo_id), SmartProxy.pulp_master)
         repo_content_list = repo.content_list
-        repo_content_list.map { |content| content.try(:_href) }
+        repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
-      def self.pulp_data(_href)
+      def self.pulp_data(_pulp_href)
         #No content read method
         fail NotImplementedError
       end

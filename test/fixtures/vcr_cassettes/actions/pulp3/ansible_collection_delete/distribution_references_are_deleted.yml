@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -23,7 +23,59 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:55 GMT
+      - Wed, 16 Oct 2019 21:47:09 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Via:
+      - 1.1 pulp3-devel-2.cannolo.example.com
+      Content-Length:
+      - '257'
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
+        NGNhNTY0ZDYtYjJkZC00ZjkwLWEyYjMtMDZmMjU0Njk0NjgyLyIsInB1bHBf
+        Y3JlYXRlZCI6IjIwMTktMTAtMTZUMjE6NDY6MzYuMTk0Mzk4WiIsInZlcnNp
+        b25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzRjYTU2NGQ2
+        LWIyZGQtNGY5MC1hMmIzLTA2ZjI1NDY5NDY4Mi92ZXJzaW9ucy8iLCJsYXRl
+        c3RfdmVyc2lvbl9ocmVmIjpudWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6
+        YXRpb24tQ2FiaW5ldC1wdWxwM19BbnNpYmxlX2NvbGxlY3Rpb25fMSIsInBs
+        dWdpbl9tYW5hZ2VkIjpmYWxzZSwiZGVzY3JpcHRpb24iOm51bGx9XX0=
+    http_version: 
+  recorded_at: Wed, 16 Oct 2019 21:47:09 GMT
+- request:
+    method: delete
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/4ca564d6-b2dd-4f90-a2b3-06f254694682/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Wed, 16 Oct 2019 21:47:09 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -31,23 +83,23 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, POST, HEAD, OPTIONS
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '52'
+      - '67'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I2MTg0ODE5LTE2ZTYtNDY0
+        NS04OTY1LTliNmFiYWEwMmIzMy8ifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:55 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:09 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/remotes/ansible/collection/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/remotes/ansible/collection/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -55,7 +107,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -68,7 +120,63 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:55 GMT
+      - Wed, 16 Oct 2019 21:47:09 GMT
+      Server:
+      - gunicorn/19.9.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Via:
+      - 1.1 pulp3-devel-2.cannolo.example.com
+      Content-Length:
+      - '364'
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2Fuc2li
+        bGUvY29sbGVjdGlvbi85MjAwZmQ2OC0yMmMyLTQ4ZTYtYTE4MS1hYTk3ZGU0
+        MzljOTUvIiwicHVscF9jcmVhdGVkIjoiMjAxOS0xMC0xNlQyMTo0NjozNi4z
+        OTA0NTNaIiwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQt
+        cHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEiLCJ1cmwiOiJodHRwczovL2dh
+        bGF4eS5hbnNpYmxlLmNvbSIsInNzbF9jYV9jZXJ0aWZpY2F0ZSI6bnVsbCwi
+        c3NsX2NsaWVudF9jZXJ0aWZpY2F0ZSI6bnVsbCwic3NsX2NsaWVudF9rZXki
+        Om51bGwsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJwcm94eV91cmwiOm51bGws
+        InB1bHBfbGFzdF91cGRhdGVkIjoiMjAxOS0xMC0xNlQyMTo0NjozNi4zOTA0
+        NjdaIiwiZG93bmxvYWRfY29uY3VycmVuY3kiOjIwLCJwb2xpY3kiOiJpbW1l
+        ZGlhdGUiLCJyZXF1aXJlbWVudHNfZmlsZSI6Ii0tLVxuIGNvbGxlY3Rpb25z
+        OlxuIC0gcm9iZXJ0ZGVib2NrLnJ1bmRlY2tfY29sbGVjdGlvbiJ9XX0=
+    http_version: 
+  recorded_at: Wed, 16 Oct 2019 21:47:09 GMT
+- request:
+    method: delete
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/remotes/ansible/collection/9200fd68-22c2-48e6-a181-aa97de439c95/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Wed, 16 Oct 2019 21:47:09 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -76,23 +184,23 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, POST, HEAD, OPTIONS
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '52'
+      - '67'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzAxODdmYzc3LWQyNmMtNDdh
+        Zi05NTM5LTBmZjE3ZmI0NGQ0ZS8ifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:55 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:09 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/ansible/ansible/?name=Default_Organization-Cabinet-pulp3_Ansible_collection_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -100,7 +208,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -113,7 +221,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:55 GMT
+      - Wed, 16 Oct 2019 21:47:09 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -127,17 +235,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:55 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:09 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/?base_path=Default_Organization/library/pulp3_Ansible_collection_1
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/ansible/ansible/?base_path=Default_Organization/library/pulp3_Ansible_collection_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -145,7 +253,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -158,7 +266,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:55 GMT
+      - Wed, 16 Oct 2019 21:47:09 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -172,17 +280,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:55 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:09 GMT
 - request:
     method: post
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/
     body:
       encoding: UTF-8
       base64_string: |
@@ -192,7 +300,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -205,13 +313,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:56 GMT
+      - Wed, 16 Oct 2019 21:47:10 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/c79a22e1-8ece-47d3-b6b6-5948a3687045/"
+      - "/pulp/api/v3/repositories/02db4fad-da93-493a-91b0-96a1f3f9f58c/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -219,25 +327,25 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '320'
+      - '349'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvYzc5YTIyZTEt
-        OGVjZS00N2QzLWI2YjYtNTk0OGEzNjg3MDQ1LyIsIl9jcmVhdGVkIjoiMjAx
-        OS0wOC0xOVQxNTozMjo1Ni4xOTAyNDJaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
-        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2M3OWEyMmUxLThlY2UtNDdkMy1i
-        NmI2LTU5NDhhMzY4NzA0NS92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
-        aHJlZiI6bnVsbCwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
-        ZXQtcHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEiLCJkZXNjcmlwdGlvbiI6
-        bnVsbH0=
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzAyZGI0
+        ZmFkLWRhOTMtNDkzYS05MWIwLTk2YTFmM2Y5ZjU4Yy8iLCJwdWxwX2NyZWF0
+        ZWQiOiIyMDE5LTEwLTE2VDIxOjQ3OjEwLjE4OTQxNVoiLCJ2ZXJzaW9uc19o
+        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy8wMmRiNGZhZC1kYTkz
+        LTQ5M2EtOTFiMC05NmExZjNmOWY1OGMvdmVyc2lvbnMvIiwibGF0ZXN0X3Zl
+        cnNpb25faHJlZiI6bnVsbCwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9u
+        LUNhYmluZXQtcHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEiLCJwbHVnaW5f
+        bWFuYWdlZCI6ZmFsc2UsImRlc2NyaXB0aW9uIjpudWxsfQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:56 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:10 GMT
 - request:
     method: post
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/remotes/ansible/collection/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/remotes/ansible/collection/
     body:
       encoding: UTF-8
       base64_string: |
@@ -250,7 +358,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -263,13 +371,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:56 GMT
+      - Wed, 16 Oct 2019 21:47:10 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/ansible/collection/4baff459-fd73-40f6-aac7-291137c7af4d/"
+      - "/pulp/api/v3/remotes/ansible/collection/105f1395-4f8f-428b-b2de-221cfa312611/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -277,30 +385,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '546'
+      - '529'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2Fuc2libGUvY29sbGVj
-        dGlvbi80YmFmZjQ1OS1mZDczLTQwZjYtYWFjNy0yOTExMzdjN2FmNGQvIiwi
-        X2NyZWF0ZWQiOiIyMDE5LTA4LTE5VDE1OjMyOjU2LjM5MjY3NloiLCJfdHlw
-        ZSI6ImFuc2libGUuY29sbGVjdGlvbiIsIm5hbWUiOiJEZWZhdWx0X09yZ2Fu
-        aXphdGlvbi1DYWJpbmV0LXB1bHAzX0Fuc2libGVfY29sbGVjdGlvbl8xIiwi
-        dXJsIjoiaHR0cHM6Ly9nYWxheHkuYW5zaWJsZS5jb20iLCJzc2xfY2FfY2Vy
-        dGlmaWNhdGUiOm51bGwsInNzbF9jbGllbnRfY2VydGlmaWNhdGUiOm51bGws
-        InNzbF9jbGllbnRfa2V5IjpudWxsLCJzc2xfdmFsaWRhdGlvbiI6dHJ1ZSwi
-        cHJveHlfdXJsIjpudWxsLCJfbGFzdF91cGRhdGVkIjoiMjAxOS0wOC0xOVQx
-        NTozMjo1Ni4zOTI2OTJaIiwiZG93bmxvYWRfY29uY3VycmVuY3kiOjIwLCJw
-        b2xpY3kiOiJpbW1lZGlhdGUiLCJyZXF1aXJlbWVudHNfZmlsZSI6Ii0tLVxu
-        IGNvbGxlY3Rpb25zOlxuIC0gcm9iZXJ0ZGVib2NrLnJ1bmRlY2tfY29sbGVj
-        dGlvbiJ9
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9hbnNpYmxlL2Nv
+        bGxlY3Rpb24vMTA1ZjEzOTUtNGY4Zi00MjhiLWIyZGUtMjIxY2ZhMzEyNjEx
+        LyIsInB1bHBfY3JlYXRlZCI6IjIwMTktMTAtMTZUMjE6NDc6MTAuMzg2OTUx
+        WiIsIm5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LXB1bHAz
+        X0Fuc2libGVfY29sbGVjdGlvbl8xIiwidXJsIjoiaHR0cHM6Ly9nYWxheHku
+        YW5zaWJsZS5jb20iLCJzc2xfY2FfY2VydGlmaWNhdGUiOm51bGwsInNzbF9j
+        bGllbnRfY2VydGlmaWNhdGUiOm51bGwsInNzbF9jbGllbnRfa2V5IjpudWxs
+        LCJzc2xfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMTktMTAtMTZUMjE6NDc6MTAuMzg2OTY1WiIs
+        ImRvd25sb2FkX2NvbmN1cnJlbmN5IjoyMCwicG9saWN5IjoiaW1tZWRpYXRl
+        IiwicmVxdWlyZW1lbnRzX2ZpbGUiOiItLS1cbiBjb2xsZWN0aW9uczpcbiAt
+        IHJvYmVydGRlYm9jay5ydW5kZWNrX2NvbGxlY3Rpb24ifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:56 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:10 GMT
 - request:
     method: post
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/c79a22e1-8ece-47d3-b6b6-5948a3687045/versions/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/02db4fad-da93-493a-91b0-96a1f3f9f58c/versions/
     body:
       encoding: UTF-8
       base64_string: 'e30=
@@ -310,7 +417,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -323,7 +430,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:56 GMT
+      - Wed, 16 Oct 2019 21:47:10 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -337,17 +444,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzU0ZTk2ODc1LWYwNWQtNDRj
-        Ni04YTM2LWUxMGQyMWFhYTRiZC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzdhMTQxNGViLTlhMTEtNDIy
+        Ni1iYjczLWM2MTBiOGE5MmYxMC8ifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:56 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:10 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/tasks/54e96875-f05d-44c6-8a36-e10d21aaa4bd/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/7a1414eb-9a11-4226-bb73-c610b8a92f10/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -355,7 +462,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -368,7 +475,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:57 GMT
+      - Wed, 16 Oct 2019 21:47:11 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -380,31 +487,31 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
       Content-Length:
-      - '354'
+      - '341'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy81NGU5Njg3NS1mMDVkLTQ0
-        YzYtOGEzNi1lMTBkMjFhYWE0YmQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTE5
-        VDE1OjMyOjU2LjgxNzUyMFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
-        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA4LTE5VDE1OjMyOjU2LjkyNzk4MVoi
-        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDgtMTlUMTU6MzI6NTcuMDAwNDAwWiIs
-        Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
-        L3B1bHAvYXBpL3YzL3dvcmtlcnMvMzQ1MTk2YTQtZjRkNi00MjViLWJhNjEt
-        YzRmY2RiNDA5ZGQ0LyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
-        W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
-        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2M3OWEyMmUxLThlY2UtNDdk
-        My1iNmI2LTU5NDhhMzY4NzA0NS92ZXJzaW9ucy8xLyJdLCJyZXNlcnZlZF9y
-        ZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        Yzc5YTIyZTEtOGVjZS00N2QzLWI2YjYtNTk0OGEzNjg3MDQ1LyJdfQ==
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvN2ExNDE0ZWItOWEx
+        MS00MjI2LWJiNzMtYzYxMGI4YTkyZjEwLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTAtMTZUMjE6NDc6MTAuODIyOTgwWiIsInN0YXRlIjoiY29tcGxldGVk
+        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5yZXBvc2l0b3J5LmFkZF9h
+        bmRfcmVtb3ZlIiwic3RhcnRlZF9hdCI6IjIwMTktMTAtMTZUMjE6NDc6MTAu
+        OTQwMzAzWiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMC0xNlQyMTo0NzoxMC45
+        NzUyMDZaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93
+        b3JrZXJzLzlhYjEyNmM3LTBkZmEtNDFkNS04ZDU4LTgwYzE3ODdmYmU0Mi8i
+        LCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19y
+        ZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOlsiL3B1bHAvYXBpL3Yz
+        L3JlcG9zaXRvcmllcy8wMmRiNGZhZC1kYTkzLTQ5M2EtOTFiMC05NmExZjNm
+        OWY1OGMvdmVyc2lvbnMvMS8iXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29y
+        ZCI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzAyZGI0ZmFkLWRhOTMt
+        NDkzYS05MWIwLTk2YTFmM2Y5ZjU4Yy8iXX0=
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:57 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:11 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/c79a22e1-8ece-47d3-b6b6-5948a3687045/versions/1/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/02db4fad-da93-493a-91b0-96a1f3f9f58c/versions/1/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -412,7 +519,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -425,7 +532,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:57 GMT
+      - Wed, 16 Oct 2019 21:47:11 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -437,22 +544,22 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
       Content-Length:
-      - '185'
+      - '188'
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvYzc5YTIyZTEt
-        OGVjZS00N2QzLWI2YjYtNTk0OGEzNjg3MDQ1L3ZlcnNpb25zLzEvIiwiX2Ny
-        ZWF0ZWQiOiIyMDE5LTA4LTE5VDE1OjMyOjU2Ljk2NDM4MVoiLCJudW1iZXIi
-        OjEsImJhc2VfdmVyc2lvbiI6bnVsbCwiY29udGVudF9zdW1tYXJ5Ijp7ImFk
-        ZGVkIjp7fSwicmVtb3ZlZCI6e30sInByZXNlbnQiOnt9fX0=
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzAyZGI0
+        ZmFkLWRhOTMtNDkzYS05MWIwLTk2YTFmM2Y5ZjU4Yy92ZXJzaW9ucy8xLyIs
+        InB1bHBfY3JlYXRlZCI6IjIwMTktMTAtMTZUMjE6NDc6MTAuOTU4MzYxWiIs
+        Im51bWJlciI6MSwiYmFzZV92ZXJzaW9uIjpudWxsLCJjb250ZW50X3N1bW1h
+        cnkiOnsiYWRkZWQiOnt9LCJyZW1vdmVkIjp7fSwicHJlc2VudCI6e319fQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:57 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:11 GMT
 - request:
     method: post
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/ansible/ansible/
     body:
       encoding: UTF-8
       base64_string: |
@@ -460,13 +567,13 @@ http_interactions:
         bHAzX0Fuc2libGVfY29sbGVjdGlvbl8xIiwibmFtZSI6IkRlZmF1bHRfT3Jn
         YW5pemF0aW9uLUNhYmluZXQtcHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEi
         LCJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL2M3OWEyMmUxLThlY2UtNDdkMy1iNmI2LTU5NDhhMzY4NzA0NS92ZXJz
+        aWVzLzAyZGI0ZmFkLWRhOTMtNDkzYS05MWIwLTk2YTFmM2Y5ZjU4Yy92ZXJz
         aW9ucy8xLyJ9
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -479,7 +586,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:57 GMT
+      - Wed, 16 Oct 2019 21:47:11 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -493,17 +600,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2MwOTRjZjMxLWEyODAtNDc3
-        Mi1iN2QyLWExNjZjMmJkODA3ZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2VjZmUzY2ExLThhMGEtNGYy
+        OC1hMzU3LTVmNzA0MzRmOTEyYS8ifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:57 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:11 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/tasks/c094cf31-a280-4772-b7d2-a166c2bd807e/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/ecfe3ca1-8a0a-4f28-a357-5f70434f912a/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -511,7 +618,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -524,7 +631,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:57 GMT
+      - Wed, 16 Oct 2019 21:47:11 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -536,30 +643,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
       Content-Length:
-      - '351'
+      - '338'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9jMDk0Y2YzMS1hMjgwLTQ3
-        NzItYjdkMi1hMTY2YzJiZDgwN2UvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTE5
-        VDE1OjMyOjU3LjM4OTQwN1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2NyZWF0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA4LTE5VDE1OjMyOjU3LjQ4MjI3M1oiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDgtMTlUMTU6MzI6NTcuNzQ2NTE4WiIsIm5vbl9m
-        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvMzQ1MTk2YTQtZjRkNi00MjViLWJhNjEtYzRmY2Ri
-        NDA5ZGQ0LyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
-        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9hbnNpYmxlL2Fuc2libGUvZTE4MzAz
-        ZjYtYmU4NS00Mjg1LWJmNjEtMTViNjZhYjA3NmFjLyJdLCJyZXNlcnZlZF9y
-        ZXNvdXJjZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlzdHJpYnV0aW9ucy8iXX0=
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZWNmZTNjYTEtOGEw
+        YS00ZjI4LWEzNTctNWY3MDQzNGY5MTJhLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTAtMTZUMjE6NDc6MTEuNDEzMTczWiIsInN0YXRlIjoiY29tcGxldGVk
+        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
+        YXRlIiwic3RhcnRlZF9hdCI6IjIwMTktMTAtMTZUMjE6NDc6MTEuNTAwMzUz
+        WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMC0xNlQyMTo0NzoxMS42NjE5MzNa
+        IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
+        LzY0ZjVkZTFlLTMwNTktNGZiOC1iODY2LWM2MWE5MDQ0ZDM1ZS8iLCJwYXJl
+        bnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRz
+        IjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOlsiL3B1bHAvYXBpL3YzL2Rpc3Ry
+        aWJ1dGlvbnMvYW5zaWJsZS9hbnNpYmxlL2QxYTRlYzk0LTg3MzQtNDUxZS1i
+        NzNiLWY5MzEyZWFkYjI1NS8iXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29y
+        ZCI6WyIvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvIl19
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:57 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:11 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/e18303f6-be85-4285-bf61-15b66ab076ac/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/ansible/ansible/d1a4ec94-8734-451e-b73b-f9312eadb255/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -567,7 +674,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -580,7 +687,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:58 GMT
+      - Wed, 16 Oct 2019 21:47:11 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -592,29 +699,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
       Content-Length:
-      - '305'
+      - '314'
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL2Fuc2libGUv
-        YW5zaWJsZS9lMTgzMDNmNi1iZTg1LTQyODUtYmY2MS0xNWI2NmFiMDc2YWMv
-        IiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTE5VDE1OjMyOjU3LjczMjg3MFoiLCJi
-        YXNlX3BhdGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L3B1bHAz
-        X0Fuc2libGVfY29sbGVjdGlvbl8xIiwiY29udGVudF9ndWFyZCI6bnVsbCwi
-        bmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNfQW5z
-        aWJsZV9jb2xsZWN0aW9uXzEiLCJyZXBvc2l0b3J5IjpudWxsLCJyZXBvc2l0
-        b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2M3OWEy
-        MmUxLThlY2UtNDdkMy1iNmI2LTU5NDhhMzY4NzA0NS92ZXJzaW9ucy8xLyIs
-        Im1hemVyX3VybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MjQ4MTcvcHVscF9hbnNp
-        YmxlL2dhbGF4eS9EZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L3B1bHAz
-        X0Fuc2libGVfY29sbGVjdGlvbl8xIn0=
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9hbnNp
+        YmxlL2Fuc2libGUvZDFhNGVjOTQtODczNC00NTFlLWI3M2ItZjkzMTJlYWRi
+        MjU1LyIsInB1bHBfY3JlYXRlZCI6IjIwMTktMTAtMTZUMjE6NDc6MTEuNjU0
+        MTc4WiIsImJhc2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJh
+        cnkvcHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEiLCJjb250ZW50X2d1YXJk
+        IjpudWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1w
+        dWxwM19BbnNpYmxlX2NvbGxlY3Rpb25fMSIsInJlcG9zaXRvcnkiOm51bGws
+        InJlcG9zaXRvcnlfdmVyc2lvbiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3Jp
+        ZXMvMDJkYjRmYWQtZGE5My00OTNhLTkxYjAtOTZhMWYzZjlmNThjL3ZlcnNp
+        b25zLzEvIiwiY2xpZW50X3VybCI6InB1bHAzLWRldmVsLTIuY2Fubm9sby5l
+        eGFtcGxlLmNvbS9wdWxwX2Fuc2libGUvZ2FsYXh5L0RlZmF1bHRfT3JnYW5p
+        emF0aW9uL2xpYnJhcnkvcHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:58 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:11 GMT
 - request:
     method: delete
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/remotes/ansible/collection/4baff459-fd73-40f6-aac7-291137c7af4d/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/remotes/ansible/collection/105f1395-4f8f-428b-b2de-221cfa312611/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -622,7 +729,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -635,7 +742,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:58 GMT
+      - Wed, 16 Oct 2019 21:47:12 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -649,17 +756,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2JlZjQ2Njk0LTFjYWMtNDI4
-        ZS04NTRjLTY2YjA0NjQ5YTcwZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzNiZmM4MGVmLTU2NjQtNDU2
+        Ny05Y2I0LTNlMjFiN2M4NDZiMC8ifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:58 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:12 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/tasks/bef46694-1cac-428e-854c-66b04649a70e/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/3bfc80ef-5664-4567-9cb4-3e21b7c846b0/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -667,7 +774,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -680,7 +787,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:58 GMT
+      - Wed, 16 Oct 2019 21:47:12 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -692,30 +799,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
       Content-Length:
-      - '345'
+      - '337'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9iZWY0NjY5NC0xY2FjLTQy
-        OGUtODU0Yy02NmIwNDY0OWE3MGUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTE5
-        VDE1OjMyOjU4LjUwODEzMFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MuYmFzZS5nZW5lcmFsX2RlbGV0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA4LTE5VDE1OjMyOjU4LjYzNDI5MFoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDgtMTlUMTU6MzI6NTguNjY0MTczWiIsIm5vbl9m
-        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvMzQ1MTk2YTQtZjRkNi00MjViLWJhNjEtYzRmY2Ri
-        NDA5ZGQ0LyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
-        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6W10sInJl
-        c2VydmVkX3Jlc291cmNlc19yZWNvcmQiOlsiL3B1bHAvYXBpL3YzL3JlbW90
-        ZXMvYW5zaWJsZS9jb2xsZWN0aW9uLzRiYWZmNDU5LWZkNzMtNDBmNi1hYWM3
-        LTI5MTEzN2M3YWY0ZC8iXX0=
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvM2JmYzgwZWYtNTY2
+        NC00NTY3LTljYjQtM2UyMWI3Yzg0NmIwLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTAtMTZUMjE6NDc6MTIuMTM4OTE2WiIsInN0YXRlIjoiY29tcGxldGVk
+        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
+        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMTktMTAtMTZUMjE6NDc6MTIuMjUwNDAy
+        WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMC0xNlQyMTo0NzoxMi4yNzg1NTRa
+        IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
+        LzlhYjEyNmM3LTBkZmEtNDFkNS04ZDU4LTgwYzE3ODdmYmU0Mi8iLCJwYXJl
+        bnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRz
+        IjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJj
+        ZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZW1vdGVzL2Fuc2libGUvY29s
+        bGVjdGlvbi8xMDVmMTM5NS00ZjhmLTQyOGItYjJkZS0yMjFjZmEzMTI2MTEv
+        Il19
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:58 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:12 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/?base_path=Default_Organization/library/pulp3_Ansible_collection_1
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/ansible/ansible/?base_path=Default_Organization/library/pulp3_Ansible_collection_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -723,7 +830,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -736,7 +843,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:58 GMT
+      - Wed, 16 Oct 2019 21:47:12 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -748,30 +855,31 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
       Content-Length:
-      - '334'
+      - '344'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvYW5z
-        aWJsZS9hbnNpYmxlL2UxODMwM2Y2LWJlODUtNDI4NS1iZjYxLTE1YjY2YWIw
-        NzZhYy8iLCJfY3JlYXRlZCI6IjIwMTktMDgtMTlUMTU6MzI6NTcuNzMyODcw
-        WiIsImJhc2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkv
-        cHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEiLCJjb250ZW50X2d1YXJkIjpu
-        dWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1wdWxw
-        M19BbnNpYmxlX2NvbGxlY3Rpb25fMSIsInJlcG9zaXRvcnkiOm51bGwsInJl
-        cG9zaXRvcnlfdmVyc2lvbiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        Yzc5YTIyZTEtOGVjZS00N2QzLWI2YjYtNTk0OGEzNjg3MDQ1L3ZlcnNpb25z
-        LzEvIiwibWF6ZXJfdXJsIjoiaHR0cDovL2xvY2FsaG9zdDoyNDgxNy9wdWxw
-        X2Fuc2libGUvZ2FsYXh5L0RlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkv
-        cHVscDNfQW5zaWJsZV9jb2xsZWN0aW9uXzEifV19
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
+        L2Fuc2libGUvYW5zaWJsZS9kMWE0ZWM5NC04NzM0LTQ1MWUtYjczYi1mOTMx
+        MmVhZGIyNTUvIiwicHVscF9jcmVhdGVkIjoiMjAxOS0xMC0xNlQyMTo0Nzox
+        MS42NTQxNzhaIiwiYmFzZV9wYXRoIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24v
+        bGlicmFyeS9wdWxwM19BbnNpYmxlX2NvbGxlY3Rpb25fMSIsImNvbnRlbnRf
+        Z3VhcmQiOm51bGwsIm5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJp
+        bmV0LXB1bHAzX0Fuc2libGVfY29sbGVjdGlvbl8xIiwicmVwb3NpdG9yeSI6
+        bnVsbCwicmVwb3NpdG9yeV92ZXJzaW9uIjoiL3B1bHAvYXBpL3YzL3JlcG9z
+        aXRvcmllcy8wMmRiNGZhZC1kYTkzLTQ5M2EtOTFiMC05NmExZjNmOWY1OGMv
+        dmVyc2lvbnMvMS8iLCJjbGllbnRfdXJsIjoicHVscDMtZGV2ZWwtMi5jYW5u
+        b2xvLmV4YW1wbGUuY29tL3B1bHBfYW5zaWJsZS9nYWxheHkvRGVmYXVsdF9P
+        cmdhbml6YXRpb24vbGlicmFyeS9wdWxwM19BbnNpYmxlX2NvbGxlY3Rpb25f
+        MSJ9XX0=
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:58 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:12 GMT
 - request:
     method: delete
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/distributions/ansible/ansible/e18303f6-be85-4285-bf61-15b66ab076ac/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/ansible/ansible/d1a4ec94-8734-451e-b73b-f9312eadb255/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -779,7 +887,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.2.0b3.dev01565965450/ruby
+      - OpenAPI-Generator/0.2.0b6.dev01570985981/ruby
       Accept:
       - application/json
       Authorization:
@@ -792,7 +900,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:59 GMT
+      - Wed, 16 Oct 2019 21:47:12 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -806,17 +914,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzY5NGUzODUwLTJiNmEtNDhl
-        MC1iMGM5LTRkYTVmN2I3YzRhMi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2UxNDJjNjg3LTJjZDAtNGRm
+        MC04MmQ2LWE2ZjMzYzgxNDEyMi8ifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:59 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:12 GMT
 - request:
     method: delete
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/repositories/c79a22e1-8ece-47d3-b6b6-5948a3687045/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/02db4fad-da93-493a-91b0-96a1f3f9f58c/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -824,7 +932,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -837,7 +945,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:59 GMT
+      - Wed, 16 Oct 2019 21:47:12 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -851,17 +959,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzNhYzI5YzVhLWRmNDMtNDBj
-        OS1iZTA4LTc3NmUxM2M2ZjQ5MC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I5ZTZkOWI5LTFjYTctNDQ0
+        YS1hNmU5LTRlMzQ0N2VjMzQ5My8ifQ==
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:59 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:12 GMT
 - request:
     method: get
-    uri: https://ansible-demo.samir.example.com/pulp/api/v3/tasks/3ac29c5a-df43-40c9-be08-776e13c6f490/
+    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/b9e6d9b9-1ca7-444a-a6e9-4e3447ec3493/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -869,7 +977,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc5.dev01565887122/ruby
+      - OpenAPI-Generator/3.0.0rc7.dev01571061598/ruby
       Accept:
       - application/json
       Authorization:
@@ -882,7 +990,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 19 Aug 2019 15:32:59 GMT
+      - Wed, 16 Oct 2019 21:47:12 GMT
       Server:
       - gunicorn/19.9.0
       Content-Type:
@@ -894,25 +1002,24 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 ansible-demo.samir.example.com
+      - 1.1 pulp3-devel-2.cannolo.example.com
       Content-Length:
-      - '334'
+      - '323'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8zYWMyOWM1YS1kZjQzLTQw
-        YzktYmUwOC03NzZlMTNjNmY0OTAvIiwiX2NyZWF0ZWQiOiIyMDE5LTA4LTE5
-        VDE1OjMyOjU5LjI0OTk3MFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5kZWxldGUiLCJzdGFy
-        dGVkX2F0IjoiMjAxOS0wOC0xOVQxNTozMjo1OS4zODQxOTlaIiwiZmluaXNo
-        ZWRfYXQiOiIyMDE5LTA4LTE5VDE1OjMyOjU5LjQ0MjE5NFoiLCJub25fZmF0
-        YWxfZXJyb3JzIjpbXSwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2Fw
-        aS92My93b3JrZXJzLzM0NTE5NmE0LWY0ZDYtNDI1Yi1iYTYxLWM0ZmNkYjQw
-        OWRkNC8iLCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9n
-        cmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdLCJyZXNl
-        cnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0
-        b3JpZXMvYzc5YTIyZTEtOGVjZS00N2QzLWI2YjYtNTk0OGEzNjg3MDQ1LyJd
-        fQ==
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYjllNmQ5YjktMWNh
+        Ny00NDRhLWE2ZTktNGUzNDQ3ZWMzNDkzLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTAtMTZUMjE6NDc6MTIuNzQ4ODgzWiIsInN0YXRlIjoiY29tcGxldGVk
+        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5yZXBvc2l0b3J5LmRlbGV0
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTEwLTE2VDIxOjQ3OjEyLjgzMTc1NVoi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMTAtMTZUMjE6NDc6MTIuODU5MTQ5WiIs
+        ImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29ya2Vycy85
+        YWIxMjZjNy0wZGZhLTQxZDUtOGQ1OC04MGMxNzg3ZmJlNDIvIiwicGFyZW50
+        IjpudWxsLCJzcGF3bmVkX3Rhc2tzIjpbXSwicHJvZ3Jlc3NfcmVwb3J0cyI6
+        W10sImNyZWF0ZWRfcmVzb3VyY2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2Vz
+        X3JlY29yZCI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzAyZGI0ZmFk
+        LWRhOTMtNDkzYS05MWIwLTk2YTFmM2Y5ZjU4Yy8iXX0=
     http_version: 
-  recorded_at: Mon, 19 Aug 2019 15:32:59 GMT
+  recorded_at: Wed, 16 Oct 2019 21:47:12 GMT
 recorded_with: VCR 3.0.3

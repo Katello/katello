@@ -15,7 +15,7 @@ module Actions
           response = nil
           File.open(input[:file], "rb") do |file|
             total_size = File.size(file)
-            upload_href = uploads_api.create(upload_class.new(size: total_size))._href
+            upload_href = uploads_api.create(upload_class.new(size: total_size)).pulp_href
             sha256 = Digest::SHA256.hexdigest(File.read(file))
             until file.eof?
               chunk = file.read(upload_chunk_size)
@@ -33,7 +33,7 @@ module Actions
             end
 
             if response
-              upload_href = response._href
+              upload_href = response.pulp_href
               output[:pulp_tasks] = [uploads_api.commit(upload_href, sha256: sha256)]
             end
           end

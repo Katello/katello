@@ -19,16 +19,16 @@ module Katello
       tasks = []
 
       if (repo = service.list(name: service.backend_object_name).first)
-        tasks << service.delete(repo._href)
+        tasks << service.delete(repo.pulp_href)
       end
 
       if (remote = service.list_remotes(name: service.backend_object_name).first)
-        tasks << service.delete_remote(remote._href)
+        tasks << service.delete_remote(remote.pulp_href)
       end
 
       #delete distribution by name, since its not random due to vcr
       if (dist = service.lookup_distributions(name: service.backend_object_name).first)
-        tasks << service.delete_distribution(dist._href)
+        tasks << service.delete_distribution(dist.pulp_href)
       end
       service.delete_distributions
     end

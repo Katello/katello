@@ -30,7 +30,7 @@ module Katello
 
       def delete_orphaned_repositories_for_mirror_proxies
         orphaned_repositories_for_mirror_proxies.map do |repo|
-          ::Katello::Pulp3::Repository.new(nil, smart_proxy).repositories_api.delete(repo._href)
+          ::Katello::Pulp3::Repository.new(nil, smart_proxy).repositories_api.delete(repo.pulp_href)
         end
       end
     end
