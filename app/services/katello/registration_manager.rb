@@ -296,6 +296,8 @@ module Katello
         host.get_status(::Katello::SubscriptionStatus).destroy
         host.get_status(::Katello::TraceStatus).destroy
         host.installed_packages.delete_all
+
+        host.rhsm_fact_values.destroy_all
       end
     end
   end
