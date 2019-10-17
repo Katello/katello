@@ -279,5 +279,6 @@ end
 
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
-        :host_collections, :comment, :pools, :hypervisor_host, :lifecycle_environment, :content_view
+        :host_collections, :comment, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
+        :installed_packages
 end
