@@ -9,7 +9,8 @@ module Actions
         end
 
         def invoke_external_task
-          content_unit_href = input[:content_unit]
+          content_unit = input[:content_unit]
+          content_unit_href = content_unit.is_a?(String) ? content_unit : content_unit.last[:created_resources].first
           repo = ::Katello::Repository.find(input[:repository_id])
           repo_backend_service = repo.backend_service(smart_proxy)
           output[:pulp_tasks] = repo_backend_service.add_content(content_unit_href)
