@@ -4,12 +4,15 @@ module Katello
   class RhsmFactParserTest < ActiveSupport::TestCase
     def setup
       @facts = {
+        'net.interface.bond0.mac_address' => '52:54:00:6D:40:72',
         'net.interface.eth0.mac_address' => '00:00:00:00:00:12',
         'net.interface.eth0.ipv4_address' => '192.168.0.1',
         'net.interface.eth0.1.mac_address' => '00:00:00:00:00:12',
         'net.interface.eth0.1.ipv4_address' => '192.168.0.2',
+        'net.interface.eth1.permanent_mac_address' => '52:54:00:6D:40:72',
         'net.interface.ethnone.mac_address' => 'none',
         'net.interface.eth2.mac_address' => '00:00:00:00:00:13',
+        'net.interface.eth2.permanent_mac_address' => '52:54:00:D8:27:F7',
         'net.interface.eth3.ipv4_address' => 'Unknown',
         'net.interface.eth3.mac_address' => '00:00:00:00:00:14'
       }
@@ -38,12 +41,21 @@ module Katello
     end
 
     def test_get_facts_for_interface_without_ip
-      expected_eth1 = {
+      expected_eth2 = {
         'link' => true,
-        'macaddress' => @facts['net.interface.eth1.mac_address'],
+        'macaddress' => @facts['net.interface.eth2.permanent_mac_address'],
         'ipaddress' => nil
       }
-      assert_equal expected_eth1, parser.get_facts_for_interface('eth1')
+      assert_equal expected_eth2, parser.get_facts_for_interface('eth2')
+    end
+
+    def test_get_facts_for_bonded_interface
+      # if an interface is part of a bond, it should report the physical mac and not the bond's mac
+      expected_mac_address = @facts['net.interface.eth2.permanent_mac_address']
+      actual_mac_address = parser.get_facts_for_interface('eth2')['macaddress']
+
+      assert_equal actual_mac_address, expected_mac_address
+      assert_not_equal actual_mac_address, @facts['net.interface.eth2.mac_address']
     end
 
     def test_get_facts_for_interface_with_invalid_ip
