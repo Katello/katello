@@ -7,8 +7,8 @@ module Actions
             file = {:filename => args.dig(:unit_key, :name)}
             sequence do
               action_output = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :upload_href => "/pulp/api/v3/uploads/" + args.dig(:upload_id) + "/", :sha256 => args.dig(:unit_key, :checksum)).output
-              artifact_action_output = plan_action(Pulp3::Repository::SaveArtifact, file, repository, action_output[:pulp_tasks], args.dig(:unit_type_id)).output
-              action_output = plan_action(Pulp3::Repository::ImportUpload, artifact_action_output[:content_unit_href], repository, smart_proxy).output
+              artifact_action_output = plan_action(Pulp3::Repository::SaveArtifact, file, repository, smart_proxy, action_output[:pulp_tasks], args.dig(:unit_type_id)).output
+              action_output = plan_action(Pulp3::Repository::ImportUpload, artifact_action_output[:pulp_tasks], repository, smart_proxy).output
               plan_action(Pulp3::Repository::SaveVersion, repository, action_output[:pulp_tasks]).output
             end
           end
