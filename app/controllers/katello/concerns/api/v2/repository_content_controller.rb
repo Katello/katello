@@ -242,6 +242,8 @@ module Katello
           _("Deb Package")
         when "Katello::Rpm"
           _("Package")
+        when "Katello::Srpm"
+          _("Source RPM")
         when "Katello::PackageGroup"
           _("Package Group")
         when "Katello::PuppetModule"
