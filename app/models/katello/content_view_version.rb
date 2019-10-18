@@ -253,6 +253,10 @@ module Katello
       library_packages.where.not(:id => packages)
     end
 
+    def srpms
+      Katello::Srpm.in_repositories(self.repositories)
+    end
+
     def srpm_count
       Katello::Srpm.in_repositories(self.repositories.archived).count
     end
