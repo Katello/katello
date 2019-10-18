@@ -39,6 +39,11 @@
         </select>
       </div>
 
+      <div class="alert alert-warning" ng-if="repository.content_type === 'ostree' || repository.content_type === 'puppet'">
+        <span class="pficon pficon-warning-triangle-o"></span>
+        <strong>Deprecation Warning: </strong>Puppet and OSTree will no longer be supported in Katello 3.16.
+      </div>
+
       <div bst-form-group label="{{ 'Restrict to Architecture' | translate }}" ng-show="repository.content_type === 'yum'">
         <select id="architecture_restricted"
                 name="architecture_restricted"
