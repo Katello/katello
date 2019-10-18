@@ -23,7 +23,7 @@ module Katello
     def get_facts_for_interface(interface)
       {
         'link' => true,
-        'macaddress' => facts["net.interface.#{interface}.mac_address"],
+        'macaddress' => get_rhsm_mac(interface),
         'ipaddress' => get_rhsm_ip(interface)
       }
     end
@@ -106,6 +106,11 @@ module Katello
     def get_rhsm_ip(interface)
       ip = facts["net.interface.#{interface}.ipv4_address"]
       Net::Validations.validate_ip(ip) ? ip : nil
+    end
+
+    def get_rhsm_mac(interface)
+      # if slave then permanent_mac_address contains the physical mac
+      facts["net.interface.#{interface}.permanent_mac_address"] || facts["net.interface.#{interface}.mac_address"]
     end
   end
 end
