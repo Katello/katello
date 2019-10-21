@@ -137,6 +137,11 @@ module Katello
       assert_includes subscriptions, @pool_one
     end
 
+    def test_search_upstream_id
+      subscriptions = Pool.search_for("upstream_pool_id = \"#{@pool_one.upstream_pool_id}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
     def test_search_instance_multiplier
       subscriptions = Pool.search_for("instance_multiplier = \"#{@pool_one.instance_multiplier}\"")
       assert_includes subscriptions, @pool_one
