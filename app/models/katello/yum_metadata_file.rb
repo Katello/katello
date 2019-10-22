@@ -10,7 +10,7 @@ module Katello
       super(repository)
     end
 
-    # yum metadata file only has one repo
+    # yum metadata files are many-to-many in Pulp 3
     def repositories
       [repository]
     end

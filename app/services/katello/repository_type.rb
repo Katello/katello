@@ -31,7 +31,12 @@ module Katello
     end
 
     def content_types_to_index
-      @content_types.select { |type| type.index }
+      if (SmartProxy.pulp_master.pulp3_repository_type_support?(self))
+        # type.index being false supersedes type.index_on_pulp3 being true
+        @content_types.select { |type| type.index && type.index_on_pulp3 }
+      else
+        @content_types.select { |type| type.index }
+      end
     end
 
     def default_managed_content_type(model_class = nil)
@@ -68,7 +73,7 @@ module Katello
     end
 
     class ContentType
-      attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable
+      attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable, :index_on_pulp3
 
       def initialize(options)
         self.model_class = options[:model_class]
@@ -76,6 +81,7 @@ module Katello
         self.pulp2_service_class = options[:pulp2_service_class]
         self.pulp3_service_class = options[:pulp3_service_class]
         self.index = options[:index].nil? ? true : options[:index]
+        self.index_on_pulp3 = options[:index_on_pulp3].nil? ? true : options[:index_on_pulp3]
         self.uploadable = options[:uploadable] || false
         self.removable = options[:removable] || false
       end

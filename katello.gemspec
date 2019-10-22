@@ -48,7 +48,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "pulp_file_client", "<= 0.1.0b5.dev01571253617"
   gem.add_dependency "pulp_ansible_client", "<= 0.2.0b6.dev01570985981"
   gem.add_dependency "pulp_docker_client", "<= 4.0.0b8.dev01571062112"
-  gem.add_dependency "pulp_rpm_client", "<= 3.0.0b71571331815"
+  gem.add_dependency "pulp_rpm_client", "<= 3.0.0b8.dev01572883308"
   gem.add_dependency "pulp_2to3_migration_client", "<= 0.0.1a1.dev01572375132"
 
   # UI

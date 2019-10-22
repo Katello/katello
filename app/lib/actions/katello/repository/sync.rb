@@ -24,7 +24,8 @@ module Actions
           incremental = options.fetch(:incremental, false)
           validate_contents = options.fetch(:validate_contents, false)
           skip_metadata_check = options.fetch(:skip_metadata_check, false) || validate_contents
-          generate_applicability = repo.yum?
+          # TODO: Remove the check for Pulp 3 once Pulp 3 errata is working fully
+          generate_applicability = repo.yum? && !SmartProxy.pulp_master.pulp3_support?(repo)
 
           pulp_sync_options = {}
           pulp_sync_options[:download_policy] = ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND if validate_contents
