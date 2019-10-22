@@ -156,6 +156,7 @@ module Katello
       version_archive_repo.errata = [@errata_security, @errata_bugfix]
       version_archive_repo.save!
 
+      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       version_env_repo.index_content
       assert_equal version_archive_repo.rpms.sort, version_env_repo.rpms.sort
       assert_equal version_archive_repo.errata.sort, version_env_repo.errata.sort
@@ -621,6 +622,7 @@ module Katello
 
     def test_index_content_ordering
       repo_type = @rhel6.repository_type
+      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       repo_types_hash = Hash[repo_type.content_types_to_index.map { |type| [type.model_class.content_type, type.priority] }]
       # {"rpm"=>1, "modulemd"=>2, "erratum"=>3, "package_group"=>99, "yum_repo_metadata_file"=>99, "srpm"=>99}
 

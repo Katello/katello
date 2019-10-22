@@ -19,6 +19,41 @@ module Katello
             name: "#{generate_backend_object_name}"
           }
         end
+
+        def import_distribution_data
+          distribution = ::Katello::Pulp3::Distribution.fetch_content_list(repository_version: repo.version_href)
+          if distribution.results.present?
+            repo.update_attributes!(
+              :distribution_version => distribution.results.first.release_version,
+              :distribution_arch => distribution.results.first.arch,
+              :distribution_family => distribution.results.first.release_name,
+              :distribution_uuid => distribution.results.first.pulp_href,
+              :distribution_bootable => self.class.distribution_bootable?(distribution)
+            )
+            unless distribution.results.first.variants.empty?
+              unless distribution.results.first.variants.first.name.nil?
+                repo.update_attributes!(:distribution_variant => distribution.results.first.variants.first.name)
+              end
+            end
+          end
+        end
+
+        def self.distribution_bootable?(distribution)
+          file_paths = distribution.results.first.images.map(&:path)
+          file_paths.any? do |path|
+            path.include?('vmlinuz') || path.include?('pxeboot') || path.include?('kernel.img') || path.include?('initrd.img') || path.include?('boot.iso')
+          end
+        end
+
+        def copy_content
+          # TODO
+          fail NotImplementedError
+        end
+
+        def regenerate_applicability
+          # TODO
+          fail NotImplementedError
+        end
       end
     end
   end
