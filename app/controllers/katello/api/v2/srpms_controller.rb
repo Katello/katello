@@ -1,6 +1,6 @@
 module Katello
   class Api::V2::SrpmsController < Api::V2::ApiController
-    apipie_concern_subst(:a_resource => N_("a source repository"), :resource => "srpms")
+    apipie_concern_subst(:a_resource => N_("SRPM details"), :resource => "srpms")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
     api :GET, "/srpms", N_("List srpms")
