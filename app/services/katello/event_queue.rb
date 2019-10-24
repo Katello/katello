@@ -12,6 +12,10 @@ module Katello
       end
     end
 
+    def self.queue_depth
+      ::Katello::Event.all.size
+    end
+
     def self.runnable_events
       Katello::Event.where(process_after: nil).or(Katello::Event.where(process_after: Date.new..Time.zone.now))
     end

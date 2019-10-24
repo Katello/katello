@@ -2,10 +2,12 @@ module Katello
   class Ping
     OK_RETURN_CODE = 'ok'.freeze
     FAIL_RETURN_CODE = 'FAIL'.freeze
+    WARN_RETURN_CODE = 'WARN'.freeze
     PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer).freeze
+
     class << self
       def services(capsule_id = nil)
-        services = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks]
+        services = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
         services += [:pulp3] if fetch_proxy(capsule_id)&.pulp3_enabled?
         services
       end
@@ -25,11 +27,13 @@ module Katello
         ping_pulp_with_auth(result[:pulp_auth], result[:pulp][:status]) if result.include?(:pulp_auth)
         ping_candlepin_with_auth(result[:candlepin_auth]) if result.include?(:candlepin_auth)
         ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
+        ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
+        ping_candlepin_events(result[:candlepin_events]) if result.include?(:candlepin_events)
 
         # set overall status result code
         result = {:services => result}
         result[:services].each_value do |v|
-          result[:status] = v[:status] == OK_RETURN_CODE ? OK_RETURN_CODE : FAIL_RETURN_CODE
+          result[:status] = [OK_RETURN_CODE, WARN_RETURN_CODE].include?(v[:status]) ? OK_RETURN_CODE : FAIL_RETURN_CODE
         end
         result
       end
@@ -39,6 +43,34 @@ module Katello
           version: Katello::VERSION,
           timeUTC: Time.now.getutc
         }
+      end
+
+      def daemon_status_message(status)
+        "#{status[:processed_count]} Processed, #{status[:failed_count]} Failed, #{status[:queue_depth]} in queue"
+      end
+
+      def ping_katello_events(result)
+        exception_watch(result) do
+          status = Katello::EventMonitor::PollerThread.status
+
+          if status[:queue_depth] > 1000
+            result[:status] = WARN_RETURN_CODE
+          end
+
+          result[:message] = daemon_status_message(status)
+        end
+      end
+
+      def ping_candlepin_events(result)
+        exception_watch(result) do
+          status = Katello::CandlepinEventListener.status
+
+          if status[:queue_depth] > 1000
+            result[:status] = WARN_RETURN_CODE
+          end
+
+          result[:message] = daemon_status_message(status)
+        end
       end
 
       def ping_pulp3_without_auth(service_result, capsule_id)
@@ -104,8 +136,8 @@ module Katello
       # check for exception - set the result code properly
       def exception_watch(result)
         start = Time.new
-        yield
         result[:status] = OK_RETURN_CODE
+        yield
         result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
         result
       rescue => e
