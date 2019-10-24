@@ -1,6 +1,6 @@
-module Actions
+module Katello
   module Candlepin
-    class ImportPoolHandler
+    class EventHandler
       attr_reader :message_handler
 
       def initialize(logger)

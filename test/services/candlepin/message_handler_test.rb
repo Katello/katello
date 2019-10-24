@@ -4,10 +4,7 @@ module Katello
   class MessageHandlerTestBase < ActiveSupport::TestCase
     def load_handler(event_name)
       json = File.read("#{Katello::Engine.root}/test/fixtures/candlepin_messages/#{event_name}.json")
-      event = Actions::Candlepin::ListenOnCandlepinEvents::Event.new(
-                            message_id: "foo",
-                            subject: event_name,
-                            content: json)
+      event = OpenStruct.new(message_id: 'foo', subject: event_name, content: json)
       ::Katello::Candlepin::MessageHandler.new(event)
     end
 

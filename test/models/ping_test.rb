@@ -80,6 +80,43 @@ module Katello
 
       assert_equal({status: 'FAIL', message: 'Candlepin is not running properly'}, Katello::Ping.ping_candlepin_without_auth({}))
     end
+
+    def test_ping_candlepin_events
+      Katello::CandlepinEventListener.reset_status
+      Katello::Resources::Candlepin::Admin.expects(:queue_depth).returns(0)
+
+      result = Katello::Ping.ping_candlepin_events({})
+
+      assert_equal 'ok', result[:status]
+      assert_equal '0 Processed, 0 Failed, 0 in queue', result[:message]
+    end
+
+    def test_ping_candlepin_deep_queue
+      Katello::CandlepinEventListener.expects(:status).returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
+
+      result = Katello::Ping.ping_candlepin_events({})
+
+      assert_equal 'WARN', result[:status]
+      assert_equal '10 Processed, 5 Failed, 1001 in queue', result[:message]
+    end
+
+    def test_ping_katello_events
+      Katello::EventMonitor::PollerThread.reset_status
+
+      result = Katello::Ping.ping_katello_events({})
+
+      assert_equal 'ok', result[:status]
+      assert_equal '0 Processed, 0 Failed, 0 in queue', result[:message]
+    end
+
+    def test_ping_katello_events_deep_queue
+      Katello::EventMonitor::PollerThread.expects(:status).returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
+
+      result = Katello::Ping.ping_katello_events({})
+
+      assert_equal 'WARN', result[:status]
+      assert_equal '10 Processed, 5 Failed, 1001 in queue', result[:message]
+    end
   end
 
   class PingTestPulp3 < ActiveSupport::TestCase
