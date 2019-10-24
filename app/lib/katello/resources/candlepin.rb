@@ -149,6 +149,12 @@ module Katello
         end # class << self
       end # UpstreamCandlepinResource
 
+      module AdminResource
+        def path
+          "#{self.prefix}/admin"
+        end
+      end
+
       module ConsumerResource
         def path(id = nil)
           "#{self.prefix}/consumers/#{id}"

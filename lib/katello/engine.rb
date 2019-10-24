@@ -26,6 +26,7 @@ module Katello
         :redhat_repository_url => 'https://cdn.redhat.com',
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
         :consumer_cert_sh => 'katello-rhsm-consumer',
+        :event_daemon_enabled => true,
         :pulp => {
           :default_login => 'admin',
           :url => 'https://localhost/pulp/api/v2/',
@@ -85,15 +86,6 @@ module Katello
       end
     end
 
-    initializer "katello.initialize_cp_listener", :before => :finisher_hook do
-      unless Rails.env.test?
-        ForemanTasks.dynflow.config.post_executor_init do |world|
-          ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running(world)
-          ::Actions::Katello::EventQueue::Monitor.ensure_running(world)
-        end
-      end
-    end
-
     initializer "katello.load_app_instance_data" do |app|
       app.config.filter_parameters += [:_json] #package profile parameter
       Katello::Engine.paths['db/migrate'].existent.each do |path|
@@ -123,6 +115,22 @@ module Katello
       ActionView::Base.send :include, Katello::TaxonomyHelper
       ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
       ActionView::Base.send :include, Katello::KatelloUrlsHelper
+    end
+
+    initializer "katello.event_daemon" do |app|
+      app.executor.to_run do
+        if app.reloader.check!
+          Katello::EventDaemon.stop # stop daemon when we are about to reload code
+        end
+      end
+
+      app.reloader.to_prepare do
+        Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
+        Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
+        Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
+
+        Katello::EventDaemon.start
+      end
     end
 
     config.to_prepare do
@@ -195,10 +203,6 @@ module Katello
       ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
       ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
       ::Api::V2::SmartProxiesController.send :include, Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
-
-      Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
-      Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
-      Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
 
       ::HostsController.class_eval do
         helper Katello::Concerns::HostsAndHostgroupsHelperExtensions

@@ -1,12 +1,12 @@
 require 'katello_test_helper'
 
 module Katello
-  describe ::Actions::Candlepin::ImportPoolHandler do
+  describe Candlepin::EventHandler do
     let(:pool_id) { 'abc123' }
     let(:pool) { OpenStruct.new(:id => pool_id) }
     let(:pool_two) { katello_pools(:pool_two) }
     let(:subscription_facet) { katello_subscription_facets(:one) }
-    let(:handler) { ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger) }
+    let(:handler) { ::Katello::Candlepin::EventHandler.new(Rails.logger) }
 
     before do
       ::Katello::Pool.stubs(:search).returns([pool])
