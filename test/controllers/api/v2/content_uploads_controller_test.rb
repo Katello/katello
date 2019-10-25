@@ -27,8 +27,7 @@ module Katello
 
     def test_create_upload_request
       mock_pulp_server(:create_upload_request => [])
-      post :create, params: { :repository_id => @repo.id }
-
+      post :create, params: { :repository_id => @repo.id, :size => 100, :checksum => 'test_checksum' }
       assert_response :success
     end
 
@@ -80,6 +79,7 @@ module Katello
       resources = mock(:content => content)
       pulp_server = mock(:resources => resources)
       pulp_master = mock(pulp_api: pulp_server, pulp3_support?: false)
+      pulp_master.stubs(:content_service).returns(stub(:content_type => "rpm"))
       SmartProxy.expects(:pulp_master).at_least_once.returns(pulp_master)
     end
   end

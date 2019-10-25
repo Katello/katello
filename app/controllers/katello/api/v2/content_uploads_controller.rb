@@ -9,8 +9,12 @@ module Katello
     api :POST, "/repositories/:repository_id/content_uploads", N_("Create an upload request")
     param :repository_id, :number, :required => true, :desc => N_("repository id")
     param :size, :number, :required => true, :desc => N_("Size of file to upload")
+    param :checksum, String, :required => false, :desc => N_("Checksum of file to upload")
+    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     def create
-      render :json => @repository.backend_content_service(::SmartProxy.pulp_master).create_upload(params[:size])
+      content_type = params[:content_type] || ::Katello::RepositoryTypeManager.find(@repository.content_type).default_managed_content_type.label
+      unit_type_id = SmartProxy.pulp_master.content_service(content_type).content_type
+      render :json => @repository.backend_content_service(::SmartProxy.pulp_master).create_upload(params[:size], params[:checksum], unit_type_id)
     end
 
     api :PUT, "/repositories/:repository_id/content_uploads/:id", N_("Upload a chunk of the file's content")
