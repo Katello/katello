@@ -81,7 +81,7 @@ module Katello
         @thread.kill if @thread
         @thread = Thread.new do
           begin
-            ActiveRecord::Base.connection_pool.with_connection do
+            Rails.application.executor.wrap do
               @logger.info("Polling Katello Event Queue")
               ::Katello::EventQueue.reset_in_progress
               loop do
