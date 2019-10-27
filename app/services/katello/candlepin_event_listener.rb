@@ -28,10 +28,10 @@ module Katello
 
       # run in own thread so connecting to qpid won't block the main process
       @thread = Thread.new do
-        initialize_listening_service
-        start_service
+        Rails.application.executor.wrap do
+          initialize_listening_service
+          start_service
 
-        ActiveRecord::Base.connection_pool.with_connection do
           Katello::CandlepinListeningService.instance.poll_for_messages do |message|
             if message[:result]
               result = message[:result]
