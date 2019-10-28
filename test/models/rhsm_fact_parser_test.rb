@@ -88,6 +88,14 @@ module Katello
       assert_equal parser.operatingsystem.minor, '04'
     end
 
+    def test_operatingsystem_release
+      existing_os = FactoryBot.create(:operatingsystem, name: 'CentOS', major: '7', release_name: 'Core')
+      @facts['distribution.name'] = 'CentOS'
+      @facts['distribution.version'] = '7'
+
+      assert_equal existing_os.id, parser.operatingsystem.id
+    end
+
     def test_uname_architecture
       @facts['uname.machine'] = 'i686'
 
