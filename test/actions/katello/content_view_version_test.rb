@@ -33,9 +33,11 @@ module ::Actions::Katello::ContentViewVersion
       @rpm = katello_rpms(:one)
 
       new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
-      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_repository).returns(new_repo)
+      repository_mapping = {}
+      repository_mapping[[library_repo]] = new_repo
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
-
+      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
       task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
       action.stubs(:task).returns(task)
       action.expects(:action_subject).with(content_view_version.content_view)
@@ -44,7 +46,7 @@ module ::Actions::Katello::ContentViewVersion
       assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyUnits,
                                 library_repo, new_repo,
                                 Katello::Rpm.with_identifiers(@rpm.id),
-                                :resolve_dependencies => false)
+                                :incremental_update => true)
     end
   end
   class ExportTest < TestBase

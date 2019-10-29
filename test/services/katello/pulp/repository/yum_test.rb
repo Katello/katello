@@ -204,6 +204,45 @@ module Katello
         end
       end
 
+      class YumDepSolveNonVcrTests < YumBaseTest
+        def test_generate_mapping
+          @rhel6.expects(:siblings).returns mock(yum_type: [@custom])
+          @rhel6_cv.expects(:siblings).returns mock(yum_type: [@custom_cv])
+          assert_equal({@custom.pulp_id => @custom_cv.pulp_id}, @rhel6.backend_service(@master).generate_mapping(@rhel6_cv))
+        end
+
+        def test_build_override_config_dep_solve_and_filters
+          mapping = { foo: "bar" }
+          service = @rhel6.backend_service(@master)
+          service.expects(:generate_mapping).with(@rhel6_cv).returns(mapping)
+          rule = FactoryBot.build(:katello_content_view_package_filter_rule)
+          options = { :solve_dependencies => true, :filters => rule.filter }
+          override_config = service.build_override_config(@rhel6_cv, options)
+          assert_equal override_config[:recursive_conservative], true
+          assert_equal override_config[:additional_repos], mapping
+        end
+
+        def test_build_override_config_dep_solve_and_no_filters
+          service = @rhel6.backend_service(@master)
+          service.expects(:generate_mapping).never
+
+          options = { :solve_dependencies => true }
+          override_config = service.build_override_config(@rhel6_cv, options)
+          assert_nil override_config[:recursive_conservative]
+          assert_nil override_config[:additional_repos]
+        end
+
+        def test_build_override_config_dep_solve_forced_on_incremental_update
+          mapping = { foo: "bar" }
+          service = @rhel6.backend_service(@master)
+          service.expects(:generate_mapping).with(@rhel6_cv).returns(mapping)
+          options = { incremental_update: true}
+          override_config = service.build_override_config(@rhel6_cv, options)
+          assert_equal override_config[:recursive_conservative], true
+          assert_equal override_config[:additional_repos], mapping
+        end
+      end
+
       class YumVcrCopyTest < YumBaseTest
         def setup
           super

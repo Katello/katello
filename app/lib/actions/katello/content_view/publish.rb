@@ -3,7 +3,7 @@ module Actions
   module Katello
     module ContentView
       class Publish < Actions::EntryAction
-        # rubocop:disable MethodLength
+        # rubocop:disable MethodLength,Metrics/AbcSize
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
           content_view.check_ready_to_publish!
@@ -31,15 +31,21 @@ module Actions
                                                           :notes => description,
                                                           :triggered_by => options[:triggered_by]
                                                          )
+          source_repositories = []
+          content_view.publish_repositories do |repositories|
+            source_repositories += [repositories]
+          end
 
           sequence do
             plan_action(ContentView::AddToEnvironment, version, library)
+            repository_mapping = plan_action(ContentViewVersion::CreateRepos, version, source_repositories).repository_mapping
+
             concurrence do
-              content_view.publish_repositories do |repositories|
+              source_repositories.each do |repositories|
                 sequence do
-                  clone_to_version = plan_action(Repository::CloneToVersion, repositories, version,
+                  plan_action(Repository::CloneToVersion, repositories, version, repository_mapping[repositories],
                                                  :repos_units => options[:repos_units])
-                  plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
+                  plan_action(Repository::CloneToEnvironment, repository_mapping[repositories], library)
                 end
               end
 
