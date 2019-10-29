@@ -17,12 +17,13 @@ module ::Actions::Katello::ContentView
   class PublishTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::Publish }
     let(:content_view) { katello_content_views(:no_environment_view) }
-
+    before do
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns({})
+    end
     it 'plans' do
       action.stubs(:task).returns(success_task)
 
       action.expects(:plan_self)
-
       plan_action(action, content_view)
     end
 

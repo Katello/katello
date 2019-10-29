@@ -94,19 +94,6 @@ module Katello
     SHA1 = "sha1".freeze
     SHA256 = "sha256".freeze
 
-    def test_build_override_config_dep_solve_and_filters
-      rule = FactoryBot.build(:katello_content_view_package_filter_rule)
-      options = { :solve_dependencies => true, :filters => rule.filter }
-      override_config = ::Katello::Repository.build_override_config(options)
-      assert_equal override_config[:recursive_conservative], true
-    end
-
-    def test_build_override_config_dep_solve_and_no_filters
-      options = { :solve_dependencies => true }
-      override_config = ::Katello::Repository.build_override_config(options)
-      assert_nil override_config[:recursive_conservative]
-    end
-
     def test_populate_from
       assert @fedora_17_x86_64.populate_from(@fedora_17_x86_64.pulp_id => {})
     end

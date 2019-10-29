@@ -23,14 +23,14 @@ module Actions
       action = create_action(action_class)
       cloned_repo.expects(:master?).returns(true)
       cloned_repo.root = yum_repo.root
-      yum_repo.expects(:build_clone).returns(cloned_repo)
       options = {}
 
-      plan_action(action, [yum_repo], version, options)
+      plan_action(action, [yum_repo], version, cloned_repo, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
+                                :copy_contents => true, :metadata_generate => true,
+                                :solve_dependencies => false)
     end
 
     it 'plans to clone yum units with dependency solving' do
@@ -40,13 +40,13 @@ module Actions
       cloned_repo.expects(:master?).returns(true)
 
       cloned_repo.root = yum_repo.root
-      yum_repo.expects(:build_clone).returns(cloned_repo)
 
-      plan_action(action, [yum_repo], version_solve_deps, {})
+      plan_action(action, [yum_repo], version_solve_deps, cloned_repo, {})
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => true)
+                                :copy_contents => true, :metadata_generate => true,
+                                :solve_dependencies => true)
     end
 
     it 'plans to clone yum metadata' do
@@ -56,13 +56,12 @@ module Actions
       cloned_repo.expects(:master?).returns(true)
       options = {}
 
-      yum_repo.expects(:build_clone).returns(cloned_repo)
-
-      plan_action(action, [yum_repo], version, options)
+      plan_action(action, [yum_repo], version, cloned_repo, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
+                                :copy_contents => true, :metadata_generate => true,
+                                :solve_dependencies => false)
     end
 
     it 'plans to clone docker units' do
@@ -70,24 +69,23 @@ module Actions
                                             version: version)
 
       action = create_action(action_class)
-      docker_repo.expects(:build_clone).returns(cloned_repo)
       options = {}
 
-      plan_action(action, [docker_repo], version, options)
+      plan_action(action, [docker_repo], version, cloned_repo, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [docker_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
+                                :copy_contents => true, :metadata_generate => true,
+                                :solve_dependencies => false)
     end
 
     it 'plans to clone file units' do
       cloned_repo = file_repo.build_clone(content_view: version.content_view,
                                             version: version)
       action = create_action(action_class)
-      file_repo.expects(:build_clone).returns(cloned_repo)
       options = {}
 
-      plan_action(action, [file_repo], version, options)
+      plan_action(action, [file_repo], version, cloned_repo, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [file_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil, :copy_contents => true,
@@ -99,10 +97,9 @@ module Actions
 
       cloned_repo = file_repo.build_clone(content_view: version.content_view,
                                             version: version)
-      file_repo.expects(:build_clone).returns(cloned_repo)
+      cloned_repo.id = 100
       options = {}
-
-      tree = plan_action_tree(action_class, [file_repo], version, options)
+      tree = plan_action_tree(action_class, [file_repo], version, cloned_repo, options)
       assert_tree_planned_with(tree, Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
                                :source_version_repo_id => file_repo.id, :target_repo_id => cloned_repo.id)
     end
@@ -113,10 +110,10 @@ module Actions
       file_repo2 = katello_repositories(:generic_file_dev)
       cloned_repo = file_repo.build_clone(content_view: version.content_view,
                                             version: version)
-      file_repo.expects(:build_clone).returns(cloned_repo)
+      cloned_repo.id = 2000
       options = {}
 
-      tree = plan_action_tree(action_class, [file_repo, file_repo2], version, options)
+      tree = plan_action_tree(action_class, [file_repo, file_repo2], version, cloned_repo, options)
       refute_tree_planned(tree, Actions::Pulp3::Orchestration::Repository::CopyAllUnits)
 
       assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyVersion,
