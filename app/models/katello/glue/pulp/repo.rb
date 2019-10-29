@@ -44,19 +44,6 @@ module Katello
             !repo.distributors_match?(repo_details["distributors"], smart_proxy)
           end
         end
-
-        def self.build_override_config(options)
-          config = {}
-          if options[:filters].present? && (options[:solve_dependencies] || options[:resolve_dependencies])
-            if Setting[:dependency_solving_algorithm] == 'greedy'
-              config[:recursive] = true
-            else
-              config[:recursive_conservative] = true
-            end
-          end
-
-          config
-        end
       end
     end
 
