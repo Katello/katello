@@ -42,7 +42,11 @@ module Actions
 
         def finalize
           environment = ::Katello::KTEnvironment.find(input['kt_environment']['id'])
-          environment.destroy!
+
+          # CapsuleLifecycleEnvironment can cause issues when auditing, it will try to associate the audit to the deleted taxonomy
+          ::Katello::CapsuleLifecycleEnvironment.without_auditing do
+            environment.destroy!
+          end
         end
       end
     end
