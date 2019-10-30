@@ -76,6 +76,9 @@ module Actions
               attrs[:metadata] = metadata
             end
           end
+
+          output[:content_view_id] = input[:content_view_id]
+          output[:content_view_version_id] = input[:content_view_version_id]
         end
 
         def rescue_strategy_for_self
