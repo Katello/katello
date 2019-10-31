@@ -64,12 +64,7 @@ module Katello
       end
 
       def runnable?
-        return false if !settings[:enabled] || ::Foreman.in_rake? || Rails.env.test?
-
-        if started?
-          Rails.logger.debug("Katello Event Daemon already running; not attempting startup")
-          return false
-        end
+        return false if started? || !settings[:enabled] || ::Foreman.in_rake? || Rails.env.test?
 
         if defined?(Rails::Console)
           Rails.logger.debug("Not starting Katello Event Daemon in the Rails Console")
