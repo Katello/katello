@@ -53,7 +53,7 @@ module Katello
         exception_watch(result) do
           status = Katello::EventMonitor::PollerThread.status
 
-          if status[:queue_depth] > 1000
+          if status[:queue_depth] && status[:queue_depth] > 1000
             result[:status] = WARN_RETURN_CODE
           end
 
@@ -65,7 +65,7 @@ module Katello
         exception_watch(result) do
           status = Katello::CandlepinEventListener.status
 
-          if status[:queue_depth] > 1000
+          if status[:queue_depth] && status[:queue_depth] > 1000
             result[:status] = WARN_RETURN_CODE
           end
 
