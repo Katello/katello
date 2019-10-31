@@ -81,18 +81,18 @@ module Katello
         @thread.kill if @thread
         @thread = Thread.new do
           begin
-            Rails.application.executor.wrap do
-              @logger.info("Polling Katello Event Queue")
-              ::Katello::EventQueue.reset_in_progress
-              loop do
+            @logger.info("Polling Katello Event Queue")
+            ::Katello::EventQueue.reset_in_progress
+            loop do
+              Rails.application.executor.wrap do
                 until (event = ::Katello::EventQueue.next_event).nil?
                   run_event(event)
                   @processed_count += 1
                   Rails.cache.write(PROCESSED_COUNT_CACHE_KEY, @processed_count, expires_in: 24.hours)
                 end
-
-                sleep SLEEP_INTERVAL
               end
+
+              sleep SLEEP_INTERVAL
             end
           rescue PG::ConnectionBad, ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
             @logger.error("Katello event queue lost database connection")
