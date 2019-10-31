@@ -23,17 +23,12 @@ module Katello
         return unless pid_file
 
         File.open(pid_file, 'w') { |f| f.puts Process.pid }
-
-        at_exit do
-          if pid == Process.pid
-            File.unlink(pid_file) if pid_file && File.exist?(pid_file)
-          end
-        end
       end
 
       def stop
         return unless pid == Process.pid
         services.values.each(&:close)
+        File.unlink(pid_file) if pid_file && File.exist?(pid_file)
       end
 
       def start(worker: false)
@@ -45,8 +40,11 @@ module Katello
           return if started? # ensure it wasn't started while we waited for the lock
 
           start_services
-
           write_pid_file
+
+          at_exit do
+            stop
+          end
 
           Rails.logger.info("Katello event daemon started process=#{Process.pid} multiprocess=#{settings[:multiprocess]}")
         ensure
@@ -63,10 +61,6 @@ module Katello
 
       def start_services
         services.values.each(&:run)
-
-        at_exit do
-          stop
-        end
       end
 
       def runnable?
