@@ -29,7 +29,8 @@ module Katello
         :event_daemon => {
           enabled: true,
           multiprocess: true,
-          lock_file: '/tmp/katello_event_daemon.lock'
+          lock_file: '/tmp/katello_event_daemon.lock',
+          pid_file: "#{Rails.root.join('tmp')}/pids/katello_event_daemon.pid"
         },
         :pulp => {
           :default_login => 'admin',
@@ -125,6 +126,8 @@ module Katello
       Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
       Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
       Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
+
+      Katello::EventDaemon.initialize
 
       if defined?(PhusionPassenger)
         PhusionPassenger.on_event(:starting_worker_process) do |forked|
