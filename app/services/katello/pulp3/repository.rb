@@ -62,6 +62,14 @@ module Katello
         self.class.api_client(smart_proxy)
       end
 
+      def self.orphans_api(smart_proxy)
+        PulpcoreClient::OrphansApi.new(core_api_client(smart_proxy))
+      end
+
+      def self.delete_orphans(smart_proxy)
+        [orphans_api(smart_proxy).delete]
+      end
+
       def distribution_mirror_options(path, options = {})
         ret = {
           base_path: path,
@@ -139,9 +147,12 @@ module Katello
         tasks
       end
 
-      def core_api_client
+      def self.core_api_client(smart_proxy)
         PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
       end
+
+      def core_api_client
+        self.class.core_api_client(smart_proxy)
 
       def repositories_api
         PulpcoreClient::RepositoriesApi.new(core_api_client)

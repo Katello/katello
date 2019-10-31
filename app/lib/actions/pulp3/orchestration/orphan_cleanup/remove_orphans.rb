@@ -7,6 +7,7 @@ module Actions
             if proxy.pulp3_enabled?
               sequence do
                 plan_action(Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions, proxy)
+                plan_action(Actions::Pulp3::OrphanCleanup::RemoveOrphans, proxy)
                 if proxy.pulp_mirror?
                   plan_action(Actions::Pulp3::OrphanCleanup::RemoveUnneededRepos, proxy)
                   plan_action(Actions::Pulp3::OrphanCleanup::DeleteOrphanDistributions, proxy)
