@@ -43,7 +43,7 @@ module Katello
         def remote_options
           options = {url: root.url, upstream_name: root.docker_upstream_name}
           if root.docker_tags_whitelist && root.docker_tags_whitelist.any?
-            options[:whitelist_tags] = root.docker_tags_whitelist.join(",")
+            options[:whitelist_tags] = root.docker_tags_whitelist
           else
             options[:whitelist_tags] = nil
           end
@@ -89,7 +89,7 @@ module Katello
           end
 
           if whitelist_ids.empty?
-            copy_units_recursively(source_repository.docker_tags.pluck(:pulp_id) - blacklist_ids, true)
+            copy_units_recursively(source_repository.docker_tags.pluck(:pulp_id).sort - blacklist_ids, true)
           else
             copy_units_recursively(whitelist_ids - blacklist_ids, true)
           end
