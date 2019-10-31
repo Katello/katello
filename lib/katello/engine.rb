@@ -26,7 +26,11 @@ module Katello
         :redhat_repository_url => 'https://cdn.redhat.com',
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
         :consumer_cert_sh => 'katello-rhsm-consumer',
-        :event_daemon_enabled => true,
+        :event_daemon => {
+          enabled: true,
+          multiprocess: true,
+          lock_file: '/tmp/katello_event_daemon.lock'
+        },
         :pulp => {
           :default_login => 'admin',
           :url => 'https://localhost/pulp/api/v2/',
@@ -117,18 +121,16 @@ module Katello
       ActionView::Base.send :include, Katello::KatelloUrlsHelper
     end
 
-    initializer "katello.event_daemon" do |app|
-      app.executor.to_run do
-        if app.reloader.check!
-          Katello::EventDaemon.stop # stop daemon when we are about to reload code
+    initializer "katello.event_daemon" do
+      Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
+      Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
+      Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
+
+      if defined?(PhusionPassenger)
+        PhusionPassenger.on_event(:starting_worker_process) do |forked|
+          Katello::EventDaemon.start(worker: forked)
         end
-      end
-
-      app.reloader.to_prepare do
-        Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
-        Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
-        Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
-
+      else
         Katello::EventDaemon.start
       end
     end
