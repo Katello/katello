@@ -1,19 +1,39 @@
 module Katello
   class EventDaemon
-    PID_CACHE_KEY = 'katello_event_daemon_pid'.freeze
-
     class << self
+      def initialize
+        FileUtils.touch(settings[:lock_file])
+      end
+
       def settings
         SETTINGS[:katello][:event_daemon]
       end
 
-      def cached_pid
-        Rails.cache.fetch(PID_CACHE_KEY)
+      def pid
+        return unless pid_file && File.exist?(pid_file)
+
+        File.open(pid_file) { |f| f.read.to_i }
+      end
+
+      def pid_file
+        settings[:pid_file]
+      end
+
+      def write_pid_file
+        return unless pid_file
+
+        File.open(pid_file, 'w') { |f| f.puts Process.pid }
+
+        at_exit do
+          if pid == Process.pid
+            File.unlink(pid_file) if pid_file && File.exist?(pid_file)
+          end
+        end
       end
 
       def stop
+        return unless pid == Process.pid
         services.values.each(&:close)
-        Rails.cache.delete(PID_CACHE_KEY)
       end
 
       def start(worker: false)
@@ -26,7 +46,8 @@ module Katello
 
           start_services
 
-          Rails.cache.write(PID_CACHE_KEY, Process.pid)
+          write_pid_file
+
           Rails.logger.info("Katello event daemon started process=#{Process.pid} multiprocess=#{settings[:multiprocess]}")
         ensure
           lockfile.flock(File::LOCK_UN)
@@ -34,7 +55,7 @@ module Katello
       end
 
       def started?
-        Process.kill(0, cached_pid)
+        Process.kill(0, pid)
         true
       rescue Errno::ESRCH, TypeError # process no longer exists or we had no PID cached
         false
