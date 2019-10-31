@@ -11,10 +11,25 @@ module Katello
     end
 
     def setup
-      @lockfile = Tempfile.new
       Katello::EventDaemon.stubs(:services).returns(mock_service: MockService)
       Katello::EventDaemon.stubs(:runnable?).returns(true)
-      Katello::EventDaemon.stubs(:settings).returns(enabled: true, multiprocess: false, lock_file: @lockfile.path)
+
+      @default_settings = {
+        enabled: true,
+        multiprocess: false,
+        lock_file: '/tmp/test_katello_daemon.lock',
+        pid_file: '/tmp/test_katello_daemon.pid'
+      }
+
+      Katello::EventDaemon.stubs(:settings).returns(@default_settings)
+      Katello::EventDaemon.initialize
+      refute Katello::EventDaemon.started?
+    end
+
+    def teardown
+      File.unlink(@default_settings[:lock_file]) if File.exist?(@default_settings[:lock_file])
+      File.unlink(@default_settings[:pid_file]) if File.exist?(@default_settings[:pid_file])
+      refute Katello::EventDaemon.started?
     end
 
     def test_start_runs_services
@@ -27,11 +42,12 @@ module Katello
     end
 
     def test_start_multiprocess_non_worker
-      Katello::EventDaemon.stubs(:settings).returns(enabled: true, multiprocess: true, lock_file: @lockfile.path)
+      Katello::EventDaemon.stubs(:settings).returns(@default_settings.merge(multiprocess: true))
 
       Katello::EventDaemon.start
 
       refute Katello::EventDaemon.started?
+      Katello::EventDaemon.stop
     end
 
     def test_stop_close_services
