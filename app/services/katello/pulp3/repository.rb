@@ -153,6 +153,7 @@ module Katello
 
       def core_api_client
         self.class.core_api_client(smart_proxy)
+      end
 
       def repositories_api
         PulpcoreClient::RepositoriesApi.new(core_api_client)
