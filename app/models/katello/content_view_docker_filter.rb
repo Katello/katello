@@ -27,7 +27,7 @@ module Katello
         manifest_tags.concat(query_manifests(repo, rule))
       end
 
-      manifest_tags
+      manifest_tags.sort
     end
 
     protected

@@ -8,6 +8,8 @@ module ::Actions::Pulp3
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @file_repo = katello_repositories(:generic_file)
       @docker_repo = katello_repositories(:busybox)
+      @docker_repo.root.update_attributes!(docker_tags_whitelist: %w(latest uclibc musl))
+
       @file_clone = katello_repositories(:generic_file_dev)
       @docker_clone = katello_repositories(:busybox_dev)
       @rule = FactoryBot.build(:katello_content_view_docker_filter_rule)
