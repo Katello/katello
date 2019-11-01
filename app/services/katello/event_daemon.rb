@@ -76,7 +76,7 @@ module Katello
           return false
         end
 
-        if Rails.env.production? && $PROGRAM_NAME.match(/dynflow/)
+        if $PROGRAM_NAME.match(/dynflow/)
           Rails.logger.debug("This appears to be the Dynflow process; not starting Katello Event Daemon")
           return false
         end
