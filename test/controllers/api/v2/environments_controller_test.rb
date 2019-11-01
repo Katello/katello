@@ -232,6 +232,12 @@ module Katello
       assert_response :success
     end
 
+    def test_index_with_sort_by_id
+      get :index, params: { :sort_by => 'id' }
+
+      assert_response :success
+    end
+
     test_attributes :pid => 'cd5a97ca-c1e8-41c7-8d6b-f908916b24e1'
     def test_destroy
       destroyable_env = KTEnvironment.create!(:name => "DestroyAble",
