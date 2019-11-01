@@ -35,6 +35,7 @@ module ::Actions::Katello::CapsuleContent
       tree = plan_action_tree(action_class, smart_proxy)
 
       assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveOrphans)
+      assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::RemoveOrphans)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions)
     end
 
@@ -44,6 +45,7 @@ module ::Actions::Katello::CapsuleContent
 
       assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveUnneededRepos)
       assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveOrphans)
+      assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::RemoveOrphans)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRemotes)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions)
