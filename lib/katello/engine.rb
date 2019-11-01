@@ -28,9 +28,7 @@ module Katello
         :consumer_cert_sh => 'katello-rhsm-consumer',
         :event_daemon => {
           enabled: true,
-          multiprocess: true,
-          lock_file: '/tmp/katello_event_daemon.lock',
-          pid_file: "#{Rails.root.join('tmp')}/pids/katello_event_daemon.pid"
+          multiprocess: true
         },
         :pulp => {
           :default_login => 'admin',

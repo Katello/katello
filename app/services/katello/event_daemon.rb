@@ -2,7 +2,7 @@ module Katello
   class EventDaemon
     class << self
       def initialize
-        FileUtils.touch(settings[:lock_file])
+        FileUtils.touch(lock_file)
       end
 
       def settings
@@ -16,7 +16,11 @@ module Katello
       end
 
       def pid_file
-        settings[:pid_file]
+        Rails.root.join('tmp', 'pids', 'katello_event_daemon.pid')
+      end
+
+      def lock_file
+        Rails.root.join('tmp', 'katello_event_daemon.lock')
       end
 
       def write_pid_file
@@ -34,7 +38,7 @@ module Katello
       def start(worker: false)
         return if !runnable? || settings[:multiprocess] && !worker
 
-        lockfile = File.open(settings[:lock_file], 'r')
+        lockfile = File.open(lock_file, 'r')
         begin
           lockfile.flock(File::LOCK_EX)
           return if started? # ensure it wasn't started while we waited for the lock
