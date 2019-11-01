@@ -76,9 +76,12 @@ module Katello
         summary
       end
 
+      def last_sync_audit
+        Audited::Audit.where(:auditable_id => self.repositories, :auditable_type => Katello::Repository.name).order(:created_at).last
+      end
+
       def last_sync
-        task = last_repo_sync_task
-        task.nil? ? nil : task.started_at.to_s
+        last_repo_sync_task&.started_at&.to_s || last_sync_audit&.created_at&.to_s
       end
 
       def last_repo_sync_task
