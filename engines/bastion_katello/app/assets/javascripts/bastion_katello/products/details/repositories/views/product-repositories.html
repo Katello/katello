@@ -88,8 +88,11 @@
           <td bst-table-cell>{{ repository.content_type }}</td>
           <td bst-table-cell>
             <span ng-show="repository.url">
-              <span ng-show="repository.last_sync == null" translate>
+              <span ng-show="repository.last_sync == null && repository.last_sync_words == null" translate>
                 Not Synced
+              </span>
+              <span ng-show="repository.last_sync == null && repository.last_sync_words" translate>
+                Completed {{ repository.last_sync_words }} ago
               </span>
               <span ng-show="repository.last_sync !== null && repository.last_sync.ended_at == null" translate>
                 <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize}}</a>

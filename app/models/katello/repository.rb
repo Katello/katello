@@ -1,6 +1,8 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class Repository < Katello::Model
+    audited
+
     #pulp uses pulp id to sync with 'yum_distributor' on the end
     PULP_ID_MAX_LENGTH = 220
 
@@ -18,6 +20,8 @@ module Katello
 
     include ERB::Util
     include ::ScopedSearchExtensions
+
+    AUDIT_SYNC_ACTION = 'sync'.freeze
 
     DEB_TYPE = 'deb'.freeze
     YUM_TYPE = 'yum'.freeze
@@ -187,6 +191,10 @@ module Katello
       else
         self.content_view.organization
       end
+    end
+
+    def audit_sync
+      write_audit(action: AUDIT_SYNC_ACTION, comment: _('Successfully synchronized.'), audited_changes: {})
     end
 
     def set_pulp_id
@@ -458,6 +466,10 @@ module Katello
 
       clone.relative_path = clone.docker? ? clone.generate_docker_repo_path : clone.generate_repo_path
       clone
+    end
+
+    def latest_sync_audit
+      self.audits.where(:action => AUDIT_SYNC_ACTION).order(:created_at).last
     end
 
     def cancel_dynflow_sync

@@ -49,6 +49,8 @@ end
 node :last_sync_words do |object|
   if (object.latest_dynflow_sync.respond_to?('ended_at') && object.latest_dynflow_sync.ended_at)
     time_ago_in_words(Time.parse(object.latest_dynflow_sync.ended_at.to_s))
+  elsif (audit = object.latest_sync_audit)
+    time_ago_in_words(audit.created_at)
   end
 end
 

@@ -69,6 +69,10 @@ module Actions
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
+        def finalize
+          ::Katello::Repository.find(input[:id])&.audit_sync
+        end
+
         def humanized_name
           if input && input[:validate_contents]
             _("Synchronize: Validate Content")
