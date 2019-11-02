@@ -13,6 +13,18 @@ module Katello
       )
     end
 
+    initializer "katello.event_daemon", before: :build_middleware_stack do |app|
+      require 'katello/middleware/event_daemon'
+
+      app.middleware.use(Katello::Middleware::EventDaemon)
+
+      Katello::EventDaemon.initialize
+
+      Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
+      Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
+      Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
+    end
+
     initializer 'katello.mount_engine', :before => :sooner_routes_load, :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
@@ -27,8 +39,7 @@ module Katello
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
         :consumer_cert_sh => 'katello-rhsm-consumer',
         :event_daemon => {
-          enabled: true,
-          multiprocess: true
+          enabled: true
         },
         :pulp => {
           :default_login => 'admin',
@@ -118,22 +129,6 @@ module Katello
       ActionView::Base.send :include, Katello::TaxonomyHelper
       ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
       ActionView::Base.send :include, Katello::KatelloUrlsHelper
-    end
-
-    initializer "katello.event_daemon" do
-      Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
-      Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
-      Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
-
-      Katello::EventDaemon.initialize
-
-      if defined?(PhusionPassenger)
-        PhusionPassenger.on_event(:starting_worker_process) do |forked|
-          Katello::EventDaemon.start(worker: forked)
-        end
-      else
-        Katello::EventDaemon.start
-      end
     end
 
     config.to_prepare do
