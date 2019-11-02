@@ -12,8 +12,7 @@ module Katello
 
     def setup
       @default_settings = {
-        enabled: true,
-        multiprocess: false
+        enabled: true
       }
 
       Katello::EventDaemon.stubs(:services).returns(mock_service: MockService)
@@ -33,14 +32,6 @@ module Katello
 
       assert Katello::EventDaemon.started?
       Katello::EventDaemon.stop
-    end
-
-    def test_start_multiprocess_non_worker
-      Katello::EventDaemon.stubs(:settings).returns(@default_settings.merge(multiprocess: true))
-
-      Katello::EventDaemon.start
-
-      refute Katello::EventDaemon.started?
     end
 
     def test_stop_close_services
