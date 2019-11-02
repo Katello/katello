@@ -35,8 +35,8 @@ module Katello
         File.unlink(pid_file) if pid_file && File.exist?(pid_file)
       end
 
-      def start(worker: false)
-        return if !runnable? || settings[:multiprocess] && !worker
+      def start
+        return unless runnable?
 
         lockfile = File.open(lock_file, 'r')
         begin
@@ -50,7 +50,7 @@ module Katello
             stop
           end
 
-          Rails.logger.info("Katello event daemon started process=#{Process.pid} multiprocess=#{settings[:multiprocess]}")
+          Rails.logger.info("Katello event daemon started process=#{Process.pid}")
         ensure
           lockfile.flock(File::LOCK_UN)
         end
@@ -68,24 +68,7 @@ module Katello
       end
 
       def runnable?
-        return false if started? || !settings[:enabled] || ::Foreman.in_rake? || Rails.env.test?
-
-        if defined?(Rails::Console)
-          Rails.logger.debug("Not starting Katello Event Daemon in the Rails Console")
-          return false
-        end
-
-        if $PROGRAM_NAME.match(/spring/)
-          Rails.logger.debug("Spring is running in the environment; not starting Katello Event Daemon")
-          return false
-        end
-
-        if $PROGRAM_NAME.match(/dynflow/)
-          Rails.logger.debug("This appears to be the Dynflow process; not starting Katello Event Daemon")
-          return false
-        end
-
-        true
+        !started? && settings[:enabled] && !::Foreman.in_rake? && !Rails.env.test?
       end
 
       def services
