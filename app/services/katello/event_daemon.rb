@@ -3,6 +3,7 @@ module Katello
     class << self
       def initialize
         FileUtils.touch(lock_file)
+        @cache = ActiveSupport::Cache::MemoryStore.new
       end
 
       def settings
@@ -73,7 +74,10 @@ module Katello
       end
 
       def runnable?
-        !started? && settings[:enabled] && !::Foreman.in_rake? && !Rails.env.test?
+        # avoid accessing the disk on each request
+        @cache.fetch('katello_event_daemon_runnable', expires_in: 1.minute) do
+          !started? && settings[:enabled] && !::Foreman.in_rake? && !Rails.env.test?
+        end
       end
 
       def services
