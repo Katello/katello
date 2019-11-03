@@ -16,7 +16,11 @@ module Katello
       end
 
       def pid_file
-        Rails.root.join('tmp', 'pids', 'katello_event_daemon.pid')
+        pid_dir.join('katello_event_daemon.pid')
+      end
+
+      def pid_dir
+        Rails.root.join('tmp', 'pids')
       end
 
       def lock_file
@@ -26,6 +30,7 @@ module Katello
       def write_pid_file
         return unless pid_file
 
+        FileUtils.mkdir_p(pid_dir)
         File.open(pid_file, 'w') { |f| f.puts Process.pid }
       end
 

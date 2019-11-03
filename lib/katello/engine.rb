@@ -4,25 +4,16 @@ module Katello
   class Engine < ::Rails::Engine
     isolate_namespace Katello
 
-    initializer 'katello.selective_params_parser', :before => :build_middleware_stack do |app|
+    initializer 'katello.middleware', :before => :build_middleware_stack do |app|
       require 'katello/prevent_json_parsing'
       app.middleware.insert_after(
         Rack::MethodOverride,
         Katello::PreventJsonParsing,
         ->(env) { env['PATH_INFO'] =~ /consumers/ && env['PATH_INFO'] =~ /profile|packages/ }
       )
-    end
 
-    initializer "katello.event_daemon", before: :build_middleware_stack do |app|
       require 'katello/middleware/event_daemon'
-
       app.middleware.use(Katello::Middleware::EventDaemon)
-
-      Katello::EventDaemon.initialize
-
-      Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
-      Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
-      Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
     end
 
     initializer 'katello.mount_engine', :before => :sooner_routes_load, :after => :build_middleware_stack do |app|
@@ -214,6 +205,12 @@ module Katello
 
       load 'katello/repository_types.rb'
       load 'katello/scheduled_jobs.rb'
+
+      Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
+      Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
+      Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
+
+      Katello::EventDaemon.initialize
     end
 
     rake_tasks do
