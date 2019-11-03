@@ -11,16 +11,9 @@ module Katello
     end
 
     def setup
-      @default_settings = {
-        enabled: true
-      }
-
       Katello::EventDaemon.stubs(:services).returns(mock_service: MockService)
       Katello::EventDaemon.stubs(:runnable?).returns(true)
       Katello::EventDaemon.stubs(:pid_file).returns(Rails.root.join('tmp', 'test_katello_daemon.pid'))
-      Katello::EventDaemon.stubs(:settings).returns(@default_settings)
-
-      Katello::EventDaemon.initialize
 
       refute Katello::EventDaemon.started?
     end
