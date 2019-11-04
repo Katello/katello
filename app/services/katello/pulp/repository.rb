@@ -86,6 +86,10 @@ module Katello
       end
 
       def mirror_needs_updates?
+        needs_update?
+      end
+
+      def needs_update?
         needs_importer_updates? || needs_distributor_updates?
       end
 
@@ -202,7 +206,7 @@ module Katello
       end
 
       def refresh_if_needed
-        refresh if needs_importer_updates? || needs_distributor_updates?
+        refresh if needs_update?
       end
 
       def refresh
