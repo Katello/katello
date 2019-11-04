@@ -91,5 +91,25 @@ module Katello
     ensure
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
     end
+
+    def test_pulp_supported_types_map
+      expected_types_map = @master.supported_pulp_types
+
+      assert_includes expected_types_map[:pulp3][:supported_types], "yum"
+      refute_includes expected_types_map[:pulp3][:overriden_to_pulp2], "file"
+      assert_includes expected_types_map[:pulp2][:supported_types], "puppet"
+    end
+
+    def test_pulp_supported_types_map_with_overrides
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
+      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
+
+      expected_types_map = @master.supported_pulp_types
+      assert_includes expected_types_map[:pulp3][:supported_types], "yum"
+      assert_includes expected_types_map[:pulp3][:overriden_to_pulp2], "file"
+      assert_includes expected_types_map[:pulp2][:supported_types], "puppet"
+    ensure
+      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
+    end
   end
 end
