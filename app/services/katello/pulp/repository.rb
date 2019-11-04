@@ -11,8 +11,10 @@ module Katello
       end
 
       def backend_data(force = false)
-        return smart_proxy.pulp_api.extensions.repository.retrieve_with_details(repo.pulp_id) if (repo.pulp_id && force)
-        @backend_data ||= smart_proxy.pulp_api.extensions.repository.retrieve_with_details(repo.pulp_id) if repo.pulp_id
+        if (repo.pulp_id && (force || @backend_data.nil?))
+          @backend_data = smart_proxy.pulp_api.extensions.repository.retrieve_with_details(repo.pulp_id)
+        end
+        @backend_data
       rescue RestClient::ResourceNotFound
         nil
       end
@@ -197,6 +199,10 @@ module Katello
 
       def proxy_host_importer_value
         root.ignore_global_proxy ? "" : nil
+      end
+
+      def refresh_if_needed
+        refresh if needs_importer_updates? || needs_distributor_updates?
       end
 
       def refresh
