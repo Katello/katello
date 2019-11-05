@@ -64,7 +64,9 @@ module Katello
     end
 
     def self.act_on_event(event)
-      ::Katello::Candlepin::EventHandler.new(@logger).handle(event)
+      ::Katello::Util::Support.with_db_connection(@logger) do
+        ::Katello::Candlepin::EventHandler.new(@logger).handle(event)
+      end
       @processed_count += 1
 
       Rails.cache.write(PROCESSED_COUNT_CACHE_KEY, @processed_count, expires_in: 24.hours)

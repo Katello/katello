@@ -21,6 +21,7 @@ module Katello
 
       def self.run
         initialize
+        ::Katello::EventQueue.reset_in_progress
         instance.poll_for_events
       end
 
@@ -82,32 +83,25 @@ module Katello
         @thread = Thread.new do
           begin
             @logger.info("Polling Katello Event Queue")
-            ::Katello::EventQueue.reset_in_progress
             loop do
               Rails.application.executor.wrap do
-                until (event = ::Katello::EventQueue.next_event).nil?
-                  run_event(event)
-                  @processed_count += 1
-                  Rails.cache.write(PROCESSED_COUNT_CACHE_KEY, @processed_count, expires_in: 24.hours)
+                Katello::Util::Support.with_db_connection(@logger) do
+                  until (event = ::Katello::EventQueue.next_event).nil?
+                    run_event(event)
+                    @processed_count += 1
+                    Rails.cache.write(PROCESSED_COUNT_CACHE_KEY, @processed_count, expires_in: 24.hours)
+                  end
                 end
               end
 
               sleep SLEEP_INTERVAL
             end
-          rescue PG::ConnectionBad, ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
-            @logger.error("Katello event queue lost database connection")
-            try_reconnect
-            retry
+          rescue => e
+            @logger.error(e.message)
+            @logger.error("Fatal error in Katello Event Monitor")
+            self.class.close
           end
         end
-      end
-
-      def try_reconnect
-        @logger.info("Reconnecting to Katello Event Monitor")
-        ActiveRecord::Base.connection.reconnect!
-      rescue
-        sleep 5
-        retry
       end
     end
   end
