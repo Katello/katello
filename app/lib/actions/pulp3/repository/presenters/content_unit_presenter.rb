@@ -15,6 +15,7 @@ module Actions
             ret << _("Total tasks: ") + ": #{finished_units}/#{total_units}"
             ret << "--------------------------------"
             progress_reports = sync_task.try(:[], 'progress_reports') || []
+            progress_reports = progress_reports.sort_by { |pr| pr.try(:[], 'message') }
             progress_reports.each do |pr|
               done = pr.try(:[], 'done')
               total = pr.try(:[], 'total') || pr.try(:[], 'done')
