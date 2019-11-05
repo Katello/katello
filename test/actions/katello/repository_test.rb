@@ -552,9 +552,9 @@ module ::Actions::Katello::Repository
         specify do
           action.humanized_output.must_equal "Total tasks: : 5/5\n"\
                                              "--------------------------------\n"\
-                                             "Downloading Metadata: 1/1\n"\
-                                             "Downloading Artifacts: 0/0\n"\
                                              "Associating Content: 1/1\n"\
+                                             "Downloading Artifacts: 0/0\n"\
+                                             "Downloading Metadata: 1/1\n"\
                                              "Parsing Metadata Lines: 3/3"
         end
 
@@ -569,8 +569,8 @@ module ::Actions::Katello::Repository
         specify do
           action.humanized_output.must_equal "Total tasks: : 2/2\n"\
                                              "--------------------------------\n"\
-                                             "Importing Collections: 1/1\n"\
-                                             "Downloading Collections: 1/1"
+                                             "Downloading Collections: 1/1\n"\
+                                             "Importing Collections: 1/1"
         end
 
         specify do
@@ -584,9 +584,9 @@ module ::Actions::Katello::Repository
         specify do
           action.humanized_output.must_equal "Total tasks: : 1192/1192\n"\
                                              "--------------------------------\n"\
-                                             "Downloading tag list: 1/1\n"\
-                                             "Downloading Artifacts: 415/415\n"\
                                              "Associating Content: 641/641\n"\
+                                             "Downloading Artifacts: 415/415\n"\
+                                             "Downloading tag list: 1/1\n"\
                                              "Processing Tags: 135/135"
         end
 
@@ -601,9 +601,9 @@ module ::Actions::Katello::Repository
         specify do
           action.humanized_output.must_equal "Total tasks: : 15/30\n"\
                                              "--------------------------------\n"\
-                                             "Downloading Metadata: 5/10\n"\
+                                             "Associating Content: 5/10\n"\
                                              "Downloading Artifacts: 5/10\n"\
-                                             "Associating Content: 5/10"
+                                             "Downloading Metadata: 5/10"\
         end
 
         specify do
