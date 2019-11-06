@@ -7,7 +7,7 @@ exports[`Module stream details page rendering renders with loading state 1`] = `
     loadingText="Loading"
     timeout={300}
   >
-    <Uncontrolled(TabContainer)
+    <ForwardRef
       defaultActiveKey={1}
       id="module-stream-tabs-container"
     >
@@ -160,7 +160,7 @@ exports[`Module stream details page rendering renders with loading state 1`] = `
           </TabPane>
         </TabContent>
       </Grid>
-    </Uncontrolled(TabContainer)>
+    </ForwardRef>
   </LoadingState>
 </div>
 `;
@@ -194,7 +194,7 @@ exports[`Module stream details page rendering renders with module stream provide
     loadingText="Loading"
     timeout={300}
   >
-    <Uncontrolled(TabContainer)
+    <ForwardRef
       defaultActiveKey={1}
       id="module-stream-tabs-container"
     >
@@ -546,7 +546,7 @@ exports[`Module stream details page rendering renders with module stream provide
           </TabPane>
         </TabContent>
       </Grid>
-    </Uncontrolled(TabContainer)>
+    </ForwardRef>
   </LoadingState>
 </div>
 `;
