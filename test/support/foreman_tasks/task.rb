@@ -7,7 +7,7 @@ module Support
       end
 
       def build_task_stub
-        task_attrs = [:id, :label, :pending,
+        task_attrs = [:id, :label, :pending, :execution_plan, :resumable?,
                       :username, :started_at, :ended_at, :state, :result, :progress,
                       :input, :humanized, :cli_example].inject({}) { |h, k| h.update k => nil }
         task_attrs[:output] = {}
