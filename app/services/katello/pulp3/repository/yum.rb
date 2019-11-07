@@ -17,7 +17,7 @@ module Katello
         end
 
         def remote_class
-          PulpRpmClient::RpmRemote
+          PulpRpmClient::RpmRpmRemote
         end
 
         def self.remotes_api(smart_proxy)
@@ -25,7 +25,7 @@ module Katello
         end
 
         def publication_class
-          PulpRpmClient::RpmPublication
+          PulpRpmClient::RpmRpmPublication
         end
 
         def publications_api
@@ -33,7 +33,7 @@ module Katello
         end
 
         def distribution_class
-          PulpRpmClient::RpmDistribution
+          PulpRpmClient::RpmRpmDistribution
         end
 
         def self.distributions_api(smart_proxy)

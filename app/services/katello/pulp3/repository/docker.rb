@@ -17,7 +17,7 @@ module Katello
         end
 
         def remote_class
-          PulpDockerClient::DockerRemote
+          PulpDockerClient::DockerDockerRemote
         end
 
         def self.remotes_api(smart_proxy)
@@ -25,7 +25,7 @@ module Katello
         end
 
         def distribution_class
-          PulpDockerClient::DockerDistribution
+          PulpDockerClient::DockerDockerDistribution
         end
 
         def self.distributions_api(smart_proxy)

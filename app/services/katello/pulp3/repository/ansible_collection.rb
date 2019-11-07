@@ -17,7 +17,7 @@ module Katello
         end
 
         def remote_class
-          PulpAnsibleClient::CollectionRemote
+          PulpAnsibleClient::AnsibleCollectionRemote
         end
 
         def self.remotes_api(smart_proxy)
@@ -25,7 +25,7 @@ module Katello
         end
 
         def distribution_class
-          PulpAnsibleClient::AnsibleDistribution
+          PulpAnsibleClient::AnsibleAnsibleDistribution
         end
 
         def self.distributions_api(smart_proxy)
