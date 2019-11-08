@@ -24,7 +24,6 @@ namespace :katello do
               Katello::Srpm,
               Katello::ModuleStream,
               Katello::YumMetadataFile,
-              Katello::Deb,
               Katello::FileUnit,
               Katello::Subscription,
               Katello::Pool,
@@ -35,6 +34,7 @@ namespace :katello do
               Katello::Content]
 
     models << Katello::OstreeBranch if Katello::RepositoryTypeManager.find(Katello::Repository::OSTREE_TYPE).present?
+    models << Katello::Deb if Katello::RepositoryTypeManager.find(Katello::Repository::DEB_TYPE).present?
 
     models.each do |model|
       print "Importing #{model.name}\n"
