@@ -53,7 +53,7 @@ module ::Actions::Pulp3
         @repo,
         @master)
 
-      yum_remote = ::Katello::Pulp3::Repository::Yum.new(Organization.first, @master).remotes_api
+      yum_remote = ::Katello::Pulp3::Api::Yum.new(@master).remotes_api
       assert_equal yum_remote.list.results.select { |remote| remote.name == "2_duplicate" }[0].policy, "on_demand"
     end
 

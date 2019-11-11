@@ -121,8 +121,7 @@ module Actions
       end
 
       def tasks_api
-        api_client = PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
-        PulpcoreClient::TasksApi.new(api_client)
+        ::Katello::Pulp3::Api::Core.new(smart_proxy).tasks_api
       end
 
       def poll_external_task

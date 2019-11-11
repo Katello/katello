@@ -11,7 +11,7 @@ module Actions
             param :repository_id
           end
           def fetch_proxy_service(smart_proxy)
-            ::Katello::Pulp3::SmartProxyRepository.new(smart_proxy)
+            ::Katello::Pulp3::SmartProxyRepository.instance_for_type(smart_proxy)
           end
 
           def act_on_repo?(repo, smart_proxy)

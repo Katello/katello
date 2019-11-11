@@ -11,7 +11,7 @@ module Katello
         SETTINGS[:katello][:content_types] = { file: nil }
 
         User.current = users(:admin)
-        @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+        @master = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
         @repo = katello_repositories(:pulp3_file_1)
         @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
         ensure_creatable(@repo, @master)
@@ -23,6 +23,7 @@ module Katello
       end
 
       def test_orphan_distributions_are_removed
+        skip "Until we can figure out testing on a pulp mirror without effecting a development env"
         @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file/')
         ForemanTasks.sync_task(
           ::Actions::Pulp3::Repository::RefreshDistribution,
@@ -34,8 +35,8 @@ module Katello
         dist = distributions.last
         assert_nil dist.publication
 
-        smart_proxy_repository = Katello::Pulp3::SmartProxyRepository.new(@master)
-        smart_proxy_repository.delete_orphaned_distributions_for_mirror_proxies
+        smart_proxy_repository = Katello::Pulp3::SmartProxyMirrorRepository.new(@master)
+        smart_proxy_repository.delete_orphan_distributions
 
         distributions = pulp3_file_repo.lookup_distributions({})
         refute_includes distributions, dist,
@@ -43,6 +44,7 @@ module Katello
       end
 
       def test_orphan_remotes_are_removed
+        skip "Until we can figure out testing on a pulp mirror without effecting a development env"
         pulp3_file_repo = Katello::Pulp3::Repository.new(@repo, @master)
         pulp3_file_repo.create
 
@@ -50,11 +52,11 @@ module Katello
         remote_href = pulp3_file_repo.repo.remote_href
         assert remote_href, 'Remote href was nil or blank.'
 
-        repos = Katello::Pulp3::Repository.list(@master, {}).pluck(:_href)
+        repos = Katello::Pulp3::Api::Core.new(@master).list_all.pluck(:pulp_href)
         refute_includes repos, repo_href
 
-        smart_proxy_repository = Katello::Pulp3::SmartProxyRepository.new(@master)
-        smart_proxy_repository.delete_orphaned_remotes_for_mirror_proxies
+        smart_proxy_repository = Katello::Pulp3::SmartProxyMirrorRepository.new(@master)
+        smart_proxy_repository.delete_orphan_remotes
 
         remote_hrefs = Katello::Pulp3::Repository::File.remotes_list(@master, {}).pluck(:_href)
         refute_includes remote_hrefs, remote_href,

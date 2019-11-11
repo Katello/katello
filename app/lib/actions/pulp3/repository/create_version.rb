@@ -11,7 +11,7 @@ module Actions
 
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:repository_id])
-          output[:response] = repo.backend_service(smart_proxy).create_version
+          output[:response] = repo.backend_service(smart_proxy).with_mirror_adapter.create_version
         end
       end
     end

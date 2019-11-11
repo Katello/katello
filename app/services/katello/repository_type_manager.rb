@@ -51,6 +51,10 @@ module Katello
         repository_types[repository_type.to_s]
       end
 
+      def find_by(attribute, value)
+        repository_types.values.find { |type| type.try(attribute) == value }
+      end
+
       def find_repository_type(katello_label)
         repository_types.values.each do |repo_type|
           repo_type.content_types.each do |content_type|

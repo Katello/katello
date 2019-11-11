@@ -8,7 +8,7 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find(input[:repository_id])
-          output[:response] = repo.backend_service(smart_proxy).create
+          output[:response] = repo.backend_service(smart_proxy).with_mirror_adapter.create
         end
       end
     end

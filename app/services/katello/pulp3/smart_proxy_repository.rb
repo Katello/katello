@@ -4,7 +4,16 @@ module Katello
       attr_accessor :smart_proxy
 
       def initialize(smart_proxy)
+        fail "Cannot use a mirror" if smart_proxy.pulp_mirror?
         @smart_proxy = smart_proxy
+      end
+
+      def self.instance_for_type(smart_proxy)
+        if smart_proxy.pulp_master?
+          SmartProxyRepository.new(smart_proxy)
+        else
+          SmartProxyMirrorRepository.new(smart_proxy)
+        end
       end
 
       def ==(other)
@@ -16,30 +25,30 @@ module Katello
         katello_repos = katello_repos.where(:environment_id => environment_id) if environment_id
         katello_repos = katello_repos.in_content_views([content_view_id]) if content_view_id
         katello_repos = katello_repos.select { |repo| smart_proxy.pulp3_support?(repo) }
-        repos_on_capsule = ::Katello::Pulp3::Repository.new(nil, smart_proxy).list(name_in: katello_repos.map(&:pulp_id))
+        repos_on_capsule = ::Katello::Pulp3::Api::Core.new(smart_proxy).list_all(name_in: katello_repos.map(&:pulp_id))
         repo_ids = repos_on_capsule.map(&:name)
         katello_repos.select { |repo| repo_ids.include? repo.pulp_id }
       end
 
-      def orphaned_repositories_for_mirror_proxies
-        smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
-        katello_pulp_ids = smart_proxy_helper.repos_available_to_capsule.map(&:pulp_id)
-        repos_on_capsule = ::Katello::Pulp3::Repository.new(nil, smart_proxy).list({})
-        repos_on_capsule.reject { |capsule_repo| katello_pulp_ids.include? capsule_repo.name }
+      def core_api
+        ::Katello::Pulp3::Api::Core.new(smart_proxy)
       end
 
-      def delete_orphaned_repositories_for_mirror_proxies
-        orphaned_repositories_for_mirror_proxies.map do |repo|
-          ::Katello::Pulp3::Repository.new(nil, smart_proxy).repositories_api.delete(repo.pulp_href)
+      def delete_orphan_repository_versions
+        orphan_repository_versions.collect do |href|
+          core_api.repository_versions_api.delete(href)
         end
       end
 
-      def delete_orphaned_distributions_for_mirror_proxies
-        ::Katello::Pulp3::Repository.delete_orphan_distributions(smart_proxy)
+      def pulp3_enabled_repo_types
+        Katello::RepositoryTypeManager.repository_types.values.select do |repository_type|
+          smart_proxy.pulp3_repository_type_support?(repository_type)
+        end
       end
 
-      def delete_orphaned_remotes_for_mirror_proxies
-        ::Katello::Pulp3::Repository.delete_orphan_remotes(smart_proxy)
+      def orphan_repository_versions
+        version_hrefs = core_api.repository_versions
+        version_hrefs - ::Katello::Repository.where(version_href: version_hrefs).pluck(:version_href)
       end
     end
   end

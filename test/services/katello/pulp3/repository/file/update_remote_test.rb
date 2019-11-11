@@ -9,6 +9,7 @@ module Katello
         def setup
           mock_remotes_create_response = mock('response')
           mock_remotes_create_response.stubs(:pulp_href).returns('http://someurl')
+          @mock_api_wrapper = mock("api_wrapper")
           @mock_pulp3_api = mock('pulp3_api')
           @mock_pulp3_api.stubs(:create).returns(mock_remotes_create_response)
           @mock_smart_proxy = mock('smart_proxy')
@@ -18,7 +19,8 @@ module Katello
           @file_repo = katello_repositories(:generic_file)
           @file_repo_service = @file_repo.backend_service(@mock_smart_proxy)
           @file_repo.root.update_attributes(url: 'my-files.org')
-          @file_repo_service.stubs(:remotes_api).returns(@mock_pulp3_api)
+          @file_repo_service.stubs(:api).returns(@mock_api_wrapper)
+          @mock_api_wrapper.stubs(:remotes_api).returns(@mock_pulp3_api)
 
           @file_repo.remote_href = '193874298udsfsdf'
           refute_empty @file_repo.remote_href

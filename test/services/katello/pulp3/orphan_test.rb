@@ -38,6 +38,8 @@ module Katello
         ensure_creatable(@repo, @master)
         create_repo(@repo, @master)
 
+        @smart_proxy_service = Katello::Pulp3::SmartProxyRepository.new(@master)
+
         ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo,
           repository_creation: true)
@@ -59,7 +61,7 @@ module Katello
       end
 
       def test_orphan_repository_versions
-        orphans = ::Katello::Pulp3::Repository.orphan_repository_versions(@master)
+        orphans = @smart_proxy_service.orphan_repository_versions
 
         repo_reference = Katello::Pulp3::RepositoryReference.find_by(
             :root_repository_id => @repo.root.id,
@@ -69,8 +71,8 @@ module Katello
       end
 
       def test_delete_orphan_repository_versions
-        ::Katello::Pulp3::Repository.delete_orphan_repository_versions(@master)
-        orphans = ::Katello::Pulp3::Repository.orphan_repository_versions(@master)
+        @smart_proxy_service.delete_orphan_repository_versions
+        orphans = @smart_proxy_service.orphan_repository_versions
         assert_empty orphans
       end
     end
