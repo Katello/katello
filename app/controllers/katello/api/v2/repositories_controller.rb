@@ -62,7 +62,7 @@ module Katello
     def_param_group :repo_create do
       param :label, String, :required => false
       param :product_id, :number, :required => true, :desc => N_("Product the repository belongs to")
-      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo (either 'yum', 'deb', 'puppet', 'docker', or 'ostree')")
+      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
