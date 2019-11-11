@@ -1,0 +1,2 @@
+attributes :download_policy
+attributes :supported_pulp_types

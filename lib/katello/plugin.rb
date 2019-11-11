@@ -269,7 +269,7 @@ Foreman::Plugin.register :katello do
   register_ping_extension { Katello::Ping.ping }
   register_status_extension { Katello::Ping.status }
 
-  extend_rabl_template 'api/v2/smart_proxies/main', 'katello/api/v2/smart_proxies/download_policy'
+  extend_rabl_template 'api/v2/smart_proxies/main', 'katello/api/v2/smart_proxies/pulp_info'
   extend_rabl_template 'api/v2/hosts/show', 'katello/api/v2/hosts/host_collections'
 
   extend_page "smart_proxies/show" do |cx|
