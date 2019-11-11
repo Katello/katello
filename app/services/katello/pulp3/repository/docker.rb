@@ -4,6 +4,10 @@ module Katello
   module Pulp3
     class Repository
       class Docker < ::Katello::Pulp3::Repository
+        def relative_path
+          repo.container_repository_name
+        end
+
         def remote_options
           options = {url: root.url, upstream_name: root.docker_upstream_name}
           if root.docker_tags_whitelist && root.docker_tags_whitelist.any?
