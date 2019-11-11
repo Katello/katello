@@ -7,8 +7,8 @@ module Actions
         end
 
         def invoke_external_task
-          smart_proxy_service = ::Katello::Pulp3::SmartProxyRepository.new(smart_proxy)
-          smart_proxy_service.delete_orphaned_remotes_for_mirror_proxies
+          smart_proxy_service = ::Katello::Pulp3::SmartProxyRepository.instance_for_type(smart_proxy)
+          smart_proxy_service.delete_orphan_remotes
         end
       end
     end

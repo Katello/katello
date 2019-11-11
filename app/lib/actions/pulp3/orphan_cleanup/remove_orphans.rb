@@ -7,8 +7,7 @@ module Actions
         end
 
         def invoke_external_task
-          smart_proxy = SmartProxy.find(input[:smart_proxy_id])
-          output[:pulp_tasks] = ::Katello::Pulp3::Repository.delete_orphans(smart_proxy)
+          output[:pulp_tasks] = ::Katello::Pulp3::Api::Core.new(smart_proxy).delete_orphans
         end
       end
     end

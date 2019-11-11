@@ -6,27 +6,25 @@ module Katello
       include VCR::TestCase
     end
 
-    PULP_TMP_DIR = "/var/lib/pulp/published/puppet_katello_test".freeze
     @repo_url = "file:///var/www/test_repos/zoo"
-    @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
     @repo = nil
 
     def ensure_creatable(repo, smart_proxy)
       service = repo.backend_service(smart_proxy)
-      service.class.any_instance.stubs(:backend_object_name).returns(repo.pulp_id)
+      service.class.any_instance.stubs(:generate_backend_object_name).returns(repo.pulp_id)
 
       tasks = []
-      if (repo = service.list(name: service.backend_object_name).first)
+      if (repo = service.list(name: service.generate_backend_object_name).first)
         tasks << service.delete(repo.pulp_href)
       end
 
-      if (remote = service.remotes_list(name: service.backend_object_name).first)
+      if (remote = service.api.remotes_list(name: service.generate_backend_object_name).first)
         tasks << service.delete_remote(remote.pulp_href)
       end
 
       #delete distribution by name, since its not random due to vcr
-      if (dist = service.lookup_distributions(name: service.backend_object_name).first)
-        tasks << service.delete_distribution(dist.pulp_href)
+      if (dist = service.lookup_distributions(name: service.generate_backend_object_name).first)
+        tasks << service.api.delete_distribution(dist.pulp_href)
       end
       service.delete_distributions
     end
@@ -43,8 +41,7 @@ module Katello
     end
 
     def tasks_api(smart_proxy)
-      api_client = PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
-      PulpcoreClient::TasksApi.new(api_client)
+      Katello::Pulp3::Api::Core.new(smart_proxy).tasks_api
     end
 
     def create_repo(repo, smart_proxy)

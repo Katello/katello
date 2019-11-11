@@ -217,7 +217,7 @@ module Katello
       end
 
       def refresh_mirror_entities
-        refresh
+        refresh_if_needed
       end
 
       def update_or_associate_importer

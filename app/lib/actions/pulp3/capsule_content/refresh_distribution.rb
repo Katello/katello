@@ -17,11 +17,11 @@ module Actions
           tasks = options[:tasks]
           repo = ::Katello::Repository.find(input[:repository_id])
           if options[:use_repository_version]
-            output[:response] = repo.backend_service(smart_proxy).refresh_mirror_distributions(:use_repository_version => true)
+            output[:response] = repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:use_repository_version => true)
           elsif tasks && tasks[:pulp_tasks] && tasks[:pulp_tasks].first
             publication_href = tasks[:pulp_tasks].first[:created_resources].first
             if publication_href
-              output[:response] = repo.backend_service(smart_proxy).refresh_mirror_distributions(:publication => publication_href)
+              output[:response] = repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:publication => publication_href)
             end
           end
         end

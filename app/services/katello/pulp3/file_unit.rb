@@ -5,7 +5,7 @@ module Katello
       CONTENT_TYPE = "file".freeze
 
       def self.content_api
-        PulpFileClient::ContentFilesApi.new(Katello::Pulp3::Repository::File.api_client(SmartProxy.pulp_master!))
+        PulpFileClient::ContentFilesApi.new(Katello::Pulp3::Api::File.new(SmartProxy.pulp_master!).api_client)
       end
 
       def self.create_content(options)

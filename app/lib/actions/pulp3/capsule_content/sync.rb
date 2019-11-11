@@ -11,7 +11,7 @@ module Actions
 
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:repository_id])
-          output[:pulp_tasks] = repo.backend_service(::SmartProxy.unscoped.find(input[:smart_proxy_id])).sync_mirror
+          output[:pulp_tasks] = repo.backend_service(smart_proxy).with_mirror_adapter.sync
         end
 
         def rescue_strategy_for_self
