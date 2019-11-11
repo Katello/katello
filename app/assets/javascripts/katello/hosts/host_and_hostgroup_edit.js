@@ -37,7 +37,7 @@ KT.hosts.fetchContentViews = function () {
     select.find('option').remove();
     if (envId) {
         KT.hosts.signalContentViewFetch(true);
-        var url = foreman_url('/katello/api/v2/content_views/');
+        var url = tfm.tools.foremanUrl('/katello/api/v2/content_views/');
         $.get(url, {environment_id: envId, full_result: true}, function (data) {
             select.append($("<option />"));
             $.each(data.results, function(index, view) {

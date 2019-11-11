@@ -19,7 +19,7 @@ function ktLoadActivationKeys() {
     // environment & content view.
     $.ajax({
         type: 'get',
-        url:  foreman_url('/katello/api/v2/environments/' + getSelectedEnvId() + '/activation_keys'),
+        url:  tfm.tools.foremanUrl('/katello/api/v2/environments/' + getSelectedEnvId() + '/activation_keys'),
         data: {'content_view_id': getSelectedContentViewId()},
         success: function(response) {
             KT.hosts.availableActivationKeys = {};
