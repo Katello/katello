@@ -13,7 +13,7 @@ module Katello
         end
 
         def remote_class
-          PulpFileClient::FileRemote
+          PulpFileClient::FileFileRemote
         end
 
         def self.api_client(smart_proxy)
@@ -25,7 +25,7 @@ module Katello
         end
 
         def publication_class
-          PulpFileClient::FilePublication
+          PulpFileClient::FileFilePublication
         end
 
         def publications_api
@@ -33,7 +33,7 @@ module Katello
         end
 
         def distribution_class
-          PulpFileClient::FileDistribution
+          PulpFileClient::FileFileDistribution
         end
 
         def self.distributions_api(smart_proxy)
