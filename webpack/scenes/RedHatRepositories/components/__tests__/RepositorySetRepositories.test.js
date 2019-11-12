@@ -1,44 +1,60 @@
 import React from 'react';
-import thunk from 'redux-thunk';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
-import configureMockStore from 'redux-mock-store';
-import RepositorySetRepositories from '../RepositorySetRepositories';
-
-const mockStore = configureMockStore([thunk]);
-const store = mockStore({ katello: { redHatRepositories: { repositorySetRepositories: [] } } });
+import { RepositorySetRepositories } from '../RepositorySetRepositories';
 
 describe('RepositorySetRepositories Component', () => {
-  let shallowWrapper;
-  beforeEach(() => {
-    shallowWrapper = shallow(<RepositorySetRepositories
-      store={store}
+  it('should render with sorted repos', async () => {
+    const shallowWrapper = shallow(<RepositorySetRepositories
+      loadRepositorySetRepos={() => null}
+      contentId={1}
+      productId={2}
+      data={{
+        loading: false,
+        repositories: [
+          { arch: 'x86_64', releasever: '5.11' },
+          { arch: 'x86_64', releasever: '7Server' },
+          { arch: 'x86_64', releasever: '7.10' },
+          { arch: 'x86_64', releasever: '7.1' },
+          { arch: 'i386', releasever: '5.11' },
+          { arch: 'i386', releasever: '5Workstation' },
+          { arch: 'x86_64', releasever: '7.11' }],
+      }}
+    />);
+
+    expect(toJson(shallowWrapper)).toMatchSnapshot();
+  });
+
+  it('should render loading', async () => {
+    const shallowWrapper = shallow(<RepositorySetRepositories
+      loadRepositorySetRepos={() => null}
       contentId={1}
       productId={2}
       type="foo"
+      data={{
+        loading: true,
+        repositories: [],
+      }}
     />);
+
+    expect(toJson(shallowWrapper)).toMatchSnapshot();
   });
 
-  it('sorts repos correctly', async () => {
-    const repos = [
-      { arch: 'x86_64', releasever: '5.11' },
-      { arch: 'x86_64', releasever: '7Server' },
-      { arch: 'x86_64', releasever: '7.10' },
-      { arch: 'x86_64', releasever: '7.1' },
-      { arch: 'i386', releasever: '5.11' },
-      { arch: 'i386', releasever: '5Workstation' },
-      { arch: 'x86_64', releasever: '7.11' }];
+  it('should render with error', async () => {
+    const shallowWrapper = shallow(<RepositorySetRepositories
+      loadRepositorySetRepos={() => null}
+      contentId={1}
+      productId={2}
+      type="foo"
+      data={{
+        loading: false,
+        repositories: [],
+        error: {
+          displayMessage: 'some error',
+        },
+      }}
+    />);
 
-    const result = shallowWrapper.dive().instance().sortedRepos(repos);
-
-    const expectedIndices = [1, 5, 6, 2, 3, 0, 4];
-
-    expectedIndices.forEach((expected, i) => {
-      expect(result[i]).toEqual(repos[expected]);
-    });
-  });
-
-  it('should render', async () => {
     expect(toJson(shallowWrapper)).toMatchSnapshot();
   });
 });
