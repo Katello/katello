@@ -8,7 +8,7 @@ import loadRepositorySetRepos from '../../../redux/actions/RedHatRepositories/re
 import RepositorySetRepository from './RepositorySetRepository/';
 import { yStream } from './RepositorySetRepositoriesHelpers';
 
-class RepositorySetRepositories extends Component {
+export class RepositorySetRepositories extends Component {
   componentDidMount() {
     const { contentId, productId } = this.props;
 

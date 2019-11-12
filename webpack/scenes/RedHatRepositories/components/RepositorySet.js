@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ListView, Icon } from 'patternfly-react';
 
 import RepositoryTypeIcon from './RepositoryTypeIcon';
+// eslint-disable-next-line import/no-named-as-default
 import RepositorySetRepositories from './RepositorySetRepositories';
 
 const RepositorySet = ({
