@@ -291,7 +291,7 @@ module Katello
 
       Product.stubs(:find).returns(product)
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :description => 'My Description', :url => 'http://www.google.com', :content_type => 'yum' }
-      assert_response :success
+      assert_response 201
       assert_template 'api/v2/common/create'
     end
 
