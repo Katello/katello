@@ -61,7 +61,7 @@ module Katello
     def test_create
       post :create, params: { :organization_id => @organization, :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014'} }
 
-      assert_response :success
+      assert_response 201
       assert_template 'api/v2/host_collections/create'
 
       results = JSON.parse(response.body)

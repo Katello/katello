@@ -12,6 +12,7 @@ module Katello
         end
 
         def respond_for_create(options = {})
+          options[:status] ||= 201
           try_specific_resource_template(options[:template] || params[:action], params[:action], options)
         end
 
