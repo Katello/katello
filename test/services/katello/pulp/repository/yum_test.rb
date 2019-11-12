@@ -155,9 +155,9 @@ module Katello
           refute_empty task_list
           TaskSupport.wait_on_tasks(task_list)
           assert_equal 2, repo.backend_data(true)['distributors'].count
-          repo_refresh = Katello::Pulp::Repository::Yum.new(@custom, @master)
-          repo_refresh.refresh
+          TaskSupport.wait_on_tasks(repo.refresh)
           assert_equal 3, repo.backend_data(true)['distributors'].count
+          assert_empty repo.refresh_if_needed
         ensure
           delete_repo(@custom)
         end

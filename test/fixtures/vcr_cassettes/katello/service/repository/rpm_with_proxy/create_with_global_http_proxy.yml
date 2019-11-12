@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/debian_9/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/debian_9/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -21,7 +21,7 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:19 GMT
+      - Mon, 04 Nov 2019 22:33:26 GMT
       Server:
       - Apache
       Content-Length:
@@ -44,10 +44,10 @@ http_interactions:
         IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJkZWJpYW5f
         OSJ9fQ==
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:19 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:26 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Fedora_17/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/debian_9/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -66,7 +66,52 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:20 GMT
+      - Mon, 04 Nov 2019 22:33:26 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '409'
+      Etag:
+      - '"71e48d5b408854fd8104f9a6699cfb90"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PWRlYmlhbl85IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9y
+        ZXBvc2l0b3JpZXMvZGViaWFuXzkvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0
+        YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0
+        YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogImRlYmlhbl85In19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT1kZWJpYW5fOSIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNr
+        IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJkZWJpYW5f
+        OSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:26 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Fedora_17/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:27 GMT
       Server:
       - Apache
       Content-Length:
@@ -89,10 +134,10 @@ http_interactions:
         YmFjayI6IG51bGwsICJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVk
         b3JhXzE3In19
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:20 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:27 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/2_duplicate/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Fedora_17/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -111,7 +156,52 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:20 GMT
+      - Mon, 04 Nov 2019 22:33:27 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '414'
+      Etag:
+      - '"4fffc025091bde2a0862d2cab0332dad"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PUZlZG9yYV8xNyIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIv
+        cmVwb3NpdG9yaWVzL0ZlZG9yYV8xNy8/ZGV0YWlscz10cnVlIiwgImh0dHBf
+        c3RhdHVzIjogNDA0LCAiZXJyb3IiOiB7ImNvZGUiOiAiUExQMDAwOSIsICJk
+        YXRhIjogeyJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVkb3JhXzE3
+        In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVw
+        b3NpdG9yeT1GZWRvcmFfMTciLCAic3ViX2Vycm9ycyI6IFtdfSwgInRyYWNl
+        YmFjayI6IG51bGwsICJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVk
+        b3JhXzE3In19
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:27 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/2_duplicate/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:27 GMT
       Server:
       - Apache
       Content-Length:
@@ -134,10 +224,10 @@ http_interactions:
         LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9y
         eSI6ICIyX2R1cGxpY2F0ZSJ9fQ==
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:20 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:27 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/feedless_1/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/2_duplicate/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -156,7 +246,52 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:20 GMT
+      - Mon, 04 Nov 2019 22:33:27 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '424'
+      Etag:
+      - '"f44a3f4eb1e519779684133f24b58c97"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTJfZHVwbGljYXRlIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92
+        Mi9yZXBvc2l0b3JpZXMvMl9kdXBsaWNhdGUvP2RldGFpbHM9dHJ1ZSIsICJo
+        dHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDki
+        LCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIjJfZHVw
+        bGljYXRlIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShz
+        KTogcmVwb3NpdG9yeT0yX2R1cGxpY2F0ZSIsICJzdWJfZXJyb3JzIjogW119
+        LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9y
+        eSI6ICIyX2R1cGxpY2F0ZSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:27 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/feedless_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:27 GMT
       Server:
       - Apache
       Content-Length:
@@ -179,10 +314,10 @@ http_interactions:
         cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
         ImZlZWRsZXNzXzEifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:20 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:27 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/9/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/feedless_1/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -201,7 +336,52 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:20 GMT
+      - Mon, 04 Nov 2019 22:33:27 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '419'
+      Etag:
+      - '"6d921e311bfa1d8e33a099d653380197"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PWZlZWRsZXNzXzEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3Yy
+        L3JlcG9zaXRvcmllcy9mZWVkbGVzc18xLz9kZXRhaWxzPXRydWUiLCAiaHR0
+        cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5Iiwg
+        ImRhdGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJmZWVkbGVz
+        c18xIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTog
+        cmVwb3NpdG9yeT1mZWVkbGVzc18xIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
+        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
+        ImZlZWRsZXNzXzEifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:27 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/9/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:27 GMT
       Server:
       - Apache
       Content-Length:
@@ -223,10 +403,10 @@ http_interactions:
         OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
         c2l0b3J5IjogIjkifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:20 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:27 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/pulp-uuid-rhel_6_x86_64/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/9/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -245,7 +425,51 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:20 GMT
+      - Mon, 04 Nov 2019 22:33:27 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"e8e14b03002cef40e7d5557b625b9e91"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTkiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy85Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI5In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT05IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjkifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:27 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/pulp-uuid-rhel_6_x86_64/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:28 GMT
       Server:
       - Apache
       Content-Length:
@@ -269,10 +493,10 @@ http_interactions:
         W119LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3Np
         dG9yeSI6ICJwdWxwLXV1aWQtcmhlbF82X3g4Nl82NCJ9fQ==
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:20 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/1/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/pulp-uuid-rhel_6_x86_64/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -291,7 +515,53 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:20 GMT
+      - Mon, 04 Nov 2019 22:33:28 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '484'
+      Etag:
+      - '"8c1d76c0d0f67a85650043812821cf79"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PXB1bHAtdXVpZC1yaGVsXzZfeDg2XzY0IiwgIl9ocmVmIjog
+        Ii9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvcHVscC11dWlkLXJoZWxfNl94
+        ODZfNjQvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVy
+        cm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2Vz
+        IjogeyJyZXBvc2l0b3J5IjogInB1bHAtdXVpZC1yaGVsXzZfeDg2XzY0In19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT1wdWxwLXV1aWQtcmhlbF82X3g4Nl82NCIsICJzdWJfZXJyb3JzIjog
+        W119LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3Np
+        dG9yeSI6ICJwdWxwLXV1aWQtcmhlbF82X3g4Nl82NCJ9fQ==
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:28 GMT
       Server:
       - Apache
       Content-Length:
@@ -313,10 +583,10 @@ http_interactions:
         OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
         c2l0b3J5IjogIjEifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:20 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/9_noarch/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/1/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -335,7 +605,51 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:20 GMT
+      - Mon, 04 Nov 2019 22:33:28 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"5cdaeba5c803a22301643a2f207d270e"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy8xLz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICIxIn19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT0xIiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjEifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/9_noarch/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:28 GMT
       Server:
       - Apache
       Content-Length:
@@ -358,10 +672,10 @@ http_interactions:
         IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICI5X25vYXJj
         aCJ9fQ==
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:20 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/4/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/9_noarch/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -380,7 +694,52 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:21 GMT
+      - Mon, 04 Nov 2019 22:33:28 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '409'
+      Etag:
+      - '"3ebcf5358ae2d94b88c36a32eaea8cdb"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTlfbm9hcmNoIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9y
+        ZXBvc2l0b3JpZXMvOV9ub2FyY2gvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0
+        YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0
+        YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIjlfbm9hcmNoIn19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT05X25vYXJjaCIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNr
+        IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICI5X25vYXJj
+        aCJ9fQ==
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/4/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:28 GMT
       Server:
       - Apache
       Content-Length:
@@ -402,10 +761,10 @@ http_interactions:
         OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
         c2l0b3J5IjogIjQifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:21 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/6/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/4/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -424,7 +783,51 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:21 GMT
+      - Mon, 04 Nov 2019 22:33:28 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"c8a0691ac59901210ead0eda68ca9033"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy80Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI0In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT00IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjQifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/6/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:28 GMT
       Server:
       - Apache
       Content-Length:
@@ -446,10 +849,10 @@ http_interactions:
         OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
         c2l0b3J5IjogIjYifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:21 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/7/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/6/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -468,7 +871,51 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:21 GMT
+      - Mon, 04 Nov 2019 22:33:28 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"a9f3e136425fefbf34661510bcc14368"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTYiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy82Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI2In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT02IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjYifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:28 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/7/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:29 GMT
       Server:
       - Apache
       Content-Length:
@@ -490,10 +937,10 @@ http_interactions:
         OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
         c2l0b3J5IjogIjcifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:21 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/source_rpm/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/7/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -512,7 +959,51 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:21 GMT
+      - Mon, 04 Nov 2019 22:33:29 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"0a8daad01b7d63ef6e6f0f14b08405b4"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTciLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy83Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI3In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT03IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjcifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/source_rpm/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:29 GMT
       Server:
       - Apache
       Content-Length:
@@ -535,10 +1026,10 @@ http_interactions:
         cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
         InNvdXJjZV9ycG0ifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:21 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Default_Organization-Test-redis/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/source_rpm/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -557,7 +1048,52 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:21 GMT
+      - Mon, 04 Nov 2019 22:33:29 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '419'
+      Etag:
+      - '"02113d4b79baab13a00a64a5315ffcdb"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PXNvdXJjZV9ycG0iLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3Yy
+        L3JlcG9zaXRvcmllcy9zb3VyY2VfcnBtLz9kZXRhaWxzPXRydWUiLCAiaHR0
+        cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5Iiwg
+        ImRhdGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJzb3VyY2Vf
+        cnBtIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTog
+        cmVwb3NpdG9yeT1zb3VyY2VfcnBtIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
+        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
+        InNvdXJjZV9ycG0ifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Test-redis/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:29 GMT
       Server:
       - Apache
       Content-Length:
@@ -582,10 +1118,10 @@ http_interactions:
         Y2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRlZmF1
         bHRfT3JnYW5pemF0aW9uLVRlc3QtcmVkaXMifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:21 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox-library/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Test-redis/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -604,7 +1140,54 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:21 GMT
+      - Mon, 04 Nov 2019 22:33:29 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '524'
+      Etag:
+      - '"9e8f48c6e57384bee04b2de884ea20ee"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtcmVkaXMiLCAi
+        X2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9EZWZhdWx0X09y
+        Z2FuaXphdGlvbi1UZXN0LXJlZGlzLz9kZXRhaWxzPXRydWUiLCAiaHR0cF9z
+        dGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRh
+        dGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
+        Z2FuaXphdGlvbi1UZXN0LXJlZGlzIn19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT1EZWZhdWx0X09yZ2FuaXph
+        dGlvbi1UZXN0LXJlZGlzIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0cmFjZWJh
+        Y2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRlZmF1
+        bHRfT3JnYW5pemF0aW9uLVRlc3QtcmVkaXMifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox-library/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:29 GMT
       Server:
       - Apache
       Content-Length:
@@ -630,10 +1213,10 @@ http_interactions:
         bnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
         Z2FuaXphdGlvbi1UZXN0LWJ1c3lib3gtbGlicmFyeSJ9fQ==
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:21 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox2-dev/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox-library/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -652,7 +1235,55 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:22 GMT
+      - Mon, 04 Nov 2019 22:33:29 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '574'
+      Etag:
+      - '"6fb3201be0e91b568106bf7a9b97d2ee"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveC1s
+        aWJyYXJ5IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMv
+        RGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94LWxpYnJhcnkvP2Rl
+        dGFpbHM9dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJj
+        b2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveC1s
+        aWJyYXJ5In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShz
+        KTogcmVwb3NpdG9yeT1EZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1c3li
+        b3gtbGlicmFyeSIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNrIjog
+        bnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
+        Z2FuaXphdGlvbi1UZXN0LWJ1c3lib3gtbGlicmFyeSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox2-dev/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:29 GMT
       Server:
       - Apache
       Content-Length:
@@ -678,10 +1309,10 @@ http_interactions:
         cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09yZ2FuaXphdGlvbi1U
         ZXN0LWJ1c3lib3gyLWRldiJ9fQ==
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:22 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/100/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox2-dev/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -700,7 +1331,55 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:22 GMT
+      - Mon, 04 Nov 2019 22:33:29 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '559'
+      Etag:
+      - '"ce36158a73de94aac5846fe735d02207"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveDIt
+        ZGV2IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvRGVm
+        YXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94Mi1kZXYvP2RldGFpbHM9
+        dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjog
+        IlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5
+        IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveDItZGV2In19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT1EZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1c3lib3gyLWRldiIs
+        ICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291
+        cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09yZ2FuaXphdGlvbi1U
+        ZXN0LWJ1c3lib3gyLWRldiJ9fQ==
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:29 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/100/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:30 GMT
       Server:
       - Apache
       Content-Length:
@@ -722,10 +1401,10 @@ http_interactions:
         X2Vycm9ycyI6IFtdfSwgInRyYWNlYmFjayI6IG51bGwsICJyZXNvdXJjZXMi
         OiB7InJlcG9zaXRvcnkiOiAiMTAwIn19
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:22 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:30 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-My_Files/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/100/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -744,7 +1423,51 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:22 GMT
+      - Mon, 04 Nov 2019 22:33:30 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '384'
+      Etag:
+      - '"ab861057593a60931f4734ae93e91b16"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTEwMCIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3Np
+        dG9yaWVzLzEwMC8/ZGV0YWlscz10cnVlIiwgImh0dHBfc3RhdHVzIjogNDA0
+        LCAiZXJyb3IiOiB7ImNvZGUiOiAiUExQMDAwOSIsICJkYXRhIjogeyJyZXNv
+        dXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiMTAwIn19LCAiZGVzY3JpcHRpb24i
+        OiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT0xMDAiLCAic3Vi
+        X2Vycm9ycyI6IFtdfSwgInRyYWNlYmFjayI6IG51bGwsICJyZXNvdXJjZXMi
+        OiB7InJlcG9zaXRvcnkiOiAiMTAwIn19
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:30 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-My_Files/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:30 GMT
       Server:
       - Apache
       Content-Length:
@@ -770,10 +1493,10 @@ http_interactions:
         IjogeyJyZXBvc2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
         ZXQtTXlfRmlsZXMifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:22 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:30 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_File_1/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-My_Files/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -792,7 +1515,55 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:22 GMT
+      - Mon, 04 Nov 2019 22:33:30 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '554'
+      Etag:
+      - '"0ec167bc899bf2ef00db7a170c7775a8"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmls
+        ZXMiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9EZWZh
+        dWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzLz9kZXRhaWxzPXRy
+        dWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQ
+        TFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6
+        ICJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIn19LCAi
+        ZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9y
+        eT1EZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIiwgInN1
+        Yl9lcnJvcnMiOiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2Vz
+        IjogeyJyZXBvc2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
+        ZXQtTXlfRmlsZXMifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:30 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_File_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:30 GMT
       Server:
       - Apache
       Content-Length:
@@ -818,10 +1589,10 @@ http_interactions:
         bnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
         Z2FuaXphdGlvbi1DYWJpbmV0LXB1bHAzX0ZpbGVfMSJ9fQ==
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:22 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:30 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_Docker_1/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_File_1/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -840,7 +1611,55 @@ http_interactions:
       message: Not Found
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:23 GMT
+      - Mon, 04 Nov 2019 22:33:30 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '574'
+      Etag:
+      - '"4edbebea83e0686375ce9470277d3b8c"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNf
+        RmlsZV8xIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMv
+        RGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1wdWxwM19GaWxlXzEvP2Rl
+        dGFpbHM9dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJj
+        b2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNf
+        RmlsZV8xIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShz
+        KTogcmVwb3NpdG9yeT1EZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LXB1
+        bHAzX0ZpbGVfMSIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNrIjog
+        bnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
+        Z2FuaXphdGlvbi1DYWJpbmV0LXB1bHAzX0ZpbGVfMSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:30 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_Docker_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:30 GMT
       Server:
       - Apache
       Content-Length:
@@ -866,10 +1685,58 @@ http_interactions:
         ZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRl
         ZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNfRG9ja2VyXzEifX0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:23 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:30 GMT
+- request:
+    method: get
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_Docker_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 04 Nov 2019 22:33:30 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '584'
+      Etag:
+      - '"bb71e1a7380e846f3eb524a094699134"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNf
+        RG9ja2VyXzEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmll
+        cy9EZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LXB1bHAzX0RvY2tlcl8x
+        Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6
+        IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNlcyI6IHsi
+        cmVwb3NpdG9yeSI6ICJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LXB1
+        bHAzX0RvY2tlcl8xIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNv
+        dXJjZShzKTogcmVwb3NpdG9yeT1EZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJp
+        bmV0LXB1bHAzX0RvY2tlcl8xIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0cmFj
+        ZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRl
+        ZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNfRG9ja2VyXzEifX0=
+    http_version: 
+  recorded_at: Mon, 04 Nov 2019 22:33:30 GMT
 - request:
     method: post
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/
     body:
       encoding: UTF-8
       base64_string: |
@@ -880,9 +1747,9 @@ http_interactions:
         L3Rlc3RfcmVwb3Mvem9vIiwidHlwZV9za2lwX2xpc3QiOm51bGwsImJhc2lj
         X2F1dGhfdXNlcm5hbWUiOm51bGwsImJhc2ljX2F1dGhfcGFzc3dvcmQiOm51
         bGwsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJwcm94eV9ob3N0IjoiaHR0cDov
-        L3VybF8xIiwic3NsX2NsaWVudF9jZXJ0IjpudWxsLCJzc2xfY2xpZW50X2tl
-        eSI6bnVsbCwic3NsX2NhX2NlcnQiOm51bGwsInByb3h5X3BvcnQiOjgwLCJw
-        cm94eV91c2VybmFtZSI6bnVsbCwicHJveHlfcGFzc3dvcmQiOm51bGx9LCJu
+        L3VybF8xIiwicHJveHlfcG9ydCI6ODAsInByb3h5X3VzZXJuYW1lIjpudWxs
+        LCJwcm94eV9wYXNzd29yZCI6bnVsbCwic3NsX2NsaWVudF9jZXJ0IjpudWxs
+        LCJzc2xfY2xpZW50X2tleSI6bnVsbCwic3NsX2NhX2NlcnQiOm51bGx9LCJu
         b3RlcyI6eyJfcmVwby10eXBlIjoicnBtLXJlcG8ifSwiZGlzdHJpYnV0b3Jz
         IjpbeyJkaXN0cmlidXRvcl90eXBlX2lkIjoieXVtX2Rpc3RyaWJ1dG9yIiwi
         ZGlzdHJpYnV0b3JfY29uZmlnIjp7InJlbGF0aXZlX3VybCI6IkFDTUVfQ29y
@@ -915,7 +1782,7 @@ http_interactions:
       message: CREATED
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:23 GMT
+      - Mon, 04 Nov 2019 22:33:31 GMT
       Server:
       - Apache
       Content-Length:
@@ -932,14 +1799,14 @@ http_interactions:
         ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
         fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
         b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
-        NWQ2ZjBiMDNiMWM1YzUwY2RjNTZiNjc3In0sICJpZCI6ICJGZWRvcmFfMTci
+        NWRjMGE3M2JjNzI3MDE1MWRkZWI5OGU5In0sICJpZCI6ICJGZWRvcmFfMTci
         LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
         MTcvIn0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:23 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:31 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Fedora_17/?details=true
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Fedora_17/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -958,11 +1825,11 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:23 GMT
+      - Mon, 04 Nov 2019 22:33:31 GMT
       Server:
       - Apache
       Etag:
-      - '"bc7fde563402b68c13ae57948b2680b8-gzip"'
+      - '"c6e145b29f2dd441d502a854c90eeb41-gzip"'
       Vary:
       - Accept-Encoding
       Content-Length:
@@ -975,60 +1842,60 @@ http_interactions:
         eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiRmVkb3JhIDE3
         IHg4Nl82NCIsICJkZXNjcmlwdGlvbiI6IG51bGwsICJkaXN0cmlidXRvcnMi
         OiBbeyJyZXBvX2lkIjogIkZlZG9yYV8xNyIsICJsYXN0X3VwZGF0ZWQiOiAi
-        MjAxOS0wOS0wNFQwMDo1MzoyM1oiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3Yy
+        MjAxOS0xMS0wNFQyMjozMzozMVoiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3Yy
         L3JlcG9zaXRvcmllcy9GZWRvcmFfMTcvZGlzdHJpYnV0b3JzL2V4cG9ydF9k
         aXN0cmlidXRvci8iLCAibGFzdF9vdmVycmlkZV9jb25maWciOiB7fSwgImxh
         c3RfcHVibGlzaCI6IG51bGwsICJkaXN0cmlidXRvcl90eXBlX2lkIjogImV4
         cG9ydF9kaXN0cmlidXRvciIsICJhdXRvX3B1Ymxpc2giOiBmYWxzZSwgInNj
         cmF0Y2hwYWQiOiB7fSwgIl9ucyI6ICJyZXBvX2Rpc3RyaWJ1dG9ycyIsICJf
-        aWQiOiB7IiRvaWQiOiAiNWQ2ZjBiMDNiMWM1YzUwY2RjNTZiNjdiIn0sICJj
+        aWQiOiB7IiRvaWQiOiAiNWRjMGE3M2JjNzI3MDE1MWRkZWI5OGVkIn0sICJj
         b25maWciOiB7Imh0dHAiOiBmYWxzZSwgInJlbGF0aXZlX3VybCI6ICJBQ01F
         X0NvcnBvcmF0aW9uL2xpYnJhcnkvZmVkb3JhXzE3X2xhYmVsIiwgImh0dHBz
         IjogZmFsc2V9LCAiaWQiOiAiZXhwb3J0X2Rpc3RyaWJ1dG9yIn0sIHsicmVw
-        b19pZCI6ICJGZWRvcmFfMTciLCAibGFzdF91cGRhdGVkIjogIjIwMTktMDkt
-        MDRUMDA6NTM6MjNaIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0
+        b19pZCI6ICJGZWRvcmFfMTciLCAibGFzdF91cGRhdGVkIjogIjIwMTktMTEt
+        MDRUMjI6MzM6MzFaIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0
         b3JpZXMvRmVkb3JhXzE3L2Rpc3RyaWJ1dG9ycy9GZWRvcmFfMTdfY2xvbmUv
         IiwgImxhc3Rfb3ZlcnJpZGVfY29uZmlnIjoge30sICJsYXN0X3B1Ymxpc2gi
         OiBudWxsLCAiZGlzdHJpYnV0b3JfdHlwZV9pZCI6ICJ5dW1fY2xvbmVfZGlz
         dHJpYnV0b3IiLCAiYXV0b19wdWJsaXNoIjogZmFsc2UsICJzY3JhdGNocGFk
         Ijoge30sICJfbnMiOiAicmVwb19kaXN0cmlidXRvcnMiLCAiX2lkIjogeyIk
-        b2lkIjogIjVkNmYwYjAzYjFjNWM1MGNkYzU2YjY3YSJ9LCAiY29uZmlnIjog
+        b2lkIjogIjVkYzBhNzNiYzcyNzAxNTFkZGViOThlYyJ9LCAiY29uZmlnIjog
         eyJkZXN0aW5hdGlvbl9kaXN0cmlidXRvcl9pZCI6ICJGZWRvcmFfMTcifSwg
         ImlkIjogIkZlZG9yYV8xN19jbG9uZSJ9LCB7InJlcG9faWQiOiAiRmVkb3Jh
-        XzE3IiwgImxhc3RfdXBkYXRlZCI6ICIyMDE5LTA5LTA0VDAwOjUzOjIzWiIs
+        XzE3IiwgImxhc3RfdXBkYXRlZCI6ICIyMDE5LTExLTA0VDIyOjMzOjMxWiIs
         ICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9yaWVzL0ZlZG9yYV8x
         Ny9kaXN0cmlidXRvcnMvRmVkb3JhXzE3LyIsICJsYXN0X292ZXJyaWRlX2Nv
         bmZpZyI6IHt9LCAibGFzdF9wdWJsaXNoIjogbnVsbCwgImRpc3RyaWJ1dG9y
         X3R5cGVfaWQiOiAieXVtX2Rpc3RyaWJ1dG9yIiwgImF1dG9fcHVibGlzaCI6
         IHRydWUsICJzY3JhdGNocGFkIjoge30sICJfbnMiOiAicmVwb19kaXN0cmli
-        dXRvcnMiLCAiX2lkIjogeyIkb2lkIjogIjVkNmYwYjAzYjFjNWM1MGNkYzU2
-        YjY3OSJ9LCAiY29uZmlnIjogeyJwcm90ZWN0ZWQiOiB0cnVlLCAiaHR0cCI6
+        dXRvcnMiLCAiX2lkIjogeyIkb2lkIjogIjVkYzBhNzNiYzcyNzAxNTFkZGVi
+        OThlYiJ9LCAiY29uZmlnIjogeyJwcm90ZWN0ZWQiOiB0cnVlLCAiaHR0cCI6
         IGZhbHNlLCAiaHR0cHMiOiB0cnVlLCAicmVsYXRpdmVfdXJsIjogIkFDTUVf
         Q29ycG9yYXRpb24vbGlicmFyeS9mZWRvcmFfMTdfbGFiZWwifSwgImlkIjog
         IkZlZG9yYV8xNyJ9XSwgImxhc3RfdW5pdF9hZGRlZCI6IG51bGwsICJub3Rl
         cyI6IHsiX3JlcG8tdHlwZSI6ICJycG0tcmVwbyJ9LCAibGFzdF91bml0X3Jl
         bW92ZWQiOiBudWxsLCAiY29udGVudF91bml0X2NvdW50cyI6IHt9LCAiX25z
         IjogInJlcG9zIiwgImltcG9ydGVycyI6IFt7InJlcG9faWQiOiAiRmVkb3Jh
-        XzE3IiwgImxhc3RfdXBkYXRlZCI6ICIyMDE5LTA5LTA0VDAwOjUzOjIzWiIs
+        XzE3IiwgImxhc3RfdXBkYXRlZCI6ICIyMDE5LTExLTA0VDIyOjMzOjMxWiIs
         ICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9yaWVzL0ZlZG9yYV8x
         Ny9pbXBvcnRlcnMveXVtX2ltcG9ydGVyLyIsICJfbnMiOiAicmVwb19pbXBv
         cnRlcnMiLCAiaW1wb3J0ZXJfdHlwZV9pZCI6ICJ5dW1faW1wb3J0ZXIiLCAi
         bGFzdF9vdmVycmlkZV9jb25maWciOiB7fSwgImxhc3Rfc3luYyI6IG51bGws
-        ICJzY3JhdGNocGFkIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1ZDZmMGIw
-        M2IxYzVjNTBjZGM1NmI2NzgifSwgImNvbmZpZyI6IHsiZmVlZCI6ICJmaWxl
+        ICJzY3JhdGNocGFkIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1ZGMwYTcz
+        YmM3MjcwMTUxZGRlYjk4ZWEifSwgImNvbmZpZyI6IHsiZmVlZCI6ICJmaWxl
         Oi8vL3Zhci93d3cvdGVzdF9yZXBvcy96b28iLCAicHJveHlfcG9ydCI6IDgw
         LCAiZG93bmxvYWRfcG9saWN5IjogImltbWVkaWF0ZSIsICJyZW1vdmVfbWlz
         c2luZyI6IHRydWUsICJwcm94eV9ob3N0IjogImh0dHA6Ly91cmxfMSIsICJz
         c2xfdmFsaWRhdGlvbiI6IHRydWV9LCAiaWQiOiAieXVtX2ltcG9ydGVyIn1d
         LCAibG9jYWxseV9zdG9yZWRfdW5pdHMiOiAwLCAiX2lkIjogeyIkb2lkIjog
-        IjVkNmYwYjAzYjFjNWM1MGNkYzU2YjY3NyJ9LCAidG90YWxfcmVwb3NpdG9y
+        IjVkYzBhNzNiYzcyNzAxNTFkZGViOThlOSJ9LCAidG90YWxfcmVwb3NpdG9y
         eV91bml0cyI6IDAsICJpZCI6ICJGZWRvcmFfMTciLCAiX2hyZWYiOiAiL3B1
         bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFfMTcvIn0=
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:23 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:31 GMT
 - request:
     method: delete
-    uri: https://zeta.partello.example.com/pulp/api/v2/repositories/Fedora_17/
+    uri: https://zeta.sparta.example.com/pulp/api/v2/repositories/Fedora_17/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1047,7 +1914,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:23 GMT
+      - Mon, 04 Nov 2019 22:33:31 GMT
       Server:
       - Apache
       Content-Length:
@@ -1058,14 +1925,14 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzL2MyNjI1ZTJiLTJkNjctNGM0Yi1hZGRmLWM5MzAxZWQ4MzJjNC8iLCAi
-        dGFza19pZCI6ICJjMjYyNWUyYi0yZDY3LTRjNGItYWRkZi1jOTMwMWVkODMy
-        YzQifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzLzViMmE2MzMzLWVjMTgtNGU2YS05NDUzLWI1ZWUzZWU5MzdmNi8iLCAi
+        dGFza19pZCI6ICI1YjJhNjMzMy1lYzE4LTRlNmEtOTQ1My1iNWVlM2VlOTM3
+        ZjYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:23 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:31 GMT
 - request:
     method: get
-    uri: https://zeta.partello.example.com/pulp/api/v2/tasks/c2625e2b-2d67-4c4b-addf-c9301ed832c4/
+    uri: https://zeta.sparta.example.com/pulp/api/v2/tasks/5b2a6333-ec18-4e6a-9453-b5ee3ee937f6/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1084,15 +1951,15 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 04 Sep 2019 00:53:23 GMT
+      - Mon, 04 Nov 2019 22:33:31 GMT
       Server:
       - Apache
       Etag:
-      - '"c26a856292aa7e3aa03e61f89522593c-gzip"'
+      - '"80c88046643511fe465325ccea5870db-gzip"'
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '359'
+      - '355'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -1100,20 +1967,20 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy9jMjYyNWUyYi0yZDY3LTRjNGItYWRkZi1jOTMwMWVkODMy
-        YzQvIiwgInRhc2tfaWQiOiAiYzI2MjVlMmItMmQ2Ny00YzRiLWFkZGYtYzkz
-        MDFlZDgzMmM0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy81YjJhNjMzMy1lYzE4LTRlNmEtOTQ1My1iNWVlM2VlOTM3
+        ZjYvIiwgInRhc2tfaWQiOiAiNWIyYTYzMzMtZWMxOC00ZTZhLTk0NTMtYjVl
+        ZTNlZTkzN2Y2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE5LTA5LTA0VDAwOjUzOjIzWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE5LTA5LTA0VDAwOjUzOjIzWiIsICJ0cmFjZWJh
+        MDE5LTExLTA0VDIyOjMzOjMxWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE5LTExLTA0VDIyOjMzOjMxWiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUB6ZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tLmRxMiIsICJzdGF0ZSI6ICJm
-        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
-        b3JrZXItMUB6ZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6
-        IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWQ2ZjBi
-        MDNhODZiNTkyMDcyY2MxMWIyIn0sICJpZCI6ICI1ZDZmMGIwM2E4NmI1OTIw
-        NzJjYzExYjIifQ==
+        MUB6ZXRhLnNwYXJ0YS5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAiZmlu
+        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTFAemV0YS5zcGFydGEuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVs
+        bCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1ZGMwYTczYjIy
+        NDY5ZTRhMDNlYmNkYTkifSwgImlkIjogIjVkYzBhNzNiMjI0NjllNGEwM2Vi
+        Y2RhOSJ9
     http_version: 
-  recorded_at: Wed, 04 Sep 2019 00:53:23 GMT
+  recorded_at: Mon, 04 Nov 2019 22:33:31 GMT
 recorded_with: VCR 3.0.3
