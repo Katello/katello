@@ -48,7 +48,7 @@ class RepositorySetRepository extends Component {
   };
 
   reloadAndNotify = async (result) => {
-    if (result.success) {
+    if (result && result.success) {
       await this.reloadEnabledRepos();
       await this.setEnabled();
       await this.notifyEnabled(result.data);
@@ -56,8 +56,8 @@ class RepositorySetRepository extends Component {
   };
 
   enableRepository = async () => {
-    await this.props.enableRepository(this.repoForAction());
-    this.reloadAndNotify();
+    const result = await this.props.enableRepository(this.repoForAction());
+    this.reloadAndNotify(result);
   };
 
   render() {
