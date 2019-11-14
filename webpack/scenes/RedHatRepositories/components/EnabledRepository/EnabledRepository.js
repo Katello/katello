@@ -55,8 +55,8 @@ class EnabledRepository extends Component {
   };
 
   disableRepository = async () => {
-    await this.props.disableRepository(this.repoForAction());
-    this.reloadAndNotify();
+    const result = await this.props.disableRepository(this.repoForAction());
+    this.reloadAndNotify(result);
   };
 
   render() {
