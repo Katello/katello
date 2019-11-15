@@ -47,20 +47,20 @@ module Katello
           fail NotImplementedError
         end
 
+        def repositories_api
+          fail NotImplementedError
+        end
+
+        def repository_versions_api
+          fail NotImplementedError
+        end
+
         def orphans_api
           PulpcoreClient::OrphansApi.new(core_api_client)
         end
 
         def core_api_client
           PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
-        end
-
-        def repositories_api
-          PulpcoreClient::RepositoriesApi.new(core_api_client)
-        end
-
-        def repository_versions_api
-          PulpcoreClient::RepositoriesVersionsApi.new(core_api_client)
         end
 
         def uploads_api

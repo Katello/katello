@@ -25,6 +25,14 @@ module Katello
           PulpAnsibleClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpAnsibleClient::Configuration))
         end
 
+        def repositories_api
+          PulpAnsibleClient::RepositoriesAnsibleApi.new(api_client)
+        end
+
+        def repository_versions_api
+          PulpAnsibleClient::RepositoriesAnsibleVersionsApi.new(api_client)
+        end
+
         def remotes_api
           PulpAnsibleClient::RemotesCollectionApi.new(api_client)
         end

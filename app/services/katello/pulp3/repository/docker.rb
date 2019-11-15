@@ -1,4 +1,4 @@
-require 'pulp_docker_client'
+require 'pulp_container_client'
 
 module Katello
   module Pulp3
@@ -29,13 +29,26 @@ module Katello
           }
         end
 
+        def create_version(options = {})
+          api.repositories_api.add(repository_reference.repository_href,
+                                   api.class.recursive_manage_class.new(content_units: options[:add_content_units]))
+          api.repositories_api.remove(repository_reference.repository_href,
+                                      api.class.recursive_manage_class.new(content_units: options[:remove_content_units]))
+        end
+
+        def add_content(content_unit_href)
+          content_unit_href = [content_unit_href] unless content_unit_href.is_a?(Array)
+          api.repositories_api.add(repository_reference.repository_href, content_units: content_unit_href)
+        end
+
         def copy_units_recursively(unit_hrefs, clear_repo = false)
           tasks = []
           if clear_repo
-            tasks << create_version(:remove_content_units => ["*"])
+            tasks << api.repositories_api.remove(repository_reference.repository_href,
+                                                 api.class.recursive_manage_class.new(:content_units => ["*"]))
           end
-          tasks << api.recursive_add_api.create(api.class.recursive_manage_class.new(repository: repository_reference.repository_href,
-                                                                       content_units: unit_hrefs))
+          tasks << api.repositories_api.add(repository_reference.repository_href,
+                                            api.class.recursive_manage_class.new(content_units: unit_hrefs))
           tasks
         end
 

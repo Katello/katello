@@ -29,6 +29,14 @@ module Katello
           PulpRpmClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpRpmClient::Configuration))
         end
 
+        def repositories_api
+          PulpRpmClient::RepositoriesRpmApi.new(api_client)
+        end
+
+        def repository_versions_api
+          PulpRpmClient::RepositoriesRpmVersionsApi.new(api_client)
+        end
+
         def remotes_api
           PulpRpmClient::RemotesRpmApi.new(api_client)
         end

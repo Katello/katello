@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/?name=Default_Organization-Cabinet-My_Files
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/repositories/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -23,205 +23,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:25 GMT
+      - Fri, 22 Nov 2019 16:22:41 GMT
       Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
-      Content-Length:
-      - '250'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        MmMwYmJmZDctNTNkMi00M2E4LWEzYjctNzdjNzUyOGVjMTA2LyIsInB1bHBf
-        Y3JlYXRlZCI6IjIwMTktMTEtMDhUMjA6NDY6NDcuOTE5Mzc0WiIsInZlcnNp
-        b25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzJjMGJiZmQ3
-        LTUzZDItNDNhOC1hM2I3LTc3Yzc1MjhlYzEwNi92ZXJzaW9ucy8iLCJsYXRl
-        c3RfdmVyc2lvbl9ocmVmIjpudWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6
-        YXRpb24tQ2FiaW5ldC1NeV9GaWxlcyIsInBsdWdpbl9tYW5hZ2VkIjpmYWxz
-        ZSwiZGVzY3JpcHRpb24iOm51bGx9XX0=
-    http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:25 GMT
-- request:
-    method: delete
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/2c0bbfd7-53d2-43a8-a3b7-77c7528ec106/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Fri, 08 Nov 2019 20:47:25 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '67'
-      Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2JmYmVjMzg3LTU4OTctNDhh
-        ZC1iMzBlLWIzZDRmOWJjZGFhNS8ifQ==
-    http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:25 GMT
-- request:
-    method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Fri, 08 Nov 2019 20:47:26 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
-      Content-Length:
-      - '322'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUv
-        ZmlsZS8zZGMyYmVhZS02ZDA5LTRkZDgtYjdmMy01YTA1YmFkOGY1NDUvIiwi
-        cHVscF9jcmVhdGVkIjoiMjAxOS0xMS0wOFQyMDo0Njo0OC4wOTAyMTZaIiwi
-        bmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmlsZXMi
-        LCJ1cmwiOiJodHRwOi8vdGVzdC90ZXN0Ly9QVUxQX01BTklGRVNUIiwic3Ns
-        X2NhX2NlcnRpZmljYXRlIjpudWxsLCJzc2xfY2xpZW50X2NlcnRpZmljYXRl
-        IjpudWxsLCJzc2xfY2xpZW50X2tleSI6bnVsbCwic3NsX3ZhbGlkYXRpb24i
-        OnRydWUsInByb3h5X3VybCI6bnVsbCwicHVscF9sYXN0X3VwZGF0ZWQiOiIy
-        MDE5LTExLTA4VDIwOjQ2OjQ4LjA5MDIzMFoiLCJkb3dubG9hZF9jb25jdXJy
-        ZW5jeSI6MjAsInBvbGljeSI6ImltbWVkaWF0ZSJ9XX0=
-    http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:26 GMT
-- request:
-    method: delete
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/remotes/file/file/3dc2beae-6d09-4dd8-b7f3-5a05bad8f545/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Fri, 08 Nov 2019 20:47:26 GMT
-      Server:
-      - gunicorn/19.9.0
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '67'
-      Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzU3OTg0MDlmLTM5M2YtNDVk
-        Yy05ZGQwLTU0OTVhZGQwOTkxNi8ifQ==
-    http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:26 GMT
-- request:
-    method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Fri, 08 Nov 2019 20:47:26 GMT
-      Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -233,17 +37,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:26 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:41 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -251,7 +55,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -264,9 +68,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:26 GMT
+      - Fri, 22 Nov 2019 16:22:41 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -278,17 +82,107 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:26 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:41 GMT
+- request:
+    method: get
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/0.1.0rc1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Nov 2019 16:22:41 GMT
+      Server:
+      - gunicorn/20.0.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 pulp3-devel.cannolo.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Fri, 22 Nov 2019 16:22:41 GMT
+- request:
+    method: get
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/0.1.0rc1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Nov 2019 16:22:41 GMT
+      Server:
+      - gunicorn/20.0.0
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 pulp3-devel.cannolo.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Fri, 22 Nov 2019 16:22:41 GMT
 - request:
     method: post
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/repositories/file/file/
     body:
       encoding: UTF-8
       base64_string: |
@@ -298,7 +192,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -311,13 +205,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:26 GMT
+      - Fri, 22 Nov 2019 16:22:42 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/fee166b2-bd39-44ca-8398-2714d34ba6b9/"
+      - "/pulp/api/v3/repositories/file/file/741dab70-a963-49a5-9034-606d17a83314/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -325,36 +219,40 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '331'
+      - '410'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZlZTE2
-        NmIyLWJkMzktNDRjYS04Mzk4LTI3MTRkMzRiYTZiOS8iLCJwdWxwX2NyZWF0
-        ZWQiOiIyMDE5LTExLTA4VDIwOjQ3OjI2LjcwOTcwMFoiLCJ2ZXJzaW9uc19o
-        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9mZWUxNjZiMi1iZDM5
-        LTQ0Y2EtODM5OC0yNzE0ZDM0YmE2YjkvdmVyc2lvbnMvIiwibGF0ZXN0X3Zl
-        cnNpb25faHJlZiI6bnVsbCwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9u
-        LUNhYmluZXQtTXlfRmlsZXMiLCJwbHVnaW5fbWFuYWdlZCI6ZmFsc2UsImRl
-        c2NyaXB0aW9uIjpudWxsfQ==
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZpbGUv
+        ZmlsZS83NDFkYWI3MC1hOTYzLTQ5YTUtOTAzNC02MDZkMTdhODMzMTQvIiwi
+        cHVscF9jcmVhdGVkIjoiMjAxOS0xMS0yMlQxNjoyMjo0Mi4wNDk1MzZaIiwi
+        dmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZmls
+        ZS9maWxlLzc0MWRhYjcwLWE5NjMtNDlhNS05MDM0LTYwNmQxN2E4MzMxNC92
+        ZXJzaW9ucy8iLCJsYXRlc3RfdmVyc2lvbl9ocmVmIjoiL3B1bHAvYXBpL3Yz
+        L3JlcG9zaXRvcmllcy9maWxlL2ZpbGUvNzQxZGFiNzAtYTk2My00OWE1LTkw
+        MzQtNjA2ZDE3YTgzMzE0L3ZlcnNpb25zLzAvIiwibmFtZSI6IkRlZmF1bHRf
+        T3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmlsZXMiLCJkZXNjcmlwdGlvbiI6
+        bnVsbH0=
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:26 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:42 GMT
 - request:
     method: post
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/remotes/file/file/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/remotes/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1NeV9GaWxl
-        cyIsInVybCI6Imh0dHA6Ly90ZXN0L3Rlc3QvL1BVTFBfTUFOSUZFU1QiLCJz
-        c2xfdmFsaWRhdGlvbiI6dHJ1ZSwicG9saWN5IjoiaW1tZWRpYXRlIn0=
+        cyIsInVybCI6Imh0dHA6Ly90ZXN0L3Rlc3QvL1BVTFBfTUFOSUZFU1QiLCJj
+        YV9jZXJ0IjpudWxsLCJjbGllbnRfY2VydCI6bnVsbCwiY2xpZW50X2tleSI6
+        bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6bnVsbCwi
+        cG9saWN5IjoiaW1tZWRpYXRlIn0=
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -367,13 +265,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:26 GMT
+      - Fri, 22 Nov 2019 16:22:42 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/file/file/4bc6bdf0-45f4-451d-ab9d-e387346e537e/"
+      - "/pulp/api/v3/remotes/file/file/68514bd5-f1cb-4c80-8c46-a67ddda478ce/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -381,27 +279,26 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '430'
+      - '404'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9maWxlL2ZpbGUv
-        NGJjNmJkZjAtNDVmNC00NTFkLWFiOWQtZTM4NzM0NmU1MzdlLyIsInB1bHBf
-        Y3JlYXRlZCI6IjIwMTktMTEtMDhUMjA6NDc6MjYuODcyMDY2WiIsIm5hbWUi
+        Njg1MTRiZDUtZjFjYi00YzgwLThjNDYtYTY3ZGRkYTQ3OGNlLyIsInB1bHBf
+        Y3JlYXRlZCI6IjIwMTktMTEtMjJUMTY6MjI6NDIuMjU2NjEyWiIsIm5hbWUi
         OiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIiwidXJs
-        IjoiaHR0cDovL3Rlc3QvdGVzdC8vUFVMUF9NQU5JRkVTVCIsInNzbF9jYV9j
-        ZXJ0aWZpY2F0ZSI6bnVsbCwic3NsX2NsaWVudF9jZXJ0aWZpY2F0ZSI6bnVs
-        bCwic3NsX2NsaWVudF9rZXkiOm51bGwsInNzbF92YWxpZGF0aW9uIjp0cnVl
-        LCJwcm94eV91cmwiOm51bGwsInB1bHBfbGFzdF91cGRhdGVkIjoiMjAxOS0x
-        MS0wOFQyMDo0NzoyNi44NzIwODBaIiwiZG93bmxvYWRfY29uY3VycmVuY3ki
-        OjIwLCJwb2xpY3kiOiJpbW1lZGlhdGUifQ==
+        IjoiaHR0cDovL3Rlc3QvdGVzdC8vUFVMUF9NQU5JRkVTVCIsImNhX2NlcnQi
+        Om51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJjbGllbnRfa2V5IjpudWxsLCJ0
+        bHNfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xh
+        c3RfdXBkYXRlZCI6IjIwMTktMTEtMjJUMTY6MjI6NDIuMjU2NjI2WiIsImRv
+        d25sb2FkX2NvbmN1cnJlbmN5IjoyMCwicG9saWN5IjoiaW1tZWRpYXRlIn0=
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:26 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:42 GMT
 - request:
     method: post
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/fee166b2-bd39-44ca-8398-2714d34ba6b9/versions/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/repositories/file/file/741dab70-a963-49a5-9034-606d17a83314/modify/
     body:
       encoding: UTF-8
       base64_string: 'e30=
@@ -411,7 +308,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -424,31 +321,31 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:27 GMT
+      - Fri, 22 Nov 2019 16:22:42 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, POST, HEAD, OPTIONS
+      - POST, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
       - '67'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA2NzVkOWI0LTA3MmYtNDVl
-        ZS1iOTcwLTFlYTcyZjUyNmQ0MS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzZiZGU0ZGNmLWUxNTUtNDZj
+        OC05ZWZjLTc3M2FhOGJkMjg4ZS8ifQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:27 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:42 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/0675d9b4-072f-45ee-b970-1ea72f526d41/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/tasks/6bde4dcf-e155-46c8-9efc-773aa8bd288e/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -456,7 +353,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/3.0.0rc8/ruby
       Accept:
       - application/json
       Authorization:
@@ -469,9 +366,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:27 GMT
+      - Fri, 22 Nov 2019 16:22:42 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -481,31 +378,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
       Content-Length:
-      - '340'
+      - '335'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMDY3NWQ5YjQtMDcy
-        Zi00NWVlLWI5NzAtMWVhNzJmNTI2ZDQxLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MTktMTEtMDhUMjA6NDc6MjcuMzU3MDAzWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNmJkZTRkY2YtZTE1
+        NS00NmM4LTllZmMtNzczYWE4YmQyODhlLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTEtMjJUMTY6MjI6NDIuNjc5NDgyWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5yZXBvc2l0b3J5LmFkZF9h
-        bmRfcmVtb3ZlIiwic3RhcnRlZF9hdCI6IjIwMTktMTEtMDhUMjA6NDc6Mjcu
-        NDY2NTI0WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMS0wOFQyMDo0NzoyNy41
-        MDI1NzhaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93
-        b3JrZXJzL2ExNjYxMDY5LTFiNmUtNGRjMC1hYTg4LTUxYjU2NzM1MmY5MS8i
+        bmRfcmVtb3ZlIiwic3RhcnRlZF9hdCI6IjIwMTktMTEtMjJUMTY6MjI6NDIu
+        NzcwNjMzWiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMS0yMlQxNjoyMjo0Mi44
+        MDgzNTZaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93
+        b3JrZXJzLzZhZmIyZGVkLTA2OTItNGQ5YS1iMjcxLTE3MWE3NDJkZDAxNS8i
         LCJwYXJlbnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19y
-        ZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOlsiL3B1bHAvYXBpL3Yz
-        L3JlcG9zaXRvcmllcy9mZWUxNjZiMi1iZDM5LTQ0Y2EtODM5OC0yNzE0ZDM0
-        YmE2YjkvdmVyc2lvbnMvMS8iXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29y
-        ZCI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZlZTE2NmIyLWJkMzkt
-        NDRjYS04Mzk4LTI3MTRkMzRiYTZiOS8iXX0=
+        ZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdLCJyZXNlcnZlZF9y
+        ZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
+        ZmlsZS9maWxlLzc0MWRhYjcwLWE5NjMtNDlhNS05MDM0LTYwNmQxN2E4MzMx
+        NC8iXX0=
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:27 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:42 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/fee166b2-bd39-44ca-8398-2714d34ba6b9/versions/1/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/repositories/file/file/741dab70-a963-49a5-9034-606d17a83314/versions/0/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -513,7 +409,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -526,9 +422,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:27 GMT
+      - Fri, 22 Nov 2019 16:22:42 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -538,33 +434,35 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
       Content-Length:
-      - '187'
+      - '195'
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZlZTE2
-        NmIyLWJkMzktNDRjYS04Mzk4LTI3MTRkMzRiYTZiOS92ZXJzaW9ucy8xLyIs
-        InB1bHBfY3JlYXRlZCI6IjIwMTktMTEtMDhUMjA6NDc6MjcuNDgxNDU5WiIs
-        Im51bWJlciI6MSwiYmFzZV92ZXJzaW9uIjpudWxsLCJjb250ZW50X3N1bW1h
-        cnkiOnsiYWRkZWQiOnt9LCJyZW1vdmVkIjp7fSwicHJlc2VudCI6e319fQ==
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZpbGUv
+        ZmlsZS83NDFkYWI3MC1hOTYzLTQ5YTUtOTAzNC02MDZkMTdhODMzMTQvdmVy
+        c2lvbnMvMC8iLCJwdWxwX2NyZWF0ZWQiOiIyMDE5LTExLTIyVDE2OjIyOjQy
+        LjA1MTEyNFoiLCJudW1iZXIiOjAsImJhc2VfdmVyc2lvbiI6bnVsbCwiY29u
+        dGVudF9zdW1tYXJ5Ijp7ImFkZGVkIjp7fSwicmVtb3ZlZCI6e30sInByZXNl
+        bnQiOnt9fX0=
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:27 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:42 GMT
 - request:
     method: post
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/publications/file/file/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/publications/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL2ZlZTE2NmIyLWJkMzktNDRjYS04Mzk4LTI3MTRkMzRiYTZiOS92ZXJz
-        aW9ucy8xLyIsIm1hbmlmZXN0IjoiUFVMUF9NQU5JRkVTVCJ9
+        aWVzL2ZpbGUvZmlsZS83NDFkYWI3MC1hOTYzLTQ5YTUtOTAzNC02MDZkMTdh
+        ODMzMTQvdmVyc2lvbnMvMC8iLCJtYW5pZmVzdCI6IlBVTFBfTUFOSUZFU1Qi
+        fQ==
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -577,9 +475,9 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:27 GMT
+      - Fri, 22 Nov 2019 16:22:43 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -591,17 +489,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2RiZmE4YTU3LTM0YTMtNDg1
-        Ny1hMzBmLWNmNzAyNDg2YTUxZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I1MjVkMzY4LWNlYWItNGY0
+        MC1iZjg1LWI5NTA4NTA2MTgxZi8ifQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:27 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:43 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/dbfa8a57-34a3-4857-a30f-cf702486a51e/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/tasks/b525d368-ceab-4f40-bf85-b9508506181f/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -609,7 +507,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/3.0.0rc8/ruby
       Accept:
       - application/json
       Authorization:
@@ -622,9 +520,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:28 GMT
+      - Fri, 22 Nov 2019 16:22:43 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -634,44 +532,44 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
       Content-Length:
-      - '362'
+      - '363'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZGJmYThhNTctMzRh
-        My00ODU3LWEzMGYtY2Y3MDI0ODZhNTFlLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MTktMTEtMDhUMjA6NDc6MjcuODQwNzI3WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYjUyNWQzNjgtY2Vh
+        Yi00ZjQwLWJmODUtYjk1MDg1MDYxODFmLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTEtMjJUMTY6MjI6NDMuMTM2NDI0WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBfZmlsZS5hcHAudGFza3MucHVibGlzaGluZy5wdWJs
-        aXNoIiwic3RhcnRlZF9hdCI6IjIwMTktMTEtMDhUMjA6NDc6MjcuOTYzNjA0
-        WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMS0wOFQyMDo0NzoyOC4wMTUyNTNa
+        aXNoIiwic3RhcnRlZF9hdCI6IjIwMTktMTEtMjJUMTY6MjI6NDMuNDY5OTE1
+        WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMS0yMlQxNjoyMjo0My41MTQ2MTJa
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzE1OGFkMDRhLTkxY2YtNDUyZS04N2JkLTJiYjhjZmJlZmE1ZC8iLCJwYXJl
+        LzZhZmIyZGVkLTA2OTItNGQ5YS1iMjcxLTE3MWE3NDJkZDAxNS8iLCJwYXJl
         bnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRz
         IjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOlsiL3B1bHAvYXBpL3YzL3B1Ymxp
-        Y2F0aW9ucy9maWxlL2ZpbGUvY2ZjMzcxOTQtMGU1OC00MTkzLWI5MmQtYzAx
-        ODI5NDQ5MTcwLyJdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9w
-        dWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZmVlMTY2YjItYmQzOS00NGNhLTgz
-        OTgtMjcxNGQzNGJhNmI5LyJdfQ==
+        Y2F0aW9ucy9maWxlL2ZpbGUvYTU0MGM0NTEtNGY5Yi00MzRhLTg3ZGYtZTNh
+        ZDYwNmQwYTVmLyJdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9w
+        dWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZmlsZS9maWxlLzc0MWRhYjcwLWE5
+        NjMtNDlhNS05MDM0LTYwNmQxN2E4MzMxNC8iXX0=
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:28 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:43 GMT
 - request:
     method: post
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/file/file/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/distributions/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJiYXNlX3BhdGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L015
         X0ZpbGVzIiwibmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQt
         TXlfRmlsZXMiLCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNh
-        dGlvbnMvZmlsZS9maWxlL2NmYzM3MTk0LTBlNTgtNDE5My1iOTJkLWMwMTgy
-        OTQ0OTE3MC8ifQ==
+        dGlvbnMvZmlsZS9maWxlL2E1NDBjNDUxLTRmOWItNDM0YS04N2RmLWUzYWQ2
+        MDZkMGE1Zi8ifQ==
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -684,9 +582,9 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:28 GMT
+      - Fri, 22 Nov 2019 16:22:43 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -698,17 +596,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2UxMjM4ZWI4LTA4NTUtNGM4
-        Ni04MGMwLWM2NjdmNzFiOTdkNy8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA1ODUzMTg3LWYxMDUtNGQw
+        ZS1hODBjLTI1YTJiYzUzNzE3Zi8ifQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:28 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:43 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/e1238eb8-0855-4c86-80c0-c667f71b97d7/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/tasks/05853187-f105-4d0e-a80c-25a2bc53717f/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -716,7 +614,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/3.0.0rc8/ruby
       Accept:
       - application/json
       Authorization:
@@ -729,9 +627,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:28 GMT
+      - Fri, 22 Nov 2019 16:22:44 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -741,30 +639,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
       Content-Length:
-      - '337'
+      - '339'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZTEyMzhlYjgtMDg1
-        NS00Yzg2LTgwYzAtYzY2N2Y3MWI5N2Q3LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MTktMTEtMDhUMjA6NDc6MjguMzE1OTI5WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMDU4NTMxODctZjEw
+        NS00ZDBlLWE4MGMtMjVhMmJjNTM3MTdmLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTEtMjJUMTY6MjI6NDMuNzY4MTEyWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
-        YXRlIiwic3RhcnRlZF9hdCI6IjIwMTktMTEtMDhUMjA6NDc6MjguNDQ0MDMw
-        WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMS0wOFQyMDo0NzoyOC42MjkxNzNa
+        YXRlIiwic3RhcnRlZF9hdCI6IjIwMTktMTEtMjJUMTY6MjI6NDMuODY3MTIz
+        WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMS0yMlQxNjoyMjo0NC4wNTA4Mjda
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        L2ExNjYxMDY5LTFiNmUtNGRjMC1hYTg4LTUxYjU2NzM1MmY5MS8iLCJwYXJl
+        LzZhZmIyZGVkLTA2OTItNGQ5YS1iMjcxLTE3MWE3NDJkZDAxNS8iLCJwYXJl
         bnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRz
         IjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOlsiL3B1bHAvYXBpL3YzL2Rpc3Ry
-        aWJ1dGlvbnMvZmlsZS9maWxlL2VlNGUxMWZmLWQ2OTYtNGIxZS1hNzk1LTZj
-        YWNjOTdiMWE3Ni8iXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIv
+        aWJ1dGlvbnMvZmlsZS9maWxlL2M5YjY3M2YyLTJiM2EtNGY0Zi05ODg0LTM3
+        ZjQ2YzMyNjQzMC8iXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIv
         YXBpL3YzL2Rpc3RyaWJ1dGlvbnMvIl19
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:28 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:44 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/file/file/ee4e11ff-d696-4b1e-a795-6cacc97b1a76/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/distributions/file/file/c9b673f2-2b3a-4f4f-9884-37f46c326430/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -772,7 +670,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -785,9 +683,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:28 GMT
+      - Fri, 22 Nov 2019 16:22:44 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -797,27 +695,27 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
       Content-Length:
-      - '281'
+      - '279'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9maWxl
-        L2ZpbGUvZWU0ZTExZmYtZDY5Ni00YjFlLWE3OTUtNmNhY2M5N2IxYTc2LyIs
-        InB1bHBfY3JlYXRlZCI6IjIwMTktMTEtMDhUMjA6NDc6MjguNjIxNzEyWiIs
+        L2ZpbGUvYzliNjczZjItMmIzYS00ZjRmLTk4ODQtMzdmNDZjMzI2NDMwLyIs
+        InB1bHBfY3JlYXRlZCI6IjIwMTktMTEtMjJUMTY6MjI6NDQuMDM4Mzk5WiIs
         ImJhc2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvTXlf
-        RmlsZXMiLCJiYXNlX3VybCI6InB1bHAzLWRldmVsLTIuY2Fubm9sby5leGFt
-        cGxlLmNvbS9wdWxwL2NvbnRlbnQvRGVmYXVsdF9Pcmdhbml6YXRpb24vbGli
-        cmFyeS9NeV9GaWxlcyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsIm5hbWUiOiJE
-        ZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIiwicHVibGlj
-        YXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS9j
-        ZmMzNzE5NC0wZTU4LTQxOTMtYjkyZC1jMDE4Mjk0NDkxNzAvIn0=
+        RmlsZXMiLCJiYXNlX3VybCI6InB1bHAzLWRldmVsLmNhbm5vbG8uZXhhbXBs
+        ZS5jb20vcHVscC9jb250ZW50L0RlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJh
+        cnkvTXlfRmlsZXMiLCJjb250ZW50X2d1YXJkIjpudWxsLCJuYW1lIjoiRGVm
+        YXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1NeV9GaWxlcyIsInB1YmxpY2F0
+        aW9uIjoiL3B1bHAvYXBpL3YzL3B1YmxpY2F0aW9ucy9maWxlL2ZpbGUvYTU0
+        MGM0NTEtNGY5Yi00MzRhLTg3ZGYtZTNhZDYwNmQwYTVmLyJ9
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:28 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:44 GMT
 - request:
     method: delete
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/remotes/file/file/4bc6bdf0-45f4-451d-ab9d-e387346e537e/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/remotes/file/file/68514bd5-f1cb-4c80-8c46-a67ddda478ce/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -825,7 +723,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -838,9 +736,9 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:29 GMT
+      - Fri, 22 Nov 2019 16:22:44 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -852,17 +750,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzEwMDM1NmQzLTg4Y2QtNGIx
-        NS05MTViLTM4Yzc3ZjQ0OWVhYS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzRmNGJhZjY3LTg2ZTItNDIy
+        Zi1hNmQ2LTkxOWUxOGQ5YjgzZS8ifQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:29 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:44 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/100356d3-88cd-4b15-915b-38c77f449eaa/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/tasks/4f4baf67-86e2-422f-a6d6-919e18d9b83e/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -870,7 +768,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/3.0.0rc8/ruby
       Accept:
       - application/json
       Authorization:
@@ -883,9 +781,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:29 GMT
+      - Fri, 22 Nov 2019 16:22:44 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -895,29 +793,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
       Content-Length:
       - '329'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMTAwMzU2ZDMtODhj
-        ZC00YjE1LTkxNWItMzhjNzdmNDQ5ZWFhLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MTktMTEtMDhUMjA6NDc6MjkuMTg2NTk0WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNGY0YmFmNjctODZl
+        Mi00MjJmLWE2ZDYtOTE5ZTE4ZDliODNlLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTEtMjJUMTY6MjI6NDQuNTQ0MTk3WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMTktMTEtMDhUMjA6NDc6MjkuMjk3NzMy
-        WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMS0wOFQyMDo0NzoyOS4zMzQwMzla
+        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMTktMTEtMjJUMTY6MjI6NDQuNjYxOTE4
+        WiIsImZpbmlzaGVkX2F0IjoiMjAxOS0xMS0yMlQxNjoyMjo0NC42OTU1NjZa
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        L2ExNjYxMDY5LTFiNmUtNGRjMC1hYTg4LTUxYjU2NzM1MmY5MS8iLCJwYXJl
+        LzZhZmIyZGVkLTA2OTItNGQ5YS1iMjcxLTE3MWE3NDJkZDAxNS8iLCJwYXJl
         bnQiOm51bGwsInNwYXduZWRfdGFza3MiOltdLCJwcm9ncmVzc19yZXBvcnRz
         IjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJj
-        ZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS80
-        YmM2YmRmMC00NWY0LTQ1MWQtYWI5ZC1lMzg3MzQ2ZTUzN2UvIl19
+        ZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS82
+        ODUxNGJkNS1mMWNiLTRjODAtOGM0Ni1hNjdkZGRhNDc4Y2UvIl19
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:29 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:44 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -925,7 +823,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -938,9 +836,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:29 GMT
+      - Fri, 22 Nov 2019 16:22:45 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -950,28 +848,28 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
       Content-Length:
-      - '310'
+      - '309'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
-        L2ZpbGUvZmlsZS9lZTRlMTFmZi1kNjk2LTRiMWUtYTc5NS02Y2FjYzk3YjFh
-        NzYvIiwicHVscF9jcmVhdGVkIjoiMjAxOS0xMS0wOFQyMDo0NzoyOC42MjE3
-        MTJaIiwiYmFzZV9wYXRoIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFy
-        eS9NeV9GaWxlcyIsImJhc2VfdXJsIjoicHVscDMtZGV2ZWwtMi5jYW5ub2xv
-        LmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9EZWZhdWx0X09yZ2FuaXphdGlv
-        bi9saWJyYXJ5L015X0ZpbGVzIiwiY29udGVudF9ndWFyZCI6bnVsbCwibmFt
-        ZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmlsZXMiLCJw
-        dWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvZmlsZS9m
-        aWxlL2NmYzM3MTk0LTBlNTgtNDE5My1iOTJkLWMwMTgyOTQ0OTE3MC8ifV19
+        L2ZpbGUvZmlsZS9jOWI2NzNmMi0yYjNhLTRmNGYtOTg4NC0zN2Y0NmMzMjY0
+        MzAvIiwicHVscF9jcmVhdGVkIjoiMjAxOS0xMS0yMlQxNjoyMjo0NC4wMzgz
+        OTlaIiwiYmFzZV9wYXRoIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFy
+        eS9NeV9GaWxlcyIsImJhc2VfdXJsIjoicHVscDMtZGV2ZWwuY2Fubm9sby5l
+        eGFtcGxlLmNvbS9wdWxwL2NvbnRlbnQvRGVmYXVsdF9Pcmdhbml6YXRpb24v
+        bGlicmFyeS9NeV9GaWxlcyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsIm5hbWUi
+        OiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIiwicHVi
+        bGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmls
+        ZS9hNTQwYzQ1MS00ZjliLTQzNGEtODdkZi1lM2FkNjA2ZDBhNWYvIn1dfQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:29 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:45 GMT
 - request:
     method: delete
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/distributions/file/file/ee4e11ff-d696-4b1e-a795-6cacc97b1a76/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/distributions/file/file/c9b673f2-2b3a-4f4f-9884-37f46c326430/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -979,7 +877,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/0.1.0b5.dev01573069180/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -992,9 +890,9 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:29 GMT
+      - Fri, 22 Nov 2019 16:22:45 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -1006,17 +904,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzI4YWZiZTM1LTZiZmQtNDA0
-        My1iOGIxLTVlOWRkNTQ4NTQ2NS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2E0NTkzZWU2LTE1NGUtNGQ1
+        ZC04ZjQ5LWZmOWFjYmIyYjZjMS8ifQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:29 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:45 GMT
 - request:
     method: delete
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/repositories/fee166b2-bd39-44ca-8398-2714d34ba6b9/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/repositories/file/file/741dab70-a963-49a5-9034-606d17a83314/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1024,7 +922,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/0.1.0rc1/ruby
       Accept:
       - application/json
       Authorization:
@@ -1037,9 +935,9 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:29 GMT
+      - Fri, 22 Nov 2019 16:22:45 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -1051,17 +949,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2VjNzU0NTMzLThlMmMtNDBi
-        MC04NjlmLTNiOTQ4ZmRhMjUxZC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2VkYjE2ZDEwLWUzMzYtNGZi
+        Yy1hMjhiLTZhODE4NDUzYjAzOS8ifQ==
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:29 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:45 GMT
 - request:
     method: get
-    uri: https://pulp3-devel-2.cannolo.example.com/pulp/api/v3/tasks/ec754533-8e2c-40b0-869f-3b948fda251d/
+    uri: https://pulp3-devel.cannolo.example.com/pulp/api/v3/tasks/edb16d10-e336-4fbc-a28b-6a818453b039/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1069,7 +967,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.0.0rc8.dev01573125401/ruby
+      - OpenAPI-Generator/3.0.0rc8/ruby
       Accept:
       - application/json
       Authorization:
@@ -1082,9 +980,9 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 08 Nov 2019 20:47:30 GMT
+      - Fri, 22 Nov 2019 16:22:45 GMT
       Server:
-      - gunicorn/19.9.0
+      - gunicorn/20.0.0
       Content-Type:
       - application/json
       Vary:
@@ -1094,24 +992,24 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 pulp3-devel-2.cannolo.example.com
+      - 1.1 pulp3-devel.cannolo.example.com
       Content-Length:
-      - '323'
+      - '328'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZWM3NTQ1MzMtOGUy
-        Yy00MGIwLTg2OWYtM2I5NDhmZGEyNTFkLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MTktMTEtMDhUMjA6NDc6MjkuODM3NzQyWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZWRiMTZkMTAtZTMz
+        Ni00ZmJjLWEyOGItNmE4MTg0NTNiMDM5LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MTktMTEtMjJUMTY6MjI6NDUuMzExNjk3WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5yZXBvc2l0b3J5LmRlbGV0
-        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTExLTA4VDIwOjQ3OjI5LjkyOTQwMFoi
-        LCJmaW5pc2hlZF9hdCI6IjIwMTktMTEtMDhUMjA6NDc6MjkuOTg4OTQ0WiIs
-        ImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29ya2Vycy9h
-        MTY2MTA2OS0xYjZlLTRkYzAtYWE4OC01MWI1NjczNTJmOTEvIiwicGFyZW50
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTExLTIyVDE2OjIyOjQ1LjM5OTEzMloi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMTEtMjJUMTY6MjI6NDUuNDUxOTgwWiIs
+        ImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29ya2Vycy85
+        YTU3ODdmYi0zOGE1LTRmYjktYTUxYS00Y2E0MGJiOTM0ZDYvIiwicGFyZW50
         IjpudWxsLCJzcGF3bmVkX3Rhc2tzIjpbXSwicHJvZ3Jlc3NfcmVwb3J0cyI6
         W10sImNyZWF0ZWRfcmVzb3VyY2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2Vz
-        X3JlY29yZCI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZlZTE2NmIy
-        LWJkMzktNDRjYS04Mzk4LTI3MTRkMzRiYTZiOS8iXX0=
+        X3JlY29yZCI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZpbGUvZmls
+        ZS83NDFkYWI3MC1hOTYzLTQ5YTUtOTAzNC02MDZkMTdhODMzMTQvIl19
     http_version: 
-  recorded_at: Fri, 08 Nov 2019 20:47:30 GMT
+  recorded_at: Fri, 22 Nov 2019 16:22:45 GMT
 recorded_with: VCR 3.0.3

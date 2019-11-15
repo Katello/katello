@@ -34,10 +34,16 @@ module Katello
         create_repo(repo2, @master)
         sync_and_reload_repo(repo2, @master)
 
-        repository_list = ::Katello::Pulp3::Api::Core.new(@master).list_all
+        pulp3_enabled_repo_types = Katello::RepositoryTypeManager.repository_types.values.select do |repository_type|
+          @master.pulp3_repository_type_support?(repository_type)
+        end
+
+        repository_list = pulp3_enabled_repo_types.collect do |repo_type|
+          repo_type.pulp3_service_class.api(@master).list_all
+        end
 
         Katello::Pulp3::RepositoryReference.all.each do |repo_reference|
-          assert_includes repository_list.map(&:pulp_href), repo_reference.repository_href
+          assert_includes repository_list.flatten.map(&:pulp_href), repo_reference.repository_href
         end
       end
     end

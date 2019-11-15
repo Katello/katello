@@ -111,7 +111,7 @@ module Katello
 
       def create
         unless repository_reference
-          response = core_api.repositories_api.create(
+          response = api.repositories_api.create(
             name: generate_backend_object_name)
           RepositoryReference.create!(
            root_repository_id: repo.root_id,
@@ -135,8 +135,8 @@ module Katello
       end
 
       def sync
-        repository_sync_url_data = api.class.client_module::RepositorySyncURL.new(repository: repository_reference.repository_href, mirror: repo.root.mirror_on_sync)
-        [api.remotes_api.sync(repo.remote_href, repository_sync_url_data)]
+        repository_sync_url_data = api.class.client_module::RepositorySyncURL.new(remote: repo.remote_href, mirror: repo.root.mirror_on_sync)
+        [api.repositories_api.sync(repository_reference.repository_href, repository_sync_url_data)]
       end
 
       def create_publication
@@ -188,7 +188,7 @@ module Katello
       end
 
       def create_version(options = {})
-        api.repository_versions_api.create(repository_reference.repository_href, options)
+        api.repositories_api.modify(repository_reference.repository_href, options)
       end
 
       def save_distribution_references(hrefs)
@@ -210,7 +210,7 @@ module Katello
 
       def common_remote_options
         remote_options = {
-          ssl_validation: root.verify_ssl_on_sync,
+          tls_validation: root.verify_ssl_on_sync,
           name: generate_backend_object_name,
           url: root.url,
           proxy_url: root.http_proxy&.full_url
@@ -226,15 +226,15 @@ module Katello
       def ssl_remote_options
         if root.redhat? && Katello::Resources::CDN::CdnResource.redhat_cdn?(root.url)
           {
-            ssl_client_certificate: root.product.certificate,
-            ssl_client_key: root.product.key,
-            ssl_ca_certificate: Katello::Repository.feed_ca_cert(root.url)
+            client_cert: root.product.certificate,
+            client_key: root.product.key,
+            ca_cert: Katello::Repository.feed_ca_cert(root.url)
           }
         elsif root.custom?
           {
-            ssl_client_certificate: root.ssl_client_cert&.content,
-            ssl_client_key: root.ssl_client_key&.content,
-            ssl_ca_certificate: root.ssl_ca_cert&.content
+            client_cert: root.ssl_client_cert&.content,
+            client_key: root.ssl_client_key&.content,
+            ca_cert: root.ssl_ca_cert&.content
           }
         else
           {}
@@ -243,29 +243,29 @@ module Katello
 
       def lookup_version(href)
         api.repository_versions_api.read(href) if href
-      rescue PulpcoreClient::ApiError => e
+      rescue api.api_exception_class => e
         Rails.logger.error "Exception when calling repository_versions_api->read: #{e}"
         nil
       end
 
       def lookup_publication(href)
         api.publications_api.read(href) if href
-      rescue PulpcoreClient::ApiError => e
+      rescue api.api_exception_class => e
         Rails.logger.error "Exception when calling publications_api->read: #{e}"
         nil
       end
 
       def remove_content(content_units)
-        data = PulpcoreClient::RepositoryVersionCreate.new(
-          remove_content_units: content_units.map(&:pulp_id))
-        api.repository_versions_api.create(repository_reference.repository_href, data)
+        if repo.root.content_type == "docker"
+          api.repositories_api.remove(repository_reference.repository_href, content_units: content_units.map(&:pulp_id))
+        else
+          api.repositories_api.modify(repository_reference.repository_href, remove_content_units: content_units.map(&:pulp_id))
+        end
       end
 
       def add_content(content_unit_href)
         content_unit_href = [content_unit_href] unless content_unit_href.is_a?(Array)
-        data = PulpcoreClient::RepositoryVersionCreate.new(
-            add_content_units: content_unit_href)
-        api.repository_versions_api.create(repository_reference.repository_href, data)
+        api.repositories_api.modify(repository_reference.repository_href, add_content_units: content_unit_href)
       end
 
       def unit_keys(uploads)

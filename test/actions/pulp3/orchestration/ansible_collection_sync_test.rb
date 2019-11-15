@@ -38,7 +38,7 @@ module ::Actions::Pulp3
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
 
-      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+      assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
     end
 
     def test_sync_mirror_false
@@ -49,7 +49,7 @@ module ::Actions::Pulp3
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
 
-      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+      assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
       @repo.index_content
       pre_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id)
       pre_content_count = pre_content.count
@@ -69,7 +69,7 @@ module ::Actions::Pulp3
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
 
-      assert_equal repository_reference.repository_href + "versions/3/", @repo.version_href
+      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
       assert_operator pre_content_count, :<, post_content.count
       assert_empty pre_content - post_content
     end

@@ -7,21 +7,46 @@ module Katello
       end
 
       def orphaned_repositories
+        repo_map = {}
+
         smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
         katello_pulp_ids = smart_proxy_helper.repos_available_to_capsule.map(&:pulp_id)
-        repos_on_capsule = ::Katello::Pulp3::Api::Core.new(smart_proxy).list_all
-        repos_on_capsule.reject { |capsule_repo| katello_pulp_ids.include? capsule_repo.name }
+        pulp3_enabled_repo_types.each do |repo_type|
+          api = repo_type.pulp3_service_class.api(smart_proxy)
+          repo_map[api] = api.list_all.reject { |capsule_repo| katello_pulp_ids.include? capsule_repo.name }
+        end
+
+        repo_map
       end
 
       def orphan_repository_versions
-        version_hrefs = core_api.repository_versions
-        version_hrefs - ::Katello::Repository.where(version_href: version_hrefs).pluck(:version_href)
+        repo_version_map = {}
+
+        pulp3_enabled_repo_types.each do |repo_type|
+          api = repo_type.pulp3_service_class.api(smart_proxy)
+          version_hrefs = api.repository_versions
+          orphan_version_hrefs = api.list_all.collect do |pulp_repo|
+            mirror_repo_versions = api.versions_list_for_repository(pulp_repo.pulp_href, ordering: :_created)
+            version_hrefs = mirror_repo_versions.collect { |version| version.pulp_href }
+
+            version_hrefs - [pulp_repo.latest_version_href]
+          end
+          repo_version_map[api] = orphan_version_hrefs.flatten
+        end
+
+        repo_version_map
       end
 
       def delete_orphan_repositories
-        orphaned_repositories.map do |repo|
-          ::Katello::Pulp3::Api::Core.new(smart_proxy).repositories_api.delete(repo.pulp_href)
+        tasks = []
+
+        orphaned_repositories.each do |api, pulp3_repo_list|
+          tasks << pulp3_repo_list.collect do |repo|
+            api.repositories_api.delete(repo.pulp_href)
+          end
         end
+
+        tasks.flatten!
       end
 
       def delete_orphan_distributions

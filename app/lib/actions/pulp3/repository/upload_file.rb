@@ -9,8 +9,8 @@ module Actions
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:repository_id])
           repo_backend_service = repo.backend_service(smart_proxy)
-          upload_class = repo_backend_service.upload_class
-          uploads_api = repo_backend_service.uploads_api
+          upload_class = repo_backend_service.core_api.upload_class
+          uploads_api = repo_backend_service.core_api.uploads_api
           offset = 0
           response = nil
           File.open(input[:file], "rb") do |file|
