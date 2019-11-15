@@ -64,7 +64,7 @@ export const genericRow = Immutable({
   contract_number: 'NA',
   end_date: 'NA',
   hypervisor: undefined,
-  id: 0,
+  id: 'RH00001',
   name: 'Alpha',
   product_id: 'RH00001',
   start_date: 'NA',
