@@ -37,7 +37,7 @@ const buildTableRow = (subscription, availableQuantities, updatedQuantity) => {
 const buildTableCollapseRow = (subscriptionGroup) => {
   const first = subscriptionGroup.subscriptions[0];
   const heading = {
-    id: 0,
+    id: first.product_id,
     collapsible: true,
     contract_number: 'NA',
     start_date: 'NA',
