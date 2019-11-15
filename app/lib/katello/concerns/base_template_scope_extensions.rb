@@ -65,6 +65,10 @@ module Katello
         load_resource(klass: Pool.readable, search: search, permission: nil, includes: includes)
       end
 
+      def last_checkin(host)
+        host&.subscription_facet&.last_checkin
+      end
+
       # rubocop:disable Metrics/MethodLength
       def load_errata_applications(filter_errata_type: nil, include_last_reboot: 'yes', since: nil, up_to: nil, status: nil)
         result = []
