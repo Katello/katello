@@ -140,7 +140,6 @@ module Katello
     scoped_search :on => :distribution_variant, :complete_value => true
     scoped_search :on => :distribution_bootable, :complete_value => true
     scoped_search :on => :distribution_uuid, :complete_value => true
-    scoped_search :on => :ignore_global_proxy, :relation => :root, :complete_value => true
     scoped_search :on => :redhat, :complete_value => { :true => true, :false => false }, :ext_method => :search_by_redhat
     scoped_search :on => :container_repository_name, :complete_value => true
     scoped_search :on => :description, :relation => :root, :only_explicit => true
@@ -157,7 +156,7 @@ module Katello
              :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
              :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases, :deb_components, :deb_architectures,
-             :ignore_global_proxy, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id,
+             :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id,
              :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :ansible_collection_requirements, :http_proxy_policy, :http_proxy_id, :to => :root
 
     delegate :content_id, to: :root, allow_nil: true

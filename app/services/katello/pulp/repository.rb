@@ -201,10 +201,6 @@ module Katello
         distributor['id']
       end
 
-      def proxy_host_importer_value
-        root.ignore_global_proxy ? "" : nil
-      end
-
       def refresh_if_needed
         refresh if needs_update?
       end
