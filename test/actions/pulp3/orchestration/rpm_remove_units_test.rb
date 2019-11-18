@@ -36,7 +36,7 @@ module ::Actions::Pulp3
     def test_remove_rpm
       content_unit = @repo.repository_rpms.first
 
-      remove_content_args = {contents: [content_unit.id], content_unit_type: 'rpm'}
+      remove_content_args = {contents: [content_unit.rpm_id], content_unit_type: 'rpm'}
       remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       assert_equal "success", remove_action.result
     end
@@ -45,7 +45,7 @@ module ::Actions::Pulp3
       content_unit = @repo.repository_rpms.first
 
       version_href = @repo.version_href
-      remove_content_args = {contents: [content_unit.id], content_unit_type: 'rpm'}
+      remove_content_args = {contents: [content_unit.rpm_id], content_unit_type: 'rpm'}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       refute_equal version_href, @repo.reload.version_href
     end
