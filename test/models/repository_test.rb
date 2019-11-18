@@ -277,6 +277,11 @@ module Katello
       refute_includes repos, @puppet_forge
     end
 
+    def test_search_name_fulltext
+      repos = Repository.search_for(@fedora_17_x86_64.name)
+      assert_includes repos, @fedora_17_x86_64
+    end
+
     def test_search_name
       repos = Repository.search_for("name = \"#{@fedora_17_x86_64.name}\"")
       assert_includes repos, @fedora_17_x86_64
