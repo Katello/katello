@@ -5,8 +5,7 @@ module Actions
         def plan(host, content_view_id, environment_id)
           host.content_facet.content_view = ::Katello::ContentView.find(content_view_id)
           host.content_facet.lifecycle_environment = ::Katello::KTEnvironment.find(environment_id)
-
-          plan_action(::Actions::Katello::Host::Update, host)
+          host.update_candlepin_associations
         end
       end
     end

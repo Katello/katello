@@ -92,6 +92,108 @@ module Katello
     end
   end
 
+  class HostManagedExtensionsUpdateTest < HostManagedExtensionsTestBase
+    def test_update
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host.content_facet.expects(:save!)
+      params = {"facts" => {'memory.memtotal' => '16 GB'}}.with_indifferent_access
+      host.subscription_facet.expects(:update_from_consumer_attributes).with(params)
+      ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, params)
+      ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).never
+      ::Katello::Host::SubscriptionFacet.expects(:update_facts).with(host, params[:facts])
+      host.update_candlepin_associations(params)
+    end
+
+    def test_update_with_autoheal
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host.content_facet.expects(:save!)
+      params = {:facts => {'memory.memtotal' => '16 GB'}, :autoheal => true}.with_indifferent_access
+      host.subscription_facet.expects(:update_from_consumer_attributes).with(params)
+      ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, params)
+      ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).with(host.subscription_facet.uuid)
+      ::Katello::Host::SubscriptionFacet.expects(:update_facts).with(host, params[:facts])
+      host.update_candlepin_associations(params)
+    end
+
+    def test_update_with_nil_facts
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host.content_facet.expects(:save!)
+      params = {:facts => nil}.with_indifferent_access
+      host.subscription_facet.expects(:update_from_consumer_attributes).with(params)
+      ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, params)
+      ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).never
+      ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
+      host.update_candlepin_associations(params)
+    end
+
+    def test_update_without_subscription_facet
+      host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
+      host.content_facet.expects(:save!)
+      params = {:facts => nil}.with_indifferent_access
+      ::Katello::Resources::Candlepin::Consumer.expects(:update).never
+      ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).never
+      ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
+      host.update_candlepin_associations(params)
+    end
+
+    def test_update_without_any_facet
+      host = FactoryBot.create(:host, :content_view => @library_view, :lifecycle_environment => @library)
+      params = {:facts => nil}.with_indifferent_access
+      ::Katello::Resources::Candlepin::Consumer.expects(:update).never
+      ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).never
+      ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
+      host.update_candlepin_associations(params)
+    end
+
+    def test_update_with_facet_params
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host.content_facet.expects(:save!)
+      host.subscription_facet.stubs(:consumer_attributes).returns('autoheal' => true)
+      host.subscription_facet.expects(:update_from_consumer_attributes).with('autoheal' => true)
+      ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, host.subscription_facet.consumer_attributes)
+      ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).never
+      ::Katello::Host::SubscriptionFacet.expects(:update_facts).never
+      host.update_candlepin_associations
+    end
+
+    def test_backend_update_needed?
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      subscription_facet = host.subscription_facet
+      refute subscription_facet.backend_update_needed?
+
+      subscription_facet.service_level = 'terrible'
+      assert subscription_facet.backend_update_needed?
+
+      subscription_facet.reload
+      refute subscription_facet.backend_update_needed?
+
+      subscription_facet.host.content_facet.content_view_id = @view.id
+      assert subscription_facet.backend_update_needed?
+    end
+
+    def test_backend_update_needed_purpose_addons?
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      subscription_facet = host.subscription_facet
+      refute host.subscription_facet.backend_update_needed?
+
+      subscription_facet.purpose_addon_ids = [katello_purpose_addons(:addon).id]
+      assert host.subscription_facet.backend_update_needed?
+    end
+
+    def test_host_update_with_overridden_dmi_uuid
+      ::Setting[:host_dmi_uuid_duplicates] = ['duplicate-dmi-uuid']
+      params = {facts: {'dmi.system.uuid' => 'duplicate-dmi-uuid'}}.with_indifferent_access
+      host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_view, :lifecycle_environment => @library)
+      host.subscription_facet.expects(:update_from_consumer_attributes).with(params)
+      ::Katello::Resources::Candlepin::Consumer.expects(:update).with(host.subscription_facet.uuid, params)
+      ::Katello::Resources::Candlepin::Consumer.expects(:refresh_entitlements).never
+      ::Katello::Host::SubscriptionFacet.expects(:update_facts).with(host, params[:facts])
+      host.update_candlepin_associations(params)
+      override = host.subscription_facet.dmi_uuid_override
+      assert_equal override.value, params[:facts]['dmi.system.uuid']
+    end
+  end
+
   class HostManagedPuppetTest < HostManagedExtensionsTestBase
     def setup
       super
