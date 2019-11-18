@@ -22,7 +22,7 @@ module Actions
             content_type = ::Katello::RepositoryTypeManager.find_content_type(input[:content_unit_type].downcase)
             if input[:contents]
               units = content_type.model_class.where(:id => input[:contents])
-              unit_pulp_ids = units.sort.map(&:pulp_id)
+              unit_pulp_ids = units.map(&:pulp_id).sort
             end
             tasks << ::SmartProxy.pulp_master.content_service(content_type).remove(repo, unit_pulp_ids)
           else
