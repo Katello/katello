@@ -7,7 +7,7 @@ module Katello
     extend ActiveRecord::TestFixtures
 
     def setup
-      @acme_corporation     = get_organization
+      @acme_corporation = get_organization
 
       @library              = KTEnvironment.find(katello_environments(:library).id)
       @dev                  = KTEnvironment.find(katello_environments(:dev).id)

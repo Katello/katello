@@ -26,11 +26,11 @@ AllCops:
     - '**/*.rake'
   TargetRubyVersion: 2.3
 
-MethodLength:
+Metrics/MethodLength:
   Description: 'Avoid methods longer than 30 lines of code.'
   Max: 30 # default is 10
 
-HashSyntax:
+Style/HashSyntax:
   Enabled: false # don't force 1.9 hash syntax
 
 Rails/DynamicFindBy:
@@ -41,52 +41,52 @@ Rails/DynamicFindBy:
     - find_by_unit_id
     - find_by_version
 
-SpaceInsideHashLiteralBraces:
+Layout/SpaceInsideHashLiteralBraces:
   Enabled: false # allow spaces (eg { :a => 1 })
 
-LeadingCommentSpace:
+Layout/LeadingCommentSpace:
   Enabled: false
 
-IfUnlessModifier:
+Style/IfUnlessModifier:
   Enabled: false
 
-RescueModifier:
+Style/RescueModifier:
   Enabled: false
 
-WhileUntilModifier:
+Style/WhileUntilModifier:
   Enabled: false
 
-AlignParameters:
+Layout/AlignParameters:
   Enabled: false # don't care if parameters are not aligned
 
-AlignHash:
+Layout/AlignHash:
   EnforcedLastArgumentHashStyle: ignore_implicit # ignore argument hashes
 
-ParenthesesAroundCondition:
+Style/ParenthesesAroundCondition:
   Enabled: false
 
-DotPosition:
+Layout/DotPosition:
   Enabled: false
 
-Lambda:
+Style/Lambda:
   Enabled: false # don't require -> for single line lambdas
 
-RedundantSelf:
+Style/RedundantSelf:
   Enabled: false
 
-RedundantReturn:
+Style/RedundantReturn:
   Enabled: false
 
-Documentation:
+Style/Documentation:
   Enabled: false # don't require documentation
 
-Encoding:
+Style/Encoding:
   Enabled: false # don't require utf-8 encoding on every file
 
-MethodCalledOnDoEndBlock:
+Style/MethodCalledOnDoEndBlock:
   Enabled: true
 
-SingleLineBlockParams:
+Style/SingleLineBlockParams:
   Enabled: false
 
 Metrics/ClassLength:
@@ -97,7 +97,7 @@ Metrics/ClassLength:
 Style/Next:
   Enabled: false # don't enforce next in loops over if/unless
 
-FormatString:
+Style/FormatString:
   Enabled: false # we use % for i18n
 
 Style/GuardClause:
