@@ -66,7 +66,9 @@ module Actions
         end
 
         def presenter
-          repo = ::Katello::Repository.find(input['repo_id'])
+          repo = ::Katello::Repository.find(input['repo_id']) if input['repo_id']
+          # For repo sync tasks older than katello 3.14, we only have pulp_id available in input.
+          repo ||= ::Katello::Repository.where(:pulp_id => input['pulp_id']).first if input['pulp_id']
 
           if repo.try(:puppet?)
             Presenters::PuppetPresenter.new(self)
