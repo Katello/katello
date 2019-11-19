@@ -117,9 +117,9 @@ module Katello
     end
 
     initializer "katello.helpers" do |_app|
-      ActionView::Base.send :include, Katello::TaxonomyHelper
-      ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
-      ActionView::Base.send :include, Katello::KatelloUrlsHelper
+      ActionView::Base.include Katello::TaxonomyHelper
+      ActionView::Base.include Katello::HostsAndHostgroupsHelper
+      ActionView::Base.include Katello::KatelloUrlsHelper
     end
 
     config.to_prepare do
@@ -132,26 +132,26 @@ module Katello
       FastGettext.default_text_domain = 'katello'
 
       # Lib Extensions
-      ::Foreman::Renderer::Scope::Variables::Base.send :include, Katello::Concerns::RendererExtensions
-      ::Foreman::Renderer::Scope::Base.send :include, Katello::Concerns::BaseTemplateScopeExtensions
+      ::Foreman::Renderer::Scope::Variables::Base.include Katello::Concerns::RendererExtensions
+      ::Foreman::Renderer::Scope::Base.include Katello::Concerns::BaseTemplateScopeExtensions
 
       # Model extensions
-      ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
-      ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
-      ::Hostgroup.send :include, Katello::Concerns::HostgroupExtensions
-      ::Location.send :include, Katello::Concerns::LocationExtensions
-      ::Redhat.send :include, Katello::Concerns::RedhatExtensions
-      ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
-      ::Organization.send :include, Katello::Concerns::OrganizationExtensions
-      ::User.send :include, Katello::Concerns::UserExtensions
-      ::Setting.send :include, Katello::Concerns::SettingExtensions
-      ::HttpProxy.send :include, Katello::Concerns::HttpProxyExtensions
-      ForemanTasks::RecurringLogic.send :include, Katello::Concerns::RecurringLogicExtensions
+      ::Environment.include Katello::Concerns::EnvironmentExtensions
+      ::Host::Managed.include Katello::Concerns::HostManagedExtensions
+      ::Hostgroup.include Katello::Concerns::HostgroupExtensions
+      ::Location.include Katello::Concerns::LocationExtensions
+      ::Redhat.include Katello::Concerns::RedhatExtensions
+      ::Operatingsystem.include Katello::Concerns::OperatingsystemExtensions
+      ::Organization.include Katello::Concerns::OrganizationExtensions
+      ::User.include Katello::Concerns::UserExtensions
+      ::Setting.include Katello::Concerns::SettingExtensions
+      ::HttpProxy.include Katello::Concerns::HttpProxyExtensions
+      ForemanTasks::RecurringLogic.include Katello::Concerns::RecurringLogicExtensions
 
       #Controller extensions
-      ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
-      ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
-      ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
+      ::HostsController.include Katello::Concerns::HostsControllerExtensions
+      ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
+      ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
       ::FactImporter.register_fact_importer(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
       ::FactParser.register_fact_parser(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactParser)
 
@@ -165,13 +165,13 @@ module Katello
       end
       #Handle Smart Proxy items separately
       begin
-        ::SmartProxy.send :include, Katello::Concerns::SmartProxyExtensions
+        ::SmartProxy.include Katello::Concerns::SmartProxyExtensions
       rescue ActiveRecord::StatementInvalid
         Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
       end
 
       # Organization controller extensions
-      ::OrganizationsController.send :include, Katello::Concerns::OrganizationsControllerExtensions
+      ::OrganizationsController.include Katello::Concerns::OrganizationsControllerExtensions
 
       # Service extensions
       require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
@@ -186,12 +186,12 @@ module Katello
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
       require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
       require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
-      ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
+      ::PuppetClassImporter.include Katello::Services::PuppetClassImporterExtensions
 
       #Api controller extensions
-      ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
-      ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
-      ::Api::V2::SmartProxiesController.send :include, Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
+      ::Api::V2::HostsController.include Katello::Concerns::Api::V2::HostsControllerExtensions
+      ::Api::V2::HostgroupsController.include Katello::Concerns::Api::V2::HostgroupsControllerExtensions
+      ::Api::V2::SmartProxiesController.include Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
 
       ::HostsController.class_eval do
         helper Katello::Concerns::HostsAndHostgroupsHelperExtensions

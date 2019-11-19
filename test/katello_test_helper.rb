@@ -37,7 +37,7 @@ require "#{Katello::Engine.root}/test/support/fixtures_support"
 require "#{Katello::Engine.root}/test/support/pulp3_support"
 
 require 'dynflow/testing'
-Mocha::Mock.send :include, Dynflow::Testing::Mimic
+Mocha::Mock.include Dynflow::Testing::Mimic
 Dynflow::Testing.logger_adapter = Dynflow::LoggerAdapters::Delegator.new(Rails.logger, Rails.logger)
 require 'foreman_tasks/test_helpers'
 require "#{Katello::Engine.root}/test/support/actions/fixtures"
