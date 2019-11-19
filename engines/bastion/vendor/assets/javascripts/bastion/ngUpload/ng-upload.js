@@ -214,10 +214,10 @@ angular.module('ngUpload', [])
                 if ( errorCatcher ){
                    if (!scope.$$phase) {
                       scope.$apply(function () {
-                          errorCatcher(scope, { error: error, content: content});
+                          errorCatcher(scope, { error: error});
                       });
                    } else {
-                     errorCatcher(scope, { error: error, content: content});
+                     errorCatcher(scope, { error: error});
                    }
                 }
 
