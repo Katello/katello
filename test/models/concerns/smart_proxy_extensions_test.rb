@@ -66,7 +66,6 @@ module Katello
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @file_repo = katello_repositories(:generic_file)
       @puppet_repo = katello_repositories(:p_forge)
-      @unknown_repo = katello_repositories(:generic_file, :content_type => "unknown")
     end
 
     def test_pulp3_repository_support
@@ -75,7 +74,11 @@ module Katello
     end
 
     def test_pulp3_repository_support_rejects_unknown_type
-      refute @master.pulp3_support(@unknown_repo)
+      type = RepositoryTypeManager.repository_types['puppet']
+      RepositoryTypeManager.repository_types.delete('puppet')
+      refute @master.pulp3_support?(@puppet_repo)
+    ensure
+      RepositoryTypeManager.repository_types['puppet'] = type
     end
   end
 end
