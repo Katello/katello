@@ -60,7 +60,7 @@ KT.container = (function(){
             noCapsules = $("#no_capsules"),
             org = getOrg(),
             spinner = $("#load_capsules"),
-            url = foreman_url("/api/smart_proxies"),
+            url = tfm.tools.foremanUrl("/api/smart_proxies"),
             params = {
                 organization_id: getOrg(),
                 search: "feature = \"Pulp Node\" or feature = \"Pulp\"",
@@ -95,7 +95,7 @@ KT.container = (function(){
         var environmentDropdown = $('#kt_environment_id'),
             org = getOrg(),
             spinner = $("#load_environments"),
-            url = foreman_url("/katello/api/organizations/" + org + "/environments");
+            url = tfm.tools.foremanUrl("/katello/api/organizations/" + org + "/environments");
 
         resetEnvironments();
         if (org !== "") {
@@ -121,7 +121,7 @@ KT.container = (function(){
             noCV = $("#no_content_views"),
             env = getEnvironment(),
             spinner = $("#load_content_views"),
-            url = foreman_url("/katello/api/organizations/" + getOrg() + "/content_views");
+            url = tfm.tools.foremanUrl("/katello/api/organizations/" + getOrg() + "/content_views");
             params = {
                 environment_id : env
             };
@@ -156,7 +156,7 @@ KT.container = (function(){
             noRepos = $("#no_repositories"),
             cv = getContentView(),
             spinner = $("#load_repositories"),
-            url = foreman_url("/katello/api/repositories/"),
+            url = tfm.tools.foremanUrl("/katello/api/repositories/"),
             params = {
                 organization_id: getOrg(),
                 content_view_id: cv,
@@ -194,7 +194,7 @@ KT.container = (function(){
         var repo = getRepo(),
             tagsDropdown = $("#tag_id"),
             spinner = $("#load_tags"),
-            url = foreman_url("/katello/api/repositories/" + repo + "/docker_tags"),
+            url = tfm.tools.foremanUrl("/katello/api/repositories/" + repo + "/docker_tags"),
             params = {};
 
         resetTags();

@@ -98,7 +98,7 @@ KT.content_actions = (function(){
 
             $.ajax({
               type: 'DELETE',
-              url: foreman_url('/katello/sync_management/' + repo_id + '?organization_id=' + getOrg()),
+              url: tfm.tools.foremanUrl('/katello/sync_management/' + repo_id + '?organization_id=' + getOrg()),
               dataType: 'json',
               success: function(data) {
               },
@@ -112,7 +112,7 @@ KT.content_actions = (function(){
         if (syncing.length ===0){
             return;
         }
-        var url = foreman_url('/katello/sync_management/sync_status');
+        var url = tfm.tools.foremanUrl('/katello/sync_management/sync_status');
         updater = $.PeriodicalUpdater(url, {
               data: function(){return {repoids:getSyncing(), organization_id:getOrg()}},
               method: 'get',
@@ -167,7 +167,7 @@ KT.content = (function(){
                 progressBar = $('<a/>').attr('class', 'progress').text(" ");
 
             if(task_id !== undefined) {
-                progressBar.attr('href', foreman_url('/foreman_tasks/tasks/' + task_id));
+                progressBar.attr('href', tfm.tools.foremanUrl('/foreman_tasks/tasks/' + task_id));
             }
 
             progress = progress ? progress : 0;
@@ -189,7 +189,7 @@ KT.content = (function(){
         finishRepo = function(repo_id, state, duration, raw_state, error_details, task_id){
             var element = $("#repo-" + repo_id);
             var messages = [];
-            var url = foreman_url('/foreman_tasks/tasks/' + task_id);
+            var url = tfm.tools.foremanUrl('/foreman_tasks/tasks/' + task_id);
             state = '<a href="' + url + '">' + state + '</a>';
             element.find(".result .result-info").html(state);
             fadeUpdate(element.find(".duration"), duration);
@@ -211,7 +211,7 @@ KT.content = (function(){
             starttime = starttime === null ? katelloI18n.no_start_time : starttime;
 
             if(task_id !== undefined) {
-                pg.attr('href', foreman_url('/foreman_tasks/tasks/' + task_id));
+                pg.attr('href', tfm.tools.foremanUrl('/foreman_tasks/tasks/' + task_id));
             }
 
             fadeUpdate(element.find(".start_time"), starttime);
@@ -219,7 +219,7 @@ KT.content = (function(){
             fadeUpdate(element.find(".duration"), '');
             fadeUpdate(element.find(".size"), display_size);
             element.find('.size').data('size', size);
-            element.find('.info-tipsy').attr('href', foreman_url('/foreman_tasks/tasks/' + task_id));
+            element.find('.info-tipsy').attr('href', tfm.tools.foremanUrl('/foreman_tasks/tasks/' + task_id));
             progress = progress === 100 ? 99 : progress;
             value.show();
             value.animate({'width': progress },{ queue:false,
