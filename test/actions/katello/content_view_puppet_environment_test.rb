@@ -148,5 +148,15 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
 
       assert_action_planed_with action, ::Actions::Pulp::Repository::Destroy, content_view_puppet_environment_id: puppet_env.id
     end
+
+    it 'does not plan action if puppet content type is missing' do
+      action.expects(:action_subject).with(puppet_env)
+      action.expects(:plan_self)
+
+      Katello::RepositoryTypeManager.stubs(:enabled?).with('puppet').returns(false)
+
+      plan_action action, puppet_env
+      refute_action_planned action, ::Actions::Pulp::Repository::Destroy
+    end
   end
 end
