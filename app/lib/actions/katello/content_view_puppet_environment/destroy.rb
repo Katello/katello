@@ -4,7 +4,9 @@ module Actions
       class Destroy < Actions::EntryAction
         def plan(puppet_env)
           action_subject(puppet_env)
-          plan_action(Pulp::Repository::Destroy, content_view_puppet_environment_id: puppet_env.id)
+          if ::Katello::RepositoryTypeManager.enabled?('puppet')
+            plan_action(Pulp::Repository::Destroy, content_view_puppet_environment_id: puppet_env.id)
+          end
           plan_self
         end
 
