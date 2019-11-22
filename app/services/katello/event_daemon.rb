@@ -1,5 +1,45 @@
 module Katello
   class EventDaemon
+    class Monitor
+      def initialize(service_classes)
+        @service_classes = service_classes
+      end
+
+      def start
+        error = nil
+        status = nil
+        loop do
+          check_services(error, status)
+          sleep 15
+        end
+      end
+
+      def check_services(error, status)
+        @service_classes.each do |service_class|
+          begin
+            status = service_class.status
+          rescue => error
+            Rails.logger.error("Error occurred while pinging #{service_class}")
+            Rails.logger.error(error.message)
+            Rails.logger.error(error.backtrace.join('\n'))
+          ensure
+            if error || !status&.dig(:running)
+              begin
+                service_class.close
+                service_class.run
+              rescue => error
+                Rails.logger.error("Error occurred while starting #{service_class}")
+                Rails.logger.error(error.message)
+                Rails.logger.error(error.backtrace.join('\n'))
+              ensure
+                error = nil
+              end
+            end
+          end
+        end
+      end
+    end
+
     class << self
       def initialize
         FileUtils.touch(lock_file)
@@ -37,6 +77,7 @@ module Katello
 
       def stop
         return unless pid == Process.pid
+        @monitor_thread.kill
         services.values.each(&:close)
         File.unlink(pid_file) if pid_file && File.exist?(pid_file)
       end
@@ -49,7 +90,7 @@ module Katello
           lockfile.flock(File::LOCK_EX)
           return if started? # ensure it wasn't started while we waited for the lock
 
-          start_services
+          start_monitor_thread
           write_pid_file
 
           at_exit do
@@ -69,8 +110,10 @@ module Katello
         false
       end
 
-      def start_services
-        services.values.each(&:run)
+      def start_monitor_thread
+        @monitor_thread = Thread.new do
+          Monitor.new(services.values).start
+        end
       end
 
       def runnable?

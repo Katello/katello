@@ -2,8 +2,7 @@ module Katello
   module EventMonitor
     class PollerThread
       SLEEP_INTERVAL = 3
-      PROCESSED_COUNT_CACHE_KEY = 'katello_events_processed'.freeze
-      FAILED_COUNT_CACHE_KEY = 'katello_events_failed'.freeze
+      STATUS_CACHE_KEY = 'katello_events_status'.freeze
 
       cattr_accessor :instance
 
@@ -25,17 +24,14 @@ module Katello
         instance.poll_for_events
       end
 
-      def self.status
-        {
-          processed_count: Rails.cache.fetch(PROCESSED_COUNT_CACHE_KEY) { 0 },
-          failed_count: Rails.cache.fetch(FAILED_COUNT_CACHE_KEY) { 0 },
-          queue_depth: Katello::EventQueue.queue_depth
-        }
+      def self.status(refresh: true)
+        Rails.cache.fetch(STATUS_CACHE_KEY, force: refresh) do
+          instance&.status
+        end
       end
 
       def self.reset_status
-        Rails.cache.write(PROCESSED_COUNT_CACHE_KEY, 0)
-        Rails.cache.write(FAILED_COUNT_CACHE_KEY, 0)
+        Rails.cache.delete(STATUS_CACHE_KEY)
       end
 
       def initialize(logger = nil)
@@ -49,6 +45,18 @@ module Katello
         @thread.kill if @thread
       end
 
+      def running?
+        @thread&.status || false
+      end
+
+      def status
+        {
+          processed_count: @processed_count,
+          failed_count: @failed_count,
+          running: running?
+        }
+      end
+
       def run_event(event)
         @logger.debug("event_queue_event: type=#{event.event_type}, object_id=#{event.object_id}")
 
@@ -60,8 +68,6 @@ module Katello
           end
         rescue => e
           @failed_count += 1
-          Rails.cache.write(FAILED_COUNT_CACHE_KEY, @failed_count, expires_in: 24.hours)
-
           @logger.error("event_queue_error: type=#{event.event_type}, object_id=#{event.object_id}")
           @logger.error(e.message)
           @logger.error(e.backtrace.join("\n"))
@@ -89,7 +95,6 @@ module Katello
                   until (event = ::Katello::EventQueue.next_event).nil?
                     run_event(event)
                     @processed_count += 1
-                    Rails.cache.write(PROCESSED_COUNT_CACHE_KEY, @processed_count, expires_in: 24.hours)
                   end
                 end
               end
