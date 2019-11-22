@@ -1,8 +1,6 @@
 module Katello
   class CandlepinEventListener
-    PROCESSED_COUNT_CACHE_KEY = 'candlepin_events_processed'.freeze
-    FAILED_COUNT_CACHE_KEY = 'candlepin_events_failed'.freeze
-    AMQP_QUEUE_NAME = 'event.org.candlepin.audit.AMQPBusPublisher'.freeze
+    STATUS_CACHE_KEY = 'candlepin_events_status'.freeze
 
     CandlepinEvent = Struct.new(:message_id, :subject, :content)
 
@@ -10,38 +8,17 @@ module Katello
     @failed_count = 0
     @processed_count = 0
 
-    def self.start_service
-      loop do
-        begin
-          result = Katello::CandlepinListeningService.instance.start
-
-          break if result == :connected
-
-          @logger.info("Attempting to restart Candlepin Listening Service")
-          sleep 5
-        end
-      end
-    end
-
     def self.run
-      @thread.kill if @thread
+      initialize_listening_service
 
-      # run in own thread so connecting to qpid won't block the main process
-      @thread = Thread.new do
-        Rails.application.executor.wrap do
-          initialize_listening_service
-          start_service
+      result = Katello::CandlepinListeningService.instance.start
+      return unless result == :connected
 
-          Katello::CandlepinListeningService.instance.poll_for_messages do |message|
-            if message[:result]
-              result = message[:result]
-              event = CandlepinEvent.new(result.message_id, result.subject, result.content)
-              act_on_event(event)
-            elsif message[:error]
-              @logger.error("Disconnected from Candlepin Listening Service, reconnecting")
-              start_service
-            end
-          end
+      Katello::CandlepinListeningService.instance.poll_for_messages do |message|
+        if message[:result]
+          result = message[:result]
+          event = CandlepinEvent.new(result.message_id, result.subject, result.content)
+          act_on_event(event)
         end
       end
     rescue => e
@@ -50,17 +27,20 @@ module Katello
       raise e
     end
 
-    def self.status
-      {
-        processed_count: Rails.cache.fetch(PROCESSED_COUNT_CACHE_KEY) { @processed_count },
-        failed_count: Rails.cache.fetch(FAILED_COUNT_CACHE_KEY) { @failed_count },
-        queue_depth: Katello::Resources::Candlepin::Admin.queue_depth(AMQP_QUEUE_NAME)
-      }
+    def self.status(refresh: true)
+      Rails.cache.fetch(STATUS_CACHE_KEY, force: refresh) do
+        {
+          processed_count: @processed_count,
+          failed_count: @failed_count,
+          running: Katello::CandlepinListeningService.instance&.running? || false
+        }
+      end
     end
 
     def self.reset_status
-      Rails.cache.write(PROCESSED_COUNT_CACHE_KEY, 0)
-      Rails.cache.write(FAILED_COUNT_CACHE_KEY, 0)
+      @processed_count = 0
+      @failed_count = 0
+      Rails.cache.delete(STATUS_CACHE_KEY)
     end
 
     def self.act_on_event(event)
@@ -68,11 +48,8 @@ module Katello
         ::Katello::Candlepin::EventHandler.new(@logger).handle(event)
       end
       @processed_count += 1
-
-      Rails.cache.write(PROCESSED_COUNT_CACHE_KEY, @processed_count, expires_in: 24.hours)
     rescue => e
       @failed_count += 1
-      Rails.cache.write(FAILED_COUNT_CACHE_KEY, @failed_count, expires_in: 24.hours)
       @logger.error("Error handling Candlepin event")
       @logger.error(e.message)
       @logger.error(e.backtrace.join("\n"))
@@ -99,7 +76,6 @@ module Katello
 
     def self.close
       Katello::CandlepinListeningService.close
-      @thread.kill if @thread
       reset_status
     end
   end

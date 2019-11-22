@@ -82,40 +82,39 @@ module Katello
     end
 
     def test_ping_candlepin_events
-      Katello::CandlepinEventListener.reset_status
-      Katello::Resources::Candlepin::Admin.expects(:queue_depth).returns(0)
+      Katello::CandlepinEventListener.stubs(:status).returns(processed_count: 0, failed_count: 0, running: true)
 
       result = Katello::Ping.ping_candlepin_events({})
 
       assert_equal 'ok', result[:status]
-      assert_equal '0 Processed, 0 Failed, 0 in queue', result[:message]
+      assert_equal '0 Processed, 0 Failed', result[:message]
     end
 
-    def test_ping_candlepin_deep_queue
-      Katello::CandlepinEventListener.expects(:status).returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
+    def test_ping_candlepin_not_running
+      Katello::CandlepinEventListener.expects(:status).returns(processed_count: 10, failed_count: 5, running: false)
 
       result = Katello::Ping.ping_candlepin_events({})
 
-      assert_equal 'WARN', result[:status]
-      assert_equal '10 Processed, 5 Failed, 1001 in queue', result[:message]
+      assert_equal 'FAIL', result[:status]
+      assert_equal 'Not running', result[:message]
     end
 
     def test_ping_katello_events
-      Katello::EventMonitor::PollerThread.reset_status
+      Katello::EventMonitor::PollerThread.stubs(:status).returns(processed_count: 0, failed_count: 0, running: true)
 
       result = Katello::Ping.ping_katello_events({})
 
       assert_equal 'ok', result[:status]
-      assert_equal '0 Processed, 0 Failed, 0 in queue', result[:message]
+      assert_equal '0 Processed, 0 Failed', result[:message]
     end
 
-    def test_ping_katello_events_deep_queue
+    def test_ping_katello_events_not_running
       Katello::EventMonitor::PollerThread.expects(:status).returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
 
       result = Katello::Ping.ping_katello_events({})
 
-      assert_equal 'WARN', result[:status]
-      assert_equal '10 Processed, 5 Failed, 1001 in queue', result[:message]
+      assert_equal 'FAIL', result[:status]
+      assert_equal 'Not running', result[:message]
     end
   end
 
