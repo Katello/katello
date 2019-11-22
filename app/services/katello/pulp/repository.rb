@@ -285,7 +285,7 @@ module Katello
 
       def proxy_options
         if repo.root.http_proxy_policy == RootRepository::NO_DEFAULT_HTTP_PROXY
-          return { proxy_host: '' }
+          return no_proxy_options
         end
 
         proxy = repo.root.http_proxy
@@ -303,10 +303,19 @@ module Katello
           }
           return proxy_options
         end
-        { proxy_host: '' }
+        no_proxy_options
       end
 
       private
+
+      def no_proxy_options
+        {
+          proxy_host: '',
+          proxy_port: nil,
+          proxy_username: '',
+          proxy_password: ''
+        }
+      end
 
       def filtered_distribution_config_equal?(generated_config, actual_config)
         generated = generated_config.clone

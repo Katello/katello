@@ -21,6 +21,9 @@ module Katello
         @repo.root.update_attribute(:http_proxy_policy, RootRepository::NO_DEFAULT_HTTP_PROXY)
         assert_nil @repo.root.reload.http_proxy
         assert_equal '', @pulp_repo.proxy_options[:proxy_host]
+        assert_nil @pulp_repo.proxy_options[:proxy_port]
+        assert_equal '', @pulp_repo.proxy_options[:proxy_username]
+        assert_equal '', @pulp_repo.proxy_options[:proxy_password]
       end
 
       def test_no_options_merged_if_no_default_proxy_and_http_proxy_exists
@@ -29,6 +32,9 @@ module Katello
                           http_proxy: proxy)
         assert @repo.root.http_proxy_id
         assert_equal '', @pulp_repo.proxy_options[:proxy_host]
+        assert_nil @pulp_repo.proxy_options[:proxy_port]
+        assert_equal '', @pulp_repo.proxy_options[:proxy_username]
+        assert_equal '', @pulp_repo.proxy_options[:proxy_password]
       end
 
       def test_no_options_merged_if_global_default_proxy_and_http_proxy_exists
