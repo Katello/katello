@@ -26,11 +26,11 @@ module Katello
         status = {
           processed_count: 0,
           failed_count: 0,
-          queue_depth: 0
+          running: false
         }
-        Katello::EventMonitor::PollerThread.reset_status
+        Katello::EventMonitor::PollerThread.initialize
 
-        assert_equal status, Katello::EventMonitor::PollerThread.status
+        assert_equal status, Katello::EventMonitor::PollerThread.status(refresh: true)
       end
     end
   end

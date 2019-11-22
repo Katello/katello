@@ -64,10 +64,13 @@ module Katello
         @receiver = @session.create_receiver(@address)
         @logger.info("Candlepin Event Listener started")
       end
-
       :connected
     rescue => e
-      raise e unless e.class.name.include? "TransportFailure"
+      @logger.error("Unable to establish candlepin events connection: #{e.message}")
+    end
+
+    def running?
+      @connection.open? && @thread&.status || false
     end
 
     def fetch_message
@@ -83,7 +86,7 @@ module Katello
           message = fetch_message
           yield(message) if block_given?
 
-          sleep SLEEP_INTERVAL if message[:result].nil? && message[:error].nil?
+          sleep SLEEP_INTERVAL if message[:result].nil?
         end
       end
     end
