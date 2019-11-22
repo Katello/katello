@@ -1,43 +1,6 @@
 ---
 http_interactions:
 - request:
-    method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/scenario_test/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:23:27 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '172'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzFhZWVmMDVlLTY0MTMtNGQwZC1iZDRjLTljYmRlMTU0MzdhZC8iLCAi
-        dGFza19pZCI6ICIxYWVlZjA1ZS02NDEzLTRkMGQtYmQ0Yy05Y2JkZTE1NDM3
-        YWQifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:23:27 GMT
-- request:
     method: get
     uri: https://devel2.balmora.example.com/pulp/api/v2/tasks/1aeef05e-6413-4d0d-bd4c-9cbde15437ad/
     body:
@@ -129,23 +92,113 @@ http_interactions:
   recorded_at: Fri, 02 Aug 2019 20:23:27 GMT
 - request:
     method: delete
-    uri: https://devel2.balmora.example.com:8443/candlepin/owners/scenario_test
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/scenario_test/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 22 Nov 2019 19:53:22 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzczYzgyMjg4LTVhOWUtNDBiNC05MjAyLTg4ZGY5Y2ZiMTQyNS8iLCAi
+        dGFza19pZCI6ICI3M2M4MjI4OC01YTllLTQwYjQtOTIwMi04OGRmOWNmYjE0
+        MjUifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Fri, 22 Nov 2019 19:53:22 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/tasks/73c82288-5a9e-40b4-9202-88df9cfb1425/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Nov 2019 19:53:22 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"bfc0aa4b26befb2e4e1e7d8b9b8356e3-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '371'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83M2M4MjI4OC01YTllLTQwYjQtOTIwMi04OGRmOWNmYjE0
+        MjUvIiwgInRhc2tfaWQiOiAiNzNjODIyODgtNWE5ZS00MGI0LTkyMDItODhk
+        ZjljZmIxNDI1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiAiMjAxOS0xMS0yMlQxOTo1MzoyMloiLCAiX25zIjogInRhc2tfc3RhdHVz
+        IiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0xMS0yMlQxOTo1MzoyMloiLCAidHJh
+        Y2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNz
+        X3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTBAY2VudG9zNy1rYXRlbGxvLWRldmVsLXN0YWJsZS5leGFtcGxlLmNv
+        bS5kcTIiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29ya2VyX25hbWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1rYXRlbGxvLWRl
+        dmVsLXN0YWJsZS5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAiZXJy
+        b3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVkZDgzY2IyNzdkNjc5Yjgz
+        MjFiNDY4NSJ9LCAiaWQiOiAiNWRkODNjYjI3N2Q2NzliODMyMWI0Njg1In0=
+    http_version: 
+  recorded_at: Fri, 22 Nov 2019 19:53:22 GMT
+- request:
+    method: delete
+    uri: https://centos7-katello-devel-stable.example.com:8443/candlepin/owners/scenario_test
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - "*/*"
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Authorization:
-      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="hOqPSn4M9aoMkJtFHl0gBx8mQHBTfWJ713qQG9oFEs",
-        oauth_signature="VlDmY%2FIUWiijQXq%2BLQokmCk08Hk%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1564777408", oauth_version="1.0"
+      - OAuth oauth_consumer_key="8AF4W2MVwfxTEEmCqtbbPD54L4ecw8b9", oauth_nonce="XXbtk95c58zijnMEcmPWDMeUkPh6tFbG8o6FClRgE",
+        oauth_signature="q0L7v6fcN5YxD%2BaMocip%2B2jwtcg%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1574452402", oauth_version="1.0"
       Cp-User:
       - foreman_admin
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 204
@@ -154,14 +207,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - a32b3eed-3826-4aa4-bf37-0bf69524d899
+      - 8145bf44-0553-431e-bfa3-39d20da38791
       X-Version:
-      - 2.6.5-1
+      - 2.9.14-1
       Date:
-      - Fri, 02 Aug 2019 20:23:27 GMT
+      - Fri, 22 Nov 2019 19:53:22 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:23:28 GMT
+  recorded_at: Fri, 22 Nov 2019 19:53:22 GMT
 recorded_with: VCR 3.0.3
