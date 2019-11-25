@@ -1,6 +1,7 @@
 module Katello
   module Pulp
     class Repository < ::Actions::Pulp::Abstract
+      include ImporterComparison
       attr_accessor :repo, :input
       attr_accessor :smart_proxy
       delegate :root, to: :repo
@@ -139,7 +140,8 @@ module Katello
         repo_details = backend_data
         return unless repo_details
         capsule_importer = repo_details["importers"][0]
-        !importer_matches?(capsule_importer)
+        generated_importer = generate_importer
+        !importer_matches?(generated_importer, capsule_importer)
       end
 
       def needs_distributor_updates?
@@ -317,12 +319,6 @@ module Katello
           actual.delete('checksum_type')
         end
         generated.compact == actual.compact
-      end
-
-      def importer_matches?(capsule_importer)
-        generated_importer = generate_importer
-        capsule_importer.try(:[], 'importer_type_id') == generated_importer.id &&
-            generated_importer.config.compact == capsule_importer['config'].compact
       end
 
       def distributors_match?(capsule_distributors)
