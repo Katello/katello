@@ -6,21 +6,25 @@ module Katello
           return false
         end
 
-        if generated_importer.config['proxy_host'] == ""
-          generated_importer.config.delete('proxy_host')
-          generated_importer.config.delete('proxy_username')
-          generated_importer.config.delete('proxy_password')
-          generated_importer.config.delete('proxy_port')
-          capsule_importer['config'].delete('proxy_host')
-          capsule_importer['config'].delete('proxy_username')
-          capsule_importer['config'].delete('proxy_port')
-          capsule_importer['config'].delete('proxy_password')
+        generated_config = generated_importer.config
+        capsule_config = capsule_importer['config']
+        if generated_config['proxy_host'] == ""
+          generated_config.delete('proxy_host')
+          generated_config.delete('proxy_username')
+          generated_config.delete('proxy_password')
+          generated_config.delete('proxy_port')
+          capsule_config.delete('proxy_host')
+          capsule_config.delete('proxy_username')
+          capsule_config.delete('proxy_password')
+          capsule_config.delete('proxy_port')
         end
-        if generated_importer.config['proxy_password'] == "" && capsule_importer['config']['proxy_password'] == "*****"
-          generated_importer.config.delete('proxy_password')
-          capsule_importer['config'].delete('proxy_password')
+
+        if generated_config['proxy_password'] == "" && capsule_config['proxy_password'] == "*****"
+          generated_config.delete('proxy_password')
+          capsule_config.delete('proxy_password')
         end
-        generated_importer.config.compact == capsule_importer['config'].compact
+
+        generated_config.compact == capsule_config.compact
       end
     end
   end
