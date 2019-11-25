@@ -10,7 +10,7 @@ module Actions
             else
               host.subscription_facet.release_version = release_version
             end
-            plan_action(Actions::Katello::Host::Update, host)
+            host.update_candlepin_associations
           else
             fail _("Host %s has not been registered with subscription-manager.") % host.name
           end

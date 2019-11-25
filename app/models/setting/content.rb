@@ -116,8 +116,6 @@ class Setting::Content < Setting
                N_('Default Location where new Puppet content will be put upon Content View publish'),
                nil, N_('Default Location Puppet content'), nil,
                :collection => proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] }),
-      self.set('host_update_lock', N_("Allow multiple concurrent Actions::Katello::Host::Update calls for one host to be processed at the same time."),
-               false, N_('Concurrent Actions::Katello::Host::Update allowed')),
       self.set('expire_soon_days', N_('The number of days remaining in a subscription before you will be reminded about renewing it.'),
                120, N_('Expire soon days')),
       self.set('content_view_solve_dependencies',

@@ -18,14 +18,6 @@ module Katello
       assert setting.valid?
     end
 
-    def test_host_update_lock_setting
-      setting = Setting.where(:name => "host_update_lock").first
-      setting.value = "invalid"
-      refute setting.valid?
-      setting.value = true
-      assert setting.valid?
-    end
-
     def test_recalculate_errata_status
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Host::RecalculateErrataStatus)
       setting = Setting.where(:name => "errata_status_installable").first
