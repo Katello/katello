@@ -331,7 +331,15 @@ module Katello
       def importer_matches?(capsule_importer)
         generated_importer = generate_importer
         capsule_importer.try(:[], 'importer_type_id') == generated_importer.id &&
-            generated_importer.config.compact == capsule_importer['config'].compact
+          ((generated_importer.config['proxy_password'] == "" && capsule_importer['config']['proxy_password'] == "*****") &&
+            importer_matches_without_proxy_password?(generated_importer.config, capsule_importer['config']) ||
+           generated_importer.config.compact == capsule_importer['config'].compact)
+      end
+
+      def importer_matches_without_proxy_password?(generated_importer_config, capsule_importer_config)
+        generated_importer_config.delete('proxy_password')
+        capsule_importer_config.delete('proxy_password')
+        generated_importer_config.compact == capsule_importer_config.compact
       end
 
       def distributors_match?(capsule_distributors)
