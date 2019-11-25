@@ -18,18 +18,6 @@ module Katello
           :unsubscribed_hypervisor => Katello::SubscriptionStatus::UNSUBSCRIBED_HYPERVISOR
         }.freeze
 
-        prepend ForemanTasks::Concerns::ActionTriggering
-
-        module Prepended
-          def update_action
-            if subscription_facet.try(:backend_update_needed?)
-              ::Actions::Katello::Host::Update
-            end
-          end
-        end
-
-        prepend Prepended
-
         accepts_nested_attributes_for :subscription_facet, :update_only => true, :reject_if => lambda { |attrs| attrs.values.compact.empty? }
 
         has_many :activation_keys, :through => :subscription_facet
@@ -70,6 +58,39 @@ module Katello
         scoped_search :on => :purpose_role, :rename => :role, :relation => :subscription_facet, :complete_value => true
         scoped_search :on => :purpose_usage, :rename => :usage, :relation => :subscription_facet, :complete_value => true
         scoped_search :on => :name, :rename => :addon, :relation => :purpose_addons, :complete_value => true, :ext_method => :find_by_purpose_addon
+        before_update :update_candlepin_associations, if: -> { subscription_facet.try(:backend_update_needed?) }
+      end
+
+      def update_candlepin_associations(consumer_params = nil)
+        content_facet.save! if content_facet
+
+        auto_attach_enabled_via_checkin = consumer_params.try(:[], 'autoheal')
+
+        if subscription_facet
+          consumer_params ||= subscription_facet.consumer_attributes
+
+          host_uuid = consumer_params.dig(:facts, 'dmi.system.uuid')
+          if ::Katello::Host::SubscriptionFacet.override_dmi_uuid?(host_uuid)
+            # if host reported a dmi uuid to treat as a duplicate, override it with the stored host param
+            override_value = subscription_facet.dmi_uuid_override&.value
+            override_value ||= subscription_facet.update_dmi_uuid_override&.value
+            consumer_params[:facts]['dmi.system.uuid'] = override_value
+          end
+          ::Katello::Resources::Candlepin::Consumer.update(subscription_facet.uuid, consumer_params)
+
+          if auto_attach_enabled_via_checkin
+            ::Katello::Resources::Candlepin::Consumer.refresh_entitlements(subscription_facet.uuid)
+          end
+
+          if consumer_params.try(:[], :facts)
+            ::Katello::Host::SubscriptionFacet.update_facts(self, consumer_params[:facts])
+          end
+
+          unless consumer_params.blank?
+            subscription_facet.update_from_consumer_attributes(consumer_params)
+            subscription_facet.save!
+          end
+        end
       end
 
       module ClassMethods

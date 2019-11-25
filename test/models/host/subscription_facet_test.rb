@@ -287,26 +287,6 @@ module Katello
       host.subscription_facet.remove_subscriptions(pq)
     end
 
-    def test_backend_update_needed?
-      refute subscription_facet.backend_update_needed?
-
-      subscription_facet.service_level = 'terrible'
-      assert subscription_facet.backend_update_needed?
-
-      subscription_facet.reload
-      refute subscription_facet.backend_update_needed?
-
-      subscription_facet.host.content_facet.lifecycle_environment_id = dev.id
-      assert subscription_facet.backend_update_needed?
-    end
-
-    def test_backend_update_needed_purpose_addons?
-      refute subscription_facet.backend_update_needed?
-
-      subscription_facet.purpose_addon_ids = [katello_purpose_addons(:addon).id]
-      assert subscription_facet.backend_update_needed?
-    end
-
     def test_search_by_activation_key_id
       host.subscription_facet.activation_keys << activation_key
       assert_includes ::Host.search_for("activation_key_id = #{activation_key.id}"), host
