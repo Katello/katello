@@ -140,8 +140,7 @@ module Katello
         repo_details = backend_data
         return unless repo_details
         capsule_importer = repo_details["importers"][0]
-        generated_importer = generate_importer
-        !importer_matches?(generated_importer, capsule_importer)
+        !importer_matches?(generate_importer, capsule_importer)
       end
 
       def needs_distributor_updates?
