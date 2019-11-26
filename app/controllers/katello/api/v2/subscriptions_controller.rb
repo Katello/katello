@@ -77,8 +77,9 @@ module Katello
     def show
       org_id = Organization.current&.id
       @resource = Katello::Pool.with_identifier(params[:id])
-      if @resource.organization_id != org_id
-        fail ActiveRecord::RecordNotFound, N_('This subscription is not relevant to the current organization.')
+      fail ActiveRecord::RecordNotFound, N_('Subscription not found') unless @resource
+      if @resource.organization_id != org_id && !User.current.organizations&.pluck(:id)&.include?(@resource.organization_id)
+        fail ActiveRecord::RecordNotFound, N_('This subscription is not relevant to the current user and organization.')
       end
       respond(:resource => @resource)
     end
