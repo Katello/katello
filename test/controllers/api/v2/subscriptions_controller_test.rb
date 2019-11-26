@@ -86,6 +86,35 @@ module Katello
       assert_template 'api/v2/subscriptions/index'
     end
 
+    def test_show_with_org_id
+      @subscription = katello_pools(:pool_one)
+      @org = get_organization(:empty_organization)
+      get :show, params: { :id => @subscription.id, :organization_id => @org.id }
+
+      assert_response :success
+      assert_template 'api/v2/subscriptions/show'
+    end
+
+    def test_show_without_user_org_id
+      @subscription = katello_pools(:pool_one)
+      @org = get_organization(:empty_organization)
+      response = get :show, params: { :id => @subscription.id }
+      body = JSON.parse(response.body)
+
+      assert_response 404
+      assert_equal('This subscription is not relevant to the current user and organization.', body['errors'][0])
+    end
+
+    def test_show_with_user_org_id
+      @subscription = katello_pools(:pool_one)
+      @org = get_organization(:empty_organization)
+      User.current.organizations << @org
+      get :show, params: { :id => @subscription.id }
+
+      assert_response :success
+      assert_template 'api/v2/subscriptions/show'
+    end
+
     def test_blank_upload
       post :upload, params: { :organization_id => @organization.id }
       assert_response 400
