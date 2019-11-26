@@ -9,14 +9,11 @@ module Katello
         generated_config = generated_importer.config
         capsule_config = capsule_importer['config']
         if generated_config['proxy_host'] == ""
-          generated_config.delete('proxy_host')
-          generated_config.delete('proxy_username')
-          generated_config.delete('proxy_password')
-          generated_config.delete('proxy_port')
-          capsule_config.delete('proxy_host')
-          capsule_config.delete('proxy_username')
-          capsule_config.delete('proxy_password')
-          capsule_config.delete('proxy_port')
+          proxy_keys = %w(proxy_host proxy_username proxy_password)
+          proxy_keys.each do |key|
+            generated_config.delete(key)
+            capsule_config.delete(key)
+          end
         end
 
         if generated_config['proxy_password'] == "" && capsule_config['proxy_password'] == "*****"
