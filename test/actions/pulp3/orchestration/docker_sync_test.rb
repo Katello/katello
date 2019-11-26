@@ -38,7 +38,7 @@ module ::Actions::Pulp3
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
 
-      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+      assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
     end
   end
 end

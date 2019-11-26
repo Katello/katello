@@ -19,7 +19,7 @@ module Support
 
     def with_pulp3_features(smart_proxy)
       spf = smart_proxy.smart_proxy_features.find_by(:feature_id => Feature.find_by(:name => SmartProxy::PULP3_FEATURE))
-      spf.capabilities = ['pulp_file', 'pulp_docker', 'pulp_ansible']
+      spf.capabilities = ['pulp_file', 'pulp_container', 'pulp_ansible']
       spf.save!
     end
 

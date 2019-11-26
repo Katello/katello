@@ -25,19 +25,24 @@ module Katello
         katello_repos = katello_repos.where(:environment_id => environment_id) if environment_id
         katello_repos = katello_repos.in_content_views([content_view_id]) if content_view_id
         katello_repos = katello_repos.select { |repo| smart_proxy.pulp3_support?(repo) }
-        repos_on_capsule = ::Katello::Pulp3::Api::Core.new(smart_proxy).list_all(name_in: katello_repos.map(&:pulp_id))
+        repos_on_capsule = pulp3_enabled_repo_types.collect do |repo_type|
+          repo_type.pulp3_service_class.api(smart_proxy).list_all(name_in: katello_repos.map(&:pulp_id))
+        end
+        repos_on_capsule.flatten!
         repo_ids = repos_on_capsule.map(&:name)
         katello_repos.select { |repo| repo_ids.include? repo.pulp_id }
       end
 
-      def core_api
-        ::Katello::Pulp3::Api::Core.new(smart_proxy)
-      end
-
       def delete_orphan_repository_versions
-        orphan_repository_versions.collect do |href|
-          core_api.repository_versions_api.delete(href)
+        tasks = []
+
+        orphan_repository_versions.each do |api, version_hrefs|
+          tasks << version_hrefs.collect do |href|
+            api.repository_versions_api.delete(href)
+          end
         end
+
+        tasks.flatten
       end
 
       def pulp3_enabled_repo_types
@@ -47,8 +52,15 @@ module Katello
       end
 
       def orphan_repository_versions
-        version_hrefs = core_api.repository_versions
-        version_hrefs - ::Katello::Repository.where(version_href: version_hrefs).pluck(:version_href)
+        # Each key is a Pulp 3 plugin API and each value is the list of version_hrefs
+        repo_version_map = {}
+        pulp3_enabled_repo_types.each do |repo_type|
+          api = repo_type.pulp3_service_class.api(smart_proxy)
+          version_hrefs = api.repository_versions
+          repo_version_map[api] = version_hrefs - ::Katello::Repository.where(version_href: version_hrefs).pluck(:version_href)
+        end
+
+        repo_version_map
       end
     end
   end

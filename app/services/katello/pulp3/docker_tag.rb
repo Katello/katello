@@ -4,7 +4,7 @@ module Katello
       include LazyAccessor
 
       def self.content_api
-        PulpDockerClient::ContentTagsApi.new(Katello::Pulp3::Api::Docker.new(SmartProxy.pulp_master!).api_client)
+        PulpContainerClient::ContentTagsApi.new(Katello::Pulp3::Api::Docker.new(SmartProxy.pulp_master!).api_client)
       end
 
       def self.ids_for_repository(repo_id)

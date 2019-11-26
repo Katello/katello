@@ -6,47 +6,55 @@ module Katello
     module Api
       class Docker < Core
         def self.api_exception_class
-          PulpDockerClient::ApiError
+          PulpContainerClient::ApiError
         end
 
         def self.client_module
-          PulpDockerClient
+          PulpContainerClient
         end
 
         def self.remote_class
-          PulpDockerClient::DockerDockerRemote
+          PulpContainerClient::ContainerContainerRemote
         end
 
         def self.distribution_class
-          PulpDockerClient::DockerDockerDistribution
+          PulpContainerClient::ContainerContainerDistribution
         end
 
         def self.publication_class
-          PulpDockerClient::DockerPublication
+          PulpContainerClient::ContainerPublication
         end
 
         def self.recursive_manage_class
-          PulpDockerClient::RecursiveManage
+          PulpContainerClient::RecursiveManage
         end
 
         def api_client
-          PulpDockerClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpDockerClient::Configuration))
+          PulpContainerClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpContainerClient::Configuration))
+        end
+
+        def repositories_api
+          PulpContainerClient::RepositoriesContainerApi.new(api_client)
+        end
+
+        def repository_versions_api
+          PulpContainerClient::RepositoriesContainerVersionsApi.new(api_client)
         end
 
         def remotes_api
-          PulpDockerClient::RemotesDockerApi.new(api_client)
+          PulpContainerClient::RemotesContainerApi.new(api_client)
         end
 
         def publications_api
-          PulpDockerClient::PublicationsDockerApi.new(api_client)
+          PulpContainerClient::PublicationsContainerApi.new(api_client)
         end
 
         def distributions_api
-          PulpDockerClient::DistributionsDockerApi.new(api_client)
+          PulpContainerClient::DistributionsContainerApi.new(api_client)
         end
 
         def recursive_add_api
-          PulpDockerClient::DockerRecursiveAddApi.new(api_client)
+          PulpContainerClient::ContainerRecursiveAddApi.new(api_client)
         end
       end
     end

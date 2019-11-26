@@ -45,13 +45,13 @@ module Katello
           repository_creation: true)
 
         sync_and_reload_repo(@repo, @master)
-        assert_version(@repo, "versions/2/")
+        assert_version(@repo, "versions/1/")
 
         @repo.root.update_attributes(
           url: "https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file/")
 
         sync_and_reload_repo(@repo, @master)
-        assert_version(@repo, "versions/3/")
+        assert_version(@repo, "versions/2/")
       end
 
       def teardown
@@ -61,18 +61,20 @@ module Katello
       end
 
       def test_orphan_repository_versions
-        orphans = @smart_proxy_service.orphan_repository_versions
+        orphans = @smart_proxy_service.orphan_repository_versions.collect { |_api, repo_versions| repo_versions }.flatten
 
         repo_reference = Katello::Pulp3::RepositoryReference.find_by(
             :root_repository_id => @repo.root.id,
             :content_view_id => @repo.content_view.id)
-        assert_includes orphans, repo_reference.repository_href + 'versions/2/'
-        refute_includes orphans, repo_reference.repository_href + 'versions/3/'
+
+        assert_includes orphans, repo_reference.repository_href + 'versions/0/'
+        assert_includes orphans, repo_reference.repository_href + 'versions/1/'
+        refute_includes orphans, repo_reference.repository_href + 'versions/2/'
       end
 
       def test_delete_orphan_repository_versions
         @smart_proxy_service.delete_orphan_repository_versions
-        orphans = @smart_proxy_service.orphan_repository_versions
+        orphans = @smart_proxy_service.orphan_repository_versions.collect { |_api, repo_versions| repo_versions }.flatten
         assert_empty orphans
       end
     end

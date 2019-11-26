@@ -81,9 +81,12 @@ module Katello
       end
 
       def remote_options
-        base_options = common_remote_options.merge(url: remote_feed_url)
-        type_options = api.try(:mirror_remote_options) || {}
-        type_options.merge(base_options)
+        base_options = common_remote_options
+        if (type_specific_options = repo_service.try(:mirror_remote_options))
+          base_options.merge(type_specific_options)
+        else
+          base_options.merge(url: remote_feed_url)
+        end
       end
 
       def create_remote
@@ -93,7 +96,7 @@ module Katello
 
       def compute_remote_options
         computed_options = remote_options
-        [:ssl_client_certificate, :ssl_client_key, :ssl_ca_certificate].each do |key|
+        [:client_cert, :client_key, :ca_cert].each do |key|
           computed_options[key] = Digest::SHA256.hexdigest(computed_options[key].chomp)
         end
         computed_options
@@ -105,8 +108,8 @@ module Katello
 
       def sync
         api_module = api.class.client_module
-        repository_sync_url_data = api_module::RepositorySyncURL.new(repository: repository_href, mirror: true)
-        [api.remotes_api.sync(remote_href, repository_sync_url_data)]
+        repository_sync_url_data = api_module::RepositorySyncURL.new(remote: remote_href, mirror: true)
+        [api.repositories_api.sync(repository_href, repository_sync_url_data)]
       end
 
       def common_remote_options
@@ -119,10 +122,10 @@ module Katello
       def ssl_remote_options
         ueber_cert = ::Cert::Certs.ueber_cert(repo.root.organization)
         {
-          ssl_client_certificate: ueber_cert[:cert],
-          ssl_client_key: ueber_cert[:key],
-          ssl_ca_certificate: ::Cert::Certs.ca_cert,
-          ssl_validation: true
+          client_cert: ueber_cert[:cert],
+          client_key: ueber_cert[:key],
+          ca_cert: ::Cert::Certs.ca_cert,
+          tls_validation: true
         }
       end
 
@@ -156,27 +159,15 @@ module Katello
         end
       end
 
+      def pulp3_enabled_repo_types
+        Katello::RepositoryTypeManager.repository_types.values.select do |repository_type|
+          smart_proxy.pulp3_repository_type_support?(repository_type)
+        end
+      end
+
       def create_distribution(path)
         distribution_data = api.class.distribution_class.new(distribution_options(path))
         repo_service.distributions_api.create(distribution_data)
-      end
-
-      def orphan_repository_versions
-        current_pulp_repositories = self.list
-
-        orphan_version_hrefs = current_pulp_repositories.collect do |pulp_repo|
-          mirror_repo_versions = api.versions_list(pulp_repo['pulp_href'], ordering: :_created).pluck(:pulp_href)
-
-          mirror_repo_versions - [pulp_repo['latest_version_href']]
-        end
-
-        orphan_version_hrefs.flatten
-      end
-
-      def delete_orphan_repository_versions
-        orphan_repository_versions.collect do |href|
-          repo_service.api.repositories_api.delete(href)
-        end
       end
     end
   end

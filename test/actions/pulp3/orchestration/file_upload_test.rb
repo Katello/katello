@@ -14,7 +14,6 @@ module ::Actions::Pulp3
     end
 
     def test_upload
-      skip "Until checksum unique constraints fixed for mutiple repos"
       action_result = ""
       @repo.reload
       assert @repo.remote_href
