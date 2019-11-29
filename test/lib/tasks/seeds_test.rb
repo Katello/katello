@@ -68,7 +68,7 @@ module Katello
 
       test "Clears out default setting if not configured" do
         SETTINGS[:katello][:cdn_proxy] = nil
-        Setting[:content_default_http_proxy] = "the proxy that shouldn't exist"
+        Setting[:content_default_http_proxy] = ""
         run_proxy_seed
 
         assert_empty Setting[:content_default_http_proxy]
