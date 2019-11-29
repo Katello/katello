@@ -2,6 +2,8 @@ class Setting::Content < Setting
   #rubocop:disable Metrics/MethodLength
   #rubocop:disable Metrics/AbcSize
 
+  validate :content_default_http_proxy, if: proc { |s| s.name == 'content_default_http_proxy' }
+
   after_save :add_organizations_and_locations_if_global_http_proxy
 
   def self.hashify_parameters(parameters)
@@ -157,6 +159,13 @@ class Setting::Content < Setting
         proxy.update_attribute(:locations, Location.unscoped.all)
       end
     end
+  end
+
+  def content_default_http_proxy
+    proxy = HttpProxy.where(name: value).first
+    return if proxy || value.blank?
+
+    errors.add(:base, _('There is no such HTTP proxy'))
   end
 end
 
