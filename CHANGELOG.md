@@ -1,3 +1,13 @@
+# 3.13.3 Baltic Porter (2019-12-02)
+
+## Bug Fixes
+
+### Repositories
+ * foreman-rake katello:reimport fails with 'NoMethodError: undefined method `pulp2_service_class' for nil:NilClass' ([#28223](https://projects.theforeman.org/issues/28223), [36788226](https://github.com/Katello/katello.git/commit/3678822678a370ccea855c4d02ff43e4b6fc5dcf))
+
+### Content Views
+ * Unable to delete version in content view [puppet is not installed/puppet content-type is missing] ([#27366](https://projects.theforeman.org/issues/27366), [3f009c16](https://github.com/Katello/katello.git/commit/3f009c165145177a6a59c74fdcb9af7038f0240a))
+
 # 3.13.2 Baltic Porter (2019-11-04)
 
 ## Features
