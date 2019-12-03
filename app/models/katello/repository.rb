@@ -103,6 +103,8 @@ module Katello
     has_many :filters, :through => :repository_content_view_filters
 
     belongs_to :content_view_version, :inverse_of => :repositories, :class_name => "Katello::ContentViewVersion"
+    has_many :distribution_references, :class_name => 'Katello::Pulp3::DistributionReference', :foreign_key => :repository_id,
+             :dependent => :destroy, :inverse_of => :repository
 
     validates_with Validators::ContainerImageNameValidator, :attributes => :container_repository_name, :allow_blank => false, :if => :docker?
     validates :container_repository_name, :if => :docker?, :uniqueness => {message: ->(object, _data) do

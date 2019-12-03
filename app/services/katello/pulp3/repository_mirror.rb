@@ -29,7 +29,7 @@ module Katello
       def needs_updates?
         remote = fetch_remote
         return true if remote.blank?
-        options = compute_remote_options
+        options = repo_service.compute_remote_options
         options.keys.any? { |key| remote.send(key) != options[key] }
       end
 
@@ -95,11 +95,7 @@ module Katello
       end
 
       def compute_remote_options
-        computed_options = remote_options
-        [:client_cert, :client_key, :ca_cert].each do |key|
-          computed_options[key] = Digest::SHA256.hexdigest(computed_options[key].chomp)
-        end
-        computed_options
+        repo_service.compute_remote_options(remote_options)
       end
 
       def fetch_remote

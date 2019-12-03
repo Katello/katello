@@ -17,8 +17,7 @@ module ::Actions::Pulp3
 
       assert repository_reference
       refute_empty repository_reference.repository_href
-      refute_empty Katello::Pulp3::DistributionReference.where(
-          root_repository_id: @repo.root.id)
+      refute_empty Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
       @repo_version_href = @repo.version_href
     end
 

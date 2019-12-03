@@ -7,7 +7,9 @@ module Actions
 
         def plan(repository, smart_proxy, options = {})
           sequence do
-            action = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :contents_changed => options[:contents_changed])
+            options = {:repository_id => repository.id, :smart_proxy_id => smart_proxy.id}
+            options[:contents_changed] if options.key?(:contents_changed)
+            action = plan_self(options)
             plan_action(SaveDistributionReferences, repository, smart_proxy,
                         action.output, :contents_changed => options[:contents_changed])
           end
