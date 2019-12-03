@@ -1,11 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { Icon } from 'patternfly-react';
-import { Link } from 'react-router-dom';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { entitlementsInlineEditFormatter } from '../../../../move_to_foreman/components/common/table/formatters/EntitlementsInlineEditFormatter';
 import { subscriptionTypeFormatter } from './SubscriptionTypeFormatter';
+import { subscriptionNameFormatter } from './SubscriptionNameFormatter';
 import {
   headerFormatter,
   cellFormatter,
@@ -54,13 +53,8 @@ export const createSubscriptionsTableSchema = (
       formatters: [headerFormatter],
     },
     cell: {
-      formatters: [
-        (value, { rowData }) => (
-          <td>
-            <Link to={urlBuilder('subscriptions', '', rowData.id)}>{rowData.name}</Link>
-          </td>
-        ),
-      ],
+      formatters: [subscriptionNameFormatter]
+      ,
     },
   },
   {

@@ -4,7 +4,7 @@ import toJson from 'enzyme-to-json';
 import { MemoryRouter } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import SubscriptionsTable from '../SubscriptionsTable';
-import { successState, loadingState, emptyState } from '../../../__tests__/subscriptions.fixtures';
+import { successState, loadingState, emptyState, groupedSubscriptions } from '../../../__tests__/subscriptions.fixtures';
 import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions';
 
 jest.mock('foremanReact/components/Pagination/PaginationWrapper');
@@ -18,6 +18,26 @@ const tableColumns = [
   'end_date',
 ];
 describe('subscriptions table', () => {
+  it('should render subscription name without hyperlink for grouped subscriptions', async () => {
+    /* eslint-disable react/jsx-indent */
+
+    const page = render(<MemoryRouter>
+          <SubscriptionsTable
+            subscriptions={groupedSubscriptions}
+            groupedSubscriptions={groupedSubscriptions}
+            loadSubscriptions={loadSubscriptions}
+            tableColumns={tableColumns}
+            updateQuantity={updateQuantity}
+            subscriptionDeleteModalOpen={false}
+            onDeleteSubscriptions={() => {}}
+            onSubscriptionDeleteModalClose={() => { }}
+            toggleDeleteButton={() => {}}
+            emptyState={{}}
+          />
+                        </MemoryRouter>);
+    expect(toJson(page)).toMatchSnapshot();
+  });
+
   it('should render a table', async () => {
     // Wrapping SubscriptionTable in MemoryRouter here since it contains
     // a Link componenent, which can't be used outside a Router
