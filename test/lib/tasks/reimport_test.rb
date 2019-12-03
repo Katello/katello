@@ -28,6 +28,7 @@ module Katello
       key.expects(:import_pools)
       Katello::ActivationKey.stubs(:all).returns([key])
 
+      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       Rake.application.invoke_task('katello:reimport')
     end
   end

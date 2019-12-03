@@ -43,6 +43,7 @@ module Katello
         page_size = options.fetch(:page_size, SETTINGS[:katello][:pulp][:bulk_load_size])
         repository_version_href = repository.version_href
         page_opts = { "offset" => 0, repository_version: repository_version_href, limit: page_size }
+        page_opts[:fields] = self.const_get(:PULP_INDEXED_FIELDS).join(",") if self.constants.include?(:PULP_INDEXED_FIELDS)
         page_opts[:fields] = 'pulp_href' if fetch_identifiers
         response = {}
         Enumerator.new do |yielder|
@@ -60,7 +61,7 @@ module Katello
       end
 
       def self.pulp_data(href)
-        content_unit = self.class.content_api.read(href)
+        content_unit = self.content_api.read(href)
         content_unit.as_json
       end
 
