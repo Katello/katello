@@ -1,7 +1,7 @@
 module Katello
   module Pulp3
     class DistributionReference < Katello::Model
-      belongs_to :root_repository, :class_name => 'Katello::RootRepository'
+      belongs_to :repository, :class_name => 'Katello::Repository'
     end
   end
 end

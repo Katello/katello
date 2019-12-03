@@ -93,8 +93,8 @@ module Katello
         RepositoryReference.find_by(:root_repository_id => repo.root_id, :content_view_id => repo.content_view.id)
       end
 
-      def distribution_reference(path)
-        DistributionReference.find_by(:path => path)
+      def distribution_reference
+        DistributionReference.find_by(:repository_id => repo.id)
       end
 
       def create_mirror_entities
@@ -107,6 +107,52 @@ module Katello
 
       def mirror_needs_updates?
         RepositoryMirror.new(self).needs_updates?
+      end
+
+      def refresh_if_needed
+        tasks = []
+        tasks << update_remote if remote_needs_updates?
+        tasks << update_distribution if distribution_needs_update?
+        tasks.compact
+      end
+
+      def get_remote(href = repo.remote_href)
+        api.remotes_api.read(href)
+      end
+
+      def remote_needs_updates?
+        if repo.remote_href
+          remote = get_remote
+          computed = compute_remote_options
+          computed.keys.any? { |key| remote.send(key) != computed[key] }
+        elsif repo.url
+          true
+        else
+          false
+        end
+      end
+
+      def get_distribution(href = distribution_reference.href)
+        api.get_distribution(href)
+      end
+
+      def distribution_needs_update?
+        if distribution_reference
+          expected = distribution_options(relative_path).except(:name).compact
+          actual = get_distribution.to_hash
+          expected != actual.slice(*expected.keys)
+        elsif repo.environment
+          true
+        else
+          false
+        end
+      end
+
+      def compute_remote_options(computed_options = remote_options)
+        [:client_cert, :client_key, :ca_cert].each do |key|
+          computed_options[key] = Digest::SHA256.hexdigest(computed_options[key].chomp) if computed_options[key]
+        end
+        computed_options.except(:name)
       end
 
       def create
@@ -149,12 +195,11 @@ module Katello
       end
 
       def refresh_distributions
-        path = relative_path
-        dist_ref = distribution_reference(path)
+        dist_ref = distribution_reference
         if dist_ref
-          update_distribution(path)
+          update_distribution
         else
-          create_distribution(path)
+          create_distribution(relative_path)
         end
       end
 
@@ -167,10 +212,9 @@ module Katello
         api.distributions_api.list(args).results
       end
 
-      def update_distribution(path)
-        distribution_reference = distribution_reference(path)
+      def update_distribution
         if distribution_reference
-          options = distribution_options(path).except(:name, :base_path)
+          options = distribution_options(relative_path).except(:name)
           api.distributions_api.partial_update(distribution_reference.href, options)
         end
       end
@@ -194,18 +238,26 @@ module Katello
       def save_distribution_references(hrefs)
         hrefs.each do |href|
           path = api.get_distribution(href)&.base_path
-          unless distribution_reference(path)
-            DistributionReference.create!(path: path, href: href, root_repository_id: repo.root.id)
+          unless distribution_reference
+            DistributionReference.create!(path: path, href: href, repository_id: repo.id)
           end
         end
       end
 
       def delete_distributions
-        path = repo.relative_path.sub(/^\//, '')
+        if (dist_ref = distribution_reference)
+          api.delete_distribution(dist_ref.href)
+          dist_ref.destroy!
+        end
+      end
+
+      def delete_distributions_by_path
+        path = relative_path
         dists = lookup_distributions(base_path: path)
-        api.delete_distribution(dists.first.pulp_href) if dists.first
-        dist_ref = distribution_reference(path)
-        dist_ref.destroy! if dist_ref
+
+        task = api.delete_distribution(dists.first.pulp_href) if dists.first
+        Katello::Pulp3::DistributionReference.where(:path => path).destroy_all
+        task
       end
 
       def common_remote_options

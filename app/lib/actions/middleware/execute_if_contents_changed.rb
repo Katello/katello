@@ -12,7 +12,7 @@ module Actions
       private
 
       def execute?
-        if action.input.keys.include?('contents_changed') && !action.input['contents_changed']
+        if action.input.keys.include?('contents_changed') && action.input['contents_changed'] == false
           self.action.output[:post_sync_skipped] = true
           false
         else

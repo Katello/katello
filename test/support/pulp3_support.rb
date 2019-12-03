@@ -26,7 +26,9 @@ module Katello
       if (dist = service.lookup_distributions(name: service.generate_backend_object_name).first)
         tasks << service.api.delete_distribution(dist.pulp_href)
       end
-      service.delete_distributions
+
+      tasks << service.delete_distributions_by_path
+      tasks.compact.each { |task| wait_on_task(smart_proxy, task) }
     end
 
     def wait_on_task(smart_proxy, task)

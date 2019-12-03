@@ -42,8 +42,6 @@ module Katello
 
     has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference', :foreign_key => :root_repository_id,
              :dependent => :destroy, :inverse_of => :root_repository
-    has_many :distribution_references, :class_name => 'Katello::Pulp3::DistributionReference', :foreign_key => :root_repository_id,
-             :dependent => :destroy, :inverse_of => :root_repository
 
     before_validation :update_ostree_upstream_sync_policy
 
