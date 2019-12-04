@@ -8,8 +8,8 @@ class Actions::Katello::EventQueueMonitorTest < ActiveSupport::TestCase
     let(:polling_class) { ::Actions::Katello::EventQueue::PollerThread }
     let(:suspended_class) { ::Actions::Katello::EventQueue::SuspendedAction }
     let(:planned_action) do
-      action_class.any_instance.expects(:singleton_lock!)
-      action_class.any_instance.expects(:holds_singleton_lock?).returns(true)
+      #action_class.any_instance.expects(:singleton_lock!)
+      #action_class.any_instance.expects(:holds_singleton_lock?).returns(true)
       create_and_plan_action action_class
     end
 
