@@ -258,9 +258,8 @@ module Katello
     end
 
     def test_available_incremental_updates
-      ContentViewVersion.any_instance.stubs(:package_count).returns(0)
-      ContentViewVersion.any_instance.stubs(:errata_count).returns(0)
-      ContentViewVersion.any_instance.stubs(:puppet_module_count).returns(0)
+      ContentViewVersion.any_instance.stubs(:content_counts).returns(
+                     :package_count => 0, :errata_count => 0, :puppet_module_count => 0)
 
       @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
 

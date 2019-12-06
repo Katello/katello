@@ -28,6 +28,13 @@ module Katello
         list.flatten
       end
 
+      def indexable_content_types
+        repository_types.
+                  values.
+                  map(&:content_types_to_index).
+                  flatten
+      end
+
       def creatable_by_user?(repository_type)
         return false unless (type = find(repository_type))
         type.allow_creation_by_user

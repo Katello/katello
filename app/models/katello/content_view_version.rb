@@ -62,6 +62,7 @@ module Katello
 
     scoped_search :on => :content_view_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
+    serialize :content_counts
 
     def self.find_by_version(_key, operator, value)
       conditions = ""
@@ -160,7 +161,7 @@ module Katello
     end
 
     def promote_puppet_environment?
-      puppet_module_count > 0 || self.content_view.force_puppet_environment?
+      (!content_counts.blank? && content_counts.dig(PuppetModule::CONTENT_TYPE) > 0) || self.content_view.force_puppet_environment?
     end
 
     def archived_repos
@@ -257,48 +258,8 @@ module Katello
       Katello::Srpm.in_repositories(self.repositories)
     end
 
-    def srpm_count
-      Katello::Srpm.in_repositories(self.repositories.archived).count
-    end
-
-    def puppet_module_count
-      puppet_modules.count
-    end
-
-    def package_count
-      Katello::Rpm.in_repositories(self.repositories.archived).count
-    end
-
     def module_streams
       ModuleStream.in_repositories(archived_repos)
-    end
-
-    def module_stream_count
-      Katello::ModuleStream.in_repositories(self.repositories.archived).count
-    end
-
-    def file_count
-      Katello::FileUnit.in_repositories(self.repositories.archived).count
-    end
-
-    def ostree_branch_count
-      ostree_branches.count
-    end
-
-    def docker_manifest_list_count
-      repositories.archived.docker_type.inject(0) do |sum, repo|
-        sum + repo.docker_manifest_lists.count
-      end
-    end
-
-    def docker_manifest_count
-      repositories.archived.docker_type.inject(0) do |sum, repo|
-        sum + repo.docker_manifests.count
-      end
-    end
-
-    def docker_tag_count
-      docker_tags.count
     end
 
     def docker_tags
@@ -308,10 +269,6 @@ module Katello
 
     def debs
       Katello::Deb.in_repositories(self.repositories.archived)
-    end
-
-    def deb_count
-      debs.count
     end
 
     def errata(errata_type = nil)
@@ -348,8 +305,24 @@ module Katello
       PackageGroup.in_repositories(archived_repos)
     end
 
-    def package_group_count
-      package_groups.count
+    def update_content_counts!
+      self.content_counts = {}
+      RepositoryTypeManager.indexable_content_types.map(&:model_class).each do |content_type|
+        if content_type::CONTENT_TYPE == DockerTag::CONTENT_TYPE
+          content_counts[DockerTag::CONTENT_TYPE] = docker_tags.count
+        else
+          content_counts[content_type::CONTENT_TYPE] = content_type.in_repositories(self.repositories.archived).count
+        end
+      end
+      save!
+    end
+
+    def content_counts_map
+      return {} if content_counts.blank?
+      counts = Hash[content_counts.map { |key, value| ["#{key}_count", value] }]
+      counts.merge("module_stream_count" => counts["modulemd_count"],
+                   "package_count" => counts["rpm_count"],
+                   "ostree_branch_count" => counts["ostree_count"])
     end
 
     def check_ready_to_promote!(to_env)
