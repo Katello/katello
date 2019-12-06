@@ -45,7 +45,7 @@ module Katello
           end
         end
 
-        def copy_content
+        def copy_content_for_source
           # TODO
           fail NotImplementedError
         end
