@@ -13,8 +13,6 @@ module Katello
           @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
-          ForemanTasks.sync_task(
-              ::Actions::Katello::Repository::MetadataGenerate, @repo)
           @repo.reload
         end
 

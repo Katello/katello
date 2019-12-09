@@ -41,9 +41,6 @@ module Katello
 
           @smart_proxy_service = Katello::Pulp3::SmartProxyRepository.new(@master)
 
-          ForemanTasks.sync_task(
-            ::Actions::Katello::Repository::MetadataGenerate, @repo)
-
           sync_and_reload_repo(@repo, @master)
           assert_version(@repo, "versions/1/")
 

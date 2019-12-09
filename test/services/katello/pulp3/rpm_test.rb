@@ -13,8 +13,7 @@ module Katello
           @repo.root.update_attributes(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
-          ForemanTasks.sync_task(
-              ::Actions::Katello::Repository::MetadataGenerate, @repo)
+
           @repo.reload
         end
 
