@@ -7,8 +7,6 @@ module Actions
             options[:contents_changed] = (options && options.key?(:contents_changed)) ? options[:contents_changed] : true
             publication_content_type = !::Katello::RepositoryTypeManager.find(repository.content_type).pulp3_skip_publication
             sequence do
-              plan_action(Actions::Pulp3::Repository::CreateVersion, repository, smart_proxy) if options[:repository_creation]
-
               if options[:source_repository] && publication_content_type
                 plan_self(source_repository_id: options[:source_repository].id, target_repository_id: repository.id)
               elsif publication_content_type

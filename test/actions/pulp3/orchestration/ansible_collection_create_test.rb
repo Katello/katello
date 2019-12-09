@@ -16,7 +16,7 @@ module ::Actions::Pulp3
       @repo.reload
 
       assert @repo.remote_href
-      refute @repo.version_href
+      assert @repo.version_href
 
       repo_reference = Katello::Pulp3::RepositoryReference.find_by(:root_repository_id => @repo.root.id,
                                                                    :content_view_id => @repo.content_view.id)

@@ -14,8 +14,7 @@ module Katello
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
           ForemanTasks.sync_task(
-              ::Actions::Katello::Repository::MetadataGenerate, @repo,
-              repository_creation: true)
+              ::Actions::Katello::Repository::MetadataGenerate, @repo)
           @repo.reload
         end
 

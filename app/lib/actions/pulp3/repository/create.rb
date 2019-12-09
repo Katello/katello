@@ -9,6 +9,7 @@ module Actions
         def run
           repo = ::Katello::Repository.find(input[:repository_id])
           output[:response] = repo.backend_service(smart_proxy).with_mirror_adapter.create
+          repo.update_attributes!(:version_href => output[:response].latest_version_href)
         end
       end
     end

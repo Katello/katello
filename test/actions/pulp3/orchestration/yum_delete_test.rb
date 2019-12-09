@@ -9,8 +9,7 @@ module ::Actions::Pulp3
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       create_repo(@repo, @master)
       ForemanTasks.sync_task(
-        ::Actions::Katello::Repository::MetadataGenerate, @repo,
-        repository_creation: true)
+        ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
       assert Katello::Pulp3::RepositoryReference.find_by(
         :root_repository_id => @repo.root.id,
