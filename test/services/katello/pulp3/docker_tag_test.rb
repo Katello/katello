@@ -12,8 +12,6 @@ module Katello
           @repo = katello_repositories(:pulp3_docker_1)
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
-          ForemanTasks.sync_task(
-              ::Actions::Katello::Repository::MetadataGenerate, @repo)
           @repo.reload
         end
 
