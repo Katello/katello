@@ -52,6 +52,13 @@ module Katello
             break unless (
               (response["count"] && page_opts["offset"] < response["count"]) ||
               page_opts["offset"] == 0)
+            if self == Katello::Pulp3::Rpm
+              # Get all packages where arch != "src"
+              # FIXME change once reverse filtering is in Pulp3
+              page_opts["arch__in"] = Katello::Pulp3::Rpm.rpm_architectures.join(",")
+            elsif self == Katello::Pulp3::Srpm
+              page_opts["arch"] = "src"
+            end
             response = fetch_content_list page_opts
             response = response.as_json.with_indifferent_access
             yielder.yield response[:results]

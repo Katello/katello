@@ -87,6 +87,7 @@ module Katello
 
     def test_show
       Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
+      NilClass.any_instance.stubs(:pulp3_repository_type_support?).returns(false)
       get :show, params: { :id => @repo.package_groups.first.id }
 
       assert_response :success
@@ -95,6 +96,7 @@ module Katello
 
     def test_show_by_uuid
       Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
+      NilClass.any_instance.stubs(:pulp3_repository_type_support?).returns(false)
       get :show, params: { :id => @repo.package_groups.first.pulp_id }
 
       assert_response :success

@@ -19,16 +19,17 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
   content_type Katello::Erratum, :priority => 3,
     :pulp2_service_class => ::Katello::Pulp::Erratum,
     :pulp3_service_class => ::Katello::Pulp3::Erratum
-  content_type Katello::PackageGroup, :pulp2_service_class => ::Katello::Pulp::PackageGroup, :index_on_pulp3 => false
+  content_type Katello::PackageGroup,
+    :pulp2_service_class => ::Katello::Pulp::PackageGroup,
+    :pulp3_service_class => ::Katello::Pulp3::PackageGroup
   content_type Katello::YumMetadataFile,
     :pulp2_service_class => ::Katello::Pulp::YumMetadataFile,
     :pulp3_service_class => ::Katello::Pulp3::YumMetadataFile,
     :index_on_pulp3 => false
-  #TODO: how to index SRPMs when Pulp 3 doesn't have an API for them?
   content_type Katello::Srpm,
     :pulp2_service_class => ::Katello::Pulp::Srpm,
-    :removable => true, :uploadable => true,
-    :index_on_pulp3 => false
+    :pulp3_service_class => ::Katello::Pulp3::Srpm,
+    :removable => true, :uploadable => true
   content_type Katello::Distribution, :priority => 4,
     :pulp2_service_class => ::Katello::Pulp::Distribution,
     :pulp3_service_class => ::Katello::Pulp3::Distribution,

@@ -13,6 +13,7 @@ module Katello
     end
 
     def test_show
+      NilClass.any_instance.stubs(:pulp3_repository_type_support?).returns(false)
       assert_service_used(Pulp::PackageGroup) do
         render_rabl('katello/api/v2/package_groups/show.json', @group)
       end
