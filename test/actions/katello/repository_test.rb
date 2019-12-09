@@ -477,7 +477,6 @@ module ::Actions::Katello::Repository
       action = create_action pulp3_metadata_generate_action_class
       action.stubs(:action_subject).with(repository_pulp3)
       plan_action action, repository_pulp3, proxy, :contents_changed => true
-      refute_action_planed action, ::Actions::Pulp3::Repository::CreateVersion
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_pulp3, proxy, :contents_changed => true)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_pulp3, proxy, :contents_changed => true)
     end
@@ -486,7 +485,6 @@ module ::Actions::Katello::Repository
       action = create_action pulp3_metadata_generate_action_class
       action.stubs(:action_subject).with(repository_ansible_collection_pulp3)
       plan_action action, repository_ansible_collection_pulp3, proxy, :contents_changed => true
-      refute_action_planed action, ::Actions::Pulp3::Repository::CreateVersion
       refute_action_planed action, ::Actions::Pulp3::Repository::CreatePublication
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_ansible_collection_pulp3, proxy, :contents_changed => true)
     end

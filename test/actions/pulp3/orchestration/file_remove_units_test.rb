@@ -14,8 +14,7 @@ module ::Actions::Pulp3
     def create_and_sync_repo(repo, proxy)
       create_repo(repo, proxy)
       ForemanTasks.sync_task(
-        ::Actions::Katello::Repository::MetadataGenerate, repo,
-        repository_creation: true)
+        ::Actions::Katello::Repository::MetadataGenerate, repo)
       sync_args = {:smart_proxy_id => proxy.id, :repo_id => repo.id}
       sync_action = ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Sync, repo, proxy, sync_args)

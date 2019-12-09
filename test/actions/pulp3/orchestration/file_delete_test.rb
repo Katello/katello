@@ -10,8 +10,7 @@ module ::Actions::Pulp3
       @repo.root.update_attributes(:url => 'http://test/test/')
       create_repo(@repo, @master)
       ForemanTasks.sync_task(
-        ::Actions::Katello::Repository::MetadataGenerate, @repo,
-        repository_creation: true)
+        ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
       assert Katello::Pulp3::RepositoryReference.find_by(
         :root_repository_id => @repo.root.id,

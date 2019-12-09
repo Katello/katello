@@ -17,7 +17,7 @@ module ::Actions::Pulp3
       action_result = ""
       @repo.reload
       assert @repo.remote_href
-      refute @repo.version_href
+      assert @repo.version_href
       VCR.use_cassette(cassette_name + '_binary', :match_requests_on => [:method, :path, :params]) do
         action_result = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::UploadContent, @repo, @master, @file, "file")
       end

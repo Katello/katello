@@ -11,8 +11,7 @@ module ::Actions::Pulp3
       create_repo(@repo, @master)
 
       ForemanTasks.sync_task(
-        ::Actions::Katello::Repository::MetadataGenerate, @repo,
-        repository_creation: true)
+        ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
       assert_equal 1,
         Katello::Pulp3::DistributionReference.where(root_repository_id: @repo.root.id).count,

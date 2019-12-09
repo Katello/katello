@@ -16,8 +16,7 @@ module Actions
       { :force => false,
         :source_repository => nil,
         :matching_content => false,
-        :dependency => nil,
-        :repository_creation => false
+        :dependency => nil
       }
     end
 
@@ -91,23 +90,10 @@ module Actions
     it 'plans a yum refresh with matching content set to some deferred object' do
       action = create_action(action_class)
       not_falsey = Object.new
-      plan_action(action, yum_repo, :matching_content => not_falsey, :repository_creation => false)
+      plan_action(action, yum_repo, :matching_content => not_falsey)
 
       yum_action_options = action_options.clone
       yum_action_options[:matching_content] = not_falsey
-      yum_action_options[:repository_creation] = false
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
-                                yum_action_options)
-    end
-
-    it 'plans a yum refresh, but ignores matching content during repository_creation' do
-      action = create_action(action_class)
-      not_falsey = Object.new
-      plan_action(action, yum_repo, :matching_content => not_falsey, :repository_creation => true)
-
-      yum_action_options = action_options.clone
-      yum_action_options[:matching_content] = false
-      yum_action_options[:repository_creation] = true
       assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
                                 yum_action_options)
     end
