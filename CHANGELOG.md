@@ -1,4 +1,4 @@
-# 3.14.0 Pecan Pie (2019-11-25)
+# 3.14.0 Pecan Pie (2019-12-09)
 
 ## Features
 
@@ -43,13 +43,11 @@
 
 ## Bug Fixes
 
-### Sync Plans
- * After 6.6 to 6.7 upgrade sync plan detail page get broken with message like "Couldn't find Katello::Repository without an ID" ([#28291](https://projects.theforeman.org/issues/28291), [9c906647](https://github.com/Katello/katello.git/commit/9c906647d533aa80641852e8c2e5c8f2260dec33))
- * Wrong timezone conversions in sync plans ([#27796](https://projects.theforeman.org/issues/27796))
-
 ### Repositories
+ * Pulp2 returns masked string after proxy_password value is set, including set as an empty string/blank ([#28349](https://projects.theforeman.org/issues/28349), [d31378b7](https://github.com/Katello/katello.git/commit/d31378b746a7dcb12d0c9b8212a02d525b2d80a5), [6eda8e16](https://github.com/Katello/katello.git/commit/6eda8e16366753cf535cf644d08da97e2748a374), [39c83678](https://github.com/Katello/katello.git/commit/39c8367828e94ebf7a338075b8b2001d4754e353), [fa881919](https://github.com/Katello/katello.git/commit/fa881919ea15c1114f059868f6b8922594277675), [398feda6](https://github.com/Katello/katello.git/commit/398feda6eb3dd36a6c7078a77f625d9c8443b2b6))
  * Unable to search repository in repositories filter box with name ([#28289](https://projects.theforeman.org/issues/28289), [f0827a5b](https://github.com/Katello/katello.git/commit/f0827a5b9b20a7aef5f21cb7513624c61152964a))
  * Web ui spinner from red hat repositories page keeps loading on enabling/disabling repository ([#28238](https://projects.theforeman.org/issues/28238), [e9c19dbd](https://github.com/Katello/katello.git/commit/e9c19dbdfa3ad2c4c6cb4e1e0cce09bbbd95333c))
+ * Proxy user/password/port does not remove after select the 'Http Proxy  = No Http Proxy' ([#28151](https://projects.theforeman.org/issues/28151))
  * Update 'SRPM' subcommand 'info' help text ([#28119](https://projects.theforeman.org/issues/28119), [6d49bf77](https://github.com/Katello/katello.git/commit/6d49bf77e00e5c495bc855e341744a79b23d6169))
  * Pulp 3 attribute names have changed ([#28026](https://projects.theforeman.org/issues/28026), [bd5fd3db](https://github.com/Katello/katello.git/commit/bd5fd3db85ebda228fc5d5934a6ae08586cd9f58))
  * deprecate background download type ([#28021](https://projects.theforeman.org/issues/28021), [e8979cea](https://github.com/Katello/katello.git/commit/e8979cea62a27706b93ed9c66d43f0cbbcc83602))
@@ -63,27 +61,9 @@
  * Pulp3- Pass mirror option set to true by default for repository syncs. ([#27373](https://projects.theforeman.org/issues/27373), [c5fc75b1](https://github.com/Katello/katello.git/commit/c5fc75b1a122ab14ca254f51fde85caba73fa7e0))
  * [Audit] Repository creation under product creates audit record with empty content ([#26675](https://projects.theforeman.org/issues/26675), [1265e895](https://github.com/Katello/katello.git/commit/1265e895f7461aaa30ee44c2da8d240c17392ff3))
 
-### API doc
- * repositories API documentation strings and validators are out of sync ([#28233](https://projects.theforeman.org/issues/28233), [b17441be](https://github.com/Katello/katello.git/commit/b17441bedf5d2a269e63cff90542c5f7d0ff16f2))
- * Subscription index API says the organization_id is required, while it is not ([#27575](https://projects.theforeman.org/issues/27575), [74b03975](https://github.com/Katello/katello.git/commit/74b03975bb12191b324b909eb99fc2f6b704dd60))
- * sync_plan apidoc for add and_ remove_products is missing required organization_id ([#27532](https://projects.theforeman.org/issues/27532), [d35a9b66](https://github.com/Katello/katello.git/commit/d35a9b66608381e1ff1d1aacc03edbb6af137869))
-
-### Hammer
- * hammer host errata list - Unrecognised option '--environment' ([#28224](https://projects.theforeman.org/issues/28224), [b2807d68](https://github.com/Katello/hammer-cli-katello.git/commit/b2807d68bad0292c63e8d638d6d41f549338630c), [3c73f0a8](https://github.com/Katello/hammer-cli-katello.git/commit/3c73f0a8d906509aaeeb238534586fffdad07b62), [6f51dff0](https://github.com/Katello/hammer-cli-katello.git/commit/6f51dff0548662bd9904cd42801010b734e1acab))
- * Hammer-cli-katello - Update hammer to allow duplicate file uploads ([#27947](https://projects.theforeman.org/issues/27947), [0d0f877e](https://github.com/Katello/hammer-cli-katello.git/commit/0d0f877eca655b17397157a0d0e369b8a1e86e20))
- * [Modularity Filters] - Add a way to create modularity filter rule using hammer cli  ([#27712](https://projects.theforeman.org/issues/27712), [846067f4](https://github.com/Katello/hammer-cli-katello.git/commit/846067f4f9456737205ee1d2f9c6df680466186c))
- * Cannot override activation key repository-sets status using hammer ([#27221](https://projects.theforeman.org/issues/27221), [fcd47679](https://github.com/Katello/katello.git/commit/fcd4767997390dba150fcff69ac769e66325a482))
-
-### Tests
- * Tests broken due to new foreman-tasks ([#28220](https://projects.theforeman.org/issues/28220), [2c9ed1c1](https://github.com/Katello/katello.git/commit/2c9ed1c173d83e3fe6cfed6ef79df8f22415faa4))
- * Fix React snapshot errors ([#28209](https://projects.theforeman.org/issues/28209), [b8d75aa9](https://github.com/Katello/katello.git/commit/b8d75aa91a3f7e357b8012d5b9fe757ceb6c1398))
- * Update bastion katello test instructions in README ([#28038](https://projects.theforeman.org/issues/28038), [887e323e](https://github.com/Katello/katello.git/commit/887e323e3421824b5ab25347f02ac386848808d2))
- * Runcible 2.12.0 causing VCR test failures ([#27744](https://projects.theforeman.org/issues/27744), [dc8751ce](https://github.com/Katello/katello.git/commit/dc8751cebfda0df5e2f94f3c1800e4fdfca74dd7))
- * Change katello test to be compatible with audited gem 4.9.0 ([#27725](https://projects.theforeman.org/issues/27725), [c8af90d8](https://github.com/Katello/katello.git/commit/c8af90d8865d437544b63a0c34c9b9228645521e))
- * Investigate failed unit tests with ActiveRecord::StatementInvalid: PG::InFailedSqlTransaction: ERROR:  current transaction is aborted, commands ignored until end of transaction block... ([#27636](https://projects.theforeman.org/issues/27636), [d7317a34](https://github.com/Katello/katello.git/commit/d7317a3469aef1ee32b47914d37db1c0b17d4ee3))
- * Actions::Pulp3::CopyAllUnitsTest assert_equal nil, nil fails in Foreman PRs ([#27503](https://projects.theforeman.org/issues/27503), [0f02353e](https://github.com/Katello/katello.git/commit/0f02353e30d71b646dc464410ab53b1bd916b194))
-
 ### Subscriptions
+ * GET katello/api/v2/subscriptions/:id always fails with error: This subscription is not relevant to the current organization ([#28327](https://projects.theforeman.org/issues/28327), [8c5ee464](https://github.com/Katello/katello.git/commit/8c5ee464fd25ce527cdc105e26b8aaa66fa1e4a1))
+ * Restore content access mode banner ([#28310](https://projects.theforeman.org/issues/28310), [97ba4d16](https://github.com/Katello/katello.git/commit/97ba4d161656316b382a1d2474df34905b0748e4))
  * Manifest refresh redundantly calls Actions::Pulp::Repository::Refresh for all repos ([#28189](https://projects.theforeman.org/issues/28189), [1237135e](https://github.com/Katello/katello.git/commit/1237135e38137300fcefa9990402181e6cf6f013))
  * virt-who hypervisor update may cause rhsm certs check to stuck for several minutes which will lead to 503 or connection timeout ([#27974](https://projects.theforeman.org/issues/27974), [5ee0f520](https://github.com/Katello/katello.git/commit/5ee0f520b48de162b69795c9aa5915827f33bed5))
  * importing a manifest creates products with only alphanumeric chars in name ([#27661](https://projects.theforeman.org/issues/27661), [d447e2e9](https://github.com/Katello/katello.git/commit/d447e2e9f6ab794001ec8e8633166dc1e6f505f6))
@@ -92,6 +72,41 @@
  * When virt-who is not required for a subscription, minus sign in "virt-who required" column should not be bold. ([#24517](https://projects.theforeman.org/issues/24517), [073bf0ce](https://github.com/Katello/katello.git/commit/073bf0ce21b057d6e60615048f8317d9635c5f2a))
  * Sort order different between Subscriptions and Add Subscriptions page ([#24308](https://projects.theforeman.org/issues/24308))
  * upstream subs should be sorted by name ([#23471](https://projects.theforeman.org/issues/23471), [430a4966](https://github.com/Katello/katello.git/commit/430a496689c6dc0124b389beea2fa7950bc01754))
+
+### Web UI
+ * hyperlink on the subscription name in the collapsible row is not valid ([#28321](https://projects.theforeman.org/issues/28321), [4826c169](https://github.com/Katello/katello.git/commit/4826c1697829decda6607d0019680324725b1155))
+ * React duplicate key error on Subscriptions page ([#28066](https://projects.theforeman.org/issues/28066), [02900d11](https://github.com/Katello/katello.git/commit/02900d11587ab873f76bae16fe4f898ea7fdc39b))
+ * Recommended repositories page on Satellite 6.6 is listing Capsule/Tools repos for 6.5 version ([#27777](https://projects.theforeman.org/issues/27777), [52bf8f6b](https://github.com/Katello/katello.git/commit/52bf8f6bf6340b5c4c6c206f6b105d48dc6744e7))
+ * Remote Execution not being used despite being set as default ([#27714](https://projects.theforeman.org/issues/27714), [27ac8a27](https://github.com/Katello/katello.git/commit/27ac8a27bca36ddfacdd4c02677bec5e2280e3f0))
+ * Update the vendor to version ^1.4.0 ([#27699](https://projects.theforeman.org/issues/27699), [e3e88ff0](https://github.com/Katello/katello.git/commit/e3e88ff09506bc577c8c7da8fd8e156a51ae3ff0))
+ * content hosts bulk errata pages should not use 'applicable_hosts' ([#27679](https://projects.theforeman.org/issues/27679), [073d74b7](https://github.com/Katello/katello.git/commit/073d74b71fd2afa1234c607c9285890fa9eb4536))
+ * Inconsistent font in content view filter rules list tab ([#27561](https://projects.theforeman.org/issues/27561), [dd5cc895](https://github.com/Katello/katello.git/commit/dd5cc89507529ccfb2a5e9c845aa34393516e7d2))
+ * Styling for new repository type options are not consistent with other form elements ([#27449](https://projects.theforeman.org/issues/27449), [6cb2412e](https://github.com/Katello/katello.git/commit/6cb2412e6edc547da0ac103e6e404958fc0074d0))
+ * Search bar assuming dropdown causes issues when typing in partial names ([#26792](https://projects.theforeman.org/issues/26792), [8afb72d2](https://github.com/Katello/katello.git/commit/8afb72d29456d8477e4d1a1079a483490dc3fe4e))
+
+### Sync Plans
+ * After 6.6 to 6.7 upgrade sync plan detail page get broken with message like "Couldn't find Katello::Repository without an ID" ([#28291](https://projects.theforeman.org/issues/28291), [9c906647](https://github.com/Katello/katello.git/commit/9c906647d533aa80641852e8c2e5c8f2260dec33))
+ * Wrong timezone conversions in sync plans ([#27796](https://projects.theforeman.org/issues/27796))
+
+### API doc
+ * repositories API documentation strings and validators are out of sync ([#28233](https://projects.theforeman.org/issues/28233), [b17441be](https://github.com/Katello/katello.git/commit/b17441bedf5d2a269e63cff90542c5f7d0ff16f2))
+ * Subscription index API says the organization_id is required, while it is not ([#27575](https://projects.theforeman.org/issues/27575), [74b03975](https://github.com/Katello/katello.git/commit/74b03975bb12191b324b909eb99fc2f6b704dd60))
+ * sync_plan apidoc for add and_ remove_products is missing required organization_id ([#27532](https://projects.theforeman.org/issues/27532), [d35a9b66](https://github.com/Katello/katello.git/commit/d35a9b66608381e1ff1d1aacc03edbb6af137869))
+
+### Hammer
+ * hammer host errata list - Unrecognised option '--environment' ([#28224](https://projects.theforeman.org/issues/28224), [b2807d68](https://github.com/Katello/hammer-cli-katello.git/commit/b2807d68bad0292c63e8d638d6d41f549338630c), [3c73f0a8](https://github.com/Katello/hammer-cli-katello.git/commit/3c73f0a8d906509aaeeb238534586fffdad07b62), [6f51dff0](https://github.com/Katello/hammer-cli-katello.git/commit/6f51dff0548662bd9904cd42801010b734e1acab))
+ * Repository info does not show assigned http_proxy details using hammer CLI ([#28177](https://projects.theforeman.org/issues/28177), [165de784](https://github.com/Katello/hammer-cli-katello.git/commit/165de784748030762a52f6642e9951001bd50c6e))
+ * Hammer-cli-katello - Update hammer to allow duplicate file uploads ([#27947](https://projects.theforeman.org/issues/27947), [0d0f877e](https://github.com/Katello/hammer-cli-katello.git/commit/0d0f877eca655b17397157a0d0e369b8a1e86e20))
+ * [Modularity Filters] - Add a way to create modularity filter rule using hammer cli  ([#27712](https://projects.theforeman.org/issues/27712), [846067f4](https://github.com/Katello/hammer-cli-katello.git/commit/846067f4f9456737205ee1d2f9c6df680466186c))
+ * Cannot override activation key repository-sets status using hammer ([#27221](https://projects.theforeman.org/issues/27221), [fcd47679](https://github.com/Katello/katello.git/commit/fcd4767997390dba150fcff69ac769e66325a482))
+
+### Tests
+ * Tests broken due to new foreman-tasks ([#28220](https://projects.theforeman.org/issues/28220), [2c9ed1c1](https://github.com/Katello/katello.git/commit/2c9ed1c173d83e3fe6cfed6ef79df8f22415faa4))
+ * Update bastion katello test instructions in README ([#28038](https://projects.theforeman.org/issues/28038), [887e323e](https://github.com/Katello/katello.git/commit/887e323e3421824b5ab25347f02ac386848808d2))
+ * Runcible 2.12.0 causing VCR test failures ([#27744](https://projects.theforeman.org/issues/27744), [dc8751ce](https://github.com/Katello/katello.git/commit/dc8751cebfda0df5e2f94f3c1800e4fdfca74dd7))
+ * Change katello test to be compatible with audited gem 4.9.0 ([#27725](https://projects.theforeman.org/issues/27725), [c8af90d8](https://github.com/Katello/katello.git/commit/c8af90d8865d437544b63a0c34c9b9228645521e))
+ * Investigate failed unit tests with ActiveRecord::StatementInvalid: PG::InFailedSqlTransaction: ERROR:  current transaction is aborted, commands ignored until end of transaction block... ([#27636](https://projects.theforeman.org/issues/27636), [d7317a34](https://github.com/Katello/katello.git/commit/d7317a3469aef1ee32b47914d37db1c0b17d4ee3))
+ * Actions::Pulp3::CopyAllUnitsTest assert_equal nil, nil fails in Foreman PRs ([#27503](https://projects.theforeman.org/issues/27503), [0f02353e](https://github.com/Katello/katello.git/commit/0f02353e30d71b646dc464410ab53b1bd916b194))
 
 ### Lifecycle Environments
  * rest-api endpoint /katello/api/v2/environments with sort_by=id no longer works with 6.5 (but did with 6.3 and 6.4) ([#28185](https://projects.theforeman.org/issues/28185), [311ab53d](https://github.com/Katello/katello.git/commit/311ab53de0190d7685a7586156d63db638e8994b))
@@ -115,16 +130,6 @@
 
 ### API
  * deprecate ostree and puppet types ([#28074](https://projects.theforeman.org/issues/28074), [afaed50b](https://github.com/Katello/katello.git/commit/afaed50b6d4c287712405ecc79c8788cbc02caca))
-
-### Web UI
- * React duplicate key error on Subscriptions page ([#28066](https://projects.theforeman.org/issues/28066), [02900d11](https://github.com/Katello/katello.git/commit/02900d11587ab873f76bae16fe4f898ea7fdc39b))
- * Recommended repositories page on Satellite 6.6 is listing Capsule/Tools repos for 6.5 version ([#27777](https://projects.theforeman.org/issues/27777), [52bf8f6b](https://github.com/Katello/katello.git/commit/52bf8f6bf6340b5c4c6c206f6b105d48dc6744e7))
- * Remote Execution not being used despite being set as default ([#27714](https://projects.theforeman.org/issues/27714), [27ac8a27](https://github.com/Katello/katello.git/commit/27ac8a27bca36ddfacdd4c02677bec5e2280e3f0))
- * Update the vendor to version ^1.4.0 ([#27699](https://projects.theforeman.org/issues/27699), [e3e88ff0](https://github.com/Katello/katello.git/commit/e3e88ff09506bc577c8c7da8fd8e156a51ae3ff0))
- * content hosts bulk errata pages should not use 'applicable_hosts' ([#27679](https://projects.theforeman.org/issues/27679), [073d74b7](https://github.com/Katello/katello.git/commit/073d74b71fd2afa1234c607c9285890fa9eb4536))
- * Inconsistent font in content view filter rules list tab ([#27561](https://projects.theforeman.org/issues/27561), [dd5cc895](https://github.com/Katello/katello.git/commit/dd5cc89507529ccfb2a5e9c845aa34393516e7d2))
- * Styling for new repository type options are not consistent with other form elements ([#27449](https://projects.theforeman.org/issues/27449), [6cb2412e](https://github.com/Katello/katello.git/commit/6cb2412e6edc547da0ac103e6e404958fc0074d0))
- * Search bar assuming dropdown causes issues when typing in partial names ([#26792](https://projects.theforeman.org/issues/26792), [8afb72d2](https://github.com/Katello/katello.git/commit/8afb72d29456d8477e4d1a1079a483490dc3fe4e))
 
 ### Hosts
  * Allow safemode render for the Content Host Description ([#28019](https://projects.theforeman.org/issues/28019), [b9c38bf5](https://github.com/Katello/katello.git/commit/b9c38bf5d9c8bc4a5444760723132c49daf0b541))
@@ -180,6 +185,8 @@
  * Stop using /owners/<owner>/info for sub compliance dashboard widget  ([#19505](https://projects.theforeman.org/issues/19505), [68fa87b7](https://github.com/Katello/katello.git/commit/68fa87b7746a357bf919456faba8ab79c64daba9))
 
 ### Other
+ * Bastion tests fail on NodeJS 10+ ([#28445](https://projects.theforeman.org/issues/28445), [43d43353](https://github.com/Katello/katello.git/commit/43d43353a3c74085fd0293a902002f4f0f5ad6a7), [619f4f84](https://github.com/Katello/katello.git/commit/619f4f84f36592ec1be896cc9efb9a496322aa18))
+ * Improve event daemon resiliency ([#28326](https://projects.theforeman.org/issues/28326), [d290b839](https://github.com/Katello/katello.git/commit/d290b839ec7155a19f37ffc6f83f4715cbc9be0d))
  * Uncaught ReferenceError: foreman_url is not defined on selecting life cycle env while creating/editing hostgroup ([#28236](https://projects.theforeman.org/issues/28236), [58e138ce](https://github.com/Katello/katello.git/commit/58e138ce9af60503a31dbeaab5326011730c61d7))
  * subscription-manager register facts creates duplicate interface with wrong mac for bond ([#28036](https://projects.theforeman.org/issues/28036), [7dc93868](https://github.com/Katello/katello.git/commit/7dc93868cd54ae517c7962f7c43b4e9e6e532d45))
  * Pin docker gem <= 4.0.0b6.dev01565529670 ([#27609](https://projects.theforeman.org/issues/27609), [3cf32301](https://github.com/Katello/katello.git/commit/3cf32301e13c0f5a74dd829b4dcefed8e93bee5d))
