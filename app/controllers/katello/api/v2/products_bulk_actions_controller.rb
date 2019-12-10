@@ -50,10 +50,10 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/products/bulk/http_proxy", N_("Update the http proxy configuration on the repositories of one or more products.")
+    api :PUT, "/products/bulk/http_proxy", N_("Update the HTTP proxy configuration on the repositories of one or more products.")
     param :ids, Array, :desc => N_("List of product ids"), :required => true
-    param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policy for http proxy for content sync")
-    param :http_proxy_id, :number, :desc => N_("Http Proxy identifier to associated"), :required => false
+    param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policy for HTTP proxy for content sync")
+    param :http_proxy_id, :number, :desc => N_("HTTP Proxy identifier to associated"), :required => false
     def update_http_proxy
       task = async_task(::Actions::Katello::Product::UpdateHttpProxy,
                         @products.editable,

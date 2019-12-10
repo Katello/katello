@@ -55,7 +55,7 @@ module Katello
       param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing"), :deprecated => true
       param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % RootRepository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
       param :ansible_collection_requirements, String, :desc => N_("Contents of requirement yaml file to sync from URL")
-      param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for http proxy for content sync")
+      param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for HTTP proxy for content sync")
       param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
     end
 
