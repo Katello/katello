@@ -18,11 +18,11 @@ module Actions
                                             filter_ids: filter_ids, solve_dependencies: solve_dependencies,
                                             rpm_filenames: rpm_filenames)
 
-                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, copy_action.output[:pulp_tasks])
+                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: copy_action.output[:pulp_tasks])
                 else
                   #if we are not filtering, copy the version to the cv repository, and the units for each additional repo
                   action = plan_action(Actions::Pulp3::Repository::CopyVersion, source_repositories.first, smart_proxy, target_repo)
-                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, action.output[:pulp_tasks])
+                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: action.output[:pulp_tasks])
                   copy_actions = []
                   #since we're creating a new version from the first repo, start copying at the 2nd
                   source_repositories[1..-1].each do |source_repo|
@@ -32,7 +32,7 @@ module Actions
                                                 rpm_filenames: rpm_filenames)
                   end
 
-                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, copy_actions.last.output[:pulp_tasks])
+                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: copy_actions.last.output[:pulp_tasks])
                 end
               end
             else

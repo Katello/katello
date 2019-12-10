@@ -15,7 +15,7 @@ module Actions
                 plan_self(:skip => true)
               end
               action_output = plan_action(Pulp3::Repository::ImportUpload, content_unit_href, repository, smart_proxy).output
-              plan_action(Pulp3::Repository::SaveVersion, repository, action_output[:pulp_tasks]).output
+              plan_action(Pulp3::Repository::SaveVersion, repository, tasks: action_output[:pulp_tasks]).output
             end
           end
 
