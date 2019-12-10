@@ -24,7 +24,7 @@ class Setting::Content < Setting
 
     [
       self.set('content_default_http_proxy', N_("Default HTTP Proxy for syncing content"),
-                      nil, N_('Default http proxy'),
+                      nil, N_('Default HTTP proxy'),
                       nil,
                       collection: proc { http_proxy_select }, include_blank: N_("no global default")
               ),

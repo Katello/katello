@@ -1,5 +1,5 @@
 <div data-extend-template="components/views/bst-modal.html">
-  <h4 data-block="modal-header">Http Proxy Management</h4>
+  <h4 data-block="modal-header">HTTP Proxy Management</h4>
 
   <div data-block="modal-body">
     <div class="row">
@@ -21,7 +21,7 @@
     <form name="proxyForm" class="col-sm-5" novalidate role="form">
 
       <div class="form-group">
-        <label translate>Http Proxy Policy:</label>
+        <label translate>HTTP Proxy Policy:</label>
         <select required
                 id="http_proxy_policy"
                 name="http_proxy_policy"
@@ -32,7 +32,7 @@
 
       <span ng-show="proxyOptions.httpProxyPolicy === 'use_selected_http_proxy'">
         <div class="form-group">
-          <label translate>Http Proxy:</label>
+          <label translate>HTTP Proxy:</label>
           <span translate ng-show="proxies.length == 0">
             No HTTP Proxies found
           </span>
