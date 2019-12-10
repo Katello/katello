@@ -2,13 +2,18 @@ module Actions
   module Pulp3
     module Repository
       class SaveVersion < Pulp3::Abstract
-        def plan(repository, tasks)
-          plan_self(:repository_id => repository.id, :tasks => tasks)
+        def plan(repository, options)
+          plan_self(:repository_id => repository.id, :tasks => options[:tasks], :repository_details => options[:repository_details])
         end
 
         def run
           repo = ::Katello::Repository.find(input[:repository_id])
-          version_href = input[:tasks].last[:created_resources].first
+
+          if input[:tasks]
+            version_href = input[:tasks].last[:created_resources].first
+          elsif input[:repository_details]
+            version_href = input[:repository_details][:latest_version_href]
+          end
 
           if version_href
             repo.update_attributes(:version_href => version_href)

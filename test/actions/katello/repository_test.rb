@@ -284,7 +284,7 @@ module ::Actions::Katello::Repository
                                 [{href: "demo_task/artifact_href"}], repository_pulp3, proxy)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
-                                [{href: "demo_task/version_href"}])
+                                tasks: [{href: "demo_task/version_href"}])
     end
 
     it 'plans for Pulp3 with duplicate' do
@@ -300,7 +300,7 @@ module ::Actions::Katello::Repository
                                 "demo_content/href", repository_pulp3, proxy)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
-                                [{href: "demo_task/version_href"}])
+                                tasks: [{href: "demo_task/version_href"}])
     end
   end
 

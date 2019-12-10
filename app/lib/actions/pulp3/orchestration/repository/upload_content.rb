@@ -15,7 +15,7 @@ module Actions
                 content_unit_href = content_list.results.first.pulp_href
               end
               action_output = plan_action(Pulp3::Repository::ImportUpload, content_unit_href, repository, smart_proxy).output
-              plan_action(Pulp3::Repository::SaveVersion, repository, action_output[:pulp_tasks]).output
+              plan_action(Pulp3::Repository::SaveVersion, repository, tasks: action_output[:pulp_tasks]).output
             end
           end
         end
