@@ -12,6 +12,7 @@ module ::Actions::Pulp3
 
       create_and_sync_repo(@repo, @master)
       @repo.reload
+      @rpm = Katello::Rpm.find_by(filename: "frog-0.1-1.noarch.rpm")
     end
 
     def create_and_sync_repo(repo, proxy)
@@ -34,18 +35,18 @@ module ::Actions::Pulp3
     end
 
     def test_remove_rpm
-      content_unit = @repo.repository_rpms.first
+      content_unit = @rpm
 
-      remove_content_args = {contents: [content_unit.rpm_id], content_unit_type: 'rpm'}
+      remove_content_args = {contents: [content_unit.id], content_unit_type: 'rpm'}
       remove_action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       assert_equal "success", remove_action.result
     end
 
     def test_remove_rpm_unit_updates_version_href
-      content_unit = @repo.repository_rpms.first
+      content_unit = @rpm
 
       version_href = @repo.version_href
-      remove_content_args = {contents: [content_unit.rpm_id], content_unit_type: 'rpm'}
+      remove_content_args = {contents: [content_unit.id], content_unit_type: 'rpm'}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RemoveUnits, @repo, @master, remove_content_args)
       refute_equal version_href, @repo.reload.version_href
     end
