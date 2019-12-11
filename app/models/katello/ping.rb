@@ -193,10 +193,9 @@ module Katello
         end
 
         workers = json["online_workers"] || []
-        resource_manager_exists = workers.any? { |worker| worker["name"].include?("resource-manager@") }
-        reservered_resource_worker_exists = workers.any? { |worker| worker["name"] =~ /reserved-resource-worker-./ }
+        resource_manager_exists = workers.any? { |worker| worker["name"].include?("resource-manager") }
 
-        unless resource_manager_exists && reservered_resource_worker_exists
+        unless resource_manager_exists && workers.count > 1
           fail _("Not all necessary pulp workers running at %s.") % url
         end
 
