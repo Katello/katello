@@ -44,7 +44,7 @@
                   readonly="denied('edit_content_views', contentView)"
                   selector="contentViewComponent.versionId"
                   options="getAvailableVersions(contentViewComponent.content_view)"
-                  options-format="option.id as option.version for option in options | orderBy: '-version'"
+                  options-format="option.id as option.version for option in options | orderBy: '-id'"
                   on-save="saveContentViewComponent(contentViewComponent)"
                   ng-if="contentViewComponent.content_view.version_count > 0">
             </span>

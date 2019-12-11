@@ -52,7 +52,7 @@
                   ng-if="componentContentView.versions.length > 0"
                   ng-model="componentContentView.versionId"
                   ng-selected="latest"
-                  ng-options="cvv.id as cvv.version for cvv in availableVersions | orderBy: '-version'">
+                  ng-options="cvv.id as cvv.version for cvv in availableVersions | orderBy: '-id'">
           </select>
           <span ng-if="componentContentView.versions.length === 0" ng-model="componentContentView.version" translate>Always Use Latest (Currently no versions)</span>
         </td>
