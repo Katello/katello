@@ -200,11 +200,7 @@ exports[`upstream subscriptions page should render 1`] = `
         >
           Submit
         </Button>
-        <LinkContainer
-          activeClassName="active"
-          exact={false}
-          replace={false}
-          strict={false}
+        <withRouter(LinkContainer)
           style={
             Object {
               "marginTop": "10px",
@@ -221,7 +217,7 @@ exports[`upstream subscriptions page should render 1`] = `
           >
             Cancel
           </Button>
-        </LinkContainer>
+        </withRouter(LinkContainer)>
       </Col>
     </Row>
   </LoadingState>
