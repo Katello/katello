@@ -8,17 +8,10 @@ attributes :published_in_composite_content_view_ids
 attributes :content_view_id
 attributes :default
 attributes :description
-attributes :package_count
-attributes :module_stream_count
-attributes :srpm_count
-attributes :file_count
-attributes :package_group_count
-attributes :puppet_module_count
-attributes :docker_manifest_count
-attributes :docker_manifest_list_count
-attributes :docker_tag_count
-attributes :ostree_branch_count
-attributes :deb_count
+
+node do |version|
+  version.content_counts_map
+end
 
 node :errata_counts do |version|
   partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(version.errata))

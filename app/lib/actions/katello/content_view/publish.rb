@@ -92,6 +92,8 @@ module Actions
         end
 
         def finalize
+          version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
+          version.update_content_counts!
           # update errata applicability counts for all hosts in the CV & Library
           ::Katello::Host::ContentFacet.where(:content_view_id => input[:content_view_id],
                                               :lifecycle_environment_id => input[:environment_id]).each do |facet|

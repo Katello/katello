@@ -92,6 +92,7 @@ module Katello
     end
 
     def test_docker_count
+      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       cv = katello_content_views(:library_view)
       cvv = cv.versions.first
       assert cvv.repositories.archived.docker_type.count > 0
@@ -113,10 +114,11 @@ module Katello
       dup_repo.update_attributes(:environment_id => ::Katello::KTEnvironment.find_by(:name => "Dev").id)
       dup_repo.docker_tags = [archived_repo.docker_tags[0]]
       ::Katello::DockerMetaTag.import_meta_tags([dup_repo])
-
       assert cvv.repositories.archived.docker_type.count > 0
-      assert_equal manifest_count, cvv.docker_manifest_count
-      assert_equal tag_count, cvv.docker_tag_count
+      cvv.update_content_counts!
+      counts = cvv.content_counts_map
+      assert_equal manifest_count, counts["docker_manifest_count"]
+      assert_equal tag_count, counts["docker_tag_count"]
     end
 
     def test_active_history_nil_task
@@ -204,7 +206,7 @@ module Katello
       assert @cvv.promote_puppet_environment?
 
       @cvv.content_view.force_puppet_environment = false
-      @cvv.stubs(:puppet_module_count).returns 2
+      @cvv.content_counts = { "puppet_module" => 2 }
       assert @cvv.promote_puppet_environment?
     end
 
