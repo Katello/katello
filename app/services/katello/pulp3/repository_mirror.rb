@@ -148,7 +148,8 @@ module Katello
         dist_params[:publication] = options[:publication] if options[:publication]
         dist_params[:repository_version] = version_href if options[:use_repository_version]
         dist_options = distribution_options(path, dist_params)
-        if (distro = repo_service.lookup_distributions(base_path: path).first)
+        if (distro = repo_service.lookup_distributions(base_path: path).first) ||
+          (distro = repo_service.lookup_distributions(name: "#{backend_object_name}").first)
           # update dist
           dist_options = dist_options.except(:name, :base_path)
           api.distributions_api.partial_update(distro.pulp_href, dist_options)
