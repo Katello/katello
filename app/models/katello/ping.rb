@@ -71,7 +71,7 @@ module Katello
 
       def ping_pulp3_without_auth(service_result, capsule_id)
         exception_watch(service_result) do
-          Katello::Ping.pulp3_without_auth(fetch_proxy(capsule_id).pulp3_url("api/v3"))
+          Katello::Ping.pulp3_without_auth(fetch_proxy(capsule_id).pulp3_url)
         end
       end
 
