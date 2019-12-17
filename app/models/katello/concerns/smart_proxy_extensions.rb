@@ -182,7 +182,7 @@ module Katello
         pulp3_uri!.host
       end
 
-      def pulp3_url(path = nil)
+      def pulp3_url(path = '/pulp/api/v3/')
         pulp_url = self.setting(PULP3_FEATURE, 'pulp_url')
         path.blank? ? pulp_url : "#{pulp_url.sub(%r|/$|, '')}/#{path.sub(%r|^/|, '')}"
       end
@@ -299,7 +299,7 @@ module Katello
       end
 
       def ping_pulp3
-        ::Katello::Ping.pulp3_without_auth(self.pulp3_url("api/v3"))
+        ::Katello::Ping.pulp3_without_auth(self.pulp3_url)
       rescue Errno::EHOSTUNREACH, Errno::ECONNREFUSED, RestClient::Exception => error
         raise ::Katello::Errors::CapsuleCannotBeReached, _("%s is unreachable. %s" % [self.name, error])
       end
