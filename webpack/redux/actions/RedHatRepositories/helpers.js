@@ -25,16 +25,16 @@ const recommendedRepositoriesRHEL = [
 ];
 
 const recommendedRepositoriesSatTools = [
-  'satellite-tools-6.6-for-rhel-8-x86_64-rpms',
-  'rhel-7-server-satellite-tools-6.6-rpms',
-  'rhel-6-server-satellite-tools-6.6-rpms',
-  'rhel-5-server-els-satellite-tools-6.6-rpms',
+  'satellite-tools-6.7-for-rhel-8-x86_64-rpms',
+  'rhel-7-server-satellite-tools-6.7-rpms',
+  'rhel-6-server-satellite-tools-6.7-rpms',
+  'rhel-5-server-els-satellite-tools-6.7-rpms',
   'rhel-7-server-satellite-maintenance-6-rpms',
 ];
 
 const recommendedRepositoriesMisc = [
   'rhel-server-rhscl-7-rpms',
-  'rhel-7-server-satellite-capsule-6.6-rpms',
+  'rhel-7-server-satellite-capsule-6.7-rpms',
   'rhel-7-server-ansible-2.8-rpms',
 ];
 
