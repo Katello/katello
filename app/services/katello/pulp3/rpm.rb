@@ -19,6 +19,22 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
+      def self.rpm_architectures
+        ['i386', 'i486', 'i586', 'i686', 'athlon', 'geode', 'pentium3', 'pentium4',
+         'x86_64', 'amd64',
+         'ia64',
+         'alpha', 'alphaev5', 'alphaev56', 'alphapca56', 'alphaev6', 'alphaev67',
+         'sparc', 'sparcv8', 'sparcv9', 'sparc64', 'sparc64v', 'sun4', 'sun4c', 'sun4d', 'sun4m', 'sun4u',
+         'armv3l', 'armv4b', 'armv4l', 'armv5tel', 'armv5tejl', 'armv6l', 'armv7l',
+         'mips', 'mipsel',
+         'ppc', 'ppciseries', 'ppcpseries', 'ppc64', 'ppc8260', 'ppc8560', 'ppc32dy4',
+         'm68k', 'm68kmint', 'atarist', 'atariste', 'ataritt', 'falcon', 'atariclone', 'milan', 'hades',
+         'Sgi',
+         'rs6000',
+         'i370', 's390x', 's390',
+         'noarch']
+      end
+
       def requires
         results = []
         flags = {'GT' => '>', 'LT' => '>', 'EQ' => '=', 'GE' => '>=', 'LE' => '<='}
