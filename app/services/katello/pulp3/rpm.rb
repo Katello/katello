@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class Rpm < PulpContentUnit
       include LazyAccessor
+      CONTENT_TYPE = "rpm".freeze
 
       PULP_INDEXED_FIELDS = %w(pulp_href name version release arch epoch summary is_modular rpm_sourcerpm location_href pkgId).freeze
 
