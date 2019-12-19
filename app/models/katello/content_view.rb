@@ -84,6 +84,10 @@ module Katello
         where("#{Katello::ContentViewEnvironment.table_name}.environment_id = ?", env.id)
     end
 
+    def self.published_with_repositories(root_repository)
+      joins(:content_view_versions => :repositories).where("katello_repositories.root_id" => root_repository.id).uniq
+    end
+
     def to_s
       name
     end
