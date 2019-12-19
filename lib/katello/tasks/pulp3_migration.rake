@@ -1,7 +1,7 @@
 namespace :katello do
   desc "Runs a Pulp 2 to 3 Content Migration for supported types.  May be run multiple times.  Use wait=false to immediately return with a task url."
   task :pulp3_migration => ["environment", "disable_dynflow", "check_ping"] do
-    task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration, [Katello::Repository::FILE_TYPE])
+    task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration)
 
     if ENV['wait'].nil? || ::Foreman::Cast.to_bool(ENV['wait'])
       until !task.pending? || task.paused?

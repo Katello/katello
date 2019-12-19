@@ -31,14 +31,17 @@ module Katello
       tasks.compact.each { |task| wait_on_task(smart_proxy, task) }
     end
 
-    def wait_on_task(smart_proxy, task)
-      task = task.as_json
-      task = tasks_api(smart_proxy).read(task['pulp_href'] || task['task']).as_json.with_indifferent_access
-      if task[:finished_at] || Actions::Pulp3::AbstractAsyncTask::FINISHED_STATES.include?(task[:state])
-        return task
-      else
-        sleep(0.1)
-        wait_on_task(smart_proxy, task)
+    def wait_on_task(smart_proxy, tasks)
+      tasks = tasks.as_json
+      tasks = [tasks] unless tasks.is_a?(Array)
+      tasks.each do |task|
+        task = tasks_api(smart_proxy).read(task['pulp_href'] || task['task']).as_json.with_indifferent_access
+        if task[:finished_at] || Actions::Pulp3::AbstractAsyncTask::FINISHED_STATES.include?(task[:state])
+          return task
+        else
+          sleep(0.1)
+          wait_on_task(smart_proxy, task)
+        end
       end
     end
 
