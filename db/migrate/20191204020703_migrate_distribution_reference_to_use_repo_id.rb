@@ -8,7 +8,10 @@ class MigrateDistributionReferenceToUseRepoId < ActiveRecord::Migration[5.2]
     # although existing pulp3 repos will not work properly
     DistributionReference.destroy_all
 
-    add_column :katello_distribution_references, :repository_id, :integer, :null => false, :index => true
+    #work around sqlite add_column with non_null issue
+    add_column :katello_distribution_references, :repository_id, :integer, :index => true
+    change_column :katello_distribution_references, :repository_id, :integer, :null => false
+
     remove_column :katello_distribution_references, :root_repository_id
     add_foreign_key :katello_distribution_references, :katello_repositories, :column => :repository_id, :primary_key => :id
   end
