@@ -340,6 +340,13 @@ generic_file:
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
 
+generic_file_archive:
+  library_instance:     generic_file
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:generic_file_root) %>
+  pulp_id:              "Default_Organization-1_0-Cabinet-My_Files"
+  relative_path:        'Default_Organization/1.0/library/My_Files'
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
+
 generic_file_dev:
   library_instance:     generic_file
   root_id:              <%= ActiveRecord::FixtureSet.identify(:generic_file_root) %>
