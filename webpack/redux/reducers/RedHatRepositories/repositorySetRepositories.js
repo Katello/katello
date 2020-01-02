@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Immutable from 'seamless-immutable';
 
 import {
@@ -12,9 +13,23 @@ import {
 
 import { normalizeContentSetRepositories } from '../../actions/RedHatRepositories/repositorySetRepositories';
 
+const normalizeArch = (arch) => {
+  if (arch === 'noarch') {
+    return undefined;
+  }
+  return arch;
+};
+
+const substitutionMatches = (value1, value2) => {
+  if (_.isEmpty(value1) && _.isEmpty(value2)) {
+    return true;
+  }
+  return value1 === value2;
+};
+
 const reposMatch = (repoA, repoB) => (
-  repoA.arch === repoB.arch &&
-  repoA.releasever === repoB.releasever
+  substitutionMatches(normalizeArch(repoA.arch), normalizeArch(repoB.arch)) &&
+    substitutionMatches(repoA.releasever, repoB.releasever)
 );
 
 const changeRepoState = (state, repoToChange, stateDiff) => {
