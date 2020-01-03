@@ -8,7 +8,7 @@ module.exports = {
         runnerPort: 9100,
         browserNoActivityTimeout: 100000,
         colors: true,
-        browsers: ['PhantomJS'],
+        browsers: ['ChromiumHeadless'],
         reporters: ['progress'],
         singleRun: true,
         preprocessors: {
