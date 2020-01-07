@@ -16,7 +16,7 @@ FactoryBot.modify do
     trait :with_pulp3 do
       after(:create) do |proxy, _evaluator|
         plugins = Katello::RepositoryTypeManager.repository_types.values.map(&:pulp3_plugin).compact
-        v3_feature = Feature.find_or_create_by(:name => 'Pulp3')
+        v3_feature = Feature.find_or_create_by(:name => ::SmartProxy::PULP3_FEATURE)
         proxy.features << v3_feature
 
         smart_proxy_feature = proxy.smart_proxy_features.find { |spf| spf.feature_id == v3_feature.id }
