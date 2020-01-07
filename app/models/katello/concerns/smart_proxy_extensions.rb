@@ -15,7 +15,7 @@ module Katello
         end
       end
 
-      PULP3_FEATURE = "Pulp3".freeze
+      PULP3_FEATURE = "Pulpcore".freeze
       PULP_FEATURE = "Pulp".freeze
       PULP_NODE_FEATURE = "Pulp Node".freeze
 
