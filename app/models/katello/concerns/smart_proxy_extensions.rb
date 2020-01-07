@@ -120,8 +120,8 @@ module Katello
           uri = pulp3_uri!
           config.host = uri.host
           config.scheme = uri.scheme
-          config.username = 'admin'
-          config.password = 'password'
+          config.ssl_client_cert = ::Cert::Certs.ssl_client_cert
+          config.ssl_client_key = ::Cert::Certs.ssl_client_key
           config.debugging = true
           config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
         end
