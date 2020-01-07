@@ -53,11 +53,13 @@ module Katello
           distributors
         end
 
-        def distributors_to_publish(_options)
-          if repo.clone && !repo.master? && smart_proxy.pulp_master?
-            source_service = repo.target_repository.backend_service(smart_proxy)
+        def distributors_to_publish(options)
+          source_repo_id = options[:source_repository]&.fetch(:id)
+          if (source_repo_id || !repo.master?) && smart_proxy.pulp_master?
+            source_repository = source_repo_id ? ::Katello::Repository.find(source_repo_id) : repo.target_repository
+            source_service = source_repository.backend_service(smart_proxy)
             source_distributor_id = source_service.lookup_distributor_id(Runcible::Models::YumDistributor.type_id)
-            {Runcible::Models::YumCloneDistributor => {source_repo_id: repo.target_repository.pulp_id,
+            {Runcible::Models::YumCloneDistributor => {source_repo_id: source_repository.pulp_id,
                                                        source_distributor_id: source_distributor_id}}
           else
             {Runcible::Models::YumDistributor => {}}
