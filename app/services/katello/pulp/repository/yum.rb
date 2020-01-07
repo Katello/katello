@@ -246,8 +246,7 @@ module Katello
             remove = clause_gen.remove_clause
             remove_clauses = {filters: {unit: remove}} if remove
           else
-            non_modular_rpms = ::Katello::Rpm.in_repositories(repo).non_modular.pluck(:filename)
-            copy_clauses = non_modular_rpms.blank? ? nil : {filters: {unit: ContentViewPackageFilter.generate_rpm_clauses(non_modular_rpms)}}
+            copy_clauses = {}
             remove_clauses = nil
           end
 
