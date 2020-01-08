@@ -85,6 +85,29 @@ module Katello
           assert ::Katello::Pulp::Repository::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/foo/pxeboot'}])
           refute ::Katello::Pulp::Repository::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/foo'}])
         end
+
+        def test_distributor_to_publish_with_source
+          @rhel6 = katello_repositories(:rhel_6_x86_64)
+          options = {:source_repository => {:id => @rhel6.id}}
+          ::Katello::Repository.expects(:find).with(@rhel6.id).returns(@rhel6)
+          source_service = Katello::Pulp::Repository::Yum.new(@rhel6, @master)
+          distributor_id = "BAR"
+          source_service.expects(:lookup_distributor_id).with(Runcible::Models::YumDistributor.type_id).returns(distributor_id)
+          @rhel6.expects(:backend_service).returns(source_service)
+
+          expected_response = { Runcible::Models::YumCloneDistributor => { source_repo_id: @rhel6.pulp_id,
+                                                                           source_distributor_id: distributor_id}
+                              }
+          assert_equal expected_response, source_service.distributors_to_publish(options)
+        end
+
+        def test_distributor_to_publish_without_source
+          @rhel6 = katello_repositories(:rhel_6_x86_64)
+          source_service = Katello::Pulp::Repository::Yum.new(@rhel6, @master)
+
+          expected_response = {Runcible::Models::YumDistributor => {}}
+          assert_equal expected_response, source_service.distributors_to_publish({})
+        end
       end
 
       class YumVcrTest < YumBaseTest
