@@ -12,7 +12,9 @@ module Katello
 
         def self.get(path, headers = {:accept => :json})
           logger.debug "Sending GET request to Registry: #{path}"
-          client = RegistryResource.load_class.rest_client(Net::HTTP::Get, :get, path)
+          resource = RegistryResource.load_class
+          joined_path = resource.prefix.chomp("/") + path
+          client = resource.rest_client(Net::HTTP::Get, :get, joined_path)
           client.get(headers)
         end
       end
@@ -26,7 +28,10 @@ module Katello
 
             # Pulp 3 has its own registry
             if pulp_master && pulp_master.pulp3_repository_type_support?(::Katello::Repository::DOCKER_TYPE)
-              registry_url = pulp_master.setting(SmartProxy::PULP3_FEATURE, 'content_app_url')
+              uri = URI(pulp_master.setting(SmartProxy::PULP3_FEATURE, 'content_app_url'))
+              uri.path = "/pulpcore_registry/"
+              registry_url = uri.to_s
+
               # Assume the registry uses the same CA as the Smart Proxy
               ca_cert_file = Setting[:ssl_ca_file]
             elsif container_config
@@ -39,6 +44,8 @@ module Katello
             uri = URI.parse(registry_url)
             self.prefix = uri.path
             self.site = "#{uri.scheme}://#{uri.host}:#{uri.port}"
+            self.ssl_client_cert = ::Cert::Certs.ssl_client_cert
+            self.ssl_client_key = ::Cert::Certs.ssl_client_key
             self.ca_cert_file = ca_cert_file
             self
           end

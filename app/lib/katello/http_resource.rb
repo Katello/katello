@@ -15,7 +15,8 @@ module Katello
       end
     end
 
-    class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers
+    class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers,
+                    :ssl_client_cert, :ssl_client_key
 
     attr_reader :json
 
@@ -190,6 +191,8 @@ module Katello
           :timeout => SETTINGS[:katello][:rest_client_timeout]
         }
         options[:ssl_ca_file] = self.ca_cert_file unless self.ca_cert_file.nil?
+        options[:ssl_client_cert] = self.ssl_client_cert unless self.ssl_client_cert.nil?
+        options[:ssl_client_key] = self.ssl_client_key unless self.ssl_client_key.nil?
 
         RestClient::Resource.new(url, options)
       end
