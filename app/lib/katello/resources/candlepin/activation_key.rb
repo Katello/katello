@@ -10,9 +10,20 @@ module Katello
             ::Katello::Util::Data.array_with_indifferent_access akeys
           end
 
-          def create(name, owner_key, auto_attach, purpose_role, purpose_usage, purpose_addons)
+          # rubocop:disable Metrics/ParameterLists
+          def create(name, owner_key, auto_attach, service_level, release_version, purpose_role, purpose_usage, purpose_addons)
             url = "/candlepin/owners/#{owner_key}/activation_keys"
-            JSON.parse(self.post(url, {:name => name, :autoAttach => auto_attach, :role => purpose_role, :usage => purpose_usage, :addOns => purpose_addons}.to_json, self.default_headers).body).with_indifferent_access
+            params = {
+              name: name,
+              autoAttach: auto_attach,
+              serviceLevel: service_level,
+              releaseVer: release_version,
+              role: purpose_role,
+              usage: purpose_usage,
+              addOns: purpose_addons
+            }
+            response = self.post(url, params.to_json, self.default_headers)
+            JSON.parse(response.body).with_indifferent_access
           end
 
           # rubocop:disable Metrics/ParameterLists
