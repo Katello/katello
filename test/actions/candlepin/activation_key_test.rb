@@ -11,12 +11,20 @@ class Actions::Candlepin::ActivationKey::CreateTest < ActiveSupport::TestCase
   describe 'Create' do
     let(:action_class) { ::Actions::Candlepin::ActivationKey::Create }
     let(:planned_action) do
-      create_and_plan_action action_class, organization_label: nil, auto_attach: true, purpose_role: "role", purpose_usage: "usage", purpose_addons: ["Test"]
+      create_and_plan_action(action_class,
+                             organization_label: nil,
+                             auto_attach: true,
+                             service_level: 'Self-Support',
+                             release_version: '7Server',
+                             purpose_role: "role",
+                             purpose_usage: "usage",
+                             purpose_addons: ["Test"]
+                            )
     end
 
     it 'runs' do
       ::Katello::Util::Model.stubs(:uuid).returns(123)
-      ::Katello::Resources::Candlepin::ActivationKey.expects(:create).with(123, nil, true, "role", "usage", ["Test"])
+      ::Katello::Resources::Candlepin::ActivationKey.expects(:create).with(123, nil, true, "Self-Support", "7Server", "role", "usage", ["Test"])
       run_action planned_action
     end
   end
