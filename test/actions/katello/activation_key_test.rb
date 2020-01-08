@@ -16,8 +16,10 @@ module ::Actions::Katello::ActivationKey
     let(:candlepin_input) do
       {  :organization_label => activation_key.organization.label,
          :auto_attach => true,
-         :purpose_usage => katello_activation_keys(:purpose_attributes_key).purpose_usage,
-         :purpose_role => katello_activation_keys(:purpose_attributes_key).purpose_role,
+         :service_level => 'Self-support',
+         :release_version => activation_key.release_version,
+         :purpose_usage => activation_key.purpose_usage,
+         :purpose_role => activation_key.purpose_role,
          :purpose_addons => [katello_purpose_addons(:addon).name]
       }
     end
@@ -25,7 +27,7 @@ module ::Actions::Katello::ActivationKey
       activation_key.expects(:save!)
       action.expects(:action_subject)
 
-      plan_action action, activation_key
+      plan_action action, activation_key, service_level: 'Self-support'
 
       assert_action_planed_with(action, ::Actions::Candlepin::ActivationKey::Create, candlepin_input)
     end

@@ -92,15 +92,25 @@ module Katello
     def test_create
       ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create)
-      assert_sync_task(::Actions::Katello::ActivationKey::Update)
 
-      post :create, params: { organization_id: @organization.id, name: 'Typical Key', release_version: '7Server', auto_attach: true, service_level: 'Standard' }
+      post :create, params: { organization_id: @organization.id, name: 'Typical Key', release_version: '7Server', auto_attach: false, service_level: 'Standard' }
 
       assert_response :success
       response = JSON.parse(@response.body)
       assert_equal 'Standard', response['service_level']
       assert_equal '7Server', response['release_version']
       assert_equal 'Typical Key', response['name']
+      assert_equal false, response['auto_attach']
+    end
+
+    def test_create_no_auto_attach
+      ActivationKey.any_instance.expects(:reload)
+      assert_sync_task(::Actions::Katello::ActivationKey::Create)
+      post :create, params: { organization_id: @organization.id, name: 'Unset Auto-Attach' }
+
+      assert_response :success
+      response = JSON.parse(@response.body)
+
       assert_equal true, response['auto_attach']
     end
 
@@ -112,8 +122,6 @@ module Katello
         assert activation_key.unlimited_hosts
         assert_valid activation_key
       end
-
-      assert_sync_task(::Actions::Katello::ActivationKey::Update)
 
       post :create, params: { :organization_id => @organization.id, :activation_key => {:name => 'Unlimited Key', :unlimited_hosts => true} }
 
@@ -133,8 +141,6 @@ module Katello
         assert_equal max_hosts, activation_key.max_hosts
         assert_valid activation_key
       end
-
-      assert_sync_task(::Actions::Katello::ActivationKey::Update)
 
       post :create, params: {
         :organization_id => @organization.id,
@@ -159,8 +165,6 @@ module Katello
         assert_valid activation_key
       end
 
-      assert_sync_task(::Actions::Katello::ActivationKey::Update)
-
       post :create, params: { :organization_id => @organization.id, :activation_key => {:name => key_name} }
 
       assert_response :success
@@ -178,8 +182,6 @@ module Katello
         assert_equal key_description, activation_key.description
         assert_valid activation_key
       end
-
-      assert_sync_task(::Actions::Katello::ActivationKey::Update)
 
       post :create, params: {
         :organization_id => @organization.id,
