@@ -49,14 +49,8 @@ module Katello
         activation_key.organization = @organization
         activation_key.user = current_user
       end
-      sync_task(::Actions::Katello::ActivationKey::Create, @activation_key)
+      sync_task(::Actions::Katello::ActivationKey::Create, @activation_key, service_level: activation_key_params['service_level'])
       @activation_key.reload
-
-      sync_task(::Actions::Katello::ActivationKey::Update, @activation_key,
-                  :service_level   => activation_key_params[:service_level],
-                  :release_version => activation_key_params[:release_version],
-                  :auto_attach     => activation_key_params[:auto_attach]
-               )
 
       respond_for_create(:resource => @activation_key)
     end

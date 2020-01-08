@@ -2,12 +2,14 @@ module Actions
   module Katello
     module ActivationKey
       class Create < Actions::EntryAction
-        def plan(activation_key)
+        def plan(activation_key, params = {})
           activation_key.save!
           if ::SETTINGS[:katello][:use_cp]
             cp_create = plan_action(Candlepin::ActivationKey::Create,
                                     organization_label: activation_key.organization.label,
                                     auto_attach: activation_key.auto_attach,
+                                    service_level: params[:service_level],
+                                    release_version: activation_key.release_version,
                                     purpose_role: activation_key.purpose_role,
                                     purpose_usage: activation_key.purpose_usage,
                                     purpose_addons: activation_key.purpose_addons.pluck(:name))
