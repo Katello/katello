@@ -152,6 +152,10 @@ module Katello
           'Debian'
         elsif name =~ /ubuntu/
           'Ubuntu'
+        elsif name =~ /oracle/
+          'OracleLinux'
+        else
+          'Unknown'
         end
       end
     end
