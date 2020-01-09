@@ -41,11 +41,6 @@ module Katello
         host_facts["virt::host_type"] || host_facts["hypervisor::type"]
       end
 
-      def dmi_system_uuid
-        host_facts = self.host.facts
-        host_facts["dmi::system::uuid"]
-      end
-
       def update_from_consumer_attributes(consumer_params)
         import_database_attributes(consumer_params)
         self.facts = consumer_params['facts'] unless consumer_params['facts'].blank?
@@ -55,6 +50,10 @@ module Katello
         update_subscription_status(consumer_params[:entitlementStatus]) unless consumer_params[:entitlementStatus].blank?
         update_hypervisor(consumer_params)
         update_guests(consumer_params)
+
+        if consumer_params['facts']
+          self.dmi_uuid = consumer_params['facts']['dmi.system.uuid']
+        end
 
         self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].blank?
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].nil?
