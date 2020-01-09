@@ -60,7 +60,9 @@ module Katello
         assert_equal 'Ubuntu', Candlepin::Consumer.distribution_to_puppet_os('Ubuntu')
         assert_equal 'Debian', Candlepin::Consumer.distribution_to_puppet_os('Debian')
 
-        assert_equal nil, Candlepin::Consumer.distribution_to_puppet_os('RedHot')
+        assert_equal 'OracleLinux', Candlepin::Consumer.distribution_to_puppet_os('Oracle Linux Server')
+
+        assert_equal 'Unknown', Candlepin::Consumer.distribution_to_puppet_os('RedHot')
       end
 
       def test_virtual_guests
