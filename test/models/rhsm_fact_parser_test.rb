@@ -78,6 +78,18 @@ module Katello
       refute parser.operatingsystem
     end
 
+    def test_operatingsystem_oel
+      @facts['distribution.name'] = 'Oracle Linux Server'
+      @facts['distribution.version'] = '7.7'
+      @facts['distribution.id'] = '7.7'
+
+      os = parser.operatingsystem
+
+      assert_equal os.name, 'OracleLinux'
+      assert_equal os.title, 'OracleLinux 7.7'
+      assert_nil os.release_name
+    end
+
     def test_operatingsystem_debian
       @facts['distribution.name'] = 'Debian GNU/Linux'
       @facts['distribution.version'] = '9'
