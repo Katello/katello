@@ -154,7 +154,7 @@ module ::Actions::Katello::Product
       assert_action_planned_with(action,
                                 ::Actions::BulkAction,
                                 ::Actions::Katello::Repository::Update,
-                                product.repositories.map(&:root),
+                                product.root_repositories,
                                 http_proxy_policy: 'use_selected_http_proxy',
                                 http_proxy_id: http_proxy.id)
     end
@@ -169,7 +169,7 @@ module ::Actions::Katello::Product
       assert_action_planned_with(action,
                                 ::Actions::BulkAction,
                                 ::Actions::Katello::Repository::Update,
-                                product.repositories.map(&:root),
+                                product.root_repositories,
                                 http_proxy_policy: 'global_default_http_proxy',
                                 http_proxy_id: nil)
     end

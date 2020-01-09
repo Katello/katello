@@ -4,7 +4,7 @@ module Actions
       class UpdateHttpProxy < Actions::EntryAction
         def plan(products, http_proxy_policy, http_proxy)
           products.each do |product|
-            roots = product.repositories.map(&:root)
+            roots = product.root_repositories
             next if roots.empty?
             plan_action(::Actions::BulkAction,
                         ::Actions::Katello::Repository::Update,
