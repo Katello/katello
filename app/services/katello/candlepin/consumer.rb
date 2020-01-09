@@ -144,6 +144,8 @@ module Katello
           'RedHat'
         elsif name =~ /centos/
           'CentOS'
+        elsif name =~ /oracle/
+          'OracleLinux'
         elsif name =~ /fedora/
           'Fedora'
         elsif name =~ /sles/ || name =~ /suse.*enterprise.*/
@@ -152,6 +154,8 @@ module Katello
           'Debian'
         elsif name =~ /ubuntu/
           'Ubuntu'
+        else
+          'Unknown'
         end
       end
     end
