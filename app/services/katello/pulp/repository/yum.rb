@@ -173,7 +173,7 @@ module Katello
           task = nil
           repo.remove_partial_errata! do |errata_to_delete|
             task = repo.unassociate_by_filter(::Katello::ContentViewErratumFilter::CONTENT_TYPE,
-                                                "id" => { "$in" => errata_to_delete.map(&:errata_id) })
+                                                "id" => { "$in" => errata_to_delete.map(&:errata_id).sort })
           end
           task
         end

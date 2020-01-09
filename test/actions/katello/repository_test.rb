@@ -637,8 +637,13 @@ module ::Actions::Katello::Repository
       smart_proxy_service_2.smart_proxy.add_lifecycle_environment(repository.environment)
 
       plan_action(action, repository)
-      assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync,
-                                 [smart_proxy_service_1.smart_proxy, smart_proxy_service_2.smart_proxy], :repository_id => repository.id)
+      assert_action_planned_with(action, ::Actions::BulkAction) do |action, proxy_list, options|
+        assert_equal ::Actions::Katello::CapsuleContent::Sync, action
+        assert_equal 2, proxy_list.length
+        assert_include proxy_list, smart_proxy_service_1.smart_proxy
+        assert_include proxy_list, smart_proxy_service_2.smart_proxy
+        assert_equal repository.id, options[:repository_id]
+      end
     end
   end
 
