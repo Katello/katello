@@ -46,18 +46,19 @@ module Katello
         host
       end
 
-      def dmi_uuid_fact_id
-        RhsmFactName.find_or_create_by(name: 'dmi::system::uuid').id
-      end
-
       def dmi_uuid_allowed_dups
         Katello::Host::SubscriptionFacet::DMI_UUID_ALLOWED_DUPS
       end
 
       def find_existing_hosts(host_name, host_uuid)
-        ::Host.unscoped.distinct.left_outer_joins(:fact_values)
-          .where("#{::Host.table_name}.name = ? OR (#{FactValue.table_name}.fact_name_id = ?
-          AND #{FactValue.table_name}.value = ? AND #{FactValue.table_name}.value NOT IN (?))", host_name, dmi_uuid_fact_id, host_uuid, dmi_uuid_allowed_dups)
+        query = ::Host.unscoped.where("#{::Host.table_name}.name = ?", host_name)
+
+        unless host_uuid.nil? || dmi_uuid_allowed_dups.include?(host_uuid) # no need to include the dmi uuid lookup
+          query = query.left_outer_joins(:subscription_facet).or(::Host.unscoped.left_outer_joins(:subscription_facet)
+            .where("#{Katello::Host::SubscriptionFacet.table_name}.dmi_uuid = ?", host_uuid)).distinct
+        end
+
+        query
       end
 
       def validate_hosts(hosts, organization, host_name, host_uuid, host_uuid_overridden = false)
@@ -77,8 +78,8 @@ module Katello
 
           if host.name == host_name
             unless Setting[:host_profile_assume] || host.subscription_facet.nil? || host.build || host_uuid_overridden
-              found_uuid = host.fact_values.where(fact_name_id: dmi_uuid_fact_id).first
-              if found_uuid && found_uuid.value != host_uuid
+              current_dmi_uuid = host.subscription_facet.dmi_uuid
+              if current_dmi_uuid && current_dmi_uuid != host_uuid
                 registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
               end
             end
@@ -271,7 +272,7 @@ module Katello
       def populate_subscription_facet(host, activation_keys, consumer_params, uuid)
         subscription_facet = host.subscription_facet || ::Katello::Host::SubscriptionFacet.new(:host => host)
         subscription_facet.last_checkin = Time.now
-        subscription_facet.update_from_consumer_attributes(consumer_params.except(:guestIds, :facts))
+        subscription_facet.update_from_consumer_attributes(consumer_params.except(:guestIds))
         subscription_facet.uuid = uuid
         subscription_facet.user = User.current unless User.current.nil? || User.current.hidden?
         subscription_facet.save!
@@ -297,7 +298,7 @@ module Katello
         host.get_status(::Katello::TraceStatus).destroy
         host.installed_packages.delete_all
 
-        host.rhsm_fact_values.destroy_all
+        host.rhsm_fact_values.delete_all
       end
     end
   end

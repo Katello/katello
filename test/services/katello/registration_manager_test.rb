@@ -25,7 +25,6 @@ module Katello
         @org = @library.organization
         @facts = {'network.hostname' => 'foo.example.com'}
         @host = FactoryBot.create(:host, organization: @org)
-        @uuid_fact_name = RhsmFactName.create(name: 'dmi::system::uuid')
       end
 
       let(:rhsm_params) { {:name => 'foobar', :facts => @facts, :type => 'system'} }
@@ -35,7 +34,6 @@ module Katello
           @org = get_organization
           @klass = Katello::RegistrationManager
           @host = FactoryBot.create(:host, :with_subscription, organization: @org)
-          @uuid_fact_name = RhsmFactName.create(name: 'dmi::system::uuid')
         end
 
         let(:hosts) { ::Host.where(id: [@host.id]) }
@@ -56,14 +54,14 @@ module Katello
 
         def test_new_host_existing_uuid
           existing_uuid = 'existing_system_uuid'
-          FactValue.create(value: existing_uuid, host: @host, fact_name: @uuid_fact_name)
+          @host.subscription_facet.update_attributes(dmi_uuid: existing_uuid)
 
           error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, 'new_host_name', existing_uuid) }
           assert_match(/matches other registered/, error.message)
         end
 
         def test_existing_host_mismatch_uuid
-          FactValue.create(value: "existing_system_uuid", host: @host, fact_name: @uuid_fact_name)
+          @host.subscription_facet.update_attributes(dmi_uuid: 'existing_system_uuid')
           Setting[:host_profile_assume] = false
 
           error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
@@ -77,14 +75,14 @@ module Katello
         end
 
         def test_existing_uuid_and_name
-          FactValue.create(value: 'host3-uuid', host: @host, fact_name: @uuid_fact_name)
+          @host.subscription_facet.update_attributes(dmi_uuid: 'host3-uuid')
 
           assert @klass.validate_hosts(hosts, @org, @host.name, 'host3-uuid')
         end
 
         def test_build_matching_hostname_new_uuid
-          @host = FactoryBot.create(:host, :managed, organization: @org, build: true)
-          FactValue.create(value: SecureRandom.uuid, host: @host, fact_name: @uuid_fact_name)
+          @host = FactoryBot.create(:host, :with_subscription, :managed, organization: @org, build: true)
+          @host.subscription_facet.update_attributes(dmi_uuid: SecureRandom.uuid)
 
           assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
         end
@@ -93,16 +91,6 @@ module Katello
           # this test case is critical for bootstrap.py which creates a host via API (which lacks the dmi uuid fact)
           # and *then* registers to it with subscription-manager
           assert_empty @host.fact_values
-
-          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
-        end
-
-        def test_existing_uuid_mismatch_unregistered
-          # when a host is unregistered we don't clear out its facts
-          # if the same host is rebuilt, etc. and gets a new DMI UUID but has the same hostname
-          # we should allow the registration to proceed
-          FactValue.create(value: 'original-uuid', host: @host, fact_name: @uuid_fact_name)
-          @host.subscription_facet.destroy!
 
           assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
         end
@@ -125,23 +113,17 @@ module Katello
       end
 
       def test_find_existing_hosts
-        fact_host = FactoryBot.create(:host)
-
-        # doesn't match PuppetFactName
-        puppet_fact_name = PuppetFactName.find_or_create_by(name: 'dmi::system::uuid')
-        fv = FactValue.create!(value: 'puppet-dmi-uuid', host: fact_host, fact_name: puppet_fact_name)
-        result = Katello::RegistrationManager.find_existing_hosts('inexistent_host', 'puppet-dmi-uuid')
-        assert_empty result
+        fact_host = FactoryBot.create(:host, :with_subscription)
 
         # matching dmi.system.uuid OR hostname
-        fv = FactValue.create!(value: 'some-uuid', host: fact_host, fact_name: @uuid_fact_name)
+        fact_host.subscription_facet.update_attributes(dmi_uuid: 'some-uuid')
         result = Katello::RegistrationManager.find_existing_hosts(@host.name, 'some-uuid')
 
         assert_equal [@host, fact_host].sort, result.sort
 
         # nil & allowed duplicate uuids
         [nil] + Katello::Host::SubscriptionFacet::DMI_UUID_ALLOWED_DUPS.each do |dup|
-          fv.update_attributes!(value: dup)
+          fact_host.subscription_facet.update_attributes(dmi_uuid: dup)
           result = Katello::RegistrationManager.find_existing_hosts('inexistent_host', dup)
           assert_empty result
         end
