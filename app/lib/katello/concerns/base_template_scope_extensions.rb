@@ -87,7 +87,7 @@ module Katello
 
         tasks = load_resource(klass: ForemanTasks::Task,
                               where: condition,
-                              permission: 'view_tasks',
+                              permission: 'view_foreman_tasks',
                               joins: 'LEFT OUTER JOIN template_invocations ON foreman_tasks_tasks.id = template_invocations.run_host_job_task_id LEFT OUTER JOIN templates ON template_invocations.template_id = templates.id',
                               select: 'foreman_tasks_tasks.*,template_invocations.id AS template_invocation_id',
                               search: search
