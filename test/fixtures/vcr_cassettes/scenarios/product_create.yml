@@ -2,64 +2,6 @@
 http_interactions:
 - request:
     method: post
-    uri: https://devel2.balmora.example.com:8443/candlepin/owners/scenario_test/products/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJuYW1lIjoiU2NlbmFyaW8gUHJvZHVjdCIsImlkIjoiN2M4MjUwMTNjYWIw
-        MTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJtdWx0aXBsaWVyIjoxLCJhdHRyaWJ1
-        dGVzIjpbeyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiQUxMIn1dfQ==
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x",
-        oauth_nonce="G6597u3RjqxXqPMqYLqPyuRx1AdizPxBDA3kfyE", oauth_signature="IJrBu9mAPsklafNXHT3ALD%2FA4aQ%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1564777341", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-      Content-Length:
-      - '127'
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 25728b61-c96c-4b77-b505-cf4aa2d9dd35
-      X-Version:
-      - 2.6.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Fri, 02 Aug 2019 20:22:21 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOS0wOC0wMlQyMDoyMjoyMSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTktMDgtMDJUMjA6MjI6MjErMDAwMCIsInV1aWQiOiI0MDI4Zjkw
-        YjZjNTM3MjI0MDE2YzUzZmY2M2U0MDA2MyIsImlkIjoiN2M4MjUwMTNjYWIw
-        MTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJuYW1lIjoiU2NlbmFyaW8gUHJvZHVj
-        dCIsIm11bHRpcGxpZXIiOjEsImF0dHJpYnV0ZXMiOlt7Im5hbWUiOiJhcmNo
-        IiwidmFsdWUiOiJBTEwifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJo
-        cmVmIjoiL3Byb2R1Y3RzLzQwMjhmOTBiNmM1MzcyMjQwMTZjNTNmZjYzZTQw
-        MDYzIiwicHJvZHVjdENvbnRlbnQiOltdfQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:22:21 GMT
-- request:
-    method: post
     uri: https://devel2.balmora.example.com:8443/candlepin/owners/scenario_test/pools
     body:
       encoding: UTF-8
@@ -137,129 +79,6 @@ http_interactions:
   recorded_at: Fri, 02 Aug 2019 20:22:22 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com:8443/candlepin/owners/scenario_test/products/7c825013cab01349ae8cb8db187de391/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Authorization:
-      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="Pt7KKY8Nc4AVwuiuc5ELSTCMlUdAnXNzLJ6UOq7Q",
-        oauth_signature="G3dz6FFMaITPTcmPGidOu6j%2F1MU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1564777342", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - ca295556-f22a-4d7f-9bf0-801e6d3046b0
-      X-Version:
-      - 2.6.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Fri, 02 Aug 2019 20:22:21 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOS0wOC0wMlQyMDoyMjoyMSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTktMDgtMDJUMjA6MjI6MjErMDAwMCIsInV1aWQiOiI0MDI4Zjkw
-        YjZjNTM3MjI0MDE2YzUzZmY2M2U0MDA2MyIsImlkIjoiN2M4MjUwMTNjYWIw
-        MTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJuYW1lIjoiU2NlbmFyaW8gUHJvZHVj
-        dCIsIm11bHRpcGxpZXIiOjEsImF0dHJpYnV0ZXMiOlt7Im5hbWUiOiJhcmNo
-        IiwidmFsdWUiOiJBTEwifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJo
-        cmVmIjoiL3Byb2R1Y3RzLzQwMjhmOTBiNmM1MzcyMjQwMTZjNTNmZjYzZTQw
-        MDYzIiwicHJvZHVjdENvbnRlbnQiOltdfQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:22:22 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com:8443/candlepin/owners/scenario_test/pools?add_future=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Authorization:
-      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="7DcKWvgUBSxyiwIVTv963bricgj2De1YAk9fgx4B6w",
-        oauth_signature="cVw%2F3Ym0r4kgd6W4E6ISXvP%2BleU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1564777342", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 1e431759-98d5-4cad-a3fa-c955b528ff8f
-      X-Version:
-      - 2.6.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Fri, 02 Aug 2019 20:22:21 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        W3siY3JlYXRlZCI6IjIwMTktMDgtMDJUMjA6MjI6MjErMDAwMCIsInVwZGF0
-        ZWQiOiIyMDE5LTA4LTAyVDIwOjIyOjIxKzAwMDAiLCJpZCI6IjQwMjhmOTBi
-        NmM1MzcyMjQwMTZjNTNmZjY0MTMwMDY0IiwidHlwZSI6Ik5PUk1BTCIsIm93
-        bmVyIjp7ImlkIjoiNDAyOGY5MGI2YzUzNzIyNDAxNmM1M2ZmNWUxMzAwNWYi
-        LCJrZXkiOiJzY2VuYXJpb190ZXN0IiwiZGlzcGxheU5hbWUiOiJzY2VuYXJp
-        b190ZXN0IiwiaHJlZiI6Ii9vd25lcnMvc2NlbmFyaW9fdGVzdCJ9LCJhY3Rp
-        dmVTdWJzY3JpcHRpb24iOnRydWUsInNvdXJjZUVudGl0bGVtZW50IjpudWxs
-        LCJxdWFudGl0eSI6LTEsInN0YXJ0RGF0ZSI6IjIwMTctMDEtMDFUMjA6MTU6
-        MDErMDAwMCIsImVuZERhdGUiOiIyMDQ2LTEyLTI1VDIwOjE1OjAxKzAwMDAi
-        LCJhdHRyaWJ1dGVzIjpbXSwicmVzdHJpY3RlZFRvVXNlcm5hbWUiOm51bGws
-        ImNvbnRyYWN0TnVtYmVyIjpudWxsLCJhY2NvdW50TnVtYmVyIjpudWxsLCJv
-        cmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjowLCJi
-        cmFuZGluZyI6W10sImNhbGN1bGF0ZWRBdHRyaWJ1dGVzIjp7ImNvbXBsaWFu
-        Y2VfdHlwZSI6IlN0YW5kYXJkIn0sInVwc3RyZWFtUG9vbElkIjpudWxsLCJ1
-        cHN0cmVhbUVudGl0bGVtZW50SWQiOm51bGwsInVwc3RyZWFtQ29uc3VtZXJJ
-        ZCI6bnVsbCwicHJvZHVjdE5hbWUiOiJTY2VuYXJpbyBQcm9kdWN0IiwicHJv
-        ZHVjdElkIjoiN2M4MjUwMTNjYWIwMTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJw
-        cm9kdWN0QXR0cmlidXRlcyI6W3sibmFtZSI6ImFyY2giLCJ2YWx1ZSI6IkFM
-        TCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2UsInNvdXJjZVN0
-        YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2UsImRlcml2ZWRQ
-        cm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0SWQiOm51bGws
-        ImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQcm9kdWN0cyI6
-        W10sImRlcml2ZWRQcm92aWRlZFByb2R1Y3RzIjpbXSwic3Vic2NyaXB0aW9u
-        U3ViS2V5IjpudWxsLCJzdWJzY3JpcHRpb25JZCI6bnVsbCwiaHJlZiI6Ii9w
-        b29scy80MDI4ZjkwYjZjNTM3MjI0MDE2YzUzZmY2NDEzMDA2NCJ9XQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:22:22 GMT
-- request:
-    method: get
     uri: https://devel2.balmora.example.com:8443/candlepin/pools/4028f90b6c537224016c53ff64130064
     body:
       encoding: US-ASCII
@@ -330,53 +149,6 @@ http_interactions:
   recorded_at: Fri, 02 Aug 2019 20:22:22 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com:8443/candlepin/owners/scenario_test/activation_keys/?include=pools.pool.id
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Authorization:
-      - OAuth oauth_consumer_key="gw4smYugVFk9p5UEZEmMNH6JJ8Wp6T9x", oauth_nonce="78c6cvav6TIzJIytGCj8lPPxdFgTjaoI1gdQr9cdr8",
-        oauth_signature="OfRKMvXK5oJd0FAQX6oiDJ9vqw0%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1564777342", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 4b9ae70a-c998-41f9-b452-7ff390773fe8
-      X-Version:
-      - 2.6.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Fri, 02 Aug 2019 20:22:21 GMT
-    body:
-      encoding: UTF-8
-      base64_string: 'W10=
-
-'
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:22:22 GMT
-- request:
-    method: get
     uri: https://devel2.balmora.example.com:8443/candlepin/pools/4028f90b6c537224016c53ff64130064/entitlements/consumer_uuids
     body:
       encoding: US-ASCII
@@ -422,4 +194,428 @@ http_interactions:
 '
     http_version: 
   recorded_at: Fri, 02 Aug 2019 20:22:22 GMT
+- request:
+    method: post
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/products/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJuYW1lIjoiU2NlbmFyaW8gUHJvZHVjdCIsImlkIjoiN2M4MjUwMTNjYWIw
+        MTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJtdWx0aXBsaWVyIjoxLCJhdHRyaWJ1
+        dGVzIjpbeyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiQUxMIn1dfQ==
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="Soh7TQgfaEfXQNxT9zSnNBUFrScsW985",
+        oauth_nonce="zMeaPWrQBnKafPjxDxvmBG4kcMOB9Ppr7Ng8J0XN1s", oauth_signature="lzvNOFRAzr5eFWbczT%2BXYZC7g1k%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1578667971", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Content-Length:
+      - '127'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 15304bf2-8fde-4f86-98bc-561900038288
+      X-Version:
+      - 2.9.14-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 10 Jan 2020 14:52:50 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAyMC0wMS0xMFQxNDo1Mjo1MSswMDAwIiwidXBkYXRl
+        ZCI6IjIwMjAtMDEtMTBUMTQ6NTI6NTErMDAwMCIsInV1aWQiOiI0MDI4ZmEy
+        OTZmOGFmOTg4MDE2ZjhmZjE5MzYyMDAyZSIsImlkIjoiN2M4MjUwMTNjYWIw
+        MTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJuYW1lIjoiU2NlbmFyaW8gUHJvZHVj
+        dCIsIm11bHRpcGxpZXIiOjEsImF0dHJpYnV0ZXMiOlt7Im5hbWUiOiJhcmNo
+        IiwidmFsdWUiOiJBTEwifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJo
+        cmVmIjoiL3Byb2R1Y3RzLzQwMjhmYTI5NmY4YWY5ODgwMTZmOGZmMTkzNjIw
+        MDJlIiwicHJvZHVjdENvbnRlbnQiOltdfQ==
+    http_version: 
+  recorded_at: Fri, 10 Jan 2020 14:52:51 GMT
+- request:
+    method: post
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/pools
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzdGFydERhdGUiOiIyMDE3LTAxLTAxVDIwOjE1OjAxLjAwMFoiLCJlbmRE
+        YXRlIjoiMjA0OS0xMi0wMVQwMDowMDowMC4wMDArMDA6MDAiLCJxdWFudGl0
+        eSI6LTEsImFjY291bnROdW1iZXIiOiIiLCJwcm9kdWN0SWQiOiI3YzgyNTAx
+        M2NhYjAxMzQ5YWU4Y2I4ZGIxODdkZTM5MSIsInByb3ZpZGVkUHJvZHVjdHMi
+        OltdLCJjb250cmFjdE51bWJlciI6IiJ9
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="Soh7TQgfaEfXQNxT9zSnNBUFrScsW985",
+        oauth_nonce="gE9rjcrPxd1vodocaUrGhLxZgIcmEDXS7i9CxfR4YY", oauth_signature="hqpjoyFZOzqNNr8RCfCqq4fNbbc%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1578667971", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Content-Length:
+      - '204'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 1db6d82d-0ed5-4ab1-82d9-d4349de5b2f6
+      X-Version:
+      - 2.9.14-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 10 Jan 2020 14:52:50 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAyMC0wMS0xMFQxNDo1Mjo1MSswMDAwIiwidXBkYXRl
+        ZCI6IjIwMjAtMDEtMTBUMTQ6NTI6NTErMDAwMCIsImlkIjoiNDAyOGZhMjk2
+        ZjhhZjk4ODAxNmY4ZmYxOTNhNjAwMmYiLCJ0eXBlIjoiTk9STUFMIiwib3du
+        ZXIiOnsiaWQiOiI0MDI4ZmEyOTZmOGFmOTg4MDE2ZjhmZjE4OTllMDAyYiIs
+        ImtleSI6InNjZW5hcmlvX3Rlc3QiLCJkaXNwbGF5TmFtZSI6InNjZW5hcmlv
+        X3Rlc3QiLCJocmVmIjoiL293bmVycy9zY2VuYXJpb190ZXN0In0sImFjdGl2
+        ZVN1YnNjcmlwdGlvbiI6dHJ1ZSwic291cmNlRW50aXRsZW1lbnQiOm51bGws
+        InF1YW50aXR5IjotMSwic3RhcnREYXRlIjoiMjAxNy0wMS0wMVQyMDoxNTow
+        MSswMDAwIiwiZW5kRGF0ZSI6IjIwNDktMTItMDFUMDA6MDA6MDArMDAwMCIs
+        ImF0dHJpYnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwi
+        Y29udHJhY3ROdW1iZXIiOm51bGwsImFjY291bnROdW1iZXIiOm51bGwsIm9y
+        ZGVyTnVtYmVyIjpudWxsLCJjb25zdW1lZCI6MCwiZXhwb3J0ZWQiOjAsImJy
+        YW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0ZXMiOm51bGwsInVwc3Ry
+        ZWFtUG9vbElkIjpudWxsLCJ1cHN0cmVhbUVudGl0bGVtZW50SWQiOm51bGws
+        InVwc3RyZWFtQ29uc3VtZXJJZCI6bnVsbCwicHJvZHVjdE5hbWUiOiJTY2Vu
+        YXJpbyBQcm9kdWN0IiwicHJvZHVjdElkIjoiN2M4MjUwMTNjYWIwMTM0OWFl
+        OGNiOGRiMTg3ZGUzOTEiLCJwcm9kdWN0QXR0cmlidXRlcyI6W3sibmFtZSI6
+        ImFyY2giLCJ2YWx1ZSI6IkFMTCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tl
+        ZCI6ZmFsc2UsInNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9v
+        bCI6ZmFsc2UsImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2
+        ZWRQcm9kdWN0SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwi
+        cHJvdmlkZWRQcm9kdWN0cyI6W10sImRlcml2ZWRQcm92aWRlZFByb2R1Y3Rz
+        IjpbXSwic3Vic2NyaXB0aW9uU3ViS2V5IjpudWxsLCJzdWJzY3JpcHRpb25J
+        ZCI6bnVsbCwibG9ja2VkIjpmYWxzZSwiaHJlZiI6Ii9wb29scy80MDI4ZmEy
+        OTZmOGFmOTg4MDE2ZjhmZjE5M2E2MDAyZiJ9
+    http_version: 
+  recorded_at: Fri, 10 Jan 2020 14:52:51 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/products/7c825013cab01349ae8cb8db187de391/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Authorization:
+      - OAuth oauth_consumer_key="Soh7TQgfaEfXQNxT9zSnNBUFrScsW985", oauth_nonce="53BmJ8oUsCfyRmjQ0KJeIieG9kPWoWbAR1NhkcNW8",
+        oauth_signature="4ZaqTKrBK0MoeSHFDoEONKuZywU%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1578667972", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 9b9eab19-26f6-48e0-b6c3-f7de31aa8cf2
+      X-Version:
+      - 2.9.14-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 10 Jan 2020 14:52:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAyMC0wMS0xMFQxNDo1Mjo1MSswMDAwIiwidXBkYXRl
+        ZCI6IjIwMjAtMDEtMTBUMTQ6NTI6NTErMDAwMCIsInV1aWQiOiI0MDI4ZmEy
+        OTZmOGFmOTg4MDE2ZjhmZjE5MzYyMDAyZSIsImlkIjoiN2M4MjUwMTNjYWIw
+        MTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJuYW1lIjoiU2NlbmFyaW8gUHJvZHVj
+        dCIsIm11bHRpcGxpZXIiOjEsImF0dHJpYnV0ZXMiOlt7Im5hbWUiOiJhcmNo
+        IiwidmFsdWUiOiJBTEwifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJo
+        cmVmIjoiL3Byb2R1Y3RzLzQwMjhmYTI5NmY4YWY5ODgwMTZmOGZmMTkzNjIw
+        MDJlIiwicHJvZHVjdENvbnRlbnQiOltdfQ==
+    http_version: 
+  recorded_at: Fri, 10 Jan 2020 14:52:52 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/pools?add_future=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Authorization:
+      - OAuth oauth_consumer_key="Soh7TQgfaEfXQNxT9zSnNBUFrScsW985", oauth_nonce="fY00R2henco95r2EYXYSf1aUdAvvY4kRqEIkI3UdBc",
+        oauth_signature="3PADdad1klGOT1cEadptLjNrl1k%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1578667972", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 12341991-1c4a-4ce4-a838-12a05f694236
+      X-Version:
+      - 2.9.14-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 10 Jan 2020 14:52:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        W3siY3JlYXRlZCI6IjIwMjAtMDEtMTBUMTQ6NTI6NTErMDAwMCIsInVwZGF0
+        ZWQiOiIyMDIwLTAxLTEwVDE0OjUyOjUxKzAwMDAiLCJpZCI6IjQwMjhmYTI5
+        NmY4YWY5ODgwMTZmOGZmMTkzYTYwMDJmIiwidHlwZSI6Ik5PUk1BTCIsIm93
+        bmVyIjp7ImlkIjoiNDAyOGZhMjk2ZjhhZjk4ODAxNmY4ZmYxODk5ZTAwMmIi
+        LCJrZXkiOiJzY2VuYXJpb190ZXN0IiwiZGlzcGxheU5hbWUiOiJzY2VuYXJp
+        b190ZXN0IiwiaHJlZiI6Ii9vd25lcnMvc2NlbmFyaW9fdGVzdCJ9LCJhY3Rp
+        dmVTdWJzY3JpcHRpb24iOnRydWUsInNvdXJjZUVudGl0bGVtZW50IjpudWxs
+        LCJxdWFudGl0eSI6LTEsInN0YXJ0RGF0ZSI6IjIwMTctMDEtMDFUMjA6MTU6
+        MDErMDAwMCIsImVuZERhdGUiOiIyMDQ5LTEyLTAxVDAwOjAwOjAwKzAwMDAi
+        LCJhdHRyaWJ1dGVzIjpbXSwicmVzdHJpY3RlZFRvVXNlcm5hbWUiOm51bGws
+        ImNvbnRyYWN0TnVtYmVyIjpudWxsLCJhY2NvdW50TnVtYmVyIjpudWxsLCJv
+        cmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjowLCJi
+        cmFuZGluZyI6W10sImNhbGN1bGF0ZWRBdHRyaWJ1dGVzIjp7ImNvbXBsaWFu
+        Y2VfdHlwZSI6IlN0YW5kYXJkIn0sInVwc3RyZWFtUG9vbElkIjpudWxsLCJ1
+        cHN0cmVhbUVudGl0bGVtZW50SWQiOm51bGwsInVwc3RyZWFtQ29uc3VtZXJJ
+        ZCI6bnVsbCwicHJvZHVjdE5hbWUiOiJTY2VuYXJpbyBQcm9kdWN0IiwicHJv
+        ZHVjdElkIjoiN2M4MjUwMTNjYWIwMTM0OWFlOGNiOGRiMTg3ZGUzOTEiLCJw
+        cm9kdWN0QXR0cmlidXRlcyI6W3sibmFtZSI6ImFyY2giLCJ2YWx1ZSI6IkFM
+        TCJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2UsInNvdXJjZVN0
+        YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2UsImRlcml2ZWRQ
+        cm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0SWQiOm51bGws
+        ImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQcm9kdWN0cyI6
+        W10sImRlcml2ZWRQcm92aWRlZFByb2R1Y3RzIjpbXSwic3Vic2NyaXB0aW9u
+        U3ViS2V5IjpudWxsLCJzdWJzY3JpcHRpb25JZCI6bnVsbCwibG9ja2VkIjpm
+        YWxzZSwiaHJlZiI6Ii9wb29scy80MDI4ZmEyOTZmOGFmOTg4MDE2ZjhmZjE5
+        M2E2MDAyZiJ9XQ==
+    http_version: 
+  recorded_at: Fri, 10 Jan 2020 14:52:52 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com:8443/candlepin/pools/4028fa296f8af988016f8ff193a6002f
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Authorization:
+      - OAuth oauth_consumer_key="Soh7TQgfaEfXQNxT9zSnNBUFrScsW985", oauth_nonce="yywkCucijI1ywD2EaES7zS7MWwetFXTqUxHeGDSs",
+        oauth_signature="Bn4qUPmYTwBfQhTPKw6rA%2FLr2RI%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1578667972", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 6af7c82b-8289-4455-9ad2-efd9d6d12020
+      X-Version:
+      - 2.9.14-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 10 Jan 2020 14:52:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAyMC0wMS0xMFQxNDo1Mjo1MSswMDAwIiwidXBkYXRl
+        ZCI6IjIwMjAtMDEtMTBUMTQ6NTI6NTErMDAwMCIsImlkIjoiNDAyOGZhMjk2
+        ZjhhZjk4ODAxNmY4ZmYxOTNhNjAwMmYiLCJ0eXBlIjoiTk9STUFMIiwib3du
+        ZXIiOnsiaWQiOiI0MDI4ZmEyOTZmOGFmOTg4MDE2ZjhmZjE4OTllMDAyYiIs
+        ImtleSI6InNjZW5hcmlvX3Rlc3QiLCJkaXNwbGF5TmFtZSI6InNjZW5hcmlv
+        X3Rlc3QiLCJocmVmIjoiL293bmVycy9zY2VuYXJpb190ZXN0In0sImFjdGl2
+        ZVN1YnNjcmlwdGlvbiI6dHJ1ZSwic291cmNlRW50aXRsZW1lbnQiOm51bGws
+        InF1YW50aXR5IjotMSwic3RhcnREYXRlIjoiMjAxNy0wMS0wMVQyMDoxNTow
+        MSswMDAwIiwiZW5kRGF0ZSI6IjIwNDktMTItMDFUMDA6MDA6MDArMDAwMCIs
+        ImF0dHJpYnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwi
+        Y29udHJhY3ROdW1iZXIiOm51bGwsImFjY291bnROdW1iZXIiOm51bGwsIm9y
+        ZGVyTnVtYmVyIjpudWxsLCJjb25zdW1lZCI6MCwiZXhwb3J0ZWQiOjAsImJy
+        YW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0ZXMiOnsiY29tcGxpYW5j
+        ZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Qb29sSWQiOm51bGwsInVw
+        c3RyZWFtRW50aXRsZW1lbnRJZCI6bnVsbCwidXBzdHJlYW1Db25zdW1lcklk
+        IjpudWxsLCJwcm9kdWN0TmFtZSI6IlNjZW5hcmlvIFByb2R1Y3QiLCJwcm9k
+        dWN0SWQiOiI3YzgyNTAxM2NhYjAxMzQ5YWU4Y2I4ZGIxODdkZTM5MSIsInBy
+        b2R1Y3RBdHRyaWJ1dGVzIjpbeyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiQUxM
+        In1dLCJzdGFja0lkIjpudWxsLCJzdGFja2VkIjpmYWxzZSwic291cmNlU3Rh
+        Y2tJZCI6bnVsbCwiZGV2ZWxvcG1lbnRQb29sIjpmYWxzZSwiZGVyaXZlZFBy
+        b2R1Y3RBdHRyaWJ1dGVzIjpbXSwiZGVyaXZlZFByb2R1Y3RJZCI6bnVsbCwi
+        ZGVyaXZlZFByb2R1Y3ROYW1lIjpudWxsLCJwcm92aWRlZFByb2R1Y3RzIjpb
+        XSwiZGVyaXZlZFByb3ZpZGVkUHJvZHVjdHMiOltdLCJzdWJzY3JpcHRpb25T
+        dWJLZXkiOm51bGwsInN1YnNjcmlwdGlvbklkIjpudWxsLCJsb2NrZWQiOmZh
+        bHNlLCJocmVmIjoiL3Bvb2xzLzQwMjhmYTI5NmY4YWY5ODgwMTZmOGZmMTkz
+        YTYwMDJmIn0=
+    http_version: 
+  recorded_at: Fri, 10 Jan 2020 14:52:52 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com:8443/candlepin/owners/scenario_test/activation_keys/?include=pools.pool.id
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Authorization:
+      - OAuth oauth_consumer_key="Soh7TQgfaEfXQNxT9zSnNBUFrScsW985", oauth_nonce="4PhsWJkslJPKyzoquRmpGrNfrEfrfpDL0ei5mZZNr8",
+        oauth_signature="KVbg01hFyyXG0shBXVibcwsJX8I%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1578667972", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 2782c462-50e9-49b2-bdc4-04c5059f64bd
+      X-Version:
+      - 2.9.14-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 10 Jan 2020 14:52:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: 'W10=
+
+'
+    http_version: 
+  recorded_at: Fri, 10 Jan 2020 14:52:52 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com:8443/candlepin/pools/4028fa296f8af988016f8ff193a6002f/entitlements/consumer_uuids
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Authorization:
+      - OAuth oauth_consumer_key="Soh7TQgfaEfXQNxT9zSnNBUFrScsW985", oauth_nonce="5x3HVYRIjRTg9p1baVdFn3o4XPU8ZLTn99o68Rayo",
+        oauth_signature="owGdryDIFNhRivNkQQTu3YWF4lw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1578667972", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 66ac6185-6424-4b09-b385-ad0ca99613fd
+      X-Version:
+      - 2.9.14-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 10 Jan 2020 14:52:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: 'W10=
+
+'
+    http_version: 
+  recorded_at: Fri, 10 Jan 2020 14:52:52 GMT
 recorded_with: VCR 3.0.3
