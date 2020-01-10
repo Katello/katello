@@ -6,6 +6,7 @@ module Katello
       ENTITLEMENTS_VALID = 'valid'.freeze
       ENTITLEMENTS_PARTIAL = 'partial'.freeze
       ENTITLEMENTS_INVALID = 'invalid'.freeze
+      ENTITLEMENTS_DISABLED = 'disabled'.freeze
 
       SYSTEM = "system".freeze
       HYPERVISOR = "hypervisor".freeze
