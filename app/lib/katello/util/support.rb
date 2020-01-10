@@ -78,12 +78,12 @@ module Katello
         logger.error(e.message)
         logger.error("Lost database connection. Attempting reconnect.")
 
-        active_record_retry_connect
+        active_record_retry_connect(logger)
 
         retry
       end
 
-      def self.active_record_retry_connect
+      def self.active_record_retry_connect(logger)
         sleep 3
         ActiveRecord::Base.connection.reconnect!
       rescue

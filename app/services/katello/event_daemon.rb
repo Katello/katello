@@ -9,7 +9,9 @@ module Katello
         error = nil
         status = nil
         loop do
-          check_services(error, status)
+          Rails.application.executor.wrap do
+            check_services(error, status)
+          end
           sleep 15
         end
       end
@@ -21,7 +23,7 @@ module Katello
           rescue => error
             Rails.logger.error("Error occurred while pinging #{service_class}")
             Rails.logger.error(error.message)
-            Rails.logger.error(error.backtrace.join('\n'))
+            Rails.logger.error(error.backtrace.join("\n"))
           ensure
             if error || !status&.dig(:running)
               begin
@@ -30,7 +32,7 @@ module Katello
               rescue => error
                 Rails.logger.error("Error occurred while starting #{service_class}")
                 Rails.logger.error(error.message)
-                Rails.logger.error(error.backtrace.join('\n'))
+                Rails.logger.error(error.backtrace.join("\n"))
               ensure
                 error = nil
               end
