@@ -39,6 +39,30 @@ module Katello
           assert_equal 'proxy://admin:password@foo.com:1000', UpstreamCandlepinResource.proxy_uri
         end
       end
+
+      class ProductTest < ActiveSupport::TestCase
+        def setup
+        end
+
+        def test_create_unlimited_subsciption
+          product_id = 3
+          owner = Organization.first
+          start_date = Time.parse('2020-01-10 07:07:47 +0000')
+          end_date = Time.parse('2049-12-01 00:00:00 +0000')
+          expected_pool = {
+            'startDate' => start_date,
+            'endDate' => end_date,
+            'quantity' => -1,
+            'accountNumber' => '',
+            'productId' => product_id,
+            'providedProducts' => [],
+            'contractNumber' => ''
+          }
+
+          ::Katello::Resources::Candlepin::Pool.expects(:create).with(owner.label, expected_pool).returns('{}')
+          ::Katello::Resources::Candlepin::Product.create_unlimited_subscription(owner.label, product_id, start_date)
+        end
+      end
     end
   end
 end
