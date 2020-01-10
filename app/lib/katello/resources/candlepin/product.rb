@@ -73,11 +73,10 @@ module Katello
           def create_unlimited_subscription(owner_key, product_id, start_date)
             start_date ||= Time.now
 
-            # Subscription-manager (python-rhsm) can't read the certificate with end date deyond
+            # Subscription-manager (python-rhsm) can't read the certificate with end date beyond
             # 2049 year correctly. Refer the links below for more details:
             # https://bugzilla.redhat.com/show_bug.cgi?id=1789654
-            # https://github.com/candlepin/candlepin/blob/5b87865f304555c112982af4fbc83a1c463d37b2
-            # /server/src/main/java/org/candlepin/model/UeberCertificateGenerator.java#L247
+            # https://github.com/candlepin/candlepin/blob/5b87865f304555c112982af4fbc83a1c463d37b2/server/src/main/java/org/candlepin/model/UeberCertificateGenerator.java#L247
             end_date = Time.parse('2049-12-01 00:00:00 +0000')
 
             pool = {
