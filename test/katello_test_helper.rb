@@ -4,7 +4,7 @@ require 'simplecov-rcov'
 require 'test_helper'
 require 'factory_bot_rails'
 require "webmock/minitest"
-require "mocha/setup"
+require 'mocha/minitest'
 require 'set'
 require 'robottelo/reporter/attributes'
 require 'minitest/reporters'
