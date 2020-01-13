@@ -9,6 +9,7 @@
   <% partial_consumer_count = partial_consumer_count() %>
   <% valid_consumer_count = valid_consumer_count()%>
   <% invalid_consumer_count = invalid_consumer_count()%>
+  <% disabled_consumer_count = disabled_consumer_count() %>
   <% unknown_consumer_count = unknown_consumer_count() %>
   <% subscription_status_url = '/content_hosts?search='%>
   <% registered_subscription_url = subscription_status_url + ERB::Util.url_encode('subscription_status = ') %>
@@ -50,6 +51,16 @@
         </td>
         <td style="text-align:right">
           <%= link_to( "#{valid_consumer_count}", "#{registered_subscription_url}" + 'valid')%>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= link_to("#{registered_subscription_url}" + 'disabled') do %>
+            <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Disabled") %>
+          <% end %>
+        </td>
+        <td style="text-align:right">
+          <%= link_to( "#{disabled_consumer_count}", "#{registered_subscription_url}" + 'disabled')%>
         </td>
       </tr>
       <tr>

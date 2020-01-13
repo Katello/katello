@@ -15,6 +15,7 @@ module Katello
           :partial => Katello::SubscriptionStatus::PARTIAL,
           :invalid => Katello::SubscriptionStatus::INVALID,
           :unknown => Katello::SubscriptionStatus::UNKNOWN,
+          :disabled => Katello::SubscriptionStatus::DISABLED,
           :unsubscribed_hypervisor => Katello::SubscriptionStatus::UNSUBSCRIBED_HYPERVISOR
         }.freeze
 

@@ -28,6 +28,12 @@ class DashboardHelperTest < ActiveSupport::TestCase
     assert_equal 1, partial
   end
 
+  def test_disabled_consumer_count
+    @host.subscription_facet.update_subscription_status('disabled')
+    disabled = disabled_consumer_count
+    assert_equal 1, disabled
+  end
+
   def test_valid_consumer_count
     @host.subscription_facet.update_subscription_status('valid')
     valid = valid_consumer_count

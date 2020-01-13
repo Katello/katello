@@ -21,6 +21,10 @@ module Katello
         host_query.search_for("subscription_status = invalid").size
       end
 
+      def disabled_consumer_count
+        host_query.search_for("subscription_status = disabled").size
+      end
+
       def unknown_consumer_count
         host_query.search_for("subscription_status = unknown or (null? subscription_uuid)").size
       end
