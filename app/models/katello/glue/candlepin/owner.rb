@@ -35,6 +35,10 @@ module Katello
         self.owner_details['contentAccessMode']
       end
 
+      def golden_ticket?
+        content_access_mode == "org_environment"
+      end
+
       def generate_debug_cert
         Resources::Candlepin::Owner.generate_ueber_cert(label)
       end

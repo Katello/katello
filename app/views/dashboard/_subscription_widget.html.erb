@@ -2,14 +2,18 @@
   <%= _("Host Subscription Status") %>
 </h4>
 
-<% unless Organization.current.present? %>
+<% if Organization.current.blank? %>
   <p class="ca"><%= _("Please select an organization to view subscription status.") %></p>
+<% elsif Organization.current.golden_ticket?%>
+  <div class="bastion alert alert-info">
+    <span translate>This organization has Simple Content Access enabled. Access to repositories is unrestricted in this organization. Hosts can consume all repositories available in the Content View they are registered to, regardless of subscription status.
+    </span>
+  </div>
 <% else %>
   <% total_count = total_host_count() %>
   <% partial_consumer_count = partial_consumer_count() %>
   <% valid_consumer_count = valid_consumer_count()%>
   <% invalid_consumer_count = invalid_consumer_count()%>
-  <% disabled_consumer_count = disabled_consumer_count() %>
   <% unknown_consumer_count = unknown_consumer_count() %>
   <% subscription_status_url = '/content_hosts?search='%>
   <% registered_subscription_url = subscription_status_url + ERB::Util.url_encode('subscription_status = ') %>
@@ -51,16 +55,6 @@
         </td>
         <td style="text-align:right">
           <%= link_to( "#{valid_consumer_count}", "#{registered_subscription_url}" + 'valid')%>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <%= link_to("#{registered_subscription_url}" + 'disabled') do %>
-            <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Disabled") %>
-          <% end %>
-        </td>
-        <td style="text-align:right">
-          <%= link_to( "#{disabled_consumer_count}", "#{registered_subscription_url}" + 'disabled')%>
         </td>
       </tr>
       <tr>

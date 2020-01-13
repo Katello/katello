@@ -32,6 +32,8 @@ module Katello
       case status
       when INVALID
         ::HostStatus::Global::ERROR
+      when DISABLED
+        ::HostStatus::Global::OK
       when VALID
         ::HostStatus::Global::OK
       else
