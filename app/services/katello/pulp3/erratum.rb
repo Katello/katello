@@ -7,6 +7,10 @@ module Katello
         PulpRpmClient::ContentAdvisoriesApi.new(Katello::Pulp3::Api::Yum.new(SmartProxy.pulp_master!).api_client)
       end
 
+      def self.unit_identifier
+        "id"
+      end
+
       def self.ids_for_repository(repo_id)
         repo = Katello::Pulp3::Repository::Yum.new(Katello::Repository.find(repo_id), SmartProxy.pulp_master)
         repo_content_list = repo.content_list
