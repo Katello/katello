@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<updates>
+<update from="lzap+pub@redhat.com" status="stable" type="security" version="1">
+  <id>RHEA-2010:0001</id>
+  <title>Empty errata 2</title>
+  <release>1</release>
+  <issued date="2010-01-01 01:01:01"/>
+  <description>Empty errata 2</description>
+</update>
+
+<update from="lzap+pub@redhat.com" status="stable" type="security" version="1">
+  <id>RHEA-2010:0002</id>
+  <title>One package errata</title>
+  <release>1</release>
+  <issued date="2010-01-01 01:01:01"/>
+  <description>One package errata</description>
+  <pkglist>
+    <collection short="">
+      <name>1</name>
+      <package arch="noarch" name="elephant" epoch="0" release="0.8" src="http://www.fedoraproject.org" version="0.3">
+        <filename>elephant-0.3-0.8.noarch.rpm</filename>
+      </package>
+    </collection>
+    <collection short="">
+      <name>coll_name2</name>
+      <module name="duck" stream="0" version="20180730233102" context="deadbeef" arch="noarch"/>
+      <package arch="noarch" name="duck" release="1" src="http://www.fedoraproject.org"
+               version="0.7">
+        <filename>duck-0.7-1.noarch.rpm</filename>
+      </package>
+    </collection>
+  </pkglist>
+</update>
+<update from="errata@redhat.com" status="stable" type="enhancement" version="1">
+  <id>RHEA-2012:0059</id>
+  <title>Duck_Kangaroo_Erratum</title>
+  <release>1</release>
+  <issued date="2018-01-27 16:08:09"/>
+  <updated date="2018-07-20 06:00:01 UTC"/>
+  <description>Duck_Kangaro_Erratum duplicate description</description>
+  <pkglist>
+    <collection short="">
+      <name>coll_name1</name>
+      <module name="kangaroo" stream="0" version="20180730223407" context="deadbeef" arch="noarch"/>
+      <package arch="noarch" name="kangaroo" release="1" src="http://www.fedoraproject.org"
+               version="0.3">
+        <filename>kangaroo-0.3-1.noarch.rpm</filename>
+      </package>
+    </collection>
+    <collection short="">
+      <name>coll_name2</name>
+      <module name="duck" stream="0" version="20180730233102" context="deadbeef" arch="noarch"/>
+      <package arch="noarch" name="duck" release="1" src="http://www.fedoraproject.org"
+               version="0.7">
+        <filename>duck-0.7-1.noarch.rpm</filename>
+      </package>
+    </collection>
+  </pkglist>
+</update>
+
+</updates>

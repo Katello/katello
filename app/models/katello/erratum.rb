@@ -144,29 +144,6 @@ module Katello
       return streams.flatten.uniq
     end
 
-    # def self.import_for_repository(repository)
-    #   pulp_ids = []
-    #   service_class = SmartProxy.pulp_master!.content_service(content_type)
-    #   fetch_only_ids = !repository.content_view.default?
-    #   service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids).each do |units|
-    #     units.each do |unit|
-    #       unit = unit.with_indifferent_access
-    #       errata_id = unit[service_class.unit_identifier]
-    #       unless fetch_only_ids
-    #         model = Katello::Util::Support.active_record_retry do
-    #           self.where(:errata_id => errata_id).first_or_create(:pulp_id => errata_id)
-    #         end
-    #         service = service_class.new(model.errata_id)
-    #         service.backend_data = unit
-    #         model.repository_id = repository.id unless many_repository_associations
-    #         service.update_model(model)
-    #       end
-    #       pulp_ids << errata_id
-    #     end
-    #   end
-    #   sync_repository_associations(repository, :errata_ids => pulp_ids) if self.many_repository_associations
-    # end
-
     def self.find_by_modular(_key, operator, value)
       conditions = ""
       if operator == '='
