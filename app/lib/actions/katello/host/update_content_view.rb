@@ -6,7 +6,7 @@ module Actions
           if host.content_facet
             host.content_facet.content_view = ::Katello::ContentView.find(content_view_id)
             host.content_facet.lifecycle_environment = ::Katello::KTEnvironment.find(lifecycle_environment_id)
-            plan_action(Actions::Katello::Host::Update, host)
+            host.update_candlepin_associations
             plan_self(:hostname => host.name)
           else
             fail _("Host %s has not been registered with subscription-manager.") % host.name

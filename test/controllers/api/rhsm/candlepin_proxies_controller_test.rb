@@ -149,8 +149,7 @@ module Katello
 
       it "should update facts" do
         facts = {'rhsm_fact' => 'rhsm_value'}
-        assert_async_task(::Actions::Katello::Host::Update)
-
+        ::Host.any_instance.expects(:update_candlepin_associations).with("facts" => facts)
         put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts }
         assert_equal 200, response.status
       end
@@ -169,8 +168,8 @@ module Katello
         uuid = @host.subscription_facet.uuid
         stub_cp_consumer_with_uuid(uuid)
         facts = {'rhsm_fact' => 'rhsm_value'}
-        assert_async_task(::Actions::Katello::Host::Update)
-        put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts }
+        ::Host.any_instance.expects(:update_candlepin_associations).with("facts" => facts)
+        put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts}
         assert_response 200
       end
     end

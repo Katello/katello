@@ -27,16 +27,14 @@ module Katello
     end
 
     def test_action_not_triggered_on_facet_no_change
-      ForemanTasks.dynflow.world.expects(:plan).never
+      host.reload
+      host.expects(:update_candlepin_associations).never
       host.update_attributes!(:content_facet_attributes => { :content_view_id => view.id })
     end
 
     def test_action_triggered_on_facet_update
-      host.stubs(:execute_planned_action)
-
-      ForemanTasks.dynflow.world
-        .expects(:plan).with(::Actions::Katello::Host::Update, host)
-        .returns(OpenStruct.new(error: false))
+      host.reload
+      host.expects(:update_candlepin_associations)
       host.update_attributes!(:content_facet_attributes => { :content_view_id => view2.id })
       if host.environment
         host.environment.organizations << host.organization
@@ -45,19 +43,16 @@ module Katello
 
       host.reload
       host.content_facet.content_view_id = view.id
-      ForemanTasks.dynflow.world
-        .expects(:plan).with(::Actions::Katello::Host::Update, host)
-        .returns(OpenStruct.new(error: false))
+      host.expects(:update_candlepin_associations)
       host.save!
 
       host.reload
-      ForemanTasks.dynflow.world
-        .expects(:plan).with(::Actions::Katello::Host::Update, host)
-        .returns(OpenStruct.new(error: false))
+      host.expects(:update_candlepin_associations)
       host.update_attributes!(:content_facet_attributes => { :lifecycle_environment_id => dev.id })
     end
 
     def test_content_facet_update
+      host.expects(:update_candlepin_associations)
       host.update_attributes!(:content_facet_attributes => { :content_view_id => view2.id })
       host.reload.content_facet.reload
 
@@ -67,6 +62,9 @@ module Katello
     end
 
     def test_other_content_facet_update
+      host = FactoryBot.create(:host, :with_content,
+                        :with_subscription, :content_view => view,
+                        :lifecycle_environment => library)
       host.update_attributes!(:content_facet_attributes => { :content_source_id => proxy.id })
       host.reload.content_facet.reload
       refute_nil host.content_facet.uuid # not reset to nil
@@ -74,6 +72,8 @@ module Katello
     end
 
     def test_content_facet_allows_individual_attribute_updates
+      host.reload
+      host.expects(:update_candlepin_associations)
       assert host.update_attributes(
         :content_facet_attributes => { content_view_id: view.id, lifecycle_environment_id: library.id })
       refute_nil host.content_facet

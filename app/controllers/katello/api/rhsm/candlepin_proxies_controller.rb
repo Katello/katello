@@ -252,7 +252,7 @@ module Katello
     #api :PUT, "/consumers/:id", N_("Update consumer information")
     def facts
       User.current = User.anonymous_admin
-      async_task(::Actions::Katello::Host::Update, @host, rhsm_params)
+      @host.update_candlepin_associations(rhsm_params)
       update_host_registered_through(@host, request.headers)
       render :json => {:content => _("Facts successfully updated.")}, :status => :ok
     end
