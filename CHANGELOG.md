@@ -1,3 +1,10 @@
+# 3.13.4 Baltic Porter (2020-01-13)
+
+## Bug Fixes
+
+### Subscriptions
+ * custom products can't be consumed by hosts ([#28714](https://projects.theforeman.org/issues/28714), [9c28bc97](https://github.com/Katello/katello.git/commit/9c28bc97a553977269f2eeb5feed79370580a833), [eb233a31](https://github.com/Katello/katello.git/commit/eb233a310083413045bf63c634865ad4f3adf076))
+
 # 3.13.3 Baltic Porter (2019-12-02)
 
 ## Bug Fixes
