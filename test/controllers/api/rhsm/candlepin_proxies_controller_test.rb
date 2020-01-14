@@ -395,6 +395,7 @@ module Katello
     describe "get parent host" do
       it "can get parent host" do
         capsule = "foocapsule.example.com"
+        Setting[:foreman_url] = 'https://foreman.example.com'
 
         host_and_capsule = {"HTTP_X_FORWARDED_SERVER" => "#{capsule}, foo.example.com"}
         just_capsule = {"HTTP_X_FORWARDED_SERVER" => "#{capsule}"}
@@ -402,7 +403,7 @@ module Katello
 
         assert_equal @controller.get_parent_host(host_and_capsule), "#{capsule}"
         assert_equal @controller.get_parent_host(just_capsule), "#{capsule}"
-        assert_equal SETTINGS[:fqdn], @controller.get_parent_host(nil_host)
+        assert_equal 'foreman.example.com', @controller.get_parent_host(nil_host)
       end
     end
   end
