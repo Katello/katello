@@ -262,7 +262,7 @@ npm WARN unmet dependency /usr/lib/node_modules/block-stream requires inherits@'
 npm WARN unmet dependency undefined
 ```
 
-Running `sudo npm update -g phantomjs bower grunt-cli` should fix the issue.
+Running `sudo npm update -g bower grunt-cli` should fix the issue.
 
 #### Fixing Dependency Errors ####
 
@@ -277,7 +277,7 @@ version of a component has been bumped.
 [See also *Installing a New Dependency*](#installing-a-new-dependency) as well as the related section
 [*Updating a New Dependency*](#updating-a-new-dependency)
 
-- `sudo npm update -g phantomjs bower grunt-cli`
+- `sudo npm update -g bower grunt-cli`
 - `npm install`
 - `grunt bower:dev`
 
