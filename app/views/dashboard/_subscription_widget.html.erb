@@ -6,7 +6,7 @@
   <p class="ca"><%= _("Please select an organization to view subscription status.") %></p>
 <% elsif Organization.current.golden_ticket?%>
   <div class="bastion alert alert-info">
-    <span translate>This organization has Simple Content Access enabled. Access to repositories is unrestricted in this organization. Hosts can consume all repositories available in the Content View they are registered to, regardless of subscription status.
+    <span translate>This organization has Simple Content Access enabled. Hosts can consume from all repositories in their Content View regardless of subscription status.
     </span>
   </div>
 <% else %>
