@@ -1,3 +1,27 @@
+# 3.14.1 Pecan Pie (2020-01-14)
+
+## Bug Fixes
+
+### Subscriptions
+ * custom products can't be consumed by hosts ([#28714](https://projects.theforeman.org/issues/28714), [9c28bc97](https://github.com/Katello/katello.git/commit/9c28bc97a553977269f2eeb5feed79370580a833), [eb233a31](https://github.com/Katello/katello.git/commit/eb233a310083413045bf63c634865ad4f3adf076))
+
+### Tests
+ * Jest test stopped working ([#28708](https://projects.theforeman.org/issues/28708), [177638b3](https://github.com/Katello/katello.git/commit/177638b3bc060090089914c42c185decb5ea76a5))
+
+### Activation Key
+ * Auto attach option is being set to null after activation key is created ([#28676](https://projects.theforeman.org/issues/28676), [fb61817c](https://github.com/Katello/katello.git/commit/fb61817c752f86550b91f0d96806337b22980d74))
+
+### Content Views
+ * copy all rpms as part of non-filter cv  publish ([#28675](https://projects.theforeman.org/issues/28675), [b58687e3](https://github.com/Katello/katello.git/commit/b58687e3468f2b9f17eead6ad62e8da35ff911a9))
+
+### API
+ * Unable to subscribe Oracle Linux 7.7 to Katello 3.13.2 ([#28556](https://projects.theforeman.org/issues/28556), [c7e880c4](https://github.com/Katello/katello.git/commit/c7e880c44c11be096dee5ce5b4e37e7f006912c1))
+
+### Client/Agent
+ * katello-agent not connecting to broker with gofer 3.0 ([#28449](https://projects.theforeman.org/issues/28449), [bfbf7ab4](https://github.com/Katello/katello-host-tools.git/commit/bfbf7ab41ff95c8f4a7259b9741ebc8b24c7fa60))
+
+### Other
+ * Ensure events recover after db outage ([#28713](https://projects.theforeman.org/issues/28713), [c86acf49](https://github.com/Katello/katello.git/commit/c86acf49406d8a8620e9083655d01e5ec76b2924))
 # 3.14.0 Pecan Pie (2019-12-09)
 
 ## Features
