@@ -6,6 +6,11 @@ module Katello
       attr_accessor :smart_proxy
       GET_QUERY_ID_LENGTH = 90
 
+      REPOSITORY_TYPES = [
+        Katello::Repository::FILE_TYPE,
+        Katello::Repository::DOCKER_TYPE
+      ].freeze
+
       def initialize(smart_proxy, repository_type_labels)
         @smart_proxy = smart_proxy
         @repository_type_labels = repository_type_labels
