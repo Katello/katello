@@ -28,7 +28,9 @@ module Katello
       rpm = mock(:content_type => "rpm")
       extensions = mock(:rpm => rpm)
 
-      unit = mock(:search => value)
+      unit = mock
+      unit.stubs(:search).returns(value, [])
+
       resources = stub(:unit => unit)
       pulp_server = stub(:resources => resources, :extensions => extensions)
       Katello.stubs(:pulp_server).returns(pulp_server)
