@@ -1,5 +1,6 @@
 module Katello
   class SubscriptionStatus < HostStatus::Status
+    DISABLED = 5
     UNSUBSCRIBED_HYPERVISOR = 4
     UNKNOWN = 3
     INVALID = 2
@@ -20,6 +21,8 @@ module Katello
         N_("Unentitled")
       when UNSUBSCRIBED_HYPERVISOR
         N_("Unsubscribed hypervisor")
+      when DISABLED
+        N_("Disabled")
       else
         N_("Unknown subscription status")
       end
@@ -29,6 +32,8 @@ module Katello
       case status
       when INVALID
         ::HostStatus::Global::ERROR
+      when DISABLED
+        ::HostStatus::Global::OK
       when VALID
         ::HostStatus::Global::OK
       else
@@ -43,6 +48,8 @@ module Katello
       status = status_override || Katello::Candlepin::Consumer.new(host.subscription_facet.uuid, host.organization.label).entitlement_status
 
       case status
+      when Katello::Candlepin::Consumer::ENTITLEMENTS_DISABLED
+        DISABLED
       when Katello::Candlepin::Consumer::ENTITLEMENTS_VALID
         VALID
       when Katello::Candlepin::Consumer::ENTITLEMENTS_PARTIAL

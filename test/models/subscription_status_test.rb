@@ -21,6 +21,11 @@ module Katello
       assert_equal Katello::SubscriptionStatus::VALID, status.to_status
     end
 
+    def test_to_status_disabled
+      stub_status(Katello::Candlepin::Consumer::ENTITLEMENTS_DISABLED)
+      assert_equal Katello::SubscriptionStatus::DISABLED, status.to_status
+    end
+
     def test_to_status_partial
       stub_status(Katello::Candlepin::Consumer::ENTITLEMENTS_PARTIAL)
       assert_equal Katello::SubscriptionStatus::PARTIAL, status.to_status

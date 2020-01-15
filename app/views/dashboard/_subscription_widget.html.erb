@@ -2,8 +2,13 @@
   <%= _("Host Subscription Status") %>
 </h4>
 
-<% unless Organization.current.present? %>
+<% if Organization.current.blank? %>
   <p class="ca"><%= _("Please select an organization to view subscription status.") %></p>
+<% elsif Organization.current.golden_ticket?%>
+  <div class="bastion alert alert-info">
+    <span translate>This organization has Simple Content Access enabled. Hosts can consume from all repositories in their Content View regardless of subscription status.
+    </span>
+  </div>
 <% else %>
   <% total_count = total_host_count() %>
   <% partial_consumer_count = partial_consumer_count() %>
