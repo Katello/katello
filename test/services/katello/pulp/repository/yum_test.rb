@@ -210,6 +210,17 @@ module Katello
           assert_equal "http://" + uri.host, config['proxy_host']
         end
 
+        def test_create_with_global_http_proxy_ipv6
+          @default_proxy = FactoryBot.create(:http_proxy, name: 'best proxy 6', url: "http://[2001:db8:abcd::1]")
+          @repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+          RepositorySupport.create_repo(@repo)
+          backend_data = @repo.backend_service(@master).backend_data
+          importers = backend_data['importers']
+          config = importers.first['config']
+          uri = URI(@default_proxy.url)
+          assert_equal "http://" + uri.hostname, config['proxy_host']
+        end
+
         def test_sync_with_global_http_proxy
           @repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
           RepositorySupport.create_repo(@repo)

@@ -118,7 +118,7 @@ module Katello
       def pulp3_configuration(config_class)
         config_class.new do |config|
           uri = pulp3_uri!
-          config.host = uri.host
+          config.host = uri.hostname
           config.scheme = uri.scheme
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert
           config.ssl_client_key = ::Cert::Certs.ssl_client_key
