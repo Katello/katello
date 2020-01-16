@@ -38,6 +38,7 @@ module Katello
         scoped_search :relation => :content_facet, :on => :lifecycle_environment_id, :rename => :lifecycle_environment_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata, :only_explicit => true
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata, :only_explicit => true
+        scoped_search :relation => :applicable_errata, :on => :issued, :rename => :applicable_errata_issued, :complete_value => true, :only_explicit => true
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source
