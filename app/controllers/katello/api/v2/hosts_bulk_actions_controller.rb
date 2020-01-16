@@ -115,7 +115,8 @@ module Katello
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
           :required => true
-    param :content, Array, :desc => N_("List of content (e.g. package names, package group names or errata ids)"), :required => true
+    param :content, Array, :desc => N_("List of content (e.g. package names, package group names or errata ids)")
+    param :install_all, :bool, :desc => N_("Only used for errata, but will install all installable errata.")
     def install_content
       content_action
     end
@@ -305,7 +306,11 @@ module Katello
 
     def content_action
       if params[:content_type] == 'errata'
-        task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, @hosts, params[:content].uniq)
+        options = {}
+        options[:update_all] = true if ::Foreman::Cast.to_bool(params[:install_all])
+        options[:errata_ids] = params[:content]
+
+        task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, @hosts, options)
         respond_for_async :resource => task
       else
         content = params[:content]

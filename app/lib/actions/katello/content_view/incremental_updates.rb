@@ -31,7 +31,7 @@ module Actions
             if hosts.any? && !content[:errata_ids].blank?
               errata = ::Katello::Erratum.with_identifiers(content[:errata_ids])
               hosts = hosts.where(:id => ::Katello::Host::ContentFacet.with_applicable_errata(errata).pluck(:host_id))
-              plan_action(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, hosts, content[:errata_ids])
+              plan_action(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, hosts, :errata_ids => content[:errata_ids])
             end
             plan_self(:version_outputs => output_for_version_ids)
           end
