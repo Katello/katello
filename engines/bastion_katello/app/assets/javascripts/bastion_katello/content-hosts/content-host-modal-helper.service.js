@@ -39,6 +39,7 @@ angular.module('Bastion.content-hosts').service('ContentHostsModalHelper', ['$ui
             $uibModal.open({
                 templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-errata-modal.html',
                 controller: 'ContentHostsBulkErrataModalController',
+                openedClass: 'bastion',
                 size: 'lg',
                 resolve: {
                     hostIds: this.resolveFunc()
