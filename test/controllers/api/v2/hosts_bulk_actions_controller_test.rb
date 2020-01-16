@@ -130,7 +130,7 @@ module Katello
       errata = katello_errata("bugfix")
       @host1.content_facet.applicable_errata << errata
       @controller.expects(:async_task).with(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall,
-                                            [@host1], [errata.errata_id]).returns({})
+                                            [@host1], :errata_ids => [errata.errata_id]).returns({})
 
       put :install_content, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :content_type => 'errata', :content => [errata.errata_id] }
 
