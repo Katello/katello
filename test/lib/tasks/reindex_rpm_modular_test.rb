@@ -14,8 +14,7 @@ module Katello
       non_modular = ::Katello::Rpm.non_modular.first
       #reverse the modular settings for is_modular
       pulp_response = [
-        {"is_modular": false, "_id": modular.pulp_id},
-        {"is_modular": true, "_id": non_modular.pulp_id}
+        {"_id": non_modular.pulp_id}
       ].map(&:with_indifferent_access)
       mock_pulp(pulp_response)
       Rake.application.invoke_task('katello:upgrades:3.15:reindex_rpm_modular')
