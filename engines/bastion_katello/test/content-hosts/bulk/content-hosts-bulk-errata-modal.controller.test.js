@@ -18,6 +18,7 @@ describe('Controller: ContentHostsBulkErrataModalController', function() {
                 getSelected: function () {return selectedErrata}
             };
 
+            this.enableSelectAllResults = function () {};
             this.setParams = function () {}
         };
 
@@ -63,7 +64,7 @@ describe('Controller: ContentHostsBulkErrataModalController', function() {
             jasmine.any(Function), jasmine.any(Function)
         );
     });
-    
+
     it("provides a function for closing the modal", function () {
         spyOn($uibModalInstance, 'close');
         $scope.ok();

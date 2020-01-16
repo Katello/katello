@@ -29,6 +29,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
             var params = hostIds;
             params['content_type'] = 'errata';
             params.content = _.map($scope.table.getSelected(), 'errata_id');
+
+            if (nutupane.table.allResultsSelected) {
+                params['install_all'] = true;
+            } else {
+                params['install_all'] = false;
+            }
+
             params['organization_id'] = CurrentOrganization;
             return params;
         }
@@ -38,6 +45,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         }
 
         nutupane = new Nutupane(HostBulkAction, hostIds, 'installableErrata');
+        nutupane.enableSelectAllResults();
+
         $scope.controllerName = 'katello_errata';
         nutupane.masterOnly = true;
         $scope.showErrata = false;
