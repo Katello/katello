@@ -128,7 +128,7 @@ module Katello
       def services
         {
           candlepin_events: ::Katello::CandlepinEventListener,
-          katello_events: ::Katello::EventMonitor::PollerThread
+          katello_events: ::Katello::EventMonitor
         }
       end
     end

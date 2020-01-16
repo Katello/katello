@@ -100,7 +100,7 @@ module Katello
     end
 
     def test_ping_katello_events
-      Katello::EventMonitor::PollerThread.stubs(:status).returns(processed_count: 0, failed_count: 0, running: true)
+      Katello::EventMonitor.stubs(:status).returns(processed_count: 0, failed_count: 0, running: true)
 
       result = Katello::Ping.ping_katello_events({})
 
@@ -109,7 +109,7 @@ module Katello
     end
 
     def test_ping_katello_events_not_running
-      Katello::EventMonitor::PollerThread.expects(:status).returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
+      Katello::EventMonitor.expects(:status).returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
 
       result = Katello::Ping.ping_katello_events({})
 

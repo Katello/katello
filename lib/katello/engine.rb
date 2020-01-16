@@ -122,6 +122,15 @@ module Katello
       ActionView::Base.include Katello::KatelloUrlsHelper
     end
 
+    initializer "katello.event_daemon" do |app|
+      app.executor.to_run do
+        if app.reloader.check!
+          Katello::EventDaemon.stop
+          Katello::Messaging::Connection.close_all
+        end
+      end
+    end
+
     config.to_prepare do
       FastGettext.add_text_domain('katello',
                                     :path => File.expand_path("../../../locale", __FILE__),

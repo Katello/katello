@@ -57,7 +57,7 @@ module Katello
 
       def ping_katello_events(result)
         exception_watch(result) do
-          status = Katello::EventMonitor::PollerThread.status(refresh: false)
+          status = Katello::EventMonitor.status(refresh: false)
           event_daemon_status(status, result)
         end
       end

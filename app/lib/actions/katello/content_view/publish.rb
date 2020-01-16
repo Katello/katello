@@ -78,9 +78,7 @@ module Actions
             triggered_by: input[:content_view_version_id]
           }
           input[:auto_publish_composite_ids].each do |composite_id|
-            ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id) do |attrs|
-              attrs[:metadata] = metadata
-            end
+            ::Katello::EventQueue.push_event(::Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_id, metadata)
           end
 
           output[:content_view_id] = input[:content_view_id]

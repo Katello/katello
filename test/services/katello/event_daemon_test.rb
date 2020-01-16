@@ -28,6 +28,7 @@ module Katello
       Katello::EventDaemon.start
 
       assert Katello::EventDaemon.started?
+
       Katello::EventDaemon.stop
     end
 

@@ -6,7 +6,11 @@ module Katello
       end
 
       def call(env)
-        Katello::EventDaemon.start
+        if Katello::EventDaemon.runnable?
+          Thread.new do
+            Katello::EventDaemon.start
+          end
+        end
         @app.call(env)
       end
     end
