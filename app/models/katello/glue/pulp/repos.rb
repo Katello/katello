@@ -100,7 +100,7 @@ module Katello
       def last_repo_sync_task_group
         if last_repo_sync_task
           started_after = last_repo_sync_task.started_at - 30.seconds
-          last_repo_sync_tasks.where("#{ForemanTasks::Task::DynflowTask.table_name}.started_at > '%s'", started_after).uniq
+          last_repo_sync_tasks.where("#{ForemanTasks::Task::DynflowTask.table_name}.started_at > '%s'", started_after.utc).uniq
         else
           []
         end
