@@ -221,11 +221,11 @@ module Katello
           # doesn't provide much benefit for the frustration it creates.
           self.save(validate: false)
         end
-
-        class Jail < ::Safemode::Jail
-          allow :name, :label
-        end
       end
     end
   end
+end
+
+class ::Organization::Jail < ::Safemode::Jail
+  allow :label
 end
