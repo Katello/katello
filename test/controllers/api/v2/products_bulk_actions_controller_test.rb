@@ -116,7 +116,7 @@ module Katello
       prod = @products.first
       assert_async_task(::Actions::Katello::Product::UpdateHttpProxy, [prod], 'use_selected_http_proxy', proxy)
 
-      put :update_http_proxy, params: { :ids => [prod.id], :organization_id => @organization.id,
+      put :update_http_proxy, params: { :ids => [prod.id],
                                         :http_proxy_policy => 'use_selected_http_proxy',
                                         :http_proxy_id => proxy.id}
 
