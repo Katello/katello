@@ -25,22 +25,27 @@
 
         <dt translate>Auto-Attach</dt>
         <dd>
+          <span ng-if="simpleContentAccessEnabled" translate>
+            Not Applicable
+          </span>
+          <div ng-if="!simpleContentAccessEnabled">
           <div bst-edit-checkbox="host.subscription_facet_attributes.autoheal"
                formatter="booleanToYesNo"
                readonly="denied('edit_hosts', host)"
                on-save="saveSubscriptionFacet(host)">
           </div>
+            <a ng-hide="denied('edit_hosts', host)"
+               ng-click="autoAttachSubscriptions()"
+               class="btn btn-default"
+               ng-disabled="subscription.workingMode">
+              <span translate>Run Auto-Attach</span>
+            </a>
 
-          <a ng-hide="denied('edit_hosts', host)"
-             ng-click="autoAttachSubscriptions()"
-             ng-disabled="subscription.workingMode">
-            <span translate>Run Auto-Attach</span>
-          </a>
-
-          <span ng-show="subscription.workingMode">
-            <i class="fa fa-spinner inline-icon fa-spin"></i>
-            <span translate>Working</span>
-          </span>
+            <span ng-show="subscription.workingMode">
+              <i class="fa fa-spinner inline-icon fa-spin"></i>
+              <span translate>Working</span>
+            </span>
+          </div>
         </dd>
 
         <dt translate>Service Level</dt>
