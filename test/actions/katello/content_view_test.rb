@@ -38,22 +38,21 @@ module ::Actions::Katello::ContentView
                           content_view: content_view)
 
         plan_action action, content_view
-        run_action action
 
-        event = Katello::Event.find_by(event_type: Katello::Events::AutoPublishCompositeView::EVENT_TYPE, object_id: composite_view.id)
         version = content_view.versions.last
+        metadata = {triggered_by: version.id, description: "Auto Publish - Triggered by '#{version.name}'"}
+        Katello::EventQueue.expects(:push_event).with(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, composite_view.id, metadata)
 
-        assert_equal event.metadata[:triggered_by], version.id
-        assert_equal event.metadata[:description], "Auto Publish - Triggered by '#{version.name}'"
+        run_action action
       end
 
       it 'does nothing for non-composite view' do
         action.stubs(:task).returns(success_task)
 
+        Katello::EventQueue.expects(:push_event).never
+
         plan_action action, katello_content_views(:no_environment_view)
         run_action action
-
-        assert_empty Katello::Event.all
       end
     end
   end
