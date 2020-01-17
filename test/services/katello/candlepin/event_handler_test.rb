@@ -52,6 +52,7 @@ module Katello
       end
 
       it 'reindex the pool' do
+        Katello::Candlepin::MessageHandler.any_instance.expects(:import_pool)
         handler.handle(mymessage)
       end
     end
@@ -62,6 +63,7 @@ module Katello
       end
 
       it 'reindex the pool' do
+        Katello::Candlepin::MessageHandler.any_instance.expects(:import_pool)
         handler.handle(mymessage)
       end
     end
@@ -72,6 +74,7 @@ module Katello
       end
 
       it 'adds pool to index and reindex the pool' do
+        Katello::Candlepin::MessageHandler.any_instance.expects(:import_pool)
         handler.handle(mymessage)
       end
     end
