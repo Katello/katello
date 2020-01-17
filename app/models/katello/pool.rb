@@ -101,7 +101,7 @@ module Katello
     end
 
     class Jail < ::Safemode::Jail
-      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date
+      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization
     end
   end
 end
