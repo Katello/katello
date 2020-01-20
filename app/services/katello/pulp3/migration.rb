@@ -6,6 +6,11 @@ module Katello
       attr_accessor :smart_proxy
       GET_QUERY_ID_LENGTH = 90
 
+      REPOSITORY_TYPES = [
+        Katello::Repository::FILE_TYPE,
+        Katello::Repository::DOCKER_TYPE
+      ].freeze
+
       def initialize(smart_proxy, repository_type_labels)
         @smart_proxy = smart_proxy
         @repository_type_labels = repository_type_labels
@@ -25,6 +30,14 @@ module Katello
 
       def create_and_run_migration
         start_migration(create_migration)
+      end
+
+      def self.content_types_for_migration
+        content_types = REPOSITORY_TYPES.collect do |repository_type_label|
+          Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index
+        end
+
+        content_types.flatten
       end
 
       def import_pulp3_content
