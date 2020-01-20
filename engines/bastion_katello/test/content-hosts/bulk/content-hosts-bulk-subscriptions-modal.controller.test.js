@@ -1,5 +1,5 @@
 describe('Controller: ContentHostsBulkSubscriptionsModalController', function() {
-    var $scope, $uibModalInstance, Nutupane, hostIds, CurrentOrganization, HostBulkAction, HostCollection, SubscriptionsHelper;
+    var $scope, $uibModalInstance, Nutupane, hostIds, CurrentOrganization, HostBulkAction, HostCollection, SubscriptionsHelper, contentAccessMode;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -59,7 +59,8 @@ describe('Controller: ContentHostsBulkSubscriptionsModalController', function() 
             CurrentOrganization: CurrentOrganization,
             HostBulkAction: HostBulkAction,
             HostCollection: HostCollection,
-            SubscriptionsHelper: SubscriptionsHelper
+            SubscriptionsHelper: SubscriptionsHelper,
+            contentAccessMode: contentAccessMode
         });
     }));
 
