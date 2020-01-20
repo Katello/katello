@@ -484,6 +484,36 @@ module Katello
       assert_template 'api/v2/common/create'
     end
 
+    def test_create_with_ssl_cert_name
+      key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
+      cert = GpgKey.find(katello_gpg_keys('fedora_cert').id)
+
+      product = mock
+      product.expects(:add_repo).with({
+        :label => 'Fedora_Repository', :name => 'Fedora Repository', :url => nil, :arch => 'x86_64',
+        :unprotected => false, :content_type => 'yum', :ssl_ca_cert => nil, :ssl_client_cert => cert,
+        :ssl_client_key => key, :checksum_type => 'sha256', :gpg_key => key,
+        :download_policy => 'on_demand'}.with_indifferent_access
+                                     ).returns(@repository.root)
+
+      product.expects(:ssl_ca_cert).returns(nil)
+      product.expects(:ssl_client_cert).returns(cert)
+      product.expects(:ssl_client_key).returns(key)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
+      product.expects(:gpg_key).returns(key)
+      assert_sync_task(::Actions::Katello::Repository::CreateRoot, @repository.root)
+
+      Product.stubs(:find).returns(product)
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '',
+                              :content_type => 'yum', :ssl_client_cert_name => cert.name, :ssl_client_key_name => key.name,
+                              :checksum_type => 'sha256', :unprotected => false, :download_policy => 'on_demand',
+                              :arch => 'x86_64' }
+
+      assert_response :success
+      assert_template 'api/v2/common/create'
+    end
+
     def test_create_without_label_or_name
       post :create, params: { :product_id => @product.id }
       #should raise an error along the lines of invalid content type provided

@@ -35,9 +35,12 @@ module Katello
     def_param_group :repo do
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
-      param :ssl_ca_cert_id, :number, :desc => N_("Idenifier of the SSL CA Cert")
-      param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert")
-      param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key")
+      param :ssl_ca_cert_id, :number, :desc => N_("Identifier of the SSL CA Cert content credential")
+      param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert content credential")
+      param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key content credential")
+      param :ssl_ca_cert_name, String, :desc => N_("Name of the SSL CA Cert content credential")
+      param :ssl_client_cert_name, String, :desc => N_("Name of the SSL Client Cert content credential")
+      param :ssl_client_key_name, String, :desc => N_("Name of the SSL Client Key content credential")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
@@ -450,14 +453,21 @@ module Katello
 
     def find_content_credential(content_type)
       credential_id = "#{content_type}_id".to_sym
+      credential_name = "#{content_type}_name".to_sym
       credential_var = "@#{content_type}"
 
+      return unless params[credential_id] || params[credential_name]
+
       if params[credential_id]
-        credential_value = GpgKey.readable.where(:id => params[credential_id], :organization_id => @organization).first
-        instance_variable_set(credential_var, credential_value)
-        if instance_variable_get(credential_var).nil?
-          fail HttpErrors::NotFound, _("Couldn't find %{content_type} with id '%{id}'") % { :content_type => content_type, :id => params[credential_id] }
-        end
+        credential_value = GpgKey.readable.where(id: params[credential_id], organization_id: @organization).first
+      elsif params[credential_name]
+        credential_value = GpgKey.readable.where(name: params[credential_name], organization_id: @organization).first
+      end
+
+      instance_variable_set(credential_var, credential_value)
+      if instance_variable_get(credential_var).nil?
+        identifier_msg = params[credential_id] ? "id '#{params[credential_id]}''" : "name '#{params[credential_name]}'"
+        fail HttpErrors::NotFound, _("Couldn't find #{content_type} with the #{identifier_msg}")
       end
     end
 
@@ -472,8 +482,8 @@ module Katello
       keys += [:ansible_collection_requirements] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
-        keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name,
-                 :checksum_type]
+        keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :ssl_ca_cert_name,
+                 :ssl_client_cert_name, :ssl_client_key_name, :unprotected, :name, :checksum_type]
       end
       params.require(:repository).permit(*keys).to_h.with_indifferent_access
     end
@@ -492,7 +502,7 @@ module Katello
     def get_content_credential(repo_params, content_type)
       credential_value = @product.send(content_type)
 
-      unless repo_params["#{content_type}_id".to_sym].blank?
+      unless repo_params["#{content_type}_id".to_sym].blank? && params["#{content_type}_name".to_sym].blank?
         credential_value = instance_variable_get("@#{content_type}")
       end
 
