@@ -17,8 +17,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscriptionsModalController',
-    ['$scope', '$location', '$uibModalInstance', 'Nutupane', 'CurrentOrganization', 'HostBulkAction', 'Subscription', 'SubscriptionsHelper', 'Notification', 'hostIds',
-        function ($scope, $location, $uibModalInstance, Nutupane, CurrentOrganization, HostBulkAction, Subscription, SubscriptionsHelper, Notification, hostIds) {
+    ['$scope', '$location', '$uibModalInstance', 'Nutupane', 'CurrentOrganization', 'HostBulkAction', 'Subscription', 'SubscriptionsHelper', 'Notification', 'hostIds', 'contentAccessMode',
+        function ($scope, $location, $uibModalInstance, Nutupane, CurrentOrganization, HostBulkAction, Subscription, SubscriptionsHelper, Notification, hostIds, contentAccessMode) {
             var success, error, params = {
                 'organization_id': CurrentOrganization,
                 'sort_order': 'ASC',
@@ -53,6 +53,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
             $scope.contentNutupane.masterOnly = true;
             $scope.contentNutupane.load();
             $scope.groupedSubscriptions = {};
+            $scope.contentAccessMode = contentAccessMode;
 
             $scope.$watch('table.rows', function (rows) {
                 $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
