@@ -26,9 +26,10 @@ glue(@resource.root) do
   attributes :deb_releases, :deb_components, :deb_architectures
   attributes :http_proxy_policy
   attributes :http_proxy_id
+  attributes :http_proxy_name
 
   node :http_proxy do
-    attributes :id => @resource.root&.http_proxy_id, :name => @resource.root&.http_proxy&.name
+    attributes :id => @resource.root&.http_proxy&.id, :name => @resource.root&.http_proxy&.name, :policy => @resource.root&.http_proxy_policy
   end
 
   attributes :ignorable_content
