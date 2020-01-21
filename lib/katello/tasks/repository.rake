@@ -11,7 +11,7 @@ namespace :katello do
   task :publish_unpublished_repositories => ["environment", "disable_dynflow", "check_ping"] do
     needing_publish = []
     Organization.find_each do |org|
-      if org.default_content_view and not org.default_content_view.versions.empty?
+      if org.default_content_view && !org.default_content_view.versions.empty?
         org.default_content_view.versions.first.repositories.joins(:root)
           .where.not(katello_root_repositories: { url: nil }).find_each do |repo|
           begin
