@@ -69,7 +69,7 @@ module Katello
 
       def sync_summary
         summary = {}
-        last_repo_sync_task_group.each do |task|
+        last_repo_sync_task_by_repoid.values.each do |task|
           summary[task.result] ||= 0
           summary[task.result] += 1
         end
@@ -104,6 +104,33 @@ module Katello
         else
           []
         end
+      end
+
+      def last_repo_sync_task_by_repoid
+        latest_tasks = {}
+        last_repo_sync_tasks.each do |t|
+          repoid = t.input["repository"]["id"]
+          latest_tasks[repoid] = t unless latest_tasks.key?(repoid) && latest_tasks[repoid].started_at > t.started_at
+        end
+        latest_tasks
+      end
+
+      def sync_state_aggregated
+        presented = last_repo_sync_task_by_repoid.transform_values { |v| ::Katello::SyncStatusPresenter.new(Katello::Repository.find(v.input["repository"]["id"]), v) }
+        worst = nil
+        scale = [
+          :never_synced,
+          :stopped,
+          :canceled,
+          :error,
+          :paused,
+          :running
+        ]
+
+        presented.each do |_repoid, task|
+          worst = task if worst.nil? || worst.sync_progress[:state].nil? || scale.index(worst.sync_progress[:raw_state].to_sym) < scale.index(task.sync_progress[:raw_state].to_sym)
+        end
+        worst&.sync_progress&.fetch(:state, nil)
       end
 
       def sync_state
