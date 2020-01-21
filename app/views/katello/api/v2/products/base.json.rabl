@@ -8,6 +8,7 @@ extends 'katello/api/v2/common/org_reference'
 attributes :provider_id
 attributes :sync_plan_id
 attributes :sync_summary
+attributes :sync_state_aggregated
 attributes :gpg_key_id
 attributes :ssl_ca_cert_id
 attributes :ssl_client_cert_id
