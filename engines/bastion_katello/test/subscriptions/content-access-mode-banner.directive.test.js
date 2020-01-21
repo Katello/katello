@@ -7,7 +7,7 @@ describe('Directive: contentAccessModeBanner', function() {
     ));
 
     beforeEach(module(function($provide) {
-        $provide.value('simContentAccessEnabled', true);
+        $provide.value('simpleContentAccessEnabled', true);
     }));
 
     beforeEach(inject(function($compile, $rootScope, $httpBackend) {
