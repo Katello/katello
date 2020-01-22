@@ -55,59 +55,5 @@ module Katello
         refute Bookmark.where(:name => "list hypervisors").empty?
       end
     end
-
-    class HttpProxyTest < ActiveSupport::TestCase
-      def setup
-        Setting[:content_default_http_proxy] = ""
-        FactoryBot.create(:smart_proxy, :default_smart_proxy)
-      end
-
-      def run_proxy_seed
-        load "#{Katello::Engine.root}/db/seeds.d/115-http_proxy.rb"
-      end
-
-      test "Clears out default setting if not configured" do
-        SETTINGS[:katello][:cdn_proxy] = nil
-        Setting[:content_default_http_proxy] = ""
-        run_proxy_seed
-
-        assert_empty Setting[:content_default_http_proxy]
-      end
-
-      test "Creates proxy and assigns if not existing" do
-        refute ::HttpProxy.find_by(:name => 'foo.com')
-
-        SETTINGS[:katello][:cdn_proxy] = {
-          host: 'http://foo.com/',
-          port: 1234
-        }
-        run_proxy_seed
-
-        proxy = ::HttpProxy.find_by(:name => 'foo.com')
-        assert proxy
-        assert_equal 'http://foo.com:1234/', proxy.url
-
-        assert_equal 'foo.com', Setting[:content_default_http_proxy]
-      end
-
-      test "Updates existing" do
-        ::HttpProxy.create!(name: 'foo.com', url: 'http://foo.com')
-        assert_empty Setting[:content_default_http_proxy]
-
-        SETTINGS[:katello][:cdn_proxy] = {
-          host: 'http://foo.com/',
-          port: 5678,
-          user: 'angry',
-          password: 'sun'
-        }
-        run_proxy_seed
-
-        proxy = ::HttpProxy.find_by(:name => 'foo.com')
-        assert_equal 'angry', proxy.username
-        assert_equal 'sun', proxy.password
-        assert_equal 'http://foo.com:5678/', proxy.url
-        assert_equal 'foo.com', Setting[:content_default_http_proxy]
-      end
-    end
   end
 end
