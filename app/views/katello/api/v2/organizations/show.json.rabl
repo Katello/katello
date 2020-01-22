@@ -7,6 +7,9 @@ attributes :task_id, :label, :owner_details, :redhat_repository_url
 if ::SETTINGS[:katello][:use_cp]
   attributes :system_purposes, :system_purposes
   attributes :service_levels, :service_level
+  node :simple_content_access do |org|
+    org.simple_content_access?
+  end
 end
 
 node :default_content_view_id do |org|
