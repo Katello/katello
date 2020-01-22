@@ -11,14 +11,17 @@ namespace :katello do
   task :publish_unpublished_repositories => ["environment", "disable_dynflow", "check_ping"] do
     needing_publish = []
     Organization.find_each do |org|
-      org.default_content_view.versions.first.repositories.where.not(:url => nil).find_each do |repo|
-        begin
-          if repo.needs_metadata_publish?
-            Rails.logger.error("Repository metadata for #{repo.name} (#{repo.id}) is out of date, regenerating.")
-            needing_publish << repo.id
+      if org.default_content_view && !org.default_content_view.versions.empty?
+        org.default_content_view.versions.first.repositories.joins(:root)
+          .where.not(katello_root_repositories: { url: nil }).find_each do |repo|
+          begin
+            if repo.needs_metadata_publish?
+              Rails.logger.error("Repository metadata for #{repo.name} (#{repo.id}) is out of date, regenerating.")
+              needing_publish << repo.id
+            end
+          rescue => e
+            puts "Failed to check repository #{repo.id}: #{e}"
           end
-        rescue => e
-          puts "Failed to check repository #{repo.id}: #{e}"
         end
       end
     end
