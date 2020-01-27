@@ -14,6 +14,12 @@ def capture_out(&_block)
   [fakeout.string, fakeerr.string]
 end
 
+def assert_ok(task_name)
+  capture_out do
+    Rake::Task[task_name].invoke
+  end
+end
+
 def assert_error(task_name, exit_code = 1)
   result = assert_raises SystemExit do
     capture_out do
