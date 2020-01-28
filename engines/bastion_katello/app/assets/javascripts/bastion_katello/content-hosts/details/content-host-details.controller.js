@@ -141,6 +141,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             return false;
         };
 
+        $scope.autoHealOptions = function () {
+            return [{value: true, name: translate("Yes")}, {value: true, name: translate("No")}];
+        };
+
         $scope.serviceLevels = function () {
             return $scope.organization.$promise.then(function(org) {
                 return _.union(org.service_levels, $scope.defaultServiceLevels);

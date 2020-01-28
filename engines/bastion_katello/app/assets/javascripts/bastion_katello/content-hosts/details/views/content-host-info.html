@@ -82,12 +82,12 @@
         </dd>
 
         <dt translate>Auto-Attach</dt>
-        <dd bst-edit-checkbox="host.subscription_facet_attributes.autoheal"
+        <dd ng-if= "simpleContentAccessEnabled" translate> Not Applicable </dd>
+        <dd ng-if= "!simpleContentAccessEnabled" bst-edit-select="host.subscription_facet_attributes.autoheal"
             readonly="denied('edit_hosts', host)"
             formatter="booleanToYesNo"
             on-save="saveSubscriptionFacet(host)">
         </dd>
-
       </dl>
 
       <div class="divider"></div>

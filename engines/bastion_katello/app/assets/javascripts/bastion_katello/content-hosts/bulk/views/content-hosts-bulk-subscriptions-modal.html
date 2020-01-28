@@ -7,11 +7,11 @@
 
     <div class="row">
       <div class="col-sm-12">
-        <button type="button" class="btn btn-default" ng-click="autoAttach()" ng-disabled="table.numSelected > 0 || contentAccessMode === 'org_environment'">
+        <button type="button" class="btn btn-default" ng-click="autoAttach()" ng-disabled="table.numSelected > 0 || simpleContentAccessEnabled">
           <span translate>Auto-Attach</span>
         </button>
 
-        <p class="help-text" ng-show="table.numSelected === 0 && contentAccessMode != 'org_environment'">
+        <p class="help-text" ng-show="table.numSelected === 0 && !simpleContentAccessEnabled">
           Auto-attach available subscriptions to all selected hosts.
         </p>
 
@@ -19,7 +19,7 @@
         <div content-access-mode-banner/>
         </p>
 
-        <p class="help-text" ng-show="table.numSelected > 0 && contentAccessMode != 'org_environment'">
+        <p class="help-text" ng-show="table.numSelected > 0 && !simpleContentAccessEnabled">
           Auto-attach uses all available subscriptions, not a selected subset.
         </p>
       </div>
