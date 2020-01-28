@@ -4,7 +4,7 @@ import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { isEmpty, isEqual } from 'lodash';
-import { Grid, Row, Col } from 'patternfly-react';
+import { Grid, Row, Col, Alert } from 'patternfly-react';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
 import { renderTaskFinishedToast, renderTaskStartedToast } from '../Tasks/helpers';
@@ -173,7 +173,7 @@ class SubscriptionsPage extends Component {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
       searchQuery, updateSearchQuery,
-      taskModalOpened,
+      taskModalOpened, simpleContentAccess,
       tasks = [], activePermissions, subscriptions, organization, subscriptionTableSettings,
     } = this.props;
     // Basic permissions - should we even show this page?
@@ -298,6 +298,13 @@ class SubscriptionsPage extends Component {
             />
 
             <div id="subscriptions-table" className="modal-container">
+              {simpleContentAccess && (
+                <Alert type="info">
+                This organization has Simple Content Access enabled. <br />
+                Hosts can consume from all repositories in their Content View regardless of
+                subscription status.
+                </Alert>
+              )}
               <SubscriptionsTable
                 canManageSubscriptionAllocations={canManageSubscriptionAllocations}
                 loadSubscriptions={this.props.loadSubscriptions}
@@ -336,6 +343,7 @@ SubscriptionsPage.propTypes = {
   updateQuantity: PropTypes.func.isRequired,
   loadTableColumns: PropTypes.func.isRequired,
   taskDetails: PropTypes.shape({}),
+  simpleContentAccess: PropTypes.bool,
   subscriptions: PropTypes.shape({
     disconnected: PropTypes.bool,
     tableColumns: PropTypes.array,
@@ -387,6 +395,7 @@ SubscriptionsPage.defaultProps = {
   taskModalOpened: false,
   deleteButtonDisabled: true,
   subscriptionTableSettings: {},
+  simpleContentAccess: false,
   activePermissions: {
     can_import_manifest: false,
     can_manage_subscription_allocations: false,

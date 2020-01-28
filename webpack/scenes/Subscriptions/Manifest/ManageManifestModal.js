@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { Button, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { Grid, Col, Row, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Button, Spinner, OverlayTrigger, Tooltip, Icon } from 'patternfly-react';
 import ForemanModal from 'foremanReact/components/ForemanModal';
 import { isEqual } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -12,6 +12,8 @@ import { manifestExists } from '../SubscriptionHelpers';
 import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
+
+import './ManageManifestModal.scss';
 
 class ManageManifestModal extends Component {
   constructor(props) {
@@ -104,6 +106,7 @@ class ManageManifestModal extends Component {
       canImportManifest,
       canDeleteManifest,
       canEditOrganizations,
+      simpleContentAccess,
     } = this.props;
 
     const showRedHatProviderDetails = canEditOrganizations;
@@ -157,113 +160,145 @@ class ManageManifestModal extends Component {
                     <h5>{__('Red Hat Provider Details')}</h5>
                     <hr />
                     <FormGroup>
-                      <Col sm={3}>
-                        <ControlLabel htmlFor="cdnUrl">
-                          {__('Red Hat CDN URL')}
-                        </ControlLabel>
-                      </Col>
-                      <Col sm={9}>
-                        <FormControl
-                          id="cdnUrl"
-                          type="text"
-                          defaultValue={this.state.redhat_repository_url || organization.redhat_repository_url || ''}
-                          onBlur={this.updateRepositoryUrl}
-                        />
-                      </Col>
+                      <Grid>
+                        <Row>
+                          <Col sm={4}>
+                            <ControlLabel htmlFor="cdnUrl">
+                              {__('Red Hat CDN URL')}
+                            </ControlLabel>
+                          </Col>
+                          <Col sm={8}>
+                            <FormControl
+                              id="cdnUrl"
+                              type="text"
+                              defaultValue={this.state.redhat_repository_url || organization.redhat_repository_url || ''}
+                              onBlur={this.updateRepositoryUrl}
+                            />
+                          </Col>
+                        </Row>
+                      </Grid>
                     </FormGroup>
                     <FormGroup>
-                      <Col smOffset={3} sm={3}>
-                        <Button onClick={this.saveOrganization} disabled={organization.loading}>
-                          {organization.loading ? buttonLoading : __('Update')}
-                        </Button>
-                      </Col>
+                      <Grid>
+                        <Row>
+                          <Col smOffset={4} sm={4}>
+                            <Button onClick={this.saveOrganization} disabled={organization.loading}>
+                              {organization.loading ? buttonLoading : __('Update')}
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Grid>
                     </FormGroup>
                     <br />
                   </React.Fragment>
                 }
                 {showSubscriptionManifest &&
                   <React.Fragment>
-                    <h5>{__('Subscription Manifest')}</h5>
-                    <hr />
 
                     <FormGroup>
-                      <ControlLabel
-                        className="col-sm-3 control-label"
-                        htmlFor="usmaFile"
-                        style={{ paddingTop: '0' }}
-                      >
-                        <OverlayTrigger
-                          overlay={
-                            <Tooltip id="usma-tooltip">
-                              {__('Upstream Subscription Management Application')}
-                            </Tooltip>
-                          }
-                          placement="bottom"
-                          trigger={['hover', 'focus']}
-                          rootClose={false}
-                        >
-                          <span>{__('USMA')}</span>
-                        </OverlayTrigger>
-                      </ControlLabel>
+                      <Grid>
+                        <h5>{__('Subscription Manifest')}</h5>
+                        <hr />
+                        <Row>
+                          <Col sm={4}>
+                            <ControlLabel
+                              className="control-label"
+                              htmlFor="usmaFile"
+                              style={{ paddingTop: '0' }}
+                            >
+                              <OverlayTrigger
+                                overlay={
+                                  <Tooltip id="usma-tooltip">
+                                    {__('Upstream Subscription Management Application')}
+                                  </Tooltip>
+                                }
+                                placement="bottom"
+                                trigger={['hover', 'focus']}
+                                rootClose={false}
+                              >
+                                <div>{__('USMA')}</div>
+                              </OverlayTrigger>
+                            </ControlLabel>
+                          </Col>
+                          <Col sm={8}>
+                            {getManifestName()}
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col sm={4}>
+                            <div>{__('Simple Content Access')}</div>
+                          </Col>
+                          <Col sm={8} className="manifest-actions">
+                            <Spinner loading={actionInProgress} inline />
+                            {simpleContentAccess ? __('Yes') : __('No')}
+                            <OverlayTrigger
+                              overlay={
+                                <Tooltip id="sca-tooltip">
+                                  {__('When Simple Content Access is enabled, hosts can consume from all repositories in their Content View regardless of subscription status.')}
+                                </Tooltip>
+                              }
+                              placement="bottom"
+                              trigger={['hover', 'focus']}
+                              rootClose={false}
+                            >
+                              <Icon type="pf" name="info" />
+                            </OverlayTrigger>
+                            {canImportManifest &&
+                              <FormControl
+                                id="usmaFile"
+                                type="file"
+                                accept=".zip"
+                                disabled={actionInProgress}
+                                onChange={e => this.uploadManifest(e.target.files)}
+                              />
+                            }
+                            <div id="manifest-actions-row">
+                              {canImportManifest &&
+                                <TooltipButton
+                                  onClick={this.refreshManifest}
+                                  tooltipId="refresh-manifest-button-tooltip"
+                                  tooltipText={disabledReason}
+                                  tooltipPlacement="top"
+                                  title={__('Refresh')}
+                                  disabled={!manifestExists(organization) ||
+                                    actionInProgress || disableManifestActions}
+                                />
+                              }
+                              {canDeleteManifest &&
+                              <React.Fragment>
+                                <TooltipButton
+                                  renderedButton={(
+                                    <Button
+                                      disabled={!manifestExists(organization) || actionInProgress}
+                                      bsStyle="danger"
+                                      onClick={this.showDeleteManifestModal}
+                                    >
+                                      {__('Delete')}
+                                    </Button>
+                                    )}
 
-                      <Col sm={9} className="manifest-actions">
-                        <Spinner loading={actionInProgress} inline />
+                                  tooltipId="delete-manifest-button-tooltip"
+                                  tooltipText={this.disabledTooltipText()}
+                                  tooltipPlacement="top"
 
-                        {getManifestName()}
-                        {canImportManifest &&
-                          <FormControl
-                            id="usmaFile"
-                            type="file"
-                            accept=".zip"
-                            disabled={actionInProgress}
-                            onChange={e => this.uploadManifest(e.target.files)}
-                          />
-                        }
-                        <div id="manifest-actions-row">
-                          {canImportManifest &&
-                            <TooltipButton
-                              onClick={this.refreshManifest}
-                              tooltipId="refresh-manifest-button-tooltip"
-                              tooltipText={disabledReason}
-                              tooltipPlacement="top"
-                              title={__('Refresh')}
-                              disabled={!manifestExists(organization) ||
-                                actionInProgress || disableManifestActions}
-                            />
-                          }
-                          {canDeleteManifest &&
-                          <React.Fragment>
-                            <TooltipButton
-                              renderedButton={(
-                                <Button
-                                  disabled={!manifestExists(organization) || actionInProgress}
-                                  bsStyle="danger"
-                                  onClick={this.showDeleteManifestModal}
-                                >
+                                />
+                              </React.Fragment>
+                              }
+                            </div>
+                            <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
+                              <DeleteManifestModalText />
+                              <ForemanModal.Footer>
+                                <Button bsStyle="default" onClick={this.hideDeleteManifestModal}>
+                                  {__('Cancel')}
+                                </Button>
+                                <Button bsStyle="danger" onClick={this.deleteManifest}>
                                   {__('Delete')}
                                 </Button>
-                                )}
-
-                              tooltipId="delete-manifest-button-tooltip"
-                              tooltipText={this.disabledTooltipText()}
-                              tooltipPlacement="top"
-
-                            />
-                          </React.Fragment>
-                          }
-                        </div>
-                        <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
-                          <DeleteManifestModalText />
-                          <ForemanModal.Footer>
-                            <Button bsStyle="default" onClick={this.hideDeleteManifestModal}>
-                              {__('Cancel')}
-                            </Button>
-                            <Button bsStyle="danger" onClick={this.deleteManifest}>
-                              {__('Delete')}
-                            </Button>
-                          </ForemanModal.Footer>
-                        </ForemanModal>
-                      </Col>
+                              </ForemanModal.Footer>
+                            </ForemanModal>
+                          </Col>
+                        </Row>
+                      </Grid>
                     </FormGroup>
                   </React.Fragment>
                 }
@@ -314,6 +349,7 @@ ManageManifestModal.propTypes = {
   loadOrganization: PropTypes.func.isRequired,
   saveOrganization: PropTypes.func.isRequired,
   taskInProgress: PropTypes.bool.isRequired,
+  simpleContentAccess: PropTypes.bool,
   manifestHistory: PropTypes.shape({
     loading: PropTypes.bool,
     results: PropTypes.array,
@@ -330,6 +366,7 @@ ManageManifestModal.defaultProps = {
   canDeleteManifest: false,
   canEditOrganizations: false,
   deleteManifestModalIsOpen: false,
+  simpleContentAccess: false,
 };
 
 export default ManageManifestModal;
