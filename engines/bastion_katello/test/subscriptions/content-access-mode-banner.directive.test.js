@@ -7,7 +7,7 @@ describe('Directive: contentAccessModeBanner', function() {
     ));
 
     beforeEach(module(function($provide) {
-        $provide.value('contentAccessMode', 'org_environment');
+        $provide.value('simpleContentAccessEnabled', true);
     }));
 
     beforeEach(inject(function($compile, $rootScope, $httpBackend) {
@@ -21,6 +21,6 @@ describe('Directive: contentAccessModeBanner', function() {
     }));
 
     it("set content access mode on the scope", function() {
-        expect($scope.contentAccessMode).toEqual("org_environment");
+        expect($scope.simpleContentAccessEnabled).toEqual(true);
     });
 });

@@ -12,13 +12,14 @@
  * @requires SubscriptionsHelper
  * @requires Notification
  * @requires hostIds
+ * @requires simpleContentAccessEnabled
  *
  * @description
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscriptionsModalController',
-    ['$scope', '$location', '$uibModalInstance', 'Nutupane', 'CurrentOrganization', 'HostBulkAction', 'Subscription', 'SubscriptionsHelper', 'Notification', 'hostIds', 'contentAccessMode',
-        function ($scope, $location, $uibModalInstance, Nutupane, CurrentOrganization, HostBulkAction, Subscription, SubscriptionsHelper, Notification, hostIds, contentAccessMode) {
+    ['$scope', '$location', '$uibModalInstance', 'Nutupane', 'CurrentOrganization', 'HostBulkAction', 'Subscription', 'SubscriptionsHelper', 'Notification', 'hostIds', 'simpleContentAccessEnabled',
+        function ($scope, $location, $uibModalInstance, Nutupane, CurrentOrganization, HostBulkAction, Subscription, SubscriptionsHelper, Notification, hostIds, simpleContentAccessEnabled) {
             var success, error, params = {
                 'organization_id': CurrentOrganization,
                 'sort_order': 'ASC',
@@ -44,7 +45,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
                 });
             };
 
-
             $scope.contentNutupane = new Nutupane(Subscription, params,
               'queryPaged', {disableAutoLoad: true});
             $scope.controllerName = 'katello_subscriptions';
@@ -53,7 +53,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
             $scope.contentNutupane.masterOnly = true;
             $scope.contentNutupane.load();
             $scope.groupedSubscriptions = {};
-            $scope.contentAccessMode = contentAccessMode;
+            $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
 
             $scope.$watch('table.rows', function (rows) {
                 $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
