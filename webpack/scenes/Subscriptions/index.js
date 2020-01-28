@@ -17,6 +17,7 @@ import {
   selectActivePermissions,
   selectTableSettings,
 } from './SubscriptionsSelectors';
+import { selectSimpleContentAccessEnabled } from '../Organizations/OrganizationSelectors';
 
 import reducer from './SubscriptionReducer';
 import { SUBSCRIPTION_TABLE_NAME } from './SubscriptionConstants';
@@ -31,6 +32,7 @@ const mapStateToProps = (state) => {
     subscriptions,
     subscriptionTableSettings,
     activePermissions: selectActivePermissions(state),
+    simpleContentAccess: selectSimpleContentAccessEnabled(state),
     tasks: selectSubscriptionsTasks(state),
     searchQuery: selectSearchQuery(state),
     deleteModalOpened: selectDeleteModalOpened(state),
