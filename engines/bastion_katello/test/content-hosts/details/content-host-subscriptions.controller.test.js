@@ -74,7 +74,8 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             Subscription: Subscription,
             Nutupane: Nutupane,
             HostSubscription: HostSubscription,
-            SubscriptionsHelper: SubscriptionsHelper
+            SubscriptionsHelper: SubscriptionsHelper,
+            simpleContentAccessEnabled: false
         });
     }));
 
