@@ -219,6 +219,10 @@ module Katello
         fail HttpErrors::UnprocessableEntity, msg
       end
 
+      if repo_params['content_type'] == "puppet" || repo_params['content_type'] == "ostree"
+        ::Foreman::Deprecation.api_deprecation_warning("Puppet and OSTree will no longer be supported in Katello 3.16")
+      end
+
       gpg_key = get_content_credential(repo_params, CONTENT_CREDENTIAL_GPG_KEY_TYPE)
       ssl_ca_cert = get_content_credential(repo_params, CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE)
       ssl_client_cert = get_content_credential(repo_params, CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE)
