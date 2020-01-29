@@ -24,10 +24,20 @@ module Katello
           importer_class.new(config.merge(master_importer_connection_options))
         end
 
+        #what foreman proxies w/ content pull docker content from
+        def docker_registry_host
+          if SmartProxy.pulp_master.pulp3_repository_type_support?(Katello::Repository::DOCKER_TYPE)
+            foreman_url = URI.parse(Setting[:foreman_url]).host.downcase
+            "https://#{foreman_url}"
+          else
+            pulp_uri = URI.parse(SmartProxy.pulp_master.pulp_url)
+            "https://#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}"
+          end
+        end
+
         def generate_mirror_importer
-          pulp_uri = URI.parse(SmartProxy.pulp_master.pulp_url)
           config = {
-            feed: "https://#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}",
+            feed: docker_registry_host,
             upstream_name: repo.container_repository_name,
             enable_v1: false
           }
