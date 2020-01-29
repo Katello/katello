@@ -35,9 +35,9 @@ module Katello
     def_param_group :repo do
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
-      param :ssl_ca_cert_id, :number, :desc => N_("Idenifier of the SSL CA Cert")
-      param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert")
-      param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key")
+      param :ssl_ca_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL CA Cert")
+      param :ssl_client_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Cert")
+      param :ssl_client_key_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Key")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
