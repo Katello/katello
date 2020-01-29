@@ -20,6 +20,31 @@ module Katello
         end
       end
 
+      class DockerMirrorTest < DockerBaseTest
+        def setup
+          super
+          Cert::Certs.stubs(:ueber_cert).returns({})
+        end
+
+        def strip_host(url)
+          URI.parse(url).host
+        end
+
+        def test_mirror_importer_with_pulp2
+          service = Katello::Pulp::Repository::Docker.new(@repo, @mirror)
+
+          assert_equal "https://#{strip_host(SmartProxy.pulp_master.pulp_url)}:5000", service.generate_mirror_importer.feed
+        end
+
+        def test_mirror_importer_with_pulp3
+          @master.destroy!
+          FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          service = Katello::Pulp::Repository::Docker.new(@repo, @mirror)
+
+          assert_equal "https://#{strip_host(Setting[:foreman_url])}", service.generate_mirror_importer.feed
+        end
+      end
+
       class DockerVcrTest < DockerBaseTest
         def setup
           super
