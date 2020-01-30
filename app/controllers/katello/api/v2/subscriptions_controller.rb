@@ -65,7 +65,7 @@ module Katello
       return available_for_activation_key if params[:available_for] == "activation_key"
       collection = Pool.readable
       collection = collection.where(:unmapped_guest => false)
-      collection = collection.get_for_organization(Organization.find(params[:organization_id])) if params[:organization_id]
+      collection = collection.where(organization: Organization.find(params[:organization_id])) if params[:organization_id]
       collection = collection.for_activation_key(@activation_key) if params[:activation_key_id]
       collection
     end
