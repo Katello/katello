@@ -34,15 +34,14 @@ module Katello
     end
 
     def test_index
-      Pool.expects(:get_for_organization).returns(Pool.all)
       get :index, params: { :organization_id => @organization.id }
-
+      results = JSON.parse(@response.body)['results']
+      assert_equal results.count, Pool.all.size
       assert_response :success
       assert_template 'api/v2/subscriptions/index'
     end
 
     def test_index_csv
-      Pool.expects(:get_for_organization).returns(Pool.all)
       get :index, params: {:format => 'csv', :organization_id => @organization.id }
       assert_response :success
       assert_equal "text/csv; charset=utf-8", response.headers["Content-Type"]

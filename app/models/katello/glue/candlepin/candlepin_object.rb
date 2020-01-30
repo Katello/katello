@@ -3,12 +3,6 @@ module Katello
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def get_for_organization(organization)
-        # returns objects from AR database rather than candlepin data
-        pool_ids = self.get_for_owner(organization.label).collect { |x| x['id'] }
-        self.where(:cp_id => pool_ids)
-      end
-
       def get_candlepin_ids(organization)
         self.get_for_owner(organization.label).map { |subscription| subscription["id"] }
       end
