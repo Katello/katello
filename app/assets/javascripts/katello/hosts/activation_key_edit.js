@@ -87,11 +87,13 @@ function ktSetParam(name, value) {
     }
 }
 
-function ktAkGetParamKeys() {
+function ktAkGetKeysFromParam() {
     var paramContainer = ktFindParamContainer(KT.KT_AK_LABEL);
     var keys = [];
     if(paramContainer) {
-        keys = paramContainer.find("textarea").val().split(',');
+        keys = paramContainer.find("textarea").val().split(',').map(function(key) {
+          return key.trim();
+        });
     }
     return keys;
 }
@@ -126,14 +128,16 @@ function ktOnLoad() {
         if (items.kt_activation_keys) { // Wait until after initialization to subscribe to store changes
             unsubscribe();
 
-            tfm.typeAheadSelect.updateSelected(ktAkGetParamKeys(), KT.KT_AK_LABEL);
+            tfm.typeAheadSelect.updateSelected(ktAkGetKeysFromParam(), KT.KT_AK_LABEL);
 
             tfm.store.observeStore('typeAheadSelect', function(items) {
                 if (items.kt_activation_keys) {
                     var selected = items.kt_activation_keys.selected || [];
 
                     ktAkUpdateSubscriptionsInfo(selected);
-                    ktSetParam(KT.KT_AK_LABEL, selected.join(','));
+                    ktSetParam(KT.KT_AK_LABEL, selected.map(function(key) {
+                      return key.trim();
+                    }).join(','));
                 }
             });
         }
