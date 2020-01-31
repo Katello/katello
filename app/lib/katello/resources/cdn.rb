@@ -1,6 +1,7 @@
 module Katello
   module Resources
     module CDN
+      SUPPORTED_SSL_VERSIONS = ['SSLv23', 'TLSv1'].freeze
       class Utils
         # takes releasever from contentUrl (e.g. 6Server, 6.0, 6.1)
         # returns hash e.g. {:major => 6, :minor => "6.1"}
@@ -25,6 +26,10 @@ module Katello
         end
 
         def initialize(url, options = {})
+          @ssl_version = Setting[:cdn_ssl_version]
+          if @ssl_version && !SUPPORTED_SSL_VERSIONS.include?(@ssl_version)
+            fail("Invalid SSL version specified. Check the 'CDN SSL Version' setting")
+          end
           options.reverse_merge!(:verify_ssl => 9)
           options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl,
                                     :product)
@@ -66,7 +71,7 @@ module Katello
           # Run the following command in rails console to figure out other
           # valid constants in other ruby versions
           # "OpenSSL::SSL::SSLContext::METHODS"
-          net.ssl_version = SETTINGS[:katello][:cdn_ssl_version] if SETTINGS[:katello].key?(:cdn_ssl_version)
+          net.ssl_version = @ssl_version
 
           if (@options[:verify_ssl] == false) || (@options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
             net.verify_mode = OpenSSL::SSL::VERIFY_NONE
