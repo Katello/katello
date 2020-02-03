@@ -158,7 +158,7 @@ module Katello
     def content_override
       content_overrides = []
       if params[:content_label]
-        ::Foreman::Deprecation.api_deprecation_warning("The parameter content_label will be removed in Katello 3.5. Please update to use the content_overrides parameter.")
+        ::Katello::Deprecation.api_deprecation_warning("host_subs_content_label", caller(0))
         content_override_params = {:content_label => params[:content_label]}
         value = params[:value]
         if value == "default"
