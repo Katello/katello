@@ -12,6 +12,7 @@ function ktLoadActivationKeys() {
         return; //no Katello-specific env selected
     }
 
+    $("#ak-load-error").hide();
     $("#ak-subscriptions-info").hide();
     $("#ak-subscriptions-spinner").show();
 
@@ -26,15 +27,12 @@ function ktLoadActivationKeys() {
             $.each(response['results'], function (i, key) {
                 KT.hosts.availableActivationKeys[key.name] = [];
             });
-            ktAkUpdateSubscriptionsInfo();
+            tfm.typeAheadSelect.updateOptions(Object.keys(KT.hosts.availableActivationKeys), KT.KT_AK_LABEL);
         },
-        error: ktErrorLoadingActivationKeys
+        error: function() {
+          $("#ak-load-error").show();
+        },
     });
-}
-
-function ktErrorLoadingActivationKeys(error) {
-    $.jnotify("Error while loading activation keys from Katello", { type: "error", sticky: true });
-    ktAkUpdateSubscriptionsInfo();
 }
 
 function ktFindParamContainer(name){
@@ -82,28 +80,27 @@ function ktSetParam(name, value) {
             paramContainer.find("input[name*='name']").val(name);
         }
         paramContainer.find("textarea").val(value);
+        paramContainer.find("input[ type = 'hidden' ]").val(0);
     } else if(paramContainer) {
         // we remove the param by setting destroy to 1
         paramContainer.find("input[ type = 'hidden' ]").val(1);
     }
 }
 
-function ktParamToAkInput() {
+function ktAkGetKeysFromParam() {
     var paramContainer = ktFindParamContainer(KT.KT_AK_LABEL);
+    var keys = [];
     if(paramContainer) {
-        $("#kt_activation_keys").val(paramContainer.find("textarea").val());
+        keys = paramContainer.find("textarea").val().split(',').map(function(key) {
+          return key.trim();
+        });
     }
+    return keys;
 }
 
-function ktAkInputToParam() {
-    var ktActivationKeysValue = $("#kt_activation_keys").val().replace(/,\s*/g,",").replace(/,$/g,"");
-    ktSetParam(KT.KT_AK_LABEL, ktActivationKeysValue);
-}
-
-function ktAkUpdateSubscriptionsInfo() {
+function ktAkUpdateSubscriptionsInfo(selectedKeys) {
     var subsInfo = $("ul#ak-subscriptions-info");
     subsInfo.empty();
-    var selectedKeys = $("#kt_activation_keys").val().split(/,\s*/);
     $.each(selectedKeys, function(i, key) {
       if(KT.hosts.availableActivationKeys[key]) {
         // hack to make it working with deface
@@ -127,50 +124,31 @@ function ktAkTab() {
 }
 
 function ktOnLoad() {
+    tfm.store.observeStore('typeAheadSelect', function(items, unsubscribe) {
+        if (items.kt_activation_keys) { // Wait until after initialization to subscribe to store changes
+            unsubscribe();
+
+            tfm.typeAheadSelect.updateSelected(ktAkGetKeysFromParam(), KT.KT_AK_LABEL);
+
+            tfm.store.observeStore('typeAheadSelect', function(items) {
+                if (items.kt_activation_keys) {
+                    var selected = items.kt_activation_keys.selected || [];
+
+                    ktAkUpdateSubscriptionsInfo(selected);
+                    ktSetParam(KT.KT_AK_LABEL, selected.map(function(key) {
+                      return key.trim();
+                    }).join(','));
+                }
+            });
+        }
+    });
+
     ktHideParams();
-    ktParamToAkInput();
     ktLoadActivationKeys();
 }
 
 $(document).on('ContentLoad', function(){
-
-    $("#kt_activation_keys").parents("form").submit(ktAkInputToParam);
-
     ktOnLoad();
-
-    $("#kt_activation_keys").autocomplete({
-        minLength: 0,
-        source: function(request, response) {
-            var terms = request.term.split(/,\s*/);
-            var part = terms.pop();
-            var items = [];
-            for(key in KT.hosts.availableActivationKeys) {
-                if(terms.indexOf(key) == -1) {
-                    items.push(key);
-                }
-            }
-            response($.ui.autocomplete.filter(
-                items, part));
-        },
-
-        focus: function() {
-            // prevent value inserted on focus
-            return false;
-        },
-        select: function(event, ui) {
-            var oldTerms = this.value.replace(/[^, ][^,]*$/,"");
-            this.value = oldTerms + ui.item.value;
-            ktAkUpdateSubscriptionsInfo();
-            return false;
-        },
-        close: function() {
-            ktAkUpdateSubscriptionsInfo();
-        }
-
-    }).bind("focus", function(event) {
-        if($(this)[0].value == "") {
-     $(this).autocomplete( "search" );
-        }});
 
     $("#hostgroup_lifecycle_environment_id").change(ktLoadActivationKeys);
     $("#hostgroup_content_view_id").change(ktLoadActivationKeys);
