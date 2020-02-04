@@ -3,10 +3,18 @@
 
 
 <div class="tab-pane" id="activation_keys">
+  <div id="ak-load-error" class="alert alert-danger" style="display: none;">
+    <%= _("There was a problem retrieving Activation Key data from the server.") %>
+  </div>
+
   <%= field(f, _("Activation Keys"),
-            :help_inline => _("comma separated values. The value will be available in templates as @host.params['#{kt_ak_label}']")) do
-    text_field_tag("kt_activation_keys", "", :style => 'width: 98%')
+            :help_inline => _("The value will be available in templates as @host.params['#{kt_ak_label}']")) do
+    tag.div id: :kt_activation_keys
   end %>
+
+  <%= mount_react_component('TypeAheadSelect', '#kt_activation_keys',
+                            {id: 'kt_activation_keys', multiple: true, allowNew: true}.to_json,
+                            { flatten_data: true }) %>
 
   <div class="alert alert-info">
     <p><b><%= _('Subscriptions information based on selected activation keys:') %></b></p>
