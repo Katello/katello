@@ -6,7 +6,7 @@ module Katello
       def initialize(product, content, substitutions)
         @product = product
         @content = content
-        @substitutions = substitutions.try(:with_indifferent_access)
+        @substitutions = prune_substitutions(substitutions.try(:with_indifferent_access), content.content_url)
       end
 
       def find_repository
@@ -67,6 +67,10 @@ module Katello
 
       def relative_path
         ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, path)
+      end
+
+      def prune_substitutions(subs, url)
+        subs.select { |key, _| url.include?("$#{key}") }
       end
 
       def feed_url
