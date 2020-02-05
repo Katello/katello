@@ -146,6 +146,9 @@ module Katello
         end
 
         unless new_ids.empty?
+          # column = columns
+          # value = values(new_ids, repository)
+          # self.repository_association_class.import column, value, validate:false
           inserts = new_ids.map { |unit_id| "(#{unit_id.to_i}, #{repository.id.to_i}, '#{Time.now.utc.to_s(:db)}', '#{Time.now.utc.to_s(:db)}')" }
           queries << "INSERT INTO #{table_name} (#{attribute_name}, repository_id, created_at, updated_at) VALUES #{inserts.join(', ')}"
         end
@@ -183,6 +186,14 @@ module Katello
 
       def with_pulp_id(unit_pulp_ids)
         where('pulp_id in (?)', unit_pulp_ids)
+      end
+
+      def columns
+        [unit_id_field.to_sym, :repository_id, :created_at, :updated_at]
+      end
+
+      def values(new_ids, repository)
+        new_ids.map { |unit_id| [unit_id.to_i, repository.id.to_i, Time.now.utc.to_s(:db), Time.now.utc.to_s(:db)] }
       end
     end
   end
