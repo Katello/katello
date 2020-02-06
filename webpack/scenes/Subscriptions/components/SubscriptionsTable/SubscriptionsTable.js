@@ -21,7 +21,6 @@ class SubscriptionsTable extends Component {
       showUpdateConfirmDialog: false,
       showCancelConfirmDialog: false,
       showErrorDialog: false,
-      selectedRows: [],
     };
   }
 
@@ -78,40 +77,30 @@ class SubscriptionsTable extends Component {
     const allSubscriptionResults = this.props.subscriptions.results;
 
     const checkAllRowsSelected = () =>
-      allSubscriptionResults.length === this.state.selectedRows.length;
+      allSubscriptionResults.length === this.props.selectedRows.length;
 
-    const updateDeleteButton = () => {
-      this.props.toggleDeleteButton(this.state.selectedRows.length > 0);
-    };
     return ({
       allRowsSelected: () => checkAllRowsSelected(),
       selectAllRows: () => {
         if (checkAllRowsSelected()) {
-          this.setState(
-            { selectedRows: [] },
-            updateDeleteButton,
-          );
+          this.props.onSelectedRowsChange([]);
+          this.props.toggleDeleteButton(false);
         } else {
-          this.setState(
-            { selectedRows: allSubscriptionResults.map(row => row.id) },
-            updateDeleteButton,
-          );
+          this.props.onSelectedRowsChange(allSubscriptionResults.map(row => row.id));
+          this.props.toggleDeleteButton(true);
         }
       },
       selectRow: ({ rowData }) => {
-        let { selectedRows } = this.state;
+        let { selectedRows } = this.props;
         if (selectedRows.includes(rowData.id)) {
           selectedRows = selectedRows.filter(e => e !== rowData.id);
         } else {
-          selectedRows.push(rowData.id);
+          selectedRows = selectedRows.concat(rowData.id);
         }
-
-        this.setState(
-          { selectedRows },
-          updateDeleteButton,
-        );
+        this.props.onSelectedRowsChange(selectedRows);
+        this.props.toggleDeleteButton(selectedRows.length > 0);
       },
-      isSelected: ({ rowData }) => this.state.selectedRows.includes(rowData.id),
+      isSelected: ({ rowData }) => this.props.selectedRows.includes(rowData.id),
     });
   };
 
@@ -177,7 +166,7 @@ class SubscriptionsTable extends Component {
       onDeleteSubscriptions,
       onSubscriptionDeleteModalClose,
     } = this.props;
-    const { selectedRows } = this.state;
+    const { selectedRows } = this.props;
     return {
       show,
       selectedRows,
@@ -305,6 +294,8 @@ SubscriptionsTable.propTypes = {
       displayName: PropTypes.string,
     }),
   }),
+  selectedRows: PropTypes.instanceOf(Array).isRequired,
+  onSelectedRowsChange: PropTypes.func.isRequired,
 };
 
 SubscriptionsTable.defaultProps = {
