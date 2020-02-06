@@ -33,6 +33,8 @@ describe('subscriptions table', () => {
             onSubscriptionDeleteModalClose={() => { }}
             toggleDeleteButton={() => {}}
             emptyState={{}}
+            selectedRows={[]}
+            onSelectedRowsChange={() => {}}
           />
                         </MemoryRouter>);
     expect(toJson(page)).toMatchSnapshot();
@@ -54,6 +56,8 @@ describe('subscriptions table', () => {
             onDeleteSubscriptions={() => {}}
             toggleDeleteButton={() => {}}
             emptyState={{}}
+            selectedRows={[]}
+            onSelectedRowsChange={() => {}}
           />
                         </MemoryRouter>);
     expect(toJson(page)).toMatchSnapshot();
@@ -72,6 +76,8 @@ describe('subscriptions table', () => {
         onDeleteSubscriptions={() => {}}
         toggleDeleteButton={() => {}}
         emptyState={{}}
+        selectedRows={[]}
+        onSelectedRowsChange={() => {}}
       />
                         </MemoryRouter>);
     expect(page.find('#select1').is('[disabled]')).toBe(true);
@@ -95,6 +101,8 @@ describe('subscriptions table', () => {
         onDeleteSubscriptions={() => {}}
         toggleDeleteButton={() => {}}
         tableColumns={[]}
+        selectedRows={[]}
+        onSelectedRowsChange={() => {}}
       />
                         </MemoryRouter>);
     expect(toJson(page)).toMatchSnapshot();
@@ -112,6 +120,8 @@ describe('subscriptions table', () => {
       onDeleteSubscriptions={() => {}}
       toggleDeleteButton={() => {}}
       emptyState={{}}
+      selectedRows={[]}
+      onSelectedRowsChange={() => {}}
     />);
     jest.runAllTimers();
     page.update();
