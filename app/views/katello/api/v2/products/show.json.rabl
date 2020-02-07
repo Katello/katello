@@ -3,6 +3,8 @@ object @resource
 
 extends "katello/api/v2/products/base"
 
+attributes :sync_state_aggregated
+
 child(:product_contents => :product_content) do
   extends "katello/api/v2/products/product_content"
 end
