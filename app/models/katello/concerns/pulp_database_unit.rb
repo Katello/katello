@@ -127,7 +127,7 @@ module Katello
 
       def sync_repository_associations(repository, options = {})
         additive = options.fetch(:additive, false)
-        pulp_ids = options.fetch(:pulp_ids)
+        pulp_ids = options.fetch(:pulp_ids, nil)
         associated_ids = with_pulp_id(pulp_ids).pluck(:id) if pulp_ids
 
         table_name = self.repository_association_class.table_name
