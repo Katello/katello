@@ -76,6 +76,39 @@ module Katello
           refute_empty erratum.cves.first.cve_id
           refute_empty erratum.cves.first.href
         end
+
+        def test_dup_errata
+          Katello::Erratum.destroy_all
+          repo_1 = katello_repositories(:rhel_7_x86_64)
+          repo_1.root.update_attributes!(:url => 'file:///var/www/test_repos/zoo2', :download_policy => 'immediate')
+          ensure_creatable(repo_1, @master)
+          create_repo(repo_1, @master)
+          repo_1.reload
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo_1, @master, :smart_proxy_id => @master.id, :repo_id => repo_1.id)
+          ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, :id => repo_1.id, :contents_changed => true)
+          repo_1.reload
+          post_unit_count, post_unit_repository_count = Katello::Erratum.all.count, Katello::RepositoryErratum.where(:repository_id => repo_1.id).count
+          assert_equal post_unit_count, 3
+          assert_equal post_unit_repository_count, 3
+
+          repo_2 = katello_repositories(:rhel_6_x86_64)
+          repo_2.root.update_attributes!(:url => 'file:///var/www/test_repos/zoo2_dup', :download_policy => 'immediate')
+          ensure_creatable(repo_2, @master)
+          create_repo(repo_2, @master)
+          repo_2.reload
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo_2, @master, :smart_proxy_id => @master.id, :repo_id => repo_2.id)
+          ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, :id => repo_2.id, :contents_changed => true)
+
+          repo_2.reload
+          post_unit_count = Katello::Erratum.all.count
+          post_unit_repository_count = Katello::RepositoryErratum.where(:repository_id => repo_2.id).count
+
+          assert_equal post_unit_count, 3
+          assert_equal post_unit_repository_count, 3
+        ensure
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo_1, @master)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo_2, @master)
+        end
       end
     end
   end
