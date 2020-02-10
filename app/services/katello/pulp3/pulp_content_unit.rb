@@ -15,6 +15,10 @@ module Katello
         fail NotImplementedError
       end
 
+      def self.backend_unit_identifier
+        nil
+      end
+
       def update_model
         fail NotImplementedError
       end

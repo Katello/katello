@@ -30,6 +30,10 @@ module Katello
         "_id"
       end
 
+      def self.backend_unit_identifier
+        nil
+      end
+
       def self.content_type
         self::CONTENT_TYPE
       end

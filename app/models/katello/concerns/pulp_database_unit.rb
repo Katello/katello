@@ -101,7 +101,7 @@ module Katello
       end
 
       def import_for_repository(repository)
-        pulp_ids = []
+        pulp_ids, pulp_id_href_map = [], {}
         service_class = SmartProxy.pulp_master!.content_service(content_type)
         fetch_only_ids = !repository.content_view.default? &&
                          !repository.repository_type.unique_content_per_repo
@@ -110,6 +110,7 @@ module Katello
           units.each do |unit|
             unit = unit.with_indifferent_access
             pulp_id = unit[service_class.unit_identifier]
+            backend_identifier = unit[service_class.backend_unit_identifier] if service_class.backend_unit_identifier
             unless fetch_only_ids
               model = Katello::Util::Support.active_record_retry do
                 self.where(:pulp_id => pulp_id).first_or_create
@@ -120,25 +121,30 @@ module Katello
               service.update_model(model)
             end
             pulp_ids << pulp_id
+            pulp_id_href_map.merge!(pulp_id => backend_identifier) if service_class.backend_unit_identifier
           end
         end
-        sync_repository_associations(repository, :pulp_ids => pulp_ids) if self.many_repository_associations
+        sync_repository_associations(repository, :pulp_ids => pulp_ids, :pulp_id_href_map => pulp_id_href_map) if self.many_repository_associations
       end
 
       def sync_repository_associations(repository, options = {})
         additive = options.fetch(:additive, false)
         pulp_ids = options.fetch(:pulp_ids, nil)
-        associated_ids = with_pulp_id(pulp_ids).pluck(:id) if pulp_ids
-
-        table_name = self.repository_association_class.table_name
-        attribute_name = unit_id_field
-
+        pulp_id_href_map = options.fetch(:pulp_id_href_map, nil)
+        id_map_for_repository, table_name, attribute_name = {}, self.repository_association_class.table_name, unit_id_field
+        if pulp_ids
+          ids_for_repository = with_pulp_id(pulp_ids).pluck(:id, :pulp_id)
+          associated_ids = ids_for_repository.map { |ids| ids[0] }
+          unless pulp_id_href_map.empty?
+            ids_for_repository.map { |arr| id_map_for_repository.merge!(arr[0] => arr[1]) }
+            id_map_for_repository.each_pair { |k, v| id_map_for_repository[k] = pulp_id_href_map[v] }
+          end
+        end
         existing_ids = self.repository_association_class.uncached do
           self.repository_association_class.where(:repository_id => repository).pluck(attribute_name)
         end
         new_ids = associated_ids - existing_ids
         delete_ids = existing_ids - associated_ids
-
         queries = []
 
         if delete_ids.any? && !additive
@@ -146,11 +152,8 @@ module Katello
         end
 
         unless new_ids.empty?
-          # column = columns
-          # value = values(new_ids, repository)
-          # self.repository_association_class.import column, value, validate:false
-          inserts = new_ids.map { |unit_id| "(#{unit_id.to_i}, #{repository.id.to_i}, '#{Time.now.utc.to_s(:db)}', '#{Time.now.utc.to_s(:db)}')" }
-          queries << "INSERT INTO #{table_name} (#{attribute_name}, repository_id, created_at, updated_at) VALUES #{inserts.join(', ')}"
+          backend_identifier = id_map_for_repository && !id_map_for_repository.empty?
+          self.repository_association_class.import db_columns(backend_identifier), db_values(new_ids, id_map_for_repository, backend_identifier, repository), validate: false
         end
 
         ActiveRecord::Base.transaction do
@@ -161,14 +164,12 @@ module Katello
       end
 
       def copy_repository_associations(source_repo, dest_repo)
+        insert_query = nil
         if many_repository_associations
           delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
                          #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
 
-          insert_query = "insert into #{repository_association_class.table_name} (repository_id, #{unit_id_field})
-                          select #{dest_repo.id} as repository_id, #{unit_id_field} from #{repository_association_class.table_name}
-                          where repository_id = #{source_repo.id} and #{unit_id_field} not in (select #{unit_id_field}
-                          from #{repository_association_class.table_name} where repository_id = #{dest_repo.id})"
+          self.repository_association_class.import db_columns_copy, db_values_copy(source_repo, dest_repo), validate: false
         else
           columns = column_names - ["id", "pulp_id", "created_at", "updated_at", "repository_id"]
 
@@ -181,19 +182,48 @@ module Katello
 
         end
         ActiveRecord::Base.connection.execute(delete_query)
-        ActiveRecord::Base.connection.execute(insert_query)
+        ActiveRecord::Base.connection.execute(insert_query) if insert_query
       end
 
       def with_pulp_id(unit_pulp_ids)
         where('pulp_id in (?)', unit_pulp_ids)
       end
 
-      def columns
-        [unit_id_field.to_sym, :repository_id, :created_at, :updated_at]
+      def db_columns(backend_identifier)
+        backend_identifier ? [unit_id_field.to_sym, self::BACKEND_IDENTIFIER_FIELD.to_sym, :repository_id, :created_at, :updated_at] : [unit_id_field.to_sym, :repository_id, :created_at, :updated_at]
       end
 
-      def values(new_ids, repository)
-        new_ids.map { |unit_id| [unit_id.to_i, repository.id.to_i, Time.now.utc.to_s(:db), Time.now.utc.to_s(:db)] }
+      def db_columns_copy
+        (defined? self::BACKEND_IDENTIFIER_FIELD) ? [self.unit_id_field.to_sym, self::BACKEND_IDENTIFIER_FIELD.to_sym, :repository_id] : [self.unit_id_field.to_sym, :repository_id]
+      end
+
+      def db_values_copy(source_repo, dest_repo)
+        db_values = []
+        source_units = self.repository_association_class.where(:repository_id => source_repo.id).to_a #source_repo.send(self::CONTENT_TYPE.pluralize)
+        dest_units = self.repository_association_class.where(:repository_id => dest_repo.id).to_a #dest_repo.send(self::CONTENT_TYPE.pluralize)
+        source_unit_ids = source_units.pluck(unit_id_field.to_sym)
+        dest_unit_ids = dest_units.pluck(unit_id_field.to_sym)
+        new_units = source_units.select { |su| (source_unit_ids - dest_unit_ids).include? su[unit_id_field] }
+        if defined? self::BACKEND_IDENTIFIER_FIELD
+          new_units.each do |unit|
+            import_unit = [unit[unit_id_field], unit.send(self::BACKEND_IDENTIFIER_FIELD.to_sym), dest_repo.id]
+            db_values << import_unit
+          end
+        else
+          new_units.each do |unit|
+            import_unit = [unit[unit_id_field], dest_repo.id]
+            db_values << import_unit
+          end
+        end
+        db_values
+      end
+
+      def db_values(new_ids, pulp_id_href_map, backend_identifier, repository)
+        if backend_identifier
+          new_ids.map { |unit_id| [unit_id.to_i, pulp_id_href_map[unit_id], repository.id.to_i, Time.now.utc.to_s(:db), Time.now.utc.to_s(:db)] }
+        else
+          new_ids.map { |unit_id| [unit_id.to_i, repository.id.to_i, Time.now.utc.to_s(:db), Time.now.utc.to_s(:db)] }
+        end
       end
     end
   end
