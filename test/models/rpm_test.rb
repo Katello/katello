@@ -466,6 +466,12 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
     end
 
+    def test_evr
+      rpm = Rpm.where(nvra: "abc123-2-1.0.0-1.0").first
+
+      assert_equal "(1,\"{\"\"(1,)\"\",\"\"(0,)\"\",\"\"(0,)\"\"}\",\"{\"\"(1,)\"\",\"\"(0,)\"\"}\")", rpm.evr
+    end
+
     def test_search_like
       # Disabled until https://github.com/wvanbergen/scoped_search/pull/178 is merged
       #results = Rpm.in_repositories(@repo).search_for("evr ~ :1.0.0-1")
