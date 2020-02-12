@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require 'support/evr_extension_support'
 
 module Katello
   class RpmTestBase < ActiveSupport::TestCase
@@ -116,6 +117,13 @@ module Katello
       @host_two = katello_content_facets(:content_facet_two).host
     end
 
+    def teardown
+      rpm = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
+      rpm.update(epoch: '0')
+      rpm.update(version: '1.0')
+      rpm.update(release: '2.el7')
+    end
+
     def test_applicable_to_hosts
       rpms = Rpm.applicable_to_hosts([@host_one])
 
@@ -146,6 +154,60 @@ module Katello
       @host_one.content_facet.bound_repositories += @rpm_one.repositories
       facet = @rpm_one.hosts_available(@host_one.organization_id).first
       assert_equal @host_one, facet.host
+    end
+
+    def test_evr_string
+      rpm = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
+      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch)
+      EvrExtensionSupport.set_rpm_evrs
+      EvrExtensionSupport.set_installed_package_evrs
+      rpm.reload
+      installed_package.reload
+
+      assert_equal "(0,\"{\"\"(1,)\"\",\"\"(0,)\"\"}\",\"{\"\"(2,)\"\",\"\"(0,el)\"\",\"\"(7,)\"\"}\")", rpm.evr
+      assert_equal "(0,\"{\"\"(1,)\"\",\"\"(0,)\"\"}\",\"{\"\"(2,)\"\",\"\"(0,el)\"\",\"\"(7,)\"\"}\")", installed_package.evr
+    end
+
+    def test_epoch_updates_evr_string
+      rpm = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
+      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch)
+      rpm.update(epoch: '99')
+      installed_package.update(epoch: '99')
+      EvrExtensionSupport.set_rpm_evrs
+      EvrExtensionSupport.set_installed_package_evrs
+      rpm.reload
+      installed_package.reload
+
+      assert_equal "(99,\"{\"\"(1,)\"\",\"\"(0,)\"\"}\",\"{\"\"(2,)\"\",\"\"(0,el)\"\",\"\"(7,)\"\"}\")", rpm.evr
+      assert_equal "(99,\"{\"\"(1,)\"\",\"\"(0,)\"\"}\",\"{\"\"(2,)\"\",\"\"(0,el)\"\",\"\"(7,)\"\"}\")", installed_package.evr
+    end
+
+    def test_version_updates_evr_string
+      rpm = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
+      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch)
+      rpm.update(version: '2.0')
+      installed_package.update(version: '2.0')
+      EvrExtensionSupport.set_rpm_evrs
+      EvrExtensionSupport.set_installed_package_evrs
+      rpm.reload
+      installed_package.reload
+
+      assert_equal "(0,\"{\"\"(2,)\"\",\"\"(0,)\"\"}\",\"{\"\"(2,)\"\",\"\"(0,el)\"\",\"\"(7,)\"\"}\")", rpm.evr
+      assert_equal "(0,\"{\"\"(2,)\"\",\"\"(0,)\"\"}\",\"{\"\"(2,)\"\",\"\"(0,el)\"\",\"\"(7,)\"\"}\")", installed_package.evr
+    end
+
+    def test_release_updates_evr_string
+      rpm = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
+      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch)
+      rpm.update(release: '3.el8')
+      installed_package.update(release: '3.el8')
+      EvrExtensionSupport.set_rpm_evrs
+      EvrExtensionSupport.set_installed_package_evrs
+      rpm.reload
+      installed_package.reload
+
+      assert_equal "(0,\"{\"\"(1,)\"\",\"\"(0,)\"\"}\",\"{\"\"(3,)\"\",\"\"(0,el)\"\",\"\"(8,)\"\"}\")", rpm.evr
+      assert_equal "(0,\"{\"\"(1,)\"\",\"\"(0,)\"\"}\",\"{\"\"(3,)\"\",\"\"(0,el)\"\",\"\"(8,)\"\"}\")", installed_package.evr
     end
   end
 

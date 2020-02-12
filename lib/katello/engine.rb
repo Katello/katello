@@ -1,3 +1,5 @@
+require 'fx'
+
 module Katello
   HOST_TASKS_QUEUE = :hosts_queue
 

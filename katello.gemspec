@@ -39,6 +39,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "gettext_i18n_rails"
   gem.add_dependency "apipie-rails", ">= 0.5.14"
 
+  gem.add_dependency "fx", "< 1.0"
+
   # Pulp
   gem.add_dependency "runcible", ">= 2.13.0", "< 3.0.0"
   gem.add_dependency "anemone"
