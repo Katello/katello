@@ -107,12 +107,25 @@ module Katello
       end
 
       def last_repo_sync_task_by_repoid
-        latest_tasks = {}
-        last_repo_sync_tasks.each do |t|
-          repoid = t.input["repository"]["id"]
-          latest_tasks[repoid] = t unless latest_tasks.key?(repoid) && latest_tasks[repoid].started_at > t.started_at
-        end
-        latest_tasks
+        all_repos = repos(self.library, nil, false)
+        base_combined_table = ForemanTasks::Task::DynflowTask
+          .where(:label => ::Actions::Katello::Repository::Sync.name)
+          .joins(:locks)
+          .where("foreman_tasks_locks.resource_id in (?) and foreman_tasks_locks.resource_type = ?", all_repos.pluck(:id), ::Katello::Repository.name)
+
+        max_per_repoid = ForemanTasks::Task::DynflowTask
+          .joins(:locks)
+          .select("#{ForemanTasks::Task::DynflowTask.table_name}.*, inner_select.resource_id")
+          .joins(
+            "INNER JOIN (#{base_combined_table
+              .select("MAX(foreman_tasks_tasks.started_at) AS started_at", "foreman_tasks_locks.resource_id AS resource_id")
+              .group("foreman_tasks_locks.resource_id")
+              .to_sql}) inner_select
+            ON inner_select.started_at = #{ForemanTasks::Task::DynflowTask.table_name}.started_at
+            AND inner_select.resource_id = locks_foreman_tasks_tasks.resource_id")
+          .distinct
+
+        max_per_repoid.map { |x| [x.resource_id, x] }.to_h
       end
 
       def sync_state_aggregated
