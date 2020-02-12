@@ -2,7 +2,6 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
     $stateProvider.state('host-collections', {
         url: '/host_collections',
         permission: 'view_host_collections',
-        template: '<div ui-view></div>',
         views: {
             '@': {
                 controller: 'HostCollectionsController',

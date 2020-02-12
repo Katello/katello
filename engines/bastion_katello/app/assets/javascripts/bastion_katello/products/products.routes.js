@@ -24,7 +24,6 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
 
     $stateProvider.state('products.new', {
         abstract: true,
-        template: '<div ui-view></div>',
         views: {
             '@': {
                 controller: 'NewProductController',

@@ -11,7 +11,6 @@ angular.module('Bastion.docker-tags').config(['$stateProvider', function ($state
     $stateProvider.state('docker-tags', {
         url: '/docker_tags',
         permission: ['view_products', 'view_content_views'],
-        template: '<div ui-view></div>',
         views: {
             '@': {
                 controller: 'DockerTagsController',

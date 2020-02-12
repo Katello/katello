@@ -11,7 +11,6 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
     $stateProvider.state('sync-plans', {
         url: '/sync_plans',
         permission: 'view_sync_plans',
-        template: '<div ui-view></div>',
         views: {
             '@': {
                 controller: 'SyncPlansController',
