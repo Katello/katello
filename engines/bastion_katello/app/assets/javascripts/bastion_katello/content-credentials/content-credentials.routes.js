@@ -11,7 +11,6 @@ angular.module('Bastion.content-credentials').config(['$stateProvider', function
     $stateProvider.state('content-credentials', {
         url: '/content_credentials',
         permission: 'view_content_credentials',
-        template: '<div ui-view></div>',
         views: {
             '@': {
                 controller: 'ContentCredentialsController',

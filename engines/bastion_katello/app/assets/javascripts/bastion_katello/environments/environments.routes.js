@@ -11,7 +11,6 @@ angular.module('Bastion.environments').config(['$stateProvider', function ($stat
     $stateProvider.state('environments', {
         url: '/lifecycle_environments',
         permission: 'view_lifecycle_environments',
-        template: '<div ui-view></div>',
         views: {
             '@': {
                 controller: 'EnvironmentsController',
