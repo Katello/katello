@@ -300,9 +300,9 @@ class SubscriptionsPage extends Component {
             <div id="subscriptions-table" className="modal-container">
               {simpleContentAccess && (
                 <Alert type="info">
-                This organization has Simple Content Access enabled. <br />
-                Hosts can consume from all repositories in their Content View regardless of
-                subscription status.
+                  This organization has Simple Content Access enabled. <br />
+                  Hosts can consume from all repositories in their Content View regardless of
+                  subscription status.
                 </Alert>
               )}
               <SubscriptionsTable
