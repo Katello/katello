@@ -45,6 +45,10 @@ module Katello
           end
         end
 
+        def partial_repo_path
+          "/pulp/repos/#{repo.relative_path}/".sub('//', '/')
+        end
+
         def copy_content_for_source
           # TODO
           fail NotImplementedError
