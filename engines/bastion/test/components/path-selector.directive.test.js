@@ -1,6 +1,8 @@
 describe('Directive: pathSelector', function() {
     var scope,
         compile,
+        $document,
+        $rootElement,
         paths,
         element,
         elementScope;
@@ -10,9 +12,11 @@ describe('Directive: pathSelector', function() {
         'components/views/path-selector.html'
     ));
 
-    beforeEach(inject(function(_$compile_, _$rootScope_) {
+    beforeEach(inject(function(_$compile_, _$rootScope_, _$document_, _$rootElement_) {
         compile = _$compile_;
         scope = _$rootScope_;
+        $document = _$document_;
+        $rootElement = _$rootElement_;
     }));
 
     beforeEach(function() {
@@ -41,6 +45,14 @@ describe('Directive: pathSelector', function() {
         scope.environment = {};
 
         element = angular.element('<div path-selector="paths" ng-model="environment" mode="singleSelect"></div>');
+
+        // Append the app to the document so that "click" triggers "change"
+        //
+        // See also:
+        // https://github.com/angular/angular.js/commit/656c8fa8f23b1277cc5c214c4d0237f3393afa1e
+        // https://github.com/angular/angular.js/blob/master/CHANGELOG.md#170-rc0-maximum-overdrive-2018-04-19
+        angular.element($document[0].body).append($rootElement.append(element));
+
         compile(element)(scope);
         scope.$digest();
 

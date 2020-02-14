@@ -3,8 +3,19 @@ describe('Service: ContentService', function() {
 
     beforeEach(module('Bastion.environments', 'Bastion.test-mocks'));
 
+    beforeEach(function() {
+      $state = {
+        current: {
+          name: ''
+        }
+      };
+
+      module(function($provide) {
+        $provide.value('$state', $state);
+      })
+    });
+
     beforeEach(inject(function ($injector) {
-        $state = $injector.get('$state');
         ContentService = $injector.get('ContentService');
     }));
 
@@ -63,6 +74,8 @@ describe('Service: ContentService', function() {
         }));
 
         it("auto loads nutupane", function () {
+          $state.current = {name: 'environment.content-views'};
+
             var nutupane = ContentService.buildNutupane();
 
             expect(nutupane.disableAutoLoad).toBe(false);
@@ -70,4 +83,3 @@ describe('Service: ContentService', function() {
         });
     });
 });
-

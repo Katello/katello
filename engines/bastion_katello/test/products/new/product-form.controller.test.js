@@ -88,7 +88,7 @@ describe('Controller: ProductFormController', function() {
 
     it('should fetch a label whenever the name changes', function() {
         spyOn(FormUtils, 'labelize');
-
+        $scope.page = {};
         $scope.product.name = 'ChangedName';
         $scope.$apply();
 
@@ -119,4 +119,3 @@ describe('Controller: ProductFormController', function() {
         expect($scope.product['sync_plan_id']).toBe(modalResponse.id);
     });
 });
-
