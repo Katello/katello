@@ -33,25 +33,25 @@ describe('config: Bastion.routing', function () {
     describe("provides a rule that", function () {
         it("removes any trailing slashes from the url", function () {
             goTo('/state///');
-            expect($window.location.href).toBe('http://server/state');
+            expect($window.location.href).toBe('/state');
         });
 
         it("doesn't remove slashes if whitelisted", function () {
             goTo('/pulp/repos/');
-            expect($window.location.href).toBe('http://server/pulp/repos/');
+            expect($window.location.href).toBe('/pulp/repos/');
         });
     });
 
     describe("provides an otherwise method that", function () {
         it('replaces encoded + characters with their decoded counterpart', function () {
             goTo('/some-state%2B%2B');
-            expect($window.location.href).toBe('http://server/some-state++');
+            expect($window.location.href).toBe('/some-state++');
         });
 
         it('removes the old browser compatibility path', function () {
-            spyOn($location, 'absUrl').and.returnValue('http://server/bastion#/some-state');
+            spyOn($location, 'url').and.returnValue('/bastion#/some-state');
             goTo('/some-state');
-            expect($window.location.href).toBe('http://server/some-state');
+            expect($window.location.href).toBe('/some-state');
         });
 
         describe("handles undefined states by", function () {
@@ -67,7 +67,7 @@ describe('config: Bastion.routing', function () {
 
             it("redirecting to the url if no parent state is found", function () {
                 goTo('/non-parent');
-                expect($window.location.href).toBe('http://server/non-parent');
+                expect($window.location.href).toBe('/non-parent');
             });
 
         });

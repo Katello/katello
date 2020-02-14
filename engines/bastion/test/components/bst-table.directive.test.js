@@ -1,14 +1,18 @@
 describe('Directive: bstTable', function() {
     var scope,
         compile,
+        $document,
+        $rootElement,
         tableElement,
         chooseTableElement;
 
     beforeEach(module('Bastion.components'));
 
-    beforeEach(inject(function(_$compile_, _$rootScope_) {
+    beforeEach(inject(function(_$compile_, _$rootScope_, _$document_, _$rootElement_) {
         compile = _$compile_;
         scope = _$rootScope_;
+        $document = _$document_;
+        $rootElement = _$rootElement_;
     }));
 
     beforeEach(function() {
@@ -61,6 +65,12 @@ describe('Directive: bstTable', function() {
               '</table>' +
             '</div>');
 
+        // Append the app to the document so that "click" triggers "change"
+        //
+        // See also:
+        // https://github.com/angular/angular.js/commit/656c8fa8f23b1277cc5c214c4d0237f3393afa1e
+        // https://github.com/angular/angular.js/blob/master/CHANGELOG.md#170-rc0-maximum-overdrive-2018-04-19
+        angular.element($document[0].body).append($rootElement.append(tableElement));
 
         compile(tableElement)(scope);
         compile(chooseTableElement)(scope);

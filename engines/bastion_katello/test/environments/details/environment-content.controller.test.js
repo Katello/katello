@@ -1,16 +1,28 @@
 describe('Controller: EnvironmentContentController', function() {
     var $scope,
+        $state,
         Repository,
         ContentService;
 
     beforeEach(module('Bastion.environments', 'Bastion.test-mocks', 'Bastion.i18n'));
 
+    beforeEach(function() {
+      $state = {
+        current: {
+          name: ''
+        }
+      };
+
+      module(function($provide) {
+        $provide.value('$state', $state);
+      })
+    });
+
     beforeEach(inject(function ($injector) {
         var $controller = $injector.get('$controller'),
             ContentView = $injector.get('MockResource').$new(),
             translate = $injector.get('translateMock'),
-            $location = $injector.get('$location'),
-            $state = $injector.get('$state');
+            $location = $injector.get('$location');
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {environmentId: 1};
@@ -92,4 +104,3 @@ describe('Controller: EnvironmentContentController', function() {
     });
 
 });
-

@@ -59,7 +59,7 @@ angular.module('Bastion.routing', ['ui.router']);
             var $window = $injector.get('$window'),
                 $state = $injector.get('$state'),
                 rootPath = getRootPath($location.path()),
-                url = $location.absUrl(),
+                url = $location.url(),
                 foundParentState;
 
             // ensure we don't double encode +s
