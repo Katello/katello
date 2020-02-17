@@ -73,6 +73,9 @@ module Katello
       @organization = Organization.new(resource_params)
       sync_task(::Actions::Katello::Organization::Create, @organization)
       @organization.reload
+      # @taxonomy instance variable is necessary for foreman side
+      # app/views/api/v2/taxonomies/show.json.rabl is using it.
+      @taxonomy = @organization
       respond_for_create :resource => @organization
     rescue => e
       ::Foreman::Logging.exception('Could not create organization', e)
