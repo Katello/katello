@@ -31,7 +31,7 @@ module Actions
                         :gpg_key_url => repository.yum_gpg_key_url,
                         :label => content.label,
                         :type => root.content_type,
-                        :arches => root.arch == "noarch" ? nil : root.arch)
+                        :arches => root.format_arches)
 
             content.update_attributes!(name: root.name,
                                        content_url: root.custom_content_path,

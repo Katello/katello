@@ -325,6 +325,14 @@ module Katello
       super
     end
 
+    def format_arches
+      if content_type == ::Katello::Repository::DEB_TYPE
+        self.deb_architectures
+      else
+        self.arch == "noarch" ? nil : self.arch
+      end
+    end
+
     class Jail < ::Safemode::Jail
       allow :name, :label, :docker_upstream_name, :url
     end
