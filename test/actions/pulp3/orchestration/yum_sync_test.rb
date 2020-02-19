@@ -39,5 +39,17 @@ module ::Actions::Pulp3
 
       assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
     end
+
+    def test_index_erratum_href
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+      @repo.index_content
+      @repo.reload
+      total_repository_errata = Katello::RepositoryErratum.where(repository_id: @repo.id).count
+      assert_equal total_repository_errata, 4
+      repository_errata_without_href = Katello::RepositoryErratum.where(repository_id: @repo.id, erratum_pulp3_href: nil).count
+      assert_equal repository_errata_without_href, 0
+    end
   end
 end
