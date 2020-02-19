@@ -5,7 +5,9 @@ module Actions
     module Repository
       class ImportUpload < Pulp3::AbstractAsyncTask
         def plan(content_unit, repository, smart_proxy)
-          plan_self(:content_unit => content_unit, :repository_id => repository.id, :smart_proxy_id => smart_proxy.id)
+          plan_self(:content_unit => content_unit,
+                    :repository_id => repository.id,
+                    :smart_proxy_id => smart_proxy.id)
         end
 
         def invoke_external_task

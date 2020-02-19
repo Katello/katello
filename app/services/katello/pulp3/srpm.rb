@@ -3,6 +3,8 @@ module Katello
     class Srpm < PulpContentUnit
       include LazyAccessor
 
+      CONTENT_TYPE = "srpm".freeze
+
       PULP_INDEXED_FIELDS = %w(pulp_href name version release arch epoch summary location_href pkgId).freeze
 
       lazy_accessor :pulp_facts, :initializer => :backend_data
