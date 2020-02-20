@@ -40,7 +40,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "apipie-rails", ">= 0.5.14"
 
   # Pulp
-  gem.add_dependency "runcible", ">= 2.12.1", "< 3.0.0"
+  gem.add_dependency "runcible", ">= 2.13.0", "< 3.0.0"
   gem.add_dependency "anemone"
 
   #pulp3

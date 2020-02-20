@@ -130,7 +130,7 @@ module Katello
                                               solve_dependencies: solve_dependencies))
 
           [:srpm, :errata, :package_group, :package_environment,
-           :yum_repo_metadata_file, :distribution, :module_default].each do |type|
+           :yum_repo_metadata_file, :distribution, :module_default, :drpm].each do |type|
             tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
           end
           tasks
