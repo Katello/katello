@@ -42,7 +42,7 @@ module Katello
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
       param :docker_tags_whitelist, Array, :desc => N_("Comma separated list of tags to sync for Container Image repository")
-      param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
+      param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background (deprecated)')")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed")
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
