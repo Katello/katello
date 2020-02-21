@@ -110,17 +110,26 @@ module Katello
       end
 
       def import_package_profile_in_bulk(simple_packages)
-        nvras = simple_packages.map { |sp| sp.nvra }
-        found = InstalledPackage.where(:nvra => nvras).select(:id, :nvra).to_a
-        found_nvras = found.map(&:nvra)
-        new_packages = simple_packages.select { |sp| !found_nvras.include?(sp.nvra) }
+        nvreas = simple_packages.map { |sp| sp.nvrea }
+        found = InstalledPackage.where(:nvrea => nvreas).select(:id, :nvrea).to_a
+        found_nvreas = found.map(&:nvrea)
 
+        new_packages = simple_packages.select { |sp| !found_nvreas.include?(sp.nvrea) }
+
+        installed_packages = []
         new_packages.each do |simple_package|
-          ::Katello::Util::Support.active_record_retry do
-            found << InstalledPackage.where(:nvra => simple_package.nvra, :name => simple_package.name).first_or_create!
-          end
+          installed_packages << InstalledPackage.new(:nvrea => simple_package.nvrea,
+                                          :nvra => simple_package.nvra,
+                                          :name => simple_package.name,
+                                          :epoch => simple_package.epoch,
+                                          :version => simple_package.version,
+                                          :release => simple_package.release,
+                                          :arch => simple_package.arch)
         end
-        found
+        InstalledPackage.import(installed_packages, validate: false, on_duplicate_key_ignore: true)
+
+        found << installed_packages
+        found.flatten
       end
 
       def import_enabled_repositories(repos)
