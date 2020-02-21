@@ -95,17 +95,19 @@ module Katello
     end
 
     api :POST, "/hosts/bulk/applicable_errata",
-        N_("Fetch applicable errata for a host.")
+        N_("Fetch applicable errata for one or more hosts.")
     param_group :bulk_params
     def applicable_errata
+      ::Foreman::Deprecation.api_deprecation_warning("The 'applicable_hosts' field will be removed from this API in Katello 2.0")
       respond_for_index(:collection => scoped_search(Katello::Erratum.applicable_to_hosts(@hosts), 'updated', 'desc',
                                                      :resource_class => Erratum))
     end
 
     api :POST, "/hosts/bulk/installable_errata",
-        N_("Fetch installable errata for a host.")
+        N_("Fetch installable errata for one or more hosts.")
     param_group :bulk_params
     def installable_errata
+      ::Foreman::Deprecation.api_deprecation_warning("The 'applicable_hosts' field will be removed from this API in Katello 2.0")
       respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_hosts(@hosts), 'updated', 'desc',
                                                      :resource_class => Erratum))
     end
