@@ -239,7 +239,8 @@ module Katello
   class HostInstalledPackagesTest < HostManagedExtensionsTestBase
     def setup
       super
-      package_json = {:name => "foo", :version => "1", :release => "1.el7", :arch => "x86_64"}
+      package_json = {:name => "foo", :version => "1", :release => "1.el7", :arch => "x86_64", :epoch => "1",
+                      :nvra => "foo-1-1.el7.x86_64"}
       @foreman_host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
       @nvra = 'foo-1-1.el7.x86_64'
       @foreman_host.reload
@@ -252,13 +253,17 @@ module Katello
     end
 
     def test_import_package_profile_adds_removes_bulk
-      packages = [::Katello::Pulp::SimplePackage.new(:name => "betterfoo", :version => "1", :release => "1.el7", :arch => "x86_64")]
+      packages = [::Katello::Pulp::SimplePackage.new(:name => "betterfoo", :version => "1", :release => "1.el7",
+                                                     :arch => "x86_64", :epoch => "1", :nvra => "betterfoo-1-1.el7.x86_64")]
       @foreman_host.import_package_profile(packages)
       assert_equal 1, @foreman_host.installed_packages.count
       assert_equal 'betterfoo', @foreman_host.installed_packages.first.name
+      assert_equal 'betterfoo-1:1-1.el7.x86_64', @foreman_host.installed_packages.first.nvrea
+      assert_equal '1', @foreman_host.installed_packages.first.epoch
 
       @foreman_host.reload
-      packages << ::Katello::Pulp::SimplePackage.new(:name => "alphabeta", :version => "1", :release => "2", :arch => "x86_64")
+      packages << ::Katello::Pulp::SimplePackage.new(:name => "alphabeta", :version => "1", :release => "2", :arch => "x86_64",
+                                                     :epoch => "1", :nvra => "alphabeta-1-2.x86_64")
       @foreman_host.import_package_profile(packages)
       assert_equal 2, @foreman_host.installed_packages.count
     end
