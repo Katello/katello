@@ -9,11 +9,15 @@ module Katello
       end
 
       def nvra
-        nvrea
+        "#{@name}-#{@version}-#{@release}.#{@arch}"
       end
 
       def nvrea
-        "#{@name}-#{@version}-#{@release}.#{@arch}"
+        if epoch == "0"
+          @nvra
+        else
+          "#{@name}-#{@epoch}:#{@version}-#{@release}.#{@arch}"
+        end
       end
     end
   end
