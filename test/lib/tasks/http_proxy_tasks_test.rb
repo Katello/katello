@@ -14,6 +14,8 @@ module Katello
       end
       @setting = Setting.find_by_name('content_default_http_proxy')
       assert @setting
+
+      HttpProxy.delete_all
     end
 
     def test_without_name_fails

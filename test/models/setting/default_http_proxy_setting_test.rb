@@ -8,6 +8,8 @@ module Katello
     def setup
       @name = 'content_default_http_proxy'
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
+
+      HttpProxy.delete_all
     end
 
     def test_default_setting_accepts_proxy_name
