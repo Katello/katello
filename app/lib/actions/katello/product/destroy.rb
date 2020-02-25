@@ -2,7 +2,7 @@ module Actions
   module Katello
     module Product
       class Destroy < Actions::EntryAction
-        # rubocop:disable MethodLength
+        # rubocop:disable Metrics/MethodLength
         def plan(product, options = {})
           organization_destroy = options.fetch(:organization_destroy, false)
 

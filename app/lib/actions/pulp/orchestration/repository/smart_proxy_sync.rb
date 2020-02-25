@@ -3,7 +3,7 @@ module Actions
     module Orchestration
       module Repository
         class SmartProxySync < Pulp::Abstract
-          # rubocop:disable MethodLength
+          # rubocop:disable Metrics/MethodLength
           def plan(repository, smart_proxy, options)
             skip_metadata_check = options.fetch(:skip_metadata_check, false)
             sequence do

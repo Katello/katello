@@ -1,5 +1,5 @@
 class AddContentFacet < ActiveRecord::Migration[4.2]
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def change
     create_table "katello_content_facets" do |t|
       t.references 'host', :null => false

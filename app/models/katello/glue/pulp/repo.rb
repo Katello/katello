@@ -1,7 +1,7 @@
 module Katello
   module Glue::Pulp::Repo
     # TODO: move into submodules
-    # rubocop:disable MethodLength
+    # rubocop:disable Metrics/MethodLength
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods

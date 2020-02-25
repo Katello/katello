@@ -29,7 +29,7 @@ namespace :katello do
                   SmartProxy.pulp_master.pulp_api.resources.repository.update_distributor(
                     repo.pulp_id, repo.find_distributor[:id], repo.find_distributor[:config])
                 end
-              # rubocop:disable HandleExceptions
+              # rubocop:disable Lint/HandleExceptions
               rescue RestClient::ResourceNotFound
               end
             end

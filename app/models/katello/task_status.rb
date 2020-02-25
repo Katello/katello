@@ -151,7 +151,7 @@ module Katello
     end
 
     # TODO: break up method
-    # rubocop:disable MethodLength
+    # rubocop:disable Metrics/MethodLength
     def message
       # Retrieve a text message that may be rendered for a task's status.  This is used in various places,
       # such as System Event history.

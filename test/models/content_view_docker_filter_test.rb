@@ -59,7 +59,7 @@ module Katello
       assert_includes clauses["_id"]["$in"], schema2.pulp_id
     end
 
-    # rubocop:disable MethodLength
+    # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def test_repo_intersection_clause
       #create repo1 with tag goo

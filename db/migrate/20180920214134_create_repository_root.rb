@@ -84,7 +84,7 @@ class CreateRepositoryRoot < ActiveRecord::Migration[5.1]
     FakeRootRepository.create!(attributes)
   end
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def create_root_table
     create_table 'katello_root_repositories' do |t|
       t.string 'name', limit: 255

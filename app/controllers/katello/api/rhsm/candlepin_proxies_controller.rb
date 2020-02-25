@@ -42,7 +42,7 @@ module Katello
           end
           response.body = body_json.to_s
 
-        # rubocop:disable HandleExceptions
+        # rubocop:disable Lint/HandleExceptions
         rescue JSON::ParserError
           # Not a json response, leave as-is
         end
@@ -457,7 +457,7 @@ module Katello
       fail "Unable to register system, not all services available" unless Katello::RegistrationManager.check_registration_services
     end
 
-    # rubocop:disable MethodLength
+    # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/CyclomaticComplexity
     def authorize_proxy_routes
       deny_access unless (authenticate || authenticate_client)

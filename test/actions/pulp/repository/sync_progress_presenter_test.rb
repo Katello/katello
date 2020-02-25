@@ -5,7 +5,7 @@ module ::Actions::Pulp::Repository
     include Dynflow::Testing
     include Support::Actions::PulpTask
 
-    # rubocop:disable MethodLength
+    # rubocop:disable Metrics/MethodLength
     def sync_task_result(pull_progress_details)
       {"state" => "running",
        "progress_report" =>
