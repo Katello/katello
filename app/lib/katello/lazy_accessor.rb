@@ -9,7 +9,7 @@ module Katello
       attr_accessor :lazy_attributes
 
       def lazy_attributes_options(attr)
-        if @lazy_attributes_options && @lazy_attributes_options.key?(attr)
+        if @lazy_attributes_options&.key?(attr)
           @lazy_attributes_options.fetch(attr.to_s)
         elsif superclass.respond_to?(:lazy_attributes_options)
           superclass.lazy_attributes_options(attr.to_s)
@@ -128,7 +128,9 @@ module Katello
         if self.respond_to?(:load_remote_data)
           load_remote_data(remote_values)
         else
-          remote_values.each_pair { |k, v| instance_variable_set("@#{k.to_s}", v) if (attrs && attrs.include?(k.to_sym) && respond_to?("#{k.to_s}=")) }
+          remote_values.each_pair do |k, v|
+            instance_variable_set("@#{k.to_s}", v) if (attrs&.include?(k.to_sym) && respond_to?("#{k.to_s}="))
+          end
         end
       end
     end

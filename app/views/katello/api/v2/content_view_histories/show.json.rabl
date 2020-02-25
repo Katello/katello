@@ -19,15 +19,11 @@ node :version_id do |h|
 end
 
 node :triggered_by do |h|
-  if h.triggered_by
-    h.triggered_by.name
-  end
+  h.triggered_by&.name
 end
 
 node :triggered_by_id do |h|
-  if h.triggered_by
-    h.triggered_by.id
-  end
+  h.triggered_by&.id
 end
 
 child :task => :task do

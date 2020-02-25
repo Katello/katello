@@ -27,7 +27,7 @@ module Katello
             pulp_master = ::SmartProxy.pulp_master
 
             # Pulp 3 has its own registry
-            if pulp_master && pulp_master.pulp3_repository_type_support?(::Katello::Repository::DOCKER_TYPE)
+            if pulp_master&.pulp3_repository_type_support?(::Katello::Repository::DOCKER_TYPE)
               uri = URI(pulp_master.setting(SmartProxy::PULP3_FEATURE, 'content_app_url'))
               uri.path = "/pulpcore_registry/"
               registry_url = uri.to_s

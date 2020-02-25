@@ -45,7 +45,7 @@ module Katello
       Product.create!(product_attrs)
     rescue => e
       [Rails.logger, import_logger].each do |logger|
-        logger.error "Failed to create product #{attrs['name']}: #{e}" if logger
+        logger&.error "Failed to create product #{attrs['name']}: #{e}"
       end
       raise e
     end

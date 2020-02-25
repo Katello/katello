@@ -125,7 +125,7 @@ module Katello
         query = query.where(:name => params[:name])
         if current_uuids.present?
           module_by_name = current_cv_puppet_modules.find_by(:name => params[:name])
-          if module_by_name && module_by_name.latest_in_modules_by_author?(query)
+          if module_by_name&.latest_in_modules_by_author?(query)
             current_uuids.delete(module_by_name.uuid)
             selected_latest_versions.push(module_by_name.uuid)
           end

@@ -14,7 +14,7 @@ module Actions
 
         def finalize
           pool = ::Katello::Pool.where(:cp_id => input[:pool_id]).first
-          pool.import_data if pool
+          pool&.import_data
         end
       end
     end

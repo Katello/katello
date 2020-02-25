@@ -10,7 +10,7 @@ namespace :katello do
 
           org_contents.each do |cp_content|
             gpg_url = cp_content['gpgUrl']
-            if gpg_url && gpg_url.match(/katello\/api\/repositories/)
+            if gpg_url&.match(/katello\/api\/repositories/)
               content = Katello::Content.where(cp_content_id: cp_content['id'], organization: org).first
 
               if content.nil?

@@ -11,9 +11,7 @@ module Katello
       if block
         content_for(:inline_javascripts) { block.call }
       end
-      if args
-        args.map { |arg| content_for(:katello_javascripts) { javascript_include_tag(arg) } }
-      end
+      args&.map { |arg| content_for(:katello_javascripts) { javascript_include_tag(arg) } }
       return ""
     end
 

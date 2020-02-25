@@ -94,9 +94,7 @@ module Actions
         end
 
         def humanized_errors
-          if task_errors
-            task_errors.map { |k, v| "#{k}: #{v}" }
-          end
+          task_errors&.map { |k, v| "#{k}: #{v}" }
         end
 
         def humanized_no_package

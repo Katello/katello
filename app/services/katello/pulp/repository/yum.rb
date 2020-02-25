@@ -250,7 +250,7 @@ module Katello
             remove_clauses = nil
           end
 
-          copy_clauses.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS) if copy_clauses
+          copy_clauses&.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS)
           [copy_clauses, remove_clauses]
         end
       end

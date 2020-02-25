@@ -42,7 +42,7 @@ module Katello
 
       def close
         @logger.info("Stopping Katello Event Monitor")
-        @thread.kill if @thread
+        @thread&.kill
       end
 
       def running?
@@ -85,7 +85,7 @@ module Katello
       end
 
       def poll_for_events
-        @thread.kill if @thread
+        @thread&.kill
         @thread = Thread.new do
           @logger.info("Polling Katello Event Queue")
           loop do

@@ -50,7 +50,7 @@ module Katello
     rescue Zlib::GzipFile::Error, Gem::Package::TarInvalidError
       raise Katello::Errors::InvalidPuppetModuleError, _("Could not unarchive puppet module. Please make sure the puppet module has been compressed properly.")
     ensure
-      tar_extract.close if tar_extract
+      tar_extract&.close
     end
 
     def self.group_by_repoid(puppet_modules)

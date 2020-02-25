@@ -23,7 +23,7 @@ module Katello
     end
 
     def use_install_media(host, options = {})
-      return true if host && host.errors && host.errors.include?(:medium_id)
+      return true if host&.errors && host.errors.include?(:medium_id)
       kickstart_repository_id(host, options).blank?
     end
 

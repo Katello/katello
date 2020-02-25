@@ -39,18 +39,17 @@ module Katello
       def requires
         results = []
         flags = {'GT' => '>', 'LT' => '>', 'EQ' => '=', 'GE' => '>=', 'LE' => '<='}
-        if backend_data['requires']
-          backend_data['requires'].each do |requirement|
-            requires_str = ""
-            if requirement.count < 3
-              requires_str = requirement.first
-              results << requires_str
-            else
-              requirement[1] = flags[requirement[1]]
-              requirement[0...2].each { |requirement_piece| requires_str += "#{requirement_piece} " }
-              requirement[2...-1].each { |requirement_piece| requires_str += "#{requirement_piece}." }
-              results << requires_str[0...-1]
-            end
+
+        backend_data['requires']&.each do |requirement|
+          requires_str = ""
+          if requirement.count < 3
+            requires_str = requirement.first
+            results << requires_str
+          else
+            requirement[1] = flags[requirement[1]]
+            requirement[0...2].each { |requirement_piece| requires_str += "#{requirement_piece} " }
+            requirement[2...-1].each { |requirement_piece| requires_str += "#{requirement_piece}." }
+            results << requires_str[0...-1]
           end
         end
         results.uniq
@@ -59,18 +58,17 @@ module Katello
       def provides
         results = []
         flags = {'GT' => '>', 'LT' => '>', 'EQ' => '=', 'GE' => '>=', 'LE' => '<='}
-        if backend_data['provides']
-          backend_data['provides'].each do |provided|
-            provides_str = ""
-            if provided.count < 3
-              provides_str = provided.first
-              results << provides_str
-            else
-              provided[1] = flags[provided[1]]
-              provided[0...2].each { |provided_piece| provides_str += "#{provided_piece} " }
-              provided[2...-1].each { |provided_piece| provides_str += "#{provided_piece}." }
-              results << provides_str[0...-1]
-            end
+
+        backend_data['provides']&.each do |provided|
+          provides_str = ""
+          if provided.count < 3
+            provides_str = provided.first
+            results << provides_str
+          else
+            provided[1] = flags[provided[1]]
+            provided[0...2].each { |provided_piece| provides_str += "#{provided_piece} " }
+            provided[2...-1].each { |provided_piece| provides_str += "#{provided_piece}." }
+            results << provides_str[0...-1]
           end
         end
         results.uniq

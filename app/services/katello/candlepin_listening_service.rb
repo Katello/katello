@@ -15,7 +15,7 @@ module Katello
       end
 
       def close
-        @instance.close if @instance
+        @instance&.close
         @instance = nil
       end
     end
@@ -33,7 +33,7 @@ module Katello
 
     def close
       @logger.info("Stopping Candlepin Listening Service")
-      @thread.kill if @thread
+      @thread&.kill
       @connection.close
     end
 
@@ -80,7 +80,7 @@ module Katello
     end
 
     def poll_for_messages
-      @thread.kill if @thread
+      @thread&.kill
       @thread = Thread.new do
         loop do
           message = fetch_message

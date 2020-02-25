@@ -18,7 +18,8 @@ child @collection[:results] => :results do
 
   node :enabled_content_override do |pc|
     override = pc.enabled_content_override
-    override.computed_value if override
+
+    override&.computed_value
   end
 
   attributes :override, :enabled

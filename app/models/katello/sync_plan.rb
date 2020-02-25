@@ -114,7 +114,7 @@ module Katello
     end
 
     def cancel_recurring_logic
-      self.foreman_tasks_recurring_logic.cancel if self.foreman_tasks_recurring_logic
+      self.foreman_tasks_recurring_logic&.cancel
     end
 
     def validate_sync_date
