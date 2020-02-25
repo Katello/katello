@@ -66,9 +66,7 @@ module Katello
         end
 
         futures.each do |future|
-          begin
-            resolved << future.value
-          end
+          resolved << future.value
         end
 
         find_substitutions(resolved.compact.flatten)

@@ -96,15 +96,13 @@ def configure_vcr
 
     begin
       c.register_request_matcher :body_json do |request_1, request_2|
-        begin
-          json_1 = JSON.parse(request_1.body)
-          json_2 = JSON.parse(request_2.body)
+        json_1 = JSON.parse(request_1.body)
+        json_2 = JSON.parse(request_2.body)
 
-          json_1 == json_2
-        rescue
-          #fallback incase there is a JSON parse error
-          request_1.body == request_2.body
-        end
+        json_1 == json_2
+      rescue
+        #fallback incase there is a JSON parse error
+        request_1.body == request_2.body
       end
     rescue
       #ignore the warning thrown about this matcher already being registered

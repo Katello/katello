@@ -210,14 +210,12 @@ class MigrateContentHosts < ActiveRecord::Migration[4.2]
     systems = systems.to_a
 
     systems.each do |system|
-      begin
-        facts = system.facts
-        unless facts
-          systems_to_remove.push(system)
-        end
-      rescue RestClient::Exception
+      facts = system.facts
+      unless facts
         systems_to_remove.push(system)
       end
+    rescue RestClient::Exception
+      systems_to_remove.push(system)
     end
 
     systems_to_remove.each do |system|

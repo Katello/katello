@@ -25,11 +25,9 @@ module Katello
 
       def self.load_annotations(directory)
         Dir["#{directory}/*.yaml"].map do |file|
-          begin
-            Annotations::AnnotationFile.new(YAML.load_file(file))
-          rescue => e
-            raise "Cannot read #{file}: #{e.message}"
-          end
+          Annotations::AnnotationFile.new(YAML.load_file(file))
+        rescue => e
+          raise "Cannot read #{file}: #{e.message}"
         end
       end
     end
