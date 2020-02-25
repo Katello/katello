@@ -462,7 +462,8 @@ module Katello
 
     def update_cp_content(env)
       view_env = content_view_environment(env)
-      view_env.update_cp_content if view_env
+
+      view_env&.update_cp_content
     end
 
     # Associate an environment with this content view.  This can occur whenever

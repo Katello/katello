@@ -63,7 +63,7 @@ module Katello
       end
 
       def update_candlepin_associations(consumer_params = nil)
-        content_facet.save! if content_facet
+        content_facet&.save!
 
         auto_attach_enabled_via_checkin = consumer_params.try(:[], 'autoheal')
 

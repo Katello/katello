@@ -267,7 +267,7 @@ module Katello
     end
 
     def in_default_view?
-      content_view_version && content_view_version.default_content_view?
+      content_view_version&.default_content_view?
     end
 
     def on_demand?
@@ -350,7 +350,7 @@ module Katello
     end
 
     def promoted?
-      if environment && environment.library?
+      if environment&.library?
         self.clones.any?
       else
         false

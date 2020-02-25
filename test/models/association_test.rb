@@ -25,7 +25,7 @@ module Katello
     end
 
     Katello::Model.subclasses.each do |model|
-      next unless model.table_name && model.table_name.starts_with?('katello_')
+      next unless model.table_name&.starts_with?('katello_')
       next if model.ancestors.include? Facets::Base
 
       describe model do

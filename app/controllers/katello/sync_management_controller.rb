@@ -44,7 +44,7 @@ module Katello
 
     def destroy
       repo = Repository.where(:id => params[:id]).syncable.first
-      repo.cancel_dynflow_sync if repo
+      repo&.cancel_dynflow_sync
       render :plain => ""
     end
 

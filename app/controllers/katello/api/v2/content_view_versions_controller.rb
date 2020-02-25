@@ -145,7 +145,7 @@ module Katello
     end
     def incremental_update
       any_environments = params[:content_view_version_environments].any? { |cvve| cvve[:environment_ids].try(:any?) }
-      if params[:add_content] && params[:add_content].key?(:errata_ids) && params[:update_hosts] && any_environments
+      if params[:add_content]&.key?(:errata_ids) && params[:update_hosts] && any_environments
         hosts = calculate_hosts_for_incremental(params[:update_hosts], params[:propagate_to_composites])
       else
         hosts = []
@@ -185,7 +185,7 @@ module Katello
 
     def find_content_view
       @view = @version ? @version.content_view : ContentView.where(:id => params[:content_view_id]).first
-      if @view && @view.default? && params[:action] == "promote"
+      if @view&.default? && params[:action] == "promote"
         fail HttpErrors::BadRequest, _("The default content view cannot be promoted")
       end
     end

@@ -177,7 +177,7 @@ module Katello
     end
 
     def environment_params
-      if @environment && @environment.library?
+      if @environment&.library?
         attrs = [:registry_name_pattern, :registry_unauthenticated_pull]
       else
         attrs = [:name, :description, :registry_name_pattern, :registry_unauthenticated_pull]

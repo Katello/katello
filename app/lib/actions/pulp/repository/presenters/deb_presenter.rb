@@ -14,11 +14,9 @@ module Actions
           private
 
           def humanized_details
-            if task_details
-              task_details.inject([]) do |res, step|
-                res.append("#{step[:description]} (#{step[:num_processed]}/#{step[:items_total]})") if step[:state] == "IN_PROGRESS"
-                res
-              end
+            task_details&.inject([]) do |res, step|
+              res.append("#{step[:description]} (#{step[:num_processed]}/#{step[:items_total]})") if step[:state] == "IN_PROGRESS"
+              res
             end
           end
 
@@ -56,15 +54,11 @@ module Actions
           end
 
           def items_done
-            if task_details
-              task_details.inject(0) { |sum, details| sum + details[:num_success].to_i }
-            end
+            task_details&.inject(0) { |sum, details| sum + details[:num_success].to_i }
           end
 
           def items_total
-            if task_details
-              task_details.inject(0) { |sum, details| sum + details[:items_total].to_i }
-            end
+            task_details&.inject(0) { |sum, details| sum + details[:items_total].to_i }
           end
 
           def size_done

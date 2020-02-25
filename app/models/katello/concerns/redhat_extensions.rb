@@ -58,7 +58,8 @@ module Katello
               distribution_variant: variant,
               "#{Katello::Product.table_name}.id": product_id
             ).first
-          distro.to_hash(host.content_source) if distro
+
+          distro&.to_hash(host.content_source)
         end
       end
 

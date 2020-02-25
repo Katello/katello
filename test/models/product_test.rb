@@ -14,7 +14,7 @@ module Katello
     end
 
     def teardown
-      @product.destroy if @product
+      @product&.destroy
     end
 
     test_attributes :pid => '3d873b73-6919-4fda-84df-0e26bdf0c1dc'

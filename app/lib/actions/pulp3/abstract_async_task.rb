@@ -55,7 +55,7 @@ module Actions
             _("checking Pulp task status")
           end
         when :suspended
-          if external_task && external_task.all? { |task| task[:start_time].nil? }
+          if external_task&.all? { |task| task[:start_time].nil? }
             _("waiting for Pulp to start the task")
           else
             _("waiting for Pulp to finish the task")
@@ -85,10 +85,8 @@ module Actions
         output[:pulp_tasks].each do |pulp_task|
           data = PulpcoreClient::Task.new(state: 'canceled')
           tasks_api.tasks_cancel(pulp_task['pulp_href'], data)
-          if pulp_task['spawned_tasks']
-            #the main task may have completed, so cancel spawned tasks too
-            pulp_task['spawned_tasks'].each { |spawned| tasks_api.tasks_cancel(spawned['pulp_href'], data) }
-          end
+          #the main task may have completed, so cancel spawned tasks too
+          pulp_task['spawned_tasks']&.each { |spawned| tasks_api.tasks_cancel(spawned['pulp_href'], data) }
         end
       end
 

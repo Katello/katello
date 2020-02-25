@@ -281,7 +281,8 @@ module Katello
 
       def last_sync_time
         task = sync_tasks.where.not(:ended_at => nil).where(:result => 'success').order(:ended_at).last
-        task.ended_at unless task.nil?
+
+        task&.ended_at
       end
 
       def environment_syncable?(env)

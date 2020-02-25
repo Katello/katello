@@ -37,7 +37,7 @@ module Actions
             host.subscription_facet ||= host.build_subscription_facet(uuid: uuid)
             # Only preload the virtual guests if 'guestIds' is not returned by Candlepin
             consumer = @candlepin_attributes[uuid]
-            next unless consumer && consumer.try(:[], 'guestIds').empty?
+            next unless consumer&.try(:[], 'guestIds')&.empty?
             host.subscription_facet.candlepin_consumer.virtual_guests
           end
         end

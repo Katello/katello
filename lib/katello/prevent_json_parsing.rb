@@ -6,7 +6,7 @@ module Katello
     end
 
     def call(env)
-      if @exclude && @exclude.call(env)
+      if @exclude&.call(env)
         env['CONTENT_TYPE'] = 'text/plain'
       end
       @app.call(env)

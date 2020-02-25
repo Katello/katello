@@ -7,7 +7,7 @@ module Katello
     end
 
     def subscription_manager_configuration_url(host = nil, rpm = true)
-      prefix = if host && host.content_source
+      prefix = if host&.content_source
                  "http://#{host.content_source.hostname}"
                else
                  foreman_settings_url

@@ -12,8 +12,8 @@ if Katello.with_remote_execution?
           template = JobTemplate.import!(File.read(template), :default => true, :locked => true, :update => sync)
         end
 
-        template.organizations << Organization.unscoped.all if template && template.organizations.empty?
-        template.locations << Location.unscoped.all if template && template.locations.empty?
+        template.organizations << Organization.unscoped.all if template&.organizations&.empty?
+        template.locations << Location.unscoped.all if template&.locations&.empty?
       end
     end
   end

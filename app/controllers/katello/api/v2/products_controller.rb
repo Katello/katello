@@ -180,7 +180,7 @@ module Katello
 
     def product_params
       # only allow sync plan id to be updated if the product is a Red Hat product
-      if @product && @product.redhat?
+      if @product&.redhat?
         params.require(:product).permit(:sync_plan_id)
       else
         params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :sync_plan_id)

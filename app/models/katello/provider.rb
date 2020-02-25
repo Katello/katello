@@ -128,9 +128,8 @@ module Katello
       if redhat_provider? && self.send(attrib).blank?
         self.send("#{attrib}=", default_value)
       end
-      if self.send(attrib)
-        self.send(attrib).strip!
-      end
+
+      self.send(attrib)&.strip!
     end
   end
 end

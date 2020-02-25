@@ -288,12 +288,11 @@ module Katello
     def find_host_collections
       ids = params[:activation_key][:host_collection_ids] if params[:activation_key]
       @host_collections = []
-      if ids
-        ids.each do |host_collection_id|
-          host_collection = HostCollection.find(host_collection_id)
-          fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % host_collection_id if host_collection.nil?
-          @host_collections << host_collection
-        end
+
+      ids&.each do |host_collection_id|
+        host_collection = HostCollection.find(host_collection_id)
+        fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % host_collection_id if host_collection.nil?
+        @host_collections << host_collection
       end
     end
 

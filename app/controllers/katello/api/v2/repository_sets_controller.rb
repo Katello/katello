@@ -147,7 +147,7 @@ module Katello
     end
 
     def custom_product?
-      fail _('Repository sets are not available for custom products.') if @product && @product.custom?
+      fail _('Repository sets are not available for custom products.') if @product&.custom?
     end
 
     def substitutions
