@@ -24,7 +24,7 @@ AllCops:
     - '**/*.rb'
     - app/views/**/*.rabl
     - '**/*.rake'
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
 
 Metrics/MethodLength:
   Description: 'Avoid methods longer than 30 lines of code.'
@@ -149,4 +149,7 @@ Lint/UriEscapeUnescape:
   Enabled: false
 
 Style/SafeNavigation:
+  Enabled: false
+
+Performance/RegexpMatch:
   Enabled: false

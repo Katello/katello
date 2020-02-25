@@ -87,25 +87,23 @@ module Katello
       def poll_for_events
         @thread.kill if @thread
         @thread = Thread.new do
-          begin
-            @logger.info("Polling Katello Event Queue")
-            loop do
-              Rails.application.executor.wrap do
-                Katello::Util::Support.with_db_connection(@logger) do
-                  until (event = ::Katello::EventQueue.next_event).nil?
-                    run_event(event)
-                    @processed_count += 1
-                  end
+          @logger.info("Polling Katello Event Queue")
+          loop do
+            Rails.application.executor.wrap do
+              Katello::Util::Support.with_db_connection(@logger) do
+                until (event = ::Katello::EventQueue.next_event).nil?
+                  run_event(event)
+                  @processed_count += 1
                 end
               end
-
-              sleep SLEEP_INTERVAL
             end
-          rescue => e
-            @logger.error(e.message)
-            @logger.error("Fatal error in Katello Event Monitor")
-            self.class.close
+
+            sleep SLEEP_INTERVAL
           end
+        rescue => e
+          @logger.error(e.message)
+          @logger.error("Fatal error in Katello Event Monitor")
+          self.class.close
         end
       end
     end

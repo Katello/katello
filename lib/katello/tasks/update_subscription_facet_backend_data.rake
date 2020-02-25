@@ -38,24 +38,22 @@ namespace :katello do
     end
 
     Katello::Host::SubscriptionFacet.where.not(:uuid => nil).find_each do |subscription_facet|
-      begin
-        candlepin_attrs = subscription_facet.candlepin_consumer.consumer_attributes
-        subscription_facet.import_database_attributes(candlepin_attrs)
-        subscription_facet.host = ::Host::Managed.find(subscription_facet.host_id)
-        subscription_facet.save!
+      candlepin_attrs = subscription_facet.candlepin_consumer.consumer_attributes
+      subscription_facet.import_database_attributes(candlepin_attrs)
+      subscription_facet.host = ::Host::Managed.find(subscription_facet.host_id)
+      subscription_facet.save!
 
-        host = subscription_facet.host
-        host.name = ::Katello::Host::SubscriptionFacet.sanitize_name(host.name)
-        host.save! if host.name_changed?
+      host = subscription_facet.host
+      host.name = ::Katello::Host::SubscriptionFacet.sanitize_name(host.name)
+      host.save! if host.name_changed?
 
-        Katello::Host::SubscriptionFacet.update_facts(subscription_facet.host, candlepin_attrs[:facts])
-      rescue StandardError => exception
-        error("Error: #{subscription_facet.host.name} - #{subscription_facet.host.id}")
-        error(candlepin_attrs)
-        error(exception.message)
-        error(exception.backtrace.join("\n"))
-        error("\n")
-      end
+      Katello::Host::SubscriptionFacet.update_facts(subscription_facet.host, candlepin_attrs[:facts])
+    rescue StandardError => exception
+      error("Error: #{subscription_facet.host.name} - #{subscription_facet.host.id}")
+      error(candlepin_attrs)
+      error(exception.message)
+      error(exception.backtrace.join("\n"))
+      error("\n")
     end
     report_errors
   end

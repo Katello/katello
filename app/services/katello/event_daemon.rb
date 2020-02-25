@@ -18,24 +18,22 @@ module Katello
 
       def check_services(error, status)
         @service_classes.each do |service_class|
-          begin
-            status = service_class.status
-          rescue => error
-            Rails.logger.error("Error occurred while pinging #{service_class}")
-            Rails.logger.error(error.message)
-            Rails.logger.error(error.backtrace.join("\n"))
-          ensure
-            if error || !status&.dig(:running)
-              begin
-                service_class.close
-                service_class.run
-              rescue => error
-                Rails.logger.error("Error occurred while starting #{service_class}")
-                Rails.logger.error(error.message)
-                Rails.logger.error(error.backtrace.join("\n"))
-              ensure
-                error = nil
-              end
+          status = service_class.status
+        rescue => error
+          Rails.logger.error("Error occurred while pinging #{service_class}")
+          Rails.logger.error(error.message)
+          Rails.logger.error(error.backtrace.join("\n"))
+        ensure
+          if error || !status&.dig(:running)
+            begin
+              service_class.close
+              service_class.run
+            rescue => error
+              Rails.logger.error("Error occurred while starting #{service_class}")
+              Rails.logger.error(error.message)
+              Rails.logger.error(error.backtrace.join("\n"))
+            ensure
+              error = nil
             end
           end
         end
