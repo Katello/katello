@@ -1,4 +1,4 @@
-# rubocop:disable HandleExceptions
+# rubocop:disable Lint/HandleExceptions
 module Actions
   module Katello
     module ContentView

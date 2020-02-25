@@ -1,9 +1,9 @@
-# rubocop:disable HandleExceptions
+# rubocop:disable Lint/HandleExceptions
 module Actions
   module Katello
     module ContentView
       class Publish < Actions::EntryAction
-        # rubocop:disable MethodLength,Metrics/AbcSize
+        # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
           content_view.check_ready_to_publish!

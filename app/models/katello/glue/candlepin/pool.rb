@@ -91,7 +91,7 @@ module Katello
         providers.any?
       end
 
-      # rubocop:disable MethodLength,Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
@@ -146,7 +146,7 @@ module Katello
         self.create_product_associations
         self.import_hosts if index_hosts_and_activation_keys
       end
-      # rubocop:enable MethodLength,Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength,Metrics/AbcSize
 
       def create_product_associations
         products = self.backend_data["providedProducts"] + self.backend_data["derivedProvidedProducts"]

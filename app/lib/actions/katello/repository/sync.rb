@@ -1,4 +1,4 @@
-# rubocop:disable HandleExceptions
+# rubocop:disable Lint/HandleExceptions
 module Actions
   module Katello
     module Repository
@@ -15,8 +15,8 @@ module Actions
         # @param repo
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
-        # rubocop:disable MethodLength
-        # rubocop:disable CyclomaticComplexity
+        # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/CyclomaticComplexity
         def plan(repo, _pulp_sync_task_id = nil, options = {})
           action_subject(repo)
 

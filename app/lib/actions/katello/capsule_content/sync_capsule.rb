@@ -4,7 +4,7 @@ module Actions
       class SyncCapsule < ::Actions::EntryAction
         include Actions::Katello::PulpSelector
 
-        # rubocop:disable MethodLength
+        # rubocop:disable Metrics/MethodLength
         def plan(smart_proxy, options = {})
           action_subject(smart_proxy)
           environment = options[:environment]
