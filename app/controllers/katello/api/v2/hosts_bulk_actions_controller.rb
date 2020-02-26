@@ -10,6 +10,7 @@ module Katello
     before_action :find_deletable_hosts, :only => [:destroy_hosts]
     before_action :find_readable_hosts, :only => [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, :only => [:available_incremental_updates]
+    before_action :deprecate_katello_agent, :only => [:install_content, :update_content, :remove_content]
 
     before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
 

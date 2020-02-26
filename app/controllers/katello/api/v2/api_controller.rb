@@ -35,6 +35,11 @@ module Katello
       @resource_class ||= "Katello::#{resource_name.classify}".constantize
     end
 
+    def deprecate_katello_agent
+      ::Foreman::Deprecation.api_deprecation_warning("Remote actions using katello-agent are deprecated and will be removed in Katello 4.0.  " \
+                                                         "You may consider switching to Remote Execution.")
+    end
+
     def full_result_response(collection)
       { :results => collection,
         :total => collection.count,

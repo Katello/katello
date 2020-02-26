@@ -1,7 +1,8 @@
 <span page-title ng-model="host">{{ 'Packages for: ' | translate }} {{ host.name }}</span>
 
-<h3 translate>Applicable Packages</h3>
 
+<h3 translate>Applicable Packages</h3>
+<div data-extend-template="common/views/katello-agent-notice.html"></div>
 <div data-extend-template="layouts/partials/table.html">
 
   <span data-block="no-rows-message" translate>
