@@ -7,7 +7,8 @@ module Katello
         def allowed_helpers
           super + [:errata, :host_subscriptions, :host_applicable_errata_ids, :host_applicable_errata_filtered,
                    :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications, :host_content_facet,
-                   :host_sla, :host_products, :sub_name, :sub_sku, :registered_through, :last_checkin]
+                   :host_sla, :host_products, :sub_name, :sub_sku, :registered_through, :last_checkin, :host_collections,
+                   :host_subscriptions_names, :host_subscriptions, :host_products_names, :host_collections_names]
         end
       end
 
@@ -23,6 +24,10 @@ module Katello
         host.subscriptions
       end
 
+      def host_subscriptions_names(host)
+        host.subscriptions.map(&:name).join(', ')
+      end
+
       def host_content_facet(host)
         host.content_facet
       end
@@ -33,6 +38,23 @@ module Katello
 
       def host_products(host)
         host_subscription_facet(host)&.installed_products
+      end
+
+      def host_products_names(host)
+        products = host_products(host)
+        if products
+          products.map(&:name).join(', ')
+        else
+          ''
+        end
+      end
+
+      def host_collections(host)
+        host.host_collections
+      end
+
+      def host_collections_names(host)
+        host.host_collections.map(&:name).join(", ")
       end
 
       def sub_name(pool)
