@@ -2,6 +2,7 @@
 
 <section ng-hide="denied('edit_hosts', host)" bst-feature-flag="remote_actions">
   <h4 translate>Package Actions</h4>
+  <div data-extend-template="common/views/katello-agent-notice.html"></div>
   <p bst-alert="info" ng-hide="host.content_facet_attributes.katello_agent_installed">
     <span translate>
       If you are not using Remote Execution to manage content on this host, ensure that it has the katello-agent package installed.
