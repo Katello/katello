@@ -7,7 +7,15 @@
   <p translate>To optionally report tracer information:</p>
   <pre><code>yum -y install katello-host-tools-tracer</code></pre>
 
-  <p translate>For remote actions and reporting package & errata information:</p>
+  <p translate>For remote actions via katello-agent:</p>
   <pre><code>yum -y install katello-agent</code></pre>
+  <section>
+    <p bst-alert="warning" >
+    <span translate>
+      Katello-agent is deprecated and will be removed in Katello 4.0.  Consider migrating to Remote Execution.
+    </span>
+    </p>
+  </section>
+
   <p translate>Learn more about these packages in the <a href="https://theforeman.org/plugins/katello/">Documentation</a> </p>
 </li>

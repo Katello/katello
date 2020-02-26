@@ -6,6 +6,7 @@ module Katello
     before_action :require_packages_only, :only => [:upgrade]
     before_action :find_editable_host_with_facet, :except => :index
     before_action :find_host, :only => :index
+    before_action :deprecate_katello_agent, :only => [:install, :remove, :upgrade, :upgrade_all]
 
     resource_description do
       api_version 'v2'
