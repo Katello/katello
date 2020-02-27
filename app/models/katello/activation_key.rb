@@ -34,6 +34,7 @@ module Katello
     validates_lengths_from_database
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates :name, :presence => true
+    validates :name, :format => { without: /,/, message: _('cannot contain commas') }
     validates :name, :uniqueness => {:scope => :organization_id}
     validate :environment_exists
     validates :max_hosts, :numericality => {:less_than => 2**31, :allow_nil => true}
