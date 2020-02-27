@@ -33,7 +33,6 @@ class CreateRepositoryRoot < ActiveRecord::Migration[5.1]
     self.table_name = 'katello_repositories'
 
     REPO_ASSOCIATIONS.each do |association|
-      # rubocop:disable Rails/ReflectionClassName
       has_many association.underscore.pluralize.to_sym, :class_name => "CreateRepositoryConfiguration::Fake#{association}", :dependent => :delete_all, :inverse_of => :repository
     end
 

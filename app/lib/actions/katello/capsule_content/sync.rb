@@ -18,7 +18,6 @@ module Actions
           input['smart_proxy'].nil? || input['smart_proxy']['name'].nil? ? super : ["'#{input['smart_proxy']['name']}'"] + super
         end
 
-        # rubocop:disable Metrics/MethodLength
         def plan(smart_proxy, options = {})
           action_subject(smart_proxy)
           smart_proxy.verify_ueber_certs

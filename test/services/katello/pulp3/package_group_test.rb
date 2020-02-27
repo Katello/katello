@@ -45,7 +45,7 @@ module Katello
 
         def test_pulp_data
           assert_equal @@package_group_names[0],
-            ::Katello::Pulp3::PackageGroup.new(@@package_groups.sort_by(&:name).first.pulp_id).backend_data["id"]
+            ::Katello::Pulp3::PackageGroup.new(@@package_groups.min_by(&:name).pulp_id).backend_data["id"]
         end
       end
 

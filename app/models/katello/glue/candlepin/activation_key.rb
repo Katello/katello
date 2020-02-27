@@ -30,7 +30,7 @@ module Katello
         key_pools = Resources::Candlepin::ActivationKey.get(self.cp_id)[0][:pools]
         key_pools.map do |key_pool|
           {
-            :amount => (key_pool[:quantity] ? key_pool[:quantity] : 0),
+            :amount => (key_pool[:quantity] || 0),
             :id => key_pool[:poolId]
           }.with_indifferent_access
         end

@@ -26,7 +26,6 @@ module Katello
             JSON.parse(response.body).with_indifferent_access
           end
 
-          # rubocop:disable Metrics/ParameterLists
           def update(id, release_version, service_level, auto_attach, purpose_role, purpose_usage, purpose_addons)
             attrs = { :releaseVer => release_version, :serviceLevel => service_level, :autoAttach => auto_attach, :role => purpose_role, :usage => purpose_usage, :addOns => purpose_addons }.delete_if { |_k, v| v.nil? }
             JSON.parse(self.put(path(id), attrs.to_json, self.default_headers).body).with_indifferent_access

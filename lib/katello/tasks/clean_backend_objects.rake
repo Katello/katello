@@ -85,7 +85,7 @@ namespace :katello do
       ENV['COMMIT'] == 'true' || ENV['FOREMAN_UPGRADE'] == '1'
     end
 
-    # rubocop:disable Lint/HandleExceptions
+    # rubocop:disable Lint/SuppressedException
     def execute(error_msg)
       if commit?
         yield

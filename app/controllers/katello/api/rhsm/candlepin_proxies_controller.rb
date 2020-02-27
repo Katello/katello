@@ -42,7 +42,7 @@ module Katello
           end
           response.body = body_json.to_s
 
-        # rubocop:disable Lint/HandleExceptions
+        # rubocop:disable Lint/SuppressedException
         rescue JSON::ParserError
           # Not a json response, leave as-is
         end
