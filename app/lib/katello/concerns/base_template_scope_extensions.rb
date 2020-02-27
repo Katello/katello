@@ -106,7 +106,7 @@ module Katello
 
           # preload errata in one query for this batch
           preloaded_errata = Katello::Erratum.where(:errata_id => seen_errata_ids).pluck(:errata_id, :errata_type)
-          preloaded_hosts = ::Host.where(:id => seen_host_ids).includes(:uptime_fact)
+          preloaded_hosts = ::Host.where(:id => seen_host_ids).includes(:reported_data)
 
           batch.each do |task|
             parse_errata(task).each do |erratum_id|
