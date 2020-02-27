@@ -11,7 +11,8 @@ module Katello
       @purpose_key = katello_activation_keys(:purpose_attributes_key)
     end
 
-    should allow_values(*valid_name_list).for(:name)
+    should allow_values(*valid_name_list.map { |name| name.gsub(',', '') }).for(:name)
+    should_not allow_values('name,with,commas').for(:name)
     should allow_values(*valid_name_list).for(:description)
     should_not allow_values(-1, 0, 'foo').for(:max_hosts)
 
