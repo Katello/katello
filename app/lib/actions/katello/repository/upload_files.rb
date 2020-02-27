@@ -1,4 +1,4 @@
-# rubocop:disable Lint/HandleExceptions
+# rubocop:disable Lint/SuppressedException
 require 'fileutils'
 require 'English'
 

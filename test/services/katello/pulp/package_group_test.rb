@@ -29,7 +29,7 @@ module Katello
       end
 
       def test_pulp_data
-        assert_equal @@package_group_names[0], Pulp::PackageGroup.pulp_data(@@package_groups.sort_by(&:name).first.pulp_id)['id']
+        assert_equal @@package_group_names[0], Pulp::PackageGroup.pulp_data(@@package_groups.min_by(&:name).pulp_id)['id']
       end
     end
 

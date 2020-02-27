@@ -1,5 +1,4 @@
 require "pulpcore_client"
-# rubocop:disable Metrics/ClassLength
 
 module Katello
   module Pulp3

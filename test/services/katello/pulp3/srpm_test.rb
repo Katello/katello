@@ -44,7 +44,7 @@ module Katello
 
         def test_pulp_data
           assert_equal @@srpm_names[0],
-            ::Katello::Pulp3::Srpm.new(@@srpms.sort_by(&:name).first.pulp_id).backend_data["name"]
+            ::Katello::Pulp3::Srpm.new(@@srpms.min_by(&:name).pulp_id).backend_data["name"]
         end
       end
 
