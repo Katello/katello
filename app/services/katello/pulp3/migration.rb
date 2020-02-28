@@ -11,6 +11,11 @@ module Katello
         Katello::Repository::DOCKER_TYPE
       ].freeze
 
+      MUTABLE_CONTENT_TYPES = [
+        Katello::DockerTag,
+        Katello::Erratum
+      ].freeze
+
       def initialize(smart_proxy, repository_types = REPOSITORY_TYPES)
         @smart_proxy = smart_proxy
         @repository_types = repository_types
@@ -111,7 +116,12 @@ module Katello
       end
 
       def import_content_type(content_type)
-        content_type.model_class.where(:migrated_pulp3_href => nil).select(:id, :pulp_id).find_in_batches(batch_size: GET_QUERY_ID_LENGTH) do |needing_hrefs|
+        unmigrated_units = content_type.model_class
+        #mutable content types have to be completely re-indexed every time
+        unless MUTABLE_CONTENT_TYPES.include?(content_type.model_class)
+          unmigrated_units = unmigrated_units.where(:migrated_pulp3_href => nil)
+        end
+        unmigrated_units.select(:id, :pulp_id).find_in_batches(batch_size: GET_QUERY_ID_LENGTH) do |needing_hrefs|
           migrated_units = pulp2_content_api.list(pulp2_id__in: needing_hrefs.map { |unit| unit.pulp_id }.join(','))
           migrated_units.results.each do |migrated_unit|
             matching_record = needing_hrefs.find { |db_unit| db_unit.pulp_id == migrated_unit.pulp2_id }
