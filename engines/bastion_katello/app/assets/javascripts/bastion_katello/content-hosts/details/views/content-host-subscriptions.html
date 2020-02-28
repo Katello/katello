@@ -29,11 +29,13 @@
             Not Applicable
           </span>
           <div ng-if="!simpleContentAccessEnabled">
-          <div bst-edit-checkbox="host.subscription_facet_attributes.autoheal"
+            <div bst-edit-select="host.subscription_facet_attributes.autoheal"
+               options="autoHealOptions()"
+               selector="host.subscription_facet_attributes.autoheal"
                formatter="booleanToYesNo"
                readonly="denied('edit_hosts', host)"
                on-save="saveSubscriptionFacet(host)">
-          </div>
+            </div>
             <a ng-hide="denied('edit_hosts', host)"
                ng-click="autoAttachSubscriptions()"
                class="btn btn-default"

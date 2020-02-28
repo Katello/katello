@@ -9,13 +9,14 @@
  * @requires ActivationKey
  * @requires SubscriptionsHelper
  * @requires Notification
+ * @requires simpleContentAccessEnabled
  *
  * @description
  *   Provides the functionality for the activation key subscriptions details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'Subscription', 'SubscriptionsHelper', 'Notification',
-    function ($scope, $location, translate, Nutupane, ActivationKey, Subscription, SubscriptionsHelper, Notification) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'Subscription', 'SubscriptionsHelper', 'Notification', 'simpleContentAccessEnabled',
+    function ($scope, $location, translate, Nutupane, ActivationKey, Subscription, SubscriptionsHelper, Notification, simpleContentAccessEnabled) {
         var params;
 
         params = {
@@ -32,6 +33,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptions
         $scope.contentNutupane.setSearchKey('subscriptionSearch');
         $scope.isRemoving = false;
         $scope.contextAdd = false;
+        $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
 
         $scope.groupedSubscriptions = {};
         $scope.$watch('table.rows', function (rows) {
