@@ -301,12 +301,11 @@ module Katello
         group("#{errata}.id").count
     end
 
-    def  self.errata_with_module_stream_counts(repo)
+    def self.errata_with_module_stream_counts(repo)
       repository_errata = Katello::RepositoryErratum.table_name
       errata = Katello::Erratum.table_name
       erratum_package = Katello::ErratumPackage.table_name
       repository_module_stream = Katello::RepositoryModuleStream.table_name
-      module_stream = Katello::ModuleStream.table_name
       msep = ::Katello::ModuleStreamErratumPackage.table_name
       ::Katello::Erratum.joins(
         "INNER JOIN #{erratum_package} on #{erratum_package}.erratum_id = #{errata}.id",
@@ -347,7 +346,7 @@ module Katello
       errata_to_keep = fetch_package_errata_to_keep - fetch_module_errata_to_filter
 
       if errata_to_keep.any?
-          partial_errata = self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_to_keep)
+        partial_errata = self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_to_keep)
       end
 
       partial_errata
