@@ -36,6 +36,19 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             $scope.panel.loading = false;
         }
 
+        $scope.autoAttachOptions = function () {
+            return [
+                {
+                    id: true,
+                    name: translate("Yes")
+                },
+                {
+                    id: false,
+                    name: translate("No")
+                }
+            ];
+        };
+
         $scope.activationKey = ActivationKey.get({id: $scope.$stateParams.activationKeyId}, function (activationKey) {
             $scope.$broadcast('activationKey.loaded', activationKey);
             $scope.panel.loading = false;
