@@ -201,7 +201,7 @@ module Katello
 
       def db_values_copy(source_repo, dest_repo)
         db_values = []
-        new_units = self.repository_association_class.where(repository: source_repo).where.not(repository: dest_repo)
+        new_units = self.repository_association_class.where(repository: source_repo).where.not(unit_id_field => self.repository_association_class.where(repository: dest_repo).pluck(unit_id_field))
         unit_backend_identifier_field = backend_identifier_field
         unit_identifier_filed = unit_id_field
         new_units.each do |unit|
