@@ -17,6 +17,7 @@ module Actions
               end
             end
 
+            plan_action(Actions::Pulp3::ContentView::DeleteRepositoryReferences, content_view, SmartProxy.pulp_master)
             plan_self
           end
         end
