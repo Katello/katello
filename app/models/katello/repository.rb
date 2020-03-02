@@ -172,8 +172,8 @@ module Katello
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)
     end
 
-    def backend_service(smart_proxy)
-      if smart_proxy.pulp3_support?(self)
+    def backend_service(smart_proxy, force_pulp3 = false)
+      if force_pulp3 || smart_proxy.pulp3_support?(self)
         @service ||= Katello::Pulp3::Repository.instance_for_type(self, smart_proxy)
       else
         @service ||= Katello::Pulp::Repository.instance_for_type(self, smart_proxy)
