@@ -192,23 +192,20 @@ module Katello
       end
 
       def db_columns_sync
-        [unit_id_field.to_sym, backend_identifier_field, :repository_id, :created_at, :updated_at].compact
+        [unit_id_field, backend_identifier_field, :repository_id, :created_at, :updated_at].compact
       end
 
       def db_columns_copy
-        [self.unit_id_field.to_sym, backend_identifier_field, :repository_id].compact
+        [unit_id_field, backend_identifier_field, :repository_id].compact
       end
 
       def db_values_copy(source_repo, dest_repo)
         db_values = []
-        source_units = self.repository_association_class.where(:repository_id => source_repo.id)
-        dest_units = self.repository_association_class.where(:repository_id => dest_repo.id)
-        source_unit_ids = source_units.pluck(unit_id_field.to_sym)
-        dest_unit_ids = dest_units.pluck(unit_id_field.to_sym)
-        new_units = source_units.select { |su| (source_unit_ids - dest_unit_ids).include? su[unit_id_field] }
+        new_units = self.repository_association_class.where(repository: source_repo).where.not(repository: dest_repo)
+        unit_backend_identifier_field = backend_identifier_field
+        unit_identifier_filed = unit_id_field
         new_units.each do |unit|
-          import_unit = [unit[unit_id_field], unit[backend_identifier_field], dest_repo.id].compact
-          db_values << import_unit
+          db_values << [unit[unit_identifier_filed], unit[unit_backend_identifier_field], dest_repo.id].compact
         end
         db_values
       end
