@@ -231,6 +231,10 @@ module Katello
         create_version(:base_version => from_repository.version_href)
       end
 
+      def delete_version
+        api.repository_versions_api.delete(repo.version_href)
+      end
+
       def create_version(options = {})
         api.repositories_api.modify(repository_reference.repository_href, options)
       end
