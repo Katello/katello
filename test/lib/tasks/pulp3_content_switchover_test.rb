@@ -9,7 +9,10 @@ module Katello
       @fake_pulp3_href = 'fake_pulp3_href'
       @another_fake_pulp3_href = 'another_fake_pulp3_href'
 
-      Katello::Pulp3::Migration.content_types_for_migration.each do |content_type|
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => true, :docker => true}
+
+      migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_master, ['file', 'docker'])
+      migration_service.content_types_for_migration.each do |content_type|
         content_type.model_class.all.each do |record|
           record.update(:migrated_pulp3_href => @fake_pulp3_href + record.id.to_s)
         end
@@ -20,6 +23,10 @@ module Katello
 
       Rake::Task[@task_name].reenable
       Rake::Task.define_task(:environment)
+    end
+
+    def teardown
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = nil
     end
 
     def test_file_unit_pulp_ids_updated
