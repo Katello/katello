@@ -105,7 +105,7 @@ module Katello
       end
 
       def import_for_repository(repository)
-        pulp_ids, pulp_id_href_map = [], {}
+        pulp_id_href_map = {}
         service_class = SmartProxy.pulp_master!.content_service(content_type)
         fetch_only_ids = !repository.content_view.default? &&
                          !repository.repository_type.unique_content_per_repo
@@ -124,39 +124,52 @@ module Katello
               model.repository_id = repository.id unless many_repository_associations
               service.update_model(model)
             end
-            pulp_ids << pulp_id
-            pulp_id_href_map.merge!(pulp_id => backend_identifier) if backend_identifier
+            pulp_id_href_map[pulp_id] = backend_identifier
           end
         end
-        sync_repository_associations(repository, :pulp_ids => pulp_ids, :pulp_id_href_map => pulp_id_href_map) if self.many_repository_associations
+        sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map) if self.many_repository_associations
       end
 
       def sync_repository_associations(repository, options = {})
+        associated_ids, id_href_map_for_repository = [], {}
         additive = options.fetch(:additive, false)
-        pulp_ids = options.dig(:pulp_ids)
-        pulp_id_href_map = options.dig(:pulp_id_href_map)
-        id_map_for_repository = {}
-        if pulp_ids
-          ids_for_repository = with_pulp_id(pulp_ids).pluck(:id, :pulp_id)
-          associated_ids = ids_for_repository.map { |ids| ids[0] }
-          unless pulp_id_href_map.empty?
-            ids_for_repository.map { |arr| id_map_for_repository.merge!(arr[0] => arr[1]) }
-            id_map_for_repository.each_pair { |k, v| id_map_for_repository[k] = pulp_id_href_map[v] }
-          end
-        end
+        pulp_id_href_map = options.dig(:pulp_id_href_map) || {}
+        pulp_ids = options.dig(:pulp_ids) || pulp_id_href_map.try(:keys)
+        ids_for_repository = with_pulp_id(pulp_ids).pluck(:id, :pulp_id)
+        associated_ids = ids_for_repository.map(&:first)
+        id_href_map_for_repository = Hash[*ids_for_repository.flatten]
+        id_href_map_for_repository.each_pair { |k, v| id_href_map_for_repository[k] = pulp_id_href_map[v] }
+
         existing_ids = self.repository_association_class.uncached do
           self.repository_association_class.where(:repository_id => repository).pluck(unit_id_field)
         end
-        new_ids = associated_ids - existing_ids
-        delete_ids = existing_ids - associated_ids
-        queries = []
 
-        if delete_ids.any? && !additive
-          queries << "DELETE FROM #{self.repository_association_class.table_name} WHERE repository_id=#{repository.id} AND #{unit_id_field} IN (#{delete_ids.join(', ')})"
+        if !additive && (delete_ids = existing_ids - associated_ids).any?
+          query = "DELETE FROM #{self.repository_association_class.table_name} WHERE repository_id=#{repository.id} AND #{unit_id_field} IN (#{delete_ids.join(', ')})"
+          ActiveRecord::Base.connection.execute(query)
         end
 
-        unless new_ids.empty?
-          self.repository_association_class.import(db_columns_sync, db_values(new_ids, id_map_for_repository, repository), validate: false)
+        unless (new_ids = associated_ids - existing_ids).empty?
+          self.repository_association_class.import(db_columns_sync, db_values(new_ids, id_href_map_for_repository, repository), validate: false)
+        end
+      end
+
+      def copy_repository_associations(source_repo, dest_repo)
+        queries = []
+        if many_repository_associations
+          queries << "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
+                         #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
+
+          self.repository_association_class.import(db_columns_copy, db_values_copy(source_repo, dest_repo), validate: false)
+        else
+          columns = column_names - ["id", "pulp_id", "created_at", "updated_at", "repository_id"]
+
+          queries << "delete from #{self.table_name} where repository_id = #{dest_repo.id} and
+                          pulp_id not in (select pulp_id from #{self.table_name} where repository_id = #{source_repo.id})"
+          queries << "insert into #{self.table_name} (repository_id, pulp_id, #{columns.join(',')})
+                    select #{dest_repo.id} as repository_id, pulp_id, #{columns.join(',')} from #{self.table_name}
+                    where repository_id = #{source_repo.id} and pulp_id not in (select pulp_id
+                    from #{self.table_name} where repository_id = #{dest_repo.id})"
         end
 
         ActiveRecord::Base.transaction do
@@ -164,27 +177,6 @@ module Katello
             ActiveRecord::Base.connection.execute(query)
           end
         end
-      end
-
-      def copy_repository_associations(source_repo, dest_repo)
-        if many_repository_associations
-          delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
-                         #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
-
-          self.repository_association_class.import(db_columns_copy, db_values_copy(source_repo, dest_repo), validate: false)
-        else
-          columns = column_names - ["id", "pulp_id", "created_at", "updated_at", "repository_id"]
-
-          delete_query = "delete from #{self.table_name} where repository_id = #{dest_repo.id} and
-                          pulp_id not in (select pulp_id from #{self.table_name} where repository_id = #{source_repo.id})"
-          insert_query = "insert into #{self.table_name} (repository_id, pulp_id, #{columns.join(',')})
-                    select #{dest_repo.id} as repository_id, pulp_id, #{columns.join(',')} from #{self.table_name}
-                    where repository_id = #{source_repo.id} and pulp_id not in (select pulp_id
-                    from #{self.table_name} where repository_id = #{dest_repo.id})"
-          ActiveRecord::Base.connection.execute(insert_query)
-
-        end
-        ActiveRecord::Base.connection.execute(delete_query)
       end
 
       def with_pulp_id(unit_pulp_ids)
