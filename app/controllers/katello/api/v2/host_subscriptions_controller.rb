@@ -147,7 +147,6 @@ module Katello
 
     api :PUT, "/hosts/:host_id/subscriptions/content_override", N_("Set content overrides for the host")
     param :host_id, String, :desc => N_("Id of the content host"), :required => true
-    param :content_label, String, :desc => N_("Label of the content"), :required => false
     param :value, String, :desc => N_("Override to a boolean value or 'default'"), :required => false
     param :content_overrides, Array, :desc => N_("Array of Content override parameters") do
       param :content_label, String, :desc => N_("Label of the content"), :required => true
@@ -156,20 +155,7 @@ module Katello
       param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
     end
     def content_override
-      content_overrides = []
-      if params[:content_label]
-        ::Foreman::Deprecation.api_deprecation_warning("The parameter content_label will be removed in Katello 3.5. Please update to use the content_overrides parameter.")
-        content_override_params = {:content_label => params[:content_label]}
-        value = params[:value]
-        if value == "default"
-          content_override_params[:remove] = true
-        elsif value
-          content_override_params[:value] = ::Foreman::Cast.to_bool(value)
-        end
-        content_overrides << content_override_params
-      elsif params[:content_overrides]
-        content_overrides = params[:content_overrides]
-      end
+      content_overrides = params[:content_overrides] || []
 
       content_override_values = content_overrides.map do |override_params|
         validate_content_overrides_enabled(override_params)
