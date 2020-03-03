@@ -28,6 +28,7 @@ module Katello
             begin
               service_class.close
               service_class.run
+              service_class.status
             rescue => error
               Rails.logger.error("Error occurred while starting #{service_class}")
               Rails.logger.error(error.message)
@@ -78,6 +79,7 @@ module Katello
       def stop
         return unless pid == Process.pid
         @monitor_thread.kill
+        @cache.clear
         services.values.each(&:close)
         File.unlink(pid_file) if pid_file && File.exist?(pid_file)
       end

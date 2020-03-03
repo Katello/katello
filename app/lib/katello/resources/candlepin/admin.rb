@@ -6,7 +6,7 @@ module Katello
 
         def self.queues
           response = get("#{path}/queues")
-          JSON.parse(response.body).first
+          JSON.parse(response.body)
         end
 
         def self.queue_depth(queue_name)
