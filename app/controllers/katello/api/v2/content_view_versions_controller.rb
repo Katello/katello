@@ -52,7 +52,6 @@ module Katello
     api :POST, "/content_view_versions/:id/promote", N_("Promote a content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :force, :bool, :desc => N_("force content view promotion and bypass lifecycle environment restriction")
-    param :environment_id, :number, :deprecated => true, :desc => N_("LifeCycle Environment identifier")
     param :environment_ids, Array, :desc => N_("Identifiers for Lifecycle Environment")
     param :description, String, :desc => N_("The description for the content view version promotion")
     def promote
@@ -287,12 +286,7 @@ module Katello
     end
 
     def find_environments
-      @environments = if params[:environment_id]
-                        ::Foreman::Deprecation.api_deprecation_warning("The parameter environment_id will be removed in Katello 3.4. Please update to use the environment_ids parameter.")
-                        KTEnvironment.where(:id => params[:environment_id])
-                      else
-                        KTEnvironment.where(:id => params[:environment_ids])
-                      end
+      @environments = KTEnvironment.where(:id => params[:environment_ids])
     end
 
     def validate_promotable
