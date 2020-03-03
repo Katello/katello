@@ -384,7 +384,6 @@ module Katello
 
     api :PUT, "/repositories/:id/import_uploads", N_("Import uploads into a repository")
     param :id, :number, :required => true, :desc => N_("Repository id")
-    param :upload_ids, Array, :desc => N_("Array of upload ids to import"), :deprecated => true
     param :async, :bool, desc: N_("Do not wait for the ImportUpload action to finish. Default: false")
     param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
@@ -401,17 +400,12 @@ module Katello
       generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
       async = ::Foreman::Cast.to_bool(params.fetch(:async, false))
-      if params['upload_ids'].empty? && params['uploads'].empty?
-        fail HttpErrors::BadRequest, _('No upload param specified. Either uploads or upload_ids (deprecated) is required.')
+      if params['uploads'].empty?
+        fail HttpErrors::BadRequest, _('No uploads param specified. An array of uploads to import is required.')
       end
 
       uploads = (params[:uploads] || []).map do |upload|
         upload.permit(:id, :content_unit_id, :size, :checksum, :name, :digest).to_h
-      end
-
-      if params.key?(:upload_ids)
-        ::Foreman::Deprecation.api_deprecation_warning("The parameter upload_ids will be removed in Katello 3.3. Please update to use the uploads parameter.")
-        params[:upload_ids].each { |upload_id| uploads << {'id' => upload_id} }
       end
 
       begin

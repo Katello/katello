@@ -827,30 +827,6 @@ module Katello
       end
     end
 
-    def test_import_upload_ids
-      uploads = [{'id' => '1'}]
-      @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-              generate_metadata: false, content_type: nil, sync_capsule: false)
-        .returns(build_task_stub)
-
-      put(:import_uploads, params: { :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] }, :publish_repository => 'false', sync_capsule: 'false' })
-
-      assert_response :success
-    end
-
-    def test_two_import_upload_ids
-      uploads = [{'id' => '1'}, {'id' => '2'}]
-      @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-              generate_metadata: false, content_type: nil, sync_capsule: false)
-        .returns(build_task_stub)
-
-      put(:import_uploads, params: { :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] }, :publish_repository => 'false', sync_capsule: 'false' })
-
-      assert_response :success
-    end
-
     def test_import_uploads
       uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
       # make sure name gets ignored for non-file repos
@@ -927,7 +903,7 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:import_uploads, allowed_perms, denied_perms) do
-        put :import_uploads, params: { :id => @repository.id, :upload_ids => [1] }
+        put :import_uploads, params: { :id => @repository.id, :uploads => [{'id' => '1'}] }
       end
     end
 
