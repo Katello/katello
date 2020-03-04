@@ -21,6 +21,10 @@ module Katello
           PulpAnsibleClient::AnsibleAnsibleDistribution
         end
 
+        def self.repository_sync_url_class
+          PulpAnsibleClient::RepositorySyncURL
+        end
+
         def api_client
           PulpAnsibleClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpAnsibleClient::Configuration))
         end
