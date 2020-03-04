@@ -25,6 +25,10 @@ module Katello
           PulpFileClient::FileFilePublication
         end
 
+        def self.repository_sync_url_class
+          PulpFileClient::RepositorySyncURL
+        end
+
         def api_client
           PulpFileClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpFileClient::Configuration))
         end

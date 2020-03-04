@@ -25,6 +25,10 @@ module Katello
           PulpRpmClient::RpmRpmPublication
         end
 
+        def self.repository_sync_url_class
+          PulpRpmClient::RepositorySyncURL
+        end
+
         def api_client
           PulpRpmClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpRpmClient::Configuration))
         end
