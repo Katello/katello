@@ -301,17 +301,52 @@ module Katello
         group("#{errata}.id").count
     end
 
+    def self.errata_with_module_stream_counts(repo)
+      repository_errata = Katello::RepositoryErratum.table_name
+      errata = Katello::Erratum.table_name
+      erratum_package = Katello::ErratumPackage.table_name
+      repository_module_stream = Katello::RepositoryModuleStream.table_name
+      msep = ::Katello::ModuleStreamErratumPackage.table_name
+      ::Katello::Erratum.joins(
+        "INNER JOIN #{erratum_package} on #{erratum_package}.erratum_id = #{errata}.id",
+        "INNER JOIN #{msep} on #{msep}.erratum_package_id = #{erratum_package}.id",
+        "INNER JOIN #{repository_errata} on #{repository_errata}.erratum_id = #{errata}.id",
+        "INNER JOIN #{repository_module_stream} on #{repository_module_stream}.module_stream_id = #{msep}.module_stream_id").
+        where("#{repository_module_stream}.repository_id" => repo.id).
+        where("#{repository_errata}.repository_id" => repo.id).
+        group("#{errata}.id").count
+    end
+
+    def fetch_package_errata_to_keep
+      errata_counts = ::Katello::Repository.errata_with_package_counts(self)
+      if errata_counts.any?
+        errata_counts_in_library = ::Katello::Repository.errata_with_package_counts(library_instance)
+        errata_counts.keep_if { |id| errata_counts[id] == errata_counts_in_library[id] }
+        errata_counts.keys
+      else
+        []
+      end
+    end
+
+    def fetch_module_errata_to_filter
+      errata_counts = ::Katello::Repository.errata_with_module_stream_counts(self)
+      errata_counts_in_library = ::Katello::Repository.errata_with_module_stream_counts(library_instance)
+      if errata_counts_in_library.any?
+        errata_counts_in_library.keep_if { |id| errata_counts[id] != errata_counts_in_library[id] }
+        errata_counts_in_library.keys
+      else
+        []
+      end
+    end
+
     def partial_errata
       return [] if library_instance?
 
-      errata_with_package_counts = ::Katello::Repository.errata_with_package_counts(self)
       partial_errata = self.errata
-      if errata_with_package_counts.any?
-        errata_with_packages_in_library = ::Katello::Repository.errata_with_package_counts(library_instance)
-        errata_with_package_counts.keep_if { |id| errata_with_package_counts[id] == errata_with_packages_in_library[id] }
-        unless errata_with_package_counts.empty?
-          partial_errata = self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_with_package_counts.keys)
-        end
+      errata_to_keep = fetch_package_errata_to_keep - fetch_module_errata_to_filter
+
+      if errata_to_keep.any?
+        partial_errata = self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_to_keep)
       end
 
       partial_errata
