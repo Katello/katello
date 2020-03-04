@@ -27,6 +27,108 @@ module Katello
       assert @repo.full_path =~ /abc123/
     end
 
+    def test_errata_counts
+      source_repo = katello_repositories(:fedora_17_x86_64)
+      source_repo.errata.destroy_all
+      module_stream = katello_module_streams(:river)
+      erratum = source_repo.errata.create! do |new_erratum|
+        new_erratum.pulp_id = "foo"
+        ep1 = ErratumPackage.new(:filename => @rpm_two.filename, :nvrea => 'foo', :name => 'foo')
+        ep1.module_streams = [module_stream]
+        ep2 = ErratumPackage.new(:filename => @rpm_one.filename, :nvrea => 'foo', :name => 'foo')
+        new_erratum.packages = [ep1, ep2]
+      end
+
+      # We added 1 errata, 2 packages and 1 module stream to the source repo.
+      assert_equal({erratum.id => 2}, ::Katello::Repository.errata_with_package_counts(source_repo))
+      assert_equal({erratum.id => 1}, ::Katello::Repository.errata_with_module_stream_counts(source_repo))
+    end
+
+    def test_fetch_package_errata_to_keep
+      @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
+      @fedora_17_x86_64_dev.errata.destroy_all
+
+      source_repo = @fedora_17_x86_64_dev.library_instance
+      source_repo.errata.destroy_all
+
+      erratum = source_repo.errata.create! do |new_erratum|
+        new_erratum.pulp_id = "foo"
+        ep1 = ErratumPackage.new(:filename => @rpm_two.filename, :nvrea => 'foo', :name => 'foo')
+        ep2 = ErratumPackage.new(:filename => @rpm_one.filename, :nvrea => 'foo', :name => 'foo')
+        new_erratum.packages = [ep1, ep2]
+      end
+
+      @fedora_17_x86_64_dev.errata << erratum
+      @fedora_17_x86_64_dev.save!
+      @fedora_17_x86_64_dev.rpms.destroy_all
+      assert_empty @fedora_17_x86_64_dev.fetch_package_errata_to_keep
+
+      @fedora_17_x86_64_dev.rpms << @rpm_two
+      @fedora_17_x86_64_dev.save!
+      assert_empty @fedora_17_x86_64_dev.fetch_package_errata_to_keep
+
+      @fedora_17_x86_64_dev.rpms << @rpm_one
+      @fedora_17_x86_64_dev.save!
+      assert_equal([erratum.id], @fedora_17_x86_64_dev.fetch_package_errata_to_keep)
+    end
+
+    def test_fetch_module_errata_to_filter
+      @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
+      @fedora_17_x86_64_dev.errata.destroy_all
+
+      source_repo = @fedora_17_x86_64_dev.library_instance
+      source_repo.errata.destroy_all
+      module_stream = katello_module_streams(:river)
+      erratum = source_repo.errata.create! do |new_erratum|
+        new_erratum.pulp_id = "foo"
+        ep1 = ErratumPackage.new(:filename => @rpm_two.filename, :nvrea => 'foo', :name => 'foo')
+        ep1.module_streams = [module_stream]
+        new_erratum.packages = [ep1]
+      end
+
+      @fedora_17_x86_64_dev.errata << erratum
+      @fedora_17_x86_64_dev.save!
+      @fedora_17_x86_64_dev.module_streams.destroy_all
+      assert_equal([erratum.id], @fedora_17_x86_64_dev.fetch_module_errata_to_filter)
+
+      @fedora_17_x86_64_dev.module_streams << module_stream
+      @fedora_17_x86_64_dev.save!
+
+      assert_empty @fedora_17_x86_64_dev.fetch_module_errata_to_filter
+    end
+
+    def test_partial_errata
+      @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
+      @fedora_17_x86_64_dev.errata.destroy_all
+
+      source_repo = @fedora_17_x86_64_dev.library_instance
+      source_repo.errata.destroy_all
+      module_stream = katello_module_streams(:river)
+      erratum = source_repo.errata.create! do |new_erratum|
+        new_erratum.pulp_id = "foo"
+        ep1 = ErratumPackage.new(:filename => @rpm_two.filename, :nvrea => 'foo', :name => 'foo')
+        ep1.module_streams = [module_stream]
+        new_erratum.packages = [ep1]
+      end
+
+      @fedora_17_x86_64_dev.errata << erratum
+      @fedora_17_x86_64_dev.save!
+      @fedora_17_x86_64_dev.module_streams.destroy_all
+      @fedora_17_x86_64_dev.rpms.destroy_all
+
+      assert_equal([erratum], @fedora_17_x86_64_dev.partial_errata)
+
+      @fedora_17_x86_64_dev.rpms << @rpm_two
+      @fedora_17_x86_64_dev.save!
+
+      assert_equal([erratum], @fedora_17_x86_64_dev.partial_errata)
+
+      @fedora_17_x86_64_dev.module_streams << module_stream
+      @fedora_17_x86_64_dev.save!
+
+      assert_empty @fedora_17_x86_64_dev.partial_errata
+    end
+
     def test_partial_errata_package_counts
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       source_repo = @fedora_17_x86_64_dev.library_instance
