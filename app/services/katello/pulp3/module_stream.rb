@@ -13,6 +13,15 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
+      def create_stream_rpms(model, packages)
+        packages_found = Katello::Rpm.where(:pulp_id => packages)
+        existing_rpms = model.rpms
+        new_packages = packages_found - existing_rpms
+        packages_to_delete = existing_rpms - packages_found
+        model.rpms.delete(packages_to_delete)
+        model.rpms << new_packages
+      end
+
       def create_stream_artifacts(model, artifacts_json)
         artifacts_json.each do |name|
           Katello::Util::Support.active_record_retry do
@@ -41,6 +50,7 @@ module Katello
 
         create_stream_artifacts(model, backend_data['artifacts']) if backend_data.key?('artifacts')
         create_profiles(model, backend_data['profiles']) if backend_data.key?('profiles')
+        create_stream_rpms(model, backend_data['packages']) if backend_data.key?('packages')
       end
     end
   end
