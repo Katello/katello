@@ -13,16 +13,25 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
-      def create_stream_artifacts(model, artifacts_json)
-        artifacts_json.each do |name|
+      def create_stream_rpms(model, packages)
+        packages_found = Katello::Rpm.where(:pulp_id => packages)
+        existing_rpms = model.rpms
+        new_packages = packages_found - existing_rpms
+        packages_to_delete = existing_rpms - packages_found
+        model.rpms.delete(packages_to_delete)
+        model.rpms << new_packages
+      end
+
+      def create_stream_artifacts(model, artifacts)
+        artifacts.each do |name|
           Katello::Util::Support.active_record_retry do
             model.artifacts.where(name: name).first_or_create!
           end
         end
       end
 
-      def create_profiles(model, profiles_json)
-        profiles_json.each do |profile, rpms|
+      def create_profiles(model, profiles)
+        profiles.each do |profile, rpms|
           Katello::Util::Support.active_record_retry do
             profile = model.profiles.where(name: profile).first_or_create!
           end
@@ -38,9 +47,9 @@ module Katello
         shared_attributes = backend_data.keys & model.class.column_names
         shared_json = backend_data.select { |key, _v| shared_attributes.include?(key) }
         model.update_attributes!(shared_json)
-
-        create_stream_artifacts(model, JSON.parse(backend_data['artifacts'])) if backend_data.key?('artifacts')
-        create_profiles(model, JSON.parse(backend_data['profiles'])) if backend_data.key?('profiles')
+        create_stream_artifacts(model, backend_data['artifacts']) if backend_data.key?('artifacts')
+        create_profiles(model, backend_data['profiles']) if backend_data.key?('profiles')
+        create_stream_rpms(model, backend_data['packages']) if backend_data.key?('packages')
       end
     end
   end
