@@ -56,7 +56,7 @@ module Katello
     has_many :repository_srpms, :class_name => "Katello::RepositorySrpm", :dependent => :delete_all
     has_many :srpms, :through => :repository_srpms
 
-    has_many :repository_file_units, :class_name => "Katello::RepositoryFileUnit", :dependent => :destroy
+    has_many :repository_file_units, :class_name => "Katello::RepositoryFileUnit", :dependent => :delete_all
     has_many :files, :through => :repository_file_units, :source => :file_unit
     alias_attribute :file_units, :files
 
@@ -83,7 +83,7 @@ module Katello
     has_many :repository_debs, :class_name => "Katello::RepositoryDeb", :dependent => :delete_all
     has_many :debs, :through => :repository_debs
 
-    has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy
+    has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :delete_all
     has_many :content_facets, :through => :content_facet_repositories
 
     has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :delete_all
