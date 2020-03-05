@@ -58,6 +58,7 @@ module Katello
 
     has_many :repository_file_units, :class_name => "Katello::RepositoryFileUnit", :dependent => :destroy
     has_many :files, :through => :repository_file_units, :source => :file_unit
+    alias_attribute :file_units, :files
 
     has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :delete_all
     has_many :puppet_modules, :through => :repository_puppet_modules
