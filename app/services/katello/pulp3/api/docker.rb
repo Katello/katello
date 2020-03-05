@@ -25,6 +25,10 @@ module Katello
           PulpContainerClient::ContainerPublication
         end
 
+        def self.repository_sync_url_class
+          PulpContainerClient::RepositorySyncURL
+        end
+
         def self.recursive_manage_class
           PulpContainerClient::RecursiveManage
         end

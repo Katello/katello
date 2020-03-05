@@ -31,6 +31,10 @@ module Katello
           fail NotImplementedError
         end
 
+        def self.repository_sync_url_class
+          fail NotImplementedError
+        end
+
         def api_client
           fail NotImplementedError
         end
