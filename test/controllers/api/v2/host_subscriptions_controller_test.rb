@@ -221,17 +221,17 @@ module Katello
     end
 
     def test_content_override
-      content_label = "some-content"
+      content_overrides = [{:content_label => 'some-content', :value => 1}]
       value = "1"
       assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides, prune_invalid|
         assert_equal @host, host
         assert_equal 1, overrides.count
-        assert_equal content_label, overrides.first.content_label
+        assert_equal 'some-content', overrides.first.content_label
         assert_equal value, overrides.first.value
         assert_equal false, prune_invalid
       end
 
-      put :content_override, params: { :host_id => @host.id, :content_label => content_label, :value => value }
+      put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/content_override'
@@ -239,7 +239,7 @@ module Katello
 
     def test_content_override_bulk
       content_overrides = [{:content_label => 'some-content', :value => 1}]
-      expected_content_labels = content_overrides.map { |override| override[:content_label] }
+      expected_content_labels = content_overrides.map { |co| co[:content_label] }
       assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides, prune_invalid|
         assert_equal @host, host
         assert_equal content_overrides.count, overrides.count
@@ -254,33 +254,33 @@ module Katello
     end
 
     def test_content_override_accepts_string_values
-      content_label = "some-content"
+      content_overrides = [{:content_label => 'some-content', :value => 1}]
       value = "1"
       assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides, _|
         assert_equal @host, host
         assert_equal 1, overrides.count
-        assert_equal content_label, overrides.first.content_label
+        assert_equal 'some-content', overrides.first.content_label
         assert_equal value, overrides.first.value
       end
 
-      put :content_override, params: { :host_id => @host.id, :content_label => 'some-content', :value => 'yes' }
+      put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides, :value => 'yes' }
 
       assert_response :success
     end
 
     # content overrides may be added before the host has access to the content
     def test_invalid_content_succeeds
-      content_label = "wrong-content"
+      content_overrides = [{:content_label => 'wrong-content', :value => 1}]
       value = "1"
       assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides, prune_invalid|
         assert_equal @host, host
         assert_equal 1, overrides.count
-        assert_equal content_label, overrides.first.content_label
+        assert_equal 'wrong-content', overrides.first.content_label
         assert_equal value, overrides.first.value
         assert_equal false, prune_invalid
       end
 
-      put :content_override, params: { :host_id => @host.id, :content_label => content_label, :value => value }
+      put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides, :value => value }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/content_override'
