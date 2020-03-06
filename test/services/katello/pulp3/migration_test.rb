@@ -50,7 +50,7 @@ module Katello
           task = migration_service.create_and_run_migrations
           wait_on_task(@master, task)
 
-          migration_service.import_pulp3_content
+          assert_equal migration_service.import_pulp3_content, ['file']
           [@repo, @cv_env_repo, @cv_archive_repo].each { |repo| repo.reload }
 
           refute_nil unit.reload.migrated_pulp3_href
@@ -76,6 +76,24 @@ module Katello
           assert_equal repository_reference(@cv_archive_repo), repository_reference(@cv_env_repo)
           assert_equal @cv_archive_repo.version_href, @cv_env_repo.version_href
           assert_equal @cv_archive_repo.publication_href, @cv_env_repo.publication_href
+        end
+
+        def test_content_types_for_migration
+          repo_types = ['file']
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_master, repo_types)
+          correct_content_types = repo_types.collect do |repository_type_label|
+            Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index
+          end
+
+          assert correct_content_types.flatten == migration_service.content_types_for_migration
+        end
+
+        def test_migration_service_type_already_migrated
+          err = assert_raises ::Katello::Errors::Pulp3MigrationError do
+            ::Katello::Pulp3::Migration.new(@master)
+          end
+
+          assert_match "Pulp 3 migration cannot run. Types docker have already been migrated.", err.message
         end
 
         def repository_reference(repo)
