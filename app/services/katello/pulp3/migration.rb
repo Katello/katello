@@ -17,8 +17,13 @@ module Katello
       ].freeze
 
       def initialize(smart_proxy, repository_types = REPOSITORY_TYPES)
-        @smart_proxy = smart_proxy
+        if (repository_types - smart_proxy.supported_pulp_types[:pulp3][:overriden_to_pulp2]).any?
+          fail ::Katello::Errors::Pulp3MigrationError, _("Pulp 3 migration cannot run. Types %s have already been migrated.") %
+            (repository_types - smart_proxy.supported_pulp_types[:pulp3][:overriden_to_pulp2]).join(', ')
+        end
+
         @repository_types = repository_types
+        @smart_proxy = smart_proxy
       end
 
       def api_client
@@ -41,8 +46,8 @@ module Katello
         create_migrations.map { |href| start_migration(href) }
       end
 
-      def self.content_types_for_migration
-        content_types = REPOSITORY_TYPES.collect do |repository_type_label|
+      def content_types_for_migration
+        content_types = @repository_types.collect do |repository_type_label|
           Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index
         end
 

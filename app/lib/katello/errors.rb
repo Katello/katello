@@ -115,6 +115,8 @@ module Katello
       end
     end
 
+    class Pulp3MigrationError < StandardError; end
+
     class PulpError < StandardError
       def self.from_task(task)
         if %w(error canceled).include?(task[:state])
