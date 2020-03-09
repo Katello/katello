@@ -42,6 +42,12 @@ module Katello
         self::CONTENT_TYPE
       end
 
+      def self.pulp_units_batch_all(content_unit_hrefs)
+        Enumerator.new do |yielder|
+          yielder.yield content_unit_hrefs.collect { |href| pulp_data(href) }
+        end
+      end
+
       def self.pulp_units_batch_for_repo(repository, options = {})
         fetch_identifiers = options.fetch(:fetch_identifiers, false)
         page_size = options.fetch(:page_size, SETTINGS[:katello][:pulp][:bulk_load_size])

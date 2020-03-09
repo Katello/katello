@@ -5,7 +5,7 @@ module Actions
         input_format do
           param :id, Integer
           param :filter
-          param :dependency
+          param :import_upload_task
           param :content_type
         end
 
@@ -23,8 +23,12 @@ module Actions
             unit_ids = search_units(repo)
             ::Katello::Deb.import_all(unit_ids, repo)
           elsif repo.yum?
-            unit_ids = search_units(repo)
-            if input[:content_type] == 'srpm'
+            if input[:import_upload_task] && input[:import_upload_task][:content_unit_href]
+              unit_ids = [input[:import_upload_task][:content_unit_href]]
+            else
+              unit_ids = search_units(repo)
+            end
+            if input[:content_type] == ::Katello::Srpm::CONTENT_TYPE
               ::Katello::Srpm.import_all(unit_ids, repo)
             else
               ::Katello::Rpm.import_all(unit_ids, repo)
