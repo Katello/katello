@@ -9,7 +9,6 @@ module Katello
                                                 :refresh_manifest, :manifest_history]
     before_action :check_disconnected, only: [:refresh_manifest]
     before_action :find_provider
-    before_action :deprecated, :only => [:create, :destroy]
 
     skip_before_action :check_content_type, :only => [:upload]
 
@@ -81,29 +80,6 @@ module Katello
         fail ActiveRecord::RecordNotFound, N_('This subscription is not relevant to the current user and organization.')
       end
       respond(:resource => @resource)
-    end
-
-    api :POST, "/activation_keys/:activation_key_id/subscriptions", N_("Add a subscription to an activation key"), :deprecated => true
-    param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
-    param :activation_key_id, String, :desc => N_("ID of the activation key"), :required => false
-    param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
-      param :id, String, :desc => N_("Subscription Pool uuid"), :required => true
-      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
-    end
-    def create
-      if params[:subscriptions]
-        params[:subscriptions].each do |sub|
-          subscription = Pool.find(sub[:id])
-          @activation_key.subscribe(subscription.cp_id, subscription[:quantity])
-        end
-      elsif params[:id] && params.key?(:quantity)
-        sub = subscription.find(params[:id])
-        @activation_key.subscribe(sub.cp_id, params[:quantity])
-      end
-
-      subscriptions = index_activation_key
-      respond_for_index(:collection => subscriptions, :template => 'index')
     end
 
     api :POST, "/organizations/:organization_id/subscriptions/upload", N_("Upload a subscription manifest")
@@ -197,11 +173,6 @@ module Katello
 
     def available_for_activation_key
       @activation_key.available_subscriptions
-    end
-
-    def deprecated
-      ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 2.6, Please see /api/v2/activation_keys/:id/add_subscriptions and \
-          /api/v2/activation_keys/:id/remove_subscriptions")
     end
   end
 end

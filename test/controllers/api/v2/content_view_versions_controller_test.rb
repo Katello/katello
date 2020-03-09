@@ -245,19 +245,19 @@ module Katello
                       [@env_promote_permission, diff_view_promote_permission]
                      ]
       assert_protected_action(:promote, allowed_perms, denied_perms) do
-        post :promote, params: { :id => @library_dev_staging_view.versions.first.id, :environment_id => @dev.id }
+        post :promote, params: { :id => @library_dev_staging_view.versions.first.id, :environment_ids => [@dev.id] }
       end
     end
 
     def test_promote_default
       view = ContentView.find(katello_content_views(:acme_default).id)
-      post :promote, params: { :id => view.versions.first.id, :environment_id => @dev.id }
+      post :promote, params: { :id => view.versions.first.id, :environment_ids => [@dev.id] }
       assert_response 400
     end
 
     def test_promote_out_of_sequence
       view = ContentView.find(katello_content_views(:acme_default).id)
-      post :promote, params: { :id => view.versions.first.id, :environment_id => @dev.id }
+      post :promote, params: { :id => view.versions.first.id, :environment_ids => [@dev.id] }
       assert_response 400
     end
 
@@ -269,7 +269,7 @@ module Katello
 
     def test_promote_outside_org
       version = @library_dev_staging_view.versions.first
-      post :promote, params: { :id => version.id, :environment_id => [@candlepin_dev.id], :force => 1, :description => 'test with param environment_id outside org' }
+      post :promote, params: { :id => version.id, :environment_ids => [@candlepin_dev.id], :force => 1, :description => 'test with param environment_id outside org' }
       assert_response 422
     end
 
