@@ -13,4 +13,4 @@ provider_type: Ansible
 kind: job_template
 %>
 
-<%= render_template('Run Command - Ansible Default', :command => "yum group remove #{input('package')}") %>
+<%= render_template('Run Command - Ansible Default', :command => "yum -y group remove #{input('package')}") %>
