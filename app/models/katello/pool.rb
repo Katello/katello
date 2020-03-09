@@ -51,7 +51,12 @@ module Katello
     end
 
     def expiring_soon?
-      (end_date.to_date - Date.today) <= Setting[:expire_soon_days]
+      expiring_in_days >= 0 &&
+        expiring_in_days <= Setting[:expire_soon_days].to_i
+    end
+
+    def expiring_in_days
+      (end_date.to_date - Date.today).to_i
     end
 
     def recently_expired?
@@ -101,7 +106,7 @@ module Katello
     end
 
     class Jail < ::Safemode::Jail
-      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed
+      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed, :expiring_in_days
     end
   end
 end
