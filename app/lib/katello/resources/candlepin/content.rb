@@ -20,7 +20,13 @@ module Katello
 
           def destroy(owner_label, id)
             fail ArgumentError, "content id has to be specified" unless id
-            self.delete(path(owner_label, id), self.default_headers).code.to_i
+
+            begin
+              self.delete(path(owner_label, id), self.default_headers).code.to_i
+            rescue RestClient::NotFound
+              # this is OK
+              :content_gone
+            end
           end
 
           def update(owner_label, attrs)
