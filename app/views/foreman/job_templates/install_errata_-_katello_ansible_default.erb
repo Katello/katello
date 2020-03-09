@@ -15,4 +15,4 @@ kind: job_template
 %>
 
 <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
-<%= render_template('Run Command - Ansible Default', :command => "yum update-minimal #{advisories}") %>
+<%= render_template('Run Command - Ansible Default', :command => "yum -y update-minimal #{advisories}") %>
