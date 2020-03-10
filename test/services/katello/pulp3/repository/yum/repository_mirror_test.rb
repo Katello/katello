@@ -16,12 +16,27 @@ module Katello
           @repo_service = @repo.backend_service(@mock_smart_proxy)
         end
 
-        def test_feed_url
+        def test_feed_url_is_prepended_with_pulp_rpm_content_path
           pulp3_repo = Katello::Pulp3::Repository::Yum.new(@repo, @mock_smart_proxy)
-          repo_mirror = pulp3_repo.with_mirror_adapter
-          feed_url = URI(repo_mirror.remote_feed_url)
 
-          assert_equal '/pulp/repos' + @repo.relative_path + '/', feed_url.path
+          assert_equal '/pulp/repos' + @repo.relative_path + '/', pulp3_repo.partial_repo_path
+        end
+
+        def test_mirror_remote_download_policy_matches_proxy
+          @mock_smart_proxy.stubs(:download_policy).returns("on_demand")
+          pulp3_repo = Katello::Pulp3::Repository::Yum.new(@repo, @mock_smart_proxy)
+
+          assert pulp3_repo.mirror_remote_options.key?(:policy)
+          assert_equal "on_demand", pulp3_repo.mirror_remote_options[:policy]
+        end
+
+        def test_mirror_remote_download_policy_is_inherit_from_repository
+          @mock_smart_proxy.stubs(:download_policy).returns(SmartProxy::DOWNLOAD_INHERIT)
+          pulp3_repo = Katello::Pulp3::Repository::Yum.new(@repo, @mock_smart_proxy)
+
+          assert_equal 'on_demand', @repo.root.download_policy
+          assert pulp3_repo.mirror_remote_options.key?(:policy)
+          assert_equal "on_demand", pulp3_repo.mirror_remote_options[:policy]
         end
       end
     end
