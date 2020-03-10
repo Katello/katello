@@ -27,7 +27,7 @@ Katello::Engine.routes.draw do
   match '/ansible_collections' => 'react#index', :via => [:get]
   match '/ansible_collections/*page' => 'react#index', :via => [:get]
 
-  match '/xui' => 'react#index', :via => [:get]
-  match '/xui/*page' => 'react#index', :via => [:get]
+  match '/labs' => 'react#index', :via => [:get]
+  match '/labs/*page' => 'react#index', :via => [:get]
   match '/organization_select' => 'react#index', :via => [:get]
 end

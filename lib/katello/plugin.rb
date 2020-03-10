@@ -209,6 +209,15 @@ Foreman::Plugin.register :katello do
        :after => :content_hosts,
        :turbolinks => false
 
+  menu :labs_menu,
+       :content_publication,
+       :url => '/labs/content_publication',
+       :url_hash => {:controller => 'katello/react',
+                     :action => 'index'},
+       :caption => N_('Content Publication'),
+       :parent => :lab_features_menu,
+       :turbolinks => false
+
   allowed_template_helpers :subscription_manager_configuration_url, :repository_url
   extend_template_helpers Katello::KatelloUrlsHelper
   register_global_js_file 'fills'
