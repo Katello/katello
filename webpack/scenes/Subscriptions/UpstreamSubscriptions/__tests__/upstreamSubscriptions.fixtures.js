@@ -145,6 +145,9 @@ export const saveSuccessActions = [
     type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST',
   },
   {
+    type: 'GET_TASK_REQUEST',
+  },
+  {
     response: getTaskSuccessResponse,
     type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS',
   },

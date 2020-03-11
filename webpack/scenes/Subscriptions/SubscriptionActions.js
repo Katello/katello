@@ -88,10 +88,10 @@ export const updateQuantity = (quantities = {}) => async (dispatch) => {
 
   try {
     const { data } = await api.put(`/organizations/${orgId()}/upstream_subscriptions`, params);
-    return dispatch({
-      type: UPDATE_QUANTITY_SUCCESS,
-      response: data,
-    });
+
+    dispatch(pollTaskUntilDone(data.id, {}, POLL_TASK_INTERVAL, Number(orgId())));
+
+    return dispatch({ type: UPDATE_QUANTITY_SUCCESS });
   } catch (error) {
     return dispatch(apiError(UPDATE_QUANTITY_FAILURE, error));
   }

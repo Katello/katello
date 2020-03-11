@@ -10,12 +10,7 @@ import {
   SUBSCRIPTIONS_QUANTITIES_REQUEST,
   SUBSCRIPTIONS_QUANTITIES_SUCCESS,
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
-  UPDATE_QUANTITY_REQUEST,
-  UPDATE_QUANTITY_SUCCESS,
-  UPDATE_QUANTITY_FAILURE,
-  DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
-  DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
@@ -35,16 +30,6 @@ const fixtures = {
   'should handle SUBSCRIPTIONS_REQUEST': {
     action: {
       type: SUBSCRIPTIONS_REQUEST,
-    },
-  },
-  'should handle UPDATE_QUANTITY_REQUEST': {
-    action: {
-      type: UPDATE_QUANTITY_REQUEST,
-    },
-  },
-  'should handle DELETE_SUBSCRIPTIONS_REQUEST': {
-    action: {
-      type: DELETE_SUBSCRIPTIONS_REQUEST,
     },
   },
   'should handle SUBSCRIPTIONS_COLUMNS_REQUEST': {
@@ -80,24 +65,9 @@ const fixtures = {
       type: DELETE_SUBSCRIPTIONS_SUCCESS,
     },
   },
-  'should handle UPDATE_QUANTITY_SUCCESS': {
-    action: {
-      type: UPDATE_QUANTITY_SUCCESS,
-    },
-  },
   'should handle SUBSCRIPTIONS_FAILURE': {
     action: {
       type: SUBSCRIPTIONS_FAILURE,
-    },
-  },
-  'should handle UPDATE_QUANTITY_FAILURE': {
-    action: {
-      type: UPDATE_QUANTITY_FAILURE,
-    },
-  },
-  'should handle DELETE_SUBSCRIPTIONS_FAILURE': {
-    action: {
-      type: DELETE_SUBSCRIPTIONS_FAILURE,
     },
   },
   'should handle SUBSCRIPTIONS_QUANTITIES_REQUEST': {

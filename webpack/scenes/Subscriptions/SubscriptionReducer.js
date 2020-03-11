@@ -14,11 +14,7 @@ import {
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
   SUBSCRIPTIONS_COLUMNS_REQUEST,
   UPDATE_SUBSCRIPTION_COLUMNS,
-  UPDATE_QUANTITY_REQUEST,
-  UPDATE_QUANTITY_SUCCESS,
-  UPDATE_QUANTITY_FAILURE,
   DELETE_SUBSCRIPTIONS_SUCCESS,
-  DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
@@ -45,7 +41,6 @@ const initialState = Immutable({
 export default (state = initialState, action) => {
   switch (action.type) {
     case SUBSCRIPTIONS_REQUEST:
-    case UPDATE_QUANTITY_REQUEST:
       return state.set('loading', true);
     case SUBSCRIPTIONS_COLUMNS_REQUEST:
       return state
@@ -87,11 +82,7 @@ export default (state = initialState, action) => {
 
     case DELETE_SUBSCRIPTIONS_SUCCESS:
       return state
-        .set('deleteButtonDisabled', true)
-        .set('loading', false);
-
-    case UPDATE_QUANTITY_SUCCESS:
-      return state.set('loading', false);
+        .set('deleteButtonDisabled', true);
 
     case SUBSCRIPTIONS_FAILURE:
       return state
@@ -102,12 +93,6 @@ export default (state = initialState, action) => {
           'missingPermissions',
           get(action, ['payload', 'messages', 0, 'missing_permissions']),
         );
-
-    case UPDATE_QUANTITY_FAILURE:
-    case DELETE_SUBSCRIPTIONS_FAILURE:
-      return state.merge({
-        loading: false,
-      });
 
     case SUBSCRIPTIONS_QUANTITIES_REQUEST:
       return state.merge({

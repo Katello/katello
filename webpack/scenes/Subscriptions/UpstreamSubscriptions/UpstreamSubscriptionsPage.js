@@ -265,7 +265,7 @@ UpstreamSubscriptionsPage.propTypes = {
     results: PropTypes.array,
     pagination: PropTypes.shape({}),
     task: PropTypes.shape({
-      id: PropTypes.number,
+      id: PropTypes.string,
     }),
   }).isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,

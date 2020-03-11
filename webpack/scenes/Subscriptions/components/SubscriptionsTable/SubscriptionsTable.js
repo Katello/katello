@@ -128,16 +128,12 @@ class SubscriptionsTable extends Component {
   getUpdateDialogProps = () => {
     const { showUpdateConfirmDialog: show, updatedQuantity } = this.state;
     const {
-      updateQuantity, bulkSearch, organization, task,
+      updateQuantity,
     } = this.props;
     return {
-      bulkSearch,
-      organization,
       show,
-      task,
       updatedQuantity,
       updateQuantity,
-      confirmEdit: this.confirmEdit,
       enableEditing: this.enableEditing,
       showUpdateConfirm: this.showUpdateConfirm,
     };

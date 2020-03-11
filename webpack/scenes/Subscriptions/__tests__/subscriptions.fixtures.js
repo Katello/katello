@@ -439,7 +439,9 @@ export const updateQuantitySuccessActions = [
     quantities: poolsUpdate,
   },
   {
-    response: requestSuccessResponse,
+    type: 'GET_TASK_REQUEST',
+  },
+  {
     type: 'UPDATE_QUANTITY_SUCCESS',
   },
 ];

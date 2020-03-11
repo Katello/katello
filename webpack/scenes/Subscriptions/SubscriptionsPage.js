@@ -109,9 +109,9 @@ class SubscriptionsPage extends Component {
   async pollTasks() {
     const { pollBulkSearch, organization } = this.props;
 
-    if (organization && organization.owner_details) {
+    if (organization) {
       pollBulkSearch({
-        action: `organization '${organization.owner_details.displayName}'`,
+        organization_id: organization.id,
         result: 'pending',
         label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
       }, BULK_TASK_SEARCH_INTERVAL, organization.id);
@@ -143,7 +143,7 @@ class SubscriptionsPage extends Component {
   cleanUpManifestTask = async () => {
     await renderTaskStartedToast(this.props.taskDetails);
     setTimeout(() => this.props.bulkSearch({
-      action: `organization '${this.props.organization.owner_details.displayName}'`,
+      organization_id: this.props.organization.id,
       result: 'pending',
       label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
     }), 100);
@@ -356,9 +356,6 @@ SubscriptionsPage.propTypes = {
   }),
   organization: PropTypes.shape({
     id: PropTypes.number,
-    owner_details: PropTypes.shape({
-      displayName: PropTypes.string,
-    }),
   }),
   pollBulkSearch: PropTypes.func.isRequired,
   bulkSearch: PropTypes.func,

@@ -12,6 +12,9 @@ import {
   SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE,
 } from './UpstreamSubscriptionsContstants';
 
+import { pollTaskUntilDone } from '../../Tasks/TaskActions';
+import { POLL_TASK_INTERVAL } from '../../Tasks/TaskConstants';
+
 export const loadUpstreamSubscriptions = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: UPSTREAM_SUBSCRIPTIONS_REQUEST });
 
@@ -41,6 +44,9 @@ export const saveUpstreamSubscriptions = upstreamSubscriptions => async (dispatc
 
   try {
     const { data } = await api.post(`/organizations/${orgId()}/upstream_subscriptions`, params);
+
+    dispatch(pollTaskUntilDone(data.id, {}, POLL_TASK_INTERVAL, Number(orgId())));
+
     return dispatch({
       type: SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
       response: data,
