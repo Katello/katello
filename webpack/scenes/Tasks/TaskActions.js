@@ -82,8 +82,8 @@ export const pollBulkSearch = (extendedParams = {}, interval, orgId) =>
         }
       }
     };
-    const { id, loading } = getState().katello.organization;
-    if (id === orgId && !loading) {
+    const { id } = getState().katello.organization;
+    if (id === orgId) {
       const dispatchedAction = await dispatch(await bulkSearch(extendedParams));
       triggerPolling(dispatchedAction);
       return dispatchedAction;
@@ -95,9 +95,9 @@ export const pollBulkSearch = (extendedParams = {}, interval, orgId) =>
 export const pollTaskUntilDone = (taskId, extendedParams = {}, interval, orgId) =>
   (dispatch, getState) => new Promise((resolve, reject) => {
     const pollUntilDone = (action) => {
-      const { id, loading } = getState().katello.organization;
+      const { id } = getState().katello.organization;
 
-      if (isUnauthorized(action) || id !== orgId || loading) {
+      if (isUnauthorized(action) || id !== orgId) {
         reject(action.result);
       } else if (action.response && action.response.pending) {
         // eslint-disable-next-line promise/prefer-await-to-then
