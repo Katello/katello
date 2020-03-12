@@ -61,6 +61,14 @@ module Katello
         scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
+
+        scoped_search relation: :pools, on: :end_date, ext_method: :find_with_pools
+
+        def self.find_with_pools(key, operator, value)
+          conditions = sanitize_sql_for_conditions(["katello_pools.#{key} #{operator} ?", value_to_sql(operator, value)])
+          host_ids = ::Host.joins(:pools).where(conditions).ids
+          { :conditions => "hosts.id IN(#{host_ids.join(',')})" }
+        end
       end
 
       def correct_kickstart_repository
