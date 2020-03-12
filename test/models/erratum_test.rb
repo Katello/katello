@@ -91,6 +91,20 @@ module Katello
     def test_not_applicable_to_hosts
       assert_empty Erratum.applicable_to_hosts(::Host.where(id: [@host_without_errata].map(&:id)))
     end
+
+    def test_large_sync_repository_association
+      Katello::Erratum.stubs(:backend_identifier_field).returns("erratum_pulp3_href")
+      i, ids, ids_href_map = 0, [], {}
+      while (i < 70_000)
+        ids[i] = ["errata_id_#{i}"]
+        ids_href_map["errata_id_#{i}"] = "pulp_href#{i}"
+        i += 1
+      end
+      Katello::Erratum.import([:pulp_id], ids, validate: false)
+      Katello::Erratum.sync_repository_associations(@repo, :pulp_id_href_map => ids_href_map)
+      post_repo_erratum_size = @repo.errata.size
+      assert_equal post_repo_erratum_size, 70_000
+    end
   end
 
   class ErratumAvailableTest < ErratumTestBase
