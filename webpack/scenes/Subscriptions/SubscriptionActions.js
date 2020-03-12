@@ -10,11 +10,9 @@ import {
   SUBSCRIPTIONS_QUANTITIES_REQUEST,
   SUBSCRIPTIONS_QUANTITIES_SUCCESS,
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
-  UPDATE_QUANTITY_REQUEST,
   UPDATE_QUANTITY_SUCCESS,
   UPDATE_QUANTITY_FAILURE,
   UPDATE_SUBSCRIPTION_COLUMNS,
-  DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTION_TABLE_COLUMNS,
@@ -30,8 +28,6 @@ import {
 } from './SubscriptionConstants';
 import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
-import { pollTaskUntilDone } from '../Tasks/TaskActions';
-import { POLL_TASK_INTERVAL } from '../Tasks/TaskConstants';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{
@@ -80,18 +76,16 @@ export const loadSubscriptions = (extendedParams = {}) => async (dispatch) => {
 };
 
 export const updateQuantity = (quantities = {}) => async (dispatch) => {
-  dispatch({ type: UPDATE_QUANTITY_REQUEST, quantities });
-
   const params = {
     pools: quantities,
   };
 
   try {
     const { data } = await api.put(`/organizations/${orgId()}/upstream_subscriptions`, params);
-
-    dispatch(pollTaskUntilDone(data.id, {}, POLL_TASK_INTERVAL, Number(orgId())));
-
-    return dispatch({ type: UPDATE_QUANTITY_SUCCESS });
+    return dispatch({
+      type: UPDATE_QUANTITY_SUCCESS,
+      response: data,
+    });
   } catch (error) {
     return dispatch(apiError(UPDATE_QUANTITY_FAILURE, error));
   }
@@ -119,16 +113,16 @@ export const loadTableColumns = selectedColumns => (dispatch) => {
 };
 
 export const deleteSubscriptions = poolIds => async (dispatch) => {
-  dispatch({ type: DELETE_SUBSCRIPTIONS_REQUEST });
-
   const params = {
     pool_ids: poolIds,
   };
 
   try {
     const { data } = await api.delete(`/organizations/${(orgId())}/upstream_subscriptions`, {}, params);
-    dispatch(pollTaskUntilDone(data.id, {}, POLL_TASK_INTERVAL, Number(orgId())));
-    return dispatch({ type: DELETE_SUBSCRIPTIONS_SUCCESS });
+    return dispatch({
+      type: DELETE_SUBSCRIPTIONS_SUCCESS,
+      response: data,
+    });
   } catch (error) {
     return dispatch(apiError(DELETE_SUBSCRIPTIONS_FAILURE, error));
   }

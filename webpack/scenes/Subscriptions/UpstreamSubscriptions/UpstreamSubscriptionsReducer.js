@@ -46,7 +46,10 @@ export default (state = initialState, action) => {
       return state.set('loading', true);
 
     case SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS:
-      return state.set('task', action.response).set('loading', false);
+      return state
+        .set('task', action.response)
+        .set('tasks', [action.response])
+        .set('loading', false);
 
     case SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE: {
       return state.set('error', action.payload.message).set('loading', false);

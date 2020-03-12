@@ -14,6 +14,7 @@ import {
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
   SUBSCRIPTIONS_COLUMNS_REQUEST,
   UPDATE_SUBSCRIPTION_COLUMNS,
+  UPDATE_QUANTITY_SUCCESS,
   DELETE_SUBSCRIPTIONS_SUCCESS,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
@@ -80,10 +81,6 @@ export default (state = initialState, action) => {
       });
     }
 
-    case DELETE_SUBSCRIPTIONS_SUCCESS:
-      return state
-        .set('deleteButtonDisabled', true);
-
     case SUBSCRIPTIONS_FAILURE:
       return state
         .set('loading', false)
@@ -126,8 +123,12 @@ export default (state = initialState, action) => {
       return state;
     }
 
+    case UPDATE_QUANTITY_SUCCESS:
+    case DELETE_SUBSCRIPTIONS_SUCCESS:
     case GET_TASK_SUCCESS: {
-      return state.set('tasks', [action.response]);
+      return state
+        .set('tasks', [action.response])
+        .set('deleteButtonDisabled', true);
     }
 
     case RESET_TASKS: {
