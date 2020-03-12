@@ -104,6 +104,7 @@ export const initialSaveState = Immutable({
 export const saveSuccessState = Immutable({
   loading: false,
   task: getTaskSuccessResponse,
+  tasks: [getTaskSuccessResponse],
 });
 
 export const errorState = Immutable({
@@ -143,9 +144,6 @@ export const getFailureActions = [
 export const saveSuccessActions = [
   {
     type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST',
-  },
-  {
-    type: 'GET_TASK_REQUEST',
   },
   {
     response: getTaskSuccessResponse,

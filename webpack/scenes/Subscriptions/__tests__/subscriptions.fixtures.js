@@ -435,22 +435,12 @@ export const poolsUpdate = [{
 
 export const updateQuantitySuccessActions = [
   {
-    type: 'UPDATE_QUANTITY_REQUEST',
-    quantities: poolsUpdate,
-  },
-  {
-    type: 'GET_TASK_REQUEST',
-  },
-  {
     type: 'UPDATE_QUANTITY_SUCCESS',
+    response: requestSuccessResponse,
   },
 ];
 
 export const updateQuantityFailureActions = [
-  {
-    type: 'UPDATE_QUANTITY_REQUEST',
-    quantities: poolsUpdate,
-  },
   failureAction('UPDATE_QUANTITY_FAILURE'),
   toastErrorAction(),
 ];
