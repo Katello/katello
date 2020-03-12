@@ -43,5 +43,18 @@ module Katello
       ids = ['href'] * 70_000 + [@file_one.pulp_id]
       assert_equal 1, FileUnit.with_pulp_id(ids).count
     end
+
+    def test_large_sync_repository_association
+      i, ids, ids_href_map = 0, [], {}
+      while (i < 70_000)
+        ids[i] = ["href#{i}"]
+        ids_href_map["href#{i}"] = nil
+        i += 1
+      end
+      Katello::FileUnit.import([:pulp_id], ids, validate: false)
+      Katello::FileUnit.sync_repository_associations(@repo, :pulp_id_href_map => ids_href_map)
+      file_unit_size_post = @repo.file_units.size
+      assert_equal file_unit_size_post, 70_000
+    end
   end
 end

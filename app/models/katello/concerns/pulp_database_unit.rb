@@ -136,7 +136,8 @@ module Katello
         pulp_ids = options.dig(:pulp_ids) || pulp_id_href_map.try(:keys)
         ids_for_repository = with_pulp_id(pulp_ids).pluck(:id, :pulp_id)
         associated_ids = ids_for_repository.map(&:first)
-        id_href_map_for_repository = Hash[*ids_for_repository.flatten]
+        id_href_map_for_repository = {}
+        ids_for_repository.each { |id_href| id_href_map_for_repository[id_href[0]] = id_href[1] }
         id_href_map_for_repository.each_pair { |k, v| id_href_map_for_repository[k] = pulp_id_href_map[v] }
 
         existing_ids = self.repository_association_class.uncached do
