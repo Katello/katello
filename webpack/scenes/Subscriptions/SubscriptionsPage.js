@@ -44,6 +44,7 @@ class SubscriptionsPage extends Component {
     } = this.props;
     const { tasks: prevTasks = [] } = prevProps;
     const currentOrg = Number(orgId());
+
     const numberOfTasks = tasks.length;
     const numberOfPrevTasks = prevTasks.length;
     const [task] = tasks;
@@ -65,7 +66,7 @@ class SubscriptionsPage extends Component {
     }
 
     if (numberOfTasks === 0) {
-      if (taskModalOpened && !this.state.pollingATask) {
+      if (taskModalOpened) {
         closeTaskModal();
       }
     }
@@ -130,14 +131,10 @@ class SubscriptionsPage extends Component {
     const task = await pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL, organization.id);
     renderTaskFinishedToast(task);
     loadSubscriptions();
-    this.setState({ pollingATask: false });
   }
 
   startManifestTask = () => {
     this.props.openTaskModal();
-    this.setState({
-      pollingATask: true,
-    });
   };
 
   cleanUpManifestTask = async () => {

@@ -115,7 +115,7 @@ export default (state = initialState, action) => {
       const tasks = action.response.results;
       const prevTasksSize = state.tasks.length;
       const shouldInitTasks = prevTasksSize === 0 && tasks.length > 0;
-      const isTaskFinished = prevTasksSize > 0 && !state.tasks[0].pending;
+      const isTaskFinished = prevTasksSize > 0 && tasks.length === 0;
 
       if (shouldInitTasks || isTaskFinished) {
         return state.set('tasks', tasks);
