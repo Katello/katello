@@ -194,7 +194,12 @@ module Katello
 
       def db_values_copy(source_repo, dest_repo)
         db_values = []
-        new_units = self.repository_association_class.where(repository: source_repo).where.not(unit_id_field => self.repository_association_class.where(repository: dest_repo).pluck(unit_id_field))
+        existing_unit_ids = self.repository_association_class.where(repository: dest_repo).pluck(unit_id_field)
+        if existing_unit_ids.empty?
+          new_units = self.repository_association_class.where(repository: source_repo)
+        else
+          new_units = self.repository_association_class.where(repository: source_repo).where.not("#{unit_id_field} in (?) ", existing_unit_ids)
+        end
         unit_backend_identifier_field = backend_identifier_field
         unit_identifier_filed = unit_id_field
         new_units.each do |unit|
