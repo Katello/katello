@@ -50,11 +50,13 @@ module Katello
       active
     end
 
+    # used for notification bell
     def expiring_soon?
       expiring_in_days >= 0 &&
         expiring_in_days <= Setting[:expire_soon_days].to_i
     end
 
+    # used for entitlements report template
     def expiring_in_days
       (end_date.to_date - Date.today).to_i
     end
