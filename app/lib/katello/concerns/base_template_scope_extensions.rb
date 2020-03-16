@@ -76,7 +76,7 @@ module Katello
       end
 
       def host_applicable_errata_filtered(host, filter = '')
-        host.applicable_errata.search_for(filter)
+        host.applicable_errata.includes(:cves).search_for(filter)
       end
 
       def host_latest_applicable_rpm_version(host, package)
