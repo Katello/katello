@@ -28,7 +28,7 @@ module Katello
     end
 
     def redhat?
-      self.products.first.try(:redhat?)
+      products.redhat.any?
     end
 
     def propagate_name_change?

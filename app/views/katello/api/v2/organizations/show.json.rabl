@@ -2,13 +2,18 @@ object @organization
 
 extends "api/v2/taxonomies/show"
 
-attributes :task_id, :label, :owner_details, :redhat_repository_url
+attributes :task_id, :label, :redhat_repository_url
 
 if ::SETTINGS[:katello][:use_cp]
   attributes :system_purposes, :system_purposes
   attributes :service_levels, :service_level
+
   node :simple_content_access do |org|
     org.simple_content_access?
+  end
+
+  node :owner_details do |org|
+    partial('katello/api/v2/organizations/owner_details', object: OpenStruct.new(org.owner_details))
   end
 end
 

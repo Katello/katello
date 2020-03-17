@@ -65,6 +65,8 @@ module ::Actions::Katello::ContentViewVersion
       [katello_repositories(:rhel_6_x86_64_dev_archive), katello_repositories(:fedora_17_x86_64_library_view_2)]
     end
 
+    let(:organization) { library.organization }
+
     it 'plans' do
       stub_remote_user
 
@@ -77,7 +79,7 @@ module ::Actions::Katello::ContentViewVersion
         refute export_to_iso
         assert_nil since
         assert_equal 0, iso_size
-        assert_equal '-published_library_view-v2.0', group_id
+        assert_equal "#{organization.label}-published_library_view-v2.0", group_id
       end
     end
 
@@ -93,7 +95,7 @@ module ::Actions::Katello::ContentViewVersion
         refute export_to_iso
         assert_equal '1841-01-01', since
         assert_equal 0, iso_size
-        assert_equal '-published_library_view-v2.0', group_id
+        assert_equal "#{organization.label}-published_library_view-v2.0", group_id
       end
     end
   end

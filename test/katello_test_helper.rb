@@ -98,6 +98,12 @@ module FixtureTestCase
 
     @@admin = ::User.unscoped.find(FIXTURES['users']['admin']['id'])
     User.current = @@admin
+
+    Organization.all.each do |org|
+      org.setup_label_from_name unless org.label
+      org.location_ids += org.hosts.pluck(:location_id) # prevent orphaned hosts validation errors
+      org.save!
+    end
   end
 end
 
@@ -288,18 +294,8 @@ class ActiveSupport::TestCase
     Organization.current = org
   end
 
-  def get_organization(org = nil)
-    saved_user = User.current
-    User.current = User.unscoped.find(users(:admin).id)
-    org = org.nil? ? :empty_organization : org
-    organization = Organization.find(taxonomies(org.to_sym).id)
-    organization.stubs(:label_not_changed).returns(true)
-    organization.setup_label_from_name
-    location = Location.where(name: "Location 1").first
-    organization.locations << location
-    organization.save!
-    User.current = saved_user
-    organization
+  def get_organization(org = :empty_organization)
+    taxonomies(org)
   end
 
   def mock_active_records(*records)

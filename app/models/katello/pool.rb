@@ -21,6 +21,8 @@ module Katello
       return self if days.blank?
       where(["end_date < ?", days.to_i.days.from_now.end_of_day])
     end
+    scope :upstream, -> { where.not(upstream_pool_id: nil) }
+
     include Glue::Candlepin::Pool
     include Glue::Candlepin::CandlepinObject
 
@@ -79,7 +81,7 @@ module Katello
     end
 
     def upstream?
-      subscription.present? && subscription.redhat?
+      upstream_pool_id.present?
     end
 
     def import_audit_record(old_host_ids, new_host_ids = subscription_facets.pluck(:host_id))

@@ -37,6 +37,7 @@ module Katello
 
         attr_accessor :statistics
 
+        scope :with_upstream_pools, -> { joins(:pools).merge(Katello::Pool.upstream).distinct }
         scope :having_name_or_label, ->(name_or_label) { where("name = :id or label = :id", :id => name_or_label) }
         scoped_search :on => :label, :complete_value => :true
 
@@ -67,6 +68,10 @@ module Katello
 
         def redhat_provider
           self.providers.redhat.first
+        end
+
+        def redhat_account_number
+          pools.upstream.pluck(:account_number).first
         end
 
         def active_pools_count
