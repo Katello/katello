@@ -9,7 +9,7 @@ import ModuleStreams from '../../scenes/ModuleStreams';
 import ModuleStreamDetails from '../../scenes/ModuleStreams/Details';
 import AnsibleCollections from '../../scenes/AnsibleCollections';
 import AnsibleCollectionDetails from '../../scenes/AnsibleCollections/Details';
-import ContentPublication from '../../scenes/ContentPublication';
+import ContentViews from '../../scenes/ContentViews';
 import withHeader from './withHeaders';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -52,7 +52,7 @@ export const links = [
     component: withHeader(AnsibleCollectionDetails, { title: __('Ansible Collection Details') }),
   },
   {
-    path: 'labs/content_publication',
-    component: withHeader(ContentPublication, { title: __('Content Publication') }),
+    path: 'labs/content_views',
+    component: withHeader(ContentViews, { title: __('Content Views') }),
   },
 ];
