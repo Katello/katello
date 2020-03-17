@@ -41,6 +41,7 @@ module.exports = {
   ],
   setupFilesAfterEnv: [
     './webpack/global_test_setup.js',
+    '@testing-library/jest-dom'
   ],
   testPathIgnorePatterns: [
     '/node_modules/',
