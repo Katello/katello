@@ -16,8 +16,15 @@ import {
   loadQuantitiesSuccessActions,
   quantitiesRequestSuccessResponse,
   loadTableColumnsSuccessAction,
+  handleTaskActions,
+  handleTaskPollingActions,
+  pollTasksActions,
+  mockPendingTask,
+  mockFinishedTask,
 } from './subscriptions.fixtures';
 import {
+  handleTask,
+  pollTasks,
   loadSubscriptions,
   updateQuantity,
   loadAvailableQuantities,
@@ -25,14 +32,19 @@ import {
   updateSearchQuery,
   openDeleteModal,
   closeDeleteModal,
-  openTaskModal,
-  closeTaskModal,
   disableDeleteButton,
   enableDeleteButton,
 } from '../SubscriptionActions';
 
 const mockStore = configureMockStore([thunk]);
-const store = mockStore({ subscriptions: Immutable({}) });
+const store = mockStore(Immutable({
+  katello: {
+    subscriptions: {},
+    organization: {
+      id: 1,
+    },
+  },
+}));
 
 afterEach(() => {
   store.clearActions();
@@ -145,6 +157,50 @@ describe('subscription actions', () => {
     );
   });
 
+  describe('handleTask', () => {
+    it('polls the task', async () => {
+      mockRequest({
+        url: '/foreman_tasks/api/tasks/12345',
+        data: {},
+        response: mockFinishedTask,
+      });
+
+      await store.dispatch(handleTask(mockPendingTask));
+
+      expect(store.getActions()).toEqual(handleTaskActions);
+    });
+
+    it('does not poll if already polling', () => {
+      const pollingStore = mockStore(Immutable({
+        katello: {
+          subscriptions: {
+            pollingATask: true,
+          },
+        },
+      }));
+
+      pollingStore.dispatch(handleTask({}));
+
+      expect(pollingStore.getActions()).toEqual(handleTaskPollingActions);
+    });
+  });
+
+  describe('pollTasks', () => {
+    it('polls tasks', async () => {
+      mockRequest({
+        url: '/foreman_tasks/api/tasks',
+        data: {},
+        response: {
+          results: [mockPendingTask],
+        },
+      });
+
+      await store.dispatch(pollTasks());
+
+      expect(store.getActions()).toEqual(pollTasksActions);
+    });
+  });
+
   describe('deleteModal', () => testActionSnapshotWithFixtures({
     'it should open delete modal': () => openDeleteModal(),
     'it should close delete modal': () => closeDeleteModal(),
@@ -152,11 +208,6 @@ describe('subscription actions', () => {
 
   describe('searchQuery', () => testActionSnapshotWithFixtures({
     'it should update the search-query': () => updateSearchQuery('some-query'),
-  }));
-
-  describe('taskModal', () => testActionSnapshotWithFixtures({
-    'it should open task modal': () => openTaskModal(),
-    'it should close task modal': () => closeTaskModal(),
   }));
 
   describe('deleteButtonDisabled', () => testActionSnapshotWithFixtures({

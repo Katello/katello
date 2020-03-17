@@ -1,5 +1,7 @@
 import { translate as __ } from 'foremanReact/common/I18n';
 
+export const CANCEL_POLL_TASKS = 'CANCEL_POLL_TASKS';
+
 export const SUBSCRIPTIONS_REQUEST = 'SUBSCRIPTIONS_REQUEST';
 export const SUBSCRIPTIONS_SUCCESS = 'SUBSCRIPTIONS_SUCCESS';
 export const SUBSCRIPTIONS_FAILURE = 'SUBSCRIPTIONS_FAILURE';

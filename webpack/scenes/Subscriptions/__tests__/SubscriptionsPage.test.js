@@ -15,9 +15,17 @@ const loadTables = () => new Promise((resolve) => {
   resolve();
 });
 
+const pollTasks = jest.fn();
+const handleTask = jest.fn();
+
+afterEach(() => {
+  pollTasks.mockClear();
+  handleTask.mockClear();
+});
+
 describe('subscriptions page', () => {
   const noop = () => {};
-  const organization = { owner_details: { upstreamConsumer: 'blah' } };
+  const organization = { owner_details: { upstreamConsumer: {} } };
   const page = shallow(<SubscriptionsPage
     setModalOpen={noop}
     setModalClosed={noop}
@@ -31,8 +39,11 @@ describe('subscriptions page', () => {
     updateColumns={updateColumns}
     loadSubscriptions={loadSubscriptions}
     updateQuantity={updateQuantity}
+    handleTask={handleTask}
     pollTaskUntilDone={noop}
     pollBulkSearch={noop}
+    pollTasks={pollTasks}
+    cancelPollTasks={noop}
     deleteSubscriptions={() => {}}
     resetTasks={noop}
     uploadManifest={noop}
@@ -43,8 +54,6 @@ describe('subscriptions page', () => {
     closeManageManifestModal={noop}
     openDeleteModal={noop}
     closeDeleteModal={noop}
-    openTaskModal={noop}
-    closeTaskModal={noop}
     disableDeleteButton={noop}
     enableDeleteButton={noop}
   />);
@@ -62,8 +71,11 @@ describe('subscriptions page', () => {
     updateColumns={updateColumns}
     loadSubscriptions={loadSubscriptions}
     updateQuantity={updateQuantity}
+    handleTask={handleTask}
     pollTaskUntilDone={noop}
     pollBulkSearch={noop}
+    pollTasks={pollTasks}
+    cancelPollTasks={noop}
     deleteSubscriptions={() => {}}
     resetTasks={noop}
     uploadManifest={noop}
@@ -74,8 +86,6 @@ describe('subscriptions page', () => {
     closeManageManifestModal={noop}
     openDeleteModal={noop}
     closeDeleteModal={noop}
-    openTaskModal={noop}
-    closeTaskModal={noop}
     disableDeleteButton={noop}
     enableDeleteButton={noop}
   />);
@@ -89,10 +99,27 @@ describe('subscriptions page', () => {
   });
 
   it('should poll tasks when org changes', async () => {
-    jest.spyOn(page.instance(), 'pollTasks');
-
     page.setProps({ organization: { id: 1 } });
 
-    expect(page.instance().pollTasks).toHaveBeenCalled();
+    expect(pollTasks).toHaveBeenCalled();
+  });
+
+  it('should not poll tasks if org has not changed', async () => {
+    page.setProps({ simpleContentAccess: true });
+
+    expect(pollTasks).not.toHaveBeenCalled();
+  });
+
+  it('should handle its task', async () => {
+    const mockTask = {
+      id: '12345',
+      humanized: {
+        action: 'Manifest Refresh',
+      },
+    };
+
+    page.setProps({ task: mockTask });
+
+    expect(handleTask).toHaveBeenCalledWith(mockTask);
   });
 });

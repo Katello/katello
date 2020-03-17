@@ -1,15 +1,24 @@
+import { addToast } from 'foremanReact/redux/actions/toasts';
 import { propsToSnakeCase } from 'foremanReact/common/helpers';
 
 import { foremanTasksApi as api } from '../../services/api';
 import {
+  POLL_TASK_STARTED,
   GET_TASK_REQUEST,
   GET_TASK_SUCCESS,
   GET_TASK_FAILURE,
   TASK_BULK_SEARCH_REQUEST,
   TASK_BULK_SEARCH_SUCCESS,
   TASK_BULK_SEARCH_FAILURE,
+  TASK_BULK_SEARCH_SKIPPED,
+  TASK_BULK_SEARCH_CANCELLED,
   RESET_TASKS,
 } from './TaskConstants';
+
+import { taskFinishedToast } from './helpers';
+
+export const toastTaskFinished = task => async dispatch =>
+  dispatch(addToast(taskFinishedToast(task)));
 
 export const bulkSearch = (extendedParams = {}) => async (dispatch) => {
   const params = {
@@ -72,24 +81,36 @@ const isUnauthorized = (action = {}) => (action.result
     && action.result.response.status === 401);
 
 
-export const pollBulkSearch = (extendedParams = {}, interval, orgId) =>
+export const pollBulkSearch = (extendedParams = {}, interval, orgId, shouldSkip, shouldCancel) =>
   async (dispatch, getState) => {
     const triggerPolling = (action) => {
       const { id } = getState().katello.organization;
       if (!isUnauthorized(action)) {
         if (id === orgId) {
-          setTimeout(() => dispatch(pollBulkSearch(extendedParams, interval, orgId)), interval);
+          setTimeout(() => {
+            dispatch(pollBulkSearch(extendedParams, interval, orgId, shouldSkip, shouldCancel));
+          }, interval);
         }
       }
     };
-    const { id } = getState().katello.organization;
-    if (id === orgId) {
-      const dispatchedAction = await dispatch(await bulkSearch(extendedParams));
-      triggerPolling(dispatchedAction);
-      return dispatchedAction;
+
+    if (!shouldCancel || !shouldCancel()) {
+      const { id } = getState().katello.organization;
+      if (id === orgId) {
+        const dispatchedAction = async () => {
+          if (shouldSkip && shouldSkip()) {
+            return dispatch({ type: TASK_BULK_SEARCH_SKIPPED });
+          }
+
+          return dispatch(await bulkSearch(extendedParams));
+        };
+
+        triggerPolling(await dispatchedAction());
+        return dispatchedAction;
+      }
     }
 
-    return dispatch({ type: 'POLLING_IS_SKIPPED' });
+    return dispatch({ type: TASK_BULK_SEARCH_CANCELLED });
   };
 
 export const pollTaskUntilDone = (taskId, extendedParams = {}, interval, orgId) =>
@@ -106,6 +127,7 @@ export const pollTaskUntilDone = (taskId, extendedParams = {}, interval, orgId) 
         resolve(action.response);
       }
     };
+    dispatch({ type: POLL_TASK_STARTED });
     // eslint-disable-next-line promise/prefer-await-to-then
     return dispatch(loadTask(taskId, extendedParams)).then(pollUntilDone);
   });

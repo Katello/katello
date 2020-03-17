@@ -27,15 +27,19 @@ export const renderTaskStartedToast = (task) => {
   });
 };
 
-export const renderTaskFinishedToast = (task) => {
-  if (!task) return;
-
-  const message = __(`Task ${task.action} completed with a result of ${task.result}.
+export const taskFinishedToast = (task) => {
+  const message = __(`Task ${task.humanized.action} completed with a result of ${task.result}.
   ${task.errors ? getErrors(task) : ''}`);
 
-  window.tfm.toastNotifications.notify({
+  return {
     message,
     type: task.result,
     link: link(task.id),
-  });
+  };
+};
+
+export const renderTaskFinishedToast = (task) => {
+  if (!task) return;
+
+  window.tfm.toastNotifications.notify(taskFinishedToast(task));
 };

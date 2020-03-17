@@ -3,7 +3,12 @@ import { get } from 'lodash';
 import { GET_SETTING_SUCCESS } from 'foremanReact/components/Settings/SettingsConstants';
 import { initialApiState } from '../../services/api';
 
-import { TASK_BULK_SEARCH_SUCCESS, RESET_TASKS, GET_TASK_SUCCESS } from '../Tasks/TaskConstants';
+import {
+  TASK_BULK_SEARCH_SUCCESS,
+  GET_TASK_SUCCESS,
+  RESET_TASKS,
+  POLL_TASK_STARTED,
+} from '../Tasks/TaskConstants';
 
 import {
   SUBSCRIPTIONS_REQUEST,
@@ -14,27 +19,41 @@ import {
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
   SUBSCRIPTIONS_COLUMNS_REQUEST,
   UPDATE_SUBSCRIPTION_COLUMNS,
+  UPDATE_QUANTITY_REQUEST,
   UPDATE_QUANTITY_SUCCESS,
+  UPDATE_QUANTITY_FAILURE,
   DELETE_SUBSCRIPTIONS_SUCCESS,
+  DELETE_SUBSCRIPTIONS_REQUEST,
+  DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
-  SUBSCRIPTIONS_OPEN_TASK_MODAL,
-  SUBSCRIPTIONS_CLOSE_TASK_MODAL,
   SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
   SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
+  CANCEL_POLL_TASKS,
 } from './SubscriptionConstants';
+
+import {
+  DELETE_MANIFEST_SUCCESS,
+  DELETE_MANIFEST_REQUEST,
+  DELETE_MANIFEST_FAILURE,
+  UPLOAD_MANIFEST_SUCCESS,
+  UPLOAD_MANIFEST_REQUEST,
+  UPLOAD_MANIFEST_FAILURE,
+  REFRESH_MANIFEST_SUCCESS,
+  REFRESH_MANIFEST_REQUEST,
+  REFRESH_MANIFEST_FAILURE,
+} from './Manifest/ManifestConstants';
 
 const initialState = Immutable({
   ...initialApiState,
   disconnected: false,
   searchQuery: '',
   deleteModalOpened: false,
-  taskModalOpened: false,
   deleteButtonDisabled: true,
   quantitiesLoading: false,
   availableQuantities: null,
-  tasks: [],
+  task: null,
   tableColumns: [],
   selectedTableColumns: [],
 });
@@ -113,27 +132,54 @@ export default (state = initialState, action) => {
 
     case TASK_BULK_SEARCH_SUCCESS: {
       const tasks = action.response.results;
-      const prevTasksSize = state.tasks.length;
-      const shouldInitTasks = prevTasksSize === 0 && tasks.length > 0;
-      const isTaskFinished = prevTasksSize > 0 && tasks.length === 0;
-
-      if (shouldInitTasks || isTaskFinished) {
-        return state.set('tasks', tasks);
+      if (tasks.length > 0) {
+        return state
+          .set('task', tasks[0]) // this will be the oldest pending task
+          .set('bulkTasksPaused', true);
       }
+
       return state;
     }
 
-    case UPDATE_QUANTITY_SUCCESS:
-    case DELETE_SUBSCRIPTIONS_SUCCESS:
-    case GET_TASK_SUCCESS: {
-      return state
-        .set('tasks', [action.response])
-        .set('deleteButtonDisabled', true);
-    }
+    case DELETE_MANIFEST_REQUEST:
+    case UPLOAD_MANIFEST_REQUEST:
+    case REFRESH_MANIFEST_REQUEST:
+    case UPDATE_QUANTITY_REQUEST:
+    case DELETE_SUBSCRIPTIONS_REQUEST:
+      return state.set('bulkTasksPaused', true);
 
-    case RESET_TASKS: {
-      return state.set('tasks', []);
-    }
+    case DELETE_MANIFEST_SUCCESS:
+    case UPLOAD_MANIFEST_SUCCESS:
+    case REFRESH_MANIFEST_SUCCESS:
+    case UPDATE_QUANTITY_SUCCESS:
+    case GET_TASK_SUCCESS:
+      return state
+        .set('task', action.response);
+
+    case DELETE_SUBSCRIPTIONS_SUCCESS:
+      return state
+        .set('task', action.response)
+        .set('deleteButtonDisabled', true);
+
+    case DELETE_MANIFEST_FAILURE:
+    case UPLOAD_MANIFEST_FAILURE:
+    case REFRESH_MANIFEST_FAILURE:
+    case DELETE_SUBSCRIPTIONS_FAILURE:
+    case UPDATE_QUANTITY_FAILURE:
+      return state.set('bulkTasksPaused', false);
+
+    case POLL_TASK_STARTED:
+      return state.set('pollingATask', true);
+
+    case RESET_TASKS:
+      return state
+        .set('task', null)
+        .set('bulkTasksPaused', false)
+        .set('bulkTasksCancelled', false)
+        .set('pollingATask', false);
+
+    case CANCEL_POLL_TASKS:
+      return state.set('bulkTasksCancelled', true);
 
     case GET_SETTING_SUCCESS: {
       if (action.response.name === 'content_disconnected') {
@@ -150,11 +196,6 @@ export default (state = initialState, action) => {
       return state.set('deleteModalOpened', true);
     case SUBSCRIPTIONS_CLOSE_DELETE_MODAL:
       return state.set('deleteModalOpened', false);
-
-    case SUBSCRIPTIONS_OPEN_TASK_MODAL:
-      return state.set('taskModalOpened', true);
-    case SUBSCRIPTIONS_CLOSE_TASK_MODAL:
-      return state.set('taskModalOpened', false);
 
     case SUBSCRIPTIONS_DISABLE_DELETE_BUTTON:
       return state.set('deleteButtonDisabled', true);

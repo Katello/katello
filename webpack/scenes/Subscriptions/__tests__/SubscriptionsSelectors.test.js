@@ -4,8 +4,7 @@ import {
   selectSearchQuery,
   selectDeleteModalOpened,
   selectDeleteButtonDisabled,
-  selectSubscriptionsTasks,
-  selectTaskModalOpened,
+  selectSubscriptionsTask,
 } from '../SubscriptionsSelectors';
 
 const state = {
@@ -15,7 +14,7 @@ const state = {
       deleteModalOpened: false,
       taskModalOpened: false,
       deleteButtonDisabled: true,
-      tasks: ['task1', 'task2'],
+      task: {},
     },
   },
 };
@@ -24,9 +23,8 @@ const fixtures = {
   'should select the subscriptions state': () => selectSubscriptionsState(state),
   'should select search-query': () => selectSearchQuery(state),
   'should select delete-modal-opened': () => selectDeleteModalOpened(state),
-  'should select task-modal-opened': () => selectTaskModalOpened(state),
   'should select delete-button-disabled': () => selectDeleteButtonDisabled(state),
-  'should select subscriptions tasks': () => selectSubscriptionsTasks(state),
+  'should select subscriptions task': () => selectSubscriptionsTask(state),
 };
 
 describe('Subscriptions selectors', () => testSelectorsSnapshotWithFixtures(fixtures));

@@ -97,6 +97,18 @@ export const bulkSearchSuccessActions = [
   },
 ];
 
+export const bulkSearchCancelledActions = [
+  {
+    type: 'TASK_BULK_SEARCH_CANCELLED',
+  },
+];
+
+export const bulkSearchSkippedActions = [
+  {
+    type: 'TASK_BULK_SEARCH_SKIPPED',
+  },
+];
+
 export const buildBulkSearchFailureActions = (errorCode = 422) => ([
   {
     type: 'TASK_BULK_SEARCH_REQUEST',
@@ -107,6 +119,12 @@ export const buildBulkSearchFailureActions = (errorCode = 422) => ([
   },
 ]);
 
+export const pollTaskStartedActions = [
+  {
+    type: 'POLL_TASK_STARTED',
+  },
+];
+
 export const buildTaskSuccessActions = response => ([
   {
     type: 'GET_TASK_REQUEST',
@@ -116,6 +134,11 @@ export const buildTaskSuccessActions = response => ([
     type: 'GET_TASK_SUCCESS',
   },
 ]);
+
+export const buildPollTaskSuccessActions = response => pollTaskStartedActions
+  .concat(buildTaskSuccessActions(response));
+
+export const getPollTaskSuccessActions = buildPollTaskSuccessActions(getTaskSuccessResponse);
 
 export const getTaskSuccessActions = buildTaskSuccessActions(getTaskSuccessResponse);
 

@@ -4,14 +4,18 @@ import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import configureMockStore from 'redux-mock-store';
 import {
+  bulkSearchCancelledActions,
+  bulkSearchSkippedActions,
   bulkSearchSuccessResponse,
   bulkSearchSuccessActions,
   buildBulkSearchFailureActions,
   getTaskSuccessResponse,
+  getPollTaskSuccessActions,
   getTaskSuccessActions,
   buildTaskFailureActions,
   getTaskPendingResponse,
   getTaskPendingActions,
+  pollTaskStartedActions,
 } from './task.fixtures';
 
 import { bulkSearch, loadTask, pollTaskUntilDone, pollBulkSearch } from '../TaskActions';
@@ -91,7 +95,7 @@ describe('task actions', () => {
       mockApi.onGet(url).replyOnce(200, getTaskSuccessResponse);
 
       await store.dispatch(pollTaskUntilDone(taskId, {}, 1, 1));
-      expect(store.getActions()).toEqual(getTaskSuccessActions);
+      expect(store.getActions()).toEqual(getPollTaskSuccessActions);
       expect(setTimeoutSpy).toHaveBeenCalledTimes(0);
     });
 
@@ -104,7 +108,8 @@ describe('task actions', () => {
         .onGet(url)
         .replyOnce(200, getTaskSuccessResponse);
 
-      const expectedActions = getTaskPendingActions
+      const expectedActions = pollTaskStartedActions
+        .concat(getTaskPendingActions)
         .concat(getTaskPendingActions)
         .concat(getTaskSuccessActions);
 
@@ -118,7 +123,8 @@ describe('task actions', () => {
         .onGet(url).replyOnce(200, getTaskPendingResponse)
         .onGet(url).replyOnce(401);
 
-      const expectedActions = getTaskPendingActions
+      const expectedActions = pollTaskStartedActions
+        .concat(getTaskPendingActions)
         .concat(buildTaskFailureActions(401));
 
       try {
@@ -150,6 +156,54 @@ describe('task actions', () => {
       await store.dispatch(pollBulkSearch({}, 1, 1));
       expect(store.getActions()).toEqual(buildBulkSearchFailureActions(401));
       expect(setTimeoutSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('stops polling when cancelled', async () => {
+      mockApi
+        .onGet(url)
+        .replyOnce(200, bulkSearchSuccessResponse)
+        .onGet(url)
+        .replyOnce(200, bulkSearchSuccessResponse);
+
+      const expectedActions = bulkSearchSuccessActions
+        .concat(bulkSearchSuccessActions)
+        .concat(bulkSearchCancelledActions);
+
+      let counter = 0;
+      const cancelFunc = () => {
+        counter += 1;
+        return counter > 2;
+      };
+
+      await store.dispatch(pollBulkSearch({}, 1, 1, null, cancelFunc));
+      await store.dispatch(pollBulkSearch({}, 1, 1, null, cancelFunc));
+      await store.dispatch(pollBulkSearch({}, 1, 1, null, cancelFunc)); // cancelled by this point
+      expect(setTimeoutSpy).toHaveBeenCalledTimes(2);
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('can skip polling', async () => {
+      mockApi
+        .onGet(url)
+        .replyOnce(200, bulkSearchSuccessResponse)
+        .onGet(url)
+        .replyOnce(200, bulkSearchSuccessResponse);
+
+      const expectedActions = bulkSearchSuccessActions
+        .concat(bulkSearchSkippedActions)
+        .concat(bulkSearchSuccessActions);
+
+      let counter = 0;
+      const skipFunc = () => {
+        counter += 1;
+        return counter === 2;
+      };
+
+      await store.dispatch(pollBulkSearch({}, 1, 1, skipFunc));
+      await store.dispatch(pollBulkSearch({}, 1, 1, skipFunc)); // this one is skipped
+      await store.dispatch(pollBulkSearch({}, 1, 1, skipFunc));
+      expect(setTimeoutSpy).toHaveBeenCalledTimes(3);
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 });

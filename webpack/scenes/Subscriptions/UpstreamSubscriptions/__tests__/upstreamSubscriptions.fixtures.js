@@ -104,7 +104,6 @@ export const initialSaveState = Immutable({
 export const saveSuccessState = Immutable({
   loading: false,
   task: getTaskSuccessResponse,
-  tasks: [getTaskSuccessResponse],
 });
 
 export const errorState = Immutable({

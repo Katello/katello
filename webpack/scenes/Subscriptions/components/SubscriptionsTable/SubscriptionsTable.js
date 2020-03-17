@@ -194,7 +194,6 @@ class SubscriptionsTable extends Component {
 
     groupedSubscriptions[groupId].open = !open;
 
-
     const rows = buildTableRows(
       groupedSubscriptions,
       subscriptions.availableQuantities,
@@ -283,21 +282,11 @@ SubscriptionsTable.propTypes = {
   onDeleteSubscriptions: PropTypes.func.isRequired,
   onSubscriptionDeleteModalClose: PropTypes.func.isRequired,
   toggleDeleteButton: PropTypes.func.isRequired,
-  task: PropTypes.shape({}),
-  bulkSearch: PropTypes.func,
-  organization: PropTypes.shape({
-    owner_details: PropTypes.shape({
-      displayName: PropTypes.string,
-    }),
-  }),
   selectedRows: PropTypes.instanceOf(Array).isRequired,
   onSelectedRowsChange: PropTypes.func.isRequired,
 };
 
 SubscriptionsTable.defaultProps = {
-  task: { humanized: {} },
-  bulkSearch: undefined,
-  organization: undefined,
   canManageSubscriptionAllocations: false,
 };
 
