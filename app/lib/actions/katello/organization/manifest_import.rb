@@ -44,6 +44,7 @@ module Actions
         end
 
         def finalize
+          subject_organization.clear_manifest_expired_notifications
           subject_organization.audit_manifest_action(_('Manifest imported'))
         end
       end
