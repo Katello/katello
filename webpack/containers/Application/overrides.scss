@@ -19,6 +19,14 @@ td, th {
   word-wrap: break-word;
 }
 
+// needed because we have overflow set to auto for all td's and it affected the pf4 table
+.katello-pf4-table {
+  td {
+    max-width: 200px;
+    overflow: unset;
+    word-wrap: break-word;
+  }
+}
 // override foreman's .editable styles, that are conflicting with the patternfly ones
 .pf-table-inline-edit {
   .editable {

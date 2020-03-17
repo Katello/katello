@@ -3,21 +3,25 @@
 exports[`task actions can poll a task 1`] = `
 Object {
   "interval": 5000,
-  "key": "TEST_POLL_TASK",
+  "payload": Object {
+    "key": "TEST_POLL_TASK",
+    "url": "/foreman_tasks/api/tasks/12345",
+  },
   "type": "API_GET",
-  "url": "/foreman_tasks/api/tasks/12345",
 }
 `;
 
 exports[`task actions can search tasks 1`] = `
 Object {
   "interval": 5000,
-  "key": "TEST_TASK_SEARCH",
-  "params": Object {
-    "search": "",
+  "payload": Object {
+    "key": "TEST_TASK_SEARCH",
+    "params": Object {
+      "search": "",
+    },
+    "url": "/foreman_tasks/api/tasks",
   },
   "type": "API_GET",
-  "url": "/foreman_tasks/api/tasks",
 }
 `;
 

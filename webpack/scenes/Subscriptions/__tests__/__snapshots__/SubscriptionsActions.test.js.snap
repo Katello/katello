@@ -62,12 +62,14 @@ Array [
   },
   Object {
     "interval": 5000,
-    "key": "SUBSCRIPTIONS_TASK_SEARCH",
-    "params": Object {
-      "search": "organization_id=1 and result=pending and label=Actions::Katello::Organization::ManifestImport or Actions::Katello::Organization::ManifestRefresh or Actions::Katello::Organization::ManifestDelete or Actions::Katello::UpstreamSubscriptions::BindEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlement or Actions::Katello::UpstreamSubscriptions::RemoveEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlements",
+    "payload": Object {
+      "key": "SUBSCRIPTIONS_TASK_SEARCH",
+      "params": Object {
+        "search": "organization_id=1 and result=pending and label=Actions::Katello::Organization::ManifestImport or Actions::Katello::Organization::ManifestRefresh or Actions::Katello::Organization::ManifestDelete or Actions::Katello::UpstreamSubscriptions::BindEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlement or Actions::Katello::UpstreamSubscriptions::RemoveEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlements",
+      },
+      "url": "/foreman_tasks/api/tasks",
     },
     "type": "API_GET",
-    "url": "/foreman_tasks/api/tasks",
   },
   Object {
     "type": "SUBSCRIPTIONS_REQUEST",
@@ -83,9 +85,11 @@ Array [
   },
   Object {
     "interval": 5000,
-    "key": "SUBSCRIPTIONS_POLL_TASK",
+    "payload": Object {
+      "key": "SUBSCRIPTIONS_POLL_TASK",
+      "url": "/foreman_tasks/api/tasks/eb1b6271-8a69-4d98-84fc-bea06ddcc166",
+    },
     "type": "API_GET",
-    "url": "/foreman_tasks/api/tasks/eb1b6271-8a69-4d98-84fc-bea06ddcc166",
   },
 ]
 `;
@@ -93,12 +97,14 @@ Array [
 exports[`subscription actions pollTasks can search tasks 1`] = `
 Object {
   "interval": 5000,
-  "key": "SUBSCRIPTIONS_TASK_SEARCH",
-  "params": Object {
-    "search": "organization_id=1 and result=pending and label=Actions::Katello::Organization::ManifestImport or Actions::Katello::Organization::ManifestRefresh or Actions::Katello::Organization::ManifestDelete or Actions::Katello::UpstreamSubscriptions::BindEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlement or Actions::Katello::UpstreamSubscriptions::RemoveEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlements",
+  "payload": Object {
+    "key": "SUBSCRIPTIONS_TASK_SEARCH",
+    "params": Object {
+      "search": "organization_id=1 and result=pending and label=Actions::Katello::Organization::ManifestImport or Actions::Katello::Organization::ManifestRefresh or Actions::Katello::Organization::ManifestDelete or Actions::Katello::UpstreamSubscriptions::BindEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlement or Actions::Katello::UpstreamSubscriptions::RemoveEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlements",
+    },
+    "url": "/foreman_tasks/api/tasks",
   },
   "type": "API_GET",
-  "url": "/foreman_tasks/api/tasks",
 }
 `;
 
