@@ -15,6 +15,11 @@ module ::Actions::Katello::Organization
 
     before do
       set_user
+      FactoryBot.create(
+          :notification_blueprint,
+          :expires_in => 24.hours,
+          :name => 'manifest_expired_warning'
+      )
     end
 
     def stub_action_locking!(action)

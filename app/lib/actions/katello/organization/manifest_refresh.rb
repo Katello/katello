@@ -34,7 +34,7 @@ module Actions
                 plan_action(Katello::Repository::RefreshRepository, repo, :dependency => import_products.output)
               end
             end
-            plan_self
+            plan_self(:organization_id => organization.id)
           end
         end
 
@@ -60,6 +60,8 @@ module Actions
         end
 
         def finalize
+          org = ::Organization.find(input[:organization_id])
+          org.clear_manifest_expired_notifications
           subject_organization.audit_manifest_action(_('Manifest refreshed'))
         end
       end

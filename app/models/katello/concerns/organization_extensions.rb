@@ -118,6 +118,10 @@ module Katello
           end
         end
 
+        def clear_manifest_expired_notifications
+          NotificationBlueprint.find_by(name: 'manifest_expired_warning').notifications.where(:subject => self).destroy_all
+        end
+
         def redhat_repository_url
           redhat_provider.repository_url
         end
