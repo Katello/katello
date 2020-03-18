@@ -119,7 +119,6 @@ module Katello
           :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
           :required => true
     param :content, Array, :desc => N_("List of content (e.g. package names, package group names or errata ids)")
-    param :install_all, :bool, :desc => N_("Only used for errata, but will install all installable errata.")
     def install_content
       content_action
     end
