@@ -11,7 +11,7 @@ module Actions
             errata_ids = options.fetch(:errata_ids, nil)
 
             applicable_errata = host.content_facet.applicable_errata
-            applicable_errata = applicable_errata.with_identifiers(errata_ids) if errata_ids
+            applicable_errata = applicable_errata.with_identifiers(errata_ids) unless options[:update_all]
             plan_action(Actions::Katello::Host::Erratum::Install, host, applicable_errata.pluck(:errata_id))
             plan_self(:hostname => host.name)
           end
