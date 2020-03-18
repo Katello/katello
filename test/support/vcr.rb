@@ -69,7 +69,7 @@ def configure_vcr
   end
 
   if mode != :none
-    system("sudo cp -rf #{Katello::Engine.root}/test/fixtures/test_repos /var/www/")
+    system("sudo cp -rf #{Katello::Engine.root}/test/fixtures/test_repos /var/lib/pulp/sync_imports/")
   end
 
   VCR.configure do |c|
