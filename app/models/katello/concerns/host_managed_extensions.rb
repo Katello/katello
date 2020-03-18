@@ -51,12 +51,6 @@ module Katello
         before_save :correct_puppet_environment
         before_validation :correct_kickstart_repository
 
-        # show all hosts which have expiring pools
-        scope :with_pools_expiring_in_days, ->(days_from_now) do
-          minimum_pool_date = (Date.today + days_from_now.to_i.days).strftime('%Y-%m-%d')
-          joins(:pools).where(["katello_pools.end_date < ?", minimum_pool_date])
-        end
-
         scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
         scoped_search :relation => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
         scoped_search :relation => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
@@ -71,8 +65,12 @@ module Katello
         scoped_search relation: :pools, on: :pools_expiring_in_days, ext_method: :find_with_expiring_pools, only_explicit: true
 
         def self.find_with_expiring_pools(_key, _operator, days_from_now)
-          host_ids = self.with_pools_expiring_in_days(days_from_now).ids
-          { :conditions => "hosts.id IN(#{host_ids.join(',')})" }
+          minimum_pool_date = (Date.today + days_from_now.to_i.days).strftime('%Y-%m-%d')
+          {
+            :joins => :pools,
+            :conditions => "katello_pools.end_date < ?",
+            :parameter => [minimum_pool_date]
+          }
         end
       end
 
