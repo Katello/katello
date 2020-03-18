@@ -4,13 +4,6 @@ import { GET_SETTING_SUCCESS } from 'foremanReact/components/Settings/SettingsCo
 import { initialApiState } from '../../services/api';
 
 import {
-  TASK_BULK_SEARCH_SUCCESS,
-  GET_TASK_SUCCESS,
-  RESET_TASKS,
-  POLL_TASK_STARTED,
-} from '../Tasks/TaskConstants';
-
-import {
   SUBSCRIPTIONS_REQUEST,
   SUBSCRIPTIONS_SUCCESS,
   SUBSCRIPTIONS_FAILURE,
@@ -19,30 +12,24 @@ import {
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
   SUBSCRIPTIONS_COLUMNS_REQUEST,
   UPDATE_SUBSCRIPTION_COLUMNS,
-  UPDATE_QUANTITY_REQUEST,
   UPDATE_QUANTITY_SUCCESS,
-  UPDATE_QUANTITY_FAILURE,
   DELETE_SUBSCRIPTIONS_SUCCESS,
-  DELETE_SUBSCRIPTIONS_REQUEST,
-  DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
   SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
   SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
-  CANCEL_POLL_TASKS,
+  SUBSCRIPTIONS_RESET_TASKS,
+  SUBSCRIPTIONS_TASK_SEARCH_SUCCESS,
+  SUBSCRIPTIONS_TASK_SEARCH_FAILURE,
+  SUBSCRIPTIONS_POLL_TASK_SUCCESS,
+  SUBSCRIPTIONS_POLL_TASK_FAILURE,
 } from './SubscriptionConstants';
 
 import {
   DELETE_MANIFEST_SUCCESS,
-  DELETE_MANIFEST_REQUEST,
-  DELETE_MANIFEST_FAILURE,
   UPLOAD_MANIFEST_SUCCESS,
-  UPLOAD_MANIFEST_REQUEST,
-  UPLOAD_MANIFEST_FAILURE,
   REFRESH_MANIFEST_SUCCESS,
-  REFRESH_MANIFEST_REQUEST,
-  REFRESH_MANIFEST_FAILURE,
 } from './Manifest/ManifestConstants';
 
 const initialState = Immutable({
@@ -130,29 +117,23 @@ export default (state = initialState, action) => {
       });
     }
 
-    case TASK_BULK_SEARCH_SUCCESS: {
-      const tasks = action.response.results;
-      if (tasks.length > 0) {
-        return state
-          .set('task', tasks[0]) // this will be the oldest pending task
-          .set('bulkTasksPaused', true);
+    case SUBSCRIPTIONS_TASK_SEARCH_SUCCESS: {
+      if (!state.task) {
+        const tasks = action.response.results;
+        if (tasks.length > 0) {
+          return state
+            .set('task', tasks[0]); // this will be the oldest pending task
+        }
       }
 
       return state;
     }
 
-    case DELETE_MANIFEST_REQUEST:
-    case UPLOAD_MANIFEST_REQUEST:
-    case REFRESH_MANIFEST_REQUEST:
-    case UPDATE_QUANTITY_REQUEST:
-    case DELETE_SUBSCRIPTIONS_REQUEST:
-      return state.set('bulkTasksPaused', true);
-
     case DELETE_MANIFEST_SUCCESS:
     case UPLOAD_MANIFEST_SUCCESS:
     case REFRESH_MANIFEST_SUCCESS:
     case UPDATE_QUANTITY_SUCCESS:
-    case GET_TASK_SUCCESS:
+    case SUBSCRIPTIONS_POLL_TASK_SUCCESS:
       return state
         .set('task', action.response);
 
@@ -161,25 +142,11 @@ export default (state = initialState, action) => {
         .set('task', action.response)
         .set('deleteButtonDisabled', true);
 
-    case DELETE_MANIFEST_FAILURE:
-    case UPLOAD_MANIFEST_FAILURE:
-    case REFRESH_MANIFEST_FAILURE:
-    case DELETE_SUBSCRIPTIONS_FAILURE:
-    case UPDATE_QUANTITY_FAILURE:
-      return state.set('bulkTasksPaused', false);
-
-    case POLL_TASK_STARTED:
-      return state.set('pollingATask', true);
-
-    case RESET_TASKS:
+    case SUBSCRIPTIONS_RESET_TASKS:
+    case SUBSCRIPTIONS_TASK_SEARCH_FAILURE:
+    case SUBSCRIPTIONS_POLL_TASK_FAILURE:
       return state
-        .set('task', null)
-        .set('bulkTasksPaused', false)
-        .set('bulkTasksCancelled', false)
-        .set('pollingATask', false);
-
-    case CANCEL_POLL_TASKS:
-      return state.set('bulkTasksCancelled', true);
+        .set('task', null);
 
     case GET_SETTING_SUCCESS: {
       if (action.response.name === 'content_disconnected') {

@@ -16,15 +16,12 @@ import {
   loadQuantitiesSuccessActions,
   quantitiesRequestSuccessResponse,
   loadTableColumnsSuccessAction,
-  handleTaskActions,
-  handleTaskPollingActions,
-  pollTasksActions,
-  mockPendingTask,
-  mockFinishedTask,
 } from './subscriptions.fixtures';
 import {
   handleTask,
   pollTasks,
+  cancelPollTasks,
+  resetTasks,
   loadSubscriptions,
   updateQuantity,
   loadAvailableQuantities,
@@ -36,8 +33,13 @@ import {
   enableDeleteButton,
 } from '../SubscriptionActions';
 
+import { getTaskPendingResponse, getTaskSuccessResponse } from '../../Tasks/__tests__/task.fixtures';
+
 const mockStore = configureMockStore([thunk]);
 const store = mockStore(Immutable({
+  intervals: {
+    SUBSCRIPTIONS_TASK_SEARCH: 5,
+  },
   katello: {
     subscriptions: {},
     organization: {
@@ -158,48 +160,62 @@ describe('subscription actions', () => {
   });
 
   describe('handleTask', () => {
-    it('polls the task', async () => {
-      mockRequest({
-        url: '/foreman_tasks/api/tasks/12345',
-        data: {},
-        response: mockFinishedTask,
+    describe('when not polling a task', () => {
+      it('starts polling the task', async () => {
+        await store.dispatch(handleTask(getTaskSuccessResponse));
+
+        expect(store.getActions()).toMatchSnapshot();
       });
-
-      await store.dispatch(handleTask(mockPendingTask));
-
-      expect(store.getActions()).toEqual(handleTaskActions);
     });
 
-    it('does not poll if already polling', () => {
-      const pollingStore = mockStore(Immutable({
-        katello: {
-          subscriptions: {
-            pollingATask: true,
-          },
-        },
-      }));
-
-      pollingStore.dispatch(handleTask({}));
-
-      expect(pollingStore.getActions()).toEqual(handleTaskPollingActions);
-    });
-  });
-
-  describe('pollTasks', () => {
-    it('polls tasks', async () => {
-      mockRequest({
-        url: '/foreman_tasks/api/tasks',
-        data: {},
-        response: {
-          results: [mockPendingTask],
+    it('does nothing if already polling and task is pending', async () => {
+      const pollStore = configureMockStore([thunk])({
+        intervals: {
+          SUBSCRIPTIONS_POLL_TASK: 5,
         },
       });
 
-      await store.dispatch(pollTasks());
+      await pollStore.dispatch(handleTask(getTaskPendingResponse));
 
-      expect(store.getActions()).toEqual(pollTasksActions);
+      expect(pollStore.getActions()).toMatchSnapshot();
+    });
+
+    it('handles a finished task', async () => {
+      const pollStore = configureMockStore([thunk])({
+        intervals: {
+          SUBSCRIPTIONS_POLL_TASK: 5,
+        },
+      });
+
+      await pollStore.dispatch(handleTask(getTaskSuccessResponse));
+
+      expect(pollStore.getActions()).toMatchSnapshot();
     });
   });
+
+  describe('pollTasks', () => testActionSnapshotWithFixtures({
+    'can search tasks': () => store.dispatch(pollTasks()),
+  }));
+
+  describe('cancelPollTasks', () => {
+    it('cancels the tasks search', async () => {
+      await store.dispatch(cancelPollTasks());
+
+      expect(store.getActions()).toMatchSnapshot();
+    });
+
+    it('does nothing if not already polling', async () => {
+      const pollStore = configureMockStore([thunk])({});
+
+      await pollStore.dispatch(cancelPollTasks());
+
+      expect(pollStore.getActions()).toMatchSnapshot();
+    });
+  });
+
+  describe('resetTasks', () => testActionSnapshotWithFixtures({
+    'resets the task state': () => resetTasks(),
+  }));
 
   describe('deleteModal', () => testActionSnapshotWithFixtures({
     'it should open delete modal': () => openDeleteModal(),

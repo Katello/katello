@@ -1,6 +1,13 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { selectDoesIntervalExist } from 'foremanReact/redux/middlewares/IntervalMiddleware/IntervalSelectors';
+
+export const bulkSearchKey = key => `${key}_TASK_SEARCH`;
+export const pollTaskKey = key => `${key}_POLL_TASK`;
+
+export const isPollingTask = (state, key) => selectDoesIntervalExist(state, pollTaskKey(key));
+export const isPollingTasks = (state, key) => selectDoesIntervalExist(state, bulkSearchKey(key));
 
 const link = id => ({
   children: __('Go to task page'),

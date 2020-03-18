@@ -1,7 +1,5 @@
 import Immutable from 'seamless-immutable';
-import { addToast } from 'foremanReact/redux/actions/toasts';
 import { toastErrorAction, failureAction } from '../../../services/api/testHelpers';
-import { taskFinishedToast } from '../../Tasks/helpers';
 
 export const initialState = Immutable({
   loading: true,
@@ -543,58 +541,3 @@ export const loadTableColumnsSuccessAction = [
 export const loadingColumnsState = Immutable({
   ...successState,
 });
-
-export const mockPendingTask = {
-  id: '12345',
-  input: {
-    current_organization_id: 1,
-  },
-  result: 'pending',
-};
-
-export const mockFinishedTask = {
-  id: '12345',
-  pending: false,
-  result: 'finished',
-  humanized: {
-    action: 'Manifest Refresh',
-  },
-};
-
-export const handleTaskActions = [
-  {
-    type: 'POLL_TASK_STARTED',
-  },
-  {
-    type: 'GET_TASK_REQUEST',
-  },
-  {
-    type: 'GET_TASK_SUCCESS',
-    response: mockFinishedTask,
-  },
-  addToast(taskFinishedToast(mockFinishedTask)),
-  {
-    type: 'RESET_TASKS',
-  },
-  {
-    type: 'SUBSCRIPTIONS_REQUEST',
-  },
-];
-
-export const pollTasksActions = [
-  {
-    type: 'TASK_BULK_SEARCH_REQUEST',
-  },
-  {
-    type: 'TASK_BULK_SEARCH_SUCCESS',
-    response: {
-      results: [mockPendingTask],
-    },
-  },
-];
-
-export const handleTaskPollingActions = [
-  {
-    type: 'ALREADY_POLLING_TASK',
-  },
-];

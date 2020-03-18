@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import api, { orgId } from '../../services/api';
 
 import {
+  SUBSCRIPTIONS,
   SUBSCRIPTIONS_REQUEST,
   SUBSCRIPTIONS_SUCCESS,
   SUBSCRIPTIONS_FAILURE,
@@ -26,13 +27,18 @@ import {
   SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
   SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
   BLOCKING_FOREMAN_TASK_TYPES,
-  BULK_TASK_SEARCH_INTERVAL,
-  CANCEL_POLL_TASKS,
+  SUBSCRIPTIONS_RESET_TASKS,
 } from './SubscriptionConstants';
 import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
-import { resetTasks, toastTaskFinished, pollBulkSearch, pollTaskUntilDone } from '../Tasks/TaskActions';
-import { POLL_TASK_INTERVAL } from '../Tasks/TaskConstants';
+import {
+  startPollingTask,
+  stopPollingTask,
+  startPollingTasks,
+  stopPollingTasks,
+  toastTaskFinished,
+} from '../Tasks/TaskActions';
+import { isPollingTasks, isPollingTask } from '../Tasks/helpers';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{
@@ -80,45 +86,38 @@ export const loadSubscriptions = (extendedParams = {}) => async (dispatch) => {
   }
 };
 
-export const handleTask = task => (dispatch, getState) => {
-  const { pollingATask } = getState().katello.subscriptions;
-  if (pollingATask) {
-    return dispatch({ type: 'ALREADY_POLLING_TASK' });
+export const cancelPollTasks = () => (dispatch, getState) => {
+  if (isPollingTasks(getState(), SUBSCRIPTIONS)) {
+    dispatch(stopPollingTasks(SUBSCRIPTIONS));
   }
+};
 
-  return dispatch(pollTaskUntilDone(
-    task.id,
-    {},
-    POLL_TASK_INTERVAL,
-    task.input.current_organization_id,
-  // eslint-disable-next-line promise/prefer-await-to-then
-  )).then((doneTask) => {
-    dispatch(toastTaskFinished(doneTask));
-  }).finally(() => {
-    dispatch(resetTasks());
-    dispatch(loadSubscriptions());
+export const pollTasks = () => dispatch => dispatch(startPollingTasks(SUBSCRIPTIONS, {
+  organization_id: orgId(),
+  result: 'pending',
+  label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
+}));
+
+export const resetTasks = () => (dispatch) => {
+  dispatch({
+    type: SUBSCRIPTIONS_RESET_TASKS,
   });
 };
 
-export const pollTasks = () => async (dispatch, getState) => {
-  const shouldSkipPolling = () => {
-    const { bulkTasksPaused } = getState().katello.subscriptions;
-    return bulkTasksPaused;
-  };
-
-  const shouldCancelPolling = () => {
-    const { bulkTasksCancelled } = getState().katello.subscriptions;
-    return bulkTasksCancelled;
-  };
-
-  return dispatch(pollBulkSearch({
-    organization_id: orgId(),
-    result: 'pending',
-    label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-  }, BULK_TASK_SEARCH_INTERVAL, Number(orgId()), shouldSkipPolling, shouldCancelPolling));
+export const handleTask = task => async (dispatch, getState) => {
+  if (isPollingTask(getState(), SUBSCRIPTIONS)) {
+    if (!task.pending) {
+      dispatch(stopPollingTask(SUBSCRIPTIONS));
+      dispatch(toastTaskFinished(task));
+      dispatch(resetTasks());
+      dispatch(pollTasks());
+      dispatch(loadSubscriptions());
+    }
+  } else {
+    dispatch(cancelPollTasks());
+    dispatch(startPollingTask(SUBSCRIPTIONS, task));
+  }
 };
-
-export const cancelPollTasks = () => async dispatch => dispatch({ type: CANCEL_POLL_TASKS });
 
 export const updateQuantity = (quantities = {}) => async (dispatch) => {
   dispatch({ type: UPDATE_QUANTITY_REQUEST });
