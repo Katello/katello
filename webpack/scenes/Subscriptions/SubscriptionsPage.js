@@ -89,7 +89,7 @@ class SubscriptionsPage extends Component {
       subscriptionTableSettings,
     } = this.props;
 
-    await pollTasks();
+    pollTasks();
     loadSetting('content_disconnected');
     loadSubscriptions();
     await loadTables();
@@ -275,8 +275,12 @@ SubscriptionsPage.propTypes = {
   }),
   organization: PropTypes.shape({
     id: PropTypes.number,
-    owner_details: PropTypes.shape({ // used by SubscriptionsHelper
-      upstreamConsumer: PropTypes.shape({}),
+    owner_details: PropTypes.shape({
+      upstreamConsumer: PropTypes.shape({
+        name: PropTypes.string,
+        webUrl: PropTypes.string,
+        uuid: PropTypes.string,
+      }),
     }),
   }),
   task: PropTypes.shape({
@@ -285,9 +289,7 @@ SubscriptionsPage.propTypes = {
     humanized: PropTypes.shape({
       action: PropTypes.string,
     }),
-    input: PropTypes.shape({
-      current_organization_id: PropTypes.number,
-    }),
+    pending: PropTypes.bool,
   }),
   pollTasks: PropTypes.func.isRequired,
   cancelPollTasks: PropTypes.func.isRequired,
