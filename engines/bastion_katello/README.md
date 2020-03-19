@@ -7,6 +7,7 @@ The only real difference, as far as the user is concerned, is that the applicati
 # Running tests:
 
 ```
+sudo yum -y install npm chromium-headless chromium
 cd ./engines/bastion_katello
 sudo npm install -g grunt-cli
 npm install
