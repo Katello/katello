@@ -66,16 +66,23 @@ module Katello
 
         def self.find_with_expiring_pools(_key, _operator, days_from_now)
           minimum_pool_date = (Date.today + days_from_now.to_i.days).strftime('%Y-%m-%d')
+          host_ids = self.joins(:pools).where(["katello_pools.end_date < ?", minimum_pool_date]).distinct.ids
+          if host_ids.blank?
+            return {
+              :conditions => "katello_pools.end_date < ?",
+              :parameter => [minimum_pool_date],
+              :joins => :pools
+            }
+          end
           {
-            :joins => :pools,
-            :conditions => "katello_pools.end_date < ?",
-            :parameter => [minimum_pool_date]
+            :conditions => "hosts.id IN (#{host_ids.join(', ')})"
           }
         end
       end
 
       # show a single host's expiring pools
       def pools_expiring_in_days(days_from_now)
+        return self.pools if days_from_now.blank?
         minimum_pool_date = (Date.today + days_from_now.to_i.days).strftime('%Y-%m-%d')
         self.pools.where(["katello_pools.end_date < ?", minimum_pool_date]).order(:end_date)
       end
