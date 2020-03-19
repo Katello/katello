@@ -10,9 +10,7 @@ module Katello
 
     module ClassMethods
       def readable
-        return all if User.current.admin?
-
-        authorized(:view_subscriptions).where(organization_id: User.current.organization_ids)
+        authorized(:view_subscriptions)
       end
     end
   end

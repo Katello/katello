@@ -75,10 +75,13 @@ module Katello
     param :id, :number, :desc => N_("Subscription identifier"), :required => true
     def show
       @resource = Katello::Pool.with_identifier(params[:id])
-      fail ActiveRecord::RecordNotFound, N_('Subscription not found') unless @resource
-      unless @resource.readable?
-        fail ActiveRecord::RecordNotFound, N_('This subscription is not relevant to the current user and organization.')
+
+      fail ActiveRecord::RecordNotFound, N_('Subscription not found') unless @resource&.readable?
+
+      if params[:organization_id] && @resource.organization_id != params[:organization_id].to_i
+        fail HttpErrors::BadRequest, N_('This subscription is not relevant to the current organization.')
       end
+
       respond(:resource => @resource)
     end
 
