@@ -86,49 +86,61 @@ module Katello
     end
 
     def test_show_with_org_id
-      @subscription = katello_pools(:pool_one)
-      @org = get_organization(:empty_organization)
-      get :show, params: { :id => @subscription.id, :organization_id => @org.id }
+      subscription = @organization.pools.first
+      get :show, params: { :id => subscription.id, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/subscriptions/show'
     end
 
     def test_show_admin_user_can_access_subs_from_different_org
-      @subscription = katello_pools(:pool_one)
-      get :show, params: { :id => @subscription.id }
+      subscription = @organization.pools.first
+
+      get :show, params: { :id => subscription.id }
 
       assert_response :success
       assert_template 'api/v2/subscriptions/show'
     end
 
+    def test_show_org_subscription_mismatch
+      subscription = @organization.pools.first
+      different_org = get_organization(:organization2)
+
+      get :show, params: { :id => subscription.id, organization_id: different_org.id }
+      body = JSON.parse(response.body)
+
+      assert_response 400
+      assert_equal('This subscription is not relevant to the current organization.', body['errors'][0])
+    end
+
     def test_show_non_admin_cannot_access_subs_from_different_org
-      @subscription = katello_pools(:pool_one)
-      @org = get_organization(:empty_organization)
+      subscription = @organization.pools.first
+
       # use a non-admin user with view_subscriptions permission
       non_admin_user = User.find(users(:one).id)
       role = Role.find_by(name: "Register hosts")
       non_admin_user.roles << role
 
       login_user(non_admin_user)
-      response = get :show, params: { :id => @subscription.id }
+
+      response = get :show, params: { :id => subscription.id }
       body = JSON.parse(response.body)
 
       assert_response 404
-      assert_equal('This subscription is not relevant to the current user and organization.', body['errors'][0])
+      assert_equal('Subscription not found', body['errors'][0])
     end
 
     def test_show_non_admin_can_access_subs_from_same_org
-      @subscription = katello_pools(:pool_one)
-      @org = get_organization(:empty_organization)
+      subscription = @organization.pools.first
+
       # use a non-admin user with view_subscriptions permission
       non_admin_user = User.find(users(:one).id)
       role = Role.find_by(name: "Register hosts")
       non_admin_user.roles << role
-
       login_user(non_admin_user)
-      User.current.organizations << @org
-      get :show, params: { :id => @subscription.id, :organization_id => @org.id }
+      User.current.organizations << @organization
+
+      get :show, params: { :id => subscription.id, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/subscriptions/show'
