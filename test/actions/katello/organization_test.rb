@@ -93,18 +93,6 @@ module ::Actions::Katello::Organization
     end
   end
 
-  class AutoAttachSubscriptionsTest < TestBase
-    let(:action_class) { ::Actions::Katello::Organization::AutoAttachSubscriptions }
-
-    it 'plans' do
-      action.stubs(:action_subject).with(organization)
-      plan_action(action, organization)
-      assert_action_planed_with(action,
-                                ::Actions::Candlepin::Owner::AutoAttach,
-                                label: organization.label)
-    end
-  end
-
   class ManifestRefreshTest < TestBase
     let(:action_class) { ::Actions::Katello::Organization::ManifestRefresh }
 

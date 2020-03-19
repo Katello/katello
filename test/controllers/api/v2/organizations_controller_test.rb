@@ -133,23 +133,6 @@ module Katello
       end
     end
 
-    def test_autoattach_subscriptions
-      assert_async_task ::Actions::Katello::Organization::AutoAttachSubscriptions do |organization|
-        organization.id == @organization.id
-      end
-
-      post :autoattach_subscriptions, params: { :id => @organization.id }
-
-      assert_response :success
-    end
-
-    def test_autoattach_subscriptions_protected
-      allowed_perms = [@update_permission]
-      assert_protected_action(:autoattach_subscriptions, allowed_perms, [], [@organization]) do
-        post :autoattach_subscriptions, params: { :id => @organization.id }
-      end
-    end
-
     def test_releases
       results = JSON.parse(get(:releases, params: { :id => @organization.id }).body)
 

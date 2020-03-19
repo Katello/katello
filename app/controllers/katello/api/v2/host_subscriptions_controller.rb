@@ -48,6 +48,10 @@ module Katello
     api :PUT, "/hosts/:host_id/subscriptions/auto_attach", N_("Trigger an auto-attach of subscriptions")
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def auto_attach
+      if @host.organization.simple_content_access?
+        fail ::Katello::HttpErrors::BadRequest, _("This host's organization is in Simple Content Access mode. Auto-attach is disabled")
+      end
+
       sync_task(::Actions::Katello::Host::AutoAttachSubscriptions, @host)
       respond_for_index(:collection => index_response, :template => "index")
     end

@@ -68,11 +68,19 @@ module Katello
     end
 
     def test_auto_attach
+      Organization.any_instance.stubs(:simple_content_access?).returns(false)
       assert_sync_task(::Actions::Katello::Host::AutoAttachSubscriptions, @host)
       put :auto_attach, params: { :host_id => @host.id }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/index'
+    end
+
+    def test_auto_attach_simple_content_access
+      Organization.any_instance.stubs(:simple_content_access?).returns(true)
+      put :auto_attach, params: { :host_id => @host.id }
+
+      assert_response(400, "This host's organization is in Simple Content Access mode. Auto-attach is disabled")
     end
 
     def test_auto_attach_protected

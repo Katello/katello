@@ -24,17 +24,4 @@ module ::Actions::Candlepin::Owner
       run_action planned_action
     end
   end
-
-  class AutoAttachTest < TestBase
-    let(:action_class) { ::Actions::Candlepin::Owner::AutoAttach }
-    let(:planned_action) do
-      create_and_plan_action action_class, label: label
-    end
-
-    it 'runs' do
-      action_class.any_instance.expects(:done?).returns(true)
-      ::Katello::Resources::Candlepin::Owner.expects(:auto_attach).with(label)
-      run_action planned_action
-    end
-  end
 end

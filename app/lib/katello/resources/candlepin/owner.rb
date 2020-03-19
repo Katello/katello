@@ -118,15 +118,6 @@ module Katello
               JSON.parse(response)['systemPurposeAttributes']
             end
           end
-
-          def auto_attach(key)
-            response = self.post(join_path(path(key), 'entitlements'), "", self.default_headers).body
-            if response.empty?
-              return nil
-            else
-              JSON.parse(response)
-            end
-          end
         end
       end
     end
