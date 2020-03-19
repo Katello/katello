@@ -216,7 +216,6 @@ Katello::Engine.routes.draw do
           member do
             post :repo_discover
             post :cancel_repo_discover
-            post :autoattach_subscriptions
             get :download_debug_certificate
             get :redhat_provider
             get :releases

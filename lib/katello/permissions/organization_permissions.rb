@@ -14,8 +14,7 @@ Foreman::AccessControl.permission(:create_organizations).actions.concat [
 ]
 
 Foreman::AccessControl.permission(:edit_organizations).actions.concat [
-  'katello/api/v2/organizations/update',
-  'katello/api/v2/organizations/autoattach_subscriptions'
+  'katello/api/v2/organizations/update'
 ]
 
 Foreman::AccessControl.permission(:destroy_organizations).actions.concat [
