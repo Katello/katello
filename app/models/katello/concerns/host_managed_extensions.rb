@@ -51,6 +51,8 @@ module Katello
         before_save :correct_puppet_environment
         before_validation :correct_kickstart_repository
 
+        scope :with_pools_expiring_in_days, ->(days) { joins(:pools).merge(Katello::Pool.expiring_in_days(days)).distinct }
+
         scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
         scoped_search :relation => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
         scoped_search :relation => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
@@ -65,26 +67,17 @@ module Katello
         scoped_search relation: :pools, on: :pools_expiring_in_days, ext_method: :find_with_expiring_pools, only_explicit: true
 
         def self.find_with_expiring_pools(_key, _operator, days_from_now)
-          minimum_pool_date = (Date.today + days_from_now.to_i.days).strftime('%Y-%m-%d')
-          host_ids = self.joins(:pools).where(["katello_pools.end_date < ?", minimum_pool_date]).distinct.ids
-          if host_ids.blank?
-            return {
-              :conditions => "katello_pools.end_date < ?",
-              :parameter => [minimum_pool_date],
-              :joins => :pools
-            }
-          end
-          {
-            :conditions => "hosts.id IN (#{host_ids.join(', ')})"
+          host_ids = with_pools_expiring_in_days(days_from_now).ids
+          scoped_search_params = {
+            :conditions => "katello_pools.end_date < ?",
+            :parameter => [days_from_now.to_i.days.from_now.end_of_day],
+            :joins => :pools
           }
+          if host_ids.present?
+            scoped_search_params = { :conditions => "hosts.id IN (#{host_ids.join(', ')})" }
+          end
+          scoped_search_params
         end
-      end
-
-      # show a single host's expiring pools
-      def pools_expiring_in_days(days_from_now)
-        return self.pools if days_from_now.blank?
-        minimum_pool_date = (Date.today + days_from_now.to_i.days).strftime('%Y-%m-%d')
-        self.pools.where(["katello_pools.end_date < ?", minimum_pool_date]).order(:end_date)
       end
 
       def correct_kickstart_repository
@@ -317,5 +310,9 @@ end
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :comment, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
-        :installed_packages, :pools_expiring_in_days
+        :installed_packages
+end
+
+class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail
+  allow :expiring_in_days
 end
