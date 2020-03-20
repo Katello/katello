@@ -1,28 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Subscriptions reducer should handle DELETE_SUBSCRIPTIONS_FAILURE 1`] = `
-Object {
-  "availableQuantities": null,
-  "deleteButtonDisabled": true,
-  "deleteModalOpened": false,
-  "disconnected": false,
-  "itemCount": 0,
-  "loading": false,
-  "pagination": Object {
-    "page": 0,
-    "perPage": 20,
-  },
-  "quantitiesLoading": false,
-  "results": Array [],
-  "searchQuery": "",
-  "selectedTableColumns": Array [],
-  "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
-}
-`;
-
-exports[`Subscriptions reducer should handle DELETE_SUBSCRIPTIONS_REQUEST 1`] = `
+exports[`Subscriptions reducer should handle DELETE_MANIFEST_SUCCESS 1`] = `
 Object {
   "availableQuantities": null,
   "deleteButtonDisabled": true,
@@ -39,8 +17,12 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": Object {
+    "humanized": Object {
+      "action": "ManifestRefresh",
+    },
+    "id": "12345",
+  },
 }
 `;
 
@@ -51,7 +33,7 @@ Object {
   "deleteModalOpened": false,
   "disconnected": false,
   "itemCount": 0,
-  "loading": false,
+  "loading": true,
   "pagination": Object {
     "page": 0,
     "perPage": 20,
@@ -61,8 +43,12 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": Object {
+    "humanized": Object {
+      "action": "ManifestRefresh",
+    },
+    "id": "12345",
+  },
 }
 `;
 
@@ -83,8 +69,7 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -105,12 +90,11 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
-exports[`Subscriptions reducer should handle GET_TASK_SUCCESS 1`] = `
+exports[`Subscriptions reducer should handle REFRESH_MANIFEST_SUCCESS 1`] = `
 Object {
   "availableQuantities": null,
   "deleteButtonDisabled": true,
@@ -127,30 +111,12 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
-}
-`;
-
-exports[`Subscriptions reducer should handle RESET_TASKS 1`] = `
-Object {
-  "availableQuantities": null,
-  "deleteButtonDisabled": true,
-  "deleteModalOpened": false,
-  "disconnected": false,
-  "itemCount": 0,
-  "loading": true,
-  "pagination": Object {
-    "page": 0,
-    "perPage": 20,
+  "task": Object {
+    "humanized": Object {
+      "action": "ManifestRefresh",
+    },
+    "id": "12345",
   },
-  "quantitiesLoading": false,
-  "results": Array [],
-  "searchQuery": "",
-  "selectedTableColumns": Array [],
-  "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
 }
 `;
 
@@ -171,30 +137,7 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
-}
-`;
-
-exports[`Subscriptions reducer should handle SUBSCRIPTIONS_CLOSE_TASK_MODAL 1`] = `
-Object {
-  "availableQuantities": null,
-  "deleteButtonDisabled": true,
-  "deleteModalOpened": false,
-  "disconnected": false,
-  "itemCount": 0,
-  "loading": true,
-  "pagination": Object {
-    "page": 0,
-    "perPage": 20,
-  },
-  "quantitiesLoading": false,
-  "results": Array [],
-  "searchQuery": "",
-  "selectedTableColumns": Array [],
-  "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -219,8 +162,7 @@ Object {
     "col2",
     "col3",
   ],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -241,8 +183,7 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -263,8 +204,7 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -286,8 +226,7 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -308,12 +247,11 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
-exports[`Subscriptions reducer should handle SUBSCRIPTIONS_OPEN_TASK_MODAL 1`] = `
+exports[`Subscriptions reducer should handle SUBSCRIPTIONS_POLL_TASK_FAILURE 1`] = `
 Object {
   "availableQuantities": null,
   "deleteButtonDisabled": true,
@@ -330,8 +268,33 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": true,
-  "tasks": Array [],
+  "task": null,
+}
+`;
+
+exports[`Subscriptions reducer should handle SUBSCRIPTIONS_POLL_TASK_SUCCESS 1`] = `
+Object {
+  "availableQuantities": null,
+  "deleteButtonDisabled": true,
+  "deleteModalOpened": false,
+  "disconnected": false,
+  "itemCount": 0,
+  "loading": true,
+  "pagination": Object {
+    "page": 0,
+    "perPage": 20,
+  },
+  "quantitiesLoading": false,
+  "results": Array [],
+  "searchQuery": "",
+  "selectedTableColumns": Array [],
+  "tableColumns": Array [],
+  "task": Object {
+    "humanized": Object {
+      "action": "ManifestRefresh",
+    },
+    "id": "12345",
+  },
 }
 `;
 
@@ -352,8 +315,7 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -374,8 +336,7 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -396,8 +357,7 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -418,8 +378,28 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
+}
+`;
+
+exports[`Subscriptions reducer should handle SUBSCRIPTIONS_RESET_TASKS 1`] = `
+Object {
+  "availableQuantities": null,
+  "deleteButtonDisabled": true,
+  "deleteModalOpened": false,
+  "disconnected": false,
+  "itemCount": 0,
+  "loading": true,
+  "pagination": Object {
+    "page": 0,
+    "perPage": 20,
+  },
+  "quantitiesLoading": false,
+  "results": Array [],
+  "searchQuery": "",
+  "selectedTableColumns": Array [],
+  "tableColumns": Array [],
+  "task": null,
 }
 `;
 
@@ -448,8 +428,54 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
+}
+`;
+
+exports[`Subscriptions reducer should handle SUBSCRIPTIONS_TASK_SEARCH_FAILURE 1`] = `
+Object {
+  "availableQuantities": null,
+  "deleteButtonDisabled": true,
+  "deleteModalOpened": false,
+  "disconnected": false,
+  "itemCount": 0,
+  "loading": true,
+  "pagination": Object {
+    "page": 0,
+    "perPage": 20,
+  },
+  "quantitiesLoading": false,
+  "results": Array [],
+  "searchQuery": "",
+  "selectedTableColumns": Array [],
+  "tableColumns": Array [],
+  "task": null,
+}
+`;
+
+exports[`Subscriptions reducer should handle SUBSCRIPTIONS_TASK_SEARCH_SUCCESS 1`] = `
+Object {
+  "availableQuantities": null,
+  "deleteButtonDisabled": true,
+  "deleteModalOpened": false,
+  "disconnected": false,
+  "itemCount": 0,
+  "loading": true,
+  "pagination": Object {
+    "page": 0,
+    "perPage": 20,
+  },
+  "quantitiesLoading": false,
+  "results": Array [],
+  "searchQuery": "",
+  "selectedTableColumns": Array [],
+  "tableColumns": Array [],
+  "task": Object {
+    "humanized": Object {
+      "action": "ManifestRefresh",
+    },
+    "id": "12345",
+  },
 }
 `;
 
@@ -470,74 +496,7 @@ Object {
   "searchQuery": "some-query",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
-}
-`;
-
-exports[`Subscriptions reducer should handle TASK_BULK_SEARCH_SUCCESS 1`] = `
-Object {
-  "availableQuantities": null,
-  "deleteButtonDisabled": true,
-  "deleteModalOpened": false,
-  "disconnected": false,
-  "itemCount": 0,
-  "loading": true,
-  "pagination": Object {
-    "page": 0,
-    "perPage": 20,
-  },
-  "quantitiesLoading": false,
-  "results": Array [],
-  "searchQuery": "",
-  "selectedTableColumns": Array [],
-  "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
-}
-`;
-
-exports[`Subscriptions reducer should handle UPDATE_QUANTITY_FAILURE 1`] = `
-Object {
-  "availableQuantities": null,
-  "deleteButtonDisabled": true,
-  "deleteModalOpened": false,
-  "disconnected": false,
-  "itemCount": 0,
-  "loading": false,
-  "pagination": Object {
-    "page": 0,
-    "perPage": 20,
-  },
-  "quantitiesLoading": false,
-  "results": Array [],
-  "searchQuery": "",
-  "selectedTableColumns": Array [],
-  "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
-}
-`;
-
-exports[`Subscriptions reducer should handle UPDATE_QUANTITY_REQUEST 1`] = `
-Object {
-  "availableQuantities": null,
-  "deleteButtonDisabled": true,
-  "deleteModalOpened": false,
-  "disconnected": false,
-  "itemCount": 0,
-  "loading": true,
-  "pagination": Object {
-    "page": 0,
-    "perPage": 20,
-  },
-  "quantitiesLoading": false,
-  "results": Array [],
-  "searchQuery": "",
-  "selectedTableColumns": Array [],
-  "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;
 
@@ -548,7 +507,7 @@ Object {
   "deleteModalOpened": false,
   "disconnected": false,
   "itemCount": 0,
-  "loading": false,
+  "loading": true,
   "pagination": Object {
     "page": 0,
     "perPage": 20,
@@ -558,8 +517,12 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": Object {
+    "humanized": Object {
+      "action": "ManifestRefresh",
+    },
+    "id": "12345",
+  },
 }
 `;
 
@@ -583,8 +546,33 @@ Object {
     "col2",
   ],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
+}
+`;
+
+exports[`Subscriptions reducer should handle UPLOAD_MANIFEST_SUCCESS 1`] = `
+Object {
+  "availableQuantities": null,
+  "deleteButtonDisabled": true,
+  "deleteModalOpened": false,
+  "disconnected": false,
+  "itemCount": 0,
+  "loading": true,
+  "pagination": Object {
+    "page": 0,
+    "perPage": 20,
+  },
+  "quantitiesLoading": false,
+  "results": Array [],
+  "searchQuery": "",
+  "selectedTableColumns": Array [],
+  "tableColumns": Array [],
+  "task": Object {
+    "humanized": Object {
+      "action": "ManifestRefresh",
+    },
+    "id": "12345",
+  },
 }
 `;
 
@@ -605,7 +593,6 @@ Object {
   "searchQuery": "",
   "selectedTableColumns": Array [],
   "tableColumns": Array [],
-  "taskModalOpened": false,
-  "tasks": Array [],
+  "task": null,
 }
 `;

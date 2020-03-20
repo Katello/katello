@@ -4,9 +4,6 @@ import {
   MANIFEST_HISTORY_REQUEST,
   MANIFEST_HISTORY_SUCCESS,
   MANIFEST_HISTORY_FAILURE,
-  UPLOAD_MANIFEST_SUCCESS,
-  DELETE_MANIFEST_SUCCESS,
-  REFRESH_MANIFEST_SUCCESS,
 } from './ManifestConstants';
 
 const initialState = Immutable({ loading: true, results: [] });
@@ -30,15 +27,6 @@ export default (state = initialState, action) => {
         error: action.payload.message,
         loading: false,
       });
-
-    case UPLOAD_MANIFEST_SUCCESS:
-      return state.set('taskDetails', action.response);
-
-    case DELETE_MANIFEST_SUCCESS:
-      return state.set('taskDetails', action.response);
-
-    case REFRESH_MANIFEST_SUCCESS:
-      return state.set('taskDetails', action.response);
 
     default:
       return state;

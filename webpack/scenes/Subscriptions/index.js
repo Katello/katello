@@ -11,9 +11,8 @@ import {
   selectSubscriptionsState,
   selectSearchQuery,
   selectDeleteModalOpened,
-  selectTaskModalOpened,
   selectDeleteButtonDisabled,
-  selectSubscriptionsTasks,
+  selectSubscriptionsTask,
   selectActivePermissions,
   selectTableSettings,
 } from './SubscriptionsSelectors';
@@ -33,13 +32,11 @@ const mapStateToProps = (state) => {
     subscriptionTableSettings,
     activePermissions: selectActivePermissions(state),
     simpleContentAccess: selectSimpleContentAccessEnabled(state),
-    tasks: selectSubscriptionsTasks(state),
+    task: selectSubscriptionsTask(state),
     searchQuery: selectSearchQuery(state),
     deleteModalOpened: selectDeleteModalOpened(state),
-    taskModalOpened: selectTaskModalOpened(state),
     deleteButtonDisabled: selectDeleteButtonDisabled(state),
     organization: state.katello.organization,
-    taskDetails: state.katello.manifestHistory.taskDetails,
   };
 };
 

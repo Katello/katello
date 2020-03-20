@@ -18,6 +18,10 @@ import {
   loadTableColumnsSuccessAction,
 } from './subscriptions.fixtures';
 import {
+  handleTask,
+  pollTasks,
+  cancelPollTasks,
+  resetTasks,
   loadSubscriptions,
   updateQuantity,
   loadAvailableQuantities,
@@ -25,14 +29,24 @@ import {
   updateSearchQuery,
   openDeleteModal,
   closeDeleteModal,
-  openTaskModal,
-  closeTaskModal,
   disableDeleteButton,
   enableDeleteButton,
 } from '../SubscriptionActions';
 
+import { getTaskPendingResponse, getTaskSuccessResponse } from '../../Tasks/__tests__/task.fixtures';
+
 const mockStore = configureMockStore([thunk]);
-const store = mockStore({ subscriptions: Immutable({}) });
+const store = mockStore(Immutable({
+  intervals: {
+    SUBSCRIPTIONS_TASK_SEARCH: 5,
+  },
+  katello: {
+    subscriptions: {},
+    organization: {
+      id: 1,
+    },
+  },
+}));
 
 afterEach(() => {
   store.clearActions();
@@ -145,6 +159,64 @@ describe('subscription actions', () => {
     );
   });
 
+  describe('handleTask', () => {
+    describe('when not polling a task', () => {
+      it('starts polling the task', async () => {
+        await store.dispatch(handleTask(getTaskSuccessResponse));
+
+        expect(store.getActions()).toMatchSnapshot();
+      });
+    });
+
+    it('does nothing if already polling and task is pending', async () => {
+      const pollStore = configureMockStore([thunk])({
+        intervals: {
+          SUBSCRIPTIONS_POLL_TASK: 5,
+        },
+      });
+
+      await pollStore.dispatch(handleTask(getTaskPendingResponse));
+
+      expect(pollStore.getActions()).toMatchSnapshot();
+    });
+
+    it('handles a finished task', async () => {
+      const pollStore = configureMockStore([thunk])({
+        intervals: {
+          SUBSCRIPTIONS_POLL_TASK: 5,
+        },
+      });
+
+      await pollStore.dispatch(handleTask(getTaskSuccessResponse));
+
+      expect(pollStore.getActions()).toMatchSnapshot();
+    });
+  });
+
+  describe('pollTasks', () => testActionSnapshotWithFixtures({
+    'can search tasks': () => store.dispatch(pollTasks()),
+  }));
+
+  describe('cancelPollTasks', () => {
+    it('cancels the tasks search', async () => {
+      await store.dispatch(cancelPollTasks());
+
+      expect(store.getActions()).toMatchSnapshot();
+    });
+
+    it('does nothing if not already polling', async () => {
+      const pollStore = configureMockStore([thunk])({});
+
+      await pollStore.dispatch(cancelPollTasks());
+
+      expect(pollStore.getActions()).toMatchSnapshot();
+    });
+  });
+
+  describe('resetTasks', () => testActionSnapshotWithFixtures({
+    'resets the task state': () => resetTasks(),
+  }));
+
   describe('deleteModal', () => testActionSnapshotWithFixtures({
     'it should open delete modal': () => openDeleteModal(),
     'it should close delete modal': () => closeDeleteModal(),
@@ -152,11 +224,6 @@ describe('subscription actions', () => {
 
   describe('searchQuery', () => testActionSnapshotWithFixtures({
     'it should update the search-query': () => updateSearchQuery('some-query'),
-  }));
-
-  describe('taskModal', () => testActionSnapshotWithFixtures({
-    'it should open task modal': () => openTaskModal(),
-    'it should close task modal': () => closeTaskModal(),
   }));
 
   describe('deleteButtonDisabled', () => testActionSnapshotWithFixtures({

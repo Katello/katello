@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`subscription actions cancelPollTasks cancels the tasks search 1`] = `
+Array [
+  Object {
+    "key": "SUBSCRIPTIONS_TASK_SEARCH",
+    "type": "STOP_INTERVAL",
+  },
+]
+`;
+
+exports[`subscription actions cancelPollTasks does nothing if not already polling 1`] = `Array []`;
+
 exports[`subscription actions deleteButtonDisabled it should disable the delete button 1`] = `
 Object {
   "type": "SUBSCRIPTIONS_DISABLE_DELETE_BUTTON",
@@ -24,21 +35,86 @@ Object {
 }
 `;
 
+exports[`subscription actions handleTask does nothing if already polling and task is pending 1`] = `Array []`;
+
+exports[`subscription actions handleTask handles a finished task 1`] = `
+Array [
+  Object {
+    "key": "SUBSCRIPTIONS_POLL_TASK",
+    "type": "STOP_INTERVAL",
+  },
+  Object {
+    "payload": Object {
+      "message": Object {
+        "link": Object {
+          "children": "Go to task page",
+          "href": "/foreman_tasks/tasks/eb1b6271-8a69-4d98-84fc-bea06ddcc166/",
+        },
+        "message": "Task Refresh Manifest completed with a result of pending.
+  ",
+        "type": "pending",
+      },
+    },
+    "type": "TOASTS_ADD",
+  },
+  Object {
+    "type": "SUBSCRIPTIONS_RESET_TASKS",
+  },
+  Object {
+    "interval": 1000,
+    "key": "SUBSCRIPTIONS_TASK_SEARCH",
+    "params": Object {
+      "search": "organization_id=1 and result=pending and label=Actions::Katello::Organization::ManifestImport or Actions::Katello::Organization::ManifestRefresh or Actions::Katello::Organization::ManifestDelete or Actions::Katello::UpstreamSubscriptions::BindEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlement or Actions::Katello::UpstreamSubscriptions::RemoveEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlements",
+    },
+    "type": "API_GET",
+    "url": "/foreman_tasks/api/tasks",
+  },
+  Object {
+    "type": "SUBSCRIPTIONS_REQUEST",
+  },
+]
+`;
+
+exports[`subscription actions handleTask when not polling a task starts polling the task 1`] = `
+Array [
+  Object {
+    "key": "SUBSCRIPTIONS_TASK_SEARCH",
+    "type": "STOP_INTERVAL",
+  },
+  Object {
+    "interval": 1000,
+    "key": "SUBSCRIPTIONS_POLL_TASK",
+    "type": "API_GET",
+    "url": "/foreman_tasks/api/tasks/eb1b6271-8a69-4d98-84fc-bea06ddcc166",
+  },
+]
+`;
+
+exports[`subscription actions pollTasks can search tasks 1`] = `
+Object {
+  "interval": 1000,
+  "key": "SUBSCRIPTIONS_TASK_SEARCH",
+  "params": Object {
+    "search": "organization_id=1 and result=pending and label=Actions::Katello::Organization::ManifestImport or Actions::Katello::Organization::ManifestRefresh or Actions::Katello::Organization::ManifestDelete or Actions::Katello::UpstreamSubscriptions::BindEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlement or Actions::Katello::UpstreamSubscriptions::RemoveEntitlements or Actions::Katello::UpstreamSubscriptions::UpdateEntitlements",
+  },
+  "type": "API_GET",
+  "url": "/foreman_tasks/api/tasks",
+}
+`;
+
+exports[`subscription actions resetTasks resets the task state 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "SUBSCRIPTIONS_RESET_TASKS",
+    },
+  ],
+]
+`;
+
 exports[`subscription actions searchQuery it should update the search-query 1`] = `
 Object {
   "payload": "some-query",
   "type": "SUBSCRIPTIONS_UPDATE_SEARCH_QUERY",
-}
-`;
-
-exports[`subscription actions taskModal it should close task modal 1`] = `
-Object {
-  "type": "SUBSCRIPTIONS_CLOSE_TASK_MODAL",
-}
-`;
-
-exports[`subscription actions taskModal it should open task modal 1`] = `
-Object {
-  "type": "SUBSCRIPTIONS_OPEN_TASK_MODAL",
 }
 `;
