@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Grid, Row, Col, Alert } from 'patternfly-react';
 import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
-import { renderTaskFinishedToast, renderTaskStartedToast } from '../Tasks/helpers';
 import ManageManifestModal from './Manifest/';
 import { MANAGE_MANIFEST_MODAL_ID } from './Manifest/ManifestConstants';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
@@ -17,11 +16,8 @@ import api, { orgId } from '../../services/api';
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
 import {
-  BLOCKING_FOREMAN_TASK_TYPES,
-  BULK_TASK_SEARCH_INTERVAL,
   SUBSCRIPTION_TABLE_NAME,
 } from './SubscriptionConstants';
-import { POLL_TASK_INTERVAL } from '../Tasks/TaskConstants';
 import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
@@ -34,64 +30,41 @@ class SubscriptionsPage extends Component {
 
   componentDidMount() {
     this.props.resetTasks();
-    this.props.loadSetting('content_disconnected');
-    this.props.loadSubscriptions();
+
+    const { id } = this.props.organization;
+    if (id) { // navigating from another react page
+      this.loadData();
+    }
   }
 
   componentDidUpdate(prevProps) {
     const {
-      tasks = [], organization, taskModalOpened, openTaskModal, closeTaskModal,
+      organization, task, handleTask,
     } = this.props;
-    const { tasks: prevTasks = [] } = prevProps;
-    const currentOrg = Number(orgId());
-    const numberOfTasks = tasks.length;
-    const numberOfPrevTasks = prevTasks.length;
-    const [task] = tasks;
 
-    if (numberOfTasks > 0) {
-      if (currentOrg === task.input.current_organization_id) {
-        if (!taskModalOpened) {
-          openTaskModal();
-        }
-      }
-
-      if (numberOfPrevTasks === 0 || prevTasks[0].id !== task.id) {
-        if (currentOrg === task.input.current_organization_id) {
-          this.handleDoneTask(task);
-        } else if (taskModalOpened) {
-          closeTaskModal();
-        }
-      }
+    if (task) {
+      handleTask(task);
     }
 
-    if (numberOfTasks === 0) {
-      if (taskModalOpened && !this.state.pollingATask) {
-        closeTaskModal();
+    if (organization) {
+      if (!prevProps.organization || prevProps.organization.id !== organization.id) {
+        this.loadData();
       }
-    }
-
-    const getOrgInfo = (org) => {
-      // remove the loading attribute so the action isn't called when org starts loading
-      const { loading, ...info } = org;
-      return info;
-    };
-
-    const currentOrgInfo = getOrgInfo(organization);
-    const prevOrgInfo = getOrgInfo(prevProps.organization);
-
-    if (!isEqual(currentOrgInfo, prevOrgInfo)) {
-      this.pollTasks();
     }
   }
 
+  componentWillUnmount() {
+    this.props.cancelPollTasks();
+  }
+
   getDisabledReason(deleteButton) {
-    const { tasks = [], subscriptions, organization } = this.props;
+    const { task, subscriptions, organization } = this.props;
     const { disconnected } = subscriptions;
     let disabledReason = null;
 
     if (disconnected) {
       disabledReason = __('This is disabled because disconnected mode is enabled.');
-    } else if (tasks.length > 0) {
+    } else if (task) {
       disabledReason = __('This is disabled because a manifest related task is in progress.');
     } else if (deleteButton && !disabledReason) {
       disabledReason = __('This is disabled because no subscriptions are selected.');
@@ -106,75 +79,30 @@ class SubscriptionsPage extends Component {
     this.setState({ selectedRows });
   };
 
-  async pollTasks() {
-    const { pollBulkSearch, organization } = this.props;
+  async loadData() {
+    const {
+      loadSetting,
+      loadSubscriptions,
+      loadTableColumns,
+      loadTables,
+      pollTasks,
+      subscriptionTableSettings,
+    } = this.props;
 
-    if (organization && organization.owner_details) {
-      pollBulkSearch({
-        action: `organization '${organization.owner_details.displayName}'`,
-        result: 'pending',
-        label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-      }, BULK_TASK_SEARCH_INTERVAL, organization.id);
-    }
-
-    this.props.loadSetting('content_disconnected');
-    this.props.loadSubscriptions();
-    await this.props.loadTables();
-    const { subscriptionTableSettings, loadTableColumns } = this.props;
+    pollTasks();
+    loadSetting('content_disconnected');
+    loadSubscriptions();
+    await loadTables();
     loadTableColumns(subscriptionTableSettings);
   }
-
-  async handleDoneTask(taskToPoll) {
-    const { pollTaskUntilDone, loadSubscriptions, organization } = this.props;
-
-    const task = await pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL, organization.id);
-    renderTaskFinishedToast(task);
-    loadSubscriptions();
-    this.setState({ pollingATask: false });
-  }
-
-  startManifestTask = () => {
-    this.props.openTaskModal();
-    this.setState({
-      pollingATask: true,
-    });
-  };
-
-  cleanUpManifestTask = async () => {
-    await renderTaskStartedToast(this.props.taskDetails);
-    setTimeout(() => this.props.bulkSearch({
-      action: `organization '${this.props.organization.owner_details.displayName}'`,
-      result: 'pending',
-      label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-    }), 100);
-  };
-
-  uploadManifest = async (file) => {
-    this.startManifestTask();
-    await this.props.uploadManifest(file);
-    this.cleanUpManifestTask();
-  };
-
-  deleteManifest = async () => {
-    this.startManifestTask();
-    await this.props.deleteManifest();
-    this.cleanUpManifestTask();
-  };
-
-  refreshManifest = async () => {
-    this.startManifestTask();
-    await this.props.refreshManifest();
-    this.cleanUpManifestTask();
-  };
 
   render() {
     const currentOrg = orgId();
     const {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
-      searchQuery, updateSearchQuery,
-      taskModalOpened, simpleContentAccess,
-      tasks = [], activePermissions, subscriptions, organization, subscriptionTableSettings,
+      searchQuery, updateSearchQuery, simpleContentAccess,
+      task, activePermissions, subscriptions, organization, subscriptionTableSettings,
     } = this.props;
     // Basic permissions - should we even show this page?
     if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
@@ -189,15 +117,10 @@ class SubscriptionsPage extends Component {
       canEditOrganizations,
     } = permissions;
     const { disconnected } = subscriptions;
-    const taskInProgress = tasks.length > 0;
-    const disableManifestActions = taskInProgress || disconnected;
-    let task = null;
+    const disableManifestActions = !!task || disconnected;
 
     const openManageManifestModal = () => this.props.setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
 
-    if (taskInProgress) {
-      [task] = tasks;
-    }
     const tableColumns = Immutable.asMutable(subscriptions.tableColumns, { deep: true });
     const onSearch = (search) => {
       this.props.loadSubscriptions({ search });
@@ -212,7 +135,6 @@ class SubscriptionsPage extends Component {
     });
 
     const onDeleteSubscriptions = (selectedRows) => {
-      this.startManifestTask();
       this.props.deleteSubscriptions(selectedRows);
       this.handleSelectedRowsChange([]);
       closeDeleteModal();
@@ -220,7 +142,6 @@ class SubscriptionsPage extends Component {
 
     const toggleDeleteButton = rowsSelected =>
       (rowsSelected ? enableDeleteButton() : disableDeleteButton());
-
 
     const csvParams = createSubscriptionParams({ search: searchQuery });
     const getEnabledColumns = (columns) => {
@@ -289,12 +210,12 @@ class SubscriptionsPage extends Component {
               canImportManifest={canImportManifest}
               canDeleteManifest={canDeleteManifest}
               canEditOrganizations={canEditOrganizations}
-              taskInProgress={taskInProgress}
+              taskInProgress={!!task}
               disableManifestActions={disableManifestActions}
               disabledReason={this.getDisabledReason()}
-              upload={this.uploadManifest}
-              delete={this.deleteManifest}
-              refresh={this.refreshManifest}
+              upload={this.props.uploadManifest}
+              delete={this.props.deleteManifest}
+              refresh={this.props.refreshManifest}
             />
 
             <div id="subscriptions-table" className="modal-container">
@@ -317,12 +238,11 @@ class SubscriptionsPage extends Component {
                 onDeleteSubscriptions={onDeleteSubscriptions}
                 toggleDeleteButton={toggleDeleteButton}
                 task={task}
-                bulkSearch={this.props.bulkSearch}
                 selectedRows={this.state.selectedRows}
                 onSelectedRowsChange={this.handleSelectedRowsChange}
               />
               <ModalProgressBar
-                show={taskModalOpened}
+                show={!!task}
                 container={document.getElementById('subscriptions-table')}
                 title={task ? task.humanized.action : null}
                 progress={task ? Math.round(task.progress * 100) : 0}
@@ -342,7 +262,6 @@ SubscriptionsPage.propTypes = {
   resetTasks: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
   loadTableColumns: PropTypes.func.isRequired,
-  taskDetails: PropTypes.shape({}),
   simpleContentAccess: PropTypes.bool,
   subscriptions: PropTypes.shape({
     disconnected: PropTypes.bool,
@@ -357,18 +276,29 @@ SubscriptionsPage.propTypes = {
   organization: PropTypes.shape({
     id: PropTypes.number,
     owner_details: PropTypes.shape({
-      displayName: PropTypes.string,
+      upstreamConsumer: PropTypes.shape({
+        name: PropTypes.string,
+        webUrl: PropTypes.string,
+        uuid: PropTypes.string,
+      }),
     }),
   }),
-  pollBulkSearch: PropTypes.func.isRequired,
-  bulkSearch: PropTypes.func,
-  pollTaskUntilDone: PropTypes.func.isRequired,
+  task: PropTypes.shape({
+    id: PropTypes.string,
+    progress: PropTypes.number,
+    humanized: PropTypes.shape({
+      action: PropTypes.string,
+    }),
+    pending: PropTypes.bool,
+  }),
+  pollTasks: PropTypes.func.isRequired,
+  cancelPollTasks: PropTypes.func.isRequired,
+  handleTask: PropTypes.func.isRequired,
   loadSetting: PropTypes.func.isRequired,
   loadTables: PropTypes.func.isRequired,
   createColumns: PropTypes.func.isRequired,
   updateColumns: PropTypes.func.isRequired,
   subscriptionTableSettings: PropTypes.shape({}),
-  tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
   refreshManifest: PropTypes.func.isRequired,
   searchQuery: PropTypes.string,
@@ -377,22 +307,16 @@ SubscriptionsPage.propTypes = {
   deleteModalOpened: PropTypes.bool,
   openDeleteModal: PropTypes.func.isRequired,
   closeDeleteModal: PropTypes.func.isRequired,
-  taskModalOpened: PropTypes.bool,
-  openTaskModal: PropTypes.func.isRequired,
-  closeTaskModal: PropTypes.func.isRequired,
   deleteButtonDisabled: PropTypes.bool,
   disableDeleteButton: PropTypes.func.isRequired,
   enableDeleteButton: PropTypes.func.isRequired,
 };
 
 SubscriptionsPage.defaultProps = {
-  tasks: [],
-  bulkSearch: undefined,
-  taskDetails: {},
+  task: undefined,
   organization: undefined,
   searchQuery: '',
   deleteModalOpened: false,
-  taskModalOpened: false,
   deleteButtonDisabled: true,
   subscriptionTableSettings: {},
   simpleContentAccess: false,

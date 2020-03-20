@@ -2,6 +2,9 @@ import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 
+export const bulkSearchKey = key => `${key}_TASK_SEARCH`;
+export const pollTaskKey = key => `${key}_POLL_TASK`;
+
 const link = id => ({
   children: __('Go to task page'),
   href: urlBuilder('foreman_tasks/tasks', '', id),
@@ -27,15 +30,19 @@ export const renderTaskStartedToast = (task) => {
   });
 };
 
-export const renderTaskFinishedToast = (task) => {
-  if (!task) return;
-
-  const message = __(`Task ${task.action} completed with a result of ${task.result}.
+export const taskFinishedToast = (task) => {
+  const message = __(`Task ${task.humanized.action} completed with a result of ${task.result}.
   ${task.errors ? getErrors(task) : ''}`);
 
-  window.tfm.toastNotifications.notify({
+  return {
     message,
     type: task.result,
     link: link(task.id),
-  });
+  };
+};
+
+export const renderTaskFinishedToast = (task) => {
+  if (!task) return;
+
+  window.tfm.toastNotifications.notify(taskFinishedToast(task));
 };

@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`task actions can poll a task 1`] = `
+Object {
+  "interval": 1000,
+  "key": "TEST_POLL_TASK",
+  "type": "API_GET",
+  "url": "/foreman_tasks/api/tasks/12345",
+}
+`;
+
+exports[`task actions can search tasks 1`] = `
+Object {
+  "interval": 1000,
+  "key": "TEST_TASK_SEARCH",
+  "params": Object {
+    "search": "",
+  },
+  "type": "API_GET",
+  "url": "/foreman_tasks/api/tasks",
+}
+`;
+
+exports[`task actions can stop polling a task 1`] = `
+Object {
+  "key": "TEST_POLL_TASK",
+  "type": "STOP_INTERVAL",
+}
+`;
+
+exports[`task actions can stop searching tasks 1`] = `
+Object {
+  "key": "TEST_TASK_SEARCH",
+  "type": "STOP_INTERVAL",
+}
+`;
+
+exports[`task actions can toast a finished task 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "message": Object {
+          "link": Object {
+            "children": "Go to task page",
+            "href": "/foreman_tasks/tasks/eb1b6271-8a69-4d98-84fc-bea06ddcc166/",
+          },
+          "message": "Task Refresh Manifest completed with a result of pending.
+  ",
+          "type": "pending",
+        },
+      },
+      "type": "TOASTS_ADD",
+    },
+  ],
+]
+`;

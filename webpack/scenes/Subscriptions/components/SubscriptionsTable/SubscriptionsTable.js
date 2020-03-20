@@ -128,16 +128,12 @@ class SubscriptionsTable extends Component {
   getUpdateDialogProps = () => {
     const { showUpdateConfirmDialog: show, updatedQuantity } = this.state;
     const {
-      updateQuantity, bulkSearch, organization, task,
+      updateQuantity,
     } = this.props;
     return {
-      bulkSearch,
-      organization,
       show,
-      task,
       updatedQuantity,
       updateQuantity,
-      confirmEdit: this.confirmEdit,
       enableEditing: this.enableEditing,
       showUpdateConfirm: this.showUpdateConfirm,
     };
@@ -197,7 +193,6 @@ class SubscriptionsTable extends Component {
     const { open } = groupedSubscriptions[groupId];
 
     groupedSubscriptions[groupId].open = !open;
-
 
     const rows = buildTableRows(
       groupedSubscriptions,
@@ -287,21 +282,11 @@ SubscriptionsTable.propTypes = {
   onDeleteSubscriptions: PropTypes.func.isRequired,
   onSubscriptionDeleteModalClose: PropTypes.func.isRequired,
   toggleDeleteButton: PropTypes.func.isRequired,
-  task: PropTypes.shape({}),
-  bulkSearch: PropTypes.func,
-  organization: PropTypes.shape({
-    owner_details: PropTypes.shape({
-      displayName: PropTypes.string,
-    }),
-  }),
   selectedRows: PropTypes.instanceOf(Array).isRequired,
   onSelectedRowsChange: PropTypes.func.isRequired,
 };
 
 SubscriptionsTable.defaultProps = {
-  task: { humanized: {} },
-  bulkSearch: undefined,
-  organization: undefined,
   canManageSubscriptionAllocations: false,
 };
 

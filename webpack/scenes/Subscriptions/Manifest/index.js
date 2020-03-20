@@ -19,7 +19,6 @@ import './Manifest.scss';
 const mapStateToProps = state => ({
   organization: state.katello.organization,
   manifestHistory: state.katello.manifestHistory,
-  taskDetails: state.katello.manifestHistory.taskDetails,
   simpleContentAccess: selectSimpleContentAccessEnabled(state),
   modalOpenState: state.foremanModals.ManageManifestModal,
   deleteManifestModalIsOpen: selectIsModalOpen(state, DELETE_MANIFEST_MODAL_ID),
