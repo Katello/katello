@@ -10,41 +10,48 @@ import {
   SUBSCRIPTIONS_QUANTITIES_REQUEST,
   SUBSCRIPTIONS_QUANTITIES_SUCCESS,
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
-  UPDATE_QUANTITY_REQUEST,
   UPDATE_QUANTITY_SUCCESS,
-  UPDATE_QUANTITY_FAILURE,
-  DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
-  DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
-  SUBSCRIPTIONS_OPEN_TASK_MODAL,
-  SUBSCRIPTIONS_CLOSE_TASK_MODAL,
   SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
   SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
-  TASK_BULK_SEARCH_SUCCESS,
-  GET_TASK_SUCCESS,
-  RESET_TASKS,
+  SUBSCRIPTIONS_RESET_TASKS,
+  SUBSCRIPTIONS_TASK_SEARCH_SUCCESS,
+  SUBSCRIPTIONS_TASK_SEARCH_FAILURE,
+  SUBSCRIPTIONS_POLL_TASK_SUCCESS,
+  SUBSCRIPTIONS_POLL_TASK_FAILURE,
 } from '../SubscriptionConstants';
 import reducer from '../SubscriptionReducer';
 
+import {
+  DELETE_MANIFEST_SUCCESS,
+  UPLOAD_MANIFEST_SUCCESS,
+  REFRESH_MANIFEST_SUCCESS,
+} from '../Manifest/ManifestConstants';
+
 jest.mock('foremanReact/components/Settings/SettingsConstants');
+
+const mockTask = {
+  id: '12345',
+  humanized: {
+    action: 'ManifestRefresh',
+  },
+};
+
+const anotherMockTask = {
+  id: '54321',
+  humanized: {
+    action: 'ManifestDelete',
+  },
+};
+
 const fixtures = {
   'should return the initial state': {},
   'should handle SUBSCRIPTIONS_REQUEST': {
     action: {
       type: SUBSCRIPTIONS_REQUEST,
-    },
-  },
-  'should handle UPDATE_QUANTITY_REQUEST': {
-    action: {
-      type: UPDATE_QUANTITY_REQUEST,
-    },
-  },
-  'should handle DELETE_SUBSCRIPTIONS_REQUEST': {
-    action: {
-      type: DELETE_SUBSCRIPTIONS_REQUEST,
     },
   },
   'should handle SUBSCRIPTIONS_COLUMNS_REQUEST': {
@@ -78,11 +85,13 @@ const fixtures = {
   'should handle DELETE_SUBSCRIPTIONS_SUCCESS': {
     action: {
       type: DELETE_SUBSCRIPTIONS_SUCCESS,
+      response: mockTask,
     },
   },
   'should handle UPDATE_QUANTITY_SUCCESS': {
     action: {
       type: UPDATE_QUANTITY_SUCCESS,
+      response: mockTask,
     },
   },
   'should handle SUBSCRIPTIONS_FAILURE': {
@@ -90,14 +99,22 @@ const fixtures = {
       type: SUBSCRIPTIONS_FAILURE,
     },
   },
-  'should handle UPDATE_QUANTITY_FAILURE': {
+  'should handle DELETE_MANIFEST_SUCCESS': {
     action: {
-      type: UPDATE_QUANTITY_FAILURE,
+      type: DELETE_MANIFEST_SUCCESS,
+      response: mockTask,
     },
   },
-  'should handle DELETE_SUBSCRIPTIONS_FAILURE': {
+  'should handle REFRESH_MANIFEST_SUCCESS': {
     action: {
-      type: DELETE_SUBSCRIPTIONS_FAILURE,
+      type: REFRESH_MANIFEST_SUCCESS,
+      response: mockTask,
+    },
+  },
+  'should handle UPLOAD_MANIFEST_SUCCESS': {
+    action: {
+      type: UPLOAD_MANIFEST_SUCCESS,
+      response: mockTask,
     },
   },
   'should handle SUBSCRIPTIONS_QUANTITIES_REQUEST': {
@@ -132,16 +149,6 @@ const fixtures = {
       type: SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
     },
   },
-  'should handle SUBSCRIPTIONS_OPEN_TASK_MODAL': {
-    action: {
-      type: SUBSCRIPTIONS_OPEN_TASK_MODAL,
-    },
-  },
-  'should handle SUBSCRIPTIONS_CLOSE_TASK_MODAL': {
-    action: {
-      type: SUBSCRIPTIONS_CLOSE_TASK_MODAL,
-    },
-  },
   'should handle SUBSCRIPTIONS_DISABLE_DELETE_BUTTON': {
     action: {
       type: SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
@@ -170,28 +177,33 @@ const fixtures = {
       },
     },
   },
-  'should handle TASK_BULK_SEARCH_SUCCESS': {
+  'should handle SUBSCRIPTIONS_RESET_TASKS': {
     action: {
-      type: TASK_BULK_SEARCH_SUCCESS,
+      type: SUBSCRIPTIONS_RESET_TASKS,
+    },
+  },
+  'should handle SUBSCRIPTIONS_TASK_SEARCH_SUCCESS': {
+    action: {
+      type: SUBSCRIPTIONS_TASK_SEARCH_SUCCESS,
       response: {
-        results: ['result1', 'result2'],
+        results: [mockTask, anotherMockTask],
       },
     },
   },
-  'should handle GET_TASK_SUCCESS': {
+  'should handle SUBSCRIPTIONS_TASK_SEARCH_FAILURE': {
     action: {
-      type: GET_TASK_SUCCESS,
-      response: {
-        results: 'some-result',
-      },
+      type: SUBSCRIPTIONS_TASK_SEARCH_FAILURE,
     },
   },
-  'should handle RESET_TASKS': {
+  'should handle SUBSCRIPTIONS_POLL_TASK_SUCCESS': {
     action: {
-      type: RESET_TASKS,
-      response: {
-        results: 'some-result',
-      },
+      type: SUBSCRIPTIONS_POLL_TASK_SUCCESS,
+      response: mockTask,
+    },
+  },
+  'should handle SUBSCRIPTIONS_POLL_TASK_FAILURE': {
+    action: {
+      type: SUBSCRIPTIONS_POLL_TASK_FAILURE,
     },
   },
 };

@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import api, { orgId } from '../../services/api';
 
 import {
+  SUBSCRIPTIONS,
   SUBSCRIPTIONS_REQUEST,
   SUBSCRIPTIONS_SUCCESS,
   SUBSCRIPTIONS_FAILURE,
@@ -23,15 +24,21 @@ import {
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
-  SUBSCRIPTIONS_OPEN_TASK_MODAL,
-  SUBSCRIPTIONS_CLOSE_TASK_MODAL,
   SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
   SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
+  BLOCKING_FOREMAN_TASK_TYPES,
+  SUBSCRIPTIONS_RESET_TASKS,
 } from './SubscriptionConstants';
 import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
-import { pollTaskUntilDone } from '../Tasks/TaskActions';
-import { POLL_TASK_INTERVAL } from '../Tasks/TaskConstants';
+import {
+  startPollingTask,
+  stopPollingTask,
+  startPollingTasks,
+  stopPollingTasks,
+  toastTaskFinished,
+} from '../Tasks/TaskActions';
+import { selectIsPollingTasks, selectIsPollingTask } from '../Tasks/TaskSelectors';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{
@@ -79,8 +86,41 @@ export const loadSubscriptions = (extendedParams = {}) => async (dispatch) => {
   }
 };
 
+export const cancelPollTasks = () => (dispatch, getState) => {
+  if (selectIsPollingTasks(getState(), SUBSCRIPTIONS)) {
+    dispatch(stopPollingTasks(SUBSCRIPTIONS));
+  }
+};
+
+export const pollTasks = () => dispatch => dispatch(startPollingTasks(SUBSCRIPTIONS, {
+  organization_id: orgId(),
+  result: 'pending',
+  label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
+}));
+
+export const resetTasks = () => (dispatch) => {
+  dispatch({
+    type: SUBSCRIPTIONS_RESET_TASKS,
+  });
+};
+
+export const handleTask = task => async (dispatch, getState) => {
+  if (selectIsPollingTask(getState(), SUBSCRIPTIONS)) {
+    if (!task.pending) {
+      dispatch(stopPollingTask(SUBSCRIPTIONS));
+      dispatch(toastTaskFinished(task));
+      dispatch(resetTasks());
+      dispatch(pollTasks());
+      dispatch(loadSubscriptions());
+    }
+  } else {
+    dispatch(cancelPollTasks());
+    dispatch(startPollingTask(SUBSCRIPTIONS, task));
+  }
+};
+
 export const updateQuantity = (quantities = {}) => async (dispatch) => {
-  dispatch({ type: UPDATE_QUANTITY_REQUEST, quantities });
+  dispatch({ type: UPDATE_QUANTITY_REQUEST });
 
   const params = {
     pools: quantities,
@@ -127,8 +167,10 @@ export const deleteSubscriptions = poolIds => async (dispatch) => {
 
   try {
     const { data } = await api.delete(`/organizations/${(orgId())}/upstream_subscriptions`, {}, params);
-    dispatch(pollTaskUntilDone(data.id, {}, POLL_TASK_INTERVAL, Number(orgId())));
-    return dispatch({ type: DELETE_SUBSCRIPTIONS_SUCCESS });
+    return dispatch({
+      type: DELETE_SUBSCRIPTIONS_SUCCESS,
+      response: data,
+    });
   } catch (error) {
     return dispatch(apiError(DELETE_SUBSCRIPTIONS_FAILURE, error));
   }
@@ -141,9 +183,6 @@ export const updateSearchQuery = query => ({
 
 export const openDeleteModal = () => ({ type: SUBSCRIPTIONS_OPEN_DELETE_MODAL });
 export const closeDeleteModal = () => ({ type: SUBSCRIPTIONS_CLOSE_DELETE_MODAL });
-
-export const openTaskModal = () => ({ type: SUBSCRIPTIONS_OPEN_TASK_MODAL });
-export const closeTaskModal = () => ({ type: SUBSCRIPTIONS_CLOSE_TASK_MODAL });
 
 export const disableDeleteButton = () => ({ type: SUBSCRIPTIONS_DISABLE_DELETE_BUTTON });
 export const enableDeleteButton = () => ({ type: SUBSCRIPTIONS_ENABLE_DELETE_BUTTON });

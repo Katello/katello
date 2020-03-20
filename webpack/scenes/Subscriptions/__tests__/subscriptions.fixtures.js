@@ -11,7 +11,7 @@ export const initialState = Immutable({
   itemCount: 0,
   quantitiesLoading: false,
   availableQuantities: null,
-  tasks: [],
+  task: undefined,
   tableColumns: [],
   selectedTableColumns: [],
 });
@@ -248,7 +248,6 @@ export const groupedSubscriptions = Immutable({
   itemCount: 81,
   quantitiesLoading: false,
   availableQuantities: null,
-  tasks: [],
   tableColumns: [],
   selectedTableColumns: [],
 });
@@ -318,7 +317,6 @@ export const successState = Immutable({
   itemCount: 81,
   quantitiesLoading: false,
   availableQuantities: null,
-  tasks: [],
   tableColumns: [],
   selectedTableColumns: [],
 });
@@ -335,7 +333,6 @@ export const permissionDeniedState = Immutable({
   itemCount: 0,
   quantitiesLoading: false,
   availableQuantities: null,
-  tasks: [],
   tableColumns: [],
   selectedTableColumns: [],
 });
@@ -366,7 +363,6 @@ export const errorState = Immutable({
   results: [],
   quantitiesLoading: false,
   availableQuantities: null,
-  tasks: [],
   tableColumns: [],
   selectedTableColumns: [],
 });
@@ -436,18 +432,16 @@ export const poolsUpdate = [{
 export const updateQuantitySuccessActions = [
   {
     type: 'UPDATE_QUANTITY_REQUEST',
-    quantities: poolsUpdate,
   },
   {
-    response: requestSuccessResponse,
     type: 'UPDATE_QUANTITY_SUCCESS',
+    response: requestSuccessResponse,
   },
 ];
 
 export const updateQuantityFailureActions = [
   {
     type: 'UPDATE_QUANTITY_REQUEST',
-    quantities: poolsUpdate,
   },
   failureAction('UPDATE_QUANTITY_FAILURE'),
   toastErrorAction(),
