@@ -31,6 +31,17 @@
         <dt translate>Type</dt>
         <dd>{{ host.subscription_facet_attributes.host_type }}</dd>
 
+        <dt translate>Katello Tracer</dt>
+          <dd>
+          <span ng-show="host.content_facet_attributes.katello_tracer_installed">
+            <span class="{{ getHostStatusIcon(0) }}"></span>
+            <span translate>Installed</span>
+          </span>
+          <span ng-hide="host.content_facet_attributes.katello_tracer_installed">
+            <span translate>Not installed</span>
+          </span>
+        </dd>
+
         <dt bst-feature-flag="remote_actions">
           <span translate>Katello Agent</span>
         </dt>

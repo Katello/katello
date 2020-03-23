@@ -198,6 +198,10 @@ module Katello
         self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-agent').any?
       end
 
+      def tracer_installed?
+        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-host-tools-tracer').any?
+      end
+
       def update_errata_status
         host.get_status(::Katello::ErrataStatus).refresh!
         host.refresh_global_status!

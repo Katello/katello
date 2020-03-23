@@ -20,6 +20,10 @@ child :content_facet => :content_facet_attributes do
   node :katello_agent_installed do |content_facet|
     content_facet.katello_agent_installed?
   end
+
+  node :katello_tracer_installed do |content_facet|
+    content_facet.tracer_installed?
+  end
 end
 
 attributes :description, :facts
