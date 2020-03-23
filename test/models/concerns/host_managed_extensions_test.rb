@@ -43,6 +43,12 @@ module Katello
       refute_includes found, other_host
     end
 
+    def test_pools_expiring_in_days
+      host_with_pool = FactoryBot.create(:host, :with_subscription)
+      host_with_pool.subscription_facet.pools << FactoryBot.build(:katello_pool, :expiring_in_12_days, cp_id: 1)
+      assert_includes ::Host.search_for('pools_expiring_in_days = 30'), host_with_pool
+    end
+
     def test_smart_proxy_ids_with_katello
       content_source = FactoryBot.create(:smart_proxy,
                                           :features => [Feature.where(:name => "Pulp Node").first_or_create])

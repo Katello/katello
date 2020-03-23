@@ -69,9 +69,7 @@ module Katello
         def self.find_with_expiring_pools(_key, _operator, days_from_now)
           host_ids = with_pools_expiring_in_days(days_from_now).ids
           scoped_search_params = {
-            :conditions => "katello_pools.end_date < ?",
-            :parameter => [days_from_now.to_i.days.from_now.end_of_day],
-            :joins => :pools
+            :conditions => "1=0"
           }
           if host_ids.present?
             scoped_search_params = { :conditions => "hosts.id IN (#{host_ids.join(', ')})" }

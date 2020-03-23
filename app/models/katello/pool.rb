@@ -117,5 +117,5 @@ module Katello
 end
 
 class ActiveRecord::AssociationRelation::Jail < Safemode::Jail
-  allow :sort
+  allow :sort_by
 end
