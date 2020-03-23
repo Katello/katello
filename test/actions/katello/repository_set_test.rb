@@ -48,7 +48,7 @@ module ::Actions::Katello::RepositorySet
 
     it 'plans' do
       action.expects(:action_subject).with do |repository|
-        repository.relative_path.must_equal expected_relative_path
+        assert_equal expected_relative_path, repository.relative_path
       end
       plan_action action, product, content, substitutions
       assert_action_planed action, ::Actions::Katello::Repository::Create
@@ -70,7 +70,7 @@ module ::Actions::Katello::RepositorySet
       repository_already_enabled!
 
       action.expects(:action_subject).with do |repository|
-        repository.relative_path.must_equal expected_relative_path
+        assert_equal expected_relative_path, repository.relative_path
       end
       plan_action action, product, content, substitutions
       assert_action_planed action, ::Actions::Katello::Repository::Destroy
@@ -105,16 +105,20 @@ module ::Actions::Katello::RepositorySet
     it 'runs' do
       SecureRandom.expects(:uuid).returns('foobar')
       action = simulate_run
-      action.output.
-          must_equal("results" =>
-                       [{"substitutions" => {"basearch" => "x86_64", "releasever" => "6Server"},
-                         "path" => "/product/x86_64/6Server",
-                         "repo_name" => "Content 123 x86_64 6Server",
-                         "name" => "Content 123",
-                         "pulp_id" => 'foobar',
-                         "repository_id" => nil,
-                         "enabled" => false,
-                         "promoted" => false}])
+      expected = {
+        "results" => [{
+          "substitutions" => {"basearch" => "x86_64", "releasever" => "6Server"},
+          "path" => "/product/x86_64/6Server",
+          "repo_name" => "Content 123 x86_64 6Server",
+          "name" => "Content 123",
+          "pulp_id" => 'foobar',
+          "repository_id" => nil,
+          "enabled" => false,
+          "promoted" => false
+        }]
+      }
+
+      assert_equal expected, action.output
     end
 
     it 'considers the repo being enabled when the repository object is present' do

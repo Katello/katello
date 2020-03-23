@@ -59,7 +59,7 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
-        assert_equal false, input[:options][:use_repository_version]
+        refute input[:options][:use_repository_version]
         assert input[:options][:tasks].present?
       end
     end
@@ -78,7 +78,7 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
-        assert_equal true, input[:options][:use_repository_version]
+        assert input[:options][:use_repository_version]
         refute input[:options][:tasks].present?
       end
     end
@@ -92,7 +92,7 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
-        assert_equal true, input[:options][:use_repository_version]
+        assert input[:options][:use_repository_version]
         refute input[:options][:tasks].present?
       end
     end
@@ -114,7 +114,7 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
         assert_equal repo.pulp_id, input[:repo_pulp_id]
-        assert_equal true, input[:sync_options][:remove_missing]
+        assert input[:sync_options][:remove_missing]
       end
     end
 
@@ -135,7 +135,7 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
         assert_equal repo.pulp_id, input[:repo_pulp_id]
-        assert_equal false, input[:sync_options][:remove_missing]
+        refute input[:sync_options][:remove_missing]
       end
     end
 
@@ -168,15 +168,15 @@ module ::Actions::Katello::CapsuleContent
         if repos_in_dev.include?(input[:repo_pulp_id])
           repo = ::Katello::Repository.find_by(pulp_id: input[:repo_pulp_id])
           if ["deb", "yum", "puppet"].include?(repo.content_type)
-            assert_equal true, input[:sync_options][:remove_missing]
+            assert input[:sync_options][:remove_missing]
           else
-            assert_equal false, input[:sync_options][:remove_missing]
+            refute input[:sync_options][:remove_missing]
           end
           refute capsule_content.smart_proxy.pulp3_support?(repo)
           repos_in_dev.delete(input[:repo_pulp_id])
         else
           # test cvpe's
-          assert_equal true, input[:sync_options][:remove_missing]
+          assert input[:sync_options][:remove_missing]
           cvpes_in_dev.delete(input[:repo_pulp_id])
           cvpe = Katello::ContentViewPuppetEnvironment.find_by(pulp_id: input[:repo_pulp_id])
           refute capsule_content.smart_proxy.pulp3_support?(cvpe.nonpersisted_repository)

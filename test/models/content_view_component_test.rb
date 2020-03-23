@@ -31,7 +31,7 @@ module Katello
       assert_equal 1, @composite.content_view_components.size
       assert_equal version1, @composite.content_view_components.first.content_view_version
       assert_equal view1, @composite.content_view_components.first.content_view
-      assert_equal false, @composite.content_view_components.first.latest?
+      refute @composite.content_view_components.first.latest?
     end
 
     def test_create_with_content_view_version_latest_bad
@@ -63,7 +63,7 @@ module Katello
       assert_equal 1, @composite.content_view_components.size
       assert_nil @composite.content_view_components.first.content_view_version
       assert_equal view1, @composite.content_view_components.first.content_view
-      assert_equal true, @composite.content_view_components.first.latest?
+      assert @composite.content_view_components.first.latest?
       assert_equal version1, @composite.content_view_components.first.latest_version
     end
 

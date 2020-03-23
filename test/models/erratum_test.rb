@@ -57,9 +57,9 @@ module Katello
     end
 
     def test_of_type
-      assert Erratum.of_type(Erratum::SECURITY).include?(@security)
-      refute Erratum.of_type(Erratum::SECURITY).include?(@bugfix)
-      refute Erratum.of_type(Erratum::SECURITY).include?(@enhancement)
+      assert_includes Erratum.of_type(Erratum::SECURITY), @security
+      refute_includes Erratum.of_type(Erratum::SECURITY), @bugfix
+      refute_includes Erratum.of_type(Erratum::SECURITY), @enhancement
     end
 
     def test_applicable_to_hosts
@@ -77,7 +77,7 @@ module Katello
     end
 
     def test_applicable_to_hosts_dashboard_respects_filter
-      assert Erratum.applicable_to_hosts_dashboard(::Host.search_for("compute_resource = SOMENAME")).empty?
+      assert_empty Erratum.applicable_to_hosts_dashboard(::Host.search_for("compute_resource = SOMENAME"))
       host = FactoryBot.build(:host, :with_content, :with_subscription,
                                       :content_view => katello_content_views(:library_dev_view),
                                       :lifecycle_environment => katello_environments(:library),
@@ -85,7 +85,7 @@ module Katello
       host.save
       host.content_facet.applicable_errata << @security
       host.save
-      refute Erratum.applicable_to_hosts_dashboard(::Host.search_for("compute_resource = #{compute_resources(:one).name}")).empty?
+      refute_empty Erratum.applicable_to_hosts_dashboard(::Host.search_for("compute_resource = #{compute_resources(:one).name}"))
     end
 
     def test_not_applicable_to_hosts

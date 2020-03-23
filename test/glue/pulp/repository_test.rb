@@ -319,11 +319,11 @@ module Katello
     def test_import_distribution_data
       @fedora_17_x86_64.import_distribution_data
 
-      assert @fedora_17_x86_64.distribution_version == "16", "couldn't find version"
-      assert @fedora_17_x86_64.distribution_arch == "x86_64", "couldn't find arch"
-      assert @fedora_17_x86_64.distribution_family == "Test Family", "couldn't find family"
-      assert @fedora_17_x86_64.distribution_variant == "TestVariant", "couldn't find variant"
-      assert @fedora_17_x86_64.distribution_bootable == false, "couldn't find bootable"
+      assert_equal @fedora_17_x86_64.distribution_version, "16", "couldn't find version"
+      assert_equal @fedora_17_x86_64.distribution_arch, "x86_64", "couldn't find arch"
+      assert_equal @fedora_17_x86_64.distribution_family, "Test Family", "couldn't find family"
+      assert_equal @fedora_17_x86_64.distribution_variant, "TestVariant", "couldn't find variant"
+      assert_equal @fedora_17_x86_64.distribution_bootable, false, "couldn't find bootable"
     end
 
     def test_distribution_bootable?

@@ -22,17 +22,21 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
   it 'plans' do
     plan_action(action, environment, content_view)
     assert_finalize_phase(action)
-    action.input.must_equal("environment_id" => environment.id,
-                            "content_view_id" => content_view.id,
-                            "repository_id" => nil,
-                            "remote_user" => SETTINGS[:katello][:pulp][:default_login],
-                            "remote_cp_user" => SETTINGS[:katello][:pulp][:default_login])
+    expected = {
+      "environment_id" => environment.id,
+      "content_view_id" => content_view.id,
+      "repository_id" => nil,
+      "remote_user" => SETTINGS[:katello][:pulp][:default_login],
+      "remote_cp_user" => SETTINGS[:katello][:pulp][:default_login]
+    }
+
+    assert_equal expected, action.input
   end
 
   it 'updates the foreman content' do
     ::Katello::Foreman.expects(:update_puppet_environment).with do |view, env|
-      env.id.must_equal environment.id
-      view.id.must_equal content_view.id
+      assert_equal environment.id, env.id
+      assert_equal content_view.id, view.id
     end
     plan_action(action, environment, content_view)
     finalize_action(action)

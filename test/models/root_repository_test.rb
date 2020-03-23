@@ -462,7 +462,7 @@ module Katello
       @root.content_type = 'yum'
       @root.download_policy = 'invalid'
       refute @root.valid?
-      assert @root.errors.include?(:download_policy)
+      assert_includes @root.errors, :download_policy
       assert_match 'must be one of the following: immediate, on_demand, background', @root.errors[:download_policy][0]
     end
 
@@ -562,18 +562,18 @@ module Katello
       assert @root.valid?
       @root.ostree_upstream_sync_policy = 'boo'
       refute @root.valid?
-      assert @root.errors.include?(:ostree_upstream_sync_policy)
+      assert_includes @root.errors, :ostree_upstream_sync_policy
 
       @root.ostree_upstream_sync_policy = 'custom'
       refute @root.valid?
-      assert @root.errors.include?(:ostree_upstream_sync_depth)
+      assert_includes @root.errors, :ostree_upstream_sync_depth
 
       @root.ostree_upstream_sync_depth = 123
       assert @root.valid?
 
       @root.content_type = 'puppet'
       refute @root.valid?
-      assert @root.errors.include?(:ostree_upstream_sync_policy)
+      assert_includes @root.errors, :ostree_upstream_sync_policy
     end
 
     def test_ostree_upstream_sync_policy_update
@@ -617,13 +617,13 @@ module Katello
       assert @root.valid?
       @root.ignorable_content = ["boo"]
       refute @root.valid?
-      assert @root.errors.include?(:ignorable_content)
+      assert_includes @root.errors, :ignorable_content
 
       @root.ignorable_content = ["srpm"]
       @root.content_type = Repository::PUPPET_TYPE
       @root.download_policy = nil
       refute @root.valid?
-      assert @root.errors.include?(:ignorable_content)
+      assert_includes @root.errors, :ignorable_content
 
       @root.ignorable_content = nil
       assert @root.valid?

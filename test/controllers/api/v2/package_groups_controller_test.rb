@@ -70,7 +70,7 @@ module Katello
       response_ids = body["results"].map { |item| item["package_group_id"] }
 
       assert_response :success
-      assert !(response_ids.include? filtered_id)
+      refute_includes response_ids, filtered_id
       assert response_ids.length > 0
     end
 

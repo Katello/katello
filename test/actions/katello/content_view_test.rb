@@ -93,20 +93,20 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
-      content_view_environment.must_be_nil
+      refute content_view_environment
 
       version = content_view.create_new_version
       action = create_and_plan_action(action_class, version, environment)
       assert_action_planed_with(action, EnvironmentCreate) do |(cve)|
-        cve.environment.must_equal environment
-        cve.content_view.must_equal content_view
+        assert_equal environment, cve.environment
+        assert_equal content_view, cve.content_view
       end
-      content_view_environment.content_view_version.version.must_equal "1.0"
+      assert_equal '1.0', content_view_environment.content_view_version.version
 
       version = content_view.create_new_version
       action = create_and_plan_action(action_class, version, environment)
       refute_action_planed(action, EnvironmentCreate)
-      content_view_environment.content_view_version.version.must_equal "2.0"
+      assert_equal '2.0', content_view_environment.content_view_version.version
     end
   end
 
@@ -271,7 +271,7 @@ module ::Actions::Katello::ContentView
                             lifecycle_environment: environment)
         options = { organization_destroy: true }
         action.expects(:action_subject).with(content_view)
-        refute content_view.hosts.first.content_facet.content_facet_errata.empty?
+        refute_empty content_view.hosts.first.content_facet.content_facet_errata
         plan_action(action, content_view, options)
       end
     end

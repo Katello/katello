@@ -61,7 +61,7 @@ module ::Actions::Katello::Repository
     it 'no clone flag means generate metadata in run phase' do
       plan = plan_action action, repository
       run_action plan
-      plan.run.label.must_equal "Actions::Katello::Repository::MetadataGenerate"
+      assert_equal 'Actions::Katello::Repository::MetadataGenerate', plan.run.label
     end
 
     it 'clone flag disables metadata generation' do
@@ -415,7 +415,7 @@ module ::Actions::Katello::Repository
       assert_action_planed action, ::Actions::Katello::Repository::ImportApplicability
       assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
         contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-        repo.id.must_equal repository.id
+        assert_equal repository.id, repo.id
       end
     end
 
@@ -502,7 +502,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success }
 
         specify do
-          action.humanized_output.must_equal "New packages: 32 (76.7 KB)."
+          assert_equal 'New packages: 32 (76.7 KB).', action.humanized_output
         end
       end
 
@@ -510,7 +510,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success_no_packages }
 
         specify do
-          action.humanized_output.must_equal "No new packages."
+          assert_equal 'No new packages.', action.humanized_output
         end
       end
 
@@ -518,7 +518,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :progress_packages }
 
         specify do
-          action.humanized_output.must_equal "New packages: 20/32 (48 KB/76.7 KB)."
+          assert_equal 'New packages: 20/32 (48 KB/76.7 KB).', action.humanized_output
         end
 
         specify do
@@ -530,7 +530,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :progress_metadata }
 
         specify do
-          action.humanized_output.must_equal "Processing metadata"
+          assert_equal 'Processing metadata', action.humanized_output
         end
       end
     end
@@ -548,7 +548,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success_file }
 
         specify do
-          action.humanized_output.must_equal "Total tasks: : 5/5\n"\
+          assert_equal action.humanized_output, "Total tasks: : 5/5\n"\
                                              "--------------------------------\n"\
                                              "Associating Content: 1/1\n"\
                                              "Downloading Artifacts: 0/0\n"\
@@ -565,7 +565,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success_ansible_collection }
 
         specify do
-          action.humanized_output.must_equal "Total tasks: : 2/2\n"\
+          assert_equal action.humanized_output, "Total tasks: : 2/2\n"\
                                              "--------------------------------\n"\
                                              "Downloading Collections: 1/1\n"\
                                              "Importing Collections: 1/1"
@@ -580,7 +580,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success_docker }
 
         specify do
-          action.humanized_output.must_equal "Total tasks: : 1192/1192\n"\
+          assert_equal action.humanized_output, "Total tasks: : 1192/1192\n"\
                                              "--------------------------------\n"\
                                              "Associating Content: 641/641\n"\
                                              "Downloading Artifacts: 415/415\n"\
@@ -597,7 +597,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :progress_units_file }
 
         specify do
-          action.humanized_output.must_equal "Total tasks: : 15/30\n"\
+          assert_equal action.humanized_output, "Total tasks: : 15/30\n"\
                                              "--------------------------------\n"\
                                              "Associating Content: 5/10\n"\
                                              "Downloading Artifacts: 5/10\n"\
@@ -613,7 +613,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :progress_units_ansible_collection }
 
         specify do
-          action.humanized_output.must_equal "Total tasks: : 1/2\n"\
+          assert_equal action.humanized_output, "Total tasks: : 1/2\n"\
                                              "--------------------------------\n"\
                                              "Downloading Collections: 1/2"
         end

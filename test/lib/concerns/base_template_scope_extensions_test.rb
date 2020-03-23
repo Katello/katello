@@ -16,7 +16,7 @@ module Katello
       scope = ::Foreman::Renderer.get_scope(host: ::Host.first)
       id = ::Foreman::Renderer.render(source, scope)
 
-      refute id.empty?
+      refute_empty id
       assert_equal @errata.id.to_s, id
     end
   end

@@ -63,7 +63,7 @@ module Katello
       @child.content_view = @view
       @child.save!
 
-      assert @view == @child.content_view
+      assert_equal @view, @child.content_view
       assert_nil @root.content_view
     end
 
@@ -71,7 +71,7 @@ module Katello
       @child.lifecycle_environment = @library
       @child.save!
 
-      assert @library == @child.lifecycle_environment
+      assert_equal @library, @child.lifecycle_environment
       assert_nil @root.lifecycle_environment
     end
 

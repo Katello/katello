@@ -48,7 +48,7 @@ module Katello
                                           :features => [Feature.where(:name => "Pulp Node").first_or_create])
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
       @foreman_host.content_facet.content_source = content_source
-      assert @foreman_host.smart_proxy_ids.include?(@foreman_host.content_source_id)
+      assert_includes @foreman_host.smart_proxy_ids, @foreman_host.content_source_id
     end
 
     def test_info_with_katello

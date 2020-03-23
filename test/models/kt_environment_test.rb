@@ -84,7 +84,7 @@ module Katello
       refute env.save
       assert_equal 1, env.errors.size
       # this an ActiveModel::Errors object; not a Hash
-      assert env.errors.include?(:label)
+      assert_includes env.errors, :label
     end
 
     def test_content_view_label_excludes_content_dir
@@ -93,7 +93,7 @@ module Katello
       refute env.save
       assert_equal 1, env.errors.size
       # this an ActiveModel::Errors object; not a Hash
-      assert env.errors.include?(:label)
+      assert_includes env.errors, :label
     end
 
     def test_audit_on_env_creation
@@ -118,7 +118,7 @@ module Katello
 
     def test_insert_successor_after_library
       @library.insert_successor({ :organization => @acme_corporation, :name => "testEnv" }, @dev.path)
-      assert @library.successors.map(&:name).include?("testEnv")
+      assert_includes @library.successors.map(&:name), "testEnv"
       assert_equal "testEnv", @dev.prior.name
     end
 

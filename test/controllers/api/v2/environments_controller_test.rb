@@ -153,7 +153,7 @@ module Katello
       @staging.reload
       assert_equal new_name, @staging.name
       assert_equal new_description, @staging.description
-      assert_equal true, @staging.registry_unauthenticated_pull
+      assert @staging.registry_unauthenticated_pull
       # note: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end

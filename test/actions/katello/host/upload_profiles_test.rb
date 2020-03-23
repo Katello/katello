@@ -79,7 +79,7 @@ module Katello::Host
         mock_consumer = mock
         mock_consumer.expects(:upload_package_profile)
         mock_consumer.expects(:upload_module_stream_profile).with do |args|
-          args.size.must_equal(1)
+          assert_equal 1, args.size
           args.first["name"].must_equal(modumd_inventory.first["name"])
           args.first["version"].must_equal(modumd_inventory.first["version"])
         end

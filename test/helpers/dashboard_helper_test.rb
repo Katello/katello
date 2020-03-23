@@ -18,7 +18,7 @@ class DashboardHelperTest < ActiveSupport::TestCase
 
   def test_total_host_count
     total = total_host_count
-    assert !total.nil?
+    refute total.nil?
     assert_equal 1, total
   end
 
@@ -60,21 +60,21 @@ class DashboardHelperTest < ActiveSupport::TestCase
 
   def test_partial_consumer_count_nil
     partial = partial_consumer_count
-    assert !partial.nil?
+    refute partial.nil?
   end
 
   def test_valid_consumer_count_nil
     valid = valid_consumer_count
-    assert !valid.nil?
+    refute valid.nil?
   end
 
   def test_invalid_consumer_count_nil
     invalid = invalid_consumer_count
-    assert !invalid.nil?
+    refute invalid.nil?
   end
 
   def test_unknown_consumer_count_nil
     unknown = unknown_consumer_count
-    assert !unknown.nil?
+    refute unknown.nil?
   end
 end

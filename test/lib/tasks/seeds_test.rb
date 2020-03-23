@@ -52,7 +52,7 @@ module Katello
       test "Ensure hypervisor bookmark is created" do
         load "#{Katello::Engine.root}/db/seeds.d/108-subcription-bookmarks.rb"
 
-        refute Bookmark.where(:name => "list hypervisors").empty?
+        refute_empty Bookmark.where(:name => "list hypervisors")
       end
     end
   end

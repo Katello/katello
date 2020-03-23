@@ -13,12 +13,12 @@ module Katello
         capsule_content.smart_proxy.available_lifecycle_environments(organization.id).wont_include(environment)
 
         capsule_content.smart_proxy.add_lifecycle_environment(environment)
-        capsule_content.smart_proxy.available_lifecycle_environments.wont_include(environment)
+        refute_includes capsule_content.smart_proxy.available_lifecycle_environments, environment
       end
 
       specify "listing environments in the capsule" do
         capsule_content.smart_proxy.add_lifecycle_environment(environment)
-        capsule_content.smart_proxy.lifecycle_environments.must_include(environment)
+        assert_includes capsule_content.smart_proxy.lifecycle_environments, environment
         capsule_content.smart_proxy.lifecycle_environments.where(organization_id: organization.id).wont_include(environment)
       end
 

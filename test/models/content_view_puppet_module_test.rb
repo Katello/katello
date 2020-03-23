@@ -102,7 +102,7 @@ module Katello
                              katello_puppet_modules(:test_apt3)]
       modules = PuppetModule.in_repositories(repo)
       modules = modules.where(:name => puppet_module_apt.name)
-      assert_equal true, content_view_puppet_module.latest_in_modules_by_author?(modules)
+      assert content_view_puppet_module.latest_in_modules_by_author?(modules)
     end
   end
 end

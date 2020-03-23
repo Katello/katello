@@ -85,7 +85,7 @@ module Katello
             Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index
           end
 
-          assert correct_content_types.flatten == migration_service.content_types_for_migration
+          assert_equal correct_content_types.flatten, migration_service.content_types_for_migration
         end
 
         def test_migration_service_type_already_migrated

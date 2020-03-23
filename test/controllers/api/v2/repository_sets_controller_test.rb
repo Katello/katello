@@ -199,13 +199,13 @@ module Katello
       error_message = "Couldn't find product with id '#{fake_product_id}'"
 
       assert_response :not_found
-      assert results["errors"].include? error_message
+      assert_includes results["errors"], error_message
     end
 
     def test_repository_enable
       assert_sync_task ::Actions::Katello::RepositorySet::EnableRepository do |product, content, substitutions|
         product.must_equal @product
-        content.cp_content_id.must_equal @content_id
+        assert_equal @content_id, content.cp_content_id
         substitutions.must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
       end
 
@@ -216,7 +216,7 @@ module Katello
     def test_repository_enable_docker
       assert_sync_task ::Actions::Katello::RepositorySet::EnableRepository do |product, content, substitutions|
         product.must_equal @product
-        content.cp_content_id.must_equal @content_id
+        assert_equal @content_id, content.cp_content_id
         substitutions.must_be_empty
       end
 
@@ -236,7 +236,7 @@ module Katello
     def test_repository_disable
       assert_sync_task ::Actions::Katello::RepositorySet::DisableRepository do |product, content, substitutions|
         product.must_equal @product
-        content.cp_content_id.must_equal @content_id
+        assert_equal @content_id, content.cp_content_id
         substitutions.must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
       end
 
@@ -247,7 +247,7 @@ module Katello
     def test_repository_disable_docker
       assert_sync_task ::Actions::Katello::RepositorySet::DisableRepository do |product, content, substitutions|
         product.must_equal @product
-        content.cp_content_id.must_equal @content_id
+        assert_equal @content_id, content.cp_content_id
         substitutions.must_be_empty
       end
 

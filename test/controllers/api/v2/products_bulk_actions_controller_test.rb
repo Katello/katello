@@ -35,7 +35,7 @@ module Katello
     def test_destroy_products
       test_product = @products.first
       assert_async_task ::Actions::Katello::Product::Destroy do |product|
-        test_product.id.must_equal product.id
+        assert_equal test_product.id, product.id
       end
 
       put :destroy_products, params: { :ids => [test_product.id], :organization_id => @organization.id }
@@ -55,7 +55,7 @@ module Katello
     def test_sync
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        repos.size.must_equal 9
+        assert_equal 9, repos.size
       end
 
       put :sync_products, params: { :ids => @products.collect(&:id), :organization_id => @organization.id }
@@ -67,7 +67,7 @@ module Katello
       create_docker_repo
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        refute repos.empty?
+        refute_empty repos
         assert repos.all? { |repo| repo.yum? }
       end
 
@@ -83,7 +83,7 @@ module Katello
 
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        refute repos.empty?
+        refute_empty repos
         assert repos.all? { |repo| repo.yum? } && repos.all? { |repo| repo.download_policy != ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND }
       end
 

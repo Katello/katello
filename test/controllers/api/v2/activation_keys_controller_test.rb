@@ -100,7 +100,7 @@ module Katello
       assert_equal 'Standard', response['service_level']
       assert_equal '7Server', response['release_version']
       assert_equal 'Typical Key', response['name']
-      assert_equal false, response['auto_attach']
+      refute response['auto_attach']
     end
 
     def test_create_no_auto_attach
@@ -111,14 +111,14 @@ module Katello
       assert_response :success
       response = JSON.parse(@response.body)
 
-      assert_equal true, response['auto_attach']
+      assert response['auto_attach']
     end
 
     test_attributes :pid => '1d73b8cc-a754-4637-8bae-d9d2aaf89003'
     def test_create_unlimited
       ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
-        activation_key.max_hosts.must_be_nil
+        refute activation_key.max_hosts
         assert activation_key.unlimited_hosts
         assert_valid activation_key
       end
@@ -454,7 +454,7 @@ module Katello
       assert_response 400
       assert response_body[:errors].count > 0
       assert_match "not found in the Organization", response_body[:displayMessage]
-      ["croissant", "crepe"].map { |label| assert response_body[:displayMessage].include? label }
+      ["croissant", "crepe"].map { |label| assert_includes response_body[:displayMessage], label }
     end
 
     def test_add_subscriptions_protected

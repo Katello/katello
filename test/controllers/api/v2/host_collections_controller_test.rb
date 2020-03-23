@@ -78,7 +78,7 @@ module Katello
       assert_response :unprocessable_entity
       results = JSON.parse(response.body)
       error_message = "You cannot have more than #{max_hosts} host(s) associated with host collection #{host_name}."
-      assert results["errors"]["base"].include?(error_message)
+      assert_includes results["errors"]["base"], error_message
     end
 
     def test_max_host_validator_success
@@ -91,7 +91,7 @@ module Katello
       assert_response :unprocessable_entity
       results = JSON.parse(response.body)
       error_message = "may not be less than the number of hosts associated with the host collection."
-      assert results["errors"]["max_host"].include?(error_message)
+      assert_includes results["errors"]["max_host"], error_message
     end
 
     def test_max_host_zero
@@ -99,7 +99,7 @@ module Katello
       assert_response :unprocessable_entity
       results = JSON.parse(response.body)
       error_message = "must be a positive integer value."
-      assert results["displayMessage"].include?(error_message)
+      assert_includes results["displayMessage"], error_message
     end
 
     def test_nil_max_hosts
@@ -107,7 +107,7 @@ module Katello
       assert_response :unprocessable_entity
       results = JSON.parse(response.body)
       error_message = "must be given a value if this host collection is not unlimited."
-      assert results["displayMessage"].include?(error_message)
+      assert_includes results["displayMessage"], error_message
     end
 
     test_attributes :pid => '9dc0ad72-58c2-4079-b1ca-2c4373472f0f'
