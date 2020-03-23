@@ -110,7 +110,7 @@ module Katello
       Pool.joins(:subscription).order("subscription.name")
     end
 
-    class Pool::Jail < ::Safemode::Jail
+    class Jail < ::Safemode::Jail
       allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed, :days_until_expiration
     end
   end
