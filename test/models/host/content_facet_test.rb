@@ -32,6 +32,14 @@ module Katello
       assert host.reload.content_facet.katello_agent_installed?
     end
 
+    def test_tracer_installed?
+      refute host.content_facet.tracer_installed?
+
+      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-host-tools-tracer', 'nvra' => 'katello-host-tools-tracer-1.0.x86_64')
+
+      assert host.reload.content_facet.tracer_installed?
+    end
+
     def test_in_content_view_version_environments
       first_cvve = {:content_view_version => content_facet.content_view.version(content_facet.lifecycle_environment),
                     :environments => [content_facet.lifecycle_environment]}
