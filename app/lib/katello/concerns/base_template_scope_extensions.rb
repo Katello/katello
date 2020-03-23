@@ -25,7 +25,7 @@ module Katello
       end
 
       def host_subscriptions_names(host)
-        host.subscriptions.map(&:name).join(', ')
+        host.subscriptions.map(&:name)
       end
 
       def host_content_facet(host)
@@ -43,9 +43,9 @@ module Katello
       def host_products_names(host)
         products = host_products(host)
         if products
-          products.map(&:name).join(', ')
+          products.map(&:name)
         else
-          ''
+          []
         end
       end
 
@@ -54,7 +54,7 @@ module Katello
       end
 
       def host_collections_names(host)
-        host.host_collections.map(&:name).join(", ")
+        host.host_collections.map(&:name)
       end
 
       def sub_name(pool)
