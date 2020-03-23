@@ -53,23 +53,23 @@ module Katello
     end
 
     def test_redhat
-      refute Katello::ProductContent.redhat.include?(katello_product_contents(:fedora_17_x86_64_content))
+      refute_includes Katello::ProductContent.redhat, katello_product_contents(:fedora_17_x86_64_content)
       assert_includes Katello::ProductContent.redhat, @product_content
     end
 
     def test_displayable
       @content.update_attributes(content_type: ::Katello::Repository::CANDLEPIN_DOCKER_TYPE)
-      refute ProductContent.displayable.include?(@product_content)
+      refute_includes ProductContent.displayable, @product_content
 
       @content.update_attributes(content_type: ::Katello::Repository::CANDLEPIN_OSTREE_TYPE)
       ::Katello::RepositoryTypeManager.stubs(:enabled?).returns(true)
-      assert ProductContent.displayable.include?(@product_content)
+      assert_includes ProductContent.displayable, @product_content
 
       ::Katello::RepositoryTypeManager.stubs(:enabled?).returns(false)
-      refute ProductContent.displayable.include?(@product_content)
+      refute_includes ProductContent.displayable, @product_content
 
       @content.update_attributes(content_type: 'arbitrary type')
-      assert ProductContent.displayable.include?(@product_content)
+      assert_includes ProductContent.displayable, @product_content
     end
 
     def test_search_name

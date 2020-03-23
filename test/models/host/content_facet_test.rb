@@ -153,7 +153,7 @@ module Katello
       assert_includes content_facets, content_facet_dev
 
       content_facets = Katello::Host::ContentFacet.with_installable_errata([non_installable.first])
-      refute content_facets.include?(content_facet_dev)
+      refute_includes content_facets, content_facet_dev
 
       content_facets = Katello::Host::ContentFacet.with_installable_errata([installable.first, non_installable.first])
       assert_includes content_facets, content_facet_dev
@@ -170,7 +170,7 @@ module Katello
       assert_includes content_facets, content_facet
 
       content_facets = Katello::Host::ContentFacet.with_non_installable_errata([content_facet.installable_errata.first], [host.id])
-      refute content_facets.include?(content_facet)
+      refute_includes content_facets, content_facet
     end
 
     def test_available_errata_other_view

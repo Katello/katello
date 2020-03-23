@@ -536,7 +536,8 @@ module Katello
       key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         root.must_equal @repository.root
-        attributes.to_hash.must_equal('gpg_key_id' => key.id.to_s)
+        expected = { 'gpg_key_id' => key.id.to_s }
+        assert_equal expected, attributes.to_hash
       end
       put :update, params: { :id => @repository.id, :repository => {:gpg_key_id => key.id.to_s} }
       assert_response :success
@@ -547,7 +548,8 @@ module Katello
       cert = GpgKey.find(katello_gpg_keys('fedora_cert').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         root.must_equal root
-        attributes.to_hash.must_equal('ssl_ca_cert_id' => cert.id.to_s)
+        expected = { 'ssl_ca_cert_id' => cert.id.to_s }
+        assert_equal expected, attributes.to_hash
       end
       put :update, params: { :id => @repository.id, :repository => {:ssl_ca_cert_id => cert.id.to_s} }
       assert_response :success
@@ -639,7 +641,8 @@ module Katello
       whitelist = ["latest", "1.23"]
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         root.must_equal @docker_repo.root
-        attributes.to_hash.must_equal('docker_tags_whitelist' => whitelist)
+        expected = {'docker_tags_whitelist' => whitelist}
+        assert_equal expected, attributes.to_hash
       end
       put :update, params: { :id => @docker_repo.id, :repository => { :docker_tags_whitelist => whitelist } }
       assert_response :success
@@ -649,7 +652,8 @@ module Katello
     def test_update_non_docker_repo_with_whitelist_tags
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         root.must_equal @repository.root
-        attributes.to_hash.must_equal('name' => 'new name')
+        expected = { 'name' => 'new name' }
+        assert_equal expected, attributes.to_hash
       end
       put :update, params: { :id => @repository.id, :repository => { name: 'new name', docker_tags_whitelist: [] } }
       assert_response :success
@@ -663,7 +667,7 @@ module Katello
       @product.expects(:add_repo).returns(@docker_repo.root)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
         root.must_equal @docker_repo.root
-        root.docker_tags_whitelist.must_equal whitelist
+        assert_equal whitelist, root.docker_tags_whitelist
       end
       post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox", :docker_tags_whitelist => whitelist }
       assert_response :success
@@ -676,7 +680,7 @@ module Katello
       @product.expects(:add_repo).returns(@docker_repo.root)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
         root.must_equal @docker_repo.root
-        root.docker_tags_whitelist.must_equal []
+        assert_equal [], root.docker_tags_whitelist
       end
       post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox" }
       assert_response :success
@@ -750,7 +754,7 @@ module Katello
 
     def test_sync_with_url_override
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, options|
-        repo.id.must_equal(@repository.id)
+        assert_equal @repository.id, repo.id
         assert_nil pulp_task_id
         options[:source_url].must_equal('file:///tmp/')
       end
@@ -760,7 +764,7 @@ module Katello
 
     def test_sync_with_incremental_flag
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, options|
-        repo.id.must_equal(@repository.id)
+        assert_equal @repository.id, repo.id
         assert_nil pulp_task_id
         options[:source_url].must_equal('file:///tmp/')
         options[:incremental].must_equal true

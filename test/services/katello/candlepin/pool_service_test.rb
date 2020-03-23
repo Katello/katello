@@ -24,7 +24,7 @@ module Katello
         Katello::Pool.any_instance.expects(:upstream_pool_id).returns(nil)
 
         error = proc { Katello::Candlepin::PoolService.local_to_upstream_ids([@pool_one.id]) }.must_raise RuntimeError
-        error.message.must_match(/No upstream pool ID/)
+        assert_match(/No upstream pool ID/, error.message)
       end
 
       def test_local_to_upstream_ids_no_fail

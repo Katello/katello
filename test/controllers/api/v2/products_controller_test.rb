@@ -152,7 +152,7 @@ module Katello
     def test_update
       params = { :name => 'New Name', :description => 'Product Description', :label => 'product_label' }
       assert_sync_task(::Actions::Katello::Product::Update) do |product, product_params|
-        product.id.must_equal @product.id
+        assert_equal @product.id, product.id
         product_params.key?(:name).must_equal true
         product_params[:name].must_equal params[:name]
         product_params.key?(:description).must_equal true
@@ -171,7 +171,7 @@ module Katello
       sync_plan = katello_sync_plans(:sync_plan_hourly)
       params = {:sync_plan_id => sync_plan.id}
       assert_sync_task(::Actions::Katello::Product::Update) do |product, _product_params|
-        product.id.must_equal @product.id
+        assert_equal @product.id, product.id
       end
       put :update, params: { :id => @product.id, :product => params }
 
@@ -192,7 +192,7 @@ module Katello
     test_attributes :pid => '30df95f5-0a4e-41ee-a99f-b418c5c5f2f3'
     def test_destroy
       assert_async_task ::Actions::Katello::Product::Destroy do |prod|
-        prod.id.must_equal @product.id
+        assert_equal @product.id, prod.id
       end
 
       delete :destroy, params: { :id => @product.id }

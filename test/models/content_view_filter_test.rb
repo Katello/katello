@@ -26,7 +26,7 @@ module Katello
     def test_bad_name
       filter = FactoryBot.build(:katello_content_view_filter, :name => "")
       assert filter.invalid?
-      assert filter.errors.include?(:name)
+      assert_includes filter.errors, :name
     end
 
     def test_duplicate_name
@@ -68,7 +68,7 @@ module Katello
 
     def test_search_exclusion
       inclusion = @filter.inclusion ? 'exclude' : 'include'
-      refute ContentViewFilter.search_for("inclusion_type = #{inclusion}").include?(@filter)
+      refute_includes ContentViewFilter.search_for("inclusion_type = #{inclusion}"), @filter
     end
 
     def test_add_bad_repo

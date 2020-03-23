@@ -14,7 +14,7 @@ module Katello
           UpstreamCandlepinResource.upstream_consumer
           flunk("Failed to raise exception when current organization is nil.")
         rescue RuntimeError => e
-          assert(e.message == "Current organization not set.", "Invalid message: #{e.message}")
+          assert_equal(e.message, "Current organization not set.", "Invalid message: #{e.message}")
         end
 
         def test_upstream_consumer_current_organization_no_imported_manifest
@@ -22,7 +22,7 @@ module Katello
           UpstreamCandlepinResource.upstream_consumer
           flunk("Failed to raise exception when manifest is not imported.")
         rescue RuntimeError => e
-          assert(e.message == "Current organization has no manifest imported.",
+          assert_equal(e.message, "Current organization has no manifest imported.",
                  "Invalid message: #{e.message}")
         end
 

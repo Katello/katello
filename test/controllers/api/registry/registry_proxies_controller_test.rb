@@ -486,8 +486,8 @@ module Katello
             assert_equal ::Actions::Katello::Repository::ImportUpload, action_class
             assert_equal @repository, repository
             assert_equal [123], uploads.pluck(:id)
-            assert_equal true, params[:generate_metadata]
-            assert_equal true, params[:sync_capsule]
+            assert params[:generate_metadata]
+            assert params[:sync_capsule]
           end
 
         manifest = {

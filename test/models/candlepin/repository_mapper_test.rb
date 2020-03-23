@@ -10,8 +10,8 @@ module Katello
       subs = {:basearch => 'x86_64', :releasever => "greatest8"}.with_indifferent_access
       mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, subs)
       assert_equal subs, mapper.substitutions
-      assert mapper.path.include?(subs[:basearch])
-      assert mapper.path.include?(subs[:releasever])
+      assert_includes mapper.path, subs[:basearch]
+      assert_includes mapper.path, subs[:releasever]
     end
 
     def test_unused_substitutions_bad
@@ -19,9 +19,9 @@ module Katello
       mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, subs)
       refute_equal subs, mapper.substitutions
       assert_equal subs.slice(:basearch, :releasever), mapper.substitutions
-      assert mapper.path.include?(subs[:basearch])
-      assert mapper.path.include?(subs[:releasever])
-      refute mapper.path.include?(subs[:wild_card])
+      assert_includes mapper.path, subs[:basearch]
+      assert_includes mapper.path, subs[:releasever]
+      refute_includes mapper.path, subs[:wild_card]
     end
 
     def test_unprotected_suse

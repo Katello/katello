@@ -39,7 +39,7 @@ describe ::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements do
     ::Katello::Resources::Candlepin::UpstreamConsumer.expects(:get).returns(true)
 
     error = proc { plan_action(@action, [pool1.id]) }.must_raise RuntimeError
-    error.message.must_match(/upstream/)
+    assert_match(/upstream/, error.message)
   end
 
   it 'raises an error when the pool has no upstream allocation' do
@@ -52,13 +52,13 @@ describe ::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements do
   it 'raises an error when given no pool ids' do
     ::Katello::Resources::Candlepin::UpstreamConsumer.expects(:get).returns(true)
     error = proc { plan_action(@action, []) }.must_raise RuntimeError
-    error.message.must_match(/provided/)
+    assert_match(/provided/, error.message)
   end
 
   it 'raises an error when no organization is set' do
     ::Katello::Resources::Candlepin::UpstreamConsumer.expects(:get).returns(true)
     set_organization(nil)
     error = proc { plan_action(@action, [:foo]) }.must_raise RuntimeError
-    error.message.must_match(/is not set/)
+    assert_match(/is not set/, error.message)
   end
 end

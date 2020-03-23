@@ -48,7 +48,7 @@ module ::Actions::Pulp::Repository
 
       it 'fails with only content units' do
         error = proc { run_action planned_action_with_content_units_only }.must_raise(RuntimeError)
-        error.message.must_match("Cannot pass content units without content unit type")
+        assert_match 'Cannot pass content units without content unit type', error.message
       end
     end
   end

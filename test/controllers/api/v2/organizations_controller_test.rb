@@ -83,7 +83,7 @@ module Katello
 
     def test_delete
       assert_async_task ::Actions::Katello::Organization::Destroy do |org|
-        org.id.must_equal @organization.id
+        assert_equal @organization.id, org.id
       end
       delete(:destroy, params: { :id => @organization.id })
 
@@ -161,7 +161,7 @@ module Katello
       def test_create
         name = "Michaelangelo"
         assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          org.name.must_equal name
+          assert_equal name, org.name
           org.stubs(:reload)
         end
         post(:create, params: { :organization => {"name" => name} })
@@ -172,7 +172,7 @@ module Katello
       def test_create_with_auto_label
         name = "Organization With Label"
         assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          org.name.must_equal name
+          assert_equal name, org.name
           assert org.valid?
           assert_equal org.label, name.gsub(' ', '_')
           org.stubs(:reload)
@@ -186,8 +186,8 @@ module Katello
         name = "Organization With Label"
         label = "org_with_label"
         assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          org.name.must_equal name
-          org.label.must_equal label
+          assert_equal name, org.name
+          assert_equal label, org.label
           assert org.valid?
           org.stubs(:reload)
         end
@@ -199,8 +199,8 @@ module Katello
         name = "Organization With Name Description Auto Label"
         description = "Organization Description"
         assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          org.name.must_equal name
-          org.description.must_equal description
+          assert_equal name, org.name
+          assert_equal description, org.description
           assert org.valid?
           assert_equal org.label, name.gsub(' ', '_')
           org.stubs(:reload)
@@ -215,9 +215,9 @@ module Katello
         label = "organization_with_name_label_description"
         description = "Organization Description"
         assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          org.name.must_equal name
-          org.label.must_equal label
-          org.description.must_equal description
+          assert_equal name, org.name
+          assert_equal label, org.label
+          assert_equal description, org.description
           assert org.valid?
           org.stubs(:reload)
         end

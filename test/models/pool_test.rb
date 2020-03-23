@@ -12,13 +12,13 @@ module Katello
     end
 
     def test_upstream
-      assert_equal true,  @pool_one.upstream?
-      assert_equal false, @custom_pool.upstream?
+      assert @pool_one.upstream?
+      refute @custom_pool.upstream?
     end
 
     def test_upstream_nil_subscription
       @pool_one.subscription = nil
-      assert_equal false, @pool_one.upstream?
+      refute @pool_one.upstream?
     end
 
     def test_active

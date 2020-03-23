@@ -26,7 +26,7 @@ module Katello
                                        :provisioning_template_id => template.id,
                                        :operatingsystem_id => os.id).any?
 
-      assert os.ptables.include? ptable
+      assert_includes os.ptables, ptable
     end
 
     def test_assign_template_for_atomic
@@ -47,7 +47,7 @@ module Katello
                                        :provisioning_template_id => template.id,
                                        :operatingsystem_id => os.id).any?
 
-      assert os.ptables.include? ptable
+      assert_includes os.ptables, ptable
       assert_equal "Redhat", os.family
       assert_equal "x86_64", os.architectures.first.name
       assert_equal "#{::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME} 7.3", os.description

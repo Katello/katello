@@ -30,7 +30,7 @@ module Katello
       org.save!
       org.label = 'my_org_label'
       refute_valid org
-      assert org.errors.include?(:label)
+      assert_includes org.errors, :label
       assert_equal 'cannot be changed.', org.errors[:label][0]
     end
   end

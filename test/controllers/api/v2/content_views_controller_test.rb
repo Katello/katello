@@ -372,7 +372,7 @@ module Katello
     end
 
     def test_remove_from_environment
-      refute @library_dev_view.environments.include?(@staging)
+      refute_includes @library_dev_view.environments, @staging
       delete :remove_from_environment, params: { id: @library_dev_view.id, environment_id: @staging.id }
       assert_response 400
     end

@@ -95,7 +95,7 @@ module Katello
       content_view = FactoryBot.build(:katello_content_view, :name => "")
       assert content_view.invalid?
       refute content_view.save
-      assert content_view.errors.include?(:name)
+      assert_includes content_view.errors, :name
     end
 
     def test_duplicate_name
@@ -115,7 +115,7 @@ module Katello
 
       assert content_view.invalid?
       assert_equal 1, content_view.errors.size
-      assert content_view.errors.include?(:label)
+      assert_includes content_view.errors, :label
     end
 
     def test_content_view_environments
@@ -162,15 +162,15 @@ module Katello
       count = ContentView.count
       new_view = @library_dev_view.copy("new view name")
 
-      assert count + 1 == ContentView.count
-      assert new_view.name == "new view name"
-      assert new_view.description == @library_dev_view.description
-      assert new_view.organization_id == @library_dev_view.organization_id
-      assert new_view.default == @library_dev_view.default
-      assert new_view.composite ==  @library_dev_view.composite
-      assert new_view.components == @library_dev_view.components
-      assert new_view.repositories == @library_dev_view.repositories
-      assert new_view.filters == @library_dev_view.filters
+      assert_equal count + 1, ContentView.count
+      assert_equal new_view.name, "new view name"
+      assert_equal new_view.description, @library_dev_view.description
+      assert_equal new_view.organization_id, @library_dev_view.organization_id
+      assert_equal new_view.default, @library_dev_view.default
+      assert_equal new_view.composite, @library_dev_view.composite
+      assert_equal new_view.components, @library_dev_view.components
+      assert_equal new_view.repositories, @library_dev_view.repositories
+      assert_equal new_view.filters, @library_dev_view.filters
     end
 
     def test_copy_with_solve_dependencies
@@ -281,13 +281,13 @@ module Katello
       repo1.root.update_attributes(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND)
       view1 = create(:katello_content_view, organization: @organization)
       view1.repositories << repo1
-      assert view1.on_demand_repositories.include?(repo1)
+      assert_includes view1.on_demand_repositories, repo1
 
       repo2 = katello_repositories(:fedora_17_x86_64)
       repo2.root.update_attributes(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE)
       view2 = create(:katello_content_view, organization: @organization)
       view2.repositories << repo2
-      refute view2.on_demand_repositories.include?(repo2)
+      refute_includes view2.on_demand_repositories, repo2
     end
 
     def test_content_view_components
@@ -405,7 +405,7 @@ module Katello
       composite.update_attributes(component_ids: [version1.id, version2.id])
 
       refute composite.valid?
-      assert composite.errors.include?(:base)
+      assert_includes composite.errors, :base
       assert composite.errors.full_messages.first =~ /^Container Image repo '#{repo.name}' is present in multiple/
     end
 

@@ -56,7 +56,7 @@ module Katello::Host
         plan_action(action, :hypervisors => @hypervisor_results)
         action = run_action(action)
 
-        action.state.must_equal :success
+        assert_equal :success, action.state
 
         @host = Host.find_by(:name => @hypervisor_name)
         assert_not_nil @host.subscription_facet
@@ -85,7 +85,7 @@ module Katello::Host
         plan_action(action, :hypervisors => @hypervisor_results)
         action = run_action(action)
 
-        action.state.must_equal :success
+        assert_equal :success, action.state
         assert_equal guests, @host.subscription_facet.virtual_guests.sort
       end
 
@@ -97,7 +97,7 @@ module Katello::Host
         plan_action(action, :hypervisors => @hypervisor_results)
         action = run_action(action)
 
-        action.state.must_equal :success
+        assert_equal :success, action.state
 
         @host.reload
         assert_not_nil @host.subscription_facet
@@ -113,7 +113,7 @@ module Katello::Host
           action = run_action(action)
         end
 
-        action.state.must_equal :success
+        assert_equal :success, action.state
       end
 
       it 'existing hypervisor, no org' do

@@ -92,7 +92,7 @@ module Katello
       response_ids = body["results"].map { |item| item["errata_id"] }
 
       assert_response :success
-      refute response_ids.include? filtered_id
+      refute_includes response_ids, filtered_id
       assert response_ids.length > 0
     end
 
@@ -104,7 +104,7 @@ module Katello
       response_ids = body["results"].map { |item| item["errata_id"] }
 
       assert_response :success
-      refute response_ids.include? filtered_id
+      refute_includes response_ids, filtered_id
       assert response_ids.length > 0
     end
 

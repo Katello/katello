@@ -48,7 +48,7 @@ module Katello
 
               it('is using correct foreign_key') do
                 unless association.class_name.start_with?("ForemanTasks::")
-                  assert model.column_names.include?(fk = association.foreign_key.to_s),
+                  assert_includes model.column_names, fk = association.foreign_key.to_s,
                          "unknown foreign_key #{fk}  #{source_code_location(model, association)}"
                 end
               end
@@ -62,7 +62,7 @@ module Katello
                   fk_columns.flatten!
                   fk_columns.uniq!
                   msg = "Foreign Key not defined for  #{model.table_name}.#{association.foreign_key}"
-                  assert fk_columns.include?(association.foreign_key.to_s), msg
+                  assert_includes fk_columns, association.foreign_key.to_s, msg
                 end
               end
             end
@@ -76,7 +76,7 @@ module Katello
           describe "has_(many|one): #{association.name.inspect} #{'with conditions' if conditioned}" do
             it("#{conditioned ? 'has' : 'has not'} :dependent option") do
               unless association.class_name.start_with?('Audited::Audit')
-                assert(association.options.key?(:dependent) != conditioned,
+                refute_equal(association.options.key?(:dependent), conditioned,
                        if conditioned
                          'conditioned association is not responsible for :dependent objects'
                        else
@@ -92,7 +92,7 @@ module Katello
               end
               other_model = class_name.constantize
               foreign_key = association.foreign_key.to_s
-              assert other_model.column_names.include?(foreign_key),
+              assert_includes other_model.column_names, foreign_key,
                      "unknown foreign_key #{foreign_key} on #{other_model}" + source_code_location(model, association)
             end
           end

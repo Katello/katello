@@ -25,16 +25,16 @@ module ::Actions::Pulp::Repository
       end
 
       action.external_task[0].must_equal(task1)
-      action.run_progress.must_equal 0.01
+      assert_equal 0.01, action.run_progress
 
       progress_action_time action
-      action.external_task[0].must_equal task2
-      action.run_progress.must_equal 0.25
+      assert_equal task2, action.external_task.first
+      assert_equal 0.25, action.run_progress
       action.wont_be :done?
 
       progress_action_time action
       action.external_task[0].must_equal task3
-      action.run_progress.must_equal 1
+      assert_equal 1, action.run_progress
       action.must_be :done?
     end
   end

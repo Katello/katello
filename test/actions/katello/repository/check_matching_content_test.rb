@@ -15,7 +15,7 @@ module Actions
       plan = plan_action(action, :source_repo_id => yum_repo.id, :target_repo_id => yum_repo2.id)
       run = run_action plan
 
-      assert_equal false, run.output[:matching_content]
+      refute run.output[:matching_content]
     end
 
     def test_check_matching_content_false_unpublished
@@ -24,7 +24,7 @@ module Actions
       plan = plan_action(action, :source_repo_id => yum_repo.id, :target_repo_id => yum_repo.id)
       run = run_action plan
 
-      assert_equal false, run.output[:matching_content]
+      refute run.output[:matching_content]
     end
 
     def test_check_matching_content_true
@@ -33,7 +33,7 @@ module Actions
       plan = plan_action(action, :source_repo_id => yum_repo.id, :target_repo_id => yum_repo.id)
       run = run_action plan
 
-      assert_equal true, run.output[:matching_content]
+      assert run.output[:matching_content]
     end
 
     def test_check_matching_content_false_checksum
@@ -52,7 +52,7 @@ module Actions
       plan = plan_action(action, :source_repo_id => yum_repo.id, :target_repo_id => yum_repo2.id)
       run = run_action plan
 
-      assert_equal false, run.output[:matching_content]
+      refute run.output[:matching_content]
     end
   end
 end

@@ -48,7 +48,7 @@ module Katello
     def test_sync
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        repos.map(&:id).sort.must_equal @repositories.map(&:id).sort
+        assert_equal @repositories.map(&:id).sort, repos.map(&:id).sort
       end
 
       post :sync_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }

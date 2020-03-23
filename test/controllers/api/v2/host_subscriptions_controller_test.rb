@@ -235,8 +235,8 @@ module Katello
         assert_equal @host, host
         assert_equal 1, overrides.count
         assert_equal 'some-content', overrides.first.content_label
+        refute prune_invalid
         assert_equal value, overrides.first.value
-        assert_equal false, prune_invalid
       end
 
       put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides }
@@ -251,8 +251,8 @@ module Katello
       assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides, prune_invalid|
         assert_equal @host, host
         assert_equal content_overrides.count, overrides.count
+        refute prune_invalid
         assert_equal expected_content_labels, overrides.map(&:content_label)
-        assert_equal false, prune_invalid
       end
 
       put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides }
@@ -284,8 +284,8 @@ module Katello
         assert_equal @host, host
         assert_equal 1, overrides.count
         assert_equal 'wrong-content', overrides.first.content_label
+        refute prune_invalid
         assert_equal value, overrides.first.value
-        assert_equal false, prune_invalid
       end
 
       put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides, :value => value }

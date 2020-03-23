@@ -39,7 +39,7 @@ module ::Actions::Katello::Host::Erratum
         let(:fixture_variant) { :success }
 
         specify do
-          action.humanized_output.must_equal <<-OUTPUT.strip_heredoc.chomp
+          assert_equal action.humanized_output, <<-OUTPUT.strip_heredoc.chomp
             1:emacs-23.1-21.el6_2.3.x86_64
             libXaw-1.0.11-2.el6.x86_64
             libXmu-1.1.1-2.el6.x86_64
@@ -52,7 +52,7 @@ module ::Actions::Katello::Host::Erratum
         let(:fixture_variant) { :no_packages }
 
         specify do
-          action.humanized_output.must_equal "No new packages installed"
+          assert_equal 'No new packages installed', action.humanized_output
         end
       end
     end

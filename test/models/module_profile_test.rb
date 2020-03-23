@@ -13,7 +13,7 @@ module Katello
     end
 
     def test_rpms_relation
-      assert @module_profile_tributary.rpms.include? @module_profile_rpm_canoe
+      assert_includes @module_profile_tributary.rpms, @module_profile_rpm_canoe
     end
   end
 end

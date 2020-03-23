@@ -50,8 +50,8 @@ module Katello
 
       assert_template :layout => 'katello/api/v2/layouts/resource'
       assert_template 'katello/api/v2/common/create'
-      assert @filter.reload.package_rules.pluck(:name).include? "testpkg"
-      assert @filter.package_rules.pluck(:version).include? "10.0"
+      assert_includes @filter.reload.package_rules.pluck(:name), "testpkg"
+      assert_includes @filter.package_rules.pluck(:version), "10.0"
     end
 
     def test_create_with_name_array

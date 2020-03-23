@@ -86,11 +86,11 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     ::Operatingsystem.expects(:find).with(@os.id).returns(@os).at_least_once
     @os.expects(:kickstart_repos).returns(ret).with do |host|
       host.must_be_kind_of(::Host::Managed)
-      host.os.must_equal(@os)
-      host.content_facet.lifecycle_environment.must_equal(@env)
-      host.content_facet.content_view.must_equal(@cv)
-      host.content_source.must_equal(@content_source)
-      host.architecture.must_equal(@arch)
+      assert_equal @os, host.os
+      assert_equal @env, host.content_facet.lifecycle_environment
+      assert_equal @cv, host.content_facet.content_view
+      assert_equal @content_source, host.content_source
+      assert_equal @arch, host.architecture
     end
     options = kickstart_repository_options(nil)
     refute_empty options
@@ -106,11 +106,11 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
 
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
       param_host.must_be_kind_of(::Host::Managed)
-      param_host.os.must_equal(@os)
-      param_host.content_facet.lifecycle_environment.must_equal(@env)
-      param_host.content_facet.content_view.must_equal(@cv)
-      param_host.content_source.must_equal(@content_source)
-      param_host.architecture.must_equal(@arch)
+      assert_equal @os, param_host.os
+      assert_equal @env, param_host.content_facet.lifecycle_environment
+      assert_equal @cv, param_host.content_facet.content_view
+      assert_equal @content_source, param_host.content_source
+      assert_equal @arch, param_host.architecture
     end
 
     options = kickstart_repository_options(host)
@@ -140,11 +140,11 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
 
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
       param_host.must_be_kind_of(::Host::Managed)
-      param_host.os.must_equal(@os)
-      param_host.content_facet.lifecycle_environment.must_equal(@env)
-      param_host.content_facet.content_view.must_equal(@cv)
-      param_host.content_source.must_equal(@content_source)
-      param_host.architecture.must_equal(@arch)
+      assert_equal @os, param_host.os
+      assert_equal @env, param_host.content_facet.lifecycle_environment
+      assert_equal @cv, param_host.content_facet.content_view
+      assert_equal @content_source, param_host.content_source
+      assert_equal @arch, param_host.architecture
     end
 
     options = kickstart_repository_options(hostgroup)
@@ -164,11 +164,11 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
 
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
       param_host.must_be_kind_of(::Host::Managed)
-      param_host.os.must_equal(@os)
-      param_host.content_facet.lifecycle_environment.must_equal(@env)
-      param_host.content_facet.content_view.must_equal(@cv)
-      param_host.content_source.must_equal(@content_source)
-      param_host.architecture.must_equal(@arch)
+      assert_equal @os, param_host.os
+      assert_equal @env, param_host.content_facet.lifecycle_environment
+      assert_equal @cv, param_host.content_facet.content_view
+      assert_equal @content_source, param_host.content_source
+      assert_equal @arch, param_host.architecture
     end
 
     options = kickstart_repository_options(host, :selected_host_group => hostgroup)

@@ -215,13 +215,13 @@ module Katello
       sync_date = '5000/11/17 18:26:48 +0000'
       @plan.sync_date = sync_date
       @plan.save_with_logic!
-      @plan.next_sync.must_equal(Time.utc(5000, 11, 18, 18, 26))
+      assert_equal Time.utc(5000, 11, 18, 18, 26), @plan.next_sync
     end
 
     def sync_date_if_disabled
       @plan.sync_date = '1999-11-17 18:26:48 UTC'
       @plan.enabled = false
-      @plan.next_sync.must_be_nil
+      refute @plan.next_sync
     end
 
     def test_sync_date_if_bad_interval
@@ -235,7 +235,7 @@ module Katello
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.sync_date = '1999-11-17 09:26:00 UTC'
       @plan.save_with_logic!
-      @plan.next_sync.must_equal(Time.utc(2012, 1, 1, 9, 26))
+      assert_equal Time.utc(2012, 1, 1, 9, 26), @plan.next_sync
     end
 
     def test_next_run_daily
@@ -243,7 +243,7 @@ module Katello
       @plan.sync_date = '1999-11-17 09:26:00 UTC'
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      @plan.next_sync.must_equal(Time.utc(2012, 1, 1, 9, 26))
+      assert_equal Time.utc(2012, 1, 1, 9, 26), @plan.next_sync
     end
 
     def test_next_run_weekly
@@ -251,7 +251,7 @@ module Katello
       @plan.sync_date = '1999-11-17 09:26:00 UTC' #WEDNESDAY
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      @plan.next_sync.must_equal(Time.utc(2012, 1, 4, 9, 26)) # Wednesday
+      assert_equal Time.utc(2012, 1, 4, 9, 26), @plan.next_sync # Wednesday
     end
 
     def test_next_run_cron_hourly
@@ -260,7 +260,7 @@ module Katello
       @plan.cron_expression = "10 * * * *" #Every hour at 10 minutes
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      @plan.next_sync.must_equal(Time.utc(2012, 1, 1, 9, 10))
+      assert_equal Time.utc(2012, 1, 1, 9, 10), @plan.next_sync
     end
 
     def test_next_run_cron_daily_at_time
@@ -269,7 +269,7 @@ module Katello
       @plan.cron_expression = "5 10 * * *" #Everyday at 10:05  #
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      @plan.next_sync.must_equal(Time.utc(2012, 1, 1, 10, 5))
+      assert_equal Time.utc(2012, 1, 1, 10, 5), @plan.next_sync
     end
 
     def test_next_run_cron_monthly
@@ -278,7 +278,7 @@ module Katello
       @plan.cron_expression = "15 14 5 * *" #At 14:15 on day-of-month 5
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      @plan.next_sync.must_equal(Time.utc(2012, 1, 5, 14, 15))
+      assert_equal Time.utc(2012, 1, 5, 14, 15), @plan.next_sync
     end
 
     def test_next_run_weekly_week_prior_time_after_now
@@ -286,7 +286,7 @@ module Katello
       @plan.sync_date = '2012-11-10 09:26:00 UTC' #SATURDAY
       Time.stubs(:now).returns(Time.utc(2012, 11, 17, 9, 20))
       @plan.save_with_logic!
-      @plan.next_sync.must_equal(Time.utc(2012, 11, 17, 9, 26))
+      assert_equal Time.utc(2012, 11, 17, 9, 26), @plan.next_sync
     end
 
     def test_invalid_custom_cron_expression
@@ -305,7 +305,7 @@ module Katello
       p.wont_be_nil
       new_name = p.name + "N"
       p = SyncPlan.update(p.id, :name => new_name)
-      p.name.must_equal(new_name)
+      assert_equal new_name, p.name
     end
 
     def test_delete
@@ -336,7 +336,7 @@ module Katello
       product = katello_products(:empty_redhat)
       @plan.products << product
       refute(@plan.valid?, "Plan must be invalid")
-      assert(@plan.errors.full_messages.include?("Can not add product #{product.name} because it is disabled."), "Validation should give proper error message")
+      assert_includes(@plan.errors.full_messages, "Can not add product #{product.name} because it is disabled.", "Validation should give proper error message")
     end
 
     def test_audit_creation_on_new_sync_plan

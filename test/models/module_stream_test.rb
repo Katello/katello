@@ -12,15 +12,15 @@ module Katello
     end
 
     def test_repositories_relation
-      assert @module_stream_river.repositories.include?(@fedora_repo)
+      assert_includes @module_stream_river.repositories, @fedora_repo
     end
 
     def test_profiles_relation
-      assert @module_stream_river.profiles.include?(@module_profile_tributary)
+      assert_includes @module_stream_river.profiles, @module_profile_tributary
     end
 
     def test_rpms_relation
-      assert @module_stream_river.artifacts.include?(@module_stream_artifact_boat)
+      assert_includes @module_stream_river.artifacts, @module_stream_artifact_boat
     end
 
     def test_search_name

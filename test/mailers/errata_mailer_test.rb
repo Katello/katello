@@ -37,8 +37,8 @@ module Katello
       ActionMailer::Base.deliveries = []
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
-      assert email.body.encoded.include? @errata_host.name
-      assert email.body.encoded.include? "http://foreman.some.host.fqdn/content_hosts/#{@errata_host.id}/errata"
+      assert_includes email.body.encoded, @errata_host.name
+      assert_includes email.body.encoded, "http://foreman.some.host.fqdn/content_hosts/#{@errata_host.id}/errata"
     end
 
     def test_sync_errata
@@ -47,7 +47,7 @@ module Katello
       errata = ::Katello::Erratum.where(:id => repo.repository_errata.where('katello_repository_errata.updated_at > ?', 10.years.ago).pluck(:erratum_id))
       MailNotification[:sync_errata].deliver(:users => [@user], :repo => repo, :errata => errata)
       email = ActionMailer::Base.deliveries.first
-      assert email.body.encoded.include? katello_errata(:security).errata_id
+      assert_includes email.body.encoded, katello_errata(:security).errata_id
     end
 
     def test_promote_errata
@@ -60,7 +60,7 @@ module Katello
       MailNotification[:promote_errata].deliver(:users => [@user], :content_view => @errata_host.content_facet.content_view,
                                                         :environment => @errata_host.content_facet.lifecycle_environment)
       email = ActionMailer::Base.deliveries.first
-      assert email.body.encoded.include? 'RHSA-1999-1231'
+      assert_includes email.body.encoded, 'RHSA-1999-1231'
     end
   end
 end

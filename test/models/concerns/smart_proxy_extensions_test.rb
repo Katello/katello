@@ -43,8 +43,8 @@ module Katello
       @proxy_mirror.save!
 
       assert @proxy.pulp_master?
-      assert !@proxy_mirror.pulp_master?
-      assert !@proxy.pulp_mirror?
+      refute @proxy_mirror.pulp_master?
+      refute @proxy.pulp_mirror?
       assert @proxy_mirror.pulp_mirror?
 
       assert_not_equal ::Organization.all.count, 0

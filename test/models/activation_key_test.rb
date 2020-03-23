@@ -56,12 +56,12 @@ module Katello
 
     test "key can be copied" do
       new_key = @dev_key.copy("new key name")
-      assert new_key.name == "new key name"
-      assert new_key.description == @dev_key.description
-      assert new_key.host_collections == @dev_key.host_collections
-      assert new_key.content_view == @dev_key.content_view
-      assert new_key.organization == @dev_key.organization
-      assert new_key.max_hosts == @dev_key.max_hosts
+      assert_equal new_key.name, "new key name"
+      assert_equal new_key.description, @dev_key.description
+      assert_equal new_key.host_collections, @dev_key.host_collections
+      assert_equal new_key.content_view, @dev_key.content_view
+      assert_equal new_key.organization, @dev_key.organization
+      assert_equal new_key.max_hosts, @dev_key.max_hosts
     end
 
     test "unlimited hosts requires no max hosts" do
@@ -77,7 +77,7 @@ module Katello
       assert new_key.valid?
 
       new_key.max_hosts = 100
-      assert !new_key.valid?
+      refute new_key.valid?
     end
 
     test "key can return pools" do
@@ -186,8 +186,8 @@ module Katello
       @dev_key.stubs(:get_pools).returns(cp_pools)
       @dev_key.pools = []
 
-      assert @dev_key.available_subscriptions.include? pool_one
-      assert @dev_key.available_subscriptions.include? pool_two
+      assert_includes @dev_key.available_subscriptions, pool_one
+      assert_includes @dev_key.available_subscriptions, pool_two
       assert_equal @dev_key.available_subscriptions.length, 2
     end
 

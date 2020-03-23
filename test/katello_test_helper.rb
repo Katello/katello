@@ -198,7 +198,7 @@ module DynflowFullTreePlanning
 
   def refute_tree_planned(execution_plan, action_class)
     found_steps = execution_plan.run_steps.select { |step| action_class == step.action_class }
-    assert found_steps.empty?, "Found enexpected action: #{action_class}"
+    assert_empty found_steps, "Found enexpected action: #{action_class}"
   end
 
   def pretty_print_differences(execution_plan, expected_input, steps)
