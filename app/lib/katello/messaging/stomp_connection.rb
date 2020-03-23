@@ -10,12 +10,10 @@ module Katello
               host: settings[:broker_host],
               port: settings[:broker_port],
               ssl: true,
-              logger: Rails.logger,
-              connect_timeout: 3,
-              start_timeout: 2,
-              use_exponential_back_off: true
             }
           ],
+          logger: Rails.logger,
+          max_reconnect_attempts: 2,
           connect_headers: {
             'accept-version': '1.2',
             'host': settings[:broker_host],
