@@ -37,6 +37,11 @@ module Katello
       assert_equal expiring_soon_subscriptions, all_subscriptions - [not_expiring_soon]
     end
 
+    def test_days_until_expiration
+      expiring_pool = FactoryBot.build(:katello_pool, :expiring_in_12_days)
+      assert_equal expiring_pool.days_until_expiration, 12
+    end
+
     def test_stacking_id
       assert_equal @pool_one.subscription, Pool.stacking_subscription(@pool_one.organization.label, @pool_one.subscription.cp_id)
     end

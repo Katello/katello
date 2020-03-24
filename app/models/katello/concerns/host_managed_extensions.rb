@@ -51,6 +51,8 @@ module Katello
         before_save :correct_puppet_environment
         before_validation :correct_kickstart_repository
 
+        scope :with_pools_expiring_in_days, ->(days) { joins(:pools).merge(Katello::Pool.expiring_in_days(days)).distinct }
+
         scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
         scoped_search :relation => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
         scoped_search :relation => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
@@ -61,6 +63,17 @@ module Katello
         scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
+
+        scoped_search relation: :pools, on: :pools_expiring_in_days, ext_method: :find_with_expiring_pools, only_explicit: true
+
+        def self.find_with_expiring_pools(_key, _operator, days_from_now)
+          host_ids = with_pools_expiring_in_days(days_from_now).ids
+          if host_ids.any?
+            { :conditions => "hosts.id IN (#{host_ids.join(', ')})" }
+          else
+            { :conditions => "1=0" }
+          end
+        end
       end
 
       def correct_kickstart_repository
@@ -294,4 +307,8 @@ class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :comment, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
         :installed_packages
+end
+
+class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail
+  allow :expiring_in_days
 end

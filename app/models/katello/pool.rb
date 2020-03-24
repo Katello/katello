@@ -17,7 +17,10 @@ module Katello
 
     scope :in_organization, ->(org_id) { where(:organization_id => org_id) }
     scope :for_activation_key, ->(ak) { joins(:activation_keys).where("#{Katello::ActivationKey.table_name}.id" => ak.id) }
-
+    scope :expiring_in_days, ->(days) do
+      return self if days.blank?
+      where(["end_date < ?", days.to_i.days.from_now.end_of_day])
+    end
     include Glue::Candlepin::Pool
     include Glue::Candlepin::CandlepinObject
 
@@ -50,8 +53,15 @@ module Katello
       active
     end
 
+    # used for notification bell
     def expiring_soon?
-      (end_date.to_date - Date.today) <= Setting[:expire_soon_days]
+      days_until_expiration >= 0 &&
+        days_until_expiration <= Setting[:expire_soon_days].to_i
+    end
+
+    # used for entitlements report template
+    def days_until_expiration
+      (end_date.to_date - Date.today).to_i
     end
 
     def recently_expired?
@@ -101,7 +111,11 @@ module Katello
     end
 
     class Jail < ::Safemode::Jail
-      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed
+      allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed, :days_until_expiration
     end
   end
+end
+
+class ActiveRecord::AssociationRelation::Jail < Safemode::Jail
+  allow :sort_by
 end
