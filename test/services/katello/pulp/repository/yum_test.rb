@@ -269,7 +269,7 @@ module Katello
       class YumVcrCopyTest < YumBaseTest
         def setup
           super
-          @custom.root.update_attributes(:url => 'file:///var/www/test_repos/zoo')
+          @custom.root.update_attributes(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo')
           delete_repo(@custom_cv)
           delete_repo(@custom)
           create_repo(@custom)

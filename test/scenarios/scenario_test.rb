@@ -21,7 +21,7 @@ module Scenarios
       product = Katello::Product.new(:name => "Scenario Product")
       @support.create_product(product, org)
 
-      root = Katello::RootRepository.new(:name => "Scenario yum product", :url => "file:///var/www/test_repos/zoo",
+      root = Katello::RootRepository.new(:name => "Scenario yum product", :url => "file:///var/lib/pulp/sync_imports/test_repos/zoo",
                                              :content_type => 'yum', :product_id => product.id,
                                              :download_policy => 'immediate')
       repo = Katello::Repository.new(:content_view_version => org.default_content_view.versions.first,

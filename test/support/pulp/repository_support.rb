@@ -10,7 +10,7 @@ module Katello
     end
 
     PULP_TMP_DIR = "/var/lib/pulp/published/puppet_katello_test".freeze
-    @repo_url = "file:///var/www/test_repos/zoo"
+    @repo_url = "file:///var/lib/pulp/sync_imports/test_repos/zoo"
     @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
     @repo = nil
 

@@ -14,7 +14,7 @@ module Katello
 
           @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:generic_file)
-          @repo.root.url = 'file:///var/www/test_repos/file_migration/'
+          @repo.root.url = 'file:///var/lib/pulp/sync_imports/test_repos/file_migration/'
           @repo.root.save!
 
           @cv_archive_repo = katello_repositories(:generic_file_archive)
