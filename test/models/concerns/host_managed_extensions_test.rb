@@ -363,6 +363,7 @@ module Katello
       super
       tracer_json = {"sshd": {"type": "daemon", "helper": "sudo systemctl restart sshd"}}
       @foreman_host.import_tracer_profile(tracer_json)
+      @foreman_host.reload
     end
 
     def test_known_traces

@@ -221,11 +221,13 @@ module Katello
       end
 
       def import_tracer_profile(tracer_profile)
-        self.host_traces.destroy_all
+        host_traces.delete_all
+        traces = []
         tracer_profile.each do |trace, attributes|
-          self.host_traces.create!(:application => trace, :helper => attributes[:helper], :app_type => attributes[:type])
+          traces << { host_id: self.id, application: trace, helper: attributes[:helper], app_type: attributes[:type] }
         end
-        self.update_trace_status
+        Katello::HostTracer.import(traces, validate: false)
+        update_trace_status
       end
 
       def subscription_status
