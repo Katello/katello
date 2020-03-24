@@ -151,7 +151,7 @@ module Katello
       User.as_anonymous_admin do
         @host.import_tracer_profile(params[:traces])
       end
-      render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
+      render json: { displayMessage: _("Tracer profile uploaded successfully") }
     end
 
     def available_releases
