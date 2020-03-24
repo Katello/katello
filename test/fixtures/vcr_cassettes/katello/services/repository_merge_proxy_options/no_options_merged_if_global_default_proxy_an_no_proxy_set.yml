@@ -2,429 +2,26 @@
 http_interactions:
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/debian_9/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/6/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:23 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '409'
-      Etag:
-      - '"71e48d5b408854fd8104f9a6699cfb90"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PWRlYmlhbl85IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9y
-        ZXBvc2l0b3JpZXMvZGViaWFuXzkvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0
-        YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0
-        YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogImRlYmlhbl85In19
-        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
-        dG9yeT1kZWJpYW5fOSIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNr
-        IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJkZWJpYW5f
-        OSJ9fQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:23 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/Fedora_17/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:23 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '414'
-      Etag:
-      - '"4fffc025091bde2a0862d2cab0332dad"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PUZlZG9yYV8xNyIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIv
-        cmVwb3NpdG9yaWVzL0ZlZG9yYV8xNy8/ZGV0YWlscz10cnVlIiwgImh0dHBf
-        c3RhdHVzIjogNDA0LCAiZXJyb3IiOiB7ImNvZGUiOiAiUExQMDAwOSIsICJk
-        YXRhIjogeyJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVkb3JhXzE3
-        In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVw
-        b3NpdG9yeT1GZWRvcmFfMTciLCAic3ViX2Vycm9ycyI6IFtdfSwgInRyYWNl
-        YmFjayI6IG51bGwsICJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVk
-        b3JhXzE3In19
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:23 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/2_duplicate/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:23 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '424'
-      Etag:
-      - '"f44a3f4eb1e519779684133f24b58c97"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PTJfZHVwbGljYXRlIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92
-        Mi9yZXBvc2l0b3JpZXMvMl9kdXBsaWNhdGUvP2RldGFpbHM9dHJ1ZSIsICJo
-        dHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDki
-        LCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIjJfZHVw
-        bGljYXRlIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShz
-        KTogcmVwb3NpdG9yeT0yX2R1cGxpY2F0ZSIsICJzdWJfZXJyb3JzIjogW119
-        LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9y
-        eSI6ICIyX2R1cGxpY2F0ZSJ9fQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:23 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/feedless_1/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:23 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '419'
-      Etag:
-      - '"6d921e311bfa1d8e33a099d653380197"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PWZlZWRsZXNzXzEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3Yy
-        L3JlcG9zaXRvcmllcy9mZWVkbGVzc18xLz9kZXRhaWxzPXRydWUiLCAiaHR0
-        cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5Iiwg
-        ImRhdGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJmZWVkbGVz
-        c18xIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTog
-        cmVwb3NpdG9yeT1mZWVkbGVzc18xIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
-        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
-        ImZlZWRsZXNzXzEifX0=
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:23 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/9/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:23 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '374'
-      Etag:
-      - '"e8e14b03002cef40e7d5557b625b9e91"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PTkiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
-        cmllcy85Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
-        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
-        cyI6IHsicmVwb3NpdG9yeSI6ICI5In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
-        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT05IiwgInN1Yl9lcnJvcnMi
-        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
-        c2l0b3J5IjogIjkifX0=
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:23 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/pulp-uuid-rhel_6_x86_64/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:24 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '484'
-      Etag:
-      - '"8c1d76c0d0f67a85650043812821cf79"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PXB1bHAtdXVpZC1yaGVsXzZfeDg2XzY0IiwgIl9ocmVmIjog
-        Ii9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvcHVscC11dWlkLXJoZWxfNl94
-        ODZfNjQvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVy
-        cm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2Vz
-        IjogeyJyZXBvc2l0b3J5IjogInB1bHAtdXVpZC1yaGVsXzZfeDg2XzY0In19
-        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
-        dG9yeT1wdWxwLXV1aWQtcmhlbF82X3g4Nl82NCIsICJzdWJfZXJyb3JzIjog
-        W119LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3Np
-        dG9yeSI6ICJwdWxwLXV1aWQtcmhlbF82X3g4Nl82NCJ9fQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:24 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/1/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:24 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '374'
-      Etag:
-      - '"5cdaeba5c803a22301643a2f207d270e"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PTEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
-        cmllcy8xLz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
-        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
-        cyI6IHsicmVwb3NpdG9yeSI6ICIxIn19LCAiZGVzY3JpcHRpb24iOiAiTWlz
-        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT0xIiwgInN1Yl9lcnJvcnMi
-        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
-        c2l0b3J5IjogIjEifX0=
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:24 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/9_noarch/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:24 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '409'
-      Etag:
-      - '"3ebcf5358ae2d94b88c36a32eaea8cdb"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PTlfbm9hcmNoIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9y
-        ZXBvc2l0b3JpZXMvOV9ub2FyY2gvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0
-        YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0
-        YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIjlfbm9hcmNoIn19
-        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
-        dG9yeT05X25vYXJjaCIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNr
-        IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICI5X25vYXJj
-        aCJ9fQ==
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:24 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/4/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:24 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '374'
-      Etag:
-      - '"c8a0691ac59901210ead0eda68ca9033"'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PTQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
-        cmllcy80Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
-        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
-        cyI6IHsicmVwb3NpdG9yeSI6ICI0In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
-        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT00IiwgInN1Yl9lcnJvcnMi
-        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
-        c2l0b3J5IjogIjQifX0=
-    http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:24 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/6/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Date:
-      - Fri, 02 Aug 2019 20:33:24 GMT
+      - Mon, 23 Mar 2020 23:49:15 GMT
       Server:
       - Apache
       Content-Length:
@@ -446,29 +43,73 @@ http_interactions:
         OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
         c2l0b3J5IjogIjYifX0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:24 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:15 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/7/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/6/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:24 GMT
+      - Mon, 23 Mar 2020 23:49:15 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"a9f3e136425fefbf34661510bcc14368"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTYiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy82Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI2In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT02IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjYifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:15 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/7/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:15 GMT
       Server:
       - Apache
       Content-Length:
@@ -490,29 +131,73 @@ http_interactions:
         OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
         c2l0b3J5IjogIjcifX0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:24 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:15 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/source_rpm/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/7/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:24 GMT
+      - Mon, 23 Mar 2020 23:49:15 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"0a8daad01b7d63ef6e6f0f14b08405b4"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTciLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy83Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI3In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT03IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjcifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:15 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/source_rpm/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:15 GMT
       Server:
       - Apache
       Content-Length:
@@ -535,29 +220,74 @@ http_interactions:
         cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
         InNvdXJjZV9ycG0ifX0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:24 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/Default_Organization-Test-redis/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/source_rpm/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:25 GMT
+      - Mon, 23 Mar 2020 23:49:16 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '419'
+      Etag:
+      - '"02113d4b79baab13a00a64a5315ffcdb"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PXNvdXJjZV9ycG0iLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3Yy
+        L3JlcG9zaXRvcmllcy9zb3VyY2VfcnBtLz9kZXRhaWxzPXRydWUiLCAiaHR0
+        cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5Iiwg
+        ImRhdGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJzb3VyY2Vf
+        cnBtIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTog
+        cmVwb3NpdG9yeT1zb3VyY2VfcnBtIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
+        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
+        InNvdXJjZV9ycG0ifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Test-redis/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:16 GMT
       Server:
       - Apache
       Content-Length:
@@ -582,29 +312,76 @@ http_interactions:
         Y2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRlZmF1
         bHRfT3JnYW5pemF0aW9uLVRlc3QtcmVkaXMifX0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:25 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox-library/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Test-redis/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:25 GMT
+      - Mon, 23 Mar 2020 23:49:16 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '524'
+      Etag:
+      - '"9e8f48c6e57384bee04b2de884ea20ee"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtcmVkaXMiLCAi
+        X2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9EZWZhdWx0X09y
+        Z2FuaXphdGlvbi1UZXN0LXJlZGlzLz9kZXRhaWxzPXRydWUiLCAiaHR0cF9z
+        dGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRh
+        dGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
+        Z2FuaXphdGlvbi1UZXN0LXJlZGlzIn19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT1EZWZhdWx0X09yZ2FuaXph
+        dGlvbi1UZXN0LXJlZGlzIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0cmFjZWJh
+        Y2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRlZmF1
+        bHRfT3JnYW5pemF0aW9uLVRlc3QtcmVkaXMifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox-library/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:16 GMT
       Server:
       - Apache
       Content-Length:
@@ -630,29 +407,77 @@ http_interactions:
         bnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
         Z2FuaXphdGlvbi1UZXN0LWJ1c3lib3gtbGlicmFyeSJ9fQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:25 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox2-dev/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox-library/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:25 GMT
+      - Mon, 23 Mar 2020 23:49:16 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '574'
+      Etag:
+      - '"6fb3201be0e91b568106bf7a9b97d2ee"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveC1s
+        aWJyYXJ5IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMv
+        RGVmYXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94LWxpYnJhcnkvP2Rl
+        dGFpbHM9dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJj
+        b2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveC1s
+        aWJyYXJ5In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShz
+        KTogcmVwb3NpdG9yeT1EZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1c3li
+        b3gtbGlicmFyeSIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNrIjog
+        bnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
+        Z2FuaXphdGlvbi1UZXN0LWJ1c3lib3gtbGlicmFyeSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox2-dev/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:16 GMT
       Server:
       - Apache
       Content-Length:
@@ -678,29 +503,77 @@ http_interactions:
         cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09yZ2FuaXphdGlvbi1U
         ZXN0LWJ1c3lib3gyLWRldiJ9fQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:25 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/100/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Test-busybox2-dev/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:25 GMT
+      - Mon, 23 Mar 2020 23:49:16 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '559'
+      Etag:
+      - '"ce36158a73de94aac5846fe735d02207"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveDIt
+        ZGV2IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvRGVm
+        YXVsdF9Pcmdhbml6YXRpb24tVGVzdC1idXN5Ym94Mi1kZXYvP2RldGFpbHM9
+        dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjog
+        IlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5
+        IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLVRlc3QtYnVzeWJveDItZGV2In19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT1EZWZhdWx0X09yZ2FuaXphdGlvbi1UZXN0LWJ1c3lib3gyLWRldiIs
+        ICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291
+        cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09yZ2FuaXphdGlvbi1U
+        ZXN0LWJ1c3lib3gyLWRldiJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/100/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:16 GMT
       Server:
       - Apache
       Content-Length:
@@ -722,29 +595,73 @@ http_interactions:
         X2Vycm9ycyI6IFtdfSwgInRyYWNlYmFjayI6IG51bGwsICJyZXNvdXJjZXMi
         OiB7InJlcG9zaXRvcnkiOiAiMTAwIn19
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:25 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-My_Files/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/100/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:25 GMT
+      - Mon, 23 Mar 2020 23:49:16 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '384'
+      Etag:
+      - '"ab861057593a60931f4734ae93e91b16"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTEwMCIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3Np
+        dG9yaWVzLzEwMC8/ZGV0YWlscz10cnVlIiwgImh0dHBfc3RhdHVzIjogNDA0
+        LCAiZXJyb3IiOiB7ImNvZGUiOiAiUExQMDAwOSIsICJkYXRhIjogeyJyZXNv
+        dXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiMTAwIn19LCAiZGVzY3JpcHRpb24i
+        OiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT0xMDAiLCAic3Vi
+        X2Vycm9ycyI6IFtdfSwgInRyYWNlYmFjayI6IG51bGwsICJyZXNvdXJjZXMi
+        OiB7InJlcG9zaXRvcnkiOiAiMTAwIn19
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-My_Files/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:16 GMT
       Server:
       - Apache
       Content-Length:
@@ -770,29 +687,77 @@ http_interactions:
         IjogeyJyZXBvc2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
         ZXQtTXlfRmlsZXMifX0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:25 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_File_1/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-My_Files/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:25 GMT
+      - Mon, 23 Mar 2020 23:49:16 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '554'
+      Etag:
+      - '"0ec167bc899bf2ef00db7a170c7775a8"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmls
+        ZXMiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9EZWZh
+        dWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzLz9kZXRhaWxzPXRy
+        dWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQ
+        TFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6
+        ICJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIn19LCAi
+        ZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9y
+        eT1EZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIiwgInN1
+        Yl9lcnJvcnMiOiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2Vz
+        IjogeyJyZXBvc2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmlu
+        ZXQtTXlfRmlsZXMifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:16 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_File_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
       Server:
       - Apache
       Content-Length:
@@ -818,29 +783,77 @@ http_interactions:
         bnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
         Z2FuaXphdGlvbi1DYWJpbmV0LXB1bHAzX0ZpbGVfMSJ9fQ==
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:25 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_Docker_1/?details=true
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_File_1/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
       - application/json
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.3p105
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Content-Type:
       - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
       code: 404
       message: Not Found
     headers:
       Date:
-      - Fri, 02 Aug 2019 20:33:26 GMT
+      - Mon, 23 Mar 2020 23:49:17 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '574'
+      Etag:
+      - '"4edbebea83e0686375ce9470277d3b8c"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNf
+        RmlsZV8xIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMv
+        RGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1wdWxwM19GaWxlXzEvP2Rl
+        dGFpbHM9dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJj
+        b2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNf
+        RmlsZV8xIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShz
+        KTogcmVwb3NpdG9yeT1EZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LXB1
+        bHAzX0ZpbGVfMSIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNrIjog
+        bnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJEZWZhdWx0X09y
+        Z2FuaXphdGlvbi1DYWJpbmV0LXB1bHAzX0ZpbGVfMSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_Docker_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
       Server:
       - Apache
       Content-Length:
@@ -866,5 +879,859 @@ http_interactions:
         ZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRl
         ZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNfRG9ja2VyXzEifX0=
     http_version: 
-  recorded_at: Fri, 02 Aug 2019 20:33:26 GMT
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Default_Organization-Cabinet-pulp3_Docker_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '584'
+      Etag:
+      - '"bb71e1a7380e846f3eb524a094699134"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PURlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNf
+        RG9ja2VyXzEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmll
+        cy9EZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LXB1bHAzX0RvY2tlcl8x
+        Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6
+        IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNlcyI6IHsi
+        cmVwb3NpdG9yeSI6ICJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LXB1
+        bHAzX0RvY2tlcl8xIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNv
+        dXJjZShzKTogcmVwb3NpdG9yeT1EZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJp
+        bmV0LXB1bHAzX0RvY2tlcl8xIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0cmFj
+        ZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIkRl
+        ZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtcHVscDNfRG9ja2VyXzEifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/9/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"e8e14b03002cef40e7d5557b625b9e91"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTkiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy85Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI5In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT05IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjkifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/9/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"e8e14b03002cef40e7d5557b625b9e91"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTkiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy85Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI5In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT05IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjkifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/pulp-uuid-rhel_6_x86_64/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '484'
+      Etag:
+      - '"8c1d76c0d0f67a85650043812821cf79"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PXB1bHAtdXVpZC1yaGVsXzZfeDg2XzY0IiwgIl9ocmVmIjog
+        Ii9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvcHVscC11dWlkLXJoZWxfNl94
+        ODZfNjQvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVy
+        cm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2Vz
+        IjogeyJyZXBvc2l0b3J5IjogInB1bHAtdXVpZC1yaGVsXzZfeDg2XzY0In19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT1wdWxwLXV1aWQtcmhlbF82X3g4Nl82NCIsICJzdWJfZXJyb3JzIjog
+        W119LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3Np
+        dG9yeSI6ICJwdWxwLXV1aWQtcmhlbF82X3g4Nl82NCJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/pulp-uuid-rhel_6_x86_64/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '484'
+      Etag:
+      - '"8c1d76c0d0f67a85650043812821cf79"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PXB1bHAtdXVpZC1yaGVsXzZfeDg2XzY0IiwgIl9ocmVmIjog
+        Ii9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvcHVscC11dWlkLXJoZWxfNl94
+        ODZfNjQvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVy
+        cm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2Vz
+        IjogeyJyZXBvc2l0b3J5IjogInB1bHAtdXVpZC1yaGVsXzZfeDg2XzY0In19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT1wdWxwLXV1aWQtcmhlbF82X3g4Nl82NCIsICJzdWJfZXJyb3JzIjog
+        W119LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3Np
+        dG9yeSI6ICJwdWxwLXV1aWQtcmhlbF82X3g4Nl82NCJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/debian_9/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '409'
+      Etag:
+      - '"71e48d5b408854fd8104f9a6699cfb90"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PWRlYmlhbl85IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9y
+        ZXBvc2l0b3JpZXMvZGViaWFuXzkvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0
+        YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0
+        YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogImRlYmlhbl85In19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT1kZWJpYW5fOSIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNr
+        IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJkZWJpYW5f
+        OSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/debian_9/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:17 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '409'
+      Etag:
+      - '"71e48d5b408854fd8104f9a6699cfb90"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PWRlYmlhbl85IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9y
+        ZXBvc2l0b3JpZXMvZGViaWFuXzkvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0
+        YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0
+        YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogImRlYmlhbl85In19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT1kZWJpYW5fOSIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNr
+        IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJkZWJpYW5f
+        OSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:17 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Fedora_17/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '414'
+      Etag:
+      - '"4fffc025091bde2a0862d2cab0332dad"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PUZlZG9yYV8xNyIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIv
+        cmVwb3NpdG9yaWVzL0ZlZG9yYV8xNy8/ZGV0YWlscz10cnVlIiwgImh0dHBf
+        c3RhdHVzIjogNDA0LCAiZXJyb3IiOiB7ImNvZGUiOiAiUExQMDAwOSIsICJk
+        YXRhIjogeyJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVkb3JhXzE3
+        In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVw
+        b3NpdG9yeT1GZWRvcmFfMTciLCAic3ViX2Vycm9ycyI6IFtdfSwgInRyYWNl
+        YmFjayI6IG51bGwsICJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVk
+        b3JhXzE3In19
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/Fedora_17/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '414'
+      Etag:
+      - '"4fffc025091bde2a0862d2cab0332dad"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PUZlZG9yYV8xNyIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIv
+        cmVwb3NpdG9yaWVzL0ZlZG9yYV8xNy8/ZGV0YWlscz10cnVlIiwgImh0dHBf
+        c3RhdHVzIjogNDA0LCAiZXJyb3IiOiB7ImNvZGUiOiAiUExQMDAwOSIsICJk
+        YXRhIjogeyJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVkb3JhXzE3
+        In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVw
+        b3NpdG9yeT1GZWRvcmFfMTciLCAic3ViX2Vycm9ycyI6IFtdfSwgInRyYWNl
+        YmFjayI6IG51bGwsICJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAiRmVk
+        b3JhXzE3In19
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/2_duplicate/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '424'
+      Etag:
+      - '"f44a3f4eb1e519779684133f24b58c97"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTJfZHVwbGljYXRlIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92
+        Mi9yZXBvc2l0b3JpZXMvMl9kdXBsaWNhdGUvP2RldGFpbHM9dHJ1ZSIsICJo
+        dHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDki
+        LCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIjJfZHVw
+        bGljYXRlIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShz
+        KTogcmVwb3NpdG9yeT0yX2R1cGxpY2F0ZSIsICJzdWJfZXJyb3JzIjogW119
+        LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9y
+        eSI6ICIyX2R1cGxpY2F0ZSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/2_duplicate/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '424'
+      Etag:
+      - '"f44a3f4eb1e519779684133f24b58c97"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTJfZHVwbGljYXRlIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92
+        Mi9yZXBvc2l0b3JpZXMvMl9kdXBsaWNhdGUvP2RldGFpbHM9dHJ1ZSIsICJo
+        dHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDki
+        LCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIjJfZHVw
+        bGljYXRlIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShz
+        KTogcmVwb3NpdG9yeT0yX2R1cGxpY2F0ZSIsICJzdWJfZXJyb3JzIjogW119
+        LCAidHJhY2ViYWNrIjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9y
+        eSI6ICIyX2R1cGxpY2F0ZSJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/feedless_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '419'
+      Etag:
+      - '"6d921e311bfa1d8e33a099d653380197"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PWZlZWRsZXNzXzEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3Yy
+        L3JlcG9zaXRvcmllcy9mZWVkbGVzc18xLz9kZXRhaWxzPXRydWUiLCAiaHR0
+        cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5Iiwg
+        ImRhdGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJmZWVkbGVz
+        c18xIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTog
+        cmVwb3NpdG9yeT1mZWVkbGVzc18xIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
+        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
+        ImZlZWRsZXNzXzEifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/feedless_1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '419'
+      Etag:
+      - '"6d921e311bfa1d8e33a099d653380197"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PWZlZWRsZXNzXzEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3Yy
+        L3JlcG9zaXRvcmllcy9mZWVkbGVzc18xLz9kZXRhaWxzPXRydWUiLCAiaHR0
+        cF9zdGF0dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5Iiwg
+        ImRhdGEiOiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJmZWVkbGVz
+        c18xIn19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTog
+        cmVwb3NpdG9yeT1mZWVkbGVzc18xIiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
+        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
+        ImZlZWRsZXNzXzEifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"5cdaeba5c803a22301643a2f207d270e"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy8xLz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICIxIn19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT0xIiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjEifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/1/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"5cdaeba5c803a22301643a2f207d270e"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTEiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy8xLz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICIxIn19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT0xIiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjEifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/9_noarch/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '409'
+      Etag:
+      - '"3ebcf5358ae2d94b88c36a32eaea8cdb"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTlfbm9hcmNoIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9y
+        ZXBvc2l0b3JpZXMvOV9ub2FyY2gvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0
+        YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0
+        YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIjlfbm9hcmNoIn19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT05X25vYXJjaCIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNr
+        IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICI5X25vYXJj
+        aCJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/9_noarch/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '409'
+      Etag:
+      - '"3ebcf5358ae2d94b88c36a32eaea8cdb"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTlfbm9hcmNoIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9y
+        ZXBvc2l0b3JpZXMvOV9ub2FyY2gvP2RldGFpbHM9dHJ1ZSIsICJodHRwX3N0
+        YXR1cyI6IDQwNCwgImVycm9yIjogeyJjb2RlIjogIlBMUDAwMDkiLCAiZGF0
+        YSI6IHsicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5IjogIjlfbm9hcmNoIn19
+        LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVwb3Np
+        dG9yeT05X25vYXJjaCIsICJzdWJfZXJyb3JzIjogW119LCAidHJhY2ViYWNr
+        IjogbnVsbCwgInJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICI5X25vYXJj
+        aCJ9fQ==
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/4/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"c8a0691ac59901210ead0eda68ca9033"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy80Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI0In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT00IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjQifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/4/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 23 Mar 2020 23:49:18 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '374'
+      Etag:
+      - '"c8a0691ac59901210ead0eda68ca9033"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PTQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy80Lz9kZXRhaWxzPXRydWUiLCAiaHR0cF9zdGF0dXMiOiA0MDQsICJl
+        cnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEiOiB7InJlc291cmNl
+        cyI6IHsicmVwb3NpdG9yeSI6ICI0In19LCAiZGVzY3JpcHRpb24iOiAiTWlz
+        c2luZyByZXNvdXJjZShzKTogcmVwb3NpdG9yeT00IiwgInN1Yl9lcnJvcnMi
+        OiBbXX0sICJ0cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjQifX0=
+    http_version: 
+  recorded_at: Mon, 23 Mar 2020 23:49:18 GMT
 recorded_with: VCR 3.0.3
