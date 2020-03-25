@@ -68,6 +68,10 @@ module Katello
       @puppet_repo = katello_repositories(:p_forge)
     end
 
+    def teardown
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => false, :docker => false}
+    end
+
     def test_pulp3_repository_support
       refute @master.pulp3_support?(@puppet_repo)
       assert @master.pulp3_support?(@file_repo)

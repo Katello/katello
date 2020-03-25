@@ -50,8 +50,11 @@ module Katello
       assert_equal @tag_schema2, meta.schema2
       assert_equal @repo, meta.repositories.first
 
+      RepositoryDockerTag.where(:docker_tag_id => @tag_schema1.id).delete_all
       DockerTag.where(:id => @tag_schema1.id).delete_all
+      DockerMetaTag.where(:schema1 => @tag_schema1.id).destroy_all
       DockerMetaTag.import_meta_tags([@repo])
+
       assert_empty DockerMetaTag.where(:schema1 => @tag_schema1.id)
       assert_equal 1, DockerMetaTag.where(:schema2 => @tag_schema2.id).count
 
