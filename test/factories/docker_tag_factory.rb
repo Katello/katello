@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :docker_tag, :class => Katello::DockerTag do
     sequence(:name) { |n| "2.#{n}" }
-    repositories { :docker_repository }
     association :docker_taggable, :factory => :docker_manifest
 
     trait :schema1 do
