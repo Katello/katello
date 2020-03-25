@@ -12,8 +12,18 @@ module Actions
 
             applicable_errata = host.content_facet.applicable_errata
             applicable_errata = applicable_errata.with_identifiers(errata_ids) unless options[:update_all]
-            plan_action(Actions::Katello::Host::Erratum::Install, host, applicable_errata.pluck(:errata_id))
-            plan_self(:hostname => host.name)
+            if applicable_errata.empty?
+              plan_self(:hostname => host.name, :skip => true)
+            else
+              plan_action(Actions::Katello::Host::Erratum::Install, host, applicable_errata.pluck(:errata_id))
+              plan_self(:hostname => host.name, :skip => false)
+            end
+          end
+
+          def run
+            if input[:skip]
+              output[:response] = _("No applicable errata for %s, skipping" % input[:hostname])
+            end
           end
 
           def humanized_name
