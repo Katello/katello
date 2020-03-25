@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require 'rake_test_helper'
 require 'rake'
 
 module Katello

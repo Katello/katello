@@ -12,8 +12,6 @@ module Katello
       schema2 = create(:docker_tag, :with_uuid, :repositories => [repo], :name => "latest")
       schema1 = create(:docker_tag, :with_uuid, :schema1, :repositories => [repo], :name => "latest")
 
-      repo.docker_tags << schema2
-      repo.docker_tags << schema1
       repo.docker_manifests << schema1.docker_manifest
       repo.docker_manifests << schema2.docker_manifest
 
@@ -38,8 +36,6 @@ module Katello
       schema2 = create(:docker_tag, :with_uuid, :with_manifest_list, :repositories => [repo], :name => "latest")
       schema1 = create(:docker_tag, :with_uuid, :with_manifest_list, :schema1, :repositories => [repo], :name => "latest")
 
-      repo.docker_tags << schema2
-      repo.docker_tags << schema1
       repo.docker_manifests << schema1.docker_manifest
       repo.docker_manifest_lists << schema2.docker_manifest_list
 
@@ -75,10 +71,6 @@ module Katello
       schema_goo_repo1 = create(:docker_tag, :with_uuid, :repositories => [repo1], :name => "goo")
       schema_goo_repo1.docker_taggable = schema1_repo1.docker_manifest
       schema_goo_repo1.save!
-
-      repo1.docker_tags << schema2_repo1
-      repo1.docker_tags << schema1_repo1
-      repo1.docker_tags << schema_goo_repo1
 
       repo1.docker_manifests << schema1_repo1.docker_manifest
       repo1.docker_manifests << schema2_repo1.docker_manifest
