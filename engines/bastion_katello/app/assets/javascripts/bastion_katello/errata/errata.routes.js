@@ -17,6 +17,9 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
               templateUrl: 'errata/views/errata.html'
           }
         },
+        params: {
+            repositoryId: null
+        },
         ncyBreadcrumb: {
             label: "{{ 'Errata' | translate }}"
         }

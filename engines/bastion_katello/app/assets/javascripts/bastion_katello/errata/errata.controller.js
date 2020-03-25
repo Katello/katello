@@ -18,16 +18,21 @@
  *   within the table.
  */
 angular.module('Bastion.errata').controller('ErrataController',
-    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'Erratum', 'IncrementalUpdate', 'Repository', 'CurrentOrganization',
-    function ($scope, $state, $location, translate, Nutupane, Erratum, IncrementalUpdate, Repository, CurrentOrganization) {
+    ['$scope', '$state', '$stateParams', '$location', 'translate', 'Nutupane', 'Erratum', 'IncrementalUpdate', 'Repository', 'CurrentOrganization',
+    function ($scope, $state, $stateParams, $location, translate, Nutupane, Erratum, IncrementalUpdate, Repository, CurrentOrganization) {
         var nutupane, params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
             'sort_by': 'updated',
             'sort_order': 'DESC',
             'paged': true,
-            'errata_restrict_applicable': true
+            'errata_restrict_applicable': false,
+            'disableAutoLoad': true
         };
+        var repoId = $stateParams.repositoryId;
+        if (repoId) {
+            params['repository_id'] = repoId;
+        }
 
         nutupane = $scope.nutupane = new Nutupane(Erratum, params);
         $scope.controllerName = 'katello_errata';
@@ -43,7 +48,11 @@ angular.module('Bastion.errata').controller('ErrataController',
         Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum', 'with_content': 'erratum'}, function (response) {
             $scope.repositories = [$scope.repository];
             $scope.repositories = $scope.repositories.concat(response.results);
-
+            if (repoId) {
+                $scope.repository = _.find($scope.repositories, function (repository) {
+                    return repository.id === repoId;
+                });
+            }
             if ($location.search().repositoryId) {
                 $scope.repository = _.find($scope.repositories, function (repository) {
                     return repository.id === parseInt($location.search().repositoryId, 10);
@@ -51,7 +60,7 @@ angular.module('Bastion.errata').controller('ErrataController',
             }
         });
 
-        $scope.showApplicable = true;
+        $scope.showApplicable = false;
         $scope.showInstallable = false;
 
         $scope.toggleFilters = function () {
@@ -67,7 +76,7 @@ angular.module('Bastion.errata').controller('ErrataController',
         $scope.$watch('repository', function (repository) {
             var nutupaneParams = nutupane.getParams();
 
-            if (repository.id === 'all') {
+            if (repository && repository.id === 'all') {
                 nutupaneParams['repository_id'] = null;
                 nutupane.setParams(nutupaneParams);
             } else {
