@@ -16,11 +16,6 @@ module Katello
       refute @custom_pool.upstream?
     end
 
-    def test_upstream_nil_subscription
-      @pool_one.subscription = nil
-      refute @pool_one.upstream?
-    end
-
     def test_active
       active_pool = FactoryBot.build(:katello_pool, :active)
       inactive_pool = FactoryBot.build(:katello_pool, :inactive)

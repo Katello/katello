@@ -5,6 +5,7 @@ module Katello
     include Katello::Authorization::Subscription
 
     has_many :pools, :class_name => "Katello::Pool", :inverse_of => :subscription, :dependent => :destroy
+    has_many :products, :class_name => "Katello::Product", :through => :pools
 
     belongs_to :organization, :class_name => "Organization", :inverse_of => :subscriptions
 
@@ -24,10 +25,7 @@ module Katello
     end
 
     def redhat?
-      # for custom subscriptions, there is no separate marketing and engineering product
-      #   so query our Products table and check there
-      product = Katello::Product.where(:cp_id => self.cp_id, :organization => self.organization).first
-      product.nil? || product.redhat?
+      products.redhat.any?
     end
 
     def active?
