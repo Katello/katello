@@ -28,6 +28,10 @@ module Katello
           PulpRpmClient::RpmRepositorySyncURL
         end
 
+        def self.rpm_package_group_class
+          PulpRpmClient::RpmPackageGroup
+        end
+
         def api_client
           PulpRpmClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpRpmClient::Configuration))
         end
@@ -50,6 +54,26 @@ module Katello
 
         def distributions_api
           PulpRpmClient::DistributionsRpmApi.new(api_client)
+        end
+
+        def copy_api
+          PulpRpmClient::RpmCopyApi.new(api_client)
+        end
+
+        def content_package_groups_api
+          PulpRpmClient::ContentPackagegroupsApi.new(api_client)
+        end
+
+        def content_package_environments_api
+          PulpRpmClient::ContentPackageenvironmentsApi.new(api_client)
+        end
+
+        def content_repo_metadata_files_api
+          PulpRpmClient::ContentRepoMetadataFilesApi.new(api_client)
+        end
+
+        def content_distribution_trees_api
+          PulpRpmClient::ContentDistributionTreesApi.new(api_client)
         end
       end
     end

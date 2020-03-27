@@ -7,7 +7,11 @@ module Katello
     validates_lengths_from_database
 
     # Returns a set of Pulp/MongoDB conditions to filter out packages in the
-    # repo repository that match parameters
+    # repo repository that match parameters if the repository content type
+    # is managed by pulp2.
+    #
+    # Returns a set of pulpcore hrefs (pulp_ids) if the repository content
+    # type is managed by pulpcore.
     #
     # @param repo [Repository] a repository containing packages to filter
     # @return [Array] an array of hashes with MongoDB conditions
@@ -20,11 +24,22 @@ module Katello
       if self.original_packages
         package_filenames.concat(repo.packages_without_errata.map(&:filename))
       end
+
       ContentViewPackageFilter.generate_rpm_clauses(package_filenames)
     end
 
     def original_packages=(value)
       self[:original_packages] = value
+    end
+
+    def content_unit_pulp_ids(repo)
+      package_filenames = []
+      self.package_rules.each do |rule|
+        package_filenames.concat(query_rpms(repo, rule))
+      end
+
+      rpms = Rpm.in_repositories(repo)
+      rpms.where(filename: package_filenames).where(:modular => false).pluck(:pulp_id).flatten.uniq
     end
 
     def self.generate_rpm_clauses(package_filenames = [])
