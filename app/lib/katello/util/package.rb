@@ -22,7 +22,6 @@ module Katello
       def self.parse_nvrea(name)
         name, suffix = extract_suffix(name)
         name, arch = extract_arch(name)
-        return unless arch
 
         if (nvre = parse_nvre(name))
           nvre.merge(:suffix => suffix, :arch => arch).delete_if { |_k, v| v.nil? }
