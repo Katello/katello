@@ -11,7 +11,9 @@ module Actions
 
           if input[:tasks]
             version_href = input[:tasks].last[:created_resources].first
-          elsif input[:repository_details]
+          end
+
+          if !version_href && input[:repository_details]
             version_href = input[:repository_details][:latest_version_href]
           end
 

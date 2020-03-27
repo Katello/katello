@@ -15,6 +15,10 @@ module Katello
         "pulp_href"
       end
 
+      def self.supports_id_fetch?
+        false
+      end
+
       def self.ids_for_repository(repo_id)
         repo = Katello::Pulp3::Repository::Yum.new(Katello::Repository.find(repo_id), SmartProxy.pulp_master)
         repo_content_list = repo.content_list

@@ -26,7 +26,36 @@ module Katello
       end
     end
 
+    def content_unit_pulp_ids(repo)
+      if filter_by_id?
+        errata_ids = erratum_rules.map(&:errata_id)
+        errata_pulp_ids = errata_package_pulp_ids_from_errata_ids(repo, errata_ids)
+      else
+        clauses = []
+        clauses << errata_from
+        clauses << errata_to
+        clauses << types_clause
+        package_filenames = Erratum.list_filenames_by_clauses(repo, clauses.compact)
+        errata_pulp_ids = errata_package_pulp_ids_from_package_filenames(repo, package_filenames)
+      end
+      errata_pulp_ids
+    end
+
     private
+
+    def rpms_by_filename(repo, package_filenames)
+      query_params = package_filenames.map { |filename| "%#{filename}" }
+      repo.rpms.where("filename ILIKE ANY ( array[?] )", query_params)
+    end
+
+    def errata_package_pulp_ids_from_package_filenames(repo, package_filenames)
+      rpms_by_filename(repo, package_filenames).pluck(:pulp_id)
+    end
+
+    def errata_package_pulp_ids_from_errata_ids(repo, errata_ids)
+      package_filenames = Katello::ErratumPackage.joins(:erratum).where("#{Erratum.table_name}.errata_id" => errata_ids).pluck(:filename)
+      rpms_by_filename(repo, package_filenames).pluck(:pulp_id)
+    end
 
     def erratum_arel
       ::Katello::Erratum.arel_table

@@ -19,6 +19,10 @@ module Katello
         nil
       end
 
+      def self.supports_id_fetch?
+        true
+      end
+
       def update_model
         fail NotImplementedError
       end

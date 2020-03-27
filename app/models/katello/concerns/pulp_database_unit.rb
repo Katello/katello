@@ -44,7 +44,6 @@ module Katello
       end
 
       def backend_identifier_field
-        nil
       end
 
       def content_unit_class
@@ -108,7 +107,8 @@ module Katello
         pulp_id_href_map = {}
         service_class = SmartProxy.pulp_master!.content_service(content_type)
         fetch_only_ids = !repository.content_view.default? &&
-                         !repository.repository_type.unique_content_per_repo
+                         !repository.repository_type.unique_content_per_repo &&
+                         service_class.supports_id_fetch?
 
         service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids).each do |units|
           units.each do |unit|
