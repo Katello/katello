@@ -180,6 +180,10 @@ module Katello
         api.repositories_api.list(options).results
       end
 
+      def read
+        api.repositories_api.read(repository_reference.try(:repository_href))
+      end
+
       def delete(href = repository_reference.try(:repository_href))
         repository_reference.try(:destroy)
         ignore_404_exception { api.repositories_api.delete(href) } if href

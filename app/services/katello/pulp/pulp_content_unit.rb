@@ -34,6 +34,10 @@ module Katello
         nil
       end
 
+      def self.supports_id_fetch?
+        true
+      end
+
       def self.content_type
         self::CONTENT_TYPE
       end
