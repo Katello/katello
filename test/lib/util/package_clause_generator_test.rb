@@ -7,6 +7,7 @@ module Katello
     def setup
       User.current = User.find(users(:admin).id)
       organization = get_organization
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       Repository.any_instance.stubs(:package_count).returns(2)
       @repo = katello_repositories(:fedora_17_x86_64)
       @rpm = katello_rpms(:one)

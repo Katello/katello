@@ -45,6 +45,19 @@ module Katello
           return errata_list
         end
       end
+
+      def filter_errata_by_pulp_href(errata, package_pulp_hrefs)
+        return [] if package_pulp_hrefs.empty?
+        rpms = Katello::Rpm.where(:pulp_id => package_pulp_hrefs)
+        rpm_filenames = rpms.map { |rpm| File.basename(rpm.filename) }
+        matching_errata = []
+        errata.each do |erratum|
+          if erratum.packages.any? && (erratum.packages.pluck(:filename) - rpm_filenames).empty?
+            matching_errata << erratum
+          end
+        end
+        matching_errata
+      end
     end
   end
 end
