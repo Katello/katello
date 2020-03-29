@@ -55,7 +55,11 @@ module Katello
     end
 
     test "key can be copied" do
+      @dev_key.content_view = katello_content_views(:acme_default)
+      @dev_key.environment = katello_environments(:library)
+      @dev_key.max_hosts = 200
       new_key = @dev_key.copy("new key name")
+
       assert_equal new_key.name, "new key name"
       assert_equal new_key.description, @dev_key.description
       assert_equal new_key.host_collections, @dev_key.host_collections
