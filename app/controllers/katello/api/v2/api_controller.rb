@@ -192,6 +192,18 @@ module Katello
       end
     end
 
+    def respond_for_show(options = {})
+      check_resource_organization(options[:resource], params[:organization_id])
+      super
+    end
+
+    def check_resource_organization(resource, organization_id)
+      return unless resource && resource&.organization_id && organization_id
+      if resource.organization_id != organization_id.to_i
+        fail HttpErrors::BadRequest, _("The requested resource does not belong to the specified organization")
+      end
+    end
+
     def find_host_with_subscriptions(id, permission)
       @host = resource_finder(::Host::Managed.authorized(permission, ::Host::Managed), id)
       fail HttpErrors::BadRequest, _("Host has not been registered with subscription-manager") if @host.subscription_facet.nil?

@@ -8,9 +8,9 @@
  *   Provides a BastionResource for activation keys.
  */
 angular.module('Bastion.activation-keys').factory('ActivationKey',
-    ['BastionResource', function (BastionResource) {
+    ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
 
-        return BastionResource('katello/api/v2/activation_keys/:id/:action/:action2', {id: '@id'}, {
+        return BastionResource('katello/api/v2/activation_keys/:id/:action/:action2', {id: '@id', 'organization_id': CurrentOrganization}, {
             get: {method: 'GET', params: {fields: 'full'}},
             update: {method: 'PUT'},
             copy: {method: 'POST', params: {action: 'copy'}},
