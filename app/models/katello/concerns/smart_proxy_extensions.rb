@@ -124,6 +124,8 @@ module Katello
           config.ssl_client_key = ::Cert::Certs.ssl_client_key
           config.debugging = true
           config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
+          config.username = self.setting(PULP3_FEATURE, 'username')
+          config.password = self.setting(PULP3_FEATURE, 'password')
         end
       end
 
@@ -182,7 +184,7 @@ module Katello
         pulp3_uri!.host
       end
 
-      def pulp3_url(path = '/pulp/api/v3/')
+      def pulp3_url(path = '/pulp/api/v3')
         pulp_url = self.setting(PULP3_FEATURE, 'pulp_url')
         path.blank? ? pulp_url : "#{pulp_url.sub(%r|/$|, '')}/#{path.sub(%r|^/|, '')}"
       end
