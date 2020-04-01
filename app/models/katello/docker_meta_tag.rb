@@ -163,7 +163,7 @@ module Katello
         (tag_table_values - meta_tag_table_values).each do |schema1, schema2, name|
           metatags << DockerMetaTag.where(:schema1_id => schema1,
                               :schema2_id => schema2,
-                              :name => name).create!
+                              :name => name).first_or_create
         end
         repo.docker_meta_tags += metatags
       end
