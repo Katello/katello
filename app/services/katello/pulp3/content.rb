@@ -6,9 +6,9 @@ module Katello
       class << self
         def create_upload(size = 0, checksum = nil, content_type = nil)
           content_unit_href = nil
-          if checksum && content_type == FileUnit::CONTENT_TYPE
+          if checksum
             content_backend_service = SmartProxy.pulp_master.content_service(content_type)
-            content_list = content_backend_service.content_api.list("digest": checksum)
+            content_list = content_backend_service.content_api.list("sha256": checksum)
             content_unit_href = content_list.results.first.pulp_href unless content_list.results.empty?
             return {"content_unit_href" => content_unit_href} if content_unit_href
           end

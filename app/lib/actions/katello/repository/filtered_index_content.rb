@@ -26,10 +26,10 @@ module Actions
           elsif repo.yum?
             if input[:import_upload_task] && input[:import_upload_task][:content_unit_href]
               unit_ids = [input[:import_upload_task][:content_unit_href]]
-            elsif input[:upload_actions] && input[:upload_actions].size>0
+            elsif input[:upload_actions]&.any? { |action| action.try(:[], "content_unit_href") }
               uploaded_content_unit_hrefs = []
-              upload_actions.each {|action| uploaded_content_unit_hrefs << action.try(:content_unit_href)}
-              unit_ids = uploaded_content_unit_hrefs.compact!
+              input[:upload_actions].each { |action| uploaded_content_unit_hrefs << action.try(:[], "content_unit_href") }
+              unit_ids = uploaded_content_unit_hrefs.compact
             else
               unit_ids = search_units(repo)
             end
