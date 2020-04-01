@@ -8,7 +8,7 @@ module Actions
             sequence do
               content_backend_service = SmartProxy.pulp_master.content_service(unit_type_id)
               content_list = content_backend_service.content_api.list("sha256": Digest::SHA256.hexdigest(File.read(file[:path])))
-              content_href = content_list&.results&.first&.pulp_href unless content_list&.results&.empty?
+              content_href = content_list&.results&.first&.pulp_href
 
               unless content_href
                 upload_action_output = plan_action(Pulp3::Repository::UploadFile, repository, smart_proxy, file[:path]).output
