@@ -6,7 +6,7 @@ module Katello
       include VCR::TestCase
     end
 
-    @repo_url = "file:///var/www/test_repos/zoo"
+    @repo_url = "file:///var/lib/pulp/sync_imports/test_repos/zoo"
     @repo = nil
 
     def ensure_creatable(repo, smart_proxy)

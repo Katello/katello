@@ -34,7 +34,8 @@ module Katello
             @repo.relative_path = "/some/other/path/that/is/different"
             @repo.root.url = 'http://foo.com/bar'
             @repo.save!
-            @service.refresh_if_needed
+            refresh_tasks = @service.refresh_if_needed
+            refresh_tasks.compact.each { |task| wait_on_task(@master, task) }
             assert_equal @repo.root.url + '/PULP_MANIFEST', @service.get_remote.url
             assert @repo.relative_path, @service.get_distribution.base_path
           end

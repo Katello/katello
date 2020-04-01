@@ -21,7 +21,7 @@ module Katello
       @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
       @cvpe_one = katello_content_view_puppet_environments(:archive_view_puppet_environment)
       @fedora_17_x86_64.relative_path = 'test_path/'
-      @fedora_17_x86_64.root.url = "file:///var/www/test_repos/zoo"
+      @fedora_17_x86_64.root.url = "file:///var/lib/pulp/sync_imports/test_repos/zoo"
       @fedora_17_x86_64.root.download_policy = 'immediate'
       @fedora_17_x86_64.root.save!
     end

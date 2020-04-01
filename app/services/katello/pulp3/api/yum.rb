@@ -25,7 +25,7 @@ module Katello
         end
 
         def self.repository_sync_url_class
-          PulpRpmClient::RepositorySyncURL
+          PulpRpmClient::RpmRepositorySyncURL
         end
 
         def api_client
