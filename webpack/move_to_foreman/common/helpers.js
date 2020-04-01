@@ -69,9 +69,10 @@ export const apiResponse = (actionType, result, additionalData = {}) => (dispatc
 
 export const sendErrorNotifications = messages => (dispatch) => {
   messages.forEach((msg) => {
+    const message = typeof msg === 'string' ? msg : `${msg.message}: ${msg.details}`;
     dispatch(addToast({
       type: 'error',
-      message: msg,
+      message,
       sticky: true,
     }));
   });
