@@ -211,10 +211,10 @@ Foreman::Plugin.register :katello do
 
   menu :labs_menu,
        :content_publication,
-       :url => '/labs/content_publication',
+       :url => '/labs/content_views',
        :url_hash => {:controller => 'katello/react',
                      :action => 'index'},
-       :caption => N_('Content Publication'),
+       :caption => N_('Content Views'),
        :parent => :lab_features_menu,
        :turbolinks => false
 

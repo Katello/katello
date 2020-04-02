@@ -1,19 +1,26 @@
 import React from 'react';
 
-import { render, fireEvent, within } from '@testing-library/react';
-import ContentViewTable from '../Table/ContentViewTable.js';
+import { render, fireEvent, within } from 'react-testing-lib-wrapper';
+import ContentViewsTable from '../Table/ContentViewsTable.js';
 
 const contentViewIndex = require('./contentViewList.fixtures.json');
 
 let firstCV;
+let contentViews;
 beforeEach(() => {
   const { results } = contentViewIndex;
+  contentViews = results;
   [firstCV] = results;
 });
 
+const defaultProps = {
+  loadContentViewDetails: () => {},
+  detailsMap: {},
+};
+
 test('Can view content views on the screen', () => {
   const { getByText, queryByTestId, queryByText } =
-    render(<ContentViewTable contentViews={contentViewIndex} />);
+    render(<ContentViewsTable results={contentViews} loading={false} {...defaultProps} />);
 
   // query* functions will return the element or null if it cannot be found
   // get* functions will return the element or throw an error if it cannot be found
@@ -37,22 +44,25 @@ test('Can view content views on the screen', () => {
 });
 
 test('Loading spinner is showing when no data is loaded yet', () => {
-  const { getByTestId } = render(<ContentViewTable contentViews={null} />);
+  const { getByTestId } = render(<ContentViewsTable results={[]} loading {...defaultProps} />);
 
   // Now we check if the loading text is showing
   expect(getByTestId('cv-loading-text')).toBeVisible();
 });
 
 test('Empty state message is shown when no Content Views are created yet', () => {
-  const noCvs = { results: [] };
-  const { getByText } = render(<ContentViewTable contentViews={noCvs} />);
+  const { getByText } = render(<ContentViewsTable
+    results={[]}
+    loading={false}
+    {...defaultProps}
+  />);
 
   expect(getByText(/You currently don't have any Content Views/)).toBeTruthy();
 });
 
 test('Can view Environment dropdown when cell is clicked', () => {
   const { getByText, getByTestId } =
-    render(<ContentViewTable contentViews={contentViewIndex} />);
+    render(<ContentViewsTable results={contentViews} loading={false} {...defaultProps} />);
 
   // Getting the row that corresponds with the first CV name
   const firstRow = within(getByText(firstCV.name).closest('tr'));

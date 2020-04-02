@@ -1,7 +1,9 @@
 import React from 'react';
 import { compoundExpand } from '@patternfly/react-table';
 import { ScreenIcon, FolderOpenIcon, ContainerNodeIcon } from '@patternfly/react-icons';
+import { translate as __ } from 'foremanReact/common/I18n';
 
+import IconWithCount from '../components/IconWithCount';
 import DetailsExpansion from '../expansions/DetailsExpansion';
 import RepositoriesExpansion from '../expansions/RepositoriesExpansion';
 import EnvironmentsExpansion from '../expansions/EnvironmentsExpansion';
@@ -9,10 +11,10 @@ import VersionsExpansion from '../expansions/VersionsExpansion';
 import ContentViewName from '../components/ContentViewName';
 
 export const buildColumns = () => [
-  'Name', 'Last Published', 'Details',
-  { title: 'Environments', cellTransforms: [compoundExpand] },
-  { title: 'Repositories', cellTransforms: [compoundExpand] },
-  { title: 'Versions', cellTransforms: [compoundExpand] },
+  __('Name'), __('Last Published'), __('Details'),
+  { title: __('Environments'), cellTransforms: [compoundExpand] },
+  { title: __('Repositories'), cellTransforms: [compoundExpand] },
+  { title: __('Versions'), cellTransforms: [compoundExpand] },
 ];
 
 const buildRow = (contentView, openColumn) => {
@@ -22,35 +24,17 @@ const buildRow = (contentView, openColumn) => {
   const row = [
     { title: <ContentViewName composite={composite ? 1 : undefined} name={name} cvId={id} /> },
     lastPublished,
-    { title: 'Details', props: { isOpen: false, ariaControls: `cv-details-expansion-${id}`, contentviewid: id } },
+    { title: __('Details'), props: { isOpen: false, ariaControls: `cv-details-expansion-${id}`, contentviewid: id } },
     {
-      title:
-            (
-              <React.Fragment>
-                <ScreenIcon key={id} title={`environments-icon-${id}`} className="ktable-cell-icon" />
-                {environments.length}
-              </React.Fragment>
-            ),
+      title: <IconWithCount Icon={ScreenIcon} count={environments.length} title={`environments-icon-${id}`} />,
       props: { isOpen: false, ariaControls: `cv-environments-expansion-${id}` },
     },
     {
-      title:
-            (
-              <React.Fragment>
-                <FolderOpenIcon key={id} title={`repositories-icon-${id}`} className="ktable-cell-icon" />
-                {repositories.length}
-              </React.Fragment>
-            ),
+      title: <IconWithCount Icon={FolderOpenIcon} count={repositories.length} title={`repositories-icon-${id}`} />,
       props: { isOpen: false, ariaControls: `cv-repositories-expansion-${id}` },
     },
     {
-      title:
-            (
-              <React.Fragment>
-                <ContainerNodeIcon key={id} title={`versions-icon-${id}`} className="ktable-cell-icon" />
-                {versions.length}
-              </React.Fragment>
-            ),
+      title: <IconWithCount Icon={ContainerNodeIcon} count={versions.length} title={`versions-icon-${id}`} />,
       props: { isOpen: false, ariaControls: `cv-versions-expansion-${id}` },
     },
   ];
@@ -61,16 +45,17 @@ const buildRow = (contentView, openColumn) => {
 
 const buildDetailDropdowns = (id, rowIndex, contentViewDetails) => {
   const {
-    repositories, environments, versions, ...details
+    loading, repositories, environments, versions, ...details
   } = contentViewDetails;
+  const commonProps = { cvId: id, className: 'pf-m-no-padding' };
 
-  const detailDropdowns = [
+  let detailDropdowns = [
     {
       compoundParent: 2,
       cells: [
         {
-          title: <DetailsExpansion details={details} cvId={id} />,
-          props: { colSpan: 6, className: 'pf-m-no-padding', details },
+          title: <DetailsExpansion details={details} {...commonProps} />,
+          props: { colSpan: 6 },
         },
       ],
     },
@@ -78,8 +63,8 @@ const buildDetailDropdowns = (id, rowIndex, contentViewDetails) => {
       compoundParent: 3,
       cells: [
         {
-          title: <EnvironmentsExpansion environments={environments} cvId={id} />,
-          props: { colSpan: 6, className: 'pf-m-no-padding' },
+          title: <EnvironmentsExpansion environments={environments} {...commonProps} />,
+          props: { colSpan: 6 },
         },
       ],
     },
@@ -87,8 +72,8 @@ const buildDetailDropdowns = (id, rowIndex, contentViewDetails) => {
       compoundParent: 4,
       cells: [
         {
-          title: <RepositoriesExpansion repositories={repositories} cvId={id} />,
-          props: { colSpan: 6, className: 'pf-m-no-padding', repositories },
+          title: <RepositoriesExpansion repositories={repositories} {...commonProps} />,
+          props: { colSpan: 6 },
         },
       ],
     },
@@ -96,8 +81,8 @@ const buildDetailDropdowns = (id, rowIndex, contentViewDetails) => {
       compoundParent: 5,
       cells: [
         {
-          title: <VersionsExpansion versions={versions} cvId={id} />,
-          props: { colSpan: 6, className: 'pf-m-no-padding', versions },
+          title: <VersionsExpansion versions={versions} {...commonProps} />,
+          props: { colSpan: 6 },
         },
       ],
     },
@@ -105,32 +90,27 @@ const buildDetailDropdowns = (id, rowIndex, contentViewDetails) => {
 
   // The rows are indexed along with the hidden dropdown rows, so we need to offset the parent row
   const rowOffset = detailDropdowns.length + 1;
-  detailDropdowns.map((dropdown) => {
-    dropdown.parent = rowIndex * rowOffset;
-    return dropdown;
-  });
+  detailDropdowns = detailDropdowns.map(detail => ({ ...detail, parent: rowIndex * rowOffset }));
 
   return detailDropdowns;
 };
 
-const tableDataGenerator = (contentViewData, detailsMap, expandedColumnMap) => {
-  const data = {};
-  const contentViews = contentViewData.results || [];
-  data.columns = buildColumns();
-  data.rows = [];
+const tableDataGenerator = (results, detailsMap, expandedColumnMap) => {
+  const contentViews = results || [];
+  const columns = buildColumns();
+  const rows = [];
 
-  contentViews.map((contentView, rowIndex) => {
+  contentViews.forEach((contentView, rowIndex) => {
     const { id } = contentView;
     const openColumn = expandedColumnMap[id];
     const contentViewDetails = detailsMap[id] || {};
     const cells = buildRow(contentView, openColumn);
 
-    data.rows.push({ isOpen: !!openColumn, cells });
-    data.rows.push(...buildDetailDropdowns(id, rowIndex, contentViewDetails));
-    return contentView;
+    rows.push({ isOpen: !!openColumn, cells });
+    rows.push(...buildDetailDropdowns(id, rowIndex, contentViewDetails));
   });
 
-  return data;
+  return { rows, columns };
 };
 
 export default tableDataGenerator;

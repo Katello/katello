@@ -9,23 +9,22 @@ import PropTypes from 'prop-types';
 import Loading from './Loading';
 import tableDataGenerator, { buildColumns } from './tableDataGenerator';
 import emptyRows from './emptyRows';
-import './ContentViewTable.scss';
+import './ContentViewsTable.scss';
 
-const contentViewShowFakeData = require('../data/show');
-
-const ContentViewTable = ({ contentViews }) => {
-  const [detailsMap, setDetailsMap] = useState({}); // Map of CV id to details object
+const ContentViewTable = ({
+  loadContentViewDetails, detailsMap, results, loading,
+}) => {
   const [table, setTable] = useState({ rows: [], columns: [] });
   // Map of CV id to expanded cell, if id not present, row is not expanded
   const [expandedColumnMap, setExpandedColumnMap] = useState({});
-  const cvsPresent = contentViews && contentViews.results && contentViews.results.length > 0;
+  const cvsPresent = results && results.length > 0;
 
   useEffect(
     () => {
-      if (!contentViews) return;
+      if (loading) return;
       if (cvsPresent) {
         const tableData = tableDataGenerator(
-          contentViews,
+          results,
           detailsMap,
           expandedColumnMap,
         );
@@ -34,27 +33,20 @@ const ContentViewTable = ({ contentViews }) => {
         setTable({ columns: buildColumns(), rows: emptyRows });
       }
     },
-    [contentViews, detailsMap, expandedColumnMap],
+    [results, detailsMap, expandedColumnMap],
   );
 
   const cvIdFromRow = ({ details: { props: rowProps } }) => rowProps.contentviewid;
 
   const loadDetails = (id) => {
     if (detailsMap[id]) return;
-    // Replace with API call
-    setTimeout(() => {
-      const details = contentViewShowFakeData;
-      setDetailsMap(prev => ({ ...prev, [id]: details }));
-    }, 300);
+    loadContentViewDetails(id);
   };
 
   const onSelect = (event, isSelected, rowId) => {
     let rows;
     if (rowId === -1) {
-      rows = table.rows.map((row) => {
-        row.selected = isSelected;
-        return row;
-      });
+      rows = table.rows.map(row => ({ ...row, selected: isSelected }));
     } else {
       rows = [...table.rows];
       rows[rowId].selected = isSelected;
@@ -63,7 +55,7 @@ const ContentViewTable = ({ contentViews }) => {
     setTable(prevTable => ({ ...prevTable, rows }));
   };
 
-  const onExpand = (_event, _rowIndex, colIndex, isOpen, rowData, _extraData) => {
+  const onExpand = (_event, _rowIndex, colIndex, isOpen, rowData) => {
     const { rows } = table;
     const contentViewId = cvIdFromRow(rowData);
     // adjust for the selection checkbox cell being counted in the index
@@ -110,31 +102,28 @@ const ContentViewTable = ({ contentViews }) => {
   };
 
   const { rows, columns } = table;
-  return contentViews ?
-    (
-      <Table
-        aria-label="Content View Table"
-        onSelect={cvsPresent ? onSelect : null}
-        onExpand={onExpand}
-        className="katello-pf4-table"
-        actionResolver={actionResolver}
-        cells={columns}
-        rows={rows}
-      >
-        <TableHeader />
-        <TableBody />
-      </Table>
-    ) : (<Loading />);
+  if (loading) return (<Loading />);
+  return (
+    <Table
+      aria-label="Content View Table"
+      onSelect={cvsPresent ? onSelect : null}
+      onExpand={onExpand}
+      className="katello-pf4-table"
+      actionResolver={actionResolver}
+      cells={columns}
+      rows={rows}
+    >
+      <TableHeader />
+      <TableBody />
+    </Table>
+  );
 };
 
 ContentViewTable.propTypes = {
-  contentViews: PropTypes.shape({
-    results: PropTypes.array,
-  }),
-};
-
-ContentViewTable.defaultProps = {
-  contentViews: null,
+  loadContentViewDetails: PropTypes.func.isRequired,
+  results: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  loading: PropTypes.bool.isRequired,
+  detailsMap: PropTypes.shape({}).isRequired,
 };
 
 export default ContentViewTable;

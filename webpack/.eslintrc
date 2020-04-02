@@ -27,7 +27,11 @@
     }],
     "promise/prefer-await-to-then": "error",
     "promise/prefer-await-to-callbacks": "error",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "no-param-reassign": ["error", { "props": false }]
+    "no-unused-vars": ["error", {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": true,
+        "argsIgnorePattern": "^_"
+    }]
   }
 }

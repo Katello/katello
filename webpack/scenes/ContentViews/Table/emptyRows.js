@@ -1,5 +1,4 @@
-// For when no items exists, use this as rows in the table.
-// Not to be used for empty searches
+// Meant for when the user has none of the object created, not when a search returns empty results
 import React from 'react';
 import { EmptyState,
   EmptyStateBody,
@@ -8,6 +7,7 @@ import { EmptyState,
   Bullseye,
   Title } from '@patternfly/react-core';
 import { CubeIcon } from '@patternfly/react-icons';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 const emptyRows = [{
   heightAuto: true,
@@ -20,10 +20,10 @@ const emptyRows = [{
           <EmptyState variant={EmptyStateVariant.small}>
             <EmptyStateIcon icon={CubeIcon} />
             <Title headingLevel="h2" size="lg">
-              You currently don&apos;t have any Content Views.
+              {__("You currently don't have any Content Views.")}
             </Title>
             <EmptyStateBody>
-              A Content View can be added by using the &quot;New content view&quot; button above.
+              {__('A Content View can be added by using the "New content view" button above.')}
             </EmptyStateBody>
           </EmptyState>
         </Bullseye>
