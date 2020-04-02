@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+
 import ContentViewTable from './Table/ContentViewTable';
 
-const contentViewIndexFakeData = require('./data/index');
-// Uncomment and comment out above to see empty state
-// const contentViewIndexFakeData = { results: [] };
-
-const ContentViewPage = () => {
-  const [contentViews, setContentViews] = useState(null);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setContentViews(contentViewIndexFakeData);
-    }, 5000);
-  }, []);
+const ContentViewPage = ({ loadContentViews, contentViews }) => {
+  useEffect(
+    () => {
+      loadContentViews();
+    }, []
+  );
 
   return (
     <React.Fragment>
       <h1>Content Views</h1>
       <ContentViewTable contentViews={contentViews} />
-    </React.Fragment>
+  </React.Fragment>
   );
+};
+
+ContentViewPage.propTypes = {
+  contentViews: PropTypes.shape({
+    results: PropTypes.array,
+  }),
+};
+
+ContentViewPage.defaultProps = {
+  contentViews: null,
 };
 
 export default ContentViewPage;
