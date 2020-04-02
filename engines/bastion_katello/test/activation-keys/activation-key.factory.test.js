@@ -35,16 +35,16 @@ describe('Factory: ActivationKey', function() {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('ActivationKey.get GET /api/v2/activation_keys/1?fields=full', function() {
-        $httpBackend.expectGET('katello/api/v2/activation_keys/1?fields=full').respond(activationKeys.results[0]);
+    it('ActivationKey.get GET /api/v2/activation_keys/1?fields=full&organization_id=ACME', function() {
+        $httpBackend.expectGET('katello/api/v2/activation_keys/1?fields=full&organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.get({id: 1}, function(response) {
             expect(response.id).toBe(activationKeys.results[0].id);
         });
     });
 
-    it('ActivationKey.query GET /api/v2/activation_keys', function() {
-        $httpBackend.expectGET('katello/api/v2/activation_keys').respond(activationKeys);
+    it('ActivationKey.query GET /api/v2/activation_keys?organization_id=ACME', function() {
+        $httpBackend.expectGET('katello/api/v2/activation_keys?organization_id=ACME').respond(activationKeys);
 
         ActivationKey.queryPaged(function(response) {
             expect(response.results.length).toBe(activationKeys.results.length);
@@ -55,64 +55,64 @@ describe('Factory: ActivationKey', function() {
         });
     });
 
-    it('ActivationKey.update PUT /api/v2/activation_keys/1', function() {
-        $httpBackend.expectPUT('katello/api/v2/activation_keys/1').respond(activationKeys.results[0]);
+    it('ActivationKey.update PUT /api/v2/activation_keys/1?organization_id=ACME', function() {
+        $httpBackend.expectPUT('katello/api/v2/activation_keys/1?organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.update({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.copy POST /api/v2/activation_keys/1/copy', function() {
-        $httpBackend.expectPOST('katello/api/v2/activation_keys/1/copy').respond(activationKeys.results[0]);
+    it('ActivationKey.copy POST /api/v2/activation_keys/1/copy?organization_id=ACME', function() {
+        $httpBackend.expectPOST('katello/api/v2/activation_keys/1/copy?organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.copy({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.removeSubscriptions PUT /api/v2/activation_keys/1/remove_subscriptions', function() {
-        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/remove_subscriptions').respond(activationKeys.results[0]);
+    it('ActivationKey.removeSubscriptions PUT /api/v2/activation_keys/1/remove_subscriptions?organization_id=ACME', function() {
+        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/remove_subscriptions?organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.removeSubscriptions({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.addSubscriptions PUT /api/v2/activation_keys/1/add_subscriptions', function() {
-        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/add_subscriptions').respond(activationKeys.results[0]);
+    it('ActivationKey.addSubscriptions PUT /api/v2/activation_keys/1/add_subscriptions?organization_id=ACME', function() {
+        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/add_subscriptions?organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.addSubscriptions({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.availableHostCollections GET /api/v2/activation_keys/1/host_collections/available', function() {
-        $httpBackend.expectGET('katello/api/v2/activation_keys/1/host_collections/available').respond(activationKeys.results[0]);
+    it('ActivationKey.availableHostCollections GET /api/v2/activation_keys/1/host_collections/available?organization_id=ACME', function() {
+        $httpBackend.expectGET('katello/api/v2/activation_keys/1/host_collections/available?organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.availableHostCollections({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.removeHostCollections PUT /api/v2/activation_keys/1/host_collections', function() {
-        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/host_collections').respond(activationKeys.results[0]);
+    it('ActivationKey.removeHostCollections PUT /api/v2/activation_keys/1/host_collections?organization_id=ACME', function() {
+        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/host_collections?organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.removeHostCollections({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.addHostCollections POST /api/v2/activation_keys/1/host_collections', function() {
-        $httpBackend.expectPOST('katello/api/v2/activation_keys/1/host_collections').respond(activationKeys.results[0]);
+    it('ActivationKey.addHostCollections POST /api/v2/activation_keys/1/host_collections?organization_id=ACME', function() {
+        $httpBackend.expectPOST('katello/api/v2/activation_keys/1/host_collections?organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.addHostCollections({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.contentOverride PUT /api/v2/activation_keys/1/content_override', function() {
-        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/content_override').respond(activationKeys.results[0]);
+    it('ActivationKey.contentOverride PUT /api/v2/activation_keys/1/content_override?organization_id=ACME', function() {
+        $httpBackend.expectPUT('katello/api/v2/activation_keys/1/content_override?organization_id=ACME').respond(activationKeys.results[0]);
 
         ActivationKey.contentOverride({id: 1},
                         {'content_override': { 'content_label': 'my-repository-label',

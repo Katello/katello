@@ -162,7 +162,7 @@ module Katello
             {content: resource_name, id: params[:id]}
         end
 
-        if params[:organization_id] && !@resource.repositories.any? {|repo| repo.organization_id == params[:organization_id].to_i}
+        if params[:organization_id] && !@resource.repositories.any? { |repo| repo.organization_id == params[:organization_id].to_i }
           fail HttpErrors::BadRequest, _("The requested resource does not belong to the specified organization")
         end
       end

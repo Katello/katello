@@ -220,22 +220,7 @@ Katello::Engine.routes.draw do
             get :redhat_provider
             get :releases
           end
-          api_resources :products, :only => [:index, :show, :create, :update, :destroy] do
-            member do
-              post :sync
-            end
-            collection do
-              get :auto_complete_search
-            end
-            api_resources :repository_sets, :only => [:index, :show] do
-              get :auto_complete_search, :on => :collection
-              member do
-                get :available_repositories
-                put :enable
-                put :disable
-              end
-            end
-          end
+          api_resources :products, :only => [:index]
           api_resources :repositories, :only => [:index]
           api_resources :subscriptions, :only => [:index] do
             collection do

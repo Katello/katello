@@ -25,8 +25,8 @@ describe('Factory: DockerManifest', function () {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('provides a way to get a list of repositories', function () {
-        $httpBackend.expectGET('katello/api/v2/docker_manifests').respond(dockerManifests);
+    it('provides a way to get a list of docker manifests', function () {
+        $httpBackend.expectGET('katello/api/v2/docker_manifests?organization_id=ACME').respond(dockerManifests);
 
         DockerManifest.queryPaged(function (dockerManifests) {
             expect(dockerManifests.records.length).toBe(1);

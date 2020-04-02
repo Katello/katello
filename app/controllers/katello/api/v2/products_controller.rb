@@ -86,7 +86,6 @@ module Katello
       respond_for_create(:resource => product)
     end
 
-    api :GET, "/organizations/:organization_id/products/:id", N_("Show a products")
     api :GET, "/products/:id", N_("Show a product")
     param :organization_id, :number, :desc => N_("Organization ID")
     param :id, :number, :desc => N_("product numeric identifier"), :required => true
