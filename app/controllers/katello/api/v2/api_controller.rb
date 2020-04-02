@@ -198,9 +198,9 @@ module Katello
     end
 
     def check_resource_organization(resource, organization_id)
-      return unless resource && resource&.organization_id && organization_id
+      return unless resource && resource.try(:organization_id) && organization_id
       if resource.organization_id != organization_id.to_i
-        fail HttpErrors::BadRequest, _("The requested resource does not belong to the specified organization")
+        fail HttpErrors::BadRequest, _("The requested resource does not belong to the specified Organization")
       end
     end
 

@@ -1,4 +1,4 @@
-import api from '../../../services/api';
+import api, {orgId} from '../../../services/api';
 import {
   MODULE_STREAM_DETAILS_REQUEST,
   MODULE_STREAM_DETAILS_SUCCESS,
@@ -10,7 +10,7 @@ export const loadModuleStreamDetails = moduleStreamId => async (dispatch) => {
   dispatch({ type: MODULE_STREAM_DETAILS_REQUEST });
 
   try {
-    const { data } = await api.get(`/module_streams/${moduleStreamId}`);
+    const { data } = await api.get(`/module_streams/${moduleStreamId}`,{}, {organization_id: orgId()});
     return dispatch({
       type: MODULE_STREAM_DETAILS_SUCCESS,
       response: data,

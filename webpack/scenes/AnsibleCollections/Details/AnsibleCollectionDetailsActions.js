@@ -1,4 +1,4 @@
-import api from '../../../services/api';
+import api, {orgId} from '../../../services/api';
 import {
   ANSIBLE_COLLECTION_DETAILS_ERROR,
   ANSIBLE_COLLECTION_DETAILS_REQUEST,
@@ -10,7 +10,7 @@ export const getAnsibleCollectionDetails = ansibleCollectionId => async (dispatc
   dispatch({ type: ANSIBLE_COLLECTION_DETAILS_REQUEST });
 
   try {
-    const { data } = await api.get(`/ansible_collections/${ansibleCollectionId}`);
+    const { data } = await api.get(`/ansible_collections/${ansibleCollectionId}`, {}, {organization_id: orgId()});
     return dispatch({
       type: ANSIBLE_COLLECTION_DETAILS_SUCCESS,
       response: data,

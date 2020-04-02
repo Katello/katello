@@ -8,9 +8,9 @@
      * @description
      *   Provides a BastionResource for interacting with Ostree Branches
      */
-    function ModuleStream(BastionResource) {
+    function ModuleStream(BastionResource, CurrentOrganization) {
         return BastionResource('katello/api/v2/module_streams/:id',
-            {'id': '@id'},
+            {'id': '@id', 'organization_id': CurrentOrganization},
             {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
             }
@@ -22,6 +22,6 @@
         .module('Bastion.module-streams')
         .factory('ModuleStream', ModuleStream);
 
-    ModuleStream.$inject = ['BastionResource'];
+    ModuleStream.$inject = ['BastionResource', 'CurrentOrganization'];
 
 })();
