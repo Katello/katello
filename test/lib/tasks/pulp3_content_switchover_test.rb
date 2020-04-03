@@ -118,6 +118,22 @@ module Katello
       assert_error(@task_name)
     end
 
+    def test_docker_tag_v1_with_null_migrated_pulp3_href_throws_an_error
+      repo = Repository.find(katello_repositories(:busybox).id)
+      tag = create(:docker_tag, :repositories => [repo], :name => 'latest')
+      tag_schema_v1 = create(:docker_tag, :schema1, :repositories => [repo], :name => 'latest')
+      tag.update(:migrated_pulp3_href => @another_fake_pulp3_href)
+      tag_schema_v1.update(:migrated_pulp3_href => nil)
+      docker_manifest = tag.docker_taggable
+      docker_manifest.update(:migrated_pulp3_href => @another_fake_pulp3_href + docker_manifest.id.to_s)
+      docker_manifest_schema_v1 = tag_schema_v1.docker_taggable
+      docker_manifest_schema_v1.update(:migrated_pulp3_href => @another_fake_pulp3_href + docker_manifest_schema_v1.id.to_s)
+      DockerMetaTag.import_meta_tags([repo])
+      assert_equal repo.docker_tags.count, 2
+      assert_ok(@task_name)
+      assert_equal repo.docker_tags.count, 1
+    end
+
     def test_rpm_pulp_ids_not_updated
       rpm = katello_rpms(:one)
       pulp_id = rpm.pulp_id
