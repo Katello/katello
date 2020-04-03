@@ -16,7 +16,7 @@
   </span>
 
   <div data-block="table">
-    <table bst-table="table" class="table table-striped table-bordered" ng-class="{'table-mask': table.working}">
+    <table bst-table="table" class="table table-striped table-bordered" ng-class="{'table-mask': table.working}" ng-if="table.rows[0].repositories">
       <thead>
         <tr bst-table-head>
           <th bst-table-column="environment" translate>Environment</th>
@@ -39,7 +39,35 @@
             </a>
           </td>
           <td bst-table-cell>
-            {{ tag.repository.full_path }}:{{ tag.name }}
+            {{ tag.repositories[0].full_path }}:{{ tag.name }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table bst-table="table" class="table table-striped table-bordered" ng-class="{'table-mask': table.working}" ng-if="!table.rows[0].repositories">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="environment" translate>Environment</th>
+          <th bst-table-column="version" translate>Content View Version</th>
+          <th bst-table-column="path" translate>Published At</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row
+            ng-repeat="repo in table.rows">
+          <td bst-table-cell>
+            <a ui-sref="environment.details({environmentId: repo.kt_environment.id})">
+              {{ repo.kt_environment.name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+            <a ui-sref="content-view.version.docker({contentViewId: repo.content_view_version.content_view_id, versionId: repo.content_view_version.id})">
+              {{ repo.content_view_version.name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+            {{ repo.full_path }}:{{ tag.name }}
           </td>
         </tr>
       </tbody>

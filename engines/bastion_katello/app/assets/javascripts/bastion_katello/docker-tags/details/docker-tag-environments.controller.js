@@ -11,8 +11,8 @@
  *   Provides the functionality for the docker tags details environments list.
  */
 angular.module('Bastion.docker-tags').controller('DockerTagEnvironmentsController',
-    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization',
-    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization) {
+    ['$scope', '$location', 'Nutupane', 'DockerTag', 'DockerTagRepositories', 'CurrentOrganization',
+    function ($scope, $location, Nutupane, DockerTag, DockerTagRepositories, CurrentOrganization) {
         var params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -20,24 +20,30 @@ angular.module('Bastion.docker-tags').controller('DockerTagEnvironmentsControlle
             'sort_order': 'ASC',
             'paged': false
         };
-        var nutupane = new Nutupane(DockerTag, params, null, {disableAutoLoad: true});
 
         var renderTable = function () {
-            var ids = _.map($scope.tag.related_tags, 'id');
             var newParams = {
                 'organization_id': CurrentOrganization,
                 'search': $location.search().search || "",
                 'sort_by': 'name',
                 'sort_order': 'ASC',
-                'paged': false,
-                'ids[]': ids
+                'paged': false
             };
+            var ids;
+            var nutupane;
+            if ($scope.tag.repositories.length > 1) {
+                nutupane = new Nutupane(DockerTagRepositories, params, null, {disableAutoLoad: true});
+                newParams['id'] = $scope.tag.id;
+                newParams['archived'] = false;
+            } else {
+                nutupane = new Nutupane(DockerTag, params, null, {disableAutoLoad: true});
+                ids = _.map($scope.tag.related_tags, 'id');
+                newParams['ids[]'] = ids;
+            }
             $scope.table = nutupane.table;
             nutupane.setParams(newParams);
             $scope.panel.loading = false;
-            if (!_.isEmpty(ids)) {
-                nutupane.refresh();
-            }
+            nutupane.refresh();
         };
 
         $scope.controllerName = 'katello_docker_tags';

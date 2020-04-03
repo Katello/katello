@@ -163,6 +163,9 @@ Katello::Engine.routes.draw do
             get :auto_complete_name
             get :compare
           end
+          member do
+            get 'repositories', :action => :repositories
+          end
         end
 
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
