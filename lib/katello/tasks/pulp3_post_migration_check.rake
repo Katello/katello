@@ -6,25 +6,41 @@ namespace :katello do
     repository_types = Katello::Pulp3::Migration::REPOSITORY_TYPES
 
     repository_types.each do |type|
-      filter = 'version_href is NULL OR remote_href is NULL'
-
-      unless type == Katello::Repository::DOCKER_TYPE
-        filter += ' OR publication_href is NULL'
-      end
-      repositories = Katello::Repository.with_type(type).where(filter)
-
-      if repositories.any?
-        $stderr.print("ERROR: #{type} repository #{repositories.first.id} has a NULL value for remote_href, version_href, publication_href\n")
+      # check version
+      nil_version_ids = Katello::Repository.with_type(type).where(version_href: nil).pluck(:id)
+      unless nil_version_ids.empty?
+        $stderr.print("ERROR: #{type} repositories with ID [#{nil_version_ids.join(',')}] have a NULL value for version_href\n")
         exit 1
       end
 
+      # check remote
+      nil_remote_ids = Katello::Repository.with_type(type).where(remote_href: nil).collect do |repo|
+        repo.id if repo.in_default_view? && !repo.root.url.nil?
+      end
+      nil_remote_ids.compact!
+      unless nil_remote_ids.empty?
+        $stderr.print("ERROR: #{type} repositories with ID [#{nil_remote_ids.join(',')}] have a NULL value for remote_href\n")
+        exit 1
+      end
+
+      # check publication
+      unless type == Katello::Repository::DOCKER_TYPE
+        nil_publication_ids = Katello::Repository.with_type(type).where(publication_href: nil).pluck(:id)
+        unless nil_publication_ids.empty?
+          $stderr.print("ERROR: #{type} repositories with ID [#{nil_publication_ids.join(',')}] have a NULL value for publication_href\n")
+          exit 1
+        end
+      end
+
+      # check distribution
       non_archived_repositories = Katello::Repository.with_type(type).non_archived
-      with_no_distribution_references = non_archived_repositories
-        .left_outer_joins(:distribution_references)
-        .where(katello_distribution_references: { id: nil })
+      with_no_distribution_references = non_archived_repositories.
+        left_outer_joins(:distribution_references).
+        where(katello_distribution_references: { id: nil }).
+        pluck(:id)
 
       if with_no_distribution_references.any?
-        $stderr.print("ERROR: A non-archive #{type} repository #{with_no_distribution_references.first.id} did not have a distribution reference\n")
+        $stderr.print("ERROR: Non-archived #{type} repositories with ID [#{with_no_distribution_references.join(',')}] have no distribution reference\n")
         exit 1
       end
     end

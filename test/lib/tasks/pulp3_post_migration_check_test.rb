@@ -69,6 +69,19 @@ module Katello
       Rake::Task[@task_name].invoke
     end
 
+    def test_passes_if_file_repository_has_nil_url
+      Katello::Repository.all.each do |repo|
+        Katello::Pulp3::DistributionReference.create!(
+          repository_id: repo.id, href: 'somedisthref', path: '/')
+      end
+
+      file = katello_repositories(:pulp3_file_1)
+      file.update(remote_href: nil)
+      file.root.update(url: nil)
+
+      Rake::Task[@task_name].invoke
+    end
+
     def test_check_passes_with_non_archive_file_repo_with_distribution_reference
       Katello::Repository.update_all(environment_id: nil)
 
@@ -96,6 +109,25 @@ module Katello
       docker.update(remote_href: nil)
 
       assert_error(@task_name)
+    end
+
+    def test_passes_if_non_default_docker_repository_has_nil_remote_href
+      Katello::Repository.all.each do |repo|
+        Katello::Pulp3::DistributionReference.create!(
+          repository_id: repo.id, href: 'somedisthref', path: '/')
+      end
+
+      docker = katello_repositories(:busybox)
+      docker.update(:remote_href => 'someurl', :version_href => 'someotherurl')
+      docker.update(:environment => nil)
+      Katello::Pulp3::DistributionReference.find_by(repository_id: docker.id).delete
+
+      assert docker.reload.archive?, "Repository was not an archive repository as expected"
+
+      docker.update(:remote_href => nil)
+      docker.content_view_version.content_view.update_attributes(default: false)
+
+      Rake::Task[@task_name].invoke
     end
 
     def test_ok_if_docker_repository_has_nil_publication_href
