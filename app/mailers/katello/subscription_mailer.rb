@@ -5,7 +5,7 @@ module Katello
     def subscription_expiry(options)
       user = ::User.find(options[:user])
       ::User.as(user.login) do
-        @pools = Katello::Pool.readable.expiring_in_days(30)
+        @pools = Katello::Pool.readable.expiring_in_days(65)
       end
 
       set_locale_for(user) do

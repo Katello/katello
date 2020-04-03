@@ -1,0 +1,16 @@
+<span style="padding: 7px;
+border: 1px solid #ccc;
+border-width: 0 0 1px 1px;
+border-radius: 0 0 0 10px;
+position: relative;
+left: 18%;
+top: -12px;">   </span>
+<div id="subscription_expiry_query_builder" class="input-group" style="
+  display: block;
+  top: -22px;
+  left: calc(20% + 16px);
+  width: 56%;
+">
+  <%= select_f(f, :mail_query, %w[7 30 60 90 180], :to_s, :to_translation, { :include_blank => _('Show all subscriptions') }, {:label => _('Days from Now'),
+             :label_help => _('The email notification will include subscriptions expiring in this number of days or fewer.')}) %>
+</div>
