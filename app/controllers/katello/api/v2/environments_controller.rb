@@ -67,7 +67,7 @@ module Katello
     param :id, :number, :desc => N_("ID of the environment"), :required => true
     param :organization_id, :number, :desc => N_("ID of the organization")
     def show
-      respond
+      respond(resource: @environment)
     end
 
     api :POST, "/environments", N_("Create an environment")

@@ -8,9 +8,9 @@
  *   Provides a BastionResource for host collections.
  */
 angular.module('Bastion.host-collections').factory('HostCollection',
-    ['BastionResource', function (BastionResource) {
+    ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
 
-        return BastionResource('katello/api/v2/host_collections/:id/:action', {id: '@id'}, {
+        return BastionResource('katello/api/v2/host_collections/:id/:action', {id: '@id', 'organization_id': CurrentOrganization}, {
             get: {method: 'GET', params: {fields: 'full'}},
             update: {method: 'PUT'},
             copy: {method: 'POST', params: {action: 'copy'}},
