@@ -54,7 +54,7 @@ module Katello
 
       assert cv2.check_docker_repository_names!([env1])
 
-      env1.update_attributes(registry_name_pattern: 'abcdef')
+      env1.update(registry_name_pattern: 'abcdef')
       assert cvv1repo1.save!
       assert_raises(ActiveRecord::RecordInvalid) do
         cvv2repo1.save!
@@ -278,13 +278,13 @@ module Katello
 
     def test_on_demand_repositories
       repo1 = katello_repositories(:rhel_6_x86_64)
-      repo1.root.update_attributes(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND)
+      repo1.root.update(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND)
       view1 = create(:katello_content_view, organization: @organization)
       view1.repositories << repo1
       assert_includes view1.on_demand_repositories, repo1
 
       repo2 = katello_repositories(:fedora_17_x86_64)
-      repo2.root.update_attributes(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE)
+      repo2.root.update(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE)
       view2 = create(:katello_content_view, organization: @organization)
       view2.repositories << repo2
       refute_includes view2.on_demand_repositories, repo2
@@ -292,7 +292,7 @@ module Katello
 
     def test_content_view_components
       assert_raises(ActiveRecord::RecordInvalid) do
-        @library_dev_view.update_attributes!(:component_ids => [@library_view.versions.first.id])
+        @library_dev_view.update!(:component_ids => [@library_view.versions.first.id])
       end
 
       # cannot add components to a non-composite view
@@ -315,7 +315,7 @@ module Katello
       composite_version1 = create(:katello_content_view_version, :content_view => composite_view1)
       composite = ContentView.find(katello_content_views(:composite_view).id)
       assert_raises(ActiveRecord::RecordInvalid) do
-        composite.update_attributes!(:component_ids => [composite_version1.id])
+        composite.update!(:component_ids => [composite_version1.id])
       end
 
       component = ContentViewComponent.new(:composite_content_view => composite,
@@ -329,7 +329,7 @@ module Katello
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       composite = ContentView.find(katello_content_views(:composite_view).id)
       v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
-      composite.update_attributes(:component_ids => [v1.id])
+      composite.update(:component_ids => [v1.id])
       repo_ids = composite.repositories_to_publish.map(&:id)
       assert_equal v1.repositories.archived.pluck(:id).sort, repo_ids.sort
 
@@ -343,7 +343,7 @@ module Katello
       v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       v2 = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version).id)
 
-      assert composite.update_attributes(component_ids: [v1.id, v2.id])
+      assert composite.update(component_ids: [v1.id, v2.id])
       assert_equal 0, composite.errors.count # docker and yum repos
       refute_empty composite.duplicate_repositories_to_publish
     end
@@ -366,7 +366,7 @@ module Katello
       version2 = create(:katello_content_view_version, :content_view => view2)
 
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([stub(:name => "httpd")]).times(4)
-      refute composite.update_attributes(component_ids: [version1.id, version2.id])
+      refute composite.update(component_ids: [version1.id, version2.id])
       assert_equal 1, composite.errors.count
       assert composite.errors.full_messages.first =~ /^Puppet module conflict/
 
@@ -402,7 +402,7 @@ module Katello
       repo2.save!
       version2 = create(:katello_content_view_version, :content_view => view2, :repositories => [repo2])
 
-      composite.update_attributes(component_ids: [version1.id, version2.id])
+      composite.update(component_ids: [version1.id, version2.id])
 
       refute composite.valid?
       assert_includes composite.errors, :base
@@ -425,12 +425,12 @@ module Katello
       repo2_cv = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo2_lib.id)
       version2 = create(:katello_content_view_version, :content_view => view2, :repositories => [repo2_cv])
 
-      composite.update_attributes(component_ids: [version1.id])
+      composite.update(component_ids: [version1.id])
       assert composite.valid?
       @dev.registry_name_pattern = "abcdef"
       assert composite.check_docker_repository_names!([@dev])
 
-      composite.update_attributes(component_ids: [version1.id, version2.id])
+      composite.update(component_ids: [version1.id, version2.id])
       assert composite.valid?
       assert_raises(RuntimeError) do
         composite.check_docker_repository_names!([@dev])

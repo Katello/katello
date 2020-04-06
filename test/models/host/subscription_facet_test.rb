@@ -33,7 +33,7 @@ module Katello
     end
 
     def test_search_role
-      subscription_facet.update_attributes(purpose_role: 'satellite')
+      subscription_facet.update(purpose_role: 'satellite')
       assert_includes ::Host.search_for("role = satellite"), host
     end
 
@@ -43,7 +43,7 @@ module Katello
     end
 
     def test_search_usage
-      subscription_facet.update_attributes(purpose_usage: 'disaster recovery')
+      subscription_facet.update(purpose_usage: 'disaster recovery')
       assert_includes ::Host.search_for('usage = "disaster recovery"'), host
     end
 
@@ -116,19 +116,19 @@ module Katello
     end
 
     def test_search_release_version
-      subscription_facet.update_attributes!(:release_version => '7Server')
+      subscription_facet.update!(:release_version => '7Server')
 
       assert_includes ::Host.search_for("release_version = 7Server"), host
     end
 
     def test_search_autoheal
-      subscription_facet.update_attributes!(:autoheal => 'true')
+      subscription_facet.update!(:autoheal => 'true')
 
       assert_includes ::Host.search_for("autoheal = true"), host
     end
 
     def test_search_service_level
-      subscription_facet.update_attributes!(:service_level => 'terrible')
+      subscription_facet.update!(:service_level => 'terrible')
 
       assert_includes ::Host.search_for("service_level = terrible"), host
     end
@@ -332,15 +332,15 @@ module Katello
       host2 = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => view,
                                      :lifecycle_environment => library, :organization => org)
       user = User.first
-      host.subscription_facet.update_attributes!(:user_id => user.id)
-      host2.subscription_facet.update_attributes!(:user_id => user.id)
+      host.subscription_facet.update!(:user_id => user.id)
+      host2.subscription_facet.update!(:user_id => user.id)
 
       assert ::Katello::Host::SubscriptionFacet.where(:user_id => user.id).count > 1
     end
 
     def test_propose_existing_hostname_fqdn_exists
       host = FactoryBot.create(:host)
-      host.update_attributes!(:name => 'foo.bar.com')
+      host.update!(:name => 'foo.bar.com')
 
       facts = {'network.hostname' => 'foo'}
       assert_equal 'foo', Host::SubscriptionFacet.propose_existing_hostname(facts)

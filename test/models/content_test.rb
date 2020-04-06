@@ -13,7 +13,7 @@ module Katello
 
     def test_update_repo_name
       repo = katello_repositories(:rhel_7_x86_64)
-      repo.root.update_attributes(:content_id => @rhel_content.cp_content_id)
+      repo.root.update(:content_id => @rhel_content.cp_content_id)
 
       @rhel_content.name = "FOOBAR"
       @rhel_content.save!

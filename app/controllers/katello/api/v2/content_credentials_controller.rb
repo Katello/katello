@@ -94,7 +94,7 @@ module Katello
 
       if filepath
         content = File.open(filepath, "rb") { |file| file.read }
-        @content_credential.update_attributes!(:content => content)
+        @content_credential.update!(:content => content)
         render :json => {:status => "success"}
       else
         fail HttpErrors::BadRequest, _("No file uploaded")

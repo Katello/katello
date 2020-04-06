@@ -142,7 +142,7 @@ module Katello
       def import_product(product_json)
         product = organization.products.find_by(:cp_id => product_json['id'])
         if product&.redhat?
-          product.update_attributes!(:name => product_json['name']) unless product.name == product_json['name']
+          product.update!(:name => product_json['name']) unless product.name == product_json['name']
         elsif product.nil?
           product = Glue::Candlepin::Product.import_from_cp(product_json, organization)
         end

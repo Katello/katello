@@ -65,7 +65,7 @@ module Katello
     param :description, String, :desc => N_("description of the filter"), :required => false
 
     def update
-      @filter.update_attributes!(filter_params)
+      @filter.update!(filter_params)
       respond :resource => @filter
     end
 

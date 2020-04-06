@@ -94,7 +94,7 @@ module Katello
         update_params[:max_version] = "" unless rule_params[:max_version]
       end
 
-      @rule.update_attributes!(update_params)
+      @rule.update!(update_params)
       respond :resource => @rule
     end
 

@@ -770,7 +770,7 @@ module Katello
       content_id = 'dummycontent-123'
       content = FactoryBot.create(:katello_content, cp_content_id: content_id, :organization_id => @product.organization_id)
       FactoryBot.create(:katello_product_content, content: content, product: @product)
-      @fedora_root.update_attributes!(content_id: content_id)
+      @fedora_root.update!(content_id: content_id)
       @audit_record = @fedora_root.audits.where(:action => 'update').first
       refute_empty @audit_record.audited_changes['content_id']
       assert_nil Katello::RootRepository.reflect_on_association('content')

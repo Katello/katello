@@ -53,8 +53,8 @@ module Katello
       event = EventQueue.push_event(@type, 1)
       event2 = EventQueue.push_event(@type, 1)
       event3 = EventQueue.push_event(@type, 1)
-      event2.update_attributes!(:created_at => event2.created_at - 5.minutes)
-      event3.update_attributes!(:created_at => event3.created_at + 5.minutes)
+      event2.update!(:created_at => event2.created_at - 5.minutes)
+      event3.update!(:created_at => event3.created_at + 5.minutes)
       Event.update_all(:in_progress => true)
       refute_empty Event.all
 

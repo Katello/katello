@@ -58,7 +58,7 @@ module Actions
         def finalize
           repository = ::Katello::Repository.find(input[:target_repo_id])
           source_checksum_type = input[:source_checksum_type]
-          repository.update_attributes!(saved_checksum_type: source_checksum_type) if (repository && source_checksum_type)
+          repository.update!(saved_checksum_type: source_checksum_type) if (repository && source_checksum_type)
         end
       end
     end

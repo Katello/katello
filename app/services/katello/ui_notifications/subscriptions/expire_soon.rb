@@ -8,7 +8,7 @@ module Katello
               if (notification = notification_already_exists?(organization))
                 next unless organization.expiring_subscriptions.count.to_s ==
                   notification.message.split(' ').first
-                notification.update_attributes(
+                notification.update(
                   :message => message(organization),
                   :actions => actions
                 )

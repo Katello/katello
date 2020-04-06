@@ -69,7 +69,7 @@ module Katello
         custom_json['nvra'] = model.build_nvra
         custom_json['filename'] = backend_data['location_href']
         custom_json['checksum'] = backend_data['pkgId']
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

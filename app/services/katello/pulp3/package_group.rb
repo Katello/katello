@@ -59,7 +59,7 @@ module Katello
         custom_json['pulp_id'] = backend_data['pulp_href']
         custom_json['name'] = backend_data['name']
         custom_json['description'] = backend_data['description']
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

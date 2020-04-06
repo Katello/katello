@@ -509,7 +509,7 @@ module Katello
                                            :components => components
                                           )
 
-      update_attributes(:next_version => major.to_i + 1) unless major.to_i < next_version
+      update(:next_version => major.to_i + 1) unless major.to_i < next_version
       version
     end
 

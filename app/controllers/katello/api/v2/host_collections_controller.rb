@@ -78,7 +78,7 @@ module Katello
     param :name, String, :required => false, :desc => N_("Host Collection name")
     param_group :host_collection
     def update
-      @host_collection.update_attributes!(host_collection_params_with_host_ids)
+      @host_collection.update!(host_collection_params_with_host_ids)
       respond_for_show(:resource => @host_collection)
     end
 

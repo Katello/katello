@@ -29,7 +29,7 @@ class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration[4.2
                                             created_at: version.created_at
                                            )
 
-      publish_history.update_attributes!(notes: version[:description])
+      publish_history.update!(notes: version[:description])
     end
 
     remove_column :katello_content_view_versions, :description, :text

@@ -24,7 +24,7 @@ module Katello
         custom_json['checksum'] = backend_data['sha256']
         custom_json['path'] = backend_data['relative_path']
         custom_json['name'] = File.basename(backend_data['relative_path'].try(:split, '/').try(:[], -1))
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

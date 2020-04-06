@@ -115,7 +115,7 @@ module Katello
     def test_available_repositories_no_product
       #reset the id of the product_content, as factorybot seems to use the same id as well as content_id
       # not exposing the bug
-      @content.reload.product_contents.first.update_attributes(:id => Katello::ProductContent.maximum(:id) + 1000)
+      @content.reload.product_contents.first.update(:id => Katello::ProductContent.maximum(:id) + 1000)
       task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn do |product, content_id|
         product.must_equal @product
         content_id.must_equal @content_id

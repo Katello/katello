@@ -12,7 +12,7 @@ module Katello
                                               :label => Katello::UINotifications::Subscriptions::ManifestExpiredWarning::CONTENT_LABEL,
                                               :organization_id => @product.organization.id)
           @product.contents << @content
-          @product.organization.redhat_provider.update_attributes(:repository_url => "https://cdn.redhat.com")
+          @product.organization.redhat_provider.update(:repository_url => "https://cdn.redhat.com")
           @class = Katello::UINotifications::Subscriptions::ManifestExpiredWarning
 
           cert = File.read(CERT_FIXTURE)
@@ -61,7 +61,7 @@ module Katello
         end
 
         def test_with_cdn_mirror
-          @product.organization.redhat_provider.update_attributes(:repository_url => "https://cdn.stage.redhat.com")
+          @product.organization.redhat_provider.update(:repository_url => "https://cdn.stage.redhat.com")
           Net::HTTP.expects(:request).never
           @class.deliver!([@product.organization])
           assert_empty NotificationBlueprint.find_by(name: 'manifest_expired_warning').notifications

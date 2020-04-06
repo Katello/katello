@@ -4,7 +4,7 @@ module Actions
       class Update < Actions::EntryAction
         def plan(product, product_params)
           action_subject product
-          product.update_attributes!(product_params)
+          product.update!(product_params)
           if product.previous_changes.key?('gpg_key_id')
             plan_action(::Actions::Katello::Product::RepositoriesGpgReset, product)
           end

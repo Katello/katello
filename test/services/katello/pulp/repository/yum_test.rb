@@ -118,7 +118,7 @@ module Katello
         end
 
         def test_create
-          @rhel6.root.update_attributes!(
+          @rhel6.root.update!(
               mirror_on_sync: true,
               download_policy: 'on_demand',
               verify_ssl_on_sync: true,
@@ -146,7 +146,7 @@ module Katello
         end
 
         def test_create_custom
-          @custom.root.update_attributes!(
+          @custom.root.update!(
               mirror_on_sync: true,
               download_policy: 'on_demand',
               verify_ssl_on_sync: true,
@@ -269,7 +269,7 @@ module Katello
       class YumVcrCopyTest < YumBaseTest
         def setup
           super
-          @custom.root.update_attributes(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo')
+          @custom.root.update(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo')
           delete_repo(@custom_cv)
           delete_repo(@custom)
           create_repo(@custom)

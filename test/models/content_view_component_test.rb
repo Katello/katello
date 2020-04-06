@@ -154,9 +154,9 @@ module Katello
       component = ContentViewComponent.create!(:composite_content_view => @composite,
                                                :content_view => view2, :latest => true)
 
-      assert component.update_attributes(:latest => false, :content_view_version => version2)
-      refute component.update_attributes(:latest => false, :content_view_version => version1)
-      refute component.update_attributes(:latest => false)
+      assert component.update(:latest => false, :content_view_version => version2)
+      refute component.update(:latest => false, :content_view_version => version1)
+      refute component.update(:latest => false)
     end
 
     def test_add_components

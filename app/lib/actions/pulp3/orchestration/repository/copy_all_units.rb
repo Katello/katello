@@ -38,7 +38,7 @@ module Actions
             else
               plan_self(source_version_repo_id: source_repositories.first.id,
                         target_repo_id: target_repo.id)
-              target_repo.update_attributes!(version_href: source_repositories.first.version_href)
+              target_repo.update!(version_href: source_repositories.first.version_href)
             end
           end
 
@@ -46,7 +46,7 @@ module Actions
             #this is a 'simple' copy, so just reference version_href
             target_repo = ::Katello::Repository.find(input[:target_repo_id])
             source_repo = ::Katello::Repository.find(input[:source_version_repo_id])
-            target_repo.update_attributes!(version_href: source_repo.version_href)
+            target_repo.update!(version_href: source_repo.version_href)
           end
         end
       end

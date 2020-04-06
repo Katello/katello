@@ -23,7 +23,7 @@ module Katello
         custom_json['schema_version'], = backend_data['schema_version']
         custom_json['digest'], = backend_data['digest']
         custom_json['docker_manifests'] = ::Katello::DockerManifest.where(:pulp_id => backend_data[:listed_manifests])
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

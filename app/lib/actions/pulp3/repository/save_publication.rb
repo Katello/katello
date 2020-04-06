@@ -12,7 +12,7 @@ module Actions
             publication_href = input[:tasks][:pulp_tasks].first[:created_resources].first
             if publication_href
               repo = ::Katello::Repository.find(input[:repository_id])
-              repo.update_attributes(:publication_href => publication_href)
+              repo.update(:publication_href => publication_href)
             end
           end
         end

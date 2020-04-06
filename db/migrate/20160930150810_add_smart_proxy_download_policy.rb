@@ -4,7 +4,7 @@ class AddSmartProxyDownloadPolicy < ActiveRecord::Migration[4.2]
     add_column :smart_proxies, :download_policy, :string, :null => true
     SmartProxy.reset_column_information
     SmartProxy.all.each do |proxy|
-      proxy.update_attributes(:download_policy => SmartProxy::DOWNLOAD_INHERIT)
+      proxy.update(:download_policy => SmartProxy::DOWNLOAD_INHERIT)
     end
   end
 

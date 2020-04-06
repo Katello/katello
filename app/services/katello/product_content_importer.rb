@@ -114,11 +114,11 @@ module Katello
                       { content: content.inspect, content_url: content.content_url, new_url: new_url })
         end
       end
-      content.update_attributes!(attrs_to_update) unless attrs_to_update.blank?
+      content.update!(attrs_to_update) unless attrs_to_update.blank?
     end
 
     private def update_product_content(product_content, new_enabled_value)
-      product_content.update_attributes!(enabled: new_enabled_value) if product_content.enabled != new_enabled_value
+      product_content.update!(enabled: new_enabled_value) if product_content.enabled != new_enabled_value
     end
   end
 end

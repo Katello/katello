@@ -24,7 +24,7 @@ module Katello::Host
 
       old_name = @host.name
       @hypervisor_name = "virt-who-#{@host.name}-#{@organization.id}"
-      @host.update_attributes!(:name => @hypervisor_name)
+      @host.update!(:name => @hypervisor_name)
       @hypervisor_results = [{ :name => old_name, :uuid => @host.subscription_facet.uuid, :organization_label => @organization.label }]
       @facts = {
         'hypervisor.type': 'VMware ESXi',
@@ -73,7 +73,7 @@ module Katello::Host
                                       :lifecycle_environment => @content_view_environment, :organization => @organization)
         end
 
-        guests.first.subscription_facet.update_attributes!(:hypervisor_host_id => original_host.id)
+        guests.first.subscription_facet.update!(:hypervisor_host_id => original_host.id)
         guests.sort!
         guest_uuids = guests.map { |guest| { 'uuid' => guest.subscription_facet.uuid } }
 

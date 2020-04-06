@@ -478,7 +478,7 @@ module Katello
       FactoryBot.create(:katello_product_content, content: content, product: product)
 
       repo = katello_repositories(:fedora_17_x86_64)
-      repo.root.update_attributes!(product: product, content_id: content_id)
+      repo.root.update!(product: product, content_id: content_id)
 
       repos = Repository.search_for("content_label=\"#{content.label}\"")
       assert_includes repos, repo
@@ -645,7 +645,7 @@ module Katello
       ]
 
       fixtures.each do |fixture|
-        repo.content.update_attributes!(content_url: fixture[:input])
+        repo.content.update!(content_url: fixture[:input])
         fail_message = "comparing #{fixture[:input]} - expected_result = #{fixture[:expected]}"
         assert_equal(fixture[:expected], repo.generate_content_path, fail_message)
       end

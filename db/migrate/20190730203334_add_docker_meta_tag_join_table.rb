@@ -17,7 +17,7 @@ class AddDockerMetaTagJoinTable < ActiveRecord::Migration[5.2]
     add_column :katello_docker_meta_tags, :repository_id, :integer
 
     ::Katello::DockerMetaTag.all.each do |meta_tag|
-      meta_tag.update_attributes(repository_id: meta_tag.repositories.first.id)
+      meta_tag.update(repository_id: meta_tag.repositories.first.id)
     end
 
     drop_table :katello_repository_docker_meta_tags

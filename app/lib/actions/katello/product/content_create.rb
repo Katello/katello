@@ -41,7 +41,7 @@ module Actions
 
         def finalize
           root = ::Katello::RootRepository.find(input[:root_repository_id])
-          root.update_attributes(:content_id => input[:content_id])
+          root.update(:content_id => input[:content_id])
 
           content = ::Katello::Content.create!(name: root.name,
                                                organization_id: root.product.organization_id,

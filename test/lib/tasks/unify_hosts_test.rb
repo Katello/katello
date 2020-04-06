@@ -22,12 +22,12 @@ module Katello
     def setup_two_hosts
       mac = '52:54:00:bc:d3:72'
       @host1 = FactoryBot.create(:host)
-      @host1.update_attributes!(:name => 'foobar.example.com')
-      @host1.primary_interface.update_attributes!(:mac => mac)
+      @host1.update!(:name => 'foobar.example.com')
+      @host1.primary_interface.update!(:mac => mac)
 
       @host2 = FactoryBot.create(:host, :with_content, :with_subscription, :name => 'foobar', :content_view => @content_view, :lifecycle_environment => @environment)
-      @host2.update_attributes!(:name => 'foobar')
-      @host2.primary_interface.update_attributes!(:mac => mac)
+      @host2.update!(:name => 'foobar')
+      @host2.primary_interface.update!(:mac => mac)
     end
 
     def test_unify_all
@@ -97,7 +97,7 @@ module Katello
     end
 
     def test_unify_all_no_mac_match
-      @host1.primary_interface.update_attributes!(:mac => '52:bc:bc:bc:bc:bc')
+      @host1.primary_interface.update!(:mac => '52:bc:bc:bc:bc:bc')
 
       Rake.application.invoke_task('katello:unify_hosts')
 
@@ -115,7 +115,7 @@ module Katello
     end
 
     def test_use_name
-      @host1.primary_interface.update_attributes!(:mac => '52:bc:bc:bc:bc:bc')
+      @host1.primary_interface.update!(:mac => '52:bc:bc:bc:bc:bc')
       ENV['USE_NAME'] = 'true'
       Rake.application.invoke_task('katello:unify_hosts')
 
@@ -124,7 +124,7 @@ module Katello
     end
 
     def test_use_name_uppercase
-      @host1.primary_interface.update_attributes!(:mac => '52:bc:bc:bc:bc:bc')
+      @host1.primary_interface.update!(:mac => '52:bc:bc:bc:bc:bc')
       @host2.name = @host1.name.upcase
       @host2.save!(:validate => false)
 

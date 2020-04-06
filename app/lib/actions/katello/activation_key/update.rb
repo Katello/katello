@@ -6,7 +6,7 @@ module Actions
           # need to check if candlepin attributes have changed prior to updating attributes
           update_candlepin = update_candlepin?(activation_key, activation_key_params)
           action_subject activation_key
-          activation_key.update_attributes!(activation_key_params)
+          activation_key.update!(activation_key_params)
           if update_candlepin
             plan_action(::Actions::Candlepin::ActivationKey::Update,
                         cp_id: activation_key.cp_id,

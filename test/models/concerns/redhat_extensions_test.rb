@@ -60,7 +60,7 @@ module Katello
       # make sure it matches 3 digit distro versions correctly
       # If I asked for available distros for OS x.y , it should match x.y and x.y.z
       # but not x.yz
-      @repo_with_distro.update_attributes!(:distribution_version => "2.3.4")
+      @repo_with_distro.update!(:distribution_version => "2.3.4")
       version = @repo_with_distro.distribution_version.split('.')
       os = ::Redhat.create_operating_system("RedHat", version[0], version[1])
       host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => os,

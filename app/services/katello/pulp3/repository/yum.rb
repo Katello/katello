@@ -33,7 +33,7 @@ module Katello
         def import_distribution_data
           distribution = ::Katello::Pulp3::Distribution.fetch_content_list(repository_version: repo.version_href)
           if distribution.results.present?
-            repo.update_attributes!(
+            repo.update!(
               :distribution_version => distribution.results.first.release_version,
               :distribution_arch => distribution.results.first.arch,
               :distribution_family => distribution.results.first.release_name,
@@ -42,7 +42,7 @@ module Katello
             )
             unless distribution.results.first.variants.empty?
               unless distribution.results.first.variants.first.name.nil?
-                repo.update_attributes!(:distribution_variant => distribution.results.first.variants.first.name)
+                repo.update!(:distribution_variant => distribution.results.first.variants.first.name)
               end
             end
           end

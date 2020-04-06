@@ -24,7 +24,7 @@ module Katello
       clear_hosts(@host.id)
       ENV['COMMIT'] = 'true'
 
-      @host.subscription_facet.update_attributes!(:uuid => nil)
+      @host.subscription_facet.update!(:uuid => nil)
       mock_cp
       mock_pulp
       # this host will end up on the nil facets list and the no subscription
@@ -39,7 +39,7 @@ module Katello
       ENV['COMMIT'] = 'true'
 
       @host.update_column(:managed, true)
-      @host.subscription_facet.update_attributes!(:uuid => nil)
+      @host.subscription_facet.update!(:uuid => nil)
       mock_cp
       mock_pulp
 
@@ -53,7 +53,7 @@ module Katello
       ENV['COMMIT'] = 'true'
 
       @host.update_column(:compute_resource_id, compute_resources(:mycompute).id)
-      @host.subscription_facet.update_attributes!(:uuid => nil)
+      @host.subscription_facet.update!(:uuid => nil)
       mock_cp
       mock_pulp
 

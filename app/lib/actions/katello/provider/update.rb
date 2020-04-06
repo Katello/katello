@@ -15,7 +15,7 @@ module Actions
         private
 
         def update_url(provider, base_url)
-          provider.update_attributes!(:repository_url => base_url)
+          provider.update!(:repository_url => base_url)
 
           if provider.redhat_provider?
             provider.products.enabled.each do |product|

@@ -30,7 +30,7 @@ module Actions
 
           if clone
             clone = ::Katello::Repository.find(clone.id) # reload readonly object
-            clone.update_attributes!(content_view_version_id: version.id)
+            clone.update!(content_view_version_id: version.id)
           else
             clone = repository.build_clone(environment: environment, content_view: version.content_view)
           end

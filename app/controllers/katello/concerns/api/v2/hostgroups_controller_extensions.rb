@@ -25,7 +25,7 @@ module Katello
         end
 
         def update
-          process_response @hostgroup.update_attributes(hostgroup_params)
+          process_response @hostgroup.update(hostgroup_params)
         end
 
         def show

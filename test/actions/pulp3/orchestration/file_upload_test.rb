@@ -7,7 +7,7 @@ module ::Actions::Pulp3
     def setup
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:generic_file)
-      @repo.root.update_attributes(:url => 'http://test/test/')
+      @repo.root.update(:url => 'http://test/test/')
       tmp_file = File.join(Katello::Engine.root, "test/fixtures/files/test_erratum.json")
       @file = {path: tmp_file, filename: "test_erratum.json"}
       create_repo(@repo, @master)

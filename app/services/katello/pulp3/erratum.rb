@@ -33,7 +33,7 @@ module Katello
           custom_json['errata_id'] = custom_json.delete('id')
           custom_json['errata_type'] = custom_json.delete('type')
           custom_json['updated'] = custom_json['updated'].blank? ? custom_json['issued'] : custom_json['updated']
-          model.update_attributes!(custom_json)
+          model.update!(custom_json)
 
           unless backend_data['references'].blank?
             update_bugzillas(model, backend_data['references'])

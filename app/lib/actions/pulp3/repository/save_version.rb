@@ -16,7 +16,7 @@ module Actions
           end
 
           if version_href
-            repo.update_attributes(:version_href => version_href)
+            repo.update(:version_href => version_href)
             output[:contents_changed] = true
           else
             output[:contents_changed] = false

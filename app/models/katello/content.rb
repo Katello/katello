@@ -15,7 +15,7 @@ module Katello
 
     def update_repository_names
       root_repositories.each do |root|
-        root.update_attributes!(:name => root.calculate_updated_name)
+        root.update!(:name => root.calculate_updated_name)
       end
     end
 

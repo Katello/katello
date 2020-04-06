@@ -21,7 +21,7 @@ module Katello
         end
         custom_json['docker_taggable'] = taggable
         custom_json['name'] = backend_data['name']
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

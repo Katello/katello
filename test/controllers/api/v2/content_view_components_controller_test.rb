@@ -115,7 +115,7 @@ module Katello
       component = create_component
       computed_version = component.latest_version.id
 
-      component.update_attributes!(:latest => true, :content_view_version_id => nil)
+      component.update!(:latest => true, :content_view_version_id => nil)
       put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :latest => true }
       assert_response :success
       assert_template 'api/v2/common/update'

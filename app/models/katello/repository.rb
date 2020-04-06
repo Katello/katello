@@ -623,7 +623,7 @@ module Katello
 
     def import_distribution_data(target_repo = nil)
       if target_repo
-        self.update_attributes!(
+        self.update!(
           :distribution_version => target_repo.distribution_version,
           :distribution_arch => target_repo.distribution_arch,
           :distribution_family => target_repo.distribution_family,

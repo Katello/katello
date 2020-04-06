@@ -51,7 +51,7 @@ module ::Actions::Pulp3
       @repo.index_content
       pre_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id)
       pre_content_count = pre_content.count
-      @repo.root.update_attributes(:ansible_collection_requirements => "---\n
+      @repo.root.update(:ansible_collection_requirements => "---\n
   collections:\n
   - newswangerd.collection_demo", :mirror_on_sync => false)
       ForemanTasks.sync_task(
@@ -78,7 +78,7 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
       pre_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id)
-      @repo.root.update_attributes(:ansible_collection_requirements => "---\n
+      @repo.root.update(:ansible_collection_requirements => "---\n
   collections:\n
   - newswangerd.collection_demo")
 

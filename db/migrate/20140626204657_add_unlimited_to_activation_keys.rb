@@ -10,16 +10,16 @@ class AddUnlimitedToActivationKeys < ActiveRecord::Migration[4.2]
     Katello::ActivationKeys.reset_column_information
     Katello::ActivationKeys.all.each do |coll|
       if coll.max_content_hosts == -1
-        coll.update_attributes(:unlimited_content_hosts => true, :max_content_hosts => nil)
+        coll.update(:unlimited_content_hosts => true, :max_content_hosts => nil)
       elsif coll.max_content_hosts > 0
-        coll.update_attributes(:unlimited_content_hosts => false)
+        coll.update(:unlimited_content_hosts => false)
       end
     end
   end
 
   def down
     Katello::ActivationKeys.all.each do |key|
-      key.update_attributes(:max_content_hosts => -1) if key.unlimited_content_hosts
+      key.update(:max_content_hosts => -1) if key.unlimited_content_hosts
     end
 
     remove_column :katello_activation_keys, :unlimited_content_hosts

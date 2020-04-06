@@ -69,7 +69,7 @@ module Katello
       transaction do
         fail _("No recurring logic tied to the sync plan.") if self.foreman_tasks_recurring_logic.nil?
         params["cron_expression"] = '' if (params.key?("interval") && !params["interval"].eql?(CUSTOM_CRON) && self.interval.eql?(CUSTOM_CRON))
-        self.update_attributes!(params.except(:enabled))
+        self.update!(params.except(:enabled))
         if (rec_logic_changed? || (params["enabled"] && !self.enabled? && self.foreman_tasks_recurring_logic.cancelled?))
           old_rec_logic = self.foreman_tasks_recurring_logic
           associate_recurring_logic

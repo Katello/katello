@@ -190,7 +190,7 @@ module Katello
           shared_keys = hams.attributes.keys & module_stream.keys
           module_stream_data = module_stream.slice(*shared_keys)
           if hams.attributes.slice(*shared_keys) != module_stream_data
-            hams.update_attributes!(module_stream_data)
+            hams.update!(module_stream_data)
           end
         end
       end

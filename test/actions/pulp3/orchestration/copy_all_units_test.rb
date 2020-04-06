@@ -8,7 +8,7 @@ module ::Actions::Pulp3
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @file_repo = katello_repositories(:generic_file)
       @docker_repo = katello_repositories(:busybox)
-      @docker_repo.root.update_attributes!(docker_tags_whitelist: %w(latest uclibc musl))
+      @docker_repo.root.update!(docker_tags_whitelist: %w(latest uclibc musl))
 
       @file_clone = katello_repositories(:generic_file_dev)
       @docker_clone = katello_repositories(:busybox_dev)
@@ -17,7 +17,7 @@ module ::Actions::Pulp3
     end
 
     def test_create
-      @file_repo.update_attributes!(:version_href => "my/custom/path")
+      @file_repo.update!(:version_href => "my/custom/path")
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits, @file_clone, @master, [@file_repo])
       refute_nil(@file_repo.version_href)
       refute_nil(@file_clone.version_href)

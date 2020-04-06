@@ -16,9 +16,9 @@ module Katello
       @man2 = katello_docker_manifests(:two)
       @man3 = katello_docker_manifests(:three)
 
-      @tag1.update_attributes!(:pulp_id => "100011")
-      @tag2.update_attributes!(:pulp_id => "100012")
-      @tag3.update_attributes!(:pulp_id => "100013")
+      @tag1.update!(:pulp_id => "100011")
+      @tag2.update!(:pulp_id => "100012")
+      @tag3.update!(:pulp_id => "100013")
 
       @repo.docker_tags = [@tag1, @tag2, @tag3]
       @repo.docker_manifests = [@man1, @man2, @man3]

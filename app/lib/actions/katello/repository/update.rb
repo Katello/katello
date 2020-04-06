@@ -10,7 +10,7 @@ module Actions
           action_subject root.library_instance
 
           repo_params[:url] = nil if repo_params[:url] == ''
-          root.update_attributes!(repo_params)
+          root.update!(repo_params)
 
           if root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
             ::Foreman::Deprecation.api_deprecation_warning("Background download_policy will be removed in Katello 3.16.  Any background repositories will be converted to Immediate")
@@ -33,7 +33,7 @@ module Actions
                         :type => root.content_type,
                         :arches => root.format_arches)
 
-            content.update_attributes!(name: root.name,
+            content.update!(name: root.name,
                                        content_url: root.custom_content_path,
                                        content_type: repository.content_type,
                                        label: content.label,
