@@ -134,7 +134,7 @@ module Katello
         custom_json['filename'] = backend_data['location_href']
         custom_json['checksum'] = backend_data['pkgId']
         custom_json['sourcerpm'] = backend_data['rpm_sourcerpm']
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

@@ -43,7 +43,7 @@ module Katello
     param :author, String, :desc => N_("author of the puppet module")
     param :uuid, String, :desc => N_("the uuid of the puppet module to associate"), :deprecated => true
     def update
-      @puppet_module.update_attributes!(puppet_module_params)
+      @puppet_module.update!(puppet_module_params)
       respond :resource => @puppet_module
     end
 

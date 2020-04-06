@@ -17,7 +17,7 @@ class AddDockerTagJoinTable < ActiveRecord::Migration[5.2]
     add_column :katello_docker_tags, :repository_id, :integer
 
     ::Katello::DockerTag.all.each do |tag|
-      tag.update_attributes(repository_id: tag.repositories.first.id)
+      tag.update(repository_id: tag.repositories.first.id)
     end
 
     drop_table :katello_repository_docker_tags

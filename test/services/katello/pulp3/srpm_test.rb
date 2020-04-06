@@ -12,7 +12,7 @@ module Katello
 
           @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:fedora_17_x86_64)
-          @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/pulp/pulp/fixtures/srpm/')
+          @repo.root.update(:url => 'https://repos.fedorapeople.org/pulp/pulp/fixtures/srpm/')
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
           ForemanTasks.sync_task(

@@ -232,7 +232,7 @@ module Katello
       if self.successor && self.prior
         prior_env = self.prior
         self.env_priors.destroy_all
-        self.successor.env_priors.first.update_attributes!(:prior_id => prior_env.id)
+        self.successor.env_priors.first.update!(:prior_id => prior_env.id)
       end
     end
 

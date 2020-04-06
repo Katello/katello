@@ -139,7 +139,7 @@ module Katello
         def import_distribution_data
           distribution = smart_proxy.pulp_api.extensions.repository.distributions(repo.pulp_id).first
           if distribution
-            repo.update_attributes!(
+            repo.update!(
               :distribution_version => distribution["version"],
               :distribution_arch => distribution["arch"],
               :distribution_family => distribution["family"],

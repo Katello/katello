@@ -140,7 +140,7 @@ module Katello
     #api :PUT, "/consumers/:id/checkin/", N_("Update consumer check-in time")
     #param :date, String, :desc => N_("check-in time")
     def consumer_checkin
-      @host.update_attributes(:last_checkin => params[:date])
+      @host.update(:last_checkin => params[:date])
       Candlepin::Consumer.new(@host.subscription_facet.uuid, @host.organization.label).checkin(params[:date])
       render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end

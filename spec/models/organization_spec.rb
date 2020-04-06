@@ -82,13 +82,13 @@ module Katello
       end
       it "name update should fail when already taken for different org" do
         update = lambda do
-          @organization.update_attributes!(:name => @organization2.name)
+          @organization.update!(:name => @organization2.name)
         end
         update.must_raise(ActiveRecord::RecordInvalid)
       end
       it "label update should fail when already taken for different org" do
         update = lambda do
-          @organization.update_attributes!(:label => @organization2.label)
+          @organization.update!(:label => @organization2.label)
         end
 
         update.must_raise(ActiveRecord::RecordInvalid)

@@ -29,7 +29,7 @@ module Katello
         custom_json = {}
         custom_json['schema_version'], = backend_data['schema_version']
         custom_json['digest'], = backend_data['digest']
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

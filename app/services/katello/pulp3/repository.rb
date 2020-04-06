@@ -49,14 +49,14 @@ module Katello
       def create_remote
         remote_file_data = api.class.remote_class.new(remote_options)
         response = api.remotes_api.create(remote_file_data)
-        repo.update_attributes!(:remote_href => response.pulp_href)
+        repo.update!(:remote_href => response.pulp_href)
       end
 
       def update_remote
         href = repo.remote_href
         if remote_options[:url].blank?
           if href
-            repo.update_attributes(remote_href: nil)
+            repo.update(remote_href: nil)
             delete_remote href
           end
         else

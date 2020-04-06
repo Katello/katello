@@ -34,7 +34,7 @@ module Katello
         subscription_attributes[:instance_multiplier] = product_json["multiplier"]
 
         exceptions = subscription_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
-        self.update_attributes!(subscription_attributes.except!(*exceptions))
+        self.update!(subscription_attributes.except!(*exceptions))
       end
     end
   end

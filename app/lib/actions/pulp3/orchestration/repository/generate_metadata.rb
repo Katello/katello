@@ -21,7 +21,7 @@ module Actions
             #we don't have to actually generate a publication, we can reuse the old one
             target_repo = ::Katello::Repository.find(input[:target_repository_id])
             source_repo = ::Katello::Repository.find(input[:source_repository_id])
-            target_repo.update_attributes!(publication_href: source_repo.publication_href)
+            target_repo.update!(publication_href: source_repo.publication_href)
           end
         end
       end

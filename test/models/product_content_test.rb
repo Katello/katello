@@ -31,7 +31,7 @@ module Katello
       assert_empty @product_content.repositories
 
       repo = katello_repositories(:fedora_17_x86_64)
-      repo.root.update_attributes!(product: @product, content_id: @content_id)
+      repo.root.update!(product: @product, content_id: @content_id)
 
       assert_includes @product_content.repositories, repo
 
@@ -58,17 +58,17 @@ module Katello
     end
 
     def test_displayable
-      @content.update_attributes(content_type: ::Katello::Repository::CANDLEPIN_DOCKER_TYPE)
+      @content.update(content_type: ::Katello::Repository::CANDLEPIN_DOCKER_TYPE)
       refute_includes ProductContent.displayable, @product_content
 
-      @content.update_attributes(content_type: ::Katello::Repository::CANDLEPIN_OSTREE_TYPE)
+      @content.update(content_type: ::Katello::Repository::CANDLEPIN_OSTREE_TYPE)
       ::Katello::RepositoryTypeManager.stubs(:enabled?).returns(true)
       assert_includes ProductContent.displayable, @product_content
 
       ::Katello::RepositoryTypeManager.stubs(:enabled?).returns(false)
       refute_includes ProductContent.displayable, @product_content
 
-      @content.update_attributes(content_type: 'arbitrary type')
+      @content.update(content_type: 'arbitrary type')
       assert_includes ProductContent.displayable, @product_content
     end
 

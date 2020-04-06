@@ -13,7 +13,7 @@ module Katello
         User.current = users(:admin)
         @master = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
         @repo = katello_repositories(:pulp3_file_1)
-        @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
+        @repo.root.update(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
         ensure_creatable(@repo, @master)
         create_repo(@repo, @master)
       end
@@ -24,7 +24,7 @@ module Katello
 
       def test_orphan_distributions_are_removed
         skip "Until we can figure out testing on a pulp mirror without effecting a development env"
-        @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file/')
+        @repo.root.update(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file/')
         ForemanTasks.sync_task(
           ::Actions::Pulp3::Repository::RefreshDistribution,
           @repo,

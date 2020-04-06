@@ -40,7 +40,7 @@ module Katello
         Setting[:default_location_puppet_content] = loc.title
 
         loc.organizations << org
-        loc.update_attributes!(:name => 'foo_bar')
+        loc.update!(:name => 'foo_bar')
         assert_equal 'foo_bar', Setting[:default_location_subscribed_hosts]
         assert_equal 'foo_bar', Setting[:default_location_puppet_content]
       end

@@ -24,14 +24,14 @@ module Katello
           @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
 
           repo1 = katello_repositories(:pulp3_file_1)
-          repo1.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file-many/')
+          repo1.root.update(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file-many/')
           ensure_creatable(repo1, @master)
           create_repo(repo1, @master)
           ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, repo1)
           sync_and_reload_repo(repo1, @master)
 
           repo2 = katello_repositories(:pulp3_file_1)
-          repo2.root.update_attributes(:url => 'https://repos.fedorapeople.org/pulp/pulp/demo_repos/test_file_repo/')
+          repo2.root.update(:url => 'https://repos.fedorapeople.org/pulp/pulp/demo_repos/test_file_repo/')
           ensure_creatable(repo2, @master)
           create_repo(repo2, @master)
           ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, repo2)

@@ -50,7 +50,7 @@ namespace :katello do
 
     if http_proxy
       setting.update_attribute(:value, http_proxy.name)
-      http_proxy.update_attributes!(url: sanitized_url,
+      http_proxy.update!(url: sanitized_url,
                                    username: options[:username], password: options[:password])
       puts "Content default HTTP proxy set to #{http_proxy.name_and_url}."
     else

@@ -12,7 +12,7 @@ module Katello
         def setup
           @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-          @repo.root.update_attributes(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo')
+          @repo.root.update(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo')
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
           @repo.reload
@@ -80,7 +80,7 @@ module Katello
         def test_dup_errata
           Katello::Erratum.destroy_all
           repo_1 = katello_repositories(:rhel_7_x86_64)
-          repo_1.root.update_attributes!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo2', :download_policy => 'immediate')
+          repo_1.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo2', :download_policy => 'immediate')
           ensure_creatable(repo_1, @master)
           create_repo(repo_1, @master)
           repo_1.reload
@@ -92,7 +92,7 @@ module Katello
           assert_equal post_unit_repository_count, 3
 
           repo_2 = katello_repositories(:rhel_6_x86_64)
-          repo_2.root.update_attributes!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo2_dup', :download_policy => 'immediate')
+          repo_2.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo2_dup', :download_policy => 'immediate')
           ensure_creatable(repo_2, @master)
           create_repo(repo_2, @master)
           repo_2.reload

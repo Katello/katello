@@ -13,7 +13,7 @@ module Katello
                     :initializer => :pulp_facts
 
       def update_model(model)
-        model.update_attributes!(backend_data.slice('name', 'description'))
+        model.update!(backend_data.slice('name', 'description'))
       end
     end
   end

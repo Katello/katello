@@ -111,7 +111,7 @@ module Katello
       archived_repo = cvv.repositories.archived.docker_type[0]
       dup_repo = archived_repo.dup
       dup_repo.save!
-      dup_repo.update_attributes(:environment_id => ::Katello::KTEnvironment.find_by(:name => "Dev").id)
+      dup_repo.update(:environment_id => ::Katello::KTEnvironment.find_by(:name => "Dev").id)
       dup_repo.docker_tags = [archived_repo.docker_tags[0]]
       ::Katello::DockerMetaTag.import_meta_tags([dup_repo])
       assert cvv.repositories.archived.docker_type.count > 0

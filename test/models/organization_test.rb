@@ -20,7 +20,7 @@ module Katello
       org = Organization.new(:name => 'My Org', :label => 'my_org')
       org.instance_variable_set('@service_level', 'foo')
       org.stubs(:service_level=)
-      org.update_attributes(:service_level => 'bar')
+      org.update(:service_level => 'bar')
       assert(org.valid?)
     end
 

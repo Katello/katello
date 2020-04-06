@@ -75,10 +75,10 @@ module Katello
         end
       end
       if cvv_id.present?
-        @component.update_attributes!(:content_view_version_id => cvv_id, :latest => false)
+        @component.update!(:content_view_version_id => cvv_id, :latest => false)
       elsif component_params.key?(:latest)
         latest = ::Foreman::Cast.to_bool(component_params[:latest])
-        @component.update_attributes!(:content_view_version_id => nil, :latest => latest)
+        @component.update!(:content_view_version_id => nil, :latest => latest)
       end
       respond :resource => @component
     end

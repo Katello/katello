@@ -47,7 +47,7 @@ class DashboardHelperTest < ActiveSupport::TestCase
   end
 
   def test_unregistered_consumer_count
-    @host.subscription_facet.update_attributes!(uuid: nil)
+    @host.subscription_facet.update!(uuid: nil)
     unknown = unknown_consumer_count
     assert_equal 1, unknown
   end

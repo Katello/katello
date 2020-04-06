@@ -7,7 +7,7 @@ module Katello
         shared_attributes = backend_data.keys & model.class.column_names
         shared_json = backend_data.select { |key, _v| shared_attributes.include?(key) }
         repo = ::Katello::Repository.find_by(:pulp_id => backend_data['repo_id']).try(:id)
-        model.update_attributes!(shared_json.merge(repository_id: repo,
+        model.update!(shared_json.merge(repository_id: repo,
                                                   name: find_name_from_json(backend_data)))
       end
 

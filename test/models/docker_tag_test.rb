@@ -22,7 +22,7 @@ module Katello
     end
 
     def test_with_uuid
-      @tag.update_attributes(:pulp_id => 'ksdjfkdjkfjdk')
+      @tag.update(:pulp_id => 'ksdjfkdjkfjdk')
       tag = DockerTag.with_pulp_id(@tag.pulp_id).first
       refute_nil tag
     end

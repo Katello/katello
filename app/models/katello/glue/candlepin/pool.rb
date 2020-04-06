@@ -138,7 +138,7 @@ module Katello
 
         pool_attributes['stack_id'] = pool_json['stackId']
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
-        self.update_attributes(pool_attributes.except!(*exceptions))
+        self.update(pool_attributes.except!(*exceptions))
         self.save!
         self.create_activation_key_associations if index_hosts_and_activation_keys
         self.create_product_associations

@@ -88,7 +88,7 @@ module Katello
 
       if filepath
         content = File.open(filepath, "rb") { |file| file.read }
-        @gpg_key.update_attributes!(:content => content)
+        @gpg_key.update!(:content => content)
         render :json => {:status => "success"}
       else
         fail HttpErrors::BadRequest, _("No file uploaded")

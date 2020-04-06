@@ -177,7 +177,7 @@ module Katello
       def update_dmi_uuid_override(host_uuid = nil)
         host_uuid ||= SecureRandom.uuid
         param = HostParameter.find_or_create_by(name: DMI_UUID_OVERRIDE_PARAM, host: host)
-        param.update_attributes!(value: host_uuid)
+        param.update!(value: host_uuid)
         param
       end
 

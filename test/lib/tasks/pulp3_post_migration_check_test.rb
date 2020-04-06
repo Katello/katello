@@ -125,7 +125,7 @@ module Katello
       assert docker.reload.archive?, "Repository was not an archive repository as expected"
 
       docker.update(:remote_href => nil)
-      docker.content_view_version.content_view.update_attributes(default: false)
+      docker.content_view_version.content_view.update(default: false)
 
       Rake::Task[@task_name].invoke
     end

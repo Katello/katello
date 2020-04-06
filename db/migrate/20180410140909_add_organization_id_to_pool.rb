@@ -6,7 +6,7 @@ class AddOrganizationIdToPool < ActiveRecord::Migration[5.1]
 
     ::Katello::Pool.reset_column_information
     ::Katello::Pool.find_each do |pool|
-      pool.update_attributes(:organization_id => pool.subscription.organization_id) if pool.subscription
+      pool.update(:organization_id => pool.subscription.organization_id) if pool.subscription
     end
   end
 

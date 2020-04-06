@@ -27,13 +27,13 @@ module ::Actions::Pulp3
     def setup
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:pulp3_file_1)
-      @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
+      @repo.root.update(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
       ensure_creatable(@repo, @master)
       create_repo(@repo, @master)
 
       sync_and_reload_repo(@repo, @master)
 
-      @repo.root.update_attributes(
+      @repo.root.update(
         url: "https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file/")
 
       sync_and_reload_repo(@repo, @master)

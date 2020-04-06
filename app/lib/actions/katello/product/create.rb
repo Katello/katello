@@ -31,7 +31,7 @@ module Actions
 
         def run
           product = ::Katello::Product.find(input[:product][:id])
-          product.update_attributes!(:cp_id => input[:cp_id])
+          product.update!(:cp_id => input[:cp_id])
         end
 
         def humanized_name

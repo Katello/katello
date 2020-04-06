@@ -63,7 +63,7 @@ class CreateRepositoryRoot < ActiveRecord::Migration[5.1]
       clones = FakeRepository.where(:library_instance_id => library_instance.id).to_a
       root = create_root(library_instance)
       (clones + [library_instance]).each do |repo|
-        repo.update_attributes!(:root_id => root.id)
+        repo.update!(:root_id => root.id)
       end
     end
   end

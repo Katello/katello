@@ -4,7 +4,7 @@ module Katello
       CONTENT_TYPE = "ostree".freeze
 
       def update_model(model)
-        model.update_attributes(:name => backend_data[:branch],
+        model.update(:name => backend_data[:branch],
                           :version => backend_data[:metadata][:version],
                           :commit => backend_data[:commit]
                          )

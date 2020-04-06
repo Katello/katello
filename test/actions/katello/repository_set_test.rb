@@ -35,9 +35,9 @@ module ::Actions::Katello::RepositorySet
     def repository_already_enabled!
       as_admin do
         katello_repositories(:rhel_6_x86_64).
-            update_attributes!(:relative_path => "#{expected_relative_path}")
+            update!(:relative_path => "#{expected_relative_path}")
         katello_repositories(:rhel_6_x86_64).root.
-            update_attributes(:content_id => content.cp_content_id,
+            update(:content_id => content.cp_content_id,
                               :arch => 'x86_64', :minor => '6Server')
       end
     end

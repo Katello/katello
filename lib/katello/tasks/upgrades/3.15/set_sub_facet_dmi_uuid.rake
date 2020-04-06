@@ -8,7 +8,7 @@ namespace :katello do
 
         fact_values = ::FactValue.where(fact_name: dmi_uuid_fact_name).where.not(value: nil)
         fact_values.each do |fv|
-          fv.host.subscription_facet&.update_attributes(dmi_uuid: fv.value)
+          fv.host.subscription_facet&.update(dmi_uuid: fv.value)
         end
       end
     end

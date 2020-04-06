@@ -9,7 +9,7 @@ class FixInvalidInterfaces < ActiveRecord::Migration[4.2]
 
   def up
     FakeNic.where(:ip => "Unknown").each do |nic|
-      nic.update_attributes(:ip => nil)
+      nic.update(:ip => nil)
     end
   end
 end

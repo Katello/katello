@@ -16,10 +16,10 @@ module Katello
       @pool_id = '4028f95162acf5c20162b043b1c606ca'
 
       @pool = katello_pools(:pool_one)
-      @pool.update_attributes!(:cp_id => @pool_id)
+      @pool.update!(:cp_id => @pool_id)
 
       @facet = katello_subscription_facets(:one)
-      @facet.update_attributes!(:uuid => @consumer_uuid)
+      @facet.update!(:uuid => @consumer_uuid)
     end
   end
 

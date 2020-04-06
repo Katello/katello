@@ -15,7 +15,7 @@ module ::Actions::Pulp3
       assert_equal 1,
         Katello::Pulp3::DistributionReference.where(repository_id: @repo.id).count,
                    "Expected a distribution reference."
-      @repo.root.update_attributes(
+      @repo.root.update(
         verify_ssl_on_sync: false,
         ssl_ca_cert: katello_gpg_keys(:unassigned_gpg_key),
         ssl_client_cert: katello_gpg_keys(:unassigned_gpg_key),
@@ -24,7 +24,7 @@ module ::Actions::Pulp3
 
     def test_update_ssl_validation
       refute @repo.root.verify_ssl_on_sync, "Respository verify_ssl_on_sync option was false."
-      @repo.root.update_attributes(
+      @repo.root.update(
         verify_ssl_on_sync: true)
 
       ForemanTasks.sync_task(
@@ -34,7 +34,7 @@ module ::Actions::Pulp3
     end
 
     def test_update_url
-      @repo.root.update_attributes(
+      @repo.root.update(
         url: 'http://website.com/')
 
       ForemanTasks.sync_task(
@@ -44,7 +44,7 @@ module ::Actions::Pulp3
     end
 
     def test_update_upstream_name
-      @repo.root.update_attributes(
+      @repo.root.update(
         docker_upstream_name: 'test')
 
       ForemanTasks.sync_task(
@@ -54,7 +54,7 @@ module ::Actions::Pulp3
     end
 
     def test_update_whitelist_tags
-      @repo.root.update_attributes(
+      @repo.root.update(
         docker_tags_whitelist: 'test_tag')
 
       ForemanTasks.sync_task(
@@ -64,7 +64,7 @@ module ::Actions::Pulp3
     end
 
     def test_update_whitelist_tags_empty
-      @repo.root.update_attributes(
+      @repo.root.update(
         docker_tags_whitelist: nil)
 
       ForemanTasks.sync_task(
@@ -77,7 +77,7 @@ module ::Actions::Pulp3
       assert @repo.root.unprotected
       assert_equal 1, Katello::Pulp3::DistributionReference.where(repository_id: @repo.id).count
 
-      @repo.root.update_attributes(unprotected: false)
+      @repo.root.update(unprotected: false)
 
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
@@ -90,7 +90,7 @@ module ::Actions::Pulp3
     end
 
     def test_update_set_unprotected
-      @repo.root.update_attributes(unprotected: false)
+      @repo.root.update(unprotected: false)
 
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
@@ -100,7 +100,7 @@ module ::Actions::Pulp3
       dist_refs = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
 
       assert_equal 1, dist_refs.count, "Expected only 1 distribution reference."
-      @repo.root.update_attributes(unprotected: true)
+      @repo.root.update(unprotected: true)
 
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,

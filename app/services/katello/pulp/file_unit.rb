@@ -14,7 +14,7 @@ module Katello
         custom_json['checksum'] = backend_data['checksum']
         custom_json['path'] = backend_data['name']
         custom_json['name'] = File.basename(backend_data['name'])
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

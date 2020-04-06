@@ -283,7 +283,7 @@ module Katello
       puppet = katello_repositories(:p_forge)
 
       fedora_content = product.product_contents.to_a
-      puppet.root.update_attributes(content_id: 2)
+      puppet.root.update(content_id: 2)
 
       content = FactoryBot.create(:katello_content, cp_content_id: puppet.content_id, organization_id: puppet.product.organization_id)
       FactoryBot.create(:katello_product_content, content: content, product: product)

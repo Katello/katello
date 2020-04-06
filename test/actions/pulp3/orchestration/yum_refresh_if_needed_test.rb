@@ -19,11 +19,11 @@ module ::Actions::Pulp3
       action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, @repo, @smart_proxy)
       assert_empty action.output[:pulp_tasks]
 
-      @repo.update_attributes(relative_path: '/foo/oohhgahbooga')
+      @repo.update(relative_path: '/foo/oohhgahbooga')
       action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, @repo, @smart_proxy)
       assert_equal 1, action.output[:pulp_tasks].count
 
-      @repo.root.update_attributes(download_policy: 'on_demand')
+      @repo.root.update(download_policy: 'on_demand')
       action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, @repo, @smart_proxy)
       assert_equal 1, action.output[:pulp_tasks].count
 

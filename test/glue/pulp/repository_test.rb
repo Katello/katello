@@ -143,7 +143,7 @@ module Katello
       repo = katello_repositories(:fedora_17_x86_64)
       username = "justin"
       password = "super-secret"
-      repo.root.update_attributes!(:upstream_username => username, :upstream_password => password)
+      repo.root.update!(:upstream_username => username, :upstream_password => password)
       importer = repo.generate_importer
       assert_equal username,  importer.basic_auth_username
       assert_equal password,  importer.basic_auth_password
@@ -155,7 +155,7 @@ module Katello
       repo = katello_repositories(:fedora_17_x86_64)
       username = "justin"
       password = "super-secret"
-      repo.root.update_attributes!(:upstream_username => username, :upstream_password => password)
+      repo.root.update!(:upstream_username => username, :upstream_password => password)
       importer = repo.generate_importer(proxy)
       assert_nil importer.basic_auth_username
       assert_nil importer.basic_auth_password

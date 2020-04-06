@@ -23,7 +23,7 @@ module Katello
         end
 
         def update
-          process_response @smart_proxy.update_attributes(smart_proxy_params)
+          process_response @smart_proxy.update(smart_proxy_params)
         end
       end
     end

@@ -14,7 +14,7 @@ module Katello
 
       def update_model(model)
         custom_json = backend_data.slice('name', 'author', 'title', 'version', 'summary')
-        model.update_attributes!(custom_json)
+        model.update!(custom_json)
       end
     end
   end

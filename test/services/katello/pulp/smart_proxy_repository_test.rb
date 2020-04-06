@@ -113,7 +113,7 @@ module Katello
           task = FactoryBot.create(:dynflow_task)
           ForemanTasks::Lock.link!(capsule_content.smart_proxy, task.id)
 
-          environment.content_view_environments.last.update_attributes(
+          environment.content_view_environments.last.update(
               :updated_at => task.ended_at.change(:month => task.ended_at.month + 1)
           )
 

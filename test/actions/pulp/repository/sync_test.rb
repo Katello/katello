@@ -22,7 +22,7 @@ module ::Actions::Pulp::Repository
     end
 
     def test_sync
-      repo.root.update_attributes!(download_policy: 'background', url: 'http://foo.com/') if repo.yum?
+      repo.root.update!(download_policy: 'background', url: 'http://foo.com/') if repo.yum?
       output = ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :repo_id => repo.id).output
       download_tasks = output["pulp_tasks"].select { |task| task["tags"].include?("pulp:action:download") }
 

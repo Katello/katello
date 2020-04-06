@@ -13,16 +13,16 @@ module Actions
     it 'plans' do
       action = create_action(action_class)
 
-      repo.content.update_attributes!(content_url: "/foo/bar")
-      repo.product.provider.update_attributes!(repository_url: "http://cdn.com")
+      repo.content.update!(content_url: "/foo/bar")
+      repo.product.provider.update!(repository_url: "http://cdn.com")
 
       expected_relative_path = repo.generate_repo_path(repo.generate_content_path)
       expected_upstream_url = repo.product.repo_url(repo.generate_content_path)
 
       action.expects(:action_subject).with(repo)
       # now change the actual values
-      repo.root.update_attributes!(:url => "http://foo")
-      repo.update_attributes!(relative_path: "1/#{repo.relative_path}")
+      repo.root.update!(:url => "http://foo")
+      repo.update!(relative_path: "1/#{repo.relative_path}")
       plan_action(action, repo)
 
       assert_equal expected_upstream_url, repo.root.url

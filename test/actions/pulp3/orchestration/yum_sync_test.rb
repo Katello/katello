@@ -7,7 +7,7 @@ module ::Actions::Pulp3
     def setup
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-      @repo.root.update_attributes!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
+      @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
       create_repo(@repo, @master)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo)

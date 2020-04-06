@@ -12,7 +12,7 @@ module Katello
     def test_update_label
       staging = KTEnvironment.find(katello_environments(:staging).id)
       assert_raises ActiveRecord::RecordInvalid do
-        staging.update_attributes!(:label => "crazy")
+        staging.update!(:label => "crazy")
       end
     end
   end

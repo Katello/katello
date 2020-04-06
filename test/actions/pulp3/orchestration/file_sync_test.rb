@@ -40,7 +40,7 @@ module ::Actions::Pulp3
     end
 
     def test_sync_with_pagination
-      @repo.root.update_attributes(:url => "https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file-many/", :mirror_on_sync => false)
+      @repo.root.update(:url => "https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file-many/", :mirror_on_sync => false)
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
           @repo,
@@ -69,7 +69,7 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
       pre_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
-      @repo.root.update_attributes(:url => "file:///var/lib/pulp/sync_imports/test_repos/file3", :mirror_on_sync => false)
+      @repo.root.update(:url => "file:///var/lib/pulp/sync_imports/test_repos/file3", :mirror_on_sync => false)
 
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
@@ -89,7 +89,7 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
       pre_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
-      @repo.root.update_attributes(:url => "file:///var/lib/pulp/sync_imports/test_repos/file2")
+      @repo.root.update(:url => "file:///var/lib/pulp/sync_imports/test_repos/file2")
 
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,

@@ -14,7 +14,7 @@ namespace :katello do
 
         root_repos.each do |root_repo|
           puts "Clearing invalid credentials for #{root_repo.label} (#{root_repo.id})"
-          root_repo.update_attributes(upstream_username: nil, upstream_password: nil)
+          root_repo.update(upstream_username: nil, upstream_password: nil)
 
           root_repo.repositories.each do |repo|
             puts "Refreshing repository #{repo.label} (#{repo.id})"

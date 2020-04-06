@@ -12,8 +12,8 @@ module Katello
 
           @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:fedora_17_x86_64)
-          @repo.root.update_attributes(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/')
-          @repo.root.update_attributes(:download_policy => 'immediate')
+          @repo.root.update(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/')
+          @repo.root.update(:download_policy => 'immediate')
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
           ForemanTasks.sync_task(
