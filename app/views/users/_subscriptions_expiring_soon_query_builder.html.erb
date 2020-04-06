@@ -11,6 +11,6 @@ top: -12px;">   </span>
   left: calc(20% + 16px);
   width: 56%;
 ">
-  <%= select_f(f, :mail_query, %w[7 30 60 90 180], :to_s, :to_translation, { :include_blank => _('Show all subscriptions') }, {:label => _('Days from Now'),
+  <%= select_f(f, :mail_query, %w[7 30 60 90 180], :to_s, :to_translation, { :include_blank => false }, {:label => _('Days from Now'),
              :label_help => _('The email notification will include subscriptions expiring in this number of days or fewer.')}) %>
 </div>
