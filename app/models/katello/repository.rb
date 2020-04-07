@@ -200,6 +200,10 @@ module Katello
       end
     end
 
+    def organization_id
+      organization&.id
+    end
+
     def audit_sync
       write_audit(action: AUDIT_SYNC_ACTION, comment: _('Successfully synchronized.'), audited_changes: {})
     end

@@ -8,9 +8,9 @@
      * @description
      *   Provides a BastionResource for interacting with Docker Manifests
      */
-    function DockerManifest(BastionResource) {
+    function DockerManifest(BastionResource, CurrentOrganization) {
         return BastionResource('katello/api/v2/docker_manifests/:id',
-            {'id': '@id'},
+            {'id': '@id', 'organization_id': CurrentOrganization},
             {
                 'autocomplete': {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
             }
@@ -21,6 +21,6 @@
         .module('Bastion.docker-manifests')
         .factory('DockerManifest', DockerManifest);
 
-    DockerManifest.$inject = ['BastionResource'];
+    DockerManifest.$inject = ['BastionResource', 'CurrentOrganization'];
 
 })();

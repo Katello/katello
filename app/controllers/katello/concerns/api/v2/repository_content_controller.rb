@@ -7,7 +7,7 @@ module Katello
         include Katello::Concerns::FilteredAutoCompleteSearch
 
         before_action :find_repository
-        before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+        before_action :find_optional_organization, :only => [:index, :show, :auto_complete_search]
         before_action :find_environment, :only => [:index, :auto_complete_search]
         before_action :find_content_view_version, :only => [:index, :auto_complete_search]
         before_action :find_filter, :find_filter_rule, :only => [:index, :auto_complete_search]
@@ -36,6 +36,7 @@ module Katello
       api :GET, "/:resource_id/:id", N_("Show :a_resource")
       api :GET, "/repositories/:repository_id/:resource_id/:id", N_("Show :a_resource")
       param :repository_id, :number, :desc => N_("repository identifier")
+      param :organization_id, :number, :desc => N_("organization identifier")
       param :id, String, :desc => N_(":a_resource identifier"), :required => true
       def show
         respond :resource => @resource
@@ -159,6 +160,10 @@ module Katello
         if params[:repository_id] && !@resource.repositories.include?(@repo)
           fail HttpErrors::NotFound, _("Could not find %{content} with id '%{id}' in repository.") %
             {content: resource_name, id: params[:id]}
+        end
+
+        if params[:organization_id] && !@resource.repositories.any? { |repo| repo.organization_id == params[:organization_id].to_i }
+          fail HttpErrors::BadRequest, _("The requested resource does not belong to the specified organization")
         end
       end
 

@@ -8,9 +8,9 @@
  *   Provides a BastionResource for product or list of products.
  */
 angular.module('Bastion.products').factory('Product',
-    ['BastionResource', function (BastionResource) {
+    ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
 
-        return BastionResource('katello/api/v2/products/:id/:action', {id: '@id'}, {
+        return BastionResource('katello/api/v2/products/:id/:action', {id: '@id', 'organization_id': CurrentOrganization}, {
             update: { method: 'PUT'},
             sync: { method: 'POST', params: { action: 'sync' }},
             updateSyncPlan: { method: 'POST', params: { action: 'sync_plan' }},

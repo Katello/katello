@@ -87,6 +87,7 @@ module Katello
     end
 
     api :GET, "/products/:id", N_("Show a product")
+    param :organization_id, :number, :desc => N_("Organization ID")
     param :id, :number, :desc => N_("product numeric identifier"), :required => true
     def show
       find_product(:includes => [{:root_repositories => {:repositories => :environment}}])

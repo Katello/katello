@@ -26,7 +26,7 @@ describe('Factory: Files', function () {
     });
 
     it('provides a way to get a list of files', function () {
-        $httpBackend.expectGET('katello/api/v2/files').respond(files);
+        $httpBackend.expectGET('katello/api/v2/files?organization_id=ACME').respond(files);
 
         File.queryPaged(function (files) {
             expect(files.records.length).toBe(1);
@@ -34,7 +34,7 @@ describe('Factory: Files', function () {
     });
 
     it('provides a way to get autocompleted search terms for files', function () {
-        $httpBackend.expectGET('katello/api/v2/files/auto_complete_search').respond(files.records);
+        $httpBackend.expectGET('katello/api/v2/files/auto_complete_search?organization_id=ACME').respond(files.records);
 
         File.autocomplete(function (files) {
             expect(files.length).toBe(1);

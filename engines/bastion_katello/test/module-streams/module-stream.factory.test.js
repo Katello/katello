@@ -25,8 +25,8 @@ describe('Factory: ModuleStream', function () {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('provides a way to get a list of repositories', function () {
-        $httpBackend.expectGET('katello/api/v2/module_streams').respond(moduleStreams);
+    it('provides a way to get a list of module streams', function () {
+        $httpBackend.expectGET('katello/api/v2/module_streams?organization_id=ACME').respond(moduleStreams);
 
         ModuleStream.queryPaged(function (moduleStreams) {
             expect(moduleStreams.records.length).toBe(1);

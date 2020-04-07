@@ -26,7 +26,7 @@ describe('Factory: DockerTag', function () {
     });
 
     it('provides a way to get a list of tags', function () {
-        $httpBackend.expectGET('katello/api/v2/docker_tags').respond(dockerTags);
+        $httpBackend.expectGET('katello/api/v2/docker_tags?organization_id=ACME').respond(dockerTags);
 
         DockerTag.queryPaged(function (dockerTags) {
             expect(dockerTags.records.length).toBe(1);

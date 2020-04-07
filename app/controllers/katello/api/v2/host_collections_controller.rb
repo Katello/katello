@@ -19,8 +19,9 @@ module Katello
 
     api :GET, "/host_collections/:id", N_("Show a host collection")
     param :id, :number, :desc => N_("Id of the host collection"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def show
-      respond
+      respond(:resource => @host_collection)
     end
 
     api :GET, "/host_collections", N_("List host collections")

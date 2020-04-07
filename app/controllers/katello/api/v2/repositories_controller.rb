@@ -260,6 +260,7 @@ module Katello
 
     api :GET, "/repositories/:id", N_("Show a repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
+    param :organization_id, :number, :desc => N_("Organization ID")
     def show
       respond_for_show(:resource => @repository)
     end

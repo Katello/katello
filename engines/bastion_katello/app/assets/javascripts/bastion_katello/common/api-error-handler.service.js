@@ -14,6 +14,8 @@
                 angular.forEach(response.data.errors, function (error) {
                     Notification.setErrorMessage(error);
                 });
+            } else if (response.hasOwnProperty('data') && response.data.hasOwnProperty('error') && response.data.error.hasOwnProperty('message')) {
+                Notification.setErrorMessage(response.data.error.message);
             } else {
                 Notification.setErrorMessage(defaultErrorMessage);
             }
