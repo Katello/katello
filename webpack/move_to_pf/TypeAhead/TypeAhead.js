@@ -33,6 +33,7 @@ class TypeAhead extends Component {
   };
 
   render() {
+    // The issue is here
     const {
       onSearch, onInputUpdate, items, actionText, ...rest
     } = this.props;
