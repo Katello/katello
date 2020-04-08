@@ -15,7 +15,8 @@ module Actions
           content_unit_href = content_unit.is_a?(String) ? content_unit : content_unit.last[:created_resources].first
           repo = ::Katello::Repository.find(input[:repository_id])
           repo_backend_service = repo.backend_service(smart_proxy)
-          output[:pulp_tasks] = repo_backend_service.add_content(content_unit_href)
+          output[:content_unit_href] = content_unit_href
+          output[:pulp_tasks] = [repo_backend_service.add_content(content_unit_href)]
         end
       end
     end

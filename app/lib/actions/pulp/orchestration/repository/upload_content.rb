@@ -3,6 +3,7 @@ module Actions
     module Orchestration
       module Repository
         class UploadContent < Pulp::Abstract
+          include Actions::Helpers::OutputPropagator
           def plan(repository, smart_proxy, file, unit_type_id)
             sequence do
               upload_request = plan_action(Pulp::Repository::CreateUploadRequest)
@@ -17,6 +18,7 @@ module Actions
                           upload_id: upload_request.output[:upload_id])
               plan_action(Pulp::Repository::DeleteUploadRequest,
                           upload_id: upload_request.output[:upload_id])
+              plan_self(:subaction_output => nil)
             end
           end
 

@@ -4,6 +4,7 @@ module Actions
       class FinishUpload < Actions::Base
         def plan(repository, options = {})
           import_upload_task = options.fetch(:import_upload_task, nil)
+          upload_actions = options.fetch(:upload_actions, nil)
           content_type = options.fetch(:content_type)
           if content_type
             unit_type_id = SmartProxy.pulp_master.content_service(content_type)::CONTENT_TYPE
@@ -19,7 +20,8 @@ module Actions
                       id: repository.id,
                       filter: {:association => {:created => {"$gt" => recent_range}}},
                       content_type: unit_type_id,
-                      import_upload_task: import_upload_task)
+                      import_upload_task: import_upload_task,
+                      upload_actions: upload_actions)
         end
       end
     end
