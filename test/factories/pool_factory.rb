@@ -2,6 +2,11 @@ FactoryBot.define do
   factory :katello_pool, :class => Katello::Pool do
     active { true }
     end_date { Date.today + 1.year }
+    cp_id { 1 }
+
+    trait :with_organization do
+      association :organization, :factory => :katello_organization
+    end
 
     trait :active do
       active { true }

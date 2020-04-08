@@ -13,20 +13,22 @@ module Katello
                         :subscription_type => 'report')
 
       @user.mail_notifications << MailNotification[:subscriptions_expiring_soon]
+      @user.user_mail_notifications.first.update(mail_query: Setting[:expire_soon_days])
 
       @pool_not_expiring_soon = FactoryBot.create(:katello_pool,
                                                   :not_expiring_soon,
+                                                  :with_organization,
                                                   cp_id: "1234",
                                                   subscription_id: ActiveRecord::FixtureSet.identify(:other_subscription))
       ActionMailer::Base.deliveries = []
     end
 
-    def setup_expiring_pool
+    def set_up_expiring_pool
       @pool_expiring_soon = FactoryBot.create(:katello_pool,
                                               :expiring_in_12_days,
+                                              :with_organization,
                                               cp_id: "123",
                                               subscription_id: ActiveRecord::FixtureSet.identify(:basic_subscription),
-                                              organization_id: ActiveRecord::FixtureSet.identify(:empty_organization),
                                               pool_type: "normal",
                                               quantity: 10,
                                               start_date: "2011-10-11T04:00:00.000+0000",
@@ -47,7 +49,7 @@ module Katello
     end
 
     def test_includes_expiring_subscription
-      setup_expiring_pool
+      set_up_expiring_pool
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
 
@@ -72,7 +74,7 @@ module Katello
     end
 
     def test_omits_non_expiring_subscription
-      setup_expiring_pool
+      set_up_expiring_pool
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
       rows = get_rows(email.body.encoded)
@@ -80,6 +82,18 @@ module Katello
       # row headings is counted as one row
       assert_equal rows.length, 2
       assert Katello::Pool.readable.size > 1
+    end
+
+    def test_days_from_now_mail_query
+      set_up_expiring_pool
+      @expiring_in_120 = FactoryBot.create(:katello_pool, :expiring_soon, :with_organization, subscription_id: ActiveRecord::FixtureSet.identify(:other_subscription)) # Setting[:expire_soon_days] || 120
+
+      @user.user_mail_notifications.first.update(mail_query: "30")
+      @user.user_mail_notifications.first.deliver
+
+      email = ActionMailer::Base.deliveries.first
+      assert_includes email.body.encoded, @pool_expiring_soon.subscription.name
+      refute_includes email.body.encoded, @expiring_in_120.subscription.name
     end
   end
 end
