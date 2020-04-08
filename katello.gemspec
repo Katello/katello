@@ -53,7 +53,7 @@ Gem::Specification.new do |gem|
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
-  gem.add_dependency "angular-rails-templates", "~> 1.0.2"
+  gem.add_dependency "angular-rails-templates", "~> 1.1.0"
   gem.add_development_dependency "uglifier"
 
   # Testing
