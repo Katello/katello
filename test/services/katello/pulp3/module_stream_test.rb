@@ -9,6 +9,15 @@ module Katello
 
         def setup
           @repo = katello_repositories(:fedora_17_x86_64_duplicate)
+          @rpm1 = Katello::Rpm.new(pulp_id: "pulp3/href1")
+          @rpm2 = Katello::Rpm.new(pulp_id: "pulp3/href2")
+          @rpm1.save!
+          @rpm2.save!
+        end
+
+        def teardown
+          @rpm1.destroy!
+          @rpm2.destroy!
         end
 
         def pulp_module_data
@@ -22,6 +31,7 @@ module Katello
             "_last_updated" => "2018-08-08T18:28:44Z",
             "_content_type_id" => "modulemd",
             "profiles" => {"default" => ["duck", "cat"]},
+            "packages" => ["pulp3/href1", "pulp3/href2"],
             "summary" => "Duck 0.7 module",
             "_href" => "/pulp/api/v2/content/units/modulemd/2c5ebdc1-1504-4089-a318-c83ace3acdde/",
             "downloaded" => true,
@@ -45,6 +55,7 @@ module Katello
           assert_equal model.name, pulp_module_data['name']
           assert_equal 2, model.artifacts.count
           assert_equal 1, model.profiles.count
+          assert_equal 2, model.rpms.count
         end
       end
     end
