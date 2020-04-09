@@ -88,8 +88,7 @@ class SourceCodeTest < ActiveSupport::TestCase
 
   describe 'gettext' do
     it 'does not use interpolation or multiple anonymous placeholders' do
-      doc = <<-DOC.strip_heredoc
-
+      doc = <<~DOC
         Interpolation example:
           _("This is a malformed string with \#{interpolated_variable} within")
           # should be _("This is a malformed string with %s within") % interpolated_variable

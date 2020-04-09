@@ -2,7 +2,7 @@ require File.expand_path("../helpers/repo_test_data", File.dirname(__FILE__))
 
 module Katello
   module OrchestrationHelper
-    CERT = <<HERECERT.strip_heredoc.freeze
+    CERT = <<~HERECERT.freeze
       -----BEGIN CERTIFICATE-----
       MIIF7DCCBVWgAwIBAgIIB1AMflT0SrswDQYJKoZIhvcNAQEFBQAwRjElMCMGA1UE
       Awwca2lsbGluZy10aW1lLmFwcGxpZWRsb2dpYy5jYTELMAkGA1UEBhMCVVMxEDAO
@@ -37,9 +37,9 @@ module Katello
       hqAQBzKqeQEoRml1CIZHgB7Q5OmVN+FC0ftv+Iy/PccyIFdcJh87UAI+1UoT80kR
       A5qqap7hk8CDz3HWi9/YGGU89EjLlFpSF5SPbFAWpA8=
       -----END CERTIFICATE-----
-HERECERT
+    HERECERT
 
-    KEY = <<HEREKEY.strip_heredoc.freeze
+    KEY = <<~HEREKEY.freeze
       -----BEGIN RSA PRIVATE KEY-----
       MIIEowIBAAKCAQEAlkidXB/p2Vj5zGF9Uh3WxvD6175G1JmA6kARy14ZlyEKVoWO
       IvnbhHWi6bVrxtLLEvLBXeX8uJHnP+I/bthBDMfR3+yBBMrShnTKvTJz/pZk6HG0
@@ -67,7 +67,7 @@ HERECERT
       rKH9OkgKEvwkf8zQjO/XSvuoac83uBEFgKXJwYLHPA3U20JrchKU7klLwzSsmrXA
       5JP55pqMjeCZBj2fNkfWrcNPQVdxq25zggRbM6Bmsl0JylpTr3Mt
       -----END RSA PRIVATE KEY-----
-HEREKEY
+    HEREKEY
 
     def disable_activation_key_orchestration
       Resources::Candlepin::ActivationKey.stubs(:create).returns(:id => '123')

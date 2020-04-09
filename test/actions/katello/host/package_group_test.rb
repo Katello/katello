@@ -34,7 +34,7 @@ module ::Actions::Katello::Host::PackageGroup
         let(:fixture_variant) { :package_group_success }
 
         specify do
-          assert_equal action.humanized_output, <<-OUTPUT.strip_heredoc.chomp
+          assert_equal action.humanized_output, <<~OUTPUT.chomp
             amanda-2.6.1p2-8.el6.x86_64
             amanda-client-2.6.1p2-8.el6.x86_64
           OUTPUT
@@ -53,7 +53,7 @@ module ::Actions::Katello::Host::PackageGroup
         let(:fixture_variant) { :error }
 
         specify do
-          assert_equal action.humanized_output, <<-MSG.strip_heredoc.chomp
+          assert_equal action.humanized_output, <<~MSG.chomp
             No new packages installed
             emacss: No package(s) available to install
           MSG
@@ -79,7 +79,7 @@ module ::Actions::Katello::Host::PackageGroup
           let(:fixture_variant) { :package_group_success }
 
           specify do
-            assert_equal action.humanized_output, <<-OUTPUT.strip_heredoc.chomp
+            assert_equal action.humanized_output, <<~OUTPUT.chomp
               amanda-2.6.1p2-8.el6.x86_64
               amanda-client-2.6.1p2-8.el6.x86_64
             OUTPUT
