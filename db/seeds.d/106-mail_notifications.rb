@@ -31,6 +31,13 @@ User.as(::User.anonymous_api_admin.login) do
      :mailer => 'Katello::ErrataMailer',
      :method => 'promote_errata',
      :subscription_type => 'alert'
+    },
+
+    {:name => :subscriptions_expiring_soon,
+     :description => N_('A list of subscriptions expiring within 30 days'),
+     :mailer => 'Katello::SubscriptionMailer',
+     :method => 'subscription_expiry',
+     :subscription_type => 'report'
     }
   ]
 
