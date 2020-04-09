@@ -42,9 +42,17 @@ module Katello
         find_bulk_hosts('edit_hosts', bulk_params)
       end
 
+      def errata_inputs
+        if params[:install_all]
+          { :errata => Erratum.installable_for_hosts(hosts).pluck(:errata_id) }
+        else
+          { :errata => params[:name] }
+        end
+      end
+
       def inputs
         if feature_name == 'katello_errata_install'
-          { :errata => params[:name] }
+          errata_inputs
         elsif feature_name == 'katello_service_restart'
           { :helper => params[:name] }
         elsif feature_name == 'katello_module_stream_action'
