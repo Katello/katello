@@ -37,7 +37,11 @@ module Katello
 
       def process_action(method_name, *args)
         super(method_name, *args)
-        Rails.logger.debug "With body: #{response.body}\n"
+        Rails.logger.debug "With body: #{filter_sensitive_data(response.body)}\n"
+      end
+
+      def filter_sensitive_data(payload)
+        payload.gsub(/-----BEGIN RSA PRIVATE KEY-----.*-----END RSA PRIVATE KEY-----/, '[private key filtered]')
       end
 
       def split_order(order)

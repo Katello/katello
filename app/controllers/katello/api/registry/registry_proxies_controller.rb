@@ -488,7 +488,7 @@ module Katello
 
     def process_action(method_name, *args)
       ::Api::V2::BaseController.instance_method(:process_action).bind(self).call(method_name, *args)
-      Rails.logger.debug "With body: #{response.body}\n" unless route_name == 'pull_blob'
+      Rails.logger.debug "With body: #{filter_sensitive_data(response.body)}\n" unless route_name == 'pull_blob'
     end
 
     def item_not_found(item)
