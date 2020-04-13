@@ -61,6 +61,12 @@ module Katello
             JSON.parse(response).with_indifferent_access
           end
 
+          def hypervisors_heartbeat(owner:, reporter_id:)
+            url = "/candlepin/hypervisors/#{owner}/heartbeat?reporter_id=#{reporter_id}"
+            response = self.put(url, {}.to_json, self.default_headers).body
+            JSON.parse(response).with_indifferent_access
+          end
+
           def register_hypervisors(params)
             url = "/candlepin/hypervisors"
             url << "?owner=#{params[:owner]}&env=#{params[:env]}"

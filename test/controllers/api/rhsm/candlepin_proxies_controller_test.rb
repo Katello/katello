@@ -301,6 +301,16 @@ module Katello
       end
     end
 
+    describe "hypervisors_heartbeat" do
+      it "sends the request to candlepin" do
+        Katello::Resources::Candlepin::Consumer.expects(:hypervisors_heartbeat).with(owner: @organization.label, reporter_id: 123)
+
+        put :hypervisors_heartbeat, params: { owner: @organization.label, reporter_id: 123 }
+
+        assert_response 200
+      end
+    end
+
     describe "available releases" do
       it "can be listed by matching consumer" do
         # Stub out the current user to simulate consumer auth.
