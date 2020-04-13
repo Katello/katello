@@ -13,7 +13,7 @@ module Katello
                                         :available_releases, :serials, :upload_tracer_profile]
     before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
     before_action :authorize_client_or_user, :only => [:consumer_show, :regenerate_identity_certificates, :upload_tracer_profile, :facts, :proxy_jobs_get_path]
-    before_action :authorize_client_or_admin, :only => [:hypervisors_update, :async_hypervisors_update]
+    before_action :authorize_client_or_admin, :only => [:hypervisors_update, :async_hypervisors_update, :hypervisors_heartbeat]
     before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
                                                :enabled_repos, :available_releases]
@@ -135,6 +135,10 @@ module Katello
         sync_task(::Actions::Katello::Host::Hypervisors, params.except(:controller, :action, :format).to_h)
       end
       render :json => task.output[:results]
+    end
+
+    def hypervisors_heartbeat
+      render json: Katello::Resources::Candlepin::Consumer.hypervisors_heartbeat(owner: params[:owner], reporter_id: params[:reporter_id])
     end
 
     #api :PUT, "/consumers/:id/checkin/", N_("Update consumer check-in time")
