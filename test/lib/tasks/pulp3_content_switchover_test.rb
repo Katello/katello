@@ -12,6 +12,10 @@ module Katello
         SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => true, :docker => true}
       end
 
+      def teardown
+        SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => false, :docker => false}
+      end
+
       def test_run
         Katello::Pulp3::MigrationSwitchover.any_instance.expects(:run)
         Rake.application.invoke_task('katello:pulp3_content_switchover')
