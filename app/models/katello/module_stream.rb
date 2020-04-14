@@ -6,6 +6,8 @@ module Katello
     has_many :artifacts, class_name: "Katello::ModuleStreamArtifact", dependent: :destroy, inverse_of: :module_stream
     has_many :module_stream_errata_packages, class_name: "Katello::ModuleStreamErratumPackage", dependent: :destroy, inverse_of: :module_stream
     has_many :erratum_packages, class_name: "Katello::ErratumPackage", :through => :module_stream_errata_packages
+    has_many :module_stream_rpms, class_name: "Katello::ModuleStreamRpm", dependent: :destroy, inverse_of: :module_stream
+    has_many :rpms, class_name: "Katello::Rpm", :through => :module_stream_rpms
 
     has_many :content_facet_applicable_module_streams, :class_name => "Katello::ContentFacetApplicableModuleStream",
              :dependent => :destroy, :inverse_of => :module_stream
