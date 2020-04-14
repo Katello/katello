@@ -4,16 +4,20 @@ module Katello
   module Messaging
     class StompConnection
       def initialize(settings:)
+        ssl_params = Stomp::SSLParams.new(key_file: settings[:ssl_key_file], cert_file: settings[:ssl_cert_file], fsck: false)
+
         @config = {
           hosts: [
             {
               host: settings[:broker_host],
               port: settings[:broker_port],
-              ssl: true,
+              ssl: ssl_params
             }
           ],
           logger: Rails.logger,
           max_reconnect_attempts: 2,
+          start_timeout: 3,
+          reliable: false,
           connect_headers: {
             'accept-version': '1.2',
             'host': settings[:broker_host],
