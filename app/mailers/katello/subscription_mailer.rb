@@ -4,12 +4,14 @@ module Katello
 
     def subscription_expiry(options)
       user = ::User.find(options[:user])
+      days_from_now = options[:query]
+
       ::User.as(user.login) do
-        @pools = Katello::Pool.readable.expiring_in_days(30)
+        @pools = Katello::Pool.readable.expiring_in_days(days_from_now)
       end
 
       set_locale_for(user) do
-        mail(:to => user.mail, :subject => _("Subscriptions expiring soon"))
+        mail(:to => user.mail, :subject => _("You have subscriptions expiring within %s days") % days_from_now)
       end
     end
 
