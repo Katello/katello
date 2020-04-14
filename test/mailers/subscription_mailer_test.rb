@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class TestBase < ActiveSupport::TestCase
     let(:pool_expiring_soon) do
-      FactoryBot.build(
+      FactoryBot.create(
         :katello_pool,
         :expiring_in_12_days,
         :with_organization,
@@ -16,7 +16,7 @@ module Katello
         contract_number: "123403949")
     end
     let(:expiring_in_120) do
-      FactoryBot.build(
+      FactoryBot.create(
         :katello_pool,
         :expiring_soon,
         :with_organization,
@@ -60,7 +60,7 @@ module Katello
     end
 
     def test_includes_expiring_subscription
-      pool_expiring_soon.save
+      pool_expiring_soon # ensures record is present before .deliver is called
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
 
@@ -85,7 +85,7 @@ module Katello
     end
 
     def test_omits_non_expiring_subscription
-      pool_expiring_soon.save
+      pool_expiring_soon
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
       rows = get_rows(email.body.encoded)
@@ -96,8 +96,8 @@ module Katello
     end
 
     def test_days_from_now_mail_query
-      pool_expiring_soon.save
-      expiring_in_120.save
+      pool_expiring_soon
+      expiring_in_120
 
       @user.user_mail_notifications.first.update(mail_query: "30")
       @user.user_mail_notifications.first.deliver
