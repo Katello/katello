@@ -9,7 +9,7 @@ module Katello
 
       def setup
         @upstream_params = { 'apiUrl' => api_url, 'idCert' => { 'key' => '', 'cert' => ''}}
-        expected_params = [expected_url, "", "", nil, { :capabilities => [], :facts => { :distributor_version => "sat-6.5" } }]
+        expected_params = [expected_url, "", "", nil, { :capabilities => [], :facts => { :distributor_version => Katello::Glue::Provider::DISTRIBUTOR_VERSION } }]
         Resources::Candlepin::UpstreamConsumer.expects(:update).with(*expected_params)
         Resources::Candlepin::CandlepinPing.stubs(:ping).returns('managerCapabilities' => [])
       end

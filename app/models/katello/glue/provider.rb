@@ -1,5 +1,7 @@
 module Katello
   module Glue::Provider
+    DISTRIBUTOR_VERSION = 'sat-6.7'.freeze
+
     def self.included(base)
       base.send :include, InstanceMethods
     end
@@ -73,7 +75,7 @@ module Katello
         params[:capabilities] = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
           result << {'name' => element}
         end
-        params[:facts] = {:distributor_version => 'sat-6.5'}
+        params[:facts] = {:distributor_version => DISTRIBUTOR_VERSION }
         Resources::Candlepin::UpstreamConsumer.update("#{url}#{upstream['uuid']}", upstream['idCert']['cert'],
                                                       upstream['idCert']['key'], ca_file, params)
       end
