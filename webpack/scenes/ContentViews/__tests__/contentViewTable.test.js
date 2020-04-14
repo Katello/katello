@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { render, fireEvent, within } from 'react-testing-lib-wrapper';
 import ContentViewsTable from '../Table/ContentViewsTable.js';
 
@@ -30,13 +29,11 @@ test('Can view content views on the screen', () => {
     return name;
   });
 
-
-  // Ensure loading text is not showing as a baseline sanity check
-  // Using .toBeNull() here as the loading spinner isn't even in the DOM, as opposed to
-  // an element that is in the DOM but hidden
-  // Using a test id that is set in the the application code so we can correctly identify
-  // the loading text. Pattern matching by "Loading" seems like it could give false positives, a
-  // test id will ensure we are correctly identifying the loading text.
+  // Ensure loading text is not showing as a baseline sanity check Using .toBeNull() here as the
+  // loading spinner isn't even in the DOM, as opposed to an element that is in the DOM but hidden.
+  // Also using a test id that is set in the the application code so we can correctly identify the
+  // loading text. Pattern matching by "Loading" seems like it could give false positives, a test
+  // id will ensure we are correctly identifying the loading text.
   expect(queryByTestId('cv-loading-text')).toBeNull();
 
   // Ensure empty state text isn't showing as a baseline sanity check
