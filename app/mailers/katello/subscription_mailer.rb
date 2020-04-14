@@ -11,7 +11,7 @@ module Katello
       end
 
       set_locale_for(user) do
-        mail(:to => user.mail, :subject => _("You have subscriptions expiring within #{days_from_now} days"))
+        mail(:to => user.mail, :subject => _("You have subscriptions expiring within %s days") % days_from_now)
       end
     end
 
