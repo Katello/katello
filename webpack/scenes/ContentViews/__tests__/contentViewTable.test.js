@@ -76,3 +76,11 @@ test('Can view Environment dropdown when cell is clicked', () => {
   // Ensure the environment expandable is now visible on screen to the user.
   expect(getByTestId(`cv-environments-expansion-${firstCV.id}`)).toBeVisible();
 });
+
+test('Handles not yet published Content Views', () => {
+  const unpublishedCVs = contentViews.map(cv => ({ ...cv, last_published: null }));
+  const { getByText } =
+    render(<ContentViewsTable results={unpublishedCVs} loading={false} {...defaultProps} />);
+
+  expect(getByText(/Not Yet Published/i)).toBeTruthy();
+});

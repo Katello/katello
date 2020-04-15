@@ -23,7 +23,7 @@ const buildRow = (contentView, openColumn) => {
   } = contentView;
   const row = [
     { title: <ContentViewName composite={composite ? 1 : undefined} name={name} cvId={id} /> },
-    lastPublished,
+    lastPublished || 'Not yet published',
     { title: __('Details'), props: { isOpen: false, ariaControls: `cv-details-expansion-${id}`, contentviewid: id } },
     {
       title: <IconWithCount Icon={ScreenIcon} count={environments.length} title={`environments-icon-${id}`} />,
