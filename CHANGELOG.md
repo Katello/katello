@@ -1,4 +1,4 @@
-# 3.15.0 Rocky Road (2020-03-26)
+# 3.15.0 Rocky Road (2020-04-15)
 
 ## Features
 
@@ -76,16 +76,8 @@
  * enabled_repos_upload should not spam the console ([#27912](https://projects.theforeman.org/issues/27912), [c35bed91](https://github.com/Katello/katello-host-tools.git/commit/c35bed912441f5e1662ce0eb8eceb70448b5260c))
  * package profile upload & repos upload needs to use subman combined profiles ([#27650](https://projects.theforeman.org/issues/27650), [3d780978](https://github.com/Katello/katello-host-tools.git/commit/3d780978ffe57eded5b501112a67a8a913aed899))
 
-### Upgrades
- * prevent rake katello:pulp3_migration and switchover from running if its already been switched over ([#29125](https://projects.theforeman.org/issues/29125), [52bb96ca](https://github.com/Katello/katello.git/commit/52bb96ca675c466120fbd94d7edfb8c0b4f4b647))
-
-### Content Views
- * deleting a content view should delete all pulp3 repositories associated with it in pulp3 ([#29122](https://projects.theforeman.org/issues/29122), [665d679c](https://github.com/Katello/katello.git/commit/665d679c5b667f09c378f39b8013b42637876160))
- * Content View publishing fails after katello_repository_rpms "id" column hits max integer size ([#28831](https://projects.theforeman.org/issues/28831), [109ab480](https://github.com/Katello/katello.git/commit/109ab4805a4b72e4a6ca58316470c17fa1c39297))
- * Publishing a new version of Content view is slow and taking huge time  ([#28677](https://projects.theforeman.org/issues/28677), [b85e018f](https://github.com/Katello/katello.git/commit/b85e018fba06aabde4dac2c4a996f39558db0d5e))
- * Content view versions list has slow query for package count ([#28427](https://projects.theforeman.org/issues/28427), [b2c46015](https://github.com/Katello/katello.git/commit/b2c46015f0790bd4cb0b9e3a7699ef6852240530))
-
 ### Repositories
+ * migrated docker tags may have their pulp3 href change after multiple migrations ([#29199](https://projects.theforeman.org/issues/29199), [b693a0b9](https://github.com/Katello/katello.git/commit/b693a0b908a9f41bebeb6a7460c747433f2b2819))
  * [pulp3] file uploads via hammer fail ([#29007](https://projects.theforeman.org/issues/29007), [53f50325](https://github.com/Katello/katello.git/commit/53f50325a502997ced2239f2ecf11d1d31d45121))
  * Remove references to :cdn_proxy, HTTP proxy db seeds ([#28834](https://projects.theforeman.org/issues/28834), [d593923a](https://github.com/Katello/katello.git/commit/d593923a18d445f853d61d8af9d9a86e6195c82c))
  * Product sync-status of latest repo-sync vs. sync-status of all repo-syncs ([#28818](https://projects.theforeman.org/issues/28818), [d79d11d8](https://github.com/Katello/katello.git/commit/d79d11d8262507ac81362d22a915a966ca9d453c), [acc1d7ca](https://github.com/Katello/hammer-cli-katello.git/commit/acc1d7ca7c0962002591baee9e95e961c8f41bc4), [3c9f3cd9](https://github.com/Katello/katello.git/commit/3c9f3cd98cac28b5ee2b7d36c9bed3aa8d8f159b), [17969c24](https://github.com/Katello/katello.git/commit/17969c24e0bc54a07362084bfbafabf07c86d960))
@@ -107,6 +99,24 @@
  * Repository create with http_proxy name fails with  Error: Found more than one http_proxy. ([#28178](https://projects.theforeman.org/issues/28178), [1d3e98bf](https://github.com/Katello/hammer-cli-katello.git/commit/1d3e98bf0c35b08c62489dcccfc7e6b316240280))
  * Deleting old distributions on pulp mirrors for pulp3 ([#27938](https://projects.theforeman.org/issues/27938), [9aa9fa8b](https://github.com/Katello/katello.git/commit/9aa9fa8bd116fcc565bda5b7ecc6212cb9591641))
 
+### Upgrades
+ * after pulp3 migration, docker schema v1 tags that haven't been migrated should be deleted ([#29197](https://projects.theforeman.org/issues/29197), [c67ab40e](https://github.com/Katello/katello.git/commit/c67ab40e47bee053e4f147e31b679a230418bf41))
+ * prevent rake katello:pulp3_migration and switchover from running if its already been switched over ([#29125](https://projects.theforeman.org/issues/29125), [52bb96ca](https://github.com/Katello/katello.git/commit/52bb96ca675c466120fbd94d7edfb8c0b4f4b647))
+
+### Content Views
+ * deleting a content view should delete all pulp3 repositories associated with it in pulp3 ([#29122](https://projects.theforeman.org/issues/29122), [665d679c](https://github.com/Katello/katello.git/commit/665d679c5b667f09c378f39b8013b42637876160))
+ * Erratum Excludes filter by id not working in some cases ([#28988](https://projects.theforeman.org/issues/28988), [df338af8](https://github.com/Katello/katello.git/commit/df338af817ef6f53b312bee148a6e4edf9114d09))
+ * Content View publishing fails after katello_repository_rpms "id" column hits max integer size ([#28831](https://projects.theforeman.org/issues/28831), [109ab480](https://github.com/Katello/katello.git/commit/109ab4805a4b72e4a6ca58316470c17fa1c39297))
+ * Publishing a new version of Content view is slow and taking huge time  ([#28677](https://projects.theforeman.org/issues/28677), [b85e018f](https://github.com/Katello/katello.git/commit/b85e018fba06aabde4dac2c4a996f39558db0d5e))
+ * Content view versions list has slow query for package count ([#28427](https://projects.theforeman.org/issues/28427), [b2c46015](https://github.com/Katello/katello.git/commit/b2c46015f0790bd4cb0b9e3a7699ef6852240530))
+
+### Subscriptions
+ * Prevent setting auto-attach on Activation Key when in Simple Content Access ([#29094](https://projects.theforeman.org/issues/29094), [8fdefe32](https://github.com/Katello/katello.git/commit/8fdefe329b1f923a4703a63cd5d9bd8ae839588e))
+ * loading subscriptions page is very slow ([#28894](https://projects.theforeman.org/issues/28894), [9b47cf0a](https://github.com/Katello/katello.git/commit/9b47cf0a2d1e0638ce15df75db68a6abec9f36fb))
+ * Disable Auto attach on Host Subscriptions for Golden Ticketed org ([#28781](https://projects.theforeman.org/issues/28781), [97589ec7](https://github.com/Katello/katello.git/commit/97589ec7e1a56f2e8a0f8398172828e155c4743b), [8fdefe32](https://github.com/Katello/katello.git/commit/8fdefe329b1f923a4703a63cd5d9bd8ae839588e))
+ * An admin cannot GET subscription/manifest uploaded in org created by another admin ([#28751](https://projects.theforeman.org/issues/28751), [844f3c24](https://github.com/Katello/katello.git/commit/844f3c244196ba9f5ea991ab16bd9f1778ba06b2))
+ * Page should auto-refresh after subscriptions have been modified on the webui ([#28659](https://projects.theforeman.org/issues/28659), [aa41e9da](https://github.com/Katello/katello.git/commit/aa41e9dab385884a025829f50f675f5b48b8cb97), [8dd1a030](https://github.com/Katello/katello.git/commit/8dd1a0305ee994a987f69c394a15c832a5df0ac7))
+
 ### Tests
  * eslint errors on master branch ([#29001](https://projects.theforeman.org/issues/29001), [f9d5042c](https://github.com/Katello/katello.git/commit/f9d5042c6842652bd61bc0ff992836531e55447b))
  * Lock mock version in host tools ([#28962](https://projects.theforeman.org/issues/28962), [9e4e264f](https://github.com/Katello/katello-host-tools.git/commit/9e4e264f61c505683965b60bd76735a81f803eda))
@@ -125,12 +135,6 @@
  * Repository info does not show assigned http_proxy policy ([#28486](https://projects.theforeman.org/issues/28486), [749cbe65](https://github.com/Katello/hammer-cli-katello.git/commit/749cbe650627caf5a120f2c16ef7cfa20c5817eb))
  * Unable to assign http_proxy to a product using hammer CLI ([#28175](https://projects.theforeman.org/issues/28175), [3553ce62](https://github.com/Katello/hammer-cli-katello.git/commit/3553ce62eafc778a61bc012bb870292bce75a3ef))
  * hammer throws "too few arguments (ArgumentError)" when Satellite returns 500 ([#27548](https://projects.theforeman.org/issues/27548), [63e9f595](https://github.com/Katello/hammer-cli-katello.git/commit/63e9f595c14637597b1eb0a7c1a6c6943613cf09))
-
-### Subscriptions
- * loading subscriptions page is very slow ([#28894](https://projects.theforeman.org/issues/28894), [9b47cf0a](https://github.com/Katello/katello.git/commit/9b47cf0a2d1e0638ce15df75db68a6abec9f36fb))
- * Disable Auto attach on Host Subscriptions for Golden Ticketed org ([#28781](https://projects.theforeman.org/issues/28781), [97589ec7](https://github.com/Katello/katello.git/commit/97589ec7e1a56f2e8a0f8398172828e155c4743b), [8fdefe32](https://github.com/Katello/katello.git/commit/8fdefe329b1f923a4703a63cd5d9bd8ae839588e))
- * An admin cannot GET subscription/manifest uploaded in org created by another admin ([#28751](https://projects.theforeman.org/issues/28751), [844f3c24](https://github.com/Katello/katello.git/commit/844f3c244196ba9f5ea991ab16bd9f1778ba06b2))
- * Page should auto-refresh after subscriptions have been modified on the webui ([#28659](https://projects.theforeman.org/issues/28659), [aa41e9da](https://github.com/Katello/katello.git/commit/aa41e9dab385884a025829f50f675f5b48b8cb97), [8dd1a030](https://github.com/Katello/katello.git/commit/8dd1a0305ee994a987f69c394a15c832a5df0ac7))
 
 ### Foreman Proxy Content
  * foreman proxy with content always tries to sync from port :5000, even if pulp3 is handling docker content ([#28880](https://projects.theforeman.org/issues/28880), [3d32c6a5](https://github.com/Katello/katello.git/commit/3d32c6a5a3ef9b20ee1bda3d8719aca2cc633f9e))
@@ -168,10 +172,10 @@
  * Sync status information is lost after cleaning up old tasks related to sync. ([#28188](https://projects.theforeman.org/issues/28188), [ea446721](https://github.com/Katello/katello.git/commit/ea4467214aa55d8290d99a873ae171b7c983816a))
 
 ### Other
+ * rake katello:pulp3_post_migration_check incorrectly warns for nil Docker remote_hrefs ([#29441](https://projects.theforeman.org/issues/29441), [50d4d046](https://github.com/Katello/katello.git/commit/50d4d0468776e54d28fdf91aab60f1cee1d743c9))
+ * Migration fails on 20200129172534_add_epoch_version_release_arch_to_katello_installed_packages.rb ([#29389](https://projects.theforeman.org/issues/29389), [189008ec](https://github.com/Katello/katello.git/commit/189008ec3208d8967abbca4bb76592f08b9c6d57))
+ * katello:pulp3_content_switchover fails if multiple docker tags point to the same manifest ([#29342](https://projects.theforeman.org/issues/29342), [89bee135](https://github.com/Katello/katello.git/commit/89bee13590f26703d01e05c05c1b527ce31d8d23), [4ba11295](https://github.com/Katello/katello.git/commit/4ba11295b937d1784b7e9bb7dce8188a61c4a0ea))
  * Object references instead of values in generated reports ([#29271](https://projects.theforeman.org/issues/29271), [d33b503d](https://github.com/Katello/katello.git/commit/d33b503da47003a02384c37495afd652bbfd0452), [d6067cf7](https://github.com/Katello/katello.git/commit/d6067cf7fc714fbac5147ba13665be8de0ccf570))
- * migrated docker tags may have their pulp3 href change after multiple migrations ([#29199](https://projects.theforeman.org/issues/29199), [b693a0b9](https://github.com/Katello/katello.git/commit/b693a0b908a9f41bebeb6a7460c747433f2b2819))
- * Prevent setting auto-attach on Activation Key when in Simple Content Access ([#29094](https://projects.theforeman.org/issues/29094), [8fdefe32](https://github.com/Katello/katello.git/commit/8fdefe329b1f923a4703a63cd5d9bd8ae839588e))
  * loosen pulp3 2to3 migration plugin client bindings requirements ([#29073](https://projects.theforeman.org/issues/29073), [7d978b5a](https://github.com/Katello/katello.git/commit/7d978b5a5ab09b45a21b3b8d4a137c57deb50343), [6be61c3c](https://github.com/Katello/katello.git/commit/6be61c3c6ff56f185c3258f95909c927021a47c7))
- * Erratum Excludes filter by id not working in some cases ([#28988](https://projects.theforeman.org/issues/28988), [df338af8](https://github.com/Katello/katello.git/commit/df338af817ef6f53b312bee148a6e4edf9114d09))
  * make pulp client requirements more strict ([#28887](https://projects.theforeman.org/issues/28887), [395c1eaa](https://github.com/Katello/katello.git/commit/395c1eaa951da2589f76f1548952c11a8854ea24))
  * Restore compatibility with foreman-tasks 1.0 ([#28550](https://projects.theforeman.org/issues/28550), [9582fb08](https://github.com/Katello/katello.git/commit/9582fb0823c614c04e2d4be5d0248b76416d93a3))
