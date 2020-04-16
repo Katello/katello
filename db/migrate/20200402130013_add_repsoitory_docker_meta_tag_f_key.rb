@@ -6,12 +6,14 @@ class AddRepsoitoryDockerMetaTagFKey < ActiveRecord::Migration[5.2]
     add_foreign_key :katello_repository_docker_meta_tags, :katello_repositories, :column => :repository_id
     add_foreign_key :katello_repository_docker_meta_tags, :katello_docker_meta_tags, :column => :docker_meta_tag_id
 
-    query = "DELETE FROM katello_repository_docker_meta_tags T1
-              USING   katello_repository_docker_meta_tags T2
-              WHERE   T1.ctid < T2.ctid
-              AND T1.repository_id  = T2.repository_id
-              AND T1.docker_meta_tag_id = T2.docker_meta_tag_id;"
-    ActiveRecord::Base.connection.execute(query)
+    if Katello::DockerMetaTag.any?
+      query = "DELETE FROM katello_repository_docker_meta_tags T1
+                USING   katello_repository_docker_meta_tags T2
+                WHERE   T1.ctid < T2.ctid
+                AND T1.repository_id  = T2.repository_id
+                AND T1.docker_meta_tag_id = T2.docker_meta_tag_id;"
+      ActiveRecord::Base.connection.execute(query)
+    end
     add_index :katello_repository_docker_meta_tags, [:repository_id, :docker_meta_tag_id], :unique => true, :name => 'repository_docker_meta_tags_rid_dmtid'
 
     Katello::RepositoryDockerTag.where.not(:repository_id => Katello::Repository.select(:id)).delete_all
@@ -20,12 +22,14 @@ class AddRepsoitoryDockerMetaTagFKey < ActiveRecord::Migration[5.2]
     add_foreign_key :katello_repository_docker_tags, :katello_repositories, :column => :repository_id
     add_foreign_key :katello_repository_docker_tags, :katello_docker_tags, :column => :docker_tag_id
 
-    query = "DELETE FROM katello_repository_docker_tags T1
-              USING   katello_repository_docker_tags T2
-              WHERE   T1.ctid < T2.ctid
-              AND T1.repository_id = T2.repository_id
-              AND T1.docker_tag_id = T2.docker_tag_id;"
-    ActiveRecord::Base.connection.execute(query)
+    if Katello::DockerTag.any?
+      query = "DELETE FROM katello_repository_docker_tags T1
+                USING   katello_repository_docker_tags T2
+                WHERE   T1.ctid < T2.ctid
+                AND T1.repository_id = T2.repository_id
+                AND T1.docker_tag_id = T2.docker_tag_id;"
+      ActiveRecord::Base.connection.execute(query)
+    end
     add_index :katello_repository_docker_tags, [:repository_id, :docker_tag_id], :unique => true, :name => 'repository_docker_tags_rid_dtid'
   end
 
