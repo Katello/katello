@@ -4,7 +4,12 @@ module Katello
   module Messaging
     class StompConnection
       def initialize(settings:)
-        ssl_params = Stomp::SSLParams.new(key_file: settings[:ssl_key_file], cert_file: settings[:ssl_cert_file], fsck: false)
+        ssl_params = Stomp::SSLParams.new(
+          key_file: settings[:ssl_key_file],
+          cert_file: settings[:ssl_cert_file],
+          ts_files: settings[:ssl_ca_file],
+          fsck: false
+        )
 
         @config = {
           hosts: [
