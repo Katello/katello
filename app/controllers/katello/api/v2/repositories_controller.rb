@@ -209,7 +209,8 @@ module Katello
     end
 
     api :POST, "/repositories", N_("Create a custom repository")
-    param :name, String, :required => true
+    param :name, String, :desc => N_("Name of the repository"), :required => true
+    param :description, String, :desc => N_("Description of the repository"), :required => false
     param_group :repo_create
     param_group :repo
     def create
