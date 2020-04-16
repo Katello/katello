@@ -14,7 +14,6 @@ import { apiError } from '../../move_to_foreman/common/helpers.js';
 const createContentViewsParams = (extendedParams = {}) => ({
   ...{
     organization_id: orgId(),
-    include_permissions: true,
     nondefault: true,
   },
   ...propsToSnakeCase(extendedParams),
@@ -54,5 +53,3 @@ export const loadContentViewDetails = contentViewId => async (dispatch) => {
     return dispatch({ contentViewId, ...apiError(CONTENT_VIEW_DETAILS_FAILURE, error) });
   }
 };
-
-export default loadContentViews;

@@ -18,15 +18,14 @@ const defaultProps = {
 };
 
 test('Can view content views on the screen', () => {
-  const { getByText, queryByTestId, queryByText } =
+  const { queryByTestId, queryByText } =
     render(<ContentViewsTable results={contentViews} loading={false} {...defaultProps} />);
 
   // query* functions will return the element or null if it cannot be found
   // get* functions will return the element or throw an error if it cannot be found
   // Loop through the CVs in the fixture and ensure they are present
-  contentViewIndex.results.map(({ name }) => {
-    expect(getByText(name)).toBeTruthy();
-    return name;
+  contentViewIndex.results.forEach(({ name }) => {
+    expect(queryByText(name)).toBeTruthy();
   });
 
   // Ensure loading text is not showing as a baseline sanity check Using .toBeNull() here as the
@@ -41,46 +40,46 @@ test('Can view content views on the screen', () => {
 });
 
 test('Loading spinner is showing when no data is loaded yet', () => {
-  const { getByTestId } = render(<ContentViewsTable results={[]} loading {...defaultProps} />);
+  const { queryByTestId } = render(<ContentViewsTable results={[]} loading {...defaultProps} />);
 
   // Now we check if the loading text is showing
-  expect(getByTestId('cv-loading-text')).toBeVisible();
+  expect(queryByTestId('cv-loading-text')).toBeVisible();
 });
 
 test('Empty state message is shown when no Content Views are created yet', () => {
-  const { getByText } = render(<ContentViewsTable
+  const { queryByText } = render(<ContentViewsTable
     results={[]}
     loading={false}
     {...defaultProps}
   />);
 
-  expect(getByText(/You currently don't have any Content Views/)).toBeTruthy();
+  expect(queryByText(/You currently don't have any Content Views/)).toBeTruthy();
 });
 
 test('Can view Environment dropdown when cell is clicked', () => {
-  const { getByText, getByTestId } =
+  const { queryByTestId, queryByText } =
     render(<ContentViewsTable results={contentViews} loading={false} {...defaultProps} />);
 
   // Getting the row that corresponds with the first CV name
-  const firstRow = within(getByText(firstCV.name).closest('tr'));
+  const firstRow = within(queryByText(firstCV.name).closest('tr'));
 
   // Make sure the environment expandable is not showing
   // This uses a specific test id set in the application code, but as it is built out, it could use
   // text shown on screen, which is prefered by the library. https://testing-library.com/docs/guide-which-query
   // Using .toBeVisible() here as the element is in the DOM but hidden from the user's view
-  expect(getByTestId(`cv-environments-expansion-${firstCV.id}`)).not.toBeVisible();
+  expect(queryByTestId(`cv-environments-expansion-${firstCV.id}`)).not.toBeVisible();
 
   // Click on the environments table cell in the row to expand the dropdown.
   fireEvent.click(firstRow.getByLabelText(`environments-icon-${firstCV.id}`));
 
   // Ensure the environment expandable is now visible on screen to the user.
-  expect(getByTestId(`cv-environments-expansion-${firstCV.id}`)).toBeVisible();
+  expect(queryByTestId(`cv-environments-expansion-${firstCV.id}`)).toBeVisible();
 });
 
 test('Handles not yet published Content Views', () => {
   const unpublishedCVs = contentViews.map(cv => ({ ...cv, last_published: null }));
-  const { getByText } =
+  const { queryByText } =
     render(<ContentViewsTable results={unpublishedCVs} loading={false} {...defaultProps} />);
 
-  expect(getByText(/Not Yet Published/i)).toBeTruthy();
+  expect(queryByText(/not yet published/i)).toBeTruthy();
 });

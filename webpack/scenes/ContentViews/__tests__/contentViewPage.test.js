@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { katelloRender, waitFor } from 'react-testing-lib-wrapper';
+import { renderWithKatelloRedux, waitFor } from 'react-testing-lib-wrapper';
 
 import ContentViewsPage, { contentViews as reducer } from '../../ContentViews';
 import { mockReset, mock as mockApi } from '../../../mockRequest';
@@ -29,12 +29,12 @@ test('Can call API for CVs and show on screen on page load', async () => {
   // Using a custom rendering function that sets up both redux and react-router.
   // This allows us to use the component as it is normally used
   const renderOptions = { initialState, reducer, namespace };
-  const { queryByText, getByText } = katelloRender(<ContentViewsPage />, renderOptions);
+  const { queryByText } = renderWithKatelloRedux(<ContentViewsPage />, renderOptions);
 
   // Assert that the CV is not showing by searching by name and the query returning null
   expect(queryByText(firstCV.name)).toBeNull();
   // Assert that the API was called with the correct path and allow any parameters
   await waitFor(() => expect(apiSpy).toHaveBeenCalledWith(cvIndexPath, expect.anything()));
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
-  await waitFor(() => expect(getByText(firstCV.name)).toBeTruthy());
+  await waitFor(() => expect(queryByText(firstCV.name)).toBeTruthy());
 });
