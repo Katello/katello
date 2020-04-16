@@ -130,10 +130,12 @@ module Katello
     end
 
     initializer "katello.events" do
-      Katello::CandlepinEventListener.client = Katello::Messaging::Connection.create(
-        connection_class: Katello::Messaging::StompConnection,
-        settings: SETTINGS[:katello][:candlepin_events]
-      )
+      Katello::CandlepinEventListener.client_factory = proc do
+        Katello::Messaging::Connection.create(
+          connection_class: Katello::Messaging::StompConnection,
+          settings: SETTINGS[:katello][:candlepin_events]
+        )
+      end
     end
 
     config.to_prepare do

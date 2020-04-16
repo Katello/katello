@@ -21,7 +21,7 @@ module Katello
           ],
           logger: Rails.logger,
           max_reconnect_attempts: 2,
-          start_timeout: 3,
+          start_timeout: 2,
           reliable: false,
           connect_headers: {
             'accept-version': '1.2',

@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require 'stomp'
 
 module Katello
   module Messaging
