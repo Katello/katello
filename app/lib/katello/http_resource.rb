@@ -15,6 +15,8 @@ module Katello
       end
     end
 
+    include Katello::Concerns::FilterSensitiveData
+
     class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers,
                     :ssl_client_cert, :ssl_client_key
 
@@ -60,10 +62,6 @@ module Katello
           end
         end
         fail RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
-      end
-
-      def filter_sensitive_data(payload)
-        payload.gsub(/-----BEGIN RSA PRIVATE KEY-----.*-----END RSA PRIVATE KEY-----/, '[filtered]')
       end
 
       def print_debug_info(_a_path, headers = {}, payload = {})
