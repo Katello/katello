@@ -76,7 +76,7 @@ module Katello
                  else v
                  end
         end
-        logger.debug "Body: #{payload_to_print.to_json}"
+        logger.debug "Body: #{filter_sensitive_data(payload_to_print.to_json)}"
       rescue
         logger.debug "Unable to print debug information"
       end
