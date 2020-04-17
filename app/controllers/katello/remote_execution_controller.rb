@@ -44,15 +44,15 @@ module Katello
 
       def errata_inputs
         if params[:install_all]
-          { :errata => Erratum.installable_for_hosts(hosts).pluck(:errata_id) }
+          Erratum.installable_for_hosts(hosts).pluck(:errata_id).join(',')
         else
-          { :errata => params[:name] }
+          params[:name]
         end
       end
 
       def inputs
         if feature_name == 'katello_errata_install'
-          errata_inputs
+          { :errata => errata_inputs }
         elsif feature_name == 'katello_service_restart'
           { :helper => params[:name] }
         elsif feature_name == 'katello_module_stream_action'
