@@ -10,7 +10,7 @@ module Katello
     # and pared down using the below script to keep this test fast and not load unnecessary data
     # https://github.com/candlepin/candlepin/blob/master/server/bin/manifest_manipulator.rb
     def setup
-      User.current = User.find(FIXTURES['users']['admin']['id'])
+      set_user
       @org = CandlepinOwnerSupport.create_organization('GlueCandlepinProviderTest', 'GlueCandlepinProviderTest')
       manifest_path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'manifest_small.zip')
       CandlepinOwnerSupport.import_manifest(@org.label, manifest_path)

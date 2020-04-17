@@ -86,8 +86,16 @@ module FixtureTestCase
     Dir.mkdir(self.fixture_path)
     FileUtils.cp(Dir.glob("#{Katello::Engine.root}/test/fixtures/models/*"), self.fixture_path)
     FileUtils.cp(Dir.glob("#{Rails.root}/test/fixtures/*"), self.fixture_path)
+
+    taxonomies_file = "#{self.fixture_path}/taxonomies.yml"
+    taxonomies = YAML.safe_load(File.read(taxonomies_file))
+    taxonomies.values.each do |taxonomy|
+      next unless taxonomy['type'] == 'Organization'
+      taxonomy['label'] = taxonomy['name'].tr(' ', '_')
+    end
+    File.open(taxonomies_file, 'w') { |file| file.write(taxonomies.to_yaml) }
+
     fixtures(:all)
-    FIXTURES = load_fixtures(ActiveRecord::Base)
 
     load_permissions
     load_repository_types
@@ -95,15 +103,6 @@ module FixtureTestCase
 
     Setting::Content.load_defaults
     Setting::ForemanTasks.load_defaults
-
-    @@admin = ::User.unscoped.find(FIXTURES['users']['admin']['id'])
-    User.current = @@admin
-
-    Organization.all.each do |org|
-      org.setup_label_from_name unless org.label
-      org.location_ids += org.hosts.pluck(:location_id) # prevent orphaned hosts validation errors
-      org.save!
-    end
   end
 end
 
@@ -278,14 +277,7 @@ class ActiveSupport::TestCase
     self.class.stub_ping
   end
 
-  def self.run_as_admin
-    User.current = User.find(FIXTURES['users']['admin']['id'])
-    yield
-    User.current = nil
-  end
-
-  def set_user(user = nil)
-    user ||= users(:admin)
+  def set_user(user = users(:admin))
     user = User.unscoped.find(user.id) if user.id
     User.current = user
   end
@@ -296,6 +288,11 @@ class ActiveSupport::TestCase
 
   def get_organization(org = :empty_organization)
     taxonomies(org)
+  end
+
+  def fix_organization_mismatches(org)
+    org.location_ids += org.hosts.pluck(:location_id)
+    org.save!
   end
 
   def mock_active_records(*records)

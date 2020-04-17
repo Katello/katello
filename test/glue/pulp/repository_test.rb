@@ -331,7 +331,7 @@ module Katello
     end
 
     def test_package_groups
-      @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
+      @fedora_17_x86_64 = katello_repositories(:fedora_17_x86_64)
       package_groups = @fedora_17_x86_64.package_groups
 
       refute_empty package_groups.select { |group| group.name == 'mammals' }
@@ -342,7 +342,7 @@ module Katello
     def setup
       super
 
-      @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
+      @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
 
       RepositorySupport.create_repo(@fedora_17_x86_64)
       RepositorySupport.sync_repo(@fedora_17_x86_64)
