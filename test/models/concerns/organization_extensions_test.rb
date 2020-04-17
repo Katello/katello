@@ -8,7 +8,6 @@ module Katello
       User.current = User.find(users(:admin).id)
       set_default_location
       @org = get_organization(:empty_organization)
-      @org.label = @org.label.tr(' ', ' ')
     end
 
     def test_active_pools_count

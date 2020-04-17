@@ -16,6 +16,7 @@ module Katello
 
     def models
       @organization = get_organization
+      fix_organization_mismatches(@organization)
     end
 
     def setup

@@ -7,7 +7,7 @@ module Katello
       include VCR::TestCase
 
       def setup
-        User.current = User.find(FIXTURES['users']['admin']['id'])
+        set_user
       end
     end
 

@@ -4,7 +4,7 @@ module Katello
   class ProductCreateTest < ActiveSupport::TestCase
     def setup
       super
-      User.current = @@admin
+      set_user
       @product = build(:katello_product,
                        :organization => get_organization,
                        :provider => katello_providers(:anonymous)

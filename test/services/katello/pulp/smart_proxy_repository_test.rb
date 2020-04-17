@@ -132,15 +132,15 @@ module Katello
 
       describe "current_repositories_data" do
         let(:repo_lib_cv1) do
-          { "id" => FIXTURES['katello_repositories']['p_forge']['pulp_id'].to_s }
+          { "id" => katello_repositories(:p_forge).pulp_id }
         end
 
         let(:repo_lib_cv2) do
-          { "id" => FIXTURES['katello_repositories']['lib_p_forge']['pulp_id'].to_s }
+          { "id" => katello_repositories(:lib_p_forge).pulp_id }
         end
 
         let(:repo_dev_cv2) do
-          { "id" => FIXTURES['katello_repositories']['dev_p_forge']['pulp_id'].to_s }
+          { "id" => katello_repositories(:dev_p_forge).pulp_id }
         end
 
         let(:lib) do

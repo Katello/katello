@@ -4,10 +4,6 @@ module Katello
   module Service
     class RegistrationManagerTestBase < ActiveSupport::TestCase
       include VCR::TestCase
-
-      def setup
-        User.current = User.find(FIXTURES['users']['admin']['id'])
-      end
     end
 
     class RegistrationManager < RegistrationManagerTestBase
@@ -15,7 +11,7 @@ module Katello
       allow_transactions_for_any_importer
 
       before :all do
-        User.current = users(:admin)
+        set_user
         @content_view = katello_content_views(:library_dev_view)
         @library = katello_environments(:library)
         @content_view_environment = katello_content_view_environments(:library_dev_view_library)
