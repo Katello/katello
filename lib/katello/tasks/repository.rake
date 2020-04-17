@@ -1,8 +1,6 @@
-namespace :katello do
-  task :disable_dynflow do
-    ForemanTasks.dynflow.config.remote = true
-  end
+load "#{Katello::Engine.root}/lib/katello/tasks/common.rake"
 
+namespace :katello do
   def commit?
     ENV['COMMIT'] == 'true' || ENV['FOREMAN_UPGRADE'] == '1'
   end
