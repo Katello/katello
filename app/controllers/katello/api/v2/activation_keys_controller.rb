@@ -323,8 +323,6 @@ module Katello
                                              :purpose_role,
                                              :purpose_usage,
                                              :purpose_addon_ids,
-                                             # For deep_munge; Remove for Rails 5
-                                             :host_collection_ids,
                                              :content_overrides => [],
                                              :host_collection_ids => []).to_h
     end
