@@ -188,8 +188,6 @@ module Katello
                :description,
                :max_hosts,
                :unlimited_hosts,
-               # For deep_munge; Remove for Rails 5
-               :host_ids,
                { :host_ids => [] }
               ]
       params.fetch(:host_collection).permit(*attrs)

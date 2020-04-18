@@ -230,7 +230,6 @@ module Katello
     def view_params
       attrs = [:name, :description, :force_puppet_environment, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
-      attrs.push(:component_ids, :auto_publish, :solve_dependencies) # For deep_munge; Remove for Rails 5
       if (!@view || !@view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)
       end
