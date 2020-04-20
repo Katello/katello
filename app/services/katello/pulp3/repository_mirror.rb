@@ -52,6 +52,9 @@ module Katello
 
       def delete(href = repository_href)
         api.repositories_api.delete(href) if href
+      rescue api.class.api_exception_class => e
+        raise e if e.code != 404
+        nil
       end
 
       def repository_href

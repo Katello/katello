@@ -84,6 +84,9 @@ module Katello
 
         def delete_remote(remote_href)
           remotes_api.delete(remote_href)
+        rescue self.class.api_exception_class => e
+          raise e if e.code != 404
+          nil
         end
 
         def repository_versions(options = {})
