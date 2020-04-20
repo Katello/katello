@@ -18,7 +18,7 @@ const defaultProps = {
 };
 
 test('Can view content views on the screen', () => {
-  const { queryByTestId, queryByText } =
+  const { queryByText } =
     render(<ContentViewsTable results={contentViews} loading={false} {...defaultProps} />);
 
   // query* functions will return the element or null if it cannot be found
@@ -28,22 +28,21 @@ test('Can view content views on the screen', () => {
     expect(queryByText(name)).toBeTruthy();
   });
 
-  // Ensure loading text is not showing as a baseline sanity check Using .toBeNull() here as the
+  // Ensure loading text is not showing as a baseline sanity check. Using .toBeNull() here as the
   // loading spinner isn't even in the DOM, as opposed to an element that is in the DOM but hidden.
-  // Also using a test id that is set in the the application code so we can correctly identify the
-  // loading text. Pattern matching by "Loading" seems like it could give false positives, a test
-  // id will ensure we are correctly identifying the loading text.
-  expect(queryByTestId('cv-loading-text')).toBeNull();
+  // This will also fail if there are other instances of "Loading" text in the DOM, suggesting
+  // the query needs to be updated to something more specific (such as a test-id).
+  expect(queryByText('Loading')).toBeNull();
 
   // Ensure empty state text isn't showing as a baseline sanity check
-  expect(queryByText(/You currently don't have any Content Views/)).toBeFalsy();
+  expect(queryByText(/You currently don't have any Content Views/i)).toBeFalsy();
 });
 
 test('Loading spinner is showing when no data is loaded yet', () => {
-  const { queryByTestId } = render(<ContentViewsTable results={[]} loading {...defaultProps} />);
+  const { queryByText } = render(<ContentViewsTable results={[]} loading {...defaultProps} />);
 
   // Now we check if the loading text is showing
-  expect(queryByTestId('cv-loading-text')).toBeVisible();
+  expect(queryByText('Loading')).toBeVisible();
 });
 
 test('Empty state message is shown when no Content Views are created yet', () => {

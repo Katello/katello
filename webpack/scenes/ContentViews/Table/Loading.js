@@ -11,7 +11,7 @@ const Loading = () => (
   <Bullseye>
     <EmptyState>
       <EmptyStateIcon variant="container" component={Spinner} />
-      <Title size="lg" data-testid="cv-loading-text">
+      <Title size="lg">
         Loading
       </Title>
     </EmptyState>
