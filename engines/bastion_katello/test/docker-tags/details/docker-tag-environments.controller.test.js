@@ -2,7 +2,7 @@ describe('Controller: DockerTagEnvironmentsController', function() {
     var $scope,
         dockerTag,
         DockerTag,
-        Repository,
+        DockerTagRepositories,
         Nutupane;
 
     beforeEach(module('Bastion.docker-tags', 'Bastion.test-mocks', 'Bastion.common'));
@@ -38,7 +38,7 @@ describe('Controller: DockerTagEnvironmentsController', function() {
             translate: translate,
             Nutupane: Nutupane,
             DockerTag: DockerTag,
-            Repository: Repository,
+            DockerTagRepositories: DockerTagRepositories,
             CurrentOrganization: 'CurrentOrganization',
             ApiErrorHandler: ApiErrorHandler
         });

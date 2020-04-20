@@ -33,8 +33,8 @@ angular.module('Bastion.docker-tags').controller('DockerTagEnvironmentsControlle
             var nutupane;
             if ($scope.tag.repositories.length > 1) {
                 nutupane = new Nutupane(DockerTagRepositories, params, null, {disableAutoLoad: true});
-                newParams['id'] = $scope.tag.id;
-                newParams['archived'] = false;
+                newParams.id = $scope.tag.id;
+                newParams.archived = false;
             } else {
                 nutupane = new Nutupane(DockerTag, params, null, {disableAutoLoad: true});
                 ids = _.map($scope.tag.related_tags, 'id');
