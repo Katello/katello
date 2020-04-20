@@ -5,10 +5,11 @@ import {
   TableBody,
 } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 import Loading from './Loading';
-import tableDataGenerator, { buildColumns } from './tableDataGenerator';
-import emptyRows from './emptyRows';
+import EmptyStateMessage from '../components/EmptyStateMessage';
+import tableDataGenerator from './tableDataGenerator';
 import './ContentViewsTable.scss';
 
 const ContentViewTable = ({
@@ -21,16 +22,13 @@ const ContentViewTable = ({
 
   useEffect(
     () => {
-      if (loading) return;
-      if (cvsPresent) {
+      if (!loading && cvsPresent) {
         const tableData = tableDataGenerator(
           results,
           detailsMap,
           expandedColumnMap,
         );
         setTable(tableData);
-      } else {
-        setTable({ columns: buildColumns(), rows: emptyRows });
       }
     },
     [results, detailsMap, expandedColumnMap],
@@ -101,8 +99,13 @@ const ContentViewTable = ({
     /* eslint-enable no-console */
   };
 
-  const { rows, columns } = table;
+  const EmptyTitle = __("You currently don't have any Content Views.");
+  const EmptyBody = __('A Content View can be added by using the "New content view" button below.');
+
   if (loading) return (<Loading />);
+  if (!cvsPresent) return (<EmptyStateMessage title={EmptyTitle} body={EmptyBody} />);
+
+  const { rows, columns } = table;
   return (
     <Table
       aria-label="Content View Table"
