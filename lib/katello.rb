@@ -12,7 +12,6 @@ require "securerandom"
 
 require "runcible"
 require "deface"
-require 'qpid_messaging'
 
 require "securerandom"
 

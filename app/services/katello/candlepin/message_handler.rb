@@ -13,12 +13,11 @@ module Katello
       end
 
       def content
-        JSON.parse(@message.content)
+        @content ||= JSON.parse(message.content)
       end
 
       def event_data
-        data = content['eventData']
-        data ? JSON.parse(data) : {}
+        @event_data ||= (data = content['eventData']) ? JSON.parse(data) : {}
       end
 
       def status

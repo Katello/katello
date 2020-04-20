@@ -48,6 +48,13 @@ module Katello
           :oauth_secret => 'katello',
           :ca_cert_file => nil,
           :bulk_load_size => 1000
+        },
+        :candlepin_events => {
+          :broker_host => 'localhost',
+          :broker_port => 61_613,
+          :queue_name => 'katello.candlepin',
+          :subscription_name => 'candlepin_events',
+          :client_id => 'katello_candlepin_event_monitor'
         }
       }
 
@@ -120,6 +127,15 @@ module Katello
       ActionView::Base.include Katello::TaxonomyHelper
       ActionView::Base.include Katello::HostsAndHostgroupsHelper
       ActionView::Base.include Katello::KatelloUrlsHelper
+    end
+
+    initializer "katello.events" do
+      Katello::CandlepinEventListener.client_factory = proc do
+        Katello::Messaging::Connection.create(
+          connection_class: Katello::Messaging::StompConnection,
+          settings: SETTINGS[:katello][:candlepin_events]
+        )
+      end
     end
 
     config.to_prepare do
