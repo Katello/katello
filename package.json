@@ -10,8 +10,8 @@
     "test:current": "jest webpack --watch",
     "format": "prettier --single-quote --trailing-comma es5 --write 'webpack/**/*.js'",
     "build": "npm run format && npm run lint",
-    "lint": "eslint webpack/",
-    "lint:fix": "eslint --fix webpack/",
+    "lint": "npx eslint webpack/",
+    "lint:fix": "npx eslint --fix webpack/",
     "lint:test": "npm run lint && npm test",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
