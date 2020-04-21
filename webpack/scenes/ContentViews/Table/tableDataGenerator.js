@@ -1,6 +1,6 @@
 import React from 'react';
 import { compoundExpand } from '@patternfly/react-table';
-import { ScreenIcon, FolderOpenIcon, ContainerNodeIcon } from '@patternfly/react-icons';
+import { ScreenIcon, RepositoryIcon, ContainerNodeIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import IconWithCount from '../components/IconWithCount';
@@ -30,7 +30,7 @@ const buildRow = (contentView, openColumn) => {
       props: { isOpen: false, ariaControls: `cv-environments-expansion-${id}` },
     },
     {
-      title: <IconWithCount Icon={FolderOpenIcon} count={repositories.length} title={`repositories-icon-${id}`} />,
+      title: <IconWithCount Icon={RepositoryIcon} count={repositories.length} title={`repositories-icon-${id}`} />,
       props: { isOpen: false, ariaControls: `cv-repositories-expansion-${id}` },
     },
     {
