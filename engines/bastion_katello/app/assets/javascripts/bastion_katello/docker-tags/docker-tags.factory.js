@@ -10,7 +10,7 @@
 angular.module('Bastion.docker-tags').factory('DockerTag',
     ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
 
-        return BastionResource('katello/api/v2/docker_tags/:id/',
+        return BastionResource('katello/api/v2/docker_tags/:id/:action/',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},

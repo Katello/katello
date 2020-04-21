@@ -55,7 +55,7 @@
 
       <tbody>
         <tr bst-table-row
-            ng-repeat="repo in table.rows">
+            ng-repeat="repo in table.rows | filter:dockerTagFilter">
           <td bst-table-cell>
             <a ui-sref="environment.details({environmentId: repo.kt_environment.id})">
               {{ repo.kt_environment.name }}

@@ -2,7 +2,6 @@ describe('Controller: DockerTagEnvironmentsController', function() {
     var $scope,
         dockerTag,
         DockerTag,
-        DockerTagRepositories,
         Nutupane;
 
     beforeEach(module('Bastion.docker-tags', 'Bastion.test-mocks', 'Bastion.common'));
@@ -19,7 +18,6 @@ describe('Controller: DockerTagEnvironmentsController', function() {
         };
         dockerTag = {id: 1, related_tags: [{id: 1}], repositories: ['test1']};
         DockerTag = MockResource.$new();
-        Repository = MockResource.$new();
     }));
 
     beforeEach(inject(function($controller, $rootScope, $location, MockResource, $injector) {
@@ -38,7 +36,6 @@ describe('Controller: DockerTagEnvironmentsController', function() {
             translate: translate,
             Nutupane: Nutupane,
             DockerTag: DockerTag,
-            DockerTagRepositories: DockerTagRepositories,
             CurrentOrganization: 'CurrentOrganization',
             ApiErrorHandler: ApiErrorHandler
         });

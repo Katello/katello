@@ -136,7 +136,7 @@ module Katello
     def test_search_in_tags
       DockerMetaTag.import_meta_tags([@repo])
       repo2 = Repository.find_by(pulp_id: "Default_Organization-Test-busybox-dev")
-      dup_tag = DockerMetaTag.create(schema1_id: repo2.docker_tags.sort.first.id, schema2_id: repo2.docker_tags.sort.second.id, name: "latest")
+      dup_tag = DockerMetaTag.create(schema1_id: repo2.docker_tags.min.id, schema2_id: repo2.docker_tags.sort.second.id, name: "latest")
       RepositoryDockerMetaTag.create(docker_meta_tag_id: dup_tag.id, repository_id: repo2.id)
 
       assert_equal DockerMetaTag.search_in_tags(DockerTag.all).sort, [DockerMetaTag.first, dup_tag]

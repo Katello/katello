@@ -164,7 +164,7 @@ Katello::Engine.routes.draw do
             get :compare
           end
           member do
-            get 'repositories', :action => :repositories
+            get :repositories
           end
         end
 

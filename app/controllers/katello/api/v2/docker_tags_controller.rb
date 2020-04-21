@@ -26,14 +26,9 @@ module Katello
     end
 
     api :GET, "/docker_tags/:id/repositories", N_("List of repositories for a docker meta tag")
-    param :archived, :bool, :desc => N_("include archived repositories")
     def repositories
-      if ::Foreman::Cast.to_bool params[:archived]
-        repos = DockerMetaTag.find(params[:id]).repositories
-      else
-        repos = DockerMetaTag.find(params[:id]).repositories.non_archived
-      end
-      
+      repos = DockerMetaTag.find(params[:id]).repositories.non_archived
+
       respond_with_template_collection('index', 'repositories', collection: full_result_response(repos))
     end
 
