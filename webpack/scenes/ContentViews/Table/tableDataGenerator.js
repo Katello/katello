@@ -1,7 +1,7 @@
 import React from 'react';
 import { compoundExpand } from '@patternfly/react-table';
 import { ScreenIcon, RepositoryIcon, ContainerNodeIcon } from '@patternfly/react-icons';
-import { translate as __ } from 'foremanReact/common/I18n';
+import { intl, translate as __ } from 'foremanReact/common/I18n';
 
 import IconWithCount from '../components/IconWithCount';
 import DetailsExpansion from '../expansions/DetailsExpansion';
@@ -9,21 +9,25 @@ import RepositoriesExpansion from '../expansions/RepositoriesExpansion';
 import EnvironmentsExpansion from '../expansions/EnvironmentsExpansion';
 import VersionsExpansion from '../expansions/VersionsExpansion';
 import ContentViewName from '../components/ContentViewName';
+import { dateFormatter } from '../../../services';
 
 export const buildColumns = () => [
-  __('Name'), __('Last Published'), __('Details'),
+  __('Name'), __('Last published'), __('Details'),
   { title: __('Environments'), cellTransforms: [compoundExpand] },
   { title: __('Repositories'), cellTransforms: [compoundExpand] },
   { title: __('Versions'), cellTransforms: [compoundExpand] },
 ];
 
+const formattedLastPublished = lastPublished => (lastPublished ? dateFormatter(lastPublished, intl.timezone) : 'Not Yet Published');
+
 const buildRow = (contentView, openColumn) => {
   const {
     id, composite, name, environments, repositories, versions, last_published: lastPublished,
   } = contentView;
+
   const row = [
     { title: <ContentViewName composite={composite ? 1 : undefined} name={name} cvId={id} /> },
-    lastPublished || 'Not yet published',
+    formattedLastPublished(lastPublished),
     { title: __('Details'), props: { isOpen: false, ariaControls: `cv-details-expansion-${id}`, contentviewid: id } },
     {
       title: <IconWithCount Icon={ScreenIcon} count={environments.length} title={`environments-icon-${id}`} />,
