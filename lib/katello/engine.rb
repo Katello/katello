@@ -22,7 +22,7 @@ module Katello
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
 
-    initializer 'katello.load_default_settings', :before => :load_config_initializers do
+    initializer 'katello.load_default_settings', :before => 'katello.register_plugin' do
       default_settings = {
         :use_pulp => true,
         :use_cp => true,
@@ -62,7 +62,10 @@ module Katello
 
       SETTINGS[:katello] = default_settings.deep_merge(SETTINGS[:katello] || {})
 
-      require_dependency File.expand_path('../../../app/models/setting/content.rb', __FILE__) if (Setting.table_exists? rescue(false))
+      if (Setting.table_exists? rescue(false))
+        require_dependency File.expand_path('../../../app/models/setting/content.rb', __FILE__)
+        Setting::Content.load_defaults
+      end
     end
 
     initializer "katello.apipie" do
