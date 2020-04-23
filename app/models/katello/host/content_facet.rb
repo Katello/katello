@@ -69,10 +69,7 @@ module Katello
         end
 
         unless self.bound_repositories.sort == repos.sort
-          self.bound_repositories = repos
-          self.save!
-          self.propagate_yum_repos
-          ForemanTasks.async_task(Actions::Katello::Host::GenerateApplicability, [self.host])
+          update_bound_repositories(repos)
         end
         self.bound_repositories.pluck(:relative_path)
       end
@@ -80,6 +77,17 @@ module Katello
       def propagate_yum_repos
         pulp_ids = self.bound_repositories.includes(:library_instance).map { |repo| repo.library_instance.try(:pulp_id) || repo.pulp_id }
         Katello::Pulp::Consumer.new(self.uuid).bind_yum_repositories(pulp_ids)
+      end
+
+      def update_bound_repositories(repos)
+        self.bound_repositories = repos
+        self.save!
+        self.propagate_yum_repos
+        if SETTINGS[:katello][:katello_applicability]
+          ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, self.host.id)
+        else
+          ForemanTasks.async_task(Actions::Katello::Host::GenerateApplicability, [self.host])
+        end
       end
 
       def installable_errata(env = nil, content_view = nil)
@@ -102,6 +110,16 @@ module Katello
         }
         hash[:total] = hash.values.inject(:+)
         hash
+      end
+
+      # Katello applicability
+      def calculate_and_import_applicability
+        bound_repos = bound_repositories.collect do |repo|
+          repo.library_instance_id.nil? ? repo.id : repo.library_instance_id
+        end
+
+        ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::Rpm, bound_repos).calculate_and_import
+        ::Katello::Applicability::ApplicableContentHelper.new(self, ::Katello::Erratum, bound_repos).calculate_and_import
       end
 
       def import_applicability(partial = false)

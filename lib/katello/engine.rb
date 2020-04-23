@@ -1,3 +1,5 @@
+require 'fx'
+
 module Katello
   HOST_TASKS_QUEUE = :hosts_queue
 
@@ -225,6 +227,7 @@ module Katello
       Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
       Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
       Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
+      Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
 
       Katello::EventDaemon.initialize
     end

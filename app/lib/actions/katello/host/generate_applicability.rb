@@ -7,20 +7,26 @@ module Actions
         end
 
         def plan(hosts, use_queue = true)
-          uuids = hosts.map { |host| host.content_facet.try(:uuid) }.compact
-          unless uuids.empty?
-            plan_action(Pulp::Consumer::GenerateApplicability, :uuids => uuids)
-            plan_self(:host_ids => hosts.map(&:id), :use_queue => use_queue)
+          if SETTINGS[:katello][:katello_applicability]
+            plan_action(::Actions::Katello::Applicability::Hosts::Generate, host_ids: hosts.pluck(:id))
+          else
+            uuids = hosts.map { |host| host.content_facet.try(:uuid) }.compact
+            unless uuids.empty?
+              plan_action(Pulp::Consumer::GenerateApplicability, :uuids => uuids)
+              plan_self(:host_ids => hosts.map(&:id), :use_queue => use_queue)
+            end
           end
         end
 
         def finalize
-          input[:host_ids].each do |host_id|
-            if input[:use_queue]
-              ::Katello::EventQueue.push_event(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host_id)
-            else
-              host = ::Host.find(host_id)
-              host.content_facet.try(:import_applicability, true) if host
+          unless SETTINGS[:katello][:katello_applicability]
+            input[:host_ids].each do |host_id|
+              if input[:use_queue]
+                ::Katello::EventQueue.push_event(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host_id)
+              else
+                host = ::Host.find(host_id)
+                host.content_facet.try(:import_applicability, true) if host
+              end
             end
           end
         end
