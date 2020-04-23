@@ -344,9 +344,9 @@ Foreman::Plugin.register :katello do
 
   Katello::PermissionCreator.new(self).define
   add_all_permissions_to_default_roles
-
-  add_permissions_to_default_roles 'System admin' => [:create_lifecycle_environments, :create_content_views]
-
+  unless Rails.env.test?
+    add_permissions_to_default_roles 'System admin' => [:create_lifecycle_environments, :create_content_views]
+  end
   role 'Register hosts', [
     :view_hostgroups, :view_activation_keys, :view_hosts,
     :create_hosts, :edit_hosts, :destroy_hosts,
