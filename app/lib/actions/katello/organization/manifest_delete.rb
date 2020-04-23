@@ -13,7 +13,8 @@ module Actions
             plan_action(Candlepin::Owner::DestroyImports, label: organization.label)
 
             if SETTINGS[:katello][:use_pulp]
-              organization.products.redhat.flat_map(&:repositories).each do |repo|
+              repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
+              repositories.each do |repo|
                 plan_action(Katello::Repository::RefreshRepository, repo)
               end
             end
