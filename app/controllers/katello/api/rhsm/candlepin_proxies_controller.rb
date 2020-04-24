@@ -30,6 +30,8 @@ module Katello
 
     prepend_before_action :convert_owner_to_organization_id, :except => [:hypervisors_update, :async_hypervisors_update], :if => lambda { params.key?(:owner) }
     prepend_before_action :convert_organization_label_to_id, :only => [:rhsm_index, :consumer_activate, :consumer_create], :if => lambda { params.key?(:organization_id) }
+    # avoid a duplicate log message from Foreman's API::BaseController with private keys not filtered out
+    skip_after_action :log_response_body
 
     def repackage_message
       yield
