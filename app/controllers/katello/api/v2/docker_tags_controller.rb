@@ -27,7 +27,17 @@ module Katello
 
     api :GET, "/docker_tags/:id/repositories", N_("List of repositories for a docker meta tag")
     def repositories
-      repos = DockerMetaTag.find(params[:id]).repositories.non_archived
+      tag = DockerMetaTag.find(params[:id])
+
+      if tag.repositories.size > 1 #pulp3
+        repos = tag.repositories.non_archived
+      else
+        repos = []
+        tag.related_tags.each do |related|
+          repos << related.repositories.non_archived
+        end
+        repos.flatten!
+      end
 
       respond_with_template_collection('index', 'repositories', collection: full_result_response(repos))
     end

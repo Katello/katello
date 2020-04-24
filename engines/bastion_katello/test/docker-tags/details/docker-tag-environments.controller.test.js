@@ -29,6 +29,7 @@ describe('Controller: DockerTagEnvironmentsController', function() {
         $scope.tag = dockerTag;
         $scope.panel = {};
         $scope.$stateParams = {tagId: 1};
+        $scope.tag.$promise = { then: function (callback) { callback({}) } };
 
         $controller('DockerTagEnvironmentsController', {
             $scope: $scope,
