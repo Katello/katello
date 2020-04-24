@@ -17,13 +17,12 @@ module ::Actions::Pulp3
         :content_view_id => @repo.content_view.id)
 
       refute_empty Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
-
-      ForemanTasks.sync_task(
-        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
-      @repo.reload
     end
 
     def test_repository_reference_is_deleted
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+      @repo.reload
       repo_reference = Katello::Pulp3::RepositoryReference.find_by(
         :root_repository_id => @repo.root.id,
         :content_view_id => @repo.content_view.id)
@@ -32,9 +31,59 @@ module ::Actions::Pulp3
     end
 
     def test_distribution_references_are_deleted
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+      @repo.reload
       distribution_references = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
 
       assert_empty distribution_references
+    end
+
+    def test_delete_deleted_distribution_references
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Repository::DeleteDistributions, @repo.id, @master)
+
+      assert_empty Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
+
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Repository::DeleteDistributions, @repo.id, @master)
+      assert_empty Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
+
+      repo_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+
+      refute_nil repo_reference
+
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+      @repo.reload
+
+      repo_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+
+      assert_nil repo_reference
+    end
+
+    def test_delete_deleted_remote_references
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Repository::DeleteRemote, @repo.id, @master)
+
+      repo_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+      refute_nil repo_reference
+
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+      @repo.reload
+
+      repo_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+
+      assert_nil repo_reference
     end
   end
 end
