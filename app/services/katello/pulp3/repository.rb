@@ -4,7 +4,6 @@ module Katello
   module Pulp3
     class Repository
       include Katello::Util::HttpProxy
-
       attr_accessor :repo
       attr_accessor :smart_proxy
       delegate :root, to: :repo
@@ -42,6 +41,13 @@ module Katello
         @api ||= self.class.api(smart_proxy)
       end
 
+      def ignore_404_exception(*)
+        yield
+      rescue api.class.api_exception_class => e
+        raise e unless e.code == 404
+        nil
+      end
+
       def content_service
         Katello::Pulp3::Content
       end
@@ -73,10 +79,7 @@ module Katello
       end
 
       def delete_remote(href = repo.remote_href)
-        api.remotes_api.delete(href) if href
-      rescue api.class.api_exception_class => e
-        raise e if e.code != 404
-        nil
+        ignore_404_exception { api.remotes_api.delete(href) } if href
       end
 
       def self.instance_for_type(repo, smart_proxy)
@@ -179,10 +182,7 @@ module Katello
 
       def delete(href = repository_reference.try(:repository_href))
         repository_reference.try(:destroy)
-        api.repositories_api.delete(href) if href
-      rescue api.class.api_exception_class => e
-        raise e if e.code != 404
-        nil
+        ignore_404_exception { api.repositories_api.delete(href) } if href
       end
 
       def sync
@@ -237,10 +237,7 @@ module Katello
       end
 
       def delete_version
-        api.repository_versions_api.delete(repo.version_href)
-      rescue api.class.api_exception_class => e
-        raise e if e.code != 404
-        nil
+        ignore_404_exception { api.repository_versions_api.delete(repo.version_href) }
       end
 
       def create_version(options = {})
@@ -258,12 +255,9 @@ module Katello
 
       def delete_distributions
         if (dist_ref = distribution_reference)
-          api.delete_distribution(dist_ref.href)
+          ignore_404_exception { api.delete_distribution(dist_ref.href) }
           dist_ref.destroy!
         end
-      rescue api.class.api_exception_class => e
-        raise e if e.code != 404
-        nil
       end
 
       def delete_distributions_by_path

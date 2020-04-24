@@ -78,15 +78,19 @@ module Katello
           PulpcoreClient::Upload
         end
 
+        def ignore_404_exception(*)
+          yield
+        rescue self.class.api_exception_class => e
+          raise e unless e.code == 404
+          nil
+        end
+
         def delete_orphans
           [orphans_api.delete]
         end
 
         def delete_remote(remote_href)
-          remotes_api.delete(remote_href)
-        rescue self.class.api_exception_class => e
-          raise e if e.code != 404
-          nil
+          ignore_404_exception { remotes_api.delete(remote_href) }
         end
 
         def repository_versions(options = {})
@@ -111,17 +115,11 @@ module Katello
         end
 
         def get_distribution(href)
-          distributions_api.read(href)
-        rescue self.class.api_exception_class => e
-          raise e if e.code != 404
-          nil
+          ignore_404_exception { distributions_api.read(href) }
         end
 
         def delete_distribution(href)
-          distributions_api.delete(href)
-        rescue self.class.api_exception_class => e
-          raise e if e.code != 404
-          nil
+          ignore_404_exception { distributions_api.delete(href) }
         end
 
         def list_all(options = {})
