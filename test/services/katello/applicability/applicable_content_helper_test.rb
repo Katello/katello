@@ -1,14 +1,19 @@
 require 'katello_test_helper'
-require 'support/evr_extension_support'
 module Katello
   module Service
     module Applicability
       class ApplicableContentHelperTest < ActiveSupport::TestCase
         FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "rpms.yml")
 
-        def setup
-          EvrExtensionSupport.set_rpm_evrs
+        def trigger_evrs(packages)
+          packages.each do |package|
+            epoch = package.epoch
+            package.update(epoch: "999999999")
+            package.update(epoch: epoch)
+          end
+        end
 
+        def setup
           @repo = katello_repositories(:fedora_17_x86_64)
           @host = FactoryBot.build(:host, :with_content, :with_subscription,
                                    :content_view => katello_content_views(:library_dev_view),
@@ -32,7 +37,7 @@ module Katello
                                                                    version: @rpm2.version, release: @rpm2.release,
                                                                    arch: @rpm2.arch)
 
-          EvrExtensionSupport.set_installed_package_evrs
+          trigger_evrs([@rpm_one, @rpm_two, @rpm_three, @rpm1, @rpm2, @installed_package1, @installed_package2])
 
           HostInstalledPackage.create(host_id: @host.id, installed_package_id: @installed_package1.id)
           HostInstalledPackage.create(host_id: @host.id, installed_package_id: @installed_package2.id)
