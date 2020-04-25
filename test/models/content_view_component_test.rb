@@ -121,7 +121,7 @@ module Katello
       # test that it gets the latest versions correctly
       view1 = create(:katello_content_view)
       version_max = create(:katello_content_view_version, :content_view => view1, :major => "12")
-      create(:katello_content_view_version, :content_view => view1, :major => "2")
+      create(:katello_content_view_version, :content_view => view1, :major => "2", :minor => "8")
       create(:katello_content_view_version, :content_view => view1, :major => "2", :minor => "9")
 
       ContentViewComponent.create!(:composite_content_view => @composite,
