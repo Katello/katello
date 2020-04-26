@@ -104,9 +104,7 @@ module ::Actions::Katello::Organization
     it 'plans' do
       acme_org = taxonomies(:empty_organization)
       upstream = {}
-      rhel7 = katello_repositories(:rhel_7_x86_64)
       acme_org.stubs(:owner_details).returns({})
-      acme_org.products.stubs(:redhat).returns([rhel7.product])
       action.stubs(:action_subject).with(acme_org)
       action.stubs(:rand).returns('1234')
       plan_action(action, acme_org)
@@ -134,11 +132,11 @@ module ::Actions::Katello::Organization
                                  organization_id: acme_org.id,
                                  dependency: found.first.output
                                         )
-      assert_action_planned_with(action,
-                                 ::Actions::Katello::Repository::RefreshRepository,
-                                 rhel7,
-                                 dependency: found.first.output
-                                )
+
+      assert_action_planned_with(action, ::Actions::Katello::Repository::RefreshRepository) do |repo, options|
+        assert repo.library_instance?
+        assert_equal options, dependency: found.first.output
+      end
     end
 
     it 'plans & create audit record for organization with comment manifest refreshed' do
@@ -218,8 +216,7 @@ module ::Actions::Katello::Organization
     let(:action_class) { ::Actions::Katello::Organization::ManifestImport }
 
     it 'plans' do
-      rhel7 = katello_repositories(:rhel_7_x86_64)
-      organization.products.stubs(:redhat).returns([rhel7.product])
+      organization = taxonomies(:empty_organization)
       action.stubs(:action_subject).with(organization)
       plan_action(action, organization, '/tmp/1234.zip', false)
 
@@ -233,10 +230,9 @@ module ::Actions::Katello::Organization
                                  ::Actions::Candlepin::Owner::ImportProducts,
                                  organization_id: organization.id
                                 )
-      assert_action_planned_with(action,
-                                 ::Actions::Katello::Repository::RefreshRepository,
-                                 rhel7
-                                )
+      assert_action_planned_with(action, ::Actions::Katello::Repository::RefreshRepository) do |args|
+        assert args.first.library_instance?
+      end
     end
 
     it 'plans & create audit record for organization with comment manifest imported' do
@@ -306,8 +302,7 @@ module ::Actions::Katello::Organization
     let(:action_class) { ::Actions::Katello::Organization::ManifestDelete }
 
     it 'plans' do
-      rhel7 = katello_repositories(:rhel_7_x86_64)
-      organization.products.stubs(:redhat).returns([rhel7.product])
+      organization = taxonomies(:empty_organization)
       action.stubs(:action_subject).with(organization)
       plan_action(action, organization)
 
@@ -315,10 +310,9 @@ module ::Actions::Katello::Organization
                                  ::Actions::Candlepin::Owner::DestroyImports,
                                  label: organization.label
                                 )
-      assert_action_planned_with(action,
-                                 ::Actions::Katello::Repository::RefreshRepository,
-                                 rhel7
-                                )
+      assert_action_planned_with(action, ::Actions::Katello::Repository::RefreshRepository) do |args|
+        assert args.first.library_instance?
+      end
     end
 
     it 'creates audit record for organization after manifest deletion' do
