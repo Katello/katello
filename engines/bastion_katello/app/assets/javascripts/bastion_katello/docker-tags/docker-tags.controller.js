@@ -44,5 +44,13 @@ angular.module('Bastion.docker-tags').controller('DockerTagsController',
             }
             return versions.join(", ");
         };
+
+        $scope.getRepositoryNames = function (tag) {
+            return tag.repositories.map(function(repo) {
+                return repo.name;
+            }).filter(function(item, index, names) {
+                return names.indexOf(item) >= index;
+            }).sort().join(', ');
+        };
     }]
 );

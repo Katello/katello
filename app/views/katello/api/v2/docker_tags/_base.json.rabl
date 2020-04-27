@@ -18,7 +18,7 @@ child :docker_manifest => :manifest do
   attributes :schema_version, :digest, :manifest_type
 end
 
-child :repository => :repository do
+child :repositories => :repositories do
   attributes :id, :name, :full_path
 end
 
