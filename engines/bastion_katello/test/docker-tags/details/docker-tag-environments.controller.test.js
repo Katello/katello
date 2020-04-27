@@ -16,7 +16,7 @@ describe('Controller: DockerTagEnvironmentsController', function() {
             this.getParams = function (params) { return {}; };
             this.refresh = function () {};
         };
-        dockerTag = {id: 1, related_tags: [{id: 1}]};
+        dockerTag = {id: 1, related_tags: [{id: 1}], repositories: ['test1']};
         DockerTag = MockResource.$new();
     }));
 
@@ -29,6 +29,7 @@ describe('Controller: DockerTagEnvironmentsController', function() {
         $scope.tag = dockerTag;
         $scope.panel = {};
         $scope.$stateParams = {tagId: 1};
+        $scope.tag.$promise = { then: function (callback) { callback({}) } };
 
         $controller('DockerTagEnvironmentsController', {
             $scope: $scope,

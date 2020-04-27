@@ -27,19 +27,19 @@
 
       <tbody>
         <tr bst-table-row
-            ng-repeat="tag in table.rows | filter:dockerTagFilter">
+            ng-repeat="repo in table.rows | filter:dockerTagFilter">
           <td bst-table-cell>
-            <a ui-sref="environment.details({environmentId: tag.environment.id})">
-              {{ tag.environment.name }}
+            <a ui-sref="environment.details({environmentId: repo.kt_environment.id})">
+              {{ repo.kt_environment.name }}
             </a>
           </td>
           <td bst-table-cell>
-            <a ui-sref="content-view.version.docker({contentViewId: tag.content_view_version.content_view_id, versionId: tag.content_view_version.id})">
-              {{ tag.content_view_version.name }}
+            <a ui-sref="content-view.version.docker({contentViewId: repo.content_view_version.content_view_id, versionId: repo.content_view_version.id})">
+              {{ repo.content_view_version.name }}
             </a>
           </td>
           <td bst-table-cell>
-            {{ tag.repository.full_path }}:{{ tag.name }}
+            {{ repo.full_path }}:{{ tag.name }}
           </td>
         </tr>
       </tbody>
