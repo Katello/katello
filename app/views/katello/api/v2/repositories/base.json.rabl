@@ -57,3 +57,11 @@ end
 child :content_view => :content_view do |_repo|
   attribute :id, :name
 end
+
+child :content_view_version do
+  attributes :id, :name, :content_view_id
+end
+
+child :environment do
+  attributes :id, :name
+end
