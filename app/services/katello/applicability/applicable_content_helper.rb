@@ -21,37 +21,61 @@ module Katello
 
       def fetch_content_ids
         if self.content_unit_class == ::Katello::Erratum
-          # Query for all Errata ids that are attached to the host's applicable packages
-          query = 'select katello_repository_errata.erratum_id as id from katello_repository_errata
-                       inner join katello_erratum_packages
-                          on  katello_repository_errata.erratum_id  = katello_erratum_packages.erratum_id
-                       inner join katello_rpms
-                          on katello_rpms.nvra = katello_erratum_packages.nvrea
-                       inner join katello_content_facet_applicable_rpms on
-                           katello_content_facet_applicable_rpms.rpm_id = katello_rpms.id
-                       where
-                            "katello_content_facet_applicable_rpms"."content_facet_id" = :content_facet_id
-                       AND katello_repository_errata.repository_id IN (:repo_ids)'
-
-          return Katello::Erratum.find_by_sql([query, {content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos} ]).map(&:id).uniq
+          fetch_errata_content_ids
         elsif self.content_unit_class == ::Katello::ModuleStream
           fail NotImplementedError
         else
-          # Query for applicable RPM ids
-          return ::Katello::Rpm.joins("INNER JOIN katello_repository_rpms ON \
-                                      katello_rpms.id = katello_repository_rpms.rpm_id").
-                                      joins("INNER JOIN katello_installed_packages ON \
-                                            katello_rpms.name = katello_installed_packages.name AND \
-                                            katello_rpms.arch = katello_installed_packages.arch AND \
-                                            katello_rpms.evr > katello_installed_packages.evr").
-                                            joins("INNER JOIN katello_host_installed_packages ON \
-                                                  katello_installed_packages.id = \
-                                                  katello_host_installed_packages.installed_package_id WHERE \
-                                                  katello_repository_rpms.repository_id in \
-                                                  (#{self.bound_library_instance_repos.join(',')}) \
-                                                  and katello_host_installed_packages.host_id = \
-                                                  #{self.content_facet.host.id}").pluck(:id).uniq
+          fetch_rpm_content_ids
         end
+      end
+
+      def fetch_errata_content_ids
+        # Query for all Errata ids that are attached to the host's applicable packages
+        query = 'select katello_repository_errata.erratum_id as id from katello_repository_errata
+                     inner join katello_erratum_packages
+                        on  katello_repository_errata.erratum_id  = katello_erratum_packages.erratum_id
+                     inner join katello_rpms
+                        on katello_rpms.nvra = katello_erratum_packages.nvrea
+                     inner join katello_content_facet_applicable_rpms on
+                         katello_content_facet_applicable_rpms.rpm_id = katello_rpms.id
+                     where
+                          "katello_content_facet_applicable_rpms"."content_facet_id" = :content_facet_id
+                     AND katello_repository_errata.repository_id IN (:repo_ids)'
+
+        return Katello::Erratum.find_by_sql([query, {content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos} ]).map(&:id).uniq
+      end
+
+      def fetch_rpm_content_ids
+        # Query for applicable RPM ids
+        # -> Include all non-modular rpms or rpms that exist within installed module streams
+        enabled_module_stream_ids = ::Katello::ModuleStream.
+          joins("inner join katello_available_module_streams on
+            katello_module_streams.name = katello_available_module_streams.name and
+            katello_module_streams.stream = katello_available_module_streams.stream").
+          joins("inner join katello_host_available_module_streams on
+            katello_available_module_streams.id = katello_host_available_module_streams.available_module_stream_id").
+          where("katello_host_available_module_streams.host_id = :content_facet_id and
+            katello_host_available_module_streams.status = 'enabled'",
+            :content_facet_id => self.content_facet.host.id).select(:id)
+
+        ::Katello::Rpm.
+          joins("INNER JOIN katello_repository_rpms ON
+            katello_rpms.id = katello_repository_rpms.rpm_id").
+          joins("INNER JOIN katello_installed_packages ON
+            katello_rpms.name = katello_installed_packages.name AND
+            katello_rpms.arch = katello_installed_packages.arch AND
+            katello_rpms.evr > katello_installed_packages.evr").
+          joins("LEFT JOIN katello_module_stream_rpms ON
+            katello_rpms.id = katello_module_stream_rpms.rpm_id").
+          joins("INNER JOIN katello_host_installed_packages ON
+            katello_installed_packages.id = katello_host_installed_packages.installed_package_id").
+          where("katello_repository_rpms.repository_id in (:bound_library_repos)",
+            :bound_library_repos => self.bound_library_instance_repos).
+          where("katello_host_installed_packages.host_id = :content_facet_id",
+            :content_facet_id => self.content_facet.host.id).
+          where("katello_module_stream_rpms.module_stream_id is null or
+            katello_module_stream_rpms.module_stream_id in (:enabled_module_streams)",
+            :enabled_module_streams => enabled_module_stream_ids).pluck(:id).uniq
       end
 
       def applicable_differences
