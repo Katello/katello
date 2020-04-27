@@ -3,6 +3,12 @@ require 'fx'
 module Katello
   HOST_TASKS_QUEUE = :hosts_queue
 
+  module CustomWorldConfig
+    def world_config
+      super.tap { |config| config.delayed_executor = nil }
+    end
+  end
+
   class Engine < ::Rails::Engine
     isolate_namespace Katello
 
@@ -79,6 +85,8 @@ module Katello
     end
 
     initializer "katello.register_actions", :before => :finisher_hook do |_app|
+      ForemanTasks::Dynflow::Configuration.prepend CustomWorldConfig if Rails.env.test?
+
       ForemanTasks.dynflow.require!
       if (Setting.table_exists? rescue(false)) && Setting['host_tasks_workers_pool_size'].to_i > 0
         ForemanTasks.dynflow.config.queues.add(HOST_TASKS_QUEUE, :pool_size => Setting['host_tasks_workers_pool_size'])
