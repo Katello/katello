@@ -12,3 +12,6 @@ configure({ adapter: new Adapter() });
 // Mocking translation function
 global.__ = text => text; // eslint-disable-line
 Services.orgId = () => 1;
+
+// Mocking locales to prevent unnecessary fallback messages
+window.locales = { en: { domain: 'app', locale_data: { app: { '': {} } } } };
