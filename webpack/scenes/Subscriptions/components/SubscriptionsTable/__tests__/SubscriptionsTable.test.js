@@ -7,7 +7,6 @@ import SubscriptionsTable from '../SubscriptionsTable';
 import { successState, loadingState, emptyState, groupedSubscriptions } from '../../../__tests__/subscriptions.fixtures';
 import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions';
 
-jest.mock('foremanReact/components/Pagination/PaginationWrapper');
 jest.useFakeTimers();
 
 const tableColumns = [

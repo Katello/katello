@@ -61,34 +61,5 @@
     "ngreact": "^0.5.0",
     "query-string": "^6.1.0",
     "react-bootstrap": "^0.32.1"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "webpack/**/*.js",
-      "!webpack/**/bundle*"
-    ],
-    "coverageReporters": [
-      "lcov"
-    ],
-    "testURL": "http://localhost/",
-    "setupFiles": [
-      "raf/polyfill",
-      "./webpack/test_setup.js"
-    ],
-    "setupTestFrameworkScriptFile": "./webpack/global_test_setup.js",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "<rootDir>/foreman/",
-      "<rootDir>/.+fixtures.+",
-      "<rootDir>/engines"
-    ],
-    "moduleDirectories": [
-      "node_modules/@theforeman/vendor-core/node_modules",
-      "node_modules"
-    ],
-    "moduleNameMapper": {
-      "^.+\\.(css|scss)$": "identity-obj-proxy"
-    }
   }
 }
