@@ -123,7 +123,7 @@ rhel_6_x86_64_dev:
   library_instance:     rhel_6_x86_64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8
-  relative_path:        'ACME_Corporation/library/rhel_6_label'
+  relative_path:        'ACME_Corporation/dev/rhel_6_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
 
@@ -131,7 +131,7 @@ rhel_6_x86_64_dev_archive:
   library_instance:     rhel_6_x86_64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_arch
-  relative_path:        'ACME_Corporation/library/rhel_6_label'
+  relative_path:        'ACME_Corporation/archive/rhel_6_label'
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
 
 fedora_17_no_arch:
@@ -183,7 +183,7 @@ rhel_6_x86_64_library_view_1:
   library_instance:     rhel_6_x86_64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_view1
-  relative_path:        'ACME_Corporation/library/rhel_6_label'
+  relative_path:        'ACME_Corporation/library_view/rhel_6_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
 
@@ -191,7 +191,7 @@ rhel_6_x86_64_library_view_1_archive:
   library_instance:     rhel_6_x86_64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_view1_archive
-  relative_path:        'ACME_Corporation/library/rhel_6_label'
+  relative_path:        'ACME_Corporation/library_view/archive/rhel_6_label'
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
 
 fedora_17_x86_64_library_view_1:
@@ -299,7 +299,7 @@ rhel_6_x86_64_composite_view_version_1_archive:
   library_instance:     rhel_6_x86_64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_composite_version1_archive
-  relative_path:        'ACME_Corporation/library/composite/rhel_6_label'
+  relative_path:        'ACME_Corporation/composite/archive/rhel_6_label'
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
 
 ostree:

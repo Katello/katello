@@ -1,8 +1,8 @@
 module Actions
   module Pulp3
     class ImportMigration < Pulp3::Abstract
-      def plan
-        plan_self
+      def plan(options)
+        plan_self(options)
       end
 
       def run

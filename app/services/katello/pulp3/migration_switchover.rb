@@ -2,7 +2,7 @@ require 'pulp_2to3_migration_client'
 
 module Katello
   module Pulp3
-    class SwitchoverError < StandardError; end
+    class SwitchOverError < StandardError; end
 
     class MigrationSwitchover
       def initialize(*argv)
@@ -14,11 +14,13 @@ module Katello
       end
 
       def run
-        check_already_migrated_content
-        cleanup_v1_docker_tags if docker_migration?
-        migrated_content_type_check
-        combine_duplicate_docker_tags if docker_migration?
-        migrate_pulp3_hrefs
+        Katello::Logging.time("CONTENT_SWITCHOVER - Total Switchover Process") do
+          Katello::Logging.time("CONTENT_SWITCHOVER - check_already_migrated_content") { check_already_migrated_content }
+          Katello::Logging.time("CONTENT_SWITCHOVER - cleanup_v1_docker_tags") { cleanup_v1_docker_tags } if docker_migration?
+          Katello::Logging.time("CONTENT_SWITCHOVER - migrated_content_type_check") { migrated_content_type_check }
+          Katello::Logging.time("CONTENT_SWITCHOVER - combine_duplicate_docker_tags") { combine_duplicate_docker_tags } if docker_migration?
+          Katello::Logging.time("CONTENT_SWITCHOVER - migrate_pulp3_hrefs") { migrate_pulp3_hrefs }
+        end
       end
 
       def docker_migration?
@@ -84,9 +86,17 @@ module Katello
 
       def migrated_content_type_check
         content_types.each do |content_type|
-          if content_type.model_class.where(migrated_pulp3_href: nil).any?
-            fail SwitchoverError, "ERROR: at least one #{content_type.model_class.table_name} record has migrated_pulp3_href NULL value\n"
+          if content_type.model_class == Katello::Erratum
+            migrated_errata_check
+          elsif content_type.model_class.where(migrated_pulp3_href: nil).any?
+            fail SwitchOverError, "ERROR: at least one #{content_type.model_class.table_name} record has migrated_pulp3_href NULL value\n"
           end
+        end
+      end
+
+      def migrated_errata_check
+        if Katello::RepositoryErratum.where(:erratum_pulp3_href => nil).any?
+          fail SwitchOverError, "ERROR: at least one Erratum record has migrated_pulp3_href NULL value\n"
         end
       end
     end

@@ -865,7 +865,9 @@ module Katello
         copy_indexed_data(source_repository)
       else
         repository_type.content_types_to_index.each do |type|
-          type.model_class.import_for_repository(self)
+          Katello::Logging.time("CONTENT_INDEX", data: {type: type.model_class}) do
+            type.model_class.import_for_repository(self)
+          end
         end
         repository_type.index_additional_data_proc&.call(self)
       end

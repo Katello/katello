@@ -19,6 +19,8 @@ module VCR
 
     module Overrides
       def run
+        SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
+
         value = nil
         remove_cassette if VCR.live?
         VCR.use_cassette(cassette_name, :match_requests_on => vcr_matches) do
