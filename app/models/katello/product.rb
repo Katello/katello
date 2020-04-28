@@ -157,7 +157,7 @@ module Katello
       self.class.where(["cp_id = ? AND id != ?", cp_id, id]).count > 0
     end
 
-    scope :all_in_org, ->(org) { Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id) }
+    scope :all_in_org, ->(org) { joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id) }
 
     def assign_unique_label
       self.label = Util::Model.labelize(self.name) if self.label.blank?
