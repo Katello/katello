@@ -3,20 +3,27 @@ require 'pulp_2to3_migration_client'
 module Katello
   module Pulp3
     class Migration
-      attr_accessor :smart_proxy
+      attr_accessor :smart_proxy, :reimport_all
       GET_QUERY_ID_LENGTH = 90
-
-      REPOSITORY_TYPES = [
-        Katello::Repository::FILE_TYPE,
-        Katello::Repository::DOCKER_TYPE
-      ].freeze
 
       MUTABLE_CONTENT_TYPES = [
         Katello::DockerTag,
         Katello::Erratum
       ].freeze
 
-      def initialize(smart_proxy, repository_types = REPOSITORY_TYPES)
+      UNIFIED_CONTENT_TYPES = [
+        Katello::Erratum
+      ].freeze
+
+      def self.repository_types_for_migration
+        #we can migrate types that pulp3 supports, but are overridden to pulp2.  These are in 'migration mode'
+        overridden = (SETTINGS[:katello][:use_pulp_2_for_content_type] || {}).keys.select { |key| SETTINGS[:katello][:use_pulp_2_for_content_type][key] }
+        overridden.select { |type| SmartProxy.pulp_master.pulp3_repository_type_support?(type.to_s, false) }.map { |t| t.to_s }
+      end
+
+      def initialize(smart_proxy, repository_types = Migration.repository_types_for_migration, options = {})
+        self.reimport_all = options.fetch(:reimport, false)
+
         if (repository_types - smart_proxy.supported_pulp_types[:pulp3][:overriden_to_pulp2]).any?
           fail ::Katello::Errors::Pulp3MigrationError, _("Pulp 3 migration cannot run. Types %s have already been migrated.") %
             (repository_types - smart_proxy.supported_pulp_types[:pulp3][:overriden_to_pulp2]).join(', ')
@@ -47,7 +54,8 @@ module Katello
       end
 
       def create_and_run_migrations
-        create_migrations.map { |href| start_migration(href) }
+        migs = create_migrations
+        migs.map { |href| start_migration(href) }
       end
 
       def content_types_for_migration
@@ -59,31 +67,75 @@ module Katello
       end
 
       def import_pulp3_content
-        @repository_types.each do |repository_type_label|
-          Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index.each do |content_type|
-            import_content_type(content_type)
+        Katello::Logging.time("CONTENT_MIGRATION - Total Import Process") do
+          @repository_types.each do |repository_type_label|
+            Katello::Logging.time("CONTENT_MIGRATION - Importing Repository", data: {type: repository_type_label}) do
+              import_repositories(repository_type_label)
+            end
+
+            Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index.each do |content_type|
+              Katello::Logging.time("CONTENT_MIGRATION - Importing Content", data: {type: content_type}) do
+                import_content_type(content_type)
+              end
+            end
           end
-          import_repositories(repository_type_label)
         end
       end
 
+      def migration_plan
+        Katello::Pulp3::MigrationPlan.new(@repository_types).generate.as_json
+      end
+
       def create_migrations
-        plan = Katello::Pulp3::MigrationPlan.new(@repository_types)
-        Rails.logger.info(plan)
-        [migration_plan_api.create(plan: plan.generate.as_json).pulp_href]
+        plan = migration_plan
+        Rails.logger.info("Migration Plan: #{plan}")
+
+        if plan['plugins'].empty?
+          Rails.logger.error("No Repositories to migrate")
+          []
+        else
+          [migration_plan_api.create(plan: plan).pulp_href]
+        end
       end
 
       def start_migration(plan_href)
-        migration_plan_api.run(plan_href, dry_run: false)
+        migration_plan_api.run(plan_href, dry_run: false, validate: true)
       end
 
       def import_repositories(repository_type_label)
         imported = Katello::Pulp3::Api::Core.fetch_from_list { |opts| pulp2_repositories_api.list(opts) }
         imported = imported.select { |migrated| !migrated.not_in_plan }
+        katello_repos = Katello::Repository.with_type(repository_type_label)
 
-        Katello::Repository.with_type(repository_type_label).each do |repo|
-          found = imported.find { |migrated_repo| migrated_repo.pulp2_repo_id == repo.pulp_id }
-          import_repo(repo, found) if found
+        if repository_type_label == 'yum'
+          import_yum_repos(imported, katello_repos)
+        else
+          katello_repos.each do |repo|
+            found = imported.find { |migrated_repo| migrated_repo.pulp2_repo_id == repo.pulp_id }
+            import_repo(repo, found) if found
+          end
+        end
+      end
+
+      def import_yum_repos(migrated_repo_items, repos)
+        repos.each do |yum_repo|
+          to_find = nil
+          if yum_repo.content_view.composite?
+            if yum_repo.link?
+              to_find = yum_repo.target_repository
+            else
+              to_find = yum_repo
+            end
+          elsif yum_repo.environment_id.nil? || yum_repo.in_default_view? #non-composite archive repo or default content view repo
+            to_find = yum_repo
+          else #non-composite env-repo
+            to_find = yum_repo.archived_instance
+          end
+
+          if to_find
+            found = migrated_repo_items.find { |migrated_repo| migrated_repo.pulp2_repo_id == to_find.pulp_id }
+            import_repo(yum_repo, found)
+          end
         end
       end
 
@@ -105,9 +157,7 @@ module Katello
         end
 
         repo_ref = Katello::Pulp3::RepositoryReference.find_or_initialize_by(:root_repository_id => katello_repo.root_id, :content_view_id => katello_repo.content_view.id)
-        repo_ref.repository_href = migrated_repo.pulp3_repository_href
-        repo_ref.save!
-
+        repo_ref.update!(repository_href: migrated_repo.pulp3_repository_href) if repo_ref.repository_href != migrated_repo.pulp3_repository_href
         process_distributions(pulp3_api, migrated_repo.pulp3_distribution_hrefs)
       end
 
@@ -125,18 +175,69 @@ module Katello
         end
       end
 
-      def import_content_type(content_type)
-        unmigrated_units = content_type.model_class
-        #mutable content types have to be completely re-indexed every time
-        unless MUTABLE_CONTENT_TYPES.include?(content_type.model_class)
-          unmigrated_units = unmigrated_units.where(:migrated_pulp3_href => nil)
+      def generate_repo_version_map
+        map = {}
+        Katello::Repository.select(:id, :version_href).each do |repo|
+          map[repo.version_href] ||= []
+          map[repo.version_href] << repo.id
         end
-        unmigrated_units.select(:id, :pulp_id).find_in_batches(batch_size: GET_QUERY_ID_LENGTH) do |needing_hrefs|
-          migrated_units = pulp2_content_api.list(pulp2_id__in: needing_hrefs.map { |unit| unit.pulp_id }.join(','))
-          migrated_units.results.each do |migrated_unit|
-            matching_record = needing_hrefs.find { |db_unit| db_unit.pulp_id == migrated_unit.pulp2_id }
+        map
+      end
 
-            matching_record&.update_column(:migrated_pulp3_href, migrated_unit.pulp3_content)
+      def operate_on_errata
+        offset = 0
+        limit = 300
+        response = pulp2_content_api.list(pulp2_content_type_id: 'erratum', offset: offset, limit: limit)
+        total_count = response.count
+        yield(response.results)
+        until (offset + limit > total_count)
+          offset += limit
+          response = pulp2_content_api.list(pulp2_content_type_id: 'erratum', offset: offset, limit: limit)
+          yield(response.results)
+        end
+      end
+
+      def import_errata
+        to_import = {}
+
+        repo_version_map = generate_repo_version_map
+
+        operate_on_errata do |migrated_list|
+          katello_errata = Katello::Erratum.where(:pulp_id => migrated_list.map(&:pulp2_id).uniq)
+          migrated_list.each do |migrated_unit|
+            pulp3_href = migrated_unit.pulp3_content
+            errata_id = katello_errata.find { |erratum| erratum.pulp_id == migrated_unit.pulp2_id }&.id
+            next if errata_id.nil?
+            repo_ids = repo_version_map[migrated_unit.pulp3_repository_version]
+            #currently pulp can have duplicates, so de-duplicate with a hash
+            repo_ids&.each do |repo_id|
+              #currently pulp can have duplicates, so de-duplicate with a hash
+              to_import[[errata_id, repo_id]] ||= {erratum_id: errata_id, erratum_pulp3_href: pulp3_href, repository_id: repo_id}
+            end
+          end
+        end
+
+        Katello::RepositoryErratum.import([:erratum_id, :erratum_pulp3_href, :repository_id], to_import.values, :validate => false,
+                                          on_duplicate_key_update: {conflict_target: [:erratum_id, :repository_id], columns: [:erratum_pulp3_href]})
+      end
+
+      def import_content_type(content_type)
+        if content_type.model_class == Katello::Erratum
+          import_errata
+        else
+          unmigrated_units = content_type.model_class
+
+          #mutable content types have to be completely re-indexed every time
+          if !MUTABLE_CONTENT_TYPES.include?(content_type.model_class) && !self.reimport_all
+            unmigrated_units = unmigrated_units.where(:migrated_pulp3_href => nil)
+          end
+
+          unmigrated_units.select(:id, :pulp_id).find_in_batches(batch_size: GET_QUERY_ID_LENGTH) do |needing_hrefs|
+            migrated_units = pulp2_content_api.list(pulp2_id__in: needing_hrefs.map { |unit| unit.pulp_id }.join(','))
+            migrated_units.results.each do |migrated_unit|
+              matching_record = needing_hrefs.find { |db_unit| db_unit.pulp_id == migrated_unit.pulp2_id }
+              matching_record&.update_column(:migrated_pulp3_href, migrated_unit.pulp3_content)
+            end
           end
         end
       end
