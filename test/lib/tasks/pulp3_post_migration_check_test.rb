@@ -8,7 +8,14 @@ module Katello
       @fake_pulp3_href = 'fake_pulp3_href'
       @another_fake_pulp3_href = 'another_fake_pulp3_href'
 
-      Katello::Pulp3::Migration::REPOSITORY_TYPES.each do |type|
+      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {
+        yum: true,
+        file: true,
+        docker: true
+      }
+
+      Katello::Pulp3::Migration.repository_types_for_migration.each do |type|
         Katello::Repository.with_type(type).each do |repo|
           repo.update(:version_href => @fake_pulp3_href + repo.id.to_s,
                         :remote_href => @fake_pulp3_href + repo.id.to_s,
@@ -20,7 +27,12 @@ module Katello
       @task_name = 'katello:pulp3_post_migration_check'
       Rake::Task[@task_name].reenable
       Rake::Task.define_task(:environment)
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+
+      ForemanTasks.stubs(:sync_task)
+    end
+
+    def teardown
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
     end
 
     def test_fails_if_file_repository_has_nil_version_href
