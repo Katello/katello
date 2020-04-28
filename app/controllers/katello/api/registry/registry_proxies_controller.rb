@@ -160,7 +160,7 @@ module Katello
       end
 
       r = Resources::Registry::Proxy.get(@_request.fullpath, headers)
-      logger.debug r
+      logger.debug filter_sensitive_data(r)
       results = JSON.parse(r)
 
       response.header['Docker-Content-Digest'] = "sha256:#{Digest::SHA256.hexdigest(r)}"
