@@ -1,10 +1,10 @@
 module Actions
   module Pulp3
     class ContentMigration < Pulp3::AbstractAsyncTask
-      def plan(smart_proxy = SmartProxy.pulp_primary)
+      def plan(smart_proxy, options)
         sequence do
-          plan_self(smart_proxy_id: smart_proxy.id)
-          plan_action(Actions::Pulp3::ImportMigration)
+          action = plan_self(smart_proxy_id: smart_proxy.id)
+          plan_action(Actions::Pulp3::ImportMigration, options.merge(:dependency => action.output))
         end
       end
 

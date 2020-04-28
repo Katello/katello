@@ -3,7 +3,7 @@ load "#{Katello::Engine.root}/lib/katello/tasks/common.rake"
 namespace :katello do
   desc "Runs a Pulp 2 to 3 Content Migration for supported types.  May be run multiple times.  Use wait=false to immediately return with a task url."
   task :pulp3_migration => ["environment", "disable_dynflow", "check_ping"] do
-    task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration)
+    task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration, SmartProxy.pulp_master, reimport_all: ENV[:reimport_all])
 
     if ENV['wait'].nil? || ::Foreman::Cast.to_bool(ENV['wait'])
       until !task.pending? || task.paused?
@@ -11,7 +11,9 @@ namespace :katello do
         task = ForemanTasks::Task.find(task.id)
       end
 
-      if task.result == 'error' || task.result == 'pending'
+      if task.result == 'warning' || task.result == 'pending'
+        msg = _("Migration failed, You will want to investigate: https://#{Socket.gethostname}/foreman_tasks/tasks/#{task.id}\n")
+        $stderr.print(msg)
         fail ForemanTasks::TaskError, task
       else
         puts _("Content Migration completed successfully")

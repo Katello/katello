@@ -44,7 +44,7 @@ module Katello
       file_unit = katello_files(:two)
       file_unit.update(:migrated_pulp3_href => nil)
 
-      assert_raises Katello::Pulp3::SwitchoverError do
+      assert_raises Katello::Pulp3::SwitchOverError do
         @switchover.run
       end
     end
@@ -62,7 +62,7 @@ module Katello
     def test_docker_manifest_with_null_migrated_pulp3_href_throws_an_error
       Katello::DockerManifest.first.update(:migrated_pulp3_href => nil)
 
-      assert_raises Katello::Pulp3::SwitchoverError do
+      assert_raises Katello::Pulp3::SwitchOverError do
         @switchover.run
       end
     end
@@ -83,7 +83,7 @@ module Katello
       manifest_list = FactoryBot.create(:docker_manifest_list)
       manifest_list.update(:migrated_pulp3_href => nil)
 
-      assert_raises Katello::Pulp3::SwitchoverError do
+      assert_raises Katello::Pulp3::SwitchOverError do
         @switchover.run
       end
     end
@@ -109,7 +109,7 @@ module Katello
       docker_manifest = tag.docker_taggable
       docker_manifest.update(:migrated_pulp3_href => @another_fake_pulp3_href + docker_manifest.id.to_s)
 
-      assert_raises Katello::Pulp3::SwitchoverError do
+      assert_raises Katello::Pulp3::SwitchOverError do
         @switchover.run
       end
     end
