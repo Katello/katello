@@ -24,7 +24,7 @@ angular.module('Bastion').config(
     ['$httpProvider', '$provide', 'BastionConfig',
     function ($httpProvider, $provide, BastionConfig) {
         $httpProvider.defaults.headers.common = {
-            Accept: 'application/json, text/plain, version=2; */*',
+            Accept: 'application/json, text/plain, */*',
             'X-CSRF-TOKEN': angular.element('meta[name=csrf-token]').attr('content')
         };
 
