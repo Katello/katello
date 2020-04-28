@@ -56,13 +56,6 @@ module Katello
       respond_for_index(:collection => index_response, :template => "index")
     end
 
-    api :GET, "/hosts/:host_id/subscriptions/events", N_("List subscription events for the host"), :deprecated => true
-    param :host_id, Integer, :desc => N_("Id of the host"), :required => true
-    def events
-      ::Foreman::Deprecation.api_deprecation_warning("Events API is being deprecated and will be removed in Katello 3.16.")
-      respond_for_index :collection => full_result_response([])
-    end
-
     api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def destroy
