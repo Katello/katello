@@ -13,8 +13,8 @@ module Katello
       end
 
       def nvrea
-        if epoch == "0"
-          @nvra
+        if epoch.nil? || epoch.to_s == "0"
+          nvra
         else
           "#{@name}-#{@epoch}:#{@version}-#{@release}.#{@arch}"
         end

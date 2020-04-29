@@ -106,7 +106,7 @@ module Katello
 
       def import_package_profile(simple_packages)
         found = import_package_profile_in_bulk(simple_packages)
-        sync_package_associations(found.map(&:id))
+        sync_package_associations(found.map(&:id).uniq)
       end
 
       def import_package_profile_in_bulk(simple_packages)
@@ -127,9 +127,14 @@ module Katello
                                           :arch => simple_package.arch)
         end
         InstalledPackage.import(installed_packages, validate: false, on_duplicate_key_ignore: true)
+        #re-lookup all imported to pickup any duplicates/conflicts
+        imported = InstalledPackage.where(:nvrea => installed_packages.map(&:nvrea)).select(:id).to_a
 
-        found << installed_packages
-        found.flatten
+        if imported.count != installed_packages.count
+          Rails.logger.warn("Mismatch found in installed package insertion, expected #{installed_packages.count} but only could find #{imported.count}.  This is most likley a bug.")
+        end
+
+        (found + imported).flatten
       end
 
       def import_enabled_repositories(repos)
