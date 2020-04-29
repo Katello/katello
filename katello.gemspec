@@ -46,11 +46,11 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   #pulp3
-  gem.add_dependency "pulpcore_client", ">= 3.2.1", "< 3.3.0"
-  gem.add_dependency "pulp_file_client", ">= 0.2.0", "< 0.3.0"
+  gem.add_dependency "pulpcore_client", ">= 3.3.0", "< 3.4.0"
+  gem.add_dependency "pulp_file_client", ">= 0.3.0", "< 0.4.0"
   gem.add_dependency "pulp_ansible_client", "> 0.1", "< 0.3.0"
-  gem.add_dependency "pulp_container_client", ">= 1.2.0", "< 1.3.0"
-  gem.add_dependency "pulp_rpm_client", ">=3.2.0", "< 3.3.0"
+  gem.add_dependency "pulp_container_client", ">= 1.3.0", "< 1.4.0"
+  gem.add_dependency "pulp_rpm_client", ">=3.3.0", "< 3.4.0"
   gem.add_dependency "pulp_2to3_migration_client", "> 0.1", "< 0.3.0"
 
   # UI
