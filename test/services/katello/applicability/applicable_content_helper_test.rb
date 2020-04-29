@@ -44,10 +44,10 @@ module Katello
 
           @installed_package1 = InstalledPackage.create(name: @rpm1.name, nvra: @rpm1.nvra, epoch: @rpm1.epoch,
                                                                    version: @rpm1.version, release: @rpm1.release,
-                                                                   arch: @rpm1.arch)
+                                                                   arch: @rpm1.arch, nvrea: @rpm1.nvrea)
           @installed_package2 = InstalledPackage.create(name: @rpm2.name, nvra: @rpm2.nvra, epoch: @rpm2.epoch,
                                                                    version: @rpm2.version, release: @rpm2.release,
-                                                                   arch: @rpm2.arch)
+                                                                   arch: @rpm2.arch, nvrea: @rpm2.nvrea)
 
           trigger_evrs([@rpm_one, @rpm_two, @rpm_three, @rpm1, @rpm2, @installed_package1, @installed_package2])
 
