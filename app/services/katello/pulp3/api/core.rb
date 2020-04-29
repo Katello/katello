@@ -93,15 +93,19 @@ module Katello
           ignore_404_exception { remotes_api.delete(remote_href) }
         end
 
+        def repository_version_hrefs(options = {})
+          repository_versions(options).map(&:pulp_href).uniq
+        end
+
         def repository_versions(options = {})
           current_pulp_repositories = self.list_all(options)
           repo_hrefs = current_pulp_repositories.collect { |repo| repo.pulp_href }.uniq
 
           version_hrefs = repo_hrefs.collect do |href|
-            versions_list_for_repository(href, options).map(&:pulp_href)
+            versions_list_for_repository(href, options)
           end
 
-          version_hrefs.flatten.uniq
+          version_hrefs.flatten
         end
 
         def versions_list_for_repository(repository_href, options)
