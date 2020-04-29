@@ -157,7 +157,7 @@ module Katello
 
     def test_epoch_updates_evr_string
       rpm = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
-      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch)
+      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch, :nvrea => rpm.nvrea)
       rpm.update(epoch: '99')
       installed_package.update(epoch: '99')
       rpm.reload
@@ -169,7 +169,7 @@ module Katello
 
     def test_version_updates_evr_string
       rpm = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
-      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch)
+      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch, :nvrea => rpm.nvrea)
       rpm.update(version: '2.0')
       installed_package.update(version: '2.0')
       rpm.reload
@@ -181,7 +181,7 @@ module Katello
 
     def test_release_updates_evr_string
       rpm = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
-      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch)
+      installed_package = InstalledPackage.create(name: rpm.name, nvra: rpm.nvra, epoch: rpm.epoch, version: rpm.version, release: rpm.release, arch: rpm.arch, :nvrea => rpm.nvrea)
       rpm.update(release: '3.el8')
       installed_package.update(release: '3.el8')
       rpm.reload

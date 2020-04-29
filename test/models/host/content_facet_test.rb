@@ -27,7 +27,7 @@ module Katello
     def test_katello_agent_installed?
       refute host.content_facet.katello_agent_installed?
 
-      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-agent', 'nvra' => 'katello-agent-1.0.x86_64')
+      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-agent', 'nvrea' => 'katello-agent-1.0.x86_64', 'nvra' => 'katello-agent-1.0.x86_64')
 
       assert host.reload.content_facet.katello_agent_installed?
     end
@@ -35,7 +35,7 @@ module Katello
     def test_tracer_installed?
       refute host.content_facet.tracer_installed?
 
-      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-host-tools-tracer', 'nvra' => 'katello-host-tools-tracer-1.0.x86_64')
+      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-host-tools-tracer', 'nvrea' => 'katello-host-tools-tracer-1.0.x86_64', 'nvra' => 'katello-agent-1.0.x86_64')
 
       assert host.reload.content_facet.tracer_installed?
     end
