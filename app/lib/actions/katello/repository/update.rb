@@ -4,17 +4,12 @@ module Actions
       class Update < Actions::EntryAction
         include Actions::Katello::PulpSelector
 
-        # rubocop:disable Metrics/MethodLength
         def plan(root, repo_params)
           repository = root.library_instance
           action_subject root.library_instance
 
           repo_params[:url] = nil if repo_params[:url] == ''
           root.update!(repo_params)
-
-          if root['content_type'] == 'puppet' || root['content_type'] == 'ostree'
-            ::Foreman::Deprecation.api_deprecation_warning("Repository types of 'Puppet' and 'OSTree' will no longer be supported in Katello 3.16.")
-          end
 
           if update_content?(repository)
             content = root.content
