@@ -12,7 +12,9 @@ module Katello
     before_action :authorize_repository_write, only: [:push_manifest]
     skip_before_action :check_content_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
                                                    :chunk_upload_blob, :push_manifest]
-    skip_after_action :log_response_body, :only => [:pull_blob]
+    if defined?(log_response_body)
+      skip_after_action :log_response_body, :only => [:pull_blob]
+    end
 
     wrap_parameters false
 
