@@ -64,7 +64,7 @@ module Katello
               :root_repository_id => @repo.root.id,
               :content_view_id => @repo.content_view.id)
 
-          assert_includes orphans, repo_reference.repository_href + 'versions/0/'
+          refute_includes orphans, repo_reference.repository_href + 'versions/0/'
           assert_includes orphans, repo_reference.repository_href + 'versions/1/'
           refute_includes orphans, repo_reference.repository_href + 'versions/2/'
         end
