@@ -152,6 +152,19 @@ module Katello
         end
       end
 
+      def missing_pulp3_capabilities?
+        pulp3_enabled? && self.capabilities(PULP3_FEATURE).empty?
+      end
+
+      def fix_pulp3_capabilities(type)
+        if missing_pulp3_capabilities? && !pulp2_preferred_for_type?(type)
+          self.refresh
+          if self.capabilities(::SmartProxy::PULP3_FEATURE).empty?
+            fail Katello::Errors::PulpcoreMissingCapabilities
+          end
+        end
+      end
+
       def pulp3_repository_type_support?(repository_type, check_pulp2_preferred = true)
         repository_type_obj = repository_type.is_a?(String) ? Katello::RepositoryTypeManager.repository_types[repository_type] : repository_type
         fail "Cannot find repository type #{repository_type}, is it enabled?" unless repository_type_obj
