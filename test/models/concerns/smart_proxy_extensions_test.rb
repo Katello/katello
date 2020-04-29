@@ -66,6 +66,8 @@ module Katello
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @file_repo = katello_repositories(:generic_file)
       @puppet_repo = katello_repositories(:p_forge)
+
+      @pulp3_feature = Feature.find_by(:name => SmartProxy::PULP3_FEATURE)
     end
 
     def teardown
@@ -114,6 +116,33 @@ module Katello
       assert_includes expected_types_map[:pulp2][:supported_types], "puppet"
     ensure
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
+    end
+
+    def test_fix_pulp3_capabilities
+      @master.expects(:refresh).once
+      @master.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [])
+
+      assert_raises(Katello::Errors::PulpcoreMissingCapabilities) do
+        @master.fix_pulp3_capabilities('file')
+      end
+    end
+
+    def test_fix_pulp3_capabilities_overridden
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
+      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
+      @master.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [])
+      @master.expects(:refresh).never
+      @master.fix_pulp3_capabilities('file')
+    ensure
+      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
+    end
+
+    def test_fix_pulp3_capabilities_not_needed
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
+      @master.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:pulpcore])
+      @master.expects(:refresh).never
+
+      @master.fix_pulp3_capabilities('file')
     end
   end
 end
