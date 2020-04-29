@@ -448,42 +448,6 @@ module Katello
       end
     end
 
-    def test_create_with_ostree
-      repository = katello_repositories(:ostree)
-      sync_depth = '123'
-      sync_policy = "custom"
-      product = mock
-      product.expects(:add_repo).with({
-        :label => 'Fedora_Repository',
-        :name => 'Fedora Repository',
-        :url => 'http://hub.registry.com',
-        :content_type => 'ostree',
-        :arch => 'noarch',
-        :unprotected => true,
-        :gpg_key => nil,
-        :ssl_ca_cert => nil,
-        :ssl_client_cert => nil,
-        :ssl_client_key => nil}.with_indifferent_access
-                                     ).returns(repository.root)
-
-      product.expects(:gpg_key).returns(nil)
-      product.expects(:ssl_ca_cert).returns(nil)
-      product.expects(:ssl_client_cert).returns(nil)
-      product.expects(:ssl_client_key).returns(nil)
-      product.expects(:organization).returns(@organization)
-      product.expects(:redhat?).returns(false)
-      repository.root.expects(:ostree_upstream_sync_policy=).with(sync_policy)
-      repository.root.expects(:ostree_upstream_sync_depth=).with(sync_depth)
-
-      assert_sync_task(::Actions::Katello::Repository::CreateRoot, repository.root)
-
-      Product.stubs(:find).returns(product)
-      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://hub.registry.com', :content_type => 'ostree', :ostree_upstream_sync_policy => sync_policy, :ostree_upstream_sync_depth => sync_depth }
-
-      assert_response :success
-      assert_template 'api/v2/common/create'
-    end
-
     def test_create_without_label_or_name
       post :create, params: { :product_id => @product.id }
       #should raise an error along the lines of invalid content type provided
@@ -615,17 +579,6 @@ module Katello
 
       assert_response 422
       assert_equal(expected_message, body['errors']['download_policy'][0])
-    end
-
-    def test_update_with_upstream_sync_policy
-      sync_depth = '100'
-      sync_policy = "custom"
-      repo = katello_repositories(:ostree)
-      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        attributes[:ostree_upstream_sync_policy].must_equal sync_policy
-        attributes[:ostree_upstream_sync_depth].must_equal sync_depth
-      end
-      put :update, params: { :id => repo.id, :ostree_upstream_sync_depth => sync_depth, :ostree_upstream_sync_policy => sync_policy }
     end
 
     def test_update_with_ignorable_content
