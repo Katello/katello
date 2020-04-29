@@ -10,6 +10,8 @@ module Katello
     include Foreman::ThreadSession::Cleaner
 
     skip_before_action :setup_has_many_params # TODO: get this working #8862
+    # avoid a duplicate log message from Foreman's API::BaseController with private keys not filtered out
+    skip_after_action :log_response_body
 
     resource_description do
       api_version 'v2'
