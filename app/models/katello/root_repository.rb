@@ -30,6 +30,8 @@ module Katello
       GLOBAL_DEFAULT_HTTP_PROXY,
       NO_DEFAULT_HTTP_PROXY,
       USE_SELECTED_HTTP_PROXY].freeze
+    DOWNLOAD_POLICIES = (::Runcible::Models::YumImporter::DOWNLOAD_POLICIES -
+      [::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND]).freeze
 
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
     belongs_to :gpg_key, :inverse_of => :root_repositories, :class_name => "Katello::GpgKey"
@@ -75,8 +77,8 @@ module Katello
       :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.repository_types.keys.join(', ') }
     }
     validates :download_policy, inclusion: {
-      :in => ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES,
-      :message => _("must be one of the following: %s") % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
+      :in => DOWNLOAD_POLICIES,
+      :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', ')
     }, if: :yum?
     validates :http_proxy_policy, inclusion: {
       :in => HTTP_PROXY_POLICIES,
