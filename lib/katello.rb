@@ -26,7 +26,7 @@ require "monkeys/anemone"
 module Katello
   require "katello/version"
   require "katello/engine"
-
+  {}.map{|i| i.foo}
   def self.pulp_server
     Katello::Pulp::Server.config(SETTINGS[:katello][:pulp][:url], User.remote_user)
   end
