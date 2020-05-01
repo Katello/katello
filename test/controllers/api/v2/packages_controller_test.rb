@@ -9,6 +9,7 @@ module Katello
       @host = hosts(:one)
       @simple_filter = katello_content_view_filters(:simple_filter)
       @one_package_rule = katello_content_view_package_filter_rules(:one_package_rule)
+      @org = get_organization
       Pulp::Rpm.any_instance.stubs(:backend_data).returns({})
       SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
     end
@@ -22,12 +23,12 @@ module Katello
     end
 
     def test_index
-      get :index, params: { :repository_id => @repo.id }
+      get :index, params: { :repository_id => @repo.id, :organization_id => @org.id}
 
       assert_response :success
       assert_template "katello/api/v2/packages/index"
 
-      get :index, params: { :content_view_version_id => @version.id }
+      get :index, params: { :content_view_version_id => @version.id, :organization_id => @org.id }
 
       assert_response :success
       assert_template "katello/api/v2/packages/index"
@@ -50,7 +51,7 @@ module Katello
     end
 
     def test_index_with_applicability
-      response = get :index, params: { :host_id => @host.id }
+      response = get :index, params: { :host_id => @host.id, :organization_id => @org.id }
 
       assert_response :success
 
@@ -59,7 +60,8 @@ module Katello
     end
 
     def test_index_with_upgradability
-      response = get :index, params: { :host_id => @host.id, :packages_restrict_upgradable => true }
+      response = get :index, params: { :host_id => @host.id, :packages_restrict_upgradable => true,
+                                       :organization_id => @org.id }
 
       assert_response :success
       ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
@@ -67,7 +69,8 @@ module Katello
     end
 
     def test_index_with_available_for_content_view_version
-      response = get :index, params: { :content_view_version_id => @version.id, :available_for => 'content_view_version' }
+      response = get :index, params: { :content_view_version_id => @version.id, :available_for => 'content_view_version',
+                                       :organization_id => @org.id }
 
       assert_response :success
       ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
@@ -75,7 +78,7 @@ module Katello
     end
 
     def test_index_with_latest
-      response = get :index, params: { :packages_restrict_latest => true }
+      response = get :index, params: { :packages_restrict_latest => true, :organization_id => @org.id }
 
       assert_response :success
       ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
@@ -102,7 +105,7 @@ module Katello
     end
 
     def test_index_with_content_view_filter_id
-      response = get :index, params: { content_view_filter_id: @simple_filter.id }
+      response = get :index, params: { content_view_filter_id: @simple_filter.id, :organization_id => @org.id }
       response_body = JSON.parse(response.body, symbolize_names: true)
 
       assert_response :success
@@ -111,7 +114,7 @@ module Katello
     end
 
     def test_index_with_content_view_filter_rule_id
-      response = get :index, params: { content_view_filter_rule_id: @one_package_rule.id }
+      response = get :index, params: { content_view_filter_rule_id: @one_package_rule.id, :organization_id => @org.id }
       response_body = JSON.parse(response.body, symbolize_names: true)
 
       assert_response :success
