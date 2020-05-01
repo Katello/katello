@@ -4,7 +4,7 @@ module Katello
     include Katello::Concerns::Api::V2::RepositoryContentController
 
     before_action :find_repositories, :only => [:auto_complete_name, :auto_complete_arch]
-    before_action :find_host, :only => :index
+    before_action :find_hosts, :only => :index
 
     def auto_complete_name
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
@@ -51,17 +51,15 @@ module Katello
     end
 
     def custom_index_relation(collection)
-      applicable = ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || @host
+      applicable = ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || params[:host_id]
       upgradable = ::Foreman::Cast.to_bool(params[:packages_restrict_upgradable])
-      if applicable || upgradable
-        hosts = @host ? [@host] : ::Host::Managed.authorized("view_hosts")
-        hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
-        if upgradable
-          collection = collection.installable_for_hosts(hosts)
-        elsif applicable
-          collection = collection.applicable_to_hosts(hosts)
-        end
+
+      if upgradable
+        collection = collection.installable_for_hosts(@hosts)
+      elsif applicable
+        collection = collection.applicable_to_hosts(@hosts)
       end
+
       collection
     end
 
@@ -93,11 +91,13 @@ module Katello
 
     private
 
-    def find_host
+    def find_hosts
+      @hosts = ::Host::Managed.authorized("view_hosts")
       if params[:host_id]
-        @host = ::Host::Managed.authorized("view_hosts").find_by(:id => params[:host_id])
-        fail HttpErrors::NotFound, _('Could not find a host with id %s') % params[:host_id] unless @host
+        @hosts = @hosts.where(:id => params[:host_id])
+        fail HttpErrors::NotFound, _('Could not find a host with id %s') % params[:host_id] if @hosts.empty?
       end
+      @hosts = @hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
     end
 
     def find_repositories
