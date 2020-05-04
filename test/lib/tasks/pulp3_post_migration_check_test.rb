@@ -20,6 +20,7 @@ module Katello
       @task_name = 'katello:pulp3_post_migration_check'
       Rake::Task[@task_name].reenable
       Rake::Task.define_task(:environment)
+      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
     end
 
     def test_fails_if_file_repository_has_nil_version_href

@@ -45,9 +45,9 @@ module Katello
         tasks.flatten
       end
 
-      def pulp3_enabled_repo_types
+      def pulp3_enabled_repo_types(check_pulp2_preferred = true)
         Katello::RepositoryTypeManager.repository_types.values.select do |repository_type|
-          smart_proxy.pulp3_repository_type_support?(repository_type)
+          smart_proxy.pulp3_repository_type_support?(repository_type, check_pulp2_preferred)
         end
       end
 
@@ -61,6 +61,26 @@ module Katello
         end
 
         repo_version_map
+      end
+
+      def delete_orphan_repositories
+        tasks = []
+        orphan_repositories.each do |api, hrefs|
+          tasks << hrefs.collect do |href|
+            api.repositories_api.delete(href)
+          end
+        end
+        tasks.flatten
+      end
+
+      def orphan_repositories
+        repo_map = {}
+        pulp3_enabled_repo_types(false).each do |repo_type|
+          api = repo_type.pulp3_service_class.api(smart_proxy)
+          repo_hrefs = api.list_all.map(&:pulp_href)
+          repo_map[api] = repo_hrefs - ::Katello::Pulp3::RepositoryReference.where(repository_href: repo_hrefs).pluck(:repository_href)
+        end
+        repo_map
       end
     end
   end
