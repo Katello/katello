@@ -119,6 +119,7 @@ module Katello
       counts = cvv.content_counts_map
       assert_equal manifest_count, counts["docker_manifest_count"]
       assert_equal tag_count, counts["docker_tag_count"]
+      assert_equal 0, counts["puppet_module_count"]
     end
 
     def test_active_history_nil_task

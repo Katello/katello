@@ -314,6 +314,7 @@ module Katello
           content_counts[content_type::CONTENT_TYPE] = content_type.in_repositories(self.repositories.archived).count
         end
       end
+      self.content_counts[PuppetModule::CONTENT_TYPE] = self.puppet_modules.count
       save!
     end
 
