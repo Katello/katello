@@ -40,12 +40,6 @@ const store = mockStore(Immutable({
   intervals: {
     SUBSCRIPTIONS_TASK_SEARCH: 5,
   },
-  katello: {
-    subscriptions: {},
-    organization: {
-      id: 1,
-    },
-  },
 }));
 
 afterEach(() => {
