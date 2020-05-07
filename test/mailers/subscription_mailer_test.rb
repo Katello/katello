@@ -44,6 +44,9 @@ module Katello
                         cp_id: "1234",
                         subscription_id: ActiveRecord::FixtureSet.identify(:other_subscription))
 
+      template = FactoryBot.create(:report_template, name: 'Subscription - Entitlement Report')
+      FactoryBot.create(:template_input, name: 'Days from Now', template_id: template.id)
+
       ActionMailer::Base.deliveries = []
     end
 
