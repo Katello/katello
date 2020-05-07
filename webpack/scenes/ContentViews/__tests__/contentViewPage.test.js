@@ -4,7 +4,7 @@ import { renderWithApiRedux, waitFor } from 'react-testing-lib-wrapper';
 import CONTENT_VIEWS_KEY from '../ContentViewsConstants';
 import ContentViewsPage from '../../ContentViews';
 import api from '../../../services/api';
-import { nockInstance, assertNockRequest } from '../../../mockRequest';
+import { nockInstance, assertNockRequest } from '../../../test-utils/nockWrapper';
 
 
 const cvIndexData = require('./contentViewList.fixtures.json');
