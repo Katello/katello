@@ -1,5 +1,7 @@
 module Katello
   class HostTracer < Katello::Model
+    include Katello::Authorization::HostTracer
+
     belongs_to :host, :inverse_of => :host_traces, :class_name => '::Host::Managed'
 
     validates :application, :length => {:maximum => 255}, :presence => true

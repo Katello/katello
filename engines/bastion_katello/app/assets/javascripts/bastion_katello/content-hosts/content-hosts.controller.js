@@ -157,5 +157,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             nutupane.invalidate();
             ContentHostsModalHelper.openModuleStreamsModal();
         };
+
+        $scope.openTracesModal = function () {
+            nutupane.invalidate();
+            ContentHostsModalHelper.openTracesModal();
+        };
     }]
 );

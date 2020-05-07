@@ -69,6 +69,17 @@ angular.module('Bastion.content-hosts').service('ContentHostsModalHelper', ['$ui
             });
         };
 
+        this.openTracesModal = function() {
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-traces-modal.html',
+                controller: 'ContentHostsBulkTracesController',
+                size: 'lg',
+                resolve: {
+                    hostIds: this.resolveFunc()
+                }
+            });
+        };
+
         this.openSubscriptionsModal = function() {
             $uibModal.open({
                 templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html',

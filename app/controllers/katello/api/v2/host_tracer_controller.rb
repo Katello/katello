@@ -16,6 +16,45 @@ module Katello
       respond_for_index(:collection => collection)
     end
 
+    api :PUT, "/traces/resolve", N_("Resolve Traces")
+    param :trace_ids, Array, :required => true, :desc => N_("Array of Trace IDs")
+    def resolve
+      traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
+
+      traces.each do |trace|
+        if trace.helper.include?('reboot')
+          trace.helper = 'reboot'
+        end
+      end
+
+      traces_by_host_id = traces.group_by(&:host_id)
+      traces_by_helper = traces.group_by(&:helper)
+
+      composers = []
+
+      if traces_by_host_id.size < traces_by_helper.size
+        traces_by_host_id.each do |host_id, trace|
+          needed_traces = trace.map(&:helper).join(',')
+          joined_helpers = { :helper => needed_traces }
+          composers << JobInvocationComposer.for_feature(:katello_service_restart, [host_id], joined_helpers)
+        end
+      else
+        traces_by_helper.each do |helper, trace|
+          helpers = { :helper => helper }
+          composers << JobInvocationComposer.for_feature(:katello_service_restart, trace.map(&:host_id), helpers)
+        end
+      end
+
+      job_invocations = []
+
+      composers.each do |composer|
+        composer.trigger
+        job_invocations << composer.job_invocation
+      end
+
+      render json: job_invocations
+    end
+
     protected
 
     def index_relation
