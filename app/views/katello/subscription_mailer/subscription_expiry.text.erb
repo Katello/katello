@@ -13,3 +13,7 @@
   <%= _("Days Remaining") %>:       <%= pool.days_until_expiration %>
 
 <% end %>
+
+<%if @report_url %>
+  <%= _("View a report of the affected hosts") %>:               <%= @report_url %>
+<% end %>

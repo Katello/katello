@@ -34,7 +34,7 @@ User.as(::User.anonymous_api_admin.login) do
     },
 
     {:name => :subscriptions_expiring_soon,
-     :description => N_('A list of subscriptions expiring within 30 days'),
+     :description => N_('A list of subscriptions expiring soon'),
      :mailer => 'Katello::SubscriptionMailer',
      :method => 'subscription_expiry',
      :subscription_type => 'report',
