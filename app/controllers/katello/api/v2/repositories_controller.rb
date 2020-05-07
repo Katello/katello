@@ -221,7 +221,7 @@ module Katello
       end
 
       if repo_params['content_type'] == "puppet" || repo_params['content_type'] == "ostree"
-        ::Foreman::Deprecation.api_deprecation_warning("Puppet and OSTree will no longer be supported in Katello 3.16")
+        ::Foreman::Deprecation.api_deprecation_warning("Puppet and OSTree will no longer be supported in Katello 4.0")
       end
 
       gpg_key = get_content_credential(repo_params, CONTENT_CREDENTIAL_GPG_KEY_TYPE)
