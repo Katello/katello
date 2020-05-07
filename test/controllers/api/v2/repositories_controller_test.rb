@@ -609,7 +609,7 @@ module Katello
     end
 
     def test_update_false_download_policy
-      expected_message = "must be one of the following: %s" % Katello::RootRepository::DOWNLOAD_POLICIES.join(', ')
+      expected_message = "must be one of the following: %s" % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
       response = put :update, params: { :id => @repository.id, :download_policy => 'false' }
       body = JSON.parse(response.body)
 
