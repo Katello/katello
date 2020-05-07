@@ -48,7 +48,7 @@ const store = mockStore(Immutable({
   },
 }));
 
-afterEach(() => {
+beforeEach(() => {
   store.clearActions();
   mockReset();
 });
