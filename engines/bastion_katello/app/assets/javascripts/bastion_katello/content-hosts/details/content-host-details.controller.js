@@ -5,6 +5,7 @@
  * @requires $scope
  * @requires $state
  * @requires $q
+ * @requires $location
  * @requires translate
  * @requires Organization
  * @requires CurrentOrganization
@@ -17,8 +18,8 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister', 'ContentHostsHelper',
-    function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister, ContentHostsHelper) {
+    ['$scope', '$state', '$q', '$location', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister', 'ContentHostsHelper',
+    function ($scope, $state, $q, $location, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister, ContentHostsHelper) {
         $scope.menuExpander = MenuExpander;
 
         $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
@@ -39,15 +40,23 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             loading: true
         };
 
-        $scope.host = Host.get({id: $scope.$stateParams.hostId}, function (host) {
-            host.unregisterDelete = !host.hasSubscription() || deleteHostOnUnregister;
-            host.deleteHostOnUnregister = deleteHostOnUnregister;
-            $scope.panel.loading = false;
-            $scope.purposeAddonsCount += host.subscription_facet_attributes.purpose_addons.length;
-        }, function (response) {
-            $scope.panel.loading = false;
-            ApiErrorHandler.handleGETRequestErrors(response, $scope);
+        function loadHost() {
+            return Host.get({id: $scope.$stateParams.hostId}, function (host) {
+                host.unregisterDelete = !host.hasSubscription() || deleteHostOnUnregister;
+                host.deleteHostOnUnregister = deleteHostOnUnregister;
+                $scope.panel.loading = false;
+                $scope.purposeAddonsCount += host.subscription_facet_attributes.purpose_addons.length;
+            }, function (response) {
+                $scope.panel.loading = false;
+                ApiErrorHandler.handleGETRequestErrors(response, $scope);
+            });
+        }
+
+        $scope.$on('TaskFinished', function() {
+            $scope.host = loadHost();
         });
+
+        $scope.host = loadHost();
 
         // @TODO begin hack for content and subscript facets
         // see http://projects.theforeman.org/issues/13763
@@ -225,6 +234,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                     $scope.transitionTo('content-hosts');
                 }, errorHandler);
             }
+        };
+
+        $scope.installTracerPackage = function(host) {
+            $location.url("/content_hosts/" + host.id + "/packages/actions?package_name=katello-host-tools-tracer");
         };
     }]
 );
