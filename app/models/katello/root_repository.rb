@@ -139,8 +139,8 @@ module Katello
 
     def ensure_compatible_download_policy
       if !url.blank? && URI(url).scheme == 'file' &&
-          download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
-        errors.add(:download_policy, _("Cannot sync file:// repositories with On Demand policies"))
+          [::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND, ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND].include?(download_policy)
+        errors.add(:download_policy, _("Cannot sync file:// repositories with On Demand or Background Download Policies"))
       end
     end
 

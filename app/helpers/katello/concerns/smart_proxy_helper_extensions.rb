@@ -37,6 +37,10 @@ module Katello
             :label => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
           },
           {
+            :name => _("Background"),
+            :label => ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
+          },
+          {
             :name => _("Immediate"),
             :label => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE
           },
