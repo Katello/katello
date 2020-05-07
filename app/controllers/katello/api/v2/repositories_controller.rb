@@ -47,6 +47,8 @@ module Katello
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
+      param :ostree_upstream_sync_policy, ::Katello::RootRepository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories")
+      param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided")
       param :deb_releases, String, :desc => N_("comma separated list of releases to be synched from deb-archive")
       param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
       param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
@@ -79,6 +81,7 @@ module Katello
     param :rpm_id, String, :desc => N_("Id of a rpm package to find repositories that contain the rpm")
     param :file_id, String, :desc => N_("Id of a file to find repositories that contain the file")
     param :ansible_collection_id, String, :desc => N_("Id of an ansible collection to find repositories that contain the ansible collection")
+    param :ostree_branch_id, String, :desc => N_("Id of an ostree branch to find repositories that contain that branch")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :archived, :bool, :desc => N_("show archived repositories")
     param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
@@ -191,6 +194,17 @@ module Katello
                     .where("#{AnsibleCollection.table_name}.id" => AnsibleCollection.with_identifiers(params[:ansible_collection_id]))
       end
 
+      if params[:ostree_branch_id]
+        query = query.joins(:ostree_branches)
+          .where("#{OstreeBranch.table_name}.id" => OstreeBranch.with_identifiers(params[:ostree_branch_id]))
+      end
+
+      if params[:puppet_module_id]
+        query = query
+                  .joins(:puppet_modules)
+                  .where("#{PuppetModule.table_name}.id" => PuppetModule.with_identifiers(params[:puppet_module_id]))
+      end
+
       query
     end
 
@@ -204,6 +218,10 @@ module Katello
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")
         fail HttpErrors::UnprocessableEntity, msg
+      end
+
+      if repo_params['content_type'] == "puppet" || repo_params['content_type'] == "ostree"
+        ::Foreman::Deprecation.api_deprecation_warning("Puppet and OSTree will no longer be supported in Katello 3.16")
       end
 
       gpg_key = get_content_credential(repo_params, CONTENT_CREDENTIAL_GPG_KEY_TYPE)
@@ -326,11 +344,12 @@ module Katello
 
     api :PUT, "/repositories/:id/remove_packages"
     api :PUT, "/repositories/:id/remove_docker_manifests"
+    api :PUT, "/repositories/:id/remove_puppet_modules"
     api :PUT, "/repositories/:id/remove_content"
     desc "Remove content from a repository"
     param :id, :number, :required => true, :desc => "repository ID"
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
-    param :content_type, RepositoryTypeManager.removable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'rpm', 'srpm')")
+    param :content_type, RepositoryTypeManager.removable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     def remove_content
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
@@ -341,7 +360,7 @@ module Katello
     api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
-    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'rpm', 'srpm')")
+    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Container Image content.") if @repository.docker?
 
@@ -370,7 +389,7 @@ module Katello
     param :async, :bool, desc: N_("Do not wait for the ImportUpload action to finish. Default: false")
     param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
-    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'rpm', 'srpm')")
+    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     param :uploads, Array, :desc => N_("Array of uploads to import") do
       param 'id', String, :required => true
       param 'content_unit_id', String
@@ -444,6 +463,7 @@ module Katello
 
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy,
               :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
               {:ignorable_content => []}
              ]
@@ -495,6 +515,10 @@ module Katello
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
 
+      if root.ostree?
+        root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
+        root.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
+      end
       if root.deb?
         root.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
         root.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
