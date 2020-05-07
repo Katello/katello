@@ -23,7 +23,7 @@ module Katello
         if self.content_unit_class == ::Katello::Erratum
           fetch_errata_content_ids
         elsif self.content_unit_class == ::Katello::ModuleStream
-          fail NotImplementedError
+          fetch_module_stream_content_ids
         else
           fetch_rpm_content_ids
         end
@@ -31,18 +31,32 @@ module Katello
 
       def fetch_errata_content_ids
         # Query for all Errata ids that are attached to the host's applicable packages
-        query = 'select katello_repository_errata.erratum_id as id from katello_repository_errata
-                     inner join katello_erratum_packages
-                        on  katello_repository_errata.erratum_id  = katello_erratum_packages.erratum_id
-                     inner join katello_rpms
-                        on katello_rpms.nvra = katello_erratum_packages.nvrea
-                     inner join katello_content_facet_applicable_rpms on
-                         katello_content_facet_applicable_rpms.rpm_id = katello_rpms.id
-                     where
-                          "katello_content_facet_applicable_rpms"."content_facet_id" = :content_facet_id
-                     AND katello_repository_errata.repository_id IN (:repo_ids)'
+        query = 'SELECT DISTINCT katello_repository_errata.erratum_id AS id FROM katello_repository_errata
+                     INNER JOIN katello_erratum_packages
+                        ON katello_repository_errata.erratum_id = katello_erratum_packages.erratum_id
+                     INNER JOIN katello_rpms
+                        ON katello_rpms.nvra = katello_erratum_packages.nvrea
+                     INNER JOIN katello_content_facet_applicable_rpms
+                        ON katello_content_facet_applicable_rpms.rpm_id = katello_rpms.id
+                     WHERE katello_content_facet_applicable_rpms.content_facet_id = :content_facet_id
+                        AND katello_repository_errata.repository_id IN (:repo_ids)'
 
-        return Katello::Erratum.find_by_sql([query, {content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos} ]).map(&:id).uniq
+        return Katello::Erratum.find_by_sql([query, { content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos }]).map(&:id)
+      end
+
+      def fetch_module_stream_content_ids
+        # Query for all applicable module stream ids
+        query = 'SELECT DISTINCT katello_repository_module_streams.module_stream_id AS id FROM katello_repository_module_streams
+                     INNER JOIN katello_module_stream_rpms
+                        ON katello_repository_module_streams.module_stream_id = katello_module_stream_rpms.module_stream_id
+                     INNER JOIN katello_rpms
+                        ON katello_rpms.id = katello_module_stream_rpms.rpm_id
+                     INNER JOIN katello_content_facet_applicable_rpms
+                        ON katello_content_facet_applicable_rpms.rpm_id = katello_rpms.id
+                     WHERE katello_content_facet_applicable_rpms.content_facet_id = :content_facet_id
+                        AND katello_repository_module_streams.repository_id IN (:repo_ids)'
+
+        return Katello::ModuleStream.find_by_sql([query, { content_facet_id: content_facet.id, repo_ids: self.bound_library_instance_repos }]).map(&:id)
       end
 
       def fetch_rpm_content_ids
