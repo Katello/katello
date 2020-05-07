@@ -51,6 +51,10 @@
           <a ng-click="openModuleStreamsModal()" disable-link="table.numSelected === 0" translate>Manage Module Streams</a>
         </li>
 
+        <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openTracesModal()" disable-link="table.numSelected === 0" translate>Manage Host Traces</a>
+        </li>
+
         <li class="divider"></li>
 
         <li role="menuitem" ng-show="permitted('destroy_hosts')" ng-class="{disabled: table.numSelected === 0}">

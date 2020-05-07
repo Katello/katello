@@ -225,6 +225,13 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :POST, "/hosts/bulk/traces", N_("Fetch traces for one or more hosts")
+    param_group :bulk_params
+    def traces
+      collection = scoped_search(Katello::HostTracer.where(host_id: @hosts.pluck(:id)), 'application', 'desc', resource_class: Katello::HostTracer)
+      respond_for_index(:collection => collection, :template => '../../../api/v2/host_tracer/index')
+    end
+
     api :POST, "/hosts/bulk/available_incremental_updates", N_("Given a set of hosts and errata, lists the content view versions" \
                                                                  " and environments that need updating.")
     param_group :bulk_params

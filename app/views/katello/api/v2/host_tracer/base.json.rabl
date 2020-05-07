@@ -4,3 +4,4 @@ attributes :id, :id
 attributes :application, :application
 attributes :helper, :helper
 attributes :app_type, :app_type
+attributes :host_id, :host

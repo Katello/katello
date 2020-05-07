@@ -21,6 +21,7 @@ module Katello
       @host1 = FactoryBot.create(:host, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
       @host2 = FactoryBot.create(:host, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
       @host_ids = [@host1.id, @host2.id]
+      @host_names = [@host1.name, @host2.name]
 
       @org = @view.organization
       @host_collection1 = katello_host_collections(:simple_host_collection)
@@ -365,6 +366,24 @@ module Katello
       }
 
       assert_response :success
+    end
+
+    def test_get_host_traces
+      Katello::HostTracer.create(host_id: @host1.id, application: 'kernel', app_type: 'static', helper: 'reboot the system')
+      Katello::HostTracer.create(host_id: @host2.id, application: 'dbus', app_type: 'static', helper: 'reboot the system')
+
+      post :traces, params: {
+        included: {:ids => @host_ids}
+      }
+
+      assert_response :success
+
+      response_body = JSON.parse(response.body)
+      assert_equal 2, response_body['total']
+      assert_equal 'kernel', response_body['results'].first['application']
+      assert_equal 'dbus', response_body['results'].last['application']
+      assert_equal @host_names.first, response_body['results'].first['host']
+      assert_equal @host_names.last, response_body['results'].last['host']
     end
   end
 end
