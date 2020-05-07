@@ -16,12 +16,6 @@
     </p>
   </div>
 
-  <div bst-alert="info" ng-hide="host.content_facet_attributes.katello_tracer_installed">
-    <span translate>
-      To use Tracer, install the katello-host-tools-tracer package.
-    </span>
-  </div>
-
   <form id="traceActionForm" method="post" action="/katello/remote_execution">
     <input type="hidden" name="remote_action" value="service_restart"/>
     <input type="hidden" name="name" ng-value="traceActionFormValues.helper"/>
@@ -33,6 +27,13 @@
   <div bst-feature-flag="remote_actions">
     <h3 translate>Traces</h3>
     <h4 translate>Tracer helps administrators identify applications that need to be restarted after a system is patched.</h4>
+    <button
+      class="btn btn-default"
+      type="button"
+      ng-hide="denied('edit_hosts', host) || host.content_facet_attributes.katello_tracer_installed"
+      ng-click="installTracerPackage(host)">
+      <span translate>Enable Traces on this host</span>
+    </button>
   </div>
 
   <div data-extend-template="layouts/partials/table.html">

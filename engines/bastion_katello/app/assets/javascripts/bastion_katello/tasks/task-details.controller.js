@@ -10,8 +10,8 @@
  *   Provides the functionality for the details of a task.
  */
 angular.module('Bastion.tasks').controller('TaskDetailsController',
-    ['$scope', 'Task',
-    function ($scope, Task) {
+    ['$scope', '$rootScope', 'Task',
+    function ($scope, $rootScope, Task) {
         var taskId;
 
         taskId = $scope.$stateParams.taskId;
@@ -24,6 +24,7 @@ angular.module('Bastion.tasks').controller('TaskDetailsController',
         $scope.updateTask = function (task) {
             $scope.task = task;
             if (!$scope.task.pending) {
+                $rootScope.$broadcast('TaskFinished', $scope.task);
                 $scope.unregisterSearch();
             }
         };
