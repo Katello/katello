@@ -143,7 +143,7 @@ module Katello
 
       def distribution_needs_update?
         if distribution_reference
-          expected = distribution_options(relative_path).except(:name).compact
+          expected = secure_distribution_options(relative_path).except(:name).compact
           actual = get_distribution.to_hash
           expected != actual.slice(*expected.keys)
         elsif repo.environment
@@ -209,7 +209,7 @@ module Katello
       end
 
       def create_distribution(path)
-        distribution_data = api.class.distribution_class.new(distribution_options(path))
+        distribution_data = api.class.distribution_class.new(secure_distribution_options(path))
         api.distributions_api.create(distribution_data)
       end
 
@@ -219,7 +219,7 @@ module Katello
 
       def update_distribution
         if distribution_reference
-          options = distribution_options(relative_path).except(:name)
+          options = secure_distribution_options(relative_path).except(:name)
           api.distributions_api.partial_update(distribution_reference.href, options)
         end
       end
@@ -246,9 +246,10 @@ module Katello
 
       def save_distribution_references(hrefs)
         hrefs.each do |href|
-          path = api.get_distribution(href)&.base_path
+          pulp3_distribution_data = api.get_distribution(href)
+          path, content_guard_href = pulp3_distribution_data&.base_path, pulp3_distribution_data&.content_guard
           unless distribution_reference
-            DistributionReference.create!(path: path, href: href, repository_id: repo.id)
+            DistributionReference.create!(path: path, href: href, repository_id: repo.id, content_guard_href: content_guard_href)
           end
         end
       end
@@ -282,6 +283,16 @@ module Katello
                                password: root.upstream_password)
         end
         remote_options.merge!(ssl_remote_options)
+      end
+
+      def secure_distribution_options(path)
+        secured_distribution_options = {}
+        if root.unprotected
+          secured_distribution_options[:content_guard] = nil
+        else
+          secured_distribution_options[:content_guard] = ::Katello::Pulp3::ContentGuard.first.pulp_href
+        end
+        secured_distribution_options.merge!(distribution_options(path))
       end
 
       def ssl_remote_options
