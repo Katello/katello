@@ -7,16 +7,17 @@ module Katello
         180
       end
 
-      def initialize(host_id)
-        @host = ::Host.find_by_id(host_id)
-        Rails.logger.warn "Host not found for ID #{object_id}" if @host.nil?
+      def initialize(object_id)
       end
 
       def run
-        return unless @host
+        return if ::Katello::ApplicableHostQueue.queue_depth == 0
 
         begin
-          ForemanTasks.async_task(::Actions::Katello::Applicability::Host::Generate, host_id: @host.id)
+          while ::Katello::ApplicableHostQueue.queue_depth != 0
+            hosts = ::Katello::ApplicableHostQueue.pop_hosts
+            ForemanTasks.async_task(::Actions::Katello::Applicability::Hosts::BulkGenerate, host_ids: hosts.map(&:host_id))
+          end
         rescue => e
           self.retry = true if e.is_a?(ForemanTasks::Lock::LockConflict)
           raise e
