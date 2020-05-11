@@ -13,11 +13,11 @@ module Actions
           root.update!(repo_params)
 
           if root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
-            ::Foreman::Deprecation.api_deprecation_warning("Background download_policy will be removed in Katello 3.16.  Any background repositories will be converted to Immediate")
+            ::Foreman::Deprecation.api_deprecation_warning("Background download_policy will be removed in Katello 4.0.  Any background repositories will be converted to Immediate")
           end
 
           if root['content_type'] == 'puppet' || root['content_type'] == 'ostree'
-            ::Foreman::Deprecation.api_deprecation_warning("Repository types of 'Puppet' and 'OSTree' will no longer be supported in Katello 3.16.")
+            ::Foreman::Deprecation.api_deprecation_warning("Repository types of 'Puppet' and 'OSTree' will no longer be supported in Katello 4.0.")
           end
 
           if update_content?(repository)

@@ -67,7 +67,7 @@ module Katello
     end
 
     def deprecated
-      ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 3.15 - please use /consumers/:id/profiles instead.")
+      ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 4.0. Please use /consumers/:id/profiles instead.")
     end
   end
 end
