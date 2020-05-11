@@ -1,7 +1,5 @@
 module Katello
   class Api::V2::HostTracerController < Api::V2::ApiController
-    #include Katello::Concerns::FilteredAutoCompleteSearch
-
     before_action :find_host, :only => :index
 
     resource_description do
@@ -22,7 +20,7 @@ module Katello
       traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
 
       traces.each do |trace|
-        if trace.helper.include?('reboot')
+        if trace.reboot_required?
           trace.helper = 'reboot'
         end
       end
