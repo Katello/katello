@@ -8,19 +8,20 @@
  * @requires HostTraces
  * @requires Nutupane
  * @requires BastionConfig
+ * @required ContentHostsHelper
  *
  * @description
  *   Provides the functionality for the content host package list and actions.
  */
 /*jshint camelcase:false*/
 angular.module('Bastion.content-hosts').controller('ContentHostTracesController',
-    ['$scope', '$timeout', '$window', 'translate', 'HostTraces', 'Nutupane', 'BastionConfig',
-    function ($scope, $timeout, $window, translate, HostTraces, Nutupane, BastionConfig) {
+    ['$scope', '$timeout', '$window', 'translate', 'HostTraces', 'Nutupane', 'BastionConfig', 'ContentHostsHelper',
+    function ($scope, $timeout, $window, translate, HostTraces, Nutupane, BastionConfig, ContentHostsHelper) {
         var tracesNutupane, params = {
             'paged': true
         };
 
-        tracesNutupane = new Nutupane(HostTraces, params, 'get');
+        tracesNutupane = new Nutupane(HostTraces, params, 'get', {'disableAutoLoad': true});
         tracesNutupane.masterOnly = true;
         $scope.table = tracesNutupane.table;
         $scope.table.tracesFilterTerm = "";
@@ -33,22 +34,23 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
 
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
 
+        $scope.rebootRequired = function() {
+            return ContentHostsHelper.rebootRequired($scope.table.getSelected());
+        };
+
         $scope.host.$promise.then(function() {
             if ($scope.host.id) {
                 tracesNutupane.setParams({id: $scope.host.id});
                 tracesNutupane.load();
             }
+            $scope.host.rebootRequired = $scope.rebootRequired;
         });
 
         $scope.selectedTraceHelpers = function() {
             var traceHelpers = [],
                 selected = $scope.table.getSelected();
 
-            var reboot = selected.some(function(value) {
-                return value.app_type === "static";
-            });
-
-            if (reboot) {
+            if ($scope.rebootRequired()) {
                 return ["reboot"];
             }
 
@@ -76,6 +78,5 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
                 angular.element('#traceActionForm').submit();
             }, 0);
         };
-
     }
 ]);

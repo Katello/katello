@@ -10,6 +10,7 @@
  * @requires BastionConfig
  * @requires hostIds
  * @requires HostTracesResolve
+ * @required ContentHostsHelper
  * @requires translate
  *
  * @description
@@ -17,8 +18,8 @@
  */
 /*jshint camelcase:false*/
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesController',
-    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'hostIds', 'HostTracesResolve', 'translate',
-    function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, hostIds, HostTracesResolve, translate) {
+    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'hostIds', 'HostTracesResolve', 'ContentHostsHelper', 'translate',
+    function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, hostIds, HostTracesResolve, ContentHostsHelper, translate) {
 
         var tracesNutupane = new Nutupane(HostBulkAction, hostIds, 'traces');
         tracesNutupane.enableSelectAllResults();
@@ -49,6 +50,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesContro
             /* eslint-enable camelcase */
         };
 
+        $scope.rebootRequired = function() {
+            return ContentHostsHelper.rebootRequired($scope.table.getSelected());
+        };
+
         $scope.ok = function () {
             $uibModalInstance.close();
         };
@@ -56,6 +61,5 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesContro
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
-
     }
 ]);

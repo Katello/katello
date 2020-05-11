@@ -47,5 +47,11 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
                 return 'pficon pficon-warning-triangle-o';
             }
         };
+
+        this.rebootRequired = function(traces) {
+            return traces.some(function(trace) {
+                return trace.reboot_required;
+            });
+        };
     }
 );

@@ -35,7 +35,7 @@ module Katello
     end
 
     def to_status(_options = {})
-      if host.host_traces.where(:app_type => "static").any?
+      if host.host_traces.reboot_required.any?
         REQUIRE_REBOOT
       elsif host.host_traces.where.not(:app_type => "session").any?
         REQUIRE_PROCESS_RESTART

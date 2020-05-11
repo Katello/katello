@@ -1,7 +1,8 @@
 object @resource ||= @object
 
-attributes :id, :id
-attributes :application, :application
-attributes :helper, :helper
-attributes :app_type, :app_type
+attributes :id
+attributes :application
+attributes :helper
+attributes :app_type
 attributes :host_id, :host
+attributes :reboot_required? => :reboot_required
