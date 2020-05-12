@@ -3,7 +3,11 @@ require File.expand_path("../engine", File.dirname(__FILE__))
 namespace :katello do
   desc "Runs a post Pulp3 migration check for supported content types."
   task :pulp3_post_migration_check => :environment do
+    User.current = User.anonymous_admin
     repository_types = Katello::Pulp3::Migration::REPOSITORY_TYPES
+
+    # Take care of repository deletions
+    ForemanTasks.sync_task(Actions::Pulp3::OrphanCleanup::DeleteOrphanedMigratedRepositories, SmartProxy.pulp_master)
 
     repository_types.each do |type|
       # check version
