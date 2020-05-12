@@ -9,7 +9,7 @@ module Katello
                    :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications, :host_content_facet,
                    :host_sla, :host_products, :sub_name, :sub_sku, :registered_through, :last_checkin, :host_collections,
                    :host_subscriptions_names, :host_subscriptions, :host_products_names, :host_collections_names,
-                   :host_redhat_subscription_names]
+                   :host_redhat_subscription_names, :registered_at]
         end
       end
 
@@ -74,6 +74,10 @@ module Katello
 
       def registered_through(host)
         host_subscription_facet(host)&.registered_through
+      end
+
+      def registered_at(host)
+        host_subscription_facet(host)&.registered_at
       end
 
       def host_applicable_errata_ids(host)
