@@ -29,5 +29,10 @@ module Katello
     def self.total_for_repositories(repos)
       self.in_repositories(repos).count
     end
+
+    def version=(version)
+      super(version)
+      self.version_sortable = version
+    end
   end
 end
