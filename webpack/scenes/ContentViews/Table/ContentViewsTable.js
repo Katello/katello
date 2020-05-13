@@ -3,29 +3,29 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 
-import TableWrapper from './TableWrapper';
+import TableWrapper from '../../../components/Table/TableWrapper';
 import tableDataGenerator from './tableDataGenerator';
 import actionResolver from './actionResolver';
+import getContentViews from '../ContentViewsActions';
 
-const ContentViewTable = ({
-  items, status, error,
-}) => {
+const ContentViewTable = ({ response, status, error }) => {
   const [table, setTable] = useState({ rows: [], columns: [] });
   const [rowMapping, setRowMapping] = useState({});
   const loading = status === STATUS.PENDING;
+  const { results, ...metadata } = response;
 
   useEffect(
     () => {
-      if (!loading && items && items.length > 0) {
+      if (!loading && results && results.length > 0) {
         const { updatedRowMapping, ...tableData } = tableDataGenerator(
-          items,
+          results,
           rowMapping,
         );
         setTable(tableData);
         setRowMapping(updatedRowMapping);
       }
     },
-    [items, JSON.stringify(rowMapping)], // use JSON to check obj values eq not reference eq
+    [results, JSON.stringify(rowMapping)], // use JSON to check obj values eq not reference eq
   );
 
   const cvIdFromRow = (rowIdx) => {
@@ -73,22 +73,28 @@ const ContentViewTable = ({
   const { rows, columns } = table;
   return (
     <TableWrapper
-      rows={rows}
-      cells={columns}
-      status={status}
-      emptyTitle={emptyTitle}
-      emptyBody={emptyBody}
-      onSelect={onSelect}
+      {...{
+        rows,
+        error,
+        status,
+        metadata,
+        emptyTitle,
+        emptyBody,
+        onSelect,
+        onExpand,
+        actionResolver,
+      }}
+      fetchItems={getContentViews}
       canSelectAll={false}
-      onExpand={onExpand}
-      actionResolver={actionResolver}
-      error={error}
+      cells={columns}
     />
   );
 };
 
 ContentViewTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({})),
+  response: PropTypes.shape({
+    results: PropTypes.arrayOf(PropTypes.shape({})),
+  }),
   status: PropTypes.string.isRequired,
   error: PropTypes.oneOfType([
     PropTypes.shape({}),
@@ -98,7 +104,7 @@ ContentViewTable.propTypes = {
 
 ContentViewTable.defaultProps = {
   error: null,
-  items: [],
+  response: { results: [] },
 };
 
 export default ContentViewTable;

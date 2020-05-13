@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import { STATUS } from 'foremanReact/constants';
-import EmptyStateMessage from '../components/EmptyStateMessage';
-import Loading from '../components/Loading';
+import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
+import Loading from '../../../components/Table/Loading';
 import getContentViewDetails from './ContentViewDetailActions';
 import { selectCVDetails,
   selectCVDetailStatus,
