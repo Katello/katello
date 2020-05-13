@@ -134,6 +134,10 @@ module Katello
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
     end
     def add_subscriptions
+      if @host.organization.simple_content_access?
+        fail ::Katello::HttpErrors::BadRequest, _("This host's organization has Simple Content Access enabled.  Attaching subscriptions is neither necessary nor allowed.")
+      end
+
       pools_with_quantities = params.require(:subscriptions).map do |sub_params|
         PoolWithQuantities.new(Pool.with_identifier(sub_params['id']), sub_params['quantity'].to_i)
       end
