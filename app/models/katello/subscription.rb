@@ -11,6 +11,8 @@ module Katello
 
     scope :in_organization, ->(org) { where(:organization => org) }
 
+    scope :redhat, -> { joins(:products).merge(Katello::Product.redhat).distinct }
+
     def self.subscribable
       product_ids = Product.subscribable.pluck(:id) + [nil]
       joins(:pools).joins("LEFT OUTER JOIN #{Katello::PoolProduct.table_name} pool_prod ON #{Pool.table_name}.id = pool_prod.pool_id")
