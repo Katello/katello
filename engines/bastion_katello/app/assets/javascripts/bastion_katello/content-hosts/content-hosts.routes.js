@@ -134,7 +134,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         controller: 'ContentHostAddSubscriptionsController',
         templateUrl: 'content-hosts/details/views/content-host-add-subscriptions.html',
         ncyBreadcrumb: {
-            label: "{{ 'Add Subscriptipons' | translate }}",
+            label: "{{ 'Add Subscriptions' | translate }}",
             parent: 'content-host.info'
         }
     });

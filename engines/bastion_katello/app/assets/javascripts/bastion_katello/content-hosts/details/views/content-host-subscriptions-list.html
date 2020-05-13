@@ -13,8 +13,12 @@
     </div>
   </div>
 
-  <span data-block="no-rows-message" translate>
-     You currently don't have any Subscriptions associated with this Content Host, you can add Subscriptions after selecting the 'Add' tab.
+  <span data-block="no-rows-message" ng-if="!simpleContentAccessEnabled" translate>
+     You currently don't have any Subscriptions associated with this Content Host. You can add Subscriptions after selecting the 'Add' tab.
+  </span>
+
+  <span data-block="no-rows-message" ng-if="simpleContentAccessEnabled" translate>
+     You currently don't have any Subscriptions associated with this Content Host. Because Simple Content Access is enabled, adding subscriptions is not necessary.
   </span>
 
   <span data-block="no-search-results-message" translate>
