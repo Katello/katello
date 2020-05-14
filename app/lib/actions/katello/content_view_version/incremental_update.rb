@@ -173,6 +173,12 @@ module Actions
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
+
+          version.repositories.each do |repo|
+            SmartProxy.pulp_master.pulp_api.extensions.send(:module_default).
+              copy(repo.library_instance.pulp_id,
+              repo.pulp_id)
+          end
         end
 
         # given a composite version, and a list of new components, calculate the list of all components for the new version
