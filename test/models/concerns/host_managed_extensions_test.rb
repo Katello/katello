@@ -361,9 +361,22 @@ module Katello
   class HostTracerTest < HostManagedExtensionsTestBase
     def setup
       super
-      tracer_json = {"sshd": {"type": "daemon", "helper": "sudo systemctl restart sshd"}}
+      tracer_json = {
+        "sshd": {
+          "type": "daemon",
+          "helper": "sudo systemctl restart sshd"
+        },
+        "tuned": {
+          "type": "daemon",
+          "helper": ""
+        }
+      }
       @foreman_host.import_tracer_profile(tracer_json)
       @foreman_host.reload
+    end
+
+    def test_trace_blank_helper
+      assert_empty @foreman_host.host_traces.where(application: 'tuned')
     end
 
     def test_known_traces
