@@ -31,5 +31,26 @@ module Katello
       SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       Rake.application.invoke_task('katello:reimport')
     end
+
+    def test_reimport_ignores_pulp3_content_types
+      Katello::Ping.expects(:ping).returns(:status => 'ok')
+      Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
+      Katello::ActivationKey.stubs(:all).returns([])
+      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
+
+      ignore_content_types = []
+
+      Katello::RepositoryTypeManager.repository_types.each_value do |repo_type|
+        indexable_types = repo_type.content_types.select { |c| c.index }
+        if SmartProxy.pulp_master.pulp3_repository_type_support?(repo_type)
+          ignore_content_types += indexable_types&.map { |type| type.model_class }
+        end
+      end
+      assert_not_equal ignore_content_types.size, 0
+      importable_models = Katello::Model.subclasses.select { |model| model if model.respond_to?(:import_all) }
+      (importable_models - ignore_content_types).each { |model| model.expects(:import_all) }
+      ignore_content_types.each { |model| model.expects(:import_all).never }
+      Rake.application.invoke_task('katello:reimport')
+    end
   end
 end

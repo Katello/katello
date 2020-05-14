@@ -14,27 +14,23 @@ namespace :katello do
   desc "Reimports information from backend systems"
   task :reimport => ["environment", "katello:check_ping"] do
     User.current = User.anonymous_admin #set a user for orchestration
-
     Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
 
-    models = [Katello::Erratum,
-              Katello::PackageGroup,
-              Katello::PuppetModule,
-              Katello::Rpm,
-              Katello::Srpm,
-              Katello::ModuleStream,
-              Katello::YumMetadataFile,
-              Katello::FileUnit,
-              Katello::Subscription,
-              Katello::Pool,
-              Katello::DockerManifest,
-              Katello::DockerManifestList,
-              Katello::DockerTag,
-              Katello::ContentViewPuppetEnvironment,
-              Katello::Content]
+    models = [
+      Katello::Subscription,
+      Katello::Pool,
+      Katello::ContentViewPuppetEnvironment,
+      Katello::Content
+    ]
 
-    models << Katello::OstreeBranch if Katello::RepositoryTypeManager.find(Katello::Repository::OSTREE_TYPE).present?
-    models << Katello::Deb if Katello::RepositoryTypeManager.find(Katello::Repository::DEB_TYPE).present?
+    Katello::RepositoryTypeManager.repository_types.each_value do |repo_type|
+      indexable_types = repo_type.content_types_to_index
+      if SmartProxy.pulp_master.pulp3_repository_type_support?(repo_type)
+        puts "\e[33mIgnoring types: #{indexable_types&.map { |type| type.model_class.name }}\e[0m\n"
+      else
+        models += indexable_types&.map(&:model_class)
+      end
+    end
 
     models.each do |model|
       print "Importing #{model.name}\n"
