@@ -226,11 +226,13 @@ module Katello
       end
 
       def import_tracer_profile(tracer_profile)
-        host_traces.delete_all
         traces = []
         tracer_profile.each do |trace, attributes|
+          next if attributes[:helper].blank?
+
           traces << { host_id: self.id, application: trace, helper: attributes[:helper], app_type: attributes[:type] }
         end
+        host_traces.delete_all
         Katello::HostTracer.import(traces, validate: false)
         update_trace_status
       end
