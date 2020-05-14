@@ -1,5 +1,5 @@
 module Katello
-  class AnsibleCollection < ApplicationRecord
+  class AnsibleCollection < Katello::Model
     include Concerns::PulpDatabaseUnit
 
     self.table_name = 'katello_ansible_collections'
