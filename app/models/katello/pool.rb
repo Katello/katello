@@ -22,6 +22,7 @@ module Katello
       where(["end_date < ?", days.to_i.days.from_now.end_of_day])
     end
     scope :upstream, -> { where.not(upstream_pool_id: nil) }
+    scope :redhat, ->() { joins(:products).merge(Katello::Product.redhat).distinct }
 
     include Glue::Candlepin::Pool
     include Glue::Candlepin::CandlepinObject

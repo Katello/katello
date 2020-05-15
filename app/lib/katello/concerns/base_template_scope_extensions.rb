@@ -8,7 +8,8 @@ module Katello
           super + [:errata, :host_subscriptions, :host_applicable_errata_ids, :host_applicable_errata_filtered,
                    :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications, :host_content_facet,
                    :host_sla, :host_products, :sub_name, :sub_sku, :registered_through, :last_checkin, :host_collections,
-                   :host_subscriptions_names, :host_subscriptions, :host_products_names, :host_collections_names]
+                   :host_subscriptions_names, :host_subscriptions, :host_products_names, :host_collections_names,
+                   :host_redhat_subscriptions_consumed]
         end
       end
 
@@ -26,6 +27,10 @@ module Katello
 
       def host_subscriptions_names(host)
         host.subscriptions.map(&:name)
+      end
+
+      def host_redhat_subcriptions_consumed(host)
+        host.pools.redhat.pluck(:consumed).sum
       end
 
       def host_content_facet(host)
