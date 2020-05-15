@@ -1,8 +1,8 @@
 module Katello
   module Pulp3
     class MigrationPlan
-      def initialize(repository_type_label)
-        @repository_type = repository_type_label
+      def initialize(repository_type_labels)
+        @repository_types = repository_type_labels
       end
 
       def master_proxy
@@ -17,12 +17,12 @@ module Katello
       end
 
       def generate_plugins
-        [
+        @repository_types.map do |repository_type|
           {
-            type: pulp2_repository_type(@repository_type),
-            repositories: repository_migrations(@repository_type)
+              type: pulp2_repository_type(repository_type),
+              repositories: repository_migrations(repository_type)
           }
-        ]
+        end
       end
 
       def pulp2_repository_type(repository_type)
