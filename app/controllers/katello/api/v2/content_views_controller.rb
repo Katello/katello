@@ -228,7 +228,8 @@ module Katello
     end
 
     def view_params
-      attrs = [:name, :description, :force_puppet_environment, {:component_ids => []}]
+      attrs = [:name, :description, :force_puppet_environment, :auto_publish, :solve_dependencies,
+               :default, :created_at, :updated_at, :next_version, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
       if (!@view || !@view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)
