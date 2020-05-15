@@ -50,6 +50,20 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRemotes)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions)
     end
+
+    it 'runs and removes orphan content units' do
+      smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      file_unit_orphan = Katello::FileUnit.new(:name => "file_unit", :pulp_id => "orphaned")
+      file_unit_orphan.save!
+      docker_unit_orphan = Katello::DockerTag.new(:name => "docker_unit", :pulp_id => "orphaned_docker")
+      docker_unit_orphan.save!
+      action = create_action(action_class)
+      action.expects(:plan_self)
+      plan_action action, smart_proxy
+      run_action action
+      assert_raises(ActiveRecord::RecordNotFound) { file_unit_orphan.reload }
+      assert_raises(ActiveRecord::RecordNotFound) { docker_unit_orphan.reload }
+    end
   end
 
   class RemoveUnneededReposTest < TestBase
