@@ -68,8 +68,9 @@ module Katello
       end
 
       def create_migrations
-        migration_plans = @repository_types.map { |label| Katello::Pulp3::MigrationPlan.new(label) }
-        migration_plans.map { |plan| migration_plan_api.create(plan: plan.generate.as_json).pulp_href }
+        plan = Katello::Pulp3::MigrationPlan.new(@repository_types)
+        Rails.logger.info(plan)
+        [migration_plan_api.create(plan: plan.generate.as_json).pulp_href]
       end
 
       def start_migration(plan_href)
