@@ -11,12 +11,12 @@ import getContentViews from '../ContentViewsActions';
 const ContentViewTable = ({ response, status, error }) => {
   const [table, setTable] = useState({ rows: [], columns: [] });
   const [rowMapping, setRowMapping] = useState({});
-  const loading = status === STATUS.PENDING;
   const { results, ...metadata } = response;
+  const loadingResponse = status === STATUS.PENDING;
 
   useEffect(
     () => {
-      if (!loading && results && results.length > 0) {
+      if (!loadingResponse && results && results.length > 0) {
         const { updatedRowMapping, ...tableData } = tableDataGenerator(
           results,
           rowMapping,
@@ -58,14 +58,19 @@ const ContentViewTable = ({ response, status, error }) => {
         return { ...prev, [contentViewId]: updatedMap };
       });
     } else {
-      // remove the row completely by assigning it to a throwaway variable
-      // eslint-disable-next-line camelcase, no-unused-vars
-      const { [contentViewId]: _throwaway, ...newMap } = rowMapping;
-      setRowMapping(newMap);
+      setRowMapping((prev) => ({ ...prev, [contentViewId]: {}}));
     }
 
     setTable(prevTable => ({ ...prevTable, rows }));
   };
+
+  // Prevents flash of "No Content" before rows are loaded
+  const tableStatus = () => {
+    const resultsLength = results && results.length
+    const rowMappingLength = Object.keys(rowMapping) && Object.keys(rowMapping).length
+    if (resultsLength > rowMappingLength) return STATUS.PENDING
+    return status
+  }
 
   const emptyTitle = __("You currently don't have any Content Views.");
   const emptyBody = __('A Content View can be added by using the "New content view" button below.');
@@ -76,7 +81,6 @@ const ContentViewTable = ({ response, status, error }) => {
       {...{
         rows,
         error,
-        status,
         metadata,
         emptyTitle,
         emptyBody,
@@ -84,6 +88,7 @@ const ContentViewTable = ({ response, status, error }) => {
         onExpand,
         actionResolver,
       }}
+      status={tableStatus()}
       fetchItems={getContentViews}
       canSelectAll={false}
       cells={columns}

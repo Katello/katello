@@ -116,9 +116,9 @@ const tableDataGenerator = (results, rowMapping) => {
   contentViews.forEach((contentView, rowIndex) => {
     const { id } = contentView;
     // hasOwnProperty syntax because of https://eslint.org/docs/rules/no-prototype-builtins
-    if (!Object.prototype.hasOwnProperty.call(updatedRowMapping, id)) {
-      updatedRowMapping[id] = { expandedColumn: null, rowIndex: rows.length };
-    }
+    const needsUpdate = !Object.prototype.hasOwnProperty.call(updatedRowMapping, id) ||
+                        !Object.keys(updatedRowMapping[id]).length;
+    if (needsUpdate) updatedRowMapping[id] = { expandedColumn: null, rowIndex: rows.length };
     const openColumn = updatedRowMapping[id].expandedColumn;
     const cells = buildRow(contentView, openColumn);
     const isOpen = !!openColumn;
