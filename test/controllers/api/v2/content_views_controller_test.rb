@@ -150,12 +150,20 @@ module Katello
 
     test_attributes :pid => '3f1457f2-586b-472c-8053-99017c4a4909'
     def test_update
-      params = { :name => "My View", :description => "New description", :solve_dependencies => true }
+      params = { :name => "My View", :description => "New description", :solve_dependencies => true,
+                 :force_puppet_environment => false, :auto_publish => false, :label => "test_label", :default => "test_default",
+                 :created_at => "test_created_at", :updated_at => "test_updated_at", :composite => false,
+                 :next_version => "test_next_version" }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
-        content_view_params.key?(:name).must_equal true
-        content_view_params[:name].must_equal params[:name]
-        content_view_params.key?(:description).must_equal true
-        content_view_params[:description].must_equal params[:description]
+        params.each do |key, value|
+          if key == :label || key == :composite
+            content_view_params.key?(key).must_equal false
+            assert_nil content_view_params[key]
+          else
+            content_view_params.key?(key).must_equal true
+            content_view_params[key].must_equal value
+          end
+        end
       end
       put :update, params: { :id => @library_dev_staging_view.id, :content_view => params }
 
