@@ -58,7 +58,7 @@ const ContentViewTable = ({ response, status, error }) => {
         return { ...prev, [contentViewId]: updatedMap };
       });
     } else {
-      setRowMapping((prev) => ({ ...prev, [contentViewId]: {}}));
+      setRowMapping(prev => ({ ...prev, [contentViewId]: {} }));
     }
 
     setTable(prevTable => ({ ...prevTable, rows }));
@@ -66,11 +66,11 @@ const ContentViewTable = ({ response, status, error }) => {
 
   // Prevents flash of "No Content" before rows are loaded
   const tableStatus = () => {
-    const resultsLength = results && results.length
-    const rowMappingLength = Object.keys(rowMapping) && Object.keys(rowMapping).length
-    if (resultsLength > rowMappingLength) return STATUS.PENDING
-    return status
-  }
+    const resultsLength = results && results.length;
+    const rowMappingLength = Object.keys(rowMapping) && Object.keys(rowMapping).length;
+    if (resultsLength > rowMappingLength) return STATUS.PENDING;
+    return status;
+  };
 
   const emptyTitle = __("You currently don't have any Content Views.");
   const emptyBody = __('A Content View can be added by using the "New content view" button below.');

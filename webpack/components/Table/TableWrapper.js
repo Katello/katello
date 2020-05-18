@@ -10,7 +10,7 @@ import {
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
-import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
+import { usePaginationOptions, useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
 
 import EmptyStateMessage from './EmptyStateMessage';
 import Loading from './Loading';
@@ -26,18 +26,19 @@ const TableWrapper = ({
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    const { total: newTotal, page: newPage, per_page: newPerPage } = metadata;
+  const updatePagination = (data) => {
+    const { total: newTotal, page: newPage, per_page: newPerPage } = data;
     if (newTotal) setTotal(parseInt(newTotal, 10));
     if (newPage) setPage(parseInt(newPage, 10));
     if (newPerPage) setPerPage(parseInt(newPerPage, 10));
-  }, [metadata]);
+  };
 
-  const buildMainTable = () => {
+  useEffect(() => updatePagination(metadata), [metadata]);
+
+  const MainTable = () => {
     if (status === STATUS.PENDING) return (<Loading />);
     // Can we display the error message?
     if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
-    // Can we prevent flash of empty row message while rows are loading with data?
     if (status === STATUS.RESOLVED && rows.length === 0) {
       return (<EmptyStateMessage title={emptyTitle} body={emptyBody} />);
     }
@@ -56,6 +57,7 @@ const TableWrapper = ({
   };
 
   const onPaginationUpdate = (updatedPagination) => {
+    updatePagination(updatedPagination);
     dispatch(fetchItems({ per_page: perPage, page, ...updatedPagination }));
   };
 
@@ -67,9 +69,10 @@ const TableWrapper = ({
         perPage={perPage}
         onSetPage={(_evt, updated) => onPaginationUpdate({ page: updated })}
         onPerPageSelect={(_evt, updated) => onPaginationUpdate({ per_page: updated })}
+        perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
         variant="top"
       />
-      {buildMainTable()}
+      {MainTable()}
     </React.Fragment>
   );
 };

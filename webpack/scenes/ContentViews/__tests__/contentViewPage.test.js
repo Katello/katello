@@ -6,10 +6,9 @@ import { createContentViewsParams } from '../ContentViewsActions';
 import ContentViewsPage from '../../ContentViews';
 import api from '../../../services/api';
 import { nockInstance, assertNockRequest } from '../../../test-utils/nockWrapper';
-
+import createBasicCVs from './basicContentViews.fixtures';
 
 const cvIndexData = require('./contentViewList.fixtures.json');
-const cvIndexLarge = require('./hundredContentViews.fixtures.json');
 
 const cvIndexPath = api.getApiUrl('/content_views');
 const renderOptions = { namespace: CONTENT_VIEWS_KEY };
@@ -56,7 +55,7 @@ test('Can handle no Content Views being present', async () => {
   const { queryByText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await waitFor(() => expect(queryByText(/don't have any Content Views/)).toBeTruthy());
+  await waitFor(() => expect(queryByText(/don't have any Content Views/i)).toBeTruthy());
   assertNockRequest(scope);
 });
 
@@ -101,6 +100,7 @@ test('Can handle unpublished Content Views', async () => {
 });
 
 test('Can handle pagination', async () => {
+  const cvIndexLarge = createBasicCVs(100);
   const { results } = cvIndexLarge;
   const cvIndexFirstPage = { ...cvIndexLarge, ...{ results: results.slice(0, 20) } };
   const cvIndexSecondPage = { ...cvIndexLarge, page: 2, results: results.slice(20, 40) };
