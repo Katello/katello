@@ -422,8 +422,12 @@ module Katello
       path
     end
 
+    def library_instance_or_self
+      self.library_instance || self
+    end
+
     def generate_repo_path(content_path = nil)
-      _org, _content, content_path = (self.library_instance || self).relative_path.split("/", 3) if content_path.blank?
+      _org, _content, content_path = library_instance_or_self.relative_path.split("/", 3) if content_path.blank?
       content_path = content_path.sub(%r|^/|, '')
       if self.environment
         cve = ContentViewEnvironment.where(:environment_id => self.environment,
@@ -496,7 +500,7 @@ module Katello
         end
       end
       clone = Repository.new(:environment => to_env,
-                     :library_instance => self.library_instance || self,
+                     :library_instance => library_instance_or_self,
                      :root => self.root,
                      :content_view_version => to_version,
                      :saved_checksum_type => checksum_type)

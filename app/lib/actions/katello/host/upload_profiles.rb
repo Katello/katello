@@ -33,16 +33,42 @@ module Actions
           Dynflow::Action::Rescue::Skip
         end
 
+        def self.upload_modules_to_pulp(available_streams, host)
+          query_name_streams = available_streams.map do |profile|
+            ::Katello::ModuleStream.where(profile.slice(:name, :stream))
+          end
+
+          query_name_streams = query_name_streams.inject(&:or)
+
+          bound_library_instances = host.content_facet.bound_repositories.map(&:library_instance_or_self)
+          query = ::Katello::ModuleStream.in_repositories(bound_library_instances).
+                                          select(:name, :stream, :version, :context, :arch).
+                                            merge(query_name_streams)
+
+          updated_profiles = query.map do |module_stream|
+            module_stream.slice(:name, :stream, :version, :context, :arch)
+          end
+
+          # We also need to pass module streams that are not found in the ModuleStream table
+          # but are present on the content host
+          unassociated_profiles = available_streams.select do |profile|
+            updated_profiles.none? { |p| p[:name] == profile[:name] && p[:stream] == profile[:stream] }
+          end
+
+          ::Katello::Pulp::Consumer.new(host.content_facet.uuid).
+              upload_module_stream_profile(updated_profiles + unassociated_profiles)
+        rescue RestClient::ResourceNotFound
+          Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % host.id)
+        end
+
         def import_module_streams(payload, host)
           enabled_payload = payload.map do |profile|
-            profile.slice("name", "stream", "version", "context", "arch") if profile["status"] == "enabled"
+            profile.slice("name", "stream", "version", "context", "arch").with_indifferent_access if profile["status"] == "enabled"
           end
           enabled_payload.compact!
 
-          ::Katello::Pulp::Consumer.new(host.content_facet.uuid).upload_module_stream_profile(enabled_payload)
+          UploadProfiles.upload_modules_to_pulp(enabled_payload, host)
           host.import_module_streams(payload)
-        rescue RestClient::ResourceNotFound
-          Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % input[:host_id])
         end
 
         def import_deb_package_profile(host, profile)
@@ -69,6 +95,7 @@ module Actions
             payload = profiles.dig("deb_package_profile", "deb_packages") || []
             import_deb_package_profile(host, payload)
           else
+            module_streams = []
             profiles.each do |profile|
               payload = profile["profile"]
               case profile["content_type"]
@@ -79,8 +106,12 @@ module Actions
               when "enabled_repos"
                 host.import_enabled_repositories(payload)
               else
-                import_module_streams(payload, host)
+                module_streams << payload
               end
+            end
+
+            module_streams.each do |module_stream_payload|
+              import_module_streams(module_stream_payload, host)
             end
           end
         end
