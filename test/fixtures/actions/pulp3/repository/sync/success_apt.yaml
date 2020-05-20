@@ -1,0 +1,50 @@
+---
+  task_groups: []
+  pulp_tasks:
+    - pulp_href: "/pulp/api/v3/tasks/aae95f53-bbdb-4c7a-8795-0da3bc1cf318/"
+      pulp_created: '2020-04-24T13:47:48.666+00:00'
+      state: completed
+      name: pulp_deb.app.tasks.synchronizing.synchronize
+      started_at: '2020-04-24T13:47:48.783+00:00'
+      finished_at: '2020-04-24T13:47:56.229+00:00'
+      non_fatal_errors: []
+      error:
+      worker: "/pulp/api/v3/workers/8fd4352b-d961-4e02-a78e-68b7b79eec60/"
+      parent:
+      spawned_tasks: []
+      progress_reports:
+      - message: Downloading Artifacts
+        code: downloading.artifacts
+        state: completed
+        done: 16
+        suffix: 
+        total: 
+      - message: Update ReleaseFile units
+        code: update.release_file
+        state: completed
+        done: 1
+        suffix: 
+        total: 
+      - message: Update PackageIndex units
+        code: update.packageindex
+        state: completed
+        done: 2
+        suffix: 
+        total: 
+      - message: Associating Content
+        code: associating.content
+        state: completed
+        done: 67
+        suffix: 
+        total: 
+      - message: Un-Associating Content
+        code: unassociating.content
+        state: completed
+        done: 7
+        suffix: 
+        total: 
+      created_resources:
+      - "/pulp/api/v3/repositories/deb/apt/e1e243cf-b0f9-4036-80b1-8740373b51dc/versions/2/"
+      reserved_resources_record:
+      - "/pulp/api/v3/repositories/deb/apt/e1e243cf-b0f9-4036-80b1-8740373b51dc/"
+      - "/pulp/api/v3/remotes/deb/apt/5fc64e41-baf4-4b8a-b36d-005540ace540/"

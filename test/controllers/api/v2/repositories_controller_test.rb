@@ -147,7 +147,7 @@ module Katello
     def test_index_available_for_content_view
       ids = @view.organization.default_content_view.versions.first.repositories.pluck(:id) - @view.repositories.pluck(:id)
 
-      response = get :index, params: { :content_view_id => @view.id, :available_for => :content_view, :organization_id => @organization.id }
+      response = get :index, params: { :content_view_id => @view.id, :available_for => :content_view, :organization_id => @organization.id, :per_page => 100 }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'

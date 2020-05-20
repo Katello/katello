@@ -204,3 +204,15 @@ pulp3_docker_root_1:
   unprotected:           <%= true %>
   url:                  "https://registry-1.docker.io/"
   docker_upstream_name: "fedora/ssh"
+
+pulp3_deb_root_1:
+  name:                 Pulp3 Deb 1
+  content_id:           11
+  content_type:         deb
+  label:                Pulp3_Deb_1
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:debian) %>
+  unprotected:           <%= true %>
+  url:                  "http://ftp.debian.mymirror.org/debian"
+  deb_releases:         buster
+  deb_components:       main
+  deb_architectures:    amd64

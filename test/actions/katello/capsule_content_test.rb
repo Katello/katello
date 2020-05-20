@@ -137,6 +137,59 @@ module ::Actions::Katello::CapsuleContent
       end
     end
 
+    it 'plans correctly for a pulp3 apt repo' do
+      with_pulp3_features(capsule_content.smart_proxy)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      repo = katello_repositories(:pulp3_deb_1)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+      options = { smart_proxy_id: capsule_content.smart_proxy.id,
+                  content_view_id: nil,
+                  repository_id: repo.id,
+                  environment_id: nil
+                }
+
+      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
+      assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+      end
+
+      assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::GenerateMetadata) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+      end
+
+      assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
+        assert_equal repo.id, input[:repository_id]
+        refute input[:options][:use_repository_version]
+        assert input[:options][:tasks].present?
+      end
+    end
+
+    it 'plans correctly for a pulp2 apt repo' do
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
+      repo = katello_repositories(:debian_9_amd64)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+      options = { smart_proxy_id: capsule_content.smart_proxy.id,
+                  content_view_id: nil,
+                  repository_id: repo.id,
+                  environment_id: nil
+                }
+
+      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
+      assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
+
+      assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
+        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
+        assert_equal repo.pulp_id, input[:repo_pulp_id]
+        assert input[:sync_options][:remove_missing]
+      end
+    end
+
     it 'plans correctly for a pulp yum repo' do
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)

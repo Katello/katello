@@ -90,6 +90,10 @@ module Katello
           PulpcoreClient::UploadCommit
         end
 
+        def signing_services_api
+          PulpcoreClient::SigningServicesApi.new(core_api_client)
+        end
+
         def tasks_api
           PulpcoreClient::TasksApi.new(core_api_client)
         end

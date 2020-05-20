@@ -14,6 +14,7 @@ module ::Actions::Katello::Repository
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
     let(:repository_pulp3) { katello_repositories(:pulp3_file_1) }
     let(:repository_ansible_collection_pulp3) { katello_repositories(:pulp3_ansible_collection_1) }
+    let(:repository_apt_pulp3) { katello_repositories(:pulp3_deb_1) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:puppet_repository) { katello_repositories(:p_forge) }
     let(:docker_repository) { katello_repositories(:redis) }
@@ -477,6 +478,23 @@ module ::Actions::Katello::Repository
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_pulp3, proxy, :contents_changed => true)
     end
 
+    it 'plans pulp3 orchestration actions with apt repo' do
+      action = create_action pulp3_action_class
+      action.stubs(:action_subject).with(repository_apt_pulp3)
+      plan_action action, repository_apt_pulp3, proxy, {}
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::Sync, repository_apt_pulp3, proxy, {})
+      assert_action_planed action, ::Actions::Pulp3::Repository::SaveVersion
+      assert_action_planed action, ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata
+    end
+
+    it 'plans pulp3 apt metadata generate with contents_changed' do
+      action = create_action pulp3_metadata_generate_action_class
+      action.stubs(:action_subject).with(repository_apt_pulp3)
+      plan_action action, repository_apt_pulp3, proxy, :contents_changed => true
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::CreatePublication, repository_apt_pulp3, proxy, :contents_changed => true)
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::RefreshDistribution, repository_apt_pulp3, proxy, :contents_changed => true)
+    end
+
     it 'plans pulp3 ansible collection metadata generate without publication ' do
       action = create_action pulp3_metadata_generate_action_class
       action.stubs(:action_subject).with(repository_ansible_collection_pulp3)
@@ -582,6 +600,24 @@ module ::Actions::Katello::Repository
                                              "Downloading Artifacts: 415/415\n"\
                                              "Downloading tag list: 1/1\n"\
                                              "Processing Tags: 135/135"
+        end
+
+        specify do
+          pulp3_action.run_progress.must_be_within_delta 1
+        end
+      end
+
+      describe 'successfully synchronized pulp3 apt repo' do
+        let(:fixture_variant) { :success_apt }
+
+        specify do
+          assert_equal action.humanized_output, "Total steps: 93/93\n"\
+                                             "--------------------------------\n"\
+                                             "Associating Content: 67/67\n"\
+                                             "Downloading Artifacts: 16/16\n"\
+                                             "Un-Associating Content: 7/7\n"\
+                                             "Update PackageIndex units: 2/2\n"\
+                                             "Update ReleaseFile units: 1/1"
         end
 
         specify do

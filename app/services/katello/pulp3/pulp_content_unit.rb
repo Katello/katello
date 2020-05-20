@@ -11,6 +11,11 @@ module Katello
         fail NotImplementedError
       end
 
+      def self.content_api_create(opts = {})
+        relative_path = opts.delete(:relative_path)
+        self.content_api.create(relative_path, opts)
+      end
+
       def self.create_content
         fail NotImplementedError
       end
