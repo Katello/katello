@@ -68,6 +68,7 @@ module Katello
           @rpm_one.update(modular: false)
           @rpm_one_two.update(modular: false)
           ModuleStreamRpm.delete_all
+          HostAvailableModuleStream.delete_all
         end
 
         def test_rpm_content_ids_returns_something
@@ -140,6 +141,43 @@ module Katello
 
           rpm_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).applicable_differences
           assert_equal [[@rpm_one_two.id], []], rpm_differences
+        end
+
+        def test_applicable_differences_adds_and_removes_no_module_ids
+          module_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::ModuleStream, bound_repos(@host)).applicable_differences
+          assert_equal [[], []], module_differences
+        end
+
+        def test_applicable_differences_adds_module_id
+          @rpm_one.update(modular: true)
+          @rpm_one_two.update(modular: true)
+
+          ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one.id)
+          ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one_two.id)
+
+          ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
+
+          module_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::ModuleStream, bound_repos(@host)).applicable_differences
+          assert_equal [[@module_stream.id], []], module_differences
+        end
+
+        def test_applicable_differences_removes_module_id
+          @rpm_one.update(modular: true)
+          @rpm_one_two.update(modular: true)
+
+          ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one.id)
+          ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one_two.id)
+
+          ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
+          ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::ModuleStream, bound_repos(@host)).calculate_and_import
+
+          HostAvailableModuleStream.find_by(host_id: @host.id, available_module_stream_id: AvailableModuleStream.
+                                            find_by(name: "Ohio").id).update(status: "disabled")
+
+          ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
+
+          module_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::ModuleStream, bound_repos(@host)).applicable_differences
+          assert_equal [[], [@module_stream.id]], module_differences
         end
       end
     end
