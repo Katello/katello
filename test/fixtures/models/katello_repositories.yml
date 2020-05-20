@@ -369,3 +369,10 @@ pulp3_docker_1:
   relative_path:        '/Default_Organization/library/pulp3_Docker_1'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
+pulp3_deb_1:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:pulp3_deb_root_1) %>
+  pulp_id:              "Default_Organization-Cabinet-pulp3_Deb_1"
+  relative_path:        'Default_Organization/library/pulp3_Deb_1'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>

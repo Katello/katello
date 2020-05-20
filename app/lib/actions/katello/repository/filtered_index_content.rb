@@ -10,6 +10,7 @@ module Actions
           param :upload_actions
         end
 
+        # rubocop:disable Metrics/MethodLength
         def run
           repo = ::Katello::Repository.find(input[:id])
           if repo.puppet?
@@ -21,7 +22,15 @@ module Actions
           elsif repo.file?
             ::Katello::FileUnit.import_for_repository(repo)
           elsif repo.deb?
-            unit_ids = search_units(repo)
+            if input[:import_upload_task] && input[:import_upload_task][:content_unit_href]
+              unit_ids = [input[:import_upload_task][:content_unit_href]]
+            elsif input[:upload_actions]&.any? { |action| action.try(:[], "content_unit_href") }
+              uploaded_content_unit_hrefs = []
+              input[:upload_actions].each { |action| uploaded_content_unit_hrefs << action.try(:[], "content_unit_href") }
+              unit_ids = uploaded_content_unit_hrefs.compact
+            else
+              unit_ids = search_units(repo)
+            end
             ::Katello::Deb.import_all(unit_ids, repo)
           elsif repo.yum?
             if input[:import_upload_task] && input[:import_upload_task][:content_unit_href]
