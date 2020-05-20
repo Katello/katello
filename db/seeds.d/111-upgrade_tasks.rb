@@ -12,6 +12,7 @@ UpgradeTask.define_tasks(:katello) do
     {:name => 'katello:upgrades:3.12:remove_pulp2_notifier'},
     {:name => 'katello:upgrades:3.13:republish_deb_metadata'},
     {:name => 'katello:upgrades:3.15:set_sub_facet_dmi_uuid'},
-    {:name => 'katello:upgrades:3.15:reindex_rpm_modular'}
+    {:name => 'katello:upgrades:3.15:reindex_rpm_modular'},
+    {:name => 'katello:upgrades:3.16:update_applicable_el8_hosts'}
   ]
 end
