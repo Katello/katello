@@ -1,3 +1,26 @@
+# 3.15.1 Rocky Road (2020-05-20)
+
+## Bug Fixes
+
+### Foreman Proxy Content
+ * simultaneously syncing multiple LCEs on smart proxy fails due to "required lock" error ([#29678](https://projects.theforeman.org/issues/29678), [246d899a](https://github.com/Katello/katello.git/commit/246d899a47ee11b358b92b5ff722ee1a582220a7))
+
+### Hosts
+ * upgraded 3.15 katello fails sometimes uploading package profile ([#29653](https://projects.theforeman.org/issues/29653), [89f83399](https://github.com/Katello/katello.git/commit/89f83399d7a11e80754eb0f097185b26c5d6bc83))
+
+### Repositories
+ * handle smart proxy refresh with missing pulp3 capabilities ([#29650](https://projects.theforeman.org/issues/29650), [e5a6f749](https://github.com/Katello/katello.git/commit/e5a6f7498892b941edfbe04d829022520c5ca672))
+
+### Documentation
+ * update http proxies documentation for 3.15 ([#29638](https://projects.theforeman.org/issues/29638))
+
+### Docker
+ * container tags don't show all lifecycle envs/cvs on details page ([#29454](https://projects.theforeman.org/issues/29454), [576259f4](https://github.com/Katello/katello.git/commit/576259f4f4551d2a596b9577cc21fc84d7eea480))
+
+### Other
+ * Orphaned repos cause `ERROR: at least one katello_docker_tags record has migrated_pulp3_href NULL value` during pulp3_content_switchover ([#29595](https://projects.theforeman.org/issues/29595), [590a15e9](https://github.com/Katello/katello.git/commit/590a15e97983f2a2a5bde7f67f5d2907ed338ef6))
+ * Katello Ansible Template for yum package install missing yes flag ([#29260](https://projects.theforeman.org/issues/29260), [21bffbad](https://github.com/Katello/katello.git/commit/21bffbadc4cc9e0acb29213704be6ab9840b66d5))
+
 # 3.15.0 Rocky Road (2020-04-15)
 
 ## Features
