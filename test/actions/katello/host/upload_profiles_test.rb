@@ -16,29 +16,16 @@ module Katello::Host
       let(:action_class) { ::Actions::Katello::Host::UploadProfiles }
       let(:rpm_profiles) { [{"name" => "foo", "version" => "1", "release" => "3"}] }
       let(:enabled_repos) { [{"repositoryid" => "foo", "baseurl" => "http://foo.com"}] }
-      let(:modumd_inventory) do
+      let(:modulemd_inventory) do
         [{"name" => "foo", "stream" => "1.1", "arch" => "x86_64",
           "context" => "cccc", "version" => "11111", "status" => "enabled"}]
-      end
-
-      let(:modumd_inventory_multiple) do
-        modumd_inventory + [{"name" => "foo1", "stream" => "1.1", "arch" => "x86_64",
-                             "context" => "cccc", "version" => "11111", "status" => "disabled"}]
       end
 
       let(:profile) do
         [
           {"content_type" => "rpm", "profile" => rpm_profiles},
           {"content_type" => "enabled_repos", "profile" => enabled_repos},
-          {"content_type" => "modulemd", "profile" => modumd_inventory}
-        ]
-      end
-
-      let(:profile1) do
-        [
-          {"content_type" => "rpm", "profile" => rpm_profiles},
-          {"content_type" => "enabled_repos", "profile" => enabled_repos},
-          {"content_type" => "modulemd", "profile" => modumd_inventory_multiple}
+          {"content_type" => "modulemd", "profile" => modulemd_inventory}
         ]
       end
 
@@ -65,7 +52,7 @@ module Katello::Host
           packages.map(&:nvra).must_equal(expected_packages.map(&:nvra))
         end
         @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with(modumd_inventory)
+        @host.expects(:import_module_streams).with(modulemd_inventory)
 
         plan_action action, @host, profile.to_json
         run_action action
@@ -74,14 +61,35 @@ module Katello::Host
       it 'selects correct modulemd payload' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
+        river = katello_module_streams(:river)
+        repo = river.repositories.first.library_instance_or_self
+        @host.content_facet.expects(:bound_repositories).returns([repo])
+
+        unassociated_profile = {"name" => "foo1", "stream" => "1.1", "arch" => "x86_64",
+                                "context" => "cccc", "version" => "11111", "status" => "enabled"}
+
+        modulemd_inventory_multiple = [
+          {"name" => river.name, "stream" => river.stream, "arch" => "x86_64",
+           "context" => "cccc", "version" => river.version + '1', "status" => "enabled"},
+          unassociated_profile
+        ]
+
+        profile1 = [
+          {"content_type" => "rpm", "profile" => rpm_profiles},
+          {"content_type" => "enabled_repos", "profile" => enabled_repos},
+          {"content_type" => "modulemd", "profile" => modulemd_inventory_multiple}
+        ]
 
         ::Host.expects(:find_by).returns(@host).at_least_once
         mock_consumer = mock
         mock_consumer.expects(:upload_package_profile)
         mock_consumer.expects(:upload_module_stream_profile).with do |args|
-          assert_equal 1, args.size
-          args.first["name"].must_equal(modumd_inventory.first["name"])
-          args.first["version"].must_equal(modumd_inventory.first["version"])
+          assert_equal 2, args.size
+          args.first["name"].must_equal(river.name)
+          args.first["stream"].must_equal(river.stream)
+          args.first["version"].must_equal(river.version)
+          args.last['name'].must_equal(unassociated_profile["name"])
+          args.last['stream'].must_equal(unassociated_profile["stream"])
         end
         ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
         @host.expects(:import_package_profile).with do |packages|
@@ -89,7 +97,7 @@ module Katello::Host
           packages.map(&:nvra).must_equal(expected_packages.map(&:nvra))
         end
         @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with(modumd_inventory_multiple)
+        @host.expects(:import_module_streams).with(modulemd_inventory_multiple)
 
         plan_action action, @host, profile1.to_json
         run_action action
@@ -106,7 +114,7 @@ module Katello::Host
         ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
         @host.expects(:import_package_profile).with(any_parameters).never
         @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with(modumd_inventory)
+        @host.expects(:import_module_streams).with(modulemd_inventory)
 
         plan_action action, @host, profile.to_json
         run_action action
@@ -146,7 +154,7 @@ module Katello::Host
         ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
         @host.expects(:import_package_profile).with(any_parameters).raises(ActiveRecord::InvalidForeignKey)
         @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with(modumd_inventory)
+        @host.expects(:import_module_streams).with(modulemd_inventory)
         plan_action action, @host, profile.to_json
         run_action action
       end
