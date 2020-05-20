@@ -100,9 +100,7 @@ const buildDetailDropdowns = (id, rowIndex, openColumn) => {
     },
   ];
 
-  // The rows are indexed along with the hidden dropdown rows, so we need to offset the parent row
-  const rowOffset = detailDropdowns.length + 1;
-  detailDropdowns = detailDropdowns.map(detail => ({ ...detail, parent: rowIndex * rowOffset }));
+  detailDropdowns = detailDropdowns.map(detail => ({ ...detail, parent: rowIndex }));
 
   return detailDropdowns;
 };
@@ -113,13 +111,15 @@ const tableDataGenerator = (results, rowMapping) => {
   const columns = buildColumns();
   const rows = [];
 
-  contentViews.forEach((contentView, rowIndex) => {
+  contentViews.forEach((contentView) => {
     const { id } = contentView;
+    const rowIndex = rows.length;
     // hasOwnProperty syntax because of https://eslint.org/docs/rules/no-prototype-builtins
-    const needsUpdate = !Object.prototype.hasOwnProperty.call(updatedRowMapping, id) ||
-                        !Object.keys(updatedRowMapping[id]).length;
-    if (needsUpdate) updatedRowMapping[id] = { expandedColumn: null, rowIndex: rows.length };
-    const openColumn = updatedRowMapping[id].expandedColumn;
+    const needsUpdate = !Object.keys(updatedRowMapping)
+      .find(i => updatedRowMapping[i].id === id) ||
+                        !Object.keys(updatedRowMapping[rowIndex]).length;
+    if (needsUpdate) updatedRowMapping[rowIndex] = { expandedColumn: null, id };
+    const openColumn = updatedRowMapping[rowIndex].expandedColumn;
     const cells = buildRow(contentView, openColumn);
     const isOpen = !!openColumn;
 

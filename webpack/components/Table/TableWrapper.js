@@ -72,7 +72,7 @@ const TableWrapper = ({
         perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
         variant="top"
       />
-      {MainTable()}
+      <MainTable />
     </React.Fragment>
   );
 };

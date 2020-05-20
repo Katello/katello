@@ -28,12 +28,6 @@ const ContentViewTable = ({ response, status, error }) => {
     [results, JSON.stringify(rowMapping)], // use JSON to check obj values eq not reference eq
   );
 
-  const cvIdFromRow = (rowIdx) => {
-    const entry = Object.entries(rowMapping).find(item => item[1].rowIndex === rowIdx);
-    if (entry) return parseInt(entry[0], 10);
-    return null;
-  };
-
   const onSelect = (event, isSelected, rowId) => {
     let rows;
     if (rowId === -1) {
@@ -48,17 +42,16 @@ const ContentViewTable = ({ response, status, error }) => {
 
   const onExpand = (_event, rowIndex, colIndex, isOpen) => {
     const { rows } = table;
-    const contentViewId = cvIdFromRow(rowIndex);
     // adjust for the selection checkbox cell being counted in the index
     const adjustedColIndex = colIndex - 1;
 
     if (!isOpen) {
       setRowMapping((prev) => {
-        const updatedMap = { ...prev[contentViewId], expandedColumn: adjustedColIndex };
-        return { ...prev, [contentViewId]: updatedMap };
+        const updatedMap = { ...prev[rowIndex], expandedColumn: adjustedColIndex };
+        return { ...prev, [rowIndex]: updatedMap };
       });
     } else {
-      setRowMapping(prev => ({ ...prev, [contentViewId]: {} }));
+      setRowMapping(prev => ({ ...prev, [rowIndex]: {} }));
     }
 
     setTable(prevTable => ({ ...prevTable, rows }));
