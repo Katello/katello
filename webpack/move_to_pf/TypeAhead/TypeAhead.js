@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 
-import { KEYCODES } from 'foremanReact/common/keyCodes';
-import { InputGroup, Button, Icon } from 'patternfly-react';
-import TypeAheadInput from './TypeAheadInput';
-import TypeAheadItems from './TypeAheadItems';
-import { getActiveItems } from './helpers';
+import TypeAheadSearch from './pf3Search/TypeAheadSearch';
+// eslint-disable-next-line import/no-named-default
+import { default as TypeAheadSearchPf4 } from './pf4Search/TypeAheadSearch';
+import { getActiveItems } from './helpers/helpers';
 
 import './TypeAhead.scss';
 
@@ -34,7 +33,7 @@ class TypeAhead extends Component {
 
   render() {
     const {
-      onSearch, onInputUpdate, items, actionText, ...rest
+      onSearch, onInputUpdate, items, actionText, patternfly4, ...rest
     } = this.props;
 
     const activeItems = getActiveItems(items);
@@ -45,7 +44,8 @@ class TypeAhead extends Component {
         defaultHighlightedIndex={0}
         selectedItem={this.state.inputValue}
         {...rest}
-        render={({
+      >
+        {({
           getInputProps,
           getItemProps,
           isOpen,
@@ -55,62 +55,32 @@ class TypeAhead extends Component {
           selectItem,
           openMenu,
         }) => {
-          const shouldShowItems = isOpen && items.length > 0;
-          const autoCompleteItemsProps = {
-            items,
-            highlightedIndex,
-            selectedItem,
-            getItemProps,
-            activeItems,
-          };
+            const typeAheadProps = {
+              userInputValue: this.state.inputValue,
+              clearSearch: this.clearSearch,
+              getInputProps,
+              getItemProps,
+              isOpen,
+              inputValue,
+              highlightedIndex,
+              selectedItem,
+              selectItem,
+              openMenu,
+              onSearch,
+              items,
+              activeItems,
+              shouldShowItems: isOpen && items.length > 0,
+           };
 
-          return (
-            <div>
-              <InputGroup>
-                <TypeAheadInput
-                  onKeyPress={(e) => {
-                    switch (e.keyCode) {
-                      case KEYCODES.TAB_KEY:
-                        if (isOpen && activeItems[highlightedIndex]) {
-                          selectItem(activeItems[highlightedIndex]);
-                          e.preventDefault();
-                        }
-
-                        break;
-
-                      case KEYCODES.ENTER:
-                        if (!isOpen || !activeItems[highlightedIndex]) {
-                          onSearch(this.state.inputValue);
-                          e.nativeEvent.preventDownshiftDefault = true;
-                          e.preventDefault();
-                        }
-
-                        break;
-
-                      default:
-                        break;
-                    }
-                  }}
-                  onInputFocus={openMenu}
-                  passedProps={getInputProps()}
-                />
-                {this.state.inputValue &&
-                  <InputGroup.Button>
-                    <Button onClick={this.clearSearch}>
-                      <Icon name="times" />
-                    </Button>
-                  </InputGroup.Button>
-                }
-                <InputGroup.Button>
-                  <Button onClick={() => onSearch(inputValue)}>{actionText}</Button>
-                </InputGroup.Button>
-              </InputGroup>
-
-              {shouldShowItems && <TypeAheadItems {...autoCompleteItemsProps} />}
-            </div>
+            return (
+              <div>
+                {patternfly4 ?
+                  <TypeAheadSearchPf4 {...typeAheadProps} /> :
+                  <TypeAheadSearch actionText={actionText} {...typeAheadProps} />}
+              </div>
           );
-        }}
-      />
+}}
+      </Downshift>
     );
   }
 }
@@ -128,11 +98,13 @@ TypeAhead.propTypes = {
   onSearch: PropTypes.func.isRequired,
   actionText: PropTypes.string,
   initialInputValue: PropTypes.string,
+  patternfly4: PropTypes.bool,
 };
 
 TypeAhead.defaultProps = {
   actionText: 'Search',
   initialInputValue: '',
+  patternfly4: false,
 };
 
 export default TypeAhead;

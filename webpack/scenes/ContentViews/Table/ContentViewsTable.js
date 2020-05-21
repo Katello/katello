@@ -73,8 +73,8 @@ const ContentViewTable = ({ response, status, error }) => {
     return STATUS.PENDING; // Fallback to pending
   };
 
-  const emptyTitle = __("You currently don't have any Content Views.");
-  const emptyBody = __('A Content View can be added by using the "New content view" button below.');
+  const emptyContentTitle = __("You currently don't have any Content Views.");
+  const emptyContentBody = __('A Content View can be added by using the "New content view" button below.');
 
   const { rows, columns } = table;
   return (
@@ -83,8 +83,8 @@ const ContentViewTable = ({ response, status, error }) => {
         rows,
         error,
         metadata,
-        emptyTitle,
-        emptyBody,
+        emptyContentTitle,
+        emptyContentBody,
         onSelect,
         onExpand,
         actionResolver,
@@ -93,6 +93,7 @@ const ContentViewTable = ({ response, status, error }) => {
       fetchItems={getContentViews}
       canSelectAll={false}
       cells={columns}
+      autocompleteEndpoint="/content_views/auto_complete_search"
     />
   );
 };
