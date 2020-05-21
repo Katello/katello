@@ -17,12 +17,12 @@ const ContentViewTable = ({ response, status, error }) => {
   useEffect(
     () => {
       if (!loadingResponse && results && results.length > 0) {
-        const { updatedRowMapping, ...tableData } = tableDataGenerator(
+        const { updatedRowMap, ...tableData } = tableDataGenerator(
           results,
           rowMapping,
         );
         setTable(tableData);
-        setRowMapping(updatedRowMapping);
+        setRowMapping(updatedRowMap);
       }
     },
     [results, JSON.stringify(rowMapping)], // use JSON to check obj values eq not reference eq
@@ -51,7 +51,8 @@ const ContentViewTable = ({ response, status, error }) => {
         return { ...prev, [rowIndex]: updatedMap };
       });
     } else {
-      setRowMapping(prev => ({ ...prev, [rowIndex]: {} }));
+      // Keep id in object to not throw off tableStatus id checks
+      setRowMapping(prev => ({ ...prev, [rowIndex]: { id: prev[rowIndex].id } }));
     }
 
     setTable(prevTable => ({ ...prevTable, rows }));
@@ -59,10 +60,17 @@ const ContentViewTable = ({ response, status, error }) => {
 
   // Prevents flash of "No Content" before rows are loaded
   const tableStatus = () => {
+    if (typeof results === 'undefined') return status; // will handle errored state
     const resultsLength = results && results.length;
     const rowMappingLength = Object.keys(rowMapping) && Object.keys(rowMapping).length;
-    if (resultsLength > rowMappingLength) return STATUS.PENDING;
-    return status;
+    if (resultsLength === 0) return status; // handles no CVs present
+    if (rowMappingLength > 0 && resultsLength > 0) {
+      const rowMappingIds = Object.values(rowMapping).map(map => map.id);
+      const resultsIds = Array.from(results.map(result => result.id));
+      // All results are accounted for in row mapping, the page is ready to load
+      if (resultsIds.every(id => rowMappingIds.includes(id))) return status;
+    }
+    return STATUS.PENDING; // Fallback to pending
   };
 
   const emptyTitle = __("You currently don't have any Content Views.");

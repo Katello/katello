@@ -106,7 +106,7 @@ const buildDetailDropdowns = (id, rowIndex, openColumn) => {
 };
 
 const tableDataGenerator = (results, rowMapping) => {
-  const updatedRowMapping = { ...rowMapping };
+  const updatedRowMap = { ...rowMapping };
   const contentViews = results || [];
   const columns = buildColumns();
   const rows = [];
@@ -115,11 +115,10 @@ const tableDataGenerator = (results, rowMapping) => {
     const { id } = contentView;
     const rowIndex = rows.length;
     // hasOwnProperty syntax because of https://eslint.org/docs/rules/no-prototype-builtins
-    const needsUpdate = !Object.keys(updatedRowMapping)
-      .find(i => updatedRowMapping[i].id === id) ||
-                        !Object.keys(updatedRowMapping[rowIndex]).length;
-    if (needsUpdate) updatedRowMapping[rowIndex] = { expandedColumn: null, id };
-    const openColumn = updatedRowMapping[rowIndex].expandedColumn;
+    const needsUpdate = !Object.keys(updatedRowMap).find(i => updatedRowMap[i].id === id) ||
+                        !Object.keys(updatedRowMap[rowIndex]).includes('expandedColumn');
+    if (needsUpdate) updatedRowMap[rowIndex] = { expandedColumn: null, id };
+    const openColumn = updatedRowMap[rowIndex].expandedColumn;
     const cells = buildRow(contentView, openColumn);
     const isOpen = !!openColumn;
 
@@ -127,7 +126,7 @@ const tableDataGenerator = (results, rowMapping) => {
     rows.push(...buildDetailDropdowns(id, rowIndex, openColumn));
   });
 
-  return { updatedRowMapping, rows, columns };
+  return { updatedRowMap, rows, columns };
 };
 
 export default tableDataGenerator;

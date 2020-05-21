@@ -23,7 +23,7 @@ const createBasicCVs = (amount) => {
     results: [],
   };
 
-  [...Array(amount).keys()].map((_, i) => response.results.push(buildContentView(i)));
+  [...Array(amount).keys()].forEach((_, i) => response.results.push(buildContentView(i)));
 
   return response;
 };
