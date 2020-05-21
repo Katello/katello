@@ -13,13 +13,14 @@
  * @requires ApiErrorHandler
  * @requires deleteHostOnUnregister
  * @requires ContentHostsHelper
+ * @requires simpleContentAccessEnabled
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', '$location', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister', 'ContentHostsHelper',
-    function ($scope, $state, $q, $location, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister, ContentHostsHelper) {
+    ['$scope', '$state', '$q', '$location', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister', 'ContentHostsHelper', 'simpleContentAccessEnabled',
+    function ($scope, $state, $q, $location, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister, ContentHostsHelper, simpleContentAccessEnabled) {
         $scope.menuExpander = MenuExpander;
 
         $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
@@ -34,6 +35,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.defaultServiceLevels = ['Self-Support', 'Standard', 'Premium'];
 
         $scope.purposeAddonsCount = 0;
+        $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
 
         $scope.panel = {
             error: false,
