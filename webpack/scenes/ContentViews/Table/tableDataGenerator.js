@@ -100,26 +100,30 @@ const buildDetailDropdowns = (id, rowIndex, openColumn) => {
     },
   ];
 
-  // The rows are indexed along with the hidden dropdown rows, so we need to offset the parent row
-  const rowOffset = detailDropdowns.length + 1;
-  detailDropdowns = detailDropdowns.map(detail => ({ ...detail, parent: rowIndex * rowOffset }));
+  detailDropdowns = detailDropdowns.map(detail => ({ ...detail, parent: rowIndex }));
 
   return detailDropdowns;
 };
 
 const tableDataGenerator = (results, rowMapping) => {
-  const updatedRowMapping = { ...rowMapping };
+  const updatedRowMap = {};
   const contentViews = results || [];
   const columns = buildColumns();
   const rows = [];
+  const contentViewIds = contentViews.map(cv => cv.id);
 
-  contentViews.forEach((contentView, rowIndex) => {
+  // Only keep the relevant rows to keep the table status check accurate
+  Object.entries(rowMapping).forEach(([rowId, value]) => {
+    if (contentViewIds.includes(value.id)) updatedRowMap[rowId] = value;
+  });
+
+  contentViews.forEach((contentView) => {
     const { id } = contentView;
-    // hasOwnProperty syntax because of https://eslint.org/docs/rules/no-prototype-builtins
-    if (!Object.prototype.hasOwnProperty.call(updatedRowMapping, id)) {
-      updatedRowMapping[id] = { expandedColumn: null, rowIndex: rows.length };
-    }
-    const openColumn = updatedRowMapping[id].expandedColumn;
+    const rowIndex = rows.length;
+    const needsUpdate = !Object.keys(updatedRowMap).find(i => updatedRowMap[i].id === id) ||
+                        !Object.keys(updatedRowMap[rowIndex]).includes('expandedColumn');
+    if (needsUpdate) updatedRowMap[rowIndex] = { expandedColumn: null, id };
+    const openColumn = updatedRowMap[rowIndex].expandedColumn;
     const cells = buildRow(contentView, openColumn);
     const isOpen = !!openColumn;
 
@@ -127,7 +131,7 @@ const tableDataGenerator = (results, rowMapping) => {
     rows.push(...buildDetailDropdowns(id, rowIndex, openColumn));
   });
 
-  return { updatedRowMapping, rows, columns };
+  return { updatedRowMap, rows, columns };
 };
 
 export default tableDataGenerator;

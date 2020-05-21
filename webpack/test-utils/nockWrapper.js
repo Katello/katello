@@ -10,7 +10,7 @@ export const nockInstance = nock('http://localhost');
 
 // Calling .done() with nock asserts that the request was fufilled. We use a timeout to ensure
 // that the component has set up and made the request before the assertion is made.
-export const assertNockRequest = (scope, timeout = 2000) => {
+export const assertNockRequest = (scope, timeout = 5000) => {
   setTimeout(() => {
     scope.done();
   }, timeout);

@@ -9,7 +9,7 @@ import { selectContentViews,
 import ContentViewsTable from './Table/ContentViewsTable';
 
 const ContentViewsPage = () => {
-  const items = useSelector(selectContentViews);
+  const response = useSelector(selectContentViews);
   const status = useSelector(selectContentViewStatus);
   const error = useSelector(selectContentViewError);
 
@@ -22,7 +22,7 @@ const ContentViewsPage = () => {
   return (
     <React.Fragment>
       <h1>{__('Content Views')}</h1>
-      <ContentViewsTable {...{ items, status, error }} />
+      <ContentViewsTable {...{ response, status, error }} />
     </React.Fragment>
   );
 };

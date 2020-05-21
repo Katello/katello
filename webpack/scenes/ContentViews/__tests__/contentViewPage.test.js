@@ -2,10 +2,11 @@ import React from 'react';
 import { renderWithApiRedux, waitFor } from 'react-testing-lib-wrapper';
 
 import CONTENT_VIEWS_KEY from '../ContentViewsConstants';
+import { createContentViewsParams } from '../ContentViewsActions';
 import ContentViewsPage from '../../ContentViews';
 import api from '../../../services/api';
 import { nockInstance, assertNockRequest } from '../../../test-utils/nockWrapper';
-
+import createBasicCVs from './basicContentViews.fixtures';
 
 const cvIndexData = require('./contentViewList.fixtures.json');
 
@@ -54,7 +55,7 @@ test('Can handle no Content Views being present', async () => {
   const { queryByText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await waitFor(() => expect(queryByText(/don't have any Content Views/)).toBeTruthy());
+  await waitFor(() => expect(queryByText(/don't have any Content Views/i)).toBeTruthy());
   assertNockRequest(scope);
 });
 
@@ -96,4 +97,47 @@ test('Can handle unpublished Content Views', async () => {
 
   await waitFor(() => expect(getAllByText(/not yet published/i).length).toBeGreaterThan(0));
   assertNockRequest(scope);
+});
+
+test('Can handle pagination', async () => {
+  const cvIndexLarge = createBasicCVs(100);
+  const { results } = cvIndexLarge;
+  const cvIndexFirstPage = { ...cvIndexLarge, ...{ results: results.slice(0, 20) } };
+  const cvIndexSecondPage = { ...cvIndexLarge, page: 2, results: results.slice(20, 40) };
+
+  // Match first page API request
+  const firstPageScope = nockInstance
+    .get(cvIndexPath)
+    .query(createContentViewsParams())
+    .reply(200, cvIndexFirstPage);
+
+  // Match second page API request
+  const secondPageScope = nockInstance
+    .get(cvIndexPath)
+    // Using a custom query params matcher because parameters can be strings
+    .query(actualQueryObject => parseInt(actualQueryObject.page, 10) === 2)
+    .reply(200, cvIndexSecondPage);
+
+  const { queryByText, getByLabelText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+
+  // Wait for first paginated page to load and assert only the first page of results are present
+  await waitFor(() => {
+    expect(queryByText(results[0].name)).toBeInTheDocument();
+    expect(queryByText(results[19].name)).toBeInTheDocument();
+    expect(queryByText(results[21].name)).not.toBeInTheDocument();
+  });
+
+  // Label comes from patternfly, if this test fails, check if patternfly updated the label.
+  expect(getByLabelText('Go to next page')).toBeTruthy();
+  getByLabelText('Go to next page').click();
+
+  // Wait for second paginated page to load and assert only the second page of results are present
+  await waitFor(() => {
+    expect(queryByText(results[20].name)).toBeInTheDocument();
+    expect(queryByText(results[39].name)).toBeInTheDocument();
+    expect(queryByText(results[41].name)).not.toBeInTheDocument();
+  });
+
+  assertNockRequest(firstPageScope);
+  assertNockRequest(secondPageScope);
 });
