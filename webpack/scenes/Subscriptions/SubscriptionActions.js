@@ -106,7 +106,7 @@ export const resetTasks = () => (dispatch) => {
 
 export const handleTask = task => async (dispatch, getState) => {
   if (selectIsPollingTask(getState(), SUBSCRIPTIONS)) {
-    if (!task.pending) {
+    if (!task.pending && task.result !== 'pending') {
       dispatch(stopPollingTask(SUBSCRIPTIONS));
       dispatch(toastTaskFinished(task));
       dispatch(resetTasks());
