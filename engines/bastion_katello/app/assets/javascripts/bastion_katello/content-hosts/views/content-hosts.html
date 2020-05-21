@@ -78,8 +78,8 @@
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column="name" sortable><span translate>Name</span></th>
-          <th bst-table-column="subscription_status" sortable>
-            {{ "Subscription Status" | translate }}
+          <th bst-table-column="subscription_status" ng-if="!simpleContentAccessEnabled" sortable>
+            {{ 'Subscription Status' | translate }}
           </th>
           <th bst-table-column="status">
             <span translate>Installable Updates</span>
@@ -102,9 +102,9 @@
               {{ host.name }}
             </a>
           </td>
-          <td bst-table-cell>
-          <span ng-class="table.getHostStatusIcon(host.subscription_global_status)">
-          </span>
+          <td bst-table-cell ng-if="!simpleContentAccessEnabled">
+            <span ng-class="table.getHostStatusIcon(host.subscription_global_status)">
+            </span>
           </td>
           <td>
             <a ui-sref="content-host.errata.index({hostId: host.id})">
