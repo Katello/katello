@@ -106,15 +106,20 @@ const buildDetailDropdowns = (id, rowIndex, openColumn) => {
 };
 
 const tableDataGenerator = (results, rowMapping) => {
-  const updatedRowMap = { ...rowMapping };
+  const updatedRowMap = {};
   const contentViews = results || [];
   const columns = buildColumns();
   const rows = [];
+  const contentViewIds = contentViews.map(cv => cv.id);
+
+  // Only keep the relevant rows to keep the table status check accurate
+  Object.entries(rowMapping).forEach(([rowId, value]) => {
+    if (contentViewIds.includes(value.id)) updatedRowMap[rowId] = value;
+  });
 
   contentViews.forEach((contentView) => {
     const { id } = contentView;
     const rowIndex = rows.length;
-    // hasOwnProperty syntax because of https://eslint.org/docs/rules/no-prototype-builtins
     const needsUpdate = !Object.keys(updatedRowMap).find(i => updatedRowMap[i].id === id) ||
                         !Object.keys(updatedRowMap[rowIndex]).includes('expandedColumn');
     if (needsUpdate) updatedRowMap[rowIndex] = { expandedColumn: null, id };
