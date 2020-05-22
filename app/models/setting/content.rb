@@ -145,7 +145,9 @@ class Setting::Content < Setting
                   "as long as the registering DMI UUID is not used by another host."),
                true, N_('Host Profile Assume')),
       self.set('host_tasks_workers_pool_size', N_("Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required."),
-               5, N_('Host Tasks Workers Pool Size'))
+               5, N_('Host Tasks Workers Pool Size')),
+      self.set('applicability_batch_size', N_("Number of host applicability calculations to process per task."),
+               50, N_('Applicability Batch Size'))
     ]
   end
 
