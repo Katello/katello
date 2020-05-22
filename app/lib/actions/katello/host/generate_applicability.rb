@@ -8,7 +8,7 @@ module Actions
 
         def plan(hosts, use_queue = true)
           if SETTINGS[:katello][:katello_applicability]
-            plan_action(::Actions::Katello::Applicability::Hosts::Generate, host_ids: hosts.pluck(:id))
+            plan_self(:host_ids => hosts.map(&:id))
           else
             uuids = hosts.map { |host| host.content_facet.try(:uuid) }.compact
             unless uuids.empty?
@@ -19,7 +19,12 @@ module Actions
         end
 
         def finalize
-          unless SETTINGS[:katello][:katello_applicability]
+          if SETTINGS[:katello][:katello_applicability]
+            input[:host_ids].each do |host_id|
+              ::Katello::ApplicableHostQueue.push_host(host_id)
+            end
+            ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, 0)
+          else
             input[:host_ids].each do |host_id|
               if input[:use_queue]
                 ::Katello::EventQueue.push_event(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host_id)
