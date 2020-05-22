@@ -11,9 +11,14 @@ module Actions
           end
 
           def run
-            ::Katello::Repository.find(input[:repo_id]).content_facets.each do |facet|
-              ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, facet.host.id)
+            host_ids = ::Katello::Repository.find(input[:repo_id]).hosts_with_applicability.pluck(:id)
+            return if host_ids.empty?
+
+            host_ids.each do |host_id|
+              ::Katello::ApplicableHostQueue.push_host(host_id)
             end
+
+            ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, 0)
           end
 
           def humanized_name

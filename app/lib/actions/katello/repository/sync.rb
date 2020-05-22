@@ -26,8 +26,7 @@ module Actions
           incremental = options.fetch(:incremental, false)
           validate_contents = options.fetch(:validate_contents, false)
           skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && repo.yum?)
-          # TODO: Remove the check for Pulp 3 once Pulp 3 errata is working fully
-          generate_applicability = repo.yum? && !SmartProxy.pulp_master.pulp3_support?(repo)
+          generate_applicability = repo.yum?
 
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum/deb repositories.") if validate_contents && !repo.yum? && !repo.deb?
