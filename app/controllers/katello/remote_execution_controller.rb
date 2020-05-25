@@ -43,7 +43,7 @@ module Katello
       end
 
       def errata_inputs
-        if params[:install_all]
+        if ::Foreman::Cast.to_bool(params[:install_all])
           Erratum.installable_for_hosts(hosts).pluck(:errata_id).join(',')
         else
           params[:name]
