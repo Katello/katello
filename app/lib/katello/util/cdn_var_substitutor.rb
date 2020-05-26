@@ -67,6 +67,7 @@ module Katello
 
         futures.each do |future|
           resolved << future.value
+          Rails.logger.error("Failed at scanning for repository: #{future.reason}") if future.rejected?
         end
 
         find_substitutions(resolved.compact.flatten)
