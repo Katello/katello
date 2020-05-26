@@ -1,4 +1,4 @@
-# 3.15.1 Rocky Road (2020-05-20)
+# 3.15.1 Rocky Road (2020-05-26)
 
 ## Bug Fixes
 
@@ -13,6 +13,9 @@
 
 ### Documentation
  * update http proxies documentation for 3.15 ([#29638](https://projects.theforeman.org/issues/29638))
+
+### Modularity
+ *  Applicable errata not showing up for module stream errata ([#29488](https://projects.theforeman.org/issues/29488), [34ea1d9f](https://github.com/Katello/katello.git/commit/34ea1d9f09d072c6a7c7b8ad90cd383798373552))
 
 ### Docker
  * container tags don't show all lifecycle envs/cvs on details page ([#29454](https://projects.theforeman.org/issues/29454), [576259f4](https://github.com/Katello/katello.git/commit/576259f4f4551d2a596b9577cc21fc84d7eea480))
