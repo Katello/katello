@@ -220,6 +220,7 @@ module Katello
       def update_distribution
         if distribution_reference
           options = secure_distribution_options(relative_path).except(:name)
+          distribution_reference.update(:content_guard_href => options[:content_guard])
           api.distributions_api.partial_update(distribution_reference.href, options)
         end
       end
