@@ -39,6 +39,7 @@ import {
   toastTaskFinished,
 } from '../Tasks/TaskActions';
 import { selectIsPollingTasks, selectIsPollingTask } from '../Tasks/TaskSelectors';
+import { selectIsTaskPending } from './SubscriptionsSelectors';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{
@@ -106,7 +107,7 @@ export const resetTasks = () => (dispatch) => {
 
 export const handleTask = task => async (dispatch, getState) => {
   if (selectIsPollingTask(getState(), SUBSCRIPTIONS)) {
-    if (!task.pending && task.result !== 'pending') {
+    if (!selectIsTaskPending(getState())) {
       dispatch(stopPollingTask(SUBSCRIPTIONS));
       dispatch(toastTaskFinished(task));
       dispatch(resetTasks());

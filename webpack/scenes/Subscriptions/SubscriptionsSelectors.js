@@ -16,5 +16,8 @@ export const selectActivePermissions = state =>
 export const selectSubscriptionsTask = state =>
   selectSubscriptionsState(state).task;
 
+export const selectIsTaskPending = state =>
+  selectSubscriptionsTask(state).pending || selectSubscriptionsTask(state).result === 'pending';
+
 export const selectTableSettings = (state, tableName) =>
   state.katello.settings.tables[tableName] || undefined;
