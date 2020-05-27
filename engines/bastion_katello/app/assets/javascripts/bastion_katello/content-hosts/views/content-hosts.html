@@ -78,7 +78,7 @@
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column="name" sortable><span translate>Name</span></th>
-          <th bst-table-column="subscription_status" ng-if="!simpleContentAccessEnabled" sortable>
+          <th bst-table-column="subscription_status" ng-hide="simpleContentAccessEnabled" sortable>
             {{ 'Subscription Status' | translate }}
           </th>
           <th bst-table-column="status">
@@ -102,7 +102,7 @@
               {{ host.name }}
             </a>
           </td>
-          <td bst-table-cell ng-if="!simpleContentAccessEnabled">
+          <td bst-table-cell ng-hide="simpleContentAccessEnabled">
             <span ng-class="table.getHostStatusIcon(host.subscription_global_status)">
             </span>
           </td>
