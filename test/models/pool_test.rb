@@ -117,6 +117,15 @@ module Katello
       Pool.import_all(org, false)
     end
 
+    def test_import_hosts
+      host = FactoryBot.create(:host, :with_subscription)
+      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([host.subscription_facet.uuid])
+
+      @pool_one.import_hosts
+
+      assert @pool_one.subscription_facets.where(id: host.subscription_facet.id).any?
+    end
+
     def test_quantity_available_unlimited
       pool = FactoryBot.build(:katello_pool, quantity: -1, consumed: 3)
       assert_equal(-1, pool.quantity_available)
