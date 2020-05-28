@@ -1,16 +1,16 @@
 const path = require('path');
 const fs = require('fs');
 
-const getForemanLocation = () => {
-  const foremanLocations = ['./foreman', '../foreman', '../../foreman'];
+const foremanLocation = () => {
+  const relativePaths = ['./foreman', '../foreman', '../../foreman'];
   const notFound = 'Foreman directory cannot be found! This action requires Foreman to be present ' +
   'in either a parent, sibling, or child directory relative to the plugin.';
   const currentDir = process.cwd();
   let fullPath;
 
-  foremanLocations.forEach((relativeForemanPath) => {
-    const possibleForemanPath = path.join(currentDir, relativeForemanPath);
-    if (fs.existsSync(possibleForemanPath)) fullPath = possibleForemanPath;
+  relativePaths.forEach((relativePath) => {
+    const result = path.join(currentDir, relativePath);
+    if (fs.existsSync(result)) fullPath = result;
   });
 
   if (!fullPath) throw new Error(notFound);
@@ -18,12 +18,12 @@ const getForemanLocation = () => {
 };
 
 // Get a subdirectory within Foreman
-const getForemanRelativePath = (relativeForemanPath) => {
-  const foremanLocation = getForemanLocation();
-  const notFound = `Could not find ${relativeForemanPath} in ${foremanLocation}`;
-  const foremanRelativePath = path.join(foremanLocation, relativeForemanPath);
-  if (!fs.existsSync(foremanRelativePath)) throw new Error(notFound);
-  return foremanRelativePath;
+const foremanRelativePath = (innerPath) => {
+  const foremanPath = foremanLocation();
+  const notFound = `Could not find ${innerPath} in ${foremanPath}`;
+  const result = path.join(foremanPath, innerPath);
+  if (!fs.existsSync(result)) throw new Error(notFound);
+  return result;
 };
 
-module.exports = { getForemanLocation, getForemanRelativePath };
+module.exports = { foremanLocation, foremanRelativePath };

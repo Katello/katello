@@ -1,10 +1,10 @@
 const path = require('path');
-const { getForemanLocation, getForemanRelativePath } = require('./test-utils/findForeman.js');
-const foremanFull = getForemanLocation();
+const { foremanLocation, foremanRelativePath } = require('./test-utils/findForeman.js');
+const foremanFull = foremanLocation();
 const foremanLintingRelative = './node_modules/@theforeman/vendor-dev/eslint.extends.js'
-const foremanLintingConfig = getForemanRelativePath(foremanLintingRelative);
+const foremanLintingConfig = foremanRelativePath(foremanLintingRelative);
 const foremanVendorRelative = './node_modules/@theforeman/vendor-core/';
-const foremanVendorDir = getForemanRelativePath(foremanVendorRelative);
+const foremanVendorDir = foremanRelativePath(foremanVendorRelative);
 
 module.exports = {
   env: {

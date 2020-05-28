@@ -1,50 +1,42 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: React Tests
+name: React Tests (non-blocking)
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
 defaults:
   run:
-    working-directory: katello
+    working-directory: ./katello
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
       with:
-        path: katello
+        path: ${{ github.workspace }}/katello
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
+    # We could update the postinstall action for foreman to look for an environment variable for plugin webpack dirs
+    # before kicking off the ruby script to find them, this would eliminate the ruby dep and running `npm i` in Katello.
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.6
-    # We could update the postinstall action for foreman to look for an environment variable for plugin webpack dirs
-    # before kicking off the ruby script to find them, setting that would eliminate the ruby dep and running `npm i` in Katello.
-    - name: Install bundler (needed to find Foreman plugins)
-      run: gem install bundler
     - name: Checkout Foreman repo
       uses: actions/checkout@v2
       with:
         repository: theforeman/foreman
-        path: foreman # checkout Foreman and Katello as siblings, same as dev env
+        path: ${{ github.workspace }}/foreman # checkout Foreman and Katello as siblings, same as dev env
         ref: develop
     - name: Install Foreman dependencies
       run:  npm i
-      working-directory: ./foreman
+      working-directory: ${{ github.workspace }}/foreman
     - name: Install Katello dependencies
       run:  npm i
-    - name: Run Katello tests
-      run: npm test
     - name: Run Katello linting
       run: npm run lint
+    - name: Run Katello tests
+      run: npm test

@@ -1,7 +1,7 @@
-const { getForemanLocation, getForemanRelativePath } = require('./webpack/test-utils/findForeman.js')
+const { foremanLocation, foremanRelativePath } = require('./webpack/test-utils/findForeman.js')
 const foremanReactRelative = 'webpack/assets/javascripts/react_app';
-const foremanFull = getForemanLocation();
-const foremanReactFull = getForemanRelativePath(foremanReactRelative);
+const foremanFull = foremanLocation();
+const foremanReactFull = foremanRelativePath(foremanReactRelative);
 
 // Jest configuration
 module.exports = {
