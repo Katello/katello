@@ -62,7 +62,7 @@ module Katello
         end
 
         if facts['distribution.name'] == 'Red Hat Enterprise Linux Workstation'
-          os_name += '_Workstation'
+          os_attributes[:name] = os_name + '_Workstation'
         end
 
         ::Operatingsystem.find_by(os_attributes) || ::Operatingsystem.create!(os_attributes)

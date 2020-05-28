@@ -126,7 +126,7 @@ module Katello
       @facts['distribution.id'] = 'Maipo'
 
       assert_equal parser.operatingsystem.name, 'RedHat_Workstation'
-      assert_equal parser.operatingsystem.type, 'RedHat'
+      assert_equal parser.operatingsystem.type, 'Redhat'
       assert_equal parser.operatingsystem.major, '7'
       assert_equal parser.operatingsystem.minor, '7'
     end
@@ -137,7 +137,7 @@ module Katello
       @facts['distribution.id'] = 'Maipo'
 
       assert_equal parser.operatingsystem.name, 'RedHat'
-      assert_equal parser.operatingsystem.type, 'RedHat'
+      assert_equal parser.operatingsystem.type, 'Redhat'
       assert_equal parser.operatingsystem.major, '7'
       assert_equal parser.operatingsystem.minor, '7'
     end
