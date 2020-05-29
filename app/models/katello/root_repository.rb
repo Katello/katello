@@ -5,6 +5,9 @@ module Katello
     serialize :docker_tags_whitelist
 
     include Ext::LabelFromName
+    include Encryptable
+
+    encrypts :upstream_password
 
     IGNORABLE_CONTENT_UNIT_TYPES = %w(rpm drpm srpm distribution erratum).freeze
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
