@@ -89,18 +89,9 @@
 
       <dl class="dl-horizontal dl-horizontal-left">
         <dt translate>Subscription Status</dt>
-        <dd ng-if="!simpleContentAccessEnabled">
+        <dd>
           <i ng-class="getHostStatusIcon(host.subscription_global_status)"></i>
           {{ host.subscription_status_label }}
-        </dd>
-        <dd ng-if="simpleContentAccessEnabled">
-          <!-- always display green icon for SCA -->
-          <i
-            ng-class="getHostStatusIcon(0)"
-            title = "{{ 'This organization has Simple Content Access enabled. Hosts can consume from all repositories in their Content View regardless of subscription status.' | translate }}"
-            >
-          </i>
-          {{ 'Simple Content Access' | translate }}
         </dd>
 
         <dt translate>Details</dt>

@@ -22,7 +22,7 @@ module Katello
       when UNSUBSCRIBED_HYPERVISOR
         N_("Unsubscribed hypervisor")
       when DISABLED
-        N_("Disabled")
+        N_("Simple Content Access")
       else
         N_("Unknown subscription status")
       end
