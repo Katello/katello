@@ -94,15 +94,14 @@
           {{ host.subscription_status_label }}
         </dd>
 
-        <dt translate>Details</dt>
+        <dt translate ng-if="!simpleContentAccessEnabled">Details</dt>
         <dd>
           <ul class="compliance-reasons">
             <li ng-repeat="reason in host.subscription_facet_attributes.compliance_reasons">{{ reason }}</li>
           </ul>
         </dd>
 
-        <dt translate>Auto-Attach Details</dt>
-        <dd ng-if="simpleContentAccessEnabled" translate>Not Applicable</dd>
+        <dt translate ng-if="!simpleContentAccessEnabled">Auto-Attach Details</dt>
         <dd ng-if="!simpleContentAccessEnabled"
             bst-edit-select="host.subscription_facet_attributes.autoheal"
             selector="host.subscription_facet_attributes.autoheal"

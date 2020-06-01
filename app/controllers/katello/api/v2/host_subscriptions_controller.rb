@@ -135,7 +135,7 @@ module Katello
     end
     def add_subscriptions
       if @host.organization.simple_content_access?
-        fail ::Katello::HttpErrors::BadRequest, _("This host's organization has Simple Content Access enabled.  Attaching subscriptions is neither necessary nor allowed.")
+        fail ::Katello::HttpErrors::BadRequest, _("This host's organization is in Simple Content Access mode. Attaching subscriptions is disabled.")
       end
 
       pools_with_quantities = params.require(:subscriptions).map do |sub_params|
