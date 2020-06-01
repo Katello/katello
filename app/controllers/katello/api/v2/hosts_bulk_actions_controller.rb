@@ -10,6 +10,7 @@ module Katello
     before_action :find_deletable_hosts, :only => [:destroy_hosts]
     before_action :find_readable_hosts, :only => [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, :only => [:available_incremental_updates]
+    before_action :find_organization, :only => [:add_subscriptions]
     before_action :deprecate_katello_agent, :only => [:install_content, :update_content, :remove_content]
 
     before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
@@ -301,9 +302,7 @@ module Katello
     end
 
     def validate_organization
-      org_id = params[:organization_id] || params[:included]&.[](:params)&.[](:organization_id)
-      fail HttpErrors::BadRequest, _("Organization ID is required") if org_id.blank?
-      @organization = Organization.find org_id
+      fail HttpErrors::BadRequest, _("Organization ID is required") if @organization.blank?
     end
 
     def validate_host_collection_membership_limit
