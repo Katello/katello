@@ -2,9 +2,6 @@ require 'katello_test_helper'
 
 module Katello
   class DefaultHTTPProxySettingTest < ActiveSupport::TestCase
-    class TestAppController < ApplicationController
-    end
-
     def setup
       @name = 'content_default_http_proxy'
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
@@ -20,14 +17,14 @@ module Katello
     end
 
     def test_collection_children_empty_when_no_proxies_defined
-      children = TestAppController.helpers.send("#{@name}_collection").last[:children]
+      children = Setting.find_by(name: @name).select_collection.last[:children]
       assert_empty children
     end
 
     def test_collection_includes_defined_proxy
       proxy = FactoryBot.create(:http_proxy)
-      children = TestAppController.helpers.send("#{@name}_collection").last[:children]
-      assert_includes children, proxy.name
+      children = Setting.find_by(name: @name).select_collection.last[:children]
+      assert_includes children.first.keys, proxy.name
     end
 
     def test_changing_proxy_name_updates_setting

@@ -304,8 +304,7 @@ module Katello
     end
 
     def test_valid_upstream_authorization
-      ENV['ENCRYPTION_KEY'] = "25d224dd383e92a7e0c82b8bf7c985e9"
-
+      @root.stubs(:encryption_key).returns("25d224dd383e92a7e0c82b8bf7c985e8")
       @root.upstream_password = "password"
       @root.upstream_username = "username"
       assert @root.save
