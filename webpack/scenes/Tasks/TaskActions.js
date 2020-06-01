@@ -5,14 +5,7 @@ import { stopInterval, withInterval } from 'foremanReact/redux/middlewares/Inter
 import { foremanTasksApi } from '../../services/api';
 import { bulkSearchKey, pollTaskKey, taskFinishedToast } from './helpers';
 
-const finishedTasks = {};
-
 export const toastTaskFinished = task => async (dispatch) => {
-  if (task.id) {
-    // Keep track of tasks we've already notified about to prevent duplicate toasts from appearing
-    if (finishedTasks[task.id]) return;
-    finishedTasks[task.id] = true;
-  }
   dispatch(addToast(taskFinishedToast(task)));
 };
 

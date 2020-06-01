@@ -105,19 +105,17 @@ export const resetTasks = () => (dispatch) => {
   });
 };
 
-export const handleTask = task => async (dispatch, getState) => {
-  if (selectIsPollingTask(getState(), SUBSCRIPTIONS)) {
-    if (!selectIsTaskPending(getState())) {
-      dispatch(stopPollingTask(SUBSCRIPTIONS));
-      dispatch(toastTaskFinished(task));
-      dispatch(resetTasks());
-      dispatch(pollTasks());
-      dispatch(loadSubscriptions());
-    }
-  } else {
-    dispatch(cancelPollTasks());
-    dispatch(startPollingTask(SUBSCRIPTIONS, task));
-  }
+export const handleFinishedTask = task => async (dispatch) => {
+  dispatch(stopPollingTask(SUBSCRIPTIONS));
+  dispatch(toastTaskFinished(task));
+  dispatch(resetTasks());
+  dispatch(pollTasks());
+  dispatch(loadSubscriptions());
+};
+
+export const handleStartTask = task => (dispatch) => {
+  dispatch(cancelPollTasks());
+  dispatch(startPollingTask(SUBSCRIPTIONS, task));
 };
 
 export const updateQuantity = (quantities = {}) => async (dispatch) => {
