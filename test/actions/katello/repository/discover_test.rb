@@ -5,7 +5,7 @@ module EncryptionKey
 end
 
 module Actions
-  describe Katello::Repository::CloneToVersion do
+  describe Katello::Repository::Discover do
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include FactoryBot::Syntax::Methods
