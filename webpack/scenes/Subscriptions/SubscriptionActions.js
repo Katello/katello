@@ -38,8 +38,7 @@ import {
   stopPollingTasks,
   toastTaskFinished,
 } from '../Tasks/TaskActions';
-import { selectIsPollingTasks, selectIsPollingTask } from '../Tasks/TaskSelectors';
-import { selectIsTaskPending } from './SubscriptionsSelectors';
+import { selectIsPollingTasks } from '../Tasks/TaskSelectors';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{
@@ -105,7 +104,7 @@ export const resetTasks = () => (dispatch) => {
   });
 };
 
-export const handleFinishedTask = task => async (dispatch) => {
+export const handleFinishedTask = task => (dispatch) => {
   dispatch(stopPollingTask(SUBSCRIPTIONS));
   dispatch(toastTaskFinished(task));
   dispatch(resetTasks());
