@@ -80,6 +80,7 @@ module Actions
               added_units = version_output.try(:[], :output).try(:[], :added_units)
               if added_units
                 total_count[:errata_count] = added_units[:erratum].try(:count)
+                total_count[:modulemd_count] = added_units[:modulemd].try(:count)
                 total_count[:rpm_count] = added_units[:rpm].try(:count)
                 total_count[:puppet_module_count] = added_units[:puppet_module].try(:count)
               end
@@ -116,6 +117,10 @@ module Actions
           if total_count[:errata_count] && total_count[:errata_count] > 0
             errata = _(" %{errata_count} Errata" % {:errata_count => total_count[:errata_count]})
             content << errata
+          end
+          if total_count[:modulemd_count] && total_count[:modulemd_count] > 0
+            modulemd = _(" %{modulemd_count} Module Stream(s)" % {:modulemd_count => total_count[:modulemd_count]})
+            content << modulemd
           end
           if total_count[:rpm_count] && total_count[:rpm_count] > 0
             rpm = _(" %{package_count} Package(s)" % {:package_count => total_count[:rpm_count]})

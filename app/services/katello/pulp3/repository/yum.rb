@@ -70,18 +70,32 @@ module Katello
           "/pulp/repos/#{repo.relative_path}/".sub('//', '/')
         end
 
-        def copy_units(source_repository_version_href, content_unit_hrefs, dependency_solving)
+        def copy_units(source_repository_version_href, content_unit_hrefs, dependency_solving, dest_base_version = 0)
           tasks = []
 
           if content_unit_hrefs.any?
             data = PulpRpmClient::Copy.new
-            data.config = [
+            data.config = [{
               source_repo_version: source_repository_version_href,
               dest_repo: repository_reference.repository_href,
-              dest_base_version: 0,
+              dest_base_version: dest_base_version,
               content: content_unit_hrefs.sort
-            ]
+            }]
             data.dependency_solving = dependency_solving
+            if dependency_solving
+              ::Katello::Repository.find_by(version_href: source_repository_version_href).siblings.each do |sibling|
+                # Any Pulp 2 siblings must be excluded
+                if sibling.version_href
+                  source_repo_version = sibling.library_instance? ? sibling.version_href : sibling.library_instance.version_href
+                  data.config << {
+                    source_repo_version: source_repo_version,
+                    # FIXME: The specific dest_repo for that sibling needs to already be created?
+                    dest_repo: repository_reference.repository_href,
+                    content: []
+                  }
+                end
+              end
+            end
             tasks << api.copy_api.copy_content(data)
           else
             data = PulpRpmClient::RepositoryAddRemoveContent.new(
@@ -157,11 +171,6 @@ module Katello
           distribution_tree_hrefs_to_include = filter_distribution_trees_by_pulp_hrefs(
             repo_service.distributiontrees(options).results, content_unit_hrefs)
           content_unit_hrefs + distribution_tree_hrefs_to_include
-        end
-
-        def regenerate_applicability
-          # TODO
-          fail NotImplementedError
         end
       end
     end

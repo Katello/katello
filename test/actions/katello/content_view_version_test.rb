@@ -29,6 +29,9 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     it 'plans' do
+      SmartProxy.stubs(:pulp_master).returns(SmartProxy.find_by(name: "Unused Proxy"))
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
+      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
       stub_remote_user
       @rpm = katello_rpms(:one)
 
@@ -47,6 +50,31 @@ module ::Actions::Katello::ContentViewVersion
                                 library_repo, new_repo,
                                 Katello::Rpm.with_identifiers(@rpm.id),
                                 :incremental_update => true)
+    end
+
+    it 'plans for pulp 3' do
+      SmartProxy.stubs(:pulp_master).returns(SmartProxy.find_by(name: "Unused Proxy"))
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
+      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
+      stub_remote_user
+      @rpm = katello_rpms(:one)
+
+      new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
+      repository_mapping = {}
+      repository_mapping[[library_repo]] = new_repo
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
+      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      action.stubs(:task).returns(task)
+      action.expects(:action_subject).with(content_view_version.content_view)
+      plan_action(action, content_view_version, [library], :content => {:package_ids => [@rpm.id]})
+
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::CopyUnits,
+                                library_repo, new_repo,
+                                Katello::Rpm.with_identifiers(@rpm.id), 1,
+                                :incremental_update => true,
+                                :dependency_solving => true)
     end
   end
   class ExportTest < TestBase

@@ -55,7 +55,8 @@ module Actions
                 copy_action_outputs += copy_repos(repository_mapping[source_repos],
                                                   new_content_view_version,
                                                   content,
-                                                  dep_solve)
+                                                  dep_solve,
+                                                  old_version)
               end
 
               sequence do
@@ -68,7 +69,8 @@ module Actions
             plan_self(:content_view_id => old_version.content_view.id,
                       :new_content_view_version_id => self.new_content_view_version.id,
                       :environment_ids => environments.map(&:id), :user_id => ::User.current.id,
-                      :history_id => history.id, :copy_action_outputs => copy_action_outputs)
+                      :history_id => history.id, :copy_action_outputs => copy_action_outputs,
+                      :old_version => old_version.id)
             promote(new_content_view_version, environments)
           end
         end
@@ -79,14 +81,15 @@ module Actions
           end
         end
 
-        def copy_repos(new_repo, new_version, content, dep_solve)
+        def copy_repos(new_repo, new_version, content, dep_solve, old_version)
           copy_output = []
           sequence do
             solve_dependencies = new_version.content_view.solve_dependencies || dep_solve
             copy_output += copy_deb_content(new_repo, solve_dependencies, content[:deb_ids])
             copy_output += copy_yum_content(new_repo, solve_dependencies,
                                             content[:package_ids],
-                                            content[:errata_ids])
+                                            content[:errata_ids],
+                                            old_version)
 
             plan_action(Katello::Repository::MetadataGenerate, new_repo)
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
@@ -142,22 +145,46 @@ module Actions
                       ::Katello::PuppetModule::CONTENT_TYPE => []
                     }
 
-          input[:copy_action_outputs].each do |copy_output|
-            copy_output[:pulp_tasks].each do |pulp_task|
-              pulp_task[:result][:units_successful].each do |unit|
-                type = unit['type_id']
-                unit = unit['unit_key']
-                case type
-                when ::Katello::Erratum::CONTENT_TYPE
-                  content[::Katello::Erratum::CONTENT_TYPE] << unit['id']
-                when ::Katello::ModuleStream::CONTENT_TYPE
-                  content[::Katello::ModuleStream::CONTENT_TYPE] << "#{unit['name']}:#{unit['stream']}:#{unit['version']}"
-                when ::Katello::Rpm::CONTENT_TYPE
-                  content[::Katello::Rpm::CONTENT_TYPE] << ::Katello::Util::Package.build_nvra(unit)
-                when ::Katello::Deb::CONTENT_TYPE
-                  content[::Katello::Deb::CONTENT_TYPE] << "#{unit['name']}_#{unit['version']}_#{unit['architecture']}"
-                when ::Katello::PuppetModule::CONTENT_TYPE
-                  content[::Katello::PuppetModule::CONTENT_TYPE] << "#{unit['author']}-#{unit['name']}-#{unit['version']}"
+          base_repos = ::Katello::ContentViewVersion.find(input[:old_version]).repositories
+          new_repos = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id]).repositories
+
+          if input[:copy_action_outputs].last[:pulp_tasks].last[:pulp_href].include?("/pulp/api/v3/")
+            new_repos.each do |new_repo|
+              matched_old_repo = base_repos.where(root_id: new_repo.root_id).first
+
+              new_errata = new_repo.errata - matched_old_repo.errata
+              new_module_streams = new_repo.module_streams - matched_old_repo.module_streams
+              new_rpms = new_repo.rpms - matched_old_repo.rpms
+
+              new_errata.each do |erratum|
+                content[::Katello::Erratum::CONTENT_TYPE] << erratum.errata_id
+              end
+              new_module_streams.each do |module_stream|
+                content[::Katello::ModuleStream::CONTENT_TYPE] <<
+                  "#{module_stream.name}:#{module_stream.stream}:#{module_stream.version}"
+              end
+              new_rpms.each do |rpm|
+                content[::Katello::Rpm::CONTENT_TYPE] << rpm.nvra
+              end
+            end
+          else
+            input[:copy_action_outputs].each do |copy_output|
+              copy_output[:pulp_tasks].each do |pulp_task|
+                pulp_task[:result][:units_successful].each do |unit|
+                  type = unit['type_id']
+                  unit = unit['unit_key']
+                  case type
+                  when ::Katello::Erratum::CONTENT_TYPE
+                    content[::Katello::Erratum::CONTENT_TYPE] << unit['id']
+                  when ::Katello::ModuleStream::CONTENT_TYPE
+                    content[::Katello::ModuleStream::CONTENT_TYPE] << "#{unit['name']}:#{unit['stream']}:#{unit['version']}"
+                  when ::Katello::Rpm::CONTENT_TYPE
+                    content[::Katello::Rpm::CONTENT_TYPE] << ::Katello::Util::Package.build_nvra(unit)
+                  when ::Katello::Deb::CONTENT_TYPE
+                    content[::Katello::Deb::CONTENT_TYPE] << "#{unit['name']}_#{unit['version']}_#{unit['architecture']}"
+                  when ::Katello::PuppetModule::CONTENT_TYPE
+                    content[::Katello::PuppetModule::CONTENT_TYPE] << "#{unit['author']}-#{unit['name']}-#{unit['version']}"
+                  end
                 end
               end
             end
@@ -174,10 +201,12 @@ module Actions
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
 
-          version.repositories.each do |repo|
-            SmartProxy.pulp_master.pulp_api.extensions.send(:module_default).
-              copy(repo.library_instance.pulp_id,
-              repo.pulp_id)
+          unless SmartProxy.pulp_master.pulp3_support?(version.repositories.first)
+            version.repositories.each do |repo|
+              SmartProxy.pulp_master.pulp_api.extensions.send(:module_default).
+                copy(repo.library_instance.pulp_id,
+                repo.pulp_id)
+            end
           end
         end
 
@@ -255,19 +284,30 @@ module Actions
           copy_outputs
         end
 
-        def copy_yum_content(new_repo, dep_solve, package_ids, errata_ids)
-          copy_outputs = []
-          if new_repo.content_type == ::Katello::Repository::YUM_TYPE
-            unless errata_ids.blank?
-              copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
-                                          ::Katello::Erratum.with_identifiers(errata_ids),
-                                          incremental_update: dep_solve).output
-            end
+        def pulp3_dest_base_version(old_cvv, new_repo)
+          old_cvv.repositories.archived.find_by(root_id: new_repo.root_id).version_href.split("/")[-1].to_i
+        end
 
-            unless package_ids.blank?
-              copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
-                                          ::Katello::Rpm.with_identifiers(package_ids),
-                                          incremental_update: dep_solve).output
+        def copy_yum_content(new_repo, dep_solve, package_ids, errata_ids, old_version)
+          copy_outputs = []
+          dest_base_version = pulp3_dest_base_version(::Katello::ContentViewVersion.find(old_version.id), new_repo)
+          if new_repo.content_type == ::Katello::Repository::YUM_TYPE
+            units = ::Katello::Erratum.with_identifiers(errata_ids) + ::Katello::Rpm.with_identifiers(package_ids)
+            if SmartProxy.pulp_master.pulp3_support?(new_repo)
+              copy_outputs << plan_action(Pulp3::Repository::CopyUnits, new_repo.library_instance, new_repo,
+                            units.flatten, dest_base_version, incremental_update: true, dependency_solving: dep_solve).output
+            else
+              unless errata_ids.blank?
+                copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
+                              ::Katello::Erratum.with_identifiers(errata_ids),
+                              incremental_update: dep_solve).output
+              end
+
+              unless package_ids.blank?
+                copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
+                              ::Katello::Rpm.with_identifiers(package_ids),
+                              incremental_update: dep_solve).output
+              end
             end
           end
           copy_outputs
