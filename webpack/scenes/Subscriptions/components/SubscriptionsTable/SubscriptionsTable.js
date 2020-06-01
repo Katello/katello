@@ -29,7 +29,10 @@ class SubscriptionsTable extends Component {
       nextProps.subscriptions !== undefined &&
       !isEqual(nextProps.subscriptions, prevState.subscriptions)
     ) {
-      const groupedSubscriptions = groupSubscriptionsByProductId(nextProps.subscriptions);
+      const groupedSubscriptions = groupSubscriptionsByProductId(
+        nextProps.subscriptions,
+        prevState.groupedSubscriptions,
+      );
       const rows = buildTableRows(
         groupedSubscriptions,
         nextProps.subscriptions.availableQuantities,
@@ -188,19 +191,20 @@ class SubscriptionsTable extends Component {
 
 
   toggleSubscriptionGroup = (groupId) => {
-    const { subscriptions } = this.props;
-    const { groupedSubscriptions, updatedQuantity } = this.state;
-    const { open } = groupedSubscriptions[groupId];
+    this.setState((prevState) => {
+      const { subscriptions } = this.props;
+      const { groupedSubscriptions, updatedQuantity } = prevState;
+      const { open } = groupedSubscriptions[groupId];
 
-    groupedSubscriptions[groupId].open = !open;
+      groupedSubscriptions[groupId].open = !open;
 
-    const rows = buildTableRows(
-      groupedSubscriptions,
-      subscriptions.availableQuantities,
-      updatedQuantity,
-    );
-
-    this.setState({ rows, groupedSubscriptions });
+      const rows = buildTableRows(
+        groupedSubscriptions,
+        subscriptions.availableQuantities,
+        updatedQuantity,
+      );
+      return { rows, groupedSubscriptions };
+    });
   };
 
   enableEditing = (editingState) => {
@@ -211,15 +215,17 @@ class SubscriptionsTable extends Component {
   };
 
   updateRows = (updatedQuantity) => {
-    const { groupedSubscriptions } = this.state;
-    const { subscriptions } = this.props;
+    this.setState((prevState) => {
+      const { groupedSubscriptions } = prevState;
+      const { subscriptions } = this.props;
 
-    const rows = buildTableRows(
-      groupedSubscriptions,
-      subscriptions.availableQuantities,
-      updatedQuantity,
-    );
-    this.setState({ rows, updatedQuantity });
+      const rows = buildTableRows(
+        groupedSubscriptions,
+        subscriptions.availableQuantities,
+        updatedQuantity,
+      );
+      return { rows, updatedQuantity };
+    });
   };
 
   showUpdateConfirm = (show) => {

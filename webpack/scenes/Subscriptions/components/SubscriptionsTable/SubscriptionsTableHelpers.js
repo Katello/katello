@@ -76,13 +76,17 @@ export const buildTableRows = (groupedSubscriptions, availableQuantities, update
   return rows;
 };
 
-export const groupSubscriptionsByProductId = ({ results: subscriptions }) => {
+export const groupSubscriptionsByProductId = (
+  { results: subscriptions },
+  prevGroupedSubscriptions,
+) => {
   const grouped = {};
 
   subscriptions.forEach((subscription) => {
     if (grouped[subscription.product_id] === undefined) {
+      const prevOpenState = prevGroupedSubscriptions?.[subscription.product_id]?.open || false;
       grouped[subscription.product_id] = {
-        open: false,
+        open: prevOpenState,
         subscriptions: [],
       };
     }
