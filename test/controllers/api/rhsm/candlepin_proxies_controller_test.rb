@@ -407,8 +407,8 @@ module Katello
         capsule = "foocapsule.example.com"
         Setting[:foreman_url] = 'https://foreman.example.com'
 
-        host_and_capsule = {"HTTP_X_FORWARDED_SERVER" => "#{capsule}, foo.example.com"}
-        just_capsule = {"HTTP_X_FORWARDED_SERVER" => "#{capsule}"}
+        host_and_capsule = {"HTTP_X_FORWARDED_HOST" => "#{capsule}:8443, foo.example.com"}
+        just_capsule = {"HTTP_X_FORWARDED_HOST" => "#{capsule}:8443"}
         nil_host = {}
 
         assert_equal @controller.get_parent_host(host_and_capsule), "#{capsule}"
