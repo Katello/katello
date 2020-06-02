@@ -35,9 +35,7 @@ Object {
 }
 `;
 
-exports[`subscription actions handleTask does nothing if already polling and task is pending 1`] = `Array []`;
-
-exports[`subscription actions handleTask handles a finished task 1`] = `
+exports[`subscription actions handleFinishedTask handles a finished task 1`] = `
 Array [
   Object {
     "key": "SUBSCRIPTIONS_POLL_TASK",
@@ -77,7 +75,7 @@ Array [
 ]
 `;
 
-exports[`subscription actions handleTask when not polling a task starts polling the task 1`] = `
+exports[`subscription actions handleStartTask starts polling the task 1`] = `
 Array [
   Object {
     "key": "SUBSCRIPTIONS_TASK_SEARCH",
