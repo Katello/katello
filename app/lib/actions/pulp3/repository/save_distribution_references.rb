@@ -12,9 +12,11 @@ module Actions
           if input[:tasks] && input[:tasks][:pulp_tasks] && input[:tasks][:pulp_tasks].first
             distribution_hrefs = input[:tasks][:pulp_tasks].map { |task| task[:created_resources].first }
             distribution_hrefs.compact!
+            repo = ::Katello::Repository.find(input[:repository_id])
             if distribution_hrefs.any?
-              repo = ::Katello::Repository.find(input[:repository_id])
               repo.backend_service(smart_proxy).save_distribution_references(distribution_hrefs)
+            else
+              repo.backend_service(smart_proxy).update_distribution
             end
           end
         end
