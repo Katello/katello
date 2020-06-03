@@ -7,6 +7,7 @@ module ::Actions::Pulp3
     def setup
       @smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
+      @repo.root.update_attribute(:unprotected, true)
       create_repo(@repo, @smart_proxy)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @repo, @smart_proxy)
     end

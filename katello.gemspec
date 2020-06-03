@@ -52,6 +52,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "pulp_container_client", ">= 1.3.0", "< 1.4.0"
   gem.add_dependency "pulp_rpm_client", ">=3.3.0", "< 3.4.0"
   gem.add_dependency "pulp_2to3_migration_client", "> 0.1", "< 0.3.0"
+  gem.add_dependency "pulp_certguard_client", "< 2.0"
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'

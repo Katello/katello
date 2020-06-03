@@ -9,6 +9,9 @@ module ::Actions::Pulp3
       @repo = katello_repositories(:generic_file)
       @repo.root.update(:url => 'http://test/test/')
       create_repo(@repo, @master)
+      cert_path = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt"
+      cert = File.read(cert_path)
+      Cert::Certs.stubs(:ca_cert).returns(cert)
 
       ForemanTasks.sync_task(
         ::Actions::Katello::Repository::MetadataGenerate, @repo)
