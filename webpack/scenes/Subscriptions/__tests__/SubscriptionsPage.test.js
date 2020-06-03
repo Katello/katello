@@ -16,11 +16,13 @@ const loadTables = () => new Promise((resolve) => {
 });
 
 const pollTasks = jest.fn();
-const handleTask = jest.fn();
+const handleStartTask = jest.fn();
+const handleFinishedTask = jest.fn();
 
 afterEach(() => {
   pollTasks.mockClear();
-  handleTask.mockClear();
+  handleStartTask.mockClear();
+  handleFinishedTask.mockClear();
 });
 
 describe('subscriptions page', () => {
@@ -39,7 +41,8 @@ describe('subscriptions page', () => {
     updateColumns={updateColumns}
     loadSubscriptions={loadSubscriptions}
     updateQuantity={updateQuantity}
-    handleTask={handleTask}
+    handleStartTask={handleStartTask}
+    handleFinishedTask={handleFinishedTask}
     pollTaskUntilDone={noop}
     pollBulkSearch={noop}
     pollTasks={pollTasks}
@@ -71,7 +74,8 @@ describe('subscriptions page', () => {
     updateColumns={updateColumns}
     loadSubscriptions={loadSubscriptions}
     updateQuantity={updateQuantity}
-    handleTask={handleTask}
+    handleStartTask={handleStartTask}
+    handleFinishedTask={handleFinishedTask}
     pollTaskUntilDone={noop}
     pollBulkSearch={noop}
     pollTasks={pollTasks}
@@ -118,8 +122,9 @@ describe('subscriptions page', () => {
       },
     };
 
-    page.setProps({ task: mockTask });
+    page.setProps({ isTaskPending: true, isPollingTask: true });
+    page.setProps({ task: mockTask, isPollingTask: true, isTaskPending: false });
 
-    expect(handleTask).toHaveBeenCalledWith(mockTask);
+    expect(handleFinishedTask).toHaveBeenCalledWith(mockTask);
   });
 });
