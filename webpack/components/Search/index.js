@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { ControlLabel } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import TypeAhead from '../../move_to_pf/TypeAhead/TypeAhead';
+import TypeAhead from '../TypeAhead';
 import api from '../../services/api';
 import { stringIncludes } from './helpers';
 
