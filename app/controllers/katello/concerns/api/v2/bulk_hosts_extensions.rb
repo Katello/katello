@@ -17,7 +17,7 @@ module Katello
 
         if bulk_params[:included][:search]
           search_hosts = ::Host::Managed.authorized(permission)
-          search_hosts = search_hosts.where(:organization_id => organization_id) if params[:organization_id]
+          search_hosts = search_hosts.where(:organization_id => organization.id) if params[:organization_id]
           search_hosts = search_hosts.search_for(bulk_params[:included][:search])
           if @hosts.any?
             @hosts = ::Host.where(id: @hosts).or(::Host.where(id: search_hosts))
