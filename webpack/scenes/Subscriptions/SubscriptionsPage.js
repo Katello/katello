@@ -39,11 +39,16 @@ class SubscriptionsPage extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      organization, task, handleTask,
+      organization, task, handleStartTask, handleFinishedTask, isTaskPending, isPollingTask,
     } = this.props;
-
     if (task) {
-      handleTask(task);
+      if (isPollingTask) {
+        if (prevProps.isTaskPending && !isTaskPending) {
+          handleFinishedTask(task);
+        }
+      } else {
+        handleStartTask(task);
+      }
     }
 
     if (organization) {
@@ -291,9 +296,12 @@ SubscriptionsPage.propTypes = {
     }),
     pending: PropTypes.bool,
   }),
+  isTaskPending: PropTypes.bool,
+  isPollingTask: PropTypes.bool,
   pollTasks: PropTypes.func.isRequired,
   cancelPollTasks: PropTypes.func.isRequired,
-  handleTask: PropTypes.func.isRequired,
+  handleStartTask: PropTypes.func.isRequired,
+  handleFinishedTask: PropTypes.func.isRequired,
   loadSetting: PropTypes.func.isRequired,
   loadTables: PropTypes.func.isRequired,
   createColumns: PropTypes.func.isRequired,
@@ -314,6 +322,8 @@ SubscriptionsPage.propTypes = {
 
 SubscriptionsPage.defaultProps = {
   task: undefined,
+  isTaskPending: undefined,
+  isPollingTask: undefined,
   organization: undefined,
   searchQuery: '',
   deleteModalOpened: false,
