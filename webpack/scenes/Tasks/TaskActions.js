@@ -5,8 +5,9 @@ import { stopInterval, withInterval } from 'foremanReact/redux/middlewares/Inter
 import { foremanTasksApi } from '../../services/api';
 import { bulkSearchKey, pollTaskKey, taskFinishedToast } from './helpers';
 
-export const toastTaskFinished = task => async dispatch =>
+export const toastTaskFinished = task => async (dispatch) => {
   dispatch(addToast(taskFinishedToast(task)));
+};
 
 const taskBulkSearchParams = params => ({
   search: Object.entries(propsToSnakeCase(params))

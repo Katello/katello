@@ -18,7 +18,8 @@ import {
   loadTableColumnsSuccessAction,
 } from './subscriptions.fixtures';
 import {
-  handleTask,
+  handleFinishedTask,
+  handleStartTask,
   pollTasks,
   cancelPollTasks,
   resetTasks,
@@ -33,7 +34,7 @@ import {
   enableDeleteButton,
 } from '../SubscriptionActions';
 
-import { getTaskPendingResponse, getTaskSuccessResponse } from '../../Tasks/__tests__/task.fixtures';
+import { getTaskSuccessResponse } from '../../Tasks/__tests__/task.fixtures';
 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore(Immutable({
@@ -159,27 +160,15 @@ describe('subscription actions', () => {
     );
   });
 
-  describe('handleTask', () => {
-    describe('when not polling a task', () => {
-      it('starts polling the task', async () => {
-        await store.dispatch(handleTask(getTaskSuccessResponse));
+  describe('handleStartTask', () => {
+    it('starts polling the task', async () => {
+      await store.dispatch(handleStartTask(getTaskSuccessResponse));
 
-        expect(store.getActions()).toMatchSnapshot();
-      });
+      expect(store.getActions()).toMatchSnapshot();
     });
+  });
 
-    it('does nothing if already polling and task is pending', async () => {
-      const pollStore = configureMockStore([thunk])({
-        intervals: {
-          SUBSCRIPTIONS_POLL_TASK: 5,
-        },
-      });
-
-      await pollStore.dispatch(handleTask(getTaskPendingResponse));
-
-      expect(pollStore.getActions()).toMatchSnapshot();
-    });
-
+  describe('handleFinishedTask', () => {
     it('handles a finished task', async () => {
       const pollStore = configureMockStore([thunk])({
         intervals: {
@@ -187,7 +176,7 @@ describe('subscription actions', () => {
         },
       });
 
-      await pollStore.dispatch(handleTask(getTaskSuccessResponse));
+      await pollStore.dispatch(handleFinishedTask(getTaskSuccessResponse));
 
       expect(pollStore.getActions()).toMatchSnapshot();
     });

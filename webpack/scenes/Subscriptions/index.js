@@ -15,11 +15,13 @@ import {
   selectSubscriptionsTask,
   selectActivePermissions,
   selectTableSettings,
+  selectIsTaskPending,
 } from './SubscriptionsSelectors';
+import { selectIsPollingTask } from '../Tasks/TaskSelectors';
 import { selectSimpleContentAccessEnabled } from '../Organizations/OrganizationSelectors';
 
 import reducer from './SubscriptionReducer';
-import { SUBSCRIPTION_TABLE_NAME } from './SubscriptionConstants';
+import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTIONS } from './SubscriptionConstants';
 import SubscriptionsPage from './SubscriptionsPage';
 
 // map state to props
@@ -33,6 +35,8 @@ const mapStateToProps = (state) => {
     activePermissions: selectActivePermissions(state),
     simpleContentAccess: selectSimpleContentAccessEnabled(state),
     task: selectSubscriptionsTask(state),
+    isTaskPending: selectIsTaskPending(state),
+    isPollingTask: selectIsPollingTask(state, SUBSCRIPTIONS),
     searchQuery: selectSearchQuery(state),
     deleteModalOpened: selectDeleteModalOpened(state),
     deleteButtonDisabled: selectDeleteButtonDisabled(state),
