@@ -95,7 +95,7 @@
         </dd>
 
         <dt translate ng-if="!simpleContentAccessEnabled">Details</dt>
-        <dd>
+        <dd ng-if="!simpleContentAccessEnabled">
           <ul class="compliance-reasons">
             <li ng-repeat="reason in host.subscription_facet_attributes.compliance_reasons">{{ reason }}</li>
           </ul>

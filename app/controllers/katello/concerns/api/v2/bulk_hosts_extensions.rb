@@ -5,19 +5,19 @@ module Katello
 
       def find_bulk_hosts(permission, bulk_params, restrict_to = nil)
         #works on a structure of param_group bulk_params and transforms it into a list of systems
-        organization = find_organization
+        find_organization
         bulk_params[:included] ||= {}
         bulk_params[:excluded] ||= {}
         @hosts = []
 
         unless bulk_params[:included][:ids].blank?
           @hosts = ::Host::Managed.authorized(permission).where(:id => bulk_params[:included][:ids])
-          @hosts = @hosts.where(:organization_id => organization.id) if organization
+          @hosts = @hosts.where(:organization_id => @organization.id) if @organization
         end
 
         if bulk_params[:included][:search]
           search_hosts = ::Host::Managed.authorized(permission)
-          search_hosts = search_hosts.where(:organization_id => organization.id) if params[:organization_id]
+          search_hosts = search_hosts.where(:organization_id => @organization.id) if @organization
           search_hosts = search_hosts.search_for(bulk_params[:included][:search])
           if @hosts.any?
             @hosts = ::Host.where(id: @hosts).or(::Host.where(id: search_hosts))
@@ -38,7 +38,7 @@ module Katello
       end
 
       def find_organization
-        @organization ||= Organization.find(params[:organization_id])
+        @organization ||= Organization.find_by_id(params[:organization_id])
       end
     end
   end

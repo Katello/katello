@@ -16,9 +16,9 @@ module Katello
   class Api::V2::BulkHostsExtensionsTest < ActiveSupport::TestCase
     def models
       @organization = get_organization
-      @host1 = FactoryBot.create(:host, organization: @organization)
-      @host2 = FactoryBot.create(:host, organization: @organization)
-      @host3 = FactoryBot.create(:host, organization: @organization)
+      @host1 = hosts(:one)
+      @host2 = hosts(:two)
+      @host3 = hosts(:without_content_facet)
     end
 
     def permissions
