@@ -332,7 +332,3 @@ module Katello
     end
   end
 end
-
-class ::SmartProxy::Jail < Safemode::Jail
-  allow :hostname
-end
