@@ -93,6 +93,7 @@ module Katello
     end
 
     def test_add_subscriptions
+      Organization.any_instance.stubs(:simple_content_access?).returns(false)
       assert_sync_task(::Actions::Katello::Host::AttachSubscriptions) do |host, pools_with_quantities|
         assert_equal @host, host
         assert_equal 1, pools_with_quantities.count

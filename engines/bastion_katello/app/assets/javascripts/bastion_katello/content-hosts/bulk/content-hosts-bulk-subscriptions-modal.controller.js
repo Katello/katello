@@ -30,7 +30,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
             function getBulkSubscriptionParams() {
                 var bulkParams = hostIds;
                 bulkParams.subscriptions = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.table);
-                bulkParams.organization_id = CurrentOrganization; //eslint-disable-line camelcase
+                bulkParams['organization_id'] = CurrentOrganization; // eslint-disable-line camelcase
                 return bulkParams;
             }
 
