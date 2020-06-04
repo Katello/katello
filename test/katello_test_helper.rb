@@ -243,6 +243,8 @@ class ActiveSupport::TestCase
   include ForemanTasks::TestHelpers::WithInThreadExecutor
   include DynflowFullTreePlanning
 
+  parallelize(workers: 2)
+
   before do
     stub_ping
     stub_certs

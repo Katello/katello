@@ -9,12 +9,11 @@ defaults:
     working-directory: ./foreman
 
 jobs:
-  env:
-    PGHOST: 127.0.0.1
-    PGUSER: foreman
-    RAILS_ENV: test
-
   build:
+    env:
+      PGHOST: 127.0.0.1
+      PGUSER: foreman
+      RAILS_ENV: test
 
     runs-on: ubuntu-latest
 
@@ -61,4 +60,4 @@ jobs:
     - name: Migrate database
       run: bundle exec rails db:migrate
     - name: Run tests
-      run: PARALLEL_WORKERS=2 bundle exec rake jenkins:katello TESTOPTS="-v" --trace
+      run: bundle exec rake test:katello
