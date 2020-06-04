@@ -1,0 +1,64 @@
+name: Rails Tests (non-blocking)
+
+on:
+  pull_request:
+    branches: [ master ]
+
+defaults:
+  run:
+    working-directory: ./foreman
+
+jobs:
+  env:
+    PGHOST: 127.0.0.1
+    PGUSER: foreman
+    RAILS_ENV: test
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: quay.io/jomitsch/postgres-with-evr
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        env:
+          POSTGRES_USER: foreman
+          POSTGRES_PASSWORD: foreman
+
+    steps:
+    - name: Checkout Katello repo
+      uses: actions/checkout@v2
+      with:
+        path: ${{ github.workspace }}/katello
+    - name: Checkout Foreman repo
+      uses: actions/checkout@v2
+      with:
+        repository: theforeman/foreman
+        path: ${{ github.workspace }}/foreman # checkout Foreman and Katello as siblings, same as dev env
+        ref: develop
+    - name: check for postgres
+      run: file /usr/share/postgresql/12/extension/
+    - name: Set up Ruby 2.6
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+    - name: Install system dependencies
+      run: sudo apt-get -yqq install libsystemd-dev make tar git ruby-libvirt build-essential patch ruby-dev zlib1g-dev liblzma-dev libxml2-dev libcurl4-openssl-dev libpq-dev qemu-kvm libvirt-daemon-system libvirt-dev nodejs
+    - name: Add Katello to Gemfile
+      run: echo "gemspec :path => '../katello', :development_group => :dev" > bundler.d/Gemfile.local.rb
+    - name: Copy database file
+      run: cp ../katello/config/database.yml.example config/database.yml
+    - name: Bundle install
+      run: bundle install --jobs 4 --retry 4
+    - name: Create database
+      run: bundle exec rails db:create
+    - name: Migrate database
+      run: bundle exec rails db:migrate
+    - name: Run tests
+      run: PARALLEL_WORKERS=2 bundle exec rake jenkins:katello TESTOPTS="-v" --trace

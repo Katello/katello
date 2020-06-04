@@ -1,0 +1,17 @@
+# For testing and CI
+
+default: &default
+  adapter: postgresql
+  username: foreman
+  password: foreman
+  host: localhost
+
+test:
+  <<: *default
+  database: foreman-test
+development:
+  <<: *default
+  database: foreman-dev
+production:
+  <<: *default
+  database: foreman-prod
