@@ -11,6 +11,10 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
+// r-t-lib's print limit for debug() is quite small, setting it to a much higher char max here.
+// See https://github.com/testing-library/react-testing-library/issues/503 for more info.
+process.env.DEBUG_PRINT_LIMIT = 999999;
+
 // Renders testable component with redux and react-router according to Katello's usage
 // This should be used when you want a fully connected component with Redux state and actions.
 function renderWithApiRedux(

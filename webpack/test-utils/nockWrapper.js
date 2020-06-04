@@ -1,4 +1,5 @@
 import nock from 'nock';
+import api from '../services/api';
 
 // Using the library 'nock' as it matches actual network requests rather than mock another
 // library. This is helpful when the request is not coming from Katello. For example, axios
@@ -9,9 +10,30 @@ import nock from 'nock';
 export const nockInstance = nock('http://localhost');
 
 // Calling .done() with nock asserts that the request was fufilled. We use a timeout to ensure
-// that the component has set up and made the request before the assertion is made.
-export const assertNockRequest = (scope, timeout = 10000) => {
-  setTimeout(() => {
-    scope.done();
-  }, timeout);
+// that the component has set up and made the request before the assertion is made. This function
+// polls until the nock scope is met. If the `done` callback from jest is passed in, it will
+// call it once the request is made, telling jest the test is done. This is to make sure all
+// nock expectations are met and cleared before moving on to the next test.
+export const assertNockRequest = (nockScope, jestDone, tries = 10) => {
+  const interval = 500;
+  let i = 0;
+  const poll = setInterval(() => {
+    i += 1;
+    if (i === tries) {
+      /* eslint-disable-next-line no-console */
+      console.error(`Nock stubbed call ${nockScope.pendingMocks()} was not met in time!`);
+    }
+    if (nockScope.isDone()) {
+      nockScope.done(); // Assert nock request
+      if (jestDone) jestDone(); // Tell jest test is done
+      clearInterval(poll); // Clear the interval so polling stops
+    }
+  }, interval);
 };
+
+export const mockAutocomplete = (instance, autoCompUrl, query = true, response = []) => instance
+  .get(api.getApiUrl(autoCompUrl))
+  .query(query) // can pass in function, see nock docs
+  .reply(200, response);
+
+export default nock;

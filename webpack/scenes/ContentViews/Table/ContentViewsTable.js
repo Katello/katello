@@ -16,7 +16,7 @@ const ContentViewTable = ({ response, status, error }) => {
 
   useEffect(
     () => {
-      if (!loadingResponse && results && results.length > 0) {
+      if (!loadingResponse && results) {
         const { updatedRowMap, ...tableData } = tableDataGenerator(
           results,
           rowMapping,
@@ -61,14 +61,12 @@ const ContentViewTable = ({ response, status, error }) => {
   // Prevents flash of "No Content" before rows are loaded
   const tableStatus = () => {
     if (typeof results === 'undefined') return status; // will handle errored state
-    const resultsLength = results && results.length;
-    const rowMappingLength = Object.keys(rowMapping) && Object.keys(rowMapping).length;
-    if (resultsLength === 0) return status; // handles no CVs present
-    if (rowMappingLength > 0 && resultsLength > 0) {
-      const rowMappingIds = Object.values(rowMapping).map(map => map.id);
-      const resultsIds = Array.from(results.map(result => result.id));
-      // All results are accounted for in row mapping, the page is ready to load
-      if (resultsIds.every(id => rowMappingIds.includes(id))) return status;
+    const rowMappingIds = Object.values(rowMapping).map(map => map.id);
+    const resultsIds = Array.from(results.map(result => result.id));
+    // All results are accounted for in row mapping, the page is ready to load
+    if (resultsIds.length === rowMappingIds.length &&
+        resultsIds.every(id => rowMappingIds.includes(id))) {
+      return status;
     }
     return STATUS.PENDING; // Fallback to pending
   };

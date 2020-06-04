@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -11,32 +11,27 @@ import { commonItemPropTypes } from '../helpers/commonPropTypes';
 const TypeAheadItems = ({
   isOpen, items, activeItems, getItemProps, highlightedIndex,
 }) => {
-  const [dropdownItems, setDropdownItems] = useState([]);
-
-  useEffect(() => {
-    const newDropdownItems = items.map(({ text, type, disabled = false }, index) => {
-      const key = `${text}${index}`;
-      if (type === 'divider') return (<DropdownSeparator key={key} />);
-      const isHovered = activeItems[highlightedIndex] === text;
-      const itemProps = getItemProps({
-        index: activeItems.indexOf(text),
-        item: text,
-        key,
-        isHovered,
-        disabled,
-      });
-      const { onClick, ...dropdownProps } = itemProps;
-      return (
-        <DropdownItem
-          {...dropdownProps}
-          component={
-            <button onClick={onClick}>{text}</button>
-        }
-        />
-      );
+  const buildDropdownItems = () => items.map(({ text, type, disabled = false }, index) => {
+    const key = `${text}${index}`;
+    if (type === 'divider') return (<DropdownSeparator key={key} />);
+    const isHovered = activeItems[highlightedIndex] === text;
+    const itemProps = getItemProps({
+      index: activeItems.indexOf(text),
+      item: text,
+      key,
+      isHovered,
+      disabled,
     });
-    setDropdownItems(newDropdownItems);
-  }, [items, activeItems, highlightedIndex]);
+    const { onClick, ...dropdownProps } = itemProps;
+    return (
+      <DropdownItem
+        {...dropdownProps}
+        component={
+          <button onClick={onClick}>{text}</button>
+        }
+      />
+    );
+  });
 
   // toggle prop is required but since it is not manually toggled, React.Fragment is used to
   // satisfy the requirement
@@ -44,7 +39,7 @@ const TypeAheadItems = ({
     <Dropdown
       toggle={<React.Fragment />}
       isOpen={isOpen}
-      dropdownItems={dropdownItems}
+      dropdownItems={buildDropdownItems()}
       className="typeahead-dropdown"
     />
   );

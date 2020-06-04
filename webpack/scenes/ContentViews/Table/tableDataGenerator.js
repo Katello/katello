@@ -105,23 +105,15 @@ const buildDetailDropdowns = (id, rowIndex, openColumn) => {
   return detailDropdowns;
 };
 
-const tableDataGenerator = (results, rowMapping) => {
-  const updatedRowMap = {};
-  const contentViews = results || [];
-  const columns = buildColumns();
+const buildRowsAndMapping = (contentViews, newRowMapping) => {
+  const updatedRowMap = { ...newRowMapping };
   const rows = [];
-  const contentViewIds = contentViews.map(cv => cv.id);
-
-  // Only keep the relevant rows to keep the table status check accurate
-  Object.entries(rowMapping).forEach(([rowId, value]) => {
-    if (contentViewIds.includes(value.id)) updatedRowMap[rowId] = value;
-  });
 
   contentViews.forEach((contentView) => {
     const { id } = contentView;
     const rowIndex = rows.length;
     const needsUpdate = !Object.keys(updatedRowMap).find(i => updatedRowMap[i].id === id) ||
-                        !Object.keys(updatedRowMap[rowIndex]).includes('expandedColumn');
+                        !Object.keys(updatedRowMap[rowIndex] || {}).includes('expandedColumn');
     if (needsUpdate) updatedRowMap[rowIndex] = { expandedColumn: null, id };
     const openColumn = updatedRowMap[rowIndex].expandedColumn;
     const cells = buildRow(contentView, openColumn);
@@ -130,6 +122,23 @@ const tableDataGenerator = (results, rowMapping) => {
     rows.push({ isOpen, cells });
     rows.push(...buildDetailDropdowns(id, rowIndex, openColumn));
   });
+
+  return { rows, updatedRowMap };
+};
+
+const tableDataGenerator = (results, rowMapping) => {
+  // If a search was performed or perPage has changed, we can clear mapping
+  const prevRowMapping = (results.length === Object.keys(rowMapping).length) ? rowMapping : {};
+  const newRowMapping = {};
+  const contentViews = results || [];
+  const columns = buildColumns();
+  const contentViewIds = contentViews.map(cv => cv.id);
+
+  // Only keep the relevant rows to keep the table status check accurate
+  Object.entries(prevRowMapping).forEach(([rowId, value]) => {
+    if (contentViewIds.includes(value.id)) newRowMapping[rowId] = value;
+  });
+  const { updatedRowMap, rows } = buildRowsAndMapping(contentViews, newRowMapping);
 
   return { updatedRowMap, rows, columns };
 };

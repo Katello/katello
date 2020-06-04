@@ -17,7 +17,7 @@ const MainTable = ({
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
-  if (status === STATUS.RESOLVED && searchIsActive) {
+  if (status === STATUS.RESOLVED && searchIsActive && rows.length === 0) {
     return (<EmptyStateMessage
       title={emptySearchTitle}
       body={emptySearchBody}

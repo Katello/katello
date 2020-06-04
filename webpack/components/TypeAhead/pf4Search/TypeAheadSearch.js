@@ -31,7 +31,9 @@ e, isOpen, activeItems, highlightedIndex,
             <TimesIcon />
           </Button>}
       </React.Fragment>
-      <Button variant="control" onClick={() => onSearch(inputValue)}><SearchIcon /></Button>
+      <Button aria-label="search button" variant="control" onClick={() => onSearch(inputValue)}>
+        <SearchIcon />
+      </Button>
 
     </InputGroup>
     <TypeAheadItems

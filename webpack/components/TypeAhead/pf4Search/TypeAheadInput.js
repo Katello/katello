@@ -21,6 +21,7 @@ const TypeAheadInput = ({ onKeyPress, onInputFocus, passedProps }) => {
       onFocus={onInputFocus}
       aria-label="text input for search"
       onChange={onChangeWrapper}
+      type="search"
     />
   );
 };
