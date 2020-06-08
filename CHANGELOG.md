@@ -1,4 +1,4 @@
-# 3.16.0 Tasty Taiyaki (2020-06-01)
+# 3.16.0 Tasty Taiyaki (2020-06-08)
 
 ## Features
 
@@ -17,6 +17,10 @@
  * Use zypper instead of yum to get list of repositories ([#29418](https://projects.theforeman.org/issues/29418), [8fc29a92](https://github.com/Katello/katello-host-tools.git/commit/8fc29a92c42a6dbc90c90025f5fd1f0d098fc55b))
  * Add message to tracer tab in UI saying how to enable ([#29405](https://projects.theforeman.org/issues/29405), [3f772fca](https://github.com/Katello/katello.git/commit/3f772fca8aabbf561a92b46219af6a21ecd09d75))
  * Consume Candlepin events via STOMP ([#29000](https://projects.theforeman.org/issues/29000), [a69551ea](https://github.com/Katello/katello.git/commit/a69551ea009af21fda779b42c72acd90ca1d4627))
+
+### Repositories
+ * SSL Authentication Guard across all types ([#29442](https://projects.theforeman.org/issues/29442), [3e145c13](https://github.com/Katello/katello.git/commit/3e145c138ad013946828a8ec13f3f252d4c56a9f))
+ * Validation Sync for debian-repositories ([#27461](https://projects.theforeman.org/issues/27461), [d4c9cdaf](https://github.com/Katello/katello.git/commit/d4c9cdaf070f8648b92dbb93864d6f5ee03f2f2a))
 
 ### Errata Management
  * Improvement for the data populated in "CVEs" field for "Applicable Errata" report template  is required ([#29355](https://projects.theforeman.org/issues/29355), [6aca5045](https://github.com/Katello/katello.git/commit/6aca5045fb408e41d79b5e768ff1f0cda736d9cc))
@@ -39,13 +43,11 @@
  * Add ability to customize email notifications for "Subscriptions expiring soon" ([#28970](https://projects.theforeman.org/issues/28970), [d414726b](https://github.com/Katello/katello.git/commit/d414726b6843ea4ab06d3556d9ba47b42838a9d7))
  * Add "Subscriptions expiring soon" email to Email Preferences ([#28969](https://projects.theforeman.org/issues/28969), [6e8e1802](https://github.com/Katello/katello.git/commit/6e8e18024279010fd4293bab8d14c5d877262e7a))
 
-### Repositories
- * Validation Sync for debian-repositories ([#27461](https://projects.theforeman.org/issues/27461), [d4c9cdaf](https://github.com/Katello/katello.git/commit/d4c9cdaf070f8648b92dbb93864d6f5ee03f2f2a))
-
 ## Bug Fixes
 
 ### Subscriptions
  * Unable to re-import subscriptions in large environment (60k+ content hosts) ([#29948](https://projects.theforeman.org/issues/29948), [bb672414](https://github.com/Katello/katello.git/commit/bb672414d89e51eee88453ea73b91d1250594343))
+ * Manifest import task keeps on executing, causing duplicate notifications ([#29942](https://projects.theforeman.org/issues/29942), [1ae0488b](https://github.com/Katello/katello.git/commit/1ae0488b5b66b8165169a9a7ea8424ee9e29478b))
  * Manifest import and delete calls Actions::Pulp::Repository::Refresh for non-Library repositories ([#29611](https://projects.theforeman.org/issues/29611), [e801fb0f](https://github.com/Katello/katello.git/commit/e801fb0f70bf25e184b89c937c5df849e120fb71))
  * Load distributor version from a constant ([#29527](https://projects.theforeman.org/issues/29527), [acd0617e](https://github.com/Katello/katello.git/commit/acd0617ea5b7188ce9977c3bd147904a1c0e6708))
  * HTTP error when deploying the virt-who configure plugin ([#29521](https://projects.theforeman.org/issues/29521), [5a8860a0](https://github.com/Katello/katello.git/commit/5a8860a0952db6f8f0b446b9d221cbc73edf597d))
@@ -83,6 +85,7 @@
  * Cannot enable dep solving or auto publish on content views: `Unpermitted parameters: :auto_publish, :solve_dependencies, :label, :default, :created_at, :updated_at, :composite, :next_version` ([#29847](https://projects.theforeman.org/issues/29847), [dad98b5f](https://github.com/Katello/katello.git/commit/dad98b5fbaa9c9e825cbb33df4c0f937f30b3a0b))
  * Skip puppet env import on cv publish/promote if smart proxy feature is not present ([#29448](https://projects.theforeman.org/issues/29448), [80bd479e](https://github.com/Katello/katello.git/commit/80bd479ee6b997610e6f511096c8d9e1c6c0e6c8))
  * Publishing large content view for 2nd time fails with PostgreSQL invalid message format ([#29335](https://projects.theforeman.org/issues/29335), [125d41ad](https://github.com/Katello/katello.git/commit/125d41add601f472d03f5f39f32c674b25af86f1))
+ * Publish a yum repository in a content view with pulp 3 with filters ([#29323](https://projects.theforeman.org/issues/29323), [c7735525](https://github.com/Katello/katello.git/commit/c77355253d1a7eafbb61caa9c7079ae27630a808))
  * drpms not getting copied over cv publish ([#29104](https://projects.theforeman.org/issues/29104), [bc0651c5](https://github.com/Katello/katello.git/commit/bc0651c586c73da246ac259d8e878371e9dd1cd1))
 
 ### Tooling
@@ -120,6 +123,7 @@
 
 ### Errata Management
  * Katello Applicability needs to calculate applicable module streams ([#29604](https://projects.theforeman.org/issues/29604), [ed09874e](https://github.com/Katello/katello.git/commit/ed09874eaa66489728ffa23a5956a65af8b42c91))
+ * Katello Applicability needs to process more than one host per task ([#29554](https://projects.theforeman.org/issues/29554), [fa452587](https://github.com/Katello/katello.git/commit/fa452587088d40eda01041a31ddaaac650090b1e))
  * Skip planning of errata installation when the list applicable errata for a host is empty ([#29368](https://projects.theforeman.org/issues/29368), [d3594739](https://github.com/Katello/katello.git/commit/d35947391c2eeaff9f28231c8d349cb1d12023d9))
  * Installing all Errata of a host doesn't work ([#29330](https://projects.theforeman.org/issues/29330), [6a8d63b9](https://github.com/Katello/katello.git/commit/6a8d63b972dbbadfe1974690273d33ebc9e35a18), [aaf599e7](https://github.com/Katello/katello.git/commit/aaf599e75db51bcb7f3b21e09de4bfaff12c49b6), [c963f3cd](https://github.com/Katello/katello.git/commit/c963f3cdbac5f012a214c225e3b3706cbd3d64a5))
  * Add custom evr type column to katello_rpms and katello_installed_packages ([#29145](https://projects.theforeman.org/issues/29145), [413f9800](https://github.com/Katello/katello.git/commit/413f9800083d5497bd700c8f91577bd28b787d1e))
@@ -178,6 +182,4 @@
  * tomcat listens on 0.0.0.0 by default ([#21508](https://projects.theforeman.org/issues/21508))
 
 ### Other
- * Katello Applicability needs to process more than one host per task ([#29554](https://projects.theforeman.org/issues/29554), [fa452587](https://github.com/Katello/katello.git/commit/fa452587088d40eda01041a31ddaaac650090b1e))
  * Database migration fails on SQLite ([#29549](https://projects.theforeman.org/issues/29549), [fc1dbc74](https://github.com/Katello/katello.git/commit/fc1dbc745a1b7df2d657b70bf2a58b8de2235341))
- * Minor fixes for developing for pulp3 ([#29449](https://projects.theforeman.org/issues/29449), [e38b9e2f](https://github.com/Katello/katello.git/commit/e38b9e2f4924b50961629b51ba21d0338b822f85))
