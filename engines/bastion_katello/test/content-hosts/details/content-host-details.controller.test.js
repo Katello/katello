@@ -114,7 +114,8 @@ describe('Controller: ContentHostDetailsController', function() {
             CurrentOrganization: CurrentOrganization,
             Organization: Organization,
             HostSubscription: HostSubscription,
-            MenuExpander: MenuExpander
+            MenuExpander: MenuExpander,
+            simpleContentAccessEnabled: false
         });
     }));
 

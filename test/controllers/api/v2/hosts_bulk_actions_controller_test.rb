@@ -286,23 +286,24 @@ module Katello
       pool = katello_pools(:pool_one)
 
       assert_protected_action(:content_overrides, good_perms, bad_perms) do
-        put :content_overrides, params: { :included => {:ids => @host_ids}, :content_overrides => [{:content_label => 'some-content', :value => 1}] }
+        put :content_overrides, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_overrides => [{:content_label => 'some-content', :value => 1}] }
       end
 
       assert_protected_action(:add_subscriptions, good_perms, bad_perms) do
-        put :add_subscriptions, params: { :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
+        put :add_subscriptions, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :subscriptions => [{:id => pool.id, :quantity => 1}] }
       end
 
       assert_protected_action(:remove_subscriptions, good_perms, bad_perms) do
-        put :remove_subscriptions, params: { :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
+        put :remove_subscriptions, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :subscriptions => [{:id => pool.id, :quantity => 1}] }
       end
 
       assert_protected_action(:auto_attach, good_perms, bad_perms) do
-        put :auto_attach, params: { :included => {:ids => @host_ids} }
+        put :auto_attach, params: { :organization_id => @org.id, :included => {:ids => @host_ids} }
       end
     end
 
     def test_add_subscriptions
+      Organization.any_instance.stubs(:simple_content_access?).returns(false)
       pool = katello_pools(:pool_one)
 
       assert_async_task(::Actions::BulkAction) do |action_class, hosts, pools_with_quantities|
@@ -312,8 +313,15 @@ module Katello
         assert_equal pool, pools_with_quantities[0].pool
         assert_equal [1], pools_with_quantities[0].quantities.map(&:to_i)
       end
-      put :add_subscriptions, params: { :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
+      put :add_subscriptions, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :subscriptions => [{:id => pool.id, :quantity => 1}] }
       assert_response :success
+    end
+
+    def test_add_subscriptions_with_simple_content_access
+      Organization.any_instance.stubs(:simple_content_access?).returns(true)
+      pool = katello_pools(:pool_one)
+      put :add_subscriptions, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :subscriptions => [{:id => pool.id, :quantity => 1}] }
+      assert_response :bad_request
     end
 
     def test_remove_subscriptions
@@ -326,7 +334,7 @@ module Katello
         assert_equal pool, pools_with_quantities[0].pool
         assert_equal [1], pools_with_quantities[0].quantities.map(&:to_i)
       end
-      put :remove_subscriptions, params: { :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
+      put :remove_subscriptions, params: { :organization_id => @org.id, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
       assert_response :success
     end
 
@@ -336,7 +344,7 @@ module Katello
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end
-      put :auto_attach, params: { :included => {:ids => @host_ids} }
+      put :auto_attach, params: { :organization_id => @org.id, :included => {:ids => @host_ids} }
       assert_response :success
     end
 
@@ -354,7 +362,7 @@ module Katello
         assert_equal expected_content_labels, content_overrides.map(&:content_label)
         assert_equal expected_values, content_overrides.map(&:value)
       end
-      put :content_overrides, params: { :included => {:ids => @host_ids}, :content_overrides => expected_content_overrides }
+      put :content_overrides, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_overrides => expected_content_overrides }
       assert_response :success
     end
 
@@ -373,6 +381,7 @@ module Katello
       Katello::HostTracer.create(host_id: @host2.id, application: 'dbus', app_type: 'static', helper: 'reboot the system')
 
       post :traces, params: {
+        organization_id: @org.id,
         included: {:ids => @host_ids}
       }
 

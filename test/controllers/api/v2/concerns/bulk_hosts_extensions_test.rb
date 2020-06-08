@@ -15,10 +15,10 @@ module Katello
 
   class Api::V2::BulkHostsExtensionsTest < ActiveSupport::TestCase
     def models
-      @host1 = FactoryBot.create(:host)
-      @host2 = FactoryBot.create(:host)
-      @host3 = FactoryBot.create(:host)
       @organization = get_organization
+      @host1 = hosts(:one)
+      @host2 = hosts(:two)
+      @host3 = hosts(:without_content_facet)
     end
 
     def permissions
@@ -29,7 +29,7 @@ module Katello
       set_user
       models
       permissions
-      @controller = TestController.new
+      @controller = TestController.new(organization_id: @organization.id)
     end
 
     def test_search

@@ -83,7 +83,8 @@ describe('Controller: HostCollectionDetailsController', function() {
             Host: Host,
             HostCollection: HostCollection,
             ContentHostsModalHelper: ContentHostsModalHelper,
-            ApiErrorHandler: ApiErrorHandler
+            ApiErrorHandler: ApiErrorHandler,
+            simpleContentAccessEnabled: false
         });
     }));
 

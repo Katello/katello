@@ -52,7 +52,8 @@ describe('Controller: ContentHostsController', function() {
             Nutupane: Nutupane,
             $uibModal: $uibModal,
             ContentHostsModalHelper:ContentHostsModalHelper,
-            CurrentOrganization: 'CurrentOrganization'
+            CurrentOrganization: 'CurrentOrganization',
+            simpleContentAccessEnabled: 'simpleContentAccessEnabled'
         });
     }));
 

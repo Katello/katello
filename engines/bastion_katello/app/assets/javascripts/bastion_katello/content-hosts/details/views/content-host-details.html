@@ -69,6 +69,7 @@
         </a>
       </li>
       <li uib-dropdown
+          ng-if="!simpleContentAccessEnabled"
           ng-class="{active: stateIncludes('content-host.subscriptions.list') || stateIncludes('content-host.subscriptions.add')}">
         <a translate
            ui-sref="content-host.subscriptions.list">

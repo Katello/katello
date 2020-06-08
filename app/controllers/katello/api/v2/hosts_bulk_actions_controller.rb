@@ -10,9 +10,11 @@ module Katello
     before_action :find_deletable_hosts, :only => [:destroy_hosts]
     before_action :find_readable_hosts, :only => [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, :only => [:available_incremental_updates]
+    before_action :find_organization, :only => [:add_subscriptions]
     before_action :deprecate_katello_agent, :only => [:install_content, :update_content, :remove_content]
 
     before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
+    before_action :validate_organization, :only => [:add_subscriptions]
 
     # disable *_count fields on erratum rabl, since they perform N+1 queries
     before_action :disable_erratum_hosts_count
@@ -173,6 +175,10 @@ module Katello
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
     end
     def add_subscriptions
+      if @organization.simple_content_access?
+        fail HttpErrors::BadRequest, _("The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled")
+      end
+
       pools_with_quantities = params.require(:subscriptions).map do |sub_params|
         PoolWithQuantities.new(Pool.find(sub_params['id']), sub_params['quantity'])
       end
@@ -293,6 +299,10 @@ module Katello
 
     def find_deletable_hosts
       find_bulk_hosts(:destroy_hosts, params)
+    end
+
+    def validate_organization
+      fail HttpErrors::BadRequest, _("Organization ID is required") if @organization.blank?
     end
 
     def validate_host_collection_membership_limit
