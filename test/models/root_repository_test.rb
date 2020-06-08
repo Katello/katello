@@ -312,6 +312,13 @@ module Katello
       assert_equal "[redacted]", @root.audits.last.audited_changes["upstream_password"]
     end
 
+    def test_encrypt_long_password
+      repo = katello_root_repositories(:fedora_17_x86_64_root)
+      repo.upstream_username = "alpha"
+      repo.upstream_password = "p" * 1024
+      assert repo.save
+    end
+
     def test_invalid_upstream_authorization
       rhel_6 = katello_root_repositories(:rhel_6_x86_64_root)
       rhel_6.upstream_password = "password"
