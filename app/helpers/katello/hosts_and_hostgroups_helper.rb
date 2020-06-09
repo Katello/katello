@@ -77,13 +77,13 @@ module Katello
 
     def accessible_lifecycle_environments(org, host)
       selected = host.lifecycle_environment
-      envs = org.kt_environments.readable
+      envs = org.kt_environments.readable.order(:name)
       envs |= [selected] if selected.present? && org == selected.organization
       envs
     end
 
     def accessible_content_proxies(obj)
-      list = accessible_resource_records(:smart_proxy).with_content.to_a
+      list = accessible_resource_records(:smart_proxy).with_content.order(:name).to_a
       current = obj.content_source
       list |= [current] if current.present?
       list
@@ -158,7 +158,7 @@ module Katello
 
       views = []
       if lifecycle_environment
-        views = Katello::ContentView.in_environment(lifecycle_environment).readable
+        views = Katello::ContentView.in_environment(lifecycle_environment).readable.order(:name)
         views |= [content_view] if content_view.present? && content_view.in_environment?(lifecycle_environment)
       elsif content_view
         views = [content_view]
