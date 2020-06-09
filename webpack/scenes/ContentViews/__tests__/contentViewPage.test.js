@@ -1,12 +1,14 @@
 /* eslint-disable no-useless-escape */
 import React from 'react';
-import { renderWithApiRedux, waitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, waitFor, fireEvent } from 'react-testing-lib-wrapper';
 
 import CONTENT_VIEWS_KEY from '../ContentViewsConstants';
 import { createContentViewsParams } from '../ContentViewsActions';
 import ContentViewsPage from '../../ContentViews';
 import api from '../../../services/api';
-import nock, { nockInstance, assertNockRequest, mockAutocomplete } from '../../../test-utils/nockWrapper';
+import nock, {
+  nockInstance, assertNockRequest, mockAutocomplete, mockSetting,
+} from '../../../test-utils/nockWrapper';
 import createBasicCVs from './basicContentViews.fixtures';
 
 const cvIndexData = require('./contentViewList.fixtures.json');
@@ -16,13 +18,19 @@ const autocompleteUrl = '/content_views/auto_complete_search';
 const renderOptions = { namespace: CONTENT_VIEWS_KEY };
 
 let firstCV;
+let searchDelayScope;
+let autoSearchScope;
 beforeEach(() => {
   const { results } = cvIndexData;
   [firstCV] = results;
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
 });
 
 afterEach(() => {
   nock.cleanAll();
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
 });
 
 test('Can call API for CVs and show on screen on page load', async (done) => {
@@ -36,7 +44,7 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
 
   // Using a custom rendering function that sets up both redux and react-router.
   // This allows us to use the component as it is normally used
-  const { queryByText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+  const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   // query* functions will return the element or null if it cannot be found
   // get* functions will return the element or throw an error if it cannot be found
@@ -63,7 +71,7 @@ test('Can handle no Content Views being present', async (done) => {
     .get(cvIndexPath)
     .query(true)
     .reply(200, noResults);
-  const { queryByText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+  const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
   await waitFor(() => expect(queryByText(/don't have any Content Views/i)).toBeTruthy());
@@ -78,7 +86,7 @@ test('Can handle errored response', async (done) => {
     .query(true)
     .reply(500);
 
-  const { queryByText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+  const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
   await waitFor(() => expect(queryByText(/unable to retrieve information/i)).toBeTruthy());
@@ -94,7 +102,7 @@ test('Can handle loading state while request is being made', async (done) => {
     .query(true)
     .reply(200);
 
-  const { queryByText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+  const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText('Loading')).toBeTruthy();
   assertNockRequest(autocompleteScope);
@@ -111,7 +119,7 @@ test('Can handle unpublished Content Views', async (done) => {
     .query(true)
     .reply(200, unpublishedCVData);
 
-  const { getAllByText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+  const { getAllByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   await waitFor(() => expect(getAllByText(/not yet published/i).length).toBeGreaterThan(0));
   assertNockRequest(autocompleteScope);
@@ -138,7 +146,7 @@ test('Can handle pagination', async (done) => {
     .query(actualQueryObject => parseInt(actualQueryObject.page, 10) === 2)
     .reply(200, cvIndexSecondPage);
 
-  const { queryByText, getByLabelText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+  const { queryByText, getByLabelText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   // Wait for first paginated page to load and assert only the first page of results are present
   await waitFor(() => {
@@ -187,16 +195,13 @@ test('Can search for specific Content View', async (done) => {
     getByLabelText,
     getByText,
     queryByText,
-  } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+  } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   await waitFor(() => expect(getByText(firstCV.name)).toBeInTheDocument());
 
   const searchInput = getByLabelText(/text input for search/i);
   expect(searchInput).toBeInTheDocument();
   fireEvent.change(searchInput, { target: { value: `name = \"${cvname}\"` } });
-  const searchButton = getByLabelText(/search button/i);
-  expect(searchButton).toBeInTheDocument();
-  searchButton.click();
 
   await waitFor(() => {
     expect(getByText(cvname)).toBeInTheDocument();
@@ -228,12 +233,11 @@ test('No results message is shown for empty search', async (done) => {
     .query(matchQuery)
     .reply(200, emptyResults);
 
-  const { getByLabelText, getByText } = renderWithApiRedux(<ContentViewsPage />, renderOptions);
+  const { getByLabelText, getByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   await waitFor(() => expect(getByText(firstCV.name)).toBeInTheDocument());
 
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: query } });
-  getByLabelText(/search button/i).click();
 
   await waitFor(() => expect(getByText(/No results found/i)).toBeInTheDocument());
 

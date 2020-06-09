@@ -1,10 +1,16 @@
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import { TextInput } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 
 import useEventListener from '../../../utils/useEventListener';
 import { commonInputPropTypes } from '../helpers/commonPropTypes';
 
-const TypeAheadInput = ({ onKeyPress, onInputFocus, passedProps }) => {
+import './TypeAheadInput.scss';
+
+const TypeAheadInput = ({
+  onKeyPress, onInputFocus, passedProps, autoSearchEnabled,
+}) => {
   const inputRef = useRef(null);
   const { onChange, ...downshiftProps } = passedProps;
 
@@ -15,17 +21,24 @@ const TypeAheadInput = ({ onKeyPress, onInputFocus, passedProps }) => {
   useEventListener('keydown', onKeyPress, inputRef.current);
 
   return (
-    <TextInput
-      {...downshiftProps}
-      ref={inputRef}
-      onFocus={onInputFocus}
-      aria-label="text input for search"
-      onChange={onChangeWrapper}
-      type="search"
-    />
+    <React.Fragment>
+      <TextInput
+        {...downshiftProps}
+        ref={inputRef}
+        onFocus={onInputFocus}
+        aria-label="text input for search"
+        onChange={onChangeWrapper}
+        className={autoSearchEnabled ? 'foreman-pf4-search-input' : ''}
+        type="search"
+      />
+      {autoSearchEnabled && <SearchIcon size="sm" className="foreman-pf4-search-icon" />}
+    </React.Fragment>
   );
 };
 
-TypeAheadInput.propTypes = commonInputPropTypes;
+TypeAheadInput.propTypes = {
+  autoSearchEnabled: PropTypes.bool.isRequired,
+  ...commonInputPropTypes,
+};
 
 export default TypeAheadInput;

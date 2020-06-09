@@ -36,4 +36,9 @@ export const mockAutocomplete = (instance, autoCompUrl, query = true, response =
   .query(query) // can pass in function, see nock docs
   .reply(200, response);
 
+export const mockSetting = (instance, name, value) => instance
+  .get(`/api/v2/settings/${name}`)
+  .query(true) // can pass in function, see nock docs
+  .reply(200, { name, value });
+
 export default nock;

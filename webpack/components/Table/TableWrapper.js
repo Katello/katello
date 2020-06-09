@@ -13,6 +13,7 @@ import { orgId } from '../../services/api';
 const TableWrapper = ({
   metadata, fetchItems, autocompleteEndpoint, ...allTableProps
 }) => {
+  const { search: currentSearch } = metadata;
   const dispatch = useDispatch();
   const { foremanPerPage = 20 } = useForemanSettings();
   // setting pagination to local state so it doesn't disappear when page reloads
@@ -43,10 +44,8 @@ const TableWrapper = ({
 
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
-    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination }));
+    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination, search: currentSearch }));
   };
-
-  const { search } = metadata;
 
   return (
     <React.Fragment>
@@ -66,7 +65,7 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!search} {...allTableProps} />
+      <MainTable searchIsActive={!!currentSearch} {...allTableProps} />
     </React.Fragment>
   );
 };

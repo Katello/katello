@@ -3,12 +3,13 @@ import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import { mock as mockApi } from '../../mockRequest';
 
-import Search from '../Search';
+import Search from '../Search/Search';
 
 describe('Search component', () => {
   const getBaseProps = () => ({
     onSearch: () => {},
     getAutoCompleteParams: () => ({ endpoint: '/fake' }),
+    loadSetting: jest.fn(),
   });
 
   describe('rendering', () => {

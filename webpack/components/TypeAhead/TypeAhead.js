@@ -16,16 +16,14 @@ class TypeAhead extends Component {
     this.state = {
       inputValue: this.props.initialInputValue,
     };
-
-    this.handleStateChange = this.handleStateChange.bind(this);
   }
 
-  handleStateChange({ inputValue }) {
+  handleStateChange = ({ inputValue }) => {
     if (typeof inputValue === 'string') {
       this.props.onInputUpdate(inputValue);
       this.setState({ inputValue });
     }
-  }
+  };
 
   clearSearch = () => {
     this.setState({ inputValue: '' }, () => this.props.onSearch(this.state.inputValue));
@@ -33,7 +31,7 @@ class TypeAhead extends Component {
 
   render() {
     const {
-      onSearch, onInputUpdate, items, actionText, patternfly4, ...rest
+      onSearch, onInputUpdate, items, actionText, patternfly4, autoSearchEnabled, ...rest
     } = this.props;
 
     const activeItems = getActiveItems(items);
@@ -75,7 +73,7 @@ class TypeAhead extends Component {
             return (
               <div>
                 {patternfly4 ?
-                  <TypeAheadSearchPf4 {...typeAheadProps} /> :
+                  <TypeAheadSearchPf4 autoSearchEnabled={autoSearchEnabled} {...typeAheadProps} /> :
                   <TypeAheadSearch actionText={actionText} {...typeAheadProps} />}
               </div>
           );
@@ -99,6 +97,7 @@ TypeAhead.propTypes = {
   actionText: PropTypes.string,
   initialInputValue: PropTypes.string,
   patternfly4: PropTypes.bool,
+  autoSearchEnabled: PropTypes.bool.isRequired,
 };
 
 TypeAhead.defaultProps = {

@@ -10,6 +10,9 @@ import { render } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { APIMiddleware } from 'foremanReact/redux/middlewares';
+import settings from '../scenes/Settings';
+import { initialSettingsState } from '../scenes/Settings/SettingsReducer';
 
 // r-t-lib's print limit for debug() is quite small, setting it to a much higher char max here.
 // See https://github.com/testing-library/react-testing-library/issues/503 for more info.
@@ -17,7 +20,7 @@ process.env.DEBUG_PRINT_LIMIT = 999999;
 
 // Renders testable component with redux and react-router according to Katello's usage
 // This should be used when you want a fully connected component with Redux state and actions.
-function renderWithApiRedux(
+function renderWithRedux(
   component,
   {
     namespace, // redux namespace
@@ -25,9 +28,22 @@ function renderWithApiRedux(
   } = {},
 ) {
   // Adding the reducer in the expected namespaced format
-  const combinedReducers = combineReducers({ ...apiReducer });
+  const combinedReducers = combineReducers({
+    ...apiReducer,
+    katello: combineReducers({ settings }),
+  });
+
   // Namespacing the initial state as well
-  const initialFullState = Immutable({ API: { [namespace]: initialState } });
+  const initialFullState = Immutable({
+    API: {
+      [namespace]: initialState,
+    },
+    katello: {
+      settings: {
+        settings: initialSettingsState,
+      },
+    },
+  });
   const middlewares = applyMiddleware(thunk, APIMiddleware);
   const store = createStore(combinedReducers, initialFullState, middlewares);
   const connectedComponent = (
@@ -42,4 +58,4 @@ function renderWithApiRedux(
 // re-export everything, so the library can be used from this wrapper.
 export * from '@testing-library/react';
 
-export { renderWithApiRedux };
+export { renderWithRedux };

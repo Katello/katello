@@ -1,8 +1,23 @@
 import React from 'react';
-import { render, waitFor, fireEvent } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest, mockAutocomplete } from '../../../test-utils/nockWrapper';
+import { renderWithRedux, waitFor, fireEvent } from 'react-testing-lib-wrapper';
+import nock, {
+  nockInstance, assertNockRequest, mockAutocomplete, mockSetting,
+} from '../../../test-utils/nockWrapper';
 
 import Search from '../../Search';
+
+let searchDelayScope;
+let autoSearchScope;
+beforeEach(() => {
+  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
+  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+});
+
+afterEach(() => {
+  nock.cleanAll();
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+});
 
 const endpoint = '/fake_endpoint';
 const props = {
@@ -25,7 +40,7 @@ test('Autocomplete shows on input', async (done) => {
   const initialScope = mockAutocomplete(nockInstance, endpoint, { ...query, search: '' }, []);
   const autocompleteScope = mockAutocomplete(nockInstance, endpoint, query, response);
 
-  const { getByLabelText, getByText, queryByText } = render(<Search {...props} />);
+  const { getByLabelText, getByText, queryByText } = renderWithRedux(<Search {...props} />);
 
   expect(queryByText(`${suggestion}`)).not.toBeInTheDocument();
 
