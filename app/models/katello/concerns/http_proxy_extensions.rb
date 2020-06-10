@@ -8,11 +8,40 @@ module Katello
           :inverse_of => :http_proxy, :dependent => :nullify
         after_update :update_default_proxy_setting
         after_commit :update_repository_proxy_details
+        before_destroy :remove_references_to_proxy
 
         def self.default_global_content_proxy
           if Setting[:content_default_http_proxy]
             HttpProxy.unscoped.find_by(name: Setting[:content_default_http_proxy])
           end
+        end
+      end
+
+      def repositories_with_proxy(proxy_id)
+        root_repos = RootRepository.with_selected_proxy(proxy_id)
+
+        if self == HttpProxy.default_global_content_proxy
+          root_repos += RootRepository.with_global_proxy
+        end
+
+        root_repos
+      end
+
+      def remove_references_to_proxy
+        root_repos = repositories_with_proxy(nil).uniq.sort
+
+        setting = Setting.find_by(name: 'content_default_http_proxy')
+        if setting&.value && setting.value == self.name
+          setting.update_attribute(:value, '')
+        end
+
+        unless root_repos.empty?
+          ForemanTasks.async_task(
+            ::Actions::BulkAction,
+            ::Actions::Katello::Repository::Update,
+            root_repos,
+            http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY,
+            http_proxy_id: nil)
         end
       end
 
@@ -32,13 +61,7 @@ module Katello
         changes = self.previous_changes
         if changes.key?(:url) || changes.key?(:username) || changes.key?(:password)
 
-          root_repos = RootRepository.with_selected_proxy(id)
-
-          if self == HttpProxy.default_global_content_proxy
-            root_repos += RootRepository.with_global_proxy
-          end
-
-          repos = root_repos.uniq.collect(&:library_instance)
+          repos = repositories_with_proxy(id).uniq.collect(&:library_instance)
 
           unless repos.empty?
             ForemanTasks.async_task(
