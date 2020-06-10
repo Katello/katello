@@ -88,6 +88,55 @@ module Katello
         ::HttpProxy.find_by(name: name).update(password: 'sekr0t')
       end
 
+      def test_deleting_global_default_proxy_updates_associated_repositories
+        setup_default_proxy('http://foobar.com', nil, nil)
+        repo = katello_repositories(:rhel_6_x86_64)
+        repo.root.update(http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+
+        global_root_repos = RootRepository.with_global_proxy.uniq.sort
+        ForemanTasks.expects(:async_task).with(
+          ::Actions::BulkAction,
+          ::Actions::Katello::Repository::Update,
+          global_root_repos,
+          http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY,
+          http_proxy_id: nil)
+
+        ForemanTasks.expects(:async_task).with(
+          ::Actions::BulkAction,
+          ::Actions::Katello::Repository::Update,
+          [@no_proxy_repo.root],
+          http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY,
+          http_proxy_id: nil).never
+
+        name = Setting[:content_default_http_proxy]
+        ::HttpProxy.find_by(name: name).destroy
+
+        assert_equal '', Setting[:content_default_http_proxy]
+      end
+
+      def test_deleting_selected_proxy_updates_associated_repositories
+        proxy = FactoryBot.create(:http_proxy)
+        repo = katello_repositories(:rhel_6_x86_64)
+        repo.root.update(http_proxy_policy: Katello::RootRepository::USE_SELECTED_HTTP_PROXY,
+                         http_proxy_id: proxy.id)
+
+        ForemanTasks.expects(:async_task).with(
+          ::Actions::BulkAction,
+          ::Actions::Katello::Repository::Update,
+          [repo.root],
+          http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY,
+          http_proxy_id: nil)
+
+        ForemanTasks.expects(:async_task).with(
+          ::Actions::BulkAction,
+          ::Actions::Katello::Repository::Update,
+          [@no_proxy_repo.root],
+          http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY,
+          http_proxy_id: nil).never
+
+        proxy.destroy
+      end
+
       def setup_default_proxy(url, user, pass)
         proxy = ::HttpProxy.create!(:url => url, :username => user, :password => pass, :name => url)
         Setting[:content_default_http_proxy] = proxy.name
