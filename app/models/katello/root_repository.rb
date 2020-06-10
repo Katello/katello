@@ -100,7 +100,7 @@ module Katello
     scope :with_no_proxy, -> { where(:http_proxy_policy => RootRepository::NO_DEFAULT_HTTP_PROXY) }
     scope :with_selected_proxy, ->(http_proxy_id) {
       where(:http_proxy_policy => RootRepository::USE_SELECTED_HTTP_PROXY).
-      where("http_proxy_id = ?", http_proxy_id)
+      where(:http_proxy_id => http_proxy_id)
     }
     delegate :redhat?, :provider, :organization, to: :product
 
