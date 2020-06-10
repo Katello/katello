@@ -120,6 +120,28 @@ module Katello
       assert_equal existing_os.id, parser.operatingsystem.id
     end
 
+    def test_operatingsystem_rhel_workstation
+      @facts['distribution.name'] = 'Red Hat Enterprise Linux Workstation'
+      @facts['distribution.version'] = '7.7'
+      @facts['distribution.id'] = 'Maipo'
+
+      assert_equal parser.operatingsystem.name, 'RedHat_Workstation'
+      assert_equal parser.operatingsystem.type, 'Redhat'
+      assert_equal parser.operatingsystem.major, '7'
+      assert_equal parser.operatingsystem.minor, '7'
+    end
+
+    def test_operatingsystem_rhel_server
+      @facts['distribution.name'] = 'Red Hat Enterprise Linux Server'
+      @facts['distribution.version'] = '7.7'
+      @facts['distribution.id'] = 'Maipo'
+
+      assert_equal parser.operatingsystem.name, 'RedHat'
+      assert_equal parser.operatingsystem.type, 'Redhat'
+      assert_equal parser.operatingsystem.major, '7'
+      assert_equal parser.operatingsystem.minor, '7'
+    end
+
     def test_uname_architecture
       @facts['uname.machine'] = 'i686'
 
