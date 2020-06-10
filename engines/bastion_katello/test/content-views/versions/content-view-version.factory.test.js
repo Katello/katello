@@ -26,7 +26,7 @@ describe('Factory: ContentViewVersion', function () {
     });
 
     it('provides a way to get a list of repositories', function () {
-        $httpBackend.expectGET('katello/api/v2/content_view_versions').respond(contentViewVersion);
+        $httpBackend.expectGET('katello/api/v2/content_view_versions?organization_id=ACME').respond(contentViewVersion);
 
         ContentViewVersion.queryPaged(function (contentViewVersion) {
             expect(contentViewVersion.records.length).toBe(1);
@@ -34,7 +34,7 @@ describe('Factory: ContentViewVersion', function () {
     });
 
     it('provides a way to get an incremental update', function () {
-        $httpBackend.expectPOST('katello/api/v2/content_view_versions/incremental_update').respond({});
+        $httpBackend.expectPOST('katello/api/v2/content_view_versions/incremental_update?organization_id=ACME').respond({});
         ContentViewVersion.incrementalUpdate();
     });
 });

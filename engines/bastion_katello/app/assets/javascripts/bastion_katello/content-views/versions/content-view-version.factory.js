@@ -9,10 +9,10 @@
  *   Provides a BastionResource for interacting with Content View Versions.
  */
 angular.module('Bastion.content-views.versions').factory('ContentViewVersion',
-    ['BastionResource', function (BastionResource) {
+    ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
 
         return BastionResource('katello/api/v2/content_view_versions/:id/:action',
-            {id: '@id'},
+            {id: '@id', 'organization_id': CurrentOrganization},
             {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 update: {method: 'PUT'},
