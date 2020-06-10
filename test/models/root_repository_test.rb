@@ -767,22 +767,5 @@ module Katello
       assert_equal 'Katello::RootRepository', recent_audit.auditable_type
       assert_equal 'destroy', recent_audit.action
     end
-
-    def test_audit_hook_to_find_records_should_return_content
-      @fedora_root.save!
-      content_id = 'dummycontent-123'
-      content = FactoryBot.create(:katello_content, cp_content_id: content_id, :organization_id => @product.organization_id)
-      FactoryBot.create(:katello_product_content, content: content, product: @product)
-      @fedora_root.update!(content_id: content_id)
-      @audit_record = @fedora_root.audits.where(:action => 'update').first
-      refute_empty @audit_record.audited_changes['content_id']
-      assert_nil Katello::RootRepository.reflect_on_association('content')
-
-      content_by_audit_record = Katello::RootRepository.audit_hook_to_find_records(
-        'content_id', @audit_record.audited_changes['content_id'][1], @audit_record
-      )
-      assert content_by_audit_record, 'No content record found by method #audit_hook_to_find_records'
-      assert_equal Katello::Content, content_by_audit_record.class
-    end
   end
 end
