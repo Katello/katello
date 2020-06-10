@@ -36,10 +36,12 @@ class EncryptRootRepositoryUpstreamPassword < ActiveRecord::Migration[6.0]
   end
 
   def up
+    change_column :katello_root_repositories, :upstream_password, :text
     modify_root_repository_upstream_password(:encrypt)
   end
 
   def down
     modify_root_repository_upstream_password(:decrypt)
+    change_column :katello_root_repositories, :upstream_password, :string
   end
 end
