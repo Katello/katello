@@ -18,6 +18,17 @@ module Katello
       included do
         prepend Overrides
 
+        def update_multiple_taxonomies(type)
+          registered_host = @hosts.detect { |host| host.subscription_facet }
+          unless registered_host.nil?
+            error _("Unregister host %s before assigning an organization") % registered_host.name
+            redirect_back_or_to hosts_path
+            return
+          end
+
+          super
+        end
+
         def destroy
           if Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
             process_success redirection_url_on_host_deletion
