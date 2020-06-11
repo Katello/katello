@@ -9,7 +9,7 @@ module Katello
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :pool
     has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
 
-    has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :destroy
+    has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :delete_all
     has_many :subscription_facets, :through => :subscription_facet_pools
 
     belongs_to :organization, :class_name => 'Organization', :inverse_of => :pools

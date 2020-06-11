@@ -132,11 +132,18 @@ module Katello
         cp_products = cp_products.select { |prod| Glue::Candlepin::Product.engineering_product_id?(prod['id']) }
 
         prod_content_importer = Katello::ProductContentImporter.new
-        cp_products.each do |product_json|
-          product = import_product(product_json)
-          prod_content_importer.add_product_content(product, product_json['productContent']) if product.redhat?
+
+        Katello::Logging.time("Imported #{cp_products.size} products") do
+          cp_products.each do |product_json|
+            product = import_product(product_json)
+            prod_content_importer.add_product_content(product, product_json['productContent']) if product.redhat?
+          end
         end
-        prod_content_importer.import
+
+        Katello::Logging.time("Imported product content") do
+          prod_content_importer.import
+        end
+
         self.index_subscriptions(self.organization)
         prod_content_importer
       end
