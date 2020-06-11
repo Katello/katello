@@ -61,5 +61,11 @@ module Katello
         get :index, params: { :repository_id => @repo.id }
       end
     end
+
+    def test_compare
+      get :compare, params: { :content_view_version_ids => [@repo.content_view_version_id, @repo.content_view_version_id] }
+      assert_response :success
+      assert_template "katello/api/v2/srpms/compare"
+    end
   end
 end
