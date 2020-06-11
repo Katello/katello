@@ -14,7 +14,7 @@
       <thead>
         <tr bst-table-head>
           <th bst-table-column="name" sortable><span translate>Name</span></th>
-          <th bst-table-column="status" translate>
+          <th bst-table-column="status" ng-if="!simpleContentAccessEnabled" translate>
             Subscription Status
           </th>
           <th bst-table-column="environment" sortable><span translate>Environment</span></th>
@@ -32,7 +32,7 @@
               {{ host.name }}
             </a>
           </td>
-          <td bst-table-cell>
+          <td bst-table-cell ng-if="!simpleContentAccessEnabled">
             <span ng-class="getHostStatusIcon(host.subscription_global_status)">
             </span>
           </td>

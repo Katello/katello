@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::V2::ActivationKeysController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
     include Katello::Concerns::Api::V2::ContentOverridesController
@@ -11,6 +12,7 @@ module Katello
                                                   :content_override, :add_subscriptions, :remove_subscriptions,
                                                   :subscriptions]
     before_action :authorize
+    before_action :verify_simple_content_access_disabled, :only => [:add_subscriptions]
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage purpose_addons content_view_environment))
 
@@ -347,6 +349,12 @@ module Katello
       end
 
       key_params
+    end
+
+    def verify_simple_content_access_disabled
+      if @activation_key.organization.simple_content_access?
+        fail HttpErrors::BadRequest, _("The specified organization is in Simple Content Access mode. Attaching subscriptions is disabled")
+      end
     end
   end
 end

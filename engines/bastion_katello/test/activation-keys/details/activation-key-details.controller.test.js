@@ -70,7 +70,8 @@ describe('Controller: ActivationKeyDetailsController', function() {
             $state: $state,
             ActivationKey: ActivationKey,
             CurrentOrganization: CurrentOrganization,
-            Organization: Organization
+            Organization: Organization,
+            simpleContentAccessEnabled: 'simpleContentAccessEnabled'
         });
     }));
 

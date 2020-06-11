@@ -461,9 +461,19 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
+      Organization.any_instance.stubs(:simple_content_access?).returns(false)
+
       assert_protected_action(:add_subscriptions, allowed_perms, denied_perms, [@organization]) do
         post(:add_subscriptions, params: { :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123 })
       end
+    end
+
+    def test_add_subscriptions_fails
+      Organization.any_instance.stubs(:simple_content_access?).returns(true)
+
+      post(:add_subscriptions, params: { :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123 })
+
+      assert_response :bad_request
     end
 
     def test_remove_subscriptions_protected
