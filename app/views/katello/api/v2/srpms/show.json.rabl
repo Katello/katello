@@ -1,5 +1,5 @@
 object @resource
 
-attributes :id, :pulp_id, :name, :filename
-attributes :created_at, :updated, :version, :arch, :release
-attributes :epoch, :checksum, :summary, :nvra
+extends "katello/api/v2/srpms/base"
+extends "katello/api/v2/srpms/backend",
+  :object => SmartProxy.pulp_master!.content_service("srpm").new(@resource.pulp_id)
