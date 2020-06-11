@@ -36,11 +36,15 @@ module Katello
 
           objects = self.in_organization(org)
           objects.each do |item|
-            if candlepin_ids.include?(item.cp_id)
-              item.import_data
-              item.import_managed_associations if import_managed_associations && item.respond_to?(:import_managed_associations)
-            else
-              item.destroy
+            exists_in_candlepin = candlepin_ids.include?(item.cp_id)
+
+            Katello::Logging.time("Imported #{self}", data: { cp_id: item.cp_id, destroyed: !exists_in_candlepin }) do
+              if exists_in_candlepin
+                item.import_data
+                item.import_managed_associations if import_managed_associations && item.respond_to?(:import_managed_associations)
+              else
+                item.destroy
+              end
             end
           end
         end

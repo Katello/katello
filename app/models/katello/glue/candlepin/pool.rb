@@ -187,8 +187,13 @@ module Katello
       end
 
       def import_managed_associations
-        import_hosts
-        create_activation_key_associations
+        Katello::Logging.time("Imported host associations") do
+          import_hosts
+        end
+
+        Katello::Logging.time("Imported activation key associations") do
+          create_activation_key_associations
+        end
       end
 
       def hosts
