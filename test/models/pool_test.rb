@@ -117,6 +117,14 @@ module Katello
       Pool.import_all(org, false)
     end
 
+    def test_import_all_destroy
+      org = get_organization
+      Pool.expects(:import_candlepin_ids).with(org).returns([])
+      Pool.expects(:in_organization).with(org).returns([@pool_one])
+      Pool.import_all(org)
+      refute Pool.find_by_id(@pool_one.id)
+    end
+
     def test_import_hosts
       host = FactoryBot.create(:host, :with_subscription)
       Resources::Candlepin::Pool.expects(:consumer_uuids).returns([host.subscription_facet.uuid])
