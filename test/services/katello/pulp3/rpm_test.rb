@@ -28,6 +28,8 @@ module Katello
 
           assert_equal post_unit_count, 32
           assert_equal post_unit_repository_count, 32
+
+          assert_equal 'bear-4.1-1.noarch', @repo.rpms.where(:name => 'bear').first.nvra
         end
 
         def test_index_on_sync
