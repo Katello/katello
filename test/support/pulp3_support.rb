@@ -68,5 +68,22 @@ module Katello
         ::Actions::Pulp3::Orchestration::Repository::Create, repo, smart_proxy)
       repo.reload
     end
+
+    def create_and_sync(repo, smart_proxy)
+      repo = create_repo(repo, smart_proxy)
+      ForemanTasks.sync_task(
+          ::Actions::Katello::Repository::MetadataGenerate, repo)
+
+      repository_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => repo.root.id,
+          :content_view_id => repo.content_view.id)
+
+      assert repository_reference
+      refute_empty repository_reference.repository_href
+      refute_empty Katello::Pulp3::DistributionReference.where(repository_id: repo.id)
+      sync_args = {:smart_proxy_id => smart_proxy.id, :repo_id => repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo, smart_proxy, sync_args)
+      repo
+    end
   end
 end
