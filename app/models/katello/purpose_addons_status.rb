@@ -1,5 +1,6 @@
 module Katello
   class PurposeAddonsStatus < HostStatus::Status
+    UNKNOWN = Katello::PurposeStatus::UNKNOWN
     def self.status_name
       N_('Addons')
     end

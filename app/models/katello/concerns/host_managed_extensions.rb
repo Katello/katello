@@ -52,6 +52,9 @@ module Katello
         before_validation :correct_kickstart_repository
         before_update :check_host_registration, :if => proc { organization_id_changed? }
 
+        after_validation :queue_reset_content_host_status
+        register_rebuild(:queue_reset_content_host_status, N_("Content_Host_Status"))
+
         scope :with_pools_expiring_in_days, ->(days) { joins(:pools).merge(Katello::Pool.expiring_in_days(days)).distinct }
 
         scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
@@ -81,6 +84,29 @@ module Katello
         if subscription_facet
           fail ::Katello::Errors::HostRegisteredException
         end
+      end
+
+      def reset_katello_status
+        self.host_statuses.where(type: ::Katello::HostStatusManager::STATUSES.map(&:name)).each do |status|
+          status.update!(:status => status.class.const_get(:UNKNOWN))
+        end
+        self.host_statuses.reload
+        true
+      end
+
+      def reset_content_host_status
+        logger.debug "Scheduling host status cleanup"
+        queue.create(id: "reset_content_host_status_#{id}", name: _("Mark Content Host Statuses as Unknown for %s") % self,
+          priority: 200, action: [self, :reset_katello_status])
+      end
+
+      def queue_reset_content_host_status
+        should_reset_content_host_status? && reset_content_host_status
+      end
+
+      def should_reset_content_host_status?
+        return false unless self.is_a?(::Host::Base)
+        !new_record? && build && self.changes.key?('build')
       end
 
       def correct_kickstart_repository

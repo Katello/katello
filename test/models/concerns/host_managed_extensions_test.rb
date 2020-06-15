@@ -50,6 +50,22 @@ module Katello
       refute_includes found, other_host
     end
 
+    def test_host_status_reset
+      host = FactoryBot.create(:host)
+      host.host_statuses.delete_all
+      Katello::SubscriptionStatus.create!(host: host, :status => Katello::SubscriptionStatus::VALID)
+      host.reload
+      assert_equal Katello::SubscriptionStatus::VALID, host.host_statuses.first.status
+      host.reset_katello_status
+      assert_equal Katello::SubscriptionStatus::UNKNOWN, host.host_statuses.first.status
+    end
+
+    def test_unknown_statuses_exists_in_katello_status_classes
+      ::Katello::HostStatusManager::STATUSES.each do |status_class|
+        assert status_class.const_defined?(:UNKNOWN), "Checking #{status_class.name}"
+      end
+    end
+
     def test_pools_expiring_in_days
       host_with_pool = FactoryBot.create(:host, :with_subscription)
       host_with_pool.subscription_facet.pools << FactoryBot.build(:katello_pool, :expiring_in_12_days, cp_id: 1)

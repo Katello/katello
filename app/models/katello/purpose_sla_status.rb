@@ -1,5 +1,6 @@
 module Katello
   class PurposeSlaStatus < HostStatus::Status
+    UNKNOWN = Katello::PurposeStatus::UNKNOWN
     def self.status_name
       N_('Service Level')
     end
