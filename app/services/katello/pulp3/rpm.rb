@@ -119,11 +119,12 @@ module Katello
           each { |field| custom_json[field] = backend_data[field] }
         custom_json['release_sortable'] = Util::Package.sortable_version(backend_data['release'])
         custom_json['version_sortable'] = Util::Package.sortable_version(backend_data['version'])
-        custom_json['nvra'] = model.build_nvra
         custom_json['filename'] = backend_data['location_href']
         custom_json['checksum'] = backend_data['pkgId']
         custom_json['sourcerpm'] = backend_data['rpm_sourcerpm']
-        model.update!(custom_json)
+        model.assign_attributes(custom_json)
+        model.nvra = model.build_nvra
+        model.save!
       end
     end
   end
