@@ -125,6 +125,30 @@ module Katello
       end
     end
 
+    def test_create_protected_without_repo_read
+      user = User.unscoped.find(users(:restricted).id)
+      denied_perms = [@create_permission, @view_permission, @update_permission, :destroy_content_views]
+      setup_user_with_permissions(denied_perms, user)
+      repository = katello_repositories(:fedora_17_unpublished)
+      login_user(user)
+
+      post :create, params: {:organization_id => @organization.id, content_view: { :name => "Test", :repository_ids => [repository.id] } }
+
+      assert_response 404
+    end
+
+    def test_create_protected_without_repo_read_non_wrapped
+      user = User.unscoped.find(users(:restricted).id)
+      denied_perms = [@create_permission, @view_permission, @update_permission, :destroy_content_views]
+      setup_user_with_permissions(denied_perms, user)
+      repository = katello_repositories(:fedora_17_unpublished)
+
+      login_user(user)
+      post :create, params: { :name => "Test", :organization_id => @organization.id, :repository_ids => [repository.id] }
+
+      assert_response 404
+    end
+
     def test_create_with_non_json_request
       @request.env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
       post :create, params: { :name => "My View", :description => "Cool", :organization_id => @organization.id }
@@ -175,6 +199,21 @@ module Katello
     def test_update_repositories
       repository = katello_repositories(:fedora_17_unpublished)
 
+      params = { :repository_ids => [repository.id] }
+      assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
+        content_view_params.key?(:repository_ids).must_equal true
+        content_view_params[:repository_ids].must_equal params[:repository_ids]
+      end
+      put :update, params: { :id => @library_dev_staging_view.id, :content_view => params }
+
+      assert_response :success
+      assert_template layout: 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/update'
+    end
+
+    def test_update_repositories_strings
+      repository = katello_repositories(:fedora_17_unpublished)
+
       params = { :repository_ids => [repository.id.to_s] }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
         content_view_params.key?(:repository_ids).must_equal true
@@ -191,7 +230,7 @@ module Katello
       version = @library_dev_staging_view.versions.first
       composite = ContentView.find(katello_content_views(:composite_view).id)
 
-      params = { :component_ids => [version.id.to_s] }
+      params = { :component_ids => [version.id] }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
         content_view_params.key?(:component_ids).must_equal true
         content_view_params[:component_ids].must_equal params[:component_ids]
