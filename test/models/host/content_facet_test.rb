@@ -67,6 +67,20 @@ module Katello
       content_facet_rec = host1.associated_audits.where(auditable_id: content_facet1.id)
       assert content_facet_rec, "No associated audit record for content_facet"
     end
+
+    def test_pulp2_binding_with_katello_applicability
+      SETTINGS[:katello][:katello_applicability] = true
+      org = taxonomies(:empty_organization)
+      host = ::Host::Managed.create!(:name => 'foohost', :managed => false, :organization_id => org.id)
+      content_facet = Katello::Host::ContentFacet.create!(
+        :content_view_id => view.id, :lifecycle_environment_id => library.id, :host => host
+      )
+
+      ::Katello::Host::ContentFacet.expects(:propagate_yum_repos).never
+      content_facet.update_bound_repositories([::Katello::Repository.find_by(pulp_id: "Fedora_17")])
+    ensure
+      SETTINGS[:katello][:katello_applicability] = nil
+    end
   end
 
   class ContentFacetErrataTest < ContentFacetBase

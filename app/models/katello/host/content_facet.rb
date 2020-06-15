@@ -82,10 +82,10 @@ module Katello
       def update_bound_repositories(repos)
         self.bound_repositories = repos
         self.save!
-        self.propagate_yum_repos
         if SETTINGS[:katello][:katello_applicability]
           ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, self.host.id)
         else
+          self.propagate_yum_repos
           ForemanTasks.async_task(Actions::Katello::Host::GenerateApplicability, [self.host])
         end
       end
