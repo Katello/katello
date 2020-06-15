@@ -22,6 +22,13 @@ module Katello
       param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
     end
 
+    def filtered_associations
+      {
+        :component_ids => Katello::ContentViewVersion,
+        :repository_ids => Katello::Repository
+      }
+    end
+
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
     api :GET, "/content_views", N_("List content views")
     param :organization_id, :number, :desc => N_("organization identifier")
