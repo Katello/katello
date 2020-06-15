@@ -388,7 +388,9 @@ Foreman::Plugin.register :katello do
     'bastion/bastion.css',
     'bastion/bastion.js',
     'bastion_katello/bastion_katello.css',
-    'bastion_katello/bastion_katello.js'
+    'bastion_katello/bastion_katello.js',
+    'katello/sync_management',
+    'katello/common'
   ]
 
   precompile.concat(javascripts)
