@@ -1,3 +1,13 @@
+# 3.15.2 Rocky Road (2020-06-16)
+
+## Bug Fixes
+
+### Hosts
+ * Actions::Katello::Host::UploadProfiles failing at upload_modules_to_pulp ([#29961](https://projects.theforeman.org/issues/29961), [7b726086](https://github.com/Katello/katello.git/commit/7b726086422f9a5c9bde1f4eb224a521b3e1d310))
+
+### Repositories
+ * Minor fixes for developing for pulp3 ([#29449](https://projects.theforeman.org/issues/29449), [e38b9e2f](https://github.com/Katello/katello.git/commit/e38b9e2f4924b50961629b51ba21d0338b822f85))
+
 # 3.15.1 Rocky Road (2020-05-26)
 
 ## Bug Fixes
