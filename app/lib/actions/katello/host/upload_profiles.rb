@@ -38,15 +38,18 @@ module Actions
             ::Katello::ModuleStream.where(profile.slice(:name, :stream))
           end
 
-          query_name_streams = query_name_streams.inject(&:or)
+          updated_profiles = []
+          unless query_name_streams.empty?
+            query_name_streams = query_name_streams.inject(&:or)
 
-          bound_library_instances = host.content_facet.bound_repositories.map(&:library_instance_or_self)
-          query = ::Katello::ModuleStream.in_repositories(bound_library_instances).
-                                          select(:name, :stream, :version, :context, :arch).
-                                            merge(query_name_streams)
+            bound_library_instances = host.content_facet.bound_repositories.map(&:library_instance_or_self)
+            query = ::Katello::ModuleStream.in_repositories(bound_library_instances).
+                                            select(:name, :stream, :version, :context, :arch).
+                                              merge(query_name_streams)
 
-          updated_profiles = query.map do |module_stream|
-            module_stream.slice(:name, :stream, :version, :context, :arch)
+            updated_profiles = query.map do |module_stream|
+              module_stream.slice(:name, :stream, :version, :context, :arch)
+            end
           end
 
           # We also need to pass module streams that are not found in the ModuleStream table
@@ -55,10 +58,16 @@ module Actions
             updated_profiles.none? { |p| p[:name] == profile[:name] && p[:stream] == profile[:stream] }
           end
 
-          ::Katello::Pulp::Consumer.new(host.content_facet.uuid).
-              upload_module_stream_profile(updated_profiles + unassociated_profiles)
-        rescue RestClient::ResourceNotFound
-          Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % host.id)
+          module_stream_profile = updated_profiles + unassociated_profiles
+
+          unless module_stream_profile.empty?
+            begin
+              ::Katello::Pulp::Consumer.new(host.content_facet.uuid).
+                upload_module_stream_profile(module_stream_profile)
+            rescue RestClient::ResourceNotFound
+              Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % host.id)
+            end
+          end
         end
 
         def import_module_streams(payload, host)
