@@ -1,4 +1,4 @@
-const { foremanLocation, foremanRelativePath } = require('./webpack/test-utils/findForeman.js')
+const { foremanLocation, foremanRelativePath } = require('@theforeman/find-foreman')
 const foremanReactRelative = 'webpack/assets/javascripts/react_app';
 const foremanFull = foremanLocation();
 const foremanReactFull = foremanRelativePath(foremanReactRelative);
