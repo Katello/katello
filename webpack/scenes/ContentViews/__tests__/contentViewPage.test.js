@@ -89,7 +89,7 @@ test('Can handle errored response', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await waitFor(() => expect(queryByText(/unable to retrieve information/i)).toBeTruthy());
+  await waitFor(() => expect(queryByText(/unable to connect/i)).toBeTruthy());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -239,7 +239,7 @@ test('No results message is shown for empty search', async (done) => {
 
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: query } });
 
-  await waitFor(() => expect(getByText(/No results found/i)).toBeInTheDocument());
+  await waitFor(() => expect(getByText(/No matching Content Views found/i)).toBeInTheDocument());
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(initialScope);

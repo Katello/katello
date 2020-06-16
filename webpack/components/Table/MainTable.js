@@ -53,16 +53,13 @@ MainTable.propTypes = {
   ]),
   emptyContentTitle: PropTypes.string.isRequired,
   emptyContentBody: PropTypes.string.isRequired,
-  emptySearchTitle: PropTypes.string,
-  emptySearchBody: PropTypes.string,
+  emptySearchTitle: PropTypes.string.isRequired,
+  emptySearchBody: PropTypes.string.isRequired,
   searchIsActive: PropTypes.bool,
 };
 
 MainTable.defaultProps = {
   error: null,
-  emptySearchTitle: 'No results found',
-  emptySearchBody: 'No results match this search criteria. ' +
-                   'Remove all criteria or clear the search to show results.',
   searchIsActive: false,
 };
 

@@ -72,7 +72,9 @@ const ContentViewTable = ({ response, status, error }) => {
   };
 
   const emptyContentTitle = __("You currently don't have any Content Views.");
-  const emptyContentBody = __('A Content View can be added by using the "New content view" button below.');
+  const emptyContentBody = __('A content view can be added by using the "New content view" button below.');
+  const emptySearchTitle = __('No matching content views found');
+  const emptySearchBody = __('Try changing your search settings.');
 
   const { rows, columns } = table;
   return (
@@ -83,6 +85,8 @@ const ContentViewTable = ({ response, status, error }) => {
         metadata,
         emptyContentTitle,
         emptyContentBody,
+        emptySearchTitle,
+        emptySearchBody,
         onSelect,
         onExpand,
         actionResolver,

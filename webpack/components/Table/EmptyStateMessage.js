@@ -52,8 +52,8 @@ EmptyStateMessage.propTypes = {
 };
 
 EmptyStateMessage.defaultProps = {
-  title: 'Unable to retrieve information from the server.',
-  body: 'Please check the server logs for more information',
+  title: 'Unable to connect',
+  body: 'There was an error retrieving data from the server. Check your connection and try again.',
   error: undefined,
   search: false,
 };

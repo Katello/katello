@@ -29,7 +29,7 @@ e, isOpen, activeItems, highlightedIndex,
         </InputGroup.Button>
       }
       <InputGroup.Button>
-        <Button onClick={() => onSearch(inputValue)}>{actionText}</Button>
+        <Button aria-label="patternfly 3 search button" onClick={() => onSearch(inputValue)}>{actionText}</Button>
       </InputGroup.Button>
     </InputGroup>
 

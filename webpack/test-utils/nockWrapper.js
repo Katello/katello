@@ -31,8 +31,15 @@ export const assertNockRequest = (nockScope, jestDone, tries = 10) => {
   }, interval);
 };
 
-export const mockAutocomplete = (instance, autoCompUrl, query = true, response = []) => instance
+export const mockAutocomplete = (
+  instance,
+  autoCompUrl,
+  query = true,
+  response = [],
+  times = 1,
+) => instance
   .get(api.getApiUrl(autoCompUrl))
+  .times(times)
   .query(query) // can pass in function, see nock docs
   .reply(200, response);
 
