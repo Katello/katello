@@ -120,6 +120,28 @@ module Katello::Host
         run_action action
       end
 
+      it 'runs and no raised exception when modulemd_inventory is empty' do
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        profile1 = [
+          {"content_type" => "rpm", "profile" => rpm_profiles},
+          {"content_type" => "enabled_repos", "profile" => enabled_repos},
+          {"content_type" => "modulemd", "profile" => []}
+        ]
+
+        ::Host.expects(:find_by).returns(@host).at_least_once
+        mock_consumer = mock
+        mock_consumer.expects(:upload_package_profile).raises(RestClient::ResourceNotFound)
+        ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
+        @host.expects(:import_package_profile).with(any_parameters).never
+        @host.expects(:import_enabled_repositories).with(enabled_repos)
+        @host.expects(:import_module_streams).with([])
+
+        plan_action action, @host, profile1.to_json
+        run_action action
+      end
+
       it 'runs and no raised exception if host not found' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
