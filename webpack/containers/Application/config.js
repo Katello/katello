@@ -10,6 +10,7 @@ import ModuleStreamDetails from '../../scenes/ModuleStreams/Details';
 import AnsibleCollections from '../../scenes/AnsibleCollections';
 import AnsibleCollectionDetails from '../../scenes/AnsibleCollections/Details';
 import ContentViews from '../../scenes/ContentViews';
+import ContentViewDetails from '../../scenes/ContentViews/Details';
 import withHeader from './withHeaders';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -54,5 +55,9 @@ export const links = [
   {
     path: 'labs/content_views',
     component: withHeader(ContentViews, { title: __('Content Views') }),
+  },
+  {
+    path: 'labs/content_views/:id([0-9]+)',
+    component: withHeader(ContentViewDetails, { title: __('Content View Details') }),
   },
 ];

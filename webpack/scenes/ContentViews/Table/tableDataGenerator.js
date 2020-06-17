@@ -9,7 +9,7 @@ import RepositoriesExpansion from '../expansions/RepositoriesExpansion';
 import EnvironmentsExpansion from '../expansions/EnvironmentsExpansion';
 import VersionsExpansion from '../expansions/VersionsExpansion';
 import ContentViewName from '../components/ContentViewName';
-import DetailsContainer from '../details/DetailsContainer';
+import DetailsContainer from '../Details/DetailsContainer';
 
 export const buildColumns = () => [
   __('Name'), __('Last published'), __('Details'),

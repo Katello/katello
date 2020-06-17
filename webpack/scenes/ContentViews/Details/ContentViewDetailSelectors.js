@@ -13,3 +13,6 @@ export const selectCVDetailStatus =
 
 export const selectCVDetailError =
   (state, cvId) => selectAPIError(state, `${CONTENT_VIEWS_KEY}_${cvId}`);
+
+
+export const selectCVUpdating = state => state.katello?.contentViewDetails?.updating;

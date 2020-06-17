@@ -3,7 +3,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import PropTypes from 'prop-types';
 import { STATUS } from 'foremanReact/constants';
 import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
-import Loading from '../../../components/Table/Loading';
+import Loading from '../../../components/Loading';
 import getContentViewDetails from './ContentViewDetailActions';
 import { selectCVDetails,
   selectCVDetailStatus,
@@ -21,7 +21,7 @@ const DetailsContainer = ({ children, cvId, isOpen }) => {
     }
   });
 
-  if (status === STATUS.PENDING) return (<Loading size="sm" />);
+  if (status === STATUS.PENDING) return (<Loading />);
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
   return (<React.Fragment>{children}</React.Fragment>);
 };
@@ -29,7 +29,11 @@ const DetailsContainer = ({ children, cvId, isOpen }) => {
 DetailsContainer.propTypes = {
   children: PropTypes.element.isRequired,
   cvId: PropTypes.number.isRequired,
-  isOpen: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool,
+};
+
+DetailsContainer.defaultProps = {
+  isOpen: true,
 };
 
 export default DetailsContainer;

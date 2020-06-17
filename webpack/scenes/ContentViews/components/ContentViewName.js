@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CubeIcon, CubesIcon } from '@patternfly/react-icons';
+import { Link } from 'react-router-dom';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import './contentViewName.scss';
 
 const ContentViewName = ({ composite, name, cvId }) => {
@@ -14,7 +16,7 @@ const ContentViewName = ({ composite, name, cvId }) => {
     <React.Fragment>
       <div className="svg-centered-container">
         {composite ? <CubesIcon {...props} /> : <CubeIcon {...props} />}
-        {name}
+        <Link to={urlBuilder('labs/content_views', '', cvId)}>{name}</Link>
       </div>
     </React.Fragment>
   );

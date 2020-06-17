@@ -8,7 +8,7 @@ import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 
 import EmptyStateMessage from './EmptyStateMessage';
-import Loading from './Loading';
+import Loading from '../../components/Loading';
 
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,

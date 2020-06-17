@@ -8,23 +8,26 @@ import {
   Spinner,
 } from '@patternfly/react-core';
 
-const Loading = ({ size }) => (
+const Loading = ({ size, showText }) => (
   <Bullseye>
     <EmptyState>
-      <EmptyStateIcon variant="container" component={Spinner} />
-      <Title size={size} headingLevel="h4">
-        Loading
-      </Title>
+      <EmptyStateIcon size={size} variant="container" component={Spinner} />
+      {showText && (
+        <Title size={size} headingLevel="h4">
+          Loading
+        </Title>)}
     </EmptyState>
   </Bullseye>
 );
 
 Loading.propTypes = {
   size: PropTypes.string,
+  showText: PropTypes.bool,
 };
 
 Loading.defaultProps = {
   size: 'lg',
+  showText: true,
 };
 
 

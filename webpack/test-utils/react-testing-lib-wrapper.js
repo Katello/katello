@@ -10,12 +10,12 @@ import { render, waitFor } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import settings from '../scenes/Settings';
+import allKatelloReducers from '../redux/reducers/index.js';
 import { initialSettingsState } from '../scenes/Settings/SettingsReducer';
 
 // r-t-lib's print limit for debug() is quite small, setting it to a much higher char max here.
 // See https://github.com/testing-library/react-testing-library/issues/503 for more info.
-process.env.DEBUG_PRINT_LIMIT = 999999;
+process.env.DEBUG_PRINT_LIMIT = 99999;
 
 // Renders testable component with redux and react-router according to Katello's usage
 // This should be used when you want a fully connected component with Redux state and actions.
@@ -23,13 +23,13 @@ function renderWithRedux(
   component,
   {
     namespace, // redux namespace
-    initialState = { response: {}, status: STATUS.RESOLVED },
+    initialState = { response: {}, status: STATUS.PENDING },
   } = {},
 ) {
   // Adding the reducer in the expected namespaced format
   const combinedReducers = combineReducers({
     ...apiReducer,
-    katello: combineReducers({ settings }),
+    katello: allKatelloReducers,
   });
 
   // Namespacing the initial state as well
