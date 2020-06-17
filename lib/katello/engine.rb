@@ -223,6 +223,7 @@ module Katello
       end
 
       ::AuditSearch::ClassMethods.prepend Katello::Concerns::AuditSearch
+      ::Widget.singleton_class.prepend Katello::Concerns::WidgetExtensions::ClassMethods
 
       load 'katello/repository_types.rb'
       load 'katello/scheduled_jobs.rb'

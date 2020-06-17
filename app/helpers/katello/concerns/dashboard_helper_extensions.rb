@@ -28,6 +28,16 @@ module Katello
       def unsubscribed_hypervisor_count
         host_query.search_for("subscription_status = unsubscribed_hypervisor").size
       end
+
+      def removed_widgets
+        widgets = super
+
+        if Organization.current&.simple_content_access?
+          widgets.reject! { |widget| ::Widget.singleton_class::SUBSCRIPTION_TEMPLATES.include? widget[:template] }
+        end
+
+        widgets
+      end
     end
   end
 end
