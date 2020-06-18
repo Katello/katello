@@ -39,7 +39,9 @@ module Katello
       respond_for_index :collection => @collection
     end
 
-    def index_response
+    def index_response(reload_host = false)
+      # Host needs to be reloaded because of lazy accessor
+      @host.reload if reload_host
       entitlements = @host.subscription_facet.candlepin_consumer.entitlements
       subscriptions = entitlements.map { |entitlement| ::Katello::HostSubscriptionPresenter.new(entitlement) }
       full_result_response(subscriptions)
@@ -53,7 +55,7 @@ module Katello
       end
 
       sync_task(::Actions::Katello::Host::AutoAttachSubscriptions, @host)
-      respond_for_index(:collection => index_response, :template => "index")
+      respond_for_index(:collection => index_response(true), :template => "index")
     end
 
     api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
@@ -124,7 +126,7 @@ module Katello
       end
 
       sync_task(::Actions::Katello::Host::RemoveSubscriptions, @host, pool_id_quantities.values)
-      respond_for_index(:collection => index_response, :template => "index")
+      respond_for_index(:collection => index_response(true), :template => "index")
     end
 
     api :PUT, "/hosts/:host_id/subscriptions/add_subscriptions", N_("Add a subscription to a host")
@@ -143,7 +145,7 @@ module Katello
       end
 
       sync_task(::Actions::Katello::Host::AttachSubscriptions, @host, pools_with_quantities)
-      respond_for_index(:collection => index_response, :template => "index")
+      respond_for_index(:collection => index_response(true), :template => "index")
     end
 
     api :PUT, "/hosts/:host_id/subscriptions/content_override", N_("Set content overrides for the host")
