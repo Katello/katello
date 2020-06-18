@@ -92,8 +92,12 @@ module Katello
                                                       :content_view_id => @repo_with_distro.content_view.id,
                                                       :content_source => @content_source})
 
-      @hostgroup = Hostgroup.new(:name => "testhg", :lifecycle_environment_id => @repo_with_distro.environment.id,
-                                 :content_view_id => @repo_with_distro.content_view.id)
+      @hostgroup = ::Hostgroup.new(:name => "testhg",
+        :content_facet_attributes => {
+          :lifecycle_environment_id => @repo_with_distro.environment.id,
+          :content_view_id => @repo_with_distro.content_view.id
+        }
+      )
       @hostgroup.architecture = architectures(:x86_64)
       @hostgroup.operatingsystem = @os
       @hostgroup.content_source = @content_source

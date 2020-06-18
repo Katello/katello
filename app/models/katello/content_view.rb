@@ -46,8 +46,10 @@ module Katello
                           :inverse_of => :content_view, :dependent => :restrict_with_exception
     has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
                           :inverse_of => :content_view
-    has_many :hostgroups, :class_name => "::Hostgroup", :foreign_key => :content_view_id,
+    has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet", :foreign_key => :content_view_id,
                           :inverse_of => :content_view, :dependent => :nullify
+    has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,
+                          :inverse_of => :content_view
 
     has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference', :foreign_key => :content_view_id,
              :dependent => :destroy, :inverse_of => :content_view

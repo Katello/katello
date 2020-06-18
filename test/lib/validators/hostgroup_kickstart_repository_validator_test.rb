@@ -21,74 +21,80 @@ module Katello
         :mismatched_ks_repo => 'The selected kickstart repository is not part of the assigned content view, lifecycle environment,
                   content source, operating system, and architecture'
       }
-      @hostgroup = ::Hostgroup.new(:operatingsystem => @os, :kickstart_repository_id => 4, :lifecycle_environment_id => library_environment.id,
-                                   :architecture => ::Architecture.new, :content_source_id => content_source.id)
+      @content_facet = Katello::Hostgroup::ContentFacet.new(
+        :kickstart_repository_id => 4,
+        :lifecycle_environment_id => library_environment.id,
+        :content_source_id => content_source.id)
+      @hostgroup = ::Hostgroup.new(
+        :operatingsystem => @os,
+        :architecture => ::Architecture.new,
+        :content_facet => @content_facet)
     end
 
     test 'it validates a hostgroup' do
       @os.expects(:kickstart_repos).returns(@repos)
 
-      @validator.validate(@hostgroup)
+      @validator.validate(@content_facet)
 
-      assert_empty @hostgroup.errors[:base]
+      assert_empty @content_facet.errors[:base]
     end
 
     test 'it invalidates on content source and environment mismatch' do
-      @hostgroup.expects(:content_source).twice.returns(FactoryBot.create(:smart_proxy))
+      @content_facet.expects(:content_source).twice.returns(FactoryBot.create(:smart_proxy))
 
-      @validator.validate(@hostgroup)
+      @validator.validate(@content_facet)
 
-      assert_equal @error_messages[:mismatched_cs_lce], @hostgroup.errors[:base].first
+      assert_equal @error_messages[:mismatched_cs_lce], @content_facet.errors[:base].first
     end
 
     test 'it invalidates on missing OS' do
       @hostgroup.operatingsystem = nil
 
-      @validator.validate(@hostgroup)
+      @validator.validate(@content_facet)
 
-      assert_equal @error_messages[:missing_os], @hostgroup.errors[:base].first
+      assert_equal @error_messages[:missing_os], @content_facet.errors[:base].first
     end
 
     test 'it invalidates on missing arch' do
       @hostgroup.architecture = nil
 
-      @validator.validate(@hostgroup)
+      @validator.validate(@content_facet)
 
-      assert_equal @error_messages[:missing_arch], @hostgroup.errors[:base].first
+      assert_equal @error_messages[:missing_arch], @content_facet.errors[:base].first
     end
 
     test 'it short-circuits on nil kickstart repo id' do
-      @hostgroup.kickstart_repository_id = nil
+      @content_facet.kickstart_repository_id = nil
       @hostgroup.expects(:operatingsystem).never
 
-      @validator.validate(@hostgroup)
+      @validator.validate(@content_facet)
 
-      assert_empty @hostgroup.errors.values
+      assert_empty @content_facet.errors.values
     end
 
     test 'it invalidates missing content source on a hostgroup' do
-      @hostgroup.content_source_id = nil
+      @content_facet.content_source_id = nil
 
-      @validator.validate(@hostgroup)
+      @validator.validate(@content_facet)
 
-      assert_equal @error_messages[:missing_content_source], @hostgroup.errors[:base].first
+      assert_equal @error_messages[:missing_content_source], @content_facet.errors[:base].first
     end
 
     test 'it invalidates non-RedHat OS on a hostgroup' do
       @hostgroup.operatingsystem = ::Operatingsystem.new
 
-      @validator.validate(@hostgroup)
+      @validator.validate(@content_facet)
 
-      assert_equal @error_messages[:invalid_os], @hostgroup.errors[:base].first
+      assert_equal @error_messages[:invalid_os], @content_facet.errors[:base].first
     end
 
     test 'it invalidates mismatched selected ks repo on a hostgroup' do
-      @hostgroup.kickstart_repository_id = 5
+      @content_facet.kickstart_repository_id = 5
       @os.expects(:kickstart_repos).returns(@repos)
 
-      @validator.validate(@hostgroup)
+      @validator.validate(@content_facet)
 
-      assert_equal @error_messages[:mismatched_ks_repo], @hostgroup.errors[:base].first
+      assert_equal @error_messages[:mismatched_ks_repo], @content_facet.errors[:base].first
     end
   end
 end

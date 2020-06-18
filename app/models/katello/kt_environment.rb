@@ -31,8 +31,10 @@ module Katello
                           :inverse_of => :lifecycle_environment, :dependent => :restrict_with_exception
     has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
                           :inverse_of => :lifecycle_environment
-    has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :lifecycle_environment_id,
+    has_many :hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet", :foreign_key => :lifecycle_environment_id,
                           :inverse_of => :lifecycle_environment, :dependent => :restrict_with_exception
+    has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets,
+                          :inverse_of => :lifecycle_environment
 
     scope :completer_scope, ->(options = nil) { where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
     scope :non_library, -> { where(library: false) }
