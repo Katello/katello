@@ -4,13 +4,12 @@
 import React from 'react';
 import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
-import { reducers as apiReducer } from 'foremanReact/redux/API';
+import { APIMiddleware, reducers as apiReducer } from 'foremanReact/redux/API';
 import { STATUS } from 'foremanReact/constants';
 import { render } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { APIMiddleware } from 'foremanReact/redux/middlewares';
 
 // Renders testable component with redux and react-router according to Katello's usage
 // This should be used when you want a fully connected component with Redux state and actions.
