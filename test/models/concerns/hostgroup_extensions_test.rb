@@ -8,21 +8,21 @@ module Katello
       @library = KTEnvironment.find(katello_environments(:library).id)
       @dev = KTEnvironment.find(katello_environments(:dev).id)
 
-      @root = Hostgroup.create!(:name => 'AHostgroup')
-      @child = Hostgroup.create!(:name => 'AChild', :parent => @root)
+      @root = ::Hostgroup.create!(:name => 'AHostgroup')
+      @child = ::Hostgroup.create!(:name => 'AChild', :parent => @root)
       @puppet_env = smart_proxies(:puppetmaster)
     end
 
     def test_create_with_content_source
       content_source = smart_proxies(:four)
-      host_group = Hostgroup.new(:name => 'new_hostgroup', :content_source => content_source)
+      host_group = ::Hostgroup.new(:name => 'new_hostgroup', :content_source => content_source)
       assert_valid host_group
       assert_equal content_source, host_group.content_source
     end
 
     def test_update_content_source
       content_source = smart_proxies(:four)
-      host_group = Hostgroup.create!(:name => 'new_hostgroup')
+      host_group = ::Hostgroup.create!(:name => 'new_hostgroup')
       host_group.content_source = content_source
       assert_valid host_group
       assert_equal content_source, host_group.content_source
@@ -107,7 +107,7 @@ module Katello
 
     def test_set_kickstart_repository
       @os.stubs(:kickstart_repos).returns([@distro])
-      hg = Hostgroup.new(
+      hg = ::Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
         content_source: @content_source,
@@ -121,7 +121,7 @@ module Katello
     end
 
     def test_set_installation_medium
-      hg = Hostgroup.new(
+      hg = ::Hostgroup.new(
         name: 'install_media',
         operatingsystem: @os,
         content_source: @content_source,
@@ -136,7 +136,7 @@ module Katello
 
     def test_change_medium_to_kickstart_repository
       @os.stubs(:kickstart_repos).returns([@distro])
-      hg = Hostgroup.new(
+      hg = ::Hostgroup.new(
         name: 'install_media',
         operatingsystem: @os,
         content_source: @content_source,
@@ -154,7 +154,7 @@ module Katello
 
     def test_change_kickstart_repository_to_medium
       @os.stubs(:kickstart_repos).returns([@distro])
-      hg = Hostgroup.new(
+      hg = ::Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
         content_source: @content_source,
@@ -171,7 +171,7 @@ module Katello
     end
 
     def test_change_lifecycle_environment_mismatched_kickstart
-      hg = Hostgroup.new(
+      hg = ::Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
         content_source: @content_source,
@@ -189,7 +189,7 @@ module Katello
     end
 
     def test_create_hostgroup_no_family_os
-      hg = Hostgroup.new(
+      hg = ::Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @no_family_os)
 

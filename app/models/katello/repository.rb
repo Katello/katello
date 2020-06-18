@@ -92,8 +92,10 @@ module Katello
     has_many :kickstart_content_facets, :class_name => "Katello::Host::ContentFacet", :foreign_key => :kickstart_repository_id,
                           :inverse_of => :kickstart_repository, :dependent => :nullify
 
-    has_many :kickstart_hostgroups, :class_name => "::Hostgroup", :foreign_key => :kickstart_repository_id,
+    has_many :kickstart_hostgroup_content_facets, :class_name => "Katello::Hostgroup::ContentFacet", :foreign_key => :kickstart_repository_id,
              :inverse_of => :kickstart_repository, :dependent => :nullify
+
+    has_many :kickstart_hostgroups, :class_name => "::Hostgroup", :through => :kickstart_hostgroup_content_facets
 
     has_many :repository_module_streams, class_name: "Katello::RepositoryModuleStream", dependent: :delete_all
     has_many :module_streams, through: :repository_module_streams

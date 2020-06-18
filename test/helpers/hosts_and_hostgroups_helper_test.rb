@@ -119,7 +119,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   end
 
   test "kickstart_repository_options should_handle_non_redhat_host" do
-    hostgroup = Hostgroup.new(:operatingsystem => @os)
+    hostgroup = ::Hostgroup.new(:operatingsystem => @os)
     host = ::Host.new(:architecture => @arch, :operatingsystem => operatingsystems(:opensuse), :hostgroup => hostgroup,
                       :content_facet_attributes => {:lifecycle_environment_id => @env.id,
                                                     :content_view_id => @cv.id,
@@ -131,8 +131,10 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
 
   test "kickstart_repository_options should provide options for a populated hostgroup" do
     self.params = {}
-    hostgroup = ::Hostgroup.new(:lifecycle_environment_id => @env.id,
-                                :content_view_id => @cv.id)
+    hostgroup = ::Hostgroup.new(
+      :content_facet_attributes => {
+        :lifecycle_environment_id => @env.id,
+        :content_view_id => @cv.id })
     hostgroup.architecture = @arch
     hostgroup.operatingsystem = @os
     hostgroup.content_source = @content_source
@@ -154,8 +156,10 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
 
   test "kickstart_repository_options should provide options for a populated host with a selected_host_group" do
     host = ::Host.new
-    hostgroup = ::Hostgroup.new(:lifecycle_environment_id => @env.id,
-                                :content_view_id => @cv.id)
+    hostgroup = ::Hostgroup.new(
+      :content_facet_attributes => {
+        :lifecycle_environment_id => @env.id,
+        :content_view_id => @cv.id})
     hostgroup.architecture = @arch
     hostgroup.operatingsystem = @os
     hostgroup.content_source = @content_source
@@ -185,11 +189,14 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
     @env = @repo_with_distro.environment
-    @hostgroup = ::Hostgroup.new(:lifecycle_environment_id => @env.id,
-                                :content_view_id => @cv.id)
+    @hostgroup = ::Hostgroup.new
     @hostgroup.architecture = @arch
     @hostgroup.operatingsystem = @os
-    @hostgroup.content_source = @content_source
+    @hostgroup.build_content_facet(
+      :lifecycle_environment_id => @env.id,
+      :content_view_id => @cv.id,
+      :content_source => @content_source
+    )
 
     @host = ::Host.new(:architecture => @arch, :operatingsystem => @os,
                        :content_facet_attributes => {:lifecycle_environment_id => @env.id,
@@ -200,14 +207,14 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
 
   test "must return host or host group kickstart id" do
     repo_id = 1000
-    @hostgroup.kickstart_repository_id = repo_id
+    @hostgroup.content_facet.kickstart_repository_id = repo_id
     assert_equal repo_id, kickstart_repository_id(@hostgroup)
     @host.content_facet.kickstart_repository_id = repo_id
     assert_equal repo_id, kickstart_repository_id(@host)
   end
 
   test "must handle  hosts or  host groups with medium_id but no kickstart_repository_id" do
-    @hostgroup.kickstart_repository_id = nil
+    @hostgroup.content_facet.kickstart_repository_id = nil
     @hostgroup.medium_id = 1000
     assert_nil kickstart_repository_id(@hostgroup)
 
@@ -220,7 +227,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     id = 100
     option = mock
     option.expects(:id).returns(id).at_least_once
-    @hostgroup.kickstart_repository_id = nil
+    @hostgroup.content_facet.kickstart_repository_id = nil
     @hostgroup.medium_id = nil
     expects(:kickstart_repository_options).with(@hostgroup, {}).returns([option])
     assert_equal id, kickstart_repository_id(@hostgroup)
@@ -238,7 +245,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
 
   test "must handle selected hosts or host groups" do
     id = 100
-    @hostgroup.kickstart_repository_id = id
+    @hostgroup.content_facet.kickstart_repository_id = id
     host = ::Host.new
     expects(:kickstart_repository_options).at_least_once.
       returns([OpenStruct.new(:id => id)])
@@ -246,7 +253,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     assert_equal id, kickstart_repository_id(host, :selected_host_group => @hostgroup)
 
     #if the host group had a medium_id lets make sure that gets used.
-    @hostgroup.kickstart_repository_id = nil
+    @hostgroup.content_facet.kickstart_repository_id = nil
     @hostgroup.medium_id = id
     assert_nil kickstart_repository_id(::Host.new, :selected_host_group => @hostgroup)
   end

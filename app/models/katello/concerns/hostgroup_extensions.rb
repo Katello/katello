@@ -5,35 +5,36 @@ module Katello
 
       included do
         before_save :add_organization_for_environment
-        belongs_to :kickstart_repository, :class_name => "::Katello::Repository",
-                   :foreign_key => :kickstart_repository_id, :inverse_of => :kickstart_hostgroups
-        belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hostgroups
-        belongs_to :content_view, :inverse_of => :hostgroups, :class_name => "::Katello::ContentView"
-        belongs_to :lifecycle_environment, :inverse_of => :hostgroups, :class_name => "::Katello::KTEnvironment"
-
-        validates_with Katello::Validators::ContentViewEnvironmentValidator
-        validates_with Katello::Validators::HostgroupKickstartRepositoryValidator
-        validates_with ::AssociationExistsValidator, attributes: [:content_source]
+        has_one :kickstart_repository, :through => :content_facet
+        has_one :content_source, :through => :content_facet
+        has_one :content_view, :through => :content_facet
+        has_one :lifecycle_environment, :through => :content_facet
 
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source, :only_explicit => true
         scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view, :only_explicit => true
         scoped_search :relation => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment, :only_explicit => true
 
         before_validation :correct_kickstart_repository
+
+        delegate :content_source_name, :content_view_name, :lifecycle_environment_name, to: :content_facet, allow_nil: true
+        delegate :content_source_id, :content_view_id, :lifecycle_environment_id, :kickstart_repository_id, to: :content_facet, allow_nil: true
+        delegate :'content_source_id=', :'content_view_id=', :'lifecycle_environment_id=', :'kickstart_repository_id=', to: :safe_content_facet, allow_nil: true
       end
 
       def correct_kickstart_repository
         # If switched from ks repo to install media:
-        if medium_id_changed? && medium && kickstart_repository_id
-          self.kickstart_repository_id = nil
+        if medium_id_changed? && medium && content_facet&.kickstart_repository_id
+          # since it's :through association, nullify both the actual data source and delegate
+          self.content_facet.kickstart_repository = nil
+          self.kickstart_repository = nil
         # If switched from install media to ks repo:
-        elsif kickstart_repository && medium
+        elsif content_facet&.kickstart_repository && medium
           self.medium = nil
         end
 
-        unless matching_kickstart_repository?
+        unless matching_kickstart_repository?(content_facet)
           if (equivalent = equivalent_kickstart_repository)
-            self.kickstart_repository_id = equivalent[:id]
+            self.content_facet.kickstart_repository_id = equivalent[:id]
           end
         end
       end
@@ -55,19 +56,19 @@ module Katello
       end
 
       def inherited_content_source_id
-        inherited_ancestry_attribute(:content_source_id)
+        inherited_ancestry_attribute(:content_source_id, :content_facet)
       end
 
       def inherited_content_view_id
-        inherited_ancestry_attribute(:content_view_id)
+        inherited_ancestry_attribute(:content_view_id, :content_facet)
       end
 
       def inherited_lifecycle_environment_id
-        inherited_ancestry_attribute(:lifecycle_environment_id)
+        inherited_ancestry_attribute(:lifecycle_environment_id, :content_facet)
       end
 
       def inherited_kickstart_repository_id
-        inherited_ancestry_attribute(:kickstart_repository_id)
+        inherited_ancestry_attribute(:kickstart_repository_id, :content_facet)
       end
 
       def rhsm_organization_label
@@ -95,22 +96,36 @@ module Katello
         ks_repos.find { |repo| repo[:name] == kickstart_repository.label }
       end
 
-      def matching_kickstart_repository?
+      def matching_kickstart_repository?(content_facet)
         return true unless operatingsystem
 
         if operatingsystem.respond_to? :kickstart_repos
-          return operatingsystem.kickstart_repos(self).any? { |repo| repo[:id] == kickstart_repository_id }
+          return operatingsystem.kickstart_repos(self).any? { |repo| repo[:id] == (content_facet&.kickstart_repository_id || content_facet&.kickstart_repository&.id) }
         end
       end
 
       private
 
-      def inherited_ancestry_attribute(attribute)
-        if ancestry.present?
-          self[attribute] || self.class.sort_by_ancestry(ancestors.where("#{attribute.to_s} is not NULL")).last.try(attribute)
-        else
-          self.send(attribute)
+      def inherited_ancestry_attribute(attribute, facet)
+        value = self.send(facet)&.send(attribute)
+
+        if value.nil? && ancestry.present?
+          # take first non-null value for the attribute going up the ancestry tree.
+          # example: you have hg1 -> hg11 -> hg111 -> hg1111 hostgroups.
+          # given we are querying hg1111 (the leaf), and a value is set on:
+          # hg1: 1
+          # hg11: 2
+          # it will return the value 2.
+          facet_model = Facets.registered_facets[facet].hostgroup_configuration.model
+          value = facet_model.where.not(attribute => nil).joins(:hostgroup).merge(
+            ::Hostgroup.where(id: self.ancestor_ids).reorder(ancestry: :desc)
+          ).limit(1).pluck(attribute)
         end
+        value
+      end
+
+      def safe_content_facet
+        content_facet || build_content_facet
       end
     end
   end

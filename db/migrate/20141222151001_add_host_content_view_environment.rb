@@ -6,7 +6,7 @@ class AddHostContentViewEnvironment < ActiveRecord::Migration[4.2]
     add_column :hostgroups, :content_view_id, :integer, :null => true
     add_column :hostgroups, :lifecycle_environment_id, :integer, :null => true
 
-    [Hostgroup, Host::Managed].each do |model|
+    [::Hostgroup, Host::Managed].each do |model|
       model.find_each do |host|
         lifecycle_environment = host.environment.try(:lifecycle_environment)
         content_view = host.environment.try(:content_view)

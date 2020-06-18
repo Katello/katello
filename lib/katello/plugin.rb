@@ -233,7 +233,7 @@ Foreman::Plugin.register :katello do
                                   :host, :kickstart_repository_id],
     :subscription_facet_attributes => [:release_version, :autoheal, :purpose_usage, :purpose_role, :service_level, :host,
                                        {:installed_products => [:product_id, :product_name, :arch, :version]}, :facts, :hypervisor_guest_uuids => [], :purpose_addon_ids => []]
-  parameter_filter Hostgroup, :content_view_id, :lifecycle_environment_id, :content_source_id,
+  parameter_filter ::Hostgroup, :content_view_id, :lifecycle_environment_id, :content_source_id,
     :kickstart_repository_id
   parameter_filter Organization, :label, :service_level
   parameter_filter SmartProxy, :download_policy, :lifecycle_environment_ids => []
@@ -289,10 +289,14 @@ Foreman::Plugin.register :katello do
   end
 
   register_facet Katello::Host::ContentFacet, :content_facet do
-    api_view :list => 'katello/api/v2/content_facet/base_with_root', :single => 'katello/api/v2/content_facet/show'
-    api_docs :content_facet_attributes, ::Katello::Api::V2::HostContentsController
-    template_compatibility_properties :content_source_id, :content_source
-    extend_model ::Katello::Concerns::ContentFacetHostExtensions
+    configure_host do
+      api_view :list => 'katello/api/v2/content_facet/base_with_root', :single => 'katello/api/v2/content_facet/show'
+      api_docs :content_facet_attributes, ::Katello::Api::V2::HostContentsController
+      template_compatibility_properties :content_source_id, :content_source
+      extend_model ::Katello::Concerns::ContentFacetHostExtensions
+    end
+
+    configure_hostgroup(::Katello::Hostgroup::ContentFacet)
   end
 
   register_facet Katello::Host::SubscriptionFacet, :subscription_facet do

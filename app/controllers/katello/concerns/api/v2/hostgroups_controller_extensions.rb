@@ -20,7 +20,7 @@ module Katello
         include ApiPieExtensions
 
         def create
-          @hostgroup = Hostgroup.new(hostgroup_params)
+          @hostgroup = ::Hostgroup.new(hostgroup_params)
           process_response @hostgroup.save
         end
 

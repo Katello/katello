@@ -15,7 +15,7 @@ module Katello
     end
 
     def organizations(host)
-      if host.is_a?(Hostgroup)
+      if host.is_a?(::Hostgroup)
         host.organizations
       else
         host.organization ? [host.organization] : []
@@ -29,8 +29,7 @@ module Katello
 
     def host_hostgroup_kickstart_repository_id(host)
       return if host.blank?
-      return host.kickstart_repository_id if host.is_a?(Hostgroup)
-      host.content_facet.kickstart_repository_id if host.try(:content_facet).present?
+      host.content_facet&.kickstart_repository_id
     end
 
     def kickstart_repository_id(host, options = {})
@@ -205,7 +204,7 @@ module Katello
 
         return [] unless new_host.operatingsystem.is_a?(Redhat)
 
-        if (host.is_a? Hostgroup)
+        if (host.is_a? ::Hostgroup)
           new_host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => host.inherited_lifecycle_environment_id,
                                                           :content_view_id => host.inherited_content_view_id,
                                                           :content_source_id => host.inherited_content_source_id)
