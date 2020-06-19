@@ -23,10 +23,12 @@ module Actions
           plan_self(:host_id => host.id, :host_name => host.name, :pool_ids => pool_ids)
         end
 
-        def finalize
-          ::Katello::Pool.where(:cp_id => input[:pool_ids]).map { |pool| pool.import_data(false) }
-          host = ::Host.find_by(:id => input[:host_id])
-          host.subscription_facet.import_database_attributes
+        def run
+          ActiveRecord::Base.transaction do
+            ::Katello::Pool.where(:cp_id => input[:pool_ids]).map { |pool| pool.import_data(false) }
+            host = ::Host.find_by(:id => input[:host_id])
+            host.subscription_facet.import_database_attributes
+          end
         end
 
         def rescue_strategy
