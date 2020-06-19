@@ -15,7 +15,6 @@ class Search extends Component {
   constructor(props) {
     super(props);
     this.state = { items: [], typingTimeout: 0, autoSearchOnEmpty: false };
-    this.onInputUpdate = this.onInputUpdate.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
 
@@ -25,7 +24,7 @@ class Search extends Component {
     this.props.loadSetting(AUTOSEARCH_WHILE_TYPING);
   }
 
-  async onInputUpdate(searchTerm = '') {
+  onInputUpdate = async (searchTerm = '') => {
     const { getAutoCompleteParams, settings: { autoSearchEnabled }, patternfly4 } = this.props;
     const items = this.state.items.filter(({ text }) => stringIncludes(text, searchTerm));
 
@@ -57,12 +56,12 @@ class Search extends Component {
 
     // Prevent empty search when page first loads, but search when input is cleared after that
     this.setState({ autoSearchOnEmpty: true });
-  }
+  };
 
-  onSearch(search) {
+  onSearch = (search) => {
     if (this.props.updateSearchQuery) this.props.updateSearchQuery(search);
     this.props.onSearch(search);
-  }
+  };
 
   // Continually clear and set the timeout as the user types. When the typing pauses, perform the
   // search. This allows us to not overload the server by requesting on each keystroke.

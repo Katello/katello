@@ -7,6 +7,7 @@ import keyPressHandler from '../helpers/helpers';
 import TypeAheadInput from './TypeAheadInput';
 import TypeAheadItems from './TypeAheadItems';
 import commonSearchPropTypes from '../helpers/commonPropTypes';
+import './TypeAheadSearch.scss';
 
 const TypeAheadSearch = ({
   userInputValue, clearSearch, getInputProps, getItemProps, isOpen, inputValue, highlightedIndex,
@@ -34,8 +35,12 @@ const TypeAheadSearch = ({
         autoSearchEnabled={autoSearchEnabled}
       />
       <React.Fragment>
-        {userInputValue && !autoSearchEnabled &&
-          <Button variant="control" onClick={clearSearch}>
+        {userInputValue &&
+          <Button
+            variant={autoSearchEnabled ? 'plain' : 'control'}
+            className="foreman-pf4-search-clear"
+            onClick={clearSearch}
+          >
             <TimesIcon />
           </Button>}
       </React.Fragment>

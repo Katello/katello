@@ -10,7 +10,6 @@ import { render } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { APIMiddleware } from 'foremanReact/redux/middlewares';
 import settings from '../scenes/Settings';
 import { initialSettingsState } from '../scenes/Settings/SettingsReducer';
 

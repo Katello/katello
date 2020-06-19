@@ -149,9 +149,9 @@ class Setting::Content < Setting
       self.set('applicability_batch_size', N_("Number of host applicability calculations to process per task."),
                50, N_('Applicability Batch Size')),
       self.set('autosearch_while_typing', N_('For pages that support it, automatically perform search while typing in search input.'),
-               true, N_('Automatic Search while Typing')),
-      self.set('autosearch_delay', N_('Delay in milliseconds before performing search for automatic searching.'),
-               500, N_('Automatic Search Typing Delay'))
+               true, N_('Autosearch')),
+      self.set('autosearch_delay', N_('Delay in milliseconds before performing search for autosearch.'),
+               500, N_('Autosearch delay'))
     ]
   end
 
