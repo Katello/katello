@@ -296,7 +296,9 @@ Foreman::Plugin.register :katello do
       extend_model ::Katello::Concerns::ContentFacetHostExtensions
     end
 
-    configure_hostgroup(::Katello::Hostgroup::ContentFacet)
+    configure_hostgroup(::Katello::Hostgroup::ContentFacet) do
+      set_dependent_action :destroy
+    end
   end
 
   register_facet Katello::Host::SubscriptionFacet, :subscription_facet do
