@@ -5,6 +5,7 @@ module Katello
 
       included do
         before_save :add_organization_for_environment
+
         has_one :kickstart_repository, :through => :content_facet
         has_one :content_source, :through => :content_facet
         has_one :content_view, :through => :content_facet
