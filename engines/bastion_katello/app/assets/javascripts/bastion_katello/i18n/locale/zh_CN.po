@@ -2,13 +2,14 @@
 # Translators:
 # Martin Liu <liuzh66@gmail.com>, 2017
 # 0868a4d1af5275b3f70b0a6dac4c99a4, 2017
-# tim123, 2019
-# Bryan Kearney <bryan.kearney@gmail.com>, 2019
+# Bryan Kearney <bryan.kearney@gmail.com>, 2020
+# tim123, 2020
+# Amit Upadhye <aupadhye@redhat.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2019\n"
+"Last-Translator: Amit Upadhye <aupadhye@redhat.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/foreman/teams/114/zh_CN/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,10 +23,6 @@ msgstr "- 日期和类型"
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
 msgid "-- select an interval --"
 msgstr "-- 选择间隔 --"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/subscription-start-date.directive.js
-msgid "(future)"
-msgstr "（未来）"
 
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
 msgid "(Not all Activation Keys editable )"
@@ -146,6 +143,11 @@ msgstr "{{ product.name }}"
 msgid "{{ puppetModule.name }}"
 msgstr "{{ puppetModule.name }}"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
+msgid ""
+"{{ repository.content_counts.ansible_collection || 0 }} Ansible Collections"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-apt.html
 msgid "{{ repository.content_counts.deb }} deb Packages"
 msgstr "{{ repository.content_counts.deb }} deb 软件包"
@@ -198,6 +200,10 @@ msgstr "{{ repository.content_counts.erratum || 0 }} 勘误"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "{{ repository.content_counts.file || 0 }} Files"
 msgstr "{{ repository.content_counts.file || 0 }} 文件"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-repositories.html
+msgid "{{ repository.content_counts.module_stream || 0 }} Module Streams"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "{{ repository.content_counts.ostree_branch || 0 }} OSTree Branches"
@@ -315,9 +321,12 @@ msgstr "*这些标记的内容视图版本来自综合内容视图。下面列�
 msgid "/foreman_tasks/tasks/%taskId"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/content-hosts-bulk-traces-modal.controller.js
+msgid "/job_invocations"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/activation-keys/activationKeyConsumed.filter.js
 #: app/assets/javascripts/bastion_katello/subscriptions/subscriptionConsumed.filter.js
-#: app/assets/javascripts/bastion_katello/subscriptions/subscriptions.controller.js
 msgid "%(consumed)s out of %(quantity)s"
 msgstr "%(quantity)s 中的 %(consumed)s"
 
@@ -456,22 +465,10 @@ msgid ""
 "href=\"/foreman_tasks/tasks/{{ task.id }}\">click for more details</a>"
 msgstr "已在后台启用同步，<a href=\"/foreman_tasks/tasks/{{ task.id }}\">点击查看详情</a>"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/content-access-mode-banner.html
-msgid ""
-"Access to repositories is unrestricted in this organization. Hosts can "
-"consume all repositories available in the Content View they are registered "
-"to, regardless of subscription status."
-msgstr "该组织中对库的访问不受限制。主机可使用它们注册的内容视图中的所有可用库，不管订阅状态如何。"
-
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
 msgid "Account"
 msgstr "帐户"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Account Number"
-msgstr "帐户号"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/histories/views/content-view-history.html
 msgid "Action"
@@ -506,10 +503,6 @@ msgstr "激活码内容"
 msgid "Activation Key removed."
 msgstr "已删除激活码。"
 
-#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
-msgid "Activation Key Type:"
-msgstr "激活码类型："
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
 msgid "Activation Key updated"
 msgstr "已更新激活码"
@@ -537,6 +530,7 @@ msgstr "活动任务"
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
 #: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/errata-filter.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-docker-repositories.html
@@ -564,6 +558,14 @@ msgstr "添加内容视图至 {{ contentView.name }}"
 msgid "Add Errata"
 msgstr "添加勘误"
 
+#: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
+msgid "Add hosts to the host collection to see available actions."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
+msgid "Add Module Stream"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/new-filter.html
 msgid "Add New Container Image Tag Filter"
 msgstr "添加新的容器镜像标签过滤器"
@@ -580,9 +582,10 @@ msgstr "添加新模块"
 msgid "Add New Yum Filter"
 msgstr "添加新的 Yum 过滤器"
 
+#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Add ons"
-msgstr ""
+msgstr "附加组件"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter-details.html
 msgid "Add Package Group"
@@ -778,10 +781,6 @@ msgstr "保存库时出错："
 msgid "An error occurred saving the Sync Plan:"
 msgstr "保存产同步计划时出错："
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "An error occurred saving the URL:"
-msgstr "保存 URL 时出错："
-
 #: app/assets/javascripts/bastion_katello/content-hosts/details/content-host-base-subscriptions.controller.js
 msgid ""
 "An error occurred trying to auto-attach subscriptions.  Please check your "
@@ -806,9 +805,14 @@ msgstr "创建内容凭证时出错："
 msgid "An error occurred while creating the Product: %s"
 msgstr "创建产品时出错：%s"
 
+#: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-http-proxy-modal.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "An error occurred:"
 msgstr "出错："
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid "Ansible Collections"
+msgstr "Ansible 系列"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -825,10 +829,7 @@ msgstr "适用的内容主机"
 msgid "Applicable Errata"
 msgstr "可用勘误"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
-msgid "Applicable hosts for {{ erratum.errata_id }}"
-msgstr "{{ erratum.errata_id }} 的可用主机"
-
+#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
 #: app/assets/javascripts/bastion_katello/content-views/new/views/content-view-new.html
 msgid ""
 "Applicable only for composite views. Auto publish composite view when a new "
@@ -848,6 +849,7 @@ msgstr "适用于"
 msgid "Applicable to Host"
 msgstr "适用于主机"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "Application"
 msgstr "应用程序"
@@ -914,6 +916,11 @@ msgstr "在主机中应用"
 msgid "Applying"
 msgstr "正在应用"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
+msgid "Apt Actions"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-details.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version.html
 msgid "Apt Repositories"
@@ -926,6 +933,7 @@ msgstr "Apt 存储库"
 msgid "Arch"
 msgstr "归档"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-deb.html
@@ -934,10 +942,6 @@ msgstr "归档"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-debs.html
 msgid "Architecture"
-msgstr "架构"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Architecture(s)"
 msgstr "架构"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -979,9 +983,11 @@ msgstr ""
 "您确定要为在 {{ selected.environment.name }} 中选择的 {{ selected.contentView.name }} "
 "分配选择的 {{ table.numSelected }} 内容主机吗？"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-msgid "Are you sure you want to delete the manifest?"
-msgstr "你确定要删除这个清单？"
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-destroy-modal.html
+msgid ""
+"Are you sure you want to delete the {{ table.numSelected }} host(s) "
+"selected?"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
 msgid ""
@@ -1099,12 +1105,6 @@ msgid ""
 "selected from the host collection(s) chosen?"
 msgstr "您确定要从所选主机集合中删除选择的 {{ table.numSelected }} 内容主机吗？"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-destroy-modal.html
-msgid ""
-"Are you sure you want to remove the {{ table.numSelected }} host(s) "
-"selected?"
-msgstr "您确定要删除所选的 {{ table.numSelected }} 主机吗？"
-
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 msgid ""
 "Are you sure you want to remove the sync plan from the selected product(s)?"
@@ -1121,6 +1121,16 @@ msgid ""
 "Are you sure you want to restart services on content host \"{{ host.name "
 "}}\"?"
 msgstr "您确定要重启内容主机 \"{{ host.name }}\" 上的服务吗？"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
+msgid ""
+"Are you sure you want to restart the services on the selected content hosts?"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
+msgid ""
+"Are you sure you want to set the HTTP Proxy to the selected products(s)?"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-release-version-modal.html
 msgid ""
@@ -1166,7 +1176,6 @@ msgid "Assign Release Version"
 msgstr "分配发行版本"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
 msgid "Associations"
 msgstr "关联"
 
@@ -1183,6 +1192,7 @@ msgstr "已添加"
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-puppet-modules.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
 #: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
@@ -1196,14 +1206,16 @@ msgstr "自动发布"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
 msgid "Auto-Attach"
 msgstr "自动附加"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid "Auto-Attach Details"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-#: app/assets/javascripts/bastion_katello/subscriptions/subscriptionAttachAmountFilter.filter.js
 msgid "Automatic"
 msgstr "自动"
 
@@ -1240,8 +1252,8 @@ msgid "Backend Identifier"
 msgstr "后端标识符"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/download-policy.service.js
-msgid "Background"
-msgstr "背景"
+msgid "Background (Deprecated)"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
@@ -1257,13 +1269,6 @@ msgstr "背景"
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 msgid "Basic Information"
 msgstr "基本信息"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
-msgid ""
-"Below are the product's repository content sets currently available for this"
-" subscription. For Red Hat subscriptions, additional content can be made "
-"available through the"
-msgstr "以下是目前可用于这个订阅的产品库内容集合。在 Red Hat 订阅中使用的附加内容可通过"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
 msgid ""
@@ -1282,6 +1287,10 @@ msgstr "以下是可通过其订阅在激活码中使用的库内容集合。在
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Between versions {{ rule.min_version }} and {{ rule.max_version }}"
 msgstr " {{ rule.min_version }} 版本和 {{ rule.max_version }} 版本之间"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid "BIOS UUID"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Bootable"
@@ -1325,6 +1334,7 @@ msgid "Build Time"
 msgstr "构建时间"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/content-view-deletion.html
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-activation-keys.html
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-confirm.html
@@ -1401,6 +1411,7 @@ msgstr "更改默认设置需要在该主机中安装 subscription-manager  版�
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Checksum"
 msgstr "Checksum"
@@ -1449,14 +1460,20 @@ msgstr "点这里为增量更新选择勘误。"
 msgid "Click to monitor task progress."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-http-proxy-modal.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/product-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "Click to view task"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-rule-matching-package-modal.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata-task-details.html
 msgid "Close"
 msgstr "关闭"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
+msgid "Collection Name"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -1487,11 +1504,15 @@ msgstr "提交"
 msgid "Complete Sync"
 msgstr "完成同步"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
+msgid "Completed {{ repository.last_sync_words }} ago"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 msgid ""
-"Completely deletes the host record and removes all reporting, provisioning, "
-"and configuration information."
-msgstr "完全删除主机记录，删除所有报告、置备和配置信息。"
+"Completely deletes the host including VM and disks, and removes all "
+"reporting, provisioning, and configuration information."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
 msgid "Completely remove version?"
@@ -1507,18 +1528,18 @@ msgstr "组件"
 msgid "Components:"
 msgstr "组件："
 
+#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
+msgid "Composite"
+msgstr "组成"
+
+#: app/assets/javascripts/bastion_katello/content-views/new/views/content-view-new.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
 msgid "Composite View"
 msgstr "综合视图"
 
-#: app/assets/javascripts/bastion_katello/content-views/new/views/content-view-new.html
 #: app/assets/javascripts/bastion_katello/content-views/views/content-views.html
 msgid "Composite View?"
 msgstr "综合视图？"
-
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
-msgid "Composite?"
-msgstr "合成？"
 
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 msgid "Confirm"
@@ -1528,14 +1549,13 @@ msgstr "确认"
 msgid "Confirm Remove"
 msgstr "确认删除"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
+msgid "Confirm services restart"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-confirm.html
 msgid "Confirm Version Removal: Version {{ version.version }}"
 msgstr "确认版本删除：版本 {{ version.version }}"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
-msgid "Consumed"
-msgstr "已消耗"
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-info.html
 msgid "Container Image Manifest"
@@ -1622,10 +1642,6 @@ msgstr "已更新内容凭证"
 msgid "Content Credentials"
 msgstr "内容凭证"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
-msgid "Content Download URL"
-msgstr "内容需啊中 URL"
-
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-provisioning-info.html
 msgid "Content Host"
@@ -1692,6 +1708,12 @@ msgstr "内容主机："
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-content-hosts.html
 msgid "Content Hosts using Version {{ version.version }}"
 msgstr "使用版本 {{ version.version }} 的内容主机"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid ""
+"Content synced depends on the specifity of the URL and/or the optional requirements.yaml specified below <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'ansible_collection'\" uib-popover-html=\"collectionURLPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\" popover-title=\"Upstream URL\">\n"
+"        </a>"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filters.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/new-filter.html
@@ -1784,19 +1806,15 @@ msgstr "包含此文件的内容视图"
 msgid "Content Views that contain this Puppet Module"
 msgstr "包含此 Puppet 模块的内容视图"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
 #: app/assets/javascripts/bastion_katello/module-streams/views/partials/module-streams-table.html
 msgid "Context"
 msgstr "上下文"
 
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
 msgid "Contract"
 msgstr "合同"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Contract Number"
-msgstr "合同号"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
 msgid "Copy Activation Key"
@@ -1817,10 +1835,6 @@ msgstr "复制主机集合"
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Cores per Socket"
 msgstr "每个插槽的 core"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/subscription-details.controller.js
-msgid "Cores: %s"
-msgstr "核: %s"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-copy.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-copy.html
@@ -1970,12 +1984,7 @@ msgid ""
 "Daily at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)"
 msgstr "每日于 {{ product.sync_plan.sync_date | date:'mediumTime' }} (服务器时间)"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-events.html
 #: app/assets/javascripts/bastion_katello/content-views/details/histories/views/content-view-history.html
-#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-ostree-branches.html
-#: app/assets/javascripts/bastion_katello/environments/details/views/environment-ostree.html
-#: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-info.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ostree-branches.html
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks-table.html
 #: app/assets/javascripts/bastion_katello/tasks/views/user-tasks-table.html
 msgid "Date"
@@ -1995,14 +2004,11 @@ msgstr "已在后台启动 deb元数据生成。点击<a href=\"{{ taskUrl() }}\
 msgid "deb Packages"
 msgstr "deb 软件包"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version.html
 #: app/assets/javascripts/bastion_katello/debs/views/debs.html
 msgid "Deb Packages"
 msgstr "Deb 软件包"
-
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
-msgid "Deb Repositories"
-msgstr "Deb 存储库"
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
@@ -2019,22 +2025,17 @@ msgstr "Deb"
 msgid "Default"
 msgstr "默认"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-msgid "Delete all subscriptions attached to activation keys."
-msgstr "删除附加到激活码的所有订阅。"
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
+msgid "Default Status"
+msgstr ""
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-msgid "Delete all subscriptions that are attached to running hosts."
-msgstr "删除附加到运行主机的所有订阅。"
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-destroy-modal.html
+msgid "Delete {{ table.numSelected  }} Hosts?"
+msgstr ""
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "Delete Manifest"
-msgstr "删除清单"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-msgid "Delete Manifest?"
-msgstr "删除清单？"
+#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
+msgid "Delete Hosts"
+msgstr "删除主机"
 
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
 msgid "Delete Version {{ version.version }}"
@@ -2096,7 +2097,6 @@ msgstr "相依性"
 #: app/assets/javascripts/bastion_katello/products/new/views/product-new-form.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 #: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
@@ -2111,6 +2111,7 @@ msgstr "描述"
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/docker-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/errata-filter.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-details.html
@@ -2125,8 +2126,6 @@ msgstr "描述"
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 #: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-details.html
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-details.html
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "Details"
@@ -2171,10 +2170,6 @@ msgstr "摘要"
 #: app/assets/javascripts/bastion_katello/common/module-stream-actions.service.js
 msgid "Disable"
 msgstr "禁用"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-msgid "Disable Red Hat Insights"
-msgstr "禁用 Red Hat Insights"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
@@ -2242,6 +2237,13 @@ msgstr "完成"
 msgid "Download Policy"
 msgstr "下载策略"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-publish.html
+msgid ""
+"Duplicate repositories between the selected Content View Versions will "
+"merge, resulting in a Composite Content View with all packages that exist "
+"among the duplicates."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/docker-tag-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Edit"
@@ -2250,6 +2252,11 @@ msgstr "编辑"
 #: app/assets/javascripts/bastion_katello/common/module-stream-actions.service.js
 msgid "Enable"
 msgstr "启用"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid "Enable Traces"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 #: app/assets/javascripts/bastion_katello/repository-sets/repository-sets-enabled.filter.js
@@ -2260,17 +2267,9 @@ msgstr "启用"
 msgid "Enabled (overridden)"
 msgstr "已启用（被覆盖）"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
-msgid "Enabled?"
-msgstr "已启用？"
-
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/date-type-errata.html
 msgid "End Date"
 msgstr "终止日期"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Ends"
-msgstr "结束"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
@@ -2406,23 +2405,10 @@ msgstr "勘误 - 日期和类型"
 msgid "Erratum Date Range"
 msgstr "勘误日期范围"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Error deleting manifest."
-msgstr "删除清单时出错。"
-
 #: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/repository-details-info.controller.js
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
 msgid "Error during upload:"
 msgstr "上传时出错："
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Error importing manifest."
-msgstr "导入清单时出错。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Error refreshing manifest."
-msgstr "刷新清单时出错。"
 
 #: app/assets/javascripts/bastion_katello/products/new/new-sync-plan-modal.controller.js
 msgid "Error saving the Sync Plan:"
@@ -2431,10 +2417,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks-table.html
 #: app/assets/javascripts/bastion_katello/tasks/views/user-tasks-table.html
 msgid "Event"
-msgstr "事件"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
-msgid "Events"
 msgstr "事件"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/new-filter.html
@@ -2452,7 +2434,6 @@ msgstr "现有产品"
 
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
 msgid "Expires"
 msgstr "过期"
 
@@ -2485,7 +2466,6 @@ msgid "File Repositories"
 msgstr "文件库"
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/content-credential-details-info.controller.js
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
 msgid "File too large."
 msgstr "文件过大。"
 
@@ -2550,7 +2530,6 @@ msgstr "过滤器:"
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
@@ -2582,21 +2561,13 @@ msgstr "在老的操作系统，比如 Red Hat Enterprise Linux 5 或 CentOS 5 �
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
 "For On Demand synchronization, only the metadata is downloaded during sync and packages are fetched and stored on the filesystem when clients request them.\n"
-"          For Background synchronization, a background task will download all packages after the initial sync.\n"
+"          On Demand is not recommended for custom repositories unless the upstream repository maintains older versions of packages within the repository.\n"
+"          For Background synchronization, a background task will download all packages after the initial sync (Deprecated).\n"
 "          The Immediate option will download all metadata and packages immediately during the sync."
 msgstr ""
-"对于按需同步，只有元数据会在同步期间下载，软件包则在客户要求时被获取和存储到文件系统中。\n"
-"          对于后台同步，后台任务会在首次同步后下载所有的软件包。\n"
-"          中间选项则会在同步期间立即下载所有元数据和软件包。"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
-msgid "For remote actions and reporting package & errata information:"
-msgstr "远程操作以及报告软件包和勘误的信息："
-
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-publish.html
-msgid ""
-"For the duplicate repositories, the packages in each Content View Version will combine regardless of the filters that \n"
-"        were applied to the individual Content View Version."
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+msgid "For remote actions via katello-agent:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-promotion.html
@@ -2607,9 +2578,13 @@ msgstr "强制推广？"
 msgid "Force Puppet Environment"
 msgstr "强制实施 Puppet 环境"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
-msgid "Generated On"
-msgstr "已生成于"
+#: app/assets/javascripts/bastion_katello/products/details/repositories/http-proxy-service.js
+msgid "Global Default"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/http-proxy-service.js
+msgid "Global Default (None)"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -2620,10 +2595,6 @@ msgstr "已生成于"
 #: app/assets/javascripts/bastion_katello/content-credentials/content-type.filter.js
 msgid "GPG Key"
 msgstr "GPG 密钥"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
-msgid "GPG Key URL"
-msgstr "GPG 密钥 URL"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Greater Than"
@@ -2645,10 +2616,7 @@ msgstr "组安装"
 msgid "Group Remove"
 msgstr "组删除"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Guests of"
-msgstr "虚拟机"
-
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "Helper"
 msgstr "Helper"
@@ -2726,6 +2694,7 @@ msgstr "主机组"
 msgid "Host Limit"
 msgstr "主机限制"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Hostname"
 msgstr "主机名"
@@ -2747,21 +2716,39 @@ msgstr ""
 "每小时于{{ product.sync_plan.sync_date | date:'m' }} 分 {{ "
 "product.sync_plan.sync_date | date:'s' }} 秒"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "HTTP Proxy"
+msgstr "HTTP 代理"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "HTTP Proxy Policy"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
+msgid "HTTP Proxy Policy:"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
+msgid "HTTP Proxy:"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid "HttpProxyPolicy"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 msgid "Id"
 msgstr "Id"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/subscription-details.controller.js
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
 msgid ""
-"If the virt-who field is Yes then the subscription requires the use of virt-"
-"who. Learn how to configure and use this tool at the <a "
-"href=\"https://access.redhat.com/articles/subscription-management-"
-"satellite-6\" target=\"_blank\">Subscription Management Home Page</a>."
+"If you are not using Remote Execution to manage content on this host, ensure"
+" that it has the katello-agent package installed."
 msgstr ""
-"如果 virt-who 项的值为 Yes，则订阅需要使用 virt-who。如需了解如何配置和使用这个工具的信息，请参阅<a "
-"href=\"https://access.redhat.com/articles/subscription-management-"
-"satellite-6\" target=\"_blank\">订阅管理主页</a>。"
 
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-activation-keys.html
 msgid ""
@@ -2792,14 +2779,6 @@ msgstr ""
 msgid "Ignorable Content"
 msgstr "可忽略的内容"
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Ignore Global Http Proxy"
-msgstr "忽略全局 Http 代理服务器"
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-msgid "Ignore Global HTTP Proxy"
-msgstr "忽略全局 HTTP 代理服务器"
-
 #: app/assets/javascripts/bastion_katello/docker-tags/details/docker-tag-details.controller.js
 msgid "Image"
 msgstr "镜像"
@@ -2807,18 +2786,6 @@ msgstr "镜像"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/download-policy.service.js
 msgid "Immediate"
 msgstr "立即"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest.html
-msgid "Import History"
-msgstr "导入历史记录"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
-msgid "Import Manifest"
-msgstr "导入清单"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest.html
-msgid "Import/Remove Manifest"
-msgstr "导入/删除清单"
 
 #: app/assets/javascripts/bastion_katello/errata/errata-severity.filter.js
 msgid "Important"
@@ -2869,7 +2836,7 @@ msgstr ""
 msgid "Install"
 msgstr "安装"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
 msgid "Install client package:"
 msgstr "安装客户端软件包："
 
@@ -2901,10 +2868,15 @@ msgstr "可安装更新"
 msgid "Installed"
 msgstr "已安装"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
+msgid "Installed Deb Packages"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Installed On"
 msgstr "安装日期"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
 msgid "Installed Package"
 msgstr "已安装软件包"
@@ -2921,10 +2893,6 @@ msgstr "安装的产品"
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 msgid "Installed Profile"
 msgstr ""
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Instance-based"
-msgstr "基于实例的"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Interfaces"
@@ -2960,6 +2928,17 @@ msgstr "发行日期"
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Katello Agent"
 msgstr "Katello Agent"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid "Katello Tracer"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/common/views/katello-agent-notice.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+msgid ""
+"Katello-agent is deprecated and will be removed in Katello 4.0.  Consider "
+"migrating to Remote Execution."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
 #: app/assets/javascripts/bastion_katello/content-views/new/views/content-view-new.html
@@ -3007,10 +2986,6 @@ msgstr "上一次同步"
 msgid "Last synced"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
-msgid "Last Updated"
-msgstr "上一次更新"
-
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Last Updated On"
 msgstr "上一次更新于"
@@ -3028,7 +3003,7 @@ msgstr "最新（当前无版本）"
 msgid "Latest Only"
 msgstr "仅最新"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
 msgid ""
 "Learn more about these packages in the <a "
 "href=\"https://theforeman.org/plugins/katello/\">Documentation</a>"
@@ -3136,10 +3111,6 @@ msgstr "限于生命周期环境"
 msgid "Limit:"
 msgstr "限制："
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Limits"
-msgstr "限制"
-
 #: app/assets/javascripts/bastion_katello/docker-tags/details/docker-tag-details.controller.js
 msgid "List"
 msgstr "列表"
@@ -3150,6 +3121,7 @@ msgstr "列表"
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
 #: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/errata-filter.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-docker-repositories.html
@@ -3167,7 +3139,6 @@ msgstr "正在载入环境路径......"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 #: app/assets/javascripts/bastion_katello/environments/views/new-environment.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content-host-status.controller.js
 msgid "Loading..."
 msgstr "载入中......"
@@ -3175,6 +3146,10 @@ msgstr "载入中......"
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
 msgid "Loading...\""
 msgstr "正在加载...”"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
+msgid "Manage Ansible Collections for Repository:"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-manifests.html
 msgid "Manage Container Image Manifests for Repository:"
@@ -3192,9 +3167,13 @@ msgstr "管理勘误"
 msgid "Manage Files for Repository:"
 msgstr "为库管理文件："
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
-msgid "Manage Manifest"
-msgstr "管理清单"
+#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
+msgid "Manage Host Traces"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/views/products.html
+msgid "Manage HTTP Proxy"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Manage Module Streams"
@@ -3236,25 +3215,9 @@ msgstr "管理订阅"
 msgid "Manage Sync Plan"
 msgstr "管理同步计划"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "Manifest History"
-msgstr "清单历史记录"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-manifests.html
 msgid "Manifest Lists"
 msgstr "清单列表"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Manifest successfully deleted."
-msgstr "成功删除清单。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Manifest successfully imported."
-msgstr "成功导入清单。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Manifest successfully refreshed."
-msgstr "成功刷新清单。"
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-info.html
 msgid "Manifest Type"
@@ -3268,11 +3231,6 @@ msgstr "在版本任务进行期间，许多内容视图操作都被禁用。"
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Maximum Version"
 msgstr "最大版本"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-events.html
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import-history.html
-msgid "Message"
-msgstr "信息"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Minimum Version"
@@ -3291,9 +3249,23 @@ msgstr "型号"
 msgid "Moderate"
 msgstr "中等"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/errata-filter-details.html
+#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-errata.html
+#: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
+msgid "Modular"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/content-view-puppet-modules.controller.js
 msgid "Module %s removed from Content View."
 msgstr "已从内容视图中删除模块 %s。"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/new-filter.controller.js
+msgid "Module Stream"
+msgstr "模块流"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter.html
+msgid "Module Stream Filter:"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
 msgid "Module Stream Management"
@@ -3309,10 +3281,19 @@ msgstr ""
 msgid "Module Stream Packages"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/available-module-stream-filter.controller.js
+msgid "Module Stream successfully added."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/module-stream-list-filter.controller.js
+msgid "Module Stream successfully removed."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/errata-details.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-helper.service.js
 #: app/assets/javascripts/bastion_katello/environments/content.service.js
 msgid "Module Streams"
 msgstr "模块流"
@@ -3328,14 +3309,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "More Details"
 msgstr "详情"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "More..."
-msgstr "更多......"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Multi-entitlement"
-msgstr "多授权"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
@@ -3366,7 +3339,6 @@ msgstr "无"
 #: app/assets/javascripts/bastion_katello/content-credentials/new/views/new-content-credential.html
 #: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-host-collections-table.html
@@ -3381,6 +3353,7 @@ msgstr "无"
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/edit-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filters.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/new-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
@@ -3446,7 +3419,6 @@ msgstr "无"
 #: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-content-views.html
 #: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
 #: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
@@ -3542,11 +3514,15 @@ msgstr "下一次同步"
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-release-version-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/errata-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
+#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-errata.html
 #: app/assets/javascripts/bastion_katello/content-views/views/content-views.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
+#: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
-#: app/assets/javascripts/bastion_katello/subscriptions/subscriptions.controller.js
+#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
+#: app/assets/javascripts/bastion_katello/content-hosts/details/content-host-details.controller.js
 msgid "No"
 msgstr "否"
 
@@ -3658,6 +3634,17 @@ msgid ""
 "the 'Add' tab."
 msgstr "无主机集合可显示，您可以选择 ‘添加’ 标签后添加主机集合。"
 
+#: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/http-proxy-service.js
+msgid "No HTTP Proxies found"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/http-proxy-service.js
+msgid "No HTTP Proxy"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 msgid "No matching results."
 msgstr "没有匹配的结果。"
@@ -3669,10 +3656,6 @@ msgstr "没有可以添加到此同步计划的产品。"
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 msgid "No products are have been added to this Sync Plan."
 msgstr "没有添加任何产品到此同步计划。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "No Products are provided by this Subscription."
-msgstr "此订阅未提供任何产品。"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
 msgid "No puppet modules found"
@@ -3706,22 +3689,14 @@ msgstr "没有任何储存库中包含这个软件包。"
 msgid "No Repositories contain this Puppet Module"
 msgstr "没有库包含此 Puppet 模块"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
-msgid "No repository content provided through this subscription."
-msgstr "没有通过这个订阅提供的库内容。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
-msgid "No repository content."
-msgstr "无库内容。"
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
 msgid "No repository sets provided through subscriptions."
 msgstr "没有通过订阅提供的库集合。"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "No subscription manifest imported"
-msgstr "未导入订阅清单"
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-rule-matching-package-modal.html
+msgid "No RPMs were matched"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
@@ -3739,6 +3714,11 @@ msgstr "未找到可用于 {{ $stateParams.moduleName }} 的版本"
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid "None"
 msgstr "无"
+
+#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
+msgid "Not Applicable"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Not installed"
@@ -3770,12 +3750,6 @@ msgstr "未同步"
 #: app/assets/javascripts/bastion_katello/content-views/views/content-views.html
 msgid "Not yet published"
 msgstr "尚未发布"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-msgid ""
-"Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a "
-"manifest will:"
-msgstr "注意：强烈建议不要删除订阅清单。删除订阅清单将会："
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Number of CPUs"
@@ -3920,6 +3894,7 @@ msgstr "覆盖至已启用"
 msgid "Package"
 msgstr "软件包"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 msgid "Package Actions"
 msgstr "软件包操作"
@@ -3958,6 +3933,7 @@ msgstr "用于储存库的软件包组："
 msgid "Package Information"
 msgstr "软件包信息"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 msgid "Package Install"
 msgstr "软件包安装"
@@ -3966,6 +3942,7 @@ msgstr "软件包安装"
 msgid "Package Installation, Removal, and Update"
 msgstr "软件包安装、删除及更新"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 msgid "Package Remove"
 msgstr "软件包删除"
@@ -3983,6 +3960,7 @@ msgstr "成功删除软件包。"
 msgid "Package successfully updated."
 msgstr "成功更新软件包"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 msgid "Package Update"
 msgstr "软件包更新"
@@ -3998,6 +3976,7 @@ msgstr "软件包更新"
 msgid "Package:"
 msgstr "软件包："
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 msgid "Package/Group Name"
 msgstr "软件包/组名称"
@@ -4019,10 +3998,18 @@ msgstr "软件包 <div>{{ library.counts.packages || 0 }}</div>"
 msgid "Packages are automatically Applicable if they are Upgradable"
 msgstr "如果软件包可以升级，则也可以自动应用"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
+msgid ""
+"Packages are corrupt, often leading to an error \"Package does not match "
+"intended download\" or \"Hash Sum mismatch\"."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-packages.html
 msgid "Packages for Errata:"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
@@ -4036,6 +4023,11 @@ msgstr "参数"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-manifests.html
 msgid "Part of a manifest list"
 msgstr "清单列表的一部分"
+
+#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
+#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
+msgid "Password"
+msgstr "密码"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
@@ -4053,6 +4045,7 @@ msgstr "粘贴内容凭证的内容"
 msgid "Path"
 msgstr "路径"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 msgid "Perform"
 msgstr "执行"
@@ -4060,16 +4053,13 @@ msgstr "执行"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
 msgid ""
 "Performs a complete sync, verifying the checksum of all packages afterwards."
-"  Any missing or corrupt RPMs will be re-downloaded.  This option will take "
-"the longest amount of time and is only relevant for yum repositories..  "
-"Choose this option if:"
+" Any missing or corrupt package will be re-downloaded. This option will take"
+" the longest amount of time. Choose this option if:"
 msgstr ""
-"执行完全同步，然后确认所有软件包的校验和。将重新下载丢失或损坏的 RPM。此选项将花费最长的时间，且只与 yum 库相关... "
-"在以下条件下，请选择此选项："
 
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Physical"
-msgstr "物理"
+#: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
+msgid "Please enter cron below"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/environments/details/environment-content.controller.js
 msgid "Please make sure a Content View is selected."
@@ -4143,10 +4133,6 @@ msgstr "以前的环境"
 msgid "Product"
 msgstr "产品"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-details.html
-msgid "Product Content"
-msgstr "产品内容"
-
 #: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 msgid "Product Count"
 msgstr "产品计数"
@@ -4158,10 +4144,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/errata/errata-type.filter.js
 msgid "Product Enhancement Advisory"
 msgstr "产品强化通知"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Product ID"
-msgstr "产品 ID"
 
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
 msgid "Product information for:"
@@ -4263,10 +4245,6 @@ msgstr "推广至 1 环境。"
 msgid "Promotion History"
 msgstr "推广历史记录"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Provided Products"
-msgstr "提供的产品"
-
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-dependencies.html
 msgid "Provides"
 msgstr "提供"
@@ -4360,7 +4338,6 @@ msgid "Puppet Modules for Content View:"
 msgstr "内容视图的 Puppet 模块："
 
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
 msgid "Quantity"
 msgstr "数量"
 
@@ -4371,10 +4348,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "RAM (GB)"
 msgstr "RAM (GB)"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/subscription-details.controller.js
-msgid "RAM: %s GB"
-msgstr "RAM: %s GB"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Range"
@@ -4400,16 +4373,7 @@ msgstr ""
 msgid "Recurring Logic"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "Red Hat CDN URL"
-msgstr "Red Hat CDN URL"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "Red Hat Provider Details"
-msgstr "Red Hat 供应商详情"
-
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
 msgid "Red Hat Repositories page"
 msgstr "Red Hat Repositories 页面启用。"
 
@@ -4417,21 +4381,9 @@ msgstr "Red Hat Repositories 页面启用。"
 msgid "Red Hat Repositories page."
 msgstr "Red Hat Repositories 页面。"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "Refresh Manifest"
-msgstr "刷新清单"
-
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "Refresh Table"
 msgstr "数显 表格"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Refreshing Manifest"
-msgstr "刷新清单"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "Refreshing manifest not supported by this manifest."
-msgstr "这个清单不支持刷新。"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
 msgid "Regenerate Repository Metadata"
@@ -4466,11 +4418,6 @@ msgstr "注册方式"
 msgid "Registry Name Pattern"
 msgstr "Registry 名称特征"
 
-#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
-#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
-msgid "Registry Password"
-msgstr "Registry 密码"
-
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
 msgid "Registry Search Parameter"
 msgstr ""
@@ -4483,14 +4430,6 @@ msgstr "要发现的 Registry"
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 msgid "Registry URL"
 msgstr "注册 URL"
-
-#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
-msgid "Registry username"
-msgstr "Registry 用户名"
-
-#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
-msgid "Registry Username"
-msgstr "Registry 用户名"
 
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-packages.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-module-streams.html
@@ -4540,10 +4479,6 @@ msgstr "删除 {{ contentView.name }}"
 msgid "Remove {{ table.numSelected  }} Container Image manifest?"
 msgid_plural "Remove {{ table.numSelected  }} Container Image manifests?"
 msgstr[0] ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-destroy-modal.html
-msgid "Remove {{ table.numSelected  }} Hosts?"
-msgstr "是否要删除 {{ table.numSelected  }} 主机？"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
 msgid "Remove Activation Key \"{{ activationKey.name }}\"?"
@@ -4595,13 +4530,13 @@ msgstr "删除"
 msgid "Remove Host Collection \"{{ hostCollection.name }}\"?"
 msgstr "是否要删除主机集合 \"{{ hostCollection.name }}\"？"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
-msgid "Remove Hosts"
-msgstr "删除主机"
-
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
 msgid "Remove Module"
 msgstr "删除模块"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
+msgid "Remove Module Stream"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter-details.html
 msgid "Remove Package Group"
@@ -4669,6 +4604,7 @@ msgstr "移除规则"
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-host-collections-table.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions-list.html
@@ -4717,10 +4653,6 @@ msgstr "从内容主机 \"%y\" 中删除 %x 主机集合。"
 msgid "Removed %x products from sync plan \"%y\"."
 msgstr "从同步计划 \"%y\" 中删除 %x 产品。"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Removing Manifest"
-msgstr "正在删除清单"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "Removing Repositories"
 msgstr "正在删除库"
@@ -4728,10 +4660,6 @@ msgstr "正在删除库"
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid "Repo Discovery"
 msgstr "库查找"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-products.html
-msgid "Repo Type"
-msgstr "库类型"
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
@@ -4835,6 +4763,10 @@ msgstr "已创建库"
 msgid "Repository Discovery"
 msgstr "查找储存库"
 
+#: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-http-proxy-modal.controller.js
+msgid "Repository HTTP proxy changes have been initiated in the background."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 msgid "Repository Label"
 msgstr "仓库标签"
@@ -4884,10 +4816,6 @@ msgstr "仓库类型"
 msgid "Repository URL"
 msgstr "仓库网址"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Repository URL updated"
-msgstr "已更新储存库 URL"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Repository:"
@@ -4897,23 +4825,17 @@ msgstr "储存库："
 msgid "Republish Repository Metadata"
 msgstr "重新发布库元数据"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-msgid ""
-"Require you to upload the subscription-manifest and re-attach subscriptions "
-"to hosts and activation keys."
-msgstr "要求您上传订阅清单，并重新将订阅附加至主机和激活码。"
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid "Requirements"
+msgstr ""
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Required Host"
-msgstr "所需主机"
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Requirements.yml"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-dependencies.html
 msgid "Requires"
 msgstr "要求"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
-msgid "Requires Virt-Who Usage"
-msgstr "要求使用 Virt-Who"
 
 #: app/assets/javascripts/bastion_katello/common/module-stream-actions.service.js
 msgid "Reset"
@@ -4925,14 +4847,17 @@ msgstr ""
 msgid "Reset to Default"
 msgstr "重置为默认值"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Resource"
-msgstr "资源"
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
+msgid "Resolving the selected Traces will reboot this host."
+msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "Restart"
 msgstr "重启"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "Restart Selected"
 msgstr "已选择重启"
@@ -4953,10 +4878,12 @@ msgstr "限制到架构"
 msgid "Result"
 msgstr "结果"
 
+#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Role"
 msgstr "角色"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-rule-matching-package-modal.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-helper.service.js
 #: app/assets/javascripts/bastion_katello/products/details/repositories/yum-content-units.service.js
@@ -4978,20 +4905,6 @@ msgstr "rpm 软件包"
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter.html
 msgid "RPMs"
 msgstr "RPMs"
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
-msgid ""
-"RPMs are corrupt, often leading to an error \"Package does not match "
-"intended download\"."
-msgstr "RPM 已损坏，通常导致错误“软件包与预期的下载不匹配”。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
-msgid "Rules Source"
-msgstr "规则源"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
-msgid "Rules Version"
-msgstr "规则版本"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
 msgid "Run Auto-Attach"
@@ -5121,12 +5034,6 @@ msgid ""
 msgstr ""
 "选择这个选项将导致 Katello 验证 upstream url 的 SSL 证书是否由受信 CA 签名。如果不想要此验证，请取消选择该项。"
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid ""
-"Selecting this option will result in the globally configured http proxy from"
-" not being used."
-msgstr "选择此选项将导致全局配置 http 代理服务器不被使用。"
-
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
 msgid ""
 "Selecting this option will result in the Version being completely deleted "
@@ -5146,7 +5053,7 @@ msgstr "服务等级"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Service Level (SLA)"
-msgstr ""
+msgstr "服务等级 (SLA)"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Set Release Version"
@@ -5174,6 +5081,10 @@ msgstr "显示全部"
 msgid "Show all Repository Sets in Organization"
 msgstr "显示组织中的所有库集合"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
+msgid "Show Matching Content"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Size"
 msgstr "大小"
@@ -5190,14 +5101,15 @@ msgstr "已同步智能代理服务器"
 msgid "Sockets"
 msgstr "插槽"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/subscription-details.controller.js
-msgid "Sockets: %s"
-msgstr "插槽：%s"
-
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/errata-details.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Solution"
 msgstr "解决方案"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
+#: app/assets/javascripts/bastion_katello/content-views/new/views/content-view-new.html
+msgid "Solve Dependencies"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 msgid ""
@@ -5233,8 +5145,8 @@ msgid "Source RPMs"
 msgstr "源 RPM"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
-msgid "Specific RPMs are throwing a 404 from yum or dnf."
-msgstr "特定 RPM 正从您的 yum 或 dnf 抛出 404。"
+msgid "Specific packages are throwing a 404 from the package-manager."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -5261,10 +5173,6 @@ msgstr "SSL 客户端证书"
 msgid "SSL Client Key"
 msgstr "SSL 客户端密钥"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Stacking ID"
-msgstr "堆栈 ID"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
 msgid "Standard sync, optimized for speed by bypassing any unneeded steps."
 msgstr "标准同步，免去任何不必要的步骤，针对速度进行了优化。"
@@ -5289,8 +5197,6 @@ msgstr "正在开始"
 
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
 msgid "Starts"
 msgstr "起始"
 
@@ -5299,7 +5205,6 @@ msgid "State"
 msgstr "状态"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-provisioning-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
@@ -5313,37 +5218,29 @@ msgstr "状态"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-host-bulk-module-streams-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
 #: app/assets/javascripts/bastion_katello/module-streams/views/partials/module-streams-table.html
 msgid "Stream"
 msgstr "流"
 
+#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
 msgid "Subscription Details"
 msgstr "订阅详情"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Subscription Info"
-msgstr "订阅信息"
 
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
 msgid "Subscription Management"
 msgstr "订阅管理"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest.html
-msgid "Subscription Manifest"
-msgstr "订阅清单"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
-msgid "Subscription Server Details"
-msgstr "订阅服务器详情"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-associations-content-hosts.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Subscription Status"
 msgstr "订阅状态"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid "Subscription UUID"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 msgid ""
@@ -5356,7 +5253,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
 msgid "Subscriptions"
 msgstr "订阅"
 
@@ -5396,6 +5292,10 @@ msgstr "成功将 %cv 版本从 %ver 推广为 %env。"
 #: app/assets/javascripts/bastion_katello/content-views/deletion/content-view-version-deletion-confirm.controller.js
 msgid "Successfully initiated removal of %cv version %ver."
 msgstr "成功删除 %cv 版本 %ver。"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/content-hosts-bulk-traces-modal.controller.js
+msgid "Successfully initiated restart of services."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/content-view-versions.controller.js
 msgid "Successfully promoted %cv version %ver to %env"
@@ -5446,6 +5346,7 @@ msgstr "成功更新订阅。"
 msgid "Successfully uploaded content:"
 msgstr "成功上传内容："
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-rule-matching-package-modal.html
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
@@ -5456,14 +5357,8 @@ msgstr "小结"
 
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
 msgid "Support Level"
 msgstr "支持等级"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Support Type"
-msgstr "支持类型"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync.html
@@ -5567,9 +5462,16 @@ msgstr "即将开始同步......"
 msgid "Synchronization is being cancelled..."
 msgstr "正在取消同步......"
 
+#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "System Purpose"
 msgstr "系统目的"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid ""
+"System Purpose allows you to set the system's intended use on your network "
+"and improves the accuracy of auto attaching subscriptions."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "System Purpose Status"
@@ -5582,10 +5484,6 @@ msgstr ""
 msgid "Tags"
 msgstr "标签"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-events.html
-msgid "Target"
-msgstr "目标"
-
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "Task Details"
 msgstr "任务详情"
@@ -5596,10 +5494,6 @@ msgstr "任务详情"
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks.html
 msgid "Tasks"
 msgstr "任务"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Temporary"
-msgstr "临时"
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 msgid ""
@@ -5615,7 +5509,7 @@ msgid ""
 "repository.docker_upstream_name\n"
 "content_view.label\n"
 "content_view.name\n"
-"content_view.version\n"
+"content_view_version.version\n"
 "product.name\n"
 "product.label\n"
 "lifecycle_environment.name\n"
@@ -5669,6 +5563,7 @@ msgstr "可在中国主机集合的内容主机中执行以下操作："
 msgid "The host has not reported any applicable packages for upgrade."
 msgstr "该主机尚未报告任何可升级的软件包。"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
 msgid ""
 "The host has not reported any installed packages, registering with "
@@ -5683,34 +5578,23 @@ msgstr ""
 "要求被附加到您选择的内容视图和生命周期环境的主机没有向其推广的内容。\n"
 "            有关管理和推广内容视图的详情，请查看 <a href=\"/content_views\">内容视图页</a> 。"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
-msgid ""
-"The katello-agent package is required to manage errata on this Host.\n"
-"        Please install the katello-agent package to manage errata on\n"
-"        {{ host.name }}."
-msgstr ""
-"在这台主机中管理勘误需要 katello-agent 软件包。\n"
-"        请安装 katello-agent 软件包以便在\n"
-"        {{ host.name }} 中管理勘误。"
-
-#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
-#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
-msgid ""
-"The katello-agent package is required to manage packages on this Host.\n"
-"      Please install the katello-agent package to manage packages on\n"
-"      {{ host.name }}. To install the package, connect directly to the\n"
-"      host from a terminal and use yum."
-msgstr ""
-"在这台主机中管理软件包需要安装 katello-agent 软件包。\n"
-"      请安装 katello-agent 软件包以便在\n"
-"      {{ host.name }} 中管理软件包。要安装软件包，请在终端\n"
-"      使用 yum 直接连接到主机。"
-
 #: app/assets/javascripts/bastion_katello/organizations/views/organization-selector.html
 msgid ""
 "The page you are attempting to access requires selecting a specific "
 "organization."
 msgstr "需要选择具体机构方可访问您尝试访问的页面。"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
+msgid ""
+"The remote execution feature is required to manage packages on this Host."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
+msgid ""
+"The Remote Execution plugin needs to be installed in order to resolve "
+"Traces."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/new/views/activation-key-new.html
 msgid ""
@@ -5721,17 +5605,6 @@ msgstr "所选环境不包含任何内容视图，请选择另一个环境。"
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
 msgid "The time the sync should happen in your current time zone."
 msgstr "在您当前所处的时区内，更新应发生的时间。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid ""
-"The uploaded manifest contains subscriptions that require the use of virt-"
-"who. Learn how to configure and use this tool at the <a "
-"href=\"https://access.redhat.com/articles/subscription-management-"
-"satellite-6\" target=\"_blank\">Subscription Management Home Page</a>."
-msgstr ""
-"上传的清单包括需要使 virt-who 的订阅。如需了解如何配置和使用这个工具的信息，请参阅<a "
-"href=\"https://access.redhat.com/articles/subscription-management-"
-"satellite-6\" target=\"_blank\">订阅管理主页</a>。"
 
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
 msgid ""
@@ -5747,13 +5620,13 @@ msgstr "这个机构中共有  {{ packageCount }} 个软件包，但没有任何
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
 msgid ""
-"There are currently no Deb Repositories associated with this Content View, "
+"There are currently no Apt Repositories associated with this Content View, "
 "you can add some by clicking on the \"Add\" tab above."
-msgstr "目前没有任何 Deb 存储库与此内容视图关联，您可以点击上面的“添加”标签添加一些存储库。"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
-msgid "There are currently no Deb Repositories to add to this Content View,"
-msgstr "目前没有在此内容视图中添加任何 Deb 存储库。"
+msgid "There are currently no Apt Repositories to add to this Content View,"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-docker-repositories.html
 msgid ""
@@ -5848,6 +5721,7 @@ msgid ""
 "selecting 'Sync Plans' under 'Hosts' in main menu."
 msgstr "无同步计划可用，您可以在主菜单中 ‘主机’ 下选择 ‘同步计划’ 后创建新的同步计划。"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "There are no Traces to display."
 msgstr "没有跟踪信息可显示。"
@@ -5861,12 +5735,6 @@ msgstr "目前没有进行任何增量更新任务。必须在应用现有更新
 #: app/assets/javascripts/bastion_katello/content-views/details/histories/views/content-view-history.html
 msgid "There is currently no history associated with this Content View."
 msgstr "目前没有与这个内容视图关联的历史记录。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-delete-modal.html
-msgid ""
-"This action should only be taken in extreme circumstances or for debugging "
-"purposes."
-msgstr "只能在极端环境中或者出于调试目的采取此操作。"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 msgid ""
@@ -5912,6 +5780,12 @@ msgstr ""
 "此操作也可能删除与主机链接的托管资源，例如虚拟机和 DNS 记录。\n"
 "          在<a href=\"/settings\">设置页面</a>上，将“取消注册时删除主机”设置更改为 false，以防止出现这种问题。"
 
+#: app/assets/javascripts/bastion_katello/subscriptions/views/content-access-mode-banner.html
+msgid ""
+"This organization has Simple Content Access enabled. Hosts can consume from "
+"all repositories in their Content View regardless of subscription status."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
 msgid ""
 "This Version cannot be deleted from some of the Lifecycle Environments due "
@@ -5926,9 +5800,18 @@ msgstr "这个版本没有与任何生命周期环境关联。"
 msgid "This version will be removed from:"
 msgstr "将删除这个版本："
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import-history.html
-msgid "Time"
-msgstr "时间"
+#: app/assets/javascripts/bastion_katello/content-views/new/views/content-view-new.html
+msgid ""
+"This will solve RPM and Module Stream dependencies on every publish of this Content View. Dependency solving significantly increases\n"
+"          publish time (publishes can take over three times as long) and filters will be ignored when adding packages to solve\n"
+"          dependencies. Also, certain scenarios involving errata may still cause dependency errors."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
+msgid ""
+"This will solve RPM and Module Stream dependencies on every publish of this Content View. Dependency solving significantly increases publish time (publishes can take over three times as long) and filters will be ignored when adding packages to solve\n"
+"            dependencies. Also, certain scenarios involving errata may still cause dependency errors."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
@@ -5945,14 +5828,10 @@ msgid "to manage them individually."
 msgstr "对其进行单独管理。"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
-msgid "To optionally report tracer information:"
-msgstr "可选报告追踪信息："
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
 msgid "To register a content host to this server, follow these steps."
 msgstr "请按照以下步骤在这台服务器中注册内容主机。"
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
 msgid "To report package & errata information:"
 msgstr "报告软件包和勘误信息："
 
@@ -5963,6 +5842,19 @@ msgstr "切换下拉菜单"
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
 msgid "Topic"
 msgstr "标题"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid ""
+"Tracer helps administrators identify applications that need to be restarted "
+"after a system is patched."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+msgid ""
+"Tracer helps administrators identify applications that need to be restarted "
+"after a system is patched. To optionally report tracer information:"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
@@ -5980,10 +5872,10 @@ msgstr "以下项的跟踪信息："
 #: app/assets/javascripts/bastion_katello/content-credentials/views/content-credentials.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/errata-details.html
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-events.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-errata.html
@@ -5993,8 +5885,6 @@ msgstr "以下项的跟踪信息："
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
 msgid "Type"
 msgstr "类型"
 
@@ -6050,11 +5940,13 @@ msgid "Unsupported Type!"
 msgstr "不支持的类型！"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
+#: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/common/module-stream-actions.service.js
 msgid "Update"
 msgstr "更新"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
 msgid "Update All Packages"
@@ -6111,7 +6003,6 @@ msgstr "升级所选"
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
 msgid "Upload"
 msgstr "上传"
 
@@ -6123,10 +6014,6 @@ msgstr "上传内容凭证文件"
 msgid "Upload File"
 msgstr "上传文件"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "Upload New Manifest"
-msgstr "上传新清单"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Upload Package"
 msgstr "上传软件包"
@@ -6135,9 +6022,15 @@ msgstr "上传软件包"
 msgid "Upload Puppet Module"
 msgstr "上传 puppet 模块"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/manifest-import.controller.js
-msgid "Uploading Manifest"
-msgstr "正在上传清单"
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid "Upload Requirements"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid ""
+"Upload Requirements.yml file <a class=\"fa fa-question-circle\" ng-show=\"repository.content_type === 'ansible_collection'\" uib-popover-html=\"requirementPopover\" popover-class=\"popover-large\" popover-trigger=\"'outsideClick'\" popover-append-to-body=\"true\">\n"
+"        </a>"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -6162,31 +6055,15 @@ msgstr "Upstream 密码"
 msgid "Upstream Repository Name"
 msgstr "Upstream 库名称"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
-msgid "Upstream Subscription"
-msgstr "Upstream 订阅"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-import.html
-msgid "Upstream Subscription Management Application"
-msgstr "Upstream 订阅管理应用程序"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Upstream Sync Policy"
 msgstr "Upstream 同步策略"
 
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
-msgid "Upstream Type"
-msgstr "Upstream 类型"
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Upstream URL"
 msgstr "Upstream URL"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/manifest/views/manifest-details.html
-msgid "Upstream User"
-msgstr "Upstream 用户"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -6206,8 +6083,18 @@ msgstr "要同步的注册 URL。例如：https://registry-1.docker.io/"
 msgid "URL to Discover"
 msgstr "要查找的 URL"
 
+#: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Usage Type"
+msgstr "使用类型"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Use Ctrl-click to multi-select/deselect items."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/http-proxy-service.js
+msgid "Use specific HTTP Proxy"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
@@ -6227,6 +6114,11 @@ msgstr "用作"
 msgid "User"
 msgstr "用户"
 
+#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
+#: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
+msgid "Username"
+msgstr "用户名"
+
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
 "Username of the upstream repository user for authentication. Leave empty if "
@@ -6240,10 +6132,6 @@ msgstr "使用用户名和密码："
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
 msgid "Using an Activation Key:"
 msgstr "使用认证码："
-
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
-msgid "UUID"
-msgstr "UUID"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
 msgid "Validate Content Sync"
@@ -6259,9 +6147,11 @@ msgstr "变体"
 msgid "Verify SSL"
 msgstr "确认 SSL"
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/content-view-deletion.html
 #: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite-available-content-views.html
 #: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite-content-views-list.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/histories/views/content-view-history.html
 #: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
@@ -6285,6 +6175,7 @@ msgstr "确认 SSL"
 #: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-info.html
 #: app/assets/javascripts/bastion_katello/ostree-branches/views/ostree-branches.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-debs.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ostree-branches.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
@@ -6335,6 +6226,7 @@ msgstr "通过 Katello Agent"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
@@ -6343,6 +6235,7 @@ msgstr "通过远程执行"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
@@ -6357,21 +6250,13 @@ msgstr "查看仓库的容器镜像列表："
 msgid "View Docker Tags for Repository:"
 msgstr "查看仓库的 Docker 标签："
 
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Virt-Who Usage Required"
-msgstr "需要使用 Virt-Who"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
-msgid "Virtual"
-msgstr "虚拟"
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/content-hosts-bulk-traces-modal.controller.js
+msgid "View job invocations."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Virtual Guest"
 msgstr "虚拟机"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/details/views/subscription-info.html
-msgid "Virtual Guest From"
-msgstr "虚拟客户机"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Virtual Guests"
@@ -6406,7 +6291,15 @@ msgid ""
 "policy will download all packages within the repository."
 msgstr "验证内容时，使用“按需”下载策略的库将在库内下载所有软件包。"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
+msgid ""
+"With this option selected, a puppet environment will be created during "
+"publish and promote even if no puppet modules have been added to the Content"
+" View"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
+#: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
 msgid "Working"
 msgstr "工作中"
 
@@ -6416,14 +6309,33 @@ msgstr "工作中"
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-release-version-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/errata-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
+#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-errata.html
 #: app/assets/javascripts/bastion_katello/content-views/views/content-views.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
+#: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-http-proxy-modal.html
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-sync-plan-modal.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/subscriptions/subscriptions.controller.js
+#: app/assets/javascripts/bastion_katello/activation-keys/details/activation-key-details.controller.js
+#: app/assets/javascripts/bastion_katello/content-hosts/details/content-host-details.controller.js
 msgid "Yes"
 msgstr "是"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid ""
+"You can upload a requirements.yml file above to auto-fill contents <b>OR</b>"
+" paste contents of <a ng-"
+"href=\"https://docs.ansible.com/ansible/devel/dev_guide/collections_tech_preview.html"
+"#install-multiple-collections-with-a-requirements-file\" target=\"_blank\"> "
+"Requirements.yml </a>below."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid ""
+"You can upload a requirements.yml file below to auto-fill contents or paste "
+"contents of requirement.yml here"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid ""
@@ -6536,11 +6448,16 @@ msgstr "您目前没有任何与此内容凭证关联的产品。"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
-#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-add-subscriptions.html
 msgid ""
 "You currently don't have any Products to subscribe to, you can add Products "
 "after selecting 'Products' under 'Content' in the main menu"
 msgstr "您目前没有任何要订阅的产品，在主菜单的 ‘内容’ 项下选择 ‘产品’ 后即可添加产品。"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-add-subscriptions.html
+msgid ""
+"You currently don't have any Products to subscribe to. You can add Products "
+"after selecting 'Products' under 'Content' in the main menu."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/views/products.html
 msgid ""
@@ -6581,12 +6498,8 @@ msgstr "您目前没有任何与这个激活码关联的订阅，选择‘添加
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions-list.html
 msgid ""
 "You currently don't have any Subscriptions associated with this Content "
-"Host, you can add Subscriptions after selecting the 'Add' tab."
-msgstr "您目前没有任何订阅，可使用右侧标记为 ‘管理清单’ 的按钮导入清单，从而添加订阅。"
-
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
-msgid "You currently don't have any Subscriptions."
-msgstr "您目前没有任何订阅。"
+"Host. You can add Subscriptions after selecting the 'Add' tab."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/sync-plans/views/sync-plans.html
 msgid ""
@@ -6712,6 +6625,7 @@ msgstr "您的搜索返回 0 个生命周期环境。"
 msgid "Your search returned zero Module Streams."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-debs-installed.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
@@ -6755,10 +6669,13 @@ msgstr "您的搜索返回 0 个库集合。"
 msgid "Your search returned zero results."
 msgstr "您的搜索返回 0 个结果。"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-rule-matching-package-modal.html
+msgid "Your search returned zero RPMs"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions-list.html
-#: app/assets/javascripts/bastion_katello/subscriptions/views/subscriptions.html
 msgid "Your search returned zero Subscriptions."
 msgstr "您的搜索返回 0 个订阅。"
 

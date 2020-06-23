@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: katello 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-18 16:45+0000\n"
-"PO-Revision-Date: 2020-05-18 16:45+0000\n"
+"POT-Creation-Date: 2020-06-23 16:04+0000\n"
+"PO-Revision-Date: 2020-06-23 16:04+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -4009,30 +4009,30 @@ msgstr ""
 #: ../app/lib/actions/katello/environment/library_create.rb:24
 #: ../app/lib/actions/katello/organization/create.rb:35
 #: ../app/lib/actions/katello/repository/create.rb:58
-#: ../app/lib/actions/katello/repository/create_root.rb:17 action_names.rb:9
+#: ../app/lib/actions/katello/repository/create_root.rb:17 action_names.rb:14
 msgid "Create"
 msgstr ""
 
-#: ../app/lib/actions/katello/activation_key/destroy.rb:19 action_names.rb:70
+#: ../app/lib/actions/katello/activation_key/destroy.rb:19 action_names.rb:66
 msgid "Delete Activation Key"
 msgstr ""
 
 #: ../app/lib/actions/katello/applicability/host/generate.rb:22
-#: action_names.rb:69
+#: action_names.rb:65
 msgid "Generate host applicability"
 msgstr ""
 
-#: ../app/lib/actions/katello/applicability/hosts/generate.rb:17
-#: action_names.rb:68
+#: ../app/lib/actions/katello/applicability/hosts/bulk_generate.rb:26
+#: action_names.rb:64
 msgid "Bulk generate applicability for hosts"
 msgstr ""
 
-#: ../app/lib/actions/katello/applicability/repository/regenerate.rb:20
-#: action_names.rb:67
+#: ../app/lib/actions/katello/applicability/repository/regenerate.rb:25
+#: action_names.rb:63
 msgid "Generate repository applicability"
 msgstr ""
 
-#: ../app/lib/actions/katello/capsule_content/sync.rb:14 action_names.rb:66
+#: ../app/lib/actions/katello/capsule_content/sync.rb:14 action_names.rb:62
 msgid "Synchronize smart proxy"
 msgstr ""
 
@@ -4053,7 +4053,7 @@ msgstr ""
 #: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:295
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/DeleteDialog.js:27
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:77
-#: action_names.rb:15
+#: action_names.rb:16
 msgid "Delete"
 msgstr ""
 
@@ -4113,7 +4113,7 @@ msgid "Cannot promote environment out of sequence. Use force to bypass restricti
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view/promote_to_environment.rb:38
-#: action_names.rb:62
+#: action_names.rb:58
 msgid "Promotion to Environment"
 msgstr ""
 
@@ -4127,7 +4127,7 @@ msgid ""
 "arameter."
 msgstr ""
 
-#: ../app/lib/actions/katello/content_view/publish.rb:72 action_names.rb:61
+#: ../app/lib/actions/katello/content_view/publish.rb:72 action_names.rb:57
 msgid "Publish"
 msgstr ""
 
@@ -4139,7 +4139,7 @@ msgstr ""
 msgid "Cannot delete version while it is in environment %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/content_view/remove.rb:86 action_names.rb:60
+#: ../app/lib/actions/katello/content_view/remove.rb:86 action_names.rb:56
 msgid "Remove Versions and Associations"
 msgstr ""
 
@@ -4166,12 +4166,12 @@ msgid ""
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view/remove_from_environment.rb:35
-#: action_names.rb:59
+#: action_names.rb:55
 msgid "Remove from Environment"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view/remove_version.rb:26
-#: action_names.rb:58
+#: action_names.rb:54
 msgid "Remove Version"
 msgstr ""
 
@@ -4184,12 +4184,12 @@ msgid "Create Repositories"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/export.rb:27
-#: ../app/lib/actions/katello/repository/export.rb:63 action_names.rb:20
+#: ../app/lib/actions/katello/repository/export.rb:63 action_names.rb:11
 msgid "Export"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/incremental_update.rb:15
-#: action_names.rb:57
+#: action_names.rb:53
 msgid "Incremental Update"
 msgstr ""
 
@@ -4216,16 +4216,16 @@ msgid "Republish Repositories of %{name} %{version}"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/republish_repositories.rb:31
-#: action_names.rb:56
+#: action_names.rb:52
 msgid "Republish Version Repositories"
 msgstr ""
 
-#: ../app/lib/actions/katello/environment/destroy.rb:36 action_names.rb:55
+#: ../app/lib/actions/katello/environment/destroy.rb:36 action_names.rb:51
 msgid "Delete Lifecycle Environment"
 msgstr ""
 
 #: ../app/lib/actions/katello/environment/publish_repositories.rb:33
-#: action_names.rb:54
+#: action_names.rb:50
 msgid "Publish Lifecycle Environment Repositories"
 msgstr ""
 
@@ -4244,7 +4244,7 @@ msgid "Unknown"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/attach_subscriptions.rb:45
-#: action_names.rb:53
+#: action_names.rb:48
 msgid "Attach subscriptions"
 msgstr ""
 
@@ -4252,7 +4252,7 @@ msgstr ""
 msgid "Destroy Content Host %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/destroy.rb:32 action_names.rb:51
+#: ../app/lib/actions/katello/host/destroy.rb:32 action_names.rb:18
 msgid "Destroy Content Host"
 msgstr ""
 
@@ -4265,7 +4265,7 @@ msgid "No applicable errata for %s, skipping"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/erratum/applicable_errata_install.rb:31
-#: action_names.rb:50
+#: action_names.rb:47
 msgid "Install Applicable Errata"
 msgstr ""
 
@@ -4277,7 +4277,7 @@ msgstr ""
 msgid "Install erratum for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/erratum/install.rb:32 action_names.rb:43
+#: ../app/lib/actions/katello/host/erratum/install.rb:32 action_names.rb:19
 msgid "Install erratum"
 msgstr ""
 
@@ -4293,7 +4293,7 @@ msgstr ""
 msgid "Install package for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/install.rb:23 action_names.rb:46
+#: ../app/lib/actions/katello/host/package/install.rb:23 action_names.rb:20
 msgid "Install package"
 msgstr ""
 
@@ -4305,7 +4305,7 @@ msgstr ""
 msgid "Remove package for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/remove.rb:21 action_names.rb:45
+#: ../app/lib/actions/katello/host/package/remove.rb:21 action_names.rb:44
 msgid "Remove package"
 msgstr ""
 
@@ -4317,7 +4317,7 @@ msgstr ""
 msgid "Update package for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/update.rb:23 action_names.rb:48
+#: ../app/lib/actions/katello/host/package/update.rb:23 action_names.rb:21
 msgid "Update package"
 msgstr ""
 
@@ -4330,7 +4330,7 @@ msgid "Update of all packages requested"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/package_group/install.rb:20
-#: action_names.rb:49
+#: action_names.rb:22
 msgid "Install package group"
 msgstr ""
 
@@ -4338,7 +4338,8 @@ msgstr ""
 msgid "Installation of package group(s) requested: %{groups}"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package_group/remove.rb:18 action_names.rb:2
+#: ../app/lib/actions/katello/host/package_group/remove.rb:18
+#: action_names.rb:43
 msgid "Remove package group"
 msgstr ""
 
@@ -4354,7 +4355,8 @@ msgstr ""
 msgid "Remove subscriptions from %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/remove_subscriptions.rb:40 action_names.rb:3
+#: ../app/lib/actions/katello/host/remove_subscriptions.rb:40
+#: action_names.rb:23
 msgid "Remove subscriptions"
 msgstr ""
 
@@ -4367,7 +4369,7 @@ msgid "Update Content Overrides to %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/update_content_overrides.rb:32
-#: action_names.rb:4
+#: action_names.rb:41
 msgid "Update Content Overrides"
 msgstr ""
 
@@ -4376,7 +4378,7 @@ msgstr ""
 msgid "Host %s has not been registered with subscription-manager."
 msgstr ""
 
-#: ../app/lib/actions/katello/host/update_content_view.rb:18 action_names.rb:5
+#: ../app/lib/actions/katello/host/update_content_view.rb:18 action_names.rb:42
 msgid "Update for host"
 msgstr ""
 
@@ -4389,7 +4391,7 @@ msgid "Host %{name} cannot be assigned release version %{release_version}."
 msgstr ""
 
 #: ../app/lib/actions/katello/host/update_release_version.rb:21
-#: action_names.rb:6
+#: action_names.rb:24
 msgid "Update release version for host"
 msgstr ""
 
@@ -4402,7 +4404,7 @@ msgid "Package Profile Update for %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/upload_package_profile.rb:22
-#: action_names.rb:7
+#: action_names.rb:40
 msgid "Package Profile Update"
 msgstr ""
 
@@ -4410,11 +4412,11 @@ msgstr ""
 msgid "Combined Profile Update for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/upload_profiles.rb:24 action_names.rb:8
+#: ../app/lib/actions/katello/host/upload_profiles.rb:24 action_names.rb:39
 msgid "Combined Profile Update"
 msgstr ""
 
-#: ../app/lib/actions/katello/organization/destroy.rb:30 action_names.rb:10
+#: ../app/lib/actions/katello/organization/destroy.rb:30 action_names.rb:38
 msgid "Destroy"
 msgstr ""
 
@@ -4446,7 +4448,7 @@ msgstr ""
 msgid "Cannot delete redhat product content"
 msgstr ""
 
-#: ../app/lib/actions/katello/product/create.rb:38 action_names.rb:11
+#: ../app/lib/actions/katello/product/create.rb:38 action_names.rb:25
 msgid "Product Create"
 msgstr ""
 
@@ -4460,7 +4462,7 @@ msgid ""
 " %{product}, %{view_versions}"
 msgstr ""
 
-#: ../app/lib/actions/katello/product/destroy.rb:61 action_names.rb:12
+#: ../app/lib/actions/katello/product/destroy.rb:61 action_names.rb:17
 msgid "Delete Product"
 msgstr ""
 
@@ -4479,7 +4481,7 @@ msgstr ""
 
 #: ../app/lib/actions/katello/provider/update.rb:12
 #: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:186
-#: action_names.rb:13
+#: action_names.rb:2
 msgid "Update"
 msgstr ""
 
@@ -4496,7 +4498,7 @@ msgid "Cannot publish a link repository if multiple component clones are specifi
 msgstr ""
 
 #: ../app/lib/actions/katello/repository/destroy_package_group.rb:21
-#: action_names.rb:17
+#: action_names.rb:12
 msgid "Delete Package Group"
 msgstr ""
 
@@ -4513,7 +4515,7 @@ msgid ""
 msgstr ""
 
 #: ../app/lib/actions/katello/repository/import_upload.rb:57
-#: ../app/lib/actions/katello/repository/upload_files.rb:45 action_names.rb:23
+#: ../app/lib/actions/katello/repository/upload_files.rb:45 action_names.rb:5
 msgid "Upload into"
 msgstr ""
 
@@ -4525,47 +4527,50 @@ msgstr ""
 msgid "Can only remove content from within the Default Content View"
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/remove_content.rb:56
-#: action_names.rb:29
+#: ../app/lib/actions/katello/repository/remove_content.rb:56 action_names.rb:8
 msgid "Remove Content"
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/sync.rb:32
+#: ../app/lib/actions/katello/repository/sync.rb:31
 msgid "Unable to sync repo. This repository does not have a feed url."
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/sync.rb:33
+#: ../app/lib/actions/katello/repository/sync.rb:32
 msgid "Cannot validate contents on non-yum/deb repositories."
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/sync.rb:34
+#: ../app/lib/actions/katello/repository/sync.rb:33
 msgid "Cannot skip metadata check on non-yum repositories."
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/sync.rb:84
+#: ../app/lib/actions/katello/repository/sync.rb:83
 msgid "Synchronize: Validate Content"
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/sync.rb:86
+#: ../app/lib/actions/katello/repository/sync.rb:85
 msgid "Synchronize: Skip Metadata Check"
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/sync.rb:88 action_names.rb:30
+#: ../app/lib/actions/katello/repository/sync.rb:87 action_names.rb:33
 msgid "Synchronize"
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/upload_errata.rb:33 action_names.rb:34
+#: ../app/lib/actions/katello/repository/update_cv_repo_cert_guard.rb:12
+msgid "Updating repository authentication configuration"
+msgstr ""
+
+#: ../app/lib/actions/katello/repository/upload_errata.rb:33 action_names.rb:35
 msgid "Upload errata into"
 msgstr ""
 
 #: ../app/lib/actions/katello/repository/upload_package_group.rb:28
-#: action_names.rb:35
+#: action_names.rb:36
 msgid "Create Package Group"
 msgstr ""
 
 #: ../app/lib/actions/katello/repository_set/disable_repository.rb:6
 #: ../webpack/scenes/RedHatRepositories/components/EnabledRepository/EnabledRepositoryContent.js:10
-#: action_names.rb:36
+#: action_names.rb:3
 msgid "Disable"
 msgstr ""
 
@@ -4574,7 +4579,7 @@ msgid "Repository not found"
 msgstr ""
 
 #: ../app/lib/actions/katello/repository_set/enable_repository.rb:6
-#: action_names.rb:37
+#: action_names.rb:4
 msgid "Enable"
 msgstr ""
 
@@ -4582,7 +4587,7 @@ msgstr ""
 msgid "The repository is already enabled"
 msgstr ""
 
-#: ../app/lib/actions/katello/sync_plan/run.rb:36 action_names.rb:38
+#: ../app/lib/actions/katello/sync_plan/run.rb:36 action_names.rb:37
 msgid "Run Sync Plan:"
 msgstr ""
 
@@ -5757,9 +5762,9 @@ msgstr ""
 
 #: ../app/models/katello/concerns/smart_proxy_extensions.rb:57
 #: ../app/models/katello/content_view_erratum_filter_rule.rb:26
-#: ../app/models/katello/root_repository.rb:75
-#: ../app/models/katello/root_repository.rb:79
-#: ../app/models/katello/root_repository.rb:83
+#: ../app/models/katello/root_repository.rb:78
+#: ../app/models/katello/root_repository.rb:82
+#: ../app/models/katello/root_repository.rb:86
 msgid "must be one of the following: %s"
 msgstr ""
 
@@ -6253,6 +6258,10 @@ msgstr ""
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr ""
 
+#: ../app/models/katello/pulp3/content_guard.rb:8
+msgid "No Content Guard configured!"
+msgstr ""
+
 #: ../app/models/katello/pulp_sync_status.rb:94
 msgid "One or more packages failed to sync properly."
 msgstr ""
@@ -6319,108 +6328,108 @@ msgstr ""
 msgid "Successfully synchronized."
 msgstr ""
 
-#: ../app/models/katello/repository.rb:484
+#: ../app/models/katello/repository.rb:488
 msgid "Cannot clone into the Default Content View"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:491
+#: ../app/models/katello/repository.rb:495
 msgid "View %{view} has not been promoted to %{env}"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:496
+#: ../app/models/katello/repository.rb:500
 msgid "Repository has already been cloned to %{cv_name} in environment %{to_env}"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:661
+#: ../app/models/katello/repository.rb:665
 msgid "Duplicate branches specified - %{branches}"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:675
+#: ../app/models/katello/repository.rb:679
 msgid ""
 "Repository cannot be deleted since it has already been included in a published"
 " Content View. Please delete all Content View versions containing this reposit"
 "ory before attempting to delete it."
 msgstr ""
 
-#: ../app/models/katello/repository.rb:726
+#: ../app/models/katello/repository.rb:730
 msgid "This is not a linked repository"
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:133
+#: ../app/models/katello/root_repository.rb:136
 msgid "Cannot set attribute %{attr} for content type %{type}"
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:141
+#: ../app/models/katello/root_repository.rb:144
 msgid ""
 "Cannot sync file:// repositories with On Demand or Background Download Policie"
 "s"
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:147
+#: ../app/models/katello/root_repository.rb:150
 msgid "cannot be blank when Repository URL is provided."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:148
+#: ../app/models/katello/root_repository.rb:151
 msgid "Upstream Name cannot be blank when Repository URL is provided."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:154
+#: ../app/models/katello/root_repository.rb:157
 msgid ""
 "Container Image Repositories are not protected at this time. They need to be p"
 "ublished via http to be available to containers."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:161
+#: ../app/models/katello/root_repository.rb:164
 msgid "cannot be set for non-yum repositories."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:167
+#: ../app/models/katello/root_repository.rb:170
 msgid ""
 "Checksum type cannot be set for yum repositories with on demand download polic"
 "y."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:173
+#: ../app/models/katello/root_repository.rb:176
 msgid "OSTree Repositories cannot be unprotected."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:201
+#: ../app/models/katello/root_repository.rb:204
 msgid "cannot be set for non-ostree repositories."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:208
+#: ../app/models/katello/root_repository.rb:211
 msgid "Ignorable content can be only set for Yum repositories."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:210
+#: ../app/models/katello/root_repository.rb:213
 msgid "Invalid value specified for ignorable content."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:212
+#: ../app/models/katello/root_repository.rb:215
 msgid "Invalid value specified for ignorable content. Permissible values %s"
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:219
+#: ../app/models/katello/root_repository.rb:222
 msgid "Invalid value specified for Container Image repositories."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:226
+#: ../app/models/katello/root_repository.rb:229
 msgid "Upstream username and password may only be set on custom repositories."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:228
+#: ../app/models/katello/root_repository.rb:231
 msgid "Upstream password requires upstream username be set."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:230
+#: ../app/models/katello/root_repository.rb:233
 msgid "Upstream username requires upstream password be set."
 msgstr ""
 
-#: ../app/models/katello/root_repository.rb:308
+#: ../app/models/katello/root_repository.rb:311
 msgid "Cannot calculate name for custom repos"
 msgstr ""
 
-#: ../app/models/katello/subscription.rb:56
+#: ../app/models/katello/subscription.rb:58
 #: ../app/models/katello/subscription_status.rb:11
 msgid "Subscription"
 msgstr ""
@@ -6916,7 +6925,15 @@ msgstr ""
 msgid "Host Tasks Workers Pool Size"
 msgstr ""
 
-#: ../app/models/setting/content.rb:178
+#: ../app/models/setting/content.rb:149
+msgid "Number of host applicability calculations to process per task."
+msgstr ""
+
+#: ../app/models/setting/content.rb:150
+msgid "Applicability Batch Size"
+msgstr ""
+
+#: ../app/models/setting/content.rb:180
 msgid "There is no such HTTP proxy"
 msgstr ""
 
@@ -7033,7 +7050,7 @@ msgstr ""
 #: ../db/seeds.d/109-katello-notification-blueprints.rb:59
 #: ../lib/katello/plugin.rb:12 ../webpack/containers/Application/config.js:23
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionDetails.js:69
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:189
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:194
 #: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:229
 msgid "Subscriptions"
 msgstr ""
@@ -8432,31 +8449,31 @@ msgstr ""
 msgid "Exceeds available quantity"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:66
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:71
 msgid "This is disabled because disconnected mode is enabled."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:68
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:73
 msgid "This is disabled because a manifest related task is in progress."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:70
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:75
 msgid "This is disabled because no subscriptions are selected."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:72
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:77
 msgid "This is disabled because no manifest has been uploaded."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:177
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:182
 msgid "There are no Subscriptions to display"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:178
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:183
 msgid "Import a Manifest to manage your Entitlements."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:181
+#: ../webpack/scenes/Subscriptions/SubscriptionsPage.js:186
 msgid "Import a Manifest"
 msgstr ""
 
@@ -8617,98 +8634,98 @@ msgstr ""
 msgid "Task ${task.humanized.action} has started."
 msgstr ""
 
-#: action_names.rb:14
-msgid "Update http proxy"
-msgstr ""
-
-#: action_names.rb:16
-msgid "Reindex subscriptions"
-msgstr ""
-
-#: action_names.rb:18
-msgid "Discover"
-msgstr ""
-
-#: action_names.rb:19
-msgid "Errata mail"
-msgstr ""
-
-#: action_names.rb:21
-msgid "Fetch pxe files"
-msgstr ""
-
-#: action_names.rb:22
-msgid "Filtered index content"
-msgstr ""
-
-#: action_names.rb:24
-msgid "Index content"
-msgstr ""
-
-#: action_names.rb:25
-msgid "Index errata"
-msgstr ""
-
-#: action_names.rb:26
-msgid "Index module streams"
-msgstr ""
-
-#: action_names.rb:27
-msgid "Index package groups"
-msgstr ""
-
-#: action_names.rb:28
-msgid "Instance update"
-msgstr ""
-
-#: action_names.rb:31
-msgid "Update content urls"
-msgstr ""
-
-#: action_names.rb:32
-msgid "Update http proxy details"
-msgstr ""
-
-#: action_names.rb:33
+#: action_names.rb:6
 msgid "Update redhat repository"
 msgstr ""
 
-#: action_names.rb:39
-msgid "Action with sub plans"
+#: action_names.rb:7
+msgid "Update http proxy details"
 msgstr ""
 
-#: action_names.rb:40
-msgid "Import facts"
+#: action_names.rb:9
+msgid "Index module streams"
 msgstr ""
 
-#: action_names.rb:41
-msgid "Import Puppet classes"
+#: action_names.rb:10
+msgid "Filtered index content"
 msgstr ""
 
-#: action_names.rb:42
-msgid "Abstract async task"
+#: action_names.rb:13
+msgid "Discover"
 msgstr ""
 
-#: action_names.rb:44
+#: action_names.rb:15
+msgid "Update http proxy"
+msgstr ""
+
+#: action_names.rb:26
+msgid "Reindex subscriptions"
+msgstr ""
+
+#: action_names.rb:27
+msgid "Errata mail"
+msgstr ""
+
+#: action_names.rb:28
+msgid "Fetch pxe files"
+msgstr ""
+
+#: action_names.rb:29
+msgid "Index content"
+msgstr ""
+
+#: action_names.rb:30
+msgid "Index errata"
+msgstr ""
+
+#: action_names.rb:31
+msgid "Index package groups"
+msgstr ""
+
+#: action_names.rb:32
+msgid "Instance update"
+msgstr ""
+
+#: action_names.rb:34
+msgid "Update content urls"
+msgstr ""
+
+#: action_names.rb:45
 msgid "Hypervisors update"
 msgstr ""
 
-#: action_names.rb:47
+#: action_names.rb:46
 msgid "Hypervisors"
 msgstr ""
 
-#: action_names.rb:52
+#: action_names.rb:49
 msgid "Auto attach subscriptions"
 msgstr ""
 
-#: action_names.rb:63
+#: action_names.rb:59
 msgid "Promote"
 msgstr ""
 
-#: action_names.rb:64
+#: action_names.rb:60
 msgid "Incremental Update of  Content View Version(s) "
 msgstr ""
 
-#: action_names.rb:65
+#: action_names.rb:61
 msgid "Sync capsule"
+msgstr ""
+
+#: action_names.rb:67
+msgid "Abstract async task"
+msgstr ""
+
+#: action_names.rb:68
+msgid "Import Puppet classes"
+msgstr ""
+
+#: action_names.rb:69
+msgid "Import facts"
+msgstr ""
+
+#: action_names.rb:70
+msgid "Action with sub plans"
 msgstr ""
