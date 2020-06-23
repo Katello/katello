@@ -46,6 +46,17 @@ module Katello
           assert_equal @@srpm_names[0],
             ::Katello::Pulp3::Srpm.new(@@srpms.min_by(&:name).pulp_id).backend_data["name"]
         end
+
+        def test_sync_skipped_srpm
+          sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+          @repo.root.update!(ignorable_content: ["srpm"])
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+          @repo.reload
+          Katello::Srpm.import_for_repository(@repo)
+          @repo.reload
+          total_repository_srpms = Katello::RepositorySrpm.where(repository_id: @repo.id).count
+          assert_equal total_repository_srpms, 0
+        end
       end
 
       class SrpmNonVcrTest < ActiveSupport::TestCase

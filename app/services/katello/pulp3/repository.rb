@@ -48,6 +48,10 @@ module Katello
         nil
       end
 
+      def skip_types
+        nil
+      end
+
       def content_service
         Katello::Pulp3::Content
       end
@@ -190,7 +194,10 @@ module Katello
       end
 
       def sync
-        repository_sync_url_data = api.class.repository_sync_url_class.new(remote: repo.remote_href, mirror: repo.root.mirror_on_sync)
+        sync_url_params = {remote: repo.remote_href, mirror: repo.root.mirror_on_sync}
+        skip_type_param = skip_types
+        sync_url_params[:skip_types] = skip_type_param if skip_type_param
+        repository_sync_url_data = api.class.repository_sync_url_class.new(sync_url_params)
         [api.repositories_api.sync(repository_reference.repository_href, repository_sync_url_data)]
       end
 
