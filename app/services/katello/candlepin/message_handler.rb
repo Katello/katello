@@ -81,9 +81,8 @@ module Katello
       end
 
       def delete_pool
-        if pool
-          Rails.logger.info "deleting pool #{pool.id} from Katello"
-          pool.destroy!
+        if Katello::Pool.where(:cp_id => pool_id).destroy_all.any?
+          Rails.logger.info "deleted pool #{pool_id} from Katello"
         end
       end
     end
