@@ -13,6 +13,7 @@ module Katello
       cert_path = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt"
       cert = File.read(cert_path)
       Cert::Certs.stubs(:ca_cert).returns(cert)
+      Katello::Pulp3::ContentGuard.import(smart_proxy, true)
       service = repo.backend_service(smart_proxy)
       service.class.any_instance.stubs(:generate_backend_object_name).returns(repo.pulp_id)
 

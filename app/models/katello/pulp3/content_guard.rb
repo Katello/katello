@@ -5,7 +5,7 @@ module Katello
         return unless (count == 0 || force)
         content_guard_api = Katello::Pulp3::Api::ContentGuard.new(smart_proxy)
         content_guard = content_guard_api.list&.results&.first
-        fail _("No Content Guard configured!") unless content_guard
+        return unless content_guard
         katello_content_guard = self.new(name: content_guard.name, pulp_href: content_guard.pulp_href)
         katello_content_guard.save!
       end
