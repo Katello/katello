@@ -23,6 +23,3 @@ export const selectIsTaskPending = (state) => {
   }
   return false;
 };
-
-export const selectTableSettings = (state, tableName) =>
-  state.katello.settings.tables[tableName] || undefined;

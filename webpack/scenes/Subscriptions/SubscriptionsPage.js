@@ -13,6 +13,7 @@ import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
 import { manifestExists } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
+import { CONTENT_DISCONNECTED } from '../Settings/SettingsConstants';
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
 import {
@@ -63,8 +64,8 @@ class SubscriptionsPage extends Component {
   }
 
   getDisabledReason(deleteButton) {
-    const { task, subscriptions, organization } = this.props;
-    const { disconnected } = subscriptions;
+    const { task, settings, organization } = this.props;
+    const { disconnected } = settings;
     let disabledReason = null;
 
     if (disconnected) {
@@ -95,7 +96,7 @@ class SubscriptionsPage extends Component {
     } = this.props;
 
     pollTasks();
-    loadSetting('content_disconnected');
+    loadSetting(CONTENT_DISCONNECTED);
     loadSubscriptions();
     await loadTables();
     loadTableColumns(subscriptionTableSettings);
@@ -106,7 +107,7 @@ class SubscriptionsPage extends Component {
     const {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
-      searchQuery, updateSearchQuery, simpleContentAccess,
+      searchQuery, updateSearchQuery, simpleContentAccess, settings,
       task, activePermissions, subscriptions, organization, subscriptionTableSettings,
     } = this.props;
     // Basic permissions - should we even show this page?
@@ -121,7 +122,7 @@ class SubscriptionsPage extends Component {
       canImportManifest,
       canEditOrganizations,
     } = permissions;
-    const { disconnected } = subscriptions;
+    const { disconnected } = settings;
     const disableManifestActions = !!task || disconnected;
 
     const openManageManifestModal = () => this.props.setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
@@ -268,8 +269,10 @@ SubscriptionsPage.propTypes = {
   updateQuantity: PropTypes.func.isRequired,
   loadTableColumns: PropTypes.func.isRequired,
   simpleContentAccess: PropTypes.bool,
-  subscriptions: PropTypes.shape({
+  settings: PropTypes.shape({
     disconnected: PropTypes.bool,
+  }),
+  subscriptions: PropTypes.shape({
     tableColumns: PropTypes.array,
     selectedTableColumns: PropTypes.array,
     missingPermissions: PropTypes.array,
@@ -333,6 +336,9 @@ SubscriptionsPage.defaultProps = {
   activePermissions: {
     can_import_manifest: false,
     can_manage_subscription_allocations: false,
+  },
+  settings: {
+    disconnected: false,
   },
 };
 

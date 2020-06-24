@@ -147,7 +147,11 @@ class Setting::Content < Setting
       self.set('host_tasks_workers_pool_size', N_("Amount of workers in the pool to handle the execution of host-related tasks. When set to 0, the default queue will be used instead. Restart of the dynflowd/foreman-tasks service is required."),
                5, N_('Host Tasks Workers Pool Size')),
       self.set('applicability_batch_size', N_("Number of host applicability calculations to process per task."),
-               50, N_('Applicability Batch Size'))
+               50, N_('Applicability Batch Size')),
+      self.set('autosearch_while_typing', N_('For pages that support it, automatically perform search while typing in search input.'),
+               true, N_('Autosearch')),
+      self.set('autosearch_delay', N_('If Autosearch is enabled, delay in milliseconds before executing searches while typing.'),
+               500, N_('Autosearch delay'))
     ]
   end
 

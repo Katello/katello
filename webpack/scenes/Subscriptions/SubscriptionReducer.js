@@ -1,6 +1,5 @@
 import Immutable from 'seamless-immutable';
 import { get } from 'lodash';
-import { GET_SETTING_SUCCESS } from 'foremanReact/components/Settings/SettingsConstants';
 import { initialApiState } from '../../services/api';
 
 import {
@@ -147,14 +146,6 @@ export default (state = initialState, action) => {
     case SUBSCRIPTIONS_POLL_TASK_FAILURE:
       return state
         .set('task', null);
-
-    case GET_SETTING_SUCCESS: {
-      if (action.response.name === 'content_disconnected') {
-        return state.set('disconnected', action.response.value);
-      }
-
-      return state;
-    }
 
     case SUBSCRIPTIONS_UPDATE_SEARCH_QUERY:
       return state.set('searchQuery', action.payload);

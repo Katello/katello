@@ -1,24 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-} from '@patternfly/react-table';
-import {
-  Pagination,
-} from '@patternfly/react-core';
+import { Pagination, Flex, FlexItem, FlexModifiers } from '@patternfly/react-core';
+
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { STATUS } from 'foremanReact/constants';
 import { usePaginationOptions, useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
 
-import EmptyStateMessage from './EmptyStateMessage';
-import Loading from './Loading';
+import MainTable from './MainTable';
+import Search from '../../components/Search';
+import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
-  status, cells, rows, error, emptyTitle, emptyBody, metadata, fetchItems, ...extraTableProps
+  metadata, fetchItems, autocompleteEndpoint, ...allTableProps
 }) => {
+  const { search: currentSearch } = metadata;
   const dispatch = useDispatch();
   const { foremanPerPage = 20 } = useForemanSettings();
   // setting pagination to local state so it doesn't disappear when page reloads
@@ -35,60 +30,47 @@ const TableWrapper = ({
 
   useEffect(() => updatePagination(metadata), [metadata]);
 
-  const MainTable = () => {
-    if (status === STATUS.PENDING) return (<Loading />);
-    // Can we display the error message?
-    if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
-    if (status === STATUS.RESOLVED && rows.length === 0) {
-      return (<EmptyStateMessage title={emptyTitle} body={emptyBody} />);
-    }
+  const paginationParams = () => ({ per_page: perPage, page });
 
-    const tableProps = { cells, rows, ...extraTableProps };
-    return (
-      <Table
-        aria-label="Content View Table"
-        className="katello-pf4-table"
-        {...tableProps}
-      >
-        <TableHeader />
-        <TableBody />
-      </Table>
-    );
-  };
+  const getAutoCompleteParams = search => ({
+    endpoint: autocompleteEndpoint,
+    params: {
+      organization_id: orgId(),
+      search,
+    },
+  });
+
+  const onSearch = search => dispatch(fetchItems({ ...paginationParams(), search }));
 
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
-    dispatch(fetchItems({ per_page: perPage, page, ...updatedPagination }));
+    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination, search: currentSearch }));
   };
 
   return (
     <React.Fragment>
-      <Pagination
-        itemCount={total}
-        page={page}
-        perPage={perPage}
-        onSetPage={(_evt, updated) => onPaginationUpdate({ page: updated })}
-        onPerPageSelect={(_evt, updated) => onPaginationUpdate({ per_page: updated })}
-        perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
-        variant="top"
-      />
-      <MainTable />
+      <Flex>
+        <FlexItem>
+          <Search patternfly4 {...{ onSearch, getAutoCompleteParams }} />
+        </FlexItem>
+        <FlexItem breakpointMods={[{ modifier: FlexModifiers['align-right'] }]}>
+          <Pagination
+            itemCount={total}
+            page={page}
+            perPage={perPage}
+            onSetPage={(_evt, updated) => onPaginationUpdate({ page: updated })}
+            onPerPageSelect={(_evt, updated) => onPaginationUpdate({ per_page: updated })}
+            perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
+            variant="top"
+          />
+        </FlexItem>
+      </Flex>
+      <MainTable searchIsActive={!!currentSearch} {...allTableProps} />
     </React.Fragment>
   );
 };
 
 TableWrapper.propTypes = {
-  status: PropTypes.string.isRequired,
-  cells: PropTypes.arrayOf(PropTypes.oneOfType([
-    PropTypes.shape({}),
-    PropTypes.string])).isRequired,
-  rows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  error: PropTypes.oneOfType([
-    PropTypes.shape({}),
-    PropTypes.string,
-  ]),
-  emptyBody: PropTypes.string.isRequired,
-  emptyTitle: PropTypes.string.isRequired,
   fetchItems: PropTypes.func.isRequired,
   metadata: PropTypes.shape({
     total: PropTypes.number,
@@ -100,11 +82,12 @@ TableWrapper.propTypes = {
       PropTypes.number,
       PropTypes.string,
     ]),
+    search: PropTypes.string,
   }),
+  autocompleteEndpoint: PropTypes.string.isRequired,
 };
 
 TableWrapper.defaultProps = {
-  error: null,
   metadata: {},
 };
 

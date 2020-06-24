@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { FormControl } from 'patternfly-react';
+
+import { commonInputPropTypes } from '../helpers/commonPropTypes';
 
 class TypeAheadInput extends Component {
   constructor(props) {
@@ -38,10 +39,6 @@ class TypeAheadInput extends Component {
   }
 }
 
-TypeAheadInput.propTypes = {
-  passedProps: PropTypes.shape({}).isRequired,
-  onKeyPress: PropTypes.func.isRequired,
-  onInputFocus: PropTypes.func.isRequired,
-};
+TypeAheadInput.propTypes = commonInputPropTypes;
 
 export default TypeAheadInput;

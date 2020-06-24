@@ -1,6 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Dropdown, MenuItem } from 'patternfly-react';
+
+import { commonItemPropTypes } from '../helpers/commonPropTypes';
 
 const TypeAheadItems = ({
   items, activeItems, getItemProps, highlightedIndex,
@@ -50,11 +51,6 @@ const TypeAheadItems = ({
   </Dropdown.Menu>
 );
 
-TypeAheadItems.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  activeItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-  highlightedIndex: PropTypes.number.isRequired,
-  getItemProps: PropTypes.func.isRequired,
-};
+TypeAheadItems.propTypes = commonItemPropTypes;
 
 export default TypeAheadItems;
