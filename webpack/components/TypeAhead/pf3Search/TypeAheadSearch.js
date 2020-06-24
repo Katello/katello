@@ -15,8 +15,8 @@ const TypeAheadSearch = ({
     <InputGroup>
       <TypeAheadInput
         onKeyPress={e => keyPressHandler(
-e, isOpen, activeItems, highlightedIndex,
-                                          selectItem, userInputValue, onSearch,
+          e, isOpen, activeItems, highlightedIndex,
+          selectItem, userInputValue, onSearch,
 )}
         onInputFocus={openMenu}
         passedProps={getInputProps()}

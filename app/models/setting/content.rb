@@ -150,7 +150,7 @@ class Setting::Content < Setting
                50, N_('Applicability Batch Size')),
       self.set('autosearch_while_typing', N_('For pages that support it, automatically perform search while typing in search input.'),
                true, N_('Autosearch')),
-      self.set('autosearch_delay', N_('Delay in milliseconds before performing search for autosearch.'),
+      self.set('autosearch_delay', N_('If Autosearch is enabled, delay in milliseconds before executing searches while typing.'),
                500, N_('Autosearch delay'))
     ]
   end

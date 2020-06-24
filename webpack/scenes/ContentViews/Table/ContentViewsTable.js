@@ -61,7 +61,7 @@ const ContentViewTable = ({ response, status, error }) => {
   // Prevents flash of "No Content" before rows are loaded
   const tableStatus = () => {
     if (typeof results === 'undefined') return status; // will handle errored state
-    const rowMappingIds = Object.values(rowMapping).map(map => map.id);
+    const rowMappingIds = Object.values(rowMapping).map(row => row.id);
     const resultsIds = Array.from(results.map(result => result.id));
     // All results are accounted for in row mapping, the page is ready to load
     if (resultsIds.length === rowMappingIds.length &&

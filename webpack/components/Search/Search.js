@@ -14,8 +14,7 @@ import {
 class Search extends Component {
   constructor(props) {
     super(props);
-    this.state = { items: [], typingTimeout: 0, autoSearchOnEmpty: false };
-    this.onSearch = this.onSearch.bind(this);
+    this.state = { items: [], typingTimeout: 0 };
   }
 
   componentDidMount() {
@@ -48,14 +47,9 @@ class Search extends Component {
       });
     }
 
-    if (autoSearchEnabled &&
-        patternfly4 &&
-        (searchTerm.length > 0 || this.state.autoSearchOnEmpty)) {
+    if (autoSearchEnabled && patternfly4 && searchTerm.length > 0) {
       this.autoSearch(searchTerm);
     }
-
-    // Prevent empty search when page first loads, but search when input is cleared after that
-    this.setState({ autoSearchOnEmpty: true });
   };
 
   onSearch = (search) => {
