@@ -136,5 +136,13 @@ module Katello
       @handler.delete_pool
       assert_empty Katello::Pool.find_by(:cp_id => @pool_id)
     end
+
+    def test_delete_pool_on_null
+      pool = @handler.pool
+      @handler.stubs(:pool).returns(pool).then.returns(nil)
+      # assert no errors are raised
+      @handler.delete_pool
+      assert_empty Katello::Pool.find_by(:cp_id => @pool_id)
+    end
   end
 end
