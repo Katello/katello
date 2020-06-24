@@ -15,6 +15,14 @@ module Katello
           end
         end
 
+        def skip_types
+          skip_types = []
+          if root.ignorable_content.try(:include?, "srpm")
+            skip_types << "srpm"
+          end
+          skip_types
+        end
+
         def distribution_options(path)
           {
             base_path: path,
