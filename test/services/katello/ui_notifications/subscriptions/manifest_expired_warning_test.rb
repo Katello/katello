@@ -17,6 +17,7 @@ module Katello
 
           cert = File.read(CERT_FIXTURE)
 
+          ::Organization.any_instance.stubs(:manifest_expired?).returns(false)
           Product.any_instance.stubs(:key).returns(cert)
           Product.any_instance.stubs(:certificate).returns(cert)
           FactoryBot.create(
@@ -29,6 +30,15 @@ module Katello
 
         def clear_notifications
           @product.organization.clear_manifest_expired_notifications
+        end
+
+        def test_manifest_expired
+          ::Organization.any_instance.stubs(:manifest_expired?).returns(true)
+          @class.stubs(:cdn_inaccessible?).returns(false)
+
+          @class.deliver!([@product.organization])
+
+          assert_equal 1, NotificationBlueprint.find_by(name: 'manifest_expired_warning').notifications.count
         end
 
         def test_with_failure

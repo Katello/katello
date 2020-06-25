@@ -37,10 +37,12 @@ export const SUBSCRIPTIONS_CLOSE_DELETE_MODAL = 'SUBSCRIPTIONS_CLOSE_DELETE_MODA
 export const SUBSCRIPTIONS_DISABLE_DELETE_BUTTON = 'SUBSCRIPTIONS_DISABLE_DELETE_BUTTON';
 export const SUBSCRIPTIONS_ENABLE_DELETE_BUTTON = 'SUBSCRIPTIONS_ENABLE_DELETE_BUTTON';
 
+export const MANIFEST_DELETE_TASK_LABEL = 'Actions::Katello::Organization::ManifestDelete';
+
 export const BLOCKING_FOREMAN_TASK_TYPES = [
   'Actions::Katello::Organization::ManifestImport',
   'Actions::Katello::Organization::ManifestRefresh',
-  'Actions::Katello::Organization::ManifestDelete',
+  MANIFEST_DELETE_TASK_LABEL,
   'Actions::Katello::UpstreamSubscriptions::BindEntitlements',
   'Actions::Katello::UpstreamSubscriptions::UpdateEntitlement',
   'Actions::Katello::UpstreamSubscriptions::RemoveEntitlements',

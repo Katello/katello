@@ -11,7 +11,7 @@ import ManageManifestModal from './Manifest/';
 import { MANAGE_MANIFEST_MODAL_ID } from './Manifest/ManifestConstants';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
-import { manifestExists } from './SubscriptionHelpers';
+import { filterRHSubscriptions, manifestExists } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
 import { CONTENT_DISCONNECTED } from '../Settings/SettingsConstants';
 
@@ -40,8 +40,21 @@ class SubscriptionsPage extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      organization, task, handleStartTask, handleFinishedTask, isTaskPending, isPollingTask,
+      handleStartTask,
+      handleFinishedTask,
+      isTaskPending,
+      isPollingTask,
+      hasUpstreamConnection,
+      loadAvailableQuantities,
+      organization,
+      pingUpstreamSubscriptions,
+      settings,
+      subscriptions,
+      task,
     } = this.props;
+
+    const { disconnected } = settings;
+
     if (task) {
       if (isPollingTask) {
         if (prevProps.isTaskPending && !isTaskPending) {
@@ -56,6 +69,19 @@ class SubscriptionsPage extends Component {
       if (!prevProps.organization || prevProps.organization.id !== organization.id) {
         this.loadData();
       }
+
+      if (disconnected === false && disconnected !== prevProps.settings.disconnected) {
+        if (manifestExists(organization)) {
+          pingUpstreamSubscriptions();
+        }
+      }
+    }
+
+    if (hasUpstreamConnection && !prevProps.hasUpstreamConnection) {
+      const poolIds = filterRHSubscriptions(subscriptions.results).map(subs => subs.id);
+      if (poolIds.length > 0) {
+        loadAvailableQuantities({ poolIds });
+      }
     }
   }
 
@@ -64,7 +90,12 @@ class SubscriptionsPage extends Component {
   }
 
   getDisabledReason(deleteButton) {
-    const { task, settings, organization } = this.props;
+    const {
+      hasUpstreamConnection,
+      task,
+      settings,
+      organization,
+    } = this.props;
     const { disconnected } = settings;
     let disabledReason = null;
 
@@ -76,6 +107,8 @@ class SubscriptionsPage extends Component {
       disabledReason = __('This is disabled because no subscriptions are selected.');
     } else if (!manifestExists(organization)) {
       disabledReason = __('This is disabled because no manifest has been uploaded.');
+    } else if (!hasUpstreamConnection) {
+      disabledReason = __('This is disabled because no connection could be made to the upstream Subscription Allocation.');
     }
 
     return disabledReason;
@@ -107,8 +140,8 @@ class SubscriptionsPage extends Component {
     const {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
-      searchQuery, updateSearchQuery, simpleContentAccess, settings,
-      task, activePermissions, subscriptions, organization, subscriptionTableSettings,
+      searchQuery, updateSearchQuery, simpleContentAccess, settings, hasUpstreamConnection,
+      task, activePermissions, subscriptions, subscriptionTableSettings,
     } = this.props;
     // Basic permissions - should we even show this page?
     if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
@@ -123,7 +156,7 @@ class SubscriptionsPage extends Component {
       canEditOrganizations,
     } = permissions;
     const { disconnected } = settings;
-    const disableManifestActions = !!task || disconnected;
+    const disableManifestActions = !!task || disconnected || !hasUpstreamConnection;
 
     const openManageManifestModal = () => this.props.setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
 
@@ -200,7 +233,7 @@ class SubscriptionsPage extends Component {
               disableManifestReason={this.getDisabledReason()}
               disableDeleteButton={deleteButtonDisabled}
               disableDeleteReason={this.getDisabledReason(true)}
-              disableAddButton={!manifestExists(organization)}
+              disableAddButton={disableManifestActions}
               getAutoCompleteParams={getAutoCompleteParams}
               updateSearchQuery={updateSearchQuery}
               onDeleteButtonClick={openDeleteModal}
@@ -246,6 +279,7 @@ class SubscriptionsPage extends Component {
                 task={task}
                 selectedRows={this.state.selectedRows}
                 onSelectedRowsChange={this.handleSelectedRowsChange}
+                selectionEnabled={!disableManifestActions}
               />
               <ModalProgressBar
                 show={!!task}
@@ -262,7 +296,9 @@ class SubscriptionsPage extends Component {
 }
 
 SubscriptionsPage.propTypes = {
+  pingUpstreamSubscriptions: PropTypes.func.isRequired,
   loadSubscriptions: PropTypes.func.isRequired,
+  loadAvailableQuantities: PropTypes.func.isRequired,
   uploadManifest: PropTypes.func.isRequired,
   deleteManifest: PropTypes.func.isRequired,
   resetTasks: PropTypes.func.isRequired,
@@ -276,6 +312,7 @@ SubscriptionsPage.propTypes = {
     tableColumns: PropTypes.array,
     selectedTableColumns: PropTypes.array,
     missingPermissions: PropTypes.array,
+    results: PropTypes.array,
   }).isRequired,
   activePermissions: PropTypes.shape({
     can_delete_manifest: PropTypes.bool,
@@ -305,6 +342,7 @@ SubscriptionsPage.propTypes = {
   cancelPollTasks: PropTypes.func.isRequired,
   handleStartTask: PropTypes.func.isRequired,
   handleFinishedTask: PropTypes.func.isRequired,
+  hasUpstreamConnection: PropTypes.bool,
   loadSetting: PropTypes.func.isRequired,
   loadTables: PropTypes.func.isRequired,
   createColumns: PropTypes.func.isRequired,
@@ -333,12 +371,13 @@ SubscriptionsPage.defaultProps = {
   deleteButtonDisabled: true,
   subscriptionTableSettings: {},
   simpleContentAccess: false,
+  hasUpstreamConnection: false,
   activePermissions: {
     can_import_manifest: false,
     can_manage_subscription_allocations: false,
   },
   settings: {
-    disconnected: false,
+    disconnected: true,
   },
 };
 

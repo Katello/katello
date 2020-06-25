@@ -211,10 +211,9 @@ module Katello
       fail HttpErrors::BadRequest, _("Host has not been registered with subscription-manager") if @host.subscription_facet.nil?
     end
 
-    def check_disconnected
-      msg = "You are currently operating in disconnected mode where access to Red Hat Subcription Management " \
-            "is prohibited. If you would like to change this, please update the content setting 'Disconnected mode'."
-      fail HttpErrors::BadRequest, _(msg) if Setting[:content_disconnected]
+    def check_upstream_connection
+      checker = Katello::UpstreamConnectionChecker.new(@organization)
+      checker.assert_connection
     end
   end
 end

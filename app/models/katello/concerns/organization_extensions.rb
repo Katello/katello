@@ -82,6 +82,16 @@ module Katello
           self.providers.anonymous.first
         end
 
+        def manifest_expired?
+          manifest_expiry = owner_details.dig(:upstreamConsumer, :idCert, :serial, :expiration)
+
+          if manifest_expiry
+            DateTime.parse(manifest_expiry) < DateTime.now
+          else
+            false
+          end
+        end
+
         def manifest_history
           imports.map { |i| OpenStruct.new(i) }
         end

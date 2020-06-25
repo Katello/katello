@@ -77,6 +77,7 @@ describe('subscriptions table', () => {
         emptyState={{}}
         selectedRows={[]}
         onSelectedRowsChange={() => {}}
+        selectionEnabled
       />
                         </MemoryRouter>);
     expect(page.find('#select1').is('[disabled]')).toBe(true);

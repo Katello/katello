@@ -7,7 +7,7 @@ module Katello
     before_action :find_optional_organization, :only => [:index, :available, :show]
     before_action :find_organization, :only => [:upload, :delete_manifest,
                                                 :refresh_manifest, :manifest_history]
-    before_action :check_disconnected, only: [:refresh_manifest]
+    before_action :check_upstream_connection, only: [:refresh_manifest]
     before_action :find_provider
 
     skip_before_action :check_content_type, :only => [:upload]

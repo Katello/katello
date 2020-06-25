@@ -31,9 +31,13 @@ import {
   REFRESH_MANIFEST_SUCCESS,
 } from './Manifest/ManifestConstants';
 
+import {
+  PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
+  PING_UPSTREAM_SUBSCRIPTIONS_FAILURE,
+} from './UpstreamSubscriptions/UpstreamSubscriptionsConstants';
+
 const initialState = Immutable({
   ...initialApiState,
-  disconnected: false,
   searchQuery: '',
   deleteModalOpened: false,
   deleteButtonDisabled: true,
@@ -42,10 +46,15 @@ const initialState = Immutable({
   task: null,
   tableColumns: [],
   selectedTableColumns: [],
+  hasUpstreamConnection: false,
 });
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS:
+      return state.set('hasUpstreamConnection', true);
+    case PING_UPSTREAM_SUBSCRIPTIONS_FAILURE:
+      return state.set('hasUpstreamConnection', false);
     case SUBSCRIPTIONS_REQUEST:
       return state.set('loading', true);
     case SUBSCRIPTIONS_COLUMNS_REQUEST:
@@ -129,6 +138,11 @@ export default (state = initialState, action) => {
     }
 
     case DELETE_MANIFEST_SUCCESS:
+      return state.merge({
+        task: action.response,
+        hasUpstreamConnection: false,
+      });
+
     case UPLOAD_MANIFEST_SUCCESS:
     case REFRESH_MANIFEST_SUCCESS:
     case UPDATE_QUANTITY_SUCCESS:

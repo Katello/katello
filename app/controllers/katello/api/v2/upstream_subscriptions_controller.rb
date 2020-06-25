@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::UpstreamSubscriptionsController < Api::V2::ApiController
-    before_action :check_disconnected
+    before_action :find_organization
+    before_action :check_upstream_connection
 
     resource_description do
       description "Red Hat subscriptions management platform."
@@ -63,6 +64,17 @@ module Katello
       task = async_task(::Actions::Katello::UpstreamSubscriptions::BindEntitlements,
                         bind_entitlements_params)
       respond_for_async resource: task
+    end
+
+    api :GET, "/organizations/:organization_id/upstream_subscriptions/ping",
+      N_("Check if a connection can be made to Red Hat Subscription Management.")
+    def ping
+      # This API raises an error if:
+      # - Katello is in disconnected mode
+      # - There is no manifest imported
+      # - The local manifest identity certs have expired
+      # - The manifest has been deleted upstream
+      render json: { status: 'OK' }
     end
 
     private

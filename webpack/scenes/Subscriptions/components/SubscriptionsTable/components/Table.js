@@ -15,9 +15,9 @@ const Table = ({
   inlineEditController,
   rows,
   editing,
+  selectionEnabled,
   groupedSubscriptions,
   toggleSubscriptionGroup,
-  canManageSubscriptionAllocations,
 }) => {
   const allSubscriptionResults = subscriptions.results;
 
@@ -28,18 +28,23 @@ const Table = ({
 
   const groupingController = {
     isCollapseable: ({ rowData }) =>
-      // the group contains more then one subscription
+      // the group contains more than one subscription
       rowData.collapsible,
     isCollapsed: ({ rowData }) => !groupedSubscriptions[rowData.product_id].open,
     toggle: ({ rowData }) => toggleSubscriptionGroup(rowData.product_id),
   };
 
-  const alwaysDisplayColumns = ['select'];
+  const alwaysDisplayColumns = [];
+
+  if (selectionEnabled) {
+    alwaysDisplayColumns.push('select');
+  }
+
   const columnsDefinition = createSubscriptionsTableSchema(
     inlineEditController,
     selectionController,
     groupingController,
-    canManageSubscriptionAllocations,
+    selectionEnabled,
   ).filter(column => tableColumns.includes(column.property) ||
     alwaysDisplayColumns.includes(column.property));
 
@@ -88,7 +93,6 @@ const Table = ({
 };
 
 Table.propTypes = {
-  canManageSubscriptionAllocations: PropTypes.bool,
   emptyState: PropTypes.shape({}).isRequired,
   tableColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
   subscriptions: PropTypes.shape({
@@ -107,11 +111,7 @@ Table.propTypes = {
   groupedSubscriptions: PropTypes.shape({}).isRequired,
   editing: PropTypes.bool.isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
-
-};
-
-Table.defaultProps = {
-  canManageSubscriptionAllocations: false,
+  selectionEnabled: PropTypes.bool.isRequired,
 };
 
 export default Table;
