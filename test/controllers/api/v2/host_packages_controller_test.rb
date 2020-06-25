@@ -118,6 +118,8 @@ module Katello
     end
 
     def test_view_permissions
+      ::Host.any_instance.stubs(:check_host_registration).returns(true)
+
       good_perms = [@view_permission]
       bad_perms = [@update_permission, @create_permission, @destroy_permission]
 
@@ -135,6 +137,8 @@ module Katello
     end
 
     def test_permissions
+      ::Host.any_instance.stubs(:check_host_registration).returns(true)
+
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @create_permission, @destroy_permission]
 

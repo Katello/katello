@@ -23,6 +23,13 @@ module Katello
   end
 
   class HostManagedExtensionsTest < HostManagedExtensionsTestBase
+    def test_update_organization
+      host = FactoryBot.create(:host, :with_subscription)
+      assert_raises ::Katello::Errors::HostRegisteredException do
+        host.update(organization_id: ::Organization.find_by(name: "Empty Organization").id)
+      end
+    end
+
     def test_rhsm_fact_values
       assert_empty @foreman_host.rhsm_fact_values
 

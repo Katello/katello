@@ -18,6 +18,17 @@ class HostsControllerTest < ActionController::TestCase
     permissions
   end
 
+  test 'cannot update registered host organization' do
+    @request.env['HTTP_REFERER'] = hosts_path
+    host = Host.find_by(name: "host1.example.com")
+    dest_org_id = ::Organization.find_by(name: "Organization 1").id
+    post :update_multiple_organization, params: { host_ids: [host.id],
+                                                  organization: { id: dest_org_id, optimistic_import: "yes" } }
+    assert_redirected_to :controller => :hosts, :action => :index
+    assert_not_equal dest_org_id, host.organization_id
+    assert_equal "Unregister host host1.example.com before assigning an organization", flash[:error]
+  end
+
   test 'puppet environment for content_view' do
     get :puppet_environment_for_content_view, params: { :content_view_id => @library_dev_staging_view.id, :lifecycle_environment_id => @library.id }
 

@@ -155,6 +155,8 @@ module Katello
     end
 
     def test_apply_protected
+      ::Host.any_instance.stubs(:check_host_registration).returns(true)
+
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @create_permission, @destroy_permission]
 
