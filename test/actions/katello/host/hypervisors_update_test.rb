@@ -117,6 +117,8 @@ module Katello::Host
       end
 
       it 'existing hypervisor, no org' do
+        ::Host.any_instance.stubs(:check_host_registration).returns(true)
+
         @host.organization = nil
         @host.save!
 
