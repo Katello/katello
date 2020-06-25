@@ -50,6 +50,7 @@ module Katello
 
         before_save :correct_puppet_environment
         before_validation :correct_kickstart_repository
+        before_update :check_host_registration, :if => proc { organization_id_changed? }
 
         scope :with_pools_expiring_in_days, ->(days) { joins(:pools).merge(Katello::Pool.expiring_in_days(days)).distinct }
 
@@ -73,6 +74,12 @@ module Katello
           else
             { :conditions => "1=0" }
           end
+        end
+      end
+
+      def check_host_registration
+        if subscription_facet
+          fail ::Katello::Errors::HostRegisteredException
         end
       end
 

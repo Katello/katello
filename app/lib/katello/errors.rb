@@ -39,6 +39,12 @@ module Katello
       end
     end
 
+    class HostRegisteredException < StandardError
+      def message
+        _("Content host must be unregistered before performing this action.")
+      end
+    end
+
     class EmptyBulkActionException < StandardError
       def message
         _("No hosts registered with subscription-manager found in selection.")
