@@ -26,6 +26,7 @@ class SubscriptionsPage extends Component {
     super(props);
     this.state = {
       selectedRows: [],
+      availableQuantitiesLoaded: false,
     };
   }
 
@@ -73,14 +74,19 @@ class SubscriptionsPage extends Component {
       if (disconnected === false && disconnected !== prevProps.settings.disconnected) {
         if (manifestExists(organization)) {
           pingUpstreamSubscriptions();
+          this.state.availableQuantitiesLoaded = false;
         }
       }
     }
 
-    if (hasUpstreamConnection && !prevProps.hasUpstreamConnection) {
-      const poolIds = filterRHSubscriptions(subscriptions.results).map(subs => subs.id);
-      if (poolIds.length > 0) {
-        loadAvailableQuantities({ poolIds });
+    if (hasUpstreamConnection) {
+      const subscriptionsChanged = subscriptions.results !== prevProps.subscriptions.results;
+      if (subscriptionsChanged || !this.state.availableQuantitiesLoaded) {
+        const poolIds = filterRHSubscriptions(subscriptions.results).map(subs => subs.id);
+        if (poolIds.length > 0) {
+          loadAvailableQuantities({ poolIds });
+          this.state.availableQuantitiesLoaded = true;
+        }
       }
     }
   }
