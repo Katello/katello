@@ -17,7 +17,8 @@ module Katello
 
           cert = File.read(CERT_FIXTURE)
 
-          ::Organization.any_instance.stubs(:manifest_expired?).returns(false)
+          @product.organization.stubs(:manifest_expired?).returns(false)
+          @product.organization.stubs(:manifest_imported?).returns(true)
           Product.any_instance.stubs(:key).returns(cert)
           Product.any_instance.stubs(:certificate).returns(cert)
           FactoryBot.create(
@@ -33,8 +34,8 @@ module Katello
         end
 
         def test_manifest_expired
-          ::Organization.any_instance.stubs(:manifest_expired?).returns(true)
           @class.stubs(:cdn_inaccessible?).returns(false)
+          Katello::UpstreamConnectionChecker.any_instance.expects(:can_connect?).returns(false)
 
           @class.deliver!([@product.organization])
 

@@ -1,7 +1,24 @@
 module Katello
   class UpstreamConnectionChecker
+    POSSIBLE_EXCEPTIONS = [
+      Katello::Errors::DisconnectedMode,
+      Katello::Errors::ManifestExpired,
+      Katello::Errors::UpstreamConsumerGone,
+      Katello::Errors::NoManifestImported
+    ].freeze
+
     def initialize(organization)
       @organization = organization
+    end
+
+    def can_connect?
+      assert_connection
+    rescue StandardError => e
+      if POSSIBLE_EXCEPTIONS.include?(e.class)
+        false
+      else
+        raise e
+      end
     end
 
     def assert_connection

@@ -60,11 +60,10 @@ module Katello
         end
 
         def self.upstream_inaccessible?(org)
+          return unless org.manifest_imported?
+
           checker = Katello::UpstreamConnectionChecker.new(org)
-          checker.assert_connection
-          false
-        rescue Katello::Errors::ManifestExpired, Katello::Errors::UpstreamConsumerGone, Katello::Errors::NoManifestImported
-          true
+          !checker.can_connect?
         end
 
         def self.redhat_connected?(org)

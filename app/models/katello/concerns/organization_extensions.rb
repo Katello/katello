@@ -82,6 +82,10 @@ module Katello
           self.providers.anonymous.first
         end
 
+        def manifest_imported?
+          owner_details['upstreamConsumer'].present?
+        end
+
         def manifest_expired?
           manifest_expiry = owner_details.dig(:upstreamConsumer, :idCert, :serial, :expiration)
 
