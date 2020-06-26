@@ -19,11 +19,10 @@ module Katello
 
         def test_upstream_consumer_current_organization_no_imported_manifest
           Organization.stubs(:current).returns(stub(owner_details: {}))
-          UpstreamCandlepinResource.upstream_consumer
-          flunk("Failed to raise exception when manifest is not imported.")
-        rescue RuntimeError => e
-          assert_equal(e.message, "Current organization has no manifest imported.",
-                 "Invalid message: #{e.message}")
+
+          assert_raises(Katello::Errors::NoManifestImported) do
+            UpstreamCandlepinResource.upstream_consumer
+          end
         end
 
         def test_global_proxy_nil
