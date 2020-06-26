@@ -35,7 +35,7 @@ module Katello
           User.current = users(:admin)
           @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:pulp3_file_1)
-          @repo.root.update(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
+          @repo.root.update(:url => 'https://fixtures.pulpproject.org/file2/')
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
 
@@ -45,7 +45,7 @@ module Katello
           assert_version(@repo, "versions/1/")
 
           @repo.root.update(
-            url: "https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file/")
+            url: "https://fixtures.pulpproject.org/file/")
 
           sync_and_reload_repo(@repo, @master)
           assert_version(@repo, "versions/2/")

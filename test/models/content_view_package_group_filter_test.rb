@@ -17,7 +17,7 @@ module Katello
     def test_content_unit_pulp_ids_returns_pulp_hrefs
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64)
-      @repo.root.update!(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/rpm-unsigned/')
+      @repo.root.update!(:url => 'https://fixtures.pulpproject.org/rpm-unsigned/')
       @repo.root.update!(:download_policy => 'immediate')
       ensure_creatable(@repo, @master)
       create_repo(@repo, @master)
