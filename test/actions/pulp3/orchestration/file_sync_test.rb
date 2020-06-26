@@ -40,7 +40,7 @@ module ::Actions::Pulp3
     end
 
     def test_sync_with_pagination
-      @repo.root.update(:url => "https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file-many/", :mirror_on_sync => false)
+      @repo.root.update(:url => "https://fixtures.pulpproject.org/file-many/", :mirror_on_sync => false)
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
           @repo,
