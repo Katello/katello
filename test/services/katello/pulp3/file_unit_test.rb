@@ -10,7 +10,7 @@ module Katello
         def setup
           @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:generic_file)
-          @repo.root.update(:url => 'https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file2/')
+          @repo.root.update(:url => 'https://fixtures.pulpproject.org/file2/')
           ensure_creatable(@repo, @master)
           create_repo(@repo, @master)
           @repo.reload
