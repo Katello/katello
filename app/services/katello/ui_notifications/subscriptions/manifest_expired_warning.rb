@@ -63,7 +63,7 @@ module Katello
           checker = Katello::UpstreamConnectionChecker.new(org)
           checker.assert_connection
           false
-        rescue Katello::Errors::ManifestExpired, Katello::Errors::UpstreamConsumerGone
+        rescue Katello::Errors::ManifestExpired, Katello::Errors::UpstreamConsumerGone, Katello::Errors::NoManifestImported
           true
         end
 

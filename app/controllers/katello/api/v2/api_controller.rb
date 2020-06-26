@@ -213,7 +213,12 @@ module Katello
 
     def check_upstream_connection
       checker = Katello::UpstreamConnectionChecker.new(@organization)
-      checker.assert_connection
+
+      begin
+        checker.assert_connection
+      rescue => e
+        raise HttpErrors::BadRequest, e.message
+      end
     end
   end
 end

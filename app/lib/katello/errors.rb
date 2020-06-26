@@ -162,6 +162,12 @@ module Katello
       end
     end
 
+    class NoManifestImported < StandardError
+      def message
+        _("Current organization has no manifest imported.")
+      end
+    end
+
     class ManifestExpired < StandardError
       def message
         _("This Organization's subscription manifest has expired. Please import a new manifest.")

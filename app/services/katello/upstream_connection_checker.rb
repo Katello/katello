@@ -19,7 +19,9 @@ module Katello
     end
 
     def assert_can_upstream_ping
-      Katello::Resources::Candlepin::UpstreamConsumer.ping
+      ::Organization.as_org(@organization) do
+        Katello::Resources::Candlepin::UpstreamConsumer.ping
+      end
     end
 
     def assert_unexpired_manifest
