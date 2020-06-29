@@ -2,7 +2,7 @@ class Setting::Content < Setting
   #rubocop:disable Metrics/MethodLength
   #rubocop:disable Metrics/AbcSize
 
-  validate :content_default_http_proxy, if: proc { |s| s.name == 'content_default_http_proxy' }
+  validate :content_default_http_proxy, if: proc { |s| s.name == 'content_default_http_proxy' && HttpProxy.table_exists? }
 
   after_save :add_organizations_and_locations_if_global_http_proxy
 
