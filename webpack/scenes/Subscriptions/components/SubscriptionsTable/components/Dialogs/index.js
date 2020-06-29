@@ -17,10 +17,10 @@ const Dialogs = ({
 );
 
 Dialogs.propTypes = {
-  updateDialog: PropTypes.shape(UpdateDialog.propTypes).isRequired,
-  unsavedChangesDialog: PropTypes.shape(UnsavedChangesDialog.propTypes).isRequired,
-  inputsErrorsDialog: PropTypes.shape(InputsErrorsDialog.propTypes).isRequired,
-  deleteDialog: PropTypes.shape(DeleteDialog.propTypes).isRequired,
+  updateDialog: PropTypes.shape({}).isRequired,
+  unsavedChangesDialog: PropTypes.shape({}).isRequired,
+  inputsErrorsDialog: PropTypes.shape({}).isRequired,
+  deleteDialog: PropTypes.shape({}).isRequired,
 };
 
 export default Dialogs;

@@ -83,8 +83,11 @@ AnsibleCollectionDetails.propTypes = {
     name: PropTypes.string,
     namespace: PropTypes.string,
     version: PropTypes.string,
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    /* eslint-disable react/forbid-prop-types */
     repositories: PropTypes.array,
     tags: PropTypes.array,
+    /* eslint-enable react/forbid-prop-types */
   }).isRequired,
 };
 

@@ -59,9 +59,12 @@ ContentDetails.propTypes = {
   contentDetails: PropTypes.shape({
     loading: PropTypes.bool,
     name: PropTypes.string,
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    /* eslint-disable react/forbid-prop-types */
     profiles: PropTypes.array,
     repositories: PropTypes.array,
     artifacts: PropTypes.array,
+    /* eslint-enable react/forbid-prop-types */
     stream: PropTypes.string,
   }).isRequired,
   schema: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

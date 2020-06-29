@@ -50,6 +50,8 @@ const SubscriptionDetailProductContent = ({ productContent }) => {
 
 SubscriptionDetailProductContent.propTypes = {
   productContent: PropTypes.shape({
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    // eslint-disable-next-line react/forbid-prop-types
     results: PropTypes.array,
   }).isRequired,
 };
