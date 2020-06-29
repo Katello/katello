@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Pagination, Flex, FlexItem, FlexModifiers } from '@patternfly/react-core';
+import { Pagination, Flex, FlexItem } from '@patternfly/react-core';
 
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
@@ -53,7 +53,7 @@ const TableWrapper = ({
         <FlexItem>
           <Search patternfly4 {...{ onSearch, getAutoCompleteParams }} />
         </FlexItem>
-        <FlexItem breakpointMods={[{ modifier: FlexModifiers['align-right'] }]}>
+        <FlexItem align={{ default: 'alignRight' }}>
           <Pagination
             itemCount={total}
             page={page}

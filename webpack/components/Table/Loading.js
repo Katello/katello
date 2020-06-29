@@ -12,7 +12,7 @@ const Loading = ({ size }) => (
   <Bullseye>
     <EmptyState>
       <EmptyStateIcon variant="container" component={Spinner} />
-      <Title size={size}>
+      <Title size={size} headingLevel="h4">
         Loading
       </Title>
     </EmptyState>
