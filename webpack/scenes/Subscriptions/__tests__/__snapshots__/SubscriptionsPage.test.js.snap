@@ -38,11 +38,11 @@ exports[`subscriptions page should render 1`] = `
       </h1>
       <SubscriptionsToolbar
         canManageSubscriptionAllocations={false}
-        disableAddButton={false}
+        disableAddButton={true}
         disableDeleteButton={true}
-        disableDeleteReason="This is disabled because no subscriptions are selected."
-        disableManifestActions={false}
-        disableManifestReason={null}
+        disableDeleteReason="This is disabled because disconnected mode is enabled."
+        disableManifestActions={true}
+        disableManifestReason="This is disabled because disconnected mode is enabled."
         getAutoCompleteParams={[Function]}
         onDeleteButtonClick={[Function]}
         onExportCsvButtonClick={[Function]}
@@ -56,8 +56,8 @@ exports[`subscriptions page should render 1`] = `
       <Connect(ManageManifestModal)
         canImportManifest={false}
         delete={[Function]}
-        disableManifestActions={false}
-        disabledReason={null}
+        disableManifestActions={true}
+        disabledReason="This is disabled because disconnected mode is enabled."
         refresh={[Function]}
         taskInProgress={false}
         upload={[Function]}
@@ -83,6 +83,7 @@ exports[`subscriptions page should render 1`] = `
           onSelectedRowsChange={[Function]}
           onSubscriptionDeleteModalClose={[Function]}
           selectedRows={Array []}
+          selectionEnabled={false}
           subscriptionDeleteModalOpen={false}
           subscriptions={
             Object {

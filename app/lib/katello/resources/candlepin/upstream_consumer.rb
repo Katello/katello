@@ -9,6 +9,12 @@ module Katello
             super(id)
           end
 
+          def ping
+            resource.head
+          rescue RestClient::Unauthorized, RestClient::Gone
+            raise ::Katello::Errors::UpstreamConsumerGone
+          end
+
           # Overrides the HttpResource get method to check if the upstream
           # consumer exists.
           def get(params)

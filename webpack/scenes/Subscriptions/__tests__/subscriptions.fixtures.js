@@ -93,50 +93,6 @@ export const requestSuccessResponse = Immutable({
   ],
 });
 
-export const requestSuccessResponseWithRHSubscriptions = Immutable({
-  organization: {},
-  total: 81,
-  subtotal: 1,
-  page: 1,
-  per_page: 2,
-  error: null,
-  search: null,
-  sort: {
-    by: 'cp_id',
-    order: 'asc',
-  },
-  results: [
-    {
-      id: 4,
-      cp_id: '4028f95a62ce96190162cf435202005b',
-      subscription_id: 5,
-      name: 'Some RH Product',
-      start_date: '2013-02-28 18:00:00 -1100',
-      end_date: '2021-12-31 17:59:59 -1100',
-      available: 12,
-      quantity: 12,
-      consumed: 0,
-      account_number: 1000000,
-      contract_number: 20000000,
-      support_level: 'Self-Support',
-      product_id: 'Z3BRU11',
-      sockets: null,
-      cores: null,
-      ram: null,
-      instance_multiplier: 1,
-      stacking_id: null,
-      multi_entitlement: null,
-      type: 'NORMAL',
-      product_name: 'Some RH Product',
-      unmapped_guest: false,
-      virt_only: false,
-      virt_who: false,
-      upstream: true,
-      upstream_pool_id: '8a85f98160f068060160f06e922a0201',
-    },
-  ],
-});
-
 export const quantitiesRequestSuccessResponse = Immutable({
   results: [
     {
@@ -396,20 +352,6 @@ export const successActions = [
     type: 'SUBSCRIPTIONS_SUCCESS',
     response: requestSuccessResponse,
     search: undefined,
-  },
-];
-
-export const successActionsWithQuantityLoad = [
-  {
-    type: 'SUBSCRIPTIONS_REQUEST',
-  },
-  {
-    type: 'SUBSCRIPTIONS_SUCCESS',
-    response: requestSuccessResponseWithRHSubscriptions,
-    search: undefined,
-  },
-  {
-    type: 'SUBSCRIPTIONS_QUANTITIES_REQUEST',
   },
 ];
 

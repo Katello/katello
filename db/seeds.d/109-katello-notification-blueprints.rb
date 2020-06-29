@@ -22,7 +22,7 @@ blueprints = [
   {
     group: N_('Subscriptions'),
     name: 'manifest_expired_warning',
-    message: N_('The manifest imported within Organization %{subject} is no longer valid.  Attempted CDN access returned Forbidden.  Refreshing the manifest may resolve this issue.'),
+    message: N_('The manifest imported within Organization %{subject} is no longer valid. Please import a new manifest.'),
     level: 'warning'
   },
   {

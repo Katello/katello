@@ -160,5 +160,24 @@ module Katello
         _("No URL found for a container registry. Please check the configuration.")
       end
     end
+
+    class DisconnectedMode < StandardError
+      def message
+        _("You are currently operating in disconnected mode where access to Red Hat Subcription Management " \
+        "is prohibited. If you would like to change this, please update the content setting 'Disconnected mode'.")
+      end
+    end
+
+    class NoManifestImported < StandardError
+      def message
+        _("Current organization has no manifest imported.")
+      end
+    end
+
+    class ManifestExpired < StandardError
+      def message
+        _("This Organization's subscription manifest has expired. Please import a new manifest.")
+      end
+    end
   end
 end

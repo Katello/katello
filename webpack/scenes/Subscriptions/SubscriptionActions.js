@@ -28,8 +28,9 @@ import {
   SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
   BLOCKING_FOREMAN_TASK_TYPES,
   SUBSCRIPTIONS_RESET_TASKS,
+  MANIFEST_DELETE_TASK_LABEL,
 } from './SubscriptionConstants';
-import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
+import { selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
 import {
   startPollingTask,
@@ -39,6 +40,7 @@ import {
   toastTaskFinished,
 } from '../Tasks/TaskActions';
 import { selectIsPollingTasks } from '../Tasks/TaskSelectors';
+import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{
@@ -51,10 +53,8 @@ export const createSubscriptionParams = (extendedParams = {}) => ({
 export const loadAvailableQuantities = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: SUBSCRIPTIONS_QUANTITIES_REQUEST });
 
-  const params = createSubscriptionParams(extendedParams);
-
   try {
-    const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions`, {}, params);
+    const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions`, {}, propsToSnakeCase(extendedParams));
     return dispatch({
       type: SUBSCRIPTIONS_QUANTITIES_SUCCESS,
       payload: selectSubscriptionsQuantitiesFromResponse(data),
@@ -76,10 +76,6 @@ export const loadSubscriptions = (extendedParams = {}) => async (dispatch) => {
       response: data,
       search: extendedParams.search,
     });
-    const poolIds = filterRHSubscriptions(data.results).map(subs => subs.id);
-    if (poolIds.length > 0) {
-      dispatch(loadAvailableQuantities({ poolIds }));
-    }
     return result;
   } catch (error) {
     return dispatch(apiError(SUBSCRIPTIONS_FAILURE, error));
@@ -110,6 +106,10 @@ export const handleFinishedTask = task => (dispatch) => {
   dispatch(resetTasks());
   dispatch(pollTasks());
   dispatch(loadSubscriptions());
+
+  if (task.label !== MANIFEST_DELETE_TASK_LABEL) {
+    dispatch(pingUpstreamSubscriptions());
+  }
 };
 
 export const handleStartTask = task => (dispatch) => {

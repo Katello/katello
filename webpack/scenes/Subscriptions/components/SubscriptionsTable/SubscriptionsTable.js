@@ -109,7 +109,11 @@ class SubscriptionsTable extends Component {
 
   getTableProps = () => {
     const {
-      subscriptions, emptyState, tableColumns, loadSubscriptions, canManageSubscriptionAllocations,
+      subscriptions,
+      emptyState,
+      tableColumns,
+      loadSubscriptions,
+      selectionEnabled,
     } = this.props;
     const { groupedSubscriptions, rows, editing } = this.state;
 
@@ -120,8 +124,8 @@ class SubscriptionsTable extends Component {
       loadSubscriptions,
       rows,
       subscriptions,
+      selectionEnabled,
       tableColumns,
-      canManageSubscriptionAllocations,
       toggleSubscriptionGroup: this.toggleSubscriptionGroup,
       inlineEditController: this.getInlineEditController(),
       selectionController: this.getSelectionController(),
@@ -278,7 +282,6 @@ SubscriptionsTable.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
   emptyState: PropTypes.shape({}).isRequired,
-  canManageSubscriptionAllocations: PropTypes.bool,
   subscriptions: PropTypes.shape({
     loading: PropTypes.bool,
     availableQuantities: PropTypes.shape({}),
@@ -290,10 +293,11 @@ SubscriptionsTable.propTypes = {
   toggleDeleteButton: PropTypes.func.isRequired,
   selectedRows: PropTypes.instanceOf(Array).isRequired,
   onSelectedRowsChange: PropTypes.func.isRequired,
+  selectionEnabled: PropTypes.bool,
 };
 
 SubscriptionsTable.defaultProps = {
-  canManageSubscriptionAllocations: false,
+  selectionEnabled: false,
 };
 
 export default SubscriptionsTable;

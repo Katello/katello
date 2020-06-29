@@ -18,9 +18,7 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin).id))
       models
-
-      @organization.stubs(:owner_details)
-        .returns("upstreamConsumer" => {'uuid' => '', 'idCert' => {'key' => '', 'cert' => ''}})
+      Katello::UpstreamConnectionChecker.any_instance.expects(:assert_connection)
     end
 
     def test_index
@@ -67,12 +65,6 @@ module Katello
       assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index, params: { organization_id: @organization.id }
       end
-    end
-
-    def test_index_disconnected
-      Setting["content_disconnected"] = true
-      get :index, params: { organization_id: @organization.id }
-      assert_response :bad_request
     end
 
     def test_destroy

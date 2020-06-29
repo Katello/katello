@@ -142,7 +142,7 @@ module Katello
           def upstream_consumer
             fail _("Current organization not set.") unless Organization.current
             upstream_consumer = Organization.current.owner_details['upstreamConsumer']
-            fail _("Current organization has no manifest imported.") unless upstream_consumer
+            fail Katello::Errors::NoManifestImported unless upstream_consumer
 
             upstream_consumer
           end

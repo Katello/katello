@@ -23,3 +23,6 @@ export const selectIsTaskPending = (state) => {
   }
   return false;
 };
+
+export const selectHasUpstreamConnection = state =>
+  selectSubscriptionsState(state).hasUpstreamConnection;
