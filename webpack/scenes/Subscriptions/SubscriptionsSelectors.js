@@ -26,3 +26,6 @@ export const selectIsTaskPending = (state) => {
 
 export const selectTableSettings = (state, tableName) =>
   state.katello.settings.tables[tableName] || undefined;
+
+export const selectHasUpstreamConnection = state =>
+  selectSubscriptionsState(state).hasUpstreamConnection;

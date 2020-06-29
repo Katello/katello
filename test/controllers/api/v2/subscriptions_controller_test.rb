@@ -171,7 +171,8 @@ module Katello
       end
     end
 
-    def test_refresh_manfiest
+    def test_refresh_manifest
+      Katello::UpstreamConnectionChecker.any_instance.expects(:assert_connection)
       assert_async_task(::Actions::Katello::Organization::ManifestRefresh) do |organization|
         assert_equal(@organization, organization)
       end
@@ -180,18 +181,13 @@ module Katello
     end
 
     def test_refresh_protected
+      Katello::UpstreamConnectionChecker.any_instance.expects(:assert_connection)
       allowed_perms = [@import_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @read_permission]
 
       assert_protected_action(:refresh_manifest, allowed_perms, denied_perms, [@organization]) do
         put :refresh_manifest, params: { :organization_id => @organization.id }
       end
-    end
-
-    def test_refresh_disconnected
-      Setting["content_disconnected"] = true
-      put :refresh_manifest, params: { :organization_id => @organization.id }
-      assert_response :bad_request
     end
 
     def test_delete_manifest

@@ -2,13 +2,13 @@
 
 exports[`subscriptions table should render a loading state 1`] = `
 <SubscriptionsTable
-  canManageSubscriptionAllocations={false}
   emptyState={Object {}}
   loadSubscriptions={[Function]}
   onDeleteSubscriptions={[Function]}
   onSelectedRowsChange={[Function]}
   onSubscriptionDeleteModalClose={[Function]}
   selectedRows={Array []}
+  selectionEnabled={false}
   subscriptionDeleteModalOpen={false}
   subscriptions={
     Object {
@@ -75,21 +75,6 @@ exports[`subscriptions table should render a table 1`] = `
         class=""
       >
         <th
-          aria-label="Select all rows"
-          class="table-view-pf-select"
-        >
-          <label
-            class="control-label sr-only"
-            for="selectAll"
-          >
-            Select all rows
-          </label>
-          <input
-            id="selectAll"
-            type="checkbox"
-          />
-        </th>
-        <th
           class=""
         >
           Name
@@ -120,20 +105,6 @@ exports[`subscriptions table should render a table 1`] = `
       <tr
         class=""
       >
-        <td
-          class="table-view-pf-select"
-        >
-          <label
-            class="control-label sr-only"
-            for="select0"
-          >
-            Select row
-          </label>
-          <input
-            id="select0"
-            type="checkbox"
-          />
-        </td>
         <td>
           <a
             href="/subscriptions/3/"
@@ -163,21 +134,6 @@ exports[`subscriptions table should render a table 1`] = `
       <tr
         class=""
       >
-        <td
-          class="table-view-pf-select"
-        >
-          <label
-            class="control-label sr-only"
-            for="select1"
-          >
-            Select row
-          </label>
-          <input
-            disabled=""
-            id="select1"
-            type="checkbox"
-          />
-        </td>
         <td>
           <a
             href="/subscriptions/4/"
@@ -225,21 +181,6 @@ exports[`subscriptions table should render subscription name without hyperlink f
         class=""
       >
         <th
-          aria-label="Select all rows"
-          class="table-view-pf-select"
-        >
-          <label
-            class="control-label sr-only"
-            for="selectAll"
-          >
-            Select all rows
-          </label>
-          <input
-            id="selectAll"
-            type="checkbox"
-          />
-        </th>
-        <th
           class=""
         >
           Name
@@ -270,14 +211,6 @@ exports[`subscriptions table should render subscription name without hyperlink f
       <tr
         class=""
       >
-        <td
-          class="table-view-pf-select"
-        >
-          <span
-            aria-hidden="true"
-            class="fa fa-angle-right collapse-subscription-group-button"
-          />
-        </td>
         <td>
           hsdfhsdh
         </td>

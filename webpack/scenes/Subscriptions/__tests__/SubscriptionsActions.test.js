@@ -5,9 +5,7 @@ import { testActionSnapshotWithFixtures } from 'react-redux-test-utils';
 import { mockRequest, mockErrorRequest, mockReset } from '../../../mockRequest';
 import {
   requestSuccessResponse,
-  requestSuccessResponseWithRHSubscriptions,
   successActions,
-  successActionsWithQuantityLoad,
   failureActions,
   updateQuantitySuccessActions,
   updateQuantityFailureActions,
@@ -76,17 +74,6 @@ describe('subscription actions', () => {
         });
         await store.dispatch(loadSubscriptions());
         expect(store.getActions()).toEqual(successActions);
-      },
-    );
-    it(
-      'creates SUBSCRIPTIONS_REQUEST and triggers loadAvailableQuantities when there is some RH subscription',
-      async () => {
-        mockRequest({
-          url: '/katello/api/v2/subscriptions',
-          response: requestSuccessResponseWithRHSubscriptions,
-        });
-        await store.dispatch(loadSubscriptions());
-        expect(store.getActions()).toEqual(successActionsWithQuantityLoad);
       },
     );
   });
