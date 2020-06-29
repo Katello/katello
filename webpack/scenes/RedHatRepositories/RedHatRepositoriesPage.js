@@ -111,6 +111,8 @@ RedHatRepositoriesPage.propTypes = {
     recommended: PropTypes.bool,
     loading: PropTypes.bool,
     search: PropTypes.shape({}),
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    // eslint-disable-next-line react/forbid-prop-types
     missingPermissions: PropTypes.array,
   }).isRequired,
 };

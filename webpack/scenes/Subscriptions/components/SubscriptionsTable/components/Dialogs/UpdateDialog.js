@@ -47,7 +47,7 @@ const UpdateDialog = ({
 UpdateDialog.propTypes = {
   show: PropTypes.bool.isRequired,
   updateQuantity: PropTypes.func.isRequired,
-  updatedQuantity: PropTypes.shape(PropTypes.Object).isRequired,
+  updatedQuantity: PropTypes.shape({}).isRequired,
   showUpdateConfirm: PropTypes.func.isRequired,
   enableEditing: PropTypes.func.isRequired,
 };

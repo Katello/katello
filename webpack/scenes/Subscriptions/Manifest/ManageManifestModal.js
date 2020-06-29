@@ -352,6 +352,8 @@ ManageManifestModal.propTypes = {
   simpleContentAccess: PropTypes.bool,
   manifestHistory: PropTypes.shape({
     loading: PropTypes.bool,
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    // eslint-disable-next-line react/forbid-prop-types
     results: PropTypes.array,
   }).isRequired,
   setModalClosed: PropTypes.func.isRequired,

@@ -45,6 +45,8 @@ SubscriptionDetailAssociations.propTypes = {
   subscriptionDetails: PropTypes.shape({
     id: PropTypes.number,
     host_count: PropTypes.number,
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    // eslint-disable-next-line react/forbid-prop-types
     activation_keys: PropTypes.array,
   }).isRequired,
 };

@@ -34,6 +34,8 @@ const ContentTable = ({ content, tableSchema, onPaginationChange }) => {
 ContentTable.propTypes = {
   content: PropTypes.shape({
     loading: PropTypes.bool,
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    // eslint-disable-next-line react/forbid-prop-types
     results: PropTypes.array,
     pagination: PropTypes.shape({}),
     itemCount: PropTypes.number,
