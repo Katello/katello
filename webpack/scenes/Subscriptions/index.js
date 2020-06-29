@@ -16,10 +16,11 @@ import {
   selectActivePermissions,
   selectTableSettings,
   selectIsTaskPending,
+  selectHasUpstreamConnection,
 } from './SubscriptionsSelectors';
 import { selectIsPollingTask } from '../Tasks/TaskSelectors';
-import { selectSimpleContentAccessEnabled } from '../Organizations/OrganizationSelectors';
-
+import { selectOrganizationState, selectSimpleContentAccessEnabled } from '../Organizations/OrganizationSelectors';
+import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
 import reducer from './SubscriptionReducer';
 import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTIONS } from './SubscriptionConstants';
 import SubscriptionsPage from './SubscriptionsPage';
@@ -34,18 +35,20 @@ const mapStateToProps = (state) => {
     subscriptionTableSettings,
     activePermissions: selectActivePermissions(state),
     simpleContentAccess: selectSimpleContentAccessEnabled(state),
+    hasUpstreamConnection: selectHasUpstreamConnection(state),
     task: selectSubscriptionsTask(state),
     isTaskPending: selectIsTaskPending(state),
     isPollingTask: selectIsPollingTask(state, SUBSCRIPTIONS),
     searchQuery: selectSearchQuery(state),
     deleteModalOpened: selectDeleteModalOpened(state),
     deleteButtonDisabled: selectDeleteButtonDisabled(state),
-    organization: state.katello.organization,
+    organization: selectOrganizationState(state),
   };
 };
 
 // map action dispatchers to props
 const actions = {
+  pingUpstreamSubscriptions,
   ...subscriptionActions,
   ...taskActions,
   ...settingActions,

@@ -7,14 +7,11 @@ module Katello
         CDN_PATH = '/content/dist/rhel/server/7/listing'.freeze
 
         def self.deliver!(orgs = ::Organization.all)
+          return if Setting[:content_disconnected]
+
           orgs.each do |org|
-            next unless redhat_connected?(org)
-            content = org.contents.find_by(:label => CONTENT_LABEL)
-            product = content&.products&.find { |p| p.key }
-            if content && product && product.pools.any?
-              if got_403? { product.cdn_resource.get(CDN_PATH) }
-                new(org).deliver!
-              end
+            if cdn_inaccessible?(org) || upstream_inaccessible?(org)
+              new(org).deliver!
             end
           end
         rescue StandardError => e
@@ -47,6 +44,14 @@ module Katello
           @blueprint ||= NotificationBlueprint.find_by(name: 'manifest_expired_warning')
         end
 
+        def self.cdn_inaccessible?(org)
+          content = org.contents.find_by(:label => CONTENT_LABEL)
+          product = content&.products&.find { |p| p.key }
+          if content && product && product.pools.any?
+            return got_403? { product.cdn_resource.get(CDN_PATH) }
+          end
+        end
+
         def self.got_403?
           yield
           false
@@ -54,8 +59,15 @@ module Katello
           true
         end
 
+        def self.upstream_inaccessible?(org)
+          return unless org.manifest_imported?
+
+          checker = Katello::UpstreamConnectionChecker.new(org)
+          !checker.can_connect?
+        end
+
         def self.redhat_connected?(org)
-          org.redhat_provider.repository_url.include?(CDN_HOSTNAME) && !Setting[:content_disconnected]
+          org.redhat_provider.repository_url.include?(CDN_HOSTNAME)
         end
       end
     end

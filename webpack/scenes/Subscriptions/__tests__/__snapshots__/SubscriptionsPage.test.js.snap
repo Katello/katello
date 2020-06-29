@@ -38,11 +38,11 @@ exports[`subscriptions page should render 1`] = `
       </h1>
       <SubscriptionsToolbar
         canManageSubscriptionAllocations={false}
-        disableAddButton={false}
+        disableAddButton={true}
         disableDeleteButton={true}
         disableDeleteReason="This is disabled because no subscriptions are selected."
-        disableManifestActions={false}
-        disableManifestReason={null}
+        disableManifestActions={true}
+        disableManifestReason="This is disabled because no connection could be made to the upstream Subscription Allocation."
         getAutoCompleteParams={[Function]}
         initialInputValue=""
         onDeleteButtonClick={[Function]}
@@ -57,7 +57,8 @@ exports[`subscriptions page should render 1`] = `
       <Connect(ManageManifestModal)
         canImportManifest={false}
         delete={[Function]}
-        disabledReason={null}
+        disableManifestActions={true}
+        disabledReason="This is disabled because no connection could be made to the upstream Subscription Allocation."
         refresh={[Function]}
         taskInProgress={false}
         upload={[Function]}
@@ -83,6 +84,7 @@ exports[`subscriptions page should render 1`] = `
           onSelectedRowsChange={[Function]}
           onSubscriptionDeleteModalClose={[Function]}
           selectedRows={Array []}
+          selectionEnabled={false}
           subscriptionDeleteModalOpen={false}
           subscriptions={
             Object {

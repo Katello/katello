@@ -4,7 +4,8 @@ import toJson from 'enzyme-to-json';
 import { loadSetting } from 'foremanReact/components/Settings/SettingsActions';
 import SubscriptionsPage from '../SubscriptionsPage';
 import { successState, settingsSuccessState, permissionDeniedState } from './subscriptions.fixtures';
-import { loadSubscriptions, updateQuantity, loadTableColumns } from '../SubscriptionActions';
+import { loadAvailableQuantities, loadSubscriptions, updateQuantity, loadTableColumns } from '../SubscriptionActions';
+import { pingUpstreamSubscriptions } from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
 import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
 jest.mock('foremanReact/components/PermissionDenied');
@@ -40,6 +41,8 @@ describe('subscriptions page', () => {
     createColumns={createColumns}
     updateColumns={updateColumns}
     loadSubscriptions={loadSubscriptions}
+    loadAvailableQuantities={loadAvailableQuantities}
+    pingUpstreamSubscriptions={pingUpstreamSubscriptions}
     updateQuantity={updateQuantity}
     handleStartTask={handleStartTask}
     handleFinishedTask={handleFinishedTask}
@@ -73,6 +76,8 @@ describe('subscriptions page', () => {
     createColumns={createColumns}
     updateColumns={updateColumns}
     loadSubscriptions={loadSubscriptions}
+    loadAvailableQuantities={loadAvailableQuantities}
+    pingUpstreamSubscriptions={pingUpstreamSubscriptions}
     updateQuantity={updateQuantity}
     handleStartTask={handleStartTask}
     handleFinishedTask={handleFinishedTask}

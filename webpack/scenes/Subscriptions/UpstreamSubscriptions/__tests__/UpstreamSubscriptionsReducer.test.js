@@ -1,4 +1,4 @@
-import * as types from '../UpstreamSubscriptionsContstants';
+import * as types from '../UpstreamSubscriptionsConstants';
 
 import {
   initialState,

@@ -7,7 +7,7 @@ import {
   SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST,
   SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
   SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE,
-} from './UpstreamSubscriptionsContstants';
+} from './UpstreamSubscriptionsConstants';
 
 const initialState = initialApiState;
 

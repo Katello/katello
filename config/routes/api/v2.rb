@@ -349,10 +349,12 @@ Katello::Engine.routes.draw do
               put :refresh_manifest
             end
           end
+
           api_resources :upstream_subscriptions, only: [:index, :create] do
             collection do
               delete :destroy
               put :update
+              get :ping
             end
           end
         end
