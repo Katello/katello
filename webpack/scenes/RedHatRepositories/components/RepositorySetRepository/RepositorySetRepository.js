@@ -141,6 +141,8 @@ RepositorySetRepository.propTypes = {
   enabledSearch: PropTypes.shape({
     query: PropTypes.string,
     searchList: PropTypes.string,
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    // eslint-disable-next-line react/forbid-prop-types
     filters: PropTypes.array,
   }),
   enabledPagination: PropTypes.shape({

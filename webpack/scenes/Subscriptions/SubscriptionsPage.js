@@ -315,10 +315,13 @@ SubscriptionsPage.propTypes = {
     disconnected: PropTypes.bool,
   }),
   subscriptions: PropTypes.shape({
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    /* eslint-disable react/forbid-prop-types */
     tableColumns: PropTypes.array,
     selectedTableColumns: PropTypes.array,
     missingPermissions: PropTypes.array,
     results: PropTypes.array,
+    /* eslint-enable react/forbid-prop-types */
   }).isRequired,
   activePermissions: PropTypes.shape({
     can_delete_manifest: PropTypes.bool,
