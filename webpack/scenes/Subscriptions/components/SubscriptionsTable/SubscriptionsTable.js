@@ -276,6 +276,8 @@ SubscriptionsTable.propTypes = {
   subscriptions: PropTypes.shape({
     loading: PropTypes.bool,
     availableQuantities: PropTypes.shape({}),
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    // eslint-disable-next-line react/forbid-prop-types
     results: PropTypes.array,
   }).isRequired,
   subscriptionDeleteModalOpen: PropTypes.bool.isRequired,
