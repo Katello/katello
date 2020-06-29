@@ -95,6 +95,8 @@ Table.propTypes = {
     searchIsActive: PropTypes.bool,
     itemCount: PropTypes.number,
     pagination: PropTypes.shape({}),
+    // Disabling rule as existing code failed due to an eslint-plugin-react update
+    // eslint-disable-next-line react/forbid-prop-types
     results: PropTypes.array,
   }).isRequired,
   loadSubscriptions: PropTypes.func.isRequired,
