@@ -90,6 +90,7 @@ module Katello
       def pulp_counts_differ?
         pulp_counts = pulp_repo_facts[:content_unit_counts]
         rpms.count != pulp_counts['rpm'].to_i ||
+          srpms.count != pulp_counts['srpm'].to_i ||
           errata.count != pulp_counts['erratum'].to_i ||
           package_groups.count != pulp_counts['package_group'].to_i ||
           puppet_modules.count != pulp_counts['puppet_module'].to_i ||
