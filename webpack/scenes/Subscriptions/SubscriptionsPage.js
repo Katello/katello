@@ -70,7 +70,7 @@ class SubscriptionsPage extends Component {
         this.loadData();
       }
 
-      if (disconnected === false && disconnected !== prevProps.settings.disconnected) {
+      if (disconnected === false && disconnected !== prevProps.subscriptions.disconnected) {
         if (manifestExists(organization)) {
           pingUpstreamSubscriptions();
           this.state.availableQuantitiesLoaded = false;
