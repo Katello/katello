@@ -3,7 +3,7 @@ module Katello
     REQUIRE_REBOOT = 2
     REQUIRE_PROCESS_RESTART = 1
     UP_TO_DATE = 0
-
+    UNKNOWN = -1
     def self.status_name
       N_("Traces")
     end

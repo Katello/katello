@@ -1,5 +1,6 @@
 module Katello
   class PurposeUsageStatus < HostStatus::Status
+    UNKNOWN = Katello::PurposeStatus::UNKNOWN
     def self.status_name
       N_('Usage')
     end

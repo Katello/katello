@@ -1,6 +1,6 @@
 require 'katello/permission_creator'
 require 'katello/repository_types.rb'
-
+require 'katello/host_status_manager.rb'
 # rubocop:disable Metrics/BlockLength
 Foreman::Plugin.register :katello do
   requires_foreman '>= 1.24'
@@ -266,14 +266,9 @@ Foreman::Plugin.register :katello do
       :onlyif => proc { |proxy| proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) }
   end
 
-  register_custom_status(Katello::ErrataStatus)
-  register_custom_status(Katello::SubscriptionStatus)
-  register_custom_status(Katello::PurposeSlaStatus)
-  register_custom_status(Katello::PurposeRoleStatus)
-  register_custom_status(Katello::PurposeUsageStatus)
-  register_custom_status(Katello::PurposeAddonsStatus)
-  register_custom_status(Katello::PurposeStatus)
-  register_custom_status(Katello::TraceStatus)
+  ::Katello::HostStatusManager::STATUSES.each do |status_class|
+    register_custom_status(status_class)
+  end
 
   register_ping_extension { Katello::Ping.ping }
   register_status_extension { Katello::Ping.status }
