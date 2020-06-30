@@ -48,7 +48,6 @@ class SubscriptionsPage extends Component {
       loadAvailableQuantities,
       organization,
       pingUpstreamSubscriptions,
-      settings,
       subscriptions,
       task,
     } = this.props;
