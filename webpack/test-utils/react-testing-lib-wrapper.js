@@ -5,13 +5,14 @@ import React from 'react';
 import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import { APIMiddleware, reducers as apiReducer } from 'foremanReact/redux/API';
+import { reducers as foremanModalReducer } from 'foremanReact/components/ForemanModal';
 import { STATUS } from 'foremanReact/constants';
 import { render, waitFor } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import allKatelloReducers from '../redux/reducers/index.js';
 import { initialSettingsState } from '../scenes/Settings/SettingsReducer';
+import allKatelloReducers from '../redux/reducers/index.js';
 
 // r-t-lib's print limit for debug() is quite small, setting it to a much higher char max here.
 // See https://github.com/testing-library/react-testing-library/issues/503 for more info.
@@ -22,26 +23,29 @@ process.env.DEBUG_PRINT_LIMIT = 99999;
 function renderWithRedux(
   component,
   {
-    namespace, // redux namespace
-    initialState = { response: {}, status: STATUS.PENDING },
+    apiNamespace, // namespace if using API middleware
+    initialApiState = { response: {}, status: STATUS.PENDING }, // Default state for API middleware
+    initialState = {}, // Override full state
   } = {},
 ) {
   // Adding the reducer in the expected namespaced format
   const combinedReducers = combineReducers({
-    ...apiReducer,
     katello: allKatelloReducers,
+    ...apiReducer,
+    ...foremanModalReducer,
   });
 
   // Namespacing the initial state as well
   const initialFullState = Immutable({
     API: {
-      [namespace]: initialState,
+      [apiNamespace]: initialApiState,
     },
     katello: {
       settings: {
         settings: initialSettingsState,
       },
     },
+    ...initialState,
   });
   const middlewares = applyMiddleware(thunk, APIMiddleware);
   const store = createStore(combinedReducers, initialFullState, middlewares);

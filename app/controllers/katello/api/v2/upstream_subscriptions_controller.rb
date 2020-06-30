@@ -77,6 +77,22 @@ module Katello
       render json: { status: 'OK' }
     end
 
+    api :PUT, "/organizations/:organization_id/simple_content_access/enable",
+      N_("Enable simple content access for a manifest")
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
+    def enable_simple_content_access
+      task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:organization_id])
+      respond_for_async :resource => task
+    end
+
+    api :PUT, "/organizations/:organization_id/simple_content_access/disable",
+      N_("Disable simple content access for a manifest")
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
+    def disable_simple_content_access
+      task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:organization_id])
+      respond_for_async :resource => task
+    end
+
     private
 
     def update_params

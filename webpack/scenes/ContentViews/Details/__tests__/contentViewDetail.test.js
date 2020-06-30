@@ -8,7 +8,7 @@ import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
 
 const cvDetailData = require('./contentViewDetails.fixtures.json');
 
-const renderOptions = { namespace: `${CONTENT_VIEWS_KEY}_1` };
+const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvDetailsPath = api.getApiUrl('/content_views/1');
 
 test('Can call API and show details on page load', async (done) => {

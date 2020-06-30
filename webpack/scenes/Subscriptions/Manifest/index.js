@@ -23,6 +23,7 @@ const mapStateToProps = state => ({
   isManifestImported: selectIsManifestImported(state),
   modalOpenState: state.foremanModals.ManageManifestModal,
   deleteManifestModalIsOpen: selectIsModalOpen(state, DELETE_MANIFEST_MODAL_ID),
+  manifestActionInProgress: state.katello.subscriptions.manifestActionInProgress,
 });
 
 // map action dispatchers to props

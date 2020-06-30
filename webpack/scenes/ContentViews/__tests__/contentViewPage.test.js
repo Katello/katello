@@ -15,7 +15,7 @@ const cvIndexData = require('./contentViewList.fixtures.json');
 
 const cvIndexPath = api.getApiUrl('/content_views');
 const autocompleteUrl = '/content_views/auto_complete_search';
-const renderOptions = { namespace: CONTENT_VIEWS_KEY };
+const renderOptions = { apiNamespace: CONTENT_VIEWS_KEY };
 
 let firstCV;
 let searchDelayScope;

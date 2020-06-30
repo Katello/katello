@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Col, Row, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { Button, Spinner, OverlayTrigger, Tooltip, Icon } from 'patternfly-react';
+import { Button, Spinner } from 'patternfly-react';
 import ForemanModal from 'foremanReact/components/ForemanModal';
-import { isEqual } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
 import { LoadingState } from '../../../components/LoadingState';
@@ -12,6 +11,7 @@ import { Table } from '../../../components/pf3Table';
 import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
+import SimpleContentAccess from './SimpleContentAccess';
 
 import './ManageManifestModal.scss';
 
@@ -20,31 +20,21 @@ class ManageManifestModal extends Component {
     super(props);
 
     this.state = {
-      actionInProgress: props.taskInProgress,
+      redhat_repository_url: null,
+      hideModalAfterAction: true,
     };
   }
 
-  static getDerivedStateFromProps(newProps, prevState) {
-    if (
-      !isEqual(newProps.taskInProgress, prevState.actionInProgress)
-    ) {
-      return {
-        actionInProgress: newProps.taskInProgress,
-      };
+  componentWillMount() {
+    if (this.props.taskInProgress && this.state.hideModalAfterAction) {
+      this.hideModal();
+      this.setState({ hideModalAfterAction: false });
     }
-    return null;
   }
 
   componentDidMount() {
     this.loadData();
-  }
-
-  componentDidUpdate(prevProp, prevState) {
-    const { actionInProgress } = this.state;
-
-    if (prevState.actionInProgress && !actionInProgress) {
-      this.props.loadOrganization();
-    }
+    this.props.loadOrganization();
   }
 
   loadData() {
@@ -72,21 +62,17 @@ class ManageManifestModal extends Component {
 
   uploadManifest = (fileList) => {
     this.hideModal();
-    this.setState({ actionInProgress: true });
     if (fileList.length > 0) {
       this.props.upload(fileList[0]);
     }
   };
 
   refreshManifest = () => {
-    this.hideModal();
-    this.setState({ actionInProgress: true });
     this.props.refresh();
   };
 
   deleteManifest = () => {
     this.hideModal();
-    this.setState({ actionInProgress: true });
     this.props.delete();
   };
 
@@ -108,13 +94,22 @@ class ManageManifestModal extends Component {
       isManifestImported,
       canEditOrganizations,
       simpleContentAccess,
+      enableSimpleContentAccess,
+      disableSimpleContentAccess,
+      taskInProgress,
+      manifestActionInProgress,
     } = this.props;
 
+    const actionInProgress = (taskInProgress || manifestActionInProgress);
     const showRedHatProviderDetails = canEditOrganizations;
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
     const showManifestTab = (showRedHatProviderDetails || showSubscriptionManifest);
-
-    const { actionInProgress } = this.state;
+    const disableSCASwitch = (
+      disableManifestActions ||
+      !isManifestImported ||
+      actionInProgress ||
+      organization.loading
+    );
 
     const emptyStateData = () => ({
       header: __('There is no Manifest History to display.'),
@@ -158,17 +153,17 @@ class ManageManifestModal extends Component {
               <Form className="form-horizontal">
                 {showRedHatProviderDetails &&
                   <React.Fragment>
-                    <h5>{__('Red Hat Provider Details')}</h5>
+                    <h3>{__('Red Hat Provider Details')}</h3>
                     <hr />
                     <FormGroup>
                       <Grid>
                         <Row>
-                          <Col sm={4}>
+                          <Col sm={5}>
                             <ControlLabel htmlFor="cdnUrl">
                               {__('Red Hat CDN URL')}
                             </ControlLabel>
                           </Col>
-                          <Col sm={8}>
+                          <Col sm={7}>
                             <FormControl
                               id="cdnUrl"
                               type="text"
@@ -182,7 +177,7 @@ class ManageManifestModal extends Component {
                     <FormGroup>
                       <Grid>
                         <Row>
-                          <Col smOffset={4} sm={4}>
+                          <Col smOffset={5} sm={7}>
                             <Button onClick={this.saveOrganization} disabled={organization.loading}>
                               {organization.loading ? buttonLoading : __('Update')}
                             </Button>
@@ -198,52 +193,36 @@ class ManageManifestModal extends Component {
 
                     <FormGroup>
                       <Grid>
-                        <h5>{__('Subscription Manifest')}</h5>
+                        <h3>{__('Subscription Manifest')}</h3>
                         <hr />
                         <Row>
-                          <Col sm={4}>
-                            <ControlLabel
-                              className="control-label"
-                              htmlFor="usmaFile"
-                              style={{ paddingTop: '0' }}
-                            >
-                              <OverlayTrigger
-                                overlay={
-                                  <Tooltip id="usma-tooltip">
-                                    {__('Upstream Subscription Management Application')}
-                                  </Tooltip>
-                                }
-                                placement="bottom"
-                                trigger={['hover', 'focus']}
-                                rootClose={false}
-                              >
-                                <div>{__('USMA')}</div>
-                              </OverlayTrigger>
-                            </ControlLabel>
+                          <SimpleContentAccess
+                            enableSimpleContentAccess={enableSimpleContentAccess}
+                            disableSimpleContentAccess={disableSimpleContentAccess}
+                            isSimpleContentAccessEnabled={simpleContentAccess}
+                            canToggleSimpleContentAccess={!disableSCASwitch}
+                          />
+                        </Row>
+                        <Row>
+                          <Col sm={5}>
+                            <strong>{__('Subscription Allocation')}</strong>
                           </Col>
-                          <Col sm={8}>
+                          <Col sm={7}>
                             {getManifestName()}
                           </Col>
                         </Row>
                         <Row>
-                          <Col sm={4}>
-                            <div>{__('Simple Content Access')}</div>
+                          <Col sm={5}>
+                            {canImportManifest &&
+                              <ControlLabel
+                                style={{ paddingTop: '10px' }}
+                              >
+                                <div>{__('Import New Manifest')}</div>
+                              </ControlLabel>
+                            }
                           </Col>
-                          <Col sm={8} className="manifest-actions">
-                            <Spinner loading={actionInProgress} inline />
-                            {simpleContentAccess ? __('Yes') : __('No')}
-                            <OverlayTrigger
-                              overlay={
-                                <Tooltip id="sca-tooltip">
-                                  {__('When Simple Content Access is enabled, hosts can consume from all repositories in their Content View regardless of subscription status.')}
-                                </Tooltip>
-                              }
-                              placement="bottom"
-                              trigger={['hover', 'focus']}
-                              rootClose={false}
-                            >
-                              <Icon type="pf" name="info" />
-                            </OverlayTrigger>
+                          <Col sm={7} className="manifest-actions">
+                            <Spinner loading={actionInProgress} />
                             {canImportManifest &&
                               <FormControl
                                 id="usmaFile"
@@ -330,6 +309,8 @@ ManageManifestModal.propTypes = {
   upload: PropTypes.func.isRequired,
   refresh: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
+  enableSimpleContentAccess: PropTypes.func.isRequired,
+  disableSimpleContentAccess: PropTypes.func.isRequired,
   loadManifestHistory: PropTypes.func.isRequired,
   organization: PropTypes.shape({
     loading: PropTypes.bool,
@@ -361,6 +342,7 @@ ManageManifestModal.propTypes = {
   setModalClosed: PropTypes.func.isRequired,
   setModalOpen: PropTypes.func.isRequired,
   deleteManifestModalIsOpen: PropTypes.bool,
+  manifestActionInProgress: PropTypes.bool,
 };
 
 ManageManifestModal.defaultProps = {
@@ -372,6 +354,7 @@ ManageManifestModal.defaultProps = {
   canEditOrganizations: false,
   deleteManifestModalIsOpen: false,
   simpleContentAccess: false,
+  manifestActionInProgress: false,
 };
 
 export default ManageManifestModal;

@@ -16,6 +16,12 @@ import {
   MANIFEST_HISTORY_REQUEST,
   MANIFEST_HISTORY_SUCCESS,
   MANIFEST_HISTORY_FAILURE,
+  ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST,
+  ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
+  ENABLE_SIMPLE_CONTENT_ACCESS_FAILURE,
+  DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST,
+  DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
+  DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE,
 } from './ManifestConstants';
 
 export const uploadManifest = file => async (dispatch) => {
@@ -72,6 +78,42 @@ export const deleteManifest = (extendedParams = {}) => async (dispatch) => {
     });
   } catch (error) {
     return dispatch(apiError(DELETE_MANIFEST_FAILURE, error));
+  }
+};
+
+export const enableSimpleContentAccess = (extendedParams = {}) => async (dispatch) => {
+  dispatch({ type: ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST });
+
+  const params = {
+    ...propsToSnakeCase(extendedParams),
+  };
+
+  try {
+    const { data } = await api.put(`/organizations/${orgId()}/upstream_subscriptions/simple_content_access/enable`, {}, params);
+    return dispatch({
+      type: ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(ENABLE_SIMPLE_CONTENT_ACCESS_FAILURE, error));
+  }
+};
+
+export const disableSimpleContentAccess = (extendedParams = {}) => async (dispatch) => {
+  dispatch({ type: DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST });
+
+  const params = {
+    ...propsToSnakeCase(extendedParams),
+  };
+
+  try {
+    const { data } = await api.put(`/organizations/${orgId()}/upstream_subscriptions/simple_content_access/disable`, {}, params);
+    return dispatch({
+      type: DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE, error));
   }
 };
 
