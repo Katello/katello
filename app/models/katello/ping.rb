@@ -6,8 +6,13 @@ module Katello
 
     class << self
       def services(capsule_id = nil)
-        services = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
-        services += [:pulp3] if fetch_proxy(capsule_id)&.pulp3_enabled?
+        proxy = fetch_proxy(capsule_id)
+        services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
+        services += [:pulp3] if proxy&.pulp3_enabled?
+        if proxy.nil? || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) || proxy.has_feature?(SmartProxy::PULP_FEATURE)
+          services += [:pulp, :pulp_auth]
+        end
+
         services
       end
 

@@ -65,7 +65,13 @@ module Katello
         end
 
         def self.pulp_master
-          unscoped.with_features(PULP_FEATURE).first
+          unscoped.with_features(PULP_FEATURE).first || non_mirror_pulp3
+        end
+
+        def self.non_mirror_pulp3
+          found = unscoped.with_features(PULP3_FEATURE).order(:id).select { |proxy| !proxy.setting(PULP3_FEATURE, 'mirror') }
+          Rails.logger.warn("Found multiple smart proxies with mirror set to false.  This is likely not intentional.") if found.count > 1
+          found.first
         end
 
         def self.pulp_master!
@@ -204,11 +210,11 @@ module Katello
       end
 
       def pulp_mirror?
-        self.has_feature? PULP_NODE_FEATURE
+        self.has_feature?(PULP_NODE_FEATURE) || self.setting(SmartProxy::PULP3_FEATURE, 'mirror')
       end
 
       def pulp_master?
-        self.has_feature? PULP_FEATURE
+        self.has_feature?(PULP_FEATURE) || self.setting(SmartProxy::PULP3_FEATURE, 'mirror') == false
       end
 
       def supported_pulp_types
