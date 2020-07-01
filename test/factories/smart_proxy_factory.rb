@@ -17,12 +17,13 @@ FactoryBot.modify do
       after(:create) do |proxy, _evaluator|
         plugins = Katello::RepositoryTypeManager.repository_types.values.map(&:pulp3_plugin).compact
         v3_feature = Feature.find_or_create_by(:name => ::SmartProxy::PULP3_FEATURE)
-        proxy.features << v3_feature
+        proxy.features << v3_feature unless proxy.features.include?(v3_feature)
 
         smart_proxy_feature = proxy.smart_proxy_features.find { |spf| spf.feature_id == v3_feature.id }
         smart_proxy_feature.capabilities = plugins
-        smart_proxy_feature.settings = { pulp_url: "https://#{Socket.gethostname}",
-                                         content_app_url: "http://localhost:24816" }
+        smart_proxy_feature.settings ||= {}
+        smart_proxy_feature.settings[:pulp_url] = "https://#{Socket.gethostname}"
+        smart_proxy_feature.settings[:content_app_url] = "http://localhost:24816"
         smart_proxy_feature.save!
       end
     end
@@ -31,6 +32,12 @@ FactoryBot.modify do
       after(:build) do |proxy, _evaluator|
         proxy.locations = proxy.organizations = proxy.lifecycle_environments = []
         proxy.features << Feature.find_or_create_by(:name => 'Pulp Node')
+
+        v3_feature = Feature.find_or_create_by(:name => 'Pulpcore')
+        proxy.features << v3_feature unless proxy.features.include?(v3_feature)
+        smart_proxy_feature = proxy.smart_proxy_features.find { |spf| spf.feature_id == v3_feature.id }
+        smart_proxy_feature.settings ||= {}
+        smart_proxy_feature.settings[:mirror] = true
       end
     end
   end

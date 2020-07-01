@@ -21,6 +21,7 @@ module Katello
         @org = @library.organization
         @facts = {'network.hostname' => 'foo.example.com'}
         @host = FactoryBot.create(:host, organization: @org)
+        FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       end
 
       let(:rhsm_params) { {:name => 'foobar', :facts => @facts, :type => 'system'} }
