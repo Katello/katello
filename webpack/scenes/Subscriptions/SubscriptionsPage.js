@@ -266,9 +266,11 @@ class SubscriptionsPage extends Component {
             <div id="subscriptions-table" className="modal-container">
               {simpleContentAccess && (
                 <Alert type="info">
-                  This organization has Simple Content Access enabled. <br />
+                  This organization has Simple Content Access enabled.
                   Hosts can consume from all repositories in their Content View regardless of
-                  subscription status.
+                  subscription status.  <br />
+                  Learn more about your overall subscription usage at
+                  <a href="https://cloud.redhat.com/subscriptions/rhel-sw/all" target="_blank" rel="noreferrer"> Subscription Watch</a>.
                 </Alert>
               )}
               <SubscriptionsTable
