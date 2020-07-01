@@ -57,6 +57,15 @@ const SubscriptionsToolbar = ({
               </LinkContainer>
             }
 
+            <a
+              href="https://cloud.redhat.com/subscriptions/rhel-sw/all"
+              className="btn btn-default"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {__('Subscription Watch')}
+            </a>
+
             <Button onClick={onManageManifestButtonClick}>
               {__('Manage Manifest')}
             </Button>
