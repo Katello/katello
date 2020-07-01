@@ -35,6 +35,10 @@ module ::Actions::Katello::CapsuleContent
     let(:staging_environment) { katello_environments(:staging) }
     let(:dev_environment) { katello_environments(:dev) }
 
+    before do
+      SmartProxy.any_instance.stubs(:pulp_master?).returns(false)
+    end
+
     it 'plans correctly for a pulp3 file repo' do
       with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(environment)

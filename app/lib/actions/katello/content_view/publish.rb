@@ -5,7 +5,7 @@ module Actions
       class Publish < Actions::EntryAction
         include ::Katello::ContentViewHelper
         attr_accessor :version
-        # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
+        # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
           content_view.check_ready_to_publish!
@@ -69,15 +69,19 @@ module Actions
                 plan_action(Repository::Destroy, repo, :skip_environment_update => true)
               end
             end
-            has_modules = content_view.publish_puppet_environment?
-            plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
-            unless options[:skip_promotion]
-              plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
-                  :puppet_modules_present => has_modules)
+
+            if SmartProxy.pulp_master.has_feature?(SmartProxy::PULP_FEATURE)
+              has_modules = content_view.publish_puppet_environment?
+              plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
+              unless options[:skip_promotion]
+                plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
+                    :puppet_modules_present => has_modules)
+              end
             end
             plan_action(Candlepin::Environment::SetContent, content_view, library, content_view.content_view_environment(library)) unless options[:skip_promotion]
             plan_action(Katello::Foreman::ContentUpdate, library, content_view) unless options[:skip_promotion]
             plan_action(ContentView::ErrataMail, content_view, library) unless options[:skip_promotion]
+
             plan_self(history_id: history.id, content_view_id: content_view.id,
                       auto_publish_composite_ids: auto_publish_composite_ids(content_view),
                       content_view_version_name: version.name,
