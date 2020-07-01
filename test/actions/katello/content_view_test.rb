@@ -19,6 +19,7 @@ module ::Actions::Katello::ContentView
     let(:content_view) { katello_content_views(:no_environment_view) }
     before do
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns({})
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
     it 'plans' do
       action.stubs(:task).returns(success_task)
