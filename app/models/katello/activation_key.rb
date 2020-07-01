@@ -104,7 +104,7 @@ module Katello
     end
 
     def products
-      Katello::Product.joins(:pools => :activation_keys).where("#{Katello::ActivationKey.table_name}.id" => self.id).enabled.uniq
+      Katello::Product.distinct.joins(:pools => :activation_keys).where("#{Katello::ActivationKey.table_name}.id" => self.id).enabled.sort
     end
 
     def valid_content_override_label?(content_label)
