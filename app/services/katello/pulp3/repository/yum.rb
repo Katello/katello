@@ -70,40 +70,52 @@ module Katello
           "/pulp/repos/#{repo.relative_path}/".sub('//', '/')
         end
 
-        def copy_units(source_repository_version_href, content_unit_hrefs, dependency_solving, dest_base_version = 0)
+        def copy_units(source_repository, content_unit_hrefs, dependency_solving, dest_base_version = 0,
+                       additional_repo_map = {})
           tasks = []
 
+          content_unit_hrefs.sort!
           if content_unit_hrefs.any?
             data = PulpRpmClient::Copy.new
             data.config = [{
-              source_repo_version: source_repository_version_href,
+              source_repo_version: source_repository.version_href,
               dest_repo: repository_reference.repository_href,
               dest_base_version: dest_base_version,
-              content: content_unit_hrefs.sort
+              content: content_unit_hrefs
             }]
             data.dependency_solving = dependency_solving
             if dependency_solving
-              ::Katello::Repository.find_by(version_href: source_repository_version_href).siblings.each do |sibling|
-                # Any Pulp 2 siblings must be excluded
-                if sibling.version_href
-                  source_repo_version = sibling.library_instance? ? sibling.version_href : sibling.library_instance.version_href
-                  data.config << {
-                    source_repo_version: source_repo_version,
-                    # FIXME: The specific dest_repo for that sibling needs to already be created?
-                    dest_repo: repository_reference.repository_href,
-                    content: []
-                  }
-                end
+              # repo_map example: {
+              #   <source_repo_id>: {
+              #     dest_repo: <dest_repo_id>,
+              #     base_version: <base_version>
+              #   }
+              # }
+              additional_repo_map.each do |source_repo, dest_repo_map|
+                source_repo_version = ::Katello::Repository.find(source_repo).version_href
+
+                dest_repo = ::Katello::Repository.find(dest_repo_map[:dest_repo])
+                dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
+                data.config << {
+                  source_repo_version: source_repo_version,
+                  dest_repo: dest_repo_href,
+                  dest_base_version: dest_repo_map[:base_version],
+                  content: content_unit_hrefs
+                }
               end
             end
             tasks << api.copy_api.copy_content(data)
           else
-            data = PulpRpmClient::RepositoryAddRemoveContent.new(
-              remove_content_units: ['*'])
-            tasks << api.repositories_api.modify(repository_reference.repository_href, data)
+            tasks << remove_all_content
           end
 
           tasks
+        end
+
+        def remove_all_content
+          data = PulpRpmClient::RepositoryAddRemoveContent.new(
+            remove_content_units: ['*'])
+          api.repositories_api.modify(repository_reference.repository_href, data)
         end
 
         def packageenvironments(options = {})
@@ -147,7 +159,7 @@ module Katello
           content_unit_hrefs += source_repository.srpms.pluck(:pulp_id)
 
           dependency_solving = options[:solve_dependencies] || false
-          copy_units(source_repository.version_href, content_unit_hrefs.uniq, dependency_solving)
+          copy_units(source_repository, content_unit_hrefs.uniq, dependency_solving)
         end
 
         def additional_content_hrefs(source_repository, content_unit_hrefs)

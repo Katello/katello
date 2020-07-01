@@ -61,6 +61,8 @@ module ::Actions::Katello::ContentViewVersion
 
       new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
       repository_mapping = {}
+      new_repo.update(content_view_version_id: ::Katello::ContentViewVersion.first.id, relative_path: "blah")
+      new_repo.save!
       repository_mapping[[library_repo]] = new_repo
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
@@ -70,10 +72,11 @@ module ::Actions::Katello::ContentViewVersion
       action.expects(:action_subject).with(content_view_version.content_view)
       plan_action(action, content_view_version, [library], :content => {:package_ids => [@rpm.id]})
 
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::CopyUnits,
-                                library_repo, new_repo,
-                                Katello::Rpm.with_identifiers(@rpm.id), 1,
-                                :incremental_update => true,
+      pulp3_repo_map = {}
+      pulp3_repo_map[library_repo.id] = { :dest_repo => new_repo.id, :base_version => 1 }
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+                                pulp3_repo_map,
+                                { :errata => [], :rpms => [@rpm.id] },
                                 :dependency_solving => true)
     end
   end
