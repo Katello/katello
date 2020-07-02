@@ -220,6 +220,8 @@ Foreman::Plugin.register :katello do
 
   allowed_template_helpers :subscription_manager_configuration_url, :repository_url
   extend_template_helpers Katello::KatelloUrlsHelper
+  extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
+
   register_global_js_file 'fills'
 
   search_path_override("Katello") do |resource|
