@@ -54,11 +54,11 @@ module Actions
           end
 
           def items_done
-            task_details&.inject(0) { |sum, details| sum + details[:num_success].to_i }
+            task_details&.inject(0) { |sum, details| sum + details[:num_success].to_i } || 0
           end
 
           def items_total
-            task_details&.inject(0) { |sum, details| sum + details[:items_total].to_i }
+            task_details&.inject(0) { |sum, details| sum + details[:items_total].to_i } || 0
           end
 
           def size_done
