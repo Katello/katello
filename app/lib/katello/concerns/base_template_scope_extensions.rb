@@ -3,20 +3,6 @@ module Katello
     module BaseTemplateScopeExtensions
       extend ActiveSupport::Concern
 
-      module Overrides
-        def allowed_helpers
-          super + [:errata, :host_subscriptions, :host_applicable_errata_ids, :host_applicable_errata_filtered,
-                   :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications, :host_content_facet,
-                   :host_sla, :host_products, :sub_name, :sub_sku, :registered_through, :last_checkin, :host_collections,
-                   :host_subscriptions_names, :host_subscriptions, :host_products_names, :host_collections_names,
-                   :host_redhat_subscription_names, :registered_at]
-        end
-      end
-
-      included do
-        prepend Overrides
-      end
-
       def errata(id)
         Katello::Erratum.in_repositories(Katello::Repository.readable).with_identifiers(id).map(&:attributes).first.slice!('created_at', 'updated_at')
       end
