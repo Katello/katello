@@ -154,7 +154,6 @@ module Katello
 
       # Lib Extensions
       ::Foreman::Renderer::Scope::Variables::Base.include Katello::Concerns::RendererExtensions
-      ::Foreman::Renderer::Scope::Base.include Katello::Concerns::BaseTemplateScopeExtensions
 
       # Model extensions
       ::Environment.include Katello::Concerns::EnvironmentExtensions
