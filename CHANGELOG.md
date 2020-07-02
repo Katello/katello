@@ -1,3 +1,17 @@
+# 3.15.3 Rocky Road (2020-07-02)
+
+## Bug Fixes
+
+### Tests
+ * react tests - eslint is failing ([#30241](https://projects.theforeman.org/issues/30241), [4e8ef6c4](https://github.com/Katello/katello.git/commit/4e8ef6c41bfa1b75232acce5ebe5f04d99dc4b72))
+
+### Orchestration
+ * async_task fails with `The Dynflow world was not initialized yet.` in rake tasks on nightly production ([#29337](https://projects.theforeman.org/issues/29337), [be88d945](https://github.com/Katello/katello.git/commit/be88d94503b1448c1c7ea8043d0c86424a6bcd3b))
+
+### Other
+ * Deleting global default HTTP proxy does not reset repositories or settings using the global default HTTP proxy ([#30100](https://projects.theforeman.org/issues/30100), [bc8bc4aa](https://github.com/Katello/katello.git/commit/bc8bc4aaf6831ea75ef1a21bb8e56cf3eda4e8c5))
+ * Katello Scenario with external database fails during migration ([#29689](https://projects.theforeman.org/issues/29689), [41711a2d](https://github.com/Katello/katello.git/commit/41711a2d9397c42d5961eba03cd236679e208075))
+
 # 3.15.2 Rocky Road (2020-06-16)
 
 ## Bug Fixes
