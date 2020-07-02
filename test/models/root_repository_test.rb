@@ -281,6 +281,20 @@ module Katello
       assert_match 'is not included in the list', @root.errors[:checksum_type][0]
     end
 
+    def test_auto_enabled_invalid_on_rh_repos
+      assert @rhel6_root.redhat?
+      @rhel6_root.auto_enabled = false
+      refute_valid @rhel6_root
+      assert @rhel6_root.errors.key?(:auto_enabled)
+      assert_match 'Auto Enablement may only be set on custom repositories.', @rhel6_root.errors[:auto_enabled].first
+    end
+
+    def test_auto_enabled_valid_on_custom_repos
+      refute @fedora_root.redhat?
+      @fedora_root.auto_enabled = false
+      assert_valid @fedora_root
+    end
+
     def test_create_with_duplicate_name_different_product
       fedora = katello_products(:fedora)
       redhat = katello_products(:redhat)
@@ -746,6 +760,13 @@ module Katello
       @fedora_root.ssl_client_key_id = cert.id
       @fedora_root.save!
       assert @fedora_root.pulp_update_needed?
+    end
+
+    def test_content_enablement_params
+      output = @fedora_root.content_enablements
+      assert output.any? { |repo| repo[:id] == @fedora_root.content_id && repo[:enabled] == @fedora_root.auto_enabled }
+      filtered = output.select { |repo| repo[:id] != @fedora_root.content_id }
+      assert filtered.none? { |repo| repo.key? :enabled }
     end
   end
 

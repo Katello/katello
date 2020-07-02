@@ -57,6 +57,7 @@ module Katello
       param :ansible_collection_requirements, String, :desc => N_("Contents of requirement yaml file to sync from URL")
       param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for HTTP proxy for content sync")
       param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
+      param :auto_enabled, :bool, :desc => N_("if true, the repositories will be automatically enabled on a registered host subscribed to this product. Default: true")
     end
 
     def_param_group :repo_create do
@@ -463,7 +464,7 @@ module Katello
 
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
-              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy,
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :auto_enabled,
               :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
               {:ignorable_content => []}
              ]
@@ -514,6 +515,7 @@ module Katello
       root.ansible_collection_requirements = repo_params[:ansible_collection_requirements] if root.ansible_collection?
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
+      root.auto_enabled = repo_params[:auto_enabled] if repo_params.key?(:auto_enabled)
 
       if root.ostree?
         root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]

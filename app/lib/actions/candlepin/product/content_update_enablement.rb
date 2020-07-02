@@ -1,17 +1,16 @@
 module Actions
   module Candlepin
     module Product
-      class ContentAdd < Candlepin::Abstract
+      class ContentUpdateEnablement < Candlepin::Abstract
         input_format do
-          param :product_id
-          param :content_id
+          param :content_enablements
           param :owner
-          param :enabled
+          param :product_id
         end
 
         def run
           output[:response] = ::Katello::Resources::Candlepin::Product.
-              add_content(input[:owner], input[:product_id], input[:content_id], input[:enabled])
+              update_enabled(input[:owner], input[:product_id], input[:content_enablements])
         end
       end
     end

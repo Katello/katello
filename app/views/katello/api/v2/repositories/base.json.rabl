@@ -6,7 +6,7 @@ attributes :pulp_id => :backend_identifier
 attributes :relative_path, :container_repository_name, :full_path, :library_instance_id
 
 glue(@object.root) do
-  attributes :content_type, :url, :arch, :content_id
+  attributes :content_type, :url, :arch, :content_id, :auto_enabled
   attributes :major, :minor
 
   child :product do |_product|

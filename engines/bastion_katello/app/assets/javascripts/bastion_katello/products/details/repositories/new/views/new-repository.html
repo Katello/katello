@@ -220,6 +220,17 @@
         </p>
       </div>
 
+      <div class="checkbox" ng-if="repository.content_type === 'yum'">
+        <label>
+          <input id="auto_enabled" name="auto_enabled" ng-model="repository.auto_enabled" type="checkbox"/>
+          <span translate>Enable on Registration</span>
+        </label>
+
+        <p class="help-block" translate>
+          Selecting this option will automatically enable this Repository when a Host registers and consumes this subscription.
+        </p>
+      </div>
+
       <div bst-form-group label="{{ 'HTTP Proxy Policy' | translate }}">
         <select required
                 id="http_proxy_policy"
