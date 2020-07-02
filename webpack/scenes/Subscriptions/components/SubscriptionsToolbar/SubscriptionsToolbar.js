@@ -4,6 +4,7 @@ import { Row, Col, Form, FormGroup, Button, OverlayTrigger, Tooltip, Icon } from
 import { LinkContainer } from 'react-router-bootstrap';
 import { noop } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { SUBSCRIPTION_WATCH_URL } from '../../SubscriptionConstants';
 
 import Search from '../../../../components/Search/index';
 import TooltipButton from '../../../../components/TooltipButton';
@@ -58,7 +59,7 @@ const SubscriptionsToolbar = ({
             }
 
             <a
-              href="https://cloud.redhat.com/subscriptions/rhel-sw/all"
+              href={SUBSCRIPTION_WATCH_URL}
               className="btn btn-default"
               target="_blank"
               rel="noreferrer"

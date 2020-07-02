@@ -16,9 +16,7 @@ import api, { orgId } from '../../services/api';
 import { CONTENT_DISCONNECTED } from '../Settings/SettingsConstants';
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
-import {
-  SUBSCRIPTION_TABLE_NAME,
-} from './SubscriptionConstants';
+import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTION_WATCH_URL } from './SubscriptionConstants';
 import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
@@ -270,7 +268,7 @@ class SubscriptionsPage extends Component {
                   Hosts can consume from all repositories in their Content View regardless of
                   subscription status.  <br />
                   Learn more about your overall subscription usage at
-                  <a href="https://cloud.redhat.com/subscriptions/rhel-sw/all" target="_blank" rel="noreferrer"> Subscription Watch</a>.
+                  {' '}<a href={SUBSCRIPTION_WATCH_URL} target="_blank" rel="noreferrer">Subscription Watch</a>.
                 </Alert>
               )}
               <SubscriptionsTable
