@@ -12,7 +12,7 @@ module Actions
 
           smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
           sequence do
-            smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository).in_groups_of(20, false) do |repos|
+            smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository).in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repos|
               concurrence do
                 repos.each do |repo|
                   plan_pulp_action([Actions::Pulp::Orchestration::Repository::SmartProxySync,
@@ -35,10 +35,6 @@ module Actions
 
         def resource_locks
           :link
-        end
-
-        def rescue_strategy
-          Dynflow::Action::Rescue::Skip
         end
       end
     end
