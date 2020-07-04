@@ -1,7 +1,7 @@
 module Katello
   class Api::V2::ContentUploadsController < Api::V2::ApiController
     before_action :find_repository
-    skip_before_action :check_content_type, :only => [:update]
+    skip_before_action :check_media_type, :only => [:update]
 
     include ::Foreman::Controller::FilterParameters
     filter_parameters :content

@@ -26,7 +26,7 @@ module Katello
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_KEY_TYPE }
     before_action :check_ignore_global_proxy, :only => [ :update, :create ]
     skip_before_action :authorize, :only => [:gpg_key_content]
-    skip_before_action :check_content_type, :only => [:upload_content]
+    skip_before_action :check_media_type, :only => [:upload_content]
 
     def custom_index_relation(collection)
       collection.includes(:product)

@@ -4,7 +4,7 @@ module Katello
     before_action :authorize
     before_action :find_organization, :only => [:create, :index, :auto_complete_search]
     before_action :find_content_credential, :only => [:show, :update, :destroy, :content, :set_content]
-    skip_before_action :check_content_type, :only => [:create, :content, :set_content]
+    skip_before_action :check_media_type, :only => [:create, :content, :set_content]
 
     def resource_class
       Katello::GpgKey

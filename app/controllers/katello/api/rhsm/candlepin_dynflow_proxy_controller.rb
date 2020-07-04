@@ -10,7 +10,7 @@ module Katello
     before_action :find_host, :only => [:upload_package_profile, :upload_profiles, :deb_package_profile]
     before_action :authorize_client_or_user, :only => [:upload_package_profile, :upload_profiles, :deb_package_profile]
 
-    skip_before_action :check_content_type
+    skip_before_action :check_media_type
 
     #api :PUT, "/consumers/:id/packages", N_("Update installed packages")
     #api :PUT, "/consumers/:id/profile", N_("Update installed packages")
