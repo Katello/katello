@@ -10,8 +10,8 @@ module Katello
     before_action :registry_authorize, except: [:token, :v1_search, :catalog]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list]
     before_action :authorize_repository_write, only: [:push_manifest]
-    skip_before_action :check_content_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
-                                                   :chunk_upload_blob, :push_manifest]
+    skip_before_action :check_media_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
+                                                 :chunk_upload_blob, :push_manifest]
 
     wrap_parameters false
 
