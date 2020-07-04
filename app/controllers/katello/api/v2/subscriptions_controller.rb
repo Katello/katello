@@ -10,7 +10,7 @@ module Katello
     before_action :check_upstream_connection, only: [:refresh_manifest]
     before_action :find_provider
 
-    skip_before_action :check_content_type, :only => [:upload]
+    skip_before_action :check_media_type, :only => [:upload]
 
     resource_description do
       description "Subscriptions management."
