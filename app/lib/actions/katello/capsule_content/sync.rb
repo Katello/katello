@@ -44,10 +44,6 @@ module Actions
             plan_action(SyncCapsule, smart_proxy, refresh_options)
           end
         end
-
-        def rescue_strategy
-          Dynflow::Action::Rescue::Skip
-        end
       end
     end
   end
