@@ -91,6 +91,8 @@ class Setting::Content < Setting
                false, N_('Restrict Composite Content View promotion')),
       self.set('check_services_before_actions', N_("Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions."),
                true, N_('Check services before actions')),
+      self.set('foreman_proxy_content_batch_size', N_("How many repositories should be synced concurrently on the capsule.  A smaller number may lead to longer sync times.  A larger number will increase dynflow load."),
+               25, N_('Batch size to sync repositories in.')),
       self.set('foreman_proxy_content_auto_sync', N_("Whether or not to auto sync the Smart Proxies after a Content View promotion."),
                true, N_('Sync Smart Proxies after Content View promotion')),
       self.set('default_download_policy', N_("Default download policy for custom repositories (either 'immediate', 'on_demand', or 'background')"), "immediate",
