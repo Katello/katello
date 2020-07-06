@@ -26,6 +26,14 @@ module Actions
           self.done? ? 1 : 0.1
         end
 
+        def rescue_strategy_for_self
+          if output[:cancelled]
+            Dynflow::Action::Rescue::Fail
+          else
+            Dynflow::Action::Rescue::Skip
+          end
+        end
+
         def run_progress_weight
           100
         end

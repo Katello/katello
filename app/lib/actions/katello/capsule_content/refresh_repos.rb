@@ -10,6 +10,10 @@ module Actions
           fail NotImplementedError
         end
 
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip if self.state == 'error'
+        end
+
         def plan(smart_proxy, options = {})
           plan_self(:smart_proxy_id => smart_proxy.id,
                     :environment_id => options[:environment]&.id,

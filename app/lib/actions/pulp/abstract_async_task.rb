@@ -74,6 +74,7 @@ module Actions
       end
 
       def cancel!
+        output[:cancelled] = true
         cancel
         self.external_task = poll_external_task
         # We suspend the action and the polling will take care of finding

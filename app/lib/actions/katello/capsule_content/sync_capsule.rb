@@ -11,19 +11,23 @@ module Actions
           skip_metadata_check = options.fetch(:skip_metadata_check, false)
 
           smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
-          concurrence do
-            smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository).each do |repo|
-              plan_pulp_action([Actions::Pulp::Orchestration::Repository::SmartProxySync,
-                                Actions::Pulp3::CapsuleContent::Sync],
-                                 repo, smart_proxy,
-                                 skip_metadata_check: skip_metadata_check)
+          sequence do
+            smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository).in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repos|
+              concurrence do
+                repos.each do |repo|
+                  plan_pulp_action([Actions::Pulp::Orchestration::Repository::SmartProxySync,
+                                    Actions::Pulp3::CapsuleContent::Sync],
+                                     repo, smart_proxy,
+                                     skip_metadata_check: skip_metadata_check)
 
-              if repo.is_a?(::Katello::Repository) &&
-                repo.distribution_bootable? &&
-                repo.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
-                plan_action(Katello::Repository::FetchPxeFiles,
-                            id: repo.id,
-                            capsule_id: smart_proxy.id)
+                  if repo.is_a?(::Katello::Repository) &&
+                    repo.distribution_bootable? &&
+                    repo.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+                    plan_action(Katello::Repository::FetchPxeFiles,
+                                id: repo.id,
+                                capsule_id: smart_proxy.id)
+                  end
+                end
               end
             end
           end
@@ -31,10 +35,6 @@ module Actions
 
         def resource_locks
           :link
-        end
-
-        def rescue_strategy
-          Dynflow::Action::Rescue::Skip
         end
       end
     end
