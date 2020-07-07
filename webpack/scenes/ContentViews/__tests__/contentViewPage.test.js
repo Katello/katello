@@ -239,7 +239,7 @@ test('No results message is shown for empty search', async (done) => {
 
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: query } });
 
-  await waitFor(() => expect(getByText(/No matching Content Views found/i)).toBeInTheDocument());
+  await waitFor(() => expect(getByText(/No matching Content Views found/i)).toBeInTheDocument(), { timeout: 5000 });
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(initialScope);
