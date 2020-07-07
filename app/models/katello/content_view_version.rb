@@ -383,6 +383,13 @@ module Katello
       [self.content_view]
     end
 
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Content View Version'
+      refs 'ContentViewVersion'
+      sections only: %w[all additional]
+      prop_group :katello_basic_props, Katello::Model, meta: { friendly_name: 'Content View Version' }
+      property :version, String, desc: 'Returns version of this content view'
+    end
     class Jail < ::Safemode::Jail
       allow :name, :label, :version
     end
