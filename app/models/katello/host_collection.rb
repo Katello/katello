@@ -102,6 +102,12 @@ module Katello
       _("Host Collections")
     end
 
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Host Collection'
+      refs 'HostCollection'
+      sections only: %w[all additional]
+      property :name, String, desc: 'Returns name of the host collection'
+    end
     class Jail < ::Safemode::Jail
       allow :name
     end
