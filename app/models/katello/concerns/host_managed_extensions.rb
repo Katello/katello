@@ -78,6 +78,19 @@ module Katello
             { :conditions => "1=0" }
           end
         end
+
+        apipie :class do
+          property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host'
+          property :subscription_manager_configuration_url, String, desc: 'Returns URL for subscription manager configuration'
+          property :rhsm_organization_label, String, desc: 'Returns label of the Red Hat Subscription Manager organization'
+          property :host_collections, array_of: 'HostCollection', desc: 'Returns list of the host collections the host belongs to'
+          property :comment, String, desc: 'Returns comment given to the host'
+          property :pools, array_of: 'Pool', desc: 'Returns subscription pool objects associated with the host'
+          property :hypervisor_host, 'Host', desc: 'Returns hypervisor host object of this host'
+          property :lifecycle_environment, 'KTEnvironment', desc: 'Returns lifecycle environment object associated with the host'
+          property :content_view, 'ContentView', desc: 'Returns content view associated with the host'
+          property :installed_packages, array_of: 'InstalledPackage', desc: 'Returns a list of packages installed on the host'
+        end
       end
 
       def check_host_registration

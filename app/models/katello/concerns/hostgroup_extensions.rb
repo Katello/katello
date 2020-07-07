@@ -20,6 +20,12 @@ module Katello
         delegate :content_source_name, :content_view_name, :lifecycle_environment_name, to: :content_facet, allow_nil: true
         delegate :content_source_id, :content_view_id, :lifecycle_environment_id, :kickstart_repository_id, to: :content_facet, allow_nil: true
         delegate :'content_source_id=', :'content_view_id=', :'lifecycle_environment_id=', :'kickstart_repository_id=', to: :safe_content_facet, allow_nil: true
+
+        apipie :class do
+          property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host group'
+          property :subscription_manager_configuration_url, String, desc: 'Returns URL for subscription manager configuration'
+          property :rhsm_organization_label, String, desc: 'Returns label of the Red Hat Subscription Manager organization'
+        end
       end
 
       def correct_kickstart_repository
