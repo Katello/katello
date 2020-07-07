@@ -11,6 +11,7 @@ describe('Service: IncrementalUpdate', function() {
 
         $provide.value('Task', Task);
         $provide.value('CurrentOrganization', "ACME");
+        $provide.value('Deb', {});
     }));
 
     beforeEach(inject(function($injector) {

@@ -18,6 +18,12 @@ module Actions
                           SmartProxy.pulp_master,
                           source_repositories,
                           filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
+
+              source_repositories.select(&:deb?).each do |repository|
+                plan_action(Actions::Katello::Repository::CopyDebErratum,
+                            source_repo_id: repository.id,
+                            target_repo_id: new_repository.id)
+              end
             end
 
             metadata_generate(source_repositories, new_repository, filters, rpm_filenames) if generate_metadata

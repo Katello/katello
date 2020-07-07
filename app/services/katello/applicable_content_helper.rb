@@ -83,6 +83,9 @@ module Katello
 
     def applicable_differences(partial)
       content_uuids = ::Katello::Pulp::Consumer.new(content_facet.uuid).applicable_ids(content_type)
+      if content_type == 'erratum'
+        content_uuids += content_facet.applicable_deb_errata_uuids
+      end
       if partial
         consumer_uuids = content_facet.send(applicable_units).pluck("#{content_unit_class.table_name}.pulp_id")
         to_remove = consumer_uuids - content_uuids

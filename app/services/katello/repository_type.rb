@@ -41,6 +41,13 @@ module Katello
       end
     end
 
+    def supports_content_type(model_class)
+      @content_types.each do |type|
+        return true if type.model_class == model_class
+      end
+      false
+    end
+
     def default_managed_content_type(model_class = nil)
       if model_class
         @default_managed_content_type_class = model_class

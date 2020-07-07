@@ -8,6 +8,7 @@ attributes :relative_path, :container_repository_name, :full_path, :library_inst
 glue(@object.root) do
   attributes :content_type, :url, :arch, :content_id
   attributes :major, :minor
+  attributes :supports_errata? => :supports_errata
 
   child :product do |_product|
     attributes :id, :cp_id, :name

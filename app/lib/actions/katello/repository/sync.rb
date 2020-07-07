@@ -47,6 +47,7 @@ module Actions
                                            SmartProxy.pulp_master,
                                            sync_args)
             output = sync_action.output
+            plan_action(Katello::Repository::SyncDebErrata, repo) if repo.deb? && repo.root.deb_errata_url.present?
 
             contents_changed = skip_metadata_check || output[:contents_changed]
 
