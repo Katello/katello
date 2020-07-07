@@ -5,14 +5,6 @@ const foremanReactFull = foremanRelativePath(foremanReactRelative);
 
 // Jest configuration
 module.exports = {
-  collectCoverage: true,
-  collectCoverageFrom: [
-    'webpack/**/*.js',
-    '!webpack/**/bundle*',
-  ],
-  coverageReporters: [
-    'lcov',
-  ],
   testURL: 'http://localhost/',
   setupFiles: [
     './webpack/test_setup.js',
