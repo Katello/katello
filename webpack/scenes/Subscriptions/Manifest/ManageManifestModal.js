@@ -5,8 +5,8 @@ import { Button, Spinner, OverlayTrigger, Tooltip, Icon } from 'patternfly-react
 import ForemanModal from 'foremanReact/components/ForemanModal';
 import { isEqual } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
-import TooltipButton from '../../../move_to_pf/TooltipButton';
-import { LoadingState } from '../../../move_to_pf/LoadingState';
+import TooltipButton from '../../../components/TooltipButton';
+import { LoadingState } from '../../../components/LoadingState';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { manifestExists } from '../SubscriptionHelpers';
 import { columns } from './ManifestHistoryTableSchema';

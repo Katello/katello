@@ -7,7 +7,7 @@ import SubscriptionDetailInfo from './SubscriptionDetailInfo';
 import SubscriptionDetailAssociations from './SubscriptionDetailAssociations';
 import SubscriptionDetailProducts from './SubscriptionDetailProducts';
 import SubscriptionDetailProductContent from './SubscriptionDetailProductContent';
-import { LoadingState } from '../../../move_to_pf/LoadingState';
+import { LoadingState } from '../../../components/LoadingState';
 import api, { orgId } from '../../../services/api';
 
 class SubscriptionDetails extends Component {

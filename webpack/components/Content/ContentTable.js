@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import { Table } from '../../move_to_foreman/components/common/table';
-import { LoadingState } from '../../move_to_pf/LoadingState';
+import { LoadingState } from '../../components/LoadingState';
 
 const ContentTable = ({ content, tableSchema, onPaginationChange }) => {
   const {

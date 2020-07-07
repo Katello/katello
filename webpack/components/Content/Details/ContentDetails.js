@@ -2,7 +2,7 @@ import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from 'patternfly-react';
 import { PropTypes } from 'prop-types';
-import { LoadingState } from '../../../move_to_pf/LoadingState/index';
+import { LoadingState } from '../../../components/LoadingState/index';
 
 const ContentDetails = (props) => {
   const { contentDetails, schema } = props;

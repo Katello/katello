@@ -6,8 +6,8 @@ import { noop } from 'foremanReact/common/helpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import Search from '../../../../components/Search/index';
-import TooltipButton from '../../../../move_to_pf/TooltipButton';
-import OptionTooltip from '../../../../move_to_pf/OptionTooltip';
+import TooltipButton from '../../../../components/TooltipButton';
+import OptionTooltip from '../../../../components/OptionTooltip';
 
 const SubscriptionsToolbar = ({
   canManageSubscriptionAllocations,
