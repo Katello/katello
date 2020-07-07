@@ -229,6 +229,9 @@ Foreman::Plugin.register :katello do
   end
   apipie_documented_controllers ["#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"]
   apipie_ignored_controllers %w(::Api::V2::OrganizationsController)
+  ApipieDSL.configuration.dsl_classes_matchers.concat [
+    "#{Katello::Engine.root}/app/models/katello/**/*.rb"
+  ]
 
   parameter_filter ::Host::Managed, :host_collection_ids => [],
     :content_facet_attributes => [:content_view_id, :lifecycle_environment_id, :content_source_id,

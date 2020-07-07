@@ -709,6 +709,12 @@ module Katello
       self.organization
     end
 
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Content View'
+      refs 'ContentView'
+      sections only: %w[all additional]
+      prop_group :katello_basic_props, Katello::Model, meta: { friendly_name: 'Content View' }
+    end
     class Jail < ::Safemode::Jail
       allow :name, :label
     end
