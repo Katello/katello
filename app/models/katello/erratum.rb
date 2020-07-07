@@ -161,6 +161,19 @@ module Katello
       { :conditions => conditions }
     end
 
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Erratum'
+      refs 'Erratum'
+      sections only: %w[all additional]
+      property :errata_id, String, desc: 'Returns errata identifier, e.g. "RHSA-1999-1231"'
+      property :errata_type, String, desc: 'Returns errata type, e.g. "security"'
+      property :issued, Date, desc: 'Returns the date of issue for the errata'
+      property :created_at, ActiveSupport::TimeWithZone, desc: 'Returns the time when the errata was created'
+      property :severity, String, desc: 'Returns severity of the errata, e.g. "Critical"'
+      property :package_names, array_of: String, desc: 'Returns names of packages the errata can be applied to'
+      property :cves, array_of: 'ErratumCve', desc: 'Returns CVEs associated with the errata'
+      property :reboot_suggested, one_of: [true, false], desc: 'Returns true if reboot is suggested after errata applying, false otherwise'
+    end
     class Jail < ::Safemode::Jail
       allow :errata_id, :errata_type, :issued, :created_at, :severity, :package_names, :cves, :reboot_suggested
     end
