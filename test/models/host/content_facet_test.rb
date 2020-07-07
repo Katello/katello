@@ -441,6 +441,24 @@ module Katello
       assert_equal content_facet.bound_repositories, [repo]
     end
 
+    def test_no_useless_warnings
+      content_facet.bound_repositories = [repo]
+      Rails.logger.expects(:warn).never
+
+      content_facet.update_repositories_by_paths(["/pulp/repos/#{repo.relative_path}"])
+    end
+
+    def test_legit_warning
+      content_facet.stubs(:update_bound_repositories)
+      content_facet.bound_repositories = [repo]
+      bogus_path = '/pulp/repos/Default_Organization/Library/unknown'
+      bogus_relative_path = bogus_path.gsub('/pulp/repos/', '')
+      expected_warning = "System #{host.name} (#{host.id}) requested binding to unknown repo #{bogus_relative_path}"
+      Rails.logger.expects(:warn).with(expected_warning)
+
+      content_facet.update_repositories_by_paths([bogus_path])
+    end
+
     def test_propagate_yum_repos
       content_facet.bound_repositories << repo
       ::Katello::Pulp::Consumer.any_instance.expects(:bind_yum_repositories).with([repo.pulp_id])
