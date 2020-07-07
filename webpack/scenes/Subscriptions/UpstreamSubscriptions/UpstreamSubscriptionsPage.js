@@ -8,7 +8,7 @@ import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import { Button } from 'patternfly-react';
 import { stringIsPositiveNumber } from 'foremanReact/common/helpers';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
-import { LoadingState } from '../../../move_to_pf/LoadingState';
+import { LoadingState } from '../../../components/LoadingState';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './UpstreamSubscriptionsTableSchema';
 

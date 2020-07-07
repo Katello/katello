@@ -9,7 +9,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { Button } from 'patternfly-react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PermissionDenied from 'foremanReact/components/PermissionDenied';
-import { LoadingState } from '../../move_to_pf/LoadingState';
+import { LoadingState } from '../../components/LoadingState';
 import { createEnabledRepoParams } from '../../redux/actions/RedHatRepositories/enabled';
 import SearchBar from './components/SearchBar';
 import RecommendedRepositorySetsToggler from './components/RecommendedRepositorySetsToggler';

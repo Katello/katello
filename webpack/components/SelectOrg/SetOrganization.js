@@ -5,10 +5,10 @@ import { Form, Button } from 'patternfly-react';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Select from '../../move_to_pf/Select/Select';
+import Select from '../../components/Select/Select';
 import * as SelectOrgActions from './SelectOrgAction';
 import reducer from './SelectOrgReducer';
-import { LoadingState } from '../../move_to_pf/LoadingState';
+import { LoadingState } from '../../components/LoadingState';
 import './SelectOrg.scss';
 
 class SetOrganization extends Component {
