@@ -47,11 +47,13 @@ module Katello
         bindable_paths = bindable_types
         relative_paths = []
 
-        paths.each do |path|
+        # paths == ["/pulp/repos/Default_Organization/Library/custom/Test_product/test2",
+        # "/pulp/repos/Default_Organization/Library/custom/Test_product/My_repo"]
+        paths.each do |absolute_path|
           bindable_paths.each do |supported|
-            relative_path = path.gsub(supported[:matcher], '')
-            relative_paths << relative_path
-            if path.starts_with?(supported[:matcher])
+            relative_path = absolute_path.gsub(supported[:matcher], '') # remove e.g. '/pulp/repos/' from beginning of string
+            relative_paths << relative_path unless relative_path == absolute_path
+            if absolute_path.starts_with?(supported[:matcher])
               supported[:paths] << relative_path
               break
             end
@@ -60,10 +62,12 @@ module Katello
 
         repos = bindable_paths.flat_map do |supported|
           repos = Repository.joins(:root).where(RootRepository.table_name => {content_type: supported[:type]}, relative_path: supported[:paths])
-          relative_paths -= repos.pluck(:relative_path)
+          relative_paths -= repos.pluck(:relative_path) # remove relative paths that match our repos
           repos
         end
 
+        # Any leftover relative paths do not match the repos we've just retrieved from the db,
+        # so we should log warnings about them.
         relative_paths.each do |repo_path|
           Rails.logger.warn("System #{self.host.name} (#{self.host.id}) requested binding to unknown repo #{repo_path}")
         end
