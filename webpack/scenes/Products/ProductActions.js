@@ -5,7 +5,7 @@ import {
   PRODUCTS_SUCCESS,
   PRODUCTS_FAILURE,
 } from './ProductConstants';
-import { apiError } from '../../move_to_foreman/common/helpers.js';
+import { apiError } from '../../utils/helpers.js';
 
 export const loadProducts = (params = {}) => async (dispatch) => {
   dispatch({ type: PRODUCTS_REQUEST });

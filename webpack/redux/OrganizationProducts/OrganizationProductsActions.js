@@ -5,7 +5,7 @@ import {
   ORGANIZATION_PRODUCTS_SUCCESS,
   ORGANIZATION_PRODUCTS_FAILURE,
 } from './OrganizationProductsConstants';
-import { apiError } from '../../move_to_foreman/common/helpers';
+import { apiError } from '../../utils/helpers';
 
 export const loadOrganizationProducts = (params = {}, orgId = getOrgId()) => async (dispatch) => {
   dispatch({ type: ORGANIZATION_PRODUCTS_REQUEST });

@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import ContentTable from '../../../components/Content/ContentTable';
 import TableSchema from '../../ModuleStreams/ModuleStreamsTableSchema';
-import { Table } from '../../../move_to_foreman/components/common/table';
+import { Table } from '../../../components/pf3Table';
 
 jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
 

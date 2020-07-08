@@ -2,7 +2,7 @@
 import React from 'react';
 import { Icon } from 'patternfly-react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { entitlementsInlineEditFormatter } from '../../../../move_to_foreman/components/common/table/formatters/EntitlementsInlineEditFormatter';
+import { entitlementsInlineEditFormatter } from '../../../../components/pf3Table/formatters/EntitlementsInlineEditFormatter';
 import { subscriptionTypeFormatter } from './SubscriptionTypeFormatter';
 import { subscriptionNameFormatter } from './SubscriptionNameFormatter';
 import {
@@ -10,7 +10,7 @@ import {
   cellFormatter,
   selectionHeaderCellFormatter,
   collapseableAndSelectionCellFormatter,
-} from '../../../../move_to_foreman/components/common/table';
+} from '../../../../components/pf3Table';
 
 function getEntitlementsFormatter(inlineEditController, canManageSubscriptionAllocations) {
   if (canManageSubscriptionAllocations) {

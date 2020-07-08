@@ -7,7 +7,7 @@ import { isEqual } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
 import { LoadingState } from '../../../components/LoadingState';
-import { Table } from '../../../move_to_foreman/components/common/table';
+import { Table } from '../../../components/pf3Table';
 import { manifestExists } from '../SubscriptionHelpers';
 import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';

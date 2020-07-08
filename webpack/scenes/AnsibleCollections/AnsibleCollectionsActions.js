@@ -6,7 +6,7 @@ import {
   ANSIBLE_COLLECTIONS_SUCCESS,
   ANSIBLE_COLLECTIONS_ERROR,
 } from './AnsibleCollectionsConstants';
-import { apiError } from '../../move_to_foreman/common/helpers';
+import { apiError } from '../../utils/helpers';
 
 export const getAnsibleCollections = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: ANSIBLE_COLLECTIONS_REQUEST });

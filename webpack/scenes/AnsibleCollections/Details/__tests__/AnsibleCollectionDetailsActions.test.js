@@ -1,11 +1,11 @@
 import { testActionSnapshotWithFixtures } from 'react-redux-test-utils';
 import api from '../../../../services/api';
-import { apiError } from '../../../../move_to_foreman/common/helpers';
+import { apiError } from '../../../../utils/helpers';
 import { getAnsibleCollectionDetails } from '../AnsibleCollectionDetailsActions';
 import { details } from './AnsibleCollectionDetails.fixtures';
 
 jest.mock('../../../../services/api');
-jest.mock('../../../../move_to_foreman/common/helpers');
+jest.mock('../../../../utils/helpers');
 
 const fixtures = {
   'should load ansible collection details on success': () => async (dispatch) => {

@@ -5,7 +5,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import {
   headerFormatter,
   cellFormatter,
-} from '../../move_to_foreman/components/common/table';
+} from '../../components/pf3Table';
 
 
 const TableSchema = [
