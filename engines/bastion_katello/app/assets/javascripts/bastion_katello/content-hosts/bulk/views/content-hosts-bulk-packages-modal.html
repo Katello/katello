@@ -38,6 +38,7 @@
       <input type="hidden" name="host_ids" ng-value="packageActionFormValues.hostIds"/>
       <input type="hidden" name="authenticity_token" ng-value="packageActionFormValues.authenticityToken"/>
       <input type="hidden" name="customize" ng-value="packageActionFormValues.customize"/>
+      <input type="hidden" ng-if="allHostsSelected" name="scoped_search" ng-value="packageActionFormValues.scopedSearch"/>
     </form>
 
     <div ng-form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')" novalidate>
