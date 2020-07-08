@@ -6,7 +6,7 @@ import {
   MODULE_STREAMS_SUCCESS,
   MODULE_STREAMS_FAILURE,
 } from './ModuleStreamsConstants';
-import { apiError } from '../../move_to_foreman/common/helpers.js';
+import { apiError } from '../../utils/helpers.js';
 
 export const getModuleStreams = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: MODULE_STREAMS_REQUEST });

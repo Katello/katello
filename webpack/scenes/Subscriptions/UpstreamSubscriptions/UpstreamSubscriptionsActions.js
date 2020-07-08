@@ -1,7 +1,7 @@
 import { propsToSnakeCase } from 'foremanReact/common/helpers';
 
 import api, { orgId } from '../../../services/api';
-import { apiError } from '../../../move_to_foreman/common/helpers.js';
+import { apiError } from '../../../utils/helpers.js';
 
 import {
   UPSTREAM_SUBSCRIPTIONS_REQUEST,

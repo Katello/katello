@@ -4,7 +4,7 @@ import {
   ANSIBLE_COLLECTION_DETAILS_REQUEST,
   ANSIBLE_COLLECTION_DETAILS_SUCCESS,
 } from './AnsibleCollectionDetailsConstants';
-import { apiError } from '../../../move_to_foreman/common/helpers';
+import { apiError } from '../../../utils/helpers';
 
 export const getAnsibleCollectionDetails = ansibleCollectionId => async (dispatch) => {
   dispatch({ type: ANSIBLE_COLLECTION_DETAILS_REQUEST });

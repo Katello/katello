@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import api from '../../../services/api';
-import { apiError, apiSuccess } from '../../../move_to_foreman/common/helpers.js';
+import { apiError, apiSuccess } from '../../../utils/helpers.js';
 import { getArchFromPath } from './helpers.js';
 
 import {

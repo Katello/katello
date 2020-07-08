@@ -4,7 +4,7 @@ import {
   MODULE_STREAM_DETAILS_SUCCESS,
   MODULE_STREAM_DETAILS_FAILURE,
 } from './ModuleStreamDetailsConstants';
-import { apiError } from '../../../move_to_foreman/common/helpers.js';
+import { apiError } from '../../../utils/helpers.js';
 
 export const loadModuleStreamDetails = moduleStreamId => async (dispatch) => {
   dispatch({ type: MODULE_STREAM_DETAILS_REQUEST });

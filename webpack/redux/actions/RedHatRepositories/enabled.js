@@ -7,7 +7,7 @@ import {
   productsIdsToSearchQuery,
   joinSearchQueries,
 } from './helpers';
-import { apiError, apiSuccess } from '../../../move_to_foreman/common/helpers.js';
+import { apiError, apiSuccess } from '../../../utils/helpers.js';
 
 import {
   ENABLED_REPOSITORIES_REQUEST,

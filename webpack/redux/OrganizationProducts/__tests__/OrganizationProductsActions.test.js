@@ -1,6 +1,6 @@
 import { testActionSnapshotWithFixtures } from 'react-redux-test-utils';
 import api, { orgId } from '../../../services/api';
-import { apiError } from '../../../move_to_foreman/common/helpers';
+import { apiError } from '../../../utils/helpers';
 
 import { loadOrganizationProducts } from '../OrganizationProductsActions';
 
@@ -9,7 +9,7 @@ const params = {
 };
 
 jest.mock('../../../services/api');
-jest.mock('../../../move_to_foreman/common/helpers');
+jest.mock('../../../utils/helpers');
 
 const fixtures = {
   'should load organization products and success': () => async (dispatch) => {

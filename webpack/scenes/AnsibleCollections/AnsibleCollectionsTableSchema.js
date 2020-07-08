@@ -5,7 +5,7 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import {
   headerFormatter,
   cellFormatter,
-} from '../../move_to_foreman/components/common/table/formatters';
+} from '../../components/pf3Table/formatters';
 
 const TableSchema = [
   {

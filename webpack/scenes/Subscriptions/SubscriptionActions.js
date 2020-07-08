@@ -31,7 +31,7 @@ import {
   MANIFEST_DELETE_TASK_LABEL,
 } from './SubscriptionConstants';
 import { selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
-import { apiError } from '../../move_to_foreman/common/helpers.js';
+import { apiError } from '../../utils/helpers.js';
 import {
   startPollingTask,
   stopPollingTask,

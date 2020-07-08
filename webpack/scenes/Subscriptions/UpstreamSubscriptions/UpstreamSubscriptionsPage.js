@@ -9,7 +9,7 @@ import { Button } from 'patternfly-react';
 import { stringIsPositiveNumber } from 'foremanReact/common/helpers';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { LoadingState } from '../../../components/LoadingState';
-import { Table } from '../../../move_to_foreman/components/common/table';
+import { Table } from '../../../components/pf3Table';
 import { columns } from './UpstreamSubscriptionsTableSchema';
 
 class UpstreamSubscriptionsPage extends Component {

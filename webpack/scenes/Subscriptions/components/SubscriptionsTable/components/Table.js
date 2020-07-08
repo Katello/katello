@@ -4,7 +4,7 @@ import { Table as PFtable } from 'patternfly-react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import classNames from 'classnames';
 import { createSubscriptionsTableSchema } from '../SubscriptionsTableSchema';
-import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../../move_to_foreman/components/common/table';
+import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../../components/pf3Table';
 
 const Table = ({
   emptyState,
