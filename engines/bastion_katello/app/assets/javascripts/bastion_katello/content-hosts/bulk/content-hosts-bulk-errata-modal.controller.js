@@ -57,12 +57,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.initialLoad = true;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
+        $scope.allHostsSelected = hostIds.allResultsSelected;
 
         $scope.errataActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
         };
 
-        if (hostIds.included.ids) {
+        if ($scope.allHostsSelected) {
+            $scope.errataActionFormValues.scopedSearch = hostIds.included.search;
+        } else if (hostIds.included.ids.length > 0) {
             $scope.errataActionFormValues.hostIds = hostIds.included.ids.join(',');
         }
 

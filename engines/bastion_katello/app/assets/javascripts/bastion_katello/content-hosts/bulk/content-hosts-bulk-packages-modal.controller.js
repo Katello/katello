@@ -119,6 +119,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
 
             $scope.content.confirm = false;
             $scope.packageActionFormValues.customize = customize;
+            $scope.allHostsSelected = selectedHosts.allResultsSelected;
 
             if (!action) {
                 action = $scope.content.action;
@@ -134,7 +135,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
                 $scope.packageActionFormValues.remoteAction = 'package_' + action;
             }
 
-            if (selectedHosts.included.ids) {
+            if ($scope.allHostsSelected) {
+                $scope.packageActionFormValues.scopedSearch = selectedHosts.included.search;
+            } else if (selectedHosts.included.ids.length > 0) {
                 $scope.packageActionFormValues.hostIds = selectedHosts.included.ids.join(',');
             }
 

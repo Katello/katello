@@ -295,12 +295,14 @@ angular.module('Bastion.components').factory('Nutupane',
                     },
                     excluded: {
                         ids: []
-                    }
+                    },
+                    allResultsSelected: false
                 };
 
                 if (self.table.allResultsSelected) {
                     selected.included.search = self.table.searchTerm || '';
                     selected.excluded.ids = _.map(self.getDeselected(), identifier);
+                    selected.allResultsSelected = true;
                 } else {
                     selectedRows = self.table.getSelected();
                     selected.included.ids = _.map(selectedRows, identifier);
