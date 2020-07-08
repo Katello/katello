@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CubeIcon, CubesIcon } from '@patternfly/react-icons';
-import { Link } from 'react-router-dom';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { CubesIcon, CubeIcon } from '@patternfly/react-icons';
 import './contentViewName.scss';
 
-const ContentViewName = ({ composite, name, cvId }) => {
+const ContentViewName = ({ composite, cvId }) => {
   const props = {
     key: cvId,
     title: composite ? 'composite' : 'single',
@@ -16,7 +14,6 @@ const ContentViewName = ({ composite, name, cvId }) => {
     <React.Fragment>
       <div className="svg-centered-container">
         {composite ? <CubesIcon {...props} /> : <CubeIcon {...props} />}
-        <Link to={urlBuilder('labs/content_views', '', cvId)}>{name}</Link>
       </div>
     </React.Fragment>
   );
@@ -24,7 +21,6 @@ const ContentViewName = ({ composite, name, cvId }) => {
 
 ContentViewName.propTypes = {
   cvId: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
   composite: PropTypes.bool,
 };
 

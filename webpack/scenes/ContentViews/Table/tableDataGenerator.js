@@ -1,20 +1,23 @@
 import React from 'react';
 import { compoundExpand } from '@patternfly/react-table';
-import { ScreenIcon, RepositoryIcon, ContainerNodeIcon } from '@patternfly/react-icons';
+import {
+  ScreenIcon,
+  ContainerNodeIcon
+} from '@patternfly/react-icons';
+import { Link } from 'react-router-dom';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import IconWithCount from '../components/IconWithCount';
 import DetailsExpansion from '../expansions/DetailsExpansion';
-import RepositoriesExpansion from '../expansions/RepositoriesExpansion';
 import EnvironmentsExpansion from '../expansions/EnvironmentsExpansion';
 import VersionsExpansion from '../expansions/VersionsExpansion';
 import ContentViewName from '../components/ContentViewName';
 import DetailsContainer from '../Details/DetailsContainer';
 
 export const buildColumns = () => [
-  __('Name'), __('Last published'), __('Details'),
+  __('Type'), __('Name'), __('Last published'), __('Details'),
   { title: __('Environments'), cellTransforms: [compoundExpand] },
-  { title: __('Repositories'), cellTransforms: [compoundExpand] },
   { title: __('Versions'), cellTransforms: [compoundExpand] },
 ];
 
@@ -23,16 +26,13 @@ const buildRow = (contentView, openColumn) => {
     id, composite, name, environments, repositories, versions, last_published: lastPublished,
   } = contentView;
   const row = [
-    { title: <ContentViewName composite={composite ? true : undefined} name={name} cvId={id} /> },
+    { title: <ContentViewName composite={composite ? true : undefined} cvId={id} /> },
+    { title: <Link to={urlBuilder('labs/content_views', '', id)}>{name}</Link> },
     lastPublished || 'Not yet published',
     { title: __('Details'), props: { isOpen: false, ariaControls: `cv-details-expansion-${id}` } },
     {
       title: <IconWithCount Icon={ScreenIcon} count={environments.length} title={`environments-icon-${id}`} />,
       props: { isOpen: false, ariaControls: `cv-environments-expansion-${id}` },
-    },
-    {
-      title: <IconWithCount Icon={RepositoryIcon} count={repositories.length} title={`repositories-icon-${id}`} />,
-      props: { isOpen: false, ariaControls: `cv-repositories-expansion-${id}` },
     },
     {
       title: <IconWithCount Icon={ContainerNodeIcon} count={versions.length} title={`versions-icon-${id}`} />,
@@ -48,14 +48,15 @@ const buildDetailDropdowns = (id, rowIndex, openColumn) => {
   const cvId = { cvId: id };
   const expansionProps = { ...cvId, className: 'pf-m-no-padding' };
   const containerProps = column => ({ ...cvId, isOpen: openColumn === column });
+  const offsetColumn = 3; // index of first expandable column
 
   let detailDropdowns = [
     {
-      compoundParent: 2,
+      compoundParent: offsetColumn,
       cells: [
         {
           title: (
-            <DetailsContainer {...containerProps(3)}>
+            <DetailsContainer {...containerProps(offsetColumn + 1)}>
               <DetailsExpansion {...expansionProps} />
             </DetailsContainer>),
           props: { colSpan: 6 },
@@ -63,11 +64,11 @@ const buildDetailDropdowns = (id, rowIndex, openColumn) => {
       ],
     },
     {
-      compoundParent: 3,
+      compoundParent: offsetColumn + 1,
       cells: [
         {
           title: (
-            <DetailsContainer {...containerProps(4)}>
+            <DetailsContainer {...containerProps(offsetColumn + 2)}>
               <EnvironmentsExpansion {...expansionProps} />
             </DetailsContainer>),
           props: { colSpan: 6 },
@@ -75,23 +76,11 @@ const buildDetailDropdowns = (id, rowIndex, openColumn) => {
       ],
     },
     {
-      compoundParent: 4,
+      compoundParent: offsetColumn + 2,
       cells: [
         {
           title: (
-            <DetailsContainer {...containerProps(5)}>
-              <RepositoriesExpansion {...expansionProps} />
-            </DetailsContainer>),
-          props: { colSpan: 6 },
-        },
-      ],
-    },
-    {
-      compoundParent: 5,
-      cells: [
-        {
-          title: (
-            <DetailsContainer {...containerProps(6)}>
+            <DetailsContainer {...containerProps(offsetColumn + 3)}>
               <VersionsExpansion {...expansionProps} />
             </DetailsContainer>),
           props: { colSpan: 6 },
