@@ -252,6 +252,24 @@ module Katello
         facet_attributes
       end
 
+      apipie :class, desc: "A class representing #{model_name.human} object" do
+        name 'Content Facet'
+        refs 'ContentFacet'
+        sections only: %w[all additional]
+        property :id, Integer, desc: 'Returns ID of the facet'
+        property :uuid, String, desc: 'Returns UUID of the facet'
+        property :applicable_module_stream_count, Integer, desc: 'Returns applicable Module Stream count'
+        property :upgradable_module_stream_count, Integer, desc: 'Returns upgradable Module Stream count'
+        property :applicable_rpm_count, Integer, desc: 'Returns applicable RPM count'
+        property :upgradable_rpm_count, Integer, desc: 'Returns upgradable RPM count'
+        property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source'
+        prop_group :katello_idname_props, Katello::Model, meta: { resource: 'content_source' }
+        prop_group :katello_idname_props, Katello::Model, meta: { resource: 'content_view' }
+        property :errata_counts, Hash, desc: 'Returns key=value object with errata counts, e.g. {security: 0, bugfix: 0, enhancement: 0, total: 0}'
+        property :kickstart_repository, 'Repository', desc: 'Returns Kickstart repository object'
+        prop_group :katello_idname_props, Katello::Model, meta: { resource: 'kickstart_repository' }
+        prop_group :katello_idname_props, Katello::Model, meta: { resource: 'lifecycle_environment' }
+      end
       class Jail < ::Safemode::Jail
         allow :applicable_module_stream_count, :applicable_rpm_count, :content_source, :content_source_id, :content_source_name, :content_view_id,
               :content_view_name, :errata_counts, :id, :kickstart_repository, :kickstart_repository_id, :kickstart_repository_name,

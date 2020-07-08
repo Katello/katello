@@ -10,6 +10,15 @@ module Katello
       property :label, String, desc: "Label of the #{@meta[:friendly_name] || @meta[:class_scope]}"
     end
 
+    apipie :prop_group, name: :katello_idname_props do
+      if @meta[:resource]
+        resource = @meta[:resource].humanize(capitalize: false)
+        prefix = "#{resource}_"
+      end
+      property "#{prefix}id".to_sym, Integer, desc: "Returns ID of the #{@meta[:friendly_name] || resource}"
+      property "#{prefix}name".to_sym, String, desc: "Returns name of the #{@meta[:friendly_name] || resource}"
+    end
+
     def destroy!
       unless destroy
         fail self.errors.full_messages.join('; ')
