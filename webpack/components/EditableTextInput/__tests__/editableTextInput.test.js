@@ -1,51 +1,39 @@
 import React from 'react';
-import { render, waitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { render, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import EditableTextInput from '../EditableTextInput';
 
 const actualValue = 'burger';
-const label = 'Favorite Food';
+const attribute = 'favorite_food';
 const defaultProps = {
   onEdit: jest.fn(),
   value: actualValue,
-  label,
+  attribute,
 };
 
-test('Passed function is called after editing and submitting', () => {
+test('Passed function is called after editing and submitting', async () => {
   const mockEdit = jest.fn();
   const { getByLabelText } = render(<EditableTextInput {...defaultProps} onEdit={mockEdit} />);
 
-  getByLabelText(/edit/i).click();
-  fireEvent.change(getByLabelText(/text input/i), { target: { value: actualValue } });
-  getByLabelText(/submit/i).click();
+  getByLabelText(`edit ${attribute}`).click();
+  fireEvent.change(getByLabelText(`${attribute} text input`), { target: { value: actualValue } });
+  getByLabelText(`submit ${attribute}`).click();
 
-  expect(mockEdit.mock.calls).toHaveLength(1);
+  await patientlyWaitFor(() => expect(mockEdit.mock.calls).toHaveLength(1));
   expect(mockEdit.mock.calls[0][0]).toBe(actualValue); // first arg
 });
 
-test('input is set back to original value after clearing', async () => {
+test('input is set back to original value after clearing', () => {
   const value = 'Sandwich';
   const { getByLabelText } = render(<EditableTextInput {...defaultProps} />);
 
   // Show original value on load
-  expect(getByLabelText(/text value/i)).toHaveTextContent(actualValue);
-  getByLabelText(/edit/i).click();
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent(actualValue);
+  getByLabelText(`edit ${attribute}`).click();
   // Update text input
-  fireEvent.change(getByLabelText(/text input/i), { target: { value } });
-  waitFor(() => expect(getByLabelText(/text input/i)).toHaveTextContent(value));
+  fireEvent.change(getByLabelText(`${attribute} text input`), { target: { value } });
+  expect(getByLabelText(`${attribute} text input`)).toHaveValue(value);
   // Clear text
-  getByLabelText(/clear/i).click();
+  getByLabelText(`clear ${attribute}`).click();
   // Original value is still showing even though it's been edited
-  expect(getByLabelText(/text value/i)).toHaveTextContent(actualValue);
-});
-
-test('editable icon shows when editable is false', () => {
-  const { queryByLabelText } = render(<EditableTextInput {...defaultProps} editable />);
-
-  expect(queryByLabelText(`edit ${label}`)).toBeInTheDocument();
-});
-
-test('editable icon does not show when editable is false', () => {
-  const { queryByLabelText } = render(<EditableTextInput {...defaultProps} editable={false} />);
-
-  expect(queryByLabelText(`edit ${label}`)).not.toBeInTheDocument();
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent(actualValue);
 });

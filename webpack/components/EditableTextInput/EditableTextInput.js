@@ -1,97 +1,107 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextInput, TextArea, Text, TextVariants, Button, Split, SplitItem } from '@patternfly/react-core';
-import { TimesIcon, CheckIcon, EditIcon } from '@patternfly/react-icons';
+import { TimesIcon, CheckIcon, PencilAltIcon } from '@patternfly/react-icons';
+import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import Loading from '../Loading';
 import './editableTextInput.scss';
 
 const EditableTextInput = ({
-  onEdit, value, textArea, editable, label,
+  onEdit, value, textArea, attribute,
 }) => {
   // Tracks input box state
   const [inputValue, setInputValue] = useState(value);
   const [editing, setEditing] = useState(false);
-  const [working, setWorking] = useState(false);
-  const onSubmit = () => {
-    setWorking(true);
-    onEdit(inputValue);
-    setWorking(false);
-    setEditing(false);
-  };
+  const [submitting, setSubmitting] = useState(false);
+
+  // Setting didCancel to avoid actions from happening after component has been unmounted
+  // see https://overreacted.io/a-complete-guide-to-useeffect/#speaking-of-race-conditions
+  useEffect(() => {
+    let didCancel = false;
+
+    const onSubmit = async () => {
+      if (submitting) {
+        await onEdit(inputValue, attribute);
+        if (!didCancel) {
+          setSubmitting(false);
+          setEditing(false);
+        }
+      }
+    };
+    onSubmit();
+
+    return () => {
+      didCancel = true;
+    };
+  }, [submitting]);
+
+
   const onClear = () => {
     setInputValue(value);
     setEditing(false);
   };
 
-  const textInput = () => {
-    const sharedProps = {
-      value: inputValue,
-      onChange: v => setInputValue(v),
-    };
-
-    if (textArea) {
-      return <TextArea {...sharedProps} aria-label={`text area ${label}`} />;
-    }
-    return <TextInput {...sharedProps} type="text" aria-label={`text input ${label}`} />;
+  const inputProps = {
+    value: inputValue || '',
+    onChange: v => setInputValue(v),
   };
 
-  if (working) return <Loading size="sm" />;
+  if (submitting) return <Loading size="sm" />;
+  if (editing) {
+    return (
+      <Split>
+        <SplitItem>
+          {textArea ?
+            (<TextArea {...inputProps} aria-label={`${attribute} text area`} />) :
+            (<TextInput {...inputProps} type="text" aria-label={`${attribute} text input`} />)}
+        </SplitItem>
+        <SplitItem>
+          <Button
+            aria-label={`submit ${attribute}`}
+            variant="plain"
+            onClick={() => setSubmitting(true)}
+          >
+            <CheckIcon />
+          </Button>
+        </SplitItem>
+        <SplitItem>
+          <Button aria-label={`clear ${attribute}`} variant="plain" onClick={onClear}>
+            <TimesIcon />
+          </Button>
+        </SplitItem>
+      </Split>
+    );
+  }
   return (
-    <Fragment>
-      {editing ?
-      (
-        <Split>
-          <SplitItem>
-            {textInput()}
-          </SplitItem>
-          <SplitItem>
-            <Button aria-label={`submit ${label}`} variant="plain" onClick={onSubmit}>
-              <CheckIcon />
-            </Button>
-          </SplitItem>
-          <SplitItem>
-            <Button aria-label={`clear ${label}`} variant="plain" onClick={onClear}>
-              <TimesIcon />
-            </Button>
-          </SplitItem>
-        </Split>
-      ) :
-      (
-        <Split>
-          <SplitItem>
-            <Text aria-label={`text value ${label}`} component={TextVariants.p}>
-              {value}
-            </Text>
-          </SplitItem>
-          {editable &&
-          <SplitItem>
-            <Button
-              className="foreman-edit-icon"
-              aria-label={`edit ${label}`}
-              variant="plain"
-              onClick={() => setEditing(true)}
-            >
-              <EditIcon />
-            </Button>
-          </SplitItem>}
-        </Split>
-      )
-    }
-    </Fragment>
+    <Split>
+      <SplitItem>
+        <Text aria-label={`${attribute} text value`} component={TextVariants.p}>
+          {value || (<i>{__('None provided')}</i>)}
+        </Text>
+      </SplitItem>
+      <SplitItem>
+        <Button
+          className="foreman-edit-icon"
+          aria-label={`edit ${attribute}`}
+          variant="plain"
+          onClick={() => setEditing(true)}
+        >
+          <PencilAltIcon />
+        </Button>
+      </SplitItem>
+    </Split>
   );
 };
 
 EditableTextInput.propTypes = {
   onEdit: PropTypes.func.isRequired,
   value: PropTypes.string,
-  label: PropTypes.string.isRequired,
+  attribute: PropTypes.string.isRequired,
   textArea: PropTypes.bool, // Is a text area instead of input when editing
-  editable: PropTypes.bool,
 };
 
 EditableTextInput.defaultProps = {
   textArea: false,
-  editable: true,
   value: '', // API can return null, so default to empty string
 };
 

@@ -28,9 +28,9 @@ export const getResponseErrorMsgs = ({ data, actionType } = {}) => {
     const customMessage = getCustomMessage(actionType, data.displayMessage);
     const messages =
       customMessage ||
-      data.errors ||
       data.displayMessage ||
       data.message ||
+      data.errors ||
       data.error;
     return Array.isArray(messages) ? messages : [messages];
   }

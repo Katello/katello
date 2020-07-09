@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, waitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
@@ -23,10 +23,10 @@ test('Can call API and show details on page load', async (done) => {
     renderOptions,
   );
 
-  await waitFor(() => {
-    expect(getByLabelText('text value name')).toHaveTextContent(name);
-    expect(getByLabelText('text value label')).toHaveTextContent(label);
-    expect(getByLabelText('text value description')).toHaveTextContent(description);
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('name text value')).toHaveTextContent(name);
+    expect(getByLabelText('label text value')).toHaveTextContent(label);
+    expect(getByLabelText('description text value')).toHaveTextContent(description);
   });
 
   assertNockRequest(scope, done);
@@ -53,31 +53,31 @@ test('Can edit text details such as name', async (done) => {
   );
 
   const editLabel = 'edit name';
-  // Wait for page to load and confirm edit button is present
-  await waitFor(() => { expect(getByLabelText(editLabel)).toBeInTheDocument(); });
-
-  // Update CV name
+  // Wait for page to load and confirm edit button is present, then click to edit
+  await patientlyWaitFor(() => { expect(getByLabelText(editLabel)).toBeInTheDocument(); });
   getByLabelText(editLabel).click();
-  const textInput = getByLabelText('text input name');
-  fireEvent.change(textInput, { target: { value: newName } });
+
+  const inputLabel = /name text input/;
+  await patientlyWaitFor(() => { expect(getByLabelText(inputLabel)).toBeInTheDocument(); });
+  fireEvent.change(getByLabelText(inputLabel), { target: { value: newName } });
   getByLabelText('submit name').click();
 
   // Make sure new name is showing after update
-  await waitFor(() => { expect(getByLabelText('text value name')).toHaveTextContent(newName); });
+  await patientlyWaitFor(() => { expect(getByLabelText('name text value')).toHaveTextContent(newName); });
 
   assertNockRequest(getscope);
   assertNockRequest(updatescope);
   assertNockRequest(afterUpdateScope, done);
 });
 
-test('Can edit boolean details such as force puppet environment', async (done) => {
-  const updatedCVDetails = { ...cvDetailData, force_puppet_environment: true };
+test('Can edit boolean details such as solve dependencies', async (done) => {
+  const updatedCVDetails = { ...cvDetailData, solve_dependencies: true };
   const getscope = nockInstance
     .get(cvDetailsPath)
     .query(true)
     .reply(200, cvDetailData);
   const updatescope = nockInstance
-    .put(cvDetailsPath, { force_puppet_environment: true })
+    .put(cvDetailsPath, { solve_dependencies: true })
     .reply(200, updatedCVDetails);
   const afterUpdateScope = nockInstance
     .get(cvDetailsPath)
@@ -89,11 +89,11 @@ test('Can edit boolean details such as force puppet environment', async (done) =
     renderOptions,
   );
 
-  const checkboxLabel = 'checkbox-force_puppet_environment';
-  await waitFor(() => expect(getByLabelText(checkboxLabel)).toBeInTheDocument());
+  const checkboxLabel = /solve_dependencies switch/;
+  await patientlyWaitFor(() => expect(getByLabelText(checkboxLabel)).toBeInTheDocument());
   expect(getByLabelText(checkboxLabel).checked).toBeFalsy();
   fireEvent.click(getByLabelText(checkboxLabel));
-  await waitFor(() => expect(getByLabelText(checkboxLabel).checked).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByLabelText(checkboxLabel).checked).toBeTruthy());
 
   assertNockRequest(getscope);
   assertNockRequest(updatescope);

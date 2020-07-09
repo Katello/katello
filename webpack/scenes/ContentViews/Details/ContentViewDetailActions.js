@@ -9,7 +9,7 @@ import CONTENT_VIEWS_KEY, {
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 
-import { apiError } from '../../../move_to_foreman/common/helpers';
+import { apiError } from '../../../utils/helpers';
 
 const getContentViewDetails = cvId => get({
   type: API_OPERATIONS.GET,
@@ -23,7 +23,7 @@ const cvUpdateSuccess = (response, dispatch) => {
   dispatch(getContentViewDetails(id));
   return dispatch(addToast({
     type: 'success',
-    message: __(' Content View updated.'),
+    message: __(' Content view updated.'),
   }));
 };
 
