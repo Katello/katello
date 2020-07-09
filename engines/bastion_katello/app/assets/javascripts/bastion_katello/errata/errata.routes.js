@@ -9,7 +9,7 @@
  */
 angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('errata', {
-        url: '/errata',
+        url: '/errata?repositoryId',
         permission: ['view_products', 'view_content_views'],
         views: {
           '@': {
