@@ -16,7 +16,7 @@ module ::Actions::Katello::Applicability::Host
 
     after :all do
       SETTINGS[:katello][:katello_applicability] = false
-      ::Setting::Content.find_by(name: "applicability_batch_size").update(value: 50)
+      ::Setting['applicability_batch_size'] = 50
     end
 
     describe 'Host Generate Applicability using Katello Applicability' do

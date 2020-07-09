@@ -3,6 +3,9 @@ require 'katello_test_helper'
 
 module Katello
   class RootRepositoryHttpProxyTest < RepositoryTestBase
+    let(:proxy) { FactoryBot.create(:http_proxy) }
+    let(:other_proxy) { FactoryBot.create(:http_proxy, url: 'http://someotherurl') }
+
     def setup
       super
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
@@ -10,6 +13,7 @@ module Katello
       @root = build(:katello_root_repository,
                     :product => katello_products(:fedora)
                    )
+      Setting['content_default_http_proxy'] = proxy.name
     end
 
     def test_default_http_proxy_when_there_is_no_global_default_set
@@ -17,46 +21,30 @@ module Katello
     end
 
     def test_http_proxy_is_global_proxy_when_global_default_exists_and_policy_is_global
-      proxy = FactoryBot.create(:http_proxy)
-      setting = Setting::Content.unscoped.
-                    where(name: "content_default_http_proxy").
-                    first
-      setting.update_attribute(:value, proxy.name)
       @root.update_attribute(:http_proxy_policy, Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
       assert_equal proxy, @root.http_proxy
     end
 
     def test_http_proxy_is_global_proxy_after_setting_http_proxy
-      proxy = FactoryBot.create(:http_proxy)
-      other_proxy = FactoryBot.create(:http_proxy, url: 'http://someotherurl')
       @root.http_proxy = other_proxy
       @root.save
-      setting = Setting::Content.unscoped.
-                    where(name: "content_default_http_proxy").
-                    first
-      setting.update_attribute(:value, proxy.name)
       @root.update_attribute(:http_proxy_policy, Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
       assert_equal proxy, @root.http_proxy
     end
 
     def test_http_proxy_is_selected_proxy_when_global_proxy_exists
-      proxy = FactoryBot.create(:http_proxy)
-      other_proxy = FactoryBot.create(:http_proxy, url: 'http://someotherurl')
       @root.http_proxy = other_proxy
       @root.save
-      setting = Setting::Content.unscoped.
-                    where(name: "content_default_http_proxy").
-                    first
-      setting.update_attribute(:value, proxy.name)
       @root.update_attribute(:http_proxy_policy, Katello::RootRepository::USE_SELECTED_HTTP_PROXY)
       assert_equal other_proxy, @root.reload.http_proxy
     end
   end
 
   class HttpProxyScopeTest < ActiveSupport::TestCase
+    let(:default_proxy) { FactoryBot.create(:http_proxy, name: "global default") }
+
     def setup
-      @default_proxy = FactoryBot.create(:http_proxy, name: "global default")
-      Setting.find_by_name('content_default_http_proxy').update(value: @default_proxy.name)
+      Setting['content_default_http_proxy'] = default_proxy.name
 
       @other_proxy = FactoryBot.create(:http_proxy)
       @another_proxy = FactoryBot.create(:http_proxy)

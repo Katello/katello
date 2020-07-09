@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ApplicableHostQueueTest < ActiveSupport::TestCase
     def setup
-      ::Setting::Content.find_by(name: "applicability_batch_size").update(value: 50)
+      Setting['applicability_batch_size'] = 50
     end
 
     def test_pop_nothing
@@ -25,7 +25,7 @@ module Katello
     end
 
     def test_pop_batch_size_only
-      ::Setting::Content.find_by(name: "applicability_batch_size").update(value: 3)
+      Setting['applicability_batch_size'] = 3
       5.times { |i| ApplicableHostQueue.push_host(i) }
       popped_hosts = ApplicableHostQueue.pop_hosts
 

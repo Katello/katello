@@ -6,13 +6,13 @@ module Katello
     class RepositoryMergeProxyOptionsTest < ActiveSupport::TestCase
       include RepositorySupport
 
+      let(:default_proxy) { FactoryBot.create(:http_proxy, name: 'best proxy') }
+
       def setup
         @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
         User.current = users(:admin)
 
-        @default_proxy = FactoryBot.create(:http_proxy, name: 'best proxy')
-        Setting.find_by(name: 'content_default_http_proxy').update(
-          value: @default_proxy.name)
+        Setting['content_default_http_proxy'] = default_proxy.name
         @repo = katello_repositories(:fedora_17_x86_64)
         @pulp_repo = Katello::Pulp::Repository.new(@repo, @primary)
       end
@@ -36,12 +36,12 @@ module Katello
         @repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY,
                           http_proxy: another_proxy)
         assert @repo.root.http_proxy_id
-        uri = URI(@default_proxy.url)
+        uri = URI(default_proxy.url)
         expected_options = {
           proxy_host: uri.scheme + '://' + uri.host,
           proxy_port: uri.port,
-          proxy_username: @default_proxy.username,
-          proxy_password: @default_proxy.password
+          proxy_username: default_proxy.username,
+          proxy_password: default_proxy.password
         }
         assert_equal expected_options, @pulp_repo.proxy_options
       end
@@ -49,12 +49,12 @@ module Katello
       def test_no_options_merged_if_global_default_proxy_an_no_proxy_set
         @repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
         assert_nil @repo.root.http_proxy_id
-        uri = URI(@default_proxy.url)
+        uri = URI(default_proxy.url)
         expected_options = {
           proxy_host: uri.scheme + '://' + uri.host,
           proxy_port: uri.port,
-          proxy_username: @default_proxy.username,
-          proxy_password: @default_proxy.password
+          proxy_username: default_proxy.username,
+          proxy_password: default_proxy.password
         }
         assert_equal expected_options, @pulp_repo.proxy_options
       end
