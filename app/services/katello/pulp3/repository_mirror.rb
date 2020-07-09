@@ -11,6 +11,11 @@ module Katello
         @repo_service = repository_service
       end
 
+      def content_guard_href
+        content_guard_api = ::Katello::Pulp3::Api::ContentGuard.new(smart_proxy)
+        content_guard_api.list&.results&.first&.pulp_href
+      end
+
       def backend_object_name
         #Create repos in pulp3 instance with the name as this repo's pulp_id
         repo.pulp_id
@@ -78,6 +83,7 @@ module Katello
           base_path: path,
           name: "#{backend_object_name}"
         }
+        ret[:content_guard] = repo.unprotected ? nil : content_guard_href
         ret[:publication] = options[:publication] if options.key? :publication
         ret[:repository_version] = options[:repository_version] if options.key? :repository_version
         ret
@@ -85,10 +91,9 @@ module Katello
 
       def remote_options
         base_options = common_remote_options
+        base_options.merge(url: remote_feed_url)
         if (type_specific_options = repo_service.try(:mirror_remote_options))
           base_options.merge(type_specific_options)
-        else
-          base_options.merge(url: remote_feed_url)
         end
       end
 
