@@ -30,9 +30,7 @@ module Katello
 
     def test_recalculate_errata_status
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Host::RecalculateErrataStatus)
-      setting = Setting.where(:name => 'errata_status_installable').first
-      setting.value = !setting.value
-      setting.save!
+      Setting['errata_status_installable'] = !Setting['errata_status_installable']
     end
   end
 end

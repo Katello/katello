@@ -479,8 +479,7 @@ module Katello
 
     def test_check_composite_action_allowed_when_setting_enabled
       # Testing composite content view restrictions (Setting: restrict_composite_view=true)
-      Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Content',
-                     :settings_type => 'boolean', :default => true)
+      Setting['restrict_composite_view'] = true
 
       library = KTEnvironment.find(katello_environments(:library).id)
       composite = ContentView.find(katello_content_views(:composite_view).id)
@@ -502,8 +501,7 @@ module Katello
 
     def test_check_composite_action_allowed_when_setting_enabled_with_active_record_relation
       # Testing composite content view restrictions (Setting: restrict_composite_view=true)
-      Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Content',
-                     :settings_type => 'boolean', :default => true)
+      Setting['restrict_composite_view'] = true
 
       library = KTEnvironment.where(:id => katello_environments(:library).id)
       composite = ContentView.find(katello_content_views(:composite_view).id)
@@ -525,8 +523,7 @@ module Katello
 
     def test_check_composite_action_allowed_when_setting_disabled
       # Testing the default behavior (Setting: restrict_composite_view=false)
-      Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Content',
-                     :settings_type => 'boolean', :default => false)
+      Setting['restrict_composite_view'] = false
 
       library = KTEnvironment.find(katello_environments(:library).id)
       composite = ContentView.find(katello_content_views(:composite_view).id)
