@@ -10,6 +10,7 @@ module Actions
           cp_create = nil
 
           organization.save!
+          organization.create_cdn_configuration(url: ::Katello::Resources::CDN::REDHAT_CDN_URL)
 
           sequence do
             if ::SETTINGS[:katello][:use_cp]

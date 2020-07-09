@@ -4,8 +4,10 @@ module Katello
 
     include Katello::Concerns::FilteredAutoCompleteSearch
 
+    skip_before_action :authorize, only: [:available_repositories, :index]
     before_action :find_product_or_organization
-    before_action :custom_product?
+    before_action :repository_sets_authorize, only: [:available_repositories, :index]
+    before_action :custom_product? # maybe we don't do this anymore
     before_action :find_product_content, :except => [:index, :auto_complete_search]
 
     resource_description do
@@ -41,8 +43,8 @@ module Katello
     param :product_id, :number, :required => false, :desc => N_("ID of a product to list repository sets from")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def available_repositories
-      scan_cdn = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, @product_content.content.cp_content_id)
-      repos = scan_cdn.output[:results]
+      task = sync_task(::Actions::Katello::RepositorySet::AvailableRepositories, product: @product, content_id: @product_content.content.cp_content_id)
+      repos = task.output[:results]
 
       repos = repos.select do |repo|
         if repo[:path].include?('kickstart') && repo[:substitutions][:releasever].present?
@@ -152,6 +154,19 @@ module Katello
 
     def substitutions
       params.permit(:basearch, :releasever).to_h
+    end
+
+    # consolidate this with registries controller
+    def ssl_client_authorized?(org_label)
+      request.headers['HTTP_SSL_CLIENT_VERIFY'] == "SUCCESS" && request.headers['HTTP_SSL_CLIENT_S_DN'] == "O=#{org_label}"
+    end
+
+    def repository_sets_authorize
+      if ssl_client_authorized?(@organization.label)
+        User.current = User.anonymous_admin
+      else
+        authorize
+      end
     end
   end
 end

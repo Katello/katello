@@ -8,7 +8,6 @@ module Katello
     before_action :find_organization, :only => [:upload, :delete_manifest,
                                                 :refresh_manifest, :manifest_history]
     before_action :check_upstream_connection, only: [:refresh_manifest]
-    before_action :find_provider
 
     skip_before_action :check_content_type, :only => [:upload]
 
@@ -88,7 +87,6 @@ module Katello
     api :POST, "/organizations/:organization_id/subscriptions/upload", N_("Upload a subscription manifest")
     param :organization_id, :number, :desc => N_("Organization id"), :required => true
     param :content, File, :desc => N_("Subscription manifest file"), :required => true
-    param :repository_url, String, :desc => N_("repository url"), :required => false
     def upload
       fail HttpErrors::BadRequest, _("No manifest file uploaded") if params[:content].blank?
 
@@ -98,12 +96,6 @@ module Katello
         temp_file.write params[:content].read
       ensure
         temp_file.close
-      end
-
-      # repository url
-      if (repo_url = params[:repository_url])
-        @provider.repository_url = repo_url
-        @provider.save!
       end
 
       task = async_task(::Actions::Katello::Organization::ManifestImport, @organization, File.expand_path(temp_file.path), params[:force])
@@ -150,12 +142,6 @@ module Katello
       @activation_key = ActivationKey.find_by!(:id => params[:activation_key_id]) if params[:activation_key_id]
     end
 
-    def find_provider
-      @organization = @activation_key.organization if @activation_key
-      @organization = @subscription.organization if @subscription
-      @provider = @organization.redhat_provider if @organization
-    end
-
     private
 
     def resource_class
@@ -164,14 +150,6 @@ module Katello
 
     def default_sort
       %w(id desc)
-    end
-
-    def index_activation_key
-      @activation_key.subscriptions
-    end
-
-    def index_organization
-      @organization.subscriptions
     end
 
     def available_for_activation_key

@@ -2,6 +2,8 @@ module Katello
   module Resources
     module CDN
       SUPPORTED_SSL_VERSIONS = ['SSLv23', 'TLSv1'].freeze
+      REDHAT_CDN_URL = SETTINGS[:katello][:redhat_repository_url]
+
       class Utils
         # takes releasever from contentUrl (e.g. 6Server, 6.0, 6.1)
         # returns hash e.g. {:major => 6, :minor => "6.1"}
@@ -51,7 +53,7 @@ module Katello
         end
 
         def self.redhat_cdn?(url)
-          url.include?(SETTINGS[:katello][:redhat_repository_url])
+          url.include?(REDHAT_CDN_URL)
         end
 
         def http_downloader

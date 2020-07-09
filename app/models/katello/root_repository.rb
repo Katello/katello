@@ -294,7 +294,7 @@ module Katello
     end
 
     def repo_mapper
-      Katello::Candlepin::RepositoryMapper.new(self.product, self.content, self.substitutions)
+      @repo_mapper ||= Katello::Candlepin::RepositoryMapper.new(self.product, self.content, self.substitutions)
     end
 
     def calculate_updated_name

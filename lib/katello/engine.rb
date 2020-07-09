@@ -135,15 +135,15 @@ module Katello
     end
 
     initializer "katello.events" do
+    end
+
+    config.to_prepare do
       Katello::CandlepinEventListener.client_factory = proc do
         Katello::Messaging::Connection.create(
           connection_class: Katello::Messaging::StompConnection,
           settings: SETTINGS[:katello][:candlepin_events]
         )
       end
-    end
-
-    config.to_prepare do
       FastGettext.add_text_domain('katello',
                                     :path => File.expand_path("../../../locale", __FILE__),
                                     :type => :po,

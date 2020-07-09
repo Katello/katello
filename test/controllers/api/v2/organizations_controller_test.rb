@@ -108,8 +108,8 @@ module Katello
       end
 
       url = "http://www.redhat.com"
-      assert_sync_task ::Actions::Katello::Provider::Update do |_organization, params|
-        params[:redhat_repository_url] == url
+      assert_sync_task ::Actions::Katello::CdnConfiguration::Update do |_organization, params|
+        params[:url] == url
       end
 
       put(:update, params: { :id => @organization.id, :redhat_repository_url => url })

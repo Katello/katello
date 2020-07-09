@@ -12,6 +12,13 @@ module Katello
     has_many :root_repositories, :class_name => "Katello::RootRepository", :inverse_of => :gpg_key, :dependent => :nullify
     has_many :repositories, :through => :root_repositories
 
+    has_many :ssl_ca_cdn_configurations, :class_name => "Katello::CdnConfiguration", :foreign_key => 'ssl_ca_credential_id',
+      :inverse_of => :ssl_ca_credential, :dependent => :nullify
+    has_many :ssl_cert_cdn_configurations, :class_name => "Katello::CdnConfiguration", :foreign_key => 'ssl_cert_credential_id',
+      :inverse_of => :ssl_cert_credential, :dependent => :nullify
+    has_many :ssl_key_cdn_configurations, :class_name => "Katello::CdnConfiguration", :foreign_key => 'ssl_key_credential_id',
+      :inverse_of => :ssl_key_credential, :dependent => :nullify
+
     has_many :products, :class_name => "Katello::Product", :inverse_of => :gpg_key, :dependent => :nullify
     has_many :ssl_ca_products, :class_name => "Katello::Product", :foreign_key => "ssl_ca_cert_id",
                                :inverse_of => :ssl_ca_cert, :dependent => :nullify

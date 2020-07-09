@@ -22,7 +22,10 @@ module Actions
         end
 
         def upstream_url(repo)
-          repo.product.repo_url(repo.generate_content_path)
+          #repo.product.repo_url(repo.generate_content_path)
+          cdn_config = repo.organization.cdn_configuration
+
+
         end
       end
     end

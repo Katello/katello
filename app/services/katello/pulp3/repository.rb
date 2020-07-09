@@ -308,12 +308,20 @@ module Katello
       end
 
       def ssl_remote_options
-        if root.redhat? && Katello::Resources::CDN::CdnResource.redhat_cdn?(root.url)
-          {
-            client_cert: root.product.certificate,
-            client_key: root.product.key,
-            ca_cert: Katello::Repository.feed_ca_cert(root.url)
-          }
+        if root.redhat? # if we associate cdn_configuration to root we can check root.cdn_configuration.url
+          if Katello::Resources::CDN::CdnResource.redhat_cdn?(root.url)
+            {
+              client_cert: root.product.certificate,
+              client_key: root.product.key,
+              ca_cert: Katello::Repository.feed_ca_cert(root.url)
+            }
+          else
+            {
+              client_cert: root.organization.cdn_configuration.ssl_cert_credential.content,
+              client_key: root.organization.cdn_configuration.ssl_key_credential.content,
+              #ca_cert: root.organization.cdn_configuration.ssl_ca_credential.content
+            }
+          end
         elsif root.custom?
           {
             client_cert: root.ssl_client_cert&.content,

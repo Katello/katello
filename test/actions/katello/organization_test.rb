@@ -44,10 +44,7 @@ module ::Actions::Katello::Organization
     let(:action_class) { ::Actions::Katello::Organization::Create }
 
     it 'plans' do
-      organization.expects(:create_library)
-      organization.expects(:create_anonymous_provider)
-      organization.expects(:create_redhat_provider)
-      organization.expects(:save!)
+      organization = FactoryBot.build(:katello_organization)
       action.stubs(:action_subject).with(organization, any_parameters)
       plan_action(action, organization)
       assert_action_planed_with(action,
@@ -58,6 +55,11 @@ module ::Actions::Katello::Organization
       assert_action_planed_with(action,
                                 ::Actions::Katello::Environment::LibraryCreate,
                                 organization.library)
+
+      assert organization.library
+      assert organization.anonymous_provider
+      assert organization.redhat_provider
+      assert organization.cdn_configuration
     end
   end
 

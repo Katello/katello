@@ -32,6 +32,11 @@ export const loadOrganization = (extendedParams = {}) => async (dispatch) => {
   }
 };
 
+export const updateCdnConfiguration = () => async (dispatch) => {
+  dispatch({ type: UPDATE_CDN_CONFIGURATION_REQUEST });
+
+};
+
 export const saveOrganization = (extendedParams = {}) => async (dispatch) => {
   dispatch({ type: SAVE_ORGANIZATION_REQUEST });
 

@@ -6,7 +6,7 @@ module Katello
     include ForemanTasks::Triggers
 
     before_action :local_find_taxonomy, :only => %w(repo_discover cancel_repo_discover
-                                                    download_debug_certificate
+                                                    download_debug_certificate cdn_configuration
                                                     redhat_provider update releases)
 
     resource_description do
@@ -56,12 +56,11 @@ module Katello
 
     api :PUT, '/organizations/:id', N_('Update organization')
     param :id, :number, :desc => N_("organization ID"), :required => true
-    param :redhat_repository_url, String, :desc => N_("Red Hat CDN URL")
+    param :redhat_repository_url, String, :desc => N_("Red Hat CDN URL"), deprecated: true
     param_group :resource
     def update
-      if params.key?(:redhat_repository_url)
-        org_params = params.permit(:redhat_repository_url).to_h
-        sync_task(::Actions::Katello::Provider::Update, @organization.redhat_provider, org_params)
+      if params[:redhat_repository_url]
+        sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, url: params[:redhat_repository_url])
       end
       super
     end
@@ -133,7 +132,28 @@ module Katello
       respond_for_index :collection => response
     end
 
-    api :GET, '/organizations/:id/redhat_provider', N_('List all :resource_id')
+    api :PUT, "/organizations/:id/cdn_configuration", N_("Update the CDN configuration")
+    param :id, String, :desc => N_("ID of the Organization"), :required => true
+    param :ssl_ca_credential_id, Integer, :desc => N_("")
+    param :ssl_cert_credential_id, Integer, :desc => N_("")
+    param :ssl_key_credential_id, Integer, :desc => N_("")
+    param :url, String, :desc => N_("")
+    def cdn_configuration
+      unless params[:url] || params[:ssl_ca_credential_id] || params[:ssl_cert_credential_id] || params[:ssl_key_credential_id]
+        fail HttpErrors::BadRequest, _("no params given")
+      end
+
+      task = async_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration,
+        url: params[:url],
+        ssl_ca_credential_id: params[:ssl_ca_credential_id],
+        ssl_key_credential_id: params[:ssl_key_credential_id],
+        ssl_cert_credential_id: params[:ssl_cert_credential_id]
+      )
+
+      respond_for_async :resource => task
+    end
+
+    api :GET, '/organizations/:id/redhat_provider', N_('List all :resource_id'), deprecated: true
     def redhat_provider
       respond_for_show(:resource => @organization.redhat_provider,
                        :resource_name => "providers")
@@ -142,7 +162,7 @@ module Katello
     protected
 
     def action_permission
-      if %w(download_debug_certificate redhat_provider repo_discover
+      if %w(download_debug_certificate redhat_provider repo_discover cdn_configuration
             cancel_repo_discover).include?(params[:action])
         :edit
       elsif params[:action] == "releases"

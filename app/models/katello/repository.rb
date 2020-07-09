@@ -135,6 +135,7 @@ module Katello
     scope :in_published_environments, -> { in_content_views(Katello::ContentView.non_default).where.not(:environment_id => nil) }
     scope :order_by_root, ->(attr) { joins(:root).order("#{Katello::RootRepository.table_name}.#{attr}") }
     scope :with_content, ->(content) { joins(Katello::RepositoryTypeManager.find_content_type(content).model_class.repository_association_class.name.demodulize.underscore.pluralize.to_sym).distinct }
+    scope :library, -> { where(library_instance_id: nil) }
 
     scoped_search :on => :name, :relation => :root, :complete_value => true
     scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true
@@ -172,6 +173,10 @@ module Katello
 
     def self.with_type(content_type)
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)
+    end
+
+    def self.for_products(products)
+      joins(:root).where("#{Katello::RootRepository.table_name}.product_id" => products)
     end
 
     def to_label
