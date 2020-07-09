@@ -8,11 +8,8 @@ module Katello
       Rake.application.rake_require 'katello/tasks/update_content_default_http_proxy'
       Rake::Task['katello:update_default_http_proxy'].reenable
       Rake::Task.define_task(:environment)
-      unless Setting.find_by_name('content_default_http_proxy')
-        Setting[:content_default_http_proxy] = FactoryBot.create(
-          :setting, category: 'Setting::Content', name: 'content_default_http_proxy')
-      end
-      @setting = Setting.find_by_name('content_default_http_proxy')
+      @setting = Setting.find_by(name: 'content_default_http_proxy')
+      @setting ||= Setting::Content.create(FactoryBot.attributes_for(:setting, name: 'content_default_http_proxy').except(:category))
       assert @setting
 
       HttpProxy.delete_all

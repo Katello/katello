@@ -19,9 +19,9 @@ module Katello
       test 'without SEED_LOCATION' do
         seed_location
         # check that default_location_subscribed_hosts gets set
-        assert_equal Setting.find_by_name('default_location_subscribed_hosts').value, Location.first.title
+        assert_equal Setting['default_location_subscribed_hosts'], Location.first.title
         # check that default_location_puppet_content gets set
-        assert_equal Setting.find_by_name('default_location_puppet_content').value, Location.first.title
+        assert_equal Setting['default_location_puppet_content'], Location.first.title
       end
     end
 

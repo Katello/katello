@@ -189,14 +189,15 @@ module Katello
       class RpmTestWithProxy < ActiveSupport::TestCase
         include RepositorySupport
 
+        let(:default_proxy) do
+          FactoryBot.create(:http_proxy, name: 'best proxy', url: 'http://url_1')
+        end
+
         def setup
           @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           User.current = users(:admin)
 
-          @default_proxy = FactoryBot.create(:http_proxy, name: 'best proxy',
-                                             url: "http://url_1")
-          Setting.find_by(name: 'content_default_http_proxy').update(
-            value: @default_proxy.name)
+          Setting['content_default_http_proxy'] = default_proxy.name
           @repo = katello_repositories(:fedora_17_x86_64)
         end
 
@@ -206,7 +207,7 @@ module Katello
           backend_data = @repo.backend_service(@primary).backend_data
           importers = backend_data['importers']
           config = importers.first['config']
-          uri = URI(@default_proxy.url)
+          uri = URI(default_proxy.url)
           assert_equal "http://" + uri.host, config['proxy_host']
         end
 
@@ -217,7 +218,7 @@ module Katello
           backend_data = @repo.backend_service(@primary).backend_data
           importers = backend_data['importers']
           config = importers.first['config']
-          uri = URI(@default_proxy.url)
+          uri = URI(default_proxy.url)
           assert_equal "http://" + uri.host, config['proxy_host']
         end
 
