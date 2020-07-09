@@ -80,6 +80,18 @@ module Katello
       assert_includes @content_view.reload.filters.map(&:name), "My Filter"
     end
 
+    def test_create_with_original_module_streams
+      @content_view = katello_content_views(:library_dev_view)
+      assert_empty @content_view.filters
+
+      post :create, params: { :content_view_id => @content_view.id, :name => "My Filter", :type => "modulemd", :original_module_streams => true }
+
+      assert_response :success
+      assert_template :layout => 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/create'
+      assert @content_view.reload.filters.first.original_module_streams
+    end
+
     def test_create_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
@@ -137,6 +149,15 @@ module Katello
       assert_protected_action(:update, allowed_perms, denied_perms) do
         put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name" }
       end
+    end
+
+    def test_update_with_original_module_streams
+      @filter = katello_content_view_filters(:populated_module_stream_filter)
+      refute @filter.original_module_streams
+      put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter, :original_module_streams => true }
+      assert_response :success
+      assert_template 'api/v2/common/update'
+      assert @filter.reload.original_module_streams
     end
 
     def test_destroy
