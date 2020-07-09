@@ -186,6 +186,16 @@ module DynflowFullTreePlanning
     Rails.application.dynflow.world.plan(action_class, *args)
   end
 
+  def assert_tree_planned_steps(execution_plan, action_class)
+    found_steps = execution_plan.steps.each_value.select { |step| action_class == step.action_class }
+    assert found_steps.any?, "Action #{action_class} was not planned, there were only #{execution_plan.run_steps.map { |s| s.action_class }}"
+  end
+
+  def refute_tree_planned_steps(execution_plan, action_class)
+    found_steps = execution_plan.steps.each_value.select { |step| action_class == step.action_class }
+    assert_empty found_steps, "Found enexpected action: #{action_class}"
+  end
+
   def assert_tree_planned_with(execution_plan, action_class, expected_input = nil)
     found_steps = execution_plan.run_steps.select { |step| action_class == step.action_class }
     assert found_steps.any?, "Action #{action_class} was not planned, there were only #{execution_plan.run_steps.map { |s| s.action_class }}"
