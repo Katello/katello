@@ -32,7 +32,7 @@ module Actions
 
           smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
           repositories = smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository)
-          smart_proxy.ping_pulp3 if repositories.any? { |repo| smart_proxy.pulp3_support?(repo) }
+
           smart_proxy.ping_pulp if repositories.any? { |repo| !smart_proxy.pulp3_support?(repo) }
 
           refresh_options = options.merge(content_view: content_view,
@@ -40,6 +40,7 @@ module Actions
                                              repository: repository)
           sequence do
             plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+            plan_action(Actions::Pulp3::CapsuleContent::RefreshContentGuard, smart_proxy) if repositories.any? { |repo| smart_proxy.pulp3_support?(repo) }
             plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options) if smart_proxy.pulp3_enabled?
             plan_action(SyncCapsule, smart_proxy, refresh_options)
           end
