@@ -188,6 +188,7 @@ module Katello
       end
 
       def pulp3_ssl_configuration(config, connection_adapter = Faraday.default_adapter)
+        config.ssl_ca_file = ::Cert::Certs.backend_ca_cert_file(:pulp)
         if connection_adapter == :excon
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert_filename
           config.ssl_client_key = ::Cert::Certs.ssl_client_key_filename
