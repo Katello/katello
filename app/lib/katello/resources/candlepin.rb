@@ -11,7 +11,7 @@ module Katello
         self.site = "#{uri.scheme}://#{uri.host}:#{uri.port}"
         self.consumer_secret = cfg[:oauth_secret]
         self.consumer_key = cfg[:oauth_key]
-        self.ssl_ca_file = cfg[:ca_cert_file]
+        self.ssl_ca_file = ::Cert::Certs.backend_ca_cert_file(:candlepin)
 
         class << self
           def process_response(response)

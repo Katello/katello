@@ -9,7 +9,7 @@ module Cert
     end
 
     def self.candlepin_client_ca_cert
-      File.read(SETTINGS[:katello][:candlepin][:ca_cert_file])
+      File.read(backend_ca_cert_file(:candlepin))
     end
 
     def self.ssl_client_cert
@@ -28,10 +28,14 @@ module Cert
       Setting[:ssl_priv_key]
     end
 
+    def self.backend_ca_cert_file(backend)
+      SETTINGS.dig(:katello, backend, :ca_cert_file) || Setting[:ssl_ca_file]
+    end
+
     def self.verify_ueber_cert(organization)
       ueber_cert = OpenSSL::X509::Certificate.new(self.ueber_cert(organization)[:cert])
       cert_store = OpenSSL::X509::Store.new
-      cert_store.add_file SETTINGS[:katello][:candlepin][:ca_cert_file]
+      cert_store.add_file backend_ca_cert_file(:candlepin)
       organization.regenerate_ueber_cert unless cert_store.verify ueber_cert
     end
   end
