@@ -112,6 +112,23 @@ module Katello
       Pool.joins(:subscription).order("subscription.name")
     end
 
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Pool'
+      refs 'Pool'
+      sections only: %w[all additional]
+      prop_group :katello_idname_props, Katello::Model, meta: { friendly_name: 'pool' }
+      property :available, Integer, desc: 'Returns number of available subscriptions'
+      property :quantity, Integer, desc: 'Returns number of all subscriptions'
+      property :consumed, Integer, desc: 'Returns number of consumed subscriptions'
+      property :product_id, String, desc: 'Returns ID of the product'
+      property :account_number, Integer, desc: 'Returns subscription account number'
+      property :contract_number, Integer, desc: 'Returns subscription contract number'
+      property :type, String, desc: 'Returns type of the pool, e.g. "NORMAL"'
+      property :organization, 'Organization', desc: 'Returns organization to which the pool belongs'
+      property :start_date, ActiveSupport::TimeWithZone, desc: 'Returns subscription start date'
+      property :end_date, ActiveSupport::TimeWithZone, desc: 'Returns subscription end date'
+      property :days_until_expiration, Integer, desc: 'Returns number of days until expiration'
+    end
     class Jail < ::Safemode::Jail
       allow :id, :name, :available, :quantity, :product_id, :contract_number, :type, :account_number, :start_date, :end_date, :organization, :consumed, :days_until_expiration
     end
