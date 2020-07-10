@@ -143,6 +143,9 @@ module Katello
       end
     end
     def incremental_update
+      if params[:add_content].values.flatten.empty?
+        fail HttpErrors::BadRequest, _("Incremental update requires at least one content unit")
+      end
       any_environments = params[:content_view_version_environments].any? { |cvve| cvve[:environment_ids].try(:any?) }
       if params[:add_content]&.key?(:errata_ids) && params[:update_hosts] && any_environments
         hosts = calculate_hosts_for_incremental(params[:update_hosts], params[:propagate_to_composites])
