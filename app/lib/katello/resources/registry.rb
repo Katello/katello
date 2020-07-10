@@ -54,7 +54,6 @@ module Katello
             uri = URI.parse(content_app_url)
             self.prefix = "/pulpcore_registry/"
             self.site = "#{uri.scheme}://#{uri.host}:#{uri.port}"
-            self.ssl_ca_file = Setting[:ssl_ca_file]
             pulp_primary.pulp3_ssl_configuration(self, :net_http)
 
             self
