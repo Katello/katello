@@ -1,5 +1,13 @@
 module Katello
   class InstalledPackage < Katello::Model
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Installed Package'
+      refs 'InstalledPackage'
+      sections only: %w[all additional]
+      property :name, String, desc: 'Returns name of the package'
+      property :nvra, String, desc: 'Returns package name with version, release and architecture'
+      property :nvrea, String, desc: 'Returns package name with version, release, epoch and architecture'
+    end
     class Jail < Safemode::Jail
       allow :nvra, :nvrea, :name
     end
