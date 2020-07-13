@@ -11,7 +11,7 @@ import ManageManifestModal from './Manifest/';
 import { MANAGE_MANIFEST_MODAL_ID } from './Manifest/ManifestConstants';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
-import { filterRHSubscriptions, manifestExists } from './SubscriptionHelpers';
+import { filterRHSubscriptions } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
 import { CONTENT_DISCONNECTED } from '../Settings/SettingsConstants';
 
@@ -46,6 +46,7 @@ class SubscriptionsPage extends Component {
       hasUpstreamConnection,
       loadAvailableQuantities,
       organization,
+      isManifestImported,
       pingUpstreamSubscriptions,
       settings,
       subscriptions,
@@ -70,7 +71,7 @@ class SubscriptionsPage extends Component {
       }
 
       if (disconnected === false && disconnected !== prevProps.settings.disconnected) {
-        if (manifestExists(organization)) {
+        if (isManifestImported) {
           pingUpstreamSubscriptions();
           this.state.availableQuantitiesLoaded = false;
         }
@@ -98,7 +99,7 @@ class SubscriptionsPage extends Component {
       hasUpstreamConnection,
       task,
       settings,
-      organization,
+      isManifestImported,
     } = this.props;
     const { disconnected } = settings;
     let disabledReason = null;
@@ -109,7 +110,7 @@ class SubscriptionsPage extends Component {
       disabledReason = __('This is disabled because a manifest related task is in progress.');
     } else if (deleteButton && !disabledReason) {
       disabledReason = __('This is disabled because no subscriptions are selected.');
-    } else if (!manifestExists(organization)) {
+    } else if (!isManifestImported) {
       disabledReason = __('This is disabled because no manifest has been uploaded.');
     } else if (!hasUpstreamConnection) {
       disabledReason = __('This is disabled because no connection could be made to the upstream Subscription Allocation.');

@@ -4,7 +4,6 @@ import {
 } from './subscriptions.fixtures';
 import {
   filterRHSubscriptions,
-  manifestExists,
   selectSubscriptionsQuantitiesFromResponse,
 } from '../SubscriptionHelpers';
 
@@ -63,16 +62,6 @@ describe('Subscription helper', () => {
     const filteredSubscriptions = filterRHSubscriptions(subscriptions);
 
     expect(filteredSubscriptions).toMatchSnapshot();
-  });
-
-  it('should check if manifest exists in an organization', () => {
-    const upstreamConsumer = 'some-upstream-consumer';
-
-    expect(manifestExists({
-      owner_details: { upstreamConsumer },
-    })).toBe(upstreamConsumer);
-
-    expect(manifestExists({})).toBeFalsy();
   });
 
   it('should select subscriptions-quantities from api response', () => {
