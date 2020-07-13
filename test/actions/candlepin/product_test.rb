@@ -32,6 +32,18 @@ class Actions::Candlepin::Product::ContentUpdateTest < ActiveSupport::TestCase
       run_action planned_action
     end
   end
+
+  describe 'ContentUpdateEnablement' do
+    let(:action_class) { ::Actions::Candlepin::Product::ContentUpdateEnablement }
+    let(:planned_action) do
+      create_and_plan_action action_class, id: 123
+    end
+
+    it 'runs' do
+      ::Katello::Resources::Candlepin::Product.expects(:update_enabled)
+      run_action planned_action
+    end
+  end
 end
 
 class Actions::Candlepin::Product::UpdateTest < ActiveSupport::TestCase

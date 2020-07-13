@@ -65,6 +65,7 @@ module Katello
     validate :ensure_valid_docker_tags_whitelist
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
+    validate :ensure_auto_enablement_not_set
     validate :ensure_no_checksum_on_demand
     validates :url, presence: true, if: :ostree?
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
@@ -224,6 +225,11 @@ module Katello
       end
     end
 
+    def ensure_auto_enablement_not_set
+      return if new_record? || !auto_enabled_changed?
+      errors.add(:auto_enabled, N_("Auto Enablement may only be set on custom repositories.")) if redhat?
+    end
+
     def custom_content_path
       parts = []
       # We generate repo path only for custom product content. We add this
@@ -323,6 +329,14 @@ module Katello
         self.deb_architectures
       else
         self.arch == "noarch" ? nil : self.arch
+      end
+    end
+
+    def content_enablements
+      product.root_repositories.map do |repo|
+        repo_content = { id: repo.content_id }
+        repo_content[:enabled] = repo.auto_enabled? if repo == self
+        repo_content
       end
     end
 

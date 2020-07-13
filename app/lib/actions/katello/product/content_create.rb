@@ -17,7 +17,8 @@ module Actions
               content_id = content_create.output[:response][:id]
               plan_action(Candlepin::Product::ContentAdd, owner: root.product.organization.label,
                                     product_id: root.product.cp_id,
-                                    content_id: content_id)
+                                    content_id: content_id,
+                                    enabled: root.auto_enabled?)
 
             else
               content_id = root.content_id
@@ -51,8 +52,7 @@ module Actions
                                                content_url: root.custom_content_path,
                                                vendor: ::Katello::Provider::CUSTOM)
 
-          #custom product content is always enabled by default
-          ::Katello::ProductContent.create!(product: root.product, content: content, enabled: true)
+          ::Katello::ProductContent.create!(product: root.product, content: content, enabled: root.auto_enabled?)
         end
       end
     end
