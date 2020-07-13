@@ -26,6 +26,7 @@ const SubscriptionsToolbar = ({
   tableColumns,
   toolTipOnChange,
   toolTipOnclose,
+  isManifestImported,
 }) => (
   <Row className="toolbar-pf table-view-pf-toolbar-external">
     <Col sm={12}>
@@ -58,26 +59,28 @@ const SubscriptionsToolbar = ({
               </LinkContainer>
             }
 
-            <a
-              href={SUBSCRIPTION_WATCH_URL}
-              className="btn btn-default"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {__('Subscription Watch')}
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id="sub-watch-tooltip">
-                    {__('Learn more about your overall subscription usage (opens in a new tab)')}
-                  </Tooltip>
-                }
-                placement="bottom"
-                trigger={['hover', 'focus']}
-                rootClose={false}
+            {isManifestImported &&
+              <a
+                href={SUBSCRIPTION_WATCH_URL}
+                className="btn btn-default"
+                target="_blank"
+                rel="noreferrer"
               >
-                <Icon type="pf" name="info" />
-              </OverlayTrigger>
-            </a>
+                {__('Subscription Watch')}
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id="sub-watch-tooltip">
+                      {__('Learn more about your overall subscription usage (opens in a new tab)')}
+                    </Tooltip>
+                  }
+                  placement="bottom"
+                  trigger={['hover', 'focus']}
+                  rootClose={false}
+                >
+                  <Icon type="pf" name="info" />
+                </OverlayTrigger>
+              </a>
+            }
 
             <Button onClick={onManageManifestButtonClick}>
               {__('Manage Manifest')}

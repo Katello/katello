@@ -145,7 +145,7 @@ class SubscriptionsPage extends Component {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
       searchQuery, updateSearchQuery, simpleContentAccess, settings, hasUpstreamConnection,
-      task, activePermissions, subscriptions, subscriptionTableSettings,
+      task, activePermissions, subscriptions, subscriptionTableSettings, isManifestImported,
     } = this.props;
     // Basic permissions - should we even show this page?
     if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
@@ -233,6 +233,7 @@ class SubscriptionsPage extends Component {
 
             <SubscriptionsToolbar
               canManageSubscriptionAllocations={canManageSubscriptionAllocations}
+              isManifestImported={isManifestImported}
               disableManifestActions={disableManifestActions}
               disableManifestReason={this.getDisabledReason()}
               disableDeleteButton={deleteButtonDisabled}
@@ -311,6 +312,7 @@ SubscriptionsPage.propTypes = {
   updateQuantity: PropTypes.func.isRequired,
   loadTableColumns: PropTypes.func.isRequired,
   simpleContentAccess: PropTypes.bool,
+  isManifestImported: PropTypes.bool,
   settings: PropTypes.shape({
     disconnected: PropTypes.bool,
   }),
@@ -380,6 +382,7 @@ SubscriptionsPage.defaultProps = {
   deleteButtonDisabled: true,
   subscriptionTableSettings: {},
   simpleContentAccess: false,
+  isManifestImported: false,
   hasUpstreamConnection: false,
   activePermissions: {
     can_import_manifest: false,
