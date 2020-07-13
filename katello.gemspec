@@ -31,7 +31,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rest-client"
 
   gem.add_dependency "rabl"
-  gem.add_dependency "foreman-tasks", "<= 1.1.1"
+  gem.add_dependency "foreman-tasks", "< 1.2.0", "!= 1.1.1", "!= 1.1.2"
   gem.add_dependency "dynflow", ">= 1.2.0"
   gem.add_dependency "activerecord-import"
 
