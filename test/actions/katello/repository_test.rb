@@ -737,7 +737,8 @@ module ::Actions::Katello::Repository
       assert_action_planed_with(action, ::Actions::Pulp::Repository::Clear,
                                 repository, SmartProxy.pulp_master)
 
-      assert_action_planed_with(action, Actions::Pulp::Repository::CopyAllUnits, custom_repository, repository)
+      assert_action_planed_with(action, Actions::Pulp::Repository::CopyAllUnits,
+                                repository, SmartProxy.pulp_master, custom_repository)
     end
 
     it 'plans without export destination' do
