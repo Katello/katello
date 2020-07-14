@@ -1,9 +1,9 @@
 module Actions
   module Katello
     module Repository
-      class SyncDebErrata < Actions::Base
-        def plan(repo)
-          plan_self(repo_id: repo.id)
+      class SyncDebErrata < Actions::EntryAction
+        def plan(repo, force = false)
+          plan_self(repo_id: repo.id, force_download: force)
         end
 
         def run
@@ -19,7 +19,7 @@ module Actions
             proxy: proxy&.full_url,
             headers: {
               params: params,
-              'If-None-Match' => repo.deb_errata_url_etag
+              'If-None-Match' => input[:force_download] ? nil : repo.deb_errata_url_etag
             }
           ) do |response, _request, _result, &block|
             case response.code
