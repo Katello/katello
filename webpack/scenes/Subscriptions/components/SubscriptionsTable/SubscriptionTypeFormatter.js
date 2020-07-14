@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 
@@ -9,11 +8,12 @@ export const subscriptionTypeFormatter = (value, { rowData }) => {
   if (rowData.virt_only === false) {
     cellContent = __('Physical');
   } else if (rowData.hypervisor) {
+    const hypervisorLink = urlBuilder('content_hosts', '', rowData.hypervisor.id);
     cellContent = (
       <span>
         {__('Guests of')}
         {' '}
-        <Link to={urlBuilder('content_hosts', '', rowData.hypervisor.id)}>{rowData.hypervisor.name}</Link>
+        <a href={hypervisorLink}>{rowData.hypervisor.name}</a>
       </span>
     );
   } else if (rowData.unmapped_guest) {
