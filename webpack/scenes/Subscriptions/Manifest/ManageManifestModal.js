@@ -8,7 +8,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
 import { LoadingState } from '../../../components/LoadingState';
 import { Table } from '../../../components/pf3Table';
-import { manifestExists } from '../SubscriptionHelpers';
+
 import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
@@ -105,6 +105,7 @@ class ManageManifestModal extends Component {
       disabledReason,
       canImportManifest,
       canDeleteManifest,
+      isManifestImported,
       canEditOrganizations,
       simpleContentAccess,
     } = this.props;
@@ -260,7 +261,7 @@ class ManageManifestModal extends Component {
                                   tooltipText={disabledReason}
                                   tooltipPlacement="top"
                                   title={__('Refresh')}
-                                  disabled={!manifestExists(organization) ||
+                                  disabled={!isManifestImported ||
                                     actionInProgress || disableManifestActions}
                                 />
                               }
@@ -269,7 +270,7 @@ class ManageManifestModal extends Component {
                                 <TooltipButton
                                   renderedButton={(
                                     <Button
-                                      disabled={!manifestExists(organization) || actionInProgress}
+                                      disabled={!isManifestImported || actionInProgress}
                                       bsStyle="danger"
                                       onClick={this.showDeleteManifestModal}
                                     >
@@ -343,6 +344,7 @@ ManageManifestModal.propTypes = {
   }).isRequired,
   canImportManifest: PropTypes.bool,
   canDeleteManifest: PropTypes.bool,
+  isManifestImported: PropTypes.bool,
   canEditOrganizations: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
   disabledReason: PropTypes.string,
@@ -366,6 +368,7 @@ ManageManifestModal.defaultProps = {
   disabledReason: '',
   canImportManifest: false,
   canDeleteManifest: false,
+  isManifestImported: false,
   canEditOrganizations: false,
   deleteManifestModalIsOpen: false,
   simpleContentAccess: false,

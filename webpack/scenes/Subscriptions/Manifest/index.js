@@ -9,7 +9,7 @@ import * as manifestActions from './ManifestActions';
 import * as organizationActions from '../../Organizations/OrganizationActions';
 import * as tasksActions from '../../Tasks/TaskActions';
 import history from './ManifestHistoryReducer';
-import { selectSimpleContentAccessEnabled } from '../../Organizations/OrganizationSelectors';
+import { selectSimpleContentAccessEnabled, selectIsManifestImported } from '../../Organizations/OrganizationSelectors';
 
 import ManifestModal from './ManageManifestModal';
 
@@ -20,6 +20,7 @@ const mapStateToProps = state => ({
   organization: state.katello.organization,
   manifestHistory: state.katello.manifestHistory,
   simpleContentAccess: selectSimpleContentAccessEnabled(state),
+  isManifestImported: selectIsManifestImported(state),
   modalOpenState: state.foremanModals.ManageManifestModal,
   deleteManifestModalIsOpen: selectIsModalOpen(state, DELETE_MANIFEST_MODAL_ID),
 });

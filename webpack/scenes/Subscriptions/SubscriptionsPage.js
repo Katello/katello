@@ -11,14 +11,12 @@ import ManageManifestModal from './Manifest/';
 import { MANAGE_MANIFEST_MODAL_ID } from './Manifest/ManifestConstants';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
-import { filterRHSubscriptions, manifestExists } from './SubscriptionHelpers';
+import { filterRHSubscriptions } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
 import { CONTENT_DISCONNECTED } from '../Settings/SettingsConstants';
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
-import {
-  SUBSCRIPTION_TABLE_NAME,
-} from './SubscriptionConstants';
+import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTION_WATCH_URL } from './SubscriptionConstants';
 import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
@@ -48,6 +46,7 @@ class SubscriptionsPage extends Component {
       hasUpstreamConnection,
       loadAvailableQuantities,
       organization,
+      isManifestImported,
       pingUpstreamSubscriptions,
       settings,
       subscriptions,
@@ -72,7 +71,7 @@ class SubscriptionsPage extends Component {
       }
 
       if (disconnected === false && disconnected !== prevProps.settings.disconnected) {
-        if (manifestExists(organization)) {
+        if (isManifestImported) {
           pingUpstreamSubscriptions();
           this.state.availableQuantitiesLoaded = false;
         }
@@ -100,7 +99,7 @@ class SubscriptionsPage extends Component {
       hasUpstreamConnection,
       task,
       settings,
-      organization,
+      isManifestImported,
     } = this.props;
     const { disconnected } = settings;
     let disabledReason = null;
@@ -111,7 +110,7 @@ class SubscriptionsPage extends Component {
       disabledReason = __('This is disabled because a manifest related task is in progress.');
     } else if (deleteButton && !disabledReason) {
       disabledReason = __('This is disabled because no subscriptions are selected.');
-    } else if (!manifestExists(organization)) {
+    } else if (!isManifestImported) {
       disabledReason = __('This is disabled because no manifest has been uploaded.');
     } else if (!hasUpstreamConnection) {
       disabledReason = __('This is disabled because no connection could be made to the upstream Subscription Allocation.');
@@ -147,7 +146,7 @@ class SubscriptionsPage extends Component {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
       searchQuery, updateSearchQuery, simpleContentAccess, settings, hasUpstreamConnection,
-      task, activePermissions, subscriptions, subscriptionTableSettings,
+      task, activePermissions, subscriptions, subscriptionTableSettings, isManifestImported,
     } = this.props;
     // Basic permissions - should we even show this page?
     if (subscriptions.missingPermissions && subscriptions.missingPermissions.length > 0) {
@@ -235,6 +234,7 @@ class SubscriptionsPage extends Component {
 
             <SubscriptionsToolbar
               canManageSubscriptionAllocations={canManageSubscriptionAllocations}
+              isManifestImported={isManifestImported}
               disableManifestActions={disableManifestActions}
               disableManifestReason={this.getDisabledReason()}
               disableDeleteButton={deleteButtonDisabled}
@@ -266,9 +266,11 @@ class SubscriptionsPage extends Component {
             <div id="subscriptions-table" className="modal-container">
               {simpleContentAccess && (
                 <Alert type="info">
-                  This organization has Simple Content Access enabled. <br />
+                  This organization has Simple Content Access enabled.
                   Hosts can consume from all repositories in their Content View regardless of
-                  subscription status.
+                  subscription status.  <br />
+                  Learn more about your overall subscription usage at
+                  {' '}<a href={SUBSCRIPTION_WATCH_URL} target="_blank" rel="noreferrer">Subscription Watch</a>.
                 </Alert>
               )}
               <SubscriptionsTable
@@ -311,6 +313,7 @@ SubscriptionsPage.propTypes = {
   updateQuantity: PropTypes.func.isRequired,
   loadTableColumns: PropTypes.func.isRequired,
   simpleContentAccess: PropTypes.bool,
+  isManifestImported: PropTypes.bool,
   settings: PropTypes.shape({
     disconnected: PropTypes.bool,
   }),
@@ -380,6 +383,7 @@ SubscriptionsPage.defaultProps = {
   deleteButtonDisabled: true,
   subscriptionTableSettings: {},
   simpleContentAccess: false,
+  isManifestImported: false,
   hasUpstreamConnection: false,
   activePermissions: {
     can_import_manifest: false,
