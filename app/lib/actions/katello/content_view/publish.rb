@@ -40,11 +40,22 @@ module Actions
             plan_action(ContentView::AddToEnvironment, version, library)
             repository_mapping = plan_action(ContentViewVersion::CreateRepos, version, source_repositories).repository_mapping
 
+            # Split Pulp 3 Yum repos out of the repository_mapping.  Only Pulp 3 RPM plugin has multi repo copy support.
+            separated_repo_map = separated_repo_mapping(repository_mapping, content_view)
+
+            if separated_repo_map[:pulp3_yum_depsolve].keys.flatten.present? &&
+                SmartProxy.pulp_master.pulp3_support?(separated_repo_map[:pulp3_yum_depsolve].keys.flatten.first) &&
+                content_view.solve_dependencies
+              plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_depsolve], version)
+            end
+
             concurrence do
               source_repositories.each do |repositories|
                 sequence do
-                  plan_action(Repository::CloneToVersion, repositories, version, repository_mapping[repositories],
-                                                 :repos_units => options[:repos_units])
+                  if repositories.present? && separated_repo_map[:other].keys.include?(repositories)
+                    plan_action(Repository::CloneToVersion, repositories, version, repository_mapping[repositories],
+                                :repos_units => options[:repos_units])
+                  end
                   plan_action(Repository::CloneToEnvironment, repository_mapping[repositories], library)
                 end
               end
@@ -66,6 +77,19 @@ module Actions
                       content_view_version_id: version.id,
                       environment_id: library.id, user_id: ::User.current.id)
           end
+        end
+
+        def separated_repo_mapping(repo_mapping, content_view)
+          separated_mapping = { :pulp3_yum_depsolve => {}, :other => {} }
+          repo_mapping.each do |source_repos, dest_repo|
+            if dest_repo.content_type == "yum" && SmartProxy.pulp_master.pulp3_support?(dest_repo) &&
+                content_view.solve_dependencies
+              separated_mapping[:pulp3_yum_depsolve][source_repos] = dest_repo
+            else
+              separated_mapping[:other][source_repos] = dest_repo
+            end
+          end
+          separated_mapping
         end
 
         def humanized_name

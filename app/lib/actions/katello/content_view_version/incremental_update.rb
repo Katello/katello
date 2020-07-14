@@ -41,6 +41,7 @@ module Actions
 
           sequence do
             repository_mapping = plan_action(ContentViewVersion::CreateRepos, new_content_view_version, repos_to_clone).repository_mapping
+            separated_repo_map = separated_repo_mapping(repository_mapping)
 
             repos_to_clone.each do |source_repos|
               plan_action(Repository::CloneToVersion,
@@ -51,20 +52,24 @@ module Actions
             end
 
             concurrence do
-              if SmartProxy.pulp_master.pulp3_support?(repos_to_clone.first.first)
-                extended_repo_mapping = pulp3_repo_mapping(repository_mapping, old_version)
+              if separated_repo_map[:pulp3_yum].keys.flatten.present?
+                extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[:pulp3_yum], old_version)
                 unit_map = pulp3_content_mapping(content)
 
-                unless extended_repo_mapping.empty?
+                unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
                   copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
                                                      dependency_solving: true).output
                 end
-              else
+              end
+
+              if separated_repo_map[:other].keys.flatten.present?
                 repos_to_clone.each do |source_repos|
-                  copy_action_outputs += copy_repos(repository_mapping[source_repos],
-                                                    new_content_view_version,
-                                                    content,
-                                                    dep_solve)
+                  if separated_repo_map[:other].keys.include?(source_repos)
+                    copy_action_outputs += copy_repos(repository_mapping[source_repos],
+                                                      new_content_view_version,
+                                                      content,
+                                                      dep_solve)
+                  end
                 end
               end
 
@@ -84,6 +89,18 @@ module Actions
           end
         end
 
+        def separated_repo_mapping(repo_mapping)
+          separated_mapping = { :pulp3_yum => {}, :other => {} }
+          repo_mapping.each do |source_repos, dest_repo|
+            if dest_repo.content_type == "yum" && SmartProxy.pulp_master.pulp3_support?(dest_repo)
+              separated_mapping[:pulp3_yum][source_repos] = dest_repo
+            else
+              separated_mapping[:other][source_repos] = dest_repo
+            end
+          end
+          separated_mapping
+        end
+
         def pulp3_content_mapping(content)
           units = ::Katello::Erratum.with_identifiers(content[:errata_ids]) +
             ::Katello::Rpm.with_identifiers(content[:package_ids])
@@ -100,15 +117,23 @@ module Actions
 
         def pulp3_repo_mapping(repo_mapping, old_version)
           pulp3_repo_mapping = {}
-          repo_mapping.each do |source_repo, dest_repo|
-            # FIXME: Other source repos are being thrown away here
+          repo_mapping.each do |source_repos, dest_repo|
             old_version_repo = old_version.repositories.archived.find_by(root_id: dest_repo.root_id)
 
             next if old_version_repo.version_href == old_version_repo.library_instance.version_href
 
-            source_repo = source_repo.first.library_instance? ? source_repo : [source_repo.first.library_instance]
-            pulp3_repo_mapping[source_repo.first.id] = { dest_repo: dest_repo.id,
-                                                         base_version: old_version_repo.version_href.split("/")[-1].to_i }
+            source_library_repo = source_repos.first.library_instance? ? source_repos.first : source_repos.first.library_instance
+            #source_repos << source_library_repo
+            # TODO: What repos need to be in here to make composites work?
+            source_repos = [source_library_repo]
+            if old_version_repo.version_href
+              base_version = old_version_repo.version_href.split("/")[-1].to_i
+            else
+              # TODO: Is this okay?
+              base_version = 0
+            end
+
+            pulp3_repo_mapping[source_repos.map(&:id)] = { dest_repo: dest_repo.id, base_version: base_version }
           end
           pulp3_repo_mapping
         end
@@ -185,8 +210,8 @@ module Actions
           base_repos = ::Katello::ContentViewVersion.find(input[:old_version]).repositories
           new_repos = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id]).repositories
 
-          if input[:copy_action_outputs].present?
-            if input[:copy_action_outputs].last[:pulp_tasks].last[:pulp_href].include?("/pulp/api/v3/")
+          if input[:copy_action_outputs].present? && input[:copy_action_outputs].last[:pulp_tasks].present?
+            if input[:copy_action_outputs].last[:pulp_tasks].last[:pulp_href]&.include?("/pulp/api/v3/")
               new_repos.each do |new_repo|
                 matched_old_repo = base_repos.where(root_id: new_repo.root_id).first
 
