@@ -273,13 +273,21 @@
         </dd>
 
         <dt translate>Content View</dt>
-        <dd bst-edit-select="host.content_facet_attributes.content_view.name"
+        <dd>
+          <div bst-edit-select="host.content_facet_attributes.content_view.name"
             readonly="denied('edit_hosts', host)"
             selector="host.content_facet_attributes.content_view.id"
             options="contentViews()"
             on-cancel="cancelContentViewUpdate()"
             on-save="saveContentView(host)"
             edit-trigger="editContentView">
+            </div>
+            <div bst-alert="info" ng-show="showCVAlert">
+              <p>Please run the following commands on the client,</p>
+              <p>so the new Content View can take effect.</p>
+              <p><code># yum clean all</code></p>
+              <p><code># subscription-manager refresh</code></p>
+            </div>
         </dd>
 
         <dt bst-feature-flag="lifecycle_environments">

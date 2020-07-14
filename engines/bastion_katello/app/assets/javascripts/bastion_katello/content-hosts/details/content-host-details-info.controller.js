@@ -42,6 +42,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         });
 
         $scope.showVersionAlert = false;
+        $scope.showCVAlert = false;
         $scope.editContentView = false;
         $scope.disableEnvironmentSelection = false;
         $scope.environments = [];
@@ -62,6 +63,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         };
 
         $scope.cancelContentViewUpdate = function () {
+            $scope.showCVAlert = false;
             if ($scope.editContentView) {
                 $scope.editContentView = false;
                 $scope.host.content_facet_attributes['lifecycle_environment'] = $scope.originalEnvironment;
@@ -76,6 +78,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
                 $scope.originalEnvironment = response.content_facet_attributes.lifecycle_environment;
             });
             $scope.disableEnvironmentSelection = false;
+            $scope.showCVAlert = false;
         };
 
         $scope.releaseVersions = function () {
@@ -122,7 +125,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             ContentView.queryUnpaged({ 'environment_id': $scope.host.content_facet_attributes.lifecycle_environment.id}, function (response) {
                 deferred.resolve(response.results);
                 $scope.contentViews = response.results;
+                $scope.showCVAlert = true;
             });
+
+            $scope.showCVAlert = true;
 
             return deferred.promise;
         };
