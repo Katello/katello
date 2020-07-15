@@ -37,6 +37,8 @@ module Katello
     param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum, docker, modulemd)"), :required => true
     param :original_packages, :bool, :desc => N_("add all packages without errata to the included/excluded list. " \
                                                        "(package filter only)")
+    param :original_module_streams, :bool, :desc => N_("add all module streams without errata to the included/excluded list. " \
+                                                       "(module stream filter only)")
     param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
     param :repository_ids, Array, :desc => N_("list of repository ids")
     param :description, String, :desc => N_("description of the filter")
@@ -60,6 +62,8 @@ module Katello
     param :name, String, :desc => N_("new name for the filter")
     param :original_packages, :bool, :desc => N_("add all packages without errata to the included/excluded list. " \
                                                        "(package filter only)")
+    param :original_module_streams, :bool, :desc => N_("add all module streams without errata to the included/excluded list. " \
+                                                       "(module stream filter only)")
     param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
     param :repository_ids, Array, :desc => N_("list of repository ids")
     param :description, String, :desc => N_("description of the filter"), :required => false
@@ -95,7 +99,7 @@ module Katello
     end
 
     def filter_params
-      params.require(:content_view_filter).permit(:name, :inclusion, :original_packages, :description, :repository_ids => [])
+      params.require(:content_view_filter).permit(:name, :inclusion, :original_packages, :original_module_streams, :description, :repository_ids => [])
     end
   end
 end

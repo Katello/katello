@@ -469,6 +469,17 @@ module Katello
       end
     end
 
+    def module_streams_without_errata
+      module_stream_errata = Katello::ModuleStreamErratumPackage.joins(:erratum_package => {:erratum => :repository_errata})
+                              .where("#{RepositoryErratum.table_name}.repository_id" => self.id)
+                              .pluck("#{Katello::ModuleStreamErratumPackage.table_name}.module_stream_id")
+      if module_stream_errata.any?
+        self.module_streams.where("#{ModuleStream.table_name}.id NOT in (?)", module_stream_errata)
+      else
+        self.module_streams
+      end
+    end
+
     def self.with_errata(errata)
       joins(:repository_errata).where("#{Katello::RepositoryErratum.table_name}.erratum_id" => errata)
     end

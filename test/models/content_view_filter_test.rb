@@ -14,6 +14,13 @@ module Katello
       assert @filter.save
     end
 
+    def test_original_module_streams
+      filter = FactoryBot.create(:katello_content_view_module_stream_filter, :content_view => @view)
+      filter.update(original_module_streams: true)
+      @repo.expects(:module_streams_without_errata).returns([])
+      filter.generate_clauses(@repo)
+    end
+
     def test_composite_view
       skip "skip until composite content views are supported"
       # filter should not get created for a composite content view

@@ -17,6 +17,10 @@ if @resource.respond_to?(:package_rules)
   attributes :original_packages
 end
 
+if @resource.respond_to?(:module_stream_rules)
+  attributes :original_module_streams
+end
+
 node :rules do |filter|
   if filter.respond_to?(:package_rules)
     filter.package_rules.map do |rule|
