@@ -40,7 +40,11 @@ module Actions
           target_repo = ::Katello::Repository.find(repo_map.values.first[:dest_repo])
           dest_base_version = repo_map.values.first[:base_version]
           repo_map.delete(repo_map.keys.first)
-          output[:pulp_tasks] = target_repo.backend_service(SmartProxy.pulp_master).copy_units(source_repo, unit_hrefs.flatten, input[:dependency_solving], dest_base_version, repo_map)
+          # FIXME: Need to handle unit_hrefs being empty properly.  Fall back to original CVV?
+          # Note: Falling back to the original CVV repo versions would match up with Pulp 2's behavior
+          unless unit_hrefs.flatten.empty?
+            output[:pulp_tasks] = target_repo.backend_service(SmartProxy.pulp_master).copy_units(source_repo, unit_hrefs.flatten, input[:dependency_solving], dest_base_version, repo_map)
+          end
         end
       end
     end
