@@ -6,9 +6,17 @@ module Katello
 
     validates_lengths_from_database
 
-    def generate_clauses(_repo)
-      return if module_stream_rules.blank?
-      module_stream_rules.map(&:module_stream_id)
+    def generate_clauses(repo)
+      rules = module_stream_rules || []
+      ids = rules.map(&:module_stream_id)
+      if self.original_module_streams
+        ids.concat(repo.module_streams_without_errata.map(&:id))
+      end
+      ids
+    end
+
+    def original_module_streams=(value)
+      self[:original_module_streams] = value
     end
   end
 end

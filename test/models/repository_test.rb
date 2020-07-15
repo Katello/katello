@@ -197,6 +197,28 @@ module Katello
       assert_not_includes @fedora_17_x86_64_dev.reload.errata, erratum
     end
 
+    def test_fetch_module_streams_without_errata
+      source_repo = katello_repositories(:fedora_17_x86_64)
+      source_repo.module_streams.destroy_all
+      module_stream_one = katello_module_streams(:one)
+      module_stream_two = katello_module_streams(:two)
+      source_repo.module_streams << module_stream_one
+      source_repo.module_streams << module_stream_two
+      source_repo.save!
+      source_repo.errata.destroy_all
+
+      source_repo.errata.create! do |new_erratum|
+        new_erratum.pulp_id = "foo"
+        ep1 = ErratumPackage.new(:filename => @rpm_two.filename, :nvrea => 'foo', :name => 'foo')
+        ep1.module_streams = [module_stream_two]
+        new_erratum.packages = [ep1]
+      end
+      assert_includes source_repo.module_streams, module_stream_one
+      assert_includes source_repo.module_streams, module_stream_two
+      assert_includes source_repo.module_streams_without_errata, module_stream_one
+      assert_not_includes source_repo.module_streams_without_errata, module_stream_two
+    end
+
     def test_archived_instance
       archived_repo = katello_repositories(:fedora_17_x86_64_dev_archive)
       env_repo = katello_repositories(:fedora_17_x86_64_dev)
