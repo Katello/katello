@@ -182,6 +182,10 @@ module Katello
       fail "setting original_packages not supported for #{self.class.name}"
     end
 
+    def original_module_streams=(_include_original)
+      fail "setting original_module_streams not supported for #{self.class.name}"
+    end
+
     protected
 
     def validate_repos

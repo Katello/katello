@@ -28,7 +28,7 @@ describe('Controller: FilterDetailsController', function() {
         var filter = Filter.get({id: 1});
         spyOn(filter, '$update');
         $scope.updateFilter(filter);
-        expect(filter.$update).toHaveBeenCalled();
+        expect(filter.$update).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));;
     });
 
 });

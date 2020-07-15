@@ -1,4 +1,21 @@
 <div data-extend-template="layouts/partials/table.html">
+  <div data-block="filters">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox"
+               ng-model="filter.original_module_streams"
+               ng-change="updateFilter(filter)"/>
+
+            <span ng-show="filter.inclusion" translate>
+              Include all Module Streams with no errata.
+            </span>
+
+            <span ng-show="!filter.inclusion" translate>
+              Exclude all Module Streams with no errata.
+            </span>
+      </label>
+    </div>
+  </div>
 
   <div data-block="list-actions">
     <button type="button" class="btn btn-primary"
