@@ -69,7 +69,7 @@ module Actions
               sequence do
                 if repo.link?
                   plan_action(Pulp::Repository::Clear, repo, SmartProxy.pulp_master!)
-                  plan_action(Pulp::Repository::CopyAllUnits, repo.target_repository, repo)
+                  plan_action(Pulp::Repository::CopyAllUnits, repo, ::SmartProxy.pulp_master, repo.target_repository)
                 end
               end
             end
