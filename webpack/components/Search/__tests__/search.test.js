@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, waitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import nock, {
   nockInstance, assertNockRequest, mockAutocomplete, mockSetting,
 } from '../../../test-utils/nockWrapper';
@@ -45,7 +45,7 @@ test('Autocomplete shows on input', async (done) => {
 
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: 'foo' } });
 
-  await waitFor(() => expect(getByText(`${suggestion}`)).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(getByText(`${suggestion}`)).toBeInTheDocument());
 
   assertNockRequest(initialScope);
   assertNockRequest(autoSearchScope);
@@ -58,7 +58,7 @@ test('autosearch turned on does not show patternfly 4 search button', async (don
 
   const { queryByLabelText } = renderWithRedux(<Search {...props} />);
 
-  await waitFor(() => expect(queryByLabelText(searchButtonLabel)).not.toBeInTheDocument());
+  await patientlyWaitFor(() => expect(queryByLabelText(searchButtonLabel)).not.toBeInTheDocument());
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(autoSearchScope, done);
@@ -70,8 +70,9 @@ test('autosearch turned off does show patternfly 4 search button', async (done) 
 
   const { getByLabelText } = renderWithRedux(<Search {...props} />);
 
-  // Using waitFor as the autoSearch setting defaults to true, it won't be changed until http call
-  await waitFor(() => expect(getByLabelText(searchButtonLabel)).toBeInTheDocument());
+  // Using patientlyWaitFor as the autoSearch setting defaults to true,
+  // it won't be changed until http call
+  await patientlyWaitFor(() => expect(getByLabelText(searchButtonLabel)).toBeInTheDocument());
 
   assertNockRequest(autoSearchScope);
   assertNockRequest(autocompleteScope, done);
@@ -83,7 +84,7 @@ test('autosearch turned on does not affect patternfly 3 buttons', async (done) =
 
   const { getByLabelText } = renderWithRedux(<Search {...{ ...props, patternfly4: false }} />);
 
-  await waitFor(() => expect(getByLabelText('patternfly 3 search button')).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(getByLabelText('patternfly 3 search button')).toBeInTheDocument());
 
   assertNockRequest(autoSearchScope);
   assertNockRequest(autocompleteScope, done);
@@ -96,7 +97,7 @@ test('search function is called when search is typed into with autosearch', asyn
 
   const { getByLabelText } = renderWithRedux(<Search {...{ ...props, onSearch: mockSearch }} />);
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: 'foo' } });
-  await waitFor(() => expect(mockSearch.mock.calls).toHaveLength(1));
+  await patientlyWaitFor(() => expect(mockSearch.mock.calls).toHaveLength(1));
 
   assertNockRequest(autoSearchScope);
   assertNockRequest(autocompleteScope, done);
@@ -111,7 +112,7 @@ test('search function is called by clicking search button without autosearch', a
 
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: 'foo' } });
   let searchButton;
-  await waitFor(() => {
+  await patientlyWaitFor(() => {
     searchButton = getByLabelText(searchButtonLabel);
     expect(searchButton).toBeInTheDocument();
   });
