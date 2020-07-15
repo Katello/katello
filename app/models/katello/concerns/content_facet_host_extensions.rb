@@ -28,7 +28,8 @@ module Katello
         has_one :content_view, :through => :content_facet
         has_one :lifecycle_environment, :through => :content_facet
         has_one :content_source, :through => :content_facet
-        has_many :applicable_errata, :through => :content_facet
+        has_many :content_facet_errata, :through => :content_facet, :class_name => 'Katello::ContentFacetErratum'
+        has_many :applicable_errata, :through => :content_facet_errata, :source => :erratum
         has_many :applicable_rpms, :through => :content_facet
         has_many :applicable_module_streams, :through => :content_facet
 
