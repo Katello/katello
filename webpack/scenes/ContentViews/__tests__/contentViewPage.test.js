@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 import React from 'react';
-import { renderWithRedux, waitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 
 import CONTENT_VIEWS_KEY from '../ContentViewsConstants';
 import { createContentViewsParams } from '../ContentViewsActions';
@@ -51,7 +51,7 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
   // Assert that the CV is not showing yet by searching by name and the query returning null
   expect(queryByText(firstCV.name)).toBeNull();
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
-  await waitFor(() => expect(queryByText(firstCV.name)).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText(firstCV.name)).toBeTruthy());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
@@ -74,7 +74,7 @@ test('Can handle no Content Views being present', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await waitFor(() => expect(queryByText(/don't have any Content Views/i)).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText(/don't have any Content Views/i)).toBeTruthy());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -89,7 +89,7 @@ test('Can handle errored response', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await waitFor(() => expect(queryByText(/unable to connect/i)).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText(/unable to connect/i)).toBeTruthy());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -121,7 +121,7 @@ test('Can handle unpublished Content Views', async (done) => {
 
   const { getAllByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
-  await waitFor(() => expect(getAllByText(/not yet published/i).length).toBeGreaterThan(0));
+  await patientlyWaitFor(() => expect(getAllByText(/not yet published/i).length).toBeGreaterThan(0));
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -149,7 +149,7 @@ test('Can handle pagination', async (done) => {
   const { queryByText, getByLabelText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   // Wait for first paginated page to load and assert only the first page of results are present
-  await waitFor(() => {
+  await patientlyWaitFor(() => {
     expect(queryByText(results[0].name)).toBeInTheDocument();
     expect(queryByText(results[19].name)).toBeInTheDocument();
     expect(queryByText(results[21].name)).not.toBeInTheDocument();
@@ -160,7 +160,7 @@ test('Can handle pagination', async (done) => {
   getByLabelText('Go to next page').click();
 
   // Wait for second paginated page to load and assert only the second page of results are present
-  await waitFor(() => {
+  await patientlyWaitFor(() => {
     expect(queryByText(results[20].name)).toBeInTheDocument();
     expect(queryByText(results[39].name)).toBeInTheDocument();
     expect(queryByText(results[41].name)).not.toBeInTheDocument();
@@ -197,13 +197,13 @@ test('Can search for specific Content View', async (done) => {
     queryByText,
   } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
-  await waitFor(() => expect(getByText(firstCV.name)).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(getByText(firstCV.name)).toBeInTheDocument());
 
   const searchInput = getByLabelText(/text input for search/i);
   expect(searchInput).toBeInTheDocument();
   fireEvent.change(searchInput, { target: { value: `name = \"${cvname}\"` } });
 
-  await waitFor(() => {
+  await patientlyWaitFor(() => {
     expect(getByText(cvname)).toBeInTheDocument();
     expect(queryByText(firstCV.name)).not.toBeInTheDocument();
   });
@@ -235,11 +235,11 @@ test('No results message is shown for empty search', async (done) => {
 
   const { getByLabelText, getByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
-  await waitFor(() => expect(getByText(firstCV.name)).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(getByText(firstCV.name)).toBeInTheDocument());
 
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: query } });
 
-  await waitFor(() => expect(getByText(/No matching Content Views found/i)).toBeInTheDocument(), { timeout: 5000 });
+  await patientlyWaitFor(() => expect(getByText(/No matching Content Views found/i)).toBeInTheDocument());
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(initialScope);

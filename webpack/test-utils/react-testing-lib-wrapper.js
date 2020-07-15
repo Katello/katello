@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import { APIMiddleware, reducers as apiReducer } from 'foremanReact/redux/API';
 import { STATUS } from 'foremanReact/constants';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -53,6 +53,10 @@ function renderWithRedux(
 
   return { ...render(connectedComponent), store };
 }
+
+// When the tests run slower, they can hit the default waitFor timeout, which is 1000ms
+// There doesn't seem to be a way to set it globally for r-t-lib, so using this wrapper function
+export const patientlyWaitFor = waitForFunc => waitFor(waitForFunc, { timeout: 5000 });
 
 // re-export everything, so the library can be used from this wrapper.
 export * from '@testing-library/react';
