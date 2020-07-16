@@ -6,8 +6,8 @@ module Katello
     before_action :confirm_push_settings, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
                                                  :chunk_upload_blob, :push_manifest]
     skip_before_action :authorize
-    before_action :optional_authorize, only: [:token]
-    before_action :registry_authorize, except: [:token, :v1_search]
+    before_action :optional_authorize, only: [:token, :catalog]
+    before_action :registry_authorize, except: [:token, :v1_search, :catalog]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list]
     before_action :authorize_repository_write, only: [:push_manifest]
     skip_before_action :check_content_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
@@ -39,20 +39,7 @@ module Katello
                                              "scope=\"repository:registry:pull,push\""
     end
 
-    def optional_authorize
-      @repository = find_scope_repository
-      if @repository && (@repository.environment.registry_unauthenticated_pull || ssl_client_authorized?(@repository.organization.label))
-        true
-      else
-        authorize
-      end
-    end
-
-    def registry_authorize
-      @repository = find_readable_repository
-      return true if ['GET', 'HEAD'].include?(request.method) && @repository && !require_user_authorization?
-
-      token = request.headers['Authorization']
+    def set_user_by_token(token, redirect_on_failure = true)
       if token
         token_type, token = token.split
         if token_type == 'Bearer' && token
@@ -63,10 +50,34 @@ module Katello
           end
         elsif token_type == 'Basic' && token
           return true if authorize
-          redirect_authorization_headers
+          redirect_authorization_headers if redirect_on_failure
           return false
         end
       end
+      false
+    end
+
+    def optional_authorize
+      @repository = find_scope_repository
+      if @repository && (@repository.environment.registry_unauthenticated_pull || ssl_client_authorized?(@repository.organization.label))
+        true
+      elsif params['action'] == 'catalog'
+        set_user_by_token(request.headers['Authorization'], false)
+      elsif (params['action'] == 'token' && params['scope'].blank? && params['account'].blank?)
+        true
+      else
+        authorize
+      end
+    end
+
+    def registry_authorize
+      @repository = find_readable_repository
+      return true if ['GET', 'HEAD'].include?(request.method) && @repository && !require_user_authorization?
+
+      is_user_set = set_user_by_token(request.headers['Authorization'])
+
+      return true if is_user_set
+
       redirect_authorization_headers
       render_error('unauthorized', :status => :unauthorized)
       return false
@@ -87,12 +98,8 @@ module Katello
     # Also include repositories in lifecycle environments with registry_unauthenticated_pull=true
     def readable_repositories
       table_name = Repository.table_name
-      in_products = Repository.in_product(Katello::Product.authorized(:view_products)).select(:id)
-      in_environments = Repository.where(:environment_id => Katello::KTEnvironment.authorized(:view_lifecycle_environments)).select(:id)
       in_unauth_environments = Repository.joins(:environment).where("#{Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true).select(:id)
-      in_content_views = Repository.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
-      in_versions = Repository.joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
-      Repository.where("#{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?)", in_products, in_content_views, in_versions, in_environments, in_unauth_environments)
+      Repository.readable.or(Repository.joins(:root).where("#{table_name}.id in (?)", in_unauth_environments))
     end
 
     def find_readable_repository
@@ -105,7 +112,8 @@ module Katello
     end
 
     def require_user_authorization?(repository = @repository)
-      !repository || (!repository.environment.registry_unauthenticated_pull && !ssl_client_authorized?(repository.organization.label))
+      !(params['action'] == 'token' && params['scope'].blank? && params['account'].blank?) &&
+        (!repository || (!repository.environment.registry_unauthenticated_pull && !ssl_client_authorized?(repository.organization.label)))
     end
 
     def ssl_client_authorized?(org_label)
@@ -293,6 +301,14 @@ module Katello
     end
 
     def v1_search
+      # Checks for podman client and issues a 404 in that case. Podman
+      # examines the response from a /v1_search request. If the result
+      # is a 4XX, it will then proceed with a request to /_catalog
+      if request.headers['HTTP_USER_AGENT'].downcase.include?('libpod')
+        render json: {}, status: :not_found
+        return
+      end
+
       authenticate # to set current_user, not to enforce
       options = {
         resource_class: Katello::Repository
