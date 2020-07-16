@@ -10,13 +10,26 @@ const defaultProps = {
   attribute,
 };
 
-test('Passed function is called after editing and submitting', async () => {
+test('Passed function is called after editing and clicking submit', async () => {
   const mockEdit = jest.fn();
   const { getByLabelText } = render(<EditableTextInput {...defaultProps} onEdit={mockEdit} />);
 
   getByLabelText(`edit ${attribute}`).click();
   fireEvent.change(getByLabelText(`${attribute} text input`), { target: { value: actualValue } });
   getByLabelText(`submit ${attribute}`).click();
+
+  await patientlyWaitFor(() => expect(mockEdit.mock.calls).toHaveLength(1));
+  expect(mockEdit.mock.calls[0][0]).toBe(actualValue); // first arg
+});
+
+test('Passed function is called after editing and hitting enter', async () => {
+  const mockEdit = jest.fn();
+  const { getByLabelText } = render(<EditableTextInput {...defaultProps} onEdit={mockEdit} />);
+
+  getByLabelText(`edit ${attribute}`).click();
+  const textInputLabel = `${attribute} text input`;
+  fireEvent.change(getByLabelText(textInputLabel), { target: { value: actualValue } });
+  fireEvent.keyDown(getByLabelText(textInputLabel), { key: 'Enter', code: 'Enter' });
 
   await patientlyWaitFor(() => expect(mockEdit.mock.calls).toHaveLength(1));
   expect(mockEdit.mock.calls[0][0]).toBe(actualValue); // first arg

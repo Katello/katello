@@ -81,9 +81,10 @@ export const sendErrorNotifications = messages => (dispatch) => {
 export const apiError = (actionType, result, additionalData = {}) => (dispatch) => {
   const messages = getResponseErrorMsgs(result.response);
 
+  let dataExtenstion;
   // If no actionType passed in, only create notification and skip dispatching action
   if (actionType) {
-    const dataExtenstion = {
+    dataExtenstion = {
       messages,
       ...additionalData,
     };

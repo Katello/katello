@@ -35,6 +35,18 @@ const EditableTextInput = ({
     };
   }, [submitting]);
 
+  // Listen for enter and trigger submit workflow on enter
+  useEffect(() => {
+    const listener = (event) => {
+      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+        if (editing) setSubmitting(true);
+      }
+    };
+    document.addEventListener('keydown', listener);
+    return () => {
+      document.removeEventListener('keydown', listener);
+    };
+  }, [editing]);
 
   const onClear = () => {
     setInputValue(value);

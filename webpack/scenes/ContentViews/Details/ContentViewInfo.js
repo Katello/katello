@@ -73,6 +73,7 @@ const ContentViewInfo = ({ cvId, details }) => {
           </Flex>
         </TextListItem>
         <ActionableDetail
+          textArea
           label={__('Description')}
           attribute="description"
           onEdit={onEdit}
@@ -80,7 +81,7 @@ const ContentViewInfo = ({ cvId, details }) => {
         />
         {composite ?
           (<ActionableDetail
-            label={__('Auto Publish')}
+            label={__('Autopublish')}
             attribute="auto_publish"
             value={autoPublish}
             onEdit={onEdit}
@@ -88,7 +89,7 @@ const ContentViewInfo = ({ cvId, details }) => {
             boolean
           />) :
           (<ActionableDetail
-            label={__('Solve Dependencies')}
+            label={__('Solve dependencies')}
             attribute="solve_dependencies"
             value={solveDependencies}
             onEdit={onEdit}

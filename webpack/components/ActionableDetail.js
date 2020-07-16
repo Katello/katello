@@ -22,15 +22,15 @@ const ActionableDetail = ({
       <TextListItem component={TextListItemVariants.dt}>
         {label}
         {tooltip &&
-        <span className="foreman-spaced-icon">
-          <Tooltip
-            position={TooltipPosition.top}
-            content={tooltip}
-          >
-            <OutlinedQuestionCircleIcon />
-          </Tooltip>
-        </span>
-      }
+          <span className="foreman-spaced-icon">
+            <Tooltip
+              position={TooltipPosition.top}
+              content={tooltip}
+            >
+              <OutlinedQuestionCircleIcon />
+            </Tooltip>
+          </span>
+        }
       </TextListItem>
       <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
         {boolean ?
