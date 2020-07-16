@@ -28,7 +28,6 @@ module Katello
       setup_controller_defaults_api
 
       SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt', allow_push: true}
-
       File.delete("#{Rails.root}/tmp/manifest.json") if File.exist?("#{Rails.root}/tmp/manifest.json")
     end
 
@@ -155,7 +154,7 @@ module Katello
         token.stubs('save!').returns(true)
         PersonalAccessToken.expects(:new).returns(token)
 
-        get :token
+        get :token, params: { account: User.name }
         assert_response 200
         assert_equal 'registry/2.0', response.headers['Docker-Distribution-API-Version']
         body = JSON.parse(response.body)
@@ -179,7 +178,7 @@ module Katello
                            .returns([token])
         PersonalAccessToken.expects(:new).never
 
-        get :token
+        get :token, params: { account: User.name }
         assert_response 200
         assert_equal 'registry/2.0', response.headers['Docker-Distribution-API-Version']
         body = JSON.parse(response.body)
@@ -188,13 +187,13 @@ module Katello
         assert_equal "#{expiration}", body['issued_at']
       end
 
-      it "token - unscoped is unauthorized" do
+      it "token - unscoped is authorized" do
         User.current = nil
         session[:user] = nil
         reset_api_credentials
 
         get :token
-        assert_response 401
+        assert_response 200
       end
 
       it "token - allow unauthenticated pull" do
@@ -255,6 +254,44 @@ module Katello
       end
     end
 
+    describe "catalog" do
+      it "displays all images for authenticated requests" do
+        @docker_repo.set_container_repository_name
+        @docker_env_repo.set_container_repository_name
+        org = @docker_repo.organization
+
+        repo = katello_repositories(:busybox_dev)
+        repo.set_container_repository_name
+        assert repo.save!
+        repo.environment.registry_unauthenticated_pull = false
+        assert repo.environment.save!
+
+        get :catalog
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal(body['repositories'].compact.sort,
+                     ["busybox",
+                      "empty_organization-dev_label-published_dev_view-puppet_product-busybox",
+                      "#{org.label.downcase}-puppet_product-busybox"])
+      end
+
+      it "shows only available images for unauthenticated requests" do
+        @docker_repo.set_container_repository_name
+        @docker_env_repo.set_container_repository_name
+        @docker_repo.environment.registry_unauthenticated_pull = true
+        assert @docker_repo.environment.save!
+
+        User.current = nil
+        session[:user] = nil
+        reset_api_credentials
+
+        get :catalog
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal(["busybox", "empty_organization-puppet_product-busybox"], body['repositories'].compact.sort)
+      end
+    end
+
     describe "docker search" do
       it "search" do
         @docker_repo.set_container_repository_name
@@ -278,6 +315,14 @@ module Katello
                       "results" => [{ "name" => "#{org.label.downcase}-puppet_product-busybox", "description" => nil },
                                     { "name" => "#{org.label.downcase}-published_library_view-1_0-puppet_product-busybox", "description" => nil }]
                     )
+      end
+
+      it "blocks search for podman" do
+        @docker_repo.set_container_repository_name
+        @docker_env_repo.set_container_repository_name
+        @request.env['HTTP_USER_AGENT'] = "libpod/1.8.0"
+        get :v1_search, params: { q: "abc", n: 2 }
+        assert_response 404
       end
 
       it "show unauthenticated repositories" do
