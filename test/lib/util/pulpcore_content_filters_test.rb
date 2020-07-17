@@ -9,8 +9,8 @@ module Katello
       @metadata1_href = "/href1"
       @metadata2_href = "/href2"
       @metadatafiles_results = [
-        PulpRpmClient::RpmRepoMetadataFileRead.new(:pulp_href => @metadata1_href),
-        PulpRpmClient::RpmRepoMetadataFileRead.new(:pulp_href => @metadata2_href)
+        PulpRpmClient::RpmRepoMetadataFile.new(:pulp_href => @metadata1_href),
+        PulpRpmClient::RpmRepoMetadataFile.new(:pulp_href => @metadata2_href)
       ]
     end
 
@@ -35,8 +35,8 @@ module Katello
       @distribution_tree1_href = "/href1"
       @distribution_tree2_href = "/href2"
       @distribution_trees_results = [
-        PulpRpmClient::RpmDistributionTreeRead.new(:pulp_href => @distribution_tree1_href),
-        PulpRpmClient::RpmDistributionTreeRead.new(:pulp_href => @distribution_tree2_href)
+        PulpRpmClient::RpmDistributionTree.new(:pulp_href => @distribution_tree1_href),
+        PulpRpmClient::RpmDistributionTree.new(:pulp_href => @distribution_tree2_href)
       ]
     end
 
@@ -62,9 +62,9 @@ module Katello
       @packagegroup2_href = "/href2"
       @packagegroup3_href = "/href3"
 
-      @packageenv1 = PulpRpmClient::RpmPackageEnvironmentRead.new(:pulp_href => "/env/href1",
+      @packageenv1 = PulpRpmClient::RpmPackageEnvironment.new(:pulp_href => "/env/href1",
                                                           :packagegroups => [@packagegroup1_href])
-      @packageenv2 = PulpRpmClient::RpmPackageEnvironmentRead.new(:pulp_href => "/env/href2",
+      @packageenv2 = PulpRpmClient::RpmPackageEnvironment.new(:pulp_href => "/env/href2",
                                                           :packagegroups => [@packagegroup2_href])
     end
 
