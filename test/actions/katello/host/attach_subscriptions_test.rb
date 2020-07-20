@@ -15,7 +15,7 @@ module Katello::Host
     describe 'attach subscriptions' do
       let(:action_class) { ::Actions::Katello::Host::AttachSubscriptions }
 
-      it 'plans' do
+      it 'plans success' do
         action = create_action action_class
         action.expects(:action_subject).with(@host)
 
@@ -31,6 +31,19 @@ module Katello::Host
                                   :quantity => 1, :pool_uuid => @pool.cp_id
         assert_action_planed_with action, Actions::Candlepin::Consumer::AttachSubscription, :uuid => @host.subscription_facet.uuid,
                                           :quantity => 2, :pool_uuid => @pool.cp_id
+      end
+
+      it 'plans failure' do
+        action = create_action action_class
+        action.expects(:action_subject).with(@host)
+
+        @host.expects(:subscription_facet).returns(nil)
+
+        pools_with_quantities = []
+
+        assert_raises RuntimeError do
+          plan_action action, @host, pools_with_quantities
+        end
       end
     end
   end
