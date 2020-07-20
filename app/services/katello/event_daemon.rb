@@ -1,5 +1,8 @@
 module Katello
   class EventDaemon
+    @services = {}
+    @cache = ActiveSupport::Cache::MemoryStore.new
+
     class Monitor
       def initialize(service_classes)
         @service_classes = service_classes
@@ -44,7 +47,6 @@ module Katello
     class << self
       def initialize
         FileUtils.touch(lock_file)
-        @cache = ActiveSupport::Cache::MemoryStore.new
       end
 
       def settings
@@ -80,7 +82,7 @@ module Katello
         return unless pid == Process.pid
         @monitor_thread.kill
         @cache.clear
-        services.values.each(&:close)
+        @services.values.each(&:close)
         File.unlink(pid_file) if pid_file && File.exist?(pid_file)
       end
 
@@ -114,7 +116,7 @@ module Katello
 
       def start_monitor_thread
         @monitor_thread = Thread.new do
-          Monitor.new(services.values).start
+          Monitor.new(@services.values).start
         end
       end
 
@@ -125,11 +127,8 @@ module Katello
         end
       end
 
-      def services
-        {
-          candlepin_events: ::Katello::CandlepinEventListener,
-          katello_events: ::Katello::EventMonitor::PollerThread
-        }
+      def register_service(name, klass)
+        @services[name] = klass
       end
     end
   end
