@@ -134,16 +134,18 @@ module Katello
       ActionView::Base.include Katello::KatelloUrlsHelper
     end
 
-    initializer "katello.events" do
+    config.to_prepare do
       Katello::CandlepinEventListener.client_factory = proc do
         Katello::Messaging::Connection.create(
           connection_class: Katello::Messaging::StompConnection,
           settings: SETTINGS[:katello][:candlepin_events]
         )
       end
-    end
 
-    config.to_prepare do
+      Katello::EventDaemon.initialize
+      Katello::EventDaemon.register_service(:candlepin_events, Katello::CandlepinEventListener)
+      Katello::EventDaemon.register_service(:katello_events, Katello::EventMonitor::PollerThread)
+
       FastGettext.add_text_domain('katello',
                                     :path => File.expand_path("../../../locale", __FILE__),
                                     :type => :po,
@@ -231,8 +233,6 @@ module Katello
       Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
       Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
       Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
-
-      Katello::EventDaemon.initialize
     end
 
     rake_tasks do
