@@ -28,9 +28,9 @@ export const getResponseErrorMsgs = ({ data, actionType } = {}) => {
     const customMessage = getCustomMessage(actionType, data.displayMessage);
     const messages =
       customMessage ||
-      data.errors ||
       data.displayMessage ||
       data.message ||
+      data.errors ||
       data.error;
     return Array.isArray(messages) ? messages : [messages];
   }
@@ -81,12 +81,16 @@ export const sendErrorNotifications = messages => (dispatch) => {
 export const apiError = (actionType, result, additionalData = {}) => (dispatch) => {
   const messages = getResponseErrorMsgs(result.response);
 
-  const dataExtenstion = {
-    messages,
-    ...additionalData,
-  };
+  let dataExtension;
+  // If no actionType passed in, only create notification and skip dispatching action
+  if (actionType) {
+    dataExtension = {
+      messages,
+      ...additionalData,
+    };
 
-  apiResponse(actionType, result, dataExtenstion)(dispatch);
+    apiResponse(actionType, result, dataExtension)(dispatch);
+  }
   sendErrorNotifications(messages)(dispatch);
 
   return resultWithSuccessFlag(result);
