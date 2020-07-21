@@ -564,6 +564,14 @@ module Katello
       assert_template 'api/v2/repositories/show'
     end
 
+    def test_update_with_description
+      repo = katello_repositories(:busybox)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:description].must_equal "katello rules"
+      end
+      put :update, params: { :id => repo.id, :description => "katello rules" }
+    end
+
     def test_update_protected
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]

@@ -328,6 +328,7 @@ module Katello
     api :PUT, "/repositories/:id", N_("Update a repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :name, String, :required => false
+    param :description, String, :desc => N_("description of the repository"), :required => false
     param_group :repo
     def update
       repo_params = repository_params
