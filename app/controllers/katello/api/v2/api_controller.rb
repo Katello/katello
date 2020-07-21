@@ -66,6 +66,7 @@ module Katello
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
       group = options.fetch(:group, nil)
+      deterministic_order = options.fetch(:deterministic_order, "#{query.table_name}.id DESC")
       params[:full_result] = true if options[:csv]
       blank_query = resource.none
 
@@ -88,7 +89,7 @@ module Katello
       if options[:custom_sort]
         query = options[:custom_sort].call(query)
       end
-      query = query.order("#{query.table_name}.id DESC") unless group #secondary order to ensure sort is deterministic
+      query = query.order(deterministic_order) unless group #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
       if ::Foreman::Cast.to_bool(params[:full_result])
