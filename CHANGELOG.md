@@ -1,4 +1,4 @@
-# 3.16.0 Tasty Taiyaki (2020-07-13)
+# 3.16.0 Tasty Taiyaki (2020-07-21)
 
 ## Features
 
@@ -51,19 +51,9 @@
 
 ## Bug Fixes
 
-### Errata Management
- * katello applicability doesn't refresh applicability 'counts' ([#30357](https://projects.theforeman.org/issues/30357), [339d401a](https://github.com/Katello/katello.git/commit/339d401a3228d34d5bd4c97968cf9fc7bb44c578))
- * Viewing errata from a repository returns incorrect unfiltered results ([#30329](https://projects.theforeman.org/issues/30329), [e367b89e](https://github.com/Katello/katello.git/commit/e367b89e0064eec16d65af55a47e11b84ee60a4d))
- * indexing a yum repo with pulp3 fails to calculate nvra at first indexing ([#30118](https://projects.theforeman.org/issues/30118), [7cef4298](https://github.com/Katello/katello.git/commit/7cef42989230033c4cb6b0ace5b04d0a55b40af3))
- * Katello Applicability needs to calculate applicable module streams ([#29604](https://projects.theforeman.org/issues/29604), [ed09874e](https://github.com/Katello/katello.git/commit/ed09874eaa66489728ffa23a5956a65af8b42c91))
- * Katello Applicability needs to process more than one host per task ([#29554](https://projects.theforeman.org/issues/29554), [fa452587](https://github.com/Katello/katello.git/commit/fa452587088d40eda01041a31ddaaac650090b1e))
- * Skip planning of errata installation when the list applicable errata for a host is empty ([#29368](https://projects.theforeman.org/issues/29368), [d3594739](https://github.com/Katello/katello.git/commit/d35947391c2eeaff9f28231c8d349cb1d12023d9))
- * Installing all Errata of a host doesn't work ([#29330](https://projects.theforeman.org/issues/29330), [6a8d63b9](https://github.com/Katello/katello.git/commit/6a8d63b972dbbadfe1974690273d33ebc9e35a18), [aaf599e7](https://github.com/Katello/katello.git/commit/aaf599e75db51bcb7f3b21e09de4bfaff12c49b6), [c963f3cd](https://github.com/Katello/katello.git/commit/c963f3cdbac5f012a214c225e3b3706cbd3d64a5))
- * Add custom evr type column to katello_rpms and katello_installed_packages ([#29145](https://projects.theforeman.org/issues/29145), [413f9800](https://github.com/Katello/katello.git/commit/413f9800083d5497bd700c8f91577bd28b787d1e))
- * Applied Errata report no longer works when last reboot is included ([#29042](https://projects.theforeman.org/issues/29042), [b528f36e](https://github.com/Katello/katello.git/commit/b528f36ea754985d3084c2ccc5452c2db71891d4))
-
 ### Tests
- * Fix timeout issue in React content view test ([#30336](https://projects.theforeman.org/issues/30336), [bab3adfd](https://github.com/Katello/katello.git/commit/bab3adfd6b7b599e08512bb34a9a13752cb088b3))
+ * pulp rpm 3.4.2 release breaks tests ([#30433](https://projects.theforeman.org/issues/30433), [b822ef58](https://github.com/Katello/katello.git/commit/b822ef58f60a8057763553f8930eece0c415029f))
+ * Lock theforeman js packages to 4.3.0 ([#30283](https://projects.theforeman.org/issues/30283))
  * Urls to https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/ are deprecated ([#30227](https://projects.theforeman.org/issues/30227), [14d3e539](https://github.com/Katello/katello.git/commit/14d3e539b591786acf72a9a114a1df15b613b484))
  * React tests - timeout on some tests for nock (http mocking lib) wrapper ([#29987](https://projects.theforeman.org/issues/29987), [99791b65](https://github.com/Katello/katello.git/commit/99791b65a47437db6de16d03932af04dd83ce8e4))
  * Fix React test issues ([#29717](https://projects.theforeman.org/issues/29717), [68219a01](https://github.com/Katello/katello.git/commit/68219a01ef036fe338b8ef457e82df30d8d82e1a))
@@ -76,6 +66,17 @@
  * Address cops for rubocop-minitest ([#29395](https://projects.theforeman.org/issues/29395), [3fe0945f](https://github.com/Katello/katello.git/commit/3fe0945f46329586a9dfcbed314434afeb5e3b20))
  * angular-ui tests broke due to patternfly update ([#29381](https://projects.theforeman.org/issues/29381), [bc651a30](https://github.com/Katello/katello.git/commit/bc651a3080c6c9cbfdb5d3f9e1a54d43b7be386d))
  * Delete all http proxies in test setup ([#29142](https://projects.theforeman.org/issues/29142), [6ed753d6](https://github.com/Katello/katello.git/commit/6ed753d6d4e61111649d6291f466fccf759db15f))
+
+### Errata Management
+ * katello applicability doesn't refresh applicability 'counts' ([#30357](https://projects.theforeman.org/issues/30357), [339d401a](https://github.com/Katello/katello.git/commit/339d401a3228d34d5bd4c97968cf9fc7bb44c578))
+ * Viewing errata from a repository returns incorrect unfiltered results ([#30329](https://projects.theforeman.org/issues/30329), [e367b89e](https://github.com/Katello/katello.git/commit/e367b89e0064eec16d65af55a47e11b84ee60a4d))
+ * indexing a yum repo with pulp3 fails to calculate nvra at first indexing ([#30118](https://projects.theforeman.org/issues/30118), [7cef4298](https://github.com/Katello/katello.git/commit/7cef42989230033c4cb6b0ace5b04d0a55b40af3))
+ * Katello Applicability needs to calculate applicable module streams ([#29604](https://projects.theforeman.org/issues/29604), [ed09874e](https://github.com/Katello/katello.git/commit/ed09874eaa66489728ffa23a5956a65af8b42c91))
+ * Katello Applicability needs to process more than one host per task ([#29554](https://projects.theforeman.org/issues/29554), [fa452587](https://github.com/Katello/katello.git/commit/fa452587088d40eda01041a31ddaaac650090b1e))
+ * Skip planning of errata installation when the list applicable errata for a host is empty ([#29368](https://projects.theforeman.org/issues/29368), [d3594739](https://github.com/Katello/katello.git/commit/d35947391c2eeaff9f28231c8d349cb1d12023d9))
+ * Installing all Errata of a host doesn't work ([#29330](https://projects.theforeman.org/issues/29330), [6a8d63b9](https://github.com/Katello/katello.git/commit/6a8d63b972dbbadfe1974690273d33ebc9e35a18), [aaf599e7](https://github.com/Katello/katello.git/commit/aaf599e75db51bcb7f3b21e09de4bfaff12c49b6), [c963f3cd](https://github.com/Katello/katello.git/commit/c963f3cdbac5f012a214c225e3b3706cbd3d64a5))
+ * Add custom evr type column to katello_rpms and katello_installed_packages ([#29145](https://projects.theforeman.org/issues/29145), [413f9800](https://github.com/Katello/katello.git/commit/413f9800083d5497bd700c8f91577bd28b787d1e))
+ * Applied Errata report no longer works when last reboot is included ([#29042](https://projects.theforeman.org/issues/29042), [b528f36e](https://github.com/Katello/katello.git/commit/b528f36ea754985d3084c2ccc5452c2db71891d4))
 
 ### Repositories
  * pulp2 Debian sync starts with stacktraces ([#30314](https://projects.theforeman.org/issues/30314), [aab445d9](https://github.com/Katello/katello.git/commit/aab445d97f72574f27989488c07f1e0a59a582d0))
