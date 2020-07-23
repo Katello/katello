@@ -282,11 +282,12 @@
             on-save="saveContentView(host)"
             edit-trigger="editContentView">
             </div>
-            <div bst-alert="info" ng-show="showCVAlert">
-              <p>Please run the following commands on the client,</p>
-              <p>so the new Content View can take effect.</p>
-              <p><code># yum clean all</code></p>
-              <p><code># subscription-manager refresh</code></p>
+            <div class="help-block" ng-show="showCVAlert">
+              <p translate>
+                Changing the Content View will not affect the Content Host until its next checkin.
+                To update the Content Host immediately run the following command:
+              </p>
+              <code># subscription-manager refresh</code>
             </div>
         </dd>
 
