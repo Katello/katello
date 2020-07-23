@@ -355,6 +355,8 @@ Katello::Engine.routes.draw do
               delete :destroy
               put :update
               get :ping
+              match '/simple_content_access/enable', :to => 'upstream_subscriptions#enable_simple_content_access', :via => :put
+              match '/simple_content_access/disable', :to => 'upstream_subscriptions#disable_simple_content_access', :via => :put
             end
           end
         end

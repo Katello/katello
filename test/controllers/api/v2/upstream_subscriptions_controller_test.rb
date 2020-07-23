@@ -131,5 +131,31 @@ module Katello
         put :update, params: { organization_id: @organization.id, pools: [] }
       end
     end
+
+    def test_enable_simple_content_access_success
+      Katello::Resources::Candlepin::UpstreamConsumer.stubs(:update).returns({})
+
+      assert_async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable) do |organization_id|
+        org = Organization.find(organization_id)
+        assert_equal @organization, org
+      end
+
+      put :enable_simple_content_access, params: { organization_id: @organization.id }
+
+      assert_response :success
+    end
+
+    def test_disable_simple_content_access_success
+      Katello::Resources::Candlepin::UpstreamConsumer.stubs(:update).returns({})
+
+      assert_async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable) do |organization_id|
+        org = Organization.find(organization_id)
+        assert_equal @organization, org
+      end
+
+      put :disable_simple_content_access, params: { organization_id: @organization.id }
+
+      assert_response :success
+    end
   end
 end

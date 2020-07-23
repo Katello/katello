@@ -29,6 +29,18 @@ import {
   DELETE_MANIFEST_SUCCESS,
   UPLOAD_MANIFEST_SUCCESS,
   REFRESH_MANIFEST_SUCCESS,
+  REFRESH_MANIFEST_FAILURE,
+  ENABLE_SIMPLE_CONTENT_ACCESS_FAILURE,
+  DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE,
+  REFRESH_MANIFEST_REQUEST,
+  DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST,
+  ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST,
+  ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
+  DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
+  UPLOAD_MANIFEST_FAILURE,
+  UPLOAD_MANIFEST_REQUEST,
+  DELETE_MANIFEST_FAILURE,
+  DELETE_MANIFEST_REQUEST,
 } from './Manifest/ManifestConstants';
 
 import {
@@ -47,6 +59,7 @@ const initialState = Immutable({
   tableColumns: [],
   selectedTableColumns: [],
   hasUpstreamConnection: false,
+  manifestActionInProgress: false,
 });
 
 export default (state = initialState, action) => {
@@ -141,14 +154,37 @@ export default (state = initialState, action) => {
       return state.merge({
         task: action.response,
         hasUpstreamConnection: false,
+        manifestActionInProgress: false,
       });
 
-    case UPLOAD_MANIFEST_SUCCESS:
-    case REFRESH_MANIFEST_SUCCESS:
     case UPDATE_QUANTITY_SUCCESS:
     case SUBSCRIPTIONS_POLL_TASK_SUCCESS:
       return state
         .set('task', action.response);
+
+    case UPLOAD_MANIFEST_SUCCESS:
+    case REFRESH_MANIFEST_SUCCESS:
+    case ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS:
+    case DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS:
+      return state
+        .set('task', action.response)
+        .set('manifestActionInProgress', false);
+
+    case ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST:
+    case DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST:
+    case REFRESH_MANIFEST_REQUEST:
+    case UPLOAD_MANIFEST_REQUEST:
+    case DELETE_MANIFEST_REQUEST:
+      return state
+        .set('manifestActionInProgress', true);
+
+    case ENABLE_SIMPLE_CONTENT_ACCESS_FAILURE:
+    case DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE:
+    case REFRESH_MANIFEST_FAILURE:
+    case UPLOAD_MANIFEST_FAILURE:
+    case DELETE_MANIFEST_FAILURE:
+      return state
+        .set('manifestActionInProgress', false);
 
     case DELETE_SUBSCRIPTIONS_SUCCESS:
       return state
