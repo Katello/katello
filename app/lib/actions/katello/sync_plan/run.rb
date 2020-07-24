@@ -19,7 +19,7 @@ module Actions
             syncable_products = sync_plan.products.syncable
             syncable_roots = ::Katello::RootRepository.where(:product_id => syncable_products).has_url
 
-            plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Sync, syncable_roots.map(&:library_instance)) unless syncable_roots.empty?
+            plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Sync, syncable_roots.map(&:library_instance).compact) unless syncable_roots.empty?
             plan_self(:sync_plan_name => sync_plan.name)
           end
         end
