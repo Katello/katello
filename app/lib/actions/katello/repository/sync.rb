@@ -34,21 +34,26 @@ module Actions
 
           pulp_sync_options = {}
           pulp_sync_options[:download_policy] = ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
+
+          #pulp2 options
           pulp_sync_options[:force_full] = true if skip_metadata_check && repo.yum?
           pulp_sync_options[:repair_sync] = true if validate_contents && repo.deb?
           pulp_sync_options[:remove_missing] = false if incremental
+          pulp_sync_options[:source_url] = source_url
+
+          #pulp3 options
+          pulp_sync_options[:optimize] = false if skip_metadata_check && repo.yum?
 
           sequence do
             if SmartProxy.pulp_master.pulp3_support?(repo) && validate_contents
               plan_action(Katello::Repository::VerifyChecksum, repo)
             else
               plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents && repo.yum?
-              sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :repo_id => repo.id, :source_url => source_url, :options => pulp_sync_options}
               sync_action = plan_pulp_action([Actions::Pulp::Orchestration::Repository::Sync,
                                               Actions::Pulp3::Orchestration::Repository::Sync],
                                              repo,
                                              SmartProxy.pulp_master,
-                                             sync_args)
+                                             pulp_sync_options)
               output = sync_action.output
 
               contents_changed = skip_metadata_check || output[:contents_changed]
