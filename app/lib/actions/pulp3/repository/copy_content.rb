@@ -11,7 +11,6 @@ module Actions
         def invoke_external_task
           source = ::Katello::Repository.find(input[:source_repository_id])
           target = ::Katello::Repository.find(input[:target_repository_id] || input[:target_repository])
-          output[:latest_version_href] = target.backend_service(smart_proxy).read.latest_version_href
           output[:pulp_tasks] = target.backend_service(smart_proxy).copy_content_for_source(source, input)
         end
       end

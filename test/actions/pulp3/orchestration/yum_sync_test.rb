@@ -5,6 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
+      User.current = users(:admin)
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
@@ -23,6 +24,7 @@ module ::Actions::Pulp3
     end
 
     def teardown
+      User.current = users(:admin)
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
       @repo.reload
@@ -38,6 +40,26 @@ module ::Actions::Pulp3
           :content_view_id => @repo.content_view.id)
 
       assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
+    end
+
+    def test_optimize_false
+      SETTINGS[:katello][:katello_applicability] = true
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      @repo.reload
+
+      old_url = @repo.version_href
+      @repo.update(version_href: old_url.sub('/1/', '/0/'))
+      @repo.index_content #should clear out the repo
+      assert_empty @repo.rpms
+
+      ForemanTasks.sync_task(::Actions::Katello::Repository::Sync, @repo, nil, skip_metadata_check: true)
+
+      @repo.reload
+      assert_equal old_url, @repo.version_href
+      refute_empty @repo.rpms
+    ensure
+      SETTINGS[:katello][:katello_applicability] = false
     end
 
     def test_index_erratum_href
