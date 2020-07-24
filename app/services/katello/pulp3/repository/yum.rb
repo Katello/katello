@@ -59,6 +59,12 @@ module Katello
           end
         end
 
+        def sync_url_params(sync_options)
+          params = super
+          params[:optimize] = sync_options[:optimize] if sync_options.key?(:optimize)
+          params
+        end
+
         def self.distribution_bootable?(distribution)
           file_paths = distribution.results.first.images.map(&:path)
           file_paths.any? do |path|
