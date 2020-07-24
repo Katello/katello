@@ -447,8 +447,7 @@ module ::Actions::Katello::Repository
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
-      assert_action_planed_with(action, pulp2_action_class, repository, proxy,
-                                smart_proxy_id: proxy.id, repo_id: repository.id, source_url: nil, options: {})
+      assert_action_planed_with(action, pulp2_action_class, repository, proxy, source_url: nil)
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent
       assert_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
       assert_action_planed action, ::Actions::Katello::Repository::ImportApplicability
@@ -474,8 +473,7 @@ module ::Actions::Katello::Repository
       plan_action action, repository, nil, :source_url => 'file:///tmp/'
 
       assert_action_planed_with(action, pulp2_action_class, repository, proxy,
-                                smart_proxy_id: proxy.id, repo_id: repository.id,
-                                source_url: 'file:///tmp/', options: {})
+                                source_url: 'file:///tmp/')
     end
 
     it 'passes force_full when skip_metadata_check is nil' do
@@ -484,8 +482,7 @@ module ::Actions::Katello::Repository
       plan_action action, repository, nil, :skip_metadata_check => true
 
       assert_action_planed_with(action, pulp2_action_class, repository, proxy,
-                                smart_proxy_id: proxy.id, repo_id: repository.id,
-                                source_url: nil, options: {force_full: true})
+                                source_url: nil, force_full: true, optimize: false)
       assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
     end
 
@@ -495,8 +492,7 @@ module ::Actions::Katello::Repository
       plan_action action, repository, nil, :validate_contents => true
 
       assert_action_planed_with(action, pulp2_action_class, repository, proxy,
-                                smart_proxy_id: proxy.id, repo_id: repository.id,
-                                source_url: nil, options: {download_policy: 'on_demand', force_full: true})
+                                source_url: nil, download_policy: 'on_demand', force_full: true, :optimize => false)
 
       assert_action_planed_with(action, Actions::Pulp::Repository::Download, pulp_id: repository.pulp_id,
                                 options: {:verify_all_units => true})

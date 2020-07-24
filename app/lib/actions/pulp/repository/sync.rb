@@ -14,8 +14,9 @@ module Actions
           overrides = {}
           overrides[:feed] = input[:source_url] if input[:source_url]
           overrides[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
-          overrides[:options] = input[:options] if input[:options]
+          overrides.merge(input[:options]) if input[:options]
           repo = ::Katello::Repository.find(input[:repo_id])
+
           output[:pulp_tasks] = repo.backend_service(::SmartProxy.pulp_master).sync(overrides)
         end
 
