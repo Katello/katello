@@ -16,8 +16,7 @@ module Actions
                   copy_action = plan_action(Actions::Pulp3::Repository::CopyContent, source_repositories.first, smart_proxy, target_repo,
                                             filter_ids: filter_ids, solve_dependencies: solve_dependencies,
                                             rpm_filenames: rpm_filenames)
-                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo,
-                              repository_details: { latest_version_href: copy_action.output[:latest_version_href] }, tasks: copy_action.output[:pulp_tasks])
+                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: copy_action.output[:pulp_tasks])
                 else
                   #if we are not filtering, copy the version to the cv repository, and the units for each additional repo
                   action = plan_action(Actions::Pulp3::Repository::CopyVersion, source_repositories.first, smart_proxy, target_repo)

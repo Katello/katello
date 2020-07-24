@@ -4,8 +4,9 @@ module Actions
       module Repository
         class Sync < Pulp::Abstract
           include Actions::Helpers::OutputPropagator
-          def plan(_repository, _smart_proxy, options)
+          def plan(repository, smart_proxy, options)
             sequence do
+              options.merge!(:repo_id => repository.id, :smart_proxy_id => smart_proxy.id)
               action_output = plan_action(Actions::Pulp::Repository::Sync, options).output
               plan_self(:subaction_output => action_output)
             end

@@ -10,7 +10,7 @@ module Actions
 
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:repo_id])
-          output[:pulp_tasks] = repo.backend_service(::SmartProxy.unscoped.find(input[:smart_proxy_id])).sync
+          output[:pulp_tasks] = repo.backend_service(::SmartProxy.unscoped.find(input[:smart_proxy_id])).sync(input[:options])
         end
 
         def external_task=(tasks)
