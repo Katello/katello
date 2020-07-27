@@ -31,9 +31,7 @@ module Katello
 
         # set overall status result code
         result = {:services => result}
-        result[:services].each_value do |v|
-          result[:status] = v[:status] == OK_RETURN_CODE ? OK_RETURN_CODE : FAIL_RETURN_CODE
-        end
+        result[:status] = result[:services].each_value.any? { |v| v[:status] == FAIL_RETURN_CODE } ? FAIL_RETURN_CODE : OK_RETURN_CODE
         result
       end
 
