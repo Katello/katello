@@ -35,11 +35,15 @@ module Katello
       end
 
       def pulp2_content_api
-        Pulp2to3MigrationClient::Pulp2contentApi.new(api_client)
+        Pulp2to3MigrationClient::Pulp2ContentApi.new(api_client)
+      rescue NameError
+        Pulp2to3MigrationClient::Pulp2contentApi.new(api_client) #backwards compatible
       end
 
       def pulp2_repositories_api
-        Pulp2to3MigrationClient::Pulp2repositoriesApi.new(api_client)
+        Pulp2to3MigrationClient::Pulp2RepositoriesApi.new(api_client)
+      rescue NameError
+        Pulp2to3MigrationClient::Pulp2repositoriesApi.new(api_client) #backwards compatible
       end
 
       def create_and_run_migrations
