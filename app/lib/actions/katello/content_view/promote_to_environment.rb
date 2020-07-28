@@ -3,7 +3,7 @@ module Actions
   module Katello
     module ContentView
       class PromoteToEnvironment < Actions::EntryAction
-        def plan(version, environment, description)
+        def plan(version, environment, description, incremental_update = false)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                           :environment => environment, :task => self.task,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
@@ -29,8 +29,13 @@ module Actions
             plan_action(Candlepin::Environment::SetContent, version.content_view, environment, version.content_view.content_view_environment(environment))
             plan_action(Katello::Foreman::ContentUpdate, environment, version.content_view)
             plan_action(ContentView::ErrataMail, version.content_view, environment)
+
+            if incremental_update && sync_proxies?(environment)
+              plan_action(ContentView::CapsuleSync, version.content_view, environment)
+            end
+
             plan_self(history_id: history.id, environment_id: environment.id, user_id: ::User.current.id,
-                      environment_name: environment.name, content_view_id: version.content_view.id)
+                      environment_name: environment.name, content_view_id: version.content_view.id, incremental_update: incremental_update)
           end
         end
 
@@ -55,7 +60,7 @@ module Actions
           history.save!
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
 
-          if ::SmartProxy.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync]
+          if !input[:incremental_update] && sync_proxies?(environment)
             ForemanTasks.async_task(ContentView::CapsuleSync,
                                     ::Katello::ContentView.find(input[:content_view_id]),
                                     environment)
@@ -64,6 +69,10 @@ module Actions
         end
 
         private
+
+        def sync_proxies?(environment)
+          Setting[:foreman_proxy_content_auto_sync] && ::SmartProxy.sync_needed?(environment)
+        end
 
         def repos_to_delete(version, environment)
           archived_library_instance_ids = version.archived_repos.collect { |archived| archived.library_instance_id }
