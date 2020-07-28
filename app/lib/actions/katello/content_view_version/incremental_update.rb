@@ -335,7 +335,7 @@ module Actions
         end
 
         def promote(new_version, environments)
-          plan_action(Katello::ContentView::Promote, new_version, environments, true)
+          plan_action(Katello::ContentView::Promote, new_version, environments, true, nil, true)
         end
 
         def copy_deb_content(new_repo, dep_solve, deb_ids)

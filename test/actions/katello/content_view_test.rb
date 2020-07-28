@@ -74,7 +74,7 @@ module ::Actions::Katello::ContentView
     end
   end
 
-  class PromoteToEnviromentTest < TestBase
+  class PromoteToEnvironmentTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::PromoteToEnvironment }
 
     let(:environment) do
@@ -88,8 +88,21 @@ module ::Actions::Katello::ContentView
     it 'plans' do
       assert_empty content_view_version.history
       action.stubs(:task).returns(success_task)
+
       plan_action(action, content_view_version, environment, 'description')
+
       refute_empty content_view_version.history
+      refute_action_planned(action, Actions::Katello::ContentView::CapsuleSync)
+    end
+
+    it 'plans for incremental update' do
+      action.stubs(:task).returns(success_task)
+      action.expects(:sync_proxies?).returns(true)
+
+      plan_action(action, content_view_version, environment, 'description', true)
+
+      refute_empty content_view_version.history
+      assert_action_planned(action, Actions::Katello::ContentView::CapsuleSync)
     end
 
     context 'finalize phase' do
