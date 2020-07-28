@@ -2,7 +2,7 @@ module Actions
   module Katello
     module ContentView
       class Promote < Actions::EntryAction
-        def plan(version, environments, is_force = false, description = nil)
+        def plan(version, environments, is_force = false, description = nil, incremental_update = false)
           action_subject(version.content_view)
           version.check_ready_to_promote!(environments)
 
@@ -13,7 +13,7 @@ module Actions
           environments.each do |environment|
             sequence do
               plan_action(Katello::ContentViewVersion::BeforePromoteHook, :id => version.id)
-              plan_action(ContentView::PromoteToEnvironment, version, environment, description)
+              plan_action(ContentView::PromoteToEnvironment, version, environment, description, incremental_update)
               plan_action(Katello::ContentViewVersion::AfterPromoteHook, :id => version.id)
             end
           end
