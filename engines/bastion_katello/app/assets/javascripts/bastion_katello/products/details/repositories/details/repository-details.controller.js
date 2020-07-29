@@ -70,6 +70,12 @@
             }, errorHandler);
         };
 
+        $scope.verifyChecksum = function (repository) {
+            Repository.verifyChecksum({id: repository.id}, function (task) {
+                $state.go('product.repository.tasks.details', {taskId: task.id});
+            }, errorHandler);
+        };
+
         $scope.republishRepository = function (repository) {
             Repository.republish({id: repository.id}, function (task) {
                 $state.go('product.repository.tasks.details', {taskId: task.id});
