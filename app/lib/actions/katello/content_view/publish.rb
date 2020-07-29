@@ -44,8 +44,7 @@ module Actions
             separated_repo_map = separated_repo_mapping(repository_mapping, content_view)
 
             if separated_repo_map[:pulp3_yum_depsolve].keys.flatten.present? &&
-                SmartProxy.pulp_master.pulp3_support?(separated_repo_map[:pulp3_yum_depsolve].keys.flatten.first) &&
-                content_view.solve_dependencies
+                SmartProxy.pulp_master.pulp3_support?(separated_repo_map[:pulp3_yum_depsolve].keys.flatten.first)
               plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_depsolve], version)
             end
 
@@ -82,8 +81,7 @@ module Actions
         def separated_repo_mapping(repo_mapping, content_view)
           separated_mapping = { :pulp3_yum_depsolve => {}, :other => {} }
           repo_mapping.each do |source_repos, dest_repo|
-            if dest_repo.content_type == "yum" && SmartProxy.pulp_master.pulp3_support?(dest_repo) &&
-                content_view.solve_dependencies
+            if dest_repo.content_type == "yum" && SmartProxy.pulp_master.pulp3_support?(dest_repo)
               separated_mapping[:pulp3_yum_depsolve][source_repos] = dest_repo
             else
               separated_mapping[:other][source_repos] = dest_repo

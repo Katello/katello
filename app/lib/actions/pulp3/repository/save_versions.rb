@@ -23,9 +23,23 @@ module Actions
             if repo.version_href
               # Chop off the version number to compare base repo strings
               unversioned_href = repo.version_href[0..-2].rpartition('/').first
-              new_version_href = version_hrefs.detect do |version_href|
-                unversioned_href == version_href[0..-2].rpartition('/').first
+              # Could have multiple version_hrefs for the same repo depending on the copy task
+              new_version_hrefs = version_hrefs.collect do |version_href|
+                version_href if unversioned_href == version_href[0..-2].rpartition('/').first
               end
+
+              new_version_hrefs.compact!
+              if new_version_hrefs.size > 1
+                version_map = {}
+                new_version_hrefs.each do |href|
+                  version_map[href] = href.split("/")[-1].to_i
+                end
+                # Find latest version_href by it's version number
+                new_version_href = version_map.sort_by{ |href, version| version }.last.first
+              else
+                new_version_href = new_version_hrefs.first
+              end
+
               # Successive incremental updates won't generate a new repo version, so fetch the latest Pulp 3 repo version
               new_version_href ||= ::Katello::Pulp3::Api::Yum.new(SmartProxy.pulp_master!).
                 repositories_api.read(repo.backend_service(SmartProxy.pulp_master).

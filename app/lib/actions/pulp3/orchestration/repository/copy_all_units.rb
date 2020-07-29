@@ -21,9 +21,7 @@ module Actions
                 else
                   #if we are not filtering, copy the version to the cv repository, and the units for each additional repo
                   action = plan_action(Actions::Pulp3::Repository::CopyVersion, source_repositories.first, smart_proxy, target_repo)
-                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo,
-                              #repository_details: { latest_version_href: nil }, tasks: action.output[:pulp_tasks])
-                              tasks: action.output[:pulp_tasks])
+                  plan_action(Actions::Pulp3::Repository::SaveVersion, target_repo, tasks: action.output[:pulp_tasks])
                   copy_actions = []
                   #since we're creating a new version from the first repo, start copying at the 2nd
                   source_repositories[1..-1].each do |source_repo|

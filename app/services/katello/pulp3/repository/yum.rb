@@ -85,7 +85,10 @@ module Katello
             repo_id_map.each do |source_repo_ids, dest_repo_id_map|
               dest_repo = ::Katello::Repository.find(dest_repo_id_map[:dest_repo])
               dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
-              tasks << remove_all_content_from_repo(dest_repo_href)
+              # Not needed during incremental update due to dest_base_version
+              unless dest_repo_id_map[:base_version]
+                tasks << remove_all_content_from_repo(dest_repo_href)
+              end
               source_repo_ids.each do |source_repo_id|
                 source_repo_version = ::Katello::Repository.find(source_repo_id).version_href
                 config = {
@@ -102,14 +105,14 @@ module Katello
           tasks
         end
 
-        def copy_units(source_repository, content_unit_hrefs, dependency_solving, dest_base_version = nil,
-                       additional_repo_map = {})
+        def copy_units(source_repository, content_unit_hrefs)
           tasks = []
           if content_unit_hrefs.sort!.any?
             data = PulpRpmClient::Copy.new
             data.config = [{
               source_repo_version: source_repository.version_href,
               dest_repo: repository_reference.repository_href,
+              dest_base_version: 0,
               content: content_unit_hrefs
             }]
             data.config[:dest_base_version] = dest_base_version if dest_base_version
@@ -255,7 +258,7 @@ module Katello
           content_unit_hrefs += source_repository.srpms.pluck(:pulp_id)
 
           dependency_solving = options[:solve_dependencies] || false
-          copy_units(source_repository, content_unit_hrefs.uniq, dependency_solving)
+          copy_units(source_repository, content_unit_hrefs.uniq)
         end
 
         def modular_packages(source_repository, filters)
