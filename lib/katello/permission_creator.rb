@@ -305,8 +305,8 @@ module Katello
       @plugin.permission :edit_products,
                          {
                            'katello/api/v2/products' => [:update],
-                           'katello/api/v2/repositories' => [:update, :remove_content, :import_uploads, :upload_content, :republish],
-                           'katello/api/v2/products_bulk_actions' => [:update_sync_plans, :update_http_proxy],
+                           'katello/api/v2/repositories' => [:update, :remove_content, :import_uploads, :upload_content, :republish, :verify_checksum],
+                           'katello/api/v2/products_bulk_actions' => [:update_sync_plans, :update_http_proxy, :verify_checksum_products],
                            'katello/api/v2/content_uploads' => [:create, :update, :destroy],
                            'katello/api/v2/organizations' => [:repo_discover, :cancel_repo_discover]
                          },

@@ -101,6 +101,30 @@ module Katello
       end
     end
 
+    def test_verify_checksum
+      FactoryBot.create(:katello_repository, :content_type => 'yum',
+                        :product_id => @products.first.id,
+                        :environment => @organization.library,
+                        :content_view_version => @organization.default_content_view.versions.first)
+
+      assert_async_task(::Actions::BulkAction) do |action_class, repos|
+        refute_empty repos
+        assert repos.all? { |repo| repo.yum? }
+        action_class.must_equal ::Actions::Katello::Repository::VerifyChecksum
+      end
+
+      put :verify_checksum_products, params: { :ids => @products.collect(&:id), :organization_id => @organization.id }
+    end
+
+    def test_verify_checksum_products_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@create_permission, @sync_permission, @view_permission, @destroy_permission]
+
+      assert_protected_action(:verify_checksum_products, allowed_perms, denied_perms, [@organization]) do
+        put :verify_checksum_products, params: { :ids => @products.collect(&:id), :organization_id => @organization.id }
+      end
+    end
+
     def test_update_http_proxy
       prod = @products.first
       assert_async_task(::Actions::Katello::Product::UpdateHttpProxy, [prod], 'global_default_http_proxy', nil)
