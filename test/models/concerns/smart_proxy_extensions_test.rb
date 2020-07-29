@@ -121,6 +121,7 @@ module Katello
     def test_fix_pulp3_capabilities
       @master.expects(:refresh).once
       @master.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [])
+      @master.reload
 
       assert_raises(Katello::Errors::PulpcoreMissingCapabilities) do
         @master.fix_pulp3_capabilities('file')
