@@ -15,7 +15,7 @@ module Katello
     before_action :find_organization_from_product, :only => [:create]
     before_action :find_repository, :only => [:show, :update, :destroy, :sync, :export,
                                               :remove_content, :upload_content, :republish,
-                                              :import_uploads, :gpg_key_content]
+                                              :import_uploads, :gpg_key_content, :verify_checksum]
     before_action :find_content, :only => :remove_content
     before_action :find_organization_from_repo, :only => [:update]
     before_action :error_on_rh_product, :only => [:create]
@@ -289,6 +289,15 @@ module Katello
       end
 
       task = async_task(::Actions::Katello::Repository::Sync, @repository, nil, sync_options)
+      respond_for_async :resource => task
+    rescue Errors::InvalidActionOptionError => e
+      raise HttpErrors::BadRequest, e.message
+    end
+
+    api :POST, "/repositories/:id/verify_checksum", N_("Verify checksum of repository contents")
+    param :id, :number, :required => true, :desc => N_("repository ID")
+    def verify_checksum
+      task = async_task(::Actions::Katello::Repository::VerifyChecksum, @repository)
       respond_for_async :resource => task
     rescue Errors::InvalidActionOptionError => e
       raise HttpErrors::BadRequest, e.message

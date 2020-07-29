@@ -50,6 +50,21 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :PUT, "/products/bulk/verify_checksum", N_("Verify checksum for one or more products")
+    param :ids, Array, :desc => N_("List of product ids"), :required => true
+    def verify_checksum_products
+      repairable_products = @products.syncable
+      repairable_roots = RootRepository.where(:product_id => repairable_products).
+        where(:content_type => ::Katello::Repository::YUM_TYPE).has_url.select { |r| r.library_instance }.uniq
+
+      repairable_repositories = Katello::Repository.where(:root_id => repairable_roots)
+      task = async_task(::Actions::BulkAction,
+                        ::Actions::Katello::Repository::VerifyChecksum,
+                        repairable_repositories)
+
+      respond_for_async :resource => task
+    end
+
     api :PUT, "/products/bulk/http_proxy", N_("Update the HTTP proxy configuration on the repositories of one or more products.")
     param :ids, Array, :desc => N_("List of product ids"), :required => true
     param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policy for HTTP proxy for content sync")
