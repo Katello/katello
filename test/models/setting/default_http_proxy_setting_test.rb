@@ -24,7 +24,7 @@ module Katello
     def test_collection_includes_defined_proxy
       proxy = FactoryBot.create(:http_proxy)
       children = Setting.find_by(name: @name).select_collection.last[:children]
-      assert_includes children.first.keys, proxy.name
+      assert_equal children.first[:value], proxy.name
     end
 
     def test_changing_proxy_name_updates_setting
