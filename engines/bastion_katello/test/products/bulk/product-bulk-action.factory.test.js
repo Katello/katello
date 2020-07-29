@@ -30,6 +30,11 @@ describe('Factory: ProductBulkAction', function() {
         ProductBulkAction.syncProducts(productParams);
     });
 
+    it('provides a way to verify checksum of products', function() {
+        $httpBackend.expect('PUT', 'katello/api/v2/products/bulk/verify_checksum', productParams).respond();
+        ProductBulkAction.verifyChecksumProducts(productParams);
+    });
+
     it('provides a way to update product sync plans', function() {
         $httpBackend.expect('PUT', 'katello/api/v2/products/bulk/sync_plan', productParams).respond();
         ProductBulkAction.updateProductSyncPlan(productParams);

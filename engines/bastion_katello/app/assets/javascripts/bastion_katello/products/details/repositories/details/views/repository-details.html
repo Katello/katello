@@ -32,6 +32,12 @@
           </a>
         </li>
 
+        <li role="menuitem" ng-hide="hideSyncButton(repository, true)" ng-class="{disabled: disableSyncLink()}">
+          <a ng-click="verifyChecksum(repository)" disable-link="disableSyncLink()" translate>
+            Verify Content Checksum
+          </a>
+        </li>
+
         <li role="menuitem" ng-hide="syncInProgress(repository.last_sync) || denied('edit_products', product)">
           <a ng-click="republishRepository(repository)" translate>
             Republish Repository Metadata

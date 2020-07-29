@@ -398,6 +398,7 @@ Katello::Engine.routes.draw do
             put :remove_docker_manifests, :action => :remove_content
             put :remove_content
             post :sync
+            post :verify_checksum
             post :export
             post :upload_content
             put :import_uploads
@@ -427,6 +428,7 @@ Katello::Engine.routes.draw do
           collection do
             match '/bulk/destroy' => 'products_bulk_actions#destroy_products', :via => :put
             match '/bulk/sync' => 'products_bulk_actions#sync_products', :via => :put
+            match '/bulk/verify_checksum' => 'products_bulk_actions#verify_checksum_products', :via => :put
             match '/bulk/sync_plan' => 'products_bulk_actions#update_sync_plans', :via => :put
             match '/bulk/http_proxy' => 'products_bulk_actions#update_http_proxy', :via => :put
           end
