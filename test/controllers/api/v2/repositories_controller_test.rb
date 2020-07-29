@@ -815,6 +815,24 @@ module Katello
       end
     end
 
+    def test_verify_checksum
+      assert_async_task ::Actions::Katello::Repository::VerifyChecksum do |repo|
+        repo.id == @repository.id
+      end
+
+      post :verify_checksum, params: { :id => @repository.id }
+      assert_response :success
+    end
+
+    def test_verify_checksum_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@create_permission, @read_permission, @destroy_permission, @sync_permission]
+
+      assert_protected_action(:verify_checksum, allowed_perms, denied_perms) do
+        post :verify_checksum, params: { :id => @repository.id }
+      end
+    end
+
     def test_upload_content
       test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
       puppet_module = Rack::Test::UploadedFile.new(test_document, '')

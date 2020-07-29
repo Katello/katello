@@ -143,6 +143,11 @@ module Katello
           api.repositories_api.modify(repo_href, data)
         end
 
+        def repair(repository_version_href)
+          data = PulpRpmClient::RepositoryVersion.new
+          api.repository_versions_api.repair(repository_version_href, data)
+        end
+
         def remove_all_content
           data = PulpRpmClient::RepositoryAddRemoveContent.new(
             remove_content_units: ['*'])

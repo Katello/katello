@@ -41,6 +41,10 @@ describe('Controller: ProductsController', function() {
             syncProducts: function () {
                 var deferred = $q.defer();
                 return {$promise: deferred.promise};
+            },
+            verifyChecksumProducts: function () {
+                var deferred = $q.defer();
+                return {$promise: deferred.promise};
             }
         };
 
@@ -120,6 +124,14 @@ describe('Controller: ProductsController', function() {
         $scope.syncProducts();
 
         expect(ProductBulkAction.syncProducts).toHaveBeenCalledWith({ids: [1, 2, 3], 'organization_id': 'foo'},
+            jasmine.any(Function), jasmine.any(Function));
+    });
+
+    it("can verify checksum of products", function () {
+        spyOn(ProductBulkAction, 'verifyChecksumProducts').and.callThrough();
+        $scope.verifyChecksumProducts();
+
+        expect(ProductBulkAction.verifyChecksumProducts).toHaveBeenCalledWith({ids: [1, 2, 3], 'organization_id': 'foo'},
             jasmine.any(Function), jasmine.any(Function));
     });
 

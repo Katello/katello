@@ -101,6 +101,21 @@ angular.module('Bastion.products').controller('ProductsController',
             ProductBulkAction.syncProducts(getBulkParams(), success, bulkError);
         };
 
+        $scope.verifyChecksumProducts = function () {
+            var success;
+
+            success = function (task) {
+                var message = translate("Product verify checksum has been initiated in the background.");
+                Notification.setSuccessMessage(message, {
+                    link: {
+                        children: translate("Click to monitor task progress."),
+                        href: translate("/foreman_tasks/tasks/%taskId").replace('%taskId', task.id)
+                    }});
+            };
+
+            ProductBulkAction.verifyChecksumProducts(getBulkParams(), success, bulkError);
+        };
+
         $scope.goToDiscoveries = function () {
             nutupane.table.rows = [];
             nutupane.table.resource.results = [];
