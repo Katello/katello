@@ -17,6 +17,7 @@ angular.module('Bastion.repositories').factory('Repository',
             {
                 update: { method: 'PUT' },
                 sync: { method: 'POST', params: { action: 'sync' } },
+                verifyChecksum: { method: 'POST', params: { action: 'verify_checksum' }},
                 removePackages: { method: 'PUT', params: { action: 'remove_packages'}},
                 removeContent: { method: 'PUT', params: { action: 'remove_content'}},
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},

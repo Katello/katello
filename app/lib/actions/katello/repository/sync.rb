@@ -39,33 +39,37 @@ module Actions
           pulp_sync_options[:remove_missing] = false if incremental
 
           sequence do
-            plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents && repo.yum?
-            sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :repo_id => repo.id, :source_url => source_url, :options => pulp_sync_options}
-            sync_action = plan_pulp_action([Actions::Pulp::Orchestration::Repository::Sync,
-                                            Actions::Pulp3::Orchestration::Repository::Sync],
-                                           repo,
-                                           SmartProxy.pulp_master,
-                                           sync_args)
-            output = sync_action.output
+            if SmartProxy.pulp_master.pulp3_support?(repo) && validate_contents
+              plan_action(Katello::Repository::VerifyChecksum, repo)
+            else
+              plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents && repo.yum?
+              sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :repo_id => repo.id, :source_url => source_url, :options => pulp_sync_options}
+              sync_action = plan_pulp_action([Actions::Pulp::Orchestration::Repository::Sync,
+                                              Actions::Pulp3::Orchestration::Repository::Sync],
+                                             repo,
+                                             SmartProxy.pulp_master,
+                                             sync_args)
+              output = sync_action.output
 
-            contents_changed = skip_metadata_check || output[:contents_changed]
+              contents_changed = skip_metadata_check || output[:contents_changed]
 
-            plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)
-            plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
-            plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
-            plan_action(Katello::Repository::CorrectChecksum, repo)
-            concurrence do
-              plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents && repo.yum?
-              plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check && repo.yum?
-              plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
-              if generate_applicability
-                regenerate_applicability(repo, contents_changed)
+              plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)
+              plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
+              plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
+              plan_action(Katello::Repository::CorrectChecksum, repo)
+              concurrence do
+                plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents && repo.yum?
+                plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check && repo.yum?
+                plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
+                if generate_applicability
+                  regenerate_applicability(repo, contents_changed)
+                end
               end
+              plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
+                        :contents_changed => contents_changed)
+              plan_action(Katello::Repository::ImportApplicability, :repo_id => repo.id, :contents_changed => contents_changed) if generate_applicability
+              plan_action(Katello::Repository::SyncHook, :id => repo.id)
             end
-            plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
-                      :contents_changed => contents_changed)
-            plan_action(Katello::Repository::ImportApplicability, :repo_id => repo.id, :contents_changed => contents_changed) if generate_applicability
-            plan_action(Katello::Repository::SyncHook, :id => repo.id)
           end
         end
 
@@ -91,6 +95,7 @@ module Actions
         def presenter
           found = all_planned_actions(Pulp::Repository::Sync)
           found = all_planned_actions(Pulp3::Repository::Sync) if found.empty?
+          found = all_planned_actions(Pulp3::Repository::Repair) if found.empty?
           Helpers::Presenter::Delegated.new(self, found)
         end
 
