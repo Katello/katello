@@ -587,7 +587,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success_file }
 
         specify do
-          assert_equal action.humanized_output, "Total tasks: : 5/5\n"\
+          assert_equal action.humanized_output, "Total steps: 5/5\n"\
                                              "--------------------------------\n"\
                                              "Associating Content: 1/1\n"\
                                              "Downloading Artifacts: 0/0\n"\
@@ -604,7 +604,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success_ansible_collection }
 
         specify do
-          assert_equal action.humanized_output, "Total tasks: : 2/2\n"\
+          assert_equal action.humanized_output, "Total steps: 2/2\n"\
                                              "--------------------------------\n"\
                                              "Downloading Collections: 1/1\n"\
                                              "Importing Collections: 1/1"
@@ -619,7 +619,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success_docker }
 
         specify do
-          assert_equal action.humanized_output, "Total tasks: : 1192/1192\n"\
+          assert_equal action.humanized_output, "Total steps: 1192/1192\n"\
                                              "--------------------------------\n"\
                                              "Associating Content: 641/641\n"\
                                              "Downloading Artifacts: 415/415\n"\
@@ -636,7 +636,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :progress_units_file }
 
         specify do
-          assert_equal action.humanized_output, "Total tasks: : 15/30\n"\
+          assert_equal action.humanized_output, "Total steps: 15/30\n"\
                                              "--------------------------------\n"\
                                              "Associating Content: 5/10\n"\
                                              "Downloading Artifacts: 5/10\n"\
@@ -652,7 +652,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :progress_units_ansible_collection }
 
         specify do
-          assert_equal action.humanized_output, "Total tasks: : 1/2\n"\
+          assert_equal action.humanized_output, "Total steps: 1/2\n"\
                                              "--------------------------------\n"\
                                              "Downloading Collections: 1/2"
         end

@@ -19,6 +19,8 @@ module Katello
     def sync_progress
       return {:state => nil} unless @repo
       return empty_task(@repo) unless @task
+      display_output = @task.humanized[:output]
+      display_output = display_output.split("\n")[0] if (display_output && @repo.version_href)
       {
         :id => @repo.id,
         :product_id => @repo.product.id,
@@ -29,8 +31,8 @@ module Katello
         :start_time => format_date(@task.started_at),
         :finish_time => format_date(@task.ended_at),
         :duration => format_duration(@task.ended_at, @task.started_at),
-        :display_size => @task.humanized[:output],
-        :size => @task.humanized[:output],
+        :display_size => display_output,
+        :size => display_output,
         :is_running => @task.pending && @task.state != 'paused',
         :error_details => @task.errors
       }
