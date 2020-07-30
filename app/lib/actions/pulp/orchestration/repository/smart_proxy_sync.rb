@@ -15,6 +15,7 @@ module Actions
               end
               pulp_options = { remove_missing: repository && ["deb", "puppet", "yum"].include?(repository.content_type) }
               pulp_options[:force_full] = true if skip_metadata_check && repository.content_type == "yum"
+              pulp_options[:repair_sync] = true if skip_metadata_check && repository.content_type == "deb"
 
               plan_action(Pulp::Consumer::SyncCapsule,
                                repository, smart_proxy, pulp_options)
