@@ -119,7 +119,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             $scope.saveSubscriptionFacet($scope.host);
         };
 
-        $scope.contentViews = function () {
+        $scope.availableContentViews = function () {
             var deferred = $q.defer();
 
             ContentView.queryUnpaged({ 'environment_id': $scope.host.content_facet_attributes.lifecycle_environment.id}, function (response) {

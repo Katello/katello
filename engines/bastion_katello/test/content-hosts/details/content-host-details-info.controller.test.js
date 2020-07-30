@@ -110,7 +110,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
     });
 
     it('provides a method to retrieve available content views for a content host', function() {
-        var promise = $scope.contentViews();
+        var promise = $scope.availableContentViews();
 
         promise.then(function(contentViews) {
             expect(contentViews).toEqual(mockContentViews);
