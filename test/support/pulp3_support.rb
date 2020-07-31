@@ -39,8 +39,17 @@ module Katello
       tasks = tasks.as_json
       tasks = [tasks] unless tasks.is_a?(Array)
       tasks.each do |task|
-        task = tasks_api(smart_proxy).read(task['pulp_href'] || task['task']).as_json.with_indifferent_access
-        if task[:finished_at] || Actions::Pulp3::AbstractAsyncTask::FINISHED_STATES.include?(task[:state])
+        pulp_task = Katello::Pulp3::Task.new(smart_proxy, 'task' => task['pulp_href'] || task['task'])
+        task_group_href = pulp_task.task_group_href
+
+        if task_group_href
+          task_group = Katello::Pulp3::TaskGroup.new_from_href(smart_proxy, task_group_href)
+          is_done = pulp_task.done? && task_group.done?
+        else
+          is_done = pulp_task.done?
+        end
+
+        if is_done
           return task
         else
           sleep(0.1)

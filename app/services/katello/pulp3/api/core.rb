@@ -74,6 +74,10 @@ module Katello
           PulpcoreClient::TasksApi.new(core_api_client)
         end
 
+        def task_groups_api
+          PulpcoreClient::TaskGroupsApi.new(core_api_client)
+        end
+
         def upload_class
           PulpcoreClient::Upload
         end

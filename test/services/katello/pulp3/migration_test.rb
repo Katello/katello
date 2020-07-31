@@ -32,6 +32,7 @@ module Katello
 
         def teardown
           [@repo, @cv_archive_repo, @cv_env_repo].each { |repo| RepositorySupport.destroy_repo(repo) }
+        ensure
           SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
         end
 
