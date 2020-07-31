@@ -576,7 +576,7 @@ module ::Actions::Katello::Repository
 
     describe 'pulp3 progress' do
       let(:pulp3_action_class) { ::Actions::Pulp3::Repository::Sync }
-      let(:pulp3_action) { fixture_action(pulp3_action_class, input: {repo_id: repository.id}, output: fixture_variant) }
+      let(:pulp3_action) { fixture_action(pulp3_action_class, input: {repo_id: repository.id, smart_proxy_id: SmartProxy.first.id}, output: fixture_variant) }
       let :action do
         create_action(action_class).tap do |action|
           action.stubs(all_planned_actions: [pulp3_action])

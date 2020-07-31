@@ -12,6 +12,10 @@ module Actions
         migration_service = ::Katello::Pulp3::Migration.new(smart_proxy)
         migration_service.create_and_run_migrations
       end
+
+      def rescue_strategy
+        Dynflow::Action::Rescue::Skip
+      end
     end
   end
 end

@@ -56,7 +56,7 @@ end
 def ignore_pending_tasks(request, response)
   return false unless request.uri.include?('/tasks/')
   body = JSON.parse(response.body) rescue nil
-  finish_states = Actions::Pulp::AbstractAsyncTask::FINISHED_STATES + Actions::Pulp3::AbstractAsyncTask::FINISHED_STATES
+  finish_states = Actions::Pulp::AbstractAsyncTask::FINISHED_STATES + Katello::Pulp3::Task::FINISHED_STATES
   body.is_a?(Hash) && body['state'].present? && !finish_states.include?(body['state'])
 end
 
