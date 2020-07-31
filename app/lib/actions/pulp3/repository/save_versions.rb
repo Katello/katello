@@ -20,6 +20,7 @@ module Actions
           output[:contents_changed] = false
           output[:updated_repositories] = []
           repositories.each do |repo|
+            repo_backend_service = repo.backend_service(SmartProxy.pulp_master)
             if repo.version_href
               # Chop off the version number to compare base repo strings
               unversioned_href = repo.version_href[0..-2].rpartition('/').first
@@ -34,19 +35,19 @@ module Actions
                 new_version_hrefs.each do |href|
                   version_map[href] = href.split("/")[-1].to_i
                 end
-                # Find latest version_href by it's version number
+                # Find latest version_href by its version number
                 new_version_href = version_map.sort_by{ |href, version| version }.last.first
               else
                 new_version_href = new_version_hrefs.first
               end
 
               # Successive incremental updates won't generate a new repo version, so fetch the latest Pulp 3 repo version
-              new_version_href ||= ::Katello::Pulp3::Api::Yum.new(SmartProxy.pulp_master!).
-                repositories_api.read(repo.backend_service(SmartProxy.pulp_master).
+              new_version_href ||= repo_backend_service.api.
+                repositories_api.read(repo_backend_service.
                 repository_reference.repository_href).latest_version_href
             else
-              new_version_href = ::Katello::Pulp3::Api::Yum.new(SmartProxy.pulp_master!).
-                repositories_api.read(repo.backend_service(SmartProxy.pulp_master).
+              new_version_href = repo_backend_service.api.
+                repositories_api.read(repo_backend_service.
                 repository_reference.repository_href).latest_version_href
             end
 

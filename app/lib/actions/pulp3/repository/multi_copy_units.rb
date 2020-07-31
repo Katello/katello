@@ -38,10 +38,15 @@ module Actions
           if input[:unit_map][:rpms].any?
             unit_hrefs << ::Katello::Rpm.where(:id => input[:unit_map][:rpms]).map(&:pulp_id)
           end
+          unit_hrefs.flatten!
+
+          repo_map.each do |source_repos, dest_repo_map|
+            dest_repo_map[:content_unit_hrefs] = unit_hrefs
+          end
 
           target_repo = ::Katello::Repository.find(repo_map.values.first[:dest_repo])
           unless unit_hrefs.flatten.empty?
-            output[:pulp_tasks] = target_repo.backend_service(SmartProxy.pulp_master).multi_copy_units(repo_map, unit_hrefs.flatten, input[:dependency_solving])
+            output[:pulp_tasks] = target_repo.backend_service(SmartProxy.pulp_master).multi_copy_units(repo_map, input[:dependency_solving])
           end
         end
       end

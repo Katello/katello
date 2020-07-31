@@ -3,6 +3,7 @@ module Actions
   module Katello
     module ContentView
       class Publish < Actions::EntryAction
+        include ::Katello::ContentViewHelper
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
@@ -32,7 +33,7 @@ module Actions
                                                           :triggered_by => options[:triggered_by]
                                                          )
           source_repositories = []
-          content_view.publish_repositories do |repositories|
+          content_view.publish_repositories(options[:override_cvvs]) do |repositories|
             source_repositories += [repositories]
           end
 
@@ -41,7 +42,7 @@ module Actions
             repository_mapping = plan_action(ContentViewVersion::CreateRepos, version, source_repositories).repository_mapping
 
             # Split Pulp 3 Yum repos out of the repository_mapping.  Only Pulp 3 RPM plugin has multi repo copy support.
-            separated_repo_map = separated_repo_mapping(repository_mapping, content_view)
+            separated_repo_map = separated_repo_mapping(repository_mapping)
 
             if separated_repo_map[:pulp3_yum].keys.flatten.present? &&
                 SmartProxy.pulp_master.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
@@ -76,18 +77,6 @@ module Actions
                       content_view_version_id: version.id,
                       environment_id: library.id, user_id: ::User.current.id)
           end
-        end
-
-        def separated_repo_mapping(repo_mapping, content_view)
-          separated_mapping = { :pulp3_yum => {}, :other => {} }
-          repo_mapping.each do |source_repos, dest_repo|
-            if dest_repo.content_type == "yum" && SmartProxy.pulp_master.pulp3_support?(dest_repo)
-              separated_mapping[:pulp3_yum][source_repos] = dest_repo
-            else
-              separated_mapping[:other][source_repos] = dest_repo
-            end
-          end
-          separated_mapping
         end
 
         def humanized_name

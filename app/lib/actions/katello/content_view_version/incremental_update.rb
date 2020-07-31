@@ -2,6 +2,7 @@ module Actions
   module Katello
     module ContentViewVersion
       class IncrementalUpdate < Actions::EntryAction
+        include ::Katello::ContentViewHelper
         attr_accessor :new_content_view_version
 
         HUMANIZED_TYPES = {
@@ -32,7 +33,8 @@ module Actions
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
           if SmartProxy.pulp_master.pulp3_support?(old_version.repositories.first) && is_composite
             publish_output = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
-                                         :major => old_version.major, :minor => new_minor).output
+                                         :major => old_version.major, :minor => new_minor,
+                                         :override_cvvs => new_components).output
             return
           end
 
@@ -94,18 +96,6 @@ module Actions
                       :old_version => old_version.id)
             promote(new_content_view_version, environments)
           end
-        end
-
-        def separated_repo_mapping(repo_mapping)
-          separated_mapping = { :pulp3_yum => {}, :other => {} }
-          repo_mapping.each do |source_repos, dest_repo|
-            if dest_repo.content_type == "yum" && SmartProxy.pulp_master.pulp3_support?(dest_repo)
-              separated_mapping[:pulp3_yum][source_repos] = dest_repo
-            else
-              separated_mapping[:other][source_repos] = dest_repo
-            end
-          end
-          separated_mapping
         end
 
         def pulp3_content_mapping(content)

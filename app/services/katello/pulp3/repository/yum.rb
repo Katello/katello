@@ -74,17 +74,17 @@ module Katello
           "/pulp/repos/#{repo.relative_path}/".sub('//', '/')
         end
 
-        def multi_copy_units(repo_id_map, content_unit_hrefs, dependency_solving)
+        def multi_copy_units(repo_id_map, dependency_solving)
           tasks = []
 
-          content_unit_hrefs.sort!
-          if content_unit_hrefs.any?
+          if repo_id_map.values.pluck(:content_unit_hrefs).flatten.any?
             data = PulpRpmClient::Copy.new
             data.dependency_solving = dependency_solving
             data.config = []
             repo_id_map.each do |source_repo_ids, dest_repo_id_map|
               dest_repo = ::Katello::Repository.find(dest_repo_id_map[:dest_repo])
               dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
+              content_unit_hrefs = dest_repo_id_map[:content_unit_hrefs]
               # Not needed during incremental update due to dest_base_version
               unless dest_repo_id_map[:base_version]
                 tasks << remove_all_content_from_repo(dest_repo_href)
@@ -174,53 +174,57 @@ module Katello
         end
 
         def copy_content_from_mapping(repo_id_map, options = {})
-          filters = [ContentViewErratumFilter, ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
-            filter_class.where(:id => options[:filter_ids])
-          end
+          repo_id_map.each do |source_repos, dest_repo_map|
+            filters = [ContentViewErratumFilter, ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
+              filter_class.where(:id => dest_repo_map[:filter_ids])
+            end
 
-          filters.flatten!.compact!
+            filters.flatten!.compact!
 
-          whitelist_ids = []
-          blacklist_ids = []
-          filters.each do |filter|
-            repo_id_map.each do |source_repo_ids, dest_repo|
-              if filter.inclusion
-                source_repo_ids.each do |repo_id|
-                  whitelist_ids += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+            whitelist_ids = []
+            blacklist_ids = []
+            filters.each do |filter|
+              repo_id_map.each do |source_repo_ids, dest_repo|
+                if filter.inclusion
+                  source_repo_ids.each do |repo_id|
+                    whitelist_ids += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+                  end
+                else
+                  source_repo_ids.each do |repo_id|
+                    blacklist_ids += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+                  end
                 end
-              else
-                source_repo_ids.each do |repo_id|
-                  blacklist_ids += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+              end
+            end
+
+            # TODO: This part could probably be improved.  Will probably change when module support is in.
+            if whitelist_ids.empty? && filters.select { |filter| filter.inclusion }.empty?
+              whitelist_ids = repo_id_map.keys.collect do |source_repo_ids|
+                source_repo_ids.collect do |source_repo_id|
+                  source_repo = ::Katello::Repository.find(source_repo_id)
+                  source_repo.rpms.pluck(:pulp_id).sort
+                end
+              end
+              whitelist_ids.flatten!.uniq!
+            end
+
+            content_unit_hrefs = whitelist_ids - blacklist_ids
+
+            if content_unit_hrefs.any?
+              repo_id_map.each do |source_repo_ids, dest_repo|
+                source_repo_ids.each do |source_repo_id|
+                  content_unit_hrefs += additional_content_hrefs(::Katello::Repository.find(source_repo_id), content_unit_hrefs)
+                  content_unit_hrefs += ::Katello::Repository.find(source_repo_id).srpms.pluck(:pulp_id)
                 end
               end
             end
-          end
 
-          # TODO: This part could probably be improved.  Will probably change when module support is in.
-          if whitelist_ids.empty? && filters.select { |filter| filter.inclusion }.empty?
-            whitelist_ids = repo_id_map.keys.collect do |source_repo_ids|
-              source_repo_ids.collect do |source_repo_id|
-                source_repo = ::Katello::Repository.find(source_repo_id)
-                source_repo.rpms.pluck(:pulp_id).sort
-              end
-            end
-            whitelist_ids.flatten!.uniq!
-          end
-
-          content_unit_hrefs = whitelist_ids - blacklist_ids
-
-          if content_unit_hrefs.any?
-            repo_id_map.each do |source_repo_ids, dest_repo|
-              source_repo_ids.each do |source_repo_id|
-                content_unit_hrefs += additional_content_hrefs(::Katello::Repository.find(source_repo_id), content_unit_hrefs)
-                content_unit_hrefs += ::Katello::Repository.find(source_repo_id).srpms.pluck(:pulp_id)
-              end
-            end
+            dest_repo_map[:content_unit_hrefs] = content_unit_hrefs.sort
           end
 
           dependency_solving = options[:solve_dependencies] || false
 
-          multi_copy_units(repo_id_map, content_unit_hrefs.uniq, dependency_solving)
+          multi_copy_units(repo_id_map, dependency_solving)
         end
 
         def copy_content_for_source(source_repository, options = {})
