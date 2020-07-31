@@ -30,11 +30,18 @@ module Actions
           validate_environments(environments, old_version)
 
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
+          if SmartProxy.pulp_master.pulp3_support?(old_version.repositories.first) && is_composite
+            publish_output = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
+                                         :major => old_version.major, :minor => new_minor).output
+            return
+          end
+
           self.new_content_view_version = old_version.content_view.create_new_version(old_version.major, new_minor, all_components)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => new_content_view_version, :user => ::User.current.login,
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task,
                                                           :notes => description)
+
 
           copy_action_outputs = []
           repos_to_clone = repos_to_copy(old_version, new_components)
@@ -123,13 +130,11 @@ module Actions
             next if old_version_repo.version_href == old_version_repo.library_instance.version_href
 
             source_library_repo = source_repos.first.library_instance? ? source_repos.first : source_repos.first.library_instance
-            #source_repos << source_library_repo
-            # TODO: What repos need to be in here to make composites work?
+
             source_repos = [source_library_repo]
             if old_version_repo.version_href
               base_version = old_version_repo.version_href.split("/")[-1].to_i
             else
-              # TODO: Is this okay?
               base_version = 0
             end
 
