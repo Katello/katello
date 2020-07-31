@@ -26,8 +26,10 @@ module Katello
       end
 
       def update_model(model)
-        keys = %w(title id severity issued type description reboot_suggested solution updated summary)
+        keys = %w(title id severity issued_date type description reboot_suggested solution updated_date summary)
         custom_json = backend_data.slice(*keys)
+        custom_json["issued"] = custom_json.delete("issued_date")
+        custom_json["updated"] = custom_json.delete("updated_date")
 
         # handle SUSE epoch dates
         custom_json["issued"] = convert_date_if_epoch(custom_json["issued"])
