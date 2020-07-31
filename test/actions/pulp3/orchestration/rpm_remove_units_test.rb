@@ -7,7 +7,7 @@ module ::Actions::Pulp3
     def setup
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_dev)
-      @repo.root.update(url: 'https://repos.fedorapeople.org/pulp/pulp/fixtures/rpm-unsigned/')
+      @repo.root.update(url: 'https://fixtures.pulpproject.org/rpm-unsigned/')
       @repo.content_view.update(default: true)
 
       create_and_sync_repo(@repo, @master)
