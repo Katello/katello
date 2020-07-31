@@ -31,6 +31,10 @@ module Katello
           }
         end
 
+        def sync_params
+          {remote: repo.remote_href, mirror: repo.root.mirror_on_sync, optimize: false}
+        end
+
         def mirror_remote_options
           policy = smart_proxy.download_policy
 
