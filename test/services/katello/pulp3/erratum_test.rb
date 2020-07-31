@@ -75,6 +75,9 @@ module Katello
           refute_empty erratum.cves
           refute_empty erratum.cves.first.cve_id
           refute_empty erratum.cves.first.href
+
+          assert_equal '2010-11-10', erratum.issued.to_s
+          assert_equal '2010-11-10', erratum.updated.to_s
         end
 
         def test_dup_errata
