@@ -53,38 +53,6 @@ module Katello
     end
   end
 
-  class Util::PulpcoreContentPackageEnvironmentFilterTest < ActiveSupport::TestCase
-    include RepositorySupport
-    include Util::PulpcoreContentFilters
-
-    def setup
-      @packagegroup1_href = "/href1"
-      @packagegroup2_href = "/href2"
-      @packagegroup3_href = "/href3"
-
-      @packageenv1 = PulpRpmClient::RpmPackageEnvironment.new(:pulp_href => "/env/href1",
-                                                          :packagegroups => [@packagegroup1_href])
-      @packageenv2 = PulpRpmClient::RpmPackageEnvironment.new(:pulp_href => "/env/href2",
-                                                          :packagegroups => [@packagegroup2_href])
-    end
-
-    def test_filter_by_pulp_id_returns_empty_list_with_empty_package_group_list
-      assert_equal [], filter_package_environments_by_pulp_hrefs([@packageenv1, @packageenv2], [])
-    end
-
-    def test_filter_by_pulp_id_returns_nothing_with_empty_list_of_package_environments
-      assert_equal [], filter_package_environments_by_pulp_hrefs([], [@packagegroup1_href])
-    end
-
-    def test_filter_by_pulp_id_returns_every_metadata_pulp_href_with_a_matching_package_group
-      assert_equal [@packageenv1.pulp_href], filter_package_environments_by_pulp_hrefs([@packageenv1, @packageenv2], [@packagegroup1_href])
-    end
-
-    def test_filter_by_pulp_id_returns_nothing_if_no_package_group_matches
-      assert_equal [], filter_package_environments_by_pulp_hrefs([@packageenv1, @packageenv2], [@packagegroup3_href])
-    end
-  end
-
   class Util::PulpcoreContentPackageGroupFilterTest < ActiveSupport::TestCase
     include RepositorySupport
     include Util::PulpcoreContentFilters

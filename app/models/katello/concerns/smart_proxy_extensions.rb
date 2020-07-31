@@ -255,6 +255,14 @@ module Katello
         pulp3_content_support?(content_type) ? content_type.pulp3_service_class : content_type.pulp2_service_class
       end
 
+      def pulp3_copy_rpm_package_env?
+        version_needed, version = '3.5.1', nil
+        json = ::Katello::Ping.pulp3_without_auth(self.pulp3_url)
+        pulp_rpm_version = json["versions"].select { |v| v["component"] == "pulp_rpm" }
+        version = pulp_rpm_version.first["version"] unless pulp_rpm_version.empty?
+        version ? (Gem::Version.create(version_needed) <= Gem::Version.create(version)) : false
+      end
+
       def set_default_download_policy
         self.download_policy ||= ::Setting[:default_proxy_download_policy] || ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
       end

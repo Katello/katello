@@ -70,12 +70,9 @@ module Katello
           "/pulp/repos/#{repo.relative_path}/".sub('//', '/')
         end
 
-        def copy_units(source_repository, content_unit_hrefs, dependency_solving, dest_base_version = 0,
-                       additional_repo_map = {})
+        def copy_units(source_repository, content_unit_hrefs, dependency_solving, dest_base_version = 0, additional_repo_map = {})
           tasks = []
-
-          content_unit_hrefs.sort!
-          if content_unit_hrefs.any?
+          if content_unit_hrefs.sort!.any?
             data = PulpRpmClient::Copy.new
             data.config = [{
               source_repo_version: source_repository.version_href,
@@ -93,7 +90,6 @@ module Katello
               # }
               additional_repo_map.each do |source_repo, dest_repo_map|
                 source_repo_version = ::Katello::Repository.find(source_repo).version_href
-
                 dest_repo = ::Katello::Repository.find(dest_repo_map[:dest_repo])
                 dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
                 data.config << {
@@ -104,12 +100,30 @@ module Katello
                 }
               end
             end
+            data_package_env = copy_package_env(source_repository, dest_base_version)
             tasks << api.copy_api.copy_content(data)
+            tasks << api.copy_api.copy_content(data_package_env) if (smart_proxy.pulp3_copy_rpm_package_env? && data_package_env)
           else
             tasks << remove_all_content
           end
-
           tasks
+        end
+
+        def copy_package_env(source_repository, dest_base_version)
+          options = { :repository_version => source_repository.version_href }
+          package_env_hrefs = packageenvironments(options).results.map(&:pulp_href)
+          data_package_env = nil
+          unless package_env_hrefs.empty?
+            data_package_env = PulpRpmClient::Copy.new
+            data_package_env.config = [{
+              source_repo_version: source_repository.version_href,
+              dest_repo: repository_reference.repository_href,
+              dest_base_version: dest_base_version,
+              content: package_env_hrefs
+            }]
+            data_package_env.dependency_solving = false
+          end
+          data_package_env
         end
 
         def remove_all_content
@@ -171,10 +185,6 @@ module Katello
 
           package_groups_to_include = filter_package_groups_by_pulp_href(source_repository.package_groups, content_unit_hrefs)
           content_unit_hrefs += package_groups_to_include.pluck(:pulp_id)
-
-          package_environment_hrefs_to_include = filter_package_environments_by_pulp_hrefs(
-            repo_service.packageenvironments(options).results, package_groups_to_include.pluck(:pulp_id))
-          content_unit_hrefs += package_environment_hrefs_to_include
 
           metadata_file_hrefs_to_include = filter_metadatafiles_by_pulp_hrefs(
             repo_service.metadatafiles(options).results, content_unit_hrefs)
