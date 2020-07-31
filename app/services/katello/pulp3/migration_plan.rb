@@ -19,8 +19,8 @@ module Katello
       def generate_plugins
         @repository_types.map do |repository_type|
           {
-              type: pulp2_repository_type(repository_type),
-              repositories: repository_migrations(repository_type)
+            type: pulp2_repository_type(repository_type),
+            repositories: repository_migrations(repository_type)
           }
         end
       end
