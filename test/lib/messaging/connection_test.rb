@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require_relative '../../../app/lib/katello/messaging/connection'
 
 module Katello
   module Messaging
