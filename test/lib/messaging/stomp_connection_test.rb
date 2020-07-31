@@ -1,5 +1,6 @@
 require 'katello_test_helper'
 require 'stomp'
+require_relative '../../../app/lib/katello/messaging/stomp_connection'
 
 module Katello
   module Messaging
