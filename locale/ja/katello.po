@@ -34,10 +34,16 @@ msgstr ""
 msgid " %{errata_count} Errata"
 msgstr ""
 
+msgid " %{modulemd_count} Module Stream(s)"
+msgstr ""
+
 msgid " %{package_count} Package(s)"
 msgstr ""
 
 msgid " %{puppet_module_count} Puppet Module(s)"
+msgstr ""
+
+msgid " Content view updated."
 msgstr ""
 
 msgid " Either select the latest content view or the content view version. Cannot set both."
@@ -292,11 +298,11 @@ msgstr ""
 msgid "A CV version already exists with the same major and minor version (%{major}.%{minor})"
 msgstr ""
 
-msgid "A Content View can be added by using the \"New content view\" button below."
-msgstr ""
-
 msgid "A backend service [ %s ] is unreachable"
 msgstr "バックエンドサービス [ %s ] には到達不能です"
+
+msgid "A content view can be added by using the \"New content view\" button below."
+msgstr ""
 
 msgid "A content_type must be provided."
 msgstr "content_type を指定する必要があります。"
@@ -552,11 +558,23 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
+msgid "Auto Enablement may only be set on custom repositories."
+msgstr ""
+
 msgid "Auto Publish - Triggered by '%s'"
 msgstr ""
 
 msgid "Auto attach subscriptions"
 msgstr "サブスクリプションの自動割り当て"
+
+msgid "Autopublish"
+msgstr ""
+
+msgid "Autosearch"
+msgstr ""
+
+msgid "Autosearch delay"
+msgstr ""
 
 msgid "Available Entitlements"
 msgstr ""
@@ -578,6 +596,9 @@ msgstr "無効にする Basearch"
 
 msgid "Basearch to enable"
 msgstr "有効にする Basearch"
+
+msgid "Batch size to sync repositories in."
+msgstr ""
 
 # translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author asasaki
 msgid "Beta"
@@ -809,6 +830,9 @@ msgstr ""
 msgid "Cannot validate contents on non-yum/deb repositories."
 msgstr ""
 
+msgid "Check if a connection can be made to Red Hat Subscription Management."
+msgstr ""
+
 msgid "Check services before actions"
 msgstr ""
 
@@ -928,6 +952,9 @@ msgstr ""
 msgid "Content View Dependency Solving Default"
 msgstr ""
 
+msgid "Content View Details"
+msgstr ""
+
 # translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author asasaki
 #, fuzzy
 msgid "Content View Filter id"
@@ -961,6 +988,9 @@ msgstr "コンテンツビュー"
 msgid "Content files to upload. Can be a single file or array of files."
 msgstr "アップロードするコンテンツファイルです。単一ファイルまたはファイルの配列を指定できます。"
 
+msgid "Content host must be unregistered before performing this action."
+msgstr ""
+
 msgid "Content source ID"
 msgstr ""
 
@@ -991,6 +1021,9 @@ msgstr "コンテンツビューの数値 ID"
 
 msgid "Content view version identifier"
 msgstr "コンテンツビューのバージョン ID"
+
+msgid "Content_Host_Status"
+msgstr ""
 
 msgid "Contents of requirement yaml file to sync from URL"
 msgstr ""
@@ -1496,7 +1529,13 @@ msgstr "無効"
 msgid "Disable Red Hat Insights."
 msgstr ""
 
+msgid "Disable Simple Content Access"
+msgstr ""
+
 msgid "Disable a repository from the set"
+msgstr ""
+
+msgid "Disable simple content access for a manifest"
 msgstr ""
 
 msgid "Disconnected mode"
@@ -1565,8 +1604,14 @@ msgstr ""
 msgid "Enable"
 msgstr "有効"
 
+msgid "Enable Simple Content Access"
+msgstr ""
+
 msgid "Enable a repository from the set"
 msgstr "セットのリポジトリーを有効化"
+
+msgid "Enable simple content access for a manifest"
+msgstr ""
 
 msgid "Enable/Disable auto publish of composite view"
 msgstr ""
@@ -1798,10 +1843,16 @@ msgstr "指定された複合バージョンのコンポーネントであるバ
 msgid "Filtered index content"
 msgstr ""
 
+msgid "Filters"
+msgstr ""
+
 msgid "Finish action timeout"
 msgstr ""
 
 msgid "Finished"
+msgstr ""
+
+msgid "For pages that support it, automatically perform search while typing in search input."
 msgstr ""
 
 msgid ""
@@ -1895,6 +1946,9 @@ msgstr ""
 msgid "Has to be > 0"
 msgstr ""
 
+msgid "History"
+msgstr ""
+
 msgid "Host"
 msgstr "ホスト"
 
@@ -1976,6 +2030,9 @@ msgstr ""
 
 msgid "Hosts with Installable Errata"
 msgstr "インストール可能なエラータのあるホスト"
+
+msgid "How many repositories should be synced concurrently on the capsule.  A smaller number may lead to longer sync times.  A larger number will increase dynflow load."
+msgstr ""
 
 msgid "How the logic of solving dependencies in a Content View is managed. Conservative will only add packages to solve the dependencies if the package needed doesn't exist. Greedy will pull in the latest package to solve a dependency even if it already does exist in the repository."
 msgstr ""
@@ -2115,6 +2172,9 @@ msgstr ""
 msgid "Identifiers for Lifecycle Environment"
 msgstr ""
 
+msgid "If Autosearch is enabled, delay in milliseconds before executing searches while typing."
+msgstr ""
+
 msgid "If hosts fail to register because of duplicate DMI UUIDs add their comma-separated values here. Subsequent registrations will generate a unique DMI UUID for the affected hosts."
 msgstr ""
 
@@ -2157,6 +2217,9 @@ msgstr ""
 msgid "Import Manifest"
 msgstr "マニフェストのインポート"
 
+msgid "Import New Manifest"
+msgstr ""
+
 msgid "Import Puppet classes"
 msgstr ""
 
@@ -2194,6 +2257,9 @@ msgid "Incremental Update of  Content View Version(s) "
 msgstr ""
 
 msgid "Incremental Update of %{content_view_count} Content View Version(s) "
+msgstr ""
+
+msgid "Incremental update requires at least one content unit"
 msgstr ""
 
 msgid "Incremental update specified for composite %{name} version %{version}, but no components updated."
@@ -2412,6 +2478,9 @@ msgstr ""
 msgid "Kickstart repository was not set for host '%{host}'"
 msgstr ""
 
+msgid "Label"
+msgstr ""
+
 msgid "Label of the content"
 msgstr "コンテンツのラベル"
 
@@ -2422,6 +2491,9 @@ msgid "Latest Errata"
 msgstr ""
 
 msgid "Learn more about adding Subscription Manifests"
+msgstr ""
+
+msgid "Learn more about your overall subscription usage (opens in a new tab)"
 msgstr ""
 
 msgid "Library lifecycle environments may not be deleted."
@@ -2732,6 +2804,9 @@ msgstr ""
 msgid "Manifest refreshed"
 msgstr ""
 
+msgid "Mark Content Host Statuses as Unknown for %s"
+msgstr ""
+
 msgid "Matched"
 msgstr ""
 
@@ -2845,9 +2920,6 @@ msgstr "新規パッケージ: %{count} (%{size})。"
 msgid "No"
 msgstr ""
 
-msgid "No Content Guard configured!"
-msgstr ""
-
 # translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author kmoriguc
 msgid "No Content View"
 msgstr "コンテンツビューがありません"
@@ -2912,6 +2984,9 @@ msgstr ""
 
 msgid "No manifest file uploaded"
 msgstr "マニフェストファイルがアップロードされていません"
+
+msgid "No matching content views found"
+msgstr ""
 
 msgid "No new packages installed"
 msgstr "インストール済みの新規パッケージはありません"
@@ -2991,6 +3066,9 @@ msgstr "非システムイベント"
 msgid "None"
 msgstr "なし"
 
+msgid "None provided"
+msgstr ""
+
 msgid "Not Specified"
 msgstr ""
 
@@ -3052,6 +3130,9 @@ msgid "One of yum or docker"
 msgstr ""
 
 msgid "One or more hosts not found"
+msgstr ""
+
+msgid "One or more ids (%{ids}) were not found for %{assoc}.  You may not have permissions to see them."
 msgstr ""
 
 msgid "One or more packages failed to sync properly."
@@ -3622,6 +3703,9 @@ msgstr "Red Hat プロバイダーの以前にインポートされたマニフ�
 msgid "Register a host with subscription and information"
 msgstr ""
 
+msgid "Register host '%s' before attaching subscriptions"
+msgstr ""
+
 msgid "Registry name pattern results in duplicate container image names for these repositories: %s."
 msgstr ""
 
@@ -4112,6 +4196,9 @@ msgstr "ソケット: %s"
 msgid "Solve RPM dependencies by default on Content View publish, defaults to false"
 msgstr ""
 
+msgid "Solve dependencies"
+msgstr ""
+
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
 msgstr ""
 
@@ -4164,6 +4251,9 @@ msgstr ""
 msgid "Subscription"
 msgstr "サブスクリプション"
 
+msgid "Subscription Allocation"
+msgstr ""
+
 msgid "Subscription Details"
 msgstr ""
 
@@ -4189,6 +4279,9 @@ msgid "Subscription Pool uuid"
 msgstr "サブスクリプションプール UUID"
 
 msgid "Subscription Status"
+msgstr ""
+
+msgid "Subscription Watch"
 msgstr ""
 
 msgid "Subscription expiration notification"
@@ -4377,6 +4470,9 @@ msgstr "タスクが取り消されました"
 msgid "Task detail"
 msgstr ""
 
+msgid "Tasks"
+msgstr ""
+
 msgid "Temporary"
 msgstr ""
 
@@ -4437,7 +4533,7 @@ msgstr ""
 msgid "The list of environments to promote the specified Content View Version to (replacing the older version)"
 msgstr ""
 
-msgid "The manifest imported within Organization %{subject} is no longer valid.  Attempted CDN access returned Forbidden.  Refreshing the manifest may resolve this issue."
+msgid "The manifest imported within Organization %{subject} is no longer valid. Please import a new manifest."
 msgstr ""
 
 msgid "The number of days remaining in a subscription before you will be reminded about renewing it."
@@ -4548,6 +4644,9 @@ msgstr ""
 msgid "This Host is not currently registered with subscription-manager."
 msgstr ""
 
+msgid "This Organization's subscription manifest has expired. Please import a new manifest."
+msgstr ""
+
 msgid "This action doesn't support package groups"
 msgstr ""
 
@@ -4573,6 +4672,9 @@ msgid "This is disabled because a manifest task is in progress"
 msgstr ""
 
 msgid "This is disabled because disconnected mode is enabled."
+msgstr ""
+
+msgid "This is disabled because no connection could be made to the upstream Subscription Allocation."
 msgstr ""
 
 msgid "This is disabled because no manifest exists"
@@ -4621,10 +4723,13 @@ msgstr ""
 msgid "Title"
 msgstr "タイトル"
 
+msgid "Toggling Simple Content Access will refresh your manifest."
+msgstr ""
+
 msgid "Total module count: %s."
 msgstr "モジュール数合計: %s."
 
-msgid "Total tasks: "
+msgid "Total steps: "
 msgstr ""
 
 msgid "Tracer profile uploaded successfully"
@@ -4639,13 +4744,13 @@ msgstr ""
 msgid "Trigger an auto-attach of subscriptions on one or more hosts"
 msgstr ""
 
+msgid "Try changing your search settings."
+msgstr ""
+
 msgid "Trying to cancel the synchronization..."
 msgstr ""
 
 msgid "Type"
-msgstr ""
-
-msgid "USMA"
 msgstr ""
 
 msgid "UUID"
@@ -4714,6 +4819,9 @@ msgstr "サブスクリプションの割り当て解除"
 msgid "Unentitled"
 msgstr ""
 
+msgid "Unfiltered params array: %s."
+msgstr ""
+
 msgid "Uninstall packages remotely"
 msgstr "パッケージのリモートでのアンインストール"
 
@@ -4737,6 +4845,9 @@ msgid "Unknown traces status"
 msgstr ""
 
 msgid "Unlimited"
+msgstr ""
+
+msgid "Unregister host %s before assigning an organization"
 msgstr ""
 
 msgid "Unregister the host as a subscription consumer"
@@ -4923,9 +5034,6 @@ msgstr "要求 ID のアップロード"
 msgid "Upstream Name cannot be blank when Repository URL is provided."
 msgstr ""
 
-msgid "Upstream Subscription Management Application"
-msgstr ""
-
 msgid "Upstream identity certificate not available"
 msgstr "アップストリームの ID 証明書が利用できません"
 
@@ -5033,6 +5141,9 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+msgid "You are currently operating in disconnected mode where access to Red Hat Subcription Management is prohibited. If you would like to change this, please update the content setting 'Disconnected mode'."
+msgstr ""
+
 msgid "You are not allowed to promote to Environments %s"
 msgstr "環境 %s にプロモートすることはできません"
 
@@ -5125,6 +5236,9 @@ msgstr "フィルターするアクティベーションキー名"
 
 msgid "activation keys"
 msgstr "アクティベーションキー"
+
+msgid "add all module streams without errata to the included/excluded list. (module stream filter only)"
+msgstr ""
 
 msgid "add all packages without errata to the included/excluded list. (package filter only)"
 msgstr ""
@@ -5464,6 +5578,9 @@ msgid "if a custom sync policy is chosen for ostree repositories then a 'depth' 
 msgstr ""
 
 msgid "if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA"
+msgstr ""
+
+msgid "if true, the repositories will be automatically enabled on a registered host subscribed to this product. Default: true"
 msgstr ""
 
 msgid "if true, will ignore the globally configured proxy when syncing"
