@@ -111,7 +111,7 @@ module Katello
 
         def copy_package_env(source_repository, dest_base_version)
           options = { :repository_version => source_repository.version_href }
-          package_env_hrefs = packageenvironments(options).results.map(&:pulp_href)
+          package_env_hrefs = packageenvironments(options).map(&:pulp_href)
           data_package_env = nil
           unless package_env_hrefs.empty?
             data_package_env = PulpRpmClient::Copy.new
@@ -133,7 +133,7 @@ module Katello
         end
 
         def packageenvironments(options = {})
-          api.content_package_environments_api.list(options)
+          Katello::Pulp3::Api::Core.fetch_from_list { |page_opts| api.content_package_environments_api.list(page_opts.merge(options)) }
         end
 
         def metadatafiles(options = {})

@@ -361,10 +361,10 @@ module ::Actions::Pulp3
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
-      @repo.root.update!(:url => 'https://repos.fedorapeople.org/pulp/pulp/fixtures/srpm-unsigned/')
+      @repo.root.update!(:url => 'https://fixtures.pulpproject.org/srpm-unsigned/')
       @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
       @repo_clone.update!(:environment_id => nil)
-      @repo_clone.root.update!(:url => 'https://repos.fedorapeople.org/pulp/pulp/fixtures/srpm-unsigned/')
+      @repo_clone.root.update!(:url => 'https://fixtures.pulpproject.org/srpm-unsigned/')
 
       ensure_creatable(@repo, @master)
       create_repo(@repo, @master)
