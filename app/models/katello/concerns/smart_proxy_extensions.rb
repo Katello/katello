@@ -257,7 +257,7 @@ module Katello
       end
 
       def pulp3_copy_rpm_package_env?
-        version_needed, version = '3.5.1', nil
+        version_needed, version = '3.5.0', nil
         json = ::Katello::Ping.pulp3_without_auth(self.pulp3_url)
         pulp_rpm_version = json["versions"].select { |v| v["component"] == "pulp_rpm" }
         version = pulp_rpm_version.first["version"] unless pulp_rpm_version.empty?
