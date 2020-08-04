@@ -76,7 +76,9 @@ module Katello
     # make sure the Katello plugin is initialized before `after_initialize`
     # hook so that the resumed Dynflow tasks can rely on everything ready.
     initializer 'katello.register_plugin', :before => :finisher_hook do
+      ::Foreman::AccessControl::Permission.prepend ::Katello::Concerns::PermissionExtensions
       require 'katello/plugin'
+
       # extend builtin permissions from core with new actions
       require 'katello/permissions'
     end

@@ -289,7 +289,7 @@ module Katello
       product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @repository.root)
 
-      Product.stubs(:find).returns(product)
+      stub_editable_product_find(product)
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :description => 'My Description', :url => 'http://www.google.com', :content_type => 'yum' }
       assert_response 201
       assert_template 'api/v2/common/create'
@@ -318,7 +318,7 @@ module Katello
       product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @repository.root)
 
-      Product.stubs(:find).returns(product)
+      stub_editable_product_find(product)
 
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '', :content_type => 'yum' }
       assert_response :success
@@ -353,7 +353,7 @@ module Katello
       product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @repository.root)
 
-      Product.stubs(:find).returns(product)
+      stub_editable_product_find(product)
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '', :content_type => 'yum', :checksum_type => 'sha256', :unprotected => false,
                               :download_policy => 'on_demand', :ssl_client_cert => cert, :arch => 'x86_64'
                               }
@@ -374,6 +374,10 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
     end
 
+    def stub_editable_product_find(product)
+      Katello::Product.expects(:editable).returns(stub(:find_by => product))
+    end
+
     def run_test_individual_attribute(params)
       product = mock
       product.expects(:add_repo).returns(@repository.root)
@@ -385,8 +389,8 @@ module Katello
       product.expects(:redhat?).returns(false)
       yield product, @repository
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @repository.root)
-      Product.stubs(:find).returns(product)
       params = {:name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false}.merge(params)
+      stub_editable_product_find(product)
       post :create, params: params
       assert_response :success
       assert_template 'api/v2/common/create'
@@ -394,7 +398,6 @@ module Katello
 
     def test_create_with_mirror_on_sync_true
       mirror_on_sync = true
-      ENV['test'] = 'true'
       run_test_individual_attribute(:mirror_on_sync => mirror_on_sync) do |_, repo|
         repo.root.expects(:mirror_on_sync=).with(mirror_on_sync)
       end
@@ -402,7 +405,7 @@ module Katello
 
     def test_create_with_auto_enabled_true
       auto_enabled = true
-      ENV['test'] = 'true'
+
       run_test_individual_attribute(:auto_enabled => auto_enabled) do |_, repo|
         repo.root.expects(:auto_enabled=).with(auto_enabled)
       end
@@ -485,7 +488,7 @@ module Katello
 
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, repository.root)
 
-      Product.stubs(:find).returns(product)
+      stub_editable_product_find(product)
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://hub.registry.com', :content_type => 'ostree', :ostree_upstream_sync_policy => sync_policy, :ostree_upstream_sync_depth => sync_depth }
 
       assert_response :success
@@ -499,8 +502,8 @@ module Katello
     end
 
     def test_create_protected
-      allowed_perms = [@create_permission]
-      denied_perms = [@read_permission, @update_permission, @destroy_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, params: { :product_id => @product.id }
@@ -679,7 +682,7 @@ module Katello
     def test_create_with_whitelist_tags
       whitelist = ["latest", "1.23"]
       @docker_repo.root.docker_tags_whitelist = nil
-      Product.stubs(:find).returns(@product)
+      stub_editable_product_find(@product)
       @product.expects(:add_repo).returns(@docker_repo.root)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
         root.must_equal @docker_repo.root
@@ -692,7 +695,7 @@ module Katello
 
     def test_create_without_whitelist_tags
       @docker_repo.root.docker_tags_whitelist = nil
-      Product.stubs(:find).returns(@product)
+      stub_editable_product_find(@product)
       @product.expects(:add_repo).returns(@docker_repo.root)
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
         root.must_equal @docker_repo.root

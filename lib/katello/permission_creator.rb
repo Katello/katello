@@ -294,23 +294,24 @@ module Katello
                                                         :repo_compare_packages,
                                                         :repo_compare_puppet_modules]
                          },
-                         :resource_type => 'Katello::Product'
+                         :resource_type => 'Katello::Product',
+                         :finder_scope => :readable
       @plugin.permission :create_products,
                          {
                            'katello/api/v2/products' => [:create],
-                           'katello/api/v2/repositories' => [:create],
                            'katello/api/v2/package_groups' => [:create]
                          },
                          :resource_type => 'Katello::Product'
       @plugin.permission :edit_products,
                          {
                            'katello/api/v2/products' => [:update],
-                           'katello/api/v2/repositories' => [:update, :remove_content, :import_uploads, :upload_content, :republish, :verify_checksum],
+                           'katello/api/v2/repositories' => [:create, :update, :remove_content, :import_uploads, :upload_content, :republish, :verify_checksum],
                            'katello/api/v2/products_bulk_actions' => [:update_sync_plans, :update_http_proxy, :verify_checksum_products],
                            'katello/api/v2/content_uploads' => [:create, :update, :destroy],
                            'katello/api/v2/organizations' => [:repo_discover, :cancel_repo_discover]
                          },
-                         :resource_type => 'Katello::Product'
+                         :resource_type => 'Katello::Product',
+                         :finder_scope => :editable
       @plugin.permission :destroy_products,
                          {
                            'katello/api/v2/products' => [:destroy],
@@ -319,7 +320,8 @@ module Katello
                            'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories],
                            'katello/api/v2/package_groups' => [:destroy]
                          },
-                         :resource_type => 'Katello::Product'
+                         :resource_type => 'Katello::Product',
+                         :finder_scope => :deletable
       @plugin.permission :sync_products,
                          {
                            'katello/api/v2/products' => [:sync],
@@ -330,12 +332,14 @@ module Katello
                            'katello/api/v2/sync_plans' => [:sync],
                            'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy]
                          },
-                         :resource_type => 'Katello::Product'
+                         :resource_type => 'Katello::Product',
+                         :finder_scope => :syncable
       @plugin.permission :export_products,
                          {
                            'katello/api/v2/repositories' => [:export]
                          },
-                         :resource_type => 'Katello::Product'
+                         :resource_type => 'Katello::Product',
+                         :finder_scope => :exportable
     end
 
     def subscription_permissions # rubocop:disable Metrics/MethodLength
