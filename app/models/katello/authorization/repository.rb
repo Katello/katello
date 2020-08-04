@@ -27,12 +27,20 @@ module Katello
         joins(:root).where("#{Repository.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?)", in_products, in_content_views, in_versions, in_environments)
       end
 
+      def exportable
+        in_product(Katello::Product.exportable)
+      end
+
       def deletable
         in_product(Katello::Product.authorized(:destroy_products))
       end
 
       def syncable
         in_product(Katello::Product.authorized(:sync_products))
+      end
+
+      def editable
+        in_product(Katello::Product.editable)
       end
     end
   end

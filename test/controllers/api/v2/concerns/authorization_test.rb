@@ -3,7 +3,7 @@
 require "katello_test_helper"
 
 module Katello
-  class TestAssociationIdController
+  class TestBaseController
     def initialize(params, filtered_associations)
       @params = params
       @filtered_associations = filtered_associations
@@ -12,17 +12,66 @@ module Katello
     def self.before_action(*_args)
     end
 
-    include Concerns::Api::V2::AssociationsPermissionCheck
+    include Concerns::Api::V2::Authorization
 
     attr_accessor :filtered_associations
     attr_reader :params
+  end
 
+  class TestAssociationIdController < TestBaseController
     def _wrapper_options
       OpenStruct.new(:name => :content_view)
     end
   end
 
-  class Api::V2::AssociationsPermissionCheckTest < ActiveSupport::TestCase
+  class TestPermissionsController < TestBaseController
+    def resource_name
+      'repository'
+    end
+
+    def resource_class
+      Repository
+    end
+
+    def repository_instance_variable
+      @repository
+    end
+
+    def path_to_authenticate
+      {controller: "katello/api/v2/repositories", action: "index"}
+    end
+  end
+
+  class Api::V2::AuthorizationFinderTest < ActiveSupport::TestCase
+    def setup
+      @repository = katello_repositories(:fedora_17_x86_64)
+      @params = {id: @repository.id}
+
+      @controller = TestPermissionsController.new(@params, {})
+    end
+
+    def test_find_authorized_katello_resource_not_found
+      ::Foreman::AccessControl::Permission.any_instance.stubs(:finder_scope).returns(nil)
+
+      assert_raise HttpErrors::NotFound do
+        @controller.find_authorized_katello_resource
+      end
+    end
+
+    def test_find_authorized_katello_resource
+      @controller.find_authorized_katello_resource
+
+      assert_equal @repository, @controller.repository_instance_variable
+    end
+
+    def test_find_unauthorized_katello_resource
+      @controller.find_unauthorized_katello_resource
+
+      assert_equal @repository, @controller.repository_instance_variable
+    end
+  end
+
+  class Api::V2::AuthorizationAssociationTest < ActiveSupport::TestCase
     def setup
       @cv = katello_content_views(:acme_default)
       @repo = katello_repositories(:fedora_17_x86_64)
