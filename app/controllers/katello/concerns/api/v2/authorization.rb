@@ -1,6 +1,6 @@
 module Katello
   module Concerns
-    module Api::V2::AssociationsPermissionCheck
+    module Api::V2::Authorization
       extend ActiveSupport::Concern
 
       # The purpose of this module is to protect a controller from a user creating or updating some association
@@ -20,6 +20,24 @@ module Katello
         before_action :check_association_ids, :only => [:create, :update]
       end
 
+      def find_authorized_katello_resource
+        finder_scope = ::Foreman::AccessControl.permissions_for_controller_action(path_to_authenticate).first&.finder_scope
+        if finder_scope
+          instance_variable_set("@#{resource_name}", resource_class.send(finder_scope).find_by(:id => params[:id]))
+        end
+
+        throw_resource_not_found if instance_variable_get("@#{resource_name}").nil?
+      end
+
+      def find_unauthorized_katello_resource
+        instance_variable_set("@#{resource_name}", resource_class.find_by(id: params[:id]))
+        throw_resource_not_found if instance_variable_get("@#{resource_name}").nil?
+      end
+
+      def throw_resource_not_found(name: resource_name, id: params[:id])
+        fail HttpErrors::NotFound, _("Could not find %{name} resource with id %{id}") % {id: id, name: name}
+      end
+
       def check_association_ids
         if filtered_associations
           wrapped_params = params[self._wrapper_options.name]
@@ -36,7 +54,7 @@ module Katello
             end
           end
         else
-          Rails.logger.warn("#{self.class.name} may has unprotected associations, see associations_permission_check.rb for details.") if ENV['RAILS_ENV'] == 'development'
+          Rails.logger.warn("#{self.class.name} may has unprotected associations, see controllers/katello/api/v2/authorization.rb for details.") if ENV['RAILS_ENV'] == 'development'
         end
       end
 
