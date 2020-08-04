@@ -597,7 +597,7 @@ module ::Actions::Pulp3
       assert_equal repo_packageenvironment_response.results, repo_clone_packageenvironment_response.results
     end
 
-    def test_no_package_environments_are_copied_if_no_groups_match
+    def test_all_package_environments_are_copied_even_if_no_groups_match
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "trout")
 
@@ -614,7 +614,7 @@ module ::Actions::Pulp3
       repo_clone_packageenvironment_response = @repo_clone.backend_service(@master).api.content_package_environments_api.list(options)
 
       refute_empty repo_packageenvironment_response.results
-      assert_empty repo_clone_packageenvironment_response.results
+      assert_equal repo_packageenvironment_response.results, repo_clone_packageenvironment_response.results
     end
   end
 
