@@ -13,9 +13,10 @@ module Katello
     before_action :find_product, :only => [:index, :auto_complete_search]
     before_action :find_product_for_create, :only => [:create]
     before_action :find_organization_from_product, :only => [:create]
-    before_action :find_repository, :only => [:show, :update, :destroy, :sync, :export,
-                                              :remove_content, :upload_content, :republish,
-                                              :import_uploads, :gpg_key_content, :verify_checksum]
+    before_action :find_unauthorized_katello_resource, :only => [:gpg_key_content]
+    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :sync, :export,
+                                                               :remove_content, :upload_content, :republish,
+                                                               :import_uploads, :verify_checksum]
     before_action :find_content, :only => :remove_content
     before_action :find_organization_from_repo, :only => [:update]
     before_action :error_on_rh_product, :only => [:create]
@@ -448,16 +449,17 @@ module Katello
     protected
 
     def find_product
-      @product = Product.find(params[:product_id]) if params[:product_id]
+      if params[:product_id]
+        @product = Product.readable.find_by(id: params[:product_id])
+        throw_resource_not_found(name: 'product', id: params[:product_id]) if @product.nil?
+      end
+
       find_organization_from_product if @organization.nil? && @product
     end
 
     def find_product_for_create
-      @product = Product.find(params[:product_id])
-    end
-
-    def find_repository
-      @repository = Repository.find(params[:id])
+      @product = Product.editable.find_by(id: params[:product_id])
+      throw_resource_not_found(name: 'product', id: params[:product_id]) if @product.nil?
     end
 
     def find_content_credential(content_type)
