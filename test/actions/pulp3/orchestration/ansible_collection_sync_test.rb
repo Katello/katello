@@ -40,6 +40,7 @@ module ::Actions::Pulp3
     end
 
     def test_sync_mirror_false
+      skip "Until pulp fixes https://pulp.plan.io/issues/7353?"
       sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
@@ -73,6 +74,7 @@ module ::Actions::Pulp3
     end
 
     def test_sync_mirror_true
+      skip "Until pulp fixes https://pulp.plan.io/issues/7353?"
       sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload

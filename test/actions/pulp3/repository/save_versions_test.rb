@@ -40,9 +40,9 @@ module ::Actions::Pulp3::Repository
       tasks_map = [{ created_resources: [] }]
 
       ::PulpFileClient::RepositoriesFileApi.any_instance.expects(:read).with("test_repo_1/").
-        returns(::PulpFileClient::FileFileRepository.new(latest_version_href: "test_repo_1/2/"))
+        returns(::PulpFileClient::FileFileRepositoryResponse.new(latest_version_href: "test_repo_1/2/"))
       ::PulpFileClient::RepositoriesFileApi.any_instance.expects(:read).with("test_repo_2/").
-        returns(::PulpFileClient::FileFileRepository.new(latest_version_href: "test_repo_2/3/"))
+        returns(::PulpFileClient::FileFileRepositoryResponse.new(latest_version_href: "test_repo_2/3/"))
       ::Katello::Repository.any_instance.stubs(:index_content).returns(true)
 
       task = ForemanTasks.sync_task(::Actions::Pulp3::Repository::SaveVersions, repos, tasks: tasks_map)
@@ -66,9 +66,9 @@ module ::Actions::Pulp3::Repository
       tasks_map = [{ created_resources: [] }]
 
       ::PulpFileClient::RepositoriesFileApi.any_instance.expects(:read).with("test_repo_1/").
-        returns(::PulpFileClient::FileFileRepository.new(latest_version_href: "test_repo_1/2/"))
+        returns(::PulpFileClient::FileFileRepositoryResponse.new(latest_version_href: "test_repo_1/2/"))
       ::PulpFileClient::RepositoriesFileApi.any_instance.expects(:read).with("test_repo_2/").
-        returns(::PulpFileClient::FileFileRepository.new(latest_version_href: "test_repo_2/3/"))
+        returns(::PulpFileClient::FileFileRepositoryResponse.new(latest_version_href: "test_repo_2/3/"))
       ::Katello::Repository.any_instance.stubs(:index_content).returns(true)
 
       task = ForemanTasks.sync_task(::Actions::Pulp3::Repository::SaveVersions, repos, tasks: tasks_map)
