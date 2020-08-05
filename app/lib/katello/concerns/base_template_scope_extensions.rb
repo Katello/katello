@@ -154,6 +154,10 @@ module Katello
       end
       # rubocop:enable Metrics/MethodLength
 
+      def sortable_version(version)
+        Util::Package.sortable_version(version)
+      end
+
       private
 
       def host_subscription_facet(host)
