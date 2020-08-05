@@ -16,10 +16,11 @@ module Actions
           if !version_href
             if input[:repository_details]
               version_href = input[:repository_details][:latest_version_href]
-            else
+            elsif repo.version_href.nil?
               # Fetch latest Pulp 3 repo version
-              version_href ||= ::Katello::Pulp3::Api::Yum.new(SmartProxy.pulp_master!).
-                repositories_api.read(repo.backend_service(SmartProxy.pulp_master).
+              repo_backend_service = repo.backend_service(SmartProxy.pulp_master)
+              version_href ||= repo_backend_service.api.
+                repositories_api.read(repo_backend_service.
                 repository_reference.repository_href).latest_version_href
             end
           end
