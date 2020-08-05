@@ -9,8 +9,6 @@
     *     Selecting an organization
     */
     function OrganizationSelectorController($scope, Organization, CurrentOrganization, $window) {
-        var transitionState;
-
         $scope.selectedOrganization = {};
 
         // TODO: per_page hack necessary because of http://projects.theforeman.org/issues/21800
@@ -18,21 +16,14 @@
             $scope.organizations = response.results;
         });
 
-        $scope.selectOrganization = function (organization) {
-            var label = organization.id + '-' + organization.name.replace("'", '').replace(".", '');
-
-            Organization.select({label: label}).$promise.catch(function () {
-                $window.location.href = transitionState;
-            });
+        $scope.changeOrgAction = function() {
+            $window.location.href = $scope.$stateParams.toState;
         };
 
-        $scope.$on('$stateChangeSuccess', function (event, toState, toParams) {
-            transitionState = toParams.toState;
-
-            if (CurrentOrganization) {
-                $window.location.href = transitionState;
-            }
-        });
+        $scope.selectOrganization = function (organization) {
+            var label = organization.id + '-' + organization.name.replace("'", '').replace(".", '');
+            Organization.select({label: label}).$promise.then($scope.changeOrgAction, $scope.changeOrgAction);
+        };
     }
 
     angular
