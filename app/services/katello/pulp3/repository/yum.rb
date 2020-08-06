@@ -150,12 +150,18 @@ module Katello
             end
           end
 
-          if whitelist_ids.empty? && filters.select { |filter| filter.inclusion }.empty?
-            whitelist_ids = source_repository.rpms.where(:modular => false).pluck(:pulp_id).sort
+          whitelist_ids = source_repository.rpms.where(:modular => false).pluck(:pulp_id).sort if (whitelist_ids.empty? && filters.select { |filter| filter.inclusion }.empty?)
+
+          modular_filters = ContentViewModuleStreamFilter.where(:id => options[:filter_ids])
+          inclusion_modular_filters = modular_filters.select { |filter| filter.inclusion }
+          exclusion_modular_filters = modular_filters - inclusion_modular_filters
+          if inclusion_modular_filters.empty? && !(filters.any? { |filter| filter.class == ContentViewErratumFilter && filter.inclusion })
+            whitelist_ids += source_repository.rpms.where(:modular => true).pluck(:pulp_id).sort
+            whitelist_ids += source_repository.module_streams.pluck(:pulp_id).sort
           end
-
+          whitelist_ids += modular_packages(source_repository, inclusion_modular_filters) unless inclusion_modular_filters.empty?
+          blacklist_ids += modular_packages(source_repository, exclusion_modular_filters) unless exclusion_modular_filters.empty?
           content_unit_hrefs = whitelist_ids - blacklist_ids
-
           if content_unit_hrefs.any?
             content_unit_hrefs += additional_content_hrefs(source_repository, content_unit_hrefs)
           end
@@ -163,6 +169,14 @@ module Katello
 
           dependency_solving = options[:solve_dependencies] || false
           copy_units(source_repository, content_unit_hrefs.uniq, dependency_solving)
+        end
+
+        def modular_packages(source_repository, filters)
+          list_ids = []
+          filters.each do |filter|
+            list_ids += filter.content_unit_pulp_ids(source_repository, true)
+          end
+          list_ids
         end
 
         def additional_content_hrefs(source_repository, content_unit_hrefs)
