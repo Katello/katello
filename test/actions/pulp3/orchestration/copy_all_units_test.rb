@@ -430,15 +430,15 @@ module ::Actions::Pulp3
       @repo_clone.reload
 
       refute_empty @repo.errata
-      assert_equal ["KATELLO-RHEA-2010:0002", "KATELLO-RHEA-2010:0111", "KATELLO-RHEA-2010:99143"].sort, @repo_clone.errata.pluck(:errata_id).sort
+      assert_equal ["KATELLO-RHEA-2010:0002", "KATELLO-RHEA-2010:0111", "KATELLO-RHEA-2010:99143", "KATELLO-RHEA-2012:0059"].sort, @repo_clone.errata.pluck(:errata_id).sort
     end
 
     def test_no_errata_copied_if_no_errata_packages_matches_filter_rules
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "cheetah")
-
+      module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
-                             @repo_clone, @master, [@repo], filters: [filter])
+                             @repo_clone, @master, [@repo], filters: [filter, module_stream_filter])
       @repo_clone.reload
       index_args = {:id => @repo_clone.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -453,8 +453,10 @@ module ::Actions::Pulp3
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => 'lion')
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => 'elephant')
 
+      module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
+
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
-                             @repo_clone, @master, [@repo], filters: [filter])
+                             @repo_clone, @master, [@repo], filters: [filter, module_stream_filter])
       @repo_clone.reload
       index_args = {:id => @repo_clone.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -479,6 +481,92 @@ module ::Actions::Pulp3
 
       refute_empty @repo.errata
       assert_empty [], @repo_clone.errata
+    end
+  end
+
+  class CopyAllUnitYumModuleStreamRepositoryTest < ActiveSupport::TestCase
+    include Katello::Pulp3Support
+    def setup
+      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @repo = katello_repositories(:fedora_17_x86_64_duplicate)
+      @repo.update!(:environment_id => nil)
+      @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
+      @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
+      @repo_clone.update!(:environment_id => nil)
+      @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
+
+      ensure_creatable(@repo, @master)
+      create_repo(@repo, @master)
+      ensure_creatable(@repo_clone, @master)
+      create_repo(@repo_clone, @master)
+
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+
+      index_args = {:id => @repo.id, :contents_changed => true}
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+      @repo.reload
+    end
+
+    def test_all_module_streams_copied_if_no_modular_filter_rules
+      filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
+                             @repo_clone, @master, [@repo], filters: [filter])
+      @repo_clone.reload
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, @repo_clone)
+      @repo_clone.reload
+      refute_empty @repo.module_streams
+      assert_equal @repo.module_streams.pluck(:name).sort, @repo_clone.module_streams.pluck(:name).sort
+    end
+
+    def test_all_module_streams_copied_if_empty_modular_filter_rules
+      filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
+                             @repo_clone, @master, [@repo], filters: [filter])
+      @repo_clone.reload
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, @repo_clone)
+      @repo_clone.reload
+
+      refute_empty @repo.module_streams
+      assert_equal @repo.module_streams.pluck(:id).sort, @repo_clone.module_streams.pluck(:id).sort
+    end
+
+    def test_module_streams_copied_with_include_modular_filter_rules
+      filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
+      duck = @repo.module_streams.where(:name => "duck").first
+      FactoryBot.create(:katello_content_view_module_stream_filter_rule,
+                                   :filter => filter,
+                                   :module_stream => duck)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
+                             @repo_clone, @master, [@repo], filters: [filter])
+      @repo_clone.reload
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, @repo_clone)
+      @repo_clone.reload
+
+      refute_empty @repo.module_streams
+      assert_equal @repo_clone.module_streams.size, 1
+      assert_equal duck.name, @repo_clone.module_streams.first.name
+    end
+
+    def test_module_streams_copied_with_modular_exclude_filter_rules
+      filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => false)
+      duck = @repo.module_streams.where(:name => "duck").first
+      FactoryBot.create(:katello_content_view_module_stream_filter_rule,
+                                    :filter => filter,
+                                    :module_stream => duck)
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
+                             @repo_clone, @master, [@repo], filters: [filter])
+      @repo_clone.reload
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, @repo_clone)
+      @repo_clone.reload
+
+      refute_empty @repo.module_streams
+      assert_equal @repo_clone.module_streams.size, 5
+      refute_includes @repo_clone.module_streams.pluck(:pulp_id), duck.pulp_id
     end
   end
 
@@ -525,9 +613,11 @@ module ::Actions::Pulp3
       birds = @repo.package_groups.where(:name => "bird").first
       FactoryBot.create(:katello_content_view_package_group_filter_rule, :filter => filter, :uuid => birds.pulp_id)
 
+      module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
+
       @repo_clone_original_version_href = @repo_clone.version_href
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
-                             @repo_clone, @master, [@repo], filters: [filter])
+                             @repo_clone, @master, [@repo], filters: [filter, module_stream_filter])
       @repo_clone.reload
       index_args = {:id => @repo_clone.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -542,9 +632,10 @@ module ::Actions::Pulp3
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => 'cheetah')
 
+      module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
       @repo_clone_original_version_href = @repo_clone.version_href
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
-                             @repo_clone, @master, [@repo], filters: [filter])
+                             @repo_clone, @master, [@repo], filters: [filter, module_stream_filter])
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexPackageGroups, @repo_clone)
       @repo_clone.reload
