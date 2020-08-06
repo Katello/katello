@@ -4,6 +4,7 @@ module Actions
     module ContentView
       class Publish < Actions::EntryAction
         include ::Katello::ContentViewHelper
+        attr_accessor :version
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
@@ -22,7 +23,11 @@ module Actions
             end
           end
 
+          # Add non-override components back in
+          options[:override_components] = include_other_components(options[:override_components], content_view)
+
           version = version_for_publish(content_view, options)
+          self.version = version
           library = content_view.organization.library
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
@@ -38,7 +43,7 @@ module Actions
           end
 
           sequence do
-            plan_action(ContentView::AddToEnvironment, version, library)
+            plan_action(ContentView::AddToEnvironment, version, library) unless options[:skip_promotion]
             repository_mapping = plan_action(ContentViewVersion::CreateRepos, version, source_repositories).repository_mapping
 
             # Split Pulp 3 Yum repos out of the repository_mapping.  Only Pulp 3 RPM plugin has multi repo copy support.
@@ -56,7 +61,7 @@ module Actions
                     plan_action(Repository::CloneToVersion, repositories, version, repository_mapping[repositories],
                                 :repos_units => options[:repos_units])
                   end
-                  plan_action(Repository::CloneToEnvironment, repository_mapping[repositories], library)
+                  plan_action(Repository::CloneToEnvironment, repository_mapping[repositories], library) unless options[:skip_promotion]
                 end
               end
 
@@ -66,16 +71,18 @@ module Actions
             end
             has_modules = content_view.publish_puppet_environment?
             plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
-            plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
-                :puppet_modules_present => has_modules)
-            plan_action(Candlepin::Environment::SetContent, content_view, library, content_view.content_view_environment(library))
-            plan_action(Katello::Foreman::ContentUpdate, library, content_view)
-            plan_action(ContentView::ErrataMail, content_view, library)
+            unless options[:skip_promotion]
+              plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
+                  :puppet_modules_present => has_modules)
+            end
+            plan_action(Candlepin::Environment::SetContent, content_view, library, content_view.content_view_environment(library)) unless options[:skip_promotion]
+            plan_action(Katello::Foreman::ContentUpdate, library, content_view) unless options[:skip_promotion]
+            plan_action(ContentView::ErrataMail, content_view, library) unless options[:skip_promotion]
             plan_self(history_id: history.id, content_view_id: content_view.id,
                       auto_publish_composite_ids: auto_publish_composite_ids(content_view),
                       content_view_version_name: version.name,
                       content_view_version_id: version.id,
-                      environment_id: library.id, user_id: ::User.current.id)
+                      environment_id: library.id, user_id: ::User.current.id, skip_promotion: options[:skip_promotion])
           end
         end
 
@@ -96,6 +103,7 @@ module Actions
 
           output[:content_view_id] = input[:content_view_id]
           output[:content_view_version_id] = input[:content_view_version_id]
+          output[:skip_promotion] = input[:skip_promotion]
         end
 
         def rescue_strategy_for_self
@@ -106,9 +114,11 @@ module Actions
           version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
           version.update_content_counts!
           # update errata applicability counts for all hosts in the CV & Library
-          ::Katello::Host::ContentFacet.where(:content_view_id => input[:content_view_id],
-                                              :lifecycle_environment_id => input[:environment_id]).each do |facet|
-            facet.update_applicability_counts
+          unless input[:skip_promotion]
+            ::Katello::Host::ContentFacet.where(:content_view_id => input[:content_view_id],
+                                                :lifecycle_environment_id => input[:environment_id]).each do |facet|
+              facet.update_applicability_counts
+            end
           end
 
           history = ::Katello::ContentViewHistory.find(input[:history_id])
@@ -116,7 +126,7 @@ module Actions
           history.save!
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
           view = ::Katello::ContentView.find(input[:content_view_id])
-          if SmartProxy.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync]
+          if SmartProxy.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync] && !input[:skip_promotion]
             ForemanTasks.async_task(ContentView::CapsuleSync,
                                     view,
                                     environment)
@@ -125,6 +135,20 @@ module Actions
         end
 
         private
+
+        def include_other_components(override_components, content_view)
+          if override_components.present?
+            content_view.components.each do |component|
+              component_has_override = override_components.detect do |override_component|
+                component.content_view_id == override_component.content_view_id
+              end
+              unless component_has_override
+                override_components << component
+              end
+            end
+            override_components
+          end
+        end
 
         def repos_to_delete(content_view)
           if content_view.composite?
@@ -143,7 +167,11 @@ module Actions
 
         def version_for_publish(content_view, options)
           if options[:minor] && options[:major]
-            content_view.create_new_version(options[:major], options[:minor])
+            if options[:override_components]
+              content_view.create_new_version(options[:major], options[:minor], options[:override_components])
+            else
+              content_view.create_new_version(options[:major], options[:minor])
+            end
           else
             content_view.create_new_version
           end

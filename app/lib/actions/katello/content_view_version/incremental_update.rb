@@ -1,6 +1,7 @@
 module Actions
   module Katello
     module ContentViewVersion
+      # rubocop:disable Metrics/ClassLength
       class IncrementalUpdate < Actions::EntryAction
         include ::Katello::ContentViewHelper
         attr_accessor :new_content_view_version
@@ -31,10 +32,16 @@ module Actions
           validate_environments(environments, old_version)
 
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
-          if SmartProxy.pulp_master.pulp3_support?(old_version.repositories.first) && is_composite
-            publish_output = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
-                                         :major => old_version.major, :minor => new_minor,
-                                         :override_cvvs => new_components).output
+          if SmartProxy.pulp_master.pulp3_repository_type_support?("yum") && is_composite
+            sequence do
+              publish_action = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
+                          :major => old_version.major, :minor => new_minor,
+                          :override_components => new_components, :skip_promotion => true)
+              if old_version.environments.present?
+                plan_action(::Actions::Katello::ContentView::Promote, publish_action.version,
+                            old_version.environments, true, description)
+              end
+            end
             return
           end
 
@@ -43,7 +50,6 @@ module Actions
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task,
                                                           :notes => description)
-
 
           copy_action_outputs = []
           repos_to_clone = repos_to_copy(old_version, new_components)

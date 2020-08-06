@@ -5,7 +5,6 @@ module Actions
         include Actions::Katello::PulpSelector
         def plan(extended_repo_mapping, options)
           generate_metadata = options.fetch(:generate_metadata, true)
-          purge_empty_contents = options.fetch(:purge_empty_contents, false)
           copy_contents = options.fetch(:copy_contents, true)
           solve_dependencies = options.fetch(:solve_dependencies, false)
 

@@ -40,7 +40,7 @@ module Actions
           end
           unit_hrefs.flatten!
 
-          repo_map.each do |source_repos, dest_repo_map|
+          repo_map.each do |_source_repos, dest_repo_map|
             dest_repo_map[:content_unit_hrefs] = unit_hrefs
           end
 

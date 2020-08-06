@@ -5,7 +5,6 @@ module Actions
         class MultiCopyAllUnits < Pulp3::Abstract
           def plan(extended_repo_map, smart_proxy, options = {})
             solve_dependencies = options.fetch(:solve_dependencies, false)
-            # Since this is currently used only for Pulp 3 yum dep solving, just copy all units.
             if extended_repo_map.values.pluck(:filters).flatten.present? ||
                 extended_repo_map.keys.detect { |source_repos| source_repos.length > 1 }
               sequence do
