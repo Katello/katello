@@ -46,6 +46,7 @@ describe('Controller: ContentHostDebsInstalledController', function() {
         $scope.$stateParams = {hostId: mockHost.id};
         $scope.openEventInfo = function(){};
         $scope.errorHandler = function(){};
+        $scope.performPackageAction = function(action, name) {};
 
         $controller('ContentHostDebsInstalledController', {$scope: $scope,
                                                HostDeb: HostDeb,
@@ -62,12 +63,9 @@ describe('Controller: ContentHostDebsInstalledController', function() {
         var mockDeb;
         mockDeb = {name: 'foo', version: '3', architecture: 'noarch'};
         spyOn($scope.table, 'getSelected').and.returnValue([mockDeb]);
-
+        spyOn($scope, 'performPackageAction');
         $scope.removeSelectedDebs();
+        expect($scope.performPackageAction).toHaveBeenCalledWith("packageRemove", mockDeb['name']);
         expect($scope.working).toBe(true);
-        expect($scope.packageActionFormValues.package).toBe('foo');
-        expect($scope.packageActionFormValues.remoteAction).toBe('packageRemove');
-        expect($scope.packageActionFormValues.hostIds).toBe(23434);
-        expect($scope.packageActionFormValues.customize).toBe(false);
     });
 });
