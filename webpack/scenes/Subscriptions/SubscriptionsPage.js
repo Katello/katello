@@ -261,7 +261,6 @@ class SubscriptionsPage extends Component {
               upload={this.props.uploadManifest}
               delete={this.props.deleteManifest}
               refresh={this.props.refreshManifest}
-              key={task?.id}
             />
 
             <div id="subscriptions-table" className="modal-container">

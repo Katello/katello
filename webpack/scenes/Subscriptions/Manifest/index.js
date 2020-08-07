@@ -10,6 +10,7 @@ import * as organizationActions from '../../Organizations/OrganizationActions';
 import * as tasksActions from '../../Tasks/TaskActions';
 import history from './ManifestHistoryReducer';
 import { selectSimpleContentAccessEnabled, selectIsManifestImported } from '../../Organizations/OrganizationSelectors';
+import { selectManifestActionStarted } from '../SubscriptionsSelectors';
 
 import ManifestModal from './ManageManifestModal';
 
@@ -23,7 +24,7 @@ const mapStateToProps = state => ({
   isManifestImported: selectIsManifestImported(state),
   modalOpenState: state.foremanModals.ManageManifestModal,
   deleteManifestModalIsOpen: selectIsModalOpen(state, DELETE_MANIFEST_MODAL_ID),
-  manifestActionInProgress: state.katello.subscriptions.manifestActionInProgress,
+  manifestActionStarted: selectManifestActionStarted(state),
 });
 
 // map action dispatchers to props
