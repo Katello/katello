@@ -25,7 +25,7 @@ class ManageManifestModal extends Component {
   }
 
   componentDidMount() {
-    this.loadData();
+    this.props.loadManifestHistory();
   }
 
   componentDidUpdate(prevProps) {
@@ -35,16 +35,12 @@ class ManageManifestModal extends Component {
 
     if (prevProps.taskInProgress && !this.props.taskInProgress) {
       this.props.loadOrganization();
-      this.loadData();
+      this.props.loadManifestHistory();
     }
   }
 
-  loadData() {
-    this.props.loadManifestHistory();
-  }
-
   hideModal = () => {
-    if (this.props.deleteManifestModalIsOpen) this.hideDeleteManifestModal();
+    this.hideDeleteManifestModal();
     this.props.setModalClosed({ id: MANAGE_MANIFEST_MODAL_ID });
   };
 
@@ -63,7 +59,6 @@ class ManageManifestModal extends Component {
   };
 
   uploadManifest = (fileList) => {
-    this.hideModal();
     if (fileList.length > 0) {
       this.props.upload(fileList[0]);
     }
@@ -74,7 +69,6 @@ class ManageManifestModal extends Component {
   };
 
   deleteManifest = () => {
-    this.hideModal();
     this.props.delete();
   };
 
@@ -336,7 +330,6 @@ ManageManifestModal.propTypes = {
   }).isRequired,
   setModalClosed: PropTypes.func.isRequired,
   setModalOpen: PropTypes.func.isRequired,
-  deleteManifestModalIsOpen: PropTypes.bool,
   manifestActionStarted: PropTypes.bool,
 };
 
@@ -347,7 +340,6 @@ ManageManifestModal.defaultProps = {
   canDeleteManifest: false,
   isManifestImported: false,
   canEditOrganizations: false,
-  deleteManifestModalIsOpen: false,
   simpleContentAccess: false,
   manifestActionStarted: false,
 };

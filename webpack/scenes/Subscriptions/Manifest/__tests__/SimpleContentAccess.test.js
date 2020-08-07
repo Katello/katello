@@ -17,7 +17,6 @@ const defaultProps = {
   canImportManifest: true,
   canDeleteManifest: true,
   canEditOrganizations: true,
-  deleteManifestModalIsOpen: true,
   upload: noop,
   refresh: noop,
   delete: noop,

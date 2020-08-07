@@ -2,9 +2,6 @@ import { bindActionCreators } from 'redux';
 
 import { connect } from 'react-redux';
 import * as foremanModalActions from 'foremanReact/components/ForemanModal/ForemanModalActions';
-import { selectIsModalOpen } from 'foremanReact/components/ForemanModal/ForemanModalSelectors';
-import { DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
-
 import * as manifestActions from './ManifestActions';
 import * as organizationActions from '../../Organizations/OrganizationActions';
 import * as tasksActions from '../../Tasks/TaskActions';
@@ -23,7 +20,6 @@ const mapStateToProps = state => ({
   simpleContentAccess: selectSimpleContentAccessEnabled(state),
   isManifestImported: selectIsManifestImported(state),
   modalOpenState: state.foremanModals.ManageManifestModal,
-  deleteManifestModalIsOpen: selectIsModalOpen(state, DELETE_MANIFEST_MODAL_ID),
   manifestActionStarted: selectManifestActionStarted(state),
 });
 
