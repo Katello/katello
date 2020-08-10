@@ -158,13 +158,17 @@ module Katello
       @lib_repo = katello_repositories(:rhel_6_x86_64)
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
 
+      @lib_repo.rpms = [katello_rpms(:one)]
+      @view_repo.rpms = [katello_rpms(:two)]
+
       get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id] }
       assert_response :success
       assert_template "katello/api/v2/packages/compare"
 
-      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], :repository_id => @lib_repo.id }
+      response = get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], :repository_id => @lib_repo.id }
       assert_response :success
       assert_template "katello/api/v2/packages/compare"
+      assert_equal 2, JSON.parse(response.body)['total']
     end
   end
 end
