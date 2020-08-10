@@ -218,7 +218,6 @@ Foreman::Plugin.register :katello do
        :parent => :lab_features_menu,
        :turbolinks => false
 
-  allowed_template_helpers :subscription_manager_configuration_url, :repository_url
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 
