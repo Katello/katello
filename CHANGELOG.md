@@ -1,6 +1,11 @@
-# 3.16.0 Tasty Taiyaki (2020-07-30)
+# 3.16.0 Tasty Taiyaki (2020-08-10)
 
 ## Features
+
+### Content Views
+ * support modularity filtering with Content view publishing on pulp3 ([#30224](https://projects.theforeman.org/issues/30224), [64495833](https://github.com/Katello/katello.git/commit/64495833bdeb9fcc6fb1ca07becdc1051f1c9866))
+ * Incremental update support with pulp3 ([#29751](https://projects.theforeman.org/issues/29751), [ab15cbb4](https://github.com/Katello/katello.git/commit/ab15cbb4235c11bc3aa9c0a91066ec9420b63f20))
+ * Create redux content view API actions and reducers ([#29319](https://projects.theforeman.org/issues/29319))
 
 ### Subscriptions
  * Improve experience when manifest identity certs have expired ([#30129](https://projects.theforeman.org/issues/30129), [70ae87c0](https://github.com/Katello/katello.git/commit/70ae87c01845eae3b9ac1a502d66958d92f7c99b))
@@ -15,10 +20,6 @@
  * Add new macro to report consumption of Red Hat Subscriptions only ([#29790](https://projects.theforeman.org/issues/29790), [5f6eb93a](https://github.com/Katello/katello.git/commit/5f6eb93ae21e4acd259b6638ef97ffe0996cb548))
  * Tracer: warn the user if they have done a select all and it includes the restart|reboot service ([#29730](https://projects.theforeman.org/issues/29730), [999f0700](https://github.com/Katello/katello.git/commit/999f0700220687c1741f994811850e980b660587))
  * Enable installation of Tracer from the UI ([#29692](https://projects.theforeman.org/issues/29692), [16ddcbad](https://github.com/Katello/katello.git/commit/16ddcbadfd6f0ff05b1c927fd7b72ab4b26ac678))
-
-### Content Views
- * Incremental update support with pulp3 ([#29751](https://projects.theforeman.org/issues/29751), [ab15cbb4](https://github.com/Katello/katello.git/commit/ab15cbb4235c11bc3aa9c0a91066ec9420b63f20))
- * Create redux content view API actions and reducers ([#29319](https://projects.theforeman.org/issues/29319))
 
 ### Tooling
  * upgrade to pulp 3.3 ([#29662](https://projects.theforeman.org/issues/29662), [4675b97f](https://github.com/Katello/katello.git/commit/4675b97fa9305c142a32ffcca422d50cb1b81f9b), [23dd6ccb](https://github.com/Katello/katello.git/commit/23dd6ccbd7cc8fef8e2db8afb84ada0d3ab2ab1f))
@@ -51,72 +52,12 @@
 
 ## Bug Fixes
 
-### Tests
- * test failures after bindings updates ([#30509](https://projects.theforeman.org/issues/30509), [b8e72f0d](https://github.com/Katello/katello.git/commit/b8e72f0dc58f97b1fce269073af2e670d75d8ff6))
- * pulp rpm 3.4.2 release breaks tests ([#30433](https://projects.theforeman.org/issues/30433), [b822ef58](https://github.com/Katello/katello.git/commit/b822ef58f60a8057763553f8930eece0c415029f))
- * Lock theforeman js packages to 4.3.0 ([#30283](https://projects.theforeman.org/issues/30283))
- * Some tests set, but don't unset, ENV variables ([#30202](https://projects.theforeman.org/issues/30202))
- * React tests - timeout on some tests for nock (http mocking lib) wrapper ([#29987](https://projects.theforeman.org/issues/29987), [99791b65](https://github.com/Katello/katello.git/commit/99791b65a47437db6de16d03932af04dd83ce8e4))
- * Fix React test issues ([#29717](https://projects.theforeman.org/issues/29717), [68219a01](https://github.com/Katello/katello.git/commit/68219a01ef036fe338b8ef457e82df30d8d82e1a))
- * Intermittent ContentViewComponent test ([#29657](https://projects.theforeman.org/issues/29657), [1033fb02](https://github.com/Katello/katello.git/commit/1033fb02ab5f64b3d7135a2054d3e906aa99db24))
- * Allow use of foremanReact from foreman in React tests ([#29637](https://projects.theforeman.org/issues/29637), [cb8ed4df](https://github.com/Katello/katello.git/commit/cb8ed4dfe684c1ae76023137513614632874029f))
- * Katello Applicability tests are failing due to jenkins test DB issues ([#29618](https://projects.theforeman.org/issues/29618), [d9dc5fe0](https://github.com/Katello/katello.git/commit/d9dc5fe04ae5fb9688bcd6759a37fc276fa803c5))
- * Travis CI keeps failing on "eslint: not found" ([#29576](https://projects.theforeman.org/issues/29576), [9183a8e9](https://github.com/Katello/katello.git/commit/9183a8e9de29fcc9582aaa6a530d795f92a63e65))
- * Transient test failures with org labels ([#29519](https://projects.theforeman.org/issues/29519), [34b931a6](https://github.com/Katello/katello.git/commit/34b931a68266f9df550607ba19cc3662a767c71e))
- * fix intermittent failing tests   ActivationKey and ContentView Copy ([#29411](https://projects.theforeman.org/issues/29411), [8dd68556](https://github.com/Katello/katello.git/commit/8dd6855640f679f0d806aea89b8678ee7e101d59), [364d11c9](https://github.com/Katello/katello.git/commit/364d11c90665f92506bba73c62ead6b5b2b3950c))
- * Address cops for rubocop-minitest ([#29395](https://projects.theforeman.org/issues/29395), [3fe0945f](https://github.com/Katello/katello.git/commit/3fe0945f46329586a9dfcbed314434afeb5e3b20))
- * angular-ui tests broke due to patternfly update ([#29381](https://projects.theforeman.org/issues/29381), [bc651a30](https://github.com/Katello/katello.git/commit/bc651a3080c6c9cbfdb5d3f9e1a54d43b7be386d))
- * Delete all http proxies in test setup ([#29142](https://projects.theforeman.org/issues/29142), [6ed753d6](https://github.com/Katello/katello.git/commit/6ed753d6d4e61111649d6291f466fccf759db15f))
-
-### Subscriptions
- * Upgraded Satellite has duplicated katello_pools indexes ([#30461](https://projects.theforeman.org/issues/30461), [cb98f469](https://github.com/Katello/katello.git/commit/cb98f46901f008f0f709d56646d04f853f2972d8))
- *  Attempting to attach a subscription to an unregistered host results in ISE 500  ([#30451](https://projects.theforeman.org/issues/30451), [ccf77fda](https://github.com/Katello/katello.git/commit/ccf77fda7f3f8e1732170fe7d9f35b510d1465de))
- * Cleanup data more efficiently when importing backend objects ([#30101](https://projects.theforeman.org/issues/30101), [654fa774](https://github.com/Katello/katello.git/commit/654fa7743b1186e526f549c77dabd623546c0028))
- *  [RFE] Capsules shouldn't update hosts' "Registered through" facts on the Satellite server in a load-balanced configuration. ([#29986](https://projects.theforeman.org/issues/29986), [2d4ad4b8](https://github.com/Katello/katello.git/commit/2d4ad4b8b05bde9f900d4be81608a41388905bea))
- * Unable to re-import subscriptions in large environment (60k+ content hosts) ([#29948](https://projects.theforeman.org/issues/29948), [bb672414](https://github.com/Katello/katello.git/commit/bb672414d89e51eee88453ea73b91d1250594343))
- * Manifest import task keeps on executing, causing duplicate notifications ([#29942](https://projects.theforeman.org/issues/29942), [1ae0488b](https://github.com/Katello/katello.git/commit/1ae0488b5b66b8165169a9a7ea8424ee9e29478b))
- * Error in production log from Candlepin events handler ([#29694](https://projects.theforeman.org/issues/29694), [b226cf98](https://github.com/Katello/katello.git/commit/b226cf98a8e16c338cda6d4117d690029d323657))
- * Manifest import and delete calls Actions::Pulp::Repository::Refresh for non-Library repositories ([#29611](https://projects.theforeman.org/issues/29611), [e801fb0f](https://github.com/Katello/katello.git/commit/e801fb0f70bf25e184b89c937c5df849e120fb71))
- * Load distributor version from a constant ([#29527](https://projects.theforeman.org/issues/29527), [acd0617e](https://github.com/Katello/katello.git/commit/acd0617ea5b7188ce9977c3bd147904a1c0e6708))
- * HTTP error when deploying the virt-who configure plugin ([#29521](https://projects.theforeman.org/issues/29521), [5a8860a0](https://github.com/Katello/katello.git/commit/5a8860a0952db6f8f0b446b9d221cbc73edf597d))
- * Non-admin user with view_subscriptions perms cannot view subscriptions ([#29376](https://projects.theforeman.org/issues/29376), [de6fd725](https://github.com/Katello/katello.git/commit/de6fd72533c232d9e493ed9affcb974fcd3f89b9))
- * send notification if manifest is no longer valid ([#29367](https://projects.theforeman.org/issues/29367), [3d86aee1](https://github.com/Katello/katello.git/commit/3d86aee17402a34e1f7748b13cce40f7c31b1a15))
- * Ignore missing candlepin content on product delete ([#29316](https://projects.theforeman.org/issues/29316), [846afb00](https://github.com/Katello/katello.git/commit/846afb0063834925b4bf2f4db0c6ddb39aa78aec))
- * Remove upstream idCert from organization details API ([#29146](https://projects.theforeman.org/issues/29146), [79366cce](https://github.com/Katello/katello.git/commit/79366cce0bd0e7a986b47ecb097819a071b9db50))
-
-### Foreman Proxy Content
- * Clicking on any other tab other than overview while on capsule synchronizing page, redirects to overview page. ([#30425](https://projects.theforeman.org/issues/30425), [afb8e562](https://github.com/Katello/katello.git/commit/afb8e5626d462b4fe88d6f3185130aeb7448fae3))
- * Pulpcore capsule sync for yum repositories doesn't reflect smart proxy download policy ([#29320](https://projects.theforeman.org/issues/29320), [8e5c047e](https://github.com/Katello/katello.git/commit/8e5c047ed5227a1c58fe83146ae1c9f21ca4e71a))
- * Support syncing a pulp3 capsule with yum content content ([#28951](https://projects.theforeman.org/issues/28951), [6c1d5d72](https://github.com/Katello/katello.git/commit/6c1d5d72e7ed6e8305d5dfafd64822fcd6b57d5d))
-
-### Errata Management
- * katello applicability doesn't refresh applicability 'counts' ([#30357](https://projects.theforeman.org/issues/30357), [339d401a](https://github.com/Katello/katello.git/commit/339d401a3228d34d5bd4c97968cf9fc7bb44c578))
- * Viewing errata from a repository returns incorrect unfiltered results ([#30329](https://projects.theforeman.org/issues/30329), [e367b89e](https://github.com/Katello/katello.git/commit/e367b89e0064eec16d65af55a47e11b84ee60a4d))
- * indexing a yum repo with pulp3 fails to calculate nvra at first indexing ([#30118](https://projects.theforeman.org/issues/30118), [7cef4298](https://github.com/Katello/katello.git/commit/7cef42989230033c4cb6b0ace5b04d0a55b40af3))
- * Katello Applicability needs to calculate applicable module streams ([#29604](https://projects.theforeman.org/issues/29604), [ed09874e](https://github.com/Katello/katello.git/commit/ed09874eaa66489728ffa23a5956a65af8b42c91))
- * Katello Applicability needs to process more than one host per task ([#29554](https://projects.theforeman.org/issues/29554), [fa452587](https://github.com/Katello/katello.git/commit/fa452587088d40eda01041a31ddaaac650090b1e))
- * Skip planning of errata installation when the list applicable errata for a host is empty ([#29368](https://projects.theforeman.org/issues/29368), [d3594739](https://github.com/Katello/katello.git/commit/d35947391c2eeaff9f28231c8d349cb1d12023d9))
- * Installing all Errata of a host doesn't work ([#29330](https://projects.theforeman.org/issues/29330), [6a8d63b9](https://github.com/Katello/katello.git/commit/6a8d63b972dbbadfe1974690273d33ebc9e35a18), [aaf599e7](https://github.com/Katello/katello.git/commit/aaf599e75db51bcb7f3b21e09de4bfaff12c49b6), [c963f3cd](https://github.com/Katello/katello.git/commit/c963f3cdbac5f012a214c225e3b3706cbd3d64a5))
- * Add custom evr type column to katello_rpms and katello_installed_packages ([#29145](https://projects.theforeman.org/issues/29145), [413f9800](https://github.com/Katello/katello.git/commit/413f9800083d5497bd700c8f91577bd28b787d1e))
- * Applied Errata report no longer works when last reboot is included ([#29042](https://projects.theforeman.org/issues/29042), [b528f36e](https://github.com/Katello/katello.git/commit/b528f36ea754985d3084c2ccc5452c2db71891d4))
-
-### Content Views
- * Add 'Module Streams with no Errata' filter ([#30352](https://projects.theforeman.org/issues/30352), [2364a766](https://github.com/Katello/katello.git/commit/2364a76689cd20de8bb13c4ffd72861a8031447f))
- * Content Hosts has Access to Content View from Different Organization ([#30112](https://projects.theforeman.org/issues/30112), [70ebdbbf](https://github.com/Katello/katello.git/commit/70ebdbbf7a9394b692d19e626804f3c6684e9902))
- * Content view version details can be viewed by an organization that the content view does not belong to ([#30092](https://projects.theforeman.org/issues/30092), [fc4683b7](https://github.com/Katello/katello.git/commit/fc4683b70693a2998f1b565c8f2c5156ab24044f))
- * Cannot enable dep solving or auto publish on content views: `Unpermitted parameters: :auto_publish, :solve_dependencies, :label, :default, :created_at, :updated_at, :composite, :next_version` ([#29847](https://projects.theforeman.org/issues/29847), [dad98b5f](https://github.com/Katello/katello.git/commit/dad98b5fbaa9c9e825cbb33df4c0f937f30b3a0b))
- * Skip puppet env import on cv publish/promote if smart proxy feature is not present ([#29448](https://projects.theforeman.org/issues/29448), [80bd479e](https://github.com/Katello/katello.git/commit/80bd479ee6b997610e6f511096c8d9e1c6c0e6c8))
- * Publishing large content view for 2nd time fails with PostgreSQL invalid message format ([#29335](https://projects.theforeman.org/issues/29335), [125d41ad](https://github.com/Katello/katello.git/commit/125d41add601f472d03f5f39f32c674b25af86f1))
- * Publish a yum repository in a content view with pulp 3 with filters ([#29323](https://projects.theforeman.org/issues/29323), [c7735525](https://github.com/Katello/katello.git/commit/c77355253d1a7eafbb61caa9c7079ae27630a808))
- * drpms not getting copied over cv publish ([#29104](https://projects.theforeman.org/issues/29104), [bc0651c5](https://github.com/Katello/katello.git/commit/bc0651c586c73da246ac259d8e878371e9dd1cd1))
-
-### Sync Plans
- * Sync Plan fails with 'uninitialized constant Actions::Foreman::Exception'  ([#30343](https://projects.theforeman.org/issues/30343), [e3074f5a](https://github.com/Katello/katello.git/commit/e3074f5a7c39898f5db1eb61f44f75ef97110d4a))
- * large capsule syncs cause slow processing of dynflow tasks/steps ([#30286](https://projects.theforeman.org/issues/30286), [f9a239d4](https://github.com/Katello/katello.git/commit/f9a239d4e42ab95dcf2561f372df00d0cb47c42b))
- * Arrow position is on left rather in the middle under "Start Time" ([#30220](https://projects.theforeman.org/issues/30220), [8d1adbc3](https://github.com/Katello/katello.git/commit/8d1adbc3e462aa8a397187e6a289402009170416))
- * Changing the organization in UI shows sync plan created in another organization ([#29013](https://projects.theforeman.org/issues/29013), [ae2d150c](https://github.com/Katello/katello.git/commit/ae2d150c268c8c9807a06d28a1fae18c6e0373d6))
-
 ### Repositories
+ * Recommended repos do not match Satellite version ([#30583](https://projects.theforeman.org/issues/30583), [44c89cc0](https://github.com/Katello/katello.git/commit/44c89cc0aac175001f15bff32898342ceb9b7b2e))
+ * pulp3 repo sync not storing issued/updated dates for errata ([#30541](https://projects.theforeman.org/issues/30541), [e397a08e](https://github.com/Katello/katello.git/commit/e397a08e658a41aae691b4e0e1a5f22b63783fcf))
+ * Run a single migration instead of multiple for pulp3 ([#30540](https://projects.theforeman.org/issues/30540), [4d0d116d](https://github.com/Katello/katello.git/commit/4d0d116dc38399ee6c2939dc59f3a6874e126fb4), [c8ab0840](https://github.com/Katello/katello.git/commit/c8ab08401ba91d491a51047ad8929f2446cf9710))
+ * Pulp_rpm 3.5 does not return Package Groups tied to Package Environments ([#30532](https://projects.theforeman.org/issues/30532), [5f4a752e](https://github.com/Katello/katello.git/commit/5f4a752ede281c27719fd38f642bc6ef254d2b16), [84212677](https://github.com/Katello/katello.git/commit/842126778fd1a9baa6f6fa52861cf82d0ffb9ff3), [c01fd3c4](https://github.com/Katello/katello.git/commit/c01fd3c43d71828e7c18d052587c041097b29929))
+ * Second Pulp 3 yum repo sync "empties" the repository ([#30389](https://projects.theforeman.org/issues/30389), [084dd3e7](https://github.com/Katello/katello.git/commit/084dd3e756ee2dbd474941fff57b370a68a3ce27))
  * pulp2 Debian sync starts with stacktraces ([#30314](https://projects.theforeman.org/issues/30314), [aab445d9](https://github.com/Katello/katello.git/commit/aab445d97f72574f27989488c07f1e0a59a582d0))
  * The change of srpm count in the repository doesn't trigger the index content ([#30235](https://projects.theforeman.org/issues/30235), [dd808d08](https://github.com/Katello/katello.git/commit/dd808d08390ee1292a1b34b06f287add957a6acf))
  * sync management page looks strange with pulp3 syncs ([#30124](https://projects.theforeman.org/issues/30124), [0bf60f53](https://github.com/Katello/katello.git/commit/0bf60f531244fe9ed08ca6e81cd5d3b19a0ad927))
@@ -139,6 +80,73 @@
  * Add errata pulp3_href to katello_repository_errata and index ([#28913](https://projects.theforeman.org/issues/28913), [51b89bea](https://github.com/Katello/katello.git/commit/51b89beadb7e8e8be068eefbfa1afc4b4b2ad2fa))
  * Filter Pulp 3 SRPMs by arch != "src" once Pulp 3 supports it. ([#28536](https://projects.theforeman.org/issues/28536), [c7b2fc51](https://github.com/Katello/katello.git/commit/c7b2fc511a26b7ffca4fbbc398fad454f7cc66ce))
  * GET /katello/api/srpms/compare always fails with error: Missing template katello/api/v2/common/compare ([#27546](https://projects.theforeman.org/issues/27546), [10192e4a](https://github.com/Katello/katello.git/commit/10192e4adce3b69a9181b759cfa08adf6e019006))
+
+### Subscriptions
+ * Error only on production builds: The Dynflow world was not initialized yet. If your plugin uses it, make sure to call Rails.application.dynflow.require! in some initializer ([#30511](https://projects.theforeman.org/issues/30511), [582d5b22](https://github.com/Katello/katello.git/commit/582d5b228d39b11b8b074183be585b0c36e62969))
+ * Upgraded Satellite has duplicated katello_pools indexes ([#30461](https://projects.theforeman.org/issues/30461), [cb98f469](https://github.com/Katello/katello.git/commit/cb98f46901f008f0f709d56646d04f853f2972d8))
+ *  Attempting to attach a subscription to an unregistered host results in ISE 500  ([#30451](https://projects.theforeman.org/issues/30451), [ccf77fda](https://github.com/Katello/katello.git/commit/ccf77fda7f3f8e1732170fe7d9f35b510d1465de))
+ * Cleanup data more efficiently when importing backend objects ([#30101](https://projects.theforeman.org/issues/30101), [654fa774](https://github.com/Katello/katello.git/commit/654fa7743b1186e526f549c77dabd623546c0028))
+ *  [RFE] Capsules shouldn't update hosts' "Registered through" facts on the Satellite server in a load-balanced configuration. ([#29986](https://projects.theforeman.org/issues/29986), [2d4ad4b8](https://github.com/Katello/katello.git/commit/2d4ad4b8b05bde9f900d4be81608a41388905bea))
+ * Unable to re-import subscriptions in large environment (60k+ content hosts) ([#29948](https://projects.theforeman.org/issues/29948), [bb672414](https://github.com/Katello/katello.git/commit/bb672414d89e51eee88453ea73b91d1250594343))
+ * Manifest import task keeps on executing, causing duplicate notifications ([#29942](https://projects.theforeman.org/issues/29942), [1ae0488b](https://github.com/Katello/katello.git/commit/1ae0488b5b66b8165169a9a7ea8424ee9e29478b))
+ * Error in production log from Candlepin events handler ([#29694](https://projects.theforeman.org/issues/29694), [b226cf98](https://github.com/Katello/katello.git/commit/b226cf98a8e16c338cda6d4117d690029d323657))
+ * Manifest import and delete calls Actions::Pulp::Repository::Refresh for non-Library repositories ([#29611](https://projects.theforeman.org/issues/29611), [e801fb0f](https://github.com/Katello/katello.git/commit/e801fb0f70bf25e184b89c937c5df849e120fb71))
+ * Load distributor version from a constant ([#29527](https://projects.theforeman.org/issues/29527), [acd0617e](https://github.com/Katello/katello.git/commit/acd0617ea5b7188ce9977c3bd147904a1c0e6708))
+ * HTTP error when deploying the virt-who configure plugin ([#29521](https://projects.theforeman.org/issues/29521), [5a8860a0](https://github.com/Katello/katello.git/commit/5a8860a0952db6f8f0b446b9d221cbc73edf597d))
+ * Non-admin user with view_subscriptions perms cannot view subscriptions ([#29376](https://projects.theforeman.org/issues/29376), [de6fd725](https://github.com/Katello/katello.git/commit/de6fd72533c232d9e493ed9affcb974fcd3f89b9))
+ * send notification if manifest is no longer valid ([#29367](https://projects.theforeman.org/issues/29367), [3d86aee1](https://github.com/Katello/katello.git/commit/3d86aee17402a34e1f7748b13cce40f7c31b1a15))
+ * Ignore missing candlepin content on product delete ([#29316](https://projects.theforeman.org/issues/29316), [846afb00](https://github.com/Katello/katello.git/commit/846afb0063834925b4bf2f4db0c6ddb39aa78aec))
+ * Remove upstream idCert from organization details API ([#29146](https://projects.theforeman.org/issues/29146), [79366cce](https://github.com/Katello/katello.git/commit/79366cce0bd0e7a986b47ecb097819a071b9db50))
+
+### Tests
+ * test failures after bindings updates ([#30509](https://projects.theforeman.org/issues/30509), [b8e72f0d](https://github.com/Katello/katello.git/commit/b8e72f0dc58f97b1fce269073af2e670d75d8ff6))
+ * pulp rpm 3.4.2 release breaks tests ([#30433](https://projects.theforeman.org/issues/30433), [b822ef58](https://github.com/Katello/katello.git/commit/b822ef58f60a8057763553f8930eece0c415029f))
+ * Lock theforeman js packages to 4.3.0 ([#30283](https://projects.theforeman.org/issues/30283))
+ * Some tests set, but don't unset, ENV variables ([#30202](https://projects.theforeman.org/issues/30202))
+ * React tests - timeout on some tests for nock (http mocking lib) wrapper ([#29987](https://projects.theforeman.org/issues/29987), [99791b65](https://github.com/Katello/katello.git/commit/99791b65a47437db6de16d03932af04dd83ce8e4))
+ * Fix React test issues ([#29717](https://projects.theforeman.org/issues/29717), [68219a01](https://github.com/Katello/katello.git/commit/68219a01ef036fe338b8ef457e82df30d8d82e1a))
+ * Intermittent ContentViewComponent test ([#29657](https://projects.theforeman.org/issues/29657), [1033fb02](https://github.com/Katello/katello.git/commit/1033fb02ab5f64b3d7135a2054d3e906aa99db24))
+ * Allow use of foremanReact from foreman in React tests ([#29637](https://projects.theforeman.org/issues/29637), [cb8ed4df](https://github.com/Katello/katello.git/commit/cb8ed4dfe684c1ae76023137513614632874029f))
+ * Katello Applicability tests are failing due to jenkins test DB issues ([#29618](https://projects.theforeman.org/issues/29618), [d9dc5fe0](https://github.com/Katello/katello.git/commit/d9dc5fe04ae5fb9688bcd6759a37fc276fa803c5))
+ * Travis CI keeps failing on "eslint: not found" ([#29576](https://projects.theforeman.org/issues/29576), [9183a8e9](https://github.com/Katello/katello.git/commit/9183a8e9de29fcc9582aaa6a530d795f92a63e65))
+ * Transient test failures with org labels ([#29519](https://projects.theforeman.org/issues/29519), [34b931a6](https://github.com/Katello/katello.git/commit/34b931a68266f9df550607ba19cc3662a767c71e))
+ * fix intermittent failing tests   ActivationKey and ContentView Copy ([#29411](https://projects.theforeman.org/issues/29411), [8dd68556](https://github.com/Katello/katello.git/commit/8dd6855640f679f0d806aea89b8678ee7e101d59), [364d11c9](https://github.com/Katello/katello.git/commit/364d11c90665f92506bba73c62ead6b5b2b3950c))
+ * Address cops for rubocop-minitest ([#29395](https://projects.theforeman.org/issues/29395), [3fe0945f](https://github.com/Katello/katello.git/commit/3fe0945f46329586a9dfcbed314434afeb5e3b20))
+ * angular-ui tests broke due to patternfly update ([#29381](https://projects.theforeman.org/issues/29381), [bc651a30](https://github.com/Katello/katello.git/commit/bc651a3080c6c9cbfdb5d3f9e1a54d43b7be386d))
+ * Delete all http proxies in test setup ([#29142](https://projects.theforeman.org/issues/29142), [6ed753d6](https://github.com/Katello/katello.git/commit/6ed753d6d4e61111649d6291f466fccf759db15f))
+
+### Foreman Proxy Content
+ * Clicking on any other tab other than overview while on capsule synchronizing page, redirects to overview page. ([#30425](https://projects.theforeman.org/issues/30425), [afb8e562](https://github.com/Katello/katello.git/commit/afb8e5626d462b4fe88d6f3185130aeb7448fae3))
+ * Pulpcore capsule sync for yum repositories doesn't reflect smart proxy download policy ([#29320](https://projects.theforeman.org/issues/29320), [8e5c047e](https://github.com/Katello/katello.git/commit/8e5c047ed5227a1c58fe83146ae1c9f21ca4e71a))
+ * Support syncing a pulp3 capsule with yum content content ([#28951](https://projects.theforeman.org/issues/28951), [6c1d5d72](https://github.com/Katello/katello.git/commit/6c1d5d72e7ed6e8305d5dfafd64822fcd6b57d5d))
+
+### Errata Management
+ * katello applicability doesn't refresh applicability 'counts' ([#30357](https://projects.theforeman.org/issues/30357), [339d401a](https://github.com/Katello/katello.git/commit/339d401a3228d34d5bd4c97968cf9fc7bb44c578))
+ * Viewing errata from a repository returns incorrect unfiltered results ([#30329](https://projects.theforeman.org/issues/30329), [e367b89e](https://github.com/Katello/katello.git/commit/e367b89e0064eec16d65af55a47e11b84ee60a4d))
+ * indexing a yum repo with pulp3 fails to calculate nvra at first indexing ([#30118](https://projects.theforeman.org/issues/30118), [7cef4298](https://github.com/Katello/katello.git/commit/7cef42989230033c4cb6b0ace5b04d0a55b40af3))
+ * Katello Applicability needs to calculate applicable module streams ([#29604](https://projects.theforeman.org/issues/29604), [ed09874e](https://github.com/Katello/katello.git/commit/ed09874eaa66489728ffa23a5956a65af8b42c91))
+ * Katello Applicability needs to process more than one host per task ([#29554](https://projects.theforeman.org/issues/29554), [fa452587](https://github.com/Katello/katello.git/commit/fa452587088d40eda01041a31ddaaac650090b1e))
+ * Skip planning of errata installation when the list applicable errata for a host is empty ([#29368](https://projects.theforeman.org/issues/29368), [d3594739](https://github.com/Katello/katello.git/commit/d35947391c2eeaff9f28231c8d349cb1d12023d9))
+ * Installing all Errata of a host doesn't work ([#29330](https://projects.theforeman.org/issues/29330), [6a8d63b9](https://github.com/Katello/katello.git/commit/6a8d63b972dbbadfe1974690273d33ebc9e35a18), [aaf599e7](https://github.com/Katello/katello.git/commit/aaf599e75db51bcb7f3b21e09de4bfaff12c49b6), [c963f3cd](https://github.com/Katello/katello.git/commit/c963f3cdbac5f012a214c225e3b3706cbd3d64a5))
+ * Add custom evr type column to katello_rpms and katello_installed_packages ([#29145](https://projects.theforeman.org/issues/29145), [413f9800](https://github.com/Katello/katello.git/commit/413f9800083d5497bd700c8f91577bd28b787d1e))
+ * Applied Errata report no longer works when last reboot is included ([#29042](https://projects.theforeman.org/issues/29042), [b528f36e](https://github.com/Katello/katello.git/commit/b528f36ea754985d3084c2ccc5452c2db71891d4))
+
+### Content Views
+ * Add 'Module Streams with no Errata' filter ([#30352](https://projects.theforeman.org/issues/30352), [2364a766](https://github.com/Katello/katello.git/commit/2364a76689cd20de8bb13c4ffd72861a8031447f))
+ * Add support for Yum cross-repo dep solving with Pulp 3 content views ([#30333](https://projects.theforeman.org/issues/30333), [4071c609](https://github.com/Katello/katello.git/commit/4071c609280235e18a4e0baf52dbe3bab6bb0f07))
+ * Content Hosts has Access to Content View from Different Organization ([#30112](https://projects.theforeman.org/issues/30112), [70ebdbbf](https://github.com/Katello/katello.git/commit/70ebdbbf7a9394b692d19e626804f3c6684e9902))
+ * Content view version details can be viewed by an organization that the content view does not belong to ([#30092](https://projects.theforeman.org/issues/30092), [fc4683b7](https://github.com/Katello/katello.git/commit/fc4683b70693a2998f1b565c8f2c5156ab24044f))
+ * Cannot enable dep solving or auto publish on content views: `Unpermitted parameters: :auto_publish, :solve_dependencies, :label, :default, :created_at, :updated_at, :composite, :next_version` ([#29847](https://projects.theforeman.org/issues/29847), [dad98b5f](https://github.com/Katello/katello.git/commit/dad98b5fbaa9c9e825cbb33df4c0f937f30b3a0b))
+ * Skip puppet env import on cv publish/promote if smart proxy feature is not present ([#29448](https://projects.theforeman.org/issues/29448), [80bd479e](https://github.com/Katello/katello.git/commit/80bd479ee6b997610e6f511096c8d9e1c6c0e6c8))
+ * Publishing large content view for 2nd time fails with PostgreSQL invalid message format ([#29335](https://projects.theforeman.org/issues/29335), [125d41ad](https://github.com/Katello/katello.git/commit/125d41add601f472d03f5f39f32c674b25af86f1))
+ * Publish a yum repository in a content view with pulp 3 with filters ([#29323](https://projects.theforeman.org/issues/29323), [c7735525](https://github.com/Katello/katello.git/commit/c77355253d1a7eafbb61caa9c7079ae27630a808))
+ * drpms not getting copied over cv publish ([#29104](https://projects.theforeman.org/issues/29104), [bc0651c5](https://github.com/Katello/katello.git/commit/bc0651c586c73da246ac259d8e878371e9dd1cd1))
+
+### Sync Plans
+ * Sync Plan fails with 'uninitialized constant Actions::Foreman::Exception'  ([#30343](https://projects.theforeman.org/issues/30343), [e3074f5a](https://github.com/Katello/katello.git/commit/e3074f5a7c39898f5db1eb61f44f75ef97110d4a))
+ * large capsule syncs cause slow processing of dynflow tasks/steps ([#30286](https://projects.theforeman.org/issues/30286), [f9a239d4](https://github.com/Katello/katello.git/commit/f9a239d4e42ab95dcf2561f372df00d0cb47c42b))
+ * Arrow position is on left rather in the middle under "Start Time" ([#30220](https://projects.theforeman.org/issues/30220), [8d1adbc3](https://github.com/Katello/katello.git/commit/8d1adbc3e462aa8a397187e6a289402009170416))
+ * Changing the organization in UI shows sync plan created in another organization ([#29013](https://projects.theforeman.org/issues/29013), [ae2d150c](https://github.com/Katello/katello.git/commit/ae2d150c268c8c9807a06d28a1fae18c6e0373d6))
 
 ### Hosts
  * Template macros are not shown in help list of edit template ([#30296](https://projects.theforeman.org/issues/30296), [414c6799](https://github.com/Katello/katello.git/commit/414c679963caf95acacb59bc6a5743b6bf7e7a80))
@@ -220,4 +228,6 @@
  * Should only be able to add repositories you have access to ([#18035](https://projects.theforeman.org/issues/18035), [853260e3](https://github.com/Katello/katello.git/commit/853260e3e9f94179d5881199e7885d1c08e600f6))
 
 ### Other
+ * Error while running katello:pulp3_migration ([#30472](https://projects.theforeman.org/issues/30472))
+ * podman search against katello ([#29742](https://projects.theforeman.org/issues/29742), [8c5c4833](https://github.com/Katello/katello.git/commit/8c5c483357d2340c84f38cbfb0e42ee04bb4f8be))
  * Database migration fails on SQLite ([#29549](https://projects.theforeman.org/issues/29549), [fc1dbc74](https://github.com/Katello/katello.git/commit/fc1dbc745a1b7df2d657b70bf2a58b8de2235341))
