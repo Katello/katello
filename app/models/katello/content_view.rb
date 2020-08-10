@@ -289,9 +289,21 @@ module Katello
         where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
     end
 
-    def repositories_to_publish
+    def repositories_to_publish(override_components = nil)
       if composite?
-        ids = components.flat_map { |version| version.repositories.archived }.map(&:id)
+        components_to_publish = []
+        components.each do |component|
+          override_component = override_components&.detect do |override_cvv|
+            override_cvv.content_view == component.content_view
+          end
+
+          if override_component
+            components_to_publish << override_component
+          else
+            components_to_publish << component
+          end
+        end
+        ids = components_to_publish.flat_map { |version| version.repositories.archived }.map(&:id)
         Repository.where(:id => ids)
       else
         repositories
@@ -302,11 +314,11 @@ module Katello
       composite? ? repositories_to_publish.pluck(&:id) : repository_ids
     end
 
-    def repositories_to_publish_by_library_instance
+    def repositories_to_publish_by_library_instance(override_components = nil)
       # retrieve the list of repositories in a hash, where the key
       # is the library instance id, and the value is an array
       # of the repositories for that instance.
-      repositories_to_publish.inject({}) do |result, repo|
+      repositories_to_publish(override_components).inject({}) do |result, repo|
         result[repo.library_instance] ||= []
         result[repo.library_instance] << repo
         result
@@ -326,8 +338,8 @@ module Katello
       component_composites.where(latest: true).joins(:composite_content_view).where(self.class.table_name => {auto_publish: true})
     end
 
-    def publish_repositories
-      repositories = composite? ? repositories_to_publish_by_library_instance.values : repositories_to_publish
+    def publish_repositories(override_components = nil)
+      repositories = composite? ? repositories_to_publish_by_library_instance(override_components).values : repositories_to_publish
       repositories.each do |repos|
         if repos.is_a? Array
           yield repos
