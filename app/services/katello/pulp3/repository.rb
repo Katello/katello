@@ -356,6 +356,11 @@ module Katello
         api.repositories_api.modify(repository_reference.repository_href, add_content_units: content_unit_href)
       end
 
+      def add_content_for_repo(repository_href, content_unit_href)
+        content_unit_href = [content_unit_href] unless content_unit_href.is_a?(Array)
+        api.repositories_api.modify(repository_href, add_content_units: content_unit_href)
+      end
+
       def unit_keys(uploads)
         uploads.map do |upload|
           upload.except('id')
