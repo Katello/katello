@@ -60,7 +60,7 @@ module Katello
           collection = custom_collection_by_content_view_version(@versions)
         else
           repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
-          repos = repos.where(:library_instance_id => @repo.id) if @repo
+          repos = repos.where(:root_id => @repo.root_id) if @repo
           collection = filter_by_repos(repos, resource_class.all)
         end
 
