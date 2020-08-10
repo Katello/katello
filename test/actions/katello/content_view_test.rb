@@ -374,6 +374,8 @@ module ::Actions::Katello::ContentView
     it 'plans with composite' do
       component = composite_version.components.first
       new_version = ::Katello::ContentViewVersion.new
+      proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      SmartProxy.any_instance.stubs(:pulp_master).returns(proxy)
 
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version).returns(new_version)
 

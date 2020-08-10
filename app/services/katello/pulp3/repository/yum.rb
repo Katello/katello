@@ -74,38 +74,64 @@ module Katello
           "/pulp/repos/#{repo.relative_path}/".sub('//', '/')
         end
 
-        def copy_units(source_repository, content_unit_hrefs, dependency_solving, dest_base_version = 0,
-                       additional_repo_map = {})
+        def multi_copy_units(repo_id_map, dependency_solving)
           tasks = []
+
+          if repo_id_map.values.pluck(:content_unit_hrefs).flatten.any?
+            data = PulpRpmClient::Copy.new
+            data.dependency_solving = dependency_solving
+            data.config = []
+            repo_id_map.each do |source_repo_ids, dest_repo_id_map|
+              dest_repo = ::Katello::Repository.find(dest_repo_id_map[:dest_repo])
+              dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
+              content_unit_hrefs = dest_repo_id_map[:content_unit_hrefs]
+              # Not needed during incremental update due to dest_base_version
+              unless dest_repo_id_map[:base_version]
+                source_repo_for_package_envs = ::Katello::Repository.find(source_repo_ids.first)
+                unless source_repo_for_package_envs.library_instance?
+                  source_repo_for_package_envs = source_repo_for_package_envs.library_instance
+                end
+                package_env_hrefs = packageenvironments({ :repository_version => source_repo_for_package_envs.version_href }).map(&:pulp_href).sort
+                tasks << remove_all_content_from_repo(dest_repo_href)
+                tasks << add_content_for_repo(dest_repo_href, package_env_hrefs) unless package_env_hrefs.empty?
+              end
+              source_repo_ids.each do |source_repo_id|
+                source_repo_version = ::Katello::Repository.find(source_repo_id).version_href
+                config = { source_repo_version: source_repo_version, dest_repo: dest_repo_href, content: content_unit_hrefs }
+                config[:dest_base_version] = dest_repo_id_map[:base_version] if dest_repo_id_map[:base_version]
+                data.config << config
+              end
+            end
+            # FIXME: data's content being [] causes all content to be copied back
+            tasks << api.copy_api.copy_content(data)
+          else
+            tasks << remove_all_content_from_mapping(repo_id_map)
+          end
+          tasks.flatten
+        end
+
+        def remove_all_content_from_mapping(repo_id_map)
+          tasks = []
+          repo_id_map.each do |_source_repo_ids, dest_repo_id_map|
+            dest_repo = ::Katello::Repository.find(dest_repo_id_map[:dest_repo])
+            dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
+            tasks << remove_all_content_from_repo(dest_repo_href)
+          end
+          tasks
+        end
+
+        def copy_units(source_repository, content_unit_hrefs, dependency_solving)
+          tasks = []
+
           if content_unit_hrefs.sort!.any?
             data = PulpRpmClient::Copy.new
             data.config = [{
               source_repo_version: source_repository.version_href,
               dest_repo: repository_reference.repository_href,
-              dest_base_version: dest_base_version,
+              dest_base_version: 0,
               content: content_unit_hrefs
             }]
             data.dependency_solving = dependency_solving
-            if dependency_solving
-              # repo_map example: {
-              #   <source_repo_id>: {
-              #     dest_repo: <dest_repo_id>,
-              #     base_version: <base_version>
-              #   }
-              # }
-              additional_repo_map.each do |source_repo, dest_repo_map|
-                source_repo_version = ::Katello::Repository.find(source_repo).version_href
-
-                dest_repo = ::Katello::Repository.find(dest_repo_map[:dest_repo])
-                dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
-                data.config << {
-                  source_repo_version: source_repo_version,
-                  dest_repo: dest_repo_href,
-                  dest_base_version: dest_repo_map[:base_version],
-                  content: content_unit_hrefs
-                }
-              end
-            end
             package_env_hrefs = packageenvironments({ :repository_version => source_repository.version_href }).map(&:pulp_href).sort
             tasks << api.copy_api.copy_content(data)
             tasks << add_content(package_env_hrefs) unless package_env_hrefs.empty?
@@ -113,6 +139,12 @@ module Katello
             tasks << remove_all_content
           end
           tasks
+        end
+
+        def remove_all_content_from_repo(repo_href)
+          data = PulpRpmClient::RepositoryAddRemoveContent.new(
+            remove_content_units: ['*'])
+          api.repositories_api.modify(repo_href, data)
         end
 
         def remove_all_content
@@ -131,6 +163,94 @@ module Katello
 
         def distributiontrees(options = {})
           api.content_distribution_trees_api.list(options)
+        end
+
+        def add_filter_content(source_repo_ids, filters, filter_list_map)
+          filters.each do |filter|
+            if filter.inclusion
+              source_repo_ids.each do |repo_id|
+                filter_list_map[:whitelist_ids] += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+              end
+            else
+              source_repo_ids.each do |repo_id|
+                filter_list_map[:blacklist_ids] += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+              end
+            end
+          end
+          filter_list_map
+        end
+
+        def add_un_modular_rpms(source_repo_ids, filters, filter_list_map)
+          if (filter_list_map[:whitelist_ids].empty? && filters.select { |filter| filter.inclusion }.empty?)
+            filter_list_map[:whitelist_ids] += source_repo_ids.collect do |source_repo_id|
+              source_repo = ::Katello::Repository.find(source_repo_id)
+              source_repo.rpms.where(:modular => false).pluck(:pulp_id).sort
+            end
+          end
+          filter_list_map
+        end
+
+        def add_modular_content(source_repo_ids, filters, modular_filters, filter_list_map)
+          inclusion_modular_filters = modular_filters.select { |filter| filter.inclusion }
+          exclusion_modular_filters = modular_filters - inclusion_modular_filters
+          if inclusion_modular_filters.empty? &&
+              !(filters.any? { |filter| filter.class == ContentViewErratumFilter && filter.inclusion })
+            source_repo_ids.each do |source_repo_id|
+              source_repo = ::Katello::Repository.find(source_repo_id)
+              filter_list_map[:whitelist_ids] += source_repo.rpms.where(:modular => true).pluck(:pulp_id).sort
+              filter_list_map[:whitelist_ids] += source_repo.module_streams.pluck(:pulp_id).sort
+            end
+          end
+
+          unless inclusion_modular_filters.empty?
+            filter_list_map[:whitelist_ids] += source_repo_ids.collect do |source_repo_id|
+              source_repo = ::Katello::Repository.find(source_repo_id)
+              modular_packages(source_repo, inclusion_modular_filters)
+            end
+          end
+
+          unless exclusion_modular_filters.empty?
+            filter_list_map[:blacklist_ids] += source_repo_ids.collect do |source_repo_id|
+              source_repo = ::Katello::Repository.find(source_repo_id)
+              modular_packages(source_repo, exclusion_modular_filters)
+            end
+          end
+
+          filter_list_map
+        end
+
+        def copy_content_from_mapping(repo_id_map, options = {})
+          repo_id_map.each do |source_repo_ids, dest_repo_map|
+            filters = [ContentViewErratumFilter, ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
+              filter_class.where(:id => dest_repo_map[:filter_ids])
+            end
+            modular_filters = ContentViewModuleStreamFilter.where(:id => dest_repo_map[:filter_ids])
+            filters.flatten!.compact!
+
+            filter_list_map = { whitelist_ids: [], blacklist_ids: [] }
+            filter_list_map = add_filter_content(source_repo_ids, filters, filter_list_map)
+            filter_list_map = add_un_modular_rpms(source_repo_ids, filters, filter_list_map)
+            filter_list_map = add_modular_content(source_repo_ids, filters, modular_filters, filter_list_map)
+
+            whitelist_ids = filter_list_map[:whitelist_ids].flatten&.uniq
+            blacklist_ids = filter_list_map[:blacklist_ids].flatten&.uniq
+            content_unit_hrefs = whitelist_ids - blacklist_ids
+
+            if content_unit_hrefs.any?
+              source_repo_ids.each do |source_repo_id|
+                content_unit_hrefs += additional_content_hrefs(::Katello::Repository.find(source_repo_id), content_unit_hrefs)
+              end
+            end
+            source_repo_ids.each do |source_repo_id|
+              content_unit_hrefs += ::Katello::Repository.find(source_repo_id).srpms.pluck(:pulp_id)
+            end
+
+            dest_repo_map[:content_unit_hrefs] = content_unit_hrefs.uniq.sort
+          end
+
+          dependency_solving = options[:solve_dependencies] || false
+
+          multi_copy_units(repo_id_map, dependency_solving)
         end
 
         def copy_content_for_source(source_repository, options = {})

@@ -1,7 +1,9 @@
 module Actions
   module Katello
     module ContentViewVersion
+      # rubocop:disable Metrics/ClassLength
       class IncrementalUpdate < Actions::EntryAction
+        include ::Katello::ContentViewHelper
         attr_accessor :new_content_view_version
 
         HUMANIZED_TYPES = {
@@ -30,6 +32,19 @@ module Actions
           validate_environments(environments, old_version)
 
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
+          if SmartProxy.pulp_master.pulp3_repository_type_support?("yum") && is_composite
+            sequence do
+              publish_action = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
+                          :major => old_version.major, :minor => new_minor,
+                          :override_components => new_components, :skip_promotion => true)
+              if old_version.environments.present?
+                plan_action(::Actions::Katello::ContentView::Promote, publish_action.version,
+                            old_version.environments, true, description)
+              end
+            end
+            return
+          end
+
           self.new_content_view_version = old_version.content_view.create_new_version(old_version.major, new_minor, all_components)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => new_content_view_version, :user => ::User.current.login,
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
@@ -41,6 +56,7 @@ module Actions
 
           sequence do
             repository_mapping = plan_action(ContentViewVersion::CreateRepos, new_content_view_version, repos_to_clone).repository_mapping
+            separated_repo_map = separated_repo_mapping(repository_mapping)
 
             repos_to_clone.each do |source_repos|
               plan_action(Repository::CloneToVersion,
@@ -51,18 +67,24 @@ module Actions
             end
 
             concurrence do
-              if SmartProxy.pulp_master.pulp3_support?(repos_to_clone.first.first)
-                extended_repo_mapping = pulp3_repo_mapping(repository_mapping, old_version)
+              if separated_repo_map[:pulp3_yum].keys.flatten.present?
+                extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[:pulp3_yum], old_version)
                 unit_map = pulp3_content_mapping(content)
 
-                copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
-                                                   dependency_solving: true).output
-              else
+                unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
+                  copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
+                                                     dependency_solving: true).output
+                end
+              end
+
+              if separated_repo_map[:other].keys.flatten.present?
                 repos_to_clone.each do |source_repos|
-                  copy_action_outputs += copy_repos(repository_mapping[source_repos],
-                                                    new_content_view_version,
-                                                    content,
-                                                    dep_solve)
+                  if separated_repo_map[:other].keys.include?(source_repos)
+                    copy_action_outputs += copy_repos(repository_mapping[source_repos],
+                                                      new_content_view_version,
+                                                      content,
+                                                      dep_solve)
+                  end
                 end
               end
 
@@ -98,11 +120,21 @@ module Actions
 
         def pulp3_repo_mapping(repo_mapping, old_version)
           pulp3_repo_mapping = {}
-          repo_mapping.each do |source_repo, dest_repo|
-            source_repo = source_repo.first.library_instance? ? source_repo : [source_repo.first.library_instance]
-            pulp3_repo_mapping[source_repo.first.id] = { dest_repo: dest_repo.id,
-                                                         base_version: pulp3_dest_base_version(
-                                                           ::Katello::ContentViewVersion.find(old_version.id), dest_repo) }
+          repo_mapping.each do |source_repos, dest_repo|
+            old_version_repo = old_version.repositories.archived.find_by(root_id: dest_repo.root_id)
+
+            next if old_version_repo.version_href == old_version_repo.library_instance.version_href
+
+            source_library_repo = source_repos.first.library_instance? ? source_repos.first : source_repos.first.library_instance
+
+            source_repos = [source_library_repo]
+            if old_version_repo.version_href
+              base_version = old_version_repo.version_href.split("/")[-1].to_i
+            else
+              base_version = 0
+            end
+
+            pulp3_repo_mapping[source_repos.map(&:id)] = { dest_repo: dest_repo.id, base_version: base_version }
           end
           pulp3_repo_mapping
         end
@@ -179,42 +211,44 @@ module Actions
           base_repos = ::Katello::ContentViewVersion.find(input[:old_version]).repositories
           new_repos = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id]).repositories
 
-          if input[:copy_action_outputs].last[:pulp_tasks].last[:pulp_href]&.include?("/pulp/api/v3/")
-            new_repos.each do |new_repo|
-              matched_old_repo = base_repos.where(root_id: new_repo.root_id).first
+          if input[:copy_action_outputs].present? && input[:copy_action_outputs].last[:pulp_tasks].present?
+            if input[:copy_action_outputs].last[:pulp_tasks].last[:pulp_href]&.include?("/pulp/api/v3/")
+              new_repos.each do |new_repo|
+                matched_old_repo = base_repos.where(root_id: new_repo.root_id).first
 
-              new_errata = new_repo.errata - matched_old_repo.errata
-              new_module_streams = new_repo.module_streams - matched_old_repo.module_streams
-              new_rpms = new_repo.rpms - matched_old_repo.rpms
+                new_errata = new_repo.errata - matched_old_repo.errata
+                new_module_streams = new_repo.module_streams - matched_old_repo.module_streams
+                new_rpms = new_repo.rpms - matched_old_repo.rpms
 
-              new_errata.each do |erratum|
-                content[::Katello::Erratum::CONTENT_TYPE] << erratum.errata_id
+                new_errata.each do |erratum|
+                  content[::Katello::Erratum::CONTENT_TYPE] << erratum.errata_id
+                end
+                new_module_streams.each do |module_stream|
+                  content[::Katello::ModuleStream::CONTENT_TYPE] <<
+                    "#{module_stream.name}:#{module_stream.stream}:#{module_stream.version}"
+                end
+                new_rpms.each do |rpm|
+                  content[::Katello::Rpm::CONTENT_TYPE] << rpm.nvra
+                end
               end
-              new_module_streams.each do |module_stream|
-                content[::Katello::ModuleStream::CONTENT_TYPE] <<
-                  "#{module_stream.name}:#{module_stream.stream}:#{module_stream.version}"
-              end
-              new_rpms.each do |rpm|
-                content[::Katello::Rpm::CONTENT_TYPE] << rpm.nvra
-              end
-            end
-          else
-            input[:copy_action_outputs].each do |copy_output|
-              copy_output[:pulp_tasks].each do |pulp_task|
-                pulp_task[:result][:units_successful].each do |unit|
-                  type = unit['type_id']
-                  unit = unit['unit_key']
-                  case type
-                  when ::Katello::Erratum::CONTENT_TYPE
-                    content[::Katello::Erratum::CONTENT_TYPE] << unit['id']
-                  when ::Katello::ModuleStream::CONTENT_TYPE
-                    content[::Katello::ModuleStream::CONTENT_TYPE] << "#{unit['name']}:#{unit['stream']}:#{unit['version']}"
-                  when ::Katello::Rpm::CONTENT_TYPE
-                    content[::Katello::Rpm::CONTENT_TYPE] << ::Katello::Util::Package.build_nvra(unit)
-                  when ::Katello::Deb::CONTENT_TYPE
-                    content[::Katello::Deb::CONTENT_TYPE] << "#{unit['name']}_#{unit['version']}_#{unit['architecture']}"
-                  when ::Katello::PuppetModule::CONTENT_TYPE
-                    content[::Katello::PuppetModule::CONTENT_TYPE] << "#{unit['author']}-#{unit['name']}-#{unit['version']}"
+            else
+              input[:copy_action_outputs].each do |copy_output|
+                copy_output[:pulp_tasks].each do |pulp_task|
+                  pulp_task[:result][:units_successful].each do |unit|
+                    type = unit['type_id']
+                    unit = unit['unit_key']
+                    case type
+                    when ::Katello::Erratum::CONTENT_TYPE
+                      content[::Katello::Erratum::CONTENT_TYPE] << unit['id']
+                    when ::Katello::ModuleStream::CONTENT_TYPE
+                      content[::Katello::ModuleStream::CONTENT_TYPE] << "#{unit['name']}:#{unit['stream']}:#{unit['version']}"
+                    when ::Katello::Rpm::CONTENT_TYPE
+                      content[::Katello::Rpm::CONTENT_TYPE] << ::Katello::Util::Package.build_nvra(unit)
+                    when ::Katello::Deb::CONTENT_TYPE
+                      content[::Katello::Deb::CONTENT_TYPE] << "#{unit['name']}_#{unit['version']}_#{unit['architecture']}"
+                    when ::Katello::PuppetModule::CONTENT_TYPE
+                      content[::Katello::PuppetModule::CONTENT_TYPE] << "#{unit['author']}-#{unit['name']}-#{unit['version']}"
+                    end
                   end
                 end
               end
@@ -313,10 +347,6 @@ module Actions
             end
           end
           copy_outputs
-        end
-
-        def pulp3_dest_base_version(old_cvv, new_repo)
-          old_cvv.repositories.archived.find_by(root_id: new_repo.root_id).version_href.split("/")[-1].to_i
         end
 
         def copy_yum_content(new_repo, dep_solve, package_ids, errata_ids)
