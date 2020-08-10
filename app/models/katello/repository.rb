@@ -3,6 +3,9 @@ module Katello
   class Repository < Katello::Model
     audited
 
+    # Optional for when querying based on CV
+    attribute :added_to_content_view, :boolean, default: false
+
     #pulp uses pulp id to sync with 'yum_distributor' on the end
     PULP_ID_MAX_LENGTH = 220
 
@@ -262,6 +265,38 @@ module Katello
     def self.in_content_views(views)
       joins(:content_view_version)
         .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
+    end
+
+    def self.all_for_content_view(content_view_id)
+      kr = Katello::Repository.table_name
+      kcv = Katello::ContentView.table_name
+      kcvr = Katello::ContentViewRepository.table_name
+      select_query = <<-SQL
+        DISTINCT #{kr}.*,
+          CASE
+              WHEN #{kcvr}.content_view_id = #{content_view_id} THEN 1
+              ELSE 0
+          END AS "added_to_content_view"
+      SQL
+      from_query = "#{kr}"
+      cvr_join = <<-SQL
+        LEFT JOIN #{kcvr} ON (#{kr}.id = #{kcvr}.repository_id)
+      SQL
+      cv_join = <<-SQL
+        LEFT JOIN #{kcv} ON (#{kcvr}.content_view_id = #{kcv}.id)
+      SQL
+      where_query = <<-SQL
+        #{kcv}.id = #{content_view_id} OR #{kcv}.id IS NULL
+      SQL
+      order_query =  <<-SQL
+        "added_to_content_view" DESC, katello_repositories.id
+      SQL
+      self.select(select_query)
+          .from(from_query)
+          .joins(cvr_join)
+          .joins(cv_join)
+          .where(where_query)
+          .order(Arel.sql(order_query))
     end
 
     def self.feed_ca_cert(url)

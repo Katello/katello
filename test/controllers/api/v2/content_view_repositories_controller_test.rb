@@ -14,6 +14,7 @@ module Katello
 
       assert_response :success
       results = JSON.parse(response.body, symbolize_names: true)[:results]
+      byebug
       added_ids = results.select { |r| r[:added_to_content_view] }.pluck(:id)
       not_added_ids = results.reject { |r| r[:added_to_content_view] }.pluck(:id)
 

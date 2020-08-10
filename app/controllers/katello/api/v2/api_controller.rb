@@ -66,7 +66,7 @@ module Katello
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
       group = options.fetch(:group, nil)
-      deterministic_order = options.fetch(:deterministic_order, "#{query.table_name}.id DESC")
+      fixed_query = options.fetch(:fixed_query, false) # Use query passed in and don't re-query by ids
       params[:full_result] = true if options[:csv]
       blank_query = resource.none
 
@@ -79,7 +79,11 @@ module Katello
       total = scoped_search_total(query, group)
 
       query = query.select(:id) if query.respond_to?(:select)
-      query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
+      if fixed_query
+        query = query.search_for(*search_options)
+      else
+        query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
+      end
 
       query = self.final_custom_index_relation(query) if self.respond_to?(:final_custom_index_relation)
 
@@ -89,7 +93,7 @@ module Katello
       if options[:custom_sort]
         query = options[:custom_sort].call(query)
       end
-      query = query.order(deterministic_order) unless group #secondary order to ensure sort is deterministic
+      query = query.order("#{query.table_name}.id DESC") unless group #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
       if ::Foreman::Cast.to_bool(params[:full_result])
@@ -118,7 +122,7 @@ module Katello
       if group
         query.select(group).group(group).length
       else
-        query.count
+        query.size
       end
     end
 
