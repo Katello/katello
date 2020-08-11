@@ -87,7 +87,7 @@ module Katello
       end
 
       # rubocop:disable Metrics/MethodLength
-      def load_errata_applications(filter_errata_type: nil, include_last_reboot: 'yes', since: nil, up_to: nil, status: nil)
+      def load_errata_applications(filter_errata_type: nil, include_last_reboot: 'yes', since: nil, up_to: nil, status: nil, host_filter: nil)
         result = []
 
         filter_errata_type = filter_errata_type.presence || 'all'
@@ -109,6 +109,7 @@ module Katello
                               select: 'foreman_tasks_tasks.*,template_invocations.id AS template_invocation_id',
                               search: search
         )
+        only_host_ids = ::Host.search_for(host_filter).pluck(:id) if host_filter
 
         # batch of 1_000 records
         tasks.each do |batch|
@@ -118,14 +119,15 @@ module Katello
 
           batch.each do |task|
             seen_errata_ids = (seen_errata_ids + parse_errata(task)).uniq
-            seen_host_ids << task.input['host']['id'] if include_last_reboot == 'yes'
+            seen_host_ids << task.input['host']['id'].to_i if include_last_reboot == 'yes'
           end
 
           # preload errata in one query for this batch
           preloaded_errata = Katello::Erratum.where(:errata_id => seen_errata_ids).pluck(:errata_id, :errata_type)
-          preloaded_hosts = ::Host.where(:id => seen_host_ids).includes(:reported_data)
+          preloaded_hosts = ::Host.where(:id => seen_host_ids & only_host_ids).includes(:reported_data)
 
           batch.each do |task|
+            next unless only_host_ids.include?(task.input['host']['id'].to_i)
             parse_errata(task).each do |erratum_id|
               current_erratum_errata_type = preloaded_errata.find { |k, _| k == erratum_id }.last
 
