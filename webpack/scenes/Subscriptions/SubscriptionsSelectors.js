@@ -24,5 +24,8 @@ export const selectIsTaskPending = (state) => {
   return false;
 };
 
+export const selectManifestActionStarted = state =>
+  selectSubscriptionsState(state).manifestActionStarted;
+
 export const selectHasUpstreamConnection = state =>
   selectSubscriptionsState(state).hasUpstreamConnection;
