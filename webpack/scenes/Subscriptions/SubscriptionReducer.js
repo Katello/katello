@@ -11,8 +11,12 @@ import {
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
   SUBSCRIPTIONS_COLUMNS_REQUEST,
   UPDATE_SUBSCRIPTION_COLUMNS,
+  UPDATE_QUANTITY_REQUEST,
   UPDATE_QUANTITY_SUCCESS,
+  UPDATE_QUANTITY_FAILURE,
+  DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
+  DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
@@ -59,7 +63,7 @@ const initialState = Immutable({
   tableColumns: [],
   selectedTableColumns: [],
   hasUpstreamConnection: false,
-  manifestActionInProgress: false,
+  manifestActionStarted: false,
 });
 
 export default (state = initialState, action) => {
@@ -154,41 +158,46 @@ export default (state = initialState, action) => {
       return state.merge({
         task: action.response,
         hasUpstreamConnection: false,
-        manifestActionInProgress: false,
+        manifestActionStarted: false,
       });
 
-    case UPDATE_QUANTITY_SUCCESS:
     case SUBSCRIPTIONS_POLL_TASK_SUCCESS:
       return state
         .set('task', action.response);
 
+    case UPDATE_QUANTITY_SUCCESS:
     case UPLOAD_MANIFEST_SUCCESS:
     case REFRESH_MANIFEST_SUCCESS:
     case ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS:
     case DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS:
       return state
         .set('task', action.response)
-        .set('manifestActionInProgress', false);
+        .set('manifestActionStarted', false);
 
     case ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST:
     case DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST:
     case REFRESH_MANIFEST_REQUEST:
     case UPLOAD_MANIFEST_REQUEST:
     case DELETE_MANIFEST_REQUEST:
+    case UPDATE_QUANTITY_REQUEST:
+    case DELETE_SUBSCRIPTIONS_REQUEST:
       return state
-        .set('manifestActionInProgress', true);
+        .set('manifestActionStarted', true);
 
     case ENABLE_SIMPLE_CONTENT_ACCESS_FAILURE:
     case DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE:
     case REFRESH_MANIFEST_FAILURE:
     case UPLOAD_MANIFEST_FAILURE:
     case DELETE_MANIFEST_FAILURE:
+    case DELETE_SUBSCRIPTIONS_FAILURE:
+    case UPDATE_QUANTITY_FAILURE:
       return state
-        .set('manifestActionInProgress', false);
+        .set('manifestActionStarted', false);
 
     case DELETE_SUBSCRIPTIONS_SUCCESS:
       return state
         .set('task', action.response)
+        .set('manifestActionStarted', false)
         .set('deleteButtonDisabled', true);
 
     case SUBSCRIPTIONS_RESET_TASKS:
