@@ -21,24 +21,22 @@ class ManageManifestModal extends Component {
 
     this.state = {
       redhat_repository_url: null,
-      hideModalAfterAction: true,
     };
   }
 
-  componentWillMount() {
-    if (this.props.taskInProgress && this.state.hideModalAfterAction) {
-      this.hideModal();
-      this.setState({ hideModalAfterAction: false });
-    }
-  }
-
   componentDidMount() {
-    this.loadData();
-    this.props.loadOrganization();
+    this.props.loadManifestHistory();
   }
 
-  loadData() {
-    this.props.loadManifestHistory();
+  componentDidUpdate(prevProps) {
+    if (!prevProps.taskInProgress && this.props.taskInProgress) {
+      this.hideModal();
+    }
+
+    if (prevProps.taskInProgress && !this.props.taskInProgress) {
+      this.props.loadOrganization();
+      this.props.loadManifestHistory();
+    }
   }
 
   hideModal = () => {
@@ -61,7 +59,6 @@ class ManageManifestModal extends Component {
   };
 
   uploadManifest = (fileList) => {
-    this.hideModal();
     if (fileList.length > 0) {
       this.props.upload(fileList[0]);
     }
@@ -72,12 +69,11 @@ class ManageManifestModal extends Component {
   };
 
   deleteManifest = () => {
-    this.hideModal();
     this.props.delete();
   };
 
   disabledTooltipText = () => {
-    if (this.state.actionInProgress) {
+    if (this.props.taskInProgress) {
       return __('This is disabled because a manifest task is in progress');
     }
     return __('This is disabled because no manifest exists');
@@ -97,10 +93,10 @@ class ManageManifestModal extends Component {
       enableSimpleContentAccess,
       disableSimpleContentAccess,
       taskInProgress,
-      manifestActionInProgress,
+      manifestActionStarted,
     } = this.props;
 
-    const actionInProgress = (taskInProgress || manifestActionInProgress);
+    const actionInProgress = (taskInProgress || manifestActionStarted);
     const showRedHatProviderDetails = canEditOrganizations;
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
     const showManifestTab = (showRedHatProviderDetails || showSubscriptionManifest);
@@ -247,20 +243,13 @@ class ManageManifestModal extends Component {
                               {canDeleteManifest &&
                               <React.Fragment>
                                 <TooltipButton
-                                  renderedButton={(
-                                    <Button
-                                      disabled={!isManifestImported || actionInProgress}
-                                      bsStyle="danger"
-                                      onClick={this.showDeleteManifestModal}
-                                    >
-                                      {__('Delete')}
-                                    </Button>
-                                    )}
-
+                                  disabled={!isManifestImported || actionInProgress}
+                                  bsStyle="danger"
+                                  onClick={this.showDeleteManifestModal}
+                                  title={__('Delete')}
                                   tooltipId="delete-manifest-button-tooltip"
                                   tooltipText={this.disabledTooltipText()}
                                   tooltipPlacement="top"
-
                                 />
                               </React.Fragment>
                               }
@@ -342,7 +331,7 @@ ManageManifestModal.propTypes = {
   setModalClosed: PropTypes.func.isRequired,
   setModalOpen: PropTypes.func.isRequired,
   deleteManifestModalIsOpen: PropTypes.bool,
-  manifestActionInProgress: PropTypes.bool,
+  manifestActionStarted: PropTypes.bool,
 };
 
 ManageManifestModal.defaultProps = {
@@ -354,7 +343,7 @@ ManageManifestModal.defaultProps = {
   canEditOrganizations: false,
   deleteManifestModalIsOpen: false,
   simpleContentAccess: false,
-  manifestActionInProgress: false,
+  manifestActionStarted: false,
 };
 
 export default ManageManifestModal;

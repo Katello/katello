@@ -17,7 +17,6 @@ const defaultProps = {
   canImportManifest: true,
   canDeleteManifest: true,
   canEditOrganizations: true,
-  deleteManifestModalIsOpen: true,
   upload: noop,
   refresh: noop,
   delete: noop,
@@ -51,7 +50,6 @@ const initialState = {
 const enableSimpleContetAccessPath = api.getApiUrl('/organizations/1/upstream_subscriptions/simple_content_access/enable');
 const disableSimpleContetAccessPath = api.getApiUrl('/organizations/1/upstream_subscriptions/simple_content_access/disable');
 const manifestHistoryPath = api.getApiUrl('/organizations/1/subscriptions/manifest_history');
-const organizationPath = api.getApiUrl('/organizations/1');
 
 test('Enable Simple Content Access after toggle switch value to true', async (done) => {
   const { getByTestId } = renderWithRedux(<ManifestModal {...defaultProps} />, { initialState });
@@ -65,11 +63,6 @@ test('Enable Simple Content Access after toggle switch value to true', async (do
     .query(true)
     .reply(200, manifestHistorySuccessResponse);
 
-  const scope = nockInstance
-    .get(organizationPath)
-    .query(true)
-    .reply(200, 'Organization Success Response!');
-
   const toggleButton = getByTestId('switch');
 
   await patientlyWaitFor(() => { expect(toggleButton).toBeInTheDocument(); });
@@ -77,7 +70,6 @@ test('Enable Simple Content Access after toggle switch value to true', async (do
 
   fireEvent.click(toggleButton);
 
-  assertNockRequest(scope);
   assertNockRequest(getscope);
   assertNockRequest(updatescope, done);
 });
@@ -94,11 +86,6 @@ test('Disable Simple Content Access after toggle switch value to false', async (
     .query(true)
     .reply(200, manifestHistorySuccessResponse);
 
-  const scope = nockInstance
-    .get(organizationPath)
-    .query(true)
-    .reply(200, 'Organization Success Response!');
-
   const { getByTestId } = renderWithRedux(<ManifestModal {...defaultProps} />, { initialState });
 
   const toggleButton = getByTestId('switch');
@@ -108,7 +95,6 @@ test('Disable Simple Content Access after toggle switch value to false', async (
 
   fireEvent.click(toggleButton);
 
-  assertNockRequest(scope);
   assertNockRequest(getscope);
   assertNockRequest(updatescope, done);
 });
