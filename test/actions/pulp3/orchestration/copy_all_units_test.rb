@@ -257,6 +257,25 @@ module ::Actions::Pulp3
       assert_equal ['kangaroo'], @repo_clone.rpms.pluck(:name)
     end
 
+    def test_yum_copy_with_whitelist_name_original_packages_filter
+      filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true, :original_packages => true)
+      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "kangaroo")
+
+      @repo_clone_original_version_href = @repo_clone.version_href
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
+                             @repo_clone, @master, [@repo], filters: [filter])
+      @repo_clone.reload
+
+      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+      @repo_clone.reload
+
+      refute_empty @repo.rpms
+      expected_rpms = ["zebra", "walrus", "whale", "tiger", "squirrel", "wolf", "pike", "horse", "lion", "kangaroo", "cow",
+                       "dolphin", "cockateel", "cheetah", "mouse", "giraffe", "frog", "chimpanzee", "elephant", "fox", "cat", "dog", "camel", "trout"].sort
+      assert_equal expected_rpms, @repo_clone.rpms.pluck(:name).sort
+    end
+
     def test_yum_copy_with_whitelist_min_version_filter
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "walrus", :min_version => "4")
