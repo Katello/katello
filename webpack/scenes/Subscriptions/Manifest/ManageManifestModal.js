@@ -37,10 +37,13 @@ class ManageManifestModal extends Component {
       this.props.loadOrganization();
       this.props.loadManifestHistory();
     }
+
+    if (!prevProps.manifestActionStarted && this.props.manifestActionStarted) {
+      this.hideDeleteManifestModal();
+    }
   }
 
   hideModal = () => {
-    if (this.props.deleteManifestModalIsOpen) this.hideDeleteManifestModal();
     this.props.setModalClosed({ id: MANAGE_MANIFEST_MODAL_ID });
   };
 
@@ -330,7 +333,6 @@ ManageManifestModal.propTypes = {
   }).isRequired,
   setModalClosed: PropTypes.func.isRequired,
   setModalOpen: PropTypes.func.isRequired,
-  deleteManifestModalIsOpen: PropTypes.bool,
   manifestActionStarted: PropTypes.bool,
 };
 
@@ -341,7 +343,6 @@ ManageManifestModal.defaultProps = {
   canDeleteManifest: false,
   isManifestImported: false,
   canEditOrganizations: false,
-  deleteManifestModalIsOpen: false,
   simpleContentAccess: false,
   manifestActionStarted: false,
 };
