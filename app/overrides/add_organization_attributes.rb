@@ -22,3 +22,9 @@ Deface::Override.new(:virtual_path => "taxonomies/_form",
                      :name => "add_organization_attributes_on_edit",
                      :insert_after => 'erb[loud]:contains("text_f"):contains(":name")',
                      :partial => 'overrides/organizations/edit_override')
+
+# Add Simple Content Access Column to org table
+Deface::Override.new(:virtual_path => "taxonomies/index",
+                     :name => "add_organization_attributes_on_index",
+                     :insert_after => 'erb[loud]:contains(":title"):contains("Taxonomy|Name")',
+                     :partial => 'overrides/organizations/index_override')

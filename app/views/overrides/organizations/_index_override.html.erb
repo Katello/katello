@@ -1,0 +1,12 @@
+<%= javascript_include_tag 'katello/organizations/index_table_change' %>
+
+<% @taxonomies.each do |taxonomy| %>
+  <% show_simple_content_access_column = true %>
+  <% if taxonomy.is_a?(Organization) %>
+    <% if show_simple_content_access_column %>
+      <%= hidden_field_tag "show_simple_content_access_column", show_simple_content_access_column  %>
+      <% show_simple_content_access_column = false %>
+    <% end %>
+    <%= hidden_field_tag taxonomy.name, taxonomy.simple_content_access?  %>
+  <% end %>
+<% end %>
