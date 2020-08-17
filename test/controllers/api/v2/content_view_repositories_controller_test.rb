@@ -14,7 +14,6 @@ module Katello
 
       assert_response :success
       results = JSON.parse(response.body, symbolize_names: true)[:results]
-      byebug
       added_ids = results.select { |r| r[:added_to_content_view] }.pluck(:id)
       not_added_ids = results.reject { |r| r[:added_to_content_view] }.pluck(:id)
 
@@ -35,32 +34,6 @@ module Katello
       assert results.first[:added_to_content_view]
       refute results.last[:added_to_content_view]
       assert_includes results.pluck(:id), @fedora_repo.id
-    end
-
-    def test_show_only_added
-      get :show_all, params: { content_view_id: @view.id, only: "added" }
-
-      assert_response :success
-      body = JSON.parse(response.body, symbolize_names: true)
-      results = body[:results]
-
-      assert_equal body[:subtotal].to_i, 1
-      assert_equal results.length, 1
-      assert results.first[:added_to_content_view]
-      assert_equal results.first[:id], @fedora_repo.id
-    end
-
-    def test_show_only_available
-      get :show_all, params: { content_view_id: @view.id, only: "available" }
-
-      assert_response :success
-      body = JSON.parse(response.body, symbolize_names: true)
-      results = body[:results]
-
-      assert body[:subtotal].to_i > 1
-      assert results.length > 1
-      results.each { |result| refute result[:added_to_content_view], "#{result} returned the wrong value!" }
-      assert_includes results.pluck(:id), @fedora_dup_repo.id
     end
   end
 end

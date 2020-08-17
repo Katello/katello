@@ -12,8 +12,24 @@ module Katello
     # This was created for ease of pagination and search for the UI
     param :id, :number, desc: N_("Content View id"), required: true
     def show_all
-      query = Katello::Repository.all_for_content_view(@content_view.id);
-      options = { resource_class: Katello::Repository, fixed_query: true }
+      kr = Katello::Repository.table_name
+      krr = Katello::RootRepository.table_name
+      kcvr = Katello::ContentViewRepository.table_name
+      join_query = <<-SQL
+        LEFT OUTER JOIN #{kcvr}
+        ON #{kr}.id = #{kcvr}.repository_id
+        AND #{kcvr}.content_view_id = #{@content_view.id}
+      SQL
+      order_query = <<-SQL
+        CAST (#{kcvr}.repository_id as BOOLEAN) ASC, #{krr}.name
+      SQL
+
+      query = Katello::Repository.in_default_view.in_organization(@organization)
+      # Use custom sort to perform the join and order since we need to order by specific content_view
+      # and the ORDER BY query needs access to the katello_content_view_repositories table
+      custom_sort = ->(sort_query) { sort_query.joins(:root).joins(join_query).order(order_query) }
+      options = { resource_class: Katello::Repository,
+                  custom_sort: custom_sort }
       repos = scoped_search(query, nil, nil, options)
 
       respond_for_index(:collection => repos)

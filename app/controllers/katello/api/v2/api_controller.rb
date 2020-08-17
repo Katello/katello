@@ -66,7 +66,6 @@ module Katello
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
       group = options.fetch(:group, nil)
-      fixed_query = options.fetch(:fixed_query, false) # Use query passed in and don't re-query by ids
       params[:full_result] = true if options[:csv]
       blank_query = resource.none
 
@@ -79,11 +78,7 @@ module Katello
       total = scoped_search_total(query, group)
 
       query = query.select(:id) if query.respond_to?(:select)
-      if fixed_query
-        query = query.search_for(*search_options)
-      else
-        query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
-      end
+      query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
 
       query = self.final_custom_index_relation(query) if self.respond_to?(:final_custom_index_relation)
 
@@ -122,7 +117,7 @@ module Katello
       if group
         query.select(group).group(group).length
       else
-        query.size
+        query.count
       end
     end
 
