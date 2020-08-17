@@ -10,7 +10,7 @@ module Katello
         repo_map = {}
 
         smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
-        katello_pulp_ids = smart_proxy_helper.repos_available_to_capsule.map(&:pulp_id)
+        katello_pulp_ids = smart_proxy_helper.combined_repos_available_to_capsule.map(&:pulp_id)
         pulp3_enabled_repo_types.each do |repo_type|
           api = repo_type.pulp3_service_class.api(smart_proxy)
           repo_map[api] = api.list_all.reject { |capsule_repo| katello_pulp_ids.include? capsule_repo.name }

@@ -10,11 +10,12 @@ module Actions
           repository = options[:repository]
           skip_metadata_check = options.fetch(:skip_metadata_check, false)
 
-          smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
           sequence do
-            smart_proxy_helper.repos_available_to_capsule(environment, content_view, repository).in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repos|
+            repos = repos_to_sync(smart_proxy, environment, content_view, repository)
+
+            repos.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|
               concurrence do
-                repos.each do |repo|
+                repo_batch.each do |repo|
                   plan_pulp_action([Actions::Pulp::Orchestration::Repository::SmartProxySync,
                                     Actions::Pulp3::CapsuleContent::Sync],
                                      repo, smart_proxy,
@@ -30,6 +31,19 @@ module Actions
                 end
               end
             end
+          end
+        end
+
+        def repos_to_sync(smart_proxy, environment, content_view, repository)
+          smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
+          smart_proxy_helper.lifecycle_environment_check(environment, repository)
+
+          if repository
+            [repository]
+          else
+            repositories = smart_proxy_helper.repositories_available_to_capsule(environment, content_view).by_rpm_count
+            puppet_envs = smart_proxy_helper.puppet_environments_available_to_capsule(environment, content_view)
+            repositories + puppet_envs
           end
         end
 
