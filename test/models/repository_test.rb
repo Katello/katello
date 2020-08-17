@@ -18,6 +18,12 @@ module Katello
       refute_empty Repository.where(:id => @repo.id)
     end
 
+    def test_by_rpm_count
+      repos = Katello::Repository.by_rpm_count
+      rpm_counts = repos.map { |r| r.rpms.count }
+      assert_equal Katello::Repository.all.map { |r| r.rpms.count }.sort, rpm_counts
+    end
+
     def test_docker_full_path
       full_path = @repo.full_path
       @repo.root.content_type = 'docker'
