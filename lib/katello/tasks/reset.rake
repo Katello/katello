@@ -27,7 +27,8 @@ namespace :katello do
       system("sudo systemctl stop 'pulpcore-worker@*' --all")
       system("sudo runuser - postgres -c 'dropdb pulpcore'")
       system("sudo runuser - postgres -c 'createdb pulpcore'")
-      Dir.chdir('/usr/lib/python3.6/site-packages/pulpcore') do
+
+      Dir.chdir("/tmp") do
         fail "\e[31mCannot migrate Pulp3 database\e[0m\n\n" unless system("sudo -u pulp PULP_SETTINGS='/etc/pulp/settings.py' DJANGO_SETTINGS_MODULE='pulpcore.app.settings' python3-django-admin migrate --no-input")
         puts "\e[33mRecreating Admin User\e[0m\n\n"
         system("sudo -u pulp PULP_SETTINGS='/etc/pulp/settings.py' DJANGO_SETTINGS_MODULE='pulpcore.app.settings' python3-django-admin reset-admin-password --password password")
