@@ -193,12 +193,8 @@ module Katello
         ignore_404_exception { api.repositories_api.delete(href) } if href
       end
 
-      def sync_params
-        {remote: repo.remote_href, mirror: repo.root.mirror_on_sync}
-      end
-
       def sync
-        sync_url_params = sync_params
+        sync_url_params = {remote: repo.remote_href, mirror: repo.root.mirror_on_sync}
         skip_type_param = skip_types
         sync_url_params[:skip_types] = skip_type_param if skip_type_param
         repository_sync_url_data = api.class.repository_sync_url_class.new(sync_url_params)
