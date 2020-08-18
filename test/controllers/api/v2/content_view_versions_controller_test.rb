@@ -1,6 +1,7 @@
 require "katello_test_helper"
 
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
@@ -126,11 +127,28 @@ module Katello
       assert_template 'api/v2/content_view_versions/show'
     end
 
+    def test_export_histories_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:export_histories, allowed_perms, denied_perms) do
+        get :export_histories, params: { :content_view_id => @library_dev_staging_view.id }
+      end
+    end
+
     def test_export_pulp3_assert_invalid_params
       SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
 
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id, :iso_mb_size => 5, :export_to_iso => "foo"}
+      assert_response :bad_request
+    end
+
+    def test_export_pulp3_missing_destination
+      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
+
+      version = @library_dev_staging_view.versions.first
+      post :export, params: { :id => version.id}
       assert_response :bad_request
     end
 

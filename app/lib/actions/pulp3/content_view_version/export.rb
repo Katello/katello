@@ -10,7 +10,7 @@ module Actions
 
         def invoke_external_task
           cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-          ::Katello::Pulp3::ContentViewVersion.new(smart_proxy: smart_proxy,
+          ::Katello::Pulp3::ContentViewVersion::Export.new(smart_proxy: smart_proxy,
                                                    content_view_version: cvv).create_export(input[:exporter_data][:pulp_href])
         end
       end

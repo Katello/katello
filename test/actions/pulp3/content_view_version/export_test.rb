@@ -11,6 +11,8 @@ module ::Actions::Pulp3::ContentView
       @repo = create_and_sync(@repo, @master)
       @content_view = @repo.content_view
       @content_view_version = @content_view.versions.last
+      @destination_server = 'dream-destination'
+      ::Katello::Pulp3::ContentViewVersion::Export.any_instance.stubs(:date_dir).returns("date_dir")
     end
 
     def teardown
@@ -18,8 +20,10 @@ module ::Actions::Pulp3::ContentView
     end
 
     def create_exporter
-      ForemanTasks.sync_task(::Actions::Pulp3::ContentViewVersion::CreateExporter, content_view_version_id: @content_view_version.id,
-                                     smart_proxy_id: @master.id).output["exporter_data"]
+      ForemanTasks.sync_task(::Actions::Pulp3::ContentViewVersion::CreateExporter,
+                                     content_view_version_id: @content_view_version.id,
+                                     smart_proxy_id: @master.id,
+                                     destination_server: @destination_server).output["exporter_data"]
     end
 
     def delete_exporter(exporter_data)
@@ -28,7 +32,7 @@ module ::Actions::Pulp3::ContentView
     end
 
     def pulp3_cvv
-      ::Katello::Pulp3::ContentViewVersion.new(smart_proxy: @master, content_view_version: @content_view_version)
+      ::Katello::Pulp3::ContentViewVersion::Export.new(smart_proxy: @master, content_view_version: @content_view_version, destination_server: @destination_server)
     end
 
     def test_create_exporter
@@ -55,9 +59,10 @@ module ::Actions::Pulp3::ContentView
     def test_export
       Actions::Pulp3::Orchestration::ContentViewVersion::Export.any_instance.expects(:action_subject).with(@content_view_version)
       File.expects(:directory?).returns(true).at_least_once
-      output = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @content_view_version).output
+      output = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @content_view_version, destination_server: "foo").output
       refute_empty output[:exported_file_name]
       refute_empty output[:exported_file_checksum]
+      assert_includes output[:exported_file_name], 'foo'
     end
   end
 end
