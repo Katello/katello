@@ -73,7 +73,7 @@ module Actions
 
                 unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
                   copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
-                                                     dependency_solving: true).output
+                                                     dependency_solving: dep_solve).output
                 end
               end
 

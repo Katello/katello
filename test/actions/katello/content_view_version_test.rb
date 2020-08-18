@@ -52,36 +52,61 @@ module ::Actions::Katello::ContentViewVersion
                                 :incremental_update => true)
     end
 
-    it 'plans for pulp 3' do
-      SmartProxy.stubs(:pulp_master).returns(SmartProxy.find_by(name: "Unused Proxy"))
-      SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
-      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
-      stub_remote_user
-      @rpm = katello_rpms(:one)
+    describe 'pulp3' do
+      let(:old_rpm) do
+        katello_rpms(:one)
+      end
 
-      new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
-      repository_mapping = {}
-      new_repo.update(content_view_version_id: ::Katello::ContentViewVersion.first.id, relative_path: "blah")
-      new_repo.update(version_href: "/test/versions/1/")
-      library_repo.update(version_href: "/library_test/versions/1/")
-      new_repo.save!
-      repository_mapping[[library_repo]] = new_repo
-      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
-      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
-      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
-      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
-      action.stubs(:task).returns(task)
-      action.expects(:action_subject).with(content_view_version.content_view)
-      plan_action(action, content_view_version, [library], :content => {:package_ids => [@rpm.id]})
+      let(:new_repo) do
+        ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
+      end
 
-      pulp3_repo_map = {}
-      pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => 1 }
-      assert_action_planed_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
-                                pulp3_repo_map,
-                                { :errata => [], :rpms => [@rpm.id] },
-                                :dependency_solving => true)
+      def pulp3_cvv_setup
+        SmartProxy.stubs(:pulp_master).returns(SmartProxy.find_by(name: "Unused Proxy"))
+        SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
+        ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
+        stub_remote_user
+
+        repository_mapping = {}
+        new_repo.update(content_view_version_id: ::Katello::ContentViewVersion.first.id, relative_path: "blah")
+        new_repo.update(version_href: "/test/versions/1/")
+        library_repo.update(version_href: "/library_test/versions/1/")
+        new_repo.save!
+        repository_mapping[[library_repo]] = new_repo
+        Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
+        Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
+        ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
+        task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+        action.stubs(:task).returns(task)
+        action.expects(:action_subject).with(content_view_version.content_view)
+      end
+
+      it 'respects dep solving false' do
+        pulp3_cvv_setup
+        plan_action(action, content_view_version, [library], :resolve_dependencies => false, :content => {:package_ids => [old_rpm.id]})
+
+        pulp3_repo_map = {}
+        pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => 1 }
+        assert_action_planed_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+                                  pulp3_repo_map,
+                                  { :errata => [], :rpms => [old_rpm.id] },
+                                  :dependency_solving => false)
+      end
+
+      it 'respects dep solving true' do
+        pulp3_cvv_setup
+        plan_action(action, content_view_version, [library], :resolve_dependencies => true, :content => {:package_ids => [old_rpm.id]})
+
+        pulp3_repo_map = {}
+        pulp3_repo_map[[library_repo.id]] = { :dest_repo => new_repo.id, :base_version => 1 }
+        assert_action_planed_with(action, ::Actions::Pulp3::Repository::MultiCopyUnits,
+                                  pulp3_repo_map,
+                                  { :errata => [], :rpms => [old_rpm.id] },
+                                  :dependency_solving => true)
+      end
     end
   end
+
   class ExportTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentViewVersion::Export }
     let(:action) { create_action action_class }
