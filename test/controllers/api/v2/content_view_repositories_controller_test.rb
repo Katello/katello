@@ -4,9 +4,14 @@ module Katello
   class Api::V2::ContentViewRepositoriesControllerTest < ActionController::TestCase
     def setup
       setup_controller_defaults_api
+      @organization = get_organization
       @view = katello_content_views(:library_view)
       @fedora_repo = katello_repositories(:fedora_17_x86_64)
       @fedora_dup_repo = katello_repositories(:fedora_17_x86_64_duplicate)
+      @read_permission = :view_content_views
+      @create_permission = :create_content_views
+      @update_permission = :edit_content_views
+      @destroy_permission = :destroy_content_views
     end
 
     def test_show_all
@@ -34,6 +39,15 @@ module Katello
       assert results.first[:added_to_content_view]
       refute results.last[:added_to_content_view]
       assert_includes results.pluck(:id), @fedora_repo.id
+    end
+
+    def test_show_all_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:show_all, allowed_perms, denied_perms) do
+        get :show_all, params: { content_view_id: @view.id }
+      end
     end
   end
 end

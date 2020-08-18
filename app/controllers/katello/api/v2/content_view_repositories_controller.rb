@@ -24,12 +24,11 @@ module Katello
         CAST (#{kcvr}.repository_id as BOOLEAN) ASC, #{krr}.name
       SQL
 
-      query = Katello::Repository.in_default_view.in_organization(@organization)
+      query = Katello::Repository.readable.in_default_view.in_organization(@organization)
       # Use custom sort to perform the join and order since we need to order by specific content_view
       # and the ORDER BY query needs access to the katello_content_view_repositories table
       custom_sort = ->(sort_query) { sort_query.joins(:root).joins(join_query).order(order_query) }
-      options = { resource_class: Katello::Repository,
-                  custom_sort: custom_sort }
+      options = { resource_class: Katello::Repository, custom_sort: custom_sort }
       repos = scoped_search(query, nil, nil, options)
 
       respond_for_index(:collection => repos)
