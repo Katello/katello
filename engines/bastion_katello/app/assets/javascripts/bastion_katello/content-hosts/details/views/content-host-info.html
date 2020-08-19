@@ -118,8 +118,8 @@
       <div style="display: inline-block"><i class="pficon-info" title="{{ 'System Purpose allows you to set the system\'s intended use on your network and improves the accuracy of auto attaching subscriptions.' | translate }}"></i></div>
 
       <dl class="dl-horizontal dl-horizontal-left">
-        <dt translate>System Purpose Status</dt>
-        <dd>
+        <dt translate ng-hide="simpleContentAccessEnabled">System Purpose Status</dt>
+        <dd ng-hide="simpleContentAccessEnabled">
           <i ng-class="getHostPurposeStatusIcon(host.purpose_status)"></i>
           {{ host.purpose_status_label }}
         </dd>

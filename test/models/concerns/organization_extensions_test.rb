@@ -26,5 +26,19 @@ module Katello
       end
       assert_equal @org.manifest_refreshed_at.to_i, current_time.to_i
     end
+
+    def test_clear_syspurpose_status
+      host = @org.hosts.first
+
+      Katello::HostStatusManager::PURPOSE_STATUS.each do |status_class|
+        HostStatus::Status.create(host: host, type: status_class.to_s)
+      end
+
+      assert_equal 5, host.host_statuses.count
+
+      @org.clear_syspurpose_status
+
+      assert_equal 0, host.host_statuses.count
+    end
   end
 end
