@@ -2,12 +2,12 @@ require 'katello_test_helper'
 
 module Katello
   module PurposeStatusTests
-    def test_status_matched
-      purpose_mock = mock(purpose_method => :matched)
+    def test_status_unknown
+      purpose_mock = mock(purpose_method => :inexistent)
       Katello::Candlepin::Consumer.any_instance.expects(:system_purpose).returns(purpose_mock)
 
-      assert_equal Katello::PurposeStatus::MATCHED, status.to_status
-      assert_equal 'Matched', status.to_label
+      assert_equal Katello::PurposeStatus::UNKNOWN, status.to_status
+      assert_equal 'Unknown', status.to_label
     end
 
     def test_status_mismatched
@@ -28,13 +28,13 @@ module Katello
       assert_equal 'Not Specified', status.to_label
     end
 
-    def test_status_unknown
-      purpose_mock = mock(purpose_method => :inexistent)
+    def test_status_matched
+      purpose_mock = mock(purpose_method => :matched)
       Katello::Candlepin::Consumer.any_instance.expects(:system_purpose).returns(purpose_mock)
       status.status = status.to_status
 
-      assert_equal Katello::PurposeStatus::UNKNOWN, status.status
-      assert_equal 'Unknown', status.to_label
+      assert_equal Katello::PurposeStatus::MATCHED, status.status
+      assert_equal 'Matched', status.to_label
     end
 
     def test_status_override

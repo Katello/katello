@@ -83,7 +83,8 @@ describe('Controller: ContentHostDetailsInfoController', function() {
             Host: Host,
             ContentView: ContentView,
             Organization: Organization,
-            CurrentOrganization: 'ACME_Corporation'
+            CurrentOrganization: 'ACME_Corporation',
+            simpleContentAccessEnabled: false
         });
     }));
 

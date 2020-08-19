@@ -53,6 +53,7 @@ module Katello
 
       def reindex_purpose_status
         reindex_consumer do
+          return if subscription_facet.host.organization.simple_content_access?
           subscription_facet.update_purpose_status(role_status: message_handler.system_purpose.role_status,
                                                    usage_status: message_handler.system_purpose.usage_status,
                                                    addons_status: message_handler.system_purpose.addons_status,

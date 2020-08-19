@@ -90,6 +90,7 @@ module Katello
     end
 
     def test_update_purpose_status
+      host.organization.stubs(:simple_content_access?).returns(false)
       subscription_facet.update_purpose_status(sla_status: :mismatched,
                                                role_status: :unknown,
                                                usage_status: :not_specified,
