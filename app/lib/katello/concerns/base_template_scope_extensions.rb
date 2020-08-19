@@ -78,6 +78,18 @@ module Katello
         host.applicable_rpms.where(name: package).order(:version_sortable).limit(1).pluck(:nvra).first
       end
 
+      def host_installable_errata_ids(host)
+        host.installable_errata.map(&:errata_id)
+      end
+
+      def host_installable_errata_filtered(host, filter = '')
+        host.installable_errata.includes(:cves).search_for(filter)
+      end
+
+      def host_latest_installable_rpm_version(host, package)
+        host.installable_rpms.where(name: package).order(:version_sortable).limit(1).pluck(:nvra).first
+      end
+
       def load_pools(search: '', includes: nil)
         load_resource(klass: Pool.readable, search: search, permission: nil, includes: includes)
       end
