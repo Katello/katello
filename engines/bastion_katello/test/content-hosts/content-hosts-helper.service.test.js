@@ -11,7 +11,7 @@ describe('Controller: ContentHostsController', function() {
     }));
 
     it("provides a way to get the status icon for system purpose on a host.", function() {
-        expect(ContentHostsHelper.getHostPurposeStatusIcon(0)).toBe("pficon pficon-ok");
+        expect(ContentHostsHelper.getHostPurposeStatusIcon(2)).toBe("pficon pficon-ok");
         expect(ContentHostsHelper.getHostPurposeStatusIcon(1)).toBe("pficon pficon-warning-triangle-o");
     });
 

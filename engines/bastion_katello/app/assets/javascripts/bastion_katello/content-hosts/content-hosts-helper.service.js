@@ -41,7 +41,7 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
         this.getHostPurposeStatusIcon = function (statusCode) {
             var code = parseInt(statusCode);
 
-            if (code === 0) { // matched
+            if (code === 2) { // matched
                 return 'pficon pficon-ok';
             } else if (code === 1) { // mismatched
                 return 'pficon pficon-warning-triangle-o';

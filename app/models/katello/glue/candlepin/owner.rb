@@ -35,8 +35,10 @@ module Katello
         self.owner_details['contentAccessMode']
       end
 
-      def simple_content_access?
-        content_access_mode == "org_environment"
+      def simple_content_access?(cached: true)
+        Rails.cache.fetch("#{self.label}_simple_content_access?", expires_in: 1.minute, force: !cached) do
+          content_access_mode == "org_environment"
+        end
       end
 
       def generate_debug_cert

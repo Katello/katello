@@ -1,8 +1,8 @@
 module Katello
   class PurposeStatus < HostStatus::Status
-    MATCHED = 0
+    UNKNOWN = 0
     MISMATCHED = 1
-    UNKNOWN = 2
+    MATCHED = 2
     NOT_SPECIFIED = 3
 
     def self.status_map
