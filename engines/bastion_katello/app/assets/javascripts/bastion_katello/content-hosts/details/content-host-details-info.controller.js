@@ -10,13 +10,14 @@
  * @requires Organization
  * @requires CurrentOrganization
  * @requires CurrentHostsHelper
+ * @requires simpleContentAccessEnabled
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoController',
-    ['$scope', '$q', 'translate', 'HostSubscription', 'ContentView', 'Organization', 'CurrentOrganization', 'ContentHostsHelper',
-    function ($scope, $q, translate, HostSubscription, ContentView, Organization, CurrentOrganization, ContentHostsHelper) {
+    ['$scope', '$q', 'translate', 'HostSubscription', 'ContentView', 'Organization', 'CurrentOrganization', 'ContentHostsHelper', 'simpleContentAccessEnabled',
+    function ($scope, $q, translate, HostSubscription, ContentView, Organization, CurrentOrganization, ContentHostsHelper, simpleContentAccessEnabled) {
         function doubleColonNotationToObject(dotString) {
             var doubleColonObject = {}, tempObject, parts, part, key, property;
             for (property in dotString) {
@@ -45,6 +46,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.showCVAlert = false;
         $scope.editContentView = false;
         $scope.disableEnvironmentSelection = false;
+        $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
         $scope.environments = [];
 
         $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
