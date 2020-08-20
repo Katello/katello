@@ -754,6 +754,13 @@ module Katello
       assert repo_types_hash[::Katello::Rpm.content_type] < repo_types_hash[::Katello::Erratum.content_type]
       assert repo_types_hash[::Katello::ModuleStream.content_type] < repo_types_hash[::Katello::Erratum.content_type]
     end
+
+    def test_in_content_view
+      view = katello_content_views(:library_view)
+      rhel7 = katello_repositories(:rhel_7_no_arch)
+      assert @fedora_17_x86_64.in_content_view?(view)
+      refute rhel7.in_content_view?(view)
+    end
   end
 
   class RepositoryApplicabilityTest < RepositoryTestBase
