@@ -41,6 +41,18 @@ module Katello
       assert_includes results.pluck(:id), @fedora_repo.id
     end
 
+    def test_show_all_with_content_type
+      get :show_all, params: { content_view_id: @view.id, content_type: "docker" }
+
+      assert_response :success
+      body = JSON.parse(response.body, symbolize_names: true)
+      results = body[:results]
+
+      results.each { |result| assert_equal result[:content_type], "docker" }
+
+      refute results.last[:added_to_content_view]
+    end
+
     def test_show_all_protected
       allowed_perms = [@read_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]

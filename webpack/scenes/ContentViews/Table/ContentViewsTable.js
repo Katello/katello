@@ -28,7 +28,7 @@ const ContentViewTable = ({ response, status, error }) => {
     [results, JSON.stringify(rowMapping)], // use JSON to check obj values eq not reference eq
   );
 
-  const onSelect = (event, isSelected, rowId) => {
+  const onSelect = (_event, isSelected, rowId) => {
     let rows;
     if (rowId === -1) {
       rows = table.rows.map(row => ({ ...row, selected: isSelected }));

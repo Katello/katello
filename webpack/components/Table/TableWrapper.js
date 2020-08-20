@@ -11,7 +11,7 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
-  metadata, fetchItems, autocompleteEndpoint, ...allTableProps
+  children, metadata, fetchItems, autocompleteEndpoint, ...allTableProps
 }) => {
   const { search: currentSearch } = metadata;
   const dispatch = useDispatch();
@@ -53,6 +53,9 @@ const TableWrapper = ({
         <FlexItem>
           <Search patternfly4 {...{ onSearch, getAutoCompleteParams }} />
         </FlexItem>
+        <FlexItem>
+          {children}
+        </FlexItem>
         <FlexItem align={{ default: 'alignRight' }}>
           <Pagination
             itemCount={total}
@@ -85,10 +88,12 @@ TableWrapper.propTypes = {
     search: PropTypes.string,
   }),
   autocompleteEndpoint: PropTypes.string.isRequired,
+  children: PropTypes.node,
 };
 
 TableWrapper.defaultProps = {
   metadata: {},
+  children: null,
 };
 
 export default TableWrapper;
