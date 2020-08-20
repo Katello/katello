@@ -17,7 +17,7 @@ describe('Controller: OrganizationSelectorController', function() {
         $window = {location: {href: ''}};
 
         Organization.select = function (params) {
-            return {'$promise': {catch: function (func) { func.call() } }};
+            return {'$promise': { then: function (func) { func.call() } }};
         };
 
         $controller('OrganizationSelectorController', {
@@ -33,7 +33,7 @@ describe('Controller: OrganizationSelectorController', function() {
     });
 
     it("should provide selecting an organization in the backend", function () {
-        $scope.$broadcast('$stateChangeSuccess', {}, {toState: '/product'});
+        $scope.$stateParams = {"toState": '/foo'};
         $scope.selectOrganization({id: 1, name: 'Default Organization'});
 
         expect($window.location.href).toBeDefined();

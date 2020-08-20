@@ -38,19 +38,19 @@ export const links = [
   },
   {
     path: 'module_streams',
-    component: withHeader(ModuleStreams, { title: __('Module Streams') }),
+    component: WithOrganization(withHeader(ModuleStreams, { title: __('Module Streams') })),
   },
   {
     path: 'module_streams/:id([0-9]+)',
-    component: withHeader(ModuleStreamDetails, { title: __('Module Stream Details') }),
+    component: WithOrganization(withHeader(ModuleStreamDetails, { title: __('Module Stream Details') })),
   },
   {
     path: 'ansible_collections',
-    component: withHeader(AnsibleCollections, { title: __('Ansible Collections') }),
+    component: WithOrganization(withHeader(AnsibleCollections, { title: __('Ansible Collections') })),
   },
   {
     path: 'ansible_collections/:id([0-9]+)',
-    component: withHeader(AnsibleCollectionDetails, { title: __('Ansible Collection Details') }),
+    component: WithOrganization(withHeader(AnsibleCollectionDetails, { title: __('Ansible Collection Details') })),
   },
   {
     path: 'labs/content_views',
