@@ -47,6 +47,7 @@ describe('Factory: Nutupane', function() {
 
         expectedResult = [{id: 2, value: "value2"}, {id:3, value: "value3"},
             {id: 4, value: "value4"}, {id:5, value: "value5"}];
+
         Resource = {
             queryPaged: function(params, callback) {
                 var result = {
@@ -93,12 +94,13 @@ describe('Factory: Nutupane', function() {
 
         it("providing a method to fetch records for the table", function() {
             spyOn(Resource, 'queryPaged').and.callThrough();
-            nutupane.query();
 
-            expect(Resource.queryPaged).toHaveBeenCalled();
-            expect(nutupane.table.rows.length).toBe(4);
-            angular.forEach(nutupane.table.rows, function(value, index) {
-                expect(value).toBe(expectedResult[index]);
+            nutupane.query().then(function() {
+                expect(Resource.queryPaged).toHaveBeenCalled();
+                expect(nutupane.table.rows.length).toBe(4);
+                angular.forEach(nutupane.table.rows, function(value, index) {
+                    expect(value).toBe(expectedResult[index]);
+                });
             });
         });
 
@@ -109,9 +111,10 @@ describe('Factory: Nutupane', function() {
 
             it("if paged", function () {
                 nutupane.table.params.paged = true;
-                nutupane.load();
-                expect($location.search).toHaveBeenCalledWith('page', 1);
-                expect($location.search).toHaveBeenCalledWith('per_page', 20);
+                nutupane.load().then(function() {
+                    expect($location.search).toHaveBeenCalledWith('page', 1);
+                    expect($location.search).toHaveBeenCalledWith('per_page', 20);
+                });
             });
 
             it("from existing table", function () {
@@ -130,8 +133,9 @@ describe('Factory: Nutupane', function() {
 
             it("by including a search if there is one", function () {
                 nutupane.table.searchTerm = 'hello!';
-                nutupane.load();
-                expect($location.search).toHaveBeenCalledWith('search', 'hello!');
+                nutupane.load().then(function() {
+                    expect($location.search).toHaveBeenCalledWith('search', 'hello!');
+                });
             });
 
             it("by not including a search if there isn't one", function () {
@@ -142,9 +146,10 @@ describe('Factory: Nutupane', function() {
             it("by including the sort properties if provided", function () {
                 nutupane.table.params['sort_by'] = 'name';
                 nutupane.table.params['sort_order'] = 'asc';
-                nutupane.load();
-                expect($location.search).toHaveBeenCalledWith('sortBy', 'name');
-                expect($location.search).toHaveBeenCalledWith('sortOrder', 'asc');
+                nutupane.load().then(function() {;
+                    expect($location.search).toHaveBeenCalledWith('sortBy', 'name');
+                    expect($location.search).toHaveBeenCalledWith('sortOrder', 'asc');
+                });
             });
 
             it("by not including the sort properties if provided", function () {
@@ -157,10 +162,10 @@ describe('Factory: Nutupane', function() {
         it("providing a method to refresh the table", function() {
             spyOn(Resource, 'queryPaged').and.callThrough();
 
-            nutupane.refresh();
-
-            expect(Resource.queryPaged).toHaveBeenCalled();
-            expect(nutupane.table.rows).toBe(expectedResult);
+            nutupane.refresh().then(function() {;
+                expect(Resource.queryPaged).toHaveBeenCalled();
+                expect(nutupane.table.rows).toBe(expectedResult);
+            });
         });
 
         it("provides a way to invalidate the table", function () {
@@ -430,7 +435,7 @@ describe('Factory: Nutupane', function() {
                 spyOn(Resource, 'queryPaged').and.callThrough();
                 nutupane.table.sortBy({id: "name"});
 
-                expect(Resource.queryPaged).toHaveBeenCalledWith(expectedParams, jasmine.any(Function));
+                expect(Resource.queryPaged).toHaveBeenCalledWith(expectedParams);
             });
 
             it("toggles the sort order if already sorting by that column", function() {
@@ -441,7 +446,7 @@ describe('Factory: Nutupane', function() {
                 spyOn(Resource, 'queryPaged').and.callThrough();
                 nutupane.table.sortBy({id: "name"});
 
-                expect(Resource.queryPaged).toHaveBeenCalledWith(expectedParams, jasmine.any(Function));
+                expect(Resource.queryPaged).toHaveBeenCalledWith(expectedParams);
             });
 
             it("sets the column sort order and marks it as active.", function() {
@@ -511,9 +516,10 @@ describe('Factory: Nutupane', function() {
 
         describe("when there was an error loading the resource", function() {
             beforeEach(function() {
+                spyOn(Notification, 'setErrorMessage').and.callThrough();
                 spyOn(Resource, 'customAction').and.callFake(function() {
                       return {
-                        $promise: $q.reject('internal server error')
+                        $promise: $q.reject({ data: { error: { message: 'internal server error' }}})
                       };
                 });
                 nutupane.load();
@@ -526,6 +532,10 @@ describe('Factory: Nutupane', function() {
 
             it("ensures the table is not in 'working' state", function() {
                 expect(nutupane.table.working).toBe(false);
+            });
+
+            it("sends a notification with the error message", function() {
+                expect(Notification.setErrorMessage).toHaveBeenCalledWith('internal server error');
             });
         });
     });

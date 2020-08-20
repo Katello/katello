@@ -4,10 +4,15 @@ describe('Controller: ContentViewPuppetModuleVersionsController', function() {
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'Bastion.i18n'))
 
     beforeEach(inject(function($injector) {
+        $q = $injector.get('$q');
         $controller = $injector.get('$controller');
         ContentView = $injector.get('MockResource').$new();
         ContentViewPuppetModule = $injector.get('MockResource').$new();
-        ContentView.availablePuppetModules = function () {};
+        ContentView.availablePuppetModules = function () {
+          return {
+            $promise: $q.defer().promise
+          }
+        };
 
         puppetModule = {
             uuid: 'abcd',

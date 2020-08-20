@@ -4,12 +4,17 @@ describe('Controller: ContentViewPuppetModuleNamesController', function() {
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
     beforeEach(inject(function($injector) {
+        $q = $injector.get('$q');
         $controller = $injector.get('$controller');
         ContentView = $injector.get('MockResource').$new();
         PuppetModule = $injector.get('MockResource').$new();
         PuppetModule.autocomplete = function(){return {$promise: {then: function(callback) {callback([])}}}};
 
-        ContentView.availablePuppetModuleNames = function () {};
+        ContentView.availablePuppetModuleNames = function () {
+          return {
+            $promise: $q.defer().promise
+          }
+        };
 
         $scope = $injector.get('$rootScope').$new();
         $scope.transitionTo = function () {};
