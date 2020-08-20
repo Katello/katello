@@ -122,6 +122,7 @@ namespace :katello do
 
       if content_facet
         content_facet.host = provisioning_host
+        provisioning_host.content_facet = content_facet
         content_facet.save!
         content_facet.update_errata_status
       end
