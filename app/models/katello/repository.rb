@@ -870,6 +870,10 @@ module Katello
       true
     end
 
+    def in_content_view?(content_view)
+      content_view.repositories.include? self
+    end
+
     protected
 
     def unit_type_for_removal(type_class = nil)
