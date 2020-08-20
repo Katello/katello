@@ -43,6 +43,7 @@ module Katello
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
       param :docker_tags_whitelist, Array, :desc => N_("Comma separated list of tags to sync for Container Image repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background (deprecated)')")
+      param :download_concurrency, :number, :desc => N_("Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed")
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
@@ -464,7 +465,7 @@ module Katello
     end
 
     def repository_params
-      keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
+      keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username, :download_concurrency,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :auto_enabled,
               :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
               {:ignorable_content => []}
