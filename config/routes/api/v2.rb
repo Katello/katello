@@ -96,7 +96,11 @@ Katello::Engine.routes.draw do
             end
           end
           api_resources :puppet_modules, :only => [:index]
-          api_resources :repositories, :only => [:index]
+          api_resources :repositories, :only => [:index] do
+            collection do
+              match '/show_all' => "content_view_repositories#show_all", :via => :get
+            end
+          end
           api_resources :content_view_versions, :only => [:index]
         end
 
