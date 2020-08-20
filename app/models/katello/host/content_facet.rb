@@ -5,6 +5,9 @@ module Katello
       self.table_name = 'katello_content_facets'
       include Facets::Base
 
+      HOST_TOOLS_PACKAGE_NAME = 'katello-host-tools'.freeze
+      SUBSCRIPTION_MANAGER_PACKAGE_NAME = 'subscription-manager'.freeze
+
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :foreign_key => :kickstart_repository_id, :inverse_of => :kickstart_content_facets
       belongs_to :content_view, :inverse_of => :content_facets, :class_name => "Katello::ContentView"
       belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "Katello::KTEnvironment"
@@ -225,6 +228,10 @@ module Katello
 
       def tracer_installed?
         self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-host-tools-tracer').any?
+      end
+
+      def host_tools_installed?
+        host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => HOST_TOOLS_PACKAGE_NAME).any?
       end
 
       def update_errata_status
