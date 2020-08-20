@@ -71,6 +71,7 @@ module Katello
                    'katello/api/v2/content_view_filter_rules' => [:index, :show],
                    'katello/api/v2/content_view_histories' => [:index, :auto_complete_search],
                    'katello/api/v2/content_view_puppet_modules' => [:index, :show, :auto_complete_search],
+                   'katello/api/v2/content_view_repositories' => [:show_all],
                    'katello/api/v2/content_view_versions' => [:index, :show, :auto_complete_search],
                    'katello/api/v2/content_view_components' => [:index, :show],
                    'katello/api/v2/packages' => [:index],
