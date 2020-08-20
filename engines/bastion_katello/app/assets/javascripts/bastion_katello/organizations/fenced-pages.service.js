@@ -21,7 +21,10 @@ angular.module('Bastion.organizations').service('FencedPages', ['$state',
             'products',
             'puppet-modules',
             'subscriptions',
-            'sync-plans'
+            'sync-plans',
+            'files',
+            'debs',
+            'ostree-branches'
         ];
 
         function getRootPath(path) {
@@ -43,7 +46,13 @@ angular.module('Bastion.organizations').service('FencedPages', ['$state',
 
         this.isFenced = function (toState) {
             var stateUrl = $state.href(toState);
-            return fencedPages.indexOf(getRootPath(stateUrl)) !== -1;
+            var rootPath;
+            if (_.isEmpty(stateUrl)) {
+                rootPath = toState.templateUrl.replace('_', '-').split('/')[0];
+            } else {
+                rootPath = getRootPath(stateUrl);
+            }
+            return fencedPages.indexOf(rootPath) !== -1;
         };
     }
 ]);

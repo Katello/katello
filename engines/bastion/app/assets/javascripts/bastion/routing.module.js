@@ -1,4 +1,4 @@
-angular.module('Bastion.routing', ['ui.router']);
+angular.module('Bastion.routing', ['ui.router', 'ui.router.state.events']);
 
 (function () {
     'use strict';

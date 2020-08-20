@@ -27,7 +27,7 @@ module.exports = {
             basePath + 'vendor/assets/javascripts/bastion/angular-animate/angular-animate.js',
             basePath + 'vendor/assets/javascripts/bastion/angular-bootstrap/ui-bootstrap.js',
             basePath + 'vendor/assets/javascripts/bastion/angular-bootstrap/ui-bootstrap-tpls.js',
-            basePath + 'vendor/assets/javascripts/bastion/angular-ui-router/angular-ui-router.js',
+            basePath + 'vendor/assets/javascripts/bastion/angular-ui-router/*.js',
             basePath + 'vendor/assets/javascripts/bastion/angular-gettext/angular-gettext.js',
             basePath + 'vendor/assets/javascripts/bastion/ngUpload/ng-upload.js',
             basePath + 'vendor/assets/javascripts/bastion/angular-breadcrumb/angular-breadcrumb.js',
