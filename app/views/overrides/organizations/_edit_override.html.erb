@@ -1,7 +1,6 @@
 <% if @taxonomy.is_a?(Organization) %>
 
   <%= javascript_include_tag 'katello/organizations/download_certificate' %>
-  <%= javascript_include_tag *webpack_asset_paths('katello', extension: 'js') %>
 
   <%= text_f f, :label, :disabled => true, :class => 'input-xlarge' %>
 
@@ -17,11 +16,11 @@
                'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
   end %>
 
-  <%= hidden_field_tag 'content_access_mode', 'unchanged' %>
-  <%= react_component(
-  'SCAContainer',
-  isSimpleContentAccessEnabled: @taxonomy.simple_content_access?,
-  )
-  %>
+  <%= field(f, _('Simple Content Access'),
+            :help_inline => _('Toggling Simple Content Access will refresh your manifest.')) do
+    tag1 = hidden_field_tag 'simple_content_access', '0'
+    tag2 = check_box_tag 'simple_content_access', '1', @taxonomy.simple_content_access?
+    tag1 + tag2
+  end %>
 
 <% end %>

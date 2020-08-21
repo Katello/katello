@@ -45,11 +45,11 @@ module Katello
 
       def update
         super
-        if params[:content_access_mode] == 'simple_content_access'
+        return if @taxonomy.simple_content_access? == sca_param
+        if sca_param == true
           async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
           info "Enabling Simple Content Access for organization #{@taxonomy.name}.", link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks" }
-        end
-        if params[:content_access_mode] == 'entitlement'
+        elsif sca_param == false
           async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
           info "Disabling Simple Content Access for organization #{@taxonomy.name}.", link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks" }
         end
@@ -58,6 +58,18 @@ module Katello
       included do
         prepend Overrides
       end
+
+      private
+        def sca_param
+          case params[:simple_content_access]
+          when "1"
+            true
+          when "0"
+            false
+          else
+            nil
+          end
+        end
 
     end
   end
