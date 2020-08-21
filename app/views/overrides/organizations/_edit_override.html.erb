@@ -17,18 +17,11 @@
                'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
   end %>
 
-  <% if @taxonomy.simple_content_access? %>
-    <%= react_component(
-    'SCAContainer',
-    isSimpleContentAccessEnabled: true,
-    )
-    %>
-  <% else %>
-    <%= react_component(
-    'SCAContainer',
-    isSimpleContentAccessEnabled: false,
-    )
-    %>
-  <% end %>
+  <%= hidden_field_tag 'content_access_mode', 'unchanged' %>
+  <%= react_component(
+  'SCAContainer',
+  isSimpleContentAccessEnabled: @taxonomy.simple_content_access?,
+  )
+  %>
 
 <% end %>
