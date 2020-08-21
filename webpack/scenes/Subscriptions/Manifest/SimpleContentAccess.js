@@ -11,6 +11,8 @@ const SimpleContentAccess = (props) => {
     isSimpleContentAccessEnabled,
     enableSimpleContentAccess,
     disableSimpleContentAccess,
+    infoMessage,
+    colWidths,
   } = props;
 
   const toggleSimpleContentAccess = () => {
@@ -22,13 +24,19 @@ const SimpleContentAccess = (props) => {
   };
 
   return (
-    <div id="simple-content-access">
-      <Col sm={5}>
+    <div id="simple-content-access" style={{ display: 'flex' }}>
+      <Col sm={colWidths.left}>
         <ControlLabel
           className="control-label"
           style={{ paddingTop: '0' }}
         >
-          <Level>
+          <Level
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+            }}
+          >
             <LevelItem>
               <span className="sca-label">{__('Simple Content Access')}</span>
             </LevelItem>
@@ -43,13 +51,13 @@ const SimpleContentAccess = (props) => {
                 trigger={['hover', 'focus']}
                 rootClose={false}
               >
-                <Icon type="pf" name="info" />
+                <Icon type="pf" name="info" style={{ marginRight: '0px' }} />
               </OverlayTrigger>
             </LevelItem>
           </Level>
         </ControlLabel>
       </Col>
-      <Col sm={7}>
+      <Col sm={colWidths.right} style={colWidths.right === 4 ? { paddingLeft: '5px' } : undefined}>
         <div id="manifest-toggle-sca-switch">
           <Switch
             id="simple-switch"
@@ -60,8 +68,8 @@ const SimpleContentAccess = (props) => {
             label=" "
           />
         </div>
-        <div>
-          <i>{__('Toggling Simple Content Access will refresh your manifest.')}</i>
+        <div id="sca-info-message" style={{ marginTop: '6px' }}>
+          <i>{infoMessage}</i>
         </div>
       </Col>
     </div>
@@ -73,6 +81,16 @@ SimpleContentAccess.propTypes = {
   disableSimpleContentAccess: PropTypes.func.isRequired,
   isSimpleContentAccessEnabled: PropTypes.bool.isRequired,
   canToggleSimpleContentAccess: PropTypes.bool.isRequired,
+  infoMessage: PropTypes.string,
+  colWidths: PropTypes.shape({
+    left: PropTypes.number,
+    right: PropTypes.number,
+  }),
+};
+
+SimpleContentAccess.defaultProps = {
+  infoMessage: __('Toggling Simple Content Access will refresh your manifest.'),
+  colWidths: { left: 5, right: 7 },
 };
 
 export default SimpleContentAccess;

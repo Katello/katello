@@ -1,12 +1,14 @@
 <% if @taxonomy.is_a?(Organization) %>
 
   <%= javascript_include_tag 'katello/organizations/download_certificate' %>
+  <%= javascript_include_tag *webpack_asset_paths('katello', extension: 'js') %>
 
   <%= text_f f, :label, :disabled => true, :class => 'input-xlarge' %>
 
   <% if ::SETTINGS[:katello][:use_cp] %>
     <%= selectable_f(f, :service_level, options_for_select(service_level_options, service_level_selected), {}, :label => _('Default System SLA')) %>
   <% end %>
+
 
   <%= field(f, _('Debug Certificate'),
             :help_inline => _('This certificate allows a user to view the repositories in any environment from a browser.')) do
@@ -15,13 +17,18 @@
                'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
   end %>
 
-  <%= field(f, _('Simple Content Access'),
-            :help_inline => _('To turn Simple Content Access on or off, go to Manage Manifest on the Subscriptions page.')) do %>
-    <% if @taxonomy.simple_content_access? %>
-      <%= _("Enabled") %>
-    <% else %>
-      <%= _("Disabled") %>
-    <% end %>
+  <% if @taxonomy.simple_content_access? %>
+    <%= react_component(
+    'SCAContainer',
+    isSimpleContentAccessEnabled: true,
+    )
+    %>
+  <% else %>
+    <%= react_component(
+    'SCAContainer',
+    isSimpleContentAccessEnabled: false,
+    )
+    %>
   <% end %>
 
-<% end%>
+<% end %>

@@ -4,6 +4,7 @@
 /* eslint-disable import/no-unresolved */
 
 import componentRegistry from 'foremanReact/components/componentRegistry';
+import SCAContainer from './scenes/Subscriptions/Manifest/SCAContainer';
 import Application from './containers/Application/index';
 import './redux';
 // Not currently mocking anything
@@ -14,3 +15,9 @@ componentRegistry.register({
   type: Application,
 });
 
+componentRegistry.register({
+  name: 'SCAContainer',
+  type: SCAContainer,
+  store: true,
+  data: true,
+});
