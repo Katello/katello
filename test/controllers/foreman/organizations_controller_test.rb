@@ -30,28 +30,32 @@ class OrganizationsControllerTest < ActionController::TestCase
     assert_equal session[:organization_id], org.id
   end
 
-  def test_simple_content_access_toggle
+  def test_simple_content_access_disable
     # use org with SCA enabled
-    org = Organization.first
+    org = get_organization(:organization2)
     Organization.any_instance.stubs(:simple_content_access?).returns true
-    TaxHost.any_instance.stubs(:check_for_orphans).returns false
     # assert correct task will be started
-    @controller.expects(:async_task).with do |action_class, _org|
-      action_class == ::Actions::Katello::Organization::SimpleContentAccess::Disable
-    end
+    @controller.expects(:async_task).with(::Actions::Katello::Organization::SimpleContentAccess::Disable, org.id.to_s)
     # send request to disable SCA
     put :update, params: { id: org.id, simple_content_access: false }
   end
 
+  def test_simple_content_access_enable
+    # use org with SCA disabled
+    org = get_organization(:organization2)
+    Organization.any_instance.stubs(:simple_content_access?).returns false
+    # assert correct task will be started
+    @controller.expects(:async_task).with(::Actions::Katello::Organization::SimpleContentAccess::Enable, org.id.to_s)
+    # send request to enable SCA
+    put :update, params: { id: org.id, simple_content_access: true }
+  end
+
   def test_simple_content_access_unchanged
     # use org with SCA enabled
-    org = Organization.first
+    org = get_organization(:organization2)
     Organization.any_instance.stubs(:simple_content_access?).returns true
-    TaxHost.any_instance.stubs(:check_for_orphans).returns false
-    # assert SCA task is not initiated
-    @controller.expects(:async_task).with do |action_class, _org|
-      action_class == ::Actions::Katello::Organization::SimpleContentAccess::Disable
-    end.never
+    # assert SCA task was not initiated
+    @controller.expects(:async_task).never
     # update org and don't change SCA
     put :update, params: { id: org.id, simple_content_access: true }
   end

@@ -6,6 +6,11 @@ module Katello
       include Foreman::Controller::Flash
 
       module Overrides
+        def edit
+          @can_toggle_sca = Katello::UpstreamConnectionChecker.new(@taxonomy).can_connect?
+          super
+        end
+
         def destroy
           if @taxonomy.is_a?(Organization)
             begin

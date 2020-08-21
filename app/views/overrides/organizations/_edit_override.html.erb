@@ -8,7 +8,6 @@
     <%= selectable_f(f, :service_level, options_for_select(service_level_options, service_level_selected), {}, :label => _('Default System SLA')) %>
   <% end %>
 
-
   <%= field(f, _('Debug Certificate'),
             :help_inline => _('This certificate allows a user to view the repositories in any environment from a browser.')) do
     button_tag _('Generate and Download'), :id => :download_debug_cert_key,
@@ -16,7 +15,7 @@
                'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
   end %>
 
-  <% if @taxonomy.manifest_imported? %>
+  <% if @can_toggle_sca %>
     <%= field(f, _('Simple Content Access'),
               :help_inline => _('Toggling Simple Content Access will refresh your manifest.')) do
       tag1 = hidden_field_tag 'simple_content_access', '0'
