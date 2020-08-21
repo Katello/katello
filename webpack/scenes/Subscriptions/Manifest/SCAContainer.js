@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import SimpleContentAccess from './SimpleContentAccess';
@@ -8,14 +8,31 @@ const SCAContainer = (props) => {
     isSimpleContentAccessEnabled,
   } = props;
   const [enabled, setEnabled] = useState(isSimpleContentAccessEnabled);
-  const infoMsgOverride = (enabled !== isSimpleContentAccessEnabled) || undefined;
+  const hiddenRailsInput = useRef(document.querySelector('#content_access_mode'));
+
+  const infoMsgOverride = enabledVal => (enabledVal !== isSimpleContentAccessEnabled) || undefined;
+  const getContentAccessModeValue = (newValue) => {
+    if (!infoMsgOverride(newValue)) return 'unchanged';
+    const newResult = {
+      true: 'simple_content_access',
+      false: 'entitlement',
+    };
+    return newResult[newValue];
+  };
+  // Set the hidden input value in the DOM
+  const setContentAccessModeValue = (newValue) => {
+    hiddenRailsInput.current.value = getContentAccessModeValue(newValue);
+  };
 
   const enableSimpleContentAccess = () => {
     setEnabled(true);
+    setContentAccessModeValue(true);
   };
   const disableSimpleContentAccess = () => {
     setEnabled(false);
+    setContentAccessModeValue(false);
   };
+
   const getInfoMsg = () => {
     // State of the switch here reflects user clicks/intent, but submit button has NOT been clicked.
     if (enabled) { // SCA was initially disabled and user has toggled the switch to enable it
@@ -31,7 +48,7 @@ const SCAContainer = (props) => {
       disableSimpleContentAccess={disableSimpleContentAccess}
       isSimpleContentAccessEnabled={enabled}
       canToggleSimpleContentAccess
-      infoMessage={infoMsgOverride && getInfoMsg()}
+      infoMessage={infoMsgOverride(enabled) && getInfoMsg()}
       colWidths={{ left: 2, right: 4 }}
     />
   );
