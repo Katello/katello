@@ -46,7 +46,7 @@ module Katello
       def update
         super
         return if params[:simple_content_access].nil?
-        sca_param = Foreman::Cast.to_bool(params[:simple_content_access])
+        sca_param = ::Foreman::Cast.to_bool(params[:simple_content_access])
         if sca_param && !@taxonomy.simple_content_access?
           # user has requested SCA enable
           task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])

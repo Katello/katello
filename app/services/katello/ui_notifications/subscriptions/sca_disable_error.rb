@@ -1,7 +1,7 @@
 module Katello
   module UINotifications
     module Subscriptions
-      class SCADisableError < UINotifications::AbstractNotification
+      class SCADisableError < UINotifications::TaskNotification
         private
 
         def blueprint

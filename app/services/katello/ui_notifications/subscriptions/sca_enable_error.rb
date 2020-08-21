@@ -1,7 +1,7 @@
 module Katello
   module UINotifications
     module Subscriptions
-      class SCAEnableError < UINotifications::AbstractNotification
+      class SCAEnableError < UINotifications::TaskNotification
         private
 
         def blueprint
