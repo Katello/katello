@@ -15,4 +15,14 @@
                'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
   end %>
 
+  <%= field(f, _('Simple Content Access'),
+            :help_inline => _('To turn Simple Content Access on or off, go to Manage Manifest on the Subscriptions page.')) do %>
+    <% if @taxonomy.simple_content_access? %>
+      <%= _("Enabled") %>
+    <% else %>
+      <%= _("Disabled") %>
+    <% end %>
+    <a href='/subscriptions'>[edit]</a>
+  <% end %>
+
 <% end%>
