@@ -47,11 +47,13 @@ module Katello
         super
         return if @taxonomy.simple_content_access? == sca_param
         if sca_param == true
-          async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
-          info "Enabling Simple Content Access for organization #{@taxonomy.name}.", link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks" }
+          task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
+          info "Enabling Simple Content Access for organization #{@taxonomy.name}.",
+            link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks/#{task&.id}" }
         elsif sca_param == false
-          async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
-          info "Disabling Simple Content Access for organization #{@taxonomy.name}.", link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks" }
+          task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
+          info "Disabling Simple Content Access for organization #{@taxonomy.name}.",
+            link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks/#{task&.id}" }
         end
       end
 
