@@ -280,6 +280,9 @@ Foreman::Plugin.register :katello do
   extend_rabl_template 'api/v2/smart_proxies/main', 'katello/api/v2/smart_proxies/pulp_info'
   extend_rabl_template 'api/v2/hosts/show', 'katello/api/v2/hosts/host_collections'
 
+  # Extend Global Registration endpoint
+  extend_allowed_registration_vars :activation_key
+
   extend_page "smart_proxies/show" do |cx|
     cx.add_pagelet :details_content,
                    :name => _('Storage'),
