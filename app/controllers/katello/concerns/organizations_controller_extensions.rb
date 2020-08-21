@@ -3,6 +3,7 @@ module Katello
     module OrganizationsControllerExtensions
       extend ActiveSupport::Concern
       include ForemanTasks::Triggers
+      include Foreman::Controller::Flash
 
       module Overrides
         def destroy
@@ -42,9 +43,22 @@ module Katello
         end
       end
 
+      def update
+        super
+        if params[:content_access_mode] == 'simple_content_access'
+          async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
+          info "Enabling Simple Content Access for organization #{@taxonomy.name}.", link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks" }
+        end
+        if params[:content_access_mode] == 'entitlement'
+          async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
+          info "Disabling Simple Content Access for organization #{@taxonomy.name}.", link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks" }
+        end
+      end
+
       included do
         prepend Overrides
       end
+
     end
   end
 end
