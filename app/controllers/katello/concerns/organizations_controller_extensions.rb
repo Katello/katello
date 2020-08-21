@@ -45,12 +45,15 @@ module Katello
 
       def update
         super
-        return if @taxonomy.simple_content_access? == sca_param
-        if sca_param == true
+        return if params[:simple_content_access].nil?
+        sca_param = Foreman::Cast.to_bool(params[:simple_content_access])
+        if sca_param && !@taxonomy.simple_content_access?
+          # user has requested SCA enable
           task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:id])
           info "Enabling Simple Content Access for organization #{@taxonomy.name}.",
             link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks/#{task&.id}" }
-        elsif sca_param == false
+        elsif !sca_param && @taxonomy.simple_content_access?
+          # user has requested SCA disable
           task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:id])
           info "Disabling Simple Content Access for organization #{@taxonomy.name}.",
             link: { text: "View progress on the Tasks page", href: "/foreman_tasks/tasks/#{task&.id}" }
@@ -60,18 +63,6 @@ module Katello
       included do
         prepend Overrides
       end
-
-      private
-        def sca_param
-          case params[:simple_content_access]
-          when "1"
-            true
-          when "0"
-            false
-          else
-            nil
-          end
-        end
 
     end
   end
