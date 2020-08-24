@@ -8,6 +8,7 @@ class HostsControllerTest < ActionController::TestCase
   def models
     @library = katello_environments(:library)
     @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
+    @host = hosts(:one)
   end
 
   def setup
@@ -19,14 +20,35 @@ class HostsControllerTest < ActionController::TestCase
   end
 
   test 'cannot update registered host organization' do
-    @request.env['HTTP_REFERER'] = hosts_path
-    host = Host.find_by(name: "host1.example.com")
-    dest_org_id = ::Organization.find_by(name: "Organization 1").id
-    post :update_multiple_organization, params: { host_ids: [host.id],
-                                                  organization: { id: dest_org_id, optimistic_import: "yes" } }
-    assert_redirected_to :controller => :hosts, :action => :index
-    assert_not_equal dest_org_id, host.organization_id
+    destination_org = get_organization(:organization1)
+    refute_equal @host.organization_id, destination_org.id
+
+    post :update_multiple_organization, params: { host_ids: [@host.id],
+                                                  organization: { id: destination_org.id, optimistic_import: "yes" } }
+
+    assert_not_equal destination_org.id, @host.reload.organization_id
     assert_equal "Unregister host host1.example.com before assigning an organization", flash[:error]
+  end
+
+  test 'can update host same organization' do
+    destination_org = @host.organization
+
+    post :update_multiple_organization, params: { host_ids: [@host.id],
+                                                  organization: { id: destination_org.id, optimistic_import: "yes" } }
+
+    assert_equal '302', response.code
+    assert_empty flash[:error]
+  end
+
+  test 'can update registered host location' do
+    new_location = taxonomies(:location2)
+    refute_equal @host.location_id, new_location.id
+
+    post :update_multiple_location, params: { host_ids: [@host.id], location: { id: new_location.id, optimistic_import: 'yes' } }
+
+    assert_equal '302', response.code
+    assert_empty flash[:error]
+    assert_equal new_location.id, @host.reload.location_id
   end
 
   test 'puppet environment for content_view' do
@@ -58,17 +80,29 @@ class HostsControllerTest < ActionController::TestCase
 
     def test_csv_export
       get :content_hosts, params: { :format => 'csv', :organization_id => @host.organization_id }
+
       assert_equal "text/csv; charset=utf-8", response.headers["Content-Type"]
       assert_equal "no-cache", response.headers["Cache-Control"]
-      assert_equal "attachment; filename=\"hosts-#{Date.today}.csv\"",
-        response.headers["Content-Disposition"]
-      buf = response.stream.instance_variable_get(:@buf)
-      assert buf.is_a? Enumerator
-      assert_equal "Name,Subscription Status,Installable Updates - Security,Installable Updates - Bug \
-Fixes,Installable Updates - Enhancements,Installable Updates - Package Count,OS,Environment,\
-Content View,Registered,Last Checkin\n",
-        buf.next
-      assert_equal 3, buf.count
+      assert_equal "attachment; filename=\"hosts-#{Date.today}.csv\"", response.headers["Content-Disposition"]
+
+      csv_body = CSV.parse(response.body)
+
+      expected_columns = [
+        'Name',
+        'Subscription Status',
+        'Installable Updates - Security',
+        'Installable Updates - Bug Fixes',
+        'Installable Updates - Enhancements',
+        'Installable Updates - Package Count',
+        'OS',
+        'Environment',
+        'Content View',
+        'Registered',
+        'Last Checkin'
+      ]
+
+      assert_equal expected_columns, csv_body.first
+      assert_equal @host.organization.hosts.count + 1, csv_body.count
     end
 
     def test_csv_export_search
