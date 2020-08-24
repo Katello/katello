@@ -63,7 +63,7 @@
                ng-model="repository.url"
                type="text"/>
         <p class="help-block" ng-show="repository.content_type === 'docker'" translate>
-          URL of the registry you want to sync. Example: https://registry-1.docker.io/
+          URL of the registry you want to sync. Example: https://registry-1.docker.io/ or https://quay.io/
         </p>
         <p class="help-block" ng-show="repository.content_type === 'ansible_collection'" translate>
           Content synced depends on the specifity of the URL and/or the optional requirements.yaml specified below <a class="fa fa-question-circle" ng-show="repository.content_type === 'ansible_collection'"
@@ -144,7 +144,7 @@
                ng-model="repository.docker_upstream_name"
                type="text"/>
         <p class="help-block" translate>
-          Name of the upstream repository you want to sync. Example: 'busybox' or 'fedora/ssh'.
+          Name of the upstream repository you want to sync. Example: 'quay/busybox' or 'fedora/ssh'.
         </p>
 
       </div>
