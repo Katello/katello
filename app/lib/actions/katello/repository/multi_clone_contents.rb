@@ -46,19 +46,15 @@ module Actions
 
           plan_action(Katello::Repository::MetadataGenerate, new_repository, metadata_options)
           unless source_repositories.first.saved_checksum_type == new_repository.saved_checksum_type
-            checksum_mapping = {}
-            repository_mapping.each do |source_repos, dest_repo|
-              checksum_mapping[dest_repo.id] = source_repos.first.saved_checksum_type
-            end
-            plan_self(:checksum_mapping => checksum_mapping)
+            plan_self(:source_checksum_type => source_repositories.first.saved_checksum_type,
+                      :target_repo_id => new_repository.id)
           end
         end
 
         def finalize
-          input[:checksum_mapping].each do |repo_id, checksum_type|
-            repository = ::Katello::Repository.find(repo_id)
-            repository.update!(saved_checksum_type: checksum_type) if (repository && checksum_type)
-          end
+          repository = ::Katello::Repository.find(input[:target_repo_id])
+          source_checksum_type = input[:source_checksum_type]
+          repository.update!(saved_checksum_type: source_checksum_type) if (repository && source_checksum_type)
         end
       end
     end
