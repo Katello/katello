@@ -19,11 +19,17 @@ module Katello
         prepend Overrides
 
         def update_multiple_taxonomies(type)
-          registered_host = @hosts.detect { |host| host.subscription_facet }
-          unless registered_host.nil?
-            error _("Unregister host %s before assigning an organization") % registered_host.name
-            redirect_back_or_to hosts_path
-            return
+          if type == :organization
+            new_org_id = params.dig(type, 'id')
+
+            if new_org_id
+              registered_host = @hosts.where.not(organization_id: new_org_id).joins(:subscription_facet).first
+              if registered_host
+                error _("Unregister host %s before assigning an organization") % registered_host.name
+                redirect_back_or_to hosts_path
+                return
+              end
+            end
           end
 
           super
