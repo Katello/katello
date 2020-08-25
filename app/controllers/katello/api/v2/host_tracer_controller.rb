@@ -2,11 +2,6 @@ module Katello
   class Api::V2::HostTracerController < Api::V2::ApiController
     before_action :find_host, :only => :index
 
-    resource_description do
-      api_version 'v2'
-      api_base_url "/api"
-    end
-
     api :GET, "/hosts/:host_id/traces", N_("List services that need restarting on the host")
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
     def index
