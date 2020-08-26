@@ -160,7 +160,7 @@ module Katello
 
     delegate :product, :redhat?, :custom?, :to => :root
     delegate :yum?, :docker?, :puppet?, :deb?, :file?, :ostree?, :ansible_collection?, :to => :root
-    delegate :name, :label, :docker_upstream_name, :url, :to => :root
+    delegate :name, :label, :docker_upstream_name, :url, :download_concurrency, :to => :root
 
     delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :arch, :label, :url, :unprotected,
              :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
