@@ -119,6 +119,7 @@ module Katello
         remote_options = {
           name: backend_object_name
         }
+        remote_options.merge!({download_concurrency: repo.download_concurrency}) if repo.download_concurrency
         remote_options.merge!(ssl_remote_options)
       end
 
