@@ -241,6 +241,10 @@ module Katello
       environments.include?(env)
     end
 
+    apipie :method, 'Returns the Katello::ContentViewVersion for a given Lifecycle Environment' do
+      required :env, 'Katello::KTEnvironment', desc: 'a __Katello::KTEnvironment__ object for which we load the __Katello::ContentViewVersion__ object'
+      returns 'Katello::ContentViewVersion'
+    end
     def version(env)
       self.versions.in_environment(env).order("#{Katello::ContentViewVersion.table_name}.id ASC").readonly(false).last
     end
@@ -760,7 +764,7 @@ module Katello
       prop_group :katello_basic_props, Katello::Model, meta: { friendly_name: 'Content View' }
     end
     class Jail < ::Safemode::Jail
-      allow :name, :label
+      allow :name, :label, :version
     end
   end
 end
