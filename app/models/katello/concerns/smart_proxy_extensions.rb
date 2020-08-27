@@ -149,7 +149,7 @@ module Katello
       end
 
       def pulp3_support?(repository)
-        pulp3_repository_type_support?(repository.content_type)
+        repository ? pulp3_repository_type_support?(repository.try(:content_type)) : false
       end
 
       def pulp2_preferred_for_type?(repository_type)
