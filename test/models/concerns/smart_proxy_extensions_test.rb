@@ -75,6 +75,7 @@ module Katello
     end
 
     def test_pulp3_repository_support
+      refute @master.pulp3_support?(nil)
       refute @master.pulp3_support?(@puppet_repo)
       assert @master.pulp3_support?(@file_repo)
     end
