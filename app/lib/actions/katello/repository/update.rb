@@ -10,8 +10,7 @@ module Actions
           action_subject root.library_instance
 
           repo_params[:url] = nil if repo_params[:url] == ''
-          update_cv_cert_protected = (repo_params[:unprotected] != repository.unprotected)
-
+          update_cv_cert_protected = repo_params.key?(:unprotected) && (repo_params[:unprotected] != repository.unprotected)
           root.update!(repo_params)
 
           if root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
@@ -42,26 +41,22 @@ module Actions
                                        gpg_url: repository.yum_gpg_key_url)
           end
           if root.pulp_update_needed?
-            plan_pulp_action([::Actions::Pulp::Orchestration::Repository::Refresh,
-                              ::Actions::Pulp3::Orchestration::Repository::Update],
-                             repository,
-                             SmartProxy.pulp_master)
-            plan_self(:repository_id => root.library_instance.id, :update_cv_cert_protected => update_cv_cert_protected)
+            sequence do
+              plan_pulp_action([::Actions::Pulp::Orchestration::Repository::Refresh,
+                                ::Actions::Pulp3::Orchestration::Repository::Update],
+                               repository,
+                               SmartProxy.pulp_master)
+              plan_self(:repository_id => root.library_instance.id)
+              if update_cv_cert_protected
+                plan_optional_pulp_action([::Actions::Pulp3::Orchestration::Repository::TriggerUpdateRepoCertGuard], repository, ::SmartProxy.pulp_master)
+              end
+            end
           end
         end
 
         def run
           repository = ::Katello::Repository.find(input[:repository_id])
-          output[:repository_id] = input[:repository_id]
-          output[:update_cv_cert_protected] = input[:update_cv_cert_protected]
           ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository)
-        end
-
-        def finalize
-          repository = ::Katello::Repository.find(output[:repository_id])
-          if output[:update_cv_cert_protected]
-            ForemanTasks.async_task(::Actions::Katello::Repository::UpdateCVRepoCertGuard, repository, SmartProxy.pulp_master)
-          end
         end
 
         private
