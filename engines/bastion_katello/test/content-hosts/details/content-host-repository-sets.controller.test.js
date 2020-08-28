@@ -20,7 +20,11 @@ describe('Controller: ContentHostRepositorySetsController', function () {
 
         HostSubscription = {
             failed: false,
-            repositorySets: function () {},
+            repositorySets: function () {
+                return {
+                    $promise: $q.defer().promise
+                }
+            },
             contentOverride: function (params, overrides, success, failure) {
                 if (this.failed) {
                     failure({data: {}})

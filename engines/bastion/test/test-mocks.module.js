@@ -22,7 +22,7 @@ angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope'
     }
 ]);
 
-angular.module('Bastion.test-mocks').factory('MockResource', function () {
+angular.module('Bastion.test-mocks').factory('MockResource', ['$q', function ($q) {
     function resourceGenerator() {
         var Resource, mockResource, successResponse, errorResponse;
 
@@ -100,7 +100,8 @@ angular.module('Bastion.test-mocks').factory('MockResource', function () {
                 mockResource
             ],
             total: 2,
-            subtotal: 1
+            subtotal: 1,
+            $promise: $q.defer().promise
         };
 
         Resource.get = function(params, callback) {
@@ -179,7 +180,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', function () {
                 return resourceGenerator();
             }
     };
-});
+}]);
 
 angular.module('Bastion.test-mocks').factory('MockForm', function() {
     return {

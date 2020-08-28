@@ -10,7 +10,7 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
 
     beforeEach(module('Bastion.activation-keys'));
 
-    beforeEach(inject(function (_$controller_, $rootScope) {
+    beforeEach(inject(function (_$controller_, $rootScope, $q) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
 
@@ -20,7 +20,11 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
 
         ActivationKey = {
             failed: false,
-            repositorySets: function () {},
+            repositorySets: function () {
+                return {
+                    $promise: $q.defer().promise
+                }
+            },
             contentOverride: function (params, overrides, success, failure) {
                 if (this.failed) {
                     failure({data: {}})

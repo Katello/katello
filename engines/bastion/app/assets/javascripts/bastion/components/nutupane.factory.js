@@ -97,7 +97,6 @@ angular.module('Bastion.components').factory('Nutupane',
             self.load = function () {
                 var deferred = $q.defer(),
                     responsePage,
-                    resourceCall,
                     table = self.table,
                     existingTable = TableCache.getTable(getTableName());
 
@@ -115,11 +114,7 @@ angular.module('Bastion.components').factory('Nutupane',
                 params.search = table.searchTerm || "";
                 params.search = self.searchTransform(params.search);
 
-                resourceCall = resource[table.action](params, function (response) {
-                    if (response.error) {
-                        Notification.setErrorMessage(response.error);
-                    }
-
+                resource[table.action](params).$promise.then(function (response) {
                     angular.forEach(response.results, function (row) {
                         row.selected = table.allResultsSelected;
                     });
@@ -155,14 +150,14 @@ angular.module('Bastion.components').factory('Nutupane',
                     table.working = false;
                     table.refreshing = false;
                     table.initialLoad = false;
-                });
+                }).catch(function(response) {
+                    table.working = false;
+                    table.refreshing = false;
 
-                if (resourceCall && resourceCall.$promise && resourceCall.$promise.catch) {
-                    resourceCall.$promise.catch(function () {
-                        table.working = false;
-                        table.refreshing = false;
-                    });
-                }
+                    if (response && response.data && response.data.error && response.data.error.message) {
+                        Notification.setErrorMessage(response.data.error.message);
+                    }
+                });
 
                 return deferred.promise;
             };
