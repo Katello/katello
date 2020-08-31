@@ -127,12 +127,23 @@ module Katello
           uri = pulp3_uri!
           config.host = uri.host
           config.scheme = uri.scheme
-          config.ssl_client_cert = ::Cert::Certs.ssl_client_cert
-          config.ssl_client_key = ::Cert::Certs.ssl_client_key
+          pulp3_ssl_configuration(config)
           config.debugging = true
           config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
           config.username = self.setting(PULP3_FEATURE, 'username')
           config.password = self.setting(PULP3_FEATURE, 'password')
+        end
+      end
+
+      def pulp3_ssl_configuration(config)
+        if Faraday.default_adapter == :excon
+          config.ssl_client_cert = ::Cert::Certs.ssl_client_cert_filename
+          config.ssl_client_key = ::Cert::Certs.ssl_client_key_filename
+        elsif Faraday.default_adapter == :net_http
+          config.ssl_client_cert = ::Cert::Certs.ssl_client_cert
+          config.ssl_client_key = ::Cert::Certs.ssl_client_key
+        else
+          fail "Unexpected faraday default_adapter #{Faraday.default_adapter}!  Cannot continue, this is likely a bug."
         end
       end
 
