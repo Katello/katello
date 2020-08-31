@@ -9,11 +9,19 @@ module Cert
     end
 
     def self.ssl_client_cert
-      @ssl_client_cert ||= OpenSSL::X509::Certificate.new(File.open(Setting['pulp_client_cert'], 'r').read)
+      @ssl_client_cert ||= OpenSSL::X509::Certificate.new(File.open(ssl_client_cert_filename, 'r').read)
+    end
+
+    def self.ssl_client_cert_filename
+      Setting['pulp_client_cert']
     end
 
     def self.ssl_client_key
-      @ssl_client_key ||= OpenSSL::PKey::RSA.new(File.open(Setting['pulp_client_key'], 'r').read)
+      @ssl_client_key ||= OpenSSL::PKey::RSA.new(File.open(ssl_client_key_filename, 'r').read)
+    end
+
+    def self.ssl_client_key_filename
+      Setting['pulp_client_key']
     end
 
     def self.verify_ueber_cert(organization)
