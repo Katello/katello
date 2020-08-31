@@ -320,12 +320,6 @@ class ActiveSupport::TestCase
     refute_equal array1.sort, array2.sort
   end
 
-  # assert that the controller has set an instance variable to the given value
-  def assert_instance_variable_set(var_name, value)
-    assert_includes @controller.view_assigns.keys, var_name.to_s
-    assert_equal @controller.view_assigns[var_name.to_s], value
-  end
-
   def render_rabl(filepath, resource)
     Rabl::Renderer.new(filepath, resource, :view_path => "#{Katello::Engine.root}/app/views/",
                        :format => 'hash', :locals => {:resource => resource}, :scope => OpenStruct.new(:params => {})).render

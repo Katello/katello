@@ -67,16 +67,6 @@ class OrganizationsControllerTest < ActionController::TestCase
     Katello::UpstreamConnectionChecker.any_instance.expects(:can_connect?).returns true
     Organization.any_instance.expects(:simple_content_access?).returns true
     get :edit, params: { id: org.id }
-    assert_instance_variable_set :can_toggle_sca, true
   end
 
-  def test_edit_override_no_manifest_imported
-    org = get_organization(:organization2)
-    Katello::UpstreamConnectionChecker.any_instance.stubs(:assert_can_upstream_ping).raises(Katello::Errors::NoManifestImported)
-    Katello::UpstreamConnectionChecker.any_instance.stubs(:assert_unexpired_manifest).returns false
-    Organization.any_instance.stubs(:service_level)
-    Organization.any_instance.stubs(:service_levels).returns []
-    get :edit, params: { id: org.id }
-    assert_instance_variable_set :can_toggle_sca, false
-  end
 end
