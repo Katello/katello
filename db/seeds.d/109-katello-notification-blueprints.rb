@@ -84,7 +84,7 @@ blueprints = [
     name: 'sca_disable_error',
     message: N_('Disabling Simple Content Access failed for \'%{subject}\'.'),
     level: 'error'
-  },
+  }
 ]
 
 blueprints.each { |blueprint| UINotifications::Seed.new(blueprint).configure }

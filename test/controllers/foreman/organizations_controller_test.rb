@@ -72,5 +72,4 @@ class OrganizationsControllerTest < ActionController::TestCase
     get :edit, params: { id: org.id }
     assert_response :success
   end
-
 end

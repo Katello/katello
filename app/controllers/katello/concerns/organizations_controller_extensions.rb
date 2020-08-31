@@ -68,7 +68,6 @@ module Katello
       included do
         prepend Overrides
       end
-
     end
   end
 end
