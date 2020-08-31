@@ -52,7 +52,7 @@ module Katello
         scoped_search :relation => :activation_keys, :on => :name, :rename => :activation_key, :complete_value => true, :ext_method => :find_by_activation_key
         scoped_search :relation => :activation_keys, :on => :id, :rename => :activation_key_id, :complete_value => true, :ext_method => :find_by_activation_key_id,
                       :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
-        scoped_search :on => :hypervisor, :relation => :subscription_facet, :complete_value => { :true => true, :false => false }
+        scoped_search :on => :hypervisor, :relation => :subscription_facet, :complete_value => true
         scoped_search :on => :name, :relation => :hypervisor_host, :complete_value => true, :rename => :hypervisor_host, :ext_method => :find_by_hypervisor_host
         scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
         scoped_search :on => :id, :relation => :pools, :rename => :subscription_id, :complete_value => true, :ext_method => :find_by_subscription_id, :only_explicit => true
