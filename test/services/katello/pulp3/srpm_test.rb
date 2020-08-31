@@ -19,14 +19,6 @@ module Katello
               ::Actions::Katello::Repository::MetadataGenerate, @repo,
               repository_creation: true)
           @repo.reload
-          sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
-          @repo.reload
-          Katello::Srpm.import_for_repository(@repo)
-          @repo.reload
-
-          @@srpms = @repo.srpms
-          @@srpm_names = ["test-srpm01", "test-srpm02", "test-srpm03"]
         end
 
         def teardown
@@ -37,6 +29,18 @@ module Katello
       end
 
       class SrpmVcrTest < SrpmTestBase
+        def setup
+          super
+          sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+          @repo.reload
+          Katello::Srpm.import_for_repository(@repo)
+          @repo.reload
+
+          @@srpms = @repo.srpms
+          @@srpm_names = ["test-srpm01", "test-srpm02", "test-srpm03"]
+        end
+
         def test_repo_srpms
           assert_equal 3, @@srpms.length
           assert_equal @@srpm_names, @@srpms.map(&:name).sort
@@ -46,7 +50,9 @@ module Katello
           assert_equal @@srpm_names[0],
             ::Katello::Pulp3::Srpm.new(@@srpms.min_by(&:name).pulp_id).backend_data["name"]
         end
+      end
 
+      class SrpmVcrInitialSyncTest < SrpmTestBase
         def test_sync_skipped_srpm
           sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
           @repo.root.update!(ignorable_content: ["srpm"])

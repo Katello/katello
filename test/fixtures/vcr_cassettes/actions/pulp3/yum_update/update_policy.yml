@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/repositories/rpm/rpm/?name=2_duplicate
+    uri: https://devel2.balmora.example.com/pulp/api/v3/contentguards/certguard/rhsm/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/1.0.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:21 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -35,28 +35,147 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '235'
+      - '3076'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS9lZWU4ODVlZC01NTM2LTRmNmItOTVmMy01Y2M4NjBiMzM4MzEv
-        IiwicHVscF9jcmVhdGVkIjoiMjAyMC0wNi0wOFQxMzoxNDozNy41MjE1NDNa
-        IiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS9lZWU4ODVlZC01NTM2LTRmNmItOTVmMy01Y2M4NjBiMzM4MzEv
-        dmVyc2lvbnMvIiwibGF0ZXN0X3ZlcnNpb25faHJlZiI6Ii9wdWxwL2FwaS92
-        My9yZXBvc2l0b3JpZXMvcnBtL3JwbS9lZWU4ODVlZC01NTM2LTRmNmItOTVm
-        My01Y2M4NjBiMzM4MzEvdmVyc2lvbnMvMC8iLCJuYW1lIjoiMl9kdXBsaWNh
-        dGUiLCJkZXNjcmlwdGlvbiI6bnVsbCwibWV0YWRhdGFfc2lnbmluZ19zZXJ2
-        aWNlIjpudWxsfV19
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50Z3VhcmRz
+        L2NlcnRndWFyZC9yaHNtL2ZlZmJmODJhLWJhOGUtNDkyMC05NjljLTZjMzlm
+        YTdhZTdlYS8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIwLTA4LTIwVDE5OjA2OjEx
+        Ljk5NTIzNloiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
+        IjpudWxsLCJjYV9jZXJ0aWZpY2F0ZSI6IkNlcnRpZmljYXRlOlxuICAgIERh
+        dGE6XG4gICAgICAgIFZlcnNpb246IDMgKDB4MilcbiAgICAgICAgU2VyaWFs
+        IE51bWJlcjpcbiAgICAgICAgICAgIGZkOmJhOmJjOjcxOjZlOjI1OmEzOjc4
+        XG4gICAgU2lnbmF0dXJlIEFsZ29yaXRobTogc2hhMjU2V2l0aFJTQUVuY3J5
+        cHRpb25cbiAgICAgICAgSXNzdWVyOiBDPVVTLCBTVD1Ob3J0aCBDYXJvbGlu
+        YSwgTD1SYWxlaWdoLCBPPUthdGVsbG8sIE9VPVNvbWVPcmdVbml0LCBDTj1j
+        ZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbVxuICAgICAgICBWYWxp
+        ZGl0eVxuICAgICAgICAgICAgTm90IEJlZm9yZTogTWF5ICA3IDE0OjIxOjUw
+        IDIwMjAgR01UXG4gICAgICAgICAgICBOb3QgQWZ0ZXIgOiBKYW4gMTggMTQ6
+        MjE6NTAgMjAzOCBHTVRcbiAgICAgICAgU3ViamVjdDogQz1VUywgU1Q9Tm9y
+        dGggQ2Fyb2xpbmEsIEw9UmFsZWlnaCwgTz1LYXRlbGxvLCBPVT1Tb21lT3Jn
+        VW5pdCwgQ049Y2VudG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5jb21cbiAg
+        ICAgICAgU3ViamVjdCBQdWJsaWMgS2V5IEluZm86XG4gICAgICAgICAgICBQ
+        dWJsaWMgS2V5IEFsZ29yaXRobTogcnNhRW5jcnlwdGlvblxuICAgICAgICAg
+        ICAgICAgIFB1YmxpYy1LZXk6ICgyMDQ4IGJpdClcbiAgICAgICAgICAgICAg
+        ICBNb2R1bHVzOlxuICAgICAgICAgICAgICAgICAgICAwMDo5ZjpkMjpjMTox
+        MDpmZjowMToxYTozMzoxOTowZTo0Mzo5ZDo4MzplNTpcbiAgICAgICAgICAg
+        ICAgICAgICAgOGE6NzM6YmE6MmQ6M2M6NjY6YjE6Nzg6Y2Q6ODk6OGM6NjA6
+        ZTU6ODE6YTY6XG4gICAgICAgICAgICAgICAgICAgIGU4OjRkOjk2OjVkOjA3
+        OmMzOmJlOmEyOjljOmMyOjdjOjk0OjJkOjZlOjQzOlxuICAgICAgICAgICAg
+        ICAgICAgICA0NDo0NjplZjpmZDozNjoyMDo0NzozYjpkNjozNTpmZDo5Nzpj
+        ZDo5NzoxNzpcbiAgICAgICAgICAgICAgICAgICAgZDc6M2Y6ZTc6Njc6ZmU6
+        YTk6MmE6ZjE6YmM6NDc6ODc6NmU6ZWQ6NmQ6YjY6XG4gICAgICAgICAgICAg
+        ICAgICAgIDllOmYxOjBkOjYzOjUzOmMxOjNmOmZkOjE3OmFiOjVmOjM1Ojdh
+        Ojg0OmNmOlxuICAgICAgICAgICAgICAgICAgICA2YjpkZDphNjo4ZTowOTo5
+        OTo1NjozOTpkZToyOTo2YjpmYjpjMjpkYzo4YzpcbiAgICAgICAgICAgICAg
+        ICAgICAgNTY6MmE6MTA6YjM6MGE6Y2E6Yjg6NmM6ZmI6Yjg6Yzg6ZWI6ZTU6
+        ZTI6YWU6XG4gICAgICAgICAgICAgICAgICAgIGQ1OjQxOjA1OjRjOmEyOmMw
+        OmJlOjdiOmIwOjZkOjFkOjdjOjY2OjgwOjg4OlxuICAgICAgICAgICAgICAg
+        ICAgICA1YTpiNzowNzo5YjpkMzpiODpmZjo5MzpmMzoxOTozMzo2Mzo0ODo5
+        NTo4MzpcbiAgICAgICAgICAgICAgICAgICAgMzQ6Mjc6YzY6YWM6Y2M6YTA6
+        MGI6NTY6YWI6MjI6MzQ6NzE6NGY6Nzk6YmY6XG4gICAgICAgICAgICAgICAg
+        ICAgIDZlOjRiOmM5Ojg5OjU5Ojg3OjhiOjdiOjM1Ojc5OmI4OjFjOjcwOmVl
+        OjU4OlxuICAgICAgICAgICAgICAgICAgICBlNjo3YjoyMjo3OTphNzoxZTpk
+        OTpiMjo1NzozYTplMDo1OTo4ZTpiMzo2YTpcbiAgICAgICAgICAgICAgICAg
+        ICAgOTc6M2Q6OWE6ODA6Y2M6M2I6ZDU6Nzc6ZDQ6ZmE6N2E6NTg6Njk6YjY6
+        YjM6XG4gICAgICAgICAgICAgICAgICAgIGFhOjk1OjU0OjU1OjllOjEzOjY1
+        OjdmOjk1OmMwOjczOjk2OmM1OmZiOjc3OlxuICAgICAgICAgICAgICAgICAg
+        ICBhMDo0ODoyMDphNjo3ZDpmNDpjNDpkMzplOTphYjo5NDo5Mzo0ZToxYTpl
+        MjpcbiAgICAgICAgICAgICAgICAgICAgNWQ6OWI6YzU6ODc6NTA6Yzc6NTY6
+        ZjA6OTM6YTg6Yjk6MGE6NzM6Y2Y6Zjc6XG4gICAgICAgICAgICAgICAgICAg
+        IDAxOjBmXG4gICAgICAgICAgICAgICAgRXhwb25lbnQ6IDY1NTM3ICgweDEw
+        MDAxKVxuICAgICAgICBYNTA5djMgZXh0ZW5zaW9uczpcbiAgICAgICAgICAg
+        IFg1MDl2MyBCYXNpYyBDb25zdHJhaW50czpcbiAgICAgICAgICAgICAgICBD
+        QTpUUlVFXG4gICAgICAgICAgICBYNTA5djMgS2V5IFVzYWdlOlxuICAgICAg
+        ICAgICAgICAgIERpZ2l0YWwgU2lnbmF0dXJlLCBLZXkgRW5jaXBoZXJtZW50
+        LCBDZXJ0aWZpY2F0ZSBTaWduLCBDUkwgU2lnblxuICAgICAgICAgICAgWDUw
+        OXYzIEV4dGVuZGVkIEtleSBVc2FnZTpcbiAgICAgICAgICAgICAgICBUTFMg
+        V2ViIFNlcnZlciBBdXRoZW50aWNhdGlvbiwgVExTIFdlYiBDbGllbnQgQXV0
+        aGVudGljYXRpb25cbiAgICAgICAgICAgIE5ldHNjYXBlIENlcnQgVHlwZTpc
+        biAgICAgICAgICAgICAgICBTU0wgU2VydmVyLCBTU0wgQ0FcbiAgICAgICAg
+        ICAgIE5ldHNjYXBlIENvbW1lbnQ6XG4gICAgICAgICAgICAgICAgS2F0ZWxs
+        byBTU0wgVG9vbCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGVcbiAgICAgICAgICAg
+        IFg1MDl2MyBTdWJqZWN0IEtleSBJZGVudGlmaWVyOlxuICAgICAgICAgICAg
+        ICAgIDlCOkQyOkQ5OjY5Ojg4Ojk5OjJDOjJFOjcwOjJCOkI3OjY5Ojc2OjdB
+        OjdEOkQxOjg1OjREOjUzOjVEXG4gICAgICAgICAgICBYNTA5djMgQXV0aG9y
+        aXR5IEtleSBJZGVudGlmaWVyOlxuICAgICAgICAgICAgICAgIGtleWlkOjlC
+        OkQyOkQ5OjY5Ojg4Ojk5OjJDOjJFOjcwOjJCOkI3OjY5Ojc2OjdBOjdEOkQx
+        Ojg1OjREOjUzOjVEXG4gICAgICAgICAgICAgICAgRGlyTmFtZTovQz1VUy9T
+        VD1Ob3J0aCBDYXJvbGluYS9MPVJhbGVpZ2gvTz1LYXRlbGxvL09VPVNvbWVP
+        cmdVbml0L0NOPWNlbnRvczctZGV2ZWwyLnNhbWlyLmV4YW1wbGUuY29tXG4g
+        ICAgICAgICAgICAgICAgc2VyaWFsOkZEOkJBOkJDOjcxOjZFOjI1OkEzOjc4
+        XG5cbiAgICBTaWduYXR1cmUgQWxnb3JpdGhtOiBzaGEyNTZXaXRoUlNBRW5j
+        cnlwdGlvblxuICAgICAgICAgMzI6MTk6NmM6YzY6YWY6YWU6YzI6YmU6NjQ6
+        MTY6YjA6N2M6YTM6NGI6MTA6ZTg6NWE6YjQ6XG4gICAgICAgICAxNzo3NDpm
+        ZDo3NTpjNjoyNjpkMjo4ODowMTpmZTo5NToyZTozZjowYToxZTo4ODphNToy
+        NTpcbiAgICAgICAgIDEzOjZiOjYwOjM0OmQwOjJjOmRlOmQ4OjQ4OjE1OmY1
+        OmNjOjFmOjA3OjgwOjJiOjFkOjI4OlxuICAgICAgICAgOTA6ZTk6OGI6NDc6
+        YzE6NzE6MWE6ZGE6ODY6YTA6Mjc6ZTg6YzQ6ODg6MzY6YTM6ZmY6ZGI6XG4g
+        ICAgICAgICAxNzoyZjowZTo5YjplMTozOTphNzoxZjpkYzoyNjo5NzoyOTo1
+        ZTo0Yjo5OTo2MDpmYTo5MjpcbiAgICAgICAgIDEyOjI0OmZjOmJjOjA0Ojk0
+        OjI0OjY1OmYzOjYwOmNjOjVlOmVlOjQyOmJmOjllOjNjOjMxOlxuICAgICAg
+        ICAgYjk6M2M6OTk6OGE6NDQ6M2Q6Mjk6NWQ6YTY6OTk6YWE6ZDU6MGU6MTU6
+        OTQ6YzQ6YzU6MjM6XG4gICAgICAgICA4YzpiOTo2ZTplNTowOToxMzo4Yzo1
+        Njo0YjowNDozNTo5NTo3OTo1MDo1YzoyMjoyZDoxZjpcbiAgICAgICAgIDNh
+        OjY4OmQwOmYzOjNlOjg4OjdkOjM4OjI5OjMyOmYyOjQ3OmIxOjE3Ojk5OmZk
+        OmE2OjQ4OlxuICAgICAgICAgMDI6MDQ6NmI6OWY6Yjk6ZGE6YzI6NmU6NjU6
+        OWI6OTk6ZTQ6NjA6N2E6MzI6Y2Q6MDI6ZmU6XG4gICAgICAgICA3MTpkYTox
+        OTplMzo5MzpiZDpjNTphNzphMDo0Njo5ZToyODpkMjo5MTphYzo4ZTo5MTpj
+        NzpcbiAgICAgICAgIGE3OjUxOjRlOjgxOjA5OmQxOmYxOjM5OjViOjA3Ojg3
+        OjQxOjNiOmI3OmUzOjFiOmE4OjdlOlxuICAgICAgICAgNTE6NTI6NGU6NjY6
+        MjA6YjE6Y2Q6YzU6YWU6ZGU6MTc6M2E6ZDc6Y2U6MDc6Mzc6ZDg6NWU6XG4g
+        ICAgICAgICA4ODplZjplMzo5NDpjMDo5ODozZTpjMzowZDo1MTo0NDozZDo1
+        Mzo1MjpmZjo1ZTowYjoxYjpcbiAgICAgICAgIDViOjZjOjliOmE2XG4tLS0t
+        LUJFR0lOIENFUlRJRklDQVRFLS0tLS1cbk1JSUZCekNDQSsrZ0F3SUJBZ0lK
+        QVAyNnZIRnVKYU40TUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdMTVFzd0NRWURc
+        blZRUUdFd0pWVXpFWE1CVUdBMVVFQ0F3T1RtOXlkR2dnUTJGeWIyeHBibUV4
+        RURBT0JnTlZCQWNNQjFKaGJHVnBcbloyZ3hFREFPQmdOVkJBb01CMHRoZEdW
+        c2JHOHhGREFTQmdOVkJBc01DMU52YldWUGNtZFZibWwwTVNrd0p3WURcblZR
+        UUREQ0JqWlc1MGIzTTNMV1JsZG1Wc01pNXpZVzFwY2k1bGVHRnRjR3hsTG1O
+        dmJUQWVGdzB5TURBMU1EY3hcbk5ESXhOVEJhRncwek9EQXhNVGd4TkRJeE5U
+        QmFNSUdMTVFzd0NRWURWUVFHRXdKVlV6RVhNQlVHQTFVRUNBd09cblRtOXlk
+        R2dnUTJGeWIyeHBibUV4RURBT0JnTlZCQWNNQjFKaGJHVnBaMmd4RURBT0Jn
+        TlZCQW9NQjB0aGRHVnNcbmJHOHhGREFTQmdOVkJBc01DMU52YldWUGNtZFZi
+        bWwwTVNrd0p3WURWUVFERENCalpXNTBiM00zTFdSbGRtVnNcbk1pNXpZVzFw
+        Y2k1bGVHRnRjR3hsTG1OdmJUQ0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURn
+        Z0VQQURDQ0FRb0NcbmdnRUJBSi9Td1JEL0FSb3pHUTVEbllQbGluTzZMVHht
+        c1hqTmlZeGc1WUdtNkUyV1hRZkR2cUtjd255VUxXNURcblJFYnYvVFlnUnp2
+        V05mMlh6WmNYMXovblovNnBLdkc4UjRkdTdXMjJudkVOWTFQQlAvMFhxMTgx
+        ZW9UUGE5Mm1cbmpnbVpWam5lS1d2N3d0eU1WaW9Rc3dyS3VHejd1TWpyNWVL
+        dTFVRUZUS0xBdm51d2JSMThab0NJV3JjSG05TzRcbi81UHpHVE5qU0pXRE5D
+        ZkdyTXlnQzFhcklqUnhUM20vYmt2SmlWbUhpM3MxZWJnY2NPNVk1bnNpZWFj
+        ZTJiSlhcbk91Qlpqck5xbHoyYWdNdzcxWGZVK25wWWFiYXpxcFZVVlo0VFpY
+        K1Z3SE9XeGZ0M29FZ2dwbjMweE5QcHE1U1RcblRocmlYWnZGaDFESFZ2Q1Rx
+        TGtLYzgvM0FROENBd0VBQWFPQ0FXb3dnZ0ZtTUF3R0ExVWRFd1FGTUFNQkFm
+        OHdcbkN3WURWUjBQQkFRREFnR21NQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZC
+        d01CQmdnckJnRUZCUWNEQWpBUkJnbGdcbmhrZ0JodmhDQVFFRUJBTUNBa1F3
+        TlFZSllJWklBWWI0UWdFTkJDZ1dKa3RoZEdWc2JHOGdVMU5NSUZSdmIyd2dc
+        blIyVnVaWEpoZEdWa0lFTmxjblJwWm1sallYUmxNQjBHQTFVZERnUVdCQlNi
+        MHRscGlKa3NMbkFydDJsMmVuM1JcbmhVMVRYVENCd0FZRFZSMGpCSUc0TUlH
+        MWdCU2IwdGxwaUprc0xuQXJ0MmwyZW4zUmhVMVRYYUdCa2FTQmpqQ0Jcbml6
+        RUxNQWtHQTFVRUJoTUNWVk14RnpBVkJnTlZCQWdNRGs1dmNuUm9JRU5oY205
+        c2FXNWhNUkF3RGdZRFZRUUhcbkRBZFNZV3hsYVdkb01SQXdEZ1lEVlFRS0RB
+        ZExZWFJsYkd4dk1SUXdFZ1lEVlFRTERBdFRiMjFsVDNKblZXNXBcbmRERXBN
+        Q2NHQTFVRUF3d2dZMlZ1ZEc5ek55MWtaWFpsYkRJdWMyRnRhWEl1WlhoaGJY
+        QnNaUzVqYjIyQ0NRRDlcbnVyeHhiaVdqZURBTkJna3Foa2lHOXcwQkFRc0ZB
+        QU9DQVFFQU1obHN4cSt1d3I1a0ZyQjhvMHNRNkZxMEYzVDlcbmRjWW0wb2dC
+        L3BVdVB3b2VpS1VsRTJ0Z05OQXMzdGhJRmZYTUh3ZUFLeDBva09tTFI4RnhH
+        dHFHb0Nmb3hJZzJcbm8vL2JGeThPbStFNXB4L2NKcGNwWGt1WllQcVNFaVQ4
+        dkFTVUpHWHpZTXhlN2tLL25qd3h1VHlaaWtROUtWMm1cbm1hclZEaFdVeE1V
+        ampMbHU1UWtUakZaTEJEV1ZlVkJjSWkwZk9talE4ejZJZlRncE12SkhzUmVa
+        L2FaSUFnUnJcbm43bmF3bTVsbTVua1lIb3l6UUwrY2RvWjQ1Tzl4YWVnUnA0
+        bzBwR3NqcEhIcDFGT2dRblI4VGxiQjRkQk83Zmpcbkc2aCtVVkpPWmlDeHpj
+        V3UzaGM2MTg0SE45aGVpTy9qbE1DWVBzTU5VVVE5VTFML1hnc2JXMnlicGc9
+        PVxuLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLSJ9XX0=
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:21 GMT
 - request:
-    method: delete
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/repositories/rpm/rpm/eee885ed-5536-4f6b-95f3-5cc860b33831/
+    method: get
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -64,7 +183,62 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 20 Aug 2020 19:12:21 GMT
+      Server:
+      - gunicorn/20.0.4
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Via:
+      - 1.1 devel2.balmora.example.com
+      Content-Length:
+      - '254'
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
+        cnBtL3JwbS8xMTVhZjU3Ni1jZWM5LTQ3NmYtYWY4Ni00MDMyNTY2MTBhYzMv
+        IiwicHVscF9jcmVhdGVkIjoiMjAyMC0wOC0yMFQxOToxMjoxNS41NTA0NzVa
+        IiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
+        cnBtL3JwbS8xMTVhZjU3Ni1jZWM5LTQ3NmYtYWY4Ni00MDMyNTY2MTBhYzMv
+        dmVyc2lvbnMvIiwibGF0ZXN0X3ZlcnNpb25faHJlZiI6Ii9wdWxwL2FwaS92
+        My9yZXBvc2l0b3JpZXMvcnBtL3JwbS8xMTVhZjU3Ni1jZWM5LTQ3NmYtYWY4
+        Ni00MDMyNTY2MTBhYzMvdmVyc2lvbnMvMC8iLCJuYW1lIjoiMl9kdXBsaWNh
+        dGUiLCJkZXNjcmlwdGlvbiI6bnVsbCwicmVtb3RlIjpudWxsLCJtZXRhZGF0
+        YV9zaWduaW5nX3NlcnZpY2UiOm51bGwsInJldGFpbl9wYWNrYWdlX3ZlcnNp
+        b25zIjowfV19
+    http_version: 
+  recorded_at: Thu, 20 Aug 2020 19:12:21 GMT
+- request:
+    method: delete
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/115af576-cec9-476f-af86-403256610ac3/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -77,7 +251,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:21 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -91,17 +265,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzZjMTgxOGRmLWRmMWUtNGU5
-        ZS1iZGNmLThjYjI1ZGMzMDk0Ny8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M3M2MzYmUwLWY0ZmUtNDIy
+        MC1iNzQyLWY1ZTkzYTE3MDQ4OS8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:21 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/rpm/rpm/?name=2_duplicate
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -109,7 +283,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -122,7 +296,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:21 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -134,29 +308,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '337'
+      - '349'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL3JwbS9y
-        cG0vZWRlZjkzNTEtYTMzZC00MDM4LTgxMjAtMjk4ZDQ4MWI2MDQ5LyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjAtMDYtMDhUMTM6MTQ6MzcuNjkwMjE5WiIsIm5h
+        cG0vYmVhMjgyZmYtYjdlZi00NGQ0LWE4NDYtYWFkM2IwZmI1MzI5LyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjAtMDgtMjBUMTk6MTI6MTUuNjkyMTkyWiIsIm5h
         bWUiOiIyX2R1cGxpY2F0ZSIsInVybCI6Imh0dHA6Ly9teXJlcG8uY29tIiwi
         Y2FfY2VydCI6IktKTDpLREYqKERGJiooKiQmKCojJEpMS0pEKEQoKEQiLCJj
         bGllbnRfY2VydCI6IktKTDpLREYqKERGJiooKiQmKCojJEpMS0pEKEQoKEQi
         LCJjbGllbnRfa2V5IjoiS0pMOktERiooREYmKigqJCYoKiMkSkxLSkQoRCgo
         RCIsInRsc192YWxpZGF0aW9uIjpmYWxzZSwicHJveHlfdXJsIjpudWxsLCJ1
         c2VybmFtZSI6bnVsbCwicGFzc3dvcmQiOm51bGwsInB1bHBfbGFzdF91cGRh
-        dGVkIjoiMjAyMC0wNi0wOFQxMzoxNDo0Mi45NTkwNzFaIiwiZG93bmxvYWRf
-        Y29uY3VycmVuY3kiOjIwLCJwb2xpY3kiOiJpbW1lZGlhdGUifV19
+        dGVkIjoiMjAyMC0wOC0yMFQxOToxMjoxOC43Mzk2MTJaIiwiZG93bmxvYWRf
+        Y29uY3VycmVuY3kiOjEwLCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJzbGVzX2F1
+        dGhfdG9rZW4iOm51bGx9XX0=
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:21 GMT
 - request:
     method: delete
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/rpm/rpm/edef9351-a33d-4038-8120-298d481b6049/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/bea282ff-b7ef-44d4-a846-aad3b0fb5329/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -164,7 +339,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -177,7 +352,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:21 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -191,17 +366,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzUzOTAzZmFkLThiMzgtNDU0
-        ZC05ZjU1LTIxZGViYzdkYTRhMC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzEyMDNiNWJiLTA2NDItNDBj
+        My05MTc0LWM4ZjhhMGViM2ExNC8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:21 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/distributions/rpm/rpm/?name=2_duplicate
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -209,7 +384,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -222,7 +397,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:21 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -234,29 +409,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '318'
+      - '346'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
-        L3JwbS9ycG0vMTYyZTdmNmItOGQyYS00OWExLWI4NDItODhmNTYzNGY5MTI0
-        LyIsInB1bHBfY3JlYXRlZCI6IjIwMjAtMDYtMDhUMTM6MTQ6MzkuNTkxNDM5
+        L3JwbS9ycG0vZjU5ZWJmNDgtYWUxZS00YTUzLWJhZDQtZWFhNjlkZmZhOThl
+        LyIsInB1bHBfY3JlYXRlZCI6IjIwMjAtMDgtMjBUMTk6MTI6MTcuNjE1MDU5
         WiIsImJhc2VfcGF0aCI6IkFDTUVfQ29ycG9yYXRpb24vZGV2L2ZlZG9yYV8x
-        N19kdXBsaWNhdGVfbGFiZWwiLCJiYXNlX3VybCI6Imh0dHA6Ly9jZW50b3M3
-        LWthdGVsbG8tZGV2ZWwtc3RhYmxlLmV4YW1wbGUuY29tL3B1bHAvY29udGVu
-        dC9BQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xh
-        YmVsLyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsIm5hbWUiOiIyX2R1cGxpY2F0
-        ZSIsInB1YmxpY2F0aW9uIjoiL3B1bHAvYXBpL3YzL3B1YmxpY2F0aW9ucy9y
-        cG0vcnBtL2NmNDk4YmUzLTAyYzMtNDhmMS1iYjZkLTc2MzE5YzQ3Mzg5OC8i
-        fV19
+        N19kdXBsaWNhdGVfbGFiZWwiLCJiYXNlX3VybCI6Imh0dHA6Ly9kZXZlbDIu
+        YmFsbW9yYS5leGFtcGxlLmNvbS9wdWxwL2NvbnRlbnQvQUNNRV9Db3Jwb3Jh
+        dGlvbi9kZXYvZmVkb3JhXzE3X2R1cGxpY2F0ZV9sYWJlbC8iLCJjb250ZW50
+        X2d1YXJkIjoiL3B1bHAvYXBpL3YzL2NvbnRlbnRndWFyZHMvY2VydGd1YXJk
+        L3Joc20vZmVmYmY4MmEtYmE4ZS00OTIwLTk2OWMtNmMzOWZhN2FlN2VhLyIs
+        Im5hbWUiOiIyX2R1cGxpY2F0ZSIsInB1YmxpY2F0aW9uIjoiL3B1bHAvYXBp
+        L3YzL3B1YmxpY2F0aW9ucy9ycG0vcnBtLzZkZjdlOTdkLTQzNTktNGUxYi04
+        NDExLWQzZGY2NjU0ZTVkNS8ifV19
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:21 GMT
 - request:
     method: delete
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/distributions/rpm/rpm/162e7f6b-8d2a-49a1-b842-88f5634f9124/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/f59ebf48-ae1e-4a53-bad4-eaa69dffa98e/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -264,7 +440,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -277,7 +453,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:21 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -291,17 +467,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzY4NDZmNTBjLTlkYjMtNDhi
-        ZC1hNWM4LWZjMGQ4YzE1NDBlMy8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzk4M2ViMzNkLTg3ZDEtNGEz
+        YS1hZmRhLTNiOGIxNDM3M2VjOC8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:21 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -309,7 +485,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -322,7 +498,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:22 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -334,27 +510,28 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '287'
+      - '316'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
-        L3JwbS9ycG0vMTYyZTdmNmItOGQyYS00OWExLWI4NDItODhmNTYzNGY5MTI0
-        LyIsInB1bHBfY3JlYXRlZCI6IjIwMjAtMDYtMDhUMTM6MTQ6MzkuNTkxNDM5
+        L3JwbS9ycG0vZjU5ZWJmNDgtYWUxZS00YTUzLWJhZDQtZWFhNjlkZmZhOThl
+        LyIsInB1bHBfY3JlYXRlZCI6IjIwMjAtMDgtMjBUMTk6MTI6MTcuNjE1MDU5
         WiIsImJhc2VfcGF0aCI6IkFDTUVfQ29ycG9yYXRpb24vZGV2L2ZlZG9yYV8x
-        N19kdXBsaWNhdGVfbGFiZWwiLCJiYXNlX3VybCI6Imh0dHA6Ly9jZW50b3M3
-        LWthdGVsbG8tZGV2ZWwtc3RhYmxlLmV4YW1wbGUuY29tL3B1bHAvY29udGVu
-        dC9BQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xh
-        YmVsLyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsIm5hbWUiOiIyX2R1cGxpY2F0
-        ZSIsInB1YmxpY2F0aW9uIjpudWxsfV19
+        N19kdXBsaWNhdGVfbGFiZWwiLCJiYXNlX3VybCI6Imh0dHA6Ly9kZXZlbDIu
+        YmFsbW9yYS5leGFtcGxlLmNvbS9wdWxwL2NvbnRlbnQvQUNNRV9Db3Jwb3Jh
+        dGlvbi9kZXYvZmVkb3JhXzE3X2R1cGxpY2F0ZV9sYWJlbC8iLCJjb250ZW50
+        X2d1YXJkIjoiL3B1bHAvYXBpL3YzL2NvbnRlbnRndWFyZHMvY2VydGd1YXJk
+        L3Joc20vZmVmYmY4MmEtYmE4ZS00OTIwLTk2OWMtNmMzOWZhN2FlN2VhLyIs
+        Im5hbWUiOiIyX2R1cGxpY2F0ZSIsInB1YmxpY2F0aW9uIjpudWxsfV19
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:22 GMT
 - request:
     method: delete
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/distributions/rpm/rpm/162e7f6b-8d2a-49a1-b842-88f5634f9124/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/f59ebf48-ae1e-4a53-bad4-eaa69dffa98e/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -362,7 +539,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -375,7 +552,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:22 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -389,17 +566,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2Y3MGUzM2NjLTA1NTAtNGY0
-        Yy1iYzdhLTkyN2U3NDcxMTRlNy8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzIxNTMwYWUxLTBhNWYtNGZj
+        MS1iNTU4LTFiOWQwYmZhOTU3ZC8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:22 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/tasks/6c1818df-df1e-4e9e-bdcf-8cb25dc30947/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/c73c3be0-f4fe-4220-b742-f5e93a170489/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -407,7 +584,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -420,7 +597,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:45 GMT
+      - Thu, 20 Aug 2020 19:12:22 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -432,30 +609,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '340'
+      - '337'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNmMxODE4ZGYtZGYx
-        ZS00ZTllLWJkY2YtOGNiMjVkYzMwOTQ3LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDYtMDhUMTM6MTQ6NDUuMjQzMTE1WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYzczYzNiZTAtZjRm
+        ZS00MjIwLWI3NDItZjVlOTNhMTcwNDg5LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjAtMDgtMjBUMTk6MTI6MjEuMjkxMjQ4WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDYtMDhUMTM6MTQ6NDUuNDQ0OTEz
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wNi0wOFQxMzoxNDo0NS42OTUxNDla
+        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MTI6MjEuNDgxMzIw
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOToxMjoyMS43MTcyNDha
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        L2QzODM4YTE1LTRjZTItNDgzMy1iYjFmLWUzMjQxMDNjODAwOS8iLCJwYXJl
+        LzEyNDMxOTY4LWNhNTMtNDJmZi1hOWMzLTQwZDZhYjEzZjU2Yy8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
         OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92
-        My9yZXBvc2l0b3JpZXMvcnBtL3JwbS9lZWU4ODVlZC01NTM2LTRmNmItOTVm
-        My01Y2M4NjBiMzM4MzEvIl19
+        My9yZXBvc2l0b3JpZXMvcnBtL3JwbS8xMTVhZjU3Ni1jZWM5LTQ3NmYtYWY4
+        Ni00MDMyNTY2MTBhYzMvIl19
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:45 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:22 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/tasks/53903fad-8b38-454d-9f55-21debc7da4a0/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/1203b5bb-0642-40c3-9174-c8f8a0eb3a14/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -463,7 +640,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -476,7 +653,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:46 GMT
+      - Thu, 20 Aug 2020 19:12:22 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -488,30 +665,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
       - '338'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNTM5MDNmYWQtOGIz
-        OC00NTRkLTlmNTUtMjFkZWJjN2RhNGEwLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDYtMDhUMTM6MTQ6NDUuMzg4OTY5WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMTIwM2I1YmItMDY0
+        Mi00MGMzLTkxNzQtYzhmOGEwZWIzYTE0LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjAtMDgtMjBUMTk6MTI6MjEuNDg3ODQ2WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDYtMDhUMTM6MTQ6NDUuNzg0NzM1
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wNi0wOFQxMzoxNDo0NS44OTYzMDBa
+        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MTI6MjEuODQ4MzM2
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOToxMjoyMS45OTA4OTFa
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        L2Q1Y2JhMWMwLWVjZTAtNDQwNS05NWJhLWY5OTNkY2IxYjQzZC8iLCJwYXJl
+        LzEwZTNlNjJmLWM5NzYtNGM3YS1iMTM1LTM4MTY0ODk0NDgwNS8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
         OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92
-        My9yZW1vdGVzL3JwbS9ycG0vZWRlZjkzNTEtYTMzZC00MDM4LTgxMjAtMjk4
-        ZDQ4MWI2MDQ5LyJdfQ==
+        My9yZW1vdGVzL3JwbS9ycG0vYmVhMjgyZmYtYjdlZi00NGQ0LWE4NDYtYWFk
+        M2IwZmI1MzI5LyJdfQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:46 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:22 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/tasks/6846f50c-9db3-48bd-a5c8-fc0d8c1540e3/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/983eb33d-87d1-4a3a-afda-3b8b14373ec8/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -519,7 +696,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -532,7 +709,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:46 GMT
+      - Thu, 20 Aug 2020 19:12:22 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -544,29 +721,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
       - '315'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNjg0NmY1MGMtOWRi
-        My00OGJkLWE1YzgtZmMwZDhjMTU0MGUzLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDYtMDhUMTM6MTQ6NDUuNTkwOTQyWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvOTgzZWIzM2QtODdk
+        MS00YTNhLWFmZGEtM2I4YjE0MzczZWM4LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjAtMDgtMjBUMTk6MTI6MjEuNzgwNzM3WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDYtMDhUMTM6MTQ6NDYuMzQ4NjEz
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wNi0wOFQxMzoxNDo0Ni40OTAzMzBa
+        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MTI6MjIuNDA5ODM5
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOToxMjoyMi40Nzc0OTha
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        L2QzODM4YTE1LTRjZTItNDgzMy1iYjFmLWUzMjQxMDNjODAwOS8iLCJwYXJl
+        LzEwZTNlNjJmLWM5NzYtNGM3YS1iMTM1LTM4MTY0ODk0NDgwNS8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
         OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlz
         dHJpYnV0aW9ucy8iXX0=
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:46 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:22 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/tasks/f70e33cc-0550-4f4c-bc7a-927e747114e7/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/21530ae1-0a5f-4fc1-b558-1b9d0bfa957d/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -574,7 +751,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -587,7 +764,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:46 GMT
+      - Thu, 20 Aug 2020 19:12:22 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -599,49 +776,49 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '666'
+      - '665'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZjcwZTMzY2MtMDU1
-        MC00ZjRjLWJjN2EtOTI3ZTc0NzExNGU3LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDYtMDhUMTM6MTQ6NDUuODIxMDI2WiIsInN0YXRlIjoiZmFpbGVkIiwi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMjE1MzBhZTEtMGE1
+        Zi00ZmMxLWI1NTgtMWI5ZDBiZmE5NTdkLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjAtMDgtMjBUMTk6MTI6MjIuMTIyODU4WiIsInN0YXRlIjoiZmFpbGVkIiwi
         bmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVsZXRl
-        Iiwic3RhcnRlZF9hdCI6IjIwMjAtMDYtMDhUMTM6MTQ6NDYuNzg1OTUwWiIs
-        ImZpbmlzaGVkX2F0IjoiMjAyMC0wNi0wOFQxMzoxNDo0Ni44MTk1MTFaIiwi
-        ZXJyb3IiOnsidHJhY2ViYWNrIjoiICBGaWxlIFwiL3Vzci9saWIvcHl0aG9u
-        My42L3NpdGUtcGFja2FnZXMvcnEvd29ya2VyLnB5XCIsIGxpbmUgODg2LCBp
-        biBwZXJmb3JtX2pvYlxuICAgIHJ2ID0gam9iLnBlcmZvcm0oKVxuICBGaWxl
-        IFwiL3Vzci9saWIvcHl0aG9uMy42L3NpdGUtcGFja2FnZXMvcnEvam9iLnB5
-        XCIsIGxpbmUgNjY0LCBpbiBwZXJmb3JtXG4gICAgc2VsZi5fcmVzdWx0ID0g
-        c2VsZi5fZXhlY3V0ZSgpXG4gIEZpbGUgXCIvdXNyL2xpYi9weXRob24zLjYv
-        c2l0ZS1wYWNrYWdlcy9ycS9qb2IucHlcIiwgbGluZSA2NzAsIGluIF9leGVj
-        dXRlXG4gICAgcmV0dXJuIHNlbGYuZnVuYygqc2VsZi5hcmdzLCAqKnNlbGYu
-        a3dhcmdzKVxuICBGaWxlIFwiL3Vzci9sb2NhbC9saWIvcHl0aG9uMy42L3Np
-        dGUtcGFja2FnZXMvcHVscGNvcmUvYXBwL3Rhc2tzL2Jhc2UucHlcIiwgbGlu
-        ZSA5MCwgaW4gZ2VuZXJhbF9kZWxldGVcbiAgICBpbnN0YW5jZSA9IHNlcmlh
-        bGl6ZXJfY2xhc3MuTWV0YS5tb2RlbC5vYmplY3RzLmdldChwaz1pbnN0YW5j
-        ZV9pZCkuY2FzdCgpXG4gIEZpbGUgXCIvdXNyL2xpYi9weXRob24zLjYvc2l0
-        ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL21hbmFnZXIucHlcIiwgbGlu
-        ZSA4MiwgaW4gbWFuYWdlcl9tZXRob2RcbiAgICByZXR1cm4gZ2V0YXR0cihz
-        ZWxmLmdldF9xdWVyeXNldCgpLCBuYW1lKSgqYXJncywgKiprd2FyZ3MpXG4g
-        IEZpbGUgXCIvdXNyL2xpYi9weXRob24zLjYvc2l0ZS1wYWNrYWdlcy9kamFu
-        Z28vZGIvbW9kZWxzL3F1ZXJ5LnB5XCIsIGxpbmUgNDA4LCBpbiBnZXRcbiAg
-        ICBzZWxmLm1vZGVsLl9tZXRhLm9iamVjdF9uYW1lXG4iLCJkZXNjcmlwdGlv
-        biI6IlJwbURpc3RyaWJ1dGlvbiBtYXRjaGluZyBxdWVyeSBkb2VzIG5vdCBl
-        eGlzdC4ifSwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvZDM4Mzhh
-        MTUtNGNlMi00ODMzLWJiMWYtZTMyNDEwM2M4MDA5LyIsInBhcmVudF90YXNr
-        IjpudWxsLCJjaGlsZF90YXNrcyI6W10sInRhc2tfZ3JvdXAiOm51bGwsInBy
-        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6W10sInJl
-        c2VydmVkX3Jlc291cmNlc19yZWNvcmQiOlsiL2FwaS92My9kaXN0cmlidXRp
-        b25zLyJdfQ==
+        Iiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MTI6MjIuNzA3NTQ5WiIs
+        ImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOToxMjoyMi43NDE0OTJaIiwi
+        ZXJyb3IiOnsidHJhY2ViYWNrIjoiICBGaWxlIFwiL3Vzci9sb2NhbC9saWIv
+        cHl0aG9uMy42L3NpdGUtcGFja2FnZXMvcnEvd29ya2VyLnB5XCIsIGxpbmUg
+        ODgzLCBpbiBwZXJmb3JtX2pvYlxuICAgIHJ2ID0gam9iLnBlcmZvcm0oKVxu
+        ICBGaWxlIFwiL3Vzci9sb2NhbC9saWIvcHl0aG9uMy42L3NpdGUtcGFja2Fn
+        ZXMvcnEvam9iLnB5XCIsIGxpbmUgNjU3LCBpbiBwZXJmb3JtXG4gICAgc2Vs
+        Zi5fcmVzdWx0ID0gc2VsZi5fZXhlY3V0ZSgpXG4gIEZpbGUgXCIvdXNyL2xv
+        Y2FsL2xpYi9weXRob24zLjYvc2l0ZS1wYWNrYWdlcy9ycS9qb2IucHlcIiwg
+        bGluZSA2NjMsIGluIF9leGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuZnVuYygq
+        c2VsZi5hcmdzLCAqKnNlbGYua3dhcmdzKVxuICBGaWxlIFwiL3Vzci9sb2Nh
+        bC9saWIvcHl0aG9uMy42L3NpdGUtcGFja2FnZXMvcHVscGNvcmUvYXBwL3Rh
+        c2tzL2Jhc2UucHlcIiwgbGluZSA5MCwgaW4gZ2VuZXJhbF9kZWxldGVcbiAg
+        ICBpbnN0YW5jZSA9IHNlcmlhbGl6ZXJfY2xhc3MuTWV0YS5tb2RlbC5vYmpl
+        Y3RzLmdldChwaz1pbnN0YW5jZV9pZCkuY2FzdCgpXG4gIEZpbGUgXCIvdXNy
+        L2xvY2FsL2xpYi9weXRob24zLjYvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIv
+        bW9kZWxzL21hbmFnZXIucHlcIiwgbGluZSA4MiwgaW4gbWFuYWdlcl9tZXRo
+        b2RcbiAgICByZXR1cm4gZ2V0YXR0cihzZWxmLmdldF9xdWVyeXNldCgpLCBu
+        YW1lKSgqYXJncywgKiprd2FyZ3MpXG4gIEZpbGUgXCIvdXNyL2xvY2FsL2xp
+        Yi9weXRob24zLjYvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL3F1
+        ZXJ5LnB5XCIsIGxpbmUgNDA4LCBpbiBnZXRcbiAgICBzZWxmLm1vZGVsLl9t
+        ZXRhLm9iamVjdF9uYW1lXG4iLCJkZXNjcmlwdGlvbiI6IlJwbURpc3RyaWJ1
+        dGlvbiBtYXRjaGluZyBxdWVyeSBkb2VzIG5vdCBleGlzdC4ifSwid29ya2Vy
+        IjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvMTBlM2U2MmYtYzk3Ni00YzdhLWIx
+        MzUtMzgxNjQ4OTQ0ODA1LyIsInBhcmVudF90YXNrIjpudWxsLCJjaGlsZF90
+        YXNrcyI6W10sInRhc2tfZ3JvdXAiOm51bGwsInByb2dyZXNzX3JlcG9ydHMi
+        OltdLCJjcmVhdGVkX3Jlc291cmNlcyI6W10sInJlc2VydmVkX3Jlc291cmNl
+        c19yZWNvcmQiOlsiL2FwaS92My9kaXN0cmlidXRpb25zLyJdfQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:46 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:22 GMT
 - request:
     method: post
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/repositories/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: 'eyJuYW1lIjoiMl9kdXBsaWNhdGUifQ==
@@ -651,7 +828,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -664,13 +841,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:47 GMT
+      - Thu, 20 Aug 2020 19:12:23 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/rpm/rpm/46a51abc-1c5e-47f9-9aa3-82f951d40dfb/"
+      - "/pulp/api/v3/repositories/rpm/rpm/7d4de580-2af5-4132-b717-e01e1849ed16/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -678,27 +855,28 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '410'
+      - '452'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vNDZhNTFhYmMtMWM1ZS00N2Y5LTlhYTMtODJmOTUxZDQwZGZiLyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjAtMDYtMDhUMTM6MTQ6NDcuMTc5NDUyWiIsInZl
+        cG0vN2Q0ZGU1ODAtMmFmNS00MTMyLWI3MTctZTAxZTE4NDllZDE2LyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjAtMDgtMjBUMTk6MTI6MjMuMDc3MjU3WiIsInZl
         cnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vNDZhNTFhYmMtMWM1ZS00N2Y5LTlhYTMtODJmOTUxZDQwZGZiL3ZlcnNp
+        cG0vN2Q0ZGU1ODAtMmFmNS00MTMyLWI3MTctZTAxZTE4NDllZDE2L3ZlcnNp
         b25zLyIsImxhdGVzdF92ZXJzaW9uX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVw
-        b3NpdG9yaWVzL3JwbS9ycG0vNDZhNTFhYmMtMWM1ZS00N2Y5LTlhYTMtODJm
-        OTUxZDQwZGZiL3ZlcnNpb25zLzAvIiwibmFtZSI6IjJfZHVwbGljYXRlIiwi
-        ZGVzY3JpcHRpb24iOm51bGwsIm1ldGFkYXRhX3NpZ25pbmdfc2VydmljZSI6
-        bnVsbH0=
+        b3NpdG9yaWVzL3JwbS9ycG0vN2Q0ZGU1ODAtMmFmNS00MTMyLWI3MTctZTAx
+        ZTE4NDllZDE2L3ZlcnNpb25zLzAvIiwibmFtZSI6IjJfZHVwbGljYXRlIiwi
+        ZGVzY3JpcHRpb24iOm51bGwsInJlbW90ZSI6bnVsbCwibWV0YWRhdGFfc2ln
+        bmluZ19zZXJ2aWNlIjpudWxsLCJyZXRhaW5fcGFja2FnZV92ZXJzaW9ucyI6
+        MH0=
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:47 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:23 GMT
 - request:
     method: post
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
@@ -710,7 +888,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -723,13 +901,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:47 GMT
+      - Thu, 20 Aug 2020 19:12:23 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/rpm/rpm/6726dbf9-ee7c-413f-8764-dc33e8b42267/"
+      - "/pulp/api/v3/remotes/rpm/rpm/35e35546-125e-4143-8ada-5c20e40e34c7/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -737,555 +915,38 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '394'
+      - '417'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzY3
-        MjZkYmY5LWVlN2MtNDEzZi04NzY0LWRjMzNlOGI0MjI2Ny8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIwLTA2LTA4VDEzOjE0OjQ3LjMwOTUzNloiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzM1
+        ZTM1NTQ2LTEyNWUtNDE0My04YWRhLTVjMjBlNDBlMzRjNy8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIwLTA4LTIwVDE5OjEyOjIzLjE4MDgzN1oiLCJuYW1lIjoi
         Ml9kdXBsaWNhdGUiLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNhX2Nl
         cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJjbGllbnRfa2V5IjpudWxs
         LCJ0bHNfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJ1c2Vy
         bmFtZSI6bnVsbCwicGFzc3dvcmQiOm51bGwsInB1bHBfbGFzdF91cGRhdGVk
-        IjoiMjAyMC0wNi0wOFQxMzoxNDo0Ny4zMDk1ODlaIiwiZG93bmxvYWRfY29u
-        Y3VycmVuY3kiOjIwLCJwb2xpY3kiOiJpbW1lZGlhdGUifQ==
+        IjoiMjAyMC0wOC0yMFQxOToxMjoyMy4xODA4NTVaIiwiZG93bmxvYWRfY29u
+        Y3VycmVuY3kiOjEwLCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJzbGVzX2F1dGhf
+        dG9rZW4iOm51bGx9
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:47 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:23 GMT
 - request:
     method: post
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/contentguards/certguard/rhsm/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImNhX2NlcnRpZmljYXRlIjoiQ2Vy
-        dGlmaWNhdGU6XG4gICAgRGF0YTpcbiAgICAgICAgVmVyc2lvbjogMyAoMHgy
-        KVxuICAgICAgICBTZXJpYWwgTnVtYmVyOlxuICAgICAgICAgICAgZmQ6YmE6
-        YmM6NzE6NmU6MjU6YTM6NzhcbiAgICBTaWduYXR1cmUgQWxnb3JpdGhtOiBz
-        aGEyNTZXaXRoUlNBRW5jcnlwdGlvblxuICAgICAgICBJc3N1ZXI6IEM9VVMs
-        IFNUPU5vcnRoIENhcm9saW5hLCBMPVJhbGVpZ2gsIE89S2F0ZWxsbywgT1U9
-        U29tZU9yZ1VuaXQsIENOPWNlbnRvczctZGV2ZWwyLnNhbWlyLmV4YW1wbGUu
-        Y29tXG4gICAgICAgIFZhbGlkaXR5XG4gICAgICAgICAgICBOb3QgQmVmb3Jl
-        OiBNYXkgIDcgMTQ6MjE6NTAgMjAyMCBHTVRcbiAgICAgICAgICAgIE5vdCBB
-        ZnRlciA6IEphbiAxOCAxNDoyMTo1MCAyMDM4IEdNVFxuICAgICAgICBTdWJq
-        ZWN0OiBDPVVTLCBTVD1Ob3J0aCBDYXJvbGluYSwgTD1SYWxlaWdoLCBPPUth
-        dGVsbG8sIE9VPVNvbWVPcmdVbml0LCBDTj1jZW50b3M3LWRldmVsMi5zYW1p
-        ci5leGFtcGxlLmNvbVxuICAgICAgICBTdWJqZWN0IFB1YmxpYyBLZXkgSW5m
-        bzpcbiAgICAgICAgICAgIFB1YmxpYyBLZXkgQWxnb3JpdGhtOiByc2FFbmNy
-        eXB0aW9uXG4gICAgICAgICAgICAgICAgUHVibGljLUtleTogKDIwNDggYml0
-        KVxuICAgICAgICAgICAgICAgIE1vZHVsdXM6XG4gICAgICAgICAgICAgICAg
-        ICAgIDAwOjlmOmQyOmMxOjEwOmZmOjAxOjFhOjMzOjE5OjBlOjQzOjlkOjgz
-        OmU1OlxuICAgICAgICAgICAgICAgICAgICA4YTo3MzpiYToyZDozYzo2Njpi
-        MTo3ODpjZDo4OTo4Yzo2MDplNTo4MTphNjpcbiAgICAgICAgICAgICAgICAg
-        ICAgZTg6NGQ6OTY6NWQ6MDc6YzM6YmU6YTI6OWM6YzI6N2M6OTQ6MmQ6NmU6
-        NDM6XG4gICAgICAgICAgICAgICAgICAgIDQ0OjQ2OmVmOmZkOjM2OjIwOjQ3
-        OjNiOmQ2OjM1OmZkOjk3OmNkOjk3OjE3OlxuICAgICAgICAgICAgICAgICAg
-        ICBkNzozZjplNzo2NzpmZTphOToyYTpmMTpiYzo0Nzo4Nzo2ZTplZDo2ZDpi
-        NjpcbiAgICAgICAgICAgICAgICAgICAgOWU6ZjE6MGQ6NjM6NTM6YzE6M2Y6
-        ZmQ6MTc6YWI6NWY6MzU6N2E6ODQ6Y2Y6XG4gICAgICAgICAgICAgICAgICAg
-        IDZiOmRkOmE2OjhlOjA5Ojk5OjU2OjM5OmRlOjI5OjZiOmZiOmMyOmRjOjhj
-        OlxuICAgICAgICAgICAgICAgICAgICA1NjoyYToxMDpiMzowYTpjYTpiODo2
-        YzpmYjpiODpjODplYjplNTplMjphZTpcbiAgICAgICAgICAgICAgICAgICAg
-        ZDU6NDE6MDU6NGM6YTI6YzA6YmU6N2I6YjA6NmQ6MWQ6N2M6NjY6ODA6ODg6
-        XG4gICAgICAgICAgICAgICAgICAgIDVhOmI3OjA3OjliOmQzOmI4OmZmOjkz
-        OmYzOjE5OjMzOjYzOjQ4Ojk1OjgzOlxuICAgICAgICAgICAgICAgICAgICAz
-        NDoyNzpjNjphYzpjYzphMDowYjo1NjphYjoyMjozNDo3MTo0Zjo3OTpiZjpc
-        biAgICAgICAgICAgICAgICAgICAgNmU6NGI6Yzk6ODk6NTk6ODc6OGI6N2I6
-        MzU6Nzk6Yjg6MWM6NzA6ZWU6NTg6XG4gICAgICAgICAgICAgICAgICAgIGU2
-        OjdiOjIyOjc5OmE3OjFlOmQ5OmIyOjU3OjNhOmUwOjU5OjhlOmIzOjZhOlxu
-        ICAgICAgICAgICAgICAgICAgICA5NzozZDo5YTo4MDpjYzozYjpkNTo3Nzpk
-        NDpmYTo3YTo1ODo2OTpiNjpiMzpcbiAgICAgICAgICAgICAgICAgICAgYWE6
-        OTU6NTQ6NTU6OWU6MTM6NjU6N2Y6OTU6YzA6NzM6OTY6YzU6ZmI6Nzc6XG4g
-        ICAgICAgICAgICAgICAgICAgIGEwOjQ4OjIwOmE2OjdkOmY0OmM0OmQzOmU5
-        OmFiOjk0OjkzOjRlOjFhOmUyOlxuICAgICAgICAgICAgICAgICAgICA1ZDo5
-        YjpjNTo4Nzo1MDpjNzo1NjpmMDo5MzphODpiOTowYTo3MzpjZjpmNzpcbiAg
-        ICAgICAgICAgICAgICAgICAgMDE6MGZcbiAgICAgICAgICAgICAgICBFeHBv
-        bmVudDogNjU1MzcgKDB4MTAwMDEpXG4gICAgICAgIFg1MDl2MyBleHRlbnNp
-        b25zOlxuICAgICAgICAgICAgWDUwOXYzIEJhc2ljIENvbnN0cmFpbnRzOlxu
-        ICAgICAgICAgICAgICAgIENBOlRSVUVcbiAgICAgICAgICAgIFg1MDl2MyBL
-        ZXkgVXNhZ2U6XG4gICAgICAgICAgICAgICAgRGlnaXRhbCBTaWduYXR1cmUs
-        IEtleSBFbmNpcGhlcm1lbnQsIENlcnRpZmljYXRlIFNpZ24sIENSTCBTaWdu
-        XG4gICAgICAgICAgICBYNTA5djMgRXh0ZW5kZWQgS2V5IFVzYWdlOlxuICAg
-        ICAgICAgICAgICAgIFRMUyBXZWIgU2VydmVyIEF1dGhlbnRpY2F0aW9uLCBU
-        TFMgV2ViIENsaWVudCBBdXRoZW50aWNhdGlvblxuICAgICAgICAgICAgTmV0
-        c2NhcGUgQ2VydCBUeXBlOlxuICAgICAgICAgICAgICAgIFNTTCBTZXJ2ZXIs
-        IFNTTCBDQVxuICAgICAgICAgICAgTmV0c2NhcGUgQ29tbWVudDpcbiAgICAg
-        ICAgICAgICAgICBLYXRlbGxvIFNTTCBUb29sIEdlbmVyYXRlZCBDZXJ0aWZp
-        Y2F0ZVxuICAgICAgICAgICAgWDUwOXYzIFN1YmplY3QgS2V5IElkZW50aWZp
-        ZXI6XG4gICAgICAgICAgICAgICAgOUI6RDI6RDk6Njk6ODg6OTk6MkM6MkU6
-        NzA6MkI6Qjc6Njk6NzY6N0E6N0Q6RDE6ODU6NEQ6NTM6NURcbiAgICAgICAg
-        ICAgIFg1MDl2MyBBdXRob3JpdHkgS2V5IElkZW50aWZpZXI6XG4gICAgICAg
-        ICAgICAgICAga2V5aWQ6OUI6RDI6RDk6Njk6ODg6OTk6MkM6MkU6NzA6MkI6
-        Qjc6Njk6NzY6N0E6N0Q6RDE6ODU6NEQ6NTM6NURcbiAgICAgICAgICAgICAg
-        ICBEaXJOYW1lOi9DPVVTL1NUPU5vcnRoIENhcm9saW5hL0w9UmFsZWlnaC9P
-        PUthdGVsbG8vT1U9U29tZU9yZ1VuaXQvQ049Y2VudG9zNy1kZXZlbDIuc2Ft
-        aXIuZXhhbXBsZS5jb21cbiAgICAgICAgICAgICAgICBzZXJpYWw6RkQ6QkE6
-        QkM6NzE6NkU6MjU6QTM6NzhcblxuICAgIFNpZ25hdHVyZSBBbGdvcml0aG06
-        IHNoYTI1NldpdGhSU0FFbmNyeXB0aW9uXG4gICAgICAgICAzMjoxOTo2Yzpj
-        NjphZjphZTpjMjpiZTo2NDoxNjpiMDo3YzphMzo0YjoxMDplODo1YTpiNDpc
-        biAgICAgICAgIDE3Ojc0OmZkOjc1OmM2OjI2OmQyOjg4OjAxOmZlOjk1OjJl
-        OjNmOjBhOjFlOjg4OmE1OjI1OlxuICAgICAgICAgMTM6NmI6NjA6MzQ6ZDA6
-        MmM6ZGU6ZDg6NDg6MTU6ZjU6Y2M6MWY6MDc6ODA6MmI6MWQ6Mjg6XG4gICAg
-        ICAgICA5MDplOTo4Yjo0NzpjMTo3MToxYTpkYTo4NjphMDoyNzplODpjNDo4
-        ODozNjphMzpmZjpkYjpcbiAgICAgICAgIDE3OjJmOjBlOjliOmUxOjM5OmE3
-        OjFmOmRjOjI2Ojk3OjI5OjVlOjRiOjk5OjYwOmZhOjkyOlxuICAgICAgICAg
-        MTI6MjQ6ZmM6YmM6MDQ6OTQ6MjQ6NjU6ZjM6NjA6Y2M6NWU6ZWU6NDI6YmY6
-        OWU6M2M6MzE6XG4gICAgICAgICBiOTozYzo5OTo4YTo0NDozZDoyOTo1ZDph
-        Njo5OTphYTpkNTowZToxNTo5NDpjNDpjNToyMzpcbiAgICAgICAgIDhjOmI5
-        OjZlOmU1OjA5OjEzOjhjOjU2OjRiOjA0OjM1Ojk1Ojc5OjUwOjVjOjIyOjJk
-        OjFmOlxuICAgICAgICAgM2E6Njg6ZDA6ZjM6M2U6ODg6N2Q6Mzg6Mjk6MzI6
-        ZjI6NDc6YjE6MTc6OTk6ZmQ6YTY6NDg6XG4gICAgICAgICAwMjowNDo2Yjo5
-        ZjpiOTpkYTpjMjo2ZTo2NTo5Yjo5OTplNDo2MDo3YTozMjpjZDowMjpmZTpc
-        biAgICAgICAgIDcxOmRhOjE5OmUzOjkzOmJkOmM1OmE3OmEwOjQ2OjllOjI4
-        OmQyOjkxOmFjOjhlOjkxOmM3OlxuICAgICAgICAgYTc6NTE6NGU6ODE6MDk6
-        ZDE6ZjE6Mzk6NWI6MDc6ODc6NDE6M2I6Yjc6ZTM6MWI6YTg6N2U6XG4gICAg
-        ICAgICA1MTo1Mjo0ZTo2NjoyMDpiMTpjZDpjNTphZTpkZToxNzozYTpkNzpj
-        ZTowNzozNzpkODo1ZTpcbiAgICAgICAgIDg4OmVmOmUzOjk0OmMwOjk4OjNl
-        OmMzOjBkOjUxOjQ0OjNkOjUzOjUyOmZmOjVlOjBiOjFiOlxuICAgICAgICAg
-        NWI6NmM6OWI6YTZcbi0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLVxuTUlJ
-        RkJ6Q0NBKytnQXdJQkFnSUpBUDI2dkhGdUphTjRNQTBHQ1NxR1NJYjNEUUVC
-        Q3dVQU1JR0xNUXN3Q1FZRFxuVlFRR0V3SlZVekVYTUJVR0ExVUVDQXdPVG05
-        eWRHZ2dRMkZ5YjJ4cGJtRXhFREFPQmdOVkJBY01CMUpoYkdWcFxuWjJneEVE
-        QU9CZ05WQkFvTUIwdGhkR1ZzYkc4eEZEQVNCZ05WQkFzTUMxTnZiV1ZQY21k
-        VmJtbDBNU2t3SndZRFxuVlFRRERDQmpaVzUwYjNNM0xXUmxkbVZzTWk1ellX
-        MXBjaTVsZUdGdGNHeGxMbU52YlRBZUZ3MHlNREExTURjeFxuTkRJeE5UQmFG
-        dzB6T0RBeE1UZ3hOREl4TlRCYU1JR0xNUXN3Q1FZRFZRUUdFd0pWVXpFWE1C
-        VUdBMVVFQ0F3T1xuVG05eWRHZ2dRMkZ5YjJ4cGJtRXhFREFPQmdOVkJBY01C
-        MUpoYkdWcFoyZ3hFREFPQmdOVkJBb01CMHRoZEdWc1xuYkc4eEZEQVNCZ05W
-        QkFzTUMxTnZiV1ZQY21kVmJtbDBNU2t3SndZRFZRUUREQ0JqWlc1MGIzTTNM
-        V1JsZG1Wc1xuTWk1ellXMXBjaTVsZUdGdGNHeGxMbU52YlRDQ0FTSXdEUVlK
-        S29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ1xuZ2dFQkFKL1N3UkQvQVJv
-        ekdRNURuWVBsaW5PNkxUeG1zWGpOaVl4ZzVZR202RTJXWFFmRHZxS2N3bnlV
-        TFc1RFxuUkVidi9UWWdSenZXTmYyWHpaY1gxei9uWi82cEt2RzhSNGR1N1cy
-        Mm52RU5ZMVBCUC8wWHExODFlb1RQYTkybVxuamdtWlZqbmVLV3Y3d3R5TVZp
-        b1Fzd3JLdUd6N3VNanI1ZUt1MVVFRlRLTEF2bnV3YlIxOFpvQ0lXcmNIbTlP
-        NFxuLzVQekdUTmpTSldETkNmR3JNeWdDMWFySWpSeFQzbS9ia3ZKaVZtSGkz
-        czFlYmdjY081WTVuc2llYWNlMmJKWFxuT3VCWmpyTnFsejJhZ013NzFYZlUr
-        bnBZYWJhenFwVlVWWjRUWlgrVndIT1d4ZnQzb0VnZ3BuMzB4TlBwcTVTVFxu
-        VGhyaVhadkZoMURIVnZDVHFMa0tjOC8zQVE4Q0F3RUFBYU9DQVdvd2dnRm1N
-        QXdHQTFVZEV3UUZNQU1CQWY4d1xuQ3dZRFZSMFBCQVFEQWdHbU1CMEdBMVVk
-        SlFRV01CUUdDQ3NHQVFVRkJ3TUJCZ2dyQmdFRkJRY0RBakFSQmdsZ1xuaGtn
-        Qmh2aENBUUVFQkFNQ0FrUXdOUVlKWUlaSUFZYjRRZ0VOQkNnV0prdGhkR1Zz
-        Ykc4Z1UxTk1JRlJ2YjJ3Z1xuUjJWdVpYSmhkR1ZrSUVObGNuUnBabWxqWVhS
-        bE1CMEdBMVVkRGdRV0JCU2IwdGxwaUprc0xuQXJ0MmwyZW4zUlxuaFUxVFhU
-        Q0J3QVlEVlIwakJJRzRNSUcxZ0JTYjB0bHBpSmtzTG5BcnQybDJlbjNSaFUx
-        VFhhR0JrYVNCampDQlxuaXpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJB
-        Z01EazV2Y25Sb0lFTmhjbTlzYVc1aE1SQXdEZ1lEVlFRSFxuREFkU1lXeGxh
-        V2RvTVJBd0RnWURWUVFLREFkTFlYUmxiR3h2TVJRd0VnWURWUVFMREF0VGIy
-        MWxUM0puVlc1cFxuZERFcE1DY0dBMVVFQXd3Z1kyVnVkRzl6Tnkxa1pYWmxi
-        REl1YzJGdGFYSXVaWGhoYlhCc1pTNWpiMjJDQ1FEOVxudXJ4eGJpV2plREFO
-        QmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBTWhsc3hxK3V3cjVrRnJCOG8wc1E2
-        RnEwRjNUOVxuZGNZbTBvZ0IvcFV1UHdvZWlLVWxFMnRnTk5BczN0aElGZlhN
-        SHdlQUt4MG9rT21MUjhGeEd0cUdvQ2ZveElnMlxuby8vYkZ5OE9tK0U1cHgv
-        Y0pwY3BYa3VaWVBxU0VpVDh2QVNVSkdYellNeGU3a0svbmp3eHVUeVppa1E5
-        S1YybVxubWFyVkRoV1V4TVVqakxsdTVRa1RqRlpMQkRXVmVWQmNJaTBmT21q
-        UTh6NklmVGdwTXZKSHNSZVovYVpJQWdSclxubjduYXdtNWxtNW5rWUhveXpR
-        TCtjZG9aNDVPOXhhZWdScDRvMHBHc2pwSEhwMUZPZ1FuUjhUbGJCNGRCTzdm
-        alxuRzZoK1VWSk9aaUN4emNXdTNoYzYxODRITjloZWlPL2psTUNZUHNNTlVV
-        UTlVMUwvWGdzYlcyeWJwZz09XG4tLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t
-        XG4ifQ==
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.1.0rc6.dev01591269671/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 500
-      message: Internal Server Error
-    headers:
-      Date:
-      - Mon, 08 Jun 2020 13:14:47 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - text/html; charset=UTF-8
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '27'
-      Vary:
-      - Cookie
-      Via:
-      - 1.1 centos7-katello-devel-stable.example.com
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      base64_string: 'PGgxPlNlcnZlciBFcnJvciAoNTAwKTwvaDE+
-
-'
-    http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:47 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/contentguards/certguard/rhsm/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.1.0rc6.dev01591269671/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 08 Jun 2020 13:14:47 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 centos7-katello-devel-stable.example.com
-      Content-Length:
-      - '3081'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50Z3VhcmRz
-        L2NlcnRndWFyZC9yaHNtLzMzMWYzZWM3LTk0NzItNDcyOS1iYzBiLWVkYzNj
-        N2ZmNGZiNC8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIwLTA2LTA4VDEyOjUyOjEw
-        LjU0MzY1NFoiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
-        IjpudWxsLCJjYV9jZXJ0aWZpY2F0ZSI6IkNlcnRpZmljYXRlOlxuICAgIERh
-        dGE6XG4gICAgICAgIFZlcnNpb246IDMgKDB4MilcbiAgICAgICAgU2VyaWFs
-        IE51bWJlcjpcbiAgICAgICAgICAgIGZkOmJhOmJjOjcxOjZlOjI1OmEzOjc4
-        XG4gICAgU2lnbmF0dXJlIEFsZ29yaXRobTogc2hhMjU2V2l0aFJTQUVuY3J5
-        cHRpb25cbiAgICAgICAgSXNzdWVyOiBDPVVTLCBTVD1Ob3J0aCBDYXJvbGlu
-        YSwgTD1SYWxlaWdoLCBPPUthdGVsbG8sIE9VPVNvbWVPcmdVbml0LCBDTj1j
-        ZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbVxuICAgICAgICBWYWxp
-        ZGl0eVxuICAgICAgICAgICAgTm90IEJlZm9yZTogTWF5ICA3IDE0OjIxOjUw
-        IDIwMjAgR01UXG4gICAgICAgICAgICBOb3QgQWZ0ZXIgOiBKYW4gMTggMTQ6
-        MjE6NTAgMjAzOCBHTVRcbiAgICAgICAgU3ViamVjdDogQz1VUywgU1Q9Tm9y
-        dGggQ2Fyb2xpbmEsIEw9UmFsZWlnaCwgTz1LYXRlbGxvLCBPVT1Tb21lT3Jn
-        VW5pdCwgQ049Y2VudG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5jb21cbiAg
-        ICAgICAgU3ViamVjdCBQdWJsaWMgS2V5IEluZm86XG4gICAgICAgICAgICBQ
-        dWJsaWMgS2V5IEFsZ29yaXRobTogcnNhRW5jcnlwdGlvblxuICAgICAgICAg
-        ICAgICAgIFB1YmxpYy1LZXk6ICgyMDQ4IGJpdClcbiAgICAgICAgICAgICAg
-        ICBNb2R1bHVzOlxuICAgICAgICAgICAgICAgICAgICAwMDo5ZjpkMjpjMTox
-        MDpmZjowMToxYTozMzoxOTowZTo0Mzo5ZDo4MzplNTpcbiAgICAgICAgICAg
-        ICAgICAgICAgOGE6NzM6YmE6MmQ6M2M6NjY6YjE6Nzg6Y2Q6ODk6OGM6NjA6
-        ZTU6ODE6YTY6XG4gICAgICAgICAgICAgICAgICAgIGU4OjRkOjk2OjVkOjA3
-        OmMzOmJlOmEyOjljOmMyOjdjOjk0OjJkOjZlOjQzOlxuICAgICAgICAgICAg
-        ICAgICAgICA0NDo0NjplZjpmZDozNjoyMDo0NzozYjpkNjozNTpmZDo5Nzpj
-        ZDo5NzoxNzpcbiAgICAgICAgICAgICAgICAgICAgZDc6M2Y6ZTc6Njc6ZmU6
-        YTk6MmE6ZjE6YmM6NDc6ODc6NmU6ZWQ6NmQ6YjY6XG4gICAgICAgICAgICAg
-        ICAgICAgIDllOmYxOjBkOjYzOjUzOmMxOjNmOmZkOjE3OmFiOjVmOjM1Ojdh
-        Ojg0OmNmOlxuICAgICAgICAgICAgICAgICAgICA2YjpkZDphNjo4ZTowOTo5
-        OTo1NjozOTpkZToyOTo2YjpmYjpjMjpkYzo4YzpcbiAgICAgICAgICAgICAg
-        ICAgICAgNTY6MmE6MTA6YjM6MGE6Y2E6Yjg6NmM6ZmI6Yjg6Yzg6ZWI6ZTU6
-        ZTI6YWU6XG4gICAgICAgICAgICAgICAgICAgIGQ1OjQxOjA1OjRjOmEyOmMw
-        OmJlOjdiOmIwOjZkOjFkOjdjOjY2OjgwOjg4OlxuICAgICAgICAgICAgICAg
-        ICAgICA1YTpiNzowNzo5YjpkMzpiODpmZjo5MzpmMzoxOTozMzo2Mzo0ODo5
-        NTo4MzpcbiAgICAgICAgICAgICAgICAgICAgMzQ6Mjc6YzY6YWM6Y2M6YTA6
-        MGI6NTY6YWI6MjI6MzQ6NzE6NGY6Nzk6YmY6XG4gICAgICAgICAgICAgICAg
-        ICAgIDZlOjRiOmM5Ojg5OjU5Ojg3OjhiOjdiOjM1Ojc5OmI4OjFjOjcwOmVl
-        OjU4OlxuICAgICAgICAgICAgICAgICAgICBlNjo3YjoyMjo3OTphNzoxZTpk
-        OTpiMjo1NzozYTplMDo1OTo4ZTpiMzo2YTpcbiAgICAgICAgICAgICAgICAg
-        ICAgOTc6M2Q6OWE6ODA6Y2M6M2I6ZDU6Nzc6ZDQ6ZmE6N2E6NTg6Njk6YjY6
-        YjM6XG4gICAgICAgICAgICAgICAgICAgIGFhOjk1OjU0OjU1OjllOjEzOjY1
-        OjdmOjk1OmMwOjczOjk2OmM1OmZiOjc3OlxuICAgICAgICAgICAgICAgICAg
-        ICBhMDo0ODoyMDphNjo3ZDpmNDpjNDpkMzplOTphYjo5NDo5Mzo0ZToxYTpl
-        MjpcbiAgICAgICAgICAgICAgICAgICAgNWQ6OWI6YzU6ODc6NTA6Yzc6NTY6
-        ZjA6OTM6YTg6Yjk6MGE6NzM6Y2Y6Zjc6XG4gICAgICAgICAgICAgICAgICAg
-        IDAxOjBmXG4gICAgICAgICAgICAgICAgRXhwb25lbnQ6IDY1NTM3ICgweDEw
-        MDAxKVxuICAgICAgICBYNTA5djMgZXh0ZW5zaW9uczpcbiAgICAgICAgICAg
-        IFg1MDl2MyBCYXNpYyBDb25zdHJhaW50czpcbiAgICAgICAgICAgICAgICBD
-        QTpUUlVFXG4gICAgICAgICAgICBYNTA5djMgS2V5IFVzYWdlOlxuICAgICAg
-        ICAgICAgICAgIERpZ2l0YWwgU2lnbmF0dXJlLCBLZXkgRW5jaXBoZXJtZW50
-        LCBDZXJ0aWZpY2F0ZSBTaWduLCBDUkwgU2lnblxuICAgICAgICAgICAgWDUw
-        OXYzIEV4dGVuZGVkIEtleSBVc2FnZTpcbiAgICAgICAgICAgICAgICBUTFMg
-        V2ViIFNlcnZlciBBdXRoZW50aWNhdGlvbiwgVExTIFdlYiBDbGllbnQgQXV0
-        aGVudGljYXRpb25cbiAgICAgICAgICAgIE5ldHNjYXBlIENlcnQgVHlwZTpc
-        biAgICAgICAgICAgICAgICBTU0wgU2VydmVyLCBTU0wgQ0FcbiAgICAgICAg
-        ICAgIE5ldHNjYXBlIENvbW1lbnQ6XG4gICAgICAgICAgICAgICAgS2F0ZWxs
-        byBTU0wgVG9vbCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGVcbiAgICAgICAgICAg
-        IFg1MDl2MyBTdWJqZWN0IEtleSBJZGVudGlmaWVyOlxuICAgICAgICAgICAg
-        ICAgIDlCOkQyOkQ5OjY5Ojg4Ojk5OjJDOjJFOjcwOjJCOkI3OjY5Ojc2OjdB
-        OjdEOkQxOjg1OjREOjUzOjVEXG4gICAgICAgICAgICBYNTA5djMgQXV0aG9y
-        aXR5IEtleSBJZGVudGlmaWVyOlxuICAgICAgICAgICAgICAgIGtleWlkOjlC
-        OkQyOkQ5OjY5Ojg4Ojk5OjJDOjJFOjcwOjJCOkI3OjY5Ojc2OjdBOjdEOkQx
-        Ojg1OjREOjUzOjVEXG4gICAgICAgICAgICAgICAgRGlyTmFtZTovQz1VUy9T
-        VD1Ob3J0aCBDYXJvbGluYS9MPVJhbGVpZ2gvTz1LYXRlbGxvL09VPVNvbWVP
-        cmdVbml0L0NOPWNlbnRvczctZGV2ZWwyLnNhbWlyLmV4YW1wbGUuY29tXG4g
-        ICAgICAgICAgICAgICAgc2VyaWFsOkZEOkJBOkJDOjcxOjZFOjI1OkEzOjc4
-        XG5cbiAgICBTaWduYXR1cmUgQWxnb3JpdGhtOiBzaGEyNTZXaXRoUlNBRW5j
-        cnlwdGlvblxuICAgICAgICAgMzI6MTk6NmM6YzY6YWY6YWU6YzI6YmU6NjQ6
-        MTY6YjA6N2M6YTM6NGI6MTA6ZTg6NWE6YjQ6XG4gICAgICAgICAxNzo3NDpm
-        ZDo3NTpjNjoyNjpkMjo4ODowMTpmZTo5NToyZTozZjowYToxZTo4ODphNToy
-        NTpcbiAgICAgICAgIDEzOjZiOjYwOjM0OmQwOjJjOmRlOmQ4OjQ4OjE1OmY1
-        OmNjOjFmOjA3OjgwOjJiOjFkOjI4OlxuICAgICAgICAgOTA6ZTk6OGI6NDc6
-        YzE6NzE6MWE6ZGE6ODY6YTA6Mjc6ZTg6YzQ6ODg6MzY6YTM6ZmY6ZGI6XG4g
-        ICAgICAgICAxNzoyZjowZTo5YjplMTozOTphNzoxZjpkYzoyNjo5NzoyOTo1
-        ZTo0Yjo5OTo2MDpmYTo5MjpcbiAgICAgICAgIDEyOjI0OmZjOmJjOjA0Ojk0
-        OjI0OjY1OmYzOjYwOmNjOjVlOmVlOjQyOmJmOjllOjNjOjMxOlxuICAgICAg
-        ICAgYjk6M2M6OTk6OGE6NDQ6M2Q6Mjk6NWQ6YTY6OTk6YWE6ZDU6MGU6MTU6
-        OTQ6YzQ6YzU6MjM6XG4gICAgICAgICA4YzpiOTo2ZTplNTowOToxMzo4Yzo1
-        Njo0YjowNDozNTo5NTo3OTo1MDo1YzoyMjoyZDoxZjpcbiAgICAgICAgIDNh
-        OjY4OmQwOmYzOjNlOjg4OjdkOjM4OjI5OjMyOmYyOjQ3OmIxOjE3Ojk5OmZk
-        OmE2OjQ4OlxuICAgICAgICAgMDI6MDQ6NmI6OWY6Yjk6ZGE6YzI6NmU6NjU6
-        OWI6OTk6ZTQ6NjA6N2E6MzI6Y2Q6MDI6ZmU6XG4gICAgICAgICA3MTpkYTox
-        OTplMzo5MzpiZDpjNTphNzphMDo0Njo5ZToyODpkMjo5MTphYzo4ZTo5MTpj
-        NzpcbiAgICAgICAgIGE3OjUxOjRlOjgxOjA5OmQxOmYxOjM5OjViOjA3Ojg3
-        OjQxOjNiOmI3OmUzOjFiOmE4OjdlOlxuICAgICAgICAgNTE6NTI6NGU6NjY6
-        MjA6YjE6Y2Q6YzU6YWU6ZGU6MTc6M2E6ZDc6Y2U6MDc6Mzc6ZDg6NWU6XG4g
-        ICAgICAgICA4ODplZjplMzo5NDpjMDo5ODozZTpjMzowZDo1MTo0NDozZDo1
-        Mzo1MjpmZjo1ZTowYjoxYjpcbiAgICAgICAgIDViOjZjOjliOmE2XG4tLS0t
-        LUJFR0lOIENFUlRJRklDQVRFLS0tLS1cbk1JSUZCekNDQSsrZ0F3SUJBZ0lK
-        QVAyNnZIRnVKYU40TUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdMTVFzd0NRWURc
-        blZRUUdFd0pWVXpFWE1CVUdBMVVFQ0F3T1RtOXlkR2dnUTJGeWIyeHBibUV4
-        RURBT0JnTlZCQWNNQjFKaGJHVnBcbloyZ3hFREFPQmdOVkJBb01CMHRoZEdW
-        c2JHOHhGREFTQmdOVkJBc01DMU52YldWUGNtZFZibWwwTVNrd0p3WURcblZR
-        UUREQ0JqWlc1MGIzTTNMV1JsZG1Wc01pNXpZVzFwY2k1bGVHRnRjR3hsTG1O
-        dmJUQWVGdzB5TURBMU1EY3hcbk5ESXhOVEJhRncwek9EQXhNVGd4TkRJeE5U
-        QmFNSUdMTVFzd0NRWURWUVFHRXdKVlV6RVhNQlVHQTFVRUNBd09cblRtOXlk
-        R2dnUTJGeWIyeHBibUV4RURBT0JnTlZCQWNNQjFKaGJHVnBaMmd4RURBT0Jn
-        TlZCQW9NQjB0aGRHVnNcbmJHOHhGREFTQmdOVkJBc01DMU52YldWUGNtZFZi
-        bWwwTVNrd0p3WURWUVFERENCalpXNTBiM00zTFdSbGRtVnNcbk1pNXpZVzFw
-        Y2k1bGVHRnRjR3hsTG1OdmJUQ0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURn
-        Z0VQQURDQ0FRb0NcbmdnRUJBSi9Td1JEL0FSb3pHUTVEbllQbGluTzZMVHht
-        c1hqTmlZeGc1WUdtNkUyV1hRZkR2cUtjd255VUxXNURcblJFYnYvVFlnUnp2
-        V05mMlh6WmNYMXovblovNnBLdkc4UjRkdTdXMjJudkVOWTFQQlAvMFhxMTgx
-        ZW9UUGE5Mm1cbmpnbVpWam5lS1d2N3d0eU1WaW9Rc3dyS3VHejd1TWpyNWVL
-        dTFVRUZUS0xBdm51d2JSMThab0NJV3JjSG05TzRcbi81UHpHVE5qU0pXRE5D
-        ZkdyTXlnQzFhcklqUnhUM20vYmt2SmlWbUhpM3MxZWJnY2NPNVk1bnNpZWFj
-        ZTJiSlhcbk91Qlpqck5xbHoyYWdNdzcxWGZVK25wWWFiYXpxcFZVVlo0VFpY
-        K1Z3SE9XeGZ0M29FZ2dwbjMweE5QcHE1U1RcblRocmlYWnZGaDFESFZ2Q1Rx
-        TGtLYzgvM0FROENBd0VBQWFPQ0FXb3dnZ0ZtTUF3R0ExVWRFd1FGTUFNQkFm
-        OHdcbkN3WURWUjBQQkFRREFnR21NQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZC
-        d01CQmdnckJnRUZCUWNEQWpBUkJnbGdcbmhrZ0JodmhDQVFFRUJBTUNBa1F3
-        TlFZSllJWklBWWI0UWdFTkJDZ1dKa3RoZEdWc2JHOGdVMU5NSUZSdmIyd2dc
-        blIyVnVaWEpoZEdWa0lFTmxjblJwWm1sallYUmxNQjBHQTFVZERnUVdCQlNi
-        MHRscGlKa3NMbkFydDJsMmVuM1JcbmhVMVRYVENCd0FZRFZSMGpCSUc0TUlH
-        MWdCU2IwdGxwaUprc0xuQXJ0MmwyZW4zUmhVMVRYYUdCa2FTQmpqQ0Jcbml6
-        RUxNQWtHQTFVRUJoTUNWVk14RnpBVkJnTlZCQWdNRGs1dmNuUm9JRU5oY205
-        c2FXNWhNUkF3RGdZRFZRUUhcbkRBZFNZV3hsYVdkb01SQXdEZ1lEVlFRS0RB
-        ZExZWFJsYkd4dk1SUXdFZ1lEVlFRTERBdFRiMjFsVDNKblZXNXBcbmRERXBN
-        Q2NHQTFVRUF3d2dZMlZ1ZEc5ek55MWtaWFpsYkRJdWMyRnRhWEl1WlhoaGJY
-        QnNaUzVqYjIyQ0NRRDlcbnVyeHhiaVdqZURBTkJna3Foa2lHOXcwQkFRc0ZB
-        QU9DQVFFQU1obHN4cSt1d3I1a0ZyQjhvMHNRNkZxMEYzVDlcbmRjWW0wb2dC
-        L3BVdVB3b2VpS1VsRTJ0Z05OQXMzdGhJRmZYTUh3ZUFLeDBva09tTFI4RnhH
-        dHFHb0Nmb3hJZzJcbm8vL2JGeThPbStFNXB4L2NKcGNwWGt1WllQcVNFaVQ4
-        dkFTVUpHWHpZTXhlN2tLL25qd3h1VHlaaWtROUtWMm1cbm1hclZEaFdVeE1V
-        ampMbHU1UWtUakZaTEJEV1ZlVkJjSWkwZk9talE4ejZJZlRncE12SkhzUmVa
-        L2FaSUFnUnJcbm43bmF3bTVsbTVua1lIb3l6UUwrY2RvWjQ1Tzl4YWVnUnA0
-        bzBwR3NqcEhIcDFGT2dRblI4VGxiQjRkQk83Zmpcbkc2aCtVVkpPWmlDeHpj
-        V3UzaGM2MTg0SE45aGVpTy9qbE1DWVBzTU5VVVE5VTFML1hnc2JXMnlicGc9
-        PVxuLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLSJ9XX0=
-    http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:47 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/contentguards/certguard/rhsm/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/0.1.0rc6.dev01591269671/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 08 Jun 2020 13:14:47 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 centos7-katello-devel-stable.example.com
-      Content-Length:
-      - '3081'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50Z3VhcmRz
-        L2NlcnRndWFyZC9yaHNtLzMzMWYzZWM3LTk0NzItNDcyOS1iYzBiLWVkYzNj
-        N2ZmNGZiNC8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIwLTA2LTA4VDEyOjUyOjEw
-        LjU0MzY1NFoiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
-        IjpudWxsLCJjYV9jZXJ0aWZpY2F0ZSI6IkNlcnRpZmljYXRlOlxuICAgIERh
-        dGE6XG4gICAgICAgIFZlcnNpb246IDMgKDB4MilcbiAgICAgICAgU2VyaWFs
-        IE51bWJlcjpcbiAgICAgICAgICAgIGZkOmJhOmJjOjcxOjZlOjI1OmEzOjc4
-        XG4gICAgU2lnbmF0dXJlIEFsZ29yaXRobTogc2hhMjU2V2l0aFJTQUVuY3J5
-        cHRpb25cbiAgICAgICAgSXNzdWVyOiBDPVVTLCBTVD1Ob3J0aCBDYXJvbGlu
-        YSwgTD1SYWxlaWdoLCBPPUthdGVsbG8sIE9VPVNvbWVPcmdVbml0LCBDTj1j
-        ZW50b3M3LWRldmVsMi5zYW1pci5leGFtcGxlLmNvbVxuICAgICAgICBWYWxp
-        ZGl0eVxuICAgICAgICAgICAgTm90IEJlZm9yZTogTWF5ICA3IDE0OjIxOjUw
-        IDIwMjAgR01UXG4gICAgICAgICAgICBOb3QgQWZ0ZXIgOiBKYW4gMTggMTQ6
-        MjE6NTAgMjAzOCBHTVRcbiAgICAgICAgU3ViamVjdDogQz1VUywgU1Q9Tm9y
-        dGggQ2Fyb2xpbmEsIEw9UmFsZWlnaCwgTz1LYXRlbGxvLCBPVT1Tb21lT3Jn
-        VW5pdCwgQ049Y2VudG9zNy1kZXZlbDIuc2FtaXIuZXhhbXBsZS5jb21cbiAg
-        ICAgICAgU3ViamVjdCBQdWJsaWMgS2V5IEluZm86XG4gICAgICAgICAgICBQ
-        dWJsaWMgS2V5IEFsZ29yaXRobTogcnNhRW5jcnlwdGlvblxuICAgICAgICAg
-        ICAgICAgIFB1YmxpYy1LZXk6ICgyMDQ4IGJpdClcbiAgICAgICAgICAgICAg
-        ICBNb2R1bHVzOlxuICAgICAgICAgICAgICAgICAgICAwMDo5ZjpkMjpjMTox
-        MDpmZjowMToxYTozMzoxOTowZTo0Mzo5ZDo4MzplNTpcbiAgICAgICAgICAg
-        ICAgICAgICAgOGE6NzM6YmE6MmQ6M2M6NjY6YjE6Nzg6Y2Q6ODk6OGM6NjA6
-        ZTU6ODE6YTY6XG4gICAgICAgICAgICAgICAgICAgIGU4OjRkOjk2OjVkOjA3
-        OmMzOmJlOmEyOjljOmMyOjdjOjk0OjJkOjZlOjQzOlxuICAgICAgICAgICAg
-        ICAgICAgICA0NDo0NjplZjpmZDozNjoyMDo0NzozYjpkNjozNTpmZDo5Nzpj
-        ZDo5NzoxNzpcbiAgICAgICAgICAgICAgICAgICAgZDc6M2Y6ZTc6Njc6ZmU6
-        YTk6MmE6ZjE6YmM6NDc6ODc6NmU6ZWQ6NmQ6YjY6XG4gICAgICAgICAgICAg
-        ICAgICAgIDllOmYxOjBkOjYzOjUzOmMxOjNmOmZkOjE3OmFiOjVmOjM1Ojdh
-        Ojg0OmNmOlxuICAgICAgICAgICAgICAgICAgICA2YjpkZDphNjo4ZTowOTo5
-        OTo1NjozOTpkZToyOTo2YjpmYjpjMjpkYzo4YzpcbiAgICAgICAgICAgICAg
-        ICAgICAgNTY6MmE6MTA6YjM6MGE6Y2E6Yjg6NmM6ZmI6Yjg6Yzg6ZWI6ZTU6
-        ZTI6YWU6XG4gICAgICAgICAgICAgICAgICAgIGQ1OjQxOjA1OjRjOmEyOmMw
-        OmJlOjdiOmIwOjZkOjFkOjdjOjY2OjgwOjg4OlxuICAgICAgICAgICAgICAg
-        ICAgICA1YTpiNzowNzo5YjpkMzpiODpmZjo5MzpmMzoxOTozMzo2Mzo0ODo5
-        NTo4MzpcbiAgICAgICAgICAgICAgICAgICAgMzQ6Mjc6YzY6YWM6Y2M6YTA6
-        MGI6NTY6YWI6MjI6MzQ6NzE6NGY6Nzk6YmY6XG4gICAgICAgICAgICAgICAg
-        ICAgIDZlOjRiOmM5Ojg5OjU5Ojg3OjhiOjdiOjM1Ojc5OmI4OjFjOjcwOmVl
-        OjU4OlxuICAgICAgICAgICAgICAgICAgICBlNjo3YjoyMjo3OTphNzoxZTpk
-        OTpiMjo1NzozYTplMDo1OTo4ZTpiMzo2YTpcbiAgICAgICAgICAgICAgICAg
-        ICAgOTc6M2Q6OWE6ODA6Y2M6M2I6ZDU6Nzc6ZDQ6ZmE6N2E6NTg6Njk6YjY6
-        YjM6XG4gICAgICAgICAgICAgICAgICAgIGFhOjk1OjU0OjU1OjllOjEzOjY1
-        OjdmOjk1OmMwOjczOjk2OmM1OmZiOjc3OlxuICAgICAgICAgICAgICAgICAg
-        ICBhMDo0ODoyMDphNjo3ZDpmNDpjNDpkMzplOTphYjo5NDo5Mzo0ZToxYTpl
-        MjpcbiAgICAgICAgICAgICAgICAgICAgNWQ6OWI6YzU6ODc6NTA6Yzc6NTY6
-        ZjA6OTM6YTg6Yjk6MGE6NzM6Y2Y6Zjc6XG4gICAgICAgICAgICAgICAgICAg
-        IDAxOjBmXG4gICAgICAgICAgICAgICAgRXhwb25lbnQ6IDY1NTM3ICgweDEw
-        MDAxKVxuICAgICAgICBYNTA5djMgZXh0ZW5zaW9uczpcbiAgICAgICAgICAg
-        IFg1MDl2MyBCYXNpYyBDb25zdHJhaW50czpcbiAgICAgICAgICAgICAgICBD
-        QTpUUlVFXG4gICAgICAgICAgICBYNTA5djMgS2V5IFVzYWdlOlxuICAgICAg
-        ICAgICAgICAgIERpZ2l0YWwgU2lnbmF0dXJlLCBLZXkgRW5jaXBoZXJtZW50
-        LCBDZXJ0aWZpY2F0ZSBTaWduLCBDUkwgU2lnblxuICAgICAgICAgICAgWDUw
-        OXYzIEV4dGVuZGVkIEtleSBVc2FnZTpcbiAgICAgICAgICAgICAgICBUTFMg
-        V2ViIFNlcnZlciBBdXRoZW50aWNhdGlvbiwgVExTIFdlYiBDbGllbnQgQXV0
-        aGVudGljYXRpb25cbiAgICAgICAgICAgIE5ldHNjYXBlIENlcnQgVHlwZTpc
-        biAgICAgICAgICAgICAgICBTU0wgU2VydmVyLCBTU0wgQ0FcbiAgICAgICAg
-        ICAgIE5ldHNjYXBlIENvbW1lbnQ6XG4gICAgICAgICAgICAgICAgS2F0ZWxs
-        byBTU0wgVG9vbCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGVcbiAgICAgICAgICAg
-        IFg1MDl2MyBTdWJqZWN0IEtleSBJZGVudGlmaWVyOlxuICAgICAgICAgICAg
-        ICAgIDlCOkQyOkQ5OjY5Ojg4Ojk5OjJDOjJFOjcwOjJCOkI3OjY5Ojc2OjdB
-        OjdEOkQxOjg1OjREOjUzOjVEXG4gICAgICAgICAgICBYNTA5djMgQXV0aG9y
-        aXR5IEtleSBJZGVudGlmaWVyOlxuICAgICAgICAgICAgICAgIGtleWlkOjlC
-        OkQyOkQ5OjY5Ojg4Ojk5OjJDOjJFOjcwOjJCOkI3OjY5Ojc2OjdBOjdEOkQx
-        Ojg1OjREOjUzOjVEXG4gICAgICAgICAgICAgICAgRGlyTmFtZTovQz1VUy9T
-        VD1Ob3J0aCBDYXJvbGluYS9MPVJhbGVpZ2gvTz1LYXRlbGxvL09VPVNvbWVP
-        cmdVbml0L0NOPWNlbnRvczctZGV2ZWwyLnNhbWlyLmV4YW1wbGUuY29tXG4g
-        ICAgICAgICAgICAgICAgc2VyaWFsOkZEOkJBOkJDOjcxOjZFOjI1OkEzOjc4
-        XG5cbiAgICBTaWduYXR1cmUgQWxnb3JpdGhtOiBzaGEyNTZXaXRoUlNBRW5j
-        cnlwdGlvblxuICAgICAgICAgMzI6MTk6NmM6YzY6YWY6YWU6YzI6YmU6NjQ6
-        MTY6YjA6N2M6YTM6NGI6MTA6ZTg6NWE6YjQ6XG4gICAgICAgICAxNzo3NDpm
-        ZDo3NTpjNjoyNjpkMjo4ODowMTpmZTo5NToyZTozZjowYToxZTo4ODphNToy
-        NTpcbiAgICAgICAgIDEzOjZiOjYwOjM0OmQwOjJjOmRlOmQ4OjQ4OjE1OmY1
-        OmNjOjFmOjA3OjgwOjJiOjFkOjI4OlxuICAgICAgICAgOTA6ZTk6OGI6NDc6
-        YzE6NzE6MWE6ZGE6ODY6YTA6Mjc6ZTg6YzQ6ODg6MzY6YTM6ZmY6ZGI6XG4g
-        ICAgICAgICAxNzoyZjowZTo5YjplMTozOTphNzoxZjpkYzoyNjo5NzoyOTo1
-        ZTo0Yjo5OTo2MDpmYTo5MjpcbiAgICAgICAgIDEyOjI0OmZjOmJjOjA0Ojk0
-        OjI0OjY1OmYzOjYwOmNjOjVlOmVlOjQyOmJmOjllOjNjOjMxOlxuICAgICAg
-        ICAgYjk6M2M6OTk6OGE6NDQ6M2Q6Mjk6NWQ6YTY6OTk6YWE6ZDU6MGU6MTU6
-        OTQ6YzQ6YzU6MjM6XG4gICAgICAgICA4YzpiOTo2ZTplNTowOToxMzo4Yzo1
-        Njo0YjowNDozNTo5NTo3OTo1MDo1YzoyMjoyZDoxZjpcbiAgICAgICAgIDNh
-        OjY4OmQwOmYzOjNlOjg4OjdkOjM4OjI5OjMyOmYyOjQ3OmIxOjE3Ojk5OmZk
-        OmE2OjQ4OlxuICAgICAgICAgMDI6MDQ6NmI6OWY6Yjk6ZGE6YzI6NmU6NjU6
-        OWI6OTk6ZTQ6NjA6N2E6MzI6Y2Q6MDI6ZmU6XG4gICAgICAgICA3MTpkYTox
-        OTplMzo5MzpiZDpjNTphNzphMDo0Njo5ZToyODpkMjo5MTphYzo4ZTo5MTpj
-        NzpcbiAgICAgICAgIGE3OjUxOjRlOjgxOjA5OmQxOmYxOjM5OjViOjA3Ojg3
-        OjQxOjNiOmI3OmUzOjFiOmE4OjdlOlxuICAgICAgICAgNTE6NTI6NGU6NjY6
-        MjA6YjE6Y2Q6YzU6YWU6ZGU6MTc6M2E6ZDc6Y2U6MDc6Mzc6ZDg6NWU6XG4g
-        ICAgICAgICA4ODplZjplMzo5NDpjMDo5ODozZTpjMzowZDo1MTo0NDozZDo1
-        Mzo1MjpmZjo1ZTowYjoxYjpcbiAgICAgICAgIDViOjZjOjliOmE2XG4tLS0t
-        LUJFR0lOIENFUlRJRklDQVRFLS0tLS1cbk1JSUZCekNDQSsrZ0F3SUJBZ0lK
-        QVAyNnZIRnVKYU40TUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdMTVFzd0NRWURc
-        blZRUUdFd0pWVXpFWE1CVUdBMVVFQ0F3T1RtOXlkR2dnUTJGeWIyeHBibUV4
-        RURBT0JnTlZCQWNNQjFKaGJHVnBcbloyZ3hFREFPQmdOVkJBb01CMHRoZEdW
-        c2JHOHhGREFTQmdOVkJBc01DMU52YldWUGNtZFZibWwwTVNrd0p3WURcblZR
-        UUREQ0JqWlc1MGIzTTNMV1JsZG1Wc01pNXpZVzFwY2k1bGVHRnRjR3hsTG1O
-        dmJUQWVGdzB5TURBMU1EY3hcbk5ESXhOVEJhRncwek9EQXhNVGd4TkRJeE5U
-        QmFNSUdMTVFzd0NRWURWUVFHRXdKVlV6RVhNQlVHQTFVRUNBd09cblRtOXlk
-        R2dnUTJGeWIyeHBibUV4RURBT0JnTlZCQWNNQjFKaGJHVnBaMmd4RURBT0Jn
-        TlZCQW9NQjB0aGRHVnNcbmJHOHhGREFTQmdOVkJBc01DMU52YldWUGNtZFZi
-        bWwwTVNrd0p3WURWUVFERENCalpXNTBiM00zTFdSbGRtVnNcbk1pNXpZVzFw
-        Y2k1bGVHRnRjR3hsTG1OdmJUQ0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURn
-        Z0VQQURDQ0FRb0NcbmdnRUJBSi9Td1JEL0FSb3pHUTVEbllQbGluTzZMVHht
-        c1hqTmlZeGc1WUdtNkUyV1hRZkR2cUtjd255VUxXNURcblJFYnYvVFlnUnp2
-        V05mMlh6WmNYMXovblovNnBLdkc4UjRkdTdXMjJudkVOWTFQQlAvMFhxMTgx
-        ZW9UUGE5Mm1cbmpnbVpWam5lS1d2N3d0eU1WaW9Rc3dyS3VHejd1TWpyNWVL
-        dTFVRUZUS0xBdm51d2JSMThab0NJV3JjSG05TzRcbi81UHpHVE5qU0pXRE5D
-        ZkdyTXlnQzFhcklqUnhUM20vYmt2SmlWbUhpM3MxZWJnY2NPNVk1bnNpZWFj
-        ZTJiSlhcbk91Qlpqck5xbHoyYWdNdzcxWGZVK25wWWFiYXpxcFZVVlo0VFpY
-        K1Z3SE9XeGZ0M29FZ2dwbjMweE5QcHE1U1RcblRocmlYWnZGaDFESFZ2Q1Rx
-        TGtLYzgvM0FROENBd0VBQWFPQ0FXb3dnZ0ZtTUF3R0ExVWRFd1FGTUFNQkFm
-        OHdcbkN3WURWUjBQQkFRREFnR21NQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZC
-        d01CQmdnckJnRUZCUWNEQWpBUkJnbGdcbmhrZ0JodmhDQVFFRUJBTUNBa1F3
-        TlFZSllJWklBWWI0UWdFTkJDZ1dKa3RoZEdWc2JHOGdVMU5NSUZSdmIyd2dc
-        blIyVnVaWEpoZEdWa0lFTmxjblJwWm1sallYUmxNQjBHQTFVZERnUVdCQlNi
-        MHRscGlKa3NMbkFydDJsMmVuM1JcbmhVMVRYVENCd0FZRFZSMGpCSUc0TUlH
-        MWdCU2IwdGxwaUprc0xuQXJ0MmwyZW4zUmhVMVRYYUdCa2FTQmpqQ0Jcbml6
-        RUxNQWtHQTFVRUJoTUNWVk14RnpBVkJnTlZCQWdNRGs1dmNuUm9JRU5oY205
-        c2FXNWhNUkF3RGdZRFZRUUhcbkRBZFNZV3hsYVdkb01SQXdEZ1lEVlFRS0RB
-        ZExZWFJsYkd4dk1SUXdFZ1lEVlFRTERBdFRiMjFsVDNKblZXNXBcbmRERXBN
-        Q2NHQTFVRUF3d2dZMlZ1ZEc5ek55MWtaWFpsYkRJdWMyRnRhWEl1WlhoaGJY
-        QnNaUzVqYjIyQ0NRRDlcbnVyeHhiaVdqZURBTkJna3Foa2lHOXcwQkFRc0ZB
-        QU9DQVFFQU1obHN4cSt1d3I1a0ZyQjhvMHNRNkZxMEYzVDlcbmRjWW0wb2dC
-        L3BVdVB3b2VpS1VsRTJ0Z05OQXMzdGhJRmZYTUh3ZUFLeDBva09tTFI4RnhH
-        dHFHb0Nmb3hJZzJcbm8vL2JGeThPbStFNXB4L2NKcGNwWGt1WllQcVNFaVQ4
-        dkFTVUpHWHpZTXhlN2tLL25qd3h1VHlaaWtROUtWMm1cbm1hclZEaFdVeE1V
-        ampMbHU1UWtUakZaTEJEV1ZlVkJjSWkwZk9talE4ejZJZlRncE12SkhzUmVa
-        L2FaSUFnUnJcbm43bmF3bTVsbTVua1lIb3l6UUwrY2RvWjQ1Tzl4YWVnUnA0
-        bzBwR3NqcEhIcDFGT2dRblI4VGxiQjRkQk83Zmpcbkc2aCtVVkpPWmlDeHpj
-        V3UzaGM2MTg0SE45aGVpTy9qbE1DWVBzTU5VVVE5VTFML1hnc2JXMnlicGc9
-        PVxuLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLSJ9XX0=
-    http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:47 GMT
-- request:
-    method: post
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/publications/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/publications/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL3JwbS9ycG0vNDZhNTFhYmMtMWM1ZS00N2Y5LTlhYTMtODJmOTUxZDQw
-        ZGZiL3ZlcnNpb25zLzAvIiwibWV0YWRhdGFfY2hlY2tzdW1fdHlwZSI6InNo
-        YTI1NiIsInBhY2thZ2VfY2hlY2tzdW1fdHlwZSI6InNoYTI1NiJ9
+        aWVzL3JwbS9ycG0vN2Q0ZGU1ODAtMmFmNS00MTMyLWI3MTctZTAxZTE4NDll
+        ZDE2L3ZlcnNpb25zLzAvIn0=
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1298,7 +959,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:47 GMT
+      - Thu, 20 Aug 2020 19:12:23 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1312,17 +973,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2RkYWY0M2RiLTk2YjYtNDhm
-        Ni04OGFkLTU1OGIxNzE3ZTU0ZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzI2NDNhMTAxLWYyMzMtNGY5
+        NC1iNzIxLTU5YTg1YzFjNWQ5OS8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:47 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:23 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/tasks/ddaf43db-96b6-48f6-88ad-558b1717e54e/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/2643a101-f233-4f94-b721-59a85c1c5d99/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1330,7 +991,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1343,7 +1004,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:48 GMT
+      - Thu, 20 Aug 2020 19:12:24 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1355,45 +1016,45 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '374'
+      - '371'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZGRhZjQzZGItOTZi
-        Ni00OGY2LTg4YWQtNTU4YjE3MTdlNTRlLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDYtMDhUMTM6MTQ6NDcuOTYyNjg1WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMjY0M2ExMDEtZjIz
+        My00Zjk0LWI3MjEtNTlhODVjMWM1ZDk5LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjAtMDgtMjBUMTk6MTI6MjMuNDczNDk3WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBfcnBtLmFwcC50YXNrcy5wdWJsaXNoaW5nLnB1Ymxp
-        c2giLCJzdGFydGVkX2F0IjoiMjAyMC0wNi0wOFQxMzoxNDo0OC4xMzM5OTZa
-        IiwiZmluaXNoZWRfYXQiOiIyMDIwLTA2LTA4VDEzOjE0OjQ4LjQ4Mjk5OFoi
+        c2giLCJzdGFydGVkX2F0IjoiMjAyMC0wOC0yMFQxOToxMjoyMy42OTc0Nzda
+        IiwiZmluaXNoZWRfYXQiOiIyMDIwLTA4LTIwVDE5OjEyOjIzLjk5OTAzNVoi
         LCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMv
-        ZDM4MzhhMTUtNGNlMi00ODMzLWJiMWYtZTMyNDEwM2M4MDA5LyIsInBhcmVu
+        MTI0MzE5NjgtY2E1My00MmZmLWE5YzMtNDBkNmFiMTNmNTZjLyIsInBhcmVu
         dF90YXNrIjpudWxsLCJjaGlsZF90YXNrcyI6W10sInRhc2tfZ3JvdXAiOm51
         bGwsInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
-        WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vMjViM2Y3NWIt
-        ZTg0YS00YWFmLWFlNTEtNDA1ZjZjMmZmMjlhLyJdLCJyZXNlcnZlZF9yZXNv
+        WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vODgwMTMxZWYt
+        NzYzMS00M2JiLTgyZWItMzQ5MjBiZjNiZGUzLyJdLCJyZXNlcnZlZF9yZXNv
         dXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBt
-        L3JwbS80NmE1MWFiYy0xYzVlLTQ3ZjktOWFhMy04MmY5NTFkNDBkZmIvIl19
+        L3JwbS83ZDRkZTU4MC0yYWY1LTQxMzItYjcxNy1lMDFlMTg0OWVkMTYvIl19
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:48 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:24 GMT
 - request:
     method: post
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/distributions/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJiYXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdf
         ZHVwbGljYXRlX2xhYmVsIiwiY29udGVudF9ndWFyZCI6Ii9wdWxwL2FwaS92
-        My9jb250ZW50Z3VhcmRzL2NlcnRndWFyZC9yaHNtLzMzMWYzZWM3LTk0NzIt
-        NDcyOS1iYzBiLWVkYzNjN2ZmNGZiNC8iLCJuYW1lIjoiMl9kdXBsaWNhdGUi
+        My9jb250ZW50Z3VhcmRzL2NlcnRndWFyZC9yaHNtL2ZlZmJmODJhLWJhOGUt
+        NDkyMC05NjljLTZjMzlmYTdhZTdlYS8iLCJuYW1lIjoiMl9kdXBsaWNhdGUi
         LCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvcnBt
-        L3JwbS8yNWIzZjc1Yi1lODRhLTRhYWYtYWU1MS00MDVmNmMyZmYyOWEvIn0=
+        L3JwbS84ODAxMzFlZi03NjMxLTQzYmItODJlYi0zNDkyMGJmM2JkZTMvIn0=
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1406,7 +1067,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:48 GMT
+      - Thu, 20 Aug 2020 19:12:24 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1420,17 +1081,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzQ0ZjhmMzM5LTg0OTEtNGYy
-        MS05ZGFhLTI0NDRjOGFmM2EyZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzU5NmU4ZTczLTI5NjgtNGFk
+        YS05YTJjLTdmMzJjOTcxOTdjZS8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:48 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:24 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/tasks/44f8f339-8491-4f21-9daa-2444c8af3a2e/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/596e8e73-2968-4ada-9a2c-7f32c97197ce/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1438,7 +1099,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1451,7 +1112,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:49 GMT
+      - Thu, 20 Aug 2020 19:12:24 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1463,30 +1124,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '347'
+      - '346'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNDRmOGYzMzktODQ5
-        MS00ZjIxLTlkYWEtMjQ0NGM4YWYzYTJlLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDYtMDhUMTM6MTQ6NDguNjc1MDU1WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNTk2ZThlNzMtMjk2
+        OC00YWRhLTlhMmMtN2YzMmM5NzE5N2NlLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjAtMDgtMjBUMTk6MTI6MjQuMTk2MDk0WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
-        YXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDYtMDhUMTM6MTQ6NDguOTEwNzk1
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wNi0wOFQxMzoxNDo0OS4zODA3MDda
+        YXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MTI6MjQuMzcxMTM5
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOToxMjoyNC43MjE2MzJa
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        L2QzODM4YTE1LTRjZTItNDgzMy1iYjFmLWUzMjQxMDNjODAwOS8iLCJwYXJl
+        LzEwZTNlNjJmLWM5NzYtNGM3YS1iMTM1LTM4MTY0ODk0NDgwNS8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
-        OlsiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvcnBtL3JwbS8xMjhhOTgz
-        Zi04ODNlLTQ2NTMtOTUzMy0wOGY3YWJiNzdiYjMvIl0sInJlc2VydmVkX3Jl
+        OlsiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvcnBtL3JwbS81NWE5MTIz
+        NC01ZTVhLTQwMzgtOTNlZS0yODZkZDZiYWYwYzMvIl0sInJlc2VydmVkX3Jl
         c291cmNlc19yZWNvcmQiOlsiL2FwaS92My9kaXN0cmlidXRpb25zLyJdfQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:49 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:24 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/distributions/rpm/rpm/128a983f-883e-4653-9533-08f7abb77bb3/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/55a91234-5e5a-4038-93ee-286dd6baf0c3/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1494,7 +1155,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1507,7 +1168,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:49 GMT
+      - Thu, 20 Aug 2020 19:12:24 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1519,29 +1180,29 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '321'
+      - '312'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9ycG0v
-        cnBtLzEyOGE5ODNmLTg4M2UtNDY1My05NTMzLTA4ZjdhYmI3N2JiMy8iLCJw
-        dWxwX2NyZWF0ZWQiOiIyMDIwLTA2LTA4VDEzOjE0OjQ5LjM2MDQxNloiLCJi
+        cnBtLzU1YTkxMjM0LTVlNWEtNDAzOC05M2VlLTI4NmRkNmJhZjBjMy8iLCJw
+        dWxwX2NyZWF0ZWQiOiIyMDIwLTA4LTIwVDE5OjEyOjI0LjY5NTQwMloiLCJi
         YXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVw
-        bGljYXRlX2xhYmVsIiwiYmFzZV91cmwiOiJodHRwOi8vY2VudG9zNy1rYXRl
-        bGxvLWRldmVsLXN0YWJsZS5leGFtcGxlLmNvbS9wdWxwL2NvbnRlbnQvQUNN
-        RV9Db3Jwb3JhdGlvbi9kZXYvZmVkb3JhXzE3X2R1cGxpY2F0ZV9sYWJlbC8i
-        LCJjb250ZW50X2d1YXJkIjoiL3B1bHAvYXBpL3YzL2NvbnRlbnRndWFyZHMv
-        Y2VydGd1YXJkL3Joc20vMzMxZjNlYzctOTQ3Mi00NzI5LWJjMGItZWRjM2M3
-        ZmY0ZmI0LyIsIm5hbWUiOiIyX2R1cGxpY2F0ZSIsInB1YmxpY2F0aW9uIjoi
-        L3B1bHAvYXBpL3YzL3B1YmxpY2F0aW9ucy9ycG0vcnBtLzI1YjNmNzViLWU4
-        NGEtNGFhZi1hZTUxLTQwNWY2YzJmZjI5YS8ifQ==
+        bGljYXRlX2xhYmVsIiwiYmFzZV91cmwiOiJodHRwOi8vZGV2ZWwyLmJhbG1v
+        cmEuZXhhbXBsZS5jb20vcHVscC9jb250ZW50L0FDTUVfQ29ycG9yYXRpb24v
+        ZGV2L2ZlZG9yYV8xN19kdXBsaWNhdGVfbGFiZWwvIiwiY29udGVudF9ndWFy
+        ZCI6Ii9wdWxwL2FwaS92My9jb250ZW50Z3VhcmRzL2NlcnRndWFyZC9yaHNt
+        L2ZlZmJmODJhLWJhOGUtNDkyMC05NjljLTZjMzlmYTdhZTdlYS8iLCJuYW1l
+        IjoiMl9kdXBsaWNhdGUiLCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9w
+        dWJsaWNhdGlvbnMvcnBtL3JwbS84ODAxMzFlZi03NjMxLTQzYmItODJlYi0z
+        NDkyMGJmM2JkZTMvIn0=
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:49 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:24 GMT
 - request:
     method: put
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/repositories/rpm/rpm/46a51abc-1c5e-47f9-9aa3-82f951d40dfb/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/7d4de580-2af5-4132-b717-e01e1849ed16/
     body:
       encoding: UTF-8
       base64_string: 'eyJuYW1lIjoiMl9kdXBsaWNhdGUifQ==
@@ -1551,7 +1212,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1564,7 +1225,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:49 GMT
+      - Thu, 20 Aug 2020 19:12:25 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1578,17 +1239,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzQ5MThhNDAxLWVkNGYtNDMz
-        MC05MWVmLWJhYWMzMTZjODJkZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2Y2MGRiMmQxLTFjY2QtNDI5
+        Yy05NDViLWI0NGU0ZjFhODliNi8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:49 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:25 GMT
 - request:
     method: patch
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/rpm/rpm/6726dbf9-ee7c-413f-8764-dc33e8b42267/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/35e35546-125e-4143-8ada-5c20e40e34c7/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1603,7 +1264,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1616,7 +1277,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:49 GMT
+      - Thu, 20 Aug 2020 19:12:25 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1630,31 +1291,31 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzFiYjU3NzNiLTA5ZTctNDg2
-        MS1iYWQzLWY4MzNkOTZlNzE5NS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2ZlYmViMjhlLWNlMjUtNDRi
+        ZS04MDhiLWEzYTBiNzBjMmJiOS8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:49 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:25 GMT
 - request:
     method: patch
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/distributions/rpm/rpm/128a983f-883e-4653-9533-08f7abb77bb3/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/55a91234-5e5a-4038-93ee-286dd6baf0c3/
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb250ZW50X2d1YXJkIjoiL3B1bHAvYXBpL3YzL2NvbnRlbnRndWFyZHMv
-        Y2VydGd1YXJkL3Joc20vMzMxZjNlYzctOTQ3Mi00NzI5LWJjMGItZWRjM2M3
-        ZmY0ZmI0LyIsImJhc2VfcGF0aCI6IkFDTUVfQ29ycG9yYXRpb24vZGV2L2Zl
+        Y2VydGd1YXJkL3Joc20vZmVmYmY4MmEtYmE4ZS00OTIwLTk2OWMtNmMzOWZh
+        N2FlN2VhLyIsImJhc2VfcGF0aCI6IkFDTUVfQ29ycG9yYXRpb24vZGV2L2Zl
         ZG9yYV8xN19kdXBsaWNhdGVfbGFiZWwiLCJwdWJsaWNhdGlvbiI6Ii9wdWxw
-        L2FwaS92My9wdWJsaWNhdGlvbnMvcnBtL3JwbS8yNWIzZjc1Yi1lODRhLTRh
-        YWYtYWU1MS00MDVmNmMyZmYyOWEvIn0=
+        L2FwaS92My9wdWJsaWNhdGlvbnMvcnBtL3JwbS84ODAxMzFlZi03NjMxLTQz
+        YmItODJlYi0zNDkyMGJmM2JkZTMvIn0=
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1667,7 +1328,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:50 GMT
+      - Thu, 20 Aug 2020 19:12:25 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1681,17 +1342,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzZkMzllNDVkLWFkNGUtNDJi
-        MS04MmE0LTlhY2Y4NmE4OTk4Zi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I4ZjU4MmVjLTkzZGUtNGRi
+        OC1iODE2LWZhZDY3NjM1MjQ4Yi8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:50 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:25 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/tasks/6d39e45d-ad4e-42b1-82a4-9acf86a8998f/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/b8f582ec-93de-4db8-b816-fad67635248b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1699,7 +1360,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1712,7 +1373,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:51 GMT
+      - Thu, 20 Aug 2020 19:12:26 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1724,43 +1385,43 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
       - '316'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNmQzOWU0NWQtYWQ0
-        ZS00MmIxLTgyYTQtOWFjZjg2YTg5OThmLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDYtMDhUMTM6MTQ6NTAuMDkwNTU5WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYjhmNTgyZWMtOTNk
+        ZS00ZGI4LWI4MTYtZmFkNjc2MzUyNDhiLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjAtMDgtMjBUMTk6MTI6MjUuNTczNjE4WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfdXBk
-        YXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDYtMDhUMTM6MTQ6NTAuNjI5NjY3
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wNi0wOFQxMzoxNDo1MC45Njg4NzRa
+        YXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MTI6MjUuOTUxODA0
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOToxMjoyNi40NDU2Mzha
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        L2QzODM4YTE1LTRjZTItNDgzMy1iYjFmLWUzMjQxMDNjODAwOS8iLCJwYXJl
+        LzEwZTNlNjJmLWM5NzYtNGM3YS1iMTM1LTM4MTY0ODk0NDgwNS8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
         OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlz
         dHJpYnV0aW9ucy8iXX0=
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:51 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:26 GMT
 - request:
     method: patch
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/distributions/rpm/rpm/128a983f-883e-4653-9533-08f7abb77bb3/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/55a91234-5e5a-4038-93ee-286dd6baf0c3/
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb250ZW50X2d1YXJkIjoiL3B1bHAvYXBpL3YzL2NvbnRlbnRndWFyZHMv
-        Y2VydGd1YXJkL3Joc20vMzMxZjNlYzctOTQ3Mi00NzI5LWJjMGItZWRjM2M3
-        ZmY0ZmI0LyIsImJhc2VfcGF0aCI6IkFDTUVfQ29ycG9yYXRpb24vZGV2L2Zl
+        Y2VydGd1YXJkL3Joc20vZmVmYmY4MmEtYmE4ZS00OTIwLTk2OWMtNmMzOWZh
+        N2FlN2VhLyIsImJhc2VfcGF0aCI6IkFDTUVfQ29ycG9yYXRpb24vZGV2L2Zl
         ZG9yYV8xN19kdXBsaWNhdGVfbGFiZWwiLCJwdWJsaWNhdGlvbiI6Ii9wdWxw
-        L2FwaS92My9wdWJsaWNhdGlvbnMvcnBtL3JwbS8yNWIzZjc1Yi1lODRhLTRh
-        YWYtYWU1MS00MDVmNmMyZmYyOWEvIn0=
+        L2FwaS92My9wdWJsaWNhdGlvbnMvcnBtL3JwbS84ODAxMzFlZi03NjMxLTQz
+        YmItODJlYi0zNDkyMGJmM2JkZTMvIn0=
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1773,7 +1434,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:51 GMT
+      - Thu, 20 Aug 2020 19:12:26 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1787,17 +1448,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2ExZmUwMzRjLWEyZDAtNDc4
-        Zi05MWUxLTg0NTU1ZDc1ZTBlZC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzE0MTBiMTA1LTI0OTMtNGQy
+        Ni1iZDYwLWNhOTQ3ODAwMWFlMS8ifQ==
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:51 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:26 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1805,7 +1466,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.4.1/ruby
+      - OpenAPI-Generator/3.6.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1818,7 +1479,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 08 Jun 2020 13:14:51 GMT
+      - Thu, 20 Aug 2020 19:12:26 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1830,24 +1491,35 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 centos7-katello-devel-stable.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '339'
+      - '483'
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        eyJjb3VudCI6MiwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL3JwbS9y
-        cG0vNjcyNmRiZjktZWU3Yy00MTNmLTg3NjQtZGMzM2U4YjQyMjY3LyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjAtMDYtMDhUMTM6MTQ6NDcuMzA5NTM2WiIsIm5h
+        cG0vMzVlMzU1NDYtMTI1ZS00MTQzLThhZGEtNWMyMGU0MGUzNGM3LyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjAtMDgtMjBUMTk6MTI6MjMuMTgwODM3WiIsIm5h
         bWUiOiIyX2R1cGxpY2F0ZSIsInVybCI6Imh0dHA6Ly9teXJlcG8uY29tIiwi
         Y2FfY2VydCI6IktKTDpLREYqKERGJiooKiQmKCojJEpMS0pEKEQoKEQiLCJj
         bGllbnRfY2VydCI6IktKTDpLREYqKERGJiooKiQmKCojJEpMS0pEKEQoKEQi
         LCJjbGllbnRfa2V5IjoiS0pMOktERiooREYmKigqJCYoKiMkSkxLSkQoRCgo
         RCIsInRsc192YWxpZGF0aW9uIjpmYWxzZSwicHJveHlfdXJsIjpudWxsLCJ1
         c2VybmFtZSI6bnVsbCwicGFzc3dvcmQiOm51bGwsInB1bHBfbGFzdF91cGRh
-        dGVkIjoiMjAyMC0wNi0wOFQxMzoxNDo1MC40MTU4ODNaIiwiZG93bmxvYWRf
-        Y29uY3VycmVuY3kiOjIwLCJwb2xpY3kiOiJvbl9kZW1hbmQifV19
+        dGVkIjoiMjAyMC0wOC0yMFQxOToxMjoyNS43NTkyNDBaIiwiZG93bmxvYWRf
+        Y29uY3VycmVuY3kiOjEwLCJwb2xpY3kiOiJvbl9kZW1hbmQiLCJzbGVzX2F1
+        dGhfdG9rZW4iOm51bGx9LHsicHVscF9ocmVmIjoiL3B1bHAvYXBpL3YzL3Jl
+        bW90ZXMvcnBtL3JwbS9lZWI1MTAzNi1mNTA2LTQzYTctYTIxMS02ZjVkZDc3
+        ODM0N2YvIiwicHVscF9jcmVhdGVkIjoiMjAyMC0wOC0yMFQxNToxODoxNi4z
+        NDUxMTNaIiwibmFtZSI6Inpvby0xODk1MCIsInVybCI6Imh0dHBzOi8vamxz
+        aGVycmlsbC5mZWRvcmFwZW9wbGUub3JnL2Zha2UtcmVwb3MvbmVlZGVkLWVy
+        cmF0YS8iLCJjYV9jZXJ0IjpudWxsLCJjbGllbnRfY2VydCI6bnVsbCwiY2xp
+        ZW50X2tleSI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3Vy
+        bCI6bnVsbCwidXNlcm5hbWUiOm51bGwsInBhc3N3b3JkIjpudWxsLCJwdWxw
+        X2xhc3RfdXBkYXRlZCI6IjIwMjAtMDgtMjBUMTU6MTg6MTYuMzQ1MTgzWiIs
+        ImRvd25sb2FkX2NvbmN1cnJlbmN5IjoxMCwicG9saWN5IjoiaW1tZWRpYXRl
+        Iiwic2xlc19hdXRoX3Rva2VuIjpudWxsfV19
     http_version: 
-  recorded_at: Mon, 08 Jun 2020 13:14:51 GMT
+  recorded_at: Thu, 20 Aug 2020 19:12:26 GMT
 recorded_with: VCR 3.0.3
