@@ -26,7 +26,7 @@ module Katello
     before_action :set_organization_id, :except => [:hypervisors_update, :async_hypervisors_update]
     before_action :find_hypervisor_organization, :only => [:async_hypervisors_update, :hypervisors_update]
 
-    before_action :check_content_type, :except => :async_hypervisors_update
+    before_action :check_media_type, :except => :async_hypervisors_update
 
     prepend_before_action :convert_owner_to_organization_id, :except => [:hypervisors_update, :async_hypervisors_update], :if => lambda { params.key?(:owner) }
     prepend_before_action :convert_organization_label_to_id, :only => [:rhsm_index, :consumer_activate, :consumer_create], :if => lambda { params.key?(:organization_id) }
@@ -480,7 +480,7 @@ module Katello
         else
           User.consumer? || ::User.current.can?(:view_organizations, self)
         end
-      when "rhsm_proxy_owner_servicelevels_path"
+      when "rhsm_proxy_owner_servicelevels_path", "rhsm_proxy_owner_system_purpose_path"
         (User.consumer? || ::User.current.can?(:view_organizations, self))
       when "rhsm_proxy_consumer_accessible_content_path", "rhsm_proxy_consumer_certificates_path",
            "rhsm_proxy_consumer_releases_path", "rhsm_proxy_certificate_serials_path",
