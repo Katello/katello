@@ -480,7 +480,7 @@ module Katello
         else
           User.consumer? || ::User.current.can?(:view_organizations, self)
         end
-      when "rhsm_proxy_owner_servicelevels_path"
+      when "rhsm_proxy_owner_servicelevels_path", "rhsm_proxy_owner_system_purpose_path"
         (User.consumer? || ::User.current.can?(:view_organizations, self))
       when "rhsm_proxy_consumer_accessible_content_path", "rhsm_proxy_consumer_certificates_path",
            "rhsm_proxy_consumer_releases_path", "rhsm_proxy_certificate_serials_path",
