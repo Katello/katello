@@ -21,6 +21,7 @@ Katello::Engine.routes.draw do
       match '/owners/:organization_id/environments' => 'candlepin_proxies#rhsm_index', :via => :get
       match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
       match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
+      match '/owners/:organization_id/system_purpose' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_system_purpose_path
       match '/environments/:environment_id/consumers' => 'candlepin_proxies#consumer_create', :via => :post
       match '/consumers/:id' => 'candlepin_proxies#consumer_show', :via => :get
       match '/consumers/:id' => 'candlepin_proxies#regenerate_identity_certificates', :via => :post
