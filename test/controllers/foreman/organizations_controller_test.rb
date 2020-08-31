@@ -38,6 +38,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     @controller.expects(:async_task).with(::Actions::Katello::Organization::SimpleContentAccess::Disable, org.id.to_s)
     # send request to disable SCA
     put :update, params: { id: org.id, simple_content_access: false }
+    assert_response :found
   end
 
   def test_simple_content_access_enable
@@ -48,6 +49,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     @controller.expects(:async_task).with(::Actions::Katello::Organization::SimpleContentAccess::Enable, org.id.to_s)
     # send request to enable SCA
     put :update, params: { id: org.id, simple_content_access: true }
+    assert_response :found
   end
 
   def test_simple_content_access_unchanged
@@ -58,6 +60,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     @controller.expects(:async_task).never
     # update org and don't change SCA
     put :update, params: { id: org.id, simple_content_access: true }
+    assert_response :found
   end
 
   def test_edit_override_can_toggle
@@ -67,6 +70,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     Katello::UpstreamConnectionChecker.any_instance.expects(:can_connect?).returns true
     Organization.any_instance.expects(:simple_content_access?).returns true
     get :edit, params: { id: org.id }
+    assert_response :success
   end
 
 end
