@@ -11,11 +11,19 @@ module Katello
         def remote_options
           options = {url: root.url, upstream_name: root.docker_upstream_name}
           if root.docker_tags_whitelist&.any?
-            options[:whitelist_tags] = root.docker_tags_whitelist
+            options[:include_tags] = root.docker_tags_whitelist
           else
-            options[:whitelist_tags] = nil
+            options[:include_tags] = nil
           end
           common_remote_options.merge(options)
+        end
+
+        def secure_distribution_options(path)
+          #we never need a content guard for docker, and pulp creates one behind the scenes,
+          # so we have to make sure not to try to clear it out
+          options = super
+          options.delete(:content_guard)
+          options
         end
 
         def mirror_remote_options
@@ -58,20 +66,20 @@ module Katello
 
         def copy_content_for_source(source_repository, options = {})
           filters = ContentViewDockerFilter.where(:id => options[:filter_ids])
-          whitelist_ids = []
-          blacklist_ids = []
+          include_list_ids = []
+          exclude_list_ids = []
           filters.each do |filter|
             if filter.inclusion
-              whitelist_ids += filter.content_unit_pulp_ids(source_repository)
+              include_list_ids += filter.content_unit_pulp_ids(source_repository)
             else
-              blacklist_ids += filter.content_unit_pulp_ids(source_repository)
+              exclude_list_ids += filter.content_unit_pulp_ids(source_repository)
             end
           end
 
-          if whitelist_ids.empty?
-            copy_units_recursively(source_repository.docker_tags.pluck(:pulp_id).sort - blacklist_ids, true)
+          if include_list_ids.empty?
+            copy_units_recursively(source_repository.docker_tags.pluck(:pulp_id).sort - exclude_list_ids, true)
           else
-            copy_units_recursively(whitelist_ids - blacklist_ids, true)
+            copy_units_recursively(include_list_ids - exclude_list_ids, true)
           end
         end
       end
