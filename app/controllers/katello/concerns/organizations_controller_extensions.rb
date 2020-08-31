@@ -49,7 +49,7 @@ module Katello
       end
 
       def update
-        super
+        super # we run super first here so that flash messages won't be in a confusing order
         return if params[:simple_content_access].nil?
         sca_param = ::Foreman::Cast.to_bool(params[:simple_content_access])
         if sca_param && !@taxonomy.simple_content_access?
