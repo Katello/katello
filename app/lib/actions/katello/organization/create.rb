@@ -17,7 +17,7 @@ module Actions
                                       label:  organization.label,
                                       name: organization.name)
             end
-            plan_action(Environment::LibraryCreate, organization.library)
+            plan_action(Katello::Environment::LibraryCreate, organization.library)
           end
           if cp_create
             action_subject organization, label: cp_create.output[:response][:key]
