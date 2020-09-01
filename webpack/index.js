@@ -13,4 +13,3 @@ componentRegistry.register({
   name: 'katello',
   type: Application,
 });
-
