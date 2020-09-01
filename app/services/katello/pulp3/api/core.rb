@@ -58,6 +58,22 @@ module Katello
           fail NotImplementedError
         end
 
+        def exporter_api
+          PulpcoreClient::ExportersPulpApi.new(core_api_client)
+        end
+
+        def importer_api
+          PulpcoreClient::ImportersPulpApi.new(core_api_client)
+        end
+
+        def export_api
+          PulpcoreClient::ExportersCoreExportsApi.new(core_api_client)
+        end
+
+        def import_api
+          PulpcoreClient::ImportersCoreImportsApi.new(core_api_client)
+        end
+
         def orphans_api
           PulpcoreClient::OrphansApi.new(core_api_client)
         end
