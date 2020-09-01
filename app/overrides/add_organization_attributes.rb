@@ -22,3 +22,15 @@ Deface::Override.new(:virtual_path => "taxonomies/_form",
                      :name => "add_organization_attributes_on_edit",
                      :insert_after => 'erb[loud]:contains("text_f"):contains(":name")',
                      :partial => 'overrides/organizations/edit_override')
+
+# Add Simple Content Access column to org table
+Deface::Override.new(:virtual_path => "taxonomies/index",
+                     :name => "add_sca_column_on_index",
+                     :insert_before => 'table th:last-child', # make it the second-to-last column
+                     :partial => 'overrides/organizations/index_header_override')
+
+# Add Simple Content Access cells to org table
+Deface::Override.new(:virtual_path => "taxonomies/index",
+                    :name => "add_sca_attributes_on_index",
+                    :insert_before => 'tbody td:last-child',
+                    :partial => 'overrides/organizations/index_row_override')
