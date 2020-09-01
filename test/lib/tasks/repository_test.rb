@@ -4,6 +4,8 @@ require 'rake'
 module Katello
   class RepositoryTaskTest < ActiveSupport::TestCase
     def setup
+      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+
       Rake.application.rake_require 'katello/tasks/repository'
       Rake.application.rake_require 'katello/tasks/reimport'
 
@@ -19,7 +21,9 @@ module Katello
       Rake::Task.define_task(:environment)
 
       @library_repo = katello_repositories(:fedora_17_x86_64)
+      ::Katello::Pulp3::RepositoryReference.new(repository_href: "test_repo_1/", root_repository_id: @library_repo.root_id, content_view_id: @library_repo.content_view.id).save
       @cv_repo = katello_repositories(:fedora_17_dev_library_view)
+      ::Katello::Pulp3::RepositoryReference.new(repository_href: "test_repo_2/", root_repository_id: @cv_repo.root_id, content_view_id: @cv_repo.content_view.id).save
 
       @puppet_env = katello_content_view_puppet_environments(:dev_view_puppet_environment)
 
@@ -72,6 +76,7 @@ module Katello
     def test_correct_repositories
       ENV['CONTENT_VIEW'] = @cv_repo.content_view.name
       Runcible::Extensions::Repository.any_instance.expects(:retrieve).once.with(@cv_repo.pulp_id).returns({})
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
 
       ForemanTasks.expects(:sync_task).never
 
@@ -81,6 +86,7 @@ module Katello
     def test_correct_repositories_missing_cv_repo
       ENV['CONTENT_VIEW'] = @cv_repo.content_view.name
       Runcible::Extensions::Repository.any_instance.expects(:retrieve).once.with(@cv_repo.pulp_id).raises(RestClient::ResourceNotFound)
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
 
       ForemanTasks.expects(:sync_task).never
 
@@ -91,6 +97,7 @@ module Katello
       ENV['CONTENT_VIEW'] = @cv_repo.content_view.name
       ENV['COMMIT'] = 'true'
       Runcible::Extensions::Repository.any_instance.expects(:retrieve).once.with(@cv_repo.pulp_id).raises(RestClient::ResourceNotFound)
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
 
       ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Destroy, @cv_repo)
 
@@ -103,10 +110,66 @@ module Katello
 
       Katello::Repository.stubs(:in_environment).returns(Katello::Repository.where(:id => @library_repo))
       Runcible::Extensions::Repository.any_instance.expects(:retrieve).once.with(@library_repo.pulp_id).raises(RestClient::ResourceNotFound)
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
 
       ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Create, @library_repo)
 
       Rake.application.invoke_task('katello:correct_repositories')
+    end
+
+    def test_correct_repositories_pulp3
+      ENV['CONTENT_VIEW'] = @cv_repo.content_view.name
+      PulpRpmClient::RepositoriesRpmApi.any_instance.expects(:read).once.with("test_repo_2/").returns({})
+
+      ForemanTasks.expects(:sync_task).never
+
+      Rake.application.invoke_task('katello:correct_repositories')
+    end
+
+    def test_correct_repositories_missing_cv_repo_pulp3
+      ENV['CONTENT_VIEW'] = @cv_repo.content_view.name
+      PulpRpmClient::RepositoriesRpmApi.any_instance.expects(:read).once.with("test_repo_2/").raises(PulpRpmClient::ApiError)
+
+      ForemanTasks.expects(:sync_task).never
+
+      Rake.application.invoke_task('katello:correct_repositories')
+    end
+
+    def test_correct_repositories_missing_cv_repo_commit_pulp3
+      ENV['CONTENT_VIEW'] = @cv_repo.content_view.name
+      ENV['COMMIT'] = 'true'
+      PulpRpmClient::RepositoriesRpmApi.any_instance.expects(:read).once.with("test_repo_2/").raises(PulpRpmClient::ApiError)
+
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Destroy, @cv_repo)
+
+      Rake.application.invoke_task('katello:correct_repositories')
+    end
+
+    def test_correct_repositories_missing_library_repo_commit_pulp3
+      ENV['LIFECYCLE_ENVIRONMENT'] = @library_repo.environment.name
+      ENV['COMMIT'] = 'true'
+
+      Katello::Repository.stubs(:in_environment).returns(Katello::Repository.where(:id => @library_repo))
+      PulpRpmClient::RepositoriesRpmApi.any_instance.expects(:read).once.with("test_repo_1/").raises(PulpRpmClient::ApiError)
+
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Create, @library_repo)
+
+      Rake.application.invoke_task('katello:correct_repositories')
+    end
+
+    def test_destroy_missing_root_repo
+      ENV['CONTENT_VIEW'] = @cv_repo.content_view.name
+      ENV['COMMIT'] = 'true'
+
+      root = ::Katello::RootRepository.create(label: "a_root_repo", name: "A Root Repo", download_policy: "immediate",
+                                              product_id: ::Katello::Product.all.min.id)
+      PulpRpmClient::RepositoriesRpmApi.any_instance.expects(:read).once.with("test_repo_2/").returns({})
+
+      Rake.application.invoke_task('katello:correct_repositories')
+
+      assert_raise ActiveRecord::RecordNotFound do
+        root.reload
+      end
     end
 
     def test_correct_puppet_environments
