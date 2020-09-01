@@ -65,6 +65,10 @@ namespace :katello do
         handle_missing_repo(repo)
       end
     end
+
+    ::Katello::RootRepository.orphaned.each do |root_repo|
+      handle_missing_root_repo(root_repo)
+    end
   end
 
   desc "Correct missing pulp repositories for puppet environments. Specify CONTENT_VIEW=name and LIFECYCLE_ENVIRONMENT=name to narrow repositories.  COMMIT=true to perform operation."
@@ -135,9 +139,14 @@ namespace :katello do
   end
 
   def repo_exists?(repo)
-    Katello.pulp_server.extensions.repository.retrieve(repo.pulp_id)
+    if SmartProxy.pulp_master!.pulp3_support?(repo)
+      backend_service = repo.backend_service(SmartProxy.pulp_master!)
+      backend_service.api.repositories_api.read(backend_service.repository_reference.repository_href)
+    else
+      Katello.pulp_server.extensions.repository.retrieve(repo.pulp_id)
+    end
     true
-  rescue RestClient::ResourceNotFound
+  rescue RestClient::ResourceNotFound, PulpRpmClient::ApiError
     false
   end
 
@@ -150,6 +159,10 @@ namespace :katello do
       puts "Deleting #{repo.id}"
       ForemanTasks.sync_task(::Actions::Katello::Repository::Destroy, repo) if commit?
     end
+  end
+
+  def handle_missing_root_repo(root_repo)
+    root_repo.destroy! if commit?
   end
 
   def handle_missing_puppet_env(puppet_env)

@@ -103,6 +103,7 @@ module Katello
       where(:http_proxy_policy => RootRepository::USE_SELECTED_HTTP_PROXY).
       where(:http_proxy_id => http_proxy_id)
     }
+    scope :orphaned, -> { where.not(id: Katello::Repository.pluck(:root_id).uniq) }
     delegate :redhat?, :provider, :organization, to: :product
 
     def library_instance
