@@ -83,7 +83,7 @@ module Katello
       DockerMetaTag.import_meta_tags([@repo])
 
       tags = DockerMetaTag.in_repositories(@repo, true).pluck(:name)
-      assert_equal tags, DockerMetaTag.where(:name => ["latest", new_tag.name]).pluck(:name)
+      assert_equal tags.sort, DockerMetaTag.where(:name => ["latest", new_tag.name]).pluck(:name).sort
     end
 
     def test_docker_manifest
@@ -141,6 +141,21 @@ module Katello
 
       assert_equal DockerMetaTag.search_in_tags(DockerTag.all).sort, [DockerMetaTag.first, dup_tag]
       assert_equal DockerMetaTag.search_in_tags(DockerTag.all, true).sort, [DockerMetaTag.first]
+    end
+
+    def test_meta_tag_cleanup_orphans
+      DockerMetaTag.import_meta_tags([@repo])
+      repo2 = Repository.find_by(pulp_id: "Default_Organization-Test-busybox-dev")
+      dup_tag = DockerMetaTag.create(schema1_id: repo2.docker_tags.min.id, schema2_id: repo2.docker_tags.sort.second.id, name: "latest")
+      RepositoryDockerMetaTag.create(docker_meta_tag_id: dup_tag.id, repository_id: repo2.id)
+      assert_equal 2, DockerMetaTag.all.count
+      assert_equal 2, RepositoryDockerMetaTag.all.count
+      RepositoryDockerMetaTag.delete_all
+      assert_equal 2, DockerMetaTag.all.count
+      assert_equal 0, RepositoryDockerMetaTag.all.count
+      DockerMetaTag.cleanup_tags
+      assert_equal 0, DockerMetaTag.all.count
+      assert_equal 0, RepositoryDockerMetaTag.all.count
     end
   end
 end
