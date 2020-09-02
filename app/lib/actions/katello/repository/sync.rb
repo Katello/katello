@@ -45,14 +45,14 @@ module Actions
           pulp_sync_options[:optimize] = false if skip_metadata_check && repo.yum?
 
           sequence do
-            if SmartProxy.pulp_master.pulp3_support?(repo) && validate_contents
+            if SmartProxy.pulp_primary.pulp3_support?(repo) && validate_contents
               plan_action(Katello::Repository::VerifyChecksum, repo)
             else
               plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents && repo.yum?
               sync_action = plan_pulp_action([Actions::Pulp::Orchestration::Repository::Sync,
                                               Actions::Pulp3::Orchestration::Repository::Sync],
                                              repo,
-                                             SmartProxy.pulp_master,
+                                             SmartProxy.pulp_primary,
                                              pulp_sync_options)
               output = sync_action.output
 

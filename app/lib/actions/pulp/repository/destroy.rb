@@ -19,7 +19,7 @@ module Actions
             Rails.logger.warn("Tried to delete repository #{input[:repository_id]}, but it did not exist.")
             return []
           end
-          capsule = input[:capsule_id] ? smart_proxy(input[:capsule_id]) : SmartProxy.pulp_master
+          capsule = input[:capsule_id] ? smart_proxy(input[:capsule_id]) : SmartProxy.pulp_primary
           output[:pulp_tasks] = repo.backend_service(capsule).delete
         end
       end

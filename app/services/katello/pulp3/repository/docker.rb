@@ -28,7 +28,7 @@ module Katello
 
         def mirror_remote_options
           {
-            url: "https://#{SmartProxy.pulp_master.pulp3_host!.downcase}",
+            url: "https://#{SmartProxy.pulp_primary.pulp3_host!.downcase}",
             upstream_name: repo.container_repository_name
           }
         end

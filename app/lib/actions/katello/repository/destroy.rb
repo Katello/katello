@@ -24,7 +24,7 @@ module Actions
           plan_pulp_action([Actions::Pulp::Orchestration::Repository::Delete,
                             Actions::Pulp3::Orchestration::Repository::Delete],
                            repository,
-                           SmartProxy.pulp_master)
+                           SmartProxy.pulp_primary)
 
           plan_self(:user_id => ::User.current.id)
           sequence do

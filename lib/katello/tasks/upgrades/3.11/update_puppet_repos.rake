@@ -2,7 +2,7 @@ namespace :katello do
   namespace :upgrades do
     namespace '3.11' do
       def wait_on_task(task, time = 0.1)
-        task = SmartProxy.pulp_master.pulp_api.resources.task.poll(task['task_id'])
+        task = SmartProxy.pulp_primary.pulp_api.resources.task.poll(task['task_id'])
         return if Actions::Pulp::AbstractAsyncTask::FINISHED_STATES.include?(task['state'])
         sleep time
         wait_on_task(task, time + 0.2)
@@ -13,9 +13,9 @@ namespace :katello do
         User.current = User.anonymous_admin
         Katello::Repository.puppet_type.each do |repo|
           puts "Refreshing repository #{repo.label} (#{repo.id})"
-          install_dist = repo.backend_service(SmartProxy.pulp_master).backend_data['distributors'].find { |dist| dist['distributor_type_id'] == 'puppet_install_distributor' }
+          install_dist = repo.backend_service(SmartProxy.pulp_primary).backend_data['distributors'].find { |dist| dist['distributor_type_id'] == 'puppet_install_distributor' }
           if install_dist
-            response = SmartProxy.pulp_master.pulp_api.resources.repository.delete_distributor(repo.pulp_id, install_dist['id'])
+            response = SmartProxy.pulp_primary.pulp_api.resources.repository.delete_distributor(repo.pulp_id, install_dist['id'])
             wait_on_task('task_id' => response['spawned_tasks'][0]['task_id'])
           end
           ForemanTasks.sync_task(::Actions::Pulp::Repository::Refresh, repo)

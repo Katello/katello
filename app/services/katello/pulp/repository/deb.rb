@@ -4,7 +4,7 @@ module Katello
       class Deb < ::Katello::Pulp::Repository
         REPOSITORY_TYPE = 'deb'.freeze
 
-        def generate_master_importer
+        def generate_primary_importer
           config = {
             feed: root.url,
             remove_missing: root.mirror_on_sync?,
@@ -14,7 +14,7 @@ module Katello
             gpg_keys: root&.gpg_key&.content,
             require_signature: root.gpg_key.present?
           }
-          importer_class.new(config.merge(master_importer_connection_options))
+          importer_class.new(config.merge(primary_importer_connection_options))
         end
 
         def generate_mirror_importer

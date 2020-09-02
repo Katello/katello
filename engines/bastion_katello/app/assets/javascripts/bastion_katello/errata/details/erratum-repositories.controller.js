@@ -26,7 +26,7 @@ function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrg
     $scope.controllerName = 'katello_repositories';
     $scope.table = repositoriesNutupane.table;
     $scope.table.initialLoad = false;
-    repositoriesNutupane.masterOnly = true;
+    repositoriesNutupane.primaryOnly = true;
     repositoriesNutupane.setSearchKey('repositoriesSearch');
 
     environment = Environment.queryUnpaged(function (response) {

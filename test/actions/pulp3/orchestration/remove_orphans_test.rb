@@ -25,32 +25,32 @@ module ::Actions::Pulp3
     end
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:pulp3_file_1)
       @repo.root.update(:url => 'https://fixtures.pulpproject.org/file2/')
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
 
-      sync_and_reload_repo(@repo, @master)
+      sync_and_reload_repo(@repo, @primary)
 
       @repo.root.update(
         url: "https://fixtures.pulpproject.org/file/")
 
-      sync_and_reload_repo(@repo, @master)
+      sync_and_reload_repo(@repo, @primary)
 
       ForemanTasks.sync_task(
-        ::Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans, @master)
+        ::Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans, @primary)
     end
 
     def teardown
       ForemanTasks.sync_task(
-          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
       @repo.reload
     end
 
     def test_orphans_are_removed
       repository_reference = repo_reference(@repo)
-      versions = ::Katello::Pulp3::Api::File.new(@master).repository_versions_api.list(repository_reference.repository_href, {}).results.collect(&:pulp_href)
+      versions = ::Katello::Pulp3::Api::File.new(@primary).repository_versions_api.list(repository_reference.repository_href, {}).results.collect(&:pulp_href)
       refute_includes versions, repository_reference.repository_href + "versions/1/"
       assert_includes versions, repository_reference.repository_href + "versions/2/"
     end

@@ -11,7 +11,7 @@ module Katello
           @mock_smart_proxy = mock('smart_proxy')
           @mock_smart_proxy.stubs(:pulp3_support?).returns(true)
           @mock_smart_proxy.stubs(:pulp2_preferred_for_type?).returns(false)
-          @mock_smart_proxy.stubs(:pulp_master?).returns(false)
+          @mock_smart_proxy.stubs(:pulp_primary?).returns(false)
           @repo = FactoryBot.create(:katello_repository, :fedora_17_x86_64_dev, :with_product)
           @repo_service = @repo.backend_service(@mock_smart_proxy)
         end

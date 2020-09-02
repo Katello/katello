@@ -42,7 +42,7 @@ module Katello
         fail NotImplementedError
       end
 
-      def master_importer_configuration
+      def primary_importer_configuration
         fail NotImplementedError
       end
 
@@ -58,7 +58,7 @@ module Katello
         fail NotImplementedError
       end
 
-      def generate_master_importer
+      def generate_primary_importer
         fail NotImplementedError
       end
 
@@ -120,7 +120,7 @@ module Katello
       end
 
       def external_url(force_https = false)
-        uri = URI.parse(::SmartProxy.pulp_master.pulp_url)
+        uri = URI.parse(::SmartProxy.pulp_primary.pulp_url)
         uri.scheme = (root.unprotected && !force_https) ? 'http' : 'https'
         uri.path = partial_repo_path
         uri.to_s
@@ -130,7 +130,7 @@ module Katello
         if smart_proxy.pulp_mirror?
           generate_mirror_importer
         elsif repo.in_default_view?
-          generate_master_importer
+          generate_primary_importer
         else #content view repositories don't need any importer configuration
           importer_class.new
         end
@@ -149,17 +149,17 @@ module Katello
         !distributors_match?(repo_details["distributors"])
       end
 
-      def master_importer_connection_options
+      def primary_importer_connection_options
         options = {
           basic_auth_username: root.upstream_username,
           basic_auth_password: root.upstream_password,
           ssl_validation: root.verify_ssl_on_sync?
         }
         options.merge!(proxy_options)
-        options.merge!(master_importer_ssl_options)
+        options.merge!(primary_importer_ssl_options)
       end
 
-      def master_importer_ssl_options
+      def primary_importer_ssl_options
         if root.redhat? && Katello::Resources::CDN::CdnResource.redhat_cdn?(root.url)
           {
             ssl_client_cert: root.product.certificate,

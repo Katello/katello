@@ -23,7 +23,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesContro
 
         var tracesNutupane = new Nutupane(HostBulkAction, hostIds, 'traces');
         tracesNutupane.enableSelectAllResults();
-        tracesNutupane.masterOnly = true;
+        tracesNutupane.primaryOnly = true;
         $scope.table = tracesNutupane.table;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
 

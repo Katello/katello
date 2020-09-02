@@ -28,7 +28,7 @@ module Actions
       action = create_action(action_class)
       plan_action(action, yum_repo)
 
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
             action_options)
     end
 
@@ -39,7 +39,7 @@ module Actions
       action = create_action(action_class)
       plan_action(action, yum_repo)
 
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
                                 action_options)
     ensure
       Location.current = old_location
@@ -51,7 +51,7 @@ module Actions
 
       plan_action(action, content_view_puppet_env)
 
-      assert_action_planed_with(action, pulp_publish_class, content_view_puppet_env, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, content_view_puppet_env, SmartProxy.pulp_primary,
               action_options)
     end
 
@@ -61,7 +61,7 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:force] = true
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
             yum_action_options)
     end
 
@@ -71,7 +71,7 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:source_repository] = yum_repo2
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
             yum_action_options)
     end
 
@@ -81,7 +81,7 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:matching_content] = true
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
                                 yum_action_options)
     end
 
@@ -92,7 +92,7 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:matching_content] = not_falsey
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
                                 yum_action_options)
     end
   end

@@ -44,7 +44,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesApplicabl
 
         packagesNutupane = new Nutupane(Package, {'host_id': $scope.$stateParams.hostId, 'packages_restrict_upgradable': true});
         $scope.controllerName = 'katello_erratum_packages';
-        packagesNutupane.masterOnly = true;
+        packagesNutupane.primaryOnly = true;
         $scope.table = packagesNutupane.table;
         $scope.table.openEventInfo = openEventInfo;
         $scope.table.contentHost = $scope.contentHost;

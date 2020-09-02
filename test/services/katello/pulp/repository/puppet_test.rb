@@ -8,7 +8,7 @@ module Katello
         include RepositorySupport
 
         def setup
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           @mirror = FactoryBot.build(:smart_proxy, :pulp_mirror)
 
           @repo = katello_repositories(:p_forge)
@@ -39,7 +39,7 @@ module Katello
         end
 
         def test_copy_contents
-          service = Katello::Pulp::Repository::Puppet.new(@repo, @master)
+          service = Katello::Pulp::Repository::Puppet.new(@repo, @primary)
           assert @repo.puppet_modules.count > 1
           task = service.copy_contents(@clone, puppet_modules: ::Katello::PuppetModule.where(:id => @repo.puppet_modules.order(:sortable_version).first.id))
           TaskSupport.wait_on_tasks([task])
@@ -57,7 +57,7 @@ module Katello
         def test_create
           @repo.root.mirror_on_sync = true
 
-          repo = Katello::Pulp::Repository::Puppet.new(@repo, @master)
+          repo = Katello::Pulp::Repository::Puppet.new(@repo, @primary)
 
           response = repo.create
           assert_equal @repo.pulp_id, response['id']
@@ -76,7 +76,7 @@ module Katello
           cvpe = katello_content_view_puppet_environments(:archive_view_puppet_environment)
           delete_cvpe(cvpe)
 
-          repo = Katello::Pulp::Repository::Puppet.new(cvpe.nonpersisted_repository, @master)
+          repo = Katello::Pulp::Repository::Puppet.new(cvpe.nonpersisted_repository, @primary)
           response = repo.create
 
           assert_equal cvpe.pulp_id, response['id']

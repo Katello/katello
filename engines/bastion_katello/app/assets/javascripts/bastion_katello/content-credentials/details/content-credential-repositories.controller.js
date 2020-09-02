@@ -16,7 +16,7 @@
             id: $scope.$stateParams.contentCredentialId
         }, 'repositories');
         $scope.controllerName = 'katello_gpg_keys';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.panel = $scope.panel || {error: false, loading: false};
 

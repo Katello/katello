@@ -5,9 +5,9 @@ module ::Actions::Pulp3
     include ::Katello::Pulp3Support
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-      create_repo(@repo, @master)
+      create_repo(@repo, @primary)
       @repo.root.update_attribute(:unprotected, true)
       ForemanTasks.sync_task(
         ::Actions::Katello::Repository::MetadataGenerate, @repo)
@@ -19,7 +19,7 @@ module ::Actions::Pulp3
       refute_empty Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
 
       ForemanTasks.sync_task(
-        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
       @repo.reload
     end
 

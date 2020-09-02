@@ -4,7 +4,7 @@ module ::Actions::Pulp3
   class MultiCopyAllUnitYumRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
@@ -12,13 +12,13 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
 
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
-      ensure_creatable(@repo_clone, @master)
-      create_repo(@repo_clone, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
 
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
       index_args = {:id => @repo.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -29,7 +29,7 @@ module ::Actions::Pulp3
       filter = FactoryBot.build(:katello_content_view_package_filter)
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
 
       index_args = {:id => @repo_clone.id, :contents_changed => true}
@@ -50,7 +50,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
 
       index_args = {:id => @repo_clone.id, :contents_changed => true}
@@ -69,7 +69,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
 
       index_args = {:id => @repo_clone.id, :contents_changed => true}
@@ -86,7 +86,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
 
       index_args = {:id => @repo_clone.id, :contents_changed => true}
@@ -103,7 +103,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master,
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary,
                              solve_dependencies: true)
       @repo_clone.reload
 
@@ -121,7 +121,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master,
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary,
                              solve_dependencies: true)
       @repo_clone.reload
 
@@ -139,7 +139,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master,
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary,
                              solve_dependencies: true)
       @repo_clone.reload
 
@@ -159,7 +159,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
 
       index_args = {:id => @repo_clone.id, :contents_changed => true}
@@ -176,7 +176,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
 
       index_args = {:id => @repo_clone.id, :contents_changed => true}
@@ -193,7 +193,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
 
       index_args = {:id => @repo_clone.id, :contents_changed => true}
@@ -212,7 +212,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
 
       @repo_clone.reload
       refute_equal @repo_clone.version_href, @repo_clone_original_version_href
@@ -225,7 +225,7 @@ module ::Actions::Pulp3
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "walrus", :max_version => "4")
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
 
       refute_equal @repo_clone.version_href, @repo_clone_original_version_href
@@ -243,7 +243,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master,
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary,
                              solve_dependencies: true)
 
       @repo_clone.reload
@@ -256,7 +256,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master,
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary,
                              solve_dependencies: true)
       @repo_clone.reload
 
@@ -272,7 +272,7 @@ module ::Actions::Pulp3
   class MultiCopyAllUnitYumSrpmsRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'https://fixtures.pulpproject.org/srpm-unsigned/')
@@ -280,13 +280,13 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'https://fixtures.pulpproject.org/srpm-unsigned/')
 
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
-      ensure_creatable(@repo_clone, @master)
-      create_repo(@repo_clone, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
 
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
       index_args = {:id => @repo.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -299,7 +299,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       index_args = {:id => @repo_clone.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -313,7 +313,7 @@ module ::Actions::Pulp3
   class MultiCopyAllUnitYumErrataRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -321,13 +321,13 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
 
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
-      ensure_creatable(@repo_clone, @master)
-      create_repo(@repo_clone, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
 
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
       index_args = {:id => @repo.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -338,7 +338,7 @@ module ::Actions::Pulp3
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
 
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexErrata, @repo_clone)
       @repo_clone.reload
@@ -352,7 +352,7 @@ module ::Actions::Pulp3
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "cheetah")
       module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter, module_stream_filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       index_args = {:id => @repo_clone.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -370,7 +370,7 @@ module ::Actions::Pulp3
       module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
 
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter, module_stream_filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       index_args = {:id => @repo_clone.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -387,7 +387,7 @@ module ::Actions::Pulp3
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => 'walrus')
 
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       index_args = {:id => @repo_clone.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -401,7 +401,7 @@ module ::Actions::Pulp3
   class MultiCopyAllUnitYumModuleStreamRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -409,13 +409,13 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
 
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
-      ensure_creatable(@repo_clone, @master)
-      create_repo(@repo_clone, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
 
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
       index_args = {:id => @repo.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -426,7 +426,7 @@ module ::Actions::Pulp3
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
 
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, @repo_clone)
       @repo_clone.reload
@@ -438,7 +438,7 @@ module ::Actions::Pulp3
       filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
 
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, @repo_clone)
       @repo_clone.reload
@@ -455,7 +455,7 @@ module ::Actions::Pulp3
                                    :module_stream => duck)
 
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, @repo_clone)
       @repo_clone.reload
@@ -473,7 +473,7 @@ module ::Actions::Pulp3
                                     :module_stream => duck)
 
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, @repo_clone)
       @repo_clone.reload
@@ -487,7 +487,7 @@ module ::Actions::Pulp3
   class MultiCopyAllUnitYumPackageGroupsRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -495,13 +495,13 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
 
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
-      ensure_creatable(@repo_clone, @master)
-      create_repo(@repo_clone, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
 
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
       index_args = {:id => @repo.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -513,7 +513,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexPackageGroups, @repo_clone)
       @repo_clone.reload
@@ -531,7 +531,7 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter, module_stream_filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       index_args = {:id => @repo_clone.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -549,7 +549,7 @@ module ::Actions::Pulp3
       module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter, module_stream_filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexPackageGroups, @repo_clone)
       @repo_clone.reload
@@ -562,7 +562,7 @@ module ::Actions::Pulp3
   class MultiCopyAllUnitYumPackageEnvironmentRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -570,13 +570,13 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
 
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
-      ensure_creatable(@repo_clone, @master)
-      create_repo(@repo_clone, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
 
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
       index_args = {:id => @repo.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -588,15 +588,15 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
 
       @repo_clone.reload
 
       options = { :repository_version => @repo.version_href }
-      repo_packageenvironment_response = @repo.backend_service(@master).api.content_package_environments_api.list(options)
+      repo_packageenvironment_response = @repo.backend_service(@primary).api.content_package_environments_api.list(options)
 
       options = { :repository_version => @repo_clone.version_href }
-      repo_clone_packageenvironment_response = @repo_clone.backend_service(@master).api.content_package_environments_api.list(options)
+      repo_clone_packageenvironment_response = @repo_clone.backend_service(@primary).api.content_package_environments_api.list(options)
 
       refute_empty repo_packageenvironment_response.results
       assert_equal repo_packageenvironment_response.results, repo_clone_packageenvironment_response.results
@@ -608,15 +608,15 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
 
       @repo_clone.reload
 
       options = { :repository_version => @repo.version_href }
-      repo_packageenvironment_response = @repo.backend_service(@master).api.content_package_environments_api.list(options)
+      repo_packageenvironment_response = @repo.backend_service(@primary).api.content_package_environments_api.list(options)
 
       options = { :repository_version => @repo_clone.version_href }
-      repo_clone_packageenvironment_response = @repo_clone.backend_service(@master).api.content_package_environments_api.list(options)
+      repo_clone_packageenvironment_response = @repo_clone.backend_service(@primary).api.content_package_environments_api.list(options)
 
       refute_empty repo_packageenvironment_response.results
       assert_equal repo_packageenvironment_response.results, repo_clone_packageenvironment_response.results
@@ -626,7 +626,7 @@ module ::Actions::Pulp3
   class MultiCopyAllUnitYumDistributionTreesRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -634,13 +634,13 @@ module ::Actions::Pulp3
       @repo_clone.update!(:environment_id => nil)
       @repo_clone.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
 
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
-      ensure_creatable(@repo_clone, @master)
-      create_repo(@repo_clone, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
 
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
       index_args = {:id => @repo.id, :contents_changed => true}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
@@ -652,15 +652,15 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
 
       @repo_clone.reload
 
       options = { :repository_version => @repo.version_href }
-      repo_distribution_trees_response = @repo.backend_service(@master).api.content_distribution_trees_api.list(options)
+      repo_distribution_trees_response = @repo.backend_service(@primary).api.content_distribution_trees_api.list(options)
 
       options = { :repository_version => @repo_clone.version_href }
-      repo_clone_distribution_trees_response = @repo_clone.backend_service(@master).api.content_distribution_trees_api.list(options)
+      repo_clone_distribution_trees_response = @repo_clone.backend_service(@primary).api.content_distribution_trees_api.list(options)
 
       refute_empty repo_distribution_trees_response.results
       assert_equal repo_distribution_trees_response.results, repo_clone_distribution_trees_response.results
@@ -672,15 +672,15 @@ module ::Actions::Pulp3
 
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter] } }
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
 
       @repo_clone.reload
 
       options = { :repository_version => @repo.version_href }
-      repo_distribution_trees_response = @repo.backend_service(@master).api.content_distribution_trees_api.list(options)
+      repo_distribution_trees_response = @repo.backend_service(@primary).api.content_distribution_trees_api.list(options)
 
       options = { :repository_version => @repo_clone.version_href }
-      repo_clone_distribution_trees_response = @repo_clone.backend_service(@master).api.content_distribution_trees_api.list(options)
+      repo_clone_distribution_trees_response = @repo_clone.backend_service(@primary).api.content_distribution_trees_api.list(options)
 
       refute_empty repo_distribution_trees_response.results
       assert_equal repo_distribution_trees_response.results, repo_clone_distribution_trees_response.results

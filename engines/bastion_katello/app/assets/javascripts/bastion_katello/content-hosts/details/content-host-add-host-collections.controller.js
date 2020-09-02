@@ -32,7 +32,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
 
         nutupane = new Nutupane(HostCollection, params);
         $scope.controllerName = 'katello_host_collections';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
 

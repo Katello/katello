@@ -34,7 +34,7 @@ describe('Controller: EnvironmentContentController', function() {
         spyOn(ContentService, 'buildNutupane').and.returnValue({
             table: {},
             params: {},
-            masterOnly: false,
+            primaryOnly: false,
             getParams: function () { return this.params; },
             setParams: function (params) { this.params = params; },
             refresh: function () {}
@@ -63,7 +63,7 @@ describe('Controller: EnvironmentContentController', function() {
     it("puts a nutupane object on the scope from the Content Service", function() {
         expect(ContentService.buildNutupane).toHaveBeenCalledWith({'environment_id': 1});
         expect($scope.nutupane).toBeDefined();
-        expect($scope.nutupane.masterOnly).toBe(true);
+        expect($scope.nutupane.primaryOnly).toBe(true);
     });
 
     it("provides a method to set the repository id when selected", function () {

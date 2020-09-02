@@ -18,7 +18,7 @@ module ::Actions::Pulp::Repository
       end
 
       run_action(::Actions::Pulp::Repository::ImportUpload,
-                 repo, SmartProxy.pulp_master,
+                 repo, SmartProxy.pulp_primary,
                     pulp_id: repo.pulp_id,
                      unit_type_id: repo.unit_type_id,
                      unit_key: {},

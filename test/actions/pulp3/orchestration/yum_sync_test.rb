@@ -6,10 +6,10 @@ module ::Actions::Pulp3
 
     def setup
       User.current = users(:admin)
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
-      create_repo(@repo, @master)
+      create_repo(@repo, @primary)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
@@ -26,13 +26,13 @@ module ::Actions::Pulp3
     def teardown
       User.current = users(:admin)
       ForemanTasks.sync_task(
-          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
       @repo.reload
     end
 
     def test_sync
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       refute_equal @repo.version_href, @repo_version_href
       repository_reference = Katello::Pulp3::RepositoryReference.find_by(
@@ -44,8 +44,8 @@ module ::Actions::Pulp3
 
     def test_optimize_false
       SETTINGS[:katello][:katello_applicability] = true
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
 
       old_url = @repo.version_href
@@ -63,8 +63,8 @@ module ::Actions::Pulp3
     end
 
     def test_index_erratum_href
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       @repo.index_content
       @repo.reload

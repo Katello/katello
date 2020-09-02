@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class SwitchoverBase < ActiveSupport::TestCase
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => true, :docker => true}
     end
 
@@ -20,14 +20,14 @@ module Katello
       @fake_pulp3_href = 'fake_pulp3_href'
       @another_fake_pulp3_href = 'another_fake_pulp3_href'
 
-      migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_master, ['file', 'docker'])
+      migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, ['file', 'docker'])
       migration_service.content_types_for_migration.each do |content_type|
         content_type.model_class.all.each do |record|
           record.update(:migrated_pulp3_href => @fake_pulp3_href + record.id.to_s)
         end
       end
 
-      @switchover = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_master, ['file', 'docker'])
+      @switchover = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary, ['file', 'docker'])
     end
 
     def test_file_unit_pulp_ids_updated
@@ -131,7 +131,7 @@ module Katello
       @cv_archive_repo = katello_repositories(:busybox_view1)
 
       Katello::RootRepository.docker_type.where.not(:id => @repo.root_id).destroy_all
-      @switchover_service = Katello::Pulp3::MigrationSwitchover.new(@master, ['docker'])
+      @switchover_service = Katello::Pulp3::MigrationSwitchover.new(@primary, ['docker'])
 
       Katello::DockerTag.destroy_all
       Katello::DockerManifest.destroy_all

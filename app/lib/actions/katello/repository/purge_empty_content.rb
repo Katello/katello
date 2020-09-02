@@ -8,7 +8,7 @@ module Actions
 
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:id])
-          repo.backend_service(SmartProxy.pulp_master).purge_empty_contents
+          repo.backend_service(SmartProxy.pulp_primary).purge_empty_contents
         end
       end
     end

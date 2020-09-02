@@ -21,7 +21,7 @@ module Katello
             foreman_environment.save!
           end
 
-          foreman_smart_proxy = SmartProxy.pulp_master
+          foreman_smart_proxy = SmartProxy.pulp_primary
           if foreman_smart_proxy.has_feature?('Puppet')
             PuppetClassImporter.new(:url => foreman_smart_proxy.url, :env => foreman_environment.name).update_environment
           end

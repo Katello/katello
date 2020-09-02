@@ -8,7 +8,7 @@ module Katello
         include RepositorySupport
 
         def setup
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           @custom = katello_repositories(:generic_file)
           @repo = katello_repositories(:pulp3_file_1)
           RepositorySupport.create_and_sync_repo(@repo)
@@ -30,13 +30,13 @@ module Katello
 
       class FileNonVCRTest < ::ActiveSupport::TestCase
         def setup
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           @custom = katello_repositories(:generic_file)
         end
 
         def test_unit_keys
           upload = {'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}
-          assert_equal [upload.except('id')], @custom.backend_service(@master).unit_keys([upload])
+          assert_equal [upload.except('id')], @custom.backend_service(@primary).unit_keys([upload])
         end
       end
     end

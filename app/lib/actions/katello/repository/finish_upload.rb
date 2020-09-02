@@ -7,10 +7,10 @@ module Actions
           upload_actions = options.fetch(:upload_actions, nil)
           content_type = options.fetch(:content_type)
           if content_type
-            unit_type_id = SmartProxy.pulp_master.content_service(content_type)::CONTENT_TYPE
+            unit_type_id = SmartProxy.pulp_primary.content_service(content_type)::CONTENT_TYPE
           else
             content_type = repository.content_type
-            unit_type_id = SmartProxy.pulp_master.content_service(content_type)::CONTENT_TYPE
+            unit_type_id = SmartProxy.pulp_primary.content_service(content_type)::CONTENT_TYPE
           end
           generate_metadata = options.fetch(:generate_metadata, true)
           plan_action(Katello::Repository::MetadataGenerate, repository, :dependency => import_upload_task) if generate_metadata

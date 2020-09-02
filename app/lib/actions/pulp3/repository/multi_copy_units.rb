@@ -14,7 +14,7 @@ module Actions
                       unit_map: unit_map,
                       dependency_solving: options[:dependency_solving],
                       incremental_update: options[:incremental_update],
-                      smart_proxy_id: SmartProxy.pulp_master.id).output
+                      smart_proxy_id: SmartProxy.pulp_primary.id).output
             plan_action(Pulp3::Repository::SaveVersions, repo_map.values.pluck(:dest_repo),
                         tasks: action_output[:pulp_tasks]).output
           end
@@ -46,7 +46,7 @@ module Actions
 
           target_repo = ::Katello::Repository.find(repo_map.values.first[:dest_repo])
           unless unit_hrefs.flatten.empty?
-            output[:pulp_tasks] = target_repo.backend_service(SmartProxy.pulp_master).multi_copy_units(repo_map, input[:dependency_solving])
+            output[:pulp_tasks] = target_repo.backend_service(SmartProxy.pulp_primary).multi_copy_units(repo_map, input[:dependency_solving])
           end
         end
       end

@@ -10,11 +10,11 @@ module Katello
         def setup
           User.current = users(:admin)
 
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:fedora_17_x86_64)
           @repo.root.update(:url => 'https://fixtures.pulpproject.org/srpm-signed/')
-          ensure_creatable(@repo, @master)
-          create_repo(@repo, @master)
+          ensure_creatable(@repo, @primary)
+          create_repo(@repo, @primary)
           ForemanTasks.sync_task(
               ::Actions::Katello::Repository::MetadataGenerate, @repo,
               repository_creation: true)
@@ -23,7 +23,7 @@ module Katello
 
         def teardown
           ForemanTasks.sync_task(
-            ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+            ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
           @repo.reload
         end
       end
@@ -31,8 +31,8 @@ module Katello
       class SrpmVcrTest < SrpmTestBase
         def setup
           super
-          sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+          sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
           @repo.reload
           Katello::Srpm.import_for_repository(@repo)
           @repo.reload
@@ -54,9 +54,9 @@ module Katello
 
       class SrpmVcrInitialSyncTest < SrpmTestBase
         def test_sync_skipped_srpm
-          sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
+          sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
           @repo.root.update!(ignorable_content: ["srpm"])
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
           @repo.reload
           Katello::Srpm.import_for_repository(@repo)
           @repo.reload

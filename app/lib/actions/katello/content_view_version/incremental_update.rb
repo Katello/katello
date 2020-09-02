@@ -32,7 +32,7 @@ module Actions
           validate_environments(environments, old_version)
 
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
-          if SmartProxy.pulp_master.pulp3_repository_type_support?("yum") && is_composite
+          if SmartProxy.pulp_primary.pulp3_repository_type_support?("yum") && is_composite
             sequence do
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, old_version.content_view, description,
                           :major => old_version.major, :minor => new_minor,
@@ -266,9 +266,9 @@ module Actions
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
 
-          unless SmartProxy.pulp_master.pulp3_support?(version.repositories.first)
+          unless SmartProxy.pulp_primary.pulp3_support?(version.repositories.first)
             version.repositories.each do |repo|
-              SmartProxy.pulp_master.pulp_api.extensions.send(:module_default).
+              SmartProxy.pulp_primary.pulp_api.extensions.send(:module_default).
                 copy(repo.library_instance.pulp_id,
                 repo.pulp_id)
             end

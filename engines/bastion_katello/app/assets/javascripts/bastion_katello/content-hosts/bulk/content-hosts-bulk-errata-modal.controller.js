@@ -48,7 +48,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         nutupane.enableSelectAllResults();
 
         $scope.controllerName = 'katello_errata';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         $scope.showErrata = false;
         $scope.showHosts = false;
         $scope.table = nutupane.table;

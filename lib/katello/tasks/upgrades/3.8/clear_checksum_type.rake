@@ -15,7 +15,7 @@ namespace :katello do
                   :download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE
                 }
 
-                SmartProxy.pulp_master.pulp_api.resources.repository.update_importer(repo.pulp_id, importer[:id], config) if (importer && importer[:id])
+                SmartProxy.pulp_primary.pulp_api.resources.repository.update_importer(repo.pulp_id, importer[:id], config) if (importer && importer[:id])
               end
             end
 
@@ -26,7 +26,7 @@ namespace :katello do
                 repo.update_attribute(:saved_checksum_type, nil)
 
                 if repo.find_distributor[:config]&.delete(:checksum_type)
-                  SmartProxy.pulp_master.pulp_api.resources.repository.update_distributor(
+                  SmartProxy.pulp_primary.pulp_api.resources.repository.update_distributor(
                     repo.pulp_id, repo.find_distributor[:id], repo.find_distributor[:config])
                 end
               # rubocop:disable Lint/SuppressedException

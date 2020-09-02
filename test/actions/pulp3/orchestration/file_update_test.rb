@@ -5,10 +5,10 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:generic_file)
       @repo.root.update(:url => 'http://test/test/')
-      create_repo(@repo, @master)
+      create_repo(@repo, @primary)
       cert_path = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt"
       cert = File.read(cert_path)
       Cert::Certs.stubs(:ca_cert).returns(cert)
@@ -34,7 +34,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
     end
 
     def test_update_unset_unprotected
@@ -46,7 +46,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
 
       dist_refs = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
 
@@ -59,7 +59,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
 
       dist_refs = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
 
@@ -69,7 +69,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
 
       dist_refs = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
       assert_equal 1, dist_refs.count, "Expected a distribution reference."

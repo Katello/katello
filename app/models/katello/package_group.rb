@@ -25,7 +25,7 @@ module Katello
     end
 
     def package_names
-      service_class = SmartProxy.pulp_master!.content_service(CONTENT_TYPE)
+      service_class = SmartProxy.pulp_primary!.content_service(CONTENT_TYPE)
       group = service_class.new(self.pulp_id)
       group.default_package_names + group.conditional_package_names + group.optional_package_names + group.mandatory_package_names
     end
