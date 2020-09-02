@@ -36,7 +36,8 @@ module Actions
 
         def finalize
           repository = ::Katello::Repository.find(input[:repository][:id])
-          delete_record(repository)
+          docker_cleanup = repository.content_type == ::Katello::Repository::DOCKER_TYPE
+          delete_record(repository, {docker_cleanup: docker_cleanup})
         end
 
         def handle_custom_content(repository)
@@ -52,9 +53,10 @@ module Actions
           end
         end
 
-        def delete_record(repository)
+        def delete_record(repository, options = {})
           repository.destroy!
           repository.root.destroy! if repository.root.repositories.empty?
+          ::Katello::DockerMetaTag.cleanup_tags if options[:docker_cleanup]
         end
 
         def humanized_name
