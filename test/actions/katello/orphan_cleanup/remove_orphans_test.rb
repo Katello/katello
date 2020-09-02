@@ -30,7 +30,7 @@ module ::Actions::Katello::CapsuleContent
   class RemoveOrphansPlanTest < TestBase
     let(:action_class) { ::Actions::Katello::OrphanCleanup::RemoveOrphans }
 
-    it 'plans proxy orphans cleanup with pulp3 master' do
+    it 'plans proxy orphans cleanup with pulp3 primary' do
       smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       tree = plan_action_tree(action_class, smart_proxy)
 

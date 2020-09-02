@@ -9,7 +9,7 @@ module Katello
       end
 
       def self.instance_for_type(smart_proxy)
-        if smart_proxy.pulp_master?
+        if smart_proxy.pulp_primary?
           SmartProxyRepository.new(smart_proxy)
         else
           SmartProxyMirrorRepository.new(smart_proxy)

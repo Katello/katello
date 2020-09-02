@@ -42,7 +42,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
             return searchQuery;
         };
 
-        contentHostsNutupane.masterOnly = true;
+        contentHostsNutupane.primaryOnly = true;
         contentHostsNutupane.setSearchKey('contentHostSearch');
 
         $scope.table = contentHostsNutupane.table;

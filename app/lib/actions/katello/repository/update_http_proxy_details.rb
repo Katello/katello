@@ -9,7 +9,7 @@ module Actions
             [Actions::Pulp::Orchestration::Repository::Refresh,
              Actions::Pulp3::Repository::UpdateRemote],
             repository,
-            SmartProxy.pulp_master)
+            SmartProxy.pulp_primary)
         end
       end
     end

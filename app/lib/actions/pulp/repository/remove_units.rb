@@ -24,11 +24,11 @@ module Actions
               units = content_type.model_class.where(:id => input[:contents])
               unit_pulp_ids = units.map(&:pulp_id).sort
             end
-            tasks << ::SmartProxy.pulp_master.content_service(content_type).remove(repo, unit_pulp_ids)
+            tasks << ::SmartProxy.pulp_primary.content_service(content_type).remove(repo, unit_pulp_ids)
           else
             repo_content_types = ::Katello::RepositoryTypeManager.find(repo.content_type).content_types
             repo_content_types.each do |type|
-              tasks << ::SmartProxy.pulp_master.content_service(type).remove(repo)
+              tasks << ::SmartProxy.pulp_primary.content_service(type).remove(repo)
             end
           end
           tasks

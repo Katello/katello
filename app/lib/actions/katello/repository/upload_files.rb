@@ -12,7 +12,7 @@ module Actions
           tmp_files = prepare_tmp_files(files)
 
           content_type ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
-          unit_type_id = SmartProxy.pulp_master.content_service(content_type)::CONTENT_TYPE
+          unit_type_id = SmartProxy.pulp_primary.content_service(content_type)::CONTENT_TYPE
           upload_actions = []
           sequence do
             concurrence do
@@ -20,7 +20,7 @@ module Actions
                 sequence do
                   upload_action = plan_pulp_action([Pulp::Orchestration::Repository::UploadContent,
                                                     Pulp3::Orchestration::Repository::UploadContent],
-                                                   repository, SmartProxy.pulp_master!, file, unit_type_id)
+                                                   repository, SmartProxy.pulp_primary!, file, unit_type_id)
 
                   upload_actions << upload_action.output
                 end

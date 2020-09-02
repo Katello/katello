@@ -8,18 +8,18 @@ module Katello
         include Katello::Pulp3Support
 
         def setup
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:generic_file)
           @repo.root.update(:url => 'https://fixtures.pulpproject.org/file2/')
-          ensure_creatable(@repo, @master)
-          create_repo(@repo, @master)
+          ensure_creatable(@repo, @primary)
+          create_repo(@repo, @primary)
           @repo.reload
         end
 
         def test_index_model
           Katello::FileUnit.destroy_all
-          sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+          sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
           @repo.reload
           @repo.index_content
           post_unit_count = Katello::FileUnit.all.count
@@ -31,8 +31,8 @@ module Katello
 
         def test_index_on_sync
           Katello::FileUnit.destroy_all
-          sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+          sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
           index_args = {:id => @repo.id, :contents_changed => true}
           ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
           @repo.reload

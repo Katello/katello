@@ -19,7 +19,7 @@
         };
 
         nutupane = new Nutupane(Deb, params);
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
         $scope.controllerName = 'katello_debs';

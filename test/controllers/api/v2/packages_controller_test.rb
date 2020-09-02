@@ -11,7 +11,7 @@ module Katello
       @one_package_rule = katello_content_view_package_filter_rules(:one_package_rule)
       @org = get_organization
       Pulp::Rpm.any_instance.stubs(:backend_data).returns({})
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
     end
 
     def setup

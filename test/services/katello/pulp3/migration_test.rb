@@ -12,7 +12,7 @@ module Katello
           SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
           SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
 
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:generic_file)
           @repo.root.url = 'file:///var/lib/pulp/sync_imports/test_repos/file_migration/'
           @repo.root.save!
@@ -39,17 +39,17 @@ module Katello
         def test_file_migration
           unit = @repo.files.first
 
-          service = Katello::Pulp::Repository::File.new(@repo, SmartProxy.pulp_master)
+          service = Katello::Pulp::Repository::File.new(@repo, SmartProxy.pulp_primary)
           service.copy_units(@cv_archive_repo, [unit])
           service.copy_units(@cv_env_repo, [unit])
           #only published repos will have their published metadata used as publications
           ForemanTasks.sync_task(Actions::Katello::Repository::MetadataGenerate, @cv_archive_repo)
           ForemanTasks.sync_task(Actions::Katello::Repository::MetadataGenerate, @cv_env_repo)
 
-          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_master, ['file'])
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, ['file'])
 
           task = migration_service.create_and_run_migrations
-          wait_on_task(@master, task)
+          wait_on_task(@primary, task)
 
           assert_equal migration_service.import_pulp3_content, ['file']
           [@repo, @cv_env_repo, @cv_archive_repo].each { |repo| repo.reload }
@@ -81,7 +81,7 @@ module Katello
 
         def test_content_types_for_migration
           repo_types = ['file']
-          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_master, repo_types)
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, repo_types)
           correct_content_types = repo_types.collect do |repository_type_label|
             Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index
           end
@@ -91,7 +91,7 @@ module Katello
 
         def test_migration_service_type_already_migrated
           err = assert_raises ::Katello::Errors::Pulp3MigrationError do
-            ::Katello::Pulp3::Migration.new(@master)
+            ::Katello::Pulp3::Migration.new(@primary)
           end
 
           assert_match "Pulp 3 migration cannot run. Types docker have already been migrated.", err.message

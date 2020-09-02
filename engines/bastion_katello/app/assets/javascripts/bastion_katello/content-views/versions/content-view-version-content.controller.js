@@ -108,7 +108,7 @@
         params = contentTypes[currentState].params || {'content_view_version_id': $scope.$stateParams.versionId};
 
         nutupane = new Nutupane(contentTypes[currentState].type, params, 'queryPaged', { 'disableAutoLoad': true });
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.nutupane = nutupane;
         $scope.table = nutupane.table;

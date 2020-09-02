@@ -8,7 +8,7 @@ module Katello
         Rake::Task['katello:pulp3_content_switchover'].reenable
         Rake::Task.define_task(:environment)
 
-        @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+        @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
         SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => true, :docker => true}
       end
 

@@ -24,7 +24,7 @@ module ::Actions::Katello::Repository
       set_user
       ::Katello::Product.any_instance.stubs(:certificate).returns(nil)
       ::Katello::Product.any_instance.stubs(:key).returns(nil)
-      SmartProxy.stubs(:pulp_master).returns(proxy)
+      SmartProxy.stubs(:pulp_primary).returns(proxy)
     end
   end
 
@@ -372,7 +372,7 @@ module ::Actions::Katello::Repository
 
   class UploadDockerTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::ImportUpload }
-    setup { SmartProxy.stubs(:pulp_master).returns(SmartProxy.new) }
+    setup { SmartProxy.stubs(:pulp_primary).returns(SmartProxy.new) }
     it 'plans' do
       action.expects(:action_subject).with(docker_repository)
 
@@ -389,7 +389,7 @@ module ::Actions::Katello::Repository
         unit_metadata: nil
       }
       assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
-                                 docker_repository, SmartProxy.pulp_master,
+                                 docker_repository, SmartProxy.pulp_primary,
                                  import_upload_args
                                 )
     end
@@ -412,7 +412,7 @@ module ::Actions::Katello::Repository
         unit_metadata: unit_keys[0]
       }
       assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
-                                 docker_repository, SmartProxy.pulp_master,
+                                 docker_repository, SmartProxy.pulp_primary,
                                  import_upload_args
                                 )
     end
@@ -731,10 +731,10 @@ module ::Actions::Katello::Repository
 
       plan_action(action, [repository], false, nil, 0, "8")
       assert_action_planed_with(action, ::Actions::Pulp::Repository::Clear,
-                                repository, SmartProxy.pulp_master)
+                                repository, SmartProxy.pulp_primary)
 
       assert_action_planed_with(action, Actions::Pulp::Repository::CopyAllUnits,
-                                repository, SmartProxy.pulp_master, custom_repository)
+                                repository, SmartProxy.pulp_primary, custom_repository)
     end
 
     it 'plans without export destination' do

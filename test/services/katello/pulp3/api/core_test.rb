@@ -9,14 +9,14 @@ module Katello
           include Katello::Pulp3Support
 
           def setup
-            @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           end
 
           def test_with_excon
             default = Faraday.default_adapter
             Faraday.default_adapter = :excon
 
-            assert Katello::Pulp3::Api::Core.new(@master).tasks_api.list(limit: 1)
+            assert Katello::Pulp3::Api::Core.new(@primary).tasks_api.list(limit: 1)
           ensure
             Faraday.default_adapter = default
           end
@@ -25,7 +25,7 @@ module Katello
             default = Faraday.default_adapter
             Faraday.default_adapter = :net_http
 
-            assert Katello::Pulp3::Api::Core.new(@master).tasks_api.list(limit: 1)
+            assert Katello::Pulp3::Api::Core.new(@primary).tasks_api.list(limit: 1)
           ensure
             Faraday.default_adapter = default
           end

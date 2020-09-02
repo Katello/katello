@@ -71,7 +71,7 @@
         }
 
         nutupane = ContentService.buildNutupane(nutupaneParams);
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.nutupane = nutupane;
         $scope.table = nutupane.table;

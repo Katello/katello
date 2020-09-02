@@ -27,7 +27,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionsController
 
         var nutupane = new Nutupane(HostCollection, params);
         $scope.controllerName = 'katello_host_collections';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;

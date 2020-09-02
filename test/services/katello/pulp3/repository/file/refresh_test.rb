@@ -9,17 +9,17 @@ module Katello
 
           def setup
             User.current = User.anonymous_admin
-            @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
             @repo = katello_repositories(:pulp3_file_1)
-            create_repo(@repo, @master)
-            @service = Katello::Pulp3::Repository::File.new(@repo, @master)
+            create_repo(@repo, @primary)
+            @service = Katello::Pulp3::Repository::File.new(@repo, @primary)
 
-            ::ForemanTasks.sync_task(Actions::Pulp3::Repository::RefreshDistribution, @repo, @master)
+            ::ForemanTasks.sync_task(Actions::Pulp3::Repository::RefreshDistribution, @repo, @primary)
           end
 
           def teardown
             User.current = User.anonymous_admin
-            ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+            ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
           end
 
           def test_needs_distributor_update
@@ -35,7 +35,7 @@ module Katello
             @repo.root.url = 'http://foo.com/bar'
             @repo.save!
             refresh_tasks = @service.refresh_if_needed
-            refresh_tasks.compact.each { |task| wait_on_task(@master, task) }
+            refresh_tasks.compact.each { |task| wait_on_task(@primary, task) }
             assert_equal @repo.root.url + '/PULP_MANIFEST', @service.get_remote.url
             assert @repo.relative_path, @service.get_distribution.base_path
           end

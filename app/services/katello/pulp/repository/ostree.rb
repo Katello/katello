@@ -4,12 +4,12 @@ module Katello
       class Ostree < ::Katello::Pulp::Repository
         PULP_MIRROR_SYNC_DEPTH = -1
 
-        def generate_master_importer
+        def generate_primary_importer
           config = {
             feed: root.url,
             depth: root.compute_ostree_upstream_sync_depth
           }
-          Runcible::Models::OstreeImporter.new(config.merge(master_importer_connection_options))
+          Runcible::Models::OstreeImporter.new(config.merge(primary_importer_connection_options))
         end
 
         def generate_mirror_importer

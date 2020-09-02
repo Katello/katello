@@ -23,7 +23,7 @@ module Actions
             end
 
             sequence do
-              smart_proxy = SmartProxy.pulp_master!
+              smart_proxy = SmartProxy.pulp_primary!
               action_output = plan_action(::Actions::Pulp3::ContentViewVersion::CreateExporter,
                                      content_view_version_id: content_view_version.id,
                                      smart_proxy_id: smart_proxy.id,

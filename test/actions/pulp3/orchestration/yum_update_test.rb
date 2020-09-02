@@ -5,9 +5,9 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-      create_repo(@repo, @master)
+      create_repo(@repo, @primary)
       ForemanTasks.sync_task(
         ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
@@ -29,7 +29,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
     end
 
     def test_update_url
@@ -39,7 +39,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
     end
 
     def test_update_policy
@@ -49,9 +49,9 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
 
-      yum_remote = ::Katello::Pulp3::Api::Yum.new(@master).remotes_api
+      yum_remote = ::Katello::Pulp3::Api::Yum.new(@primary).remotes_api
       assert_equal yum_remote.list.results.select { |remote| remote.name == "2_duplicate" }[0].policy, "on_demand"
     end
 
@@ -65,7 +65,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
 
       dist_refs = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
 
@@ -78,7 +78,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
 
       dist_refs = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
 
@@ -88,7 +88,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
-        @master)
+        @primary)
 
       dist_refs = Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
       assert_equal 1, dist_refs.count, "Expected a distribution reference."

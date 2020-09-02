@@ -26,7 +26,7 @@ angular.module('Bastion.packages').controller('PackagesController',
 
         nutupane = $scope.nutupane = new Nutupane(Package, params);
         $scope.controllerName = 'katello_erratum_packages';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 

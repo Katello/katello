@@ -7,7 +7,7 @@ module Katello
         def create_upload(size = 0, checksum = nil, content_type = nil)
           content_unit_href = nil
           if checksum
-            content_backend_service = SmartProxy.pulp_master.content_service(content_type)
+            content_backend_service = SmartProxy.pulp_primary.content_service(content_type)
             content_list = content_backend_service.content_api.list("sha256": checksum)
             content_unit_href = content_list.results.first.pulp_href unless content_list.results.empty?
             return {"content_unit_href" => content_unit_href} if content_unit_href
@@ -39,7 +39,7 @@ module Katello
         private
 
         def core_api_client
-          PulpcoreClient::ApiClient.new(SmartProxy.pulp_master.pulp3_configuration(PulpcoreClient::Configuration))
+          PulpcoreClient::ApiClient.new(SmartProxy.pulp_primary.pulp3_configuration(PulpcoreClient::Configuration))
         end
 
         def uploads_api

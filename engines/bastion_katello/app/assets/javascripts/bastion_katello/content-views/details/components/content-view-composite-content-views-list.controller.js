@@ -22,7 +22,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeContentV
         }, 'contentViewComponents');
         $scope.controllerName = 'katello_content_views';
 
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         $scope.table = nutupane.table;
 
         $scope.saveContentViewComponent = function (contentViewComponent) {

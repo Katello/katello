@@ -35,7 +35,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
         $scope.table = $scope.contentNutupane.table;
         $scope.isAdding = false;
         $scope.contentNutupane.setSearchKey('subscriptionSearch');
-        $scope.contentNutupane.masterOnly = true;
+        $scope.contentNutupane.primaryOnly = true;
         $scope.contextAdd = true;
         $scope.groupedSubscriptions = {};
         $scope.$watch('table.rows', function (rows) {

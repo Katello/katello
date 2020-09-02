@@ -28,7 +28,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeysController',
 
         var nutupane = new Nutupane(ActivationKey, params);
         $scope.controllerName = 'katello_activation_keys';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         $scope.table = nutupane.table;
     }]
 );

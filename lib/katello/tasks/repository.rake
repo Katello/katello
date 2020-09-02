@@ -139,8 +139,8 @@ namespace :katello do
   end
 
   def repo_exists?(repo)
-    if SmartProxy.pulp_master!.pulp3_support?(repo)
-      backend_service = repo.backend_service(SmartProxy.pulp_master!)
+    if SmartProxy.pulp_primary!.pulp3_support?(repo)
+      backend_service = repo.backend_service(SmartProxy.pulp_primary!)
       backend_service.api.repositories_api.read(backend_service.repository_reference.repository_href)
     else
       Katello.pulp_server.extensions.repository.retrieve(repo.pulp_id)

@@ -9,7 +9,7 @@ module Actions
           param :capsule_id
         end
 
-        def plan(repository, smart_proxy = SmartProxy.pulp_master!)
+        def plan(repository, smart_proxy = SmartProxy.pulp_primary!)
           if repository.is_a?(::Katello::ContentViewPuppetEnvironment)
             plan_self(:content_view_puppet_environment_id => repository.id, :capsule_id => smart_proxy.id)
           else

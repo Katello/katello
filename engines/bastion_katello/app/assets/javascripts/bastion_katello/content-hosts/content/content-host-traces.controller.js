@@ -22,7 +22,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
         };
 
         tracesNutupane = new Nutupane(HostTraces, params, 'get', {'disableAutoLoad': true});
-        tracesNutupane.masterOnly = true;
+        tracesNutupane.primaryOnly = true;
         $scope.table = tracesNutupane.table;
         $scope.table.tracesFilterTerm = "";
         $scope.table.tracesCompare = function (item) {

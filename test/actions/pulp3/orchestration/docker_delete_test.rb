@@ -5,10 +5,10 @@ module ::Actions::Pulp3
     include ::Katello::Pulp3Support
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:busybox)
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
       ForemanTasks.sync_task(
         ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
@@ -19,7 +19,7 @@ module ::Actions::Pulp3
       refute_empty Katello::Pulp3::DistributionReference.where(repository_id: @repo.id)
 
       ForemanTasks.sync_task(
-        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
       @repo.reload
     end
 

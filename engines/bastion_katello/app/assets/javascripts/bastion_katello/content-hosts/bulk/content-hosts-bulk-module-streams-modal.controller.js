@@ -31,7 +31,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
 
         $scope.moduleStreamsNutupane = new Nutupane(HostBulkAction, hostIds, 'moduleStreams');
         $scope.controllerName = 'katello_module_streams';
-        $scope.moduleStreamsNutupane.masterOnly = true;
+        $scope.moduleStreamsNutupane.primaryOnly = true;
         $scope.table = $scope.moduleStreamsNutupane.table;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;

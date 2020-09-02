@@ -28,7 +28,7 @@ module Actions
           target_env = ::Katello::ContentViewPuppetEnvironment.find(input[:target_content_view_puppet_environment_id])
 
           puppet_modules = input[:puppet_module_ids] ? ::Katello::PuppetModule.where(:id => input[:puppet_module_ids]) : nil
-          source_repository.backend_service(SmartProxy.pulp_master).copy_contents(target_env.nonpersisted_repository, puppet_modules: puppet_modules)
+          source_repository.backend_service(SmartProxy.pulp_primary).copy_contents(target_env.nonpersisted_repository, puppet_modules: puppet_modules)
         end
       end
     end

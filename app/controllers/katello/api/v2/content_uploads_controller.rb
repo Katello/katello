@@ -13,8 +13,8 @@ module Katello
     param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     def create
       content_type = params[:content_type] || ::Katello::RepositoryTypeManager.find(@repository.content_type).default_managed_content_type.label
-      unit_type_id = SmartProxy.pulp_master.content_service(content_type).content_type
-      render :json => @repository.backend_content_service(::SmartProxy.pulp_master).create_upload(params[:size], params[:checksum], unit_type_id)
+      unit_type_id = SmartProxy.pulp_primary.content_service(content_type).content_type
+      render :json => @repository.backend_content_service(::SmartProxy.pulp_primary).create_upload(params[:size], params[:checksum], unit_type_id)
     end
 
     api :PUT, "/repositories/:repository_id/content_uploads/:id", N_("Upload a chunk of the file's content")
@@ -24,7 +24,7 @@ module Katello
     param :offset, :number, :required => true, :desc => N_("The offset in the file where the content starts")
     param :content, File, :required => true, :desc => N_("The actual file contents")
     def update
-      @repository.backend_content_service(::SmartProxy.pulp_master)
+      @repository.backend_content_service(::SmartProxy.pulp_primary)
         .upload_chunk(params[:id], params[:offset], params[:content], params[:size])
       head :no_content
     end
@@ -33,7 +33,7 @@ module Katello
     param :repository_id, :number, :required => true, :desc => N_("Repository id")
     param :id, String, :required => true, :desc => N_("Upload request id")
     def destroy
-      @repository.backend_content_service(::SmartProxy.pulp_master).delete_upload(params[:id])
+      @repository.backend_content_service(::SmartProxy.pulp_primary).delete_upload(params[:id])
       head :no_content
     end
 

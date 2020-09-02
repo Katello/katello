@@ -4,7 +4,7 @@ module Katello
   class RpmViewTest < ActiveSupport::TestCase
     def setup
       @rpm = katello_rpms(:two)
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
     end
 
     def test_base

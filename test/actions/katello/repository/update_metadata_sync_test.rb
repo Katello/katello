@@ -13,16 +13,16 @@ module Actions
 
     it 'plans' do
       action = create_action(action_class)
-      master = smart_proxies(:one)
-      master.expects(:pulp_master?).returns(true)
+      primary = smart_proxies(:one)
+      primary.expects(:pulp_primary?).returns(true)
 
       mirror = smart_proxies(:two)
-      mirror.expects(:pulp_master?).returns(false)
+      mirror.expects(:pulp_primary?).returns(false)
 
-      SmartProxy.expects(:with_repo).with(repo).returns([master, mirror])
+      SmartProxy.expects(:with_repo).with(repo).returns([primary, mirror])
       plan_action(action, repo)
 
-      # master capsule sync should get ignored
+      # primary capsule sync should get ignored
       assert_action_planed_with(action, capsule_sync_class, mirror, repository_id: repo.id)
       assert_action_planed_with(action, metadata_generate_class, repo)
     end

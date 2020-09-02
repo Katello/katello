@@ -12,7 +12,7 @@ module Actions
             if copy_contents
               plan_action(Pulp3::Orchestration::Repository::MultiCopyAllUnits,
                           extended_repo_mapping,
-                          SmartProxy.pulp_master,
+                          SmartProxy.pulp_primary,
                           solve_dependencies: solve_dependencies)
             end
 

@@ -64,7 +64,7 @@ module Katello
           where("#{Katello::CapsuleLifecycleEnvironment.table_name}.lifecycle_environment_id" => repo.environment_id)
         end
 
-        def self.pulp_master
+        def self.pulp_primary
           unscoped.with_features(PULP_FEATURE).first || non_mirror_pulp3
         end
 
@@ -74,16 +74,16 @@ module Katello
           found.first
         end
 
-        def self.pulp_master!
-          pulp_master || fail(_("Could not find a smart proxy with pulp feature."))
+        def self.pulp_primary!
+          pulp_primary || fail(_("Could not find a smart proxy with pulp feature."))
         end
 
         def self.default_capsule
-          pulp_master
+          pulp_primary
         end
 
         def self.default_capsule!
-          pulp_master!
+          pulp_primary!
         end
 
         def self.with_environment(environment, include_default = false)
@@ -224,7 +224,7 @@ module Katello
         self.has_feature?(PULP_NODE_FEATURE) || self.setting(SmartProxy::PULP3_FEATURE, 'mirror')
       end
 
-      def pulp_master?
+      def pulp_primary?
         self.has_feature?(PULP_FEATURE) || self.setting(SmartProxy::PULP3_FEATURE, 'mirror') == false
       end
 
@@ -251,14 +251,14 @@ module Katello
 
       #deprecated methods
       alias_method :pulp_node, :pulp_api
-      alias_method :default_capsule?, :pulp_master?
+      alias_method :default_capsule?, :pulp_primary?
 
       def associate_organizations
-        self.organizations = Organization.all if self.pulp_master?
+        self.organizations = Organization.all if self.pulp_primary?
       end
 
       def associate_default_locations
-        return unless self.pulp_master?
+        return unless self.pulp_primary?
         ['puppet_content', 'subscribed_hosts'].each do |type|
           default_location = ::Location.unscoped.find_by_title(
             ::Setting[:"default_location_#{type}"])
@@ -278,7 +278,7 @@ module Katello
       end
 
       def associate_lifecycle_environments
-        self.lifecycle_environments = Katello::KTEnvironment.all if self.pulp_master?
+        self.lifecycle_environments = Katello::KTEnvironment.all if self.pulp_primary?
       end
 
       def add_lifecycle_environment(environment)

@@ -5,8 +5,8 @@ module Katello
         @repository_types = repository_type_labels
       end
 
-      def master_proxy
-        SmartProxy.pulp_master!
+      def primary_proxy
+        SmartProxy.pulp_primary!
       end
 
       def generate

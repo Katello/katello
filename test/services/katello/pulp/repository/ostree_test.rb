@@ -9,7 +9,7 @@ module Katello
 
         def setup
           set_ca_file
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           @mirror = FactoryBot.build(:smart_proxy, :pulp_mirror)
 
           @repo = katello_repositories(:ostree)
@@ -30,7 +30,7 @@ module Katello
                                                                                                            ssl_ca_cert: nil,
                                                                                                            ssl_validation: false
           )
-          assert_include service.generate_mirror_importer.feed, URI(SmartProxy.pulp_master.pulp_url).host
+          assert_include service.generate_mirror_importer.feed, URI(SmartProxy.pulp_primary.pulp_url).host
         end
       end
 
@@ -41,7 +41,7 @@ module Katello
         end
 
         def test_create
-          repo = Katello::Pulp::Repository::Ostree.new(@repo, @master)
+          repo = Katello::Pulp::Repository::Ostree.new(@repo, @primary)
           response = repo.create
 
           assert_equal @repo.pulp_id, response['id']

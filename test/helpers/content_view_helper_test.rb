@@ -6,7 +6,7 @@ class ContentViewHelperTest < ActionView::TestCase
   include Katello::ContentViewHelper
 
   def setup
-    @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+    @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
     @docker_repo1 = katello_repositories(:busybox)
     @docker_repo2 = katello_repositories(:busybox2)
     @yum_repo1 = katello_repositories(:fedora_17_x86_64)

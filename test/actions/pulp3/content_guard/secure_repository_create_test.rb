@@ -5,7 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
     CERT_FIXTURE = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt".freeze
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:generic_file)
       @repo.root.update(:url => 'http://test/test/', :unprotected => false)
     end
@@ -13,7 +13,7 @@ module ::Actions::Pulp3
     def test_create
       content_guard = ::Katello::Pulp3::ContentGuard.first
       assert_nil content_guard
-      create_repo(@repo, @master)
+      create_repo(@repo, @primary)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo)
       @repo.reload

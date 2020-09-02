@@ -35,7 +35,7 @@ module Katello
       Product.any_instance.stubs(:certificate).returns(nil)
       Product.any_instance.stubs(:key).returns(nil)
       Resources::CDN::CdnResource.stubs(:ca_file_contents).returns(:nil)
-      SmartProxy.stubs(:pulp_master).returns @smart_proxy
+      SmartProxy.stubs(:pulp_primary).returns @smart_proxy
     end
 
     def setup

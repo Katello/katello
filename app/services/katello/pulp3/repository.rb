@@ -21,7 +21,7 @@ module Katello
       end
 
       def with_mirror_adapter
-        if smart_proxy.pulp_master?
+        if smart_proxy.pulp_primary?
           return self
         else
           return RepositoryMirror.new(self)

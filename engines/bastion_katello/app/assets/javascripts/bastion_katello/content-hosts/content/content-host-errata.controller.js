@@ -30,7 +30,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
 
         $scope.nutupane = new Nutupane(HostErratum, params, 'get');
         $scope.controllerName = 'katello_errata';
-        $scope.nutupane.masterOnly = true;
+        $scope.nutupane.primaryOnly = true;
         $scope.table = $scope.nutupane.table;
         $scope.table.errataFilterTerm = "";
 
