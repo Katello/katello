@@ -29,7 +29,7 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             'paged': true
         });
         $scope.controllerName = 'katello_repositories';
-        repositoriesNutupane.masterOnly = true;
+        repositoriesNutupane.primaryOnly = true;
 
         function getParams() {
             return {

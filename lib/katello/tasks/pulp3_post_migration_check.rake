@@ -7,7 +7,7 @@ namespace :katello do
     repository_types = Katello::Pulp3::Migration::REPOSITORY_TYPES
 
     # Take care of repository deletions
-    ForemanTasks.sync_task(Actions::Pulp3::OrphanCleanup::DeleteOrphanedMigratedRepositories, SmartProxy.pulp_master)
+    ForemanTasks.sync_task(Actions::Pulp3::OrphanCleanup::DeleteOrphanedMigratedRepositories, SmartProxy.pulp_primary)
 
     repository_types.each do |type|
       # check version

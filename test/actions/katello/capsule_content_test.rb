@@ -36,7 +36,7 @@ module ::Actions::Katello::CapsuleContent
     let(:dev_environment) { katello_environments(:dev) }
 
     before do
-      SmartProxy.any_instance.stubs(:pulp_master?).returns(false)
+      SmartProxy.any_instance.stubs(:pulp_primary?).returns(false)
     end
 
     it 'plans correctly for a pulp3 file repo' do
@@ -248,7 +248,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'fails when trying to sync to the default capsule' do
-      SmartProxy.any_instance.stubs(:pulp_master?).returns(true)
+      SmartProxy.any_instance.stubs(:pulp_primary?).returns(true)
       action = create_action(action_class)
       action.expects(:action_subject).with(capsule_content.smart_proxy)
       assert_raises(RuntimeError) do

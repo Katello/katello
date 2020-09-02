@@ -106,7 +106,7 @@ module Katello
     param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB. Relevant only for Pulp 2 repositories"), :required => false
     param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z). Relevant only for Pulp 2 repositories"), :required => false
     def export
-      if SmartProxy.pulp_master.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
+      if SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
         invalid_params = [:export_to_iso, :iso_mb_size, :since].reject { |param| params[param].blank? }
         unless invalid_params.empty?
           fail HttpErrors::BadRequest, _("Invalid parameters provided - %{params}. These are only relevant for Pulp 2 repositories" % { params: invalid_params.join(', ')})

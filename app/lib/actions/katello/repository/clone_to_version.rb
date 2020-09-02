@@ -13,7 +13,7 @@ module Actions
             Rails.logger.warn("Filters on content view have been overridden by passed-in filename list during publish") if filters.any?
           end
 
-          copy_contents = destination_repository.master?
+          copy_contents = destination_repository.primary?
           fail _('Cannot publish a link repository if multiple component clones are specified') if !copy_contents && repositories.count > 1
 
           sequence do

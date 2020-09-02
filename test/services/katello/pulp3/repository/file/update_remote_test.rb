@@ -15,7 +15,7 @@ module Katello
           @mock_smart_proxy = mock('smart_proxy')
           @mock_smart_proxy.stubs(:pulp3_support?).returns(true)
           @mock_smart_proxy.stubs(:pulp2_preferred_for_type?).returns(false)
-          @mock_smart_proxy.stubs(:pulp_master?).returns(true)
+          @mock_smart_proxy.stubs(:pulp_primary?).returns(true)
           @file_repo = katello_repositories(:generic_file)
           @file_repo_service = @file_repo.backend_service(@mock_smart_proxy)
           @file_repo.root.update(url: 'my-files.org')

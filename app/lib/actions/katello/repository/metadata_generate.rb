@@ -9,7 +9,7 @@ module Actions
           force = options.fetch(:force, false)
           source_repository = options.fetch(:source_repository, nil)
           source_repository ||= repository.target_repository if repository.link?
-          smart_proxy = options.fetch(:smart_proxy, SmartProxy.pulp_master)
+          smart_proxy = options.fetch(:smart_proxy, SmartProxy.pulp_primary)
           matching_content = options.fetch(:matching_content, false)
 
           plan_pulp_action([Pulp::Repository::DistributorPublish, Pulp3::Orchestration::Repository::GenerateMetadata],

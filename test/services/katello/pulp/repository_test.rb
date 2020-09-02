@@ -9,12 +9,12 @@ module Katello
       let(:default_proxy) { FactoryBot.create(:http_proxy, name: 'best proxy') }
 
       def setup
-        @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+        @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
         User.current = users(:admin)
 
         Setting['content_default_http_proxy'] = default_proxy.name
         @repo = katello_repositories(:fedora_17_x86_64)
-        @pulp_repo = Katello::Pulp::Repository.new(@repo, @master)
+        @pulp_repo = Katello::Pulp::Repository.new(@repo, @primary)
       end
 
       def test_no_options_merged_if_no_default_proxy_and_no_http_proxy_set

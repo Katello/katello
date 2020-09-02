@@ -27,7 +27,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesInstalled
         };
 
         packagesNutupane = new Nutupane(HostPackage, {id: $scope.$stateParams.hostId});
-        packagesNutupane.masterOnly = true;
+        packagesNutupane.primaryOnly = true;
         $scope.table = packagesNutupane.table;
         $scope.table.contentHost = $scope.contentHost;
     }

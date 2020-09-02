@@ -44,7 +44,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
 
         nutupane = new Nutupane(Host, params);
         $scope.controllerName = 'hosts';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
         $scope.nutupane = nutupane;

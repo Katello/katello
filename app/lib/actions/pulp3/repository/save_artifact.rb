@@ -10,7 +10,7 @@ module Actions
         def invoke_external_task
           artifact_href = input[:tasks].last[:created_resources].first
           content_type = input[:unit_type_id]
-          content_backend_service = SmartProxy.pulp_master.content_service(content_type)
+          content_backend_service = SmartProxy.pulp_primary.content_service(content_type)
           output[:pulp_tasks] = [content_backend_service.content_api.create(input[:options][:file_name], artifact: artifact_href)]
         end
       end

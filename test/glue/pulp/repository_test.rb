@@ -14,7 +14,7 @@ module Katello
       set_user
       backend_stubs
       set_ca_file
-      @master_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      @primary_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_x86_64 = katello_repositories(:fedora_17_x86_64)
       @fedora_17_library_library_view = katello_repositories(:fedora_17_library_library_view)
@@ -262,7 +262,7 @@ module Katello
     end
 
     def test_generate_distributors_with_default_capsule
-      dists = @fedora_17_x86_64.generate_distributors(@master_proxy)
+      dists = @fedora_17_x86_64.generate_distributors(@primary_proxy)
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumCloneDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }

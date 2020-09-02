@@ -654,7 +654,7 @@ module Katello
           :distribution_bootable => target_repo.distribution_bootable
         )
       else
-        self.backend_service(SmartProxy.pulp_master).import_distribution_data
+        self.backend_service(SmartProxy.pulp_primary).import_distribution_data
       end
     end
 
@@ -726,10 +726,10 @@ module Katello
       DockerMetaTag.in_repositories(self.id).count
     end
 
-    # a master repository actually has content (rpms, errata, etc) in the pulp repository.  For these repositories, we can use the YumDistributor
+    # a primary repository actually has content (rpms, errata, etc) in the pulp repository.  For these repositories, we can use the YumDistributor
     # to generate metadata and can index the content from pulp, or for the case of content view archives without filters, can also use the YumCloneDistributor
     #
-    def master?
+    def primary?
       !self.yum? || # non-yum repos
           self.in_default_view? || # default content view repos
           (self.archive? && !self.content_view.composite) || # non-composite content view archive repos
@@ -739,19 +739,19 @@ module Katello
     # a link repository has no content in the pulp repository and serves as a shell.  It will always be empty.  Only the YumCloneDistributor can be used
     # to publish yum metadata, and it cannot be indexed from pulp, but must have its indexed associations copied from another repository (its target).
     def link?
-      !master?
+      !primary?
     end
 
     # A link (empty repo) points to a target (a repository that actually has units in pulp).  Target repos are always archive repos of a content view version (a repo with no environment)
-    # But for composite view versions, an archive repo, usually won't be a master (but might be if multple components contain the same repo)
+    # But for composite view versions, an archive repo, usually won't be a primary (but might be if multple components contain the same repo)
     def target_repository
-      fail _("This is not a linked repository") if master?
+      fail _("This is not a linked repository") if primary?
       return nil if self.archived_instance.nil?
 
-      #this is an environment repo, and the archived_instance is a master (not always true with composite)
-      if self.environment_id? && self.archived_instance.master?
+      #this is an environment repo, and the archived_instance is a primary (not always true with composite)
+      if self.environment_id? && self.archived_instance.primary?
         self.archived_instance
-      elsif self.environment_id #this is an environment repo, but a composite who's archived_instance isn't a master
+      elsif self.environment_id #this is an environment repo, but a composite who's archived_instance isn't a primary
         self.archived_instance.target_repository || self.archived_instance #to archived_instance if nil
       else #must be a composite archive repo, with only one component repo
         self.component_source_repositories.first
@@ -862,7 +862,7 @@ module Katello
     def index_content(options = {})
       source_repository = options.fetch(:source_repository, nil)
 
-      if self.yum? && !self.master?
+      if self.yum? && !self.primary?
         index_linked_repo
       elsif source_repository && !repository_type.unique_content_per_repo
         copy_indexed_data(source_repository)

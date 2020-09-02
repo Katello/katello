@@ -36,7 +36,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkRepositorySe
         nutupane = new Nutupane(RepositorySet, nutupaneParams,
           'queryPaged', {disableAutoLoad: true});
         $scope.controllerName = 'katello_repository_sets';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         nutupane.setSearchKey('repoSetsSearch');
         nutupane.load();
 

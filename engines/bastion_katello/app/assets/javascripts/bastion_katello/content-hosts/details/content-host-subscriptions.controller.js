@@ -28,7 +28,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
         $scope.controllerName = 'katello_subscriptions';
         $scope.nutupane.table.initialLoad = false;
         $scope.table = $scope.nutupane.table;
-        $scope.nutupane.masterOnly = true;
+        $scope.nutupane.primaryOnly = true;
         $scope.isRemoving = false;
         $scope.contextAdd = false;
         $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;

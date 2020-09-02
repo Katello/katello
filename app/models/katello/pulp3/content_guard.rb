@@ -1,7 +1,7 @@
 module Katello
   module Pulp3
     class ContentGuard < Katello::Model
-      def self.import(smart_proxy = SmartProxy.pulp_master!, force = false)
+      def self.import(smart_proxy = SmartProxy.pulp_primary!, force = false)
         return unless (count == 0 || force)
         content_guard_api = Katello::Pulp3::Api::ContentGuard.new(smart_proxy)
         content_guard = content_guard_api.list&.results&.first

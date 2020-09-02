@@ -21,28 +21,28 @@ module Katello
 
         def test_list_with_pagination
           User.current = users(:admin)
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
 
           repo1 = katello_repositories(:pulp3_file_1)
           repo1.root.update(:url => 'https://fixtures.pulpproject.org/file-many/')
-          ensure_creatable(repo1, @master)
-          create_repo(repo1, @master)
+          ensure_creatable(repo1, @primary)
+          create_repo(repo1, @primary)
           ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, repo1)
-          sync_and_reload_repo(repo1, @master)
+          sync_and_reload_repo(repo1, @primary)
 
           repo2 = katello_repositories(:pulp3_file_1)
           repo2.root.update(:url => 'https://repos.fedorapeople.org/pulp/pulp/demo_repos/test_file_repo/')
-          ensure_creatable(repo2, @master)
-          create_repo(repo2, @master)
+          ensure_creatable(repo2, @primary)
+          create_repo(repo2, @primary)
           ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, repo2)
-          sync_and_reload_repo(repo2, @master)
+          sync_and_reload_repo(repo2, @primary)
 
           pulp3_enabled_repo_types = Katello::RepositoryTypeManager.repository_types.values.select do |repository_type|
-            @master.pulp3_repository_type_support?(repository_type)
+            @primary.pulp3_repository_type_support?(repository_type)
           end
 
           repository_list = pulp3_enabled_repo_types.collect do |repo_type|
-            repo_type.pulp3_service_class.api(@master).list_all
+            repo_type.pulp3_service_class.api(@primary).list_all
           end
 
           Katello::Pulp3::RepositoryReference.all.each do |repo_reference|

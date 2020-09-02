@@ -33,27 +33,27 @@ module Katello
       class RepositoryOrphanTest < RepositoryOrphanBaseTest
         def setup
           User.current = users(:admin)
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:pulp3_file_1)
           @repo.root.update(:url => 'https://fixtures.pulpproject.org/file2/')
-          ensure_creatable(@repo, @master)
-          create_repo(@repo, @master)
+          ensure_creatable(@repo, @primary)
+          create_repo(@repo, @primary)
 
-          @smart_proxy_service = Katello::Pulp3::SmartProxyRepository.new(@master)
+          @smart_proxy_service = Katello::Pulp3::SmartProxyRepository.new(@primary)
 
-          sync_and_reload_repo(@repo, @master)
+          sync_and_reload_repo(@repo, @primary)
           assert_version(@repo, "versions/1/")
 
           @repo.root.update(
             url: "https://fixtures.pulpproject.org/file/")
 
-          sync_and_reload_repo(@repo, @master)
+          sync_and_reload_repo(@repo, @primary)
           assert_version(@repo, "versions/2/")
         end
 
         def teardown
           ForemanTasks.sync_task(
-              ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+              ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
           @repo.reload
         end
 
@@ -71,7 +71,7 @@ module Katello
 
         def test_delete_orphan_repository_versions
           delete_orphan_tasks = @smart_proxy_service.delete_orphan_repository_versions
-          delete_orphan_tasks.compact.each { |task| wait_on_task(@master, task) }
+          delete_orphan_tasks.compact.each { |task| wait_on_task(@primary, task) }
           orphans = @smart_proxy_service.orphan_repository_versions.collect { |_api, repo_versions| repo_versions }.flatten
           assert_empty orphans
         end

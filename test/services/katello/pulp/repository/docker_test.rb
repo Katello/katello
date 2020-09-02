@@ -8,7 +8,7 @@ module Katello
         include RepositorySupport
 
         def setup
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           @mirror = FactoryBot.build(:smart_proxy, :pulp_mirror)
 
           @repo = katello_repositories(:busybox)
@@ -33,11 +33,11 @@ module Katello
         def test_mirror_importer_with_pulp2
           service = Katello::Pulp::Repository::Docker.new(@repo, @mirror)
 
-          assert_equal "https://#{strip_host(SmartProxy.pulp_master.pulp_url)}:5000", service.generate_mirror_importer.feed
+          assert_equal "https://#{strip_host(SmartProxy.pulp_primary.pulp_url)}:5000", service.generate_mirror_importer.feed
         end
 
         def test_mirror_importer_with_pulp3
-          @master.destroy!
+          @primary.destroy!
           FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           service = Katello::Pulp::Repository::Docker.new(@repo, @mirror)
 
@@ -55,7 +55,7 @@ module Katello
         def test_create
           @repo.root.mirror_on_sync = true
 
-          service = Katello::Pulp::Repository::Docker.new(@repo, @master)
+          service = Katello::Pulp::Repository::Docker.new(@repo, @primary)
           response = service.create
           assert_equal @repo.pulp_id, response['id']
 
@@ -72,9 +72,9 @@ module Katello
         def test_index_content
           @repo.root.mirror_on_sync = true
 
-          service = Katello::Pulp::Repository::Docker.new(@repo, @master)
+          service = Katello::Pulp::Repository::Docker.new(@repo, @primary)
           service.create
-          service2 = Katello::Pulp::Repository::Docker.new(@repo_copy, @master)
+          service2 = Katello::Pulp::Repository::Docker.new(@repo_copy, @primary)
           service2.create
           RepositorySupport.create_and_sync_repo(@repo)
           RepositorySupport.create_repo(@repo_copy)
@@ -91,17 +91,17 @@ module Katello
 
         def test_unit_keys
           upload = {'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}
-          assert_equal [upload.except('id')], @repo.backend_service(@master).unit_keys([upload])
+          assert_equal [upload.except('id')], @repo.backend_service(@primary).unit_keys([upload])
         end
 
         def test_unit_type_id_docker_manifest
           uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
-          assert_equal 'docker_manifest', @repo.backend_service(@master).unit_type_id(uploads)
+          assert_equal 'docker_manifest', @repo.backend_service(@primary).unit_type_id(uploads)
         end
 
         def test_unit_type_id_docker_tag
           uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test', 'digest' => 'sha256:1234'}]
-          assert_equal 'docker_tag', @repo.backend_service(@master).unit_type_id(uploads)
+          assert_equal 'docker_tag', @repo.backend_service(@primary).unit_type_id(uploads)
         end
       end
 

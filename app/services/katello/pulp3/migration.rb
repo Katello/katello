@@ -92,7 +92,7 @@ module Katello
       end
 
       def import_repo(katello_repo, migrated_repo)
-        pulp3_api = api_for_repository(katello_repo).new(SmartProxy.pulp_master)
+        pulp3_api = api_for_repository(katello_repo).new(SmartProxy.pulp_primary)
         katello_repo.remote_href = migrated_repo.pulp3_remote_href
         katello_repo.publication_href = migrated_repo.pulp3_publication_href
         katello_repo.version_href = migrated_repo.pulp3_repository_version

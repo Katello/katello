@@ -10,12 +10,12 @@ namespace :katello do
     end
 
     yum_distributor_directory = Dir.glob "#{OLD_DIRECTORY}/yum_distributor/*"
-    master_directory = Dir.glob "#{OLD_DIRECTORY}/*"
-    master_directory.delete "#{OLD_DIRECTORY}/yum_distributor"
+    primary_directory = Dir.glob "#{OLD_DIRECTORY}/*"
+    primary_directory.delete "#{OLD_DIRECTORY}/yum_distributor"
 
     republish = []
     delete = []
-    master_directory.each do |directory|
+    primary_directory.each do |directory|
       repo_name = directory.split('/').last
       (current_cv_directories.include?(repo_name) && yum_distributor_directory.exclude?("#{OLD_DIRECTORY}/yum_distributor/#{repo_name}")) ? republish << repo_name : delete << directory
     end

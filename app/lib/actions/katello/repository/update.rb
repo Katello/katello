@@ -30,10 +30,10 @@ module Actions
               plan_pulp_action([::Actions::Pulp::Orchestration::Repository::Refresh,
                                 ::Actions::Pulp3::Orchestration::Repository::Update],
                                repository,
-                               SmartProxy.pulp_master)
+                               SmartProxy.pulp_primary)
               plan_self(:repository_id => root.library_instance.id)
               if update_cv_cert_protected
-                plan_optional_pulp_action([::Actions::Pulp3::Orchestration::Repository::TriggerUpdateRepoCertGuard], repository, ::SmartProxy.pulp_master)
+                plan_optional_pulp_action([::Actions::Pulp3::Orchestration::Repository::TriggerUpdateRepoCertGuard], repository, ::SmartProxy.pulp_primary)
               end
             end
           end

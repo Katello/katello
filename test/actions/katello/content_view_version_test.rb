@@ -29,7 +29,7 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     it 'plans' do
-      SmartProxy.stubs(:pulp_master).returns(SmartProxy.find_by(name: "Unused Proxy"))
+      SmartProxy.stubs(:pulp_primary).returns(SmartProxy.find_by(name: "Unused Proxy"))
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
       ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
       stub_remote_user
@@ -62,7 +62,7 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       def pulp3_cvv_setup
-        SmartProxy.stubs(:pulp_master).returns(SmartProxy.find_by(name: "Unused Proxy"))
+        SmartProxy.stubs(:pulp_primary).returns(SmartProxy.find_by(name: "Unused Proxy"))
         SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
         ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
         stub_remote_user

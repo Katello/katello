@@ -217,7 +217,7 @@ module Katello
       private
 
       def fetch_proxy(capsule_id)
-        capsule_id ? SmartProxy.unscoped.find(capsule_id) : SmartProxy.pulp_master
+        capsule_id ? SmartProxy.unscoped.find(capsule_id) : SmartProxy.pulp_primary
       end
 
       def backend_status(url, backend)

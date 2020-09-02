@@ -20,7 +20,7 @@
 
         nutupane = new Nutupane(File, params);
         $scope.controllerName = 'katello_files';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
         $scope.controllerName = 'katello_files';

@@ -28,7 +28,7 @@ module Katello
     end
 
     def self.create_repo(repo)
-      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_master
+      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_primary
 
       repo.relative_path = (repo.puppet? ? PULP_TMP_DIR : 'test_path') unless repo.file?
       repo.root.url = (repo.puppet? ? @puppet_repo_url : @repo_url) unless repo.file?
@@ -39,7 +39,7 @@ module Katello
     end
 
     def self.sync_repo(repo)
-      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_master
+      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_primary
 
       ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync,
                                repo_id: repo.id
@@ -47,9 +47,9 @@ module Katello
     end
 
     def self.destroy_repo(repo)
-      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_master
+      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_primary
 
-      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :repository_id => repo.id, :capsule_id => ::SmartProxy.pulp_master.id)
+      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :repository_id => repo.id, :capsule_id => ::SmartProxy.pulp_primary.id)
     rescue RestClient::ResourceNotFound => e
       puts "Failed to destroy repo #{e.message}"
     end

@@ -13,9 +13,9 @@ module Actions
               plan_action(Repository::Create, clone, true, false)
             else
               #only clear if it should be empty, but its not
-              plan_optional_pulp_action([Actions::Pulp::Repository::Clear], clone, SmartProxy.pulp_master)
+              plan_optional_pulp_action([Actions::Pulp::Repository::Clear], clone, SmartProxy.pulp_primary)
               # Do we need to refresh distributors here?
-              plan_optional_pulp_action([Actions::Pulp::Orchestration::Repository::RefreshIfNeeded], clone, SmartProxy.pulp_master)
+              plan_optional_pulp_action([Actions::Pulp::Orchestration::Repository::RefreshIfNeeded], clone, SmartProxy.pulp_primary)
             end
 
             plan_action(::Actions::Katello::Repository::CloneContents, [repository], clone, :copy_contents => !clone.yum?)

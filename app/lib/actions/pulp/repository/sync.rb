@@ -17,7 +17,7 @@ module Actions
           overrides.merge(input[:options]) if input[:options]
           repo = ::Katello::Repository.find(input[:repo_id])
 
-          output[:pulp_tasks] = repo.backend_service(::SmartProxy.pulp_master).sync(overrides)
+          output[:pulp_tasks] = repo.backend_service(::SmartProxy.pulp_primary).sync(overrides)
         end
 
         def finalize

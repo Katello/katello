@@ -4,11 +4,11 @@ module Katello
       include LazyAccessor
 
       def self.content_api
-        PulpRpmClient::ContentRepoMetadataFilesApi.new(Katello::Pulp3::Repository::Yum.api_client(SmartProxy.pulp_master!))
+        PulpRpmClient::ContentRepoMetadataFilesApi.new(Katello::Pulp3::Repository::Yum.api_client(SmartProxy.pulp_primary!))
       end
 
       def self.ids_for_repository(repo_id)
-        repo = Katello::Pulp3::Repository::Yum.new(Katello::Repository.find(repo_id), SmartProxy.pulp_master)
+        repo = Katello::Pulp3::Repository::Yum.new(Katello::Repository.find(repo_id), SmartProxy.pulp_primary)
         repo_content_list = repo.content_list
         repo_content_list.map { |content| content.try(:pulp_href) }
       end

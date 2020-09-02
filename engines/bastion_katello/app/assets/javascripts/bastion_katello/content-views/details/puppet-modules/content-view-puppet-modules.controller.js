@@ -18,7 +18,7 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
             contentViewId: $scope.$stateParams.contentViewId
         });
 
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
 

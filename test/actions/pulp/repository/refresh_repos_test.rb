@@ -13,7 +13,7 @@ module ::Actions::Pulp::Repository
       SmartProxy.any_instance.stubs(:ping_pulp3).returns({})
       @smart_proxy = capsule_content.smart_proxy
       capsule_content.smart_proxy.add_lifecycle_environment(katello_environments(:library))
-      SmartProxy.any_instance.stubs(:pulp_master?).returns(false)
+      SmartProxy.any_instance.stubs(:pulp_primary?).returns(false)
     end
 
     describe 'Refresh Repos pulp2' do

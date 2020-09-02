@@ -2,12 +2,12 @@ module Katello
   module Pulp
     class Repository
       class Puppet < ::Katello::Pulp::Repository
-        def generate_master_importer
+        def generate_primary_importer
           config = {
             feed: root.url,
             remove_missing: root.mirror_on_sync?
           }
-          importer_class.new(config.merge(master_importer_connection_options))
+          importer_class.new(config.merge(primary_importer_connection_options))
         end
 
         def generate_mirror_importer

@@ -10,23 +10,23 @@ module Katello
 
     def teardown
       ForemanTasks.sync_task(
-        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+        ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
       @repo.reload
     end
 
     def test_content_unit_pulp_ids_returns_pulp_hrefs
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64)
       @repo.root.update!(:url => 'https://fixtures.pulpproject.org/rpm-unsigned/')
       @repo.root.update!(:download_policy => 'immediate')
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo,
           repository_creation: true)
       @repo.reload
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       @repo.index_content
       Katello::PackageGroup.import_for_repository(@repo)

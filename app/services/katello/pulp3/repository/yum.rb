@@ -91,7 +91,7 @@ module Katello
             data.config = []
             repo_id_map.each do |source_repo_ids, dest_repo_id_map|
               dest_repo = ::Katello::Repository.find(dest_repo_id_map[:dest_repo])
-              dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
+              dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_primary).repository_reference.repository_href
               content_unit_hrefs = dest_repo_id_map[:content_unit_hrefs]
               # Not needed during incremental update due to dest_base_version
               unless dest_repo_id_map[:base_version]
@@ -122,7 +122,7 @@ module Katello
           tasks = []
           repo_id_map.each do |_source_repo_ids, dest_repo_id_map|
             dest_repo = ::Katello::Repository.find(dest_repo_id_map[:dest_repo])
-            dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_master).repository_reference.repository_href
+            dest_repo_href = ::Katello::Pulp3::Repository::Yum.new(dest_repo, SmartProxy.pulp_primary).repository_reference.repository_href
             tasks << remove_all_content_from_repo(dest_repo_href)
           end
           tasks
@@ -313,7 +313,7 @@ module Katello
         end
 
         def additional_content_hrefs(source_repository, content_unit_hrefs)
-          repo_service = source_repository.backend_service(SmartProxy.pulp_master)
+          repo_service = source_repository.backend_service(SmartProxy.pulp_primary)
           options = { :repository_version => source_repository.version_href }
 
           errata_to_include = filter_errata_by_pulp_href(source_repository.errata, content_unit_hrefs)

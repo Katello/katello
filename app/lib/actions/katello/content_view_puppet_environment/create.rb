@@ -3,7 +3,7 @@ module Actions
     module ContentViewPuppetEnvironment
       class Create < Actions::EntryAction
         def plan(puppet_environment, clone = false)
-          internal_capsule = SmartProxy.pulp_master
+          internal_capsule = SmartProxy.pulp_primary
           fail _("Content View %s  cannot be published without an internal capsule." % puppet_environment.name) unless internal_capsule
 
           User.as_anonymous_admin { puppet_environment.save! }
@@ -22,7 +22,7 @@ module Actions
 
         def run
           puppet_environment = ::Katello::ContentViewPuppetEnvironment.find(input[:content_view_puppet_environment_id])
-          output[:response] = ::Katello::Pulp::Repository::Puppet.new(puppet_environment.nonpersisted_repository, SmartProxy.pulp_master).create
+          output[:response] = ::Katello::Pulp::Repository::Puppet.new(puppet_environment.nonpersisted_repository, SmartProxy.pulp_primary).create
         end
 
         def humanized_name

@@ -6,7 +6,7 @@ module Actions
           include Actions::Helpers::OutputPropagator
           def plan(repository, smart_proxy, file, unit_type_id)
             sequence do
-              content_backend_service = SmartProxy.pulp_master.content_service(unit_type_id)
+              content_backend_service = SmartProxy.pulp_primary.content_service(unit_type_id)
               content_list = content_backend_service.content_api.list("sha256": Digest::SHA256.hexdigest(File.read(file[:path])))
               content_href = content_list&.results&.first&.pulp_href
 

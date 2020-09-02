@@ -11,7 +11,7 @@ module Katello
           @mock_smart_proxy = mock('smart_proxy')
           @mock_smart_proxy.stubs(:pulp3_support?).returns(true)
           @mock_smart_proxy.stubs(:pulp2_preferred_for_type?).returns(false)
-          @mock_smart_proxy.stubs(:pulp_master?).returns(true)
+          @mock_smart_proxy.stubs(:pulp_primary?).returns(true)
           @docker_repo = katello_repositories(:pulp3_docker_1)
           @docker_repo.stubs(:container_repository_name).returns("a repo name")
           @docker_repo_service = @docker_repo.backend_service(@mock_smart_proxy)

@@ -87,7 +87,7 @@ module Katello
 
       def import_all(pulp_ids = nil, repository = nil)
         ids_to_associate = []
-        service_class = SmartProxy.pulp_master!.content_service(content_type)
+        service_class = SmartProxy.pulp_primary!.content_service(content_type)
         service_class.pulp_units_batch_all(pulp_ids).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
@@ -105,7 +105,7 @@ module Katello
 
       def import_for_repository(repository)
         pulp_id_href_map = {}
-        service_class = SmartProxy.pulp_master!.content_service(content_type)
+        service_class = SmartProxy.pulp_primary!.content_service(content_type)
         fetch_only_ids = !repository.content_view.default? &&
                          !repository.repository_type.unique_content_per_repo &&
                          service_class.supports_id_fetch?

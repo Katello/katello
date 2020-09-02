@@ -5,13 +5,13 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:busybox)
-      ensure_creatable(@repo, @master)
+      ensure_creatable(@repo, @primary)
     end
 
     def test_create
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Create, @repo, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Create, @repo, @primary)
       @repo.reload
 
       assert @repo.remote_href

@@ -53,7 +53,7 @@ angular.module('Bastion.products').controller('ProductsController',
         $scope.disableRepoDiscovery = true;
         nutupane = new Nutupane(Product, params, undefined, nutupaneParams);
         $scope.controllerName = 'katello_products';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         nutupane.refresh().then(function () {
             $scope.disableRepoDiscovery = false;
         });

@@ -5,9 +5,9 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:pulp3_file_1)
-      create_repo(@repo, @master)
+      create_repo(@repo, @primary)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
@@ -23,13 +23,13 @@ module ::Actions::Pulp3
 
     def teardown
       ForemanTasks.sync_task(
-          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
       @repo.reload
     end
 
     def test_sync
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       refute_equal @repo.version_href, @repo_version_href
       repository_reference = Katello::Pulp3::RepositoryReference.find_by(
@@ -44,13 +44,13 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
           @repo,
-          @master)
+          @primary)
 
       old_page_size = SETTINGS[:katello][:pulp][:bulk_load_size]
       SETTINGS[:katello][:pulp][:bulk_load_size] = 10
 
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
       begin
         @repo.reload
@@ -64,8 +64,8 @@ module ::Actions::Pulp3
     end
 
     def test_sync_with_mirror_false
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       @repo.index_content
       pre_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
@@ -74,9 +74,9 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
           @repo,
-          @master)
+          @primary)
 
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       @repo.index_content
       post_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
@@ -84,8 +84,8 @@ module ::Actions::Pulp3
     end
 
     def test_sync_with_mirror_true
-      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       @repo.index_content
       pre_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
@@ -94,9 +94,9 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
           @repo,
-          @master)
+          @primary)
 
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       @repo.index_content
       post_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count

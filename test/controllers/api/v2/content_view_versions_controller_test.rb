@@ -137,7 +137,7 @@ module Katello
     end
 
     def test_export_pulp3_assert_invalid_params
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
 
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id, :iso_mb_size => 5, :export_to_iso => "foo"}
@@ -145,7 +145,7 @@ module Katello
     end
 
     def test_export_pulp3_missing_destination
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
 
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id}
@@ -153,7 +153,7 @@ module Katello
     end
 
     def test_export
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Export,
                                             version, false, nil, nil).returns({})
@@ -162,7 +162,7 @@ module Katello
     end
 
     def test_export_fails_on_demand
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       ContentView.any_instance.stubs(:on_demand_repositories).returns([katello_repositories(:fedora_17_x86_64)])
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id }
@@ -170,14 +170,14 @@ module Katello
     end
 
     def test_export_bad_date
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id, :since => "a really bad date" }
       assert_response 400
     end
 
     def test_export_size_sans_iso_param
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id, :iso_mb_size => 5 }
       assert_response 400

@@ -134,7 +134,7 @@ module Katello
       end
 
       def remote_feed_url
-        uri = ::SmartProxy.pulp_master.pulp3_uri!
+        uri = ::SmartProxy.pulp_primary.pulp3_uri!
         uri.path = repo_service.partial_repo_path
         uri.to_s
       end
