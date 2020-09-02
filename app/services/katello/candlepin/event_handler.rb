@@ -30,6 +30,8 @@ module Katello
           reindex_subscription_status
         when /system_purpose_compliance\.created/
           reindex_purpose_status
+        when /owner_content_access_mode\.modified/
+          message_handler.handle_content_access_mode_modified
         end
       end
 

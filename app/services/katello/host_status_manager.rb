@@ -16,5 +16,14 @@ module Katello
       Katello::PurposeRoleStatus,
       Katello::PurposeSlaStatus,
       Katello::PurposeUsageStatus].freeze
+
+    def self.update_subscription_status_to_sca(hosts)
+      HostStatus::Status.where(host: hosts, type: Katello::SubscriptionStatus.to_s).update(status: Katello::SubscriptionStatus::DISABLED)
+    end
+
+    def self.clear_syspurpose_status(hosts)
+      host_purpose = HostStatus::Status.where(type: ::Katello::HostStatusManager::PURPOSE_STATUS.map(&:to_s)).where('host_id in (?)', hosts.pluck(:id))
+      host_purpose.destroy_all
+    end
   end
 end

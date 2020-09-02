@@ -2,13 +2,10 @@ require 'katello_test_helper'
 
 module Katello
   class MessageHandlerTestBase < ActiveSupport::TestCase
-    def load_handler(event_name)
+    def setup
       json = File.read("#{Katello::Engine.root}/test/fixtures/candlepin_messages/#{event_name}.json")
       event = OpenStruct.new(subject: event_name, content: json)
-      ::Katello::Candlepin::MessageHandler.new(event)
-    end
-
-    def setup
+      @handler = ::Katello::Candlepin::MessageHandler.new(event)
       @pool = katello_pools(:pool_one)
 
       #from json files
@@ -24,10 +21,7 @@ module Katello
   end
 
   class SystemPurposeComplianceCreatedTest < MessageHandlerTestBase
-    def setup
-      super
-      @handler = load_handler('system_purpose_compliance.created')
-    end
+    let(:event_name) { 'system_purpose_compliance.created' }
 
     def test_system_purpose
       assert_equal @handler.system_purpose.overall_status, :mismatched
@@ -39,10 +33,7 @@ module Katello
   end
 
   class ComplianceCreatedTest < MessageHandlerTestBase
-    def setup
-      super
-      @handler = load_handler('compliance.created')
-    end
+    let(:event_name) { 'compliance.created' }
 
     def test_consumer_uuid
       assert_equal @consumer_uuid, @handler.consumer_uuid
@@ -62,11 +53,8 @@ module Katello
     end
   end
 
-  class EntitlementCreated < MessageHandlerTestBase
-    def setup
-      super
-      @handler = load_handler('entitlement.created')
-    end
+  class EntitlementCreatedTest < MessageHandlerTestBase
+    let(:event_name) { 'entitlement.created' }
 
     def test_pool_id
       assert_equal @pool_id, @handler.pool_id
@@ -84,11 +72,8 @@ module Katello
     end
   end
 
-  class EntitlementDeleted < MessageHandlerTestBase
-    def setup
-      super
-      @handler = load_handler('entitlement.deleted')
-    end
+  class EntitlementDeletedTest < MessageHandlerTestBase
+    let(:event_name) { 'entitlement.deleted' }
 
     def test_consumer_uuid
       assert_equal @consumer_uuid, @handler.consumer_uuid
@@ -105,11 +90,8 @@ module Katello
     end
   end
 
-  class PoolCreated < MessageHandlerTestBase
-    def setup
-      super
-      @handler = load_handler('pool.created')
-    end
+  class PoolCreatedTest < MessageHandlerTestBase
+    let(:event_name) { 'pool.created' }
 
     def test_pool_id
       assert_equal @pool_id, @handler.pool_id
@@ -122,11 +104,8 @@ module Katello
     end
   end
 
-  class PoolDeleted < MessageHandlerTestBase
-    def setup
-      super
-      @handler = load_handler('pool.deleted')
-    end
+  class PoolDeletedTest < MessageHandlerTestBase
+    let(:event_name) { 'pool.deleted' }
 
     def test_pool_id
       assert_equal @pool_id, @handler.pool_id
@@ -143,6 +122,33 @@ module Katello
       # assert no errors are raised
       @handler.delete_pool
       assert_empty Katello::Pool.find_by(:cp_id => @pool_id)
+    end
+  end
+
+  class OwnerContentAccessModeModifiedTest < MessageHandlerTestBase
+    let(:event_name) { 'owner_content_access_mode.modified' }
+
+    def test_sca_enabled
+      Katello::HostStatusManager.expects(:clear_syspurpose_status)
+      Katello::HostStatusManager.expects(:update_subscription_status_to_sca)
+      Organization.any_instance.expects(:simple_content_access?).with(cached: false)
+
+      @handler.handle_content_access_mode_modified
+    end
+
+    def test_sca_disabled
+      Katello::HostStatusManager.expects(:clear_syspurpose_status).never
+      Katello::HostStatusManager.expects(:update_subscription_status_to_sca).never
+      Organization.any_instance.expects(:simple_content_access?).with(cached: false)
+      @handler.expects(:event_data).returns('contentAccessMode' => 'entitlement').twice
+
+      org = get_organization(:empty_organization)
+      org.hosts.joins(:subscription_facet).count.times do
+        Katello::Resources::Candlepin::Consumer.expects(:compliance)
+        Katello::Resources::Candlepin::Consumer.expects(:purpose_compliance)
+      end
+
+      @handler.handle_content_access_mode_modified
     end
   end
 end

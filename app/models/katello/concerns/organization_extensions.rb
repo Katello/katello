@@ -228,11 +228,6 @@ module Katello
           subscriptions.select(&:expiring_soon?)
         end
 
-        def clear_syspurpose_status
-          host_purpose = HostStatus::Status.where(type: ::Katello::HostStatusManager::PURPOSE_STATUS.map(&:to_s)).where('host_id in (?)', self.hosts.pluck(:id))
-          host_purpose.destroy_all
-        end
-
         def notification_recipients_ids
           users = User.unscoped.all.find_all do |user|
             user.can?(:import_manifest) && user.can?(:view_organizations, self)

@@ -20,6 +20,10 @@ module Katello
         @event_data ||= (data = content['eventData']) ? JSON.parse(data) : {}
       end
 
+      def target_name
+        content['targetName']
+      end
+
       def status
         event_data['status']
       end
@@ -84,6 +88,27 @@ module Katello
         if Katello::Pool.where(:cp_id => pool_id).destroy_all.any?
           Rails.logger.info "deleted pool #{pool_id} from Katello"
         end
+      end
+
+      def handle_content_access_mode_modified
+        org_label = Katello::Util::Model.labelize(target_name)
+        org = ::Organization.find_by!(label: org_label)
+        hosts = org.hosts
+
+        if event_data['contentAccessMode'] == 'org_environment'
+          Katello::HostStatusManager.clear_syspurpose_status(hosts)
+          Katello::HostStatusManager.update_subscription_status_to_sca(hosts)
+        elsif event_data['contentAccessMode'] == 'entitlement'
+          cp_consumer_uuids = hosts.joins(:subscription_facet).pluck("#{Katello::Host::SubscriptionFacet.table_name}.uuid")
+          cp_consumer_uuids.each do |uuid|
+            Katello::Resources::Candlepin::Consumer.compliance(uuid)
+            Katello::Resources::Candlepin::Consumer.purpose_compliance(uuid)
+          rescue => e
+            Rails.logger.error("Error encountered while fetching consumer compliance for #{uuid}: #{e.message}")
+          end
+        end
+
+        org.simple_content_access?(cached: false)
       end
     end
   end
