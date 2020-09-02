@@ -8,7 +8,7 @@ module Actions
               create_action = plan_action(Actions::Pulp3::Repository::Create, repository, smart_proxy)
               plan_action(Actions::Pulp3::Repository::SaveVersion, repository, repository_details: create_action.output[:response])
 
-              if repository.content_view.default? || !smart_proxy.pulp_master?
+              if repository.content_view.default? || !smart_proxy.pulp_primary?
                 plan_action(Actions::Pulp3::Repository::CreateRemote, repository, smart_proxy)
               end
             end

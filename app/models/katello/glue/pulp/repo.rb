@@ -84,7 +84,7 @@ module Katello
       end
 
       def pulp_scratchpad_checksum_type
-        if SmartProxy.pulp_master.has_feature?(SmartProxy::PULP_FEATURE)
+        if SmartProxy.pulp_primary.has_feature?(SmartProxy::PULP_FEATURE)
           pulp_repo_facts&.dig('scratchpad', 'checksum_type')
         end
       end

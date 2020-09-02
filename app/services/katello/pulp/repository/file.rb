@@ -10,9 +10,9 @@ module Katello
           end
         end
 
-        def generate_master_importer
+        def generate_primary_importer
           config = { feed: root.url }
-          importer_class.new(config.merge(master_importer_connection_options))
+          importer_class.new(config.merge(primary_importer_connection_options))
         end
 
         def generate_mirror_importer

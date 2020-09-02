@@ -6,7 +6,7 @@ module Actions
       end
 
       def run
-        migration_service = ::Katello::Pulp3::Migration.new(SmartProxy.pulp_master)
+        migration_service = ::Katello::Pulp3::Migration.new(SmartProxy.pulp_primary)
         migration_service.import_pulp3_content
       end
     end

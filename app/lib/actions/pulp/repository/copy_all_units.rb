@@ -19,7 +19,7 @@ module Actions
           target_repo = ::Katello::Repository.find(input[:target_repo_id])
           filters = ::Katello::ContentViewFilter.where(:id => input[:filter_ids])
 
-          source_repo.backend_service(SmartProxy.pulp_master).copy_contents(target_repo,
+          source_repo.backend_service(SmartProxy.pulp_primary).copy_contents(target_repo,
                                                                             filters: filters,
                                                                             solve_dependencies: input[:solve_dependencies],
                                                                             rpm_filenames: input[:rpm_filenames])

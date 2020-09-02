@@ -51,7 +51,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
             $scope.controllerName = 'katello_subscriptions';
             $scope.table = $scope.contentNutupane.table;
             $scope.contentNutupane.setSearchKey('subscriptionSearch');
-            $scope.contentNutupane.masterOnly = true;
+            $scope.contentNutupane.primaryOnly = true;
             $scope.contentNutupane.load();
             $scope.groupedSubscriptions = {};
             $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;

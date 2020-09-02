@@ -5,7 +5,7 @@ module ::Actions::Pulp::Repository
     include VCR::TestCase
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @repo = katello_repositories(:pulp3_file_1)
       Katello::RepositorySupport.create_and_sync_repo(@repo)
     end
@@ -18,7 +18,7 @@ module ::Actions::Pulp::Repository
       @repo.index_content
       assert_equal @repo.files.count, 3
 
-      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Clear, @repo, @master)
+      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Clear, @repo, @primary)
       @repo.index_content
       assert_equal @repo.files.count, 0
     ensure

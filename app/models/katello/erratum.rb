@@ -56,7 +56,7 @@ module Katello
     end
 
     def self.backend_identifier_field
-      SmartProxy.pulp_master!.content_service(CONTENT_TYPE).backend_unit_identifier ? BACKEND_IDENTIFIER_FIELD.to_sym : nil
+      SmartProxy.pulp_primary!.content_service(CONTENT_TYPE).backend_unit_identifier ? BACKEND_IDENTIFIER_FIELD.to_sym : nil
     end
 
     def self.applicable_to_hosts(hosts)

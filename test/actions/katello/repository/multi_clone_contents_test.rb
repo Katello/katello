@@ -11,16 +11,16 @@ module Actions
 
     def setup
       get_organization #ensure we have an org label
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
       @repo_clone.update!(:environment_id => nil)
 
-      ensure_creatable(@repo, @master)
-      create_repo(@repo, @master)
-      ensure_creatable(@repo_clone, @master)
-      create_repo(@repo_clone, @master)
+      ensure_creatable(@repo, @primary)
+      create_repo(@repo, @primary)
+      ensure_creatable(@repo_clone, @primary)
+      create_repo(@repo_clone, @primary)
 
       @repo.reload
 

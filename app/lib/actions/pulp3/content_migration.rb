@@ -1,7 +1,7 @@
 module Actions
   module Pulp3
     class ContentMigration < Pulp3::AbstractAsyncTask
-      def plan(smart_proxy = SmartProxy.pulp_master)
+      def plan(smart_proxy = SmartProxy.pulp_primary)
         sequence do
           plan_self(smart_proxy_id: smart_proxy.id)
           plan_action(Actions::Pulp3::ImportMigration)

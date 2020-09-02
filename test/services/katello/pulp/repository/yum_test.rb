@@ -9,7 +9,7 @@ module Katello
 
         def setup
           set_ca_file
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           @mirror = FactoryBot.build(:smart_proxy, :pulp_mirror)
 
           @rhel6 = katello_repositories(:rhel_6_x86_64)
@@ -32,14 +32,14 @@ module Katello
         end
 
         def create_repo(repo)
-          repo.backend_service(SmartProxy.pulp_master).create
+          repo.backend_service(SmartProxy.pulp_primary).create
         end
       end
 
       class YumTest < YumBaseTest
         def test_importer_rhel6_mirror
           @rhel6.root.url = "https://cdn.redhat.com/"
-          repo = Katello::Pulp::Repository::Yum.new(@rhel6, @master)
+          repo = Katello::Pulp::Repository::Yum.new(@rhel6, @primary)
           importer = repo.generate_importer
           assert_includes importer.feed, "cdn.redhat.com"
         end
@@ -47,7 +47,7 @@ module Katello
         def test_importer_redhat_mirror
           repo = Katello::Pulp::Repository::Yum.new(@rhel6, @mirror)
           importer = repo.generate_importer
-          assert_includes importer.feed, "https://#{URI(@master.url).host}"
+          assert_includes importer.feed, "https://#{URI(@primary.url).host}"
         end
 
         def test_external_url_mirror
@@ -55,7 +55,7 @@ module Katello
           @rhel6.relative_path = '/elbow'
 
           service = Katello::Pulp::Repository::Yum.new(@rhel6, @mirror)
-          host = URI(@master.url).host.chomp('/')
+          host = URI(@primary.url).host.chomp('/')
 
           assert_equal service.generate_importer.feed, "https://#{host}/pulp/repos/elbow/"
 
@@ -63,12 +63,12 @@ module Katello
           assert_equal service.generate_importer.feed, "https://#{host}/pulp/repos/elbow/"
         end
 
-        def test_external_url_master
+        def test_external_url_primary
           @rhel6.root.url = 'http://zodiak.com/ted'
           @rhel6.relative_path = '/elbow'
 
-          service = Katello::Pulp::Repository::Yum.new(@rhel6, @master)
-          host = URI(@master.url).host.chomp('/')
+          service = Katello::Pulp::Repository::Yum.new(@rhel6, @primary)
+          host = URI(@primary.url).host.chomp('/')
 
           assert_equal service.generate_importer.feed, @rhel6.root.url
           assert_equal service.external_url, "https://#{host}/pulp/repos/elbow/"
@@ -90,7 +90,7 @@ module Katello
           @rhel6 = katello_repositories(:rhel_6_x86_64)
           options = {:source_repository => {:id => @rhel6.id}}
           ::Katello::Repository.expects(:find).with(@rhel6.id).returns(@rhel6)
-          source_service = Katello::Pulp::Repository::Yum.new(@rhel6, @master)
+          source_service = Katello::Pulp::Repository::Yum.new(@rhel6, @primary)
           distributor_id = "BAR"
           source_service.expects(:lookup_distributor_id).with(Runcible::Models::YumDistributor.type_id).returns(distributor_id)
           @rhel6.expects(:backend_service).returns(source_service)
@@ -103,7 +103,7 @@ module Katello
 
         def test_distributor_to_publish_without_source
           @rhel6 = katello_repositories(:rhel_6_x86_64)
-          source_service = Katello::Pulp::Repository::Yum.new(@rhel6, @master)
+          source_service = Katello::Pulp::Repository::Yum.new(@rhel6, @primary)
 
           expected_response = {Runcible::Models::YumDistributor => {}}
           assert_equal expected_response, source_service.distributors_to_publish({})
@@ -129,7 +129,7 @@ module Katello
           @rhel6.root.product.expects(:key).returns('repo_key')
           Katello::Repository.expects(:feed_ca_cert).returns('ca_cert')
 
-          repo = Katello::Pulp::Repository::Yum.new(@rhel6, @master)
+          repo = Katello::Pulp::Repository::Yum.new(@rhel6, @primary)
 
           response = repo.create
           assert_equal @rhel6.pulp_id, response['id']
@@ -154,7 +154,7 @@ module Katello
                upstream_password: 'redhat',
               ignorable_content: ['drpm']
           )
-          repo = Katello::Pulp::Repository::Yum.new(@custom, @master)
+          repo = Katello::Pulp::Repository::Yum.new(@custom, @primary)
 
           response = repo.create
           assert_equal @custom.pulp_id, response['id']
@@ -171,7 +171,7 @@ module Katello
         end
 
         def test_refresh
-          repo = Katello::Pulp::Repository::Yum.new(@custom, @master)
+          repo = Katello::Pulp::Repository::Yum.new(@custom, @primary)
           repo.create
           distributor = repo.backend_data['distributors'].find { |dist| dist['distributor_type_id'] == 'yum_distributor' }
           task_list = repo.smart_proxy.pulp_api.resources.repository.delete_distributor(@custom.pulp_id, distributor['id'])
@@ -190,7 +190,7 @@ module Katello
         include RepositorySupport
 
         def setup
-          @master = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
           User.current = users(:admin)
 
           @default_proxy = FactoryBot.create(:http_proxy, name: 'best proxy',
@@ -203,7 +203,7 @@ module Katello
         def test_create_with_global_http_proxy
           @repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
           RepositorySupport.create_repo(@repo)
-          backend_data = @repo.backend_service(@master).backend_data
+          backend_data = @repo.backend_service(@primary).backend_data
           importers = backend_data['importers']
           config = importers.first['config']
           uri = URI(@default_proxy.url)
@@ -214,7 +214,7 @@ module Katello
           @repo.root.update(http_proxy_policy: RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
           RepositorySupport.create_repo(@repo)
           ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :repo_id => @repo.id)
-          backend_data = @repo.backend_service(@master).backend_data
+          backend_data = @repo.backend_service(@primary).backend_data
           importers = backend_data['importers']
           config = importers.first['config']
           uri = URI(@default_proxy.url)
@@ -231,12 +231,12 @@ module Katello
         def test_generate_mapping
           @rhel6.expects(:siblings).returns mock(yum_type: [@custom])
           @rhel6_cv.expects(:siblings).returns mock(yum_type: [@custom_cv])
-          assert_equal({@custom.pulp_id => @custom_cv.pulp_id}, @rhel6.backend_service(@master).generate_mapping(@rhel6_cv))
+          assert_equal({@custom.pulp_id => @custom_cv.pulp_id}, @rhel6.backend_service(@primary).generate_mapping(@rhel6_cv))
         end
 
         def test_build_override_config_dep_solve_and_filters
           mapping = { foo: "bar" }
-          service = @rhel6.backend_service(@master)
+          service = @rhel6.backend_service(@primary)
           service.expects(:generate_mapping).with(@rhel6_cv).returns(mapping)
           rule = FactoryBot.build(:katello_content_view_package_filter_rule)
           options = { :solve_dependencies => true, :filters => rule.filter }
@@ -246,7 +246,7 @@ module Katello
         end
 
         def test_build_override_config_dep_solve_and_no_filters
-          service = @rhel6.backend_service(@master)
+          service = @rhel6.backend_service(@primary)
           service.expects(:generate_mapping).never
 
           options = { :solve_dependencies => true }
@@ -257,7 +257,7 @@ module Katello
 
         def test_build_override_config_dep_solve_forced_on_incremental_update
           mapping = { foo: "bar" }
-          service = @rhel6.backend_service(@master)
+          service = @rhel6.backend_service(@primary)
           service.expects(:generate_mapping).with(@rhel6_cv).returns(mapping)
           options = { incremental_update: true}
           override_config = service.build_override_config(@rhel6_cv, options)
@@ -284,15 +284,15 @@ module Katello
 
         def test_copy_no_filters
           @custom.index_content
-          TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv))
-          assert_equal SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom.pulp_id)[:content_unit_counts].except('package_category'),
-                       SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
+          TaskSupport.wait_on_tasks(@custom.backend_service(@primary).copy_contents(@custom_cv))
+          assert_equal SmartProxy.pulp_primary.pulp_api.extensions.repository.retrieve_with_details(@custom.pulp_id)[:content_unit_counts].except('package_category'),
+                       SmartProxy.pulp_primary.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
         end
 
         def test_copy_rpm_filenames
           @custom.index_content
-          TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv, :rpm_filenames => [@custom.rpms.non_modular.first.filename]))
-          counts = SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
+          TaskSupport.wait_on_tasks(@custom.backend_service(@primary).copy_contents(@custom_cv, :rpm_filenames => [@custom.rpms.non_modular.first.filename]))
+          counts = SmartProxy.pulp_primary.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
 
           assert_equal 1 + @custom.rpms.modular.count, counts[:rpm]
           assert_equal @custom.errata.count, counts[:erratum]
@@ -302,11 +302,11 @@ module Katello
           @custom.index_content
           filter = Katello::ContentViewErratumFilter.create!(:inclusion => true, :content_view_id => @custom_cv.content_view.id, :name => 'asdf')
           filter.erratum_rules << Katello::ContentViewErratumFilterRule.new(:errata_id => 'KATELLO-RHEA-2010:0002')
-          TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv, :filters => Katello::ContentViewErratumFilter.where(:id => filter.id)))
+          TaskSupport.wait_on_tasks(@custom.backend_service(@primary).copy_contents(@custom_cv, :filters => Katello::ContentViewErratumFilter.where(:id => filter.id)))
           @custom_cv.index_content
           @custom_cv = @custom_cv.reload
-          TaskSupport.wait_on_tasks(@custom_cv.backend_service(@master).purge_partial_errata)
-          counts = SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
+          TaskSupport.wait_on_tasks(@custom_cv.backend_service(@primary).purge_partial_errata)
+          counts = SmartProxy.pulp_primary.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
 
           assert_equal 1, counts[:rpm]
           assert_equal 1, counts[:erratum]

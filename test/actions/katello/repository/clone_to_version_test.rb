@@ -21,7 +21,7 @@ module Actions
       cloned_repo = katello_repositories(:fedora_17_x86_64)
 
       action = create_action(action_class)
-      cloned_repo.expects(:master?).returns(true)
+      cloned_repo.expects(:primary?).returns(true)
       cloned_repo.root = yum_repo.root
       options = {}
 
@@ -37,7 +37,7 @@ module Actions
       cloned_repo = katello_repositories(:fedora_17_x86_64)
 
       action = create_action(action_class)
-      cloned_repo.expects(:master?).returns(true)
+      cloned_repo.expects(:primary?).returns(true)
 
       cloned_repo.root = yum_repo.root
 
@@ -53,7 +53,7 @@ module Actions
       cloned_repo = katello_repositories(:fedora_17_x86_64)
 
       action = create_action(action_class)
-      cloned_repo.expects(:master?).returns(true)
+      cloned_repo.expects(:primary?).returns(true)
       options = {}
 
       plan_action(action, [yum_repo], version, cloned_repo, options)
@@ -105,7 +105,7 @@ module Actions
     end
 
     it 'fully plans out unit copying with multiple source repositories' do
-      master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
 
       file_repo2 = katello_repositories(:generic_file_dev)
       cloned_repo = file_repo.build_clone(content_view: version.content_view,
@@ -119,11 +119,11 @@ module Actions
       assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyVersion,
                                :source_repository_id => file_repo.id,
                                :target_repository_id => cloned_repo.id,
-                               :smart_proxy_id => master.id)
+                               :smart_proxy_id => primary.id)
       assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyContent,
                                :source_repository_id => file_repo2.id,
                                :target_repository_id => cloned_repo.id,
-                               :smart_proxy_id => master.id,
+                               :smart_proxy_id => primary.id,
                                :filter_ids => [], :solve_dependencies => false, :rpm_filenames => nil)
     end
   end

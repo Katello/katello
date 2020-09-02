@@ -5,10 +5,10 @@ module ::Actions::Pulp3::ContentView
     include Katello::Pulp3Support
 
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
-      @repo = create_and_sync(@repo, @master)
+      @repo = create_and_sync(@repo, @primary)
       @content_view = @repo.content_view
       @content_view_version = @content_view.versions.last
       @destination_server = 'dream-destination'
@@ -16,23 +16,23 @@ module ::Actions::Pulp3::ContentView
     end
 
     def teardown
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
     end
 
     def create_exporter
       ForemanTasks.sync_task(::Actions::Pulp3::ContentViewVersion::CreateExporter,
                                      content_view_version_id: @content_view_version.id,
-                                     smart_proxy_id: @master.id,
+                                     smart_proxy_id: @primary.id,
                                      destination_server: @destination_server).output["exporter_data"]
     end
 
     def delete_exporter(exporter_data)
       ForemanTasks.sync_task(::Actions::Pulp3::ContentViewVersion::DestroyExporter, exporter_data: exporter_data,
-                               smart_proxy_id: @master.id)
+                               smart_proxy_id: @primary.id)
     end
 
     def pulp3_cvv
-      ::Katello::Pulp3::ContentViewVersion::Export.new(smart_proxy: @master, content_view_version: @content_view_version, destination_server: @destination_server)
+      ::Katello::Pulp3::ContentViewVersion::Export.new(smart_proxy: @primary, content_view_version: @content_view_version, destination_server: @destination_server)
     end
 
     def test_create_exporter
@@ -48,11 +48,11 @@ module ::Actions::Pulp3::ContentView
       delete_exporter(exporter_data)
 
       assert_raises(PulpcoreClient::ApiError) do
-        Katello::Pulp3::Api::Core.new(@master).exporter_api.read(exporter_data[:pulp_href])
+        Katello::Pulp3::Api::Core.new(@primary).exporter_api.read(exporter_data[:pulp_href])
       end
 
       assert_raises(PulpcoreClient::ApiError) do
-        assert_empty Katello::Pulp3::Api::Core.new(@master).export_api.list(exporter_data[:pulp_href])
+        assert_empty Katello::Pulp3::Api::Core.new(@primary).export_api.list(exporter_data[:pulp_href])
       end
     end
 

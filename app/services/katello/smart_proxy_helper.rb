@@ -10,7 +10,7 @@ module Katello
     end
 
     def default_capsule?
-      @smart_proxy.pulp_master?
+      @smart_proxy.pulp_primary?
     end
 
     def lifecycle_environment_check(environment = nil, repository = nil)

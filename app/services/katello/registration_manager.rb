@@ -186,7 +186,7 @@ module Katello
       end
 
       def pulp2_supported?
-        SmartProxy.pulp_master.has_feature?(SmartProxy::PULP_FEATURE)
+        SmartProxy.pulp_primary.has_feature?(SmartProxy::PULP_FEATURE)
       end
 
       def get_uuid(params)

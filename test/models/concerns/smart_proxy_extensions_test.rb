@@ -42,8 +42,8 @@ module Katello
       @proxy.save!
       @proxy_mirror.save!
 
-      assert @proxy.pulp_master?
-      refute @proxy_mirror.pulp_master?
+      assert @proxy.pulp_primary?
+      refute @proxy_mirror.pulp_primary?
       refute @proxy.pulp_mirror?
       assert @proxy_mirror.pulp_mirror?
 
@@ -63,7 +63,7 @@ module Katello
 
   class SmartProxyPulp3Test < ActiveSupport::TestCase
     def setup
-      @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @file_repo = katello_repositories(:generic_file)
       @puppet_repo = katello_repositories(:p_forge)
 
@@ -75,32 +75,32 @@ module Katello
     end
 
     def test_pulp3_repository_support
-      refute @master.pulp3_support?(nil)
-      refute @master.pulp3_support?(@puppet_repo)
-      assert @master.pulp3_support?(@file_repo)
+      refute @primary.pulp3_support?(nil)
+      refute @primary.pulp3_support?(@puppet_repo)
+      assert @primary.pulp3_support?(@file_repo)
     end
 
     def test_pulp3_repository_type_support
-      refute @master.pulp3_repository_type_support?(Katello::Repository::PUPPET_TYPE)
-      assert @master.pulp3_repository_type_support?(Katello::Repository::FILE_TYPE)
+      refute @primary.pulp3_repository_type_support?(Katello::Repository::PUPPET_TYPE)
+      assert @primary.pulp3_repository_type_support?(Katello::Repository::FILE_TYPE)
     end
 
     def test_pulp3_content_type_support
-      refute @master.pulp3_content_support?(Katello::PuppetModule::CONTENT_TYPE)
-      assert @master.pulp3_content_support?(Katello::DockerManifest::CONTENT_TYPE)
+      refute @primary.pulp3_content_support?(Katello::PuppetModule::CONTENT_TYPE)
+      assert @primary.pulp3_content_support?(Katello::DockerManifest::CONTENT_TYPE)
     end
 
     def test_pulp2_preferred_for_type
       SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
-      assert @master.pulp2_preferred_for_type?("file")
-      refute @master.pulp2_preferred_for_type?("docker")
+      assert @primary.pulp2_preferred_for_type?("file")
+      refute @primary.pulp2_preferred_for_type?("docker")
     ensure
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
     end
 
     def test_pulp_supported_types_map
-      expected_types_map = @master.supported_pulp_types
+      expected_types_map = @primary.supported_pulp_types
 
       assert_includes expected_types_map[:pulp3][:supported_types], "yum"
       refute_includes expected_types_map[:pulp3][:overriden_to_pulp2], "file"
@@ -111,7 +111,7 @@ module Katello
       SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
 
-      expected_types_map = @master.supported_pulp_types
+      expected_types_map = @primary.supported_pulp_types
       assert_includes expected_types_map[:pulp3][:supported_types], "yum"
       assert_includes expected_types_map[:pulp3][:overriden_to_pulp2], "file"
       assert_includes expected_types_map[:pulp2][:supported_types], "puppet"
@@ -120,31 +120,31 @@ module Katello
     end
 
     def test_fix_pulp3_capabilities
-      @master.expects(:refresh).once
-      @master.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [])
-      @master.reload
+      @primary.expects(:refresh).once
+      @primary.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [])
+      @primary.reload
 
       assert_raises(Katello::Errors::PulpcoreMissingCapabilities) do
-        @master.fix_pulp3_capabilities('file')
+        @primary.fix_pulp3_capabilities('file')
       end
     end
 
     def test_fix_pulp3_capabilities_overridden
       SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
-      @master.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [])
-      @master.expects(:refresh).never
-      @master.fix_pulp3_capabilities('file')
+      @primary.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [])
+      @primary.expects(:refresh).never
+      @primary.fix_pulp3_capabilities('file')
     ensure
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
     end
 
     def test_fix_pulp3_capabilities_not_needed
       SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
-      @master.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:pulpcore])
-      @master.expects(:refresh).never
+      @primary.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:pulpcore])
+      @primary.expects(:refresh).never
 
-      @master.fix_pulp3_capabilities('file')
+      @primary.fix_pulp3_capabilities('file')
     end
   end
 end

@@ -70,7 +70,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDebsInstalledCont
         };
 
         debsNutupane = new Nutupane(HostDeb, {id: $scope.$stateParams.hostId});
-        debsNutupane.masterOnly = true;
+        debsNutupane.primaryOnly = true;
         $scope.table = debsNutupane.table;
         $scope.table.contentHost = $scope.contentHost;
     }

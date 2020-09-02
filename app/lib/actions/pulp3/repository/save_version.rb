@@ -32,7 +32,7 @@ module Actions
 
         def fetch_version_href(repo)
           # Fetch latest Pulp 3 repo version
-          repo_backend_service = repo.backend_service(SmartProxy.pulp_master)
+          repo_backend_service = repo.backend_service(SmartProxy.pulp_primary)
           repo_href = repo_backend_service.repository_reference.repository_href
           repo_backend_service.api.repositories_api.read(repo_href).latest_version_href
         end

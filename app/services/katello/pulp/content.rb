@@ -16,7 +16,7 @@ module Katello
         end
 
         private def pulp_content
-          SmartProxy.pulp_master.pulp_api.resources.content
+          SmartProxy.pulp_primary.pulp_api.resources.content
         end
       end
     end

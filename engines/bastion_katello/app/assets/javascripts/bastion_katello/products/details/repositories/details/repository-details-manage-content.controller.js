@@ -72,7 +72,7 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             'repository_id': $scope.$stateParams.repositoryId
         });
         $scope.table = $scope.contentNutupane.table;
-        $scope.contentNutupane.masterOnly = true;
+        $scope.contentNutupane.primaryOnly = true;
 
         $scope.controllerName = contentTypes[$scope.currentState].controllerName;
 

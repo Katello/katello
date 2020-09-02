@@ -30,7 +30,7 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableOstreeRe
         'queryPaged', nutupaneParams);
         $scope.controllerName = 'katello_repositories';
 
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         nutupane.load();
 
         $scope.table = nutupane.table;

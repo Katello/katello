@@ -20,7 +20,7 @@
 
         nutupane = new Nutupane(PuppetModule, params);
         $scope.controllerName = 'katello_puppet_modules';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         $scope.table = nutupane.table;
         $scope.controllerName = 'katello_puppet_modules';

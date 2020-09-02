@@ -17,8 +17,8 @@ module Actions
               end
             end
 
-            if SmartProxy.pulp_master&.pulp3_enabled?
-              plan_action(Actions::Pulp3::ContentView::DeleteRepositoryReferences, content_view, SmartProxy.pulp_master)
+            if SmartProxy.pulp_primary&.pulp3_enabled?
+              plan_action(Actions::Pulp3::ContentView::DeleteRepositoryReferences, content_view, SmartProxy.pulp_primary)
             end
             plan_self
           end

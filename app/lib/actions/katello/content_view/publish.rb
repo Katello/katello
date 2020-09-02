@@ -50,7 +50,7 @@ module Actions
             separated_repo_map = separated_repo_mapping(repository_mapping)
 
             if separated_repo_map[:pulp3_yum].keys.flatten.present? &&
-                SmartProxy.pulp_master.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
+                SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
               plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)
             end
 
@@ -70,7 +70,7 @@ module Actions
               end
             end
 
-            if SmartProxy.pulp_master.has_feature?(SmartProxy::PULP_FEATURE)
+            if SmartProxy.pulp_primary.has_feature?(SmartProxy::PULP_FEATURE)
               has_modules = content_view.publish_puppet_environment?
               plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
               unless options[:skip_promotion]

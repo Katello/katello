@@ -100,7 +100,7 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
             'queryUnpaged'
         );
         $scope.controllerName = 'katello_erratum_packages';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
 
         filterByDate = function (date, type) {
             date = date.toISOString().split('T')[0];

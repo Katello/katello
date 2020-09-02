@@ -19,7 +19,7 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleNames
             'availablePuppetModuleNames'
         );
         $scope.controllerName = 'katello_content_views';
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         $scope.table = nutupane.table;
 
         $scope.table.fetchAutocomplete = function (term) {

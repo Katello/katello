@@ -13,7 +13,7 @@ module Actions
 
           output.merge!(contents_changed: false, updated_repositories: [])
           repositories.each do |repo|
-            repo_backend_service = repo.backend_service(SmartProxy.pulp_master)
+            repo_backend_service = repo.backend_service(SmartProxy.pulp_primary)
             if repo.version_href
               # Chop off the version number to compare base repo strings
               unversioned_href = repo.version_href[0..-2].rpartition('/').first

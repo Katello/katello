@@ -113,7 +113,7 @@ module Katello
     end
 
     def get_rhsm_mac(interface)
-      # if slave then permanent_mac_address contains the physical mac
+      # if secondary then permanent_mac_address contains the physical mac
       facts["net.interface.#{interface}.permanent_mac_address"] || facts["net.interface.#{interface}.mac_address"]
     end
   end

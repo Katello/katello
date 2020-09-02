@@ -42,7 +42,7 @@ module Katello
       false
     end
 
-    def master
+    def primary
       true
     end
 

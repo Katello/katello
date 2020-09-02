@@ -50,7 +50,7 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
         }
 
         $scope.table = nutupane.table;
-        nutupane.masterOnly = true;
+        nutupane.primaryOnly = true;
         nutupane.table.closeItem = function () {};
 
         $scope.addPackageGroups = function (filter) {

@@ -113,7 +113,7 @@ module Katello
         end
 
         def associate_default_capsule
-          smart_proxy = SmartProxy.pulp_master
+          smart_proxy = SmartProxy.pulp_primary
           smart_proxy.organizations << self if smart_proxy
         end
 

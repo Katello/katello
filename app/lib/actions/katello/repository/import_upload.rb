@@ -6,7 +6,7 @@ module Actions
         include Actions::Katello::PulpSelector
         def plan(repository, uploads, options = {})
           action_subject(repository)
-          repo_service = repository.backend_service(::SmartProxy.pulp_master)
+          repo_service = repository.backend_service(::SmartProxy.pulp_primary)
 
           upload_ids = uploads.pluck('id')
           unit_keys = repo_service.unit_keys(uploads)
@@ -14,7 +14,7 @@ module Actions
           sync_capsule = options.fetch(:sync_capsule, true)
 
           options[:content_type] ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
-          unit_type_id = SmartProxy.pulp_master.content_service(options[:content_type])::CONTENT_TYPE
+          unit_type_id = SmartProxy.pulp_primary.content_service(options[:content_type])::CONTENT_TYPE
 
           sequence do
             upload_results = concurrence do
@@ -29,7 +29,7 @@ module Actions
                 }
                 import_upload = plan_pulp_action([Actions::Pulp::Repository::ImportUpload,
                                                   Actions::Pulp3::Orchestration::Repository::ImportUpload],
-                                  repository, SmartProxy.pulp_master, import_upload_args)
+                                  repository, SmartProxy.pulp_primary, import_upload_args)
                 plan_action(FinishUpload, repository, :import_upload_task => import_upload.output,
                             generate_metadata: false, content_type: options[:content_type])
                 import_upload.output

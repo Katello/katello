@@ -2,7 +2,7 @@ module Katello
   module Pulp3
     class SmartProxyMirrorRepository < SmartProxyRepository
       def initialize(smart_proxy)
-        fail "Cannot use a central pulp smart proxy" if smart_proxy.pulp_master?
+        fail "Cannot use a central pulp smart proxy" if smart_proxy.pulp_primary?
         @smart_proxy = smart_proxy
       end
 

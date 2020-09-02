@@ -24,7 +24,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
 
         $scope.moduleStreamsNutupane = new Nutupane(HostModuleStream, $scope.nutupaneParams);
 
-        $scope.moduleStreamsNutupane.masterOnly = true;
+        $scope.moduleStreamsNutupane.primaryOnly = true;
         $scope.table = $scope.moduleStreamsNutupane.table;
 
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;

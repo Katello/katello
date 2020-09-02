@@ -247,22 +247,22 @@ module Katello
       assert repo.pulp_id.ends_with?('pulp-id')
     end
 
-    def test_master_link
-      assert @puppet_forge.master?
+    def test_primary_link
+      assert @puppet_forge.primary?
 
-      assert @fedora_17_x86_64.master?
+      assert @fedora_17_x86_64.primary?
       refute @fedora_17_x86_64.link?
 
       assert @fedora_17_x86_64_dev.link?
-      refute @fedora_17_x86_64_dev.master?
+      refute @fedora_17_x86_64_dev.primary?
       assert_equal @fedora_17_x86_64_dev.target_repository, katello_repositories(:fedora_17_x86_64_dev_archive)
 
       archive = katello_repositories(:fedora_17_x86_64_dev_archive)
-      assert archive.master?
+      assert archive.primary?
       refute archive.link?
     end
 
-    def test_master_link_composite
+    def test_primary_link_composite
       version = katello_content_view_versions(:composite_view_version_1)
       version_env_repo = katello_repositories(:rhel_6_x86_64_composite_view_version_1)
       version_archive_repo = version_env_repo.archived_instance
@@ -275,9 +275,9 @@ module Katello
                                                                                              :environment_id => nil).first,
                    version_archive_repo.target_repository
 
-      #now add a 2nd component to make the archive a "master", due to 'conflicting' repos
+      #now add a 2nd component to make the archive a "primary", due to 'conflicting' repos
       version.components << katello_content_view_versions(:library_view_version_2)
-      assert version_archive_repo.master?
+      assert version_archive_repo.primary?
 
       # composite environment repo should stay as a linked repo
       assert version_env_repo.link?
@@ -286,7 +286,7 @@ module Katello
       version_archive_repo.errata = [@errata_security, @errata_bugfix]
       version_archive_repo.save!
 
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       version_env_repo.index_content
       assert_equal version_archive_repo.rpms.sort, version_env_repo.rpms.sort
       assert_equal version_archive_repo.errata.sort, version_env_repo.errata.sort
@@ -752,7 +752,7 @@ module Katello
 
     def test_index_content_ordering
       repo_type = @rhel6.repository_type
-      SmartProxy.stubs(:pulp_master).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
       repo_types_hash = Hash[repo_type.content_types_to_index.map { |type| [type.model_class.content_type, type.priority] }]
       # {"rpm"=>1, "modulemd"=>2, "erratum"=>3, "package_group"=>99, "yum_repo_metadata_file"=>99, "srpm"=>99}
 

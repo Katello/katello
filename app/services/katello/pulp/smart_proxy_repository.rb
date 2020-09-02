@@ -12,7 +12,7 @@ module Katello
       end
 
       def default_capsule?
-        @smart_proxy.pulp_master?
+        @smart_proxy.pulp_primary?
       end
 
       def current_repositories(environment_id = nil, content_view_id = nil)

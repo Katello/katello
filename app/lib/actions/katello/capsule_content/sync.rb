@@ -28,7 +28,7 @@ module Actions
           content_view_id = options.fetch(:content_view_id, nil)
           content_view = ::Katello::ContentView.find(content_view_id) if content_view_id
 
-          fail _("Action not allowed for the default smart proxy.") if smart_proxy.pulp_master?
+          fail _("Action not allowed for the default smart proxy.") if smart_proxy.pulp_primary?
 
           smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
           repositories = smart_proxy_helper.combined_repos_available_to_capsule(environment, content_view, repository)

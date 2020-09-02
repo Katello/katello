@@ -4,14 +4,14 @@ module Katello
       class Yum < ::Katello::Pulp::Repository
         REPOSITORY_TYPE = 'yum'.freeze
 
-        def generate_master_importer
+        def generate_primary_importer
           config = {
             download_policy: root.download_policy,
             remove_missing: root.mirror_on_sync?,
             feed: root.url,
             type_skip_list: root.ignorable_content
           }
-          importer_class.new(config.merge(master_importer_connection_options))
+          importer_class.new(config.merge(primary_importer_connection_options))
         end
 
         def generate_mirror_importer
@@ -38,14 +38,14 @@ module Katello
             id: yum_dist_id,
             auto_publish: true
           }
-          if smart_proxy.pulp_master?
+          if smart_proxy.pulp_primary?
             options[:checksum_type] = repo.saved_checksum_type || root.checksum_type
           else
             options[:checksum_type] = nil
           end
           distributors = [Runcible::Models::YumDistributor.new(repo.relative_path, root.unprotected, true, options)]
 
-          if smart_proxy.pulp_master?
+          if smart_proxy.pulp_primary?
             distributors << Runcible::Models::YumCloneDistributor.new(:id => "#{repo.pulp_id}_clone",
                                                                    :destination_distributor_id => yum_dist_id)
             distributors << Runcible::Models::ExportDistributor.new(false, false, repo.relative_path)
@@ -55,7 +55,7 @@ module Katello
 
         def distributors_to_publish(options)
           source_repo_id = options[:source_repository]&.fetch(:id)
-          if (source_repo_id || !repo.master?) && smart_proxy.pulp_master?
+          if (source_repo_id || !repo.primary?) && smart_proxy.pulp_primary?
             source_repository = source_repo_id ? ::Katello::Repository.find(source_repo_id) : repo.target_repository
             source_service = source_repository.backend_service(smart_proxy)
             source_distributor_id = source_service.lookup_distributor_id(Runcible::Models::YumDistributor.type_id)
