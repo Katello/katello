@@ -106,7 +106,7 @@ module Katello
         end
 
         def delete_orphans
-          [orphans_api.delete]
+          [orphans_api.orphans_delete]
         end
 
         def delete_remote(remote_href)
