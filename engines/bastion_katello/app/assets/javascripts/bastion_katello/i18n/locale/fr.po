@@ -7,11 +7,12 @@
 # 21966816214bc546c1fc8a185e75ca1c, 2020
 # Claer <transiblu@claer.hammock.fr>, 2020
 # Bryan Kearney <bryan.kearney@gmail.com>, 2020
+# Amit Upadhye <aupadhye@redhat.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2020\n"
+"Last-Translator: Amit Upadhye <aupadhye@redhat.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/foreman/teams/114/fr/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -613,7 +614,7 @@ msgstr "Ajouter un nouveau filtre Yum"
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Add ons"
-msgstr ""
+msgstr "Ajouts"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter-details.html
 msgid "Add Package Group"
@@ -799,6 +800,7 @@ msgstr ""
 "Une erreur s'est produite lors de l'enregistrement de l'environnement :"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/edit-filter.controller.js
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-details.controller.js
 msgid "An error occurred saving the Filter:"
 msgstr "Une erreur s’est produite lors de l'enregistrement du filtre :"
 
@@ -861,7 +863,7 @@ msgstr "Une erreur s'est produite :"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Ansible Collections"
-msgstr ""
+msgstr "Collections Ansible"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -1548,6 +1550,18 @@ msgid ""
 msgstr ""
 "Une version 1.10 ou ultérieure de subscription-manager doit être installée "
 "sur cet hôte pour modifier les paramètres par défaut."
+
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid ""
+"Changing the Content View will not affect the Content Host until its next checkin.\n"
+"                To update the Content Host immediately run the following command:"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
+msgid ""
+"Changing the Content View will not affect the Content Hosts until their next checkin.\n"
+"        To update the Content Hosts immediately run the following command:"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
@@ -2417,6 +2431,11 @@ msgstr "Modifier"
 msgid "Enable"
 msgstr "Activer"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Enable on Registration"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Enable Traces"
@@ -2588,6 +2607,10 @@ msgstr "Événement"
 msgid "Exclude"
 msgstr "Exclure"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
+msgid "Exclude all Module Streams with no errata."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Exclude all RPMs with no errata."
 msgstr "Exclut tous les RPM sans errata."
@@ -2688,6 +2711,10 @@ msgstr "Règle de filtre mise à jour."
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/edit-filter.controller.js
 msgid "Filter Saved"
 msgstr "Filtre enregistré"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-details.controller.js
+msgid "Filter Updated -"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-details.html
 msgid "Filter:"
@@ -2984,6 +3011,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-helper.service.js
 msgid "Include"
 msgstr "Inclure"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
+msgid "Include all Module Streams with no errata."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Include all RPMs with no errata."
@@ -5274,6 +5305,12 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
+"Selecting this option will automatically enable this Repository when a Host "
+"registers and consumes this subscription."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid ""
 "Selecting this option will result in contents that are no longer part of the"
 " upstream repository being removed during synchronization."
 msgstr ""
@@ -5314,7 +5351,7 @@ msgstr "Niveau de service"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Service Level (SLA)"
-msgstr ""
+msgstr "Niveau de service (SLA)"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Set Release Version"
@@ -6434,7 +6471,7 @@ msgstr "URL à découvrir"
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Usage Type"
-msgstr ""
+msgstr "Type d'utilisation"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html

@@ -15,11 +15,12 @@
 # Ettore Atalan <atalanttore@googlemail.com>, 2020
 # Bryan Kearney <bryan.kearney@gmail.com>, 2020
 # simon11 <transifex@stieger.co>, 2020
+# Ulrich Habel <rhaen@pkgbox.de>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Last-Translator: simon11 <transifex@stieger.co>, 2020\n"
+"Last-Translator: Ulrich Habel <rhaen@pkgbox.de>, 2020\n"
 "Language-Team: German (https://www.transifex.com/foreman/teams/114/de/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -766,6 +767,7 @@ msgid "An error occurred saving the Environment:"
 msgstr "Fehler beim Speichern der Umgebung:"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/edit-filter.controller.js
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-details.controller.js
 msgid "An error occurred saving the Filter:"
 msgstr "Fehler beim Speichern des Filters:"
 
@@ -809,7 +811,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/discovery/discovery-create.controller.js
 msgid "An error occurred while creating the Product: %s"
-msgstr ""
+msgstr "Fehler beim Speichern des Produkts:"
 
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-http-proxy-modal.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
@@ -845,15 +847,15 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
 msgid "Applicable Packages"
-msgstr ""
+msgstr "Anwendbare Pakete"
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Applicable To"
-msgstr ""
+msgstr "Anwendbar auf"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-add-subscriptions.html
 msgid "Applicable to Host"
-msgstr ""
+msgstr "Anwendbar auf Host"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
@@ -924,13 +926,13 @@ msgstr "Anwenden"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 msgid "Apt Actions"
-msgstr ""
+msgstr "Apt Aktionen"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-details.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version.html
 msgid "Apt Repositories"
-msgstr ""
+msgstr "Apt Repositories"
 
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-packages.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-module-streams.html
@@ -1235,7 +1237,7 @@ msgstr "Autor"
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
 #: app/assets/javascripts/bastion_katello/content-views/new/views/content-view-new.html
 msgid "Auto Publish"
-msgstr ""
+msgstr "Automatisch veröffentlichen"
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
@@ -1245,7 +1247,7 @@ msgstr "Automatische Verknüpfung"
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Auto-Attach Details"
-msgstr ""
+msgstr "Automatische Verknüpfung der Details"
 
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html
@@ -1330,7 +1332,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Bootable"
-msgstr ""
+msgstr "Bootfähig"
 
 #: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-info.html
 msgid "Branch Info"
@@ -1387,27 +1389,35 @@ msgstr "Abbrechen"
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 msgid "Cannot Remove"
-msgstr ""
+msgstr "Löschen nicht möglich"
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Cannot republish Repository without the proper permissions."
 msgstr ""
+"Sie können dieses Repository ohne die erforderlichen Rechte nicht neu "
+"veröffentlichen."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Cannot republish Repository, a sync is already in progress."
 msgstr ""
+"Sie können das Repository nicht neu veröffentlichen, da bereits eine "
+"Aktualisierung stattfindet."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Cannot sync Repository without a URL."
-msgstr ""
+msgstr "Sie können das Repository ohne URL nicht synchroniseren."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Cannot sync Repository without the proper permissions."
 msgstr ""
+"Sie können dieses Repository ohne die erforderlichen Rechte nicht "
+"veröffentlichen."
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
 msgid "Cannot sync Repository, a sync is already in progress."
 msgstr ""
+"Sie können das Repository nicht synchroniseren, da es bereits synchronisiert"
+" wird."
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-host-collections-table.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-host-collections-table.html
@@ -1447,6 +1457,18 @@ msgid ""
 msgstr ""
 "Um die Standardeinstellungen zu ändern, muss subscription-manager Version "
 "1.10 oder höher auf diesem Host installiert sein."
+
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid ""
+"Changing the Content View will not affect the Content Host until its next checkin.\n"
+"                To update the Content Host immediately run the following command:"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
+msgid ""
+"Changing the Content View will not affect the Content Hosts until their next checkin.\n"
+"        To update the Content Hosts immediately run the following command:"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
@@ -2292,6 +2314,11 @@ msgstr "Bearbeiten"
 msgid "Enable"
 msgstr "Aktivieren"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Enable on Registration"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Enable Traces"
@@ -2463,6 +2490,10 @@ msgstr "Ereignis"
 msgid "Exclude"
 msgstr "Ausschließen"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
+msgid "Exclude all Module Streams with no errata."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Exclude all RPMs with no errata."
 msgstr "Alle RPMs ohne Errata ausschließen."
@@ -2562,6 +2593,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/edit-filter.controller.js
 msgid "Filter Saved"
 msgstr "Filter gespeichert"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-details.controller.js
+msgid "Filter Updated -"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-details.html
 msgid "Filter:"
@@ -2855,6 +2890,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-helper.service.js
 msgid "Include"
 msgstr "Einschließen"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
+msgid "Include all Module Streams with no errata."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Include all RPMs with no errata."
@@ -5078,6 +5117,12 @@ msgid ""
 " product to be synced. Selecting \"Validate Content\" will cause only Yum "
 "repositories using the \"Immediate\" or \"Background\" download policies "
 "will be synced."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid ""
+"Selecting this option will automatically enable this Repository when a Host "
+"registers and consumes this subscription."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
