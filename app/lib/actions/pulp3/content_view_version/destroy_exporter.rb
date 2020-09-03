@@ -8,7 +8,7 @@ module Actions
         end
 
         def run
-          ::Katello::Pulp3::ContentViewVersion.new(smart_proxy: smart_proxy).destroy_exporter(input[:exporter_data][:pulp_href])
+          ::Katello::Pulp3::ContentViewVersion::Export.new(smart_proxy: smart_proxy).destroy_exporter(input[:exporter_data][:pulp_href])
         end
       end
     end

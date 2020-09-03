@@ -121,6 +121,7 @@ Katello::Engine.routes.draw do
             get :available_errata, :controller => :errata
           end
           collection do
+            get :export_histories
             get :auto_complete_search
             post :incremental_update
           end
