@@ -82,8 +82,26 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :GET, "/content_view_versions/export_histories", N_("Show the export history for a content view version")
+    param :content_view_version_id, :number, :desc => N_("Content view version identifier"), :required => false
+    param :content_view_id, :number, :desc => N_("Content view identifier"), :required => false
+    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
+    param :organization_id, :number, :desc => N_("Organization identifier"), :required => false
+    param_group :search, Api::V2::ApiController
+    add_scoped_search_description_for(ContentViewVersionExportHistory)
+    def export_histories
+      history = ContentViewVersionExportHistory.readable
+      history = history.where(:content_view_version_id => params[:content_view_version_id]) unless params[:content_view_version_id].blank?
+      history = history.where(:destination_server => params[:destination_server]) unless params[:destination_server].blank?
+      history = history.with_organization_id(params[:organization_id]) unless params[:organization_id].blank?
+      history = history.with_content_view_id(params[:content_view_id]) unless params[:content_view_id].blank?
+      respond_for_index(:collection => scoped_search(history, 'id', 'asc', resource_class: ContentViewVersionExportHistory),
+                        :template => '../../../api/v2/content_view_version_export_histories/index')
+    end
+
     api :POST, "/content_view_versions/:id/export", N_("Export a content view version"), :deprecated => true
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
+    param :destination_server, String, :desc => N_("Destination Server name, required for Pulp3")
     param :export_to_iso, :bool, :desc => N_("Export to ISO format. Relevant only for Pulp 2 repositories"), :required => false
     param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB. Relevant only for Pulp 2 repositories"), :required => false
     param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z). Relevant only for Pulp 2 repositories"), :required => false
@@ -93,7 +111,12 @@ module Katello
         unless invalid_params.empty?
           fail HttpErrors::BadRequest, _("Invalid parameters provided - %{params}. These are only relevant for Pulp 2 repositories" % { params: invalid_params.join(', ')})
         end
-        task = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @version)
+
+        if params[:destination_server].blank?
+          fail HttpErrors::BadRequest, _("Destination Server Name required for Pulp3 repositories")
+        end
+
+        task = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @version, destination_server: params[:destination_server])
       else
         ::Foreman::Deprecation.api_deprecation_warning("Export is being deprecated and will be removed in a future version of Katello. Use hammer content-view version export instead.")
         if params[:export_to_iso].blank? && params[:iso_mb_size].present?
