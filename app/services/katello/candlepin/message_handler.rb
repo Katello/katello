@@ -91,8 +91,17 @@ module Katello
       end
 
       def handle_content_access_mode_modified
-        org_label = Katello::Util::Model.labelize(target_name)
-        org = ::Organization.find_by!(label: org_label)
+        # Ideally the target_name would be the Candlepin Owner key
+        # Since it's the displayName, and we don't update that after org creation, there could be a mismatch
+        # For now, find the Candlepin Owner displayName from this event, and tie it back to a Katello org based on owner key
+        owners = Katello::Resources::Candlepin::Owner.all
+        owner = owners.find { |o| o['displayName'] == target_name }
+
+        unless owner
+          fail("Candlepin Owner %s could not be found" % target_name)
+        end
+
+        org = ::Organization.find_by!(label: owner['key'])
         hosts = org.hosts
 
         if event_data['contentAccessMode'] == 'org_environment'
@@ -104,7 +113,7 @@ module Katello
             Katello::Resources::Candlepin::Consumer.compliance(uuid)
             Katello::Resources::Candlepin::Consumer.purpose_compliance(uuid)
           rescue => e
-            Rails.logger.error("Error encountered while fetching consumer compliance for #{uuid}: #{e.message}")
+            Rails.logger.error("Error encountered while fetching compliance for consumer #{uuid}: #{e.message}")
           end
         end
 

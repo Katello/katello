@@ -128,6 +128,19 @@ module Katello
   class OwnerContentAccessModeModifiedTest < MessageHandlerTestBase
     let(:event_name) { 'owner_content_access_mode.modified' }
 
+    def setup
+      @org = get_organization(:empty_organization)
+      Katello::Resources::Candlepin::Owner.expects(:all).returns(
+        [
+          {
+            'displayName' => @org.name,
+            'key' => @org.label
+          }
+        ]
+      )
+      super
+    end
+
     def test_sca_enabled
       Katello::HostStatusManager.expects(:clear_syspurpose_status)
       Katello::HostStatusManager.expects(:update_subscription_status_to_sca)
@@ -142,8 +155,7 @@ module Katello
       Organization.any_instance.expects(:simple_content_access?).with(cached: false)
       @handler.expects(:event_data).returns('contentAccessMode' => 'entitlement').twice
 
-      org = get_organization(:empty_organization)
-      org.hosts.joins(:subscription_facet).count.times do
+      @org.hosts.joins(:subscription_facet).count.times do
         Katello::Resources::Candlepin::Consumer.expects(:compliance)
         Katello::Resources::Candlepin::Consumer.expects(:purpose_compliance)
       end
