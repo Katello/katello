@@ -5,6 +5,8 @@ module Actions
         # rubocop:disable Metrics/MethodLength
         def plan(product, options = {})
           organization_destroy = options.fetch(:organization_destroy, false)
+          skip_environment_update = options.fetch(:skip_environment_update, false) ||
+              options.fetch(:organization_destroy, false)
 
           unless organization_destroy || product.user_deletable?
             if product.redhat?
@@ -24,11 +26,13 @@ module Actions
 
           sequence do
             unless organization_destroy
+              sequence do
+                # ContentDestroy must be called sequentially due to Candlepin's
+                # issues with running multiple remove_content calls at the same time.
+                plan_content_destruction(product, skip_environment_update)
+              end
               concurrence do
-                product.repositories.in_default_view.each do |repo|
-                  repo_options = options.clone
-                  plan_action(Katello::Repository::Destroy, repo, repo_options)
-                end
+                plan_repo_destruction(product, options)
               end
               plan_action(Candlepin::Product::DeletePools,
                             cp_id: product.cp_id, organization_label: product.organization.label)
@@ -63,6 +67,23 @@ module Actions
 
         def clear_pool_associations(product)
           product.pool_products.delete_all
+        end
+
+        def plan_content_destruction(product, skip_environment_update)
+          product.repositories.in_default_view.each do |repo|
+            if repo.root.repositories.where.not(id: repo.id).empty? &&
+                !repo.redhat? &&
+                !skip_environment_update
+              plan_action(::Actions::Katello::Product::ContentDestroy, repo.root)
+            end
+          end
+        end
+
+        def plan_repo_destruction(product, options)
+          product.repositories.in_default_view.each do |repo|
+            repo_options = options.clone
+            plan_action(Katello::Repository::Destroy, repo, repo_options.merge(destroy_content: false))
+          end
         end
 
         def view_versions(product)

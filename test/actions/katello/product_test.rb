@@ -202,6 +202,10 @@ module ::Actions::Katello::Product
       plan_action(action, product)
 
       assert_action_planed_with(action, candlepin_destroy_class, cp_id: product.cp_id, owner: product.organization.label)
+      assert_action_planed_with(action, ::Actions::Katello::Product::ContentDestroy) do |root|
+        root.first.repositories.where.not(id: root.first.repositories.first.id).empty?
+        !root.first.repositories.first.redhat?
+      end
       assert_action_planed_with(action, ::Actions::Katello::Repository::Destroy) do |repo|
         default_view_repos.include?(repo.first.id)
       end
