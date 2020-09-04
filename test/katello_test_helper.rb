@@ -32,6 +32,7 @@ require "#{Katello::Engine.root}/spec/helpers/organization_helper_methods"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/controller_support"
 require "#{Katello::Engine.root}/test/support/capsule_support"
+require "#{Katello::Engine.root}/test/support/export_support"
 require "#{Katello::Engine.root}/test/support/pulp/repository_support"
 require "#{Katello::Engine.root}/test/support/fixtures_support"
 require "#{Katello::Engine.root}/test/support/pulp3_support"
@@ -188,12 +189,12 @@ module DynflowFullTreePlanning
 
   def assert_tree_planned_steps(execution_plan, action_class)
     found_steps = execution_plan.steps.each_value.select { |step| action_class == step.action_class }
-    assert found_steps.any?, "Action #{action_class} was not planned, there were only #{execution_plan.run_steps.map { |s| s.action_class }}"
+    assert found_steps.any?, "Action #{action_class} was not planned, there were only  #{execution_plan.steps.each_value.map(&:action_class)}"
   end
 
   def refute_tree_planned_steps(execution_plan, action_class)
     found_steps = execution_plan.steps.each_value.select { |step| action_class == step.action_class }
-    assert_empty found_steps, "Found enexpected action: #{action_class}"
+    assert_empty found_steps, "Found unexpected action: #{action_class}"
   end
 
   def assert_tree_planned_with(execution_plan, action_class, expected_input = nil)
@@ -277,6 +278,16 @@ class ActiveSupport::TestCase
       Cert::Certs.stubs(:ssl_client_cert).returns("ssl_client_cert")
       Cert::Certs.stubs(:ssl_client_key).returns("ssl_client_key")
     end
+  end
+
+  def stub_constant(klass, const, value)
+    old = klass.const_get(const)
+    klass.send(:remove_const, const)
+    klass.const_set(const, value)
+    yield
+  ensure
+    klass.send(:remove_const, const)
+    klass.const_set(const, old)
   end
 
   def self.stub_ping

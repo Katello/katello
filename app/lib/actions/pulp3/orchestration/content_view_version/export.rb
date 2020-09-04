@@ -50,9 +50,17 @@ module Actions
             api = ::Katello::Pulp3::Api::Core.new(smart_proxy)
             export_data = api.export_api.list(input[:exporter_data][:pulp_href]).results.first
             output[:exported_file_name], output[:exported_file_checksum] = export_data.output_file_info.first
+            path = File.dirname(output[:exported_file_name].to_s)
             ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: input[:content_view_version_id],
                                                                destination_server: input[:destination_server],
-                                                               path: File.dirname(output[:exported_file_name].to_s))
+                                                               path: path)
+            cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
+
+            export_metadata = ::Katello::Pulp3::ContentViewVersion::Export.new(:content_view_version => cvv,
+                                                               :smart_proxy => smart_proxy).generate_metadata
+            toc = Dir.glob("#{path}/*toc.json").first
+            export_metadata[:toc] = File.basename(toc) if toc
+            File.write("#{path}/#{::Katello::Pulp3::ContentViewVersion::Export::METADATA_FILE}", export_metadata.to_json)
           end
 
           def humanized_name

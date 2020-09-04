@@ -38,7 +38,7 @@ module ::Actions::Pulp3::ContentView
     def test_create_exporter
       exporter_data = create_exporter
       assert_includes exporter_data["repositories"], pulp3_cvv.version_href_to_repository_href(@repo.version_href)
-      assert_equal exporter_data["name"], pulp3_cvv.generate_exporter_id
+      assert_equal exporter_data["name"], pulp3_cvv.generate_id
       assert exporter_data["path"].end_with? pulp3_cvv.generate_exporter_path
       delete_exporter(exporter_data)
     end
@@ -59,6 +59,10 @@ module ::Actions::Pulp3::ContentView
     def test_export
       Actions::Pulp3::Orchestration::ContentViewVersion::Export.any_instance.expects(:action_subject).with(@content_view_version)
       File.expects(:directory?).returns(true).at_least_once
+      File.expects(:write).returns.with do |path|
+        assert path.end_with?(::Katello::Pulp3::ContentViewVersion::Export::METADATA_FILE)
+      end
+
       output = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @content_view_version, destination_server: "foo").output
       refute_empty output[:exported_file_name]
       refute_empty output[:exported_file_checksum]

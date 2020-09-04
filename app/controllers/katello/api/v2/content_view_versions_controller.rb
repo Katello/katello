@@ -99,7 +99,7 @@ module Katello
                         :template => '../../../api/v2/content_view_version_export_histories/index')
     end
 
-    api :POST, "/content_view_versions/:id/export", N_("Export a content view version"), :deprecated => true
+    api :POST, "/content_view_versions/:id/export", N_("Export a content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :destination_server, String, :desc => N_("Destination Server name, required for Pulp3")
     param :export_to_iso, :bool, :desc => N_("Export to ISO format. Relevant only for Pulp 2 repositories"), :required => false
@@ -140,6 +140,14 @@ module Katello
                           params[:iso_mb_size])
       end
 
+      respond_for_async :resource => task
+    end
+
+    api :POST, "/content_view_versions/import", N_("Import a content view version")
+    param :content_view_id, :number, :desc => N_("Content view identifier"), :required => true
+    param :path, String, :desc => N_("Import path"), :required => true
+    def import
+      task = async_task(::Actions::Katello::ContentViewVersion::Import, @view, path: params[:path])
       respond_for_async :resource => task
     end
 

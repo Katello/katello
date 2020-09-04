@@ -579,6 +579,12 @@ module Katello
       PuppetModule.group_by_repoid(puppet_modules.flatten)
     end
 
+    def check_ready_to_import!
+      fail _("User must be logged in.") if ::User.current.nil?
+      fail _("Cannot import a composite content view") if composite?
+      true
+    end
+
     def check_ready_to_publish!
       fail _("User must be logged in.") if ::User.current.nil?
       fail _("Cannot publish default content view") if default?

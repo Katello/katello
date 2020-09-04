@@ -124,6 +124,7 @@ Katello::Engine.routes.draw do
             get :export_histories
             get :auto_complete_search
             post :incremental_update
+            post :import
           end
         end
 
