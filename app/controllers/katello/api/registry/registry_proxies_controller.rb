@@ -200,7 +200,9 @@ module Katello
     end
 
     def pull_blob
-      r = Resources::Registry::Proxy.get(@_request.fullpath, 'Accept' => request.headers['Accept'])
+      headers = {}
+      headers['Accept'] = request.headers['Accept'] if request.headers['Accept']
+      r = Resources::Registry::Proxy.get(@_request.fullpath, headers)
       render json: r
     end
 
