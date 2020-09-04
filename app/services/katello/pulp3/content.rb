@@ -29,7 +29,7 @@ module Katello
             filechunk.write(content)
             filechunk.flush
             actual_chunk_size = File.size(filechunk)
-            uploads_api.update(upload_href, content_range(offset, offset + actual_chunk_size - 1, size), filechunk)
+            uploads_api.update(content_range(offset, offset + actual_chunk_size - 1, size), upload_href, filechunk)
           ensure
             filechunk.close
             filechunk.unlink
