@@ -8,11 +8,17 @@ module Katello
         include Katello::Util::PulpcoreContentFilters
 
         def remote_options
-          if root.url.blank?
-            common_remote_options.merge(url: nil, policy: root.download_policy)
-          else
-            common_remote_options.merge(policy: root.download_policy)
-          end
+          url, sles_token = extract_sles_token
+          options = common_remote_options
+          options.merge!(sles_auth_token: sles_token) if sles_token
+          options.merge!(url: url, policy: root.download_policy)
+        end
+
+        def extract_sles_token
+          uri = URI(root.url)
+          query = uri.query
+          uri.query = nil
+          [uri.to_s, query]
         end
 
         def skip_types
