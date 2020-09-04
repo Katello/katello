@@ -7,9 +7,11 @@ module Actions
 
         # options:
         #   skip_environment_update - defaults to false. skips updating the CP environment
+        #   destroy_content - can be disabled to skip Candlepin remove_content
         def plan(repository, options = {})
           skip_environment_update = options.fetch(:skip_environment_update, false) ||
               options.fetch(:organization_destroy, false)
+          destroy_content = options.fetch(:destroy_content, true)
           action_subject(repository)
 
           unless repository.destroyable?
@@ -29,7 +31,9 @@ module Actions
             if repository.redhat?
               handle_redhat_content(repository) unless skip_environment_update
             else
-              handle_custom_content(repository) unless skip_environment_update
+              if destroy_content && !skip_environment_update
+                handle_custom_content(repository)
+              end
             end
           end
         end
