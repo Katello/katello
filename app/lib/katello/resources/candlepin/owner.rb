@@ -5,6 +5,11 @@ module Katello
         extend OwnerResource
 
         class << self
+          def all
+            response = self.get(path, default_headers)
+            JSON.parse(response.body)
+          end
+
           # Set the contentPrefix at creation time so that the client will get
           # content only for the org it has been subscribed to
           def create(key, description)

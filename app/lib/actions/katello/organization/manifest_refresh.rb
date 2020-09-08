@@ -61,7 +61,6 @@ module Actions
 
         def finalize
           org = ::Organization.find(input[:organization_id])
-          subject_organization.clear_syspurpose_status if subject_organization.simple_content_access?(cached: false)
           org.clear_manifest_expired_notifications
           subject_organization.audit_manifest_action(_('Manifest refreshed'))
         end
