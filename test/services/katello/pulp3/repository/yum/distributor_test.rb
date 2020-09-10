@@ -30,7 +30,6 @@ module Katello
           assert_equal @repo_service.repo.distribution_bootable, true
           assert_equal @repo_service.repo.distribution_family, "MyOS"
           assert_equal @repo_service.repo.distribution_variant, "MyOS_variant_name"
-          assert_equal @repo_service.repo.distribution_uuid, "/a/uuid/"
         end
 
         def test_import_distribution_data_not_bootable
@@ -41,7 +40,6 @@ module Katello
           assert_equal @repo_service.repo.distribution_bootable, false
           assert_equal @repo_service.repo.distribution_family, "MyOS"
           assert_equal @repo_service.repo.distribution_variant, "MyOS_variant_name"
-          assert_equal @repo_service.repo.distribution_uuid, "/a/uuid/"
         end
       end
     end

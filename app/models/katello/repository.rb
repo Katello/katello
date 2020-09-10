@@ -149,7 +149,6 @@ module Katello
     scoped_search :on => :distribution_family, :complete_value => true
     scoped_search :on => :distribution_variant, :complete_value => true
     scoped_search :on => :distribution_bootable, :complete_value => true
-    scoped_search :on => :distribution_uuid, :complete_value => true
     scoped_search :on => :redhat, :complete_value => { :true => true, :false => false }, :ext_method => :search_by_redhat
     scoped_search :on => :container_repository_name, :complete_value => true
     scoped_search :on => :description, :relation => :root, :only_explicit => true
@@ -650,7 +649,6 @@ module Katello
           :distribution_arch => target_repo.distribution_arch,
           :distribution_family => target_repo.distribution_family,
           :distribution_variant => target_repo.distribution_variant,
-          :distribution_uuid => target_repo.distribution_uuid,
           :distribution_bootable => target_repo.distribution_bootable
         )
       else
@@ -664,7 +662,6 @@ module Katello
         distribution_arch: self.distribution_arch,
         distribution_family: self.distribution_family,
         distribution_variant: self.distribution_variant,
-        distribution_uuid: self.distribution_uuid,
         distribution_bootable: self.distribution_bootable
       }
     end
