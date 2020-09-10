@@ -54,7 +54,6 @@ module Katello
               :distribution_version => distribution.results.first.release_version,
               :distribution_arch => distribution.results.first.arch,
               :distribution_family => distribution.results.first.release_name,
-              :distribution_uuid => distribution.results.first.pulp_href,
               :distribution_bootable => self.class.distribution_bootable?(distribution)
             )
             unless distribution.results.first.variants.empty?

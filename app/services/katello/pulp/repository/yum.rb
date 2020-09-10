@@ -144,7 +144,6 @@ module Katello
               :distribution_arch => distribution["arch"],
               :distribution_family => distribution["family"],
               :distribution_variant => distribution["variant"],
-              :distribution_uuid => distribution["_id"],
               :distribution_bootable => self.class.distribution_bootable?(distribution)
             )
           end
