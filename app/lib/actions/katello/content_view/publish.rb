@@ -122,6 +122,7 @@ module Actions
             ::Katello::Host::ContentFacet.where(:content_view_id => input[:content_view_id],
                                                 :lifecycle_environment_id => input[:environment_id]).each do |facet|
               facet.update_applicability_counts
+              facet.update_errata_status
             end
           end
 

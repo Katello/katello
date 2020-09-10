@@ -57,9 +57,24 @@ module ::Actions::Katello::ContentView
         assert_empty Katello::Event.all
       end
     end
+
+    context 'finalize phase' do
+      it 'updates errata counts and status' do
+        content_facet = katello_content_facets(:content_facet_two)
+        action.stubs(:input).returns(
+          content_view_version_id: content_facet.content_view_version.id,
+          content_view_id: content_facet.content_view_id,
+          environment_id: content_facet.lifecycle_environment_id,
+          history_id: Katello::ContentViewHistory.first.id
+        )
+        Katello::Host::ContentFacet.any_instance.expects(:update_applicability_counts)
+        Katello::Host::ContentFacet.any_instance.expects(:update_errata_status)
+        action.finalize
+      end
+    end
   end
 
-  class PromoteToEnviroment < TestBase
+  class PromoteToEnviromentTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::PromoteToEnvironment }
 
     let(:environment) do
@@ -75,6 +90,20 @@ module ::Actions::Katello::ContentView
       action.stubs(:task).returns(success_task)
       plan_action(action, content_view_version, environment, 'description')
       refute_empty content_view_version.history
+    end
+
+    context 'finalize phase' do
+      it 'updates errata counts and status' do
+        content_facet = katello_content_facets(:content_facet_two)
+        action.stubs(:input).returns(
+          content_view_id: content_facet.content_view_id,
+          environment_id: content_facet.lifecycle_environment_id,
+          history_id: Katello::ContentViewHistory.first.id
+        )
+        Katello::Host::ContentFacet.any_instance.expects(:update_applicability_counts)
+        Katello::Host::ContentFacet.any_instance.expects(:update_errata_status)
+        action.finalize
+      end
     end
   end
 
