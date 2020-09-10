@@ -23,10 +23,11 @@ module Actions
                 import_upload_args = {
                   pulp_id: repository.pulp_id,
                   unit_type_id: unit_type_id,
-                  unit_key: unit_key,
+                  unit_key: unit_key.with_indifferent_access,
                   upload_id: upload_id,
                   unit_metadata: unit_metadata
                 }
+
                 import_upload = plan_pulp_action([Actions::Pulp::Repository::ImportUpload,
                                                   Actions::Pulp3::Orchestration::Repository::ImportUpload],
                                   repository, SmartProxy.pulp_master, import_upload_args)
