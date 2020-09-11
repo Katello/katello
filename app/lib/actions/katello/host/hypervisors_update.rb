@@ -13,6 +13,8 @@ module Actions
           @hypervisors = input[:hypervisors]
           return unless @hypervisors
 
+          @duplicate_uuid_hypervisors = {}
+
           User.as_anonymous_admin do
             ActiveRecord::Base.transaction do
               load_resources
@@ -30,7 +32,15 @@ module Actions
               update_facts(uuid, host)
             end
           end
+
+          @duplicate_uuid_hypervisors.each do |hypervisor, existing_host|
+            fail _("Host creation was skipped for %s because it shares a BIOS UUID with %s. " \
+                   "To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' " \
+                   "to 'true' in the Candlepin configuration." % [hypervisor[:name], existing_host.name])
+          end
         end
+
+        private
 
         def load_hosts_guests
           @hosts.each do |uuid, host|
@@ -80,6 +90,14 @@ module Actions
           new_hypervisors = {}
           @hypervisors.each do |hypervisor|
             next if @hosts.key?(hypervisor[:uuid])
+
+            created_host = new_hypervisors[hypervisor[:uuid]]
+            if created_host
+              # we've already created a host record for this duplicate hypervisor
+              # track it so we can message later, and continue processing the remaining hypervisors
+              @duplicate_uuid_hypervisors[hypervisor] = created_host
+              next
+            end
 
             duplicate_name, org = duplicate_name(hypervisor, @candlepin_attributes[hypervisor[:uuid]])
             new_hypervisors[hypervisor[:uuid]] = create_host_for_hypervisor(duplicate_name, org)
