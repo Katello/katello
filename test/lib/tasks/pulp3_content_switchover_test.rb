@@ -22,7 +22,7 @@ module Katello
         task.stubs('paused?').returns(false)
         task.stubs('result').returns('success')
 
-        ForemanTasks.expects(:sync_task).with(Actions::Pulp3::ContentGuard::RefreshAllDistributions, SmartProxy.pulp_master).returns(task)
+        ForemanTasks.expects(:sync_task).with(Actions::Pulp3::ContentGuard::RefreshAllDistributions, SmartProxy.pulp_primary).returns(task)
         Katello::Pulp3::MigrationSwitchover.any_instance.expects(:run)
         Rake.application.invoke_task('katello:pulp3_content_switchover')
       end
