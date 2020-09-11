@@ -16,14 +16,16 @@ module Actions
                           solve_dependencies: solve_dependencies)
             end
 
-            extended_repo_mapping.each do |source_repos, dest_repo_map|
-              if generate_metadata
-                metadata_generate(source_repos, dest_repo_map[:dest_repo], dest_repo_map[:filters])
+            concurrence do
+              extended_repo_mapping.each do |source_repos, dest_repo_map|
+                if generate_metadata
+                  metadata_generate(source_repos, dest_repo_map[:dest_repo], dest_repo_map[:filters])
+                end
               end
-            end
 
-            extended_repo_mapping.values.each do |dest_repo_map|
-              plan_action(Katello::Repository::IndexContent, id: dest_repo_map[:dest_repo].id)
+              extended_repo_mapping.values.each do |dest_repo_map|
+                plan_action(Katello::Repository::IndexContent, id: dest_repo_map[:dest_repo].id)
+              end
             end
           end
         end
