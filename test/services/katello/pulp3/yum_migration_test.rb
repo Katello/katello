@@ -52,7 +52,7 @@ module Katello
 
       class YumMigrationTest < YumMigrationTestBase
         def test_yum_migration
-          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_master, ['yum'])
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, ['yum'])
 
           task = migration_service.create_and_run_migrations
           wait_on_task(@master, task)
@@ -145,7 +145,7 @@ module Katello
         end
 
         def test_yum_migration_master_composite
-          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_master, ['yum'])
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, ['yum'])
 
           task = migration_service.create_and_run_migrations
           wait_on_task(@master, task)

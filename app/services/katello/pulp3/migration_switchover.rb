@@ -18,9 +18,15 @@ module Katello
           Katello::Logging.time("CONTENT_SWITCHOVER - check_already_migrated_content") { check_already_migrated_content }
           Katello::Logging.time("CONTENT_SWITCHOVER - cleanup_v1_docker_tags") { cleanup_v1_docker_tags } if docker_migration?
           Katello::Logging.time("CONTENT_SWITCHOVER - migrated_content_type_check") { migrated_content_type_check }
+          Katello::Logging.time("CONTENT_SWITCHOVER - combine_duplicate_content_types") { combine_duplicate_content_types }
           Katello::Logging.time("CONTENT_SWITCHOVER - combine_duplicate_docker_tags") { combine_duplicate_docker_tags } if docker_migration?
           Katello::Logging.time("CONTENT_SWITCHOVER - migrate_pulp3_hrefs") { migrate_pulp3_hrefs }
         end
+      end
+
+      def deduplicated_content_types
+        #even though YumMetatadataFile is de-depulicated, we're not indexing it in pulp3
+        [Katello::PackageGroup]
       end
 
       def docker_migration?
@@ -36,7 +42,7 @@ module Katello
       end
 
       def check_already_migrated_content
-        content_types.each do |content_type|
+        (content_types - Migration.ignorable_content_types).each do |content_type|
           if content_type.model_class.where("pulp_id=migrated_pulp3_href").any?
             Rails.logger.error("Content Switchover: #{content_type.label} seems to have already migrated content, switchover may fail.  Did you already perform the switchover?")
           end
@@ -60,6 +66,22 @@ module Katello
         end
 
         Katello::DockerMetaTag.cleanup_tags
+      end
+
+      def combine_duplicate_content_types
+        deduplicated_content_types.each do |content_class|
+          to_delete = []
+          content_class.having("count(migrated_pulp3_href) > 1").group(:migrated_pulp3_href).pluck(:migrated_pulp3_href).each do |duplicate_href|
+            units = content_class.where(:migrated_pulp3_href => duplicate_href).to_a
+            main_unit = units.pop
+            content_class.repository_association_class.where(content_class.unit_id_field => units.map(&:id)).update_all(content_class.unit_id_field => main_unit.id)
+            to_delete += units.map(&:id)
+          end
+
+          to_delete.each_slice(10_000) do |group|
+            content_class.where(:id => group).delete_all
+          end
+        end
       end
 
       def combine_duplicate_docker_tags

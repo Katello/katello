@@ -18,7 +18,7 @@ module Katello
       def self.repository_types_for_migration
         #we can migrate types that pulp3 supports, but are overridden to pulp2.  These are in 'migration mode'
         overridden = (SETTINGS[:katello][:use_pulp_2_for_content_type] || {}).keys.select { |key| SETTINGS[:katello][:use_pulp_2_for_content_type][key] }
-        overridden.select { |type| SmartProxy.pulp_master.pulp3_repository_type_support?(type.to_s, false) }.map { |t| t.to_s }
+        overridden.select { |type| SmartProxy.pulp_primary.pulp3_repository_type_support?(type.to_s, false) }.map { |t| t.to_s }
       end
 
       def initialize(smart_proxy, repository_types = Migration.repository_types_for_migration, options = {})
@@ -58,12 +58,16 @@ module Katello
         migs.map { |href| start_migration(href) }
       end
 
+      def self.ignorable_content_types
+        [YumMetadataFile]
+      end
+
       def content_types_for_migration
         content_types = @repository_types.collect do |repository_type_label|
           Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index
         end
 
-        content_types.flatten
+        content_types.flatten - Migration.ignorable_content_types
       end
 
       def import_pulp3_content
