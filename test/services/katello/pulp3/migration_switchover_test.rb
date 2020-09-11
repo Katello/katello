@@ -13,6 +13,12 @@ module Katello
     end
   end
 
+  class Pulp3YumContentSwitchoverTest < SwitchoverBase
+    def setup
+      super
+    end
+  end
+
   class Pulp3ContentSwitchoverTest < SwitchoverBase
     def setup
       super
