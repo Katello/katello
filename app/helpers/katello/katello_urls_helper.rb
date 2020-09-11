@@ -6,12 +6,15 @@ module Katello
       ::Setting[:foreman_url].sub(%r|^.*?:|, "#{schema}:")
     end
 
-    def subscription_manager_configuration_url(host = nil, rpm = true)
-      prefix = if host&.content_source
+    def subscription_manager_configuration_url(host = nil, rpm = true, hostname: nil)
+      prefix = if hostname
+                 "http://#{hostname}"
+               elsif host&.content_source
                  "http://#{host.content_source.hostname}"
                else
                  foreman_settings_url
                end
+
       config = rpm ? SETTINGS[:katello][:consumer_cert_rpm] : SETTINGS[:katello][:consumer_cert_sh]
 
       "#{prefix}/pub/#{config}"
