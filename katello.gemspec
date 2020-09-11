@@ -52,7 +52,7 @@ Gem::Specification.new do |gem|
   #pulp3
   gem.add_dependency "pulpcore_client", ">= 3.6.0", "< 3.7.0"
   gem.add_dependency "pulp_file_client", ">= 1.2.0", "< 1.3.0"
-  gem.add_dependency "pulp_ansible_client", ">= 0.2", "< 0.3"
+  gem.add_dependency "pulp_ansible_client", ">= 0.2", "< 0.4"
   gem.add_dependency "pulp_container_client", ">= 2.0.0", "< 2.1.0"
   gem.add_dependency "pulp_rpm_client", ">=3.6.2", "< 3.7.0"
   gem.add_dependency "pulp_2to3_migration_client", ">= 0.3.0", "< 0.4.0"

@@ -74,9 +74,14 @@ module ::Actions::Pulp3
     end
 
     def test_sync_mirror_true
+<<<<<<< HEAD
       skip "Until pulp fixes https://pulp.plan.io/issues/7353?"
       sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
+=======
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+>>>>>>> 427975911b... Refs #30630 - update ansible client to 0.3
       @repo.reload
       @repo.index_content
       pre_content = ::Katello::RepositoryAnsibleCollection.where(:repository_id => @repo.id)
