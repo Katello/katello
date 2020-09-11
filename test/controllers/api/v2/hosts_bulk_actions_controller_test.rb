@@ -3,6 +3,7 @@
 require "katello_test_helper"
 
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::V2::HostsBulkActionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
@@ -384,6 +385,21 @@ module Katello
       assert_equal 'dbus', response_body['results'].last['application']
       assert_equal @host_names.first, response_body['results'].first['host']
       assert_equal @host_names.last, response_body['results'].last['host']
+    end
+
+    def test_resolve_traces
+      trace_one = Katello::HostTracer.create(host_id: @host1.id, application: 'rsyslog', app_type: 'daemon', helper: 'systemctl restart rsyslog')
+      job_invocation = {"description" => "Restart Services", "id" => 1, "job_category" => "Katello"}
+
+      Katello::HostTraceManager.expects(:resolve_traces).with([trace_one]).returns([job_invocation])
+
+      put :resolve_traces, params: { :trace_ids => [trace_one.id] }
+
+      assert_response :success
+
+      body = JSON.parse(response.body)
+
+      assert_equal [job_invocation], body
     end
   end
 end

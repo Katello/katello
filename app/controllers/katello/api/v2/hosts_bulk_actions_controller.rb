@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::Api::V2::ContentOverridesController
@@ -6,7 +7,7 @@ module Katello
     before_action :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_action :find_environment, :only => [:environment_content_view]
     before_action :find_content_view, :only => [:environment_content_view]
-    before_action :find_editable_hosts, :except => [:destroy_hosts, :applicable_errata, :installable_errata]
+    before_action :find_editable_hosts, :except => [:destroy_hosts, :applicable_errata, :installable_errata, :resolve_traces]
     before_action :find_deletable_hosts, :only => [:destroy_hosts]
     before_action :find_readable_hosts, :only => [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, :only => [:available_incremental_updates]
@@ -228,6 +229,16 @@ module Katello
     def traces
       collection = scoped_search(Katello::HostTracer.where(host_id: @hosts.pluck(:id)), 'application', 'desc', resource_class: Katello::HostTracer)
       respond_for_index(:collection => collection, :template => '../../../api/v2/host_tracer/index')
+    end
+
+    api :PUT, "/hosts/bulk/resolve_traces", N_("Resolve traces for one or more hosts")
+    param_group :bulk_params
+    param :trace_ids, Array, :required => true, :desc => N_("Array of Trace IDs")
+    def resolve_traces
+      traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
+      result = Katello::HostTraceManager.resolve_traces(traces)
+
+      render json: result
     end
 
     api :POST, "/hosts/bulk/available_incremental_updates", N_("Given a set of hosts and errata, lists the content view versions" \
