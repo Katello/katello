@@ -310,12 +310,6 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :traces, :only => [], :controller => 'host_tracer' do
-          collection do
-            put :resolve
-          end
-        end
-
         api_resources :srpms, :only => [:index, :show], :controller => 'srpms' do
           collection do
             get :auto_complete_search

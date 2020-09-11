@@ -9,7 +9,6 @@
  * @requires Nutupane
  * @requires BastionConfig
  * @requires hostIds
- * @requires HostTracesResolve
  * @required ContentHostsHelper
  * @requires translate
  *
@@ -18,8 +17,8 @@
  */
 /*jshint camelcase:false*/
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesController',
-    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'hostIds', 'HostTracesResolve', 'ContentHostsHelper', 'translate',
-    function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, hostIds, HostTracesResolve, ContentHostsHelper, translate) {
+    ['$scope', '$uibModalInstance', 'HostBulkAction', 'Notification', 'Nutupane', 'BastionConfig', 'hostIds', 'ContentHostsHelper', 'translate',
+    function ($scope, $uibModalInstance, HostBulkAction, Notification, Nutupane, BastionConfig, hostIds, ContentHostsHelper, translate) {
 
         var tracesNutupane = new Nutupane(HostBulkAction, hostIds, 'traces');
         tracesNutupane.enableSelectAllResults();
@@ -46,7 +45,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkTracesContro
                 });
             };
             /* eslint-disable camelcase */
-            HostTracesResolve.resolve({trace_ids: traceids}, onSuccess, onFailure);
+            HostBulkAction.resolveTraces({trace_ids: traceids}, onSuccess, onFailure);
             /* eslint-enable camelcase */
         };
 
