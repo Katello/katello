@@ -179,12 +179,82 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
     });
 
     describe("can toggle repository set filters", function () {
-        it("all and env toggles", function () {
+        it("all and env toggles correctly with no SCA", function () {
             $scope.contentAccessModes.contentAccessModeAll = false;
             $scope.contentAccessModes.contentAccessModeEnv = false;
+            $scope.simpleContentAccessEnabled = false;
             $scope.toggleFilters();
             expect($scope.nutupane.table.params['content_access_mode_env']).toEqual($scope.contentAccessModes.contentAccessModeEnv);
             expect($scope.nutupane.table.params['content_access_mode_all']).toEqual($scope.contentAccessModes.contentAccessModeAll);
         });
+    });
+});
+
+describe('Controller: ActivationKeyRepositorySetsControllerWithSCA', function () {
+    var $scope,
+        $controller,
+        translate,
+        ActivationKey,
+        expectedTableSelection,
+        ContentOverrideHelper,
+        Notification,
+        CurrentOrganization;
+
+    beforeEach(module('Bastion.activation-keys'));
+
+    beforeEach(inject(function (_$controller_, $rootScope, $q) {
+        $controller = _$controller_;
+        $scope = $rootScope.$new();
+        $rootScope.simpleContentAccessEnabled = true;
+        translate = function (message) {
+            return message;
+        };
+
+        ActivationKey = {
+            failed: false,
+            repositorySets: function () {
+                return {
+                    $promise: $q.defer().promise
+                }
+            },
+            contentOverride: function (params, overrides, success, failure) {
+                if (this.failed) {
+                    failure({data: {}})
+                } else {
+                    success();
+                }
+            }
+        };
+
+        ContentOverrideHelper = {
+            getEnabledContentOverrides: function () {},
+            getDisabledContentOverrides: function () {},
+            getDefaultContentOverrides: function () {}
+        };
+
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
+
+        $controller('ActivationKeyRepositorySetsController', {
+            $scope: $scope,
+            translate: translate,
+            ActivationKey: ActivationKey,
+            Notification: Notification,
+            ContentOverrideHelper: ContentOverrideHelper,
+            CurrentOrganization: CurrentOrganization
+        });
+
+        $scope.table = {
+            getSelected: function () {}
+        };
+
+        $scope.$stateParams.activationKeyId = 1;
+    }));
+
+    it('sets the content access mode correctly', function () {
+        expect($scope.contentAccessModes.contentAccessModeAll).toBe(true);
     });
 });

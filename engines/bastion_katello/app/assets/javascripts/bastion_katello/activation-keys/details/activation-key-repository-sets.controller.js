@@ -20,7 +20,8 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
 
         params = {
             id: $scope.$stateParams.activationKeyId,
-            'organization_id': CurrentOrganization
+            'organization_id': CurrentOrganization,
+            'content_access_mode_all': $scope.simpleContentAccessEnabled
         };
 
         $scope.controllerName = 'katello_products';
@@ -28,12 +29,12 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
         $scope.table = $scope.nutupane.table;
 
         $scope.contentAccessModes = {
-            contentAccessModeAll: false,
+            contentAccessModeAll: $scope.simpleContentAccessEnabled,
             contentAccessModeEnv: false
         };
         $scope.toggleFilters = function () {
             $scope.nutupane.table.params['content_access_mode_env'] = $scope.contentAccessModes.contentAccessModeEnv;
-            $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll;
+            $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll || $scope.simpleContentAccessEnabled;
             $scope.nutupane.refresh();
         };
 
