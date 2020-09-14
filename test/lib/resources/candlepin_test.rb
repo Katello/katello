@@ -61,22 +61,6 @@ module Katello
           ::Katello::Resources::Candlepin::Pool.expects(:create).with(owner.label, expected_pool).returns('{}')
           ::Katello::Resources::Candlepin::Product.create_unlimited_subscription(owner.label, product_id, start_date)
         end
-
-        def test_update_enablement
-          product_id = 3
-          owner_label = "cool_org"
-          content_enablements = [ { id: 100, enabled: false }, { id: 200 }]
-          expected_enablements = {
-            id: product_id,
-            productContent: [
-              { content: {id: 100}, enabled: false },
-              { content: {id: 200} }
-            ]
-          }
-
-          ::Katello::Resources::Candlepin::Product.expects(:update).with(owner_label, expected_enablements)
-          ::Katello::Resources::Candlepin::Product.update_enabled(owner_label, product_id, content_enablements)
-        end
       end
     end
   end

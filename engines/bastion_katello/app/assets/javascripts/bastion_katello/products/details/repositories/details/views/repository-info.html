@@ -150,15 +150,6 @@
         </dd>
       </span>
 
-      <span ng-show="repository.content_type === 'yum' && !product.redhat">
-        <dt translate>Enable on Registration</dt>
-        <dd bst-edit-checkbox="repository.auto_enabled"
-            formatter="booleanToYesNo"
-            on-save="save(repository)"
-            readonly="denied('edit_products', product)">
-        </dd>
-      </span>
-
       <span>
         <dt translate>HTTP Proxy</dt>
         <dd bst-edit-custom="repository.http_proxy_policy"
