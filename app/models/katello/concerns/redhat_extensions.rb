@@ -8,8 +8,10 @@ module Katello
           os_name = construct_name(repo.distribution_family)
           major, minor = repo.distribution_version.split('.')
           minor ||= '' # treat minor versions as empty string to not confuse with nil
-
-          create_os = lambda { ::Redhat.where(:name => os_name, :major => major, :minor => minor).first_or_create! }
+          os = ::Redhat.where(:name => os_name, :major => major, :minor => minor).try(:first)
+          return os if os
+          description = "#{os_name}-#{repo.distribution_version}"
+          create_os = lambda { ::Redhat.create!(:name => os_name, :major => major, :minor => minor, :description => description) }
 
           begin
             create_os.call
