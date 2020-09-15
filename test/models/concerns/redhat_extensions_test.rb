@@ -15,6 +15,35 @@ module Katello
       refute_nil ::Redhat.find_or_create_operating_system(@repo_with_distro)
     end
 
+    def test_find_or_create_operating_system_when_os_present
+      assert_nil ::Redhat.where(:name => @my_distro.name).first
+      params = {
+        'name' => 'RedHat',
+        'major' => "2",
+        'minor' => "1",
+        'family' => 'Redhat'
+      }
+      os = ::Redhat.create!(params)
+      assert_equal os.title, "RedHat 2.1"
+      repo_os = ::Redhat.find_or_create_operating_system(@repo_with_distro)
+      assert_equal repo_os, os
+    end
+
+    def test_find_or_create_operating_system_when_title_conflicts
+      assert_nil ::Redhat.where(:name => @my_distro.name).first
+      params = {
+        'name' => 'RedHat',
+        'major' => "2",
+        'minor' => "5",
+        'family' => 'Redhat',
+        'description' => 'RedHat 2.1'
+      }
+      os = ::Redhat.create!(params)
+      assert_equal os.title, "RedHat 2.1"
+      repo_os = ::Redhat.find_or_create_operating_system(@repo_with_distro)
+      refute_equal repo_os, os
+    end
+
     def test_find_or_create_os_without_minor
       repo_without_minor = Repository.find(katello_repositories(:rhel_7_x86_64).id)
       os_count = Operatingsystem.count
