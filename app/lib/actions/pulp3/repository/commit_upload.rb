@@ -10,7 +10,8 @@ module Actions
           repo = ::Katello::Repository.find(input[:repository_id])
           repo_backend_service = repo.backend_service(smart_proxy)
           uploads_api = repo_backend_service.core_api.uploads_api
-          output[:pulp_tasks] = [uploads_api.commit(input[:upload_href], sha256: input[:sha256])]
+          upload_commit = repo_backend_service.core_api.upload_commit_class.new(sha256: input[:sha256])
+          output[:pulp_tasks] = [uploads_api.commit(input[:upload_href], upload_commit)]
         end
       end
     end
