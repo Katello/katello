@@ -30,7 +30,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
             function updateSyncPlan(syncPlan) {
                 var syncDate;
                 if (syncPlan['sync_date']) {
-                    syncDate = new Date(syncPlan['sync_date'].replace(/\s/, 'T').replace(/\s/, ''));
+                    syncDate = new Date(syncPlan['sync_date']);
                 } else {
                     syncDate = new Date();
                 }
@@ -68,11 +68,12 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
                     syncDate = new Date(syncPlan.syncDate),
                     syncTime = new Date(syncPlan.syncTime || new Date());
 
+                var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+
                 syncDate.setHours(syncTime.getHours());
                 syncDate.setMinutes(syncTime.getMinutes());
                 syncDate.setSeconds(0);
-                syncPlan['sync_date'] = syncDate.toString();
-
+                syncPlan['sync_date'] = syncDate.toLocaleString("en-US", options);
                 syncPlan.$update(function (response) {
                     updateSyncPlan(syncPlan);
                     deferred.resolve(response);

@@ -121,6 +121,14 @@ module Katello
       errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
     end
 
+    def sync_date_sans_tz
+      if User.current.try(:timezone)
+        return self.sync_date.strftime('%a, %d %b %Y %H:%M:%S')
+      else
+        sync_date
+      end
+    end
+
     def next_sync
       return nil unless self.enabled?
       self.foreman_tasks_recurring_logic&.tasks&.order(:start_at)&.last&.start_at
