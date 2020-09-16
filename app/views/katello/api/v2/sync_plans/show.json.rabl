@@ -2,7 +2,8 @@ object @resource
 
 attributes :id, :organization_id
 attributes :name, :description
-attributes :interval, :next_sync, :sync_date
+attributes :interval, :next_sync
+attributes :sync_date_sans_tz => :sync_date
 attributes :created_at, :updated_at
 attributes :enabled, :foreman_tasks_recurring_logic_id
 attributes :cron_expression
