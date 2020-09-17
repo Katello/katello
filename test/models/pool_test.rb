@@ -134,6 +134,25 @@ module Katello
       assert @pool_one.subscription_facets.where(id: host.subscription_facet.id).any?
     end
 
+    def test_import_hosts_no_consumers
+      host = FactoryBot.create(:host, :with_subscription)
+      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
+
+      @pool_one.import_hosts
+
+      refute @pool_one.subscription_facets.where(id: host.subscription_facet.id).any?
+    end
+
+    def test_import_hosts_cleanup_facet_pools
+      host = FactoryBot.create(:host, :with_subscription)
+      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
+      facet_pool = Katello::SubscriptionFacetPool.create!(pool: @pool_one, subscription_facet: host.subscription_facet)
+
+      @pool_one.import_hosts
+
+      refute Katello::SubscriptionFacetPool.find_by_id(facet_pool.id)
+    end
+
     def test_quantity_available_unlimited
       pool = FactoryBot.build(:katello_pool, quantity: -1, consumed: 3)
       assert_equal(-1, pool.quantity_available)
