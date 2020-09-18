@@ -4,8 +4,10 @@ module Katello
 
     include Katello::Concerns::FilteredAutoCompleteSearch
     before_action :find_organization, :only => [:create, :index, :auto_complete_search]
-    before_action :find_plan, :only => [:update, :show, :destroy, :sync,
-                                        :add_products, :remove_products]
+    before_action :find_authorized_katello_resource, :only => [:update, :show, :destroy, :sync,
+                                                               :add_products, :remove_products]
+    before_action :set_organization, :only => [:update, :show, :destroy, :sync,
+                                               :add_products, :remove_products]
 
     def_param_group :sync_plan do
       param :name, String, :desc => N_("sync plan name"), :required => true, :action_aware => true
@@ -117,16 +119,13 @@ module Katello
 
     protected
 
-    def find_plan
-      @sync_plan = SyncPlan.find_by(:id => params[:id])
-      fail HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % { :plan => params[:id], :org => params[:organization_id] } if @sync_plan.nil?
-      @organization ||= @sync_plan.organization
-      @sync_plan
-    end
-
     def sync_plan_params
       params[:sync_plan][:enabled] = params[:enabled] unless params[:enabled].nil?
       params.require(:sync_plan).permit(:name, :description, :interval, :sync_date, :product_ids, :enabled, :cron_expression)
+    end
+
+    def set_organization
+      @organization ||= @sync_plan.try(:organization)
     end
   end
 end

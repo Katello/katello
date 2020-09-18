@@ -22,7 +22,7 @@ module Katello
       @update_permission = :edit_sync_plans
       @destroy_permission = :destroy_sync_plans
 
-      @sync_permission = :sync_products
+      @sync_permission = :sync_sync_plans
       @read_products_permission = :view_products
       @update_products_permission = :edit_products
     end
@@ -117,6 +117,22 @@ module Katello
         post :create, params: { :organization_id => @organization.id, :sync_plan => {:name => 'Hourly Sync Plan',
                                                                                      :sync_date => '2014-01-09 17:46:00',
                                                                                      :interval => 'hourly'} }
+      end
+    end
+
+    def test_show
+      get :show, params: { :id => @sync_plan.id }
+
+      assert_response :success
+      assert_template 'api/v2/sync_plans/show'
+    end
+
+    def test_show_protected_specific_instance
+      allowed_perms = [{:name => @view_permission, :search => "name=\"#{@sync_plan.name}\"" }]
+      denied_perms = [{:name => @view_permission, :search => "name=\"some_name\"" }]
+
+      assert_protected_object(:show, allowed_perms, denied_perms) do
+        get :show, params: { :id => @sync_plan.id }
       end
     end
 
