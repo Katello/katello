@@ -21,12 +21,16 @@ module Katello
       end
 
       def find_authorized_katello_resource
-        finder_scope = ::Foreman::AccessControl.permissions_for_controller_action(path_to_authenticate).first&.finder_scope
-        if finder_scope
-          instance_variable_set("@#{resource_name}", resource_class.send(finder_scope).find_by(:id => params[:id]))
+        found_entity = nil
+        ::Foreman::AccessControl.permissions_for_controller_action(path_to_authenticate).each do |permission|
+          next unless found_entity.blank?
+          finder_scope = permission&.finder_scope
+          if finder_scope
+            found_entity = resource_class.send(finder_scope).find_by(:id => params[:id])
+          end
         end
-
-        throw_resource_not_found if instance_variable_get("@#{resource_name}").nil?
+        throw_resource_not_found if found_entity.blank?
+        instance_variable_set("@#{resource_name}", found_entity)
       end
 
       def find_unauthorized_katello_resource
