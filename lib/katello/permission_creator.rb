@@ -329,7 +329,6 @@ module Katello
                            'katello/api/v2/products_bulk_actions' => [:sync_products],
                            'katello/api/v2/repositories_bulk_actions' => [:sync_repositories],
                            'katello/api/v2/sync' => [:index],
-                           'katello/api/v2/sync_plans' => [:sync],
                            'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy]
                          },
                          :resource_type => 'Katello::Product',
@@ -377,28 +376,38 @@ module Katello
                          :resource_type => 'Katello::Subscription'
     end
 
-    def sync_plan_permissions
+    def sync_plan_permissions # rubocop:disable Metrics/MethodLength
       @plugin.permission :view_sync_plans,
                          {
                            'katello/api/v2/sync_plans' => [:index, :show, :add_products, :remove_products, :available_products, :auto_complete_search],
                            'katello/api/v2/products' => [:index]
                          },
-                         :resource_type => 'Katello::SyncPlan'
+                         :resource_type => 'Katello::SyncPlan',
+                         :finder_scope => :readable
       @plugin.permission :create_sync_plans,
                          {
                            'katello/api/v2/sync_plans' => [:create]
                          },
-                         :resource_type => 'Katello::SyncPlan'
+                         :resource_type => 'Katello::SyncPlan',
+                         :finder_scope => :editable
       @plugin.permission :edit_sync_plans,
                          {
                            'katello/api/v2/sync_plans' => [:update]
                          },
-                         :resource_type => 'Katello::SyncPlan'
+                         :resource_type => 'Katello::SyncPlan',
+                         :finder_scope => :editable
       @plugin.permission :destroy_sync_plans,
                          {
                            'katello/api/v2/sync_plans' => [:destroy]
                          },
-                         :resource_type => 'Katello::SyncPlan'
+                         :resource_type => 'Katello::SyncPlan',
+                         :finder_scope => :deletable
+      @plugin.permission :sync_sync_plans,
+                         {
+                           'katello/api/v2/sync_plans' => [:sync]
+                         },
+                         :resource_type => 'Katello::SyncPlan',
+                         :finder_scope => :syncable
     end
 
     def user_permissions
