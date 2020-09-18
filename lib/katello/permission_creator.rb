@@ -109,7 +109,8 @@ module Katello
                                                 :view_compare_puppet_modules,
                                                 :views]
                  },
-                 :resource_type => 'Katello::ContentView'
+                 :resource_type => 'Katello::ContentView',
+                 :finder_scope => :readable
       @plugin.permission :create_content_views,
                          {
                            'katello/api/v2/content_views' => [:create, :copy]
@@ -124,30 +125,35 @@ module Katello
                            'katello/api/v2/content_view_puppet_modules' => [:create, :update, :destroy],
                            'katello/api/v2/content_view_components' => [:add_components, :remove_components, :update]
                          },
-                         :resource_type => 'Katello::ContentView'
+                         :resource_type => 'Katello::ContentView',
+                         :finder_scope => :editable
       @plugin.permission :destroy_content_views,
                          {
                            'katello/api/v2/content_views' => [:destroy, :remove],
                            'katello/api/v2/content_view_versions' => [:destroy]
                          },
-                         :resource_type => 'Katello::ContentView'
+                         :resource_type => 'Katello::ContentView',
+                         :finder_scope => :deletable
       @plugin.permission :publish_content_views,
                          {
                            'katello/api/v2/content_views' => [:publish],
                            'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories]
                          },
-                         :resource_type => 'Katello::ContentView'
+                         :resource_type => 'Katello::ContentView',
+                         :finder_scope => :publishable
       @plugin.permission :promote_or_remove_content_views,
                          {
                            'katello/api/v2/content_view_versions' => [:promote],
                            'katello/api/v2/content_views' => [:remove_from_environment, :remove, :republish_repositories]
                          },
-                         :resource_type => 'Katello::ContentView'
+                         :resource_type => 'Katello::ContentView',
+                         :finder_scope => :promotable_or_removable
       @plugin.permission :export_content_views,
                          {
                            'katello/api/v2/content_view_versions' => [:export]
                          },
-                         :resource_type => 'Katello::ContentView'
+                         :resource_type => 'Katello::ContentView',
+                         :finder_scope => :exportable
     end
 
     def gpg_key_permissions

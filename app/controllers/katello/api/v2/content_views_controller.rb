@@ -3,7 +3,8 @@ module Katello
     include Concerns::Authorization::Api::V2::ContentViewsController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_content_view, :except => [:index, :create, :auto_complete_search]
+    before_action :find_authorized_katello_resource, :except => [:index, :create, :copy, :auto_complete_search]
+    before_action :ensure_non_default, :except => [:index, :create, :copy, :auto_complete_search]
     before_action :find_organization, :only => [:create]
     before_action :find_optional_organization, :only => [:index, :auto_complete_search]
     before_action :find_environment, :only => [:index, :remove_from_environment]
@@ -66,12 +67,12 @@ module Katello
     param :composite, :bool, :desc => N_("Composite content view")
     param_group :content_view
     def create
-      @view = ContentView.create!(view_params) do |view|
+      @content_view = ContentView.create!(view_params) do |view|
         view.organization = @organization
         view.label ||= labelize_params(params[:content_view])
       end
 
-      respond :resource => @view
+      respond :resource => @content_view
     end
 
     api :PUT, "/content_views/:id", N_("Update a content view")
@@ -79,8 +80,8 @@ module Katello
     param :name, String, :desc => N_("New name for the content view")
     param_group :content_view
     def update
-      sync_task(::Actions::Katello::ContentView::Update, @view, view_params)
-      respond :resource => @view.reload
+      sync_task(::Actions::Katello::ContentView::Update, @content_view, view_params)
+      respond :resource => @content_view.reload
     end
 
     api :POST, "/content_views/:id/publish", N_("Publish a content view")
@@ -93,7 +94,7 @@ module Katello
       param :rpm_filenames, Array, of: String, :desc => N_("list of rpm filename strings to include in published version"), :required => true
     end
     def publish
-      if params[:repos_units].present? && @view.composite?
+      if params[:repos_units].present? && @content_view.composite?
         fail HttpErrors::BadRequest, _("Directly setting package lists on composite content views is not allowed. Please " \
                                      "update the components, then re-publish the composite.")
       end
@@ -105,7 +106,7 @@ module Katello
         fail HttpErrors::BadRequest, _("Both major and minor parameters have to be used to override a CV version")
       end
 
-      task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
+      task = async_task(::Actions::Katello::ContentView::Publish, @content_view, params[:description],
                         :major => params[:major],
                         :minor => params[:minor],
                         :repos_units => params[:repos_units])
@@ -115,7 +116,7 @@ module Katello
     api :GET, "/content_views/:id", N_("Show a content view")
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     def show
-      respond :resource => @view
+      respond :resource => @content_view
     end
 
     api :GET, "/content_views/:id/available_puppet_modules",
@@ -123,9 +124,9 @@ module Katello
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     param :name, String, :desc => N_("module name to restrict modules for"), :required => false
     def available_puppet_modules
-      current_cv_puppet_modules = @view.content_view_puppet_modules.where("uuid is NOT NULL")
+      current_cv_puppet_modules = @content_view.content_view_puppet_modules.where("uuid is NOT NULL")
       current_uuids = current_cv_puppet_modules.pluck(:uuid)
-      repositories = @view.organization.library.puppet_repositories
+      repositories = @content_view.organization.library.puppet_repositories
       query = PuppetModule.in_repositories(repositories)
       selected_latest_versions = []
       if params[:name]
@@ -154,9 +155,9 @@ module Katello
         N_("Get puppet modules names that are available to be added to the content view")
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     def available_puppet_module_names
-      current_names = @view.content_view_puppet_modules.where("name is NOT NULL").pluck(:name)
+      current_names = @content_view.content_view_puppet_modules.where("name is NOT NULL").pluck(:name)
 
-      repos = @view.organization.library.puppet_repositories
+      repos = @content_view.organization.library.puppet_repositories
 
       modules = PuppetModule.in_repositories(repos)
       modules = modules.where('name NOT in (?)', current_names) if current_names.present?
@@ -169,12 +170,12 @@ module Katello
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     param :environment_id, :number, :desc => N_("environment numeric identifier"), :required => true
     def remove_from_environment
-      unless @view.environments.include?(@environment)
+      unless @content_view.environments.include?(@environment)
         fail HttpErrors::BadRequest, _("Content view '%{view}' is not in lifecycle environment '%{env}'.") %
-              {view: @view.name, env: @environment.name}
+              {view: @content_view.name, env: @environment.name}
       end
 
-      task = async_task(::Actions::Katello::ContentView::RemoveFromEnvironment, @view, @environment)
+      task = async_task(::Actions::Katello::ContentView::RemoveFromEnvironment, @content_view, @environment)
       respond_for_async :resource => task
     end
 
@@ -190,7 +191,7 @@ module Katello
       cv_envs = ContentViewEnvironment.where(:environment_id => params[:environment_ids],
                                              :content_view_id => params[:id]
                                             )
-      versions = @view.versions.where(:id => params[:content_view_version_ids])
+      versions = @content_view.versions.where(:id => params[:content_view_version_ids])
 
       if cv_envs.empty? && versions.empty?
         fail _("There either were no environments nor versions specified or there were invalid environments/versions specified. "\
@@ -205,14 +206,14 @@ module Katello
       options[:content_view_versions] = versions
       options[:content_view_environments] = cv_envs
 
-      task = async_task(::Actions::Katello::ContentView::Remove, @view, options)
+      task = async_task(::Actions::Katello::ContentView::Remove, @content_view, options)
       respond_for_async :resource => task
     end
 
     api :DELETE, "/content_views/:id", N_("Delete a content view")
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     def destroy
-      task = async_task(::Actions::Katello::ContentView::Destroy, @view)
+      task = async_task(::Actions::Katello::ContentView::Destroy, @content_view)
       respond_for_async :resource => task
     end
 
@@ -220,16 +221,17 @@ module Katello
     param :id, :number, :desc => N_("Content view numeric identifier"), :required => true
     param :name, String, :required => true, :desc => N_("New content view name")
     def copy
-      new_content_view = @view.copy(params[:content_view][:name])
+      @content_view = Katello::ContentView.readable.find_by(:id => params[:id])
+      throw_resource_not_found(name: 'content_view', id: params[:id]) if @content_view.blank?
+      ensure_non_default
+      new_content_view = @content_view.copy(params[:content_view][:name])
       respond_for_create :resource => new_content_view
     end
 
     private
 
-    def find_content_view
-      @view = ContentView.find(params[:id])
-
-      if @view.default? && !%w(show history).include?(params[:action])
+    def  ensure_non_default
+      if @content_view.default? && !%w(show history).include?(params[:action])
         fail HttpErrors::BadRequest, _("The default content view cannot be edited, published, or deleted.")
       end
     end
@@ -238,7 +240,7 @@ module Katello
       attrs = [:name, :description, :force_puppet_environment, :auto_publish, :solve_dependencies,
                :default, :created_at, :updated_at, :next_version, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
-      if (!@view || !@view.composite?)
+      if (!@content_view || !@content_view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)
       end
       params.require(:content_view).permit(*attrs).to_h
@@ -246,7 +248,7 @@ module Katello
 
     def find_environment
       return if !params.key?(:environment_id) && params[:action] == "index"
-      @environment = KTEnvironment.find(params[:environment_id])
+      @environment = KTEnvironment.readable.find(params[:environment_id])
     end
 
     def add_use_latest_records(module_records, selected_latest_versions)
