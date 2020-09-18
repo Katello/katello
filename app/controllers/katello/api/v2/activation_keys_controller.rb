@@ -1,5 +1,4 @@
 module Katello
-  # rubocop:disable Metrics/ClassLength
   class Api::V2::ActivationKeysController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
     include Katello::Concerns::Api::V2::ContentOverridesController
@@ -7,11 +6,10 @@ module Katello
     before_action :find_environment, :only => [:index, :create, :update]
     before_action :find_optional_organization, :only => [:index, :create, :show]
     before_action :find_content_view, :only => [:index]
-    before_action :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
-                                                  :available_host_collections, :add_host_collections, :remove_host_collections,
-                                                  :content_override, :add_subscriptions, :remove_subscriptions,
-                                                  :subscriptions]
-    before_action :authorize
+    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :available_releases, :product_content,
+                                                               :available_host_collections, :add_host_collections, :remove_host_collections,
+                                                               :content_override, :add_subscriptions, :remove_subscriptions,
+                                                               :subscriptions]
     before_action :verify_simple_content_access_disabled, :only => [:add_subscriptions]
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach purpose_role purpose_usage purpose_addons content_view_environment))
@@ -97,6 +95,9 @@ module Katello
     param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def copy
+      @activation_key = Katello::ActivationKey.readable.find_by(:id => params[:id])
+      throw_resource_not_found(name: 'activation_key', id: params[:id]) if @activation_key.nil?
+
       fail HttpErrors::BadRequest, _("New name cannot be blank") unless params[:new_name]
       @new_activation_key = @activation_key.copy(params[:new_name])
       @new_activation_key.user = current_user
@@ -256,12 +257,6 @@ module Katello
       activation_keys
     end
 
-    def find_activation_key
-      @activation_key = ActivationKey.find(params[:id])
-      fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
-      @activation_key
-    end
-
     private
 
     def subscription_index
@@ -281,7 +276,7 @@ module Katello
       environment_id = params[:environment][:id] if !environment_id && params[:environment]
       return unless environment_id
 
-      @environment = KTEnvironment.find(environment_id)
+      @environment = KTEnvironment.readable.find_by(id: environment_id)
       fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       @organization = @environment.organization
       @environment
@@ -292,7 +287,7 @@ module Katello
       @host_collections = []
 
       ids&.each do |host_collection_id|
-        host_collection = HostCollection.find(host_collection_id)
+        host_collection = HostCollection.readable.find(host_collection_id)
         fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % host_collection_id if host_collection.nil?
         @host_collections << host_collection
       end
@@ -306,7 +301,7 @@ module Katello
     def find_content_view
       if params.include?(:content_view_id)
         cv_id = params[:content_view_id]
-        @content_view = ContentView.find_by(:id => cv_id)
+        @content_view = ContentView.readable.find_by(:id => cv_id)
         fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
       end
     end
