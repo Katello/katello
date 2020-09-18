@@ -210,22 +210,26 @@ module Katello
                          {
                            'katello/api/v2/host_collections' => [:index, :show, :auto_complete_search]
                          },
-                         :resource_type => 'Katello::HostCollection'
+                         :resource_type => 'Katello::HostCollection',
+                         :finder_scope => :readable
       @plugin.permission :create_host_collections,
                          {
                            'katello/api/v2/host_collections' => [:create, :copy]
                          },
-                         :resource_type => 'Katello::HostCollection'
+                         :resource_type => 'Katello::HostCollection',
+                         :finder_scope => :creatable
       @plugin.permission :edit_host_collections,
                          {
                            'katello/api/v2/host_collections' => [:update, :add_hosts, :remove_hosts]
                          },
-                         :resource_type => 'Katello::HostCollection'
+                         :resource_type => 'Katello::HostCollection',
+                         :finder_scope => :editable
       @plugin.permission :destroy_host_collections,
                          {
                            'katello/api/v2/host_collections' => [:destroy]
                          },
-                         :resource_type => 'Katello::HostCollection'
+                         :resource_type => 'Katello::HostCollection',
+                         :finder_scope => :deletable
     end
 
     def lifecycle_environment_permissions
