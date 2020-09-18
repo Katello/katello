@@ -25,7 +25,8 @@ module Katello
                            'katello/api/v2/activation_keys' => [:index, :show, :available_host_collections, :available_releases,
                                                                 :product_content, :auto_complete_search]
                          },
-                         :resource_type => 'Katello::ActivationKey'
+                         :resource_type => 'Katello::ActivationKey',
+                         :finder_scope => :readable
       @plugin.permission :create_activation_keys,
                          {
                            'katello/api/v2/activation_keys' => [:create, :copy]
@@ -37,12 +38,14 @@ module Katello
                                                                 :add_subscriptions, :remove_subscriptions,
                                                                 :add_host_collections, :remove_host_collections]
                          },
-                         :resource_type => 'Katello::ActivationKey'
+                         :resource_type => 'Katello::ActivationKey',
+                         :finder_scope => :editable
       @plugin.permission :destroy_activation_keys,
                          {
                            'katello/api/v2/activation_keys' => [:destroy]
                          },
-                         :resource_type => 'Katello::ActivationKey'
+                         :resource_type => 'Katello::ActivationKey',
+                         :finder_scope => :deletable
     end
 
     def capsule_content_permissions

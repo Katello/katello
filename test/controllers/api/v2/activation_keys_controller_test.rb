@@ -80,12 +80,24 @@ module Katello
       end
     end
 
+    def test_create_protected_object
+      #don't have view on LCE or CV
+      denied_perms = [{:name => @create_permission, :search => "name=\"Key A2\""}]
+
+      assert_protected_object(:create, [], denied_perms) do
+        post :create, params: { :environment => { :id => @library.id }, :content_view_id => @view.id, :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
+      end
+    end
+
     def test_create_protected
-      allowed_perms = [@create_permission]
+      dev_env_read_permission = {:name => :view_lifecycle_environments, :search => "id=\"#{@library.id}\"" }
+      view_read_permission = {:name => :view_lifecycle_environments, :search => "id=\"#{@view.id}\"" }
+
+      allowed_perms = [[@create_permission, dev_env_read_permission, view_read_permission]]
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, params: { :environment => { :id => @library.id }, :content_view => { :id => @view.id }, :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
+        post :create, params: { :environment => { :id => @library.id }, :content_view_id => @view.id, :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
       end
     end
 
@@ -307,6 +319,15 @@ module Katello
       end
     end
 
+    def test_update_protected_object
+      allowed_perms = [{:name => @update_permission, :search => "name=\"#{@activation_key.name}\"" }]
+      denied_perms = [{:name => @update_permission, :search => "name=\"foobar999\"" }]
+
+      assert_protected_object(:update, allowed_perms, denied_perms, [@organization]) do
+        put :update, params: { :id => @activation_key.id, :organization_id => @organization.id, :activation_key => {:name => 'New Name'} }
+      end
+    end
+
     def test_update_limit_below_consumed
       subscription_facet1 = Host::SubscriptionFacet.find(katello_subscription_facets(:one).id)
       subscription_facet2 = Host::SubscriptionFacet.find(katello_subscription_facets(:two).id)
@@ -346,8 +367,7 @@ module Katello
       @activation_key.stubs(:service_level).returns("Premium")
       @activation_key.stubs(:release_version).returns("6Server")
       @activation_key.stubs(:auto_attach).returns(false)
-      @controller.instance_variable_set(:@activation_key, @activation_key)
-      @controller.stubs(:find_activation_key).returns(@activation_key)
+      ActivationKey.expects(:readable).returns(stub(:find_by => @activation_key))
 
       assert_sync_task(::Actions::Katello::ActivationKey::Create)
       assert_sync_task(::Actions::Katello::ActivationKey::Update) do |_activation_key, activation_key_params|
@@ -427,7 +447,7 @@ module Katello
       expected_names = ["enabled", "enabled", "mirrorlist"]
       expected_values = ["1", "0", nil]
 
-      ActivationKey.expects(:find).returns(@activation_key)
+      ActivationKey.expects(:editable).returns(stub(:find_by => @activation_key))
       @activation_key.expects(:set_content_overrides).returns(true).once.with do |params|
         params.size == overrides.size &&
           params.map(&:content_label) == expected_content_labels &&

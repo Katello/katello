@@ -25,6 +25,10 @@ module Katello
         authorized(:edit_activation_keys)
       end
 
+      def deletable
+        authorized(:destroy_activation_keys)
+      end
+
       def any_editable?
         editable.count > 0
       end

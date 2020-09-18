@@ -4,12 +4,16 @@ module Katello
   class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin').id)
-      @key = ActivationKey.find(katello_activation_keys('simple_key').id)
+      User.current = users('admin')
+      @key = katello_activation_keys('simple_key')
     end
 
     def test_readable
       refute_empty ActivationKey.readable
+    end
+
+    def test_deletable
+      refute_empty ActivationKey.deletable
     end
 
     def test_readable?
@@ -39,6 +43,10 @@ module Katello
       super
       User.current = User.find(users(:restricted).id)
       @key = ActivationKey.find(katello_activation_keys('simple_key').id)
+    end
+
+    def test_deletable
+      assert_empty ActivationKey.deletable
     end
 
     def test_readable?
