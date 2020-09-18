@@ -24,6 +24,14 @@ module Katello
     def test_any_promotable?
       assert KTEnvironment.any_promotable?
     end
+
+    def test_deleteable
+      refute_empty KTEnvironment.deletable
+    end
+
+    def test_ediable
+      refute_empty KTEnvironment.editable
+    end
   end
 
   class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
@@ -48,6 +56,14 @@ module Katello
 
     def test_any_promotable?
       refute KTEnvironment.any_promotable?
+    end
+
+    def test_deletable
+      assert_empty KTEnvironment.deletable
+    end
+
+    def test_editable
+      assert_empty KTEnvironment.editable
     end
   end
 
