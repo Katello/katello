@@ -45,6 +45,14 @@ module Katello
         ::User.current.can?(:create_lifecycle_environments)
       end
 
+      def deletable
+        authorized(:destroy_lifecycle_environments)
+      end
+
+      def editable
+        authorized(:edit_lifecycle_environments)
+      end
+
       def content_readable(org)
         readable.where(:organization_id => org)
       end

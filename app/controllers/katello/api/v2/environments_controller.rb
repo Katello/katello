@@ -37,7 +37,7 @@ module Katello
     before_action :find_organization, :only => [:create, :paths, :auto_complete_search]
     before_action :find_optional_organization, :only => [:index, :show, :update, :destroy]
     before_action :find_prior, :only => [:create]
-    before_action :find_environment, :only => [:show, :update, :destroy, :repositories]
+    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :repositories]
     before_action :find_content_view, :only => [:repositories]
     before_action :find_path, :only => [:create]
 
@@ -154,15 +154,15 @@ module Katello
       respond_for_index(:collection => collection, :template => :paths)
     end
 
-    protected
-
-    def find_environment
-      identifier = params.require(:id) || params.require(:environment).require(:id)
-      @environment = KTEnvironment.find(identifier)
-      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % identifier.to_s if @environment.nil?
-      @organization = @environment.organization
-      @environment
+    def resource_name
+      'environment'
     end
+
+    def resource_class
+      Katello::KTEnvironment
+    end
+
+    protected
 
     def find_prior
       prior = params[:environment][:prior] || params.require(:environment).require(:prior_id)

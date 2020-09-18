@@ -234,26 +234,30 @@ module Katello
                            'katello/api/v2/environments' => [:index, :show, :paths, :repositories, :auto_complete_search],
                            'katello/api/rhsm/candlepin_proxies' => [:rhsm_index]
                          },
-                         :resource_type => 'Katello::KTEnvironment'
+                         :resource_type => 'Katello::KTEnvironment',
+                         :finder_scope => :readable
       @plugin.permission :create_lifecycle_environments,
                          {
                            'katello/api/v2/environments' => [:create]
                          },
-                         :resource_type => 'Katello::KTEnvironment'
+                         :resource_type => 'Katello::KTEnvironment',
+                         :finder_scope => :creatable
       @plugin.permission :edit_lifecycle_environments,
                          {
                            'katello/api/v2/environments' => [:update]
                          },
-                         :resource_type => 'Katello::KTEnvironment'
+                         :resource_type => 'Katello::KTEnvironment',
+                         :finder_scope => :editable
       @plugin.permission :destroy_lifecycle_environments,
                          {
                            'katello/api/v2/environments' => [:destroy]
                          },
-                         :resource_type => 'Katello::KTEnvironment'
-
+                         :resource_type => 'Katello::KTEnvironment',
+                         :finder_scope => :deletable
       @plugin.permission :promote_or_remove_content_views_to_environments,
                          {},
-                         :resource_type => 'Katello::KTEnvironment'
+                         :resource_type => 'Katello::KTEnvironment',
+                         :finder_scope => :promotable
     end
 
     def product_permissions # rubocop:disable Metrics/MethodLength

@@ -213,7 +213,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
           :new_name => 'New Name'
         } }
@@ -243,6 +243,7 @@ module Katello
       destroyable_env = KTEnvironment.create!(:name => "DestroyAble",
                                               :organization => @staging.organization,
                                               :prior => @staging)
+
       assert_sync_task(::Actions::Katello::Environment::Destroy, destroyable_env)
       delete :destroy, params: { :organization_id => @organization.id, :id => destroyable_env.id }
 
