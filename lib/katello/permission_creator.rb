@@ -8,7 +8,6 @@ module Katello
       activation_keys_permissions
       capsule_content_permissions
       content_view_permissions
-      gpg_key_permissions
       content_credential_permissions
       host_collections_permissions
       lifecycle_environment_permissions
@@ -159,50 +158,34 @@ module Katello
                          :finder_scope => :exportable
     end
 
-    def gpg_key_permissions
-      @plugin.permission :view_gpg_keys,
-                         {
-                           'katello/api/v2/gpg_keys' => [:index, :show, :content, :auto_complete_search]
-                         },
-                         :resource_type => 'Katello::GpgKey'
-      @plugin.permission :create_gpg_keys,
-                         {
-                           'katello/api/v2/gpg_keys' => [:create]
-                         },
-                         :resource_type => 'Katello::GpgKey'
-      @plugin.permission :edit_gpg_keys,
-                         {
-                           'katello/api/v2/gpg_keys' => [:update, :set_content]
-                         },
-                         :resource_type => 'Katello::GpgKey'
-      @plugin.permission :destroy_gpg_keys,
-                         {
-                           'katello/api/v2/gpg_keys' => [:destroy]
-                         },
-                         :resource_type => 'Katello::GpgKey'
-    end
-
     def content_credential_permissions
       @plugin.permission :view_content_credentials,
                          {
-                           'katello/api/v2/content_credentials' => [:index, :show, :content, :auto_complete_search]
+                           'katello/api/v2/content_credentials' => [:index, :show, :content, :auto_complete_search],
+                           'katello/api/v2/gpg_keys' => [:index, :show, :content, :auto_complete_search]
                          },
-                         :resource_type => 'Katello::GpgKey'
+                         :resource_type => 'Katello::GpgKey',
+                         :finder_scope => :readable
       @plugin.permission :create_content_credentials,
                          {
-                           'katello/api/v2/content_credentials' => [:create]
+                           'katello/api/v2/content_credentials' => [:create],
+                           'katello/api/v2/gpg_keys' => [:create]
                          },
                          :resource_type => 'Katello::GpgKey'
       @plugin.permission :edit_content_credentials,
                          {
-                           'katello/api/v2/content_credentials' => [:update, :set_content]
+                           'katello/api/v2/content_credentials' => [:update, :set_content],
+                           'katello/api/v2/gpg_keys' => [:update, :set_content]
                          },
-                         :resource_type => 'Katello::GpgKey'
+                         :resource_type => 'Katello::GpgKey',
+                         :finder_scope => :editable
       @plugin.permission :destroy_content_credentials,
                          {
-                           'katello/api/v2/content_credentials' => [:destroy]
+                           'katello/api/v2/content_credentials' => [:destroy],
+                           'katello/api/v2/gpg_keys' => [:destroy]
                          },
-                         :resource_type => 'Katello::GpgKey'
+                         :resource_type => 'Katello::GpgKey',
+                         :finder_scope => :deletable
     end
 
     def host_collections_permissions

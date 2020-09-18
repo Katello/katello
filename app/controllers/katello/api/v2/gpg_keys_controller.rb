@@ -52,13 +52,13 @@ module Katello
       respond_for_create(:resource => gpg_key)
     end
 
-    api :GET, "/gpg_keys/:id", N_("Show a gpg key")
+    api :GET, "/gpg_keys/:id", N_("Show a gpg key"), :deprecated => true
     param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     def show
       respond_for_show(:resource => @gpg_key)
     end
 
-    api :PUT, "/gpg_keys/:id", N_("Update a repository")
+    api :PUT, "/gpg_keys/:id", N_("Update a repository"), :deprecated => true
     param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     param_group :gpg_key
     def update
@@ -67,20 +67,20 @@ module Katello
       respond_for_show(:resource => @gpg_key)
     end
 
-    api :DELETE, "/gpg_keys/:id", N_("Destroy a gpg key")
+    api :DELETE, "/gpg_keys/:id", N_("Destroy a gpg key"), :deprecated => true
     param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     def destroy
       @gpg_key.destroy
       respond_for_destroy
     end
 
-    api :GET, "/gpg_keys/:id/content", N_("Return the content of a gpg key, used directly by yum")
+    api :GET, "/gpg_keys/:id/content", N_("Return the content of a gpg key, used directly by yum"), :deprecated => true
     param :id, :number, :required => true
     def content
       render(:plain => @gpg_key.content, :layout => false)
     end
 
-    api :POST, "/gpg_keys/:id/content", N_("Upload gpg key contents")
+    api :POST, "/gpg_keys/:id/content", N_("Upload gpg key contents"), :deprecated => true
     param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     param :content, File, :desc => N_("file contents"), :required => true
     def set_content

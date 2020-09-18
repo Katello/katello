@@ -49,6 +49,24 @@ module Katello
       end
     end
 
+    def test_create_protected
+      allowed_perms = [@create_permission]
+      denied_perms = [@view_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
+        post :create, params: {content: 'asdf', content_type: 'gpg_key', name: 'foo', organization_id: @organization.id}
+      end
+    end
+
+    def test_update_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
+        put :update, params: {name: 'foo2', id: @gpg_key.id }
+      end
+    end
+
     def test_content
       get :content, params: { :id => @gpg_key.id }
       assert_equal @response.body, @gpg_key.content

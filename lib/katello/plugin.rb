@@ -358,7 +358,7 @@ Foreman::Plugin.register :katello do
   role 'Register hosts', [
     :view_hostgroups, :view_activation_keys, :view_hosts,
     :create_hosts, :edit_hosts, :destroy_hosts,
-    :view_content_views, :view_gpg_keys, :view_subscriptions,
+    :view_content_views, :view_content_credentials, :view_subscriptions,
     :attach_subscriptions, :view_host_collections,
     :view_organizations, :view_lifecycle_environments, :view_products,
     :view_locations, :view_domains, :view_architectures,

@@ -46,7 +46,7 @@ module Katello
     end
 
     def self.humanize_class_name(_name = nil)
-      _("GPG Keys")
+      _("Content Credentials")
     end
 
     def to_label
