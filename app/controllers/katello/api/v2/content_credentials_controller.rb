@@ -1,9 +1,8 @@
 module Katello
   class Api::V2::ContentCredentialsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
-    before_action :authorize
     before_action :find_organization, :only => [:create, :index, :auto_complete_search]
-    before_action :find_content_credential, :only => [:show, :update, :destroy, :content, :set_content]
+    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :content, :set_content]
     skip_before_action :check_media_type, :only => [:create, :content, :set_content]
 
     def resource_class
@@ -102,12 +101,6 @@ module Katello
     end
 
     protected
-
-    def find_content_credential
-      @content_credential = GpgKey.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      raise HttpErrors::NotFound, _("Couldn't find Content Credential '%s'") % params[:id]
-    end
 
     def content_credential_params
       params.permit(:name, :content_type, :content)
