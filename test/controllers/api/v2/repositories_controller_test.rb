@@ -185,17 +185,15 @@ module Katello
       assert_response_ids response, ids
     end
 
-    # def test_index_with_content_view_version_id_and_library
-    #   # version  = @organization.default_content_view_version
-    #   # ids = version.repositories.pluck(:library_instance_id).reject(&:blank?).uniq
-    #   ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?).uniq
-    #
-    #   response = get :index, params: { :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true }
-    #
-    #   assert_response :success
-    #   assert_template 'api/v2/repositories/index'
-    #   assert_response_ids response, ids
-    # end
+    def test_index_with_content_view_version_id_and_library
+      ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?).uniq
+
+      response = get :index, params: { :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true }
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+      assert_response_ids response, ids
+    end
 
     def test_index_with_library
       ids = @organization.default_content_view.versions.first.repositories.pluck(:id)
@@ -539,6 +537,15 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
+        get :show, params: { :id => @repository.id }
+      end
+    end
+
+    def test_show_protected_specific_instance
+      allowed_perms = [{:name => @read_permission, :search => "name=\"#{@repository.product.name}\"" }]
+      denied_perms = [{:name => @read_permission, :search => "name=\"#{@redhat_repository.product.name}\"" }]
+
+      assert_protected_object(:show, allowed_perms, denied_perms) do
         get :show, params: { :id => @repository.id }
       end
     end

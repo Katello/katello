@@ -3,27 +3,29 @@ require "#{Katello::Engine.root}/test/support/auth_support"
 module ControllerSupport
   include Katello::AuthorizationSupportMethods
 
-  def check_permission(params)
-    permissions = params[:permission].is_a?(Array) ? params[:permission] : [params[:permission]]
+  def check_permission(permission:, action:, request:, organizations:, authorized: true, expect_404: false)
+    permissions = permission.is_a?(Array) ? permission : [permission]
 
-    permissions.each do |permission|
+    permissions.each do |perm|
       user = User.unscoped.find(users(:restricted).id)
       as_admin do
-        user.organizations = params[:organizations] if params[:organizations].present?
-        setup_user_with_permissions(permission, user)
+        user.organizations = organizations unless organizations.blank?
+        setup_user_with_permissions(perm, user)
       end
 
-      action = params[:action]
-      req = params[:request]
       @controller.define_singleton_method(action) { head :no_content }
 
       login_user(user)
-      req.call
+      request.call
 
-      if params[:authorized]
+      if authorized
         msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" \
                  "permission -> #{permission.to_yaml}"
         assert((response.status >= 200) && (response.status < 300), msg)
+      elsif expect_404
+        msg = "404 expected for #{action}, got #{response.status} instead. \n" \
+                "permission -> #{permission.to_yaml}"
+        assert_equal 404, response.status, msg
       else
         msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n" \
                 "permission -> #{permission.to_yaml}"
@@ -32,12 +34,13 @@ module ControllerSupport
     end
   end
 
-  def assert_protected_action(action_name, allowed_perms, denied_perms = [], organizations = [], &block)
+  def assert_protected_action(action_name, allowed_perms, denied_perms = [], organizations = [], expect_404: false, &block)
     assert_authorized(
         :permission => allowed_perms,
         :action => action_name,
         :request => block,
-        :organizations => organizations
+        :organizations => organizations,
+        :expect_404 => expect_404
     )
 
     unless denied_perms.empty?
@@ -45,9 +48,14 @@ module ControllerSupport
           :permission => denied_perms,
           :action => action_name,
           :request => block,
-          :organizations => organizations
+          :organizations => organizations,
+          :expect_404 => expect_404
       )
     end
+  end
+
+  def assert_protected_object(action_name, allowed_perms, denied_perms = [], organizations = [], &block)
+    assert_protected_action(action_name, allowed_perms, denied_perms, organizations, expect_404: true, &block)
   end
 
   def assert_authorized(params)
