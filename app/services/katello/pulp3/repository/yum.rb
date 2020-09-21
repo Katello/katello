@@ -113,23 +113,11 @@ module Katello
                 data.config << config
               end
             end
-            tasks << copy_pulp_units(data)
+            tasks << copy_content_chunked(data)
           else
             tasks << remove_all_content_from_mapping(repo_id_map)
           end
           tasks.flatten
-        end
-
-        def copy_pulp_units(data)
-          tasks = []
-          unit_amount = 0
-          data.config.each { |repo_config| unit_amount += repo_config[:content].size }
-          if unit_amount > UNIT_LIMIT
-            tasks << copy_content_chunked(data)
-          else
-            tasks << api.copy_api.copy_content(data)
-          end
-          tasks
         end
 
         def copy_api_data_dup(data)
@@ -150,6 +138,10 @@ module Katello
 
         def copy_content_chunked(data)
           tasks = []
+          # Don't chunk if there aren't enough content units
+          if data.config.sum { |repo_config| repo_config[:content].size } <= UNIT_LIMIT
+            return api.copy_api.copy_content(data)
+          end
 
           unit_copy_counter = 0
           i = 0
@@ -175,6 +167,8 @@ module Katello
             end
 
             if leftover_units.empty?
+              # Nothing more to copy -- clear current config's content
+              data_dup.config[i][:content] = []
               i += 1
               # Fetch unit list for next data config
               leftover_units = data.config[i][:content].deep_dup unless i == data_dup.config.size
