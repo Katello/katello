@@ -267,8 +267,8 @@ class SubscriptionsPage extends Component {
               {simpleContentAccess && (
                 <Alert type="info">
                   This organization has Simple Content Access enabled.
-                  Hosts can consume from all repositories in their Content View regardless of
-                  subscription status.  <br />
+                  Hosts are not required to have subscriptions attached to access repositories.
+                  <br />
                   Learn more about your overall subscription usage at
                   {' '}<a href={SUBSCRIPTION_WATCH_URL} target="_blank" rel="noreferrer">Subscription Watch</a>.
                 </Alert>

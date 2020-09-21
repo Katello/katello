@@ -37,7 +37,7 @@ export const SUBSCRIPTIONS_CLOSE_DELETE_MODAL = 'SUBSCRIPTIONS_CLOSE_DELETE_MODA
 export const SUBSCRIPTIONS_DISABLE_DELETE_BUTTON = 'SUBSCRIPTIONS_DISABLE_DELETE_BUTTON';
 export const SUBSCRIPTIONS_ENABLE_DELETE_BUTTON = 'SUBSCRIPTIONS_ENABLE_DELETE_BUTTON';
 
-export const SUBSCRIPTION_WATCH_URL = 'https://cloud.redhat.com/subscriptions/rhel-sw/all';
+export const SUBSCRIPTION_WATCH_URL = 'https://access.redhat.com/articles/subscription-watch';
 
 export const MANIFEST_DELETE_TASK_LABEL = 'Actions::Katello::Organization::ManifestDelete';
 

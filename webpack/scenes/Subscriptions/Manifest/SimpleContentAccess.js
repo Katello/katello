@@ -36,7 +36,7 @@ const SimpleContentAccess = (props) => {
               <OverlayTrigger
                 overlay={
                   <Tooltip id="sca-refresh-tooltip">
-                    {__('When Simple Content Access is enabled, hosts can consume from all repositories in their Content View regardless of subscription status.')}
+                    {__('When Simple Content Access is enabled, hosts are not required to have subscriptions attached to access repositories.')}
                   </Tooltip>
                 }
                 placement="bottom"
