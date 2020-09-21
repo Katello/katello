@@ -6,12 +6,11 @@ module Actions
           param :product_id
           param :content_id
           param :owner
-          param :enabled
         end
 
         def run
           output[:response] = ::Katello::Resources::Candlepin::Product.
-              add_content(input[:owner], input[:product_id], input[:content_id], input[:enabled])
+              add_content(input[:owner], input[:product_id], input[:content_id], true)
         end
       end
     end

@@ -66,17 +66,6 @@ module Katello
             self.post(join_path(path(owner_label, product_id), "content/#{content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
           end
 
-          def update_enabled(owner_label, product_id, contents)
-            options = { id: product_id }
-            options[:productContent] = contents.map do |content|
-              ret = { content: { id: content[:id] } }
-              ret[:enabled] = content[:enabled] if content.key?(:enabled)
-              ret
-            end
-
-            update(owner_label, options)
-          end
-
           def remove_content(owner_label, product_id, content_id)
             self.delete(join_path(path(owner_label, product_id), "content/#{content_id}"), self.default_headers).code.to_i
           end

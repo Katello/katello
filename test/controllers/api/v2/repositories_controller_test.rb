@@ -403,14 +403,6 @@ module Katello
       end
     end
 
-    def test_create_with_auto_enabled_true
-      auto_enabled = true
-
-      run_test_individual_attribute(:auto_enabled => auto_enabled) do |_, repo|
-        repo.root.expects(:auto_enabled=).with(auto_enabled)
-      end
-    end
-
     def test_create_with_ignorable_content
       ignorable_content = ["srpm", "erratum"]
       run_test_individual_attribute(:ignorable_content => ignorable_content) do |_, repo|
