@@ -86,7 +86,7 @@ module ::Actions::Katello::Repository
   class UpdateTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Update }
     let(:pulp_action_class) { ::Actions::Pulp::Orchestration::Repository::Refresh }
-    let(:katello_candlepin_action_class) { ::Actions::Katello::Repository::ContentUpdate }
+    let(:candlepin_action_class) { ::Actions::Candlepin::Product::ContentUpdate }
     let(:repository) { katello_repositories(:fedora_17_unpublished) }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Update }
     def setup
@@ -102,7 +102,7 @@ module ::Actions::Katello::Repository
       plan_action action, repository.root, :unprotected => true
       assert_action_planed_with action, pulp_action_class,
         repository, proxy
-      assert_action_planed_with action, katello_candlepin_action_class, repository, update_auto_enabled: false
+      assert_action_planed action, candlepin_action_class
     end
   end
 
@@ -178,45 +178,6 @@ module ::Actions::Katello::Repository
           returns(mock('discovery', run: nil))
 
       run_action action_planned
-    end
-  end
-
-  class ContentUpdateTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::ContentUpdate }
-    let(:repository) { katello_repositories(:fedora_17_unpublished) }
-    let(:candlepin_action_class) { ::Actions::Candlepin::Product::ContentUpdate }
-    let(:candlepin_enablement_class) { ::Actions::Candlepin::Product::ContentUpdateEnablement }
-    let(:action_planned_yes) { create_and_plan_action action_class, repository, update_auto_enabled: true }
-    let(:action_planned_no) { create_and_plan_action action_class, repository }
-
-    def setup
-      content = FactoryBot.create(:katello_content, cp_content_id: repository.content_id, organization_id: repository.product.organization_id)
-      Katello::ProductContent.create!(:content_id => content.id, :product_id => repository.product_id)
-      super
-    end
-
-    it 'plans' do
-      action = create_action action_class
-      plan_action action, repository, update_auto_enabled: true
-      assert_action_planned action, candlepin_action_class
-      assert_action_planed action, candlepin_enablement_class
-    end
-
-    it 'runs-content-update' do
-      assert_run_phase action_planned_yes
-    end
-
-    it 'doesnot-run-content-update' do
-      refute_run_phase action_planned_no
-    end
-
-    it 'plans-no-enable' do
-      action = create_action action_class
-      action.stubs(:action_subject).with(repository)
-
-      plan_action action, repository, update_auto_enabled: false
-      assert_action_planed action, candlepin_action_class
-      refute_action_planed action, candlepin_enablement_class
     end
   end
 
