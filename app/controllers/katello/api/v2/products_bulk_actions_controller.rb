@@ -107,7 +107,7 @@ module Katello
 
     def find_products
       params.require(:ids)
-      @products = Product.where(:id => params[:ids])
+      @products = Product.readable.where(:id => params[:ids])
     end
   end
 end
