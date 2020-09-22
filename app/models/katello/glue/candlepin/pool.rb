@@ -164,7 +164,7 @@ module Katello
       end
 
       def import_hosts
-        sub_facet_ids_from_cp, host_ids_from_cp = Katello::Host::SubscriptionFacet.where('uuid in (?)', consumer_uuids).pluck([:id, :host_id]).transpose
+        sub_facet_ids_from_cp, host_ids_from_cp = Katello::Host::SubscriptionFacet.where('uuid in (?)', consumer_uuids).pluck(:id, :host_id).transpose
         sub_facet_ids_from_cp ||= []
         host_ids_from_cp ||= []
 
