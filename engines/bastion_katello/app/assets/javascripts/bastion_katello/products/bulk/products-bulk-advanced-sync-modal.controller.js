@@ -21,13 +21,12 @@ angular.module('Bastion.products').controller('ProductsBulkAdvancedSyncModalCont
             var success, error;
 
             success = function (task) {
-                var url, message, taskLink;
-                url = $state.href('task', {taskId: task.id});
-                taskLink = $sce.trustAsHtml("<a href=" + url + ">here</a>");
-                message = translate("Product syncs has been initiated in the background. " +
-                    "Click %s to monitor the progress.");
-
-                Notification.setSuccessMessage(message.replace('%s', taskLink));
+                var message = translate("Product syncs has been initiated in the background.");
+                Notification.setSuccessMessage(message, {
+                link: {
+                    children: translate("Click to view task"),
+                    href: translate("/foreman_tasks/tasks/%taskId").replace('%taskId', task.id)
+                }});
             };
 
             error = function (response) {
