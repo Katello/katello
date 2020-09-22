@@ -18,7 +18,7 @@ module Katello
       class CdnResource
         CDN_DOCKER_CONTAINER_LISTING = "CONTAINER_REGISTRY_LISTING".freeze
 
-        attr_reader :url, :product, :options
+        attr_reader :url, :product, :options, :proxy
 
         def substitutor(logger = nil)
           @logger = logger
@@ -26,6 +26,7 @@ module Katello
         end
 
         def initialize(url, options = {})
+          @proxy = ::HttpProxy.default_global_content_proxy
           @ssl_version = Setting[:cdn_ssl_version]
           if @ssl_version && !SUPPORTED_SSL_VERSIONS.include?(@ssl_version)
             fail("Invalid SSL version specified. Check the 'CDN SSL Version' setting")
@@ -140,7 +141,7 @@ module Katello
         end
 
         def net_http_class
-          if (proxy = ::HttpProxy.default_global_content_proxy)
+          if self.proxy
             uri = URI(proxy.url) #Net::HTTP::Proxy ignores port as part of the url
             Net::HTTP::Proxy("#{uri.host}#{uri.path}", uri.port, proxy.username, proxy.password)
           else
