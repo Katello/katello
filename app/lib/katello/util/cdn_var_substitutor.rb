@@ -59,15 +59,17 @@ module Katello
 
         return resolved if to_resolve.empty?
 
-        futures = to_resolve.map do |path_with_substitution|
-          Concurrent::Promises.future do
-            path_with_substitution.resolve_substitutions(@resource)
+        to_resolve.in_groups_of(8) do |group|
+          futures = group.map do |path_with_substitution|
+            Concurrent::Promises.future do
+              path_with_substitution.resolve_substitutions(@resource)
+            end
           end
-        end
 
-        futures.each do |future|
-          resolved << future.value
-          Rails.logger.error("Failed at scanning for repository: #{future.reason}") if future.rejected?
+          futures.each do |future|
+            resolved << future.value
+            Rails.logger.error("Failed at scanning for repository: #{future.reason}") if future.rejected?
+          end
         end
 
         find_substitutions(resolved.compact.flatten)
