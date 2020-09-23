@@ -171,7 +171,7 @@ module Katello
           relative_path = pulp3_api.distributions_api.read(href).base_path
 
           dist_ref = Katello::Pulp3::DistributionReference.find_or_initialize_by(:path => relative_path)
-          if (distribution_repo = Katello::Repository.find_by(:relative_path => relative_path))
+          if (distribution_repo = Katello::Repository.find_by(:relative_path => relative_path) || Katello::Repository.find_by(:container_repository_name => relative_path))
             dist_ref.href = href
             dist_ref.repository_id = distribution_repo.id
             dist_ref.save!
