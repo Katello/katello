@@ -21,6 +21,8 @@ module Katello
         lazy_accessor :available, :initializer => lambda { |_s| self.quantity_available }
 
         lazy_accessor :backend_data, :initializer => lambda { |_s| self.class.candlepin_data(self.cp_id) }
+
+        lazy_accessor :consumer_uuids, :initializer => lambda { |_s| Resources::Candlepin::Pool.consumer_uuids(self.cp_id) }
       end
     end
 
@@ -162,27 +164,20 @@ module Katello
       end
 
       def import_hosts
-        uuids = Resources::Candlepin::Pool.consumer_uuids(self.cp_id)
-
-        sub_facet_ids_from_cp, host_ids_from_cp = Katello::Host::SubscriptionFacet.where('uuid in (?)', uuids).pluck([:id, :host_id]).transpose
+        sub_facet_ids_from_cp, host_ids_from_cp = Katello::Host::SubscriptionFacet.where('uuid in (?)', consumer_uuids).pluck(:id, :host_id).transpose
         sub_facet_ids_from_cp ||= []
         host_ids_from_cp ||= []
 
-        sub_facet_ids_from_pool_table = Katello::SubscriptionFacetPool.where(:pool_id => self.id).select(:subscription_facet_id).pluck(:subscription_facet_id)
-        host_ids_from_pool_table = Katello::Host::SubscriptionFacet.where(:id => sub_facet_ids_from_pool_table).pluck(:host_id)
+        sub_facet_ids_from_pool_table, host_ids_from_pool_table = self.subscription_facets.pluck(:id, :host_id).transpose
+        sub_facet_ids_from_pool_table ||= []
+        host_ids_from_pool_table ||= []
 
         entries_to_add = sub_facet_ids_from_cp - sub_facet_ids_from_pool_table
-        unless entries_to_add.empty?
-          ActiveRecord::Base.transaction do
-            entries_to_add.each do |sub_facet_id|
-              query = "INSERT INTO #{Katello::SubscriptionFacetPool.table_name} (pool_id, subscription_facet_id) VALUES (#{self.id}, #{sub_facet_id})"
-              ActiveRecord::Base.connection.execute(query)
-            end
-          end
-        end
+        facet_pool_data = entries_to_add.map { |sub_facet_id| { pool_id: self.id, subscription_facet_id: sub_facet_id } }
+        Katello::SubscriptionFacetPool.import(facet_pool_data) unless facet_pool_data.empty?
 
         entries_to_remove = sub_facet_ids_from_pool_table - sub_facet_ids_from_cp
-        Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => entries_to_remove).delete_all
+        self.subscription_facet_pools.where(subscription_facet_id: entries_to_remove).delete_all
         self.import_audit_record(host_ids_from_pool_table, host_ids_from_cp)
       end
 
