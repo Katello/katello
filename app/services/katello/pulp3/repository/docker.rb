@@ -8,6 +8,10 @@ module Katello
           repo.container_repository_name
         end
 
+        def partial_repo_path
+          ''
+        end
+
         def remote_options
           options = {url: root.url, upstream_name: root.docker_upstream_name}
           if root.docker_tags_whitelist&.any?
