@@ -24,6 +24,10 @@ module Katello
       authorized?(:promote_or_remove_content_views) && Katello::KTEnvironment.any_promotable?
     end
 
+    def exportable?
+      authorized?(:export_content_views)
+    end
+
     module ClassMethods
       def readable
         authorized(:view_content_views)
@@ -43,6 +47,15 @@ module Katello
 
       def publishable
         authorized(:publish_content_views)
+      end
+
+      def promotable_or_removable
+        return where("1=0") unless Katello::KTEnvironment.any_promotable?
+        authorized(:promote_or_remove_content_views)
+      end
+
+      def exportable
+        authorized(:export_content_views)
       end
 
       def readable_repositories(repo_ids = nil)

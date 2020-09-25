@@ -172,6 +172,15 @@ module Katello
       end
     end
 
+    def test_show_protected_specific_instance
+      allowed_perms = [{:name => :view_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }]
+      denied_perms = [{:name => :view_content_views, :search => "name=\"#{@library_dev_view.name}\"" }]
+
+      assert_protected_object(:show, allowed_perms, denied_perms) do
+        get :show, params: { :id => @library_dev_staging_view.id }
+      end
+    end
+
     test_attributes :pid => '3f1457f2-586b-472c-8053-99017c4a4909'
     def test_update
       params = { :name => "My View", :description => "New description", :solve_dependencies => true,
@@ -413,7 +422,7 @@ module Katello
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @update_permission, :destroy_content_views]
 
-      assert_protected_action(:create, allowed_perms, denied_perms) do
+      assert_protected_action(:copy, allowed_perms, denied_perms) do
         post :copy, params: { :id => @library_dev_staging_view.id, :name => "Test" }
       end
     end
@@ -425,6 +434,7 @@ module Katello
     end
 
     def test_remove_from_environment_protected
+      dev_env_read_permission = {:name => :view_lifecycle_environments, :search => "id=\"#{@dev.id}\"" }
       dev_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{@dev.name}\"" }
       library_dev_staging_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }
 
@@ -433,10 +443,10 @@ module Katello
       diff_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{diff_env.name}\"" }
       diff_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{diff_view.name}\"" }
 
-      allowed_perms = [[:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views],
-                       [dev_env_remove_permission, library_dev_staging_view_remove_permission],
-                       [dev_env_remove_permission, :promote_or_remove_content_views],
-                       [:promote_or_remove_content_views_to_environments, library_dev_staging_view_remove_permission]
+      allowed_perms = [[:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views, dev_env_read_permission],
+                       [dev_env_remove_permission, library_dev_staging_view_remove_permission, dev_env_read_permission],
+                       [dev_env_remove_permission, :promote_or_remove_content_views, dev_env_read_permission],
+                       [:promote_or_remove_content_views_to_environments, library_dev_staging_view_remove_permission, dev_env_read_permission]
                       ]
       denied_perms = [@view_permission,
                       @create_permission,
