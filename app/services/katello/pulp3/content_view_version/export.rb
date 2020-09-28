@@ -26,8 +26,10 @@ module Katello
                                   repositories: repository_hrefs)
         end
 
-        def create_export(exporter_href)
-          [api.export_api.create(exporter_href, { versions: version_hrefs })]
+        def create_export(exporter_href, chunk_size = nil)
+          options = { versions: version_hrefs }
+          options[:chunk_size] = "#{chunk_size}MB" if chunk_size
+          [api.export_api.create(exporter_href, options)]
         end
 
         def fetch_export(exporter_href)
