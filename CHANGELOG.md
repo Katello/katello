@@ -231,3 +231,46 @@
  * Error while running katello:pulp3_migration ([#30472](https://projects.theforeman.org/issues/30472))
  * podman search against katello ([#29742](https://projects.theforeman.org/issues/29742), [8c5c4833](https://github.com/Katello/katello.git/commit/8c5c483357d2340c84f38cbfb0e42ee04bb4f8be))
  * Database migration fails on SQLite ([#29549](https://projects.theforeman.org/issues/29549), [fc1dbc74](https://github.com/Katello/katello.git/commit/fc1dbc745a1b7df2d657b70bf2a58b8de2235341))
+
+# 3.16.1 Tasty Taiyaki (2020-09-28)
+
+## Features
+
+### Repositories
+ * Support verify checksum scan in pulp3 ([#30190](https://projects.theforeman.org/issues/30190), [a2e8304e](https://github.com/Katello/katello.git/commit/a2e8304ed638bdc81e4fdb93dd8ef4b175e8b456))
+ * Support 'Skip metadata check' form of syncing with pulp3 (optimize=False) with pulp3 ([#30189](https://projects.theforeman.org/issues/30189), [ee06f150](https://github.com/Katello/katello.git/commit/ee06f1508165ec2be53324361882e876a211bffc))
+
+### Other
+ * Expose sortable_version as template macro ([#30561](https://projects.theforeman.org/issues/30561), [dc91a5a2](https://github.com/Katello/katello.git/commit/dc91a5a2f1903e434e72c63648f84b00d42aff20), [8a69eadb](https://github.com/Katello/katello.git/commit/8a69eadbf1447b2f4ffd257096eea9a54b888d20))
+
+## Bug Fixes
+
+### Content Views
+ * publishing a large content view with filters fails with error on multi-copy api ([#30775](https://projects.theforeman.org/issues/30775), [b64f6f7b](https://github.com/Katello/katello.git/commit/b64f6f7b8e441a1b16c10a06acafc1c141fa538c))
+ * hammer content-view version incremental-update fails with ISE ([#30725](https://projects.theforeman.org/issues/30725), [902f0789](https://github.com/Katello/katello.git/commit/902f07899002c39fbc078d96416c094195b3ffb7))
+ * Content view publish fails if repo checksum type changes ([#30641](https://projects.theforeman.org/issues/30641), [7b59d75e](https://github.com/Katello/katello.git/commit/7b59d75e9c70002dbef6387e9b01ad62d0af02ea))
+ * 'include packages with no errata' package filter does not work with pulp3 ([#30533](https://projects.theforeman.org/issues/30533), [026fd8de](https://github.com/Katello/katello.git/commit/026fd8dee9a245a28c4e0bdb081960f3b55d2e43))
+
+### Repositories
+ * Error Row was updated or deleted by another transaction when deleting docker repository ([#30766](https://projects.theforeman.org/issues/30766), [26eb0351](https://github.com/Katello/katello.git/commit/26eb03518f8ce13bd0247b5fc63f7830d25e3d6f))
+ * cannot communicate with pulpcore if foreman_azure_rm is installed  "no implicit conversion of OpenSSL::X509::Certificate into String (TypeError) (Faraday::ConnectionFailed)" ([#30746](https://projects.theforeman.org/issues/30746), [d2b75839](https://github.com/Katello/katello.git/commit/d2b75839705a72a7970f732c7d7159a48125f3fe))
+ * Updating the CDN URL is manifest works fine but creates some tasks which remains in planned state with success result ([#30736](https://projects.theforeman.org/issues/30736), [d62fe7d2](https://github.com/Katello/katello.git/commit/d62fe7d219c482ebfa8837debc6a5e20bbfeaa78))
+ * Update ansible recommended repo version ([#30672](https://projects.theforeman.org/issues/30672), [2475b102](https://github.com/Katello/katello.git/commit/2475b102ca03bd4b83ba53e6c5962168d2c447d7))
+ * Turn optimize back on for Pulp 3 yum repo syncs ([#30646](https://projects.theforeman.org/issues/30646), [a385d2f2](https://github.com/Katello/katello.git/commit/a385d2f20356f5e1db3e26a49b0fbbc714fc26ff))
+ * 'The sha256 checksum did not match.' error when uploading larger files to Pulp 3 file repo through the UI ([#30462](https://projects.theforeman.org/issues/30462), [b43f2f08](https://github.com/Katello/katello.git/commit/b43f2f08b38547753f520f21340cc0b9098fe6e2))
+ * Cannot see why redhat repo scanning failed ([#29933](https://projects.theforeman.org/issues/29933), [394c8b6a](https://github.com/Katello/katello.git/commit/394c8b6a3daaf59bb8942b0f555f030a4a107a52))
+
+### Hosts
+ * Add /owners/:id/system_purpose to RHSM Proxies Controller ([#30749](https://projects.theforeman.org/issues/30749), [4173dec5](https://github.com/Katello/katello.git/commit/4173dec504c347b4a56af04b5e2ff461ad6622e6))
+ * Unable to change host location ([#30702](https://projects.theforeman.org/issues/30702), [fae2cdd3](https://github.com/Katello/katello.git/commit/fae2cdd35512480ab6e55587ca48a87912cfd993))
+
+### API
+ * Wrong API endpoint path referenced for resolving host traces ([#30700](https://projects.theforeman.org/issues/30700), [9ec9438c](https://github.com/Katello/katello.git/commit/9ec9438ce987c8841c3dcec20a908a1751e43c26))
+ * API PING request return "status": "ok" even if there is a service in state failed ([#30498](https://projects.theforeman.org/issues/30498), [2b8a2115](https://github.com/Katello/katello.git/commit/2b8a2115b2ea208a45cf6abf978dab4fa01f3582))
+
+### Foreman Proxy Content
+ * batch smart proxy content syncing causing slower syncs ([#30654](https://projects.theforeman.org/issues/30654), [a4e854cd](https://github.com/Katello/katello.git/commit/a4e854cdcb0d982a352e50640c2138140e0c25ce))
+
+### Other
+ * Errata status is not update after applicability regeneration (pulp3) ([#30636](https://projects.theforeman.org/issues/30636), [41231b70](https://github.com/Katello/katello.git/commit/41231b70e0ae9ccf5aebc573699fc8202791188c))
+ * Content Host Applicable Packages page error: NoMethodError: undefined method `where' for #<Array:0x00007f69a5ea4820> ([#29563](https://projects.theforeman.org/issues/29563), [54608e1c](https://github.com/Katello/katello.git/commit/54608e1c2208dcc6273ae3d11debec9505f1391c))
