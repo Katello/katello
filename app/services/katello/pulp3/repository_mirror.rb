@@ -110,8 +110,11 @@ module Katello
         api.remotes_list(name: backend_object_name).first
       end
 
-      def sync
-        repository_sync_url_data = api.class.repository_sync_url_class.new(remote: remote_href, mirror: true)
+      def sync(options = {})
+        sync_params = repo_service.sync_url_params(options)
+        sync_params[:remote] = remote_href
+        sync_params[:mirror] = true
+        repository_sync_url_data = api.class.repository_sync_url_class.new(sync_params)
         [api.repositories_api.sync(repository_href, repository_sync_url_data)]
       end
 
@@ -152,6 +155,7 @@ module Katello
         dist_params[:publication] = options[:publication] if options[:publication]
         dist_params[:repository_version] = version_href if options[:use_repository_version]
         dist_options = distribution_options(path, dist_params)
+        dist_options.delete(:content_guard) if repo_service.repo.content_type == "docker"
         if (distro = repo_service.lookup_distributions(base_path: path).first) ||
           (distro = repo_service.lookup_distributions(name: "#{backend_object_name}").first)
           # update dist
