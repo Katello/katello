@@ -208,6 +208,16 @@ module Katello
           tasks
         end
 
+        def copy_all(source_repository)
+          data = PulpRpmClient::Copy.new
+          data.config = [{
+            source_repo_version: source_repository.version_href,
+            dest_repo: repository_reference.repository_href
+          }]
+
+          [api.copy_api.copy_content(data)]
+        end
+
         def remove_all_content_from_repo(repo_href)
           data = PulpRpmClient::RepositoryAddRemoveContent.new(
             remove_content_units: ['*'])
@@ -331,7 +341,6 @@ module Katello
           end
 
           filters.flatten!.compact!
-
           whitelist_ids = []
           blacklist_ids = []
           filters.each do |filter|
@@ -358,7 +367,6 @@ module Katello
             content_unit_hrefs += additional_content_hrefs(source_repository, content_unit_hrefs)
           end
           content_unit_hrefs += source_repository.srpms.pluck(:pulp_id)
-
           dependency_solving = options[:solve_dependencies] || false
           copy_units(source_repository, content_unit_hrefs.uniq, dependency_solving)
         end
