@@ -1,3 +1,9 @@
+# 3.16.1.1 Tasty Taiyaki (2020-09-30)
+
+## Bug Fixes
+
+### Tooling
+ * katello:pulp3_post_migration_check fails with 'The Dynflow world was not initialized yet' ([#30937](https://projects.theforeman.org/issues/30937), [fb3d180e](https://github.com/Katello/katello.git/commit/fb3d180e1330cf96551752d28b36b532bff7f63a))
 # 3.16.0 Tasty Taiyaki (2020-08-10)
 
 ## Features
