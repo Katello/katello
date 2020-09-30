@@ -10,11 +10,12 @@ module Katello
           ::Foreman::Logging.logger('katello/registry_proxy')
         end
 
-        def self.get(path, headers = {:accept => :json})
+        def self.get(path, headers = {:accept => :json}, options = {})
           logger.debug "Sending GET request to Registry: #{path}"
           resource = RegistryResource.load_class
           joined_path = resource.prefix.chomp("/") + path
           client = resource.rest_client(Net::HTTP::Get, :get, joined_path)
+          client.options.merge!(options)
           client.get(headers)
         end
       end

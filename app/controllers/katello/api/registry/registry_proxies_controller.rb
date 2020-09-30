@@ -166,25 +166,27 @@ module Katello
         headers[header[0].split('_')[1..-1].join('-')] = header[1]
       end
 
-      r = Resources::Registry::Proxy.get(@_request.fullpath, headers)
-      logger.debug filter_sensitive_data(r)
-      results = JSON.parse(r)
+      if (manifest_response = redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers) })
+        #when pulp 2 is removed, this should no longer be needed, and all clients should be redirected
+        logger.debug filter_sensitive_data(manifest_response)
+        results = JSON.parse(manifest_response)
 
-      response.header['Docker-Content-Digest'] = "sha256:#{Digest::SHA256.hexdigest(r)}"
-      # https://docs.docker.com/registry/spec/manifest-v2-2/
-      # If its v2 schema 2 only the mediaType attribute will be present in the manifest
-      media_type = results['mediaType']
-      if media_type.blank?
-        # so mediaType is not schema2 v2 only set the mediaType based on
-        # https://docs.docker.com/registry/spec/manifest-v2-1/
-        media_type = if results["signatures"].blank?
-                       'application/vnd.docker.distribution.manifest.v1+json'
-                     else
-                       'application/vnd.docker.distribution.manifest.v1+prettyjws'
-                     end
+        response.header['Docker-Content-Digest'] = "sha256:#{Digest::SHA256.hexdigest(manifest_response)}"
+        # https://docs.docker.com/registry/spec/manifest-v2-2/
+        # If its v2 schema 2 only the mediaType attribute will be present in the manifest
+        media_type = results['mediaType']
+        if media_type.blank?
+          # so mediaType is not schema2 v2 only set the mediaType based on
+          # https://docs.docker.com/registry/spec/manifest-v2-1/
+          media_type = if results["signatures"].blank?
+                         'application/vnd.docker.distribution.manifest.v1+json'
+                       else
+                         'application/vnd.docker.distribution.manifest.v1+prettyjws'
+                       end
+        end
+
+        render json: manifest_response, content_type: media_type
       end
-
-      render json: r, content_type: media_type
     end
 
     def check_blob
@@ -199,11 +201,24 @@ module Katello
       render json: {}
     end
 
+    def redirect_client
+      return yield
+    rescue RestClient::Exception => exception
+      if [301, 302, 307].include?(exception.response.code)
+        redirect_to exception.response.headers[:location]
+        nil
+      else
+        raise exception
+      end
+    end
+
     def pull_blob
       headers = {}
       headers['Accept'] = request.headers['Accept'] if request.headers['Accept']
-      r = Resources::Registry::Proxy.get(@_request.fullpath, headers)
-      render json: r
+      if (blob_response = redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers, max_redirects: 0) })
+        #when pulp 2 is removed, this should no longer be needed, and all clients should be redirected
+        render json: blob_response
+      end
     end
 
     def push_manifest
