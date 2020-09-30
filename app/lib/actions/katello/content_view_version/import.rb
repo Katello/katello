@@ -15,7 +15,9 @@ module Actions
           minor = metadata[:content_view_version][:minor]
 
           if ::Katello::ContentViewVersion.where(major: major, minor: minor, content_view: content_view).exists?
-            fail _("Content View Version specified in the metadata - '%s %s.%s' has already been imported." % [content_view.name, major, minor])
+            cvv_name = "#{content_view.name} #{major}.#{minor}"
+            fail _("Content View Version specified in the metadata - '%{name}' already exists. "\
+                    "If you wish to replace the existing version, delete %{name} and try again. " % { name: cvv_name })
           end
 
           plan_action(::Actions::Katello::ContentView::Publish, content_view, '',

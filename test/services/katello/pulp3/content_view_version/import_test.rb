@@ -53,7 +53,7 @@ module Katello
 
           it "fails if pulp user is not able to access metadata json" do
             import_export_dir = File.join(Katello::Engine.root, 'test/fixtures/import-export')
-            ::Katello::Pulp3::ContentViewVersion::Import.expects(:pulp_user_accesible?).with(import_export_dir).returns(false)
+            ::Katello::Pulp3::ContentViewVersion::Import.expects(:pulp_user_accessible?).with(import_export_dir).returns(false)
 
             stub_constant(::Katello::Pulp3::ContentViewVersion::Import, :BASEDIR, import_export_dir) do
               exception = assert_raises(RuntimeError) do
@@ -63,49 +63,49 @@ module Katello
             end
           end
 
-          it "pulp_user_accesible returns false if no pulp user" do
+          it "pulp_user_accessible returns false if no pulp user" do
             ::Katello::Pulp3::ContentViewVersion::Import.expects(:fetch_pulp_user_info).returns(nil)
-            refute ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accesible?("/tmp")
+            refute ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accessible?("/tmp")
           end
 
-          it "pulp_user_accesible returns false if no uid/gid/readable does not match" do
+          it "pulp_user_accessible returns false if no uid/gid/readable does not match" do
             path = "/tmp"
             stats = mock(gid: 1001, uid: 1002, mode: 1)
             File.expects(:stat).with(path).returns(stats)
 
             user_info = mock(gid: 1003.to_s, uid: 1004.to_s)
             ::Katello::Pulp3::ContentViewVersion::Import.expects(:fetch_pulp_user_info).returns(user_info)
-            refute ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accesible?(path)
+            refute ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accessible?(path)
           end
 
-          it "pulp_user_accesible returns true if world readable" do
+          it "pulp_user_accessible returns true if world readable" do
             path = "/tmp"
             stats = mock(gid: 1001, uid: 1002, mode: 7)
             File.expects(:stat).with(path).returns(stats)
 
             user_info = mock(gid: 1004.to_s, uid: 1005.to_s)
             ::Katello::Pulp3::ContentViewVersion::Import.expects(:fetch_pulp_user_info).returns(user_info)
-            assert ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accesible?(path)
+            assert ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accessible?(path)
           end
 
-          it "pulp_user_accesible returns true if groups match" do
+          it "pulp_user_accessible returns true if groups match" do
             path = "/tmp"
             stats = mock(gid: 1001)
             File.expects(:stat).with(path).returns(stats)
 
             user_info = mock(gid: 1001.to_s)
             ::Katello::Pulp3::ContentViewVersion::Import.expects(:fetch_pulp_user_info).returns(user_info)
-            assert ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accesible?(path)
+            assert ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accessible?(path)
           end
 
-          it "pulp_user_accesible returns true if uids match" do
+          it "pulp_user_accessible returns true if uids match" do
             path = "/tmp"
             stats = mock(gid: 1001, uid: 1002)
             File.expects(:stat).with(path).returns(stats)
 
             user_info = mock(gid: 1003.to_s, uid: 1002.to_s)
             ::Katello::Pulp3::ContentViewVersion::Import.expects(:fetch_pulp_user_info).returns(user_info)
-            assert ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accesible?(path)
+            assert ::Katello::Pulp3::ContentViewVersion::Import.pulp_user_accessible?(path)
           end
         end
       end

@@ -58,14 +58,14 @@ module Katello
             metadata_file = "#{path}/#{::Katello::Pulp3::ContentViewVersion::Export::METADATA_FILE}"
             fail _("Could not find metadata.json at '%s'." % metadata_file) unless File.exist?(metadata_file)
             fail _("Unable to read the metadata.json at '%s'." % metadata_file) unless File.readable?(metadata_file)
-            fail _("Pulp user or group unable to read content in '%s'." % path) unless pulp_user_accesible?(path)
+            fail _("Pulp user or group unable to read content in '%s'." % path) unless pulp_user_accessible?(path)
             Dir.glob("#{path}/*").each do |file|
               next if file == metadata_file
-              fail _("Pulp user or group unable to read '%s'." % file) unless pulp_user_accesible?(file)
+              fail _("Pulp user or group unable to read '%s'." % file) unless pulp_user_accessible?(file)
             end
           end
 
-          def pulp_user_accesible?(path)
+          def pulp_user_accessible?(path)
             pulp_info = fetch_pulp_user_info
             return false if pulp_info.blank?
 

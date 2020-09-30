@@ -55,7 +55,7 @@ module ::Actions::Katello::ContentViewVersion
       exception = assert_raises(RuntimeError) do
         plan_action(action, content_view, path: import_export_dir)
       end
-      assert_match(/has already been imported/, exception.message)
+      assert_match(/'#{content_view_version.name}' already exists/, exception.message)
     end
 
     it 'Import should plan properly' do
