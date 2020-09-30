@@ -8,7 +8,9 @@ module Actions
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
-          content_view.check_ready_to_publish!
+          import_only = options.fetch(:import_only, false)
+          path = options[:path]
+          content_view.check_ready_to_publish! unless import_only
 
           if options[:repos_units].present?
             valid_labels_from_cv = content_view.repositories.map(&:label)
@@ -51,7 +53,11 @@ module Actions
 
             if separated_repo_map[:pulp3_yum].keys.flatten.present? &&
                 SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
-              plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)
+              if import_only
+                handle_import(version, path)
+              else
+                plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)
+              end
             end
 
             concurrence do
@@ -179,6 +185,16 @@ module Actions
             end
           else
             content_view.create_new_version
+          end
+        end
+
+        def handle_import(version, path)
+          plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, path: path)
+          plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary, version)
+          concurrence do
+            version.importable_repositories.pluck(:id).each do |id|
+              plan_action(Katello::Repository::IndexContent, id: id)
+            end
           end
         end
       end

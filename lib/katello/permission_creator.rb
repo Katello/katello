@@ -134,7 +134,7 @@ module Katello
       @plugin.permission :publish_content_views,
                          {
                            'katello/api/v2/content_views' => [:publish],
-                           'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories]
+                           'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories, :import]
                          },
                          :resource_type => 'Katello::ContentView'
       @plugin.permission :promote_or_remove_content_views,
