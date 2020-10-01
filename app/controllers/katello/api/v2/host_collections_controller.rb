@@ -1,10 +1,17 @@
 module Katello
   class Api::V2::HostCollectionsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
-    before_action :find_host_collection, :only => [:copy, :show, :update, :destroy,
-                                                   :add_hosts, :remove_hosts, :hosts]
-    before_action :find_activation_key
-    before_action :find_host
+    before_action :find_authorized_katello_resource, :only => [
+      :copy,
+      :show,
+      :update,
+      :destroy,
+      :add_hosts,
+      :remove_hosts,
+      :hosts
+    ]
+    before_action :find_readable_activation_key, :only => [:index]
+    before_action :find_editable_host, :only => [:index]
     before_action :find_optional_organization, :only => [:index]
     before_action :find_organization, :only => [:create, :auto_complete_search]
 
@@ -175,14 +182,6 @@ module Katello
 
     private
 
-    def find_host_collection
-      @organization = @host.organization if @host
-      @organization = @activation_key.organization if @activation_key
-      id = params[:host_collection_id] || params[:id]
-      @host_collection = HostCollection.where(:id => id).first
-      fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % id if @host_collection.nil?
-    end
-
     def host_collection_params
       attrs = [:name,
                :description,
@@ -199,14 +198,18 @@ module Katello
       result
     end
 
-    def find_host
+    def find_editable_host
       @host = resource_finder(::Host::Managed.authorized("edit_hosts"), params[:host_id]) if params[:host_id]
       @organization = @host.organization if @host
     end
 
-    def find_activation_key
-      @activation_key = ActivationKey.find_by!(:id => params[:activation_key_id]) if params[:activation_key_id]
-      @organization = @activation_key.organization if @activation_key
+    def find_readable_activation_key
+      @activation_key = ActivationKey.readable.find_by(:id => params[:activation_key_id]) if params[:activation_key_id]
+      if params[:activation_key_id] && @activation_key.nil?
+        throw_resource_not_found(name: 'activation_key', id: params[:activation_key_id])
+      else
+        @organization = @activation_key&.organization
+      end
     end
   end
 end

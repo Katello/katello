@@ -185,6 +185,15 @@ module Katello
       assert results['displayMessages']['success'].none?, 'Expected no success messages'
     end
 
+    def test_unauthorized_update
+      allowed_perms = [{:name => "edit_host_collections", :search => "name=\"#{@host_collection.name}\"" }]
+      denied_perms = [{:name => "edit_host_collections", :search => "name=\"some_name\"" }]
+
+      assert_protected_object(:put, allowed_perms, denied_perms) do
+        put :update, params: { :id => @host_collection.id }
+      end
+    end
+
     test_attributes :pid => '13a16cd2-16ce-4966-8c03-5d821edf963b'
     def test_destroy
       delete :destroy, params: { :id => @host_collection.id }
