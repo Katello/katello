@@ -102,44 +102,16 @@ module Katello
     api :POST, "/content_view_versions/:id/export", N_("Export a content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :destination_server, String, :desc => N_("Destination Server name, required for Pulp3")
+    param :chunk_size_mb, :number, :desc => N_("Chunk export-tarfile into pieces of chunk_size mega bytes. Relevant only for Pulp 3 repositories"), :required => false
     param :export_to_iso, :bool, :desc => N_("Export to ISO format. Relevant only for Pulp 2 repositories"), :required => false
     param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB. Relevant only for Pulp 2 repositories"), :required => false
     param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z). Relevant only for Pulp 2 repositories"), :required => false
     def export
-      if SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
-        invalid_params = [:export_to_iso, :iso_mb_size, :since].reject { |param| params[param].blank? }
-        unless invalid_params.empty?
-          fail HttpErrors::BadRequest, _("Invalid parameters provided - %{params}. These are only relevant for Pulp 2 repositories" % { params: invalid_params.join(', ')})
-        end
-
-        if params[:destination_server].blank?
-          fail HttpErrors::BadRequest, _("Destination Server Name required for Pulp3 repositories")
-        end
-
-        task = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @version, destination_server: params[:destination_server])
-      else
-        ::Foreman::Deprecation.api_deprecation_warning("Export is being deprecated and will be removed in a future version of Katello. Use hammer content-view version export instead.")
-        if params[:export_to_iso].blank? && params[:iso_mb_size].present?
-          fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
-        end
-
-        if (repos = @version.content_view.on_demand_repositories).any?
-          fail HttpErrors::BadRequest, _("This content view has on demand repositories that cannot be exported: %{repos}" % {repos: repos.pluck(:label).join(", ")})
-        end
-
-        if params[:since].present?
-          begin
-            params[:since].to_datetime
-          rescue
-            raise HttpErrors::BadRequest, _("Invalid date provided.")
-          end
-        end
-        task = async_task(::Actions::Katello::ContentViewVersion::Export, @version,
-                          ::Foreman::Cast.to_bool(params[:export_to_iso]),
-                          params[:since].try(:to_datetime),
-                          params[:iso_mb_size])
-      end
-
+      task = if SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
+               export_pulp_v3
+             else
+               export_pulp_v2
+             end
       respond_for_async :resource => task
     end
 
@@ -340,6 +312,43 @@ module Katello
     def authorize_destroy
       return deny_access unless @version.content_view.deletable?
       true
+    end
+
+    def export_pulp_v2
+      ::Foreman::Deprecation.api_deprecation_warning("Export is being deprecated and will be removed in a future version of Katello. Use hammer content-view version export instead.")
+      if params[:export_to_iso].blank? && params[:iso_mb_size].present?
+        fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
+      end
+
+      if (repos = @version.content_view.on_demand_repositories).any?
+        fail HttpErrors::BadRequest, _("This content view has on demand repositories that cannot be exported: %{repos}" % {repos: repos.pluck(:label).join(", ")})
+      end
+
+      if params[:since].present?
+        begin
+          params[:since].to_datetime
+        rescue
+          raise HttpErrors::BadRequest, _("Invalid date provided.")
+        end
+      end
+      async_task(::Actions::Katello::ContentViewVersion::Export, @version,
+                        ::Foreman::Cast.to_bool(params[:export_to_iso]),
+                        params[:since].try(:to_datetime),
+                        params[:iso_mb_size])
+    end
+
+    def export_pulp_v3
+      invalid_params = [:export_to_iso, :iso_mb_size, :since].reject { |param| params[param].blank? }
+      unless invalid_params.empty?
+        fail HttpErrors::BadRequest, _("Invalid parameters provided - %{params}. These are only relevant for Pulp 2 repositories" % { params: invalid_params.join(', ')})
+      end
+
+      if params[:destination_server].blank?
+        fail HttpErrors::BadRequest, _("Destination Server Name required for Pulp3 repositories")
+      end
+
+      async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @version, destination_server: params[:destination_server],
+                                                                                               chunk_size: params[:chunk_size_mb])
     end
   end
 end

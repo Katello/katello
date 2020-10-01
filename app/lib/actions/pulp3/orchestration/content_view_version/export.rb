@@ -12,11 +12,11 @@ module Actions
           end
 
           output_format do
-            param :exported_file_name, String
-            param :exported_file_checksum, String
+            param :exported_file_checksum, Hash
+            param :export_path, String
           end
 
-          def plan(content_view_version, destination_server:)
+          def plan(content_view_version, destination_server:, chunk_size: nil)
             action_subject(content_view_version)
             unless File.directory?(Setting['pulpcore_export_destination'])
               fail ::Foreman::Exception, N_("Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory.")
@@ -32,7 +32,8 @@ module Actions
               plan_action(::Actions::Pulp3::ContentViewVersion::Export,
                                      content_view_version_id: content_view_version.id,
                                      smart_proxy_id: smart_proxy.id,
-                                     exporter_data: action_output[:exporter_data]
+                                     exporter_data: action_output[:exporter_data],
+                                     chunk_size: chunk_size
                                      )
 
               plan_self(exporter_data: action_output[:exporter_data], smart_proxy_id: smart_proxy.id,
@@ -49,8 +50,10 @@ module Actions
             smart_proxy = ::SmartProxy.find(input[:smart_proxy_id])
             api = ::Katello::Pulp3::Api::Core.new(smart_proxy)
             export_data = api.export_api.list(input[:exporter_data][:pulp_href]).results.first
-            output[:exported_file_name], output[:exported_file_checksum] = export_data.output_file_info.first
-            path = File.dirname(output[:exported_file_name].to_s)
+            output[:exported_file_checksum] = export_data.output_file_info
+            file_name = output[:exported_file_checksum].first&.first
+            path = File.dirname(file_name.to_s)
+            output[:export_path] = path
             ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: input[:content_view_version_id],
                                                                destination_server: input[:destination_server],
                                                                path: path)

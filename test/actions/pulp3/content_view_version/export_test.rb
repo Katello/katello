@@ -63,10 +63,10 @@ module ::Actions::Pulp3::ContentView
         assert path.end_with?(::Katello::Pulp3::ContentViewVersion::Export::METADATA_FILE)
       end
 
-      output = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @content_view_version, destination_server: "foo").output
-      refute_empty output[:exported_file_name]
-      refute_empty output[:exported_file_checksum]
-      assert_includes output[:exported_file_name], 'foo'
+      output = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @content_view_version, destination_server: "foo", chunk_size: 0.1).output
+      refute_empty output[:export_path]
+      assert output[:exported_file_checksum].length > 1
+      assert_includes output[:export_path], 'foo'
     end
   end
 end
