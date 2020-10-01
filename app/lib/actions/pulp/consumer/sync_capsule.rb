@@ -2,14 +2,16 @@ module Actions
   module Pulp
     module Consumer
       class SyncCapsule < ::Actions::Pulp::AbstractAsyncTask
+        include ::Actions::Helpers::SmartProxySyncHistoryHelper
         input_format do
           param :capsule_id, Integer
           param :repo_pulp_id, String
+          param :repository_id, Integer
           param :sync_options
         end
 
         def plan(repository, smart_proxy, options)
-          plan_self(:capsule_id => smart_proxy.id, :repo_pulp_id => repository.pulp_id, :sync_options => options)
+          plan_self(:capsule_id => smart_proxy.id, :repo_pulp_id => repository.pulp_id, :repository_id => repository.id, :sync_options => options)
         end
 
         def humanized_name
@@ -17,7 +19,7 @@ module Actions
         end
 
         def invoke_external_task
-          pulp_resources.repository.sync(input[:repo_pulp_id], override_config: input[:sync_options])
+          output[:pulp_tasks] = pulp_resources.repository.sync(input[:repo_pulp_id], override_config: input[:sync_options])
         end
 
         def run_progress

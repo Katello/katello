@@ -23,7 +23,7 @@ module Actions
             remove_content_args = {
               :contents => content_unit_ids,
               :content_unit_type => content_unit_type}
-
+            repository.clear_smart_proxy_sync_histories
             pulp_action = plan_pulp_action(
               [Pulp::Orchestration::Repository::RemoveUnits,
                Pulp3::Orchestration::Repository::RemoveUnits],

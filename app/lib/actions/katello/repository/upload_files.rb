@@ -9,6 +9,7 @@ module Actions
         include Actions::Katello::PulpSelector
         def plan(repository, files, content_type = nil)
           action_subject(repository)
+          repository.clear_smart_proxy_sync_histories
           tmp_files = prepare_tmp_files(files)
 
           content_type ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label

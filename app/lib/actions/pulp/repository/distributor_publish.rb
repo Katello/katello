@@ -20,7 +20,7 @@ module Actions
           else
             repo = ::Katello::ContentViewPuppetEnvironment.find_by(:id => input[:content_view_puppet_environment_id]).nonpersisted_repository
           end
-
+          repo.clear_smart_proxy_sync_histories if smart_proxy(input[:smart_proxy_id]).pulp_primary?
           repo.backend_service(smart_proxy(input[:smart_proxy_id])).distributor_publish(input[:options])
         end
 
