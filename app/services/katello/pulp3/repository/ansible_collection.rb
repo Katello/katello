@@ -19,6 +19,15 @@ module Katello
             name: "#{generate_backend_object_name}"
           }
         end
+
+        def partial_repo_path
+          "/pulp_ansible/galaxy/#{repo.relative_path}/api/v2/collections"
+        end
+
+        def mirror_remote_options
+          {
+          }
+        end
       end
     end
   end

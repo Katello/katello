@@ -91,10 +91,11 @@ module Katello
 
       def remote_options
         base_options = common_remote_options
-        base_options.merge(url: remote_feed_url)
+        base_options.merge!(url: remote_feed_url)
         if (type_specific_options = repo_service.try(:mirror_remote_options))
-          base_options.merge(type_specific_options)
+          base_options.merge!(type_specific_options)
         end
+        base_options
       end
 
       def create_remote

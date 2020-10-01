@@ -240,6 +240,8 @@ module Katello
           "iso"
         when Repository::DEB_TYPE
           "deb"
+        when Repository::ANSIBLE_COLLECTION_TYPE
+          "ansible_collection"
         end
       end
 
@@ -269,6 +271,10 @@ module Katello
 
       def deb?
         self.content_type == Repository::DEB_TYPE
+      end
+
+      def ansible_collection?
+        self.content_type == Repository::ANSIBLE_COLLECTION_TYPE
       end
 
       def published?
@@ -378,6 +384,8 @@ module Katello
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{relative_path}"
       elsif deb?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/deb/#{relative_path}/"
+      elsif ansible_collection?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}/"
       end
