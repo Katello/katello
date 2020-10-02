@@ -266,8 +266,9 @@ module Actions
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
 
-          unless SmartProxy.pulp_master.pulp3_support?(version.repositories.first)
-            version.repositories.each do |repo|
+          cvv_yum_repos = version.repositories.yum_type
+          unless cvv_yum_repos.empty? || SmartProxy.pulp_master.pulp3_support?(cvv_yum_repos.first)
+            cvv_yum_repos.each do |repo|
               SmartProxy.pulp_master.pulp_api.extensions.send(:module_default).
                 copy(repo.library_instance.pulp_id,
                 repo.pulp_id)
