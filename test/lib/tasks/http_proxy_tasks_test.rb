@@ -13,6 +13,10 @@ module Katello
       assert @setting
 
       HttpProxy.delete_all
+
+      ::Setting.any_instance.stubs(:update_global_proxies)
+      ::HttpProxy.any_instance.stubs(:update_default_proxy_setting)
+      ::HttpProxy.any_instance.stubs(:update_repository_proxy_details)
     end
 
     def test_without_name_fails
