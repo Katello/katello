@@ -1,9 +1,8 @@
-import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 
-// type: [singular_name, plural_name, link]
+// type: [plural_name, singular_name, link]
 const repoLabels = {
   rpm: ['rpm packages', 'rpm package', 'packages'],
   module_stream: ['module streams', 'module stream', 'module_streams'],
@@ -24,14 +23,15 @@ const appendCount = (type, count, info, productId, repoId) => {
   const [repoPlural, repoSingular, link] = info;
   const displayName = count > 1 ? repoPlural : repoSingular;
   let url = urlBuilder(`products/${productId}/repositories/${repoId}/content`, '', link);
-  const displayInfo = <Fragment>{`${count} ${displayName}`}</Fragment>;
+  const displayInfo = `${count} ${displayName}`;
   if (type === 'source_rpm') return displayInfo;
   if (type === 'erratum') url = urlBuilder(`errata?repositoryId=${repoId}`);
 
-  return {
-    key: `${type}${count}`,
-    component: <Link to={url}>{displayInfo}</Link>,
-  };
+  return (
+    <div key={`${type}${count}`}>
+      <a href={url}>{displayInfo}</a>
+    </div>
+  );
 };
 
 const ContentCounts = ({ productId, repoId, counts }) => {
@@ -44,11 +44,7 @@ const ContentCounts = ({ productId, repoId, counts }) => {
     if (type !== 'package' && count > 0) allCounts.push(appendCount(type, count, info, productId, repoId));
   });
 
-  return (
-    <div>
-      {allCounts.map(({ component, key }) => <div key={key}>{component}</div>)}
-    </div>
-  );
+  return allCounts;
 };
 
 ContentCounts.propTypes = {

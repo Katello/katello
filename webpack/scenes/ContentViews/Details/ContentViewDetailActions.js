@@ -58,7 +58,7 @@ export const getContentViewRepositories = (cvId, params, status) => {
     type: API_OPERATIONS.GET,
     key: cvDetailsRepoKey(cvId),
     url: api.getApiUrl(apiUrl),
-    apiParams,
+    params: apiParams,
   });
 };
 

@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { CheckCircleIcon, ExclamationTriangleIcon, CloseIcon } from '@patternfly/react-icons';
-import { Link } from 'react-router-dom';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { foremanUrl } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 
 const LastSync = ({ lastSyncWords, lastSync }) => {
@@ -24,9 +23,9 @@ const LastSync = ({ lastSyncWords, lastSync }) => {
     }
 
     return (
-      <Link to={urlBuilder('foreman_tasks/tasks', '', id)}>
+      <a href={foremanUrl(`/foreman_tasks/tasks/${id}/`)}>
         <Icon style={{ color }} />&nbsp;{`${lastSyncWords} ago`}
-      </Link>
+      </a>
     );
   }
   return <div>Not Synced</div>;
