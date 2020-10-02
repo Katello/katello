@@ -1,3 +1,12 @@
+# 3.16.1.2 Tasty Taiyaki (2020-10-02)
+
+## Bug Fixes
+
+### Content Views
+ * Incremental update fails if content view version has Pulp 3 non-yum content and Pulp 2 yum content. ([#30954](https://projects.theforeman.org/issues/30954), [a1cb3f0f](https://github.com/Katello/katello.git/commit/a1cb3f0f86dbd23caee5834c1e19d9d87ddf46b8))
+
+### Repositories
+ * Docker content view repos missing distribution references after Pulp 2 to 3 migration ([#30562](https://projects.theforeman.org/issues/30562), [141678cd](https://github.com/Katello/katello/commit/141678cd380f9f786f0906130e08c30f8e0a224e))
 # 3.16.1.1 Tasty Taiyaki (2020-09-30)
 
 ## Bug Fixes
