@@ -127,12 +127,35 @@ module Katello
       assert_template 'api/v2/content_view_versions/show'
     end
 
+    def test_export_api_status_true_for_pulp3
+      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      get :export_api_status
+      assert_response :success
+      assert JSON.parse(@response.body)["api_usable"]
+    end
+
+    def test_export_api_status_false_for_pulp2
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      get :export_api_status
+      assert_response :success
+      refute JSON.parse(@response.body)["api_usable"]
+    end
+
     def test_export_histories_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:export_histories, allowed_perms, denied_perms) do
         get :export_histories, params: { :content_view_id => @library_dev_staging_view.id }
+      end
+    end
+
+    def test_export_api_status_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:export_api_status, allowed_perms, denied_perms) do
+        get :export_api_status
       end
     end
 

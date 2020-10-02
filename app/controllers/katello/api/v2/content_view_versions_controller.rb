@@ -99,6 +99,11 @@ module Katello
                         :template => '../../../api/v2/content_view_version_export_histories/index')
     end
 
+    api :GET, "/content_view_versions/export_api_status", N_("true if the export api is pulp3 ready and usable")
+    def export_api_status
+      render json: { api_usable: SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE) }, status: :ok
+    end
+
     api :POST, "/content_view_versions/:id/export", N_("Export a content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :destination_server, String, :desc => N_("Destination Server name, required for Pulp3")
