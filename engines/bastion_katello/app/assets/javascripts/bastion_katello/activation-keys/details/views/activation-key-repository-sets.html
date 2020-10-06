@@ -17,7 +17,7 @@
   </div>
 
   <div data-block="filters">
-    <label class="checkbox-inline" title="{{ 'Show all Repository Sets in Organization' | translate }}">
+    <label class="checkbox-inline" title="{{ 'Show all Repository Sets in Organization' | translate }}" ng-if="!simpleContentAccessEnabled">
       <input type="checkbox" ng-model="contentAccessModes.contentAccessModeAll" ng-change="toggleFilters()"/>
       <span translate>Show All</span>
     </label>

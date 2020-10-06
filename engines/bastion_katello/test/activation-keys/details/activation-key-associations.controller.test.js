@@ -40,13 +40,11 @@ describe('Controller: ActivationKeyAssociationsController', function() {
             ActivationKey: ActivationKey,
             Host: Host,
             ContentHostsHelper: {},
-            CurrentOrganization: 'ACME',
-            simpleContentAccessEnabled: 'simpleContentAccessEnabled'
+            CurrentOrganization: 'ACME'
         });
     }));
 
     it('should attach a activation-key resource onto the scope', function() {
         expect($scope.activationKey).toBeDefined();
     });
-
 });
