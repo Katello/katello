@@ -23,7 +23,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsCon
             'organization_id': CurrentOrganization,
             enabled: true,
             'full_result': true,
-            'include_available_content': true
+            'include_available_content': true,
+            'content_access_mode_all': $scope.simpleContentAccessEnabled
         };
 
         $scope.controllerName = 'katello_products';
@@ -31,11 +32,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsCon
         $scope.table = $scope.nutupane.table;
 
         $scope.contentAccessModes = {
-            contentAccessModeAll: false,
+            contentAccessModeAll: $scope.simpleContentAccessEnabled,
             contentAccessModeEnv: false
         };
         $scope.toggleFilters = function () {
-            $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll;
+            $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll || $scope.simpleContentAccessEnabled;
             $scope.nutupane.table.params['content_access_mode_env'] = $scope.contentAccessModes.contentAccessModeEnv;
             $scope.nutupane.refresh();
         };

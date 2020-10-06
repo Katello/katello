@@ -8,14 +8,13 @@
  * @requires Subscription
  * @requires SubscriptionsHelper
  * @requires Notification
- * @requires simpleContentAccessEnabled
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'Host', 'HostSubscription', 'SubscriptionsHelper', 'Notification', 'simpleContentAccessEnabled',
-    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, Host, HostSubscription, SubscriptionsHelper, Notification, simpleContentAccessEnabled) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'Host', 'HostSubscription', 'SubscriptionsHelper', 'Notification',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, Host, HostSubscription, SubscriptionsHelper, Notification) {
 
         var params = {
             'organization_id': CurrentOrganization,
@@ -31,7 +30,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
         $scope.nutupane.primaryOnly = true;
         $scope.isRemoving = false;
         $scope.contextAdd = false;
-        $scope.simpleContentAccessEnabled = simpleContentAccessEnabled;
         $scope.groupedSubscriptions = {};
         $scope.$watch('table.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);

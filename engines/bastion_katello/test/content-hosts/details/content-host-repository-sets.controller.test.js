@@ -175,12 +175,81 @@ describe('Controller: ContentHostRepositorySetsController', function () {
     });
 
     describe("can toggle repository set filters", function () {
-        it("all and env toggles", function () {
-            $scope.contentAccessModes.contentAccessModeAll = true;
+        it("all and env toggles correctly with no SCA", function () {
+            $scope.contentAccessModes.contentAccessModeAll = false;
             $scope.contentAccessModes.contentAccessModeEnv = false;
+            $scope.simpleContentAccessEnabled = false;
             $scope.toggleFilters();
-            expect($scope.nutupane.table.params['content_access_mode_all']).toEqual($scope.contentAccessModes.contentAccessModeAll);
             expect($scope.nutupane.table.params['content_access_mode_env']).toEqual($scope.contentAccessModes.contentAccessModeEnv);
+            expect($scope.nutupane.table.params['content_access_mode_all']).toEqual($scope.contentAccessModes.contentAccessModeAll);
         });
+    });
+});
+
+describe('Controller: ContentHostRepositorySetsControllerWithSCA', function () {
+    var $scope,
+        $controller,
+        translate,
+        HostSubscription,
+        expectedTableSelection,
+        ContentOverrideHelper,
+        Notification,
+        CurrentOrganization;
+
+    beforeEach(module('Bastion.content-hosts'));
+
+    beforeEach(inject(function (_$controller_, $rootScope) {
+        $controller = _$controller_;
+        $scope = $rootScope.$new();
+        $scope.simpleContentAccessEnabled = true;
+        translate = function (message) {
+            return message;
+        };
+
+        HostSubscription = {
+            failed: false,
+            repositorySets: function () {
+                return {
+                    $promise: $q.defer().promise
+                }
+            },
+            contentOverride: function (params, overrides, success, failure) {
+                if (this.failed) {
+                    failure({data: {}})
+                } else {
+                    success();
+                }
+            }
+        };
+
+        ContentOverrideHelper = {
+            getEnabledContentOverrides: function () {},
+            getDisabledContentOverrides: function () {},
+            getDefaultContentOverrides: function () {}
+        };
+
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
+        $controller('ContentHostRepositorySetsController', {
+            $scope: $scope,
+            translate: translate,
+            HostSubscription: HostSubscription,
+            Notification: Notification,
+            ContentOverrideHelper: ContentOverrideHelper,
+            CurrentOrganization: CurrentOrganization
+        });
+
+        $scope.table = {
+            getSelected: function () {}
+        };
+
+        $scope.$stateParams.hostId = 1;
+    }));
+
+    it('sets the content access mode correctly', function () {
+        expect($scope.contentAccessModes.contentAccessModeAll).toBe(true);
     });
 });
