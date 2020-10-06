@@ -7,7 +7,7 @@ import {
   UPDATE_CONTENT_VIEW_FAILURE,
   UPDATE_CONTENT_VIEW_SUCCESS,
   NOT_ADDED,
-  ADDED,
+  BOTH,
   cvDetailsKey,
   cvDetailsRepoKey,
 } from '../ContentViewsConstants';
@@ -48,9 +48,10 @@ export const updateContentView = (cvId, params) => async dispatch => dispatch(pu
 export const getContentViewRepositories = (cvId, params, status) => {
   const apiParams = { ...params };
   let apiUrl = `/content_views/${cvId}/repositories`;
-  if (status[ADDED] && status[NOT_ADDED]) {
+
+  if (status === BOTH) {
     apiUrl += '/show_all';
-  } else if (status[NOT_ADDED]) {
+  } else if (status === NOT_ADDED) {
     apiParams.available_for = 'content_view';
   }
 

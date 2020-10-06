@@ -57,24 +57,23 @@ test('Can filter by repository type', async (done) => {
 
   const allTypesScope = nockInstance
     .get(cvAllRepos)
-    .query({ 'content_type[]': ['yum', 'file', 'docker', 'ostree'] })
+    .query(true)
     .reply(200, repoData);
 
   // With the yum checkbox unchecked, we can expect the query params to not include 'yum'
   const noYumScope = nockInstance
     .get(cvAllRepos)
-    .query({ 'content_type[]': ['file', 'docker', 'ostree'] })
+    .query({ content_type: 'yum' })
     .reply(200, repoData);
 
   const { getByLabelText } = renderWithRedux(<ContentViewRepositories cvId={1} />, renderOptions);
 
-  const toggleLabel = 'toggle Type';
-  const checkboxLabel = 'Yum Repositories checkbox';
-
-  fireEvent.click(getByLabelText(toggleLabel)); // Open type dropdown
-  expect(getByLabelText(checkboxLabel).checked).toBeTruthy(); // it is checked by default
-  fireEvent.click(getByLabelText(checkboxLabel)); // uncheck
-  expect(getByLabelText(checkboxLabel).checked).toBeFalsy(); // assert it is unchecked
+  // Patternfly's Select component makes it hard to attach a label, the existing options aren't
+  // working as expected, so querying by container label and getting first button to open dropdown
+  const toggleContainer = getByLabelText('select Type container');
+  const toggleButton = toggleContainer.querySelector('button');
+  fireEvent.click(toggleButton); // Open type dropdown
+  fireEvent.click(getByLabelText('select Yum repositories')); // select yum repos
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(allTypesScope);
@@ -96,13 +95,10 @@ test('Can filter by Not added status', async (done) => {
 
   const { getByLabelText } = renderWithRedux(<ContentViewRepositories cvId={1} />, renderOptions);
 
-  const toggleLabel = 'toggle Status';
-  const checkboxLabel = 'Added checkbox';
-
-  fireEvent.click(getByLabelText(toggleLabel));
-  expect(getByLabelText(checkboxLabel).checked).toBeTruthy();
-  fireEvent.click(getByLabelText(checkboxLabel)); // uncheck Added, only Not Added is checked
-  expect(getByLabelText(checkboxLabel).checked).toBeFalsy();
+  const toggleContainer = getByLabelText('select Status container');
+  const toggleButton = toggleContainer.querySelector('button');
+  fireEvent.click(toggleButton);
+  fireEvent.click(getByLabelText('select Not added'));
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(allStatusScope);
@@ -117,25 +113,19 @@ test('Can filter by Added status', async (done) => {
     .query(true)
     .reply(200, repoData);
 
-  const notAddedScope = nockInstance
+  const addedScope = nockInstance
     .get(cvRepos)
-    .query((params) => {
-      const keys = Object.keys(params);
-      return keys.length === 1 && keys[0] === 'content_type[]'; // only param is content_type array
-    })
+    .query({})
     .reply(200, repoData);
 
   const { getByLabelText } = renderWithRedux(<ContentViewRepositories cvId={1} />, renderOptions);
 
-  const toggleLabel = 'toggle Status';
-  const checkboxLabel = 'Not Added checkbox';
-
-  fireEvent.click(getByLabelText(toggleLabel));
-  expect(getByLabelText(checkboxLabel).checked).toBeTruthy();
-  fireEvent.click(getByLabelText(checkboxLabel)); // uncheck Not Added, only Added is checked
-  expect(getByLabelText(checkboxLabel).checked).toBeFalsy();
+  const toggleContainer = getByLabelText('select Status container');
+  const toggleButton = toggleContainer.querySelector('button');
+  fireEvent.click(toggleButton);
+  fireEvent.click(getByLabelText('select Added'));
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(allStatusScope);
-  assertNockRequest(notAddedScope, done);
+  assertNockRequest(addedScope, done);
 });

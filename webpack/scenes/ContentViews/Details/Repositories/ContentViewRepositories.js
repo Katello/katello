@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { Bullseye } from '@patternfly/react-core';
+import { Bullseye, Split, SplitItem } from '@patternfly/react-core';
 import { TableVariant, fitContent } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 import { STATUS } from 'foremanReact/constants';
@@ -11,15 +11,16 @@ import PropTypes from 'prop-types';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import { getContentViewRepositories } from '../ContentViewDetailActions';
 import { selectCVRepos, selectCVReposStatus, selectCVReposError } from '../ContentViewDetailSelectors';
-import { ADDED, NOT_ADDED } from '../../ContentViewsConstants';
+import { ADDED, NOT_ADDED, BOTH } from '../../ContentViewsConstants';
 import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
 import RepoAddedStatus from './RepoAddedStatus';
 import RepoIcon from './RepoIcon';
-import CheckableDropdown from './CheckableDropdown';
+import CheckableDropdown from './SelectableDropdown';
 
 // checkbox_name: API_name
 const repoTypes = {
+  'All repositories': 'all',
   'Yum repositories': 'yum',
   'File repositories': 'file',
   'Container repositories': 'docker',
@@ -31,15 +32,11 @@ const ContentViewRepositories = ({ cvId }) => {
   const response = useSelector(state => selectCVRepos(state, cvId), shallowEqual);
   const status = useSelector(state => selectCVReposStatus(state, cvId), shallowEqual);
   const error = useSelector(state => selectCVReposError(state, cvId), shallowEqual);
-  const baseTypeState = {};
-  Object.keys(repoTypes).forEach((type) => {
-    baseTypeState[type] = true;
-  });
 
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
-  const [typeChecked, setTypeChecked] = useState(baseTypeState);
-  const [statusChecked, setStatusChecked] = useState({ [ADDED]: true, [NOT_ADDED]: true });
+  const [typeSelected, setTypeSelected] = useState('All repositories');
+  const [statusSelected, setStatusSelected] = useState('Both');
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
@@ -69,9 +66,7 @@ const ContentViewRepositories = ({ cvId }) => {
         { title: <LastSync {...{ lastSyncWords, lastSync }} /> },
         { title: <ContentCounts {...{ counts, productId }} repoId={id} /> },
         {
-          title: <RepoAddedStatus
-            added={addedToCV || (statusChecked[ADDED] && !statusChecked[NOT_ADDED])}
-          />,
+          title: <RepoAddedStatus added={addedToCV || statusSelected === ADDED} />,
         },
       ];
 
@@ -93,17 +88,20 @@ const ContentViewRepositories = ({ cvId }) => {
   };
 
   const getCVReposWithOptions = (params = {}) => {
-    const contentTypeParam = [];
-    Object.keys(typeChecked).forEach((type) => {
-      if (typeChecked[type]) contentTypeParam.push(repoTypes[type]);
-    });
-    const allParams = { ...params, content_type: contentTypeParam };
-    return getContentViewRepositories(cvId, allParams, statusChecked);
+    let allParams;
+
+    if (typeSelected === 'All repositories') {
+      allParams = { ...params };
+    } else {
+      allParams = { ...params, content_type: repoTypes[typeSelected] };
+    }
+
+    return getContentViewRepositories(cvId, allParams, statusSelected);
   };
 
   useEffect(() => {
     dispatch(getCVReposWithOptions());
-  }, [statusChecked, typeChecked]);
+  }, [statusSelected, typeSelected]);
 
   useEffect(() => {
     const { results, ...meta } = response;
@@ -114,10 +112,6 @@ const ContentViewRepositories = ({ cvId }) => {
       setRows(newRows);
     }
   }, [JSON.stringify(response)]);
-
-  useEffect(() => {
-    if (!statusChecked[ADDED] && !statusChecked[NOT_ADDED]) setStatusChecked({ [ADDED]: true });
-  }, [statusChecked]);
 
   const emptyContentTitle = __("You currently don't have any repositories to add to this content view.");
   const emptyContentBody = __('Please add some repositories.'); // needs link
@@ -142,8 +136,26 @@ const ContentViewRepositories = ({ cvId }) => {
       autocompleteEndpoint="/repositories/auto_complete_search"
       fetchItems={params => getCVReposWithOptions(params)}
     >
-      <CheckableDropdown items={Object.keys(repoTypes)} title="Type" checked={typeChecked} setChecked={setTypeChecked} />
-      <CheckableDropdown items={[ADDED, NOT_ADDED]} title="Status" checked={statusChecked} setChecked={setStatusChecked} />
+      <Split hasGutter>
+        <SplitItem>
+          <CheckableDropdown
+            items={Object.keys(repoTypes)}
+            title="Type"
+            selected={typeSelected}
+            setSelected={setTypeSelected}
+            placeholderText="Type"
+          />
+        </SplitItem>
+        <SplitItem>
+          <CheckableDropdown
+            items={[ADDED, NOT_ADDED, BOTH]}
+            title="Status"
+            selected={statusSelected}
+            setSelected={setStatusSelected}
+            placeholderText="Status"
+          />
+        </SplitItem>
+      </Split>
     </TableWrapper>
   );
 };

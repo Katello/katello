@@ -9,5 +9,6 @@ export const cvDetailsRepoKey = cvId => `${CONTENT_VIEWS_KEY}_REPOSITORIES_${cvI
 // Repo added to content view status display and key
 export const ADDED = 'Added';
 export const NOT_ADDED = 'Not added';
+export const BOTH = 'Both';
 
 export default CONTENT_VIEWS_KEY;
