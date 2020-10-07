@@ -153,7 +153,7 @@ module Katello
                          :finder_scope => :promotable_or_removable
       @plugin.permission :export_content_views,
                          {
-                           'katello/api/v2/content_view_versions' => [:export]
+                           'katello/api/v2/content_view_versions' => [:export, :export_histories, :export_api_status]
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :exportable

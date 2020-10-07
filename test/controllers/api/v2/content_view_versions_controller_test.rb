@@ -142,7 +142,7 @@ module Katello
     end
 
     def test_export_histories_protected
-      allowed_perms = [@view_permission]
+      allowed_perms = [@view_permission, @export_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:export_histories, allowed_perms, denied_perms) do
@@ -151,7 +151,7 @@ module Katello
     end
 
     def test_export_api_status_protected
-      allowed_perms = [@view_permission]
+      allowed_perms = [@export_permission, @view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:export_api_status, allowed_perms, denied_perms) do
