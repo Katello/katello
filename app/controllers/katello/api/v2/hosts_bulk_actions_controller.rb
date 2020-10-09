@@ -247,6 +247,23 @@ module Katello
       render json: result
     end
 
+    api :PUT, "/hosts/bulk/system_purpose", N_("Assign system purpose attributes on one or more hosts")
+    param_group :bulk_params
+    param :service_level, String, :desc => N_("Service level of host")
+    param :purpose_role, String, :desc => N_("Role of host")
+    param :purpose_usage, String, :desc => N_("Usage of host")
+    param :purpose_addons, Array, :desc => N_("Sets the system add-ons")
+    def system_purpose
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateSystemPurpose,
+        @hosts,
+        params[:service_level],
+        params[:purpose_role],
+        params[:purpose_usage],
+        params[:purpose_addons])
+
+      respond_for_async :resource => task
+    end
+
     api :POST, "/hosts/bulk/available_incremental_updates", N_("Given a set of hosts and errata, lists the content view versions" \
                                                                  " and environments that need updating.")
     param_group :bulk_params
