@@ -19,6 +19,7 @@ module Actions
                      type: input[:type],
                      arches: input[:arches],
                      label: input[:label],
+                     requiredTags: input[:required_tags],
                      metadataExpire: 1,
                      vendor: ::Katello::Provider::CUSTOM)
         end

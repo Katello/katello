@@ -8,12 +8,13 @@ module Actions
           sequence do
             if root.content_id.nil?
               content_create = plan_action(Candlepin::Product::ContentCreate,
-                                           owner:       root.product.organization.label,
-                                           name:        root.name,
-                                           type:        root.content_type,
-                                           arches:      root.format_arches,
-                                           label:       root.custom_content_label,
-                                           content_url: root.custom_content_path)
+                                           owner:         root.product.organization.label,
+                                           name:          root.name,
+                                           type:          root.content_type,
+                                           arches:        root.format_arches,
+                                           label:         root.custom_content_label,
+                                           required_tags: root.required_tags,
+                                           content_url:   root.custom_content_path)
               content_id = content_create.output[:response][:id]
               plan_action(Candlepin::Product::ContentAdd, owner: root.product.organization.label,
                                     product_id: root.product.cp_id,

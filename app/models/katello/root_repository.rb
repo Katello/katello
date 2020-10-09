@@ -85,7 +85,10 @@ module Katello
       :in => HTTP_PROXY_POLICIES,
       :message => _("must be one of the following: %s") % HTTP_PROXY_POLICIES.join(', ')
     }
-    validates :required_tags, format: { without: / /, message: "must be a comma-separated list without spaces" }
+    validates :required_tags, allow_nil: true, format: {
+      with: /\A\S*\z/,
+      message: _("must be a comma-separated list without spaces")
+    }
     scope :subscribable, -> { where(content_type: RootRepository::SUBSCRIBABLE_TYPES) }
     scope :has_url, -> { where.not(:url => nil) }
     scope :with_repository_attribute, ->(attr, value) { joins(:repositories).where("#{Katello::Repository.table_name}.#{attr}" => value) }
