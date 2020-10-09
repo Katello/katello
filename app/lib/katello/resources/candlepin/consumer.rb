@@ -53,8 +53,8 @@ module Katello
             JSON.parse(response).with_indifferent_access
           end
 
-          def async_hypervisors(owner, raw_json)
-            url = "/candlepin/hypervisors/#{owner}"
+          def async_hypervisors(owner:, reporter_id:, raw_json:)
+            url = "/candlepin/hypervisors/#{owner}?reporter_id=#{reporter_id}"
             headers = self.default_headers
             headers['content-type'] = 'text/plain'
             response = self.post(url, raw_json, headers)

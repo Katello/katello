@@ -263,14 +263,20 @@ module Katello
 
     describe "async_hypervisors_update" do
       it "hypervisors_update" do
-        Katello::Resources::Candlepin::Consumer.expects(:async_hypervisors).returns('id' => 'foo')
+        owner = @organization.label
+        reporter_id = 100
+        env = 'dev/dev'
+        Katello::Resources::Candlepin::Consumer.expects(:async_hypervisors).returns('id' => 'foo').with do |params|
+          assert_equal params[:owner], owner
+          assert_equal params[:reporter_id], reporter_id
+        end
 
         assert_async_task(::Actions::Katello::Host::Hypervisors) do |params, options|
           assert_nil params
           assert_equal options, :task_id => 'foo'
         end
 
-        post(:async_hypervisors_update, :params => {:owner => @organization.label, :env => 'dev/dev'})
+        post(:async_hypervisors_update, :params => {owner: owner, reporter_id: reporter_id, env: env})
         assert_response 200
       end
     end
