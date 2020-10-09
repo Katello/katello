@@ -19,8 +19,8 @@ module Katello
       @view_2 = katello_content_views(:acme_default)
       @library = katello_environments(:library)
 
-      @host1 = FactoryBot.create(:host, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
-      @host2 = FactoryBot.create(:host, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
+      @host1 = FactoryBot.create(:host, :with_subscription, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
+      @host2 = FactoryBot.create(:host, :with_subscription, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
       @host_ids = [@host1.id, @host2.id]
       @host_names = [@host1.name, @host2.name]
 
@@ -162,6 +162,44 @@ module Katello
       put :environment_content_view, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :environment_id => @library.id, :content_view_id => @view_2.id }
 
       assert_response :success
+    end
+
+    def test_system_purpose
+      host_service_level = 'Standard'
+      host_purpose_role = 'Red Hat Enterprise Linux Server'
+      host_purpose_usage = 'Production'
+      host_purpose_addons = ['foo']
+
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts, service_level_param, purpose_role_param, purpose_usage_param, purpose_addons_param|
+        assert_equal action_class, ::Actions::Katello::Host::UpdateSystemPurpose
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+        assert_equal host_service_level, service_level_param
+        assert_equal host_purpose_role, purpose_role_param
+        assert_equal host_purpose_usage, purpose_usage_param
+        assert_equal host_purpose_addons, purpose_addons_param
+      end
+
+      put :system_purpose, params: { :included => {:ids => @host_ids}, :service_level => host_service_level, :purpose_role => host_purpose_role,
+                                     :purpose_usage => host_purpose_usage, :purpose_addons => host_purpose_addons}
+
+      assert_response :success
+    end
+
+    def test_system_purpose_permission
+      good_perms = [@update_permission]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
+
+      host_service_level = 'Standard'
+      host_purpose_usage = 'Production'
+      host_purpose_role = 'Red Hat Enterprise Linux Server'
+      host_purpose_addons = ['foo']
+
+      assert_protected_action(:release_version, good_perms, bad_perms) do
+        put :system_purpose, params: { :included => {:ids => @host_ids}, :service_level => host_service_level, :purpose_role => host_purpose_role,
+                                       :purpose_usage => host_purpose_usage, :purpose_addons => host_purpose_addons}
+      end
     end
 
     def test_release_version
