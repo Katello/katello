@@ -52,12 +52,16 @@ module Katello
             JSON.parse(File.read("#{path}/#{Export::METADATA_FILE}")).with_indifferent_access
           end
 
-          def check_permissions!(path)
+          def check_permissions!(path, assert_metadata: true)
             fail _("Invalid path specified.") if path.blank? || !File.directory?(path)
             fail _("The import path must be in a subdirectory under '%s'." % BASEDIR) unless path.starts_with?(BASEDIR)
+
             metadata_file = "#{path}/#{::Katello::Pulp3::ContentViewVersion::Export::METADATA_FILE}"
-            fail _("Could not find metadata.json at '%s'." % metadata_file) unless File.exist?(metadata_file)
-            fail _("Unable to read the metadata.json at '%s'." % metadata_file) unless File.readable?(metadata_file)
+            if assert_metadata
+              fail _("Could not find metadata.json at '%s'." % metadata_file) unless File.exist?(metadata_file)
+              fail _("Unable to read the metadata.json at '%s'." % metadata_file) unless File.readable?(metadata_file)
+            end
+
             fail _("Pulp user or group unable to read content in '%s'." % path) unless pulp_user_accessible?(path)
             Dir.glob("#{path}/*").each do |file|
               next if file == metadata_file

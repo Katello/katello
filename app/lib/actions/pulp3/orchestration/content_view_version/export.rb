@@ -54,16 +54,16 @@ module Actions
             file_name = output[:exported_file_checksum].first&.first
             path = File.dirname(file_name.to_s)
             output[:export_path] = path
-            ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: input[:content_view_version_id],
-                                                               destination_server: input[:destination_server],
-                                                               path: path)
             cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
 
             export_metadata = ::Katello::Pulp3::ContentViewVersion::Export.new(:content_view_version => cvv,
                                                                :smart_proxy => smart_proxy).generate_metadata
             toc = Dir.glob("#{path}/*toc.json").first
             export_metadata[:toc] = File.basename(toc) if toc
-            File.write("#{path}/#{::Katello::Pulp3::ContentViewVersion::Export::METADATA_FILE}", export_metadata.to_json)
+            ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: input[:content_view_version_id],
+                                                               destination_server: input[:destination_server],
+                                                               path: path,
+                                                               metadata: export_metadata)
           end
 
           def humanized_name

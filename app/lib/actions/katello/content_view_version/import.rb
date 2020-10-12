@@ -4,15 +4,20 @@ module Actions
       class Import < Actions::EntryAction
         PULP_USER = 'pulp'.freeze
 
-        def plan(content_view, path:)
+        def plan(content_view, path:, metadata: nil)
           content_view.check_ready_to_import!
           unless SmartProxy.pulp_primary.pulp3_repository_type_support?(::Katello::Repository::YUM_TYPE)
-            fail HttpErrors::BadRequest, _("This API endpoint is only valid for Pulp 3 repositories.")
+            fail ::Katello::HttpErrors::BadRequest, _("This API endpoint is only valid for Pulp 3 repositories.")
           end
-          ::Katello::Pulp3::ContentViewVersion::Import.check_permissions!(path)
-          metadata = ::Katello::Pulp3::ContentViewVersion::Import.metadata(path)
-          major = metadata[:content_view_version][:major]
-          minor = metadata[:content_view_version][:minor]
+          ::Katello::Pulp3::ContentViewVersion::Import.check_permissions!(path, assert_metadata: metadata.nil?)
+          metadata_json = if metadata
+                            JSON.parse(metadata).with_indifferent_access
+                          else
+                            ::Katello::Pulp3::ContentViewVersion::Import.metadata(path)
+                          end
+
+          major = metadata_json[:content_view_version][:major]
+          minor = metadata_json[:content_view_version][:minor]
 
           if ::Katello::ContentViewVersion.where(major: major, minor: minor, content_view: content_view).exists?
             cvv_name = "#{content_view.name} #{major}.#{minor}"
