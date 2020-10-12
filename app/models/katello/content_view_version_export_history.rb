@@ -7,6 +7,7 @@ module Katello
     validates :content_view_version_id, :presence => true
     validates :destination_server, :presence => true, :uniqueness => { :scope => [:content_view_version_id, :destination_server, :path] }
     validates :metadata, :presence => true
+    serialize :metadata, Hash
 
     scope :with_organization_id, ->(organization_id) do
       where(:content_view_version_id => ContentViewVersion.with_organization_id(organization_id))
