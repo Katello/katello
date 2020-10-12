@@ -122,6 +122,9 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             if (repository.content_type === 'ostree') {
                 repository.unprotected = false;
             }
+            if (repository.content_type === 'yum') {
+              repository.required_tags = $scope.formatRequiredTags();
+            }
             if (repository.content_type !== 'yum') {
                 repository['download_policy'] = '';
             }
@@ -156,5 +159,29 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         HttpProxy.queryUnpaged(function (proxies) {
             $scope.proxies = proxies.results;
         });
+
+        $scope.requiredTagsOptions = function () {
+          if ($scope.requiredTagsList) return $scope.requiredTagsList;
+          $scope.requiredTagsList = [
+            { name: 'Red Hat Enterprise Linux 7 Server', tag: 'rhel-7-server', selected: false },
+            { name: 'Red Hat Enterprise Linux 7 Workstation', tag: 'rhel-7-workstation', selected: false },
+          ];
+          return $scope.requiredTagsList;
+        };
+
+        $scope.formatRequiredTags = function () {
+          if (!$scope.requiredTagsList) return null;
+          var selectedItems = $scope.requiredTagsList.filter(function (item) {
+            return item.selected;
+          })
+          var individualTags = selectedItems.map(function (item) {
+            return item.tag;
+          })
+          var reqTagStr;
+          if (individualTags) reqTagStr = individualTags.join(",");
+          console.log(reqTagStr);
+          return reqTagStr;
+        };
+
     }]
 );

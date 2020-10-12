@@ -1,0 +1,8 @@
+<div class="bst-checkbox-list" ng-class="open">
+  <form ng-show="true" role="form">
+    <p ng-repeat="option in options">
+      <input type="checkbox" ng-model="option.selected"/> {{ option.name }}
+    </p>
+  </form>
+  <div bst-edit></div>
+</div>

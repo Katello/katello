@@ -39,6 +39,23 @@
         </select>
       </div>
 
+      <div
+        bst-form-group label="{{ 'Required Tags' | translate }}"
+        ng-if="repository.content_type === 'yum'"
+        ng-click="formatRequiredTags()"
+      >
+       <div bst-checkbox-list="repository.required_tags"
+           icon-show="true"
+           formatter="arrayToString"
+           deletable="true"
+           selector="repository.required_tags"
+           display-value="formatRequiredTags()"
+           options="requiredTagsOptions()"
+           button-config="none"
+           >
+       </div>
+      </div>
+
       <div class="alert alert-warning" ng-if="repository.content_type === 'ostree' || repository.content_type === 'puppet'">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>Deprecation Warning: </strong>Puppet and OSTree will no longer be supported in Katello 4.0.

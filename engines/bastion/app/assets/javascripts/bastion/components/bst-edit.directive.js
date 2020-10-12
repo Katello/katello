@@ -335,6 +335,74 @@ angular.module('Bastion.components')
             unbindWatcher();
         });
     }])
+    .directive('bstCheckboxList', function () {
+        return {
+            templateUrl: 'components/views/bst-checkbox-list.html',
+            scope: {
+                model: '=bstCheckboxList',
+                iconClass: '=iconClass',
+                iconShow: '=iconShow',
+                formatter: '@formatter',
+                formatterOptions: '@formatterOptions',
+                handleOptions: '&options',
+                handleSave: '&onSave',
+                handleAdd: '&onAdd',
+                handleRemove: '&onRemove',
+                handleCancel: '&onCancel',
+                buttonConfig: '@buttonConfig',
+                forcedWorkingMode: '=',
+                displayValueDefault: '@displayValueDefault',
+                readonly: '='
+            },
+            controller: 'BstCheckboxListController'
+        };
+    })
+    .controller('BstCheckboxListController', ['$scope', function ($scope) {
+        var unbindWatcher, checkPrevious, getIds;
+
+        getIds = function (models) {
+            models = models || [];
+            return _.chain(models).map("id").without(undefined).value();
+        };
+
+        checkPrevious = function () {
+            var appliedIds = getIds($scope.model);
+
+            if (_.isEmpty(appliedIds)) {
+                return;
+            }
+
+            _.each($scope.options, function (tag) {
+                if (_.includes(appliedIds, tag.id, 0)) {
+                    tag.selected = true;
+                } else {
+                    tag.selected = false;
+                }
+            });
+        };
+
+        $scope.toggleOption = function (option) {
+            var appliedIds = getIds($scope.model),
+                position = _.indexOf(appliedIds, option.id, 0);
+
+            if (position >= 0) {
+                option.selected = false;
+                $scope.model.splice(position, 1);
+            } else {
+                option.selected = true;
+                $scope.model.push(option);
+            }
+        };
+
+        // Set the checkboxes for already selected items and then unbind.
+        unbindWatcher = $scope.$watch("model + options", function () {
+            if (!$scope.model || !$scope.options) {
+                return;
+            }
+            checkPrevious();
+            unbindWatcher();
+        });
+    }])
     .directive('bstEditAddItem', function () {
         return {
             templateUrl: 'components/views/bst-edit-add-item.html',
