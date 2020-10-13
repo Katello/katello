@@ -32,12 +32,15 @@ module Actions
                         :gpg_key_url => repository.yum_gpg_key_url,
                         :label => content.label,
                         :type => root.content_type,
-                        :arches => root.format_arches)
+                        :arches => root.format_arches,
+                        :required_tags => root.required_tags,
+                      )
 
             content.update!(name: root.name,
                                        content_url: root.custom_content_path,
                                        content_type: repository.content_type,
                                        label: content.label,
+                                       required_tags: root.required_tags,
                                        gpg_url: repository.yum_gpg_key_url)
           end
           if root.pulp_update_needed?
