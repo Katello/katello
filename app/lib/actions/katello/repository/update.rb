@@ -40,7 +40,6 @@ module Actions
                                        content_url: root.custom_content_path,
                                        content_type: repository.content_type,
                                        label: content.label,
-                                       required_tags: root.required_tags,
                                        gpg_url: repository.yum_gpg_key_url)
           end
           if root.pulp_update_needed?

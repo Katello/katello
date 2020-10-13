@@ -9,6 +9,7 @@ module Actions
           param :label
           param :content_url
           param :owner
+          param :required_tags
         end
 
         def run

@@ -7,6 +7,7 @@ module Actions
           param :name
           param :type
           param :arches
+          param :required_tags
           param :label
           param :content_url
           param :gpg_key_url
@@ -22,6 +23,7 @@ module Actions
                      gpgUrl: input[:gpg_key_url] || '', #candlepin ignores nil
                      type: input[:type],
                      arches: input[:arches],
+                     required_tags: input[:required_tags],
                      label: input[:label],
                      metadataExpire: 1,
                      vendor: ::Katello::Provider::CUSTOM)
