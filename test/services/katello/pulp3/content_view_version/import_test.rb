@@ -42,8 +42,9 @@ module Katello
           it "can skip the metadata json check" do
             import_export_dir = File.join(Katello::Engine.root, 'test/fixtures')
             File.expects(:readable?).with("#{import_export_dir}/metadata.json").never
+            ::Katello::Pulp3::ContentViewVersion::Import.expects(:pulp_user_accessible?).at_least_once.returns(true)
             stub_constant(::Katello::Pulp3::ContentViewVersion::Import, :BASEDIR, import_export_dir) do
-              ::Katello::Pulp3::ContentViewVersion::Import.check_permissions!(import_export_dir, assert_metadata: false)
+              assert ::Katello::Pulp3::ContentViewVersion::Import.check_permissions!(import_export_dir, assert_metadata: false)
             end
           end
 

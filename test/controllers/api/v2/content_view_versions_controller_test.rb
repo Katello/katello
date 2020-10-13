@@ -217,6 +217,14 @@ module Katello
       end
     end
 
+    def test_import
+      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Import, @library_view, path: '/tmp', metadata: '{}').returns({})
+
+      post :import, params: { content_view_id: @library_view.id, path: '/tmp', metadata: '{}'}
+
+      assert_response :success
+    end
+
     def test_show_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]

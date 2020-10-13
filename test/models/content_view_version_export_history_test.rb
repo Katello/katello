@@ -12,16 +12,19 @@ module Katello
       path = "/tmp"
       ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: @cvv.id,
                                                                           destination_server: destination,
+                                                                          metadata: {foo: :bar},
                                                                           path: path)
       assert_raises ActiveRecord::RecordInvalid do
         ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: @cvv.id,
                                                                   destination_server: destination,
+                                                                  metadata: {foo: :bar},
                                                                   path: path)
       end
 
       assert_nothing_raised do
         ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: @cvv.id,
                                                                 destination_server: destination + "foo",
+                                                                metadata: {foo: :bar},
                                                                 path: path)
       end
     end
