@@ -23,7 +23,7 @@ module Actions
                      gpgUrl: input[:gpg_key_url] || '', #candlepin ignores nil
                      type: input[:type],
                      arches: input[:arches],
-                     required_tags: input[:required_tags],
+                     requiredTags: input[:required_tags],
                      label: input[:label],
                      metadataExpire: 1,
                      vendor: ::Katello::Provider::CUSTOM)
