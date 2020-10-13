@@ -102,6 +102,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 repository["docker_tags_whitelist"] = [];
             }
 
+            repository.required_tags = $scope.formatRequiredTags();
+
             repository.$update(function (response) {
                 deferred.resolve(response);
                 if (!_.isEmpty(response["docker_tags_whitelist"])) {
