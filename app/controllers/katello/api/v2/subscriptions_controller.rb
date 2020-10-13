@@ -19,7 +19,7 @@ module Katello
 
     api :GET, "/organizations/:organization_id/subscriptions", N_("List organization subscriptions")
     api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
-    api :GET, "/subscriptions"
+    api :GET, "/subscriptions", N_("List subscriptions")
     param_group :search, Api::V2::ApiController
     param :organization_id, :number, :desc => N_("Organization ID"), :required => false
     param :host_id, String, :desc => N_("id of a host"), :required => false
