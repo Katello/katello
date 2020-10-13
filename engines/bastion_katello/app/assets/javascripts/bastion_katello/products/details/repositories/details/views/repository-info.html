@@ -44,6 +44,17 @@
         </dd>
       </span>
 
+      <span ng-show="repository.content_type === 'yum'" >
+        <dt translate>Required Tags</dt>
+        <dd bst-edit-multiselect="repository.required_tags"
+            selector="repository.required_tags"
+            formatter="arrayToString"
+            formatter-options="','"
+            options="requiredTagsOptions()"
+            on-save="save(repository)">
+        </dd>
+      </span>
+
       <dt ng-show="repository.content_type !== 'docker'" translate>Upstream URL</dt>
       <dt ng-show="repository.content_type === 'docker'" translate>Registry URL</dt>
       <dd bst-edit-text="repository.url"

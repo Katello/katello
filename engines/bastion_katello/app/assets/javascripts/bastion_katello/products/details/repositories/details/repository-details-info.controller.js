@@ -200,6 +200,44 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return HttpProxyPolicy.displayHttpProxyName($scope.proxies, proxyId);
         };
 
+        $scope.requiredTagsOptions = function () {
+          if ($scope.requiredTagsList) return $scope.requiredTagsList;
+          $scope.requiredTagsList = [
+            { name: 'Red Hat Enterprise Linux 7 Server', tag: 'rhel-7-server', selected: undefined },
+            { name: 'Red Hat Enterprise Linux 7 Workstation', tag: 'rhel-7-workstation', selected: undefined },
+          ];
+          // set selected to true or false for each required tag
+          $scope.requiredTagsList.forEach(function (reqTagObj) {
+            console.log(reqTagObj)
+            reqTagObj.selected = $scope.isRequiredTagSelected(reqTagObj.tag);
+            console.log($scope.isRequiredTagSelected)
+          });
+          return $scope.requiredTagsList;
+        };
+
+        $scope.isRequiredTagSelected = function (tag) {
+          if (!$scope.repository.required_tags) return false;
+          var requiredTags = $scope.repository.required_tags.split(',');
+          return !!requiredTags.find(function (reqTag) {
+              console.log({reqTag: reqTag, tag: tag})
+              return reqTag === tag;
+            })
+        }
+
+        $scope.formatRequiredTags = function () {
+          if (!$scope.requiredTagsList) return null;
+          var selectedItems = $scope.requiredTagsList.filter(function (item) {
+            return item.selected;
+          })
+          var individualTags = selectedItems.map(function (item) {
+            return item.tag;
+          })
+          var reqTagStr;
+          if (individualTags) reqTagStr = individualTags.join(",");
+          console.log(reqTagStr);
+          return reqTagStr;
+        };
+
         HttpProxy.queryUnpaged(function (proxies) {
             $scope.proxies = proxies.results;
         });
