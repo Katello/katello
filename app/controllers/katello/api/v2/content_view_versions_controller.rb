@@ -124,7 +124,7 @@ module Katello
     api :POST, "/content_view_versions/import", N_("Import a content view version")
     param :content_view_id, :number, :desc => N_("Content view identifier"), :required => true
     param :path, String, :desc => N_("Directory containing the exported Content View Version"), :required => true
-    param :metadata, String, :desc => N_("If path does not contain the export metadata it must be provided."), :required => false
+    param :metadata, Hash, :desc => N_("If path does not contain the export metadata it must be provided."), :required => false
     def import
       task = async_task(::Actions::Katello::ContentViewVersion::Import, @view, path: params[:path], metadata: params[:metadata])
       respond_for_async :resource => task

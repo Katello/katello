@@ -218,9 +218,9 @@ module Katello
     end
 
     def test_import
-      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Import, @library_view, path: '/tmp', metadata: '{}').returns({})
+      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Import, @library_view, path: '/tmp', metadata: {'foo' => 'bar'}).returns({})
 
-      post :import, params: { content_view_id: @library_view.id, path: '/tmp', metadata: '{}'}
+      post :import, params: { content_view_id: @library_view.id, path: '/tmp', metadata: {foo: :bar}}
 
       assert_response :success
     end

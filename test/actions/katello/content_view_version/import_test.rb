@@ -78,19 +78,18 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     it 'gives precendence to metadata param over file' do
-      metadata = "{\"content_view_version\":{\"major\":\"1\",\"minor\":\"2\"}}"
-      metadata_json = JSON.parse(metadata).with_indifferent_access
+      metadata = {content_view_version: {major: 1, minor: 2}}
       ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir, assert_metadata: false).returns
 
-      plan_action(action, content_view, path: @import_export_dir, metadata: "{\"content_view_version\":{\"major\":\"1\",\"minor\":\"2\"}}")
+      plan_action(action, content_view, path: @import_export_dir, metadata: metadata)
 
       assert_action_planned_with(action,
                                   ::Actions::Katello::ContentView::Publish,
                                   content_view, '',
                                   path: @import_export_dir,
                                   import_only: true,
-                                  major: metadata_json[:content_view_version][:major],
-                                  minor: metadata_json[:content_view_version][:minor])
+                                  major: metadata[:content_view_version][:major],
+                                  minor: metadata[:content_view_version][:minor])
     end
 
     it 'Import should plan the full tree appropriately' do

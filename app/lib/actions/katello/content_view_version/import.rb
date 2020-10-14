@@ -10,14 +10,10 @@ module Actions
             fail ::Katello::HttpErrors::BadRequest, _("This API endpoint is only valid for Pulp 3 repositories.")
           end
           ::Katello::Pulp3::ContentViewVersion::Import.check_permissions!(path, assert_metadata: metadata.nil?)
-          metadata_json = if metadata
-                            JSON.parse(metadata).with_indifferent_access
-                          else
-                            ::Katello::Pulp3::ContentViewVersion::Import.metadata(path)
-                          end
+          metadata ||= ::Katello::Pulp3::ContentViewVersion::Import.metadata(path)
 
-          major = metadata_json[:content_view_version][:major]
-          minor = metadata_json[:content_view_version][:minor]
+          major = metadata[:content_view_version][:major]
+          minor = metadata[:content_view_version][:minor]
 
           if ::Katello::ContentViewVersion.where(major: major, minor: minor, content_view: content_view).exists?
             cvv_name = "#{content_view.name} #{major}.#{minor}"
