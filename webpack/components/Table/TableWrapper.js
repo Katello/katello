@@ -11,9 +11,10 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
-  children, metadata, fetchItems, autocompleteEndpoint, ...allTableProps
+  children, metadata, fetchItems, autocompleteEndpoint, searchQuery, updateSearchQuery,
+  ...allTableProps
 }) => {
-  const { search: currentSearch } = metadata;
+  // Search isn't working when something besides search changes
   const dispatch = useDispatch();
   const { foremanPerPage = 20 } = useForemanSettings();
   // setting pagination to local state so it doesn't disappear when page reloads
@@ -28,9 +29,16 @@ const TableWrapper = ({
     if (newPerPage) setPerPage(parseInt(newPerPage, 10));
   };
 
+  const paginationParams = () => ({ per_page: perPage, page });
+
   useEffect(() => updatePagination(metadata), [metadata]);
 
-  const paginationParams = () => ({ per_page: perPage, page });
+  // The search component will update the search query when a search is performed, listen for that
+  // and perform the search so we can be sure the searchQuery is updated when search is performed.
+  useEffect(() => {
+    dispatch(fetchItems({ ...paginationParams(), search: searchQuery }));
+  }, [searchQuery]);
+
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
@@ -40,18 +48,20 @@ const TableWrapper = ({
     },
   });
 
-  const onSearch = search => dispatch(fetchItems({ ...paginationParams(), search }));
-
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
-    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination, search: currentSearch }));
+    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination, search: searchQuery }));
   };
 
   return (
     <React.Fragment>
       <Flex>
         <FlexItem>
-          <Search patternfly4 {...{ onSearch, getAutoCompleteParams }} />
+          <Search
+            patternfly4
+            onSearch={search => updateSearchQuery(search)}
+            getAutoCompleteParams={getAutoCompleteParams}
+          />
         </FlexItem>
         <FlexItem>
           {children}
@@ -68,12 +78,14 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!currentSearch} {...allTableProps} />
+      <MainTable searchIsActive={!!searchQuery} {...allTableProps} />
     </React.Fragment>
   );
 };
 
 TableWrapper.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  updateSearchQuery: PropTypes.func.isRequired,
   fetchItems: PropTypes.func.isRequired,
   metadata: PropTypes.shape({
     total: PropTypes.number,

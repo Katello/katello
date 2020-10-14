@@ -16,7 +16,7 @@ const repoLabels = {
   ostree_branch: ['ostree branches', 'ostree branch', 'content/ostree_branches'],
   package_group: ['package groups', 'package group', 'package_groups'],
   puppet_module: ['puppet modules', 'puppet module', 'content/puppet_modules'],
-  srpm: ['source rpms', 'source rpm', 'source_rpms'], // no link?
+  srpm: ['source RPMs', 'source RPM', 'source_rpms'], // no link?
 };
 
 const appendCount = (type, count, info, productId, repoId) => {

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Bullseye, Split, SplitItem } from '@patternfly/react-core';
 import { TableVariant, fitContent } from '@patternfly/react-table';
-import { Link } from 'react-router-dom';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -35,6 +34,7 @@ const ContentViewRepositories = ({ cvId }) => {
 
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
+  const [searchQuery, updateSearchQuery] = useState('');
   const [typeSelected, setTypeSelected] = useState('All repositories');
   const [statusSelected, setStatusSelected] = useState('Both');
 
@@ -61,7 +61,7 @@ const ContentViewRepositories = ({ cvId }) => {
 
       const cells = [
         { title: <Bullseye><RepoIcon type={contentType} /></Bullseye> },
-        { title: <Link to={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</Link> },
+        { title: <a href={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</a> },
         productName,
         { title: <LastSync {...{ lastSyncWords, lastSync }} /> },
         { title: <ContentCounts {...{ counts, productId }} repoId={id} /> },
@@ -88,13 +88,8 @@ const ContentViewRepositories = ({ cvId }) => {
   };
 
   const getCVReposWithOptions = (params = {}) => {
-    let allParams;
-
-    if (typeSelected === 'All repositories') {
-      allParams = { ...params };
-    } else {
-      allParams = { ...params, content_type: repoTypes[typeSelected] };
-    }
+    const allParams = { ...params, search: searchQuery };
+    if (typeSelected !== 'All repositories') allParams.content_type = repoTypes[typeSelected];
 
     return getContentViewRepositories(cvId, allParams, statusSelected);
   };
@@ -128,6 +123,8 @@ const ContentViewRepositories = ({ cvId }) => {
         emptyContentBody,
         emptySearchTitle,
         emptySearchBody,
+        searchQuery,
+        updateSearchQuery,
         error,
         status,
       }}
