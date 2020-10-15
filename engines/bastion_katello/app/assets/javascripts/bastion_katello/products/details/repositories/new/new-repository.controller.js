@@ -17,6 +17,7 @@
  * @requires OstreeUpstreamSyncPolicy
  * @requires Architecture
  * @requires RepositoryTypesService
+ * @requires RequiredTags
  * @requires YumContentUnits
  * #requires HttpProxyPolicy
  *
@@ -24,8 +25,8 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy',
-    function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy) {
+    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'RequiredTags',
+    function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, RequiredTags) {
 
         function success() {
             Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -161,26 +162,12 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         });
 
         $scope.requiredTagsOptions = function () {
-          if ($scope.requiredTagsList) return $scope.requiredTagsList;
-          $scope.requiredTagsList = [
-            { name: 'Red Hat Enterprise Linux 7 Server', tag: 'rhel-7-server', selected: false },
-            { name: 'Red Hat Enterprise Linux 7 Workstation', tag: 'rhel-7-workstation', selected: false },
-          ];
+          $scope.requiredTagsList = $scope.requiredTagsList || RequiredTags.getRequiredTagsOptions();
           return $scope.requiredTagsList;
         };
 
         $scope.formatRequiredTags = function () {
-          if (!$scope.requiredTagsList) return null;
-          var selectedItems = $scope.requiredTagsList.filter(function (item) {
-            return item.selected;
-          })
-          var individualTags = selectedItems.map(function (item) {
-            return item.tag;
-          })
-          var reqTagStr;
-          if (individualTags) reqTagStr = individualTags.join(",");
-          console.log(reqTagStr);
-          return reqTagStr;
+          return RequiredTags.formatRequiredTags($scope.requiredTagsList);
         };
 
     }]

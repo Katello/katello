@@ -14,13 +14,14 @@
  * @requires Architecture
  * @requires YumContentUnits
  * @requires HttpProxyPolicy
+ * @requires RequiredTags
  *
  * @description
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'YumContentUnits', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy',
-    function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, YumContentUnits, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'YumContentUnits', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'RequiredTags',
+    function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, YumContentUnits, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, RequiredTags) {
         $scope.organization = CurrentOrganization;
 
         $scope.progress = {uploading: false};
@@ -203,41 +204,18 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         };
 
         $scope.requiredTagsOptions = function () {
-          if ($scope.requiredTagsList) return $scope.requiredTagsList;
-          $scope.requiredTagsList = [
-            { name: 'Red Hat Enterprise Linux 7 Server', tag: 'rhel-7-server', selected: undefined },
-            { name: 'Red Hat Enterprise Linux 7 Workstation', tag: 'rhel-7-workstation', selected: undefined },
-          ];
-          // set selected to true or false for each required tag
+          // initial options
+          $scope.requiredTagsList = $scope.requiredTagsList || RequiredTags.getRequiredTagsOptions();
+          // set selected to true or false for each required tag, based on the saved object
           $scope.requiredTagsList.forEach(function (reqTagObj) {
             console.log(reqTagObj)
-            reqTagObj.selected = $scope.isRequiredTagSelected(reqTagObj.tag);
-            console.log($scope.isRequiredTagSelected)
+            reqTagObj.selected = RequiredTags.isRequiredTagSelected(reqTagObj.tag, $scope.repository);
           });
           return $scope.requiredTagsList;
         };
 
-        $scope.isRequiredTagSelected = function (tag) {
-          if (!$scope.repository.required_tags) return false;
-          var requiredTags = $scope.repository.required_tags.split(',');
-          return !!requiredTags.find(function (reqTag) {
-              console.log({reqTag: reqTag, tag: tag})
-              return reqTag === tag;
-            })
-        }
-
         $scope.formatRequiredTags = function () {
-          if (!$scope.requiredTagsList) return null;
-          var selectedItems = $scope.requiredTagsList.filter(function (item) {
-            return item.selected;
-          })
-          var individualTags = selectedItems.map(function (item) {
-            return item.tag;
-          })
-          var reqTagStr;
-          if (individualTags) reqTagStr = individualTags.join(",");
-          console.log(reqTagStr);
-          return reqTagStr;
+          return RequiredTags.formatRequiredTags($scope.requiredTagsList);
         };
 
         HttpProxy.queryUnpaged(function (proxies) {
