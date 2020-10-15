@@ -38,6 +38,12 @@ module Katello
         def version_href_to_repository_href(version_href)
           version_href.split("/")[0..-3].join("/") + "/"
         end
+
+        def zero_version_href(repository_href)
+          #  /pulp/api/v3/repositories/rpm/rpm/e59c4334-81d2-4d6b-a1a1-b61fa55ed664/versions/0/
+          repository_href += "/" unless repository_href.ends_with?('/')
+          "#{repository_href}versions/0/"
+        end
       end
     end
   end

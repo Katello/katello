@@ -127,7 +127,7 @@ module Katello
     param :path, String, :desc => N_("Directory containing the exported Content View Version"), :required => true
     param :metadata, Hash, :desc => N_("Metadata taken from the upstream export history for this Content View Version"), :required => true
     def import
-      task = async_task(::Actions::Katello::ContentViewVersion::Import, @view, path: params[:path], metadata: metadata_params)
+      task = async_task(::Actions::Katello::ContentViewVersion::Import, @view, path: params[:path], metadata: metadata_params&.to_h)
       respond_for_async :resource => task
     end
 
@@ -355,8 +355,11 @@ module Katello
         fail HttpErrors::BadRequest, _("Destination Server Name required for Pulp3 repositories")
       end
 
+      history = ::Katello::ContentViewVersionExportHistory.find(params[:from_history_id]) unless params[:from_history_id].blank?
+
       async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @version, destination_server: params[:destination_server],
-                                                                                               chunk_size: params[:chunk_size_mb])
+                                                                                         chunk_size: params[:chunk_size_mb],
+                                                                                         from_history: history)
     end
 
     def metadata_params
