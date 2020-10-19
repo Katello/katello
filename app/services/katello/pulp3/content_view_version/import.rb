@@ -5,7 +5,7 @@ module Katello
         include ImportExportCommon
         BASEDIR = '/var/lib/pulp'.freeze
 
-        def initialize(smart_proxy:, content_view_version:, path:, metadata:)
+        def initialize(smart_proxy:, content_view_version: nil, path: nil, metadata: nil)
           @smart_proxy = smart_proxy
           @content_view_version = content_view_version
           @path = path
