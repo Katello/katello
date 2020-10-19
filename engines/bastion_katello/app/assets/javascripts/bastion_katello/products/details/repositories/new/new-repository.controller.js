@@ -124,7 +124,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                     repository.unprotected = false;
                 }
                 if (repository.content_type === 'yum') {
-                    repository.required_tags = $scope.formatRequiredTags();
+                    repository.required_tags = $scope.requiredTagsParam();
                 }
                 if (repository.content_type !== 'yum') {
                     repository['download_policy'] = '';
@@ -168,6 +168,10 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
             $scope.formatRequiredTags = function () {
                 return RequiredTags.formatRequiredTags($scope.requiredTagsList);
+            };
+
+            $scope.requiredTagsParam = function () {
+                return RequiredTags.requiredTagsParam($scope.requiredTagsList);
             };
 
         }]

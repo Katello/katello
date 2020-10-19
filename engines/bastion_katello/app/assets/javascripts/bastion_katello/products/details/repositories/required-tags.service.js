@@ -12,12 +12,10 @@ angular
     .service('RequiredTags', function () {
 
         this.isRequiredTagSelected = function (tag, repo) {
-            var requiredTags;
             if (!repo.required_tags) {
                 return false;
             }
-            requiredTags = repo.required_tags.split(',');
-            return !!requiredTags.find(function (reqTag) {
+            return !!repo.required_tags.find(function (reqTag) {
                 return reqTag === tag;
             });
         };
@@ -33,17 +31,24 @@ angular
             ];
         };
 
-        this.formatRequiredTags = function (tagList) {
-            var selectedItems, individualTags, reqTagStr;
+        // return an array of required tags
+        this.requiredTagsParam = function (tagList) {
+            var selectedItems;
             if (!tagList) {
-                return null;
+                return [];
             }
             selectedItems = tagList.filter(function (item) {
                 return item.selected;
             });
-            individualTags = selectedItems.map(function (item) {
+            return selectedItems.map(function (item) {
                 return item.tag;
             });
+        };
+
+        // return the tags as comma-separated string
+        this.formatRequiredTags = function (tagList) {
+            var individualTags, reqTagStr;
+            individualTags = this.requiredTagsParam(tagList);
             if (individualTags) {
                 reqTagStr = individualTags.join(",");
             }

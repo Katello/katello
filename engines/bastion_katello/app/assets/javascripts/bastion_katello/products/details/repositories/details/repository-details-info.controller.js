@@ -103,7 +103,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     repository["docker_tags_whitelist"] = [];
                 }
                 /* eslint-disable camelcase */
-                repository.required_tags = $scope.formatRequiredTags();
+                repository.required_tags = $scope.requiredTagsParam();
 
                 repository.$update(function (response) {
                     deferred.resolve(response);
@@ -215,6 +215,10 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.formatRequiredTags = function () {
                 return RequiredTags.formatRequiredTags($scope.requiredTagsList);
+            };
+
+            $scope.requiredTagsParam = function () {
+                return RequiredTags.requiredTagsParam($scope.requiredTagsList);
             };
 
             HttpProxy.queryUnpaged(function (proxies) {

@@ -35,7 +35,7 @@ module Katello
 
     def_param_group :repo do
       param :url, String, :desc => N_("repository source url")
-      param :required_tags, String, :desc => N_("comma-separated list of tags used to identify whether the repository should be disabled on a client with a nonmatching release version")
+      param :required_tags, Array, :desc => N_("comma-separated list of tags used to identify whether the repository should be disabled on a client with a nonmatching release version")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :ssl_ca_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL CA Cert")
       param :ssl_client_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Cert")
@@ -477,7 +477,7 @@ module Katello
 
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username, :download_concurrency,
-              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :required_tags,
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, {:required_tags => []},
               :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
               {:ignorable_content => []}
              ]
@@ -528,7 +528,7 @@ module Katello
       root.ansible_collection_requirements = repo_params[:ansible_collection_requirements] if root.ansible_collection?
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
-      root.required_tags = repo_params[:required_tags] if repo_params[:required_tags].present?
+      root.required_tags = repo_params.fetch(:required_tags, []) if root.yum?
 
       if root.ostree?
         root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]

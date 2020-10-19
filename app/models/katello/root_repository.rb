@@ -3,6 +3,7 @@ module Katello
     audited :except => [:content_id]
     serialize :ignorable_content
     serialize :docker_tags_whitelist
+    serialize :required_tags
 
     include Ext::LabelFromName
     include Encryptable
@@ -63,6 +64,7 @@ module Katello
     validate :ensure_compatible_download_policy, :if => :yum?
     validate :ensure_valid_ignorable_content
     validate :ensure_valid_docker_tags_whitelist
+    validate :ensure_valid_required_tags
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
     validate :ensure_no_checksum_on_demand
@@ -84,10 +86,6 @@ module Katello
     validates :http_proxy_policy, inclusion: {
       :in => HTTP_PROXY_POLICIES,
       :message => _("must be one of the following: %s") % HTTP_PROXY_POLICIES.join(', ')
-    }
-    validates :required_tags, allow_nil: true, format: {
-      with: /\A\S*\z/,
-      message: _("must be a comma-separated list without spaces")
     }
     scope :subscribable, -> { where(content_type: RootRepository::SUBSCRIBABLE_TYPES) }
     scope :has_url, -> { where.not(:url => nil) }
@@ -215,6 +213,13 @@ module Katello
       return if docker_tags_whitelist.blank?
       unless docker_tags_whitelist.is_a?(Array)
         errors.add(:docker_tags_whitelist, N_("Invalid value specified for Container Image repositories."))
+      end
+    end
+
+    def ensure_valid_required_tags
+      return if required_tags.blank?
+      if required_tags.any? { |tag| tag.include?(',') }
+        errors.add(:required_tags, N_("must not include commas in any individual tag"))
       end
     end
 

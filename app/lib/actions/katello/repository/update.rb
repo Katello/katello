@@ -11,6 +11,7 @@ module Actions
 
           repo_params[:url] = nil if repo_params[:url] == ''
           update_cv_cert_protected = repo_params.key?(:unprotected) && (repo_params[:unprotected] != repository.unprotected)
+
           root.update!(repo_params)
 
           if root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
@@ -33,7 +34,7 @@ module Actions
                         :label => content.label,
                         :type => root.content_type,
                         :arches => root.format_arches,
-                        :required_tags => root.required_tags,
+                        :required_tags => root.required_tags&.join(','),
                       )
 
             content.update!(name: root.name,
