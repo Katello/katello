@@ -12,7 +12,9 @@ angular.module('Bastion.components.formatters').filter('arrayToString', [functio
     return function (toFormat, separator) {
         if (!toFormat) toFormat = [];
         separator = separator || ', ';
-        if (typeof toFormat === 'string') toFormat = toFormat.split(separator);
+        if (angular.isString(toFormat)) {
+          toFormat = toFormat.split(separator);
+        }
         return toFormat.join(separator);
     };
 }]);
