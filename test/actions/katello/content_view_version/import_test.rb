@@ -23,6 +23,15 @@ module ::Actions::Katello::ContentViewVersion
       katello_content_view_versions(:library_view_version_2)
     end
 
+    let(:metadata) do
+      {
+        content_view_version: {
+          major: content_view_version.major,
+          minor: content_view_version.minor
+        }
+      }
+    end
+
     def setup_proxy
       proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
@@ -48,60 +57,34 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     it 'Import should fail on importing content for an existing versions' do
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir, assert_metadata: true).returns
-      metadata = { content_view_version: { major: content_view_version.major, minor: content_view_version.minor} }
+      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir).returns
 
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:metadata).with(@import_export_dir).returns(metadata)
       exception = assert_raises(RuntimeError) do
-        plan_action(action, content_view, path: @import_export_dir)
+        plan_action(action, content_view, path: @import_export_dir, metadata: metadata)
       end
       assert_match(/'#{content_view_version.name}' already exists/, exception.message)
     end
 
     it 'Import should plan properly' do
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir, assert_metadata: true).returns
+      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir).returns
 
-      exporter = fetch_exporter(smart_proxy: SmartProxy.pulp_primary,
-                                 content_view_version: content_view_version,
-                                 destination_server: "foo")
-      metadata = exporter.generate_metadata
       metadata[:content_view_version][:major] += 10
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:metadata).with(@import_export_dir).returns(metadata)
-      plan_action(action, content_view, path: @import_export_dir)
-      assert_action_planned_with(action,
-                                  ::Actions::Katello::ContentView::Publish,
-                                  content_view, '',
-                                  path: @import_export_dir,
-                                  import_only: true,
-                                  major: metadata[:content_view_version][:major],
-                                  minor: metadata[:content_view_version][:minor])
-    end
-
-    it 'gives precendence to metadata param over file' do
-      metadata = {content_view_version: {major: 1, minor: 2}}
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir, assert_metadata: false).returns
-
       plan_action(action, content_view, path: @import_export_dir, metadata: metadata)
-
       assert_action_planned_with(action,
                                   ::Actions::Katello::ContentView::Publish,
                                   content_view, '',
                                   path: @import_export_dir,
+                                  metadata: metadata,
                                   import_only: true,
                                   major: metadata[:content_view_version][:major],
                                   minor: metadata[:content_view_version][:minor])
     end
 
     it 'Import should plan the full tree appropriately' do
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir, assert_metadata: true).returns
-      exporter = fetch_exporter(smart_proxy: SmartProxy.pulp_primary,
-                                 content_view_version: content_view_version,
-                                 destination_server: "foo")
-      metadata = exporter.generate_metadata
+      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir).returns
       metadata[:content_view_version][:major] += 10
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:metadata).with(@import_export_dir).returns(metadata)
       generated_cvv = nil
-      tree = plan_action_tree(action_class, content_view, path: @import_export_dir)
+      tree = plan_action_tree(action_class, content_view, path: @import_export_dir, metadata: metadata)
 
       assert_empty tree.errors
       assert_tree_planned_steps(tree, Actions::Katello::ContentView::AddToEnvironment)

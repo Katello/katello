@@ -218,9 +218,27 @@ module Katello
     end
 
     def test_import
-      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Import, @library_view, path: '/tmp', metadata: {'foo' => 'bar'}).returns({})
+      metadata = {
+        organization: "org name",
+        repository_mapping: {
+          'repo name' => {
+            repository: 'root repo name',
+            product: 'product name',
+            redhat: true
+          }
+        },
+        content_view: "cv name",
+        content_view_version: {
+          major: "4",
+          minor: "5"
+        }
+      }
 
-      post :import, params: { content_view_id: @library_view.id, path: '/tmp', metadata: {foo: :bar}}
+      metadata_params = ActionController::Parameters.new(metadata).permit!
+
+      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Import, @library_view, path: '/tmp', metadata: metadata_params).returns({})
+
+      post :import, params: { content_view_id: @library_view.id, path: '/tmp', metadata: metadata}
 
       assert_response :success
     end

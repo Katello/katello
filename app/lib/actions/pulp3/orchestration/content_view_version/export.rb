@@ -60,10 +60,12 @@ module Actions
                                                                :smart_proxy => smart_proxy).generate_metadata
             toc = Dir.glob("#{path}/*toc.json").first
             export_metadata[:toc] = File.basename(toc) if toc
-            ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: input[:content_view_version_id],
-                                                               destination_server: input[:destination_server],
-                                                               path: path,
-                                                               metadata: export_metadata)
+            ::Katello::ContentViewVersionExportHistory.create!(
+              content_view_version_id: input[:content_view_version_id],
+              destination_server: input[:destination_server],
+              path: path,
+              metadata: export_metadata
+            )
           end
 
           def humanized_name

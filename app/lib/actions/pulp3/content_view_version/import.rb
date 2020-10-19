@@ -7,13 +7,17 @@ module Actions
           param :smart_proxy_id, Integer
           param :importer_data, Hash
           param :path, String
+          param :metadata, Hash
         end
 
         def invoke_external_task
           cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-          output[:pulp_tasks] = ::Katello::Pulp3::ContentViewVersion::Import.new(smart_proxy: smart_proxy,
-                                                   content_view_version: cvv,
-                                                   path: input[:path]).create_import(input[:importer_data][:pulp_href])
+          output[:pulp_tasks] = ::Katello::Pulp3::ContentViewVersion::Import.new(
+            smart_proxy: smart_proxy,
+            content_view_version: cvv,
+            path: input[:path],
+            metadata: input[:metadata]
+          ).create_import(input[:importer_data][:pulp_href])
         end
       end
     end
