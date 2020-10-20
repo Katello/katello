@@ -160,6 +160,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             ContentHostsModalHelper.openModuleStreamsModal();
         };
 
+        $scope.openSystemPurposeModal = function () {
+            nutupane.invalidate();
+            ContentHostsModalHelper.openSystemPurposeModal();
+        };
+
         $scope.openTracesModal = function () {
             nutupane.invalidate();
             ContentHostsModalHelper.openTracesModal();
