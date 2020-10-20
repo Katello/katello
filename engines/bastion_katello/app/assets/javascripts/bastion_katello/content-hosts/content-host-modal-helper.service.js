@@ -91,6 +91,17 @@ angular.module('Bastion.content-hosts').service('ContentHostsModalHelper', ['$ui
             });
         };
 
+        this.openSystemPurposeModal = function() {
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html',
+                controller: 'ContentHostsBulkSystemPurposeModalController',
+                size: 'lg',
+                resolve: {
+                    hostIds: this.resolveFunc()
+                }
+            });
+        };
+
         this.openModuleStreamsModal = function() {
             $uibModal.open({
                 templateUrl: 'content-hosts/bulk/views/content-host-bulk-module-streams-modal.html',

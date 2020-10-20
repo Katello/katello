@@ -77,6 +77,10 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
             ContentHostsModalHelper.openSubscriptionsModal();
         };
 
+        $scope.openSystemPurposeModal = function () {
+            ContentHostsModalHelper.openSystemPurposeModal();
+        };
+
         $scope.openModuleStreamsModal = function () {
             ContentHostsModalHelper.openModuleStreamsModal();
         };
