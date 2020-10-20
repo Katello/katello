@@ -91,7 +91,8 @@ module Actions
               sequence do
                 new_puppet_environment = plan_action(Katello::ContentViewPuppetEnvironment::Clone, old_version,
                                                    :new_version => new_content_view_version).new_puppet_environment
-                copy_action_outputs += copy_puppet_content(new_puppet_environment, content[:puppet_module_ids]) unless content[:puppet_module_ids].blank?
+                check_puppet_module_duplicates(content[:puppet_module_ids])
+                copy_action_outputs += copy_puppet_content(new_puppet_environment, content[:puppet_module_ids], old_version) unless content[:puppet_module_ids].blank?
               end
             end
 
@@ -368,14 +369,28 @@ module Actions
           copy_outputs
         end
 
+        def check_puppet_module_duplicates(puppet_module_ids)
+          puppet_module_dup_counts = ::Katello::PuppetModule.where(id: puppet_module_ids).
+            select(:name, :author).group(:name, :author).having("count(*) > 1").size
+          if puppet_module_dup_counts.present?
+            offending_puppet_modules = puppet_module_dup_counts.keys.collect do |dup|
+              "#{dup[0]}-#{dup[1]}"
+            end
+            fail _("Adding multiple versions of the same Puppet Module is not supported by incremental update.  The following Puppet Modules have duplicate versions in the incremental update content list: %{dup_list}" % {:dup_list => offending_puppet_modules})
+          end
+        end
+
         def remove_puppet_modules(repo, puppet_module_ids)
           plan_action(Pulp::Repository::RemoveUnits, :content_view_puppet_environment_id => repo.id, :contents => puppet_module_ids, :content_unit_type => ::Katello::PuppetModule::CONTENT_TYPE)
         end
 
-        def copy_puppet_content(new_repo, puppet_module_ids)
+        def copy_puppet_content(new_repo, puppet_module_ids, old_version)
           copy_outputs = []
+          # Remove older versions
+          query = 'SELECT a.* FROM katello_puppet_modules a LEFT JOIN katello_puppet_modules b ON a.name = b.name AND a.author = b.author AND a.sortable_version < b.sortable_version WHERE b.sortable_version IS NOT NULL AND a.id IN (:old_version_puppet_module_ids)'
+          old_puppet_module_ids = ::Katello::PuppetModule.find_by_sql([query, :old_version_puppet_module_ids => old_version.puppet_modules.map(&:id)]).map(&:id)
           unless puppet_module_ids.blank?
-            remove_puppet_modules(new_repo, puppet_module_ids)
+            remove_puppet_modules(new_repo, (old_puppet_module_ids + puppet_module_ids).uniq)
             copy_outputs = puppet_module_ids.map { |module_id| copy_puppet_module(new_repo, module_id).output }
             plan_action(Pulp::ContentViewPuppetEnvironment::IndexContent, id: new_repo.id)
           end
