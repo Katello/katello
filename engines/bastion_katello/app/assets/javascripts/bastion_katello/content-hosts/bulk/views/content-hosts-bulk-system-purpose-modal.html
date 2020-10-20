@@ -1,0 +1,78 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header" translate>Content Host System Purpose</h4>
+
+  <div data-block="modal-body">
+    <h4 translate>Assign System Purpose:</h4>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <form name="contentHostContentForm" class="form" ng-hide="content.workingMode">
+      <div>
+        <label translate>Service Level:</label>
+
+        <select type="select"
+                ng-options="item for item in defaultServiceLevels"
+                ng-model="selectedServiceLevels">
+        </select>
+      <br /><br />
+
+        <label translate>Usage Type:</label>
+
+        <select type="select"
+                ng-options="item for item in defaultUsages"
+                ng-model="selectedRoles">
+        </select>
+        <br /><br />
+
+        <label translate>Role:</label>
+
+        <select type="select"
+                ng-options="item for item in defaultRoles"
+                ng-model="selectedUsages">
+        </select>
+        <br /><br />
+
+        <label ng-hide="!purposeAddonsList().length" translate>Add ons:</label>
+        <div class="help-block" style="text-align:left;">
+          <p translate>ctrl-click or shift-click to select multiple Add ons</p>
+        </div>
+
+        <select multiple ng-multiple="true"
+                ng-hide="!purposeAddonsList().length"
+                ng-options="item for item in purposeAddonsList()"
+                ng-model="selectedAddons">
+        </select>
+        <br /><br />
+
+      </div>
+
+      <div bst-alert="info" ng-show="showConfirm">
+        <span translate>
+          Set System Purpose values on {{ hostCount }} selected content hosts?
+        </span>
+        <div>
+          <br />
+          <button type="button" class="btn btn-primary" ng-click="showConfirm = false; performAction()" translate>Assign</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary"
+              type="button"
+              ng-hide="showConfirm"
+              ng-click="showConfirm = true;">
+        <span translate>Assign</span>
+      </button>
+
+    </form>
+  </div>
+
+  <div data-block="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()" translate>
+      Cancel
+    </button>
+  </div>
+</div>

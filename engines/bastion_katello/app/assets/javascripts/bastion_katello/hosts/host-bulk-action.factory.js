@@ -27,7 +27,8 @@ angular.module('Bastion.hosts').factory('HostBulkAction',
             availableIncrementalUpdates: {method: 'POST', isArray: true, params: {action: 'available_incremental_updates'}},
             moduleStreams: {method: 'POST', params: {action: 'module_streams'}},
             traces: {method: 'POST', params: {action: 'traces'}},
-            resolveTraces: {method: 'PUT', isArray: true, params: {action: 'resolve_traces'}}
+            resolveTraces: {method: 'PUT', isArray: true, params: {action: 'resolve_traces'}},
+            systemPurpose: {method: 'PUT', params: {action: 'system_purpose'}}
         });
 
     }]
