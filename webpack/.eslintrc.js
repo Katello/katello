@@ -48,6 +48,15 @@ module.exports = {
         ]
       }
     ],
+    'jsx-a11y/label-has-for': [
+      'error',
+      {
+        'required': {
+          // Some patternfly components don't play well with the 'nesting' check
+          "every": [ "id" ]
+        },
+      }
+    ],
     'promise/prefer-await-to-then': 'error',
     'promise/prefer-await-to-callbacks': 'error',
     'no-unused-vars': [

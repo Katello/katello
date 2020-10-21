@@ -11,6 +11,9 @@ const cvDetailData = require('./contentViewDetails.fixtures.json');
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvDetailsPath = api.getApiUrl('/content_views/1');
 
+// The Repositories tab will load in the background, prevent this by mocking
+jest.mock('../Repositories/ContentViewRepositories.js', () => () => 'mocked!');
+
 test('Can call API and show details on page load', async (done) => {
   const { label, name, description } = cvDetailData;
   const scope = nockInstance
