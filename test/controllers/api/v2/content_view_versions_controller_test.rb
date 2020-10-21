@@ -227,6 +227,7 @@ module Katello
             redhat: true
           }
         },
+        toc: "toc file name",
         content_view: "cv name",
         content_view_version: {
           major: "4",

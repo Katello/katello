@@ -364,6 +364,7 @@ module Katello
         :organization,
         :content_view,
         :repository_mapping,
+        :toc,
         content_view_version: [:major, :minor]
       ).tap do |nested|
         nested[:repository_mapping] = params[:metadata].require(:repository_mapping).permit!
