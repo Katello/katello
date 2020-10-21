@@ -53,6 +53,10 @@ module Katello
         task_group_data['all_tasks_dispatched'] == true && IN_PROGRESS_STATES.all? { |state| task_group_data[state] == 0 }
       end
 
+      def group_progress_reports
+        task_group_data['group_progress_reports']
+      end
+
       def poll
         clear_task_group_data
         task_group_data
