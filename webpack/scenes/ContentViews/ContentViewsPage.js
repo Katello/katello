@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid, GridItem, TextContent, Text, TextVariants } from '@patternfly/react-core';
-import getContentViews from './ContentViewsActions';
 import { selectContentViews,
   selectContentViewStatus,
   selectContentViewError } from './ContentViewSelectors';
@@ -12,12 +11,6 @@ const ContentViewsPage = () => {
   const response = useSelector(selectContentViews);
   const status = useSelector(selectContentViewStatus);
   const error = useSelector(selectContentViewError);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getContentViews());
-  }, []);
 
   return (
     <Grid className="grid-with-margin">

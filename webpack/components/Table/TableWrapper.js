@@ -11,7 +11,7 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
-  children, metadata, fetchItems, autocompleteEndpoint, searchQuery, updateSearchQuery,
+  children, metadata, fetchItems, autocompleteEndpoint, searchQuery, updateSearchQuery, additionalListeners,
   ...allTableProps
 }) => {
   // Search isn't working when something besides search changes
@@ -36,9 +36,10 @@ const TableWrapper = ({
   // The search component will update the search query when a search is performed, listen for that
   // and perform the search so we can be sure the searchQuery is updated when search is performed.
   useEffect(() => {
-    dispatch(fetchItems({ ...paginationParams(), search: searchQuery }));
-  }, [searchQuery]);
-
+    const allParams = { ...paginationParams() };
+    if (searchQuery) allParams.search = searchQuery; 
+    dispatch(fetchItems(allParams));
+  }, [searchQuery, ...additionalListeners]);
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
@@ -101,11 +102,17 @@ TableWrapper.propTypes = {
   }),
   autocompleteEndpoint: PropTypes.string.isRequired,
   children: PropTypes.node,
+  // additionalListeners are anything that can trigger another API call, e.g. a filter
+  additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]))
 };
 
 TableWrapper.defaultProps = {
   metadata: {},
   children: null,
+  additionalListeners: [],
 };
 
 export default TableWrapper;

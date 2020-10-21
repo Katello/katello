@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
 import { Bullseye, Split, SplitItem } from '@patternfly/react-core';
 import { TableVariant, fitContent } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
@@ -15,7 +15,7 @@ import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
 import RepoAddedStatus from './RepoAddedStatus';
 import RepoIcon from './RepoIcon';
-import CheckableDropdown from './SelectableDropdown';
+import SelectableDropdown from './SelectableDropdown';
 
 // checkbox_name: API_name
 const repoTypes = {
@@ -27,7 +27,6 @@ const repoTypes = {
 };
 
 const ContentViewRepositories = ({ cvId }) => {
-  const dispatch = useDispatch();
   const response = useSelector(state => selectCVRepos(state, cvId), shallowEqual);
   const status = useSelector(state => selectCVReposStatus(state, cvId), shallowEqual);
   const error = useSelector(state => selectCVReposError(state, cvId), shallowEqual);
@@ -88,15 +87,11 @@ const ContentViewRepositories = ({ cvId }) => {
   };
 
   const getCVReposWithOptions = (params = {}) => {
-    const allParams = { ...params, search: searchQuery };
+    const allParams = { ...params };
     if (typeSelected !== 'All repositories') allParams.content_type = repoTypes[typeSelected];
 
     return getContentViewRepositories(cvId, allParams, statusSelected);
   };
-
-  useEffect(() => {
-    dispatch(getCVReposWithOptions());
-  }, [statusSelected, typeSelected]);
 
   useEffect(() => {
     const { results, ...meta } = response;
@@ -132,10 +127,11 @@ const ContentViewRepositories = ({ cvId }) => {
       variant={TableVariant.compact}
       autocompleteEndpoint="/repositories/auto_complete_search"
       fetchItems={params => getCVReposWithOptions(params)}
+      additionalListeners={[typeSelected, statusSelected]}
     >
       <Split hasGutter>
         <SplitItem>
-          <CheckableDropdown
+          <SelectableDropdown
             items={Object.keys(repoTypes)}
             title="Type"
             selected={typeSelected}
@@ -144,7 +140,7 @@ const ContentViewRepositories = ({ cvId }) => {
           />
         </SplitItem>
         <SplitItem>
-          <CheckableDropdown
+          <SelectableDropdown
             items={[ADDED, NOT_ADDED, BOTH]}
             title="Status"
             selected={statusSelected}

@@ -63,7 +63,7 @@ test('Can filter by repository type', async (done) => {
   // With the yum checkbox unchecked, we can expect the query params to not include 'yum'
   const noYumScope = nockInstance
     .get(cvAllRepos)
-    .query({ content_type: 'yum' })
+    .query(queryObj => queryObj.content_type == 'yum')
     .reply(200, repoData);
 
   const { getByLabelText } = renderWithRedux(<ContentViewRepositories cvId={1} />, renderOptions);
@@ -115,7 +115,7 @@ test('Can filter by Added status', async (done) => {
 
   const addedScope = nockInstance
     .get(cvRepos)
-    .query({})
+    .query(true)
     .reply(200, repoData);
 
   const { getByLabelText } = renderWithRedux(<ContentViewRepositories cvId={1} />, renderOptions);

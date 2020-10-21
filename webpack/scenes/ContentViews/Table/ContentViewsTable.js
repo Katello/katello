@@ -11,6 +11,7 @@ import getContentViews from '../ContentViewsActions';
 const ContentViewTable = ({ response, status, error }) => {
   const [table, setTable] = useState({ rows: [], columns: [] });
   const [rowMapping, setRowMapping] = useState({});
+  const [searchQuery, updateSearchQuery] = useState('');
   const { results, ...metadata } = response;
   const loadingResponse = status === STATUS.PENDING;
 
@@ -90,6 +91,8 @@ const ContentViewTable = ({ response, status, error }) => {
         onSelect,
         onExpand,
         actionResolver,
+        searchQuery,
+        updateSearchQuery,
       }}
       status={tableStatus()}
       fetchItems={getContentViews}
