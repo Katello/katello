@@ -130,7 +130,7 @@ module Katello
           config.host = uri.host
           config.scheme = uri.scheme
           pulp3_ssl_configuration(config)
-          config.debugging = true
+          config.debugging = false
           config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
           config.username = self.setting(PULP3_FEATURE, 'username')
           config.password = self.setting(PULP3_FEATURE, 'password')

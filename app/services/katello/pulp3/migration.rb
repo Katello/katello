@@ -3,7 +3,7 @@ require 'pulp_2to3_migration_client'
 module Katello
   module Pulp3
     class Migration
-      attr_accessor :smart_proxy, :reimport_all
+      attr_accessor :smart_proxy, :reimport_all, :task_id
       GET_QUERY_ID_LENGTH = 90
 
       MUTABLE_CONTENT_TYPES = [
@@ -21,8 +21,10 @@ module Katello
         overridden.select { |type| SmartProxy.pulp_primary.pulp3_repository_type_support?(type.to_s, false) }.map { |t| t.to_s }
       end
 
-      def initialize(smart_proxy, repository_types = Migration.repository_types_for_migration, options = {})
+      def initialize(smart_proxy, options = {})
+        self.task_id = options.fetch(:task_id, nil)
         self.reimport_all = options.fetch(:reimport_all, false)
+        repository_types = options.fetch(:repository_types, Migration.repository_types_for_migration)
 
         if (repository_types - smart_proxy.supported_pulp_types[:pulp3][:overriden_to_pulp2]).any?
           fail ::Katello::Errors::Pulp3MigrationError, _("Pulp 3 migration cannot run. Types %s have already been migrated.") %
@@ -79,7 +81,20 @@ module Katello
         content_types.flatten - Migration.ignorable_content_types
       end
 
+      def update_import_status(message, index = nil)
+        #reduce output updating, only update every 20 items
+        if (index.nil? || index % 20 == 0) && self.task_id
+          progress = Katello::ContentMigrationProgress.find_or_create_by(:task_id => self.task_id)
+          progress.update(:progress_message => message)
+          progress.save!
+
+          fail Katello::Errors::Pulp3MigrationError, "Cancelled by user." if progress.canceled?
+        end
+      end
+
       def import_pulp3_content
+        update_import_status("Starting katello import phase.")
+
         Katello::Logging.time("CONTENT_MIGRATION - Total Import Process") do
           @repository_types.each do |repository_type_label|
             Katello::Logging.time("CONTENT_MIGRATION - Importing Repository", data: {type: repository_type_label}) do
@@ -123,7 +138,9 @@ module Katello
         if repository_type_label == 'yum'
           import_yum_repos(imported, katello_repos)
         else
-          katello_repos.each do |repo|
+          repo_count = katello_repos.count
+          katello_repos.each_with_index do |repo, index|
+            update_import_status("Importing migrated content units #{repository_type_label}: #{index + 1}/#{repo_count}", index)
             found = imported.find { |migrated_repo| migrated_repo.pulp2_repo_id == repo.pulp_id }
             import_repo(repo, found) if found
           end
@@ -131,7 +148,9 @@ module Katello
       end
 
       def import_yum_repos(migrated_repo_items, repos)
-        repos.each do |yum_repo|
+        repo_count = repos.count
+        repos.each_with_index do |yum_repo, index|
+          update_import_status("Importing migrated yum repositories: #{index + 1}/#{repo_count}", index)
           to_find = nil
           if yum_repo.content_view.composite?
             if yum_repo.link?
@@ -206,13 +225,14 @@ module Katello
       def operate_on_errata
         last_migration_time = last_successful_migration_time
         offset = 0
-        limit = 2000
+        limit = SETTINGS[:katello][:pulp][:bulk_load_size]
         response = pulp2_content_api.list(pulp2_content_type_id: 'erratum', offset: offset, limit: limit, pulp2_last_updated__gt: last_migration_time)
         total_count = response.count
         yield(response.results)
         until (offset + limit > total_count)
           offset += limit
           response = pulp2_content_api.list(pulp2_content_type_id: 'erratum', offset: offset, limit: limit, pulp2_last_updated__gt: last_migration_time)
+          update_import_status("Importing migrated content type erratum: #{offset + limit}/#{total_count}")
           yield(response.results)
         end
       end
@@ -252,7 +272,12 @@ module Katello
             unmigrated_units = unmigrated_units.where(:migrated_pulp3_href => nil)
           end
 
+          total_count = unmigrated_units.count
+          current_count = 0
+
           unmigrated_units.select(:id, :pulp_id).find_in_batches(batch_size: GET_QUERY_ID_LENGTH) do |needing_hrefs|
+            current_count += needing_hrefs.count
+            update_import_status("Importing migrated content type #{content_type.label}: #{current_count}/#{total_count}")
             migrated_units = pulp2_content_api.list(pulp2_id__in: needing_hrefs.map { |unit| unit.pulp_id }.join(','))
             migrated_units.results.each do |migrated_unit|
               matching_record = needing_hrefs.find { |db_unit| db_unit.pulp_id == migrated_unit.pulp2_id }

@@ -32,7 +32,7 @@ module Katello
         end
 
         def test_docker_migration
-          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, ['docker'])
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, repository_types: ['docker'])
 
           task = migration_service.create_and_run_migrations
           wait_on_task(@primary, task)

@@ -3,11 +3,25 @@ load "#{Katello::Engine.root}/lib/katello/tasks/common.rake"
 namespace :katello do
   desc "Runs a Pulp 2 to 3 Content Migration for supported types.  May be run multiple times.  Use wait=false to immediately return with a task url."
   task :pulp3_migration => ["environment", "disable_dynflow", "check_ping"] do
-    task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration, SmartProxy.pulp_primary, reimport_all: ENV['reimport_all'])
+    puts "Starting task."
+    SmartProxy.pulp_primary.refresh
 
-    if ENV['wait'].nil? || ::Foreman::Cast.to_bool(ENV['wait'])
+    reimport_all = ::Foreman::Cast.to_bool(ENV['reimport_all'])
+    wait = ::Foreman::Cast.to_bool(ENV['wait'] || 'true')
+    preserve_output = ::Foreman::Cast.to_bool(ENV['preserve_output'])
+
+    task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration, SmartProxy.pulp_primary, reimport_all: reimport_all)
+
+    if wait
+      clear_count = nil
       until !task.pending? || task.paused?
-        sleep(20)
+        $stdout.print("\r#{' ' * clear_count}\r") if clear_count && !preserve_output #clear the line before printing
+        $stdout.print("\n") if preserve_output
+        message = "#{Time.now.to_s}: #{task.humanized[:output]}"
+        clear_count = message.length + 1
+        $stdout.print(message)
+
+        sleep(10)
         task = ForemanTasks::Task.find(task.id)
       end
 
