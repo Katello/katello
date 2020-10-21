@@ -45,7 +45,7 @@ module Katello
           ForemanTasks.sync_task(Actions::Katello::Repository::MetadataGenerate, @cv_archive_repo)
           ForemanTasks.sync_task(Actions::Katello::Repository::MetadataGenerate, @cv_env_repo)
 
-          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, ['file'])
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, :repository_types => ['file'])
 
           task = migration_service.create_and_run_migrations
           wait_on_task(@primary, task)
@@ -80,7 +80,7 @@ module Katello
 
         def test_content_types_for_migration
           repo_types = ['file']
-          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, repo_types)
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, :repository_types => repo_types)
           correct_content_types = repo_types.collect do |repository_type_label|
             Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index
           end

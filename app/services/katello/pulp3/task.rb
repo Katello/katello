@@ -68,6 +68,10 @@ module Katello
         task_data[:finish_time] || FINISHED_STATES.include?(task_data[:state])
       end
 
+      def progress_reports
+        task_data['progress_reports']
+      end
+
       def poll
         task_data(true)
         self
