@@ -26,14 +26,14 @@ module Katello
       @fake_pulp3_href = 'fake_pulp3_href'
       @another_fake_pulp3_href = 'another_fake_pulp3_href'
 
-      migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, ['file', 'docker'])
+      migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, repository_types: ['file', 'docker'])
       migration_service.content_types_for_migration.each do |content_type|
         content_type.model_class.all.each do |record|
           record.update(:migrated_pulp3_href => @fake_pulp3_href + record.id.to_s)
         end
       end
 
-      @switchover = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary, ['file', 'docker'])
+      @switchover = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary, repository_types: ['file', 'docker'])
     end
 
     def test_file_unit_pulp_ids_updated
@@ -137,7 +137,7 @@ module Katello
       @cv_archive_repo = katello_repositories(:busybox_view1)
 
       Katello::RootRepository.docker_type.where.not(:id => @repo.root_id).destroy_all
-      @switchover_service = Katello::Pulp3::MigrationSwitchover.new(@primary, ['docker'])
+      @switchover_service = Katello::Pulp3::MigrationSwitchover.new(@primary, repository_types: ['docker'])
 
       Katello::DockerTag.destroy_all
       Katello::DockerManifest.destroy_all
