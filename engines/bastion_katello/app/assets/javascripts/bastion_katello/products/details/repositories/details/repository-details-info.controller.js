@@ -205,7 +205,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.requiredTagsOptions = function () {
                 // initial options
-                $scope.requiredTagsList = $scope.requiredTagsList || RequiredTags.getRequiredTagsOptions();
+                $scope.requiredTagsList = $scope.requiredTagsList || RequiredTags.getRequiredTagsOptions($scope.repository);
                 // set selected to true or false for each required tag, based on the saved object
                 $scope.requiredTagsList.forEach(function (reqTagObj) {
                     reqTagObj.selected = RequiredTags.isRequiredTagSelected(reqTagObj.tag, $scope.repository);

@@ -162,7 +162,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             });
 
             $scope.requiredTagsOptions = function () {
-                $scope.requiredTagsList = $scope.requiredTagsList || RequiredTags.getRequiredTagsOptions();
+                $scope.requiredTagsList = $scope.requiredTagsList || RequiredTags.getRequiredTagsOptions($scope.repository);
                 return $scope.requiredTagsList;
             };
 
