@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 
 // type: [plural_name, singular_name, link]
 const repoLabels = {
-  rpm: ['rpm packages', 'rpm package', 'packages'],
+  rpm: ['RPM packages', 'RPM package', 'packages'],
   module_stream: ['module streams', 'module stream', 'module_streams'],
   erratum: ['errata', 'erratum', 'errata'], // need to handle link, its $URL/errata?repositoryId=107
   deb: ['deb packages', 'deb package', 'debs'],
-  ansible_collection: ['ansible collections', 'ansible collection', 'ansible_collections'],
+  ansible_collection: ['Ansible collections', 'Ansible collection', 'ansible_collections'],
   docker_manifest: ['container manifests', 'container manifest', 'content/docker_manifests'],
   docker_manifest_list: ['container manifest lists', 'container manifest list', 'content/docker_manifest_lists'],
   docker_tag: ['container tags', 'container tag', 'content/docker_tags'],
@@ -44,7 +44,7 @@ const ContentCounts = ({ productId, repoId, counts }) => {
     if (type !== 'package' && count > 0) allCounts.push(appendCount(type, count, info, productId, repoId));
   });
 
-  return allCounts;
+  return <Fragment>{allCounts}</Fragment>;
 };
 
 ContentCounts.propTypes = {

@@ -12,12 +12,14 @@ import Loading from '../../components/Loading';
 
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
-  emptySearchTitle, emptySearchBody, searchIsActive, ...extraTableProps
+  emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
+  ...extraTableProps
 }) => {
+  const isFiltering = activeFilters || searchIsActive;
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
-  if (status === STATUS.RESOLVED && searchIsActive && rows.length === 0) {
+  if (status === STATUS.RESOLVED && isFiltering && rows.length === 0) {
     return (<EmptyStateMessage
       title={emptySearchTitle}
       body={emptySearchBody}
@@ -56,11 +58,13 @@ MainTable.propTypes = {
   emptySearchTitle: PropTypes.string.isRequired,
   emptySearchBody: PropTypes.string.isRequired,
   searchIsActive: PropTypes.bool,
+  activeFilters: PropTypes.bool,
 };
 
 MainTable.defaultProps = {
   error: null,
   searchIsActive: false,
+  activeFilters: false,
 };
 
 export default MainTable;

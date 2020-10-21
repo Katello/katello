@@ -10,16 +10,18 @@ import PropTypes from 'prop-types';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import { getContentViewRepositories } from '../ContentViewDetailActions';
 import { selectCVRepos, selectCVReposStatus, selectCVReposError } from '../ContentViewDetailSelectors';
-import { ADDED, NOT_ADDED, BOTH } from '../../ContentViewsConstants';
+import { ADDED, NOT_ADDED, ALL_STATUSES } from '../../ContentViewsConstants';
 import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
 import RepoAddedStatus from './RepoAddedStatus';
 import RepoIcon from './RepoIcon';
 import SelectableDropdown from './SelectableDropdown';
 
+const allRepositories = 'All repositories';
+
 // checkbox_name: API_name
 const repoTypes = {
-  'All repositories': 'all',
+  [allRepositories]: 'all',
   'Yum repositories': 'yum',
   'File repositories': 'file',
   'Container repositories': 'docker',
@@ -34,12 +36,16 @@ const ContentViewRepositories = ({ cvId }) => {
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
-  const [typeSelected, setTypeSelected] = useState('All repositories');
-  const [statusSelected, setStatusSelected] = useState('Both');
+  const [typeSelected, setTypeSelected] = useState(allRepositories);
+  const [statusSelected, setStatusSelected] = useState(ALL_STATUSES);
+
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
-    __('Name'), __('Product'), __('Sync state'), __('Content'),
+    __('Name'),
+    __('Product'),
+    __('Sync state'),
+    __('Content'),
     { title: __('Status') },
   ];
   const loading = status === STATUS.PENDING;
@@ -107,6 +113,8 @@ const ContentViewRepositories = ({ cvId }) => {
   const emptyContentBody = __('Please add some repositories.'); // needs link
   const emptySearchTitle = __('No matching repositories found');
   const emptySearchBody = __('Try changing your search settings.');
+  const activeFilters = (typeSelected && typeSelected !== allRepositories) ||
+    (statusSelected && statusSelected !== ALL_STATUSES);
 
   return (
     <TableWrapper
@@ -122,6 +130,7 @@ const ContentViewRepositories = ({ cvId }) => {
         updateSearchQuery,
         error,
         status,
+        activeFilters,
       }}
       cells={columnHeaders}
       variant={TableVariant.compact}
@@ -141,7 +150,7 @@ const ContentViewRepositories = ({ cvId }) => {
         </SplitItem>
         <SplitItem>
           <SelectableDropdown
-            items={[ADDED, NOT_ADDED, BOTH]}
+            items={[ADDED, NOT_ADDED, ALL_STATUSES]}
             title="Status"
             selected={statusSelected}
             setSelected={setStatusSelected}

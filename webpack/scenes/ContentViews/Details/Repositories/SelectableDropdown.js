@@ -17,7 +17,7 @@ const SelectableDropdown = ({
   return (
     <Level>
       <LevelItem>
-        <label style={{ margin: '0px 5px' }} htmlFor={`select ${title}`}>
+        <label htmlFor={`select ${title}`} style={{ margin: '0px 5px' }}>
           {`${title}:`}
         </label>
       </LevelItem>

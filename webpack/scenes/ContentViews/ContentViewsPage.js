@@ -1,6 +1,6 @@
 import React from 'react';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Grid, GridItem, TextContent, Text, TextVariants } from '@patternfly/react-core';
 import { selectContentViews,
   selectContentViewStatus,

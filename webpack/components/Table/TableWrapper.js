@@ -11,10 +11,16 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
-  children, metadata, fetchItems, autocompleteEndpoint, searchQuery, updateSearchQuery, additionalListeners,
+  children,
+  metadata,
+  fetchItems,
+  autocompleteEndpoint,
+  searchQuery,
+  updateSearchQuery,
+  additionalListeners,
+  activeFilters,
   ...allTableProps
 }) => {
-  // Search isn't working when something besides search changes
   const dispatch = useDispatch();
   const { foremanPerPage = 20 } = useForemanSettings();
   // setting pagination to local state so it doesn't disappear when page reloads
@@ -23,22 +29,27 @@ const TableWrapper = ({
   const [total, setTotal] = useState(0);
 
   const updatePagination = (data) => {
-    const { total: newTotal, page: newPage, per_page: newPerPage } = data;
+    const { subtotal: newTotal, page: newPage, per_page: newPerPage } = data;
     if (newTotal) setTotal(parseInt(newTotal, 10));
     if (newPage) setPage(parseInt(newPage, 10));
     if (newPerPage) setPerPage(parseInt(newPerPage, 10));
   };
-
   const paginationParams = () => ({ per_page: perPage, page });
+  const fetchWithParams = (allParams = {}) => {
+    dispatch(fetchItems({ ...paginationParams(), ...allParams }));
+  };
 
   useEffect(() => updatePagination(metadata), [metadata]);
 
   // The search component will update the search query when a search is performed, listen for that
   // and perform the search so we can be sure the searchQuery is updated when search is performed.
   useEffect(() => {
-    const allParams = { ...paginationParams() };
-    if (searchQuery) allParams.search = searchQuery; 
-    dispatch(fetchItems(allParams));
+    if (searchQuery || activeFilters) {
+      // Reset page back to 1 when filter or search changes
+      fetchWithParams({ search: searchQuery, page: 1 });
+    } else {
+      fetchWithParams();
+    }
   }, [searchQuery, ...additionalListeners]);
 
   const getAutoCompleteParams = search => ({
@@ -79,7 +90,7 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!searchQuery} {...allTableProps} />
+      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} {...allTableProps} />
     </React.Fragment>
   );
 };
@@ -105,14 +116,16 @@ TableWrapper.propTypes = {
   // additionalListeners are anything that can trigger another API call, e.g. a filter
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.number,
-    PropTypes.string
-  ]))
+    PropTypes.string,
+  ])),
+  activeFilters: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
   metadata: {},
   children: null,
   additionalListeners: [],
+  activeFilters: false,
 };
 
 export default TableWrapper;
