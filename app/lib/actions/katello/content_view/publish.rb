@@ -53,7 +53,7 @@ module Actions
             if separated_repo_map[:pulp3_yum].keys.flatten.present? &&
                 SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
               if import_only
-                handle_import(version, options.slice(:path, metadata))
+                handle_import(version, options.slice(:path, :metadata))
               else
                 plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)
               end
