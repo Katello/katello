@@ -47,7 +47,7 @@ ActionableDetail.propTypes = {
   value: PropTypes.oneOfType([ // displayed value
     PropTypes.string,
     PropTypes.bool,
-  ]).isRequired,
+  ]),
   onEdit: PropTypes.func.isRequired,
   textArea: PropTypes.bool,
   boolean: PropTypes.bool,
@@ -58,6 +58,7 @@ ActionableDetail.defaultProps = {
   textArea: false,
   boolean: false,
   tooltip: null,
+  value: null,
 };
 
 export default ActionableDetail;

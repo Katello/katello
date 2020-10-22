@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import DetailsContainer from './DetailsContainer';
 import ContentViewInfo from './ContentViewInfo';
+import ContentViewRepositories from './Repositories/ContentViewRepositories';
 import { selectCVDetails } from './ContentViewDetailSelectors';
 import TabbedView from '../../../components/TabbedView';
 
@@ -25,7 +26,7 @@ const ContentViewDetails = ({ match }) => {
     },
     {
       title: __('Repositories'),
-      content: <React.Fragment>Repositories</React.Fragment>,
+      content: <ContentViewRepositories {...{ cvId, details }} />,
     },
     {
       title: __('Filters'),

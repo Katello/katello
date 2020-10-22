@@ -11,9 +11,16 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
-  metadata, fetchItems, autocompleteEndpoint, ...allTableProps
+  children,
+  metadata,
+  fetchItems,
+  autocompleteEndpoint,
+  searchQuery,
+  updateSearchQuery,
+  additionalListeners,
+  activeFilters,
+  ...allTableProps
 }) => {
-  const { search: currentSearch } = metadata;
   const dispatch = useDispatch();
   const { foremanPerPage = 20 } = useForemanSettings();
   // setting pagination to local state so it doesn't disappear when page reloads
@@ -22,15 +29,28 @@ const TableWrapper = ({
   const [total, setTotal] = useState(0);
 
   const updatePagination = (data) => {
-    const { total: newTotal, page: newPage, per_page: newPerPage } = data;
+    const { subtotal: newTotal, page: newPage, per_page: newPerPage } = data;
     if (newTotal) setTotal(parseInt(newTotal, 10));
     if (newPage) setPage(parseInt(newPage, 10));
     if (newPerPage) setPerPage(parseInt(newPerPage, 10));
   };
+  const paginationParams = () => ({ per_page: perPage, page });
+  const fetchWithParams = (allParams = {}) => {
+    dispatch(fetchItems({ ...paginationParams(), ...allParams }));
+  };
 
   useEffect(() => updatePagination(metadata), [metadata]);
 
-  const paginationParams = () => ({ per_page: perPage, page });
+  // The search component will update the search query when a search is performed, listen for that
+  // and perform the search so we can be sure the searchQuery is updated when search is performed.
+  useEffect(() => {
+    if (searchQuery || activeFilters) {
+      // Reset page back to 1 when filter or search changes
+      fetchWithParams({ search: searchQuery, page: 1 });
+    } else {
+      fetchWithParams();
+    }
+  }, [searchQuery, ...additionalListeners]);
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
@@ -40,18 +60,23 @@ const TableWrapper = ({
     },
   });
 
-  const onSearch = search => dispatch(fetchItems({ ...paginationParams(), search }));
-
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
-    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination, search: currentSearch }));
+    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination, search: searchQuery }));
   };
 
   return (
     <React.Fragment>
       <Flex>
         <FlexItem>
-          <Search patternfly4 {...{ onSearch, getAutoCompleteParams }} />
+          <Search
+            patternfly4
+            onSearch={search => updateSearchQuery(search)}
+            getAutoCompleteParams={getAutoCompleteParams}
+          />
+        </FlexItem>
+        <FlexItem>
+          {children}
         </FlexItem>
         <FlexItem align={{ default: 'alignRight' }}>
           <Pagination
@@ -65,12 +90,14 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!currentSearch} {...allTableProps} />
+      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} {...allTableProps} />
     </React.Fragment>
   );
 };
 
 TableWrapper.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  updateSearchQuery: PropTypes.func.isRequired,
   fetchItems: PropTypes.func.isRequired,
   metadata: PropTypes.shape({
     total: PropTypes.number,
@@ -85,10 +112,20 @@ TableWrapper.propTypes = {
     search: PropTypes.string,
   }),
   autocompleteEndpoint: PropTypes.string.isRequired,
+  children: PropTypes.node,
+  // additionalListeners are anything that can trigger another API call, e.g. a filter
+  additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ])),
+  activeFilters: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
   metadata: {},
+  children: null,
+  additionalListeners: [],
+  activeFilters: false,
 };
 
 export default TableWrapper;

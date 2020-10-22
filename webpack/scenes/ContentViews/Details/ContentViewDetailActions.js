@@ -2,10 +2,14 @@ import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { translate as __ } from 'foremanReact/common/I18n';
 
-import CONTENT_VIEWS_KEY, {
+import {
   UPDATE_CONTENT_VIEW,
   UPDATE_CONTENT_VIEW_FAILURE,
   UPDATE_CONTENT_VIEW_SUCCESS,
+  NOT_ADDED,
+  ALL_STATUSES,
+  cvDetailsKey,
+  cvDetailsRepoKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 
@@ -13,7 +17,7 @@ import { apiError } from '../../../utils/helpers';
 
 const getContentViewDetails = cvId => get({
   type: API_OPERATIONS.GET,
-  key: `${CONTENT_VIEWS_KEY}_${cvId}`,
+  key: cvDetailsKey(cvId),
   url: api.getApiUrl(`/content_views/${cvId}`),
 });
 
@@ -29,7 +33,7 @@ const cvUpdateSuccess = (response, dispatch) => {
 
 export const updateContentView = (cvId, params) => async dispatch => dispatch(put({
   type: API_OPERATIONS.PUT,
-  key: `${CONTENT_VIEWS_KEY}_${cvId}`,
+  key: cvDetailsKey(cvId),
   url: api.getApiUrl(`/content_views/${cvId}`),
   params,
   handleSuccess: response => cvUpdateSuccess(response, dispatch),
@@ -40,5 +44,23 @@ export const updateContentView = (cvId, params) => async dispatch => dispatch(pu
     FAILURE: UPDATE_CONTENT_VIEW_FAILURE,
   },
 }));
+
+export const getContentViewRepositories = (cvId, params, status) => {
+  const apiParams = { ...params };
+  let apiUrl = `/content_views/${cvId}/repositories`;
+
+  if (status === ALL_STATUSES) {
+    apiUrl += '/show_all';
+  } else if (status === NOT_ADDED) {
+    apiParams.available_for = 'content_view';
+  }
+
+  return get({
+    type: API_OPERATIONS.GET,
+    key: cvDetailsRepoKey(cvId),
+    url: api.getApiUrl(apiUrl),
+    params: apiParams,
+  });
+};
 
 export default getContentViewDetails;

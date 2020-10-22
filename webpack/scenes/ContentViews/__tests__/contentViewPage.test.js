@@ -3,7 +3,6 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 
 import CONTENT_VIEWS_KEY from '../ContentViewsConstants';
-import { createContentViewsParams } from '../ContentViewsActions';
 import ContentViewsPage from '../../ContentViews';
 import api from '../../../services/api';
 import nock, {
@@ -136,7 +135,8 @@ test('Can handle pagination', async (done) => {
   // Match first page API request
   const firstPageScope = nockInstance
     .get(cvIndexPath)
-    .query(createContentViewsParams())
+    // Using a custom query params matcher because parameters can be strings
+    .query(actualQueryObject => parseInt(actualQueryObject.page, 10) === 1)
     .reply(200, cvIndexFirstPage);
 
   // Match second page API request
