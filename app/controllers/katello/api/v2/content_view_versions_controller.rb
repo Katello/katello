@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::V2::ContentViewVersionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::FilteredAutoCompleteSearch
@@ -123,9 +124,10 @@ module Katello
 
     api :POST, "/content_view_versions/import", N_("Import a content view version")
     param :content_view_id, :number, :desc => N_("Content view identifier"), :required => true
-    param :path, String, :desc => N_("Import path"), :required => true
+    param :path, String, :desc => N_("Directory containing the exported Content View Version"), :required => true
+    param :metadata, Hash, :desc => N_("Metadata taken from the upstream export history for this Content View Version"), :required => true
     def import
-      task = async_task(::Actions::Katello::ContentViewVersion::Import, @view, path: params[:path])
+      task = async_task(::Actions::Katello::ContentViewVersion::Import, @view, path: params[:path], metadata: metadata_params)
       respond_for_async :resource => task
     end
 
@@ -355,6 +357,18 @@ module Katello
 
       async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @version, destination_server: params[:destination_server],
                                                                                                chunk_size: params[:chunk_size_mb])
+    end
+
+    def metadata_params
+      params.require(:metadata).permit(
+        :organization,
+        :content_view,
+        :repository_mapping,
+        :toc,
+        content_view_version: [:major, :minor]
+      ).tap do |nested|
+        nested[:repository_mapping] = params[:metadata].require(:repository_mapping).permit!
+      end
     end
   end
 end

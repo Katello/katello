@@ -217,6 +217,33 @@ module Katello
       end
     end
 
+    def test_import
+      metadata = {
+        organization: "org name",
+        repository_mapping: {
+          'repo name' => {
+            repository: 'root repo name',
+            product: 'product name',
+            redhat: true
+          }
+        },
+        toc: "toc file name",
+        content_view: "cv name",
+        content_view_version: {
+          major: "4",
+          minor: "5"
+        }
+      }
+
+      metadata_params = ActionController::Parameters.new(metadata).permit!
+
+      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Import, @library_view, path: '/tmp', metadata: metadata_params).returns({})
+
+      post :import, params: { content_view_id: @library_view.id, path: '/tmp', metadata: metadata}
+
+      assert_response :success
+    end
+
     def test_show_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]

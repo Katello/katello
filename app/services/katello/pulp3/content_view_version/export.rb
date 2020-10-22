@@ -3,7 +3,6 @@ module Katello
     module ContentViewVersion
       class Export
         include ImportExportCommon
-        METADATA_FILE = "metadata.json".freeze
 
         def initialize(smart_proxy:, content_view_version: nil, destination_server: nil)
           @smart_proxy = smart_proxy

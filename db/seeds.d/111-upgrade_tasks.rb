@@ -13,6 +13,7 @@ UpgradeTask.define_tasks(:katello) do
     {:name => 'katello:upgrades:3.13:republish_deb_metadata'},
     {:name => 'katello:upgrades:3.15:set_sub_facet_dmi_uuid'},
     {:name => 'katello:upgrades:3.15:reindex_rpm_modular'},
-    {:name => 'katello:upgrades:3.16:update_applicable_el8_hosts'}
+    {:name => 'katello:upgrades:3.16:update_applicable_el8_hosts'},
+    {:name => 'katello:upgrades:3.18:add_cvv_export_history_metadata'}
   ]
 end

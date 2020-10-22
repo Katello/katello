@@ -9,7 +9,6 @@ module Actions
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
           import_only = options.fetch(:import_only, false)
-          path = options[:path]
           content_view.check_ready_to_publish! unless import_only
 
           if options[:repos_units].present?
@@ -54,7 +53,7 @@ module Actions
             if separated_repo_map[:pulp3_yum].keys.flatten.present? &&
                 SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
               if import_only
-                handle_import(version, path)
+                handle_import(version, options.slice(:path, :metadata))
               else
                 plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)
               end
@@ -188,8 +187,8 @@ module Actions
           end
         end
 
-        def handle_import(version, path)
-          plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, path: path)
+        def handle_import(version, path:, metadata:)
+          plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, path: path, metadata: metadata)
           plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary, version)
           concurrence do
             version.importable_repositories.pluck(:id).each do |id|

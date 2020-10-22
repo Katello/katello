@@ -29,29 +29,7 @@ module Katello
             assert_match(/import path must be in a subdirectory under/, exception.message)
           end
 
-          it "fails if not a metadata json found" do
-            import_export_dir = File.join(Katello::Engine.root, 'test/fixtures')
-            stub_constant(::Katello::Pulp3::ContentViewVersion::Import, :BASEDIR, import_export_dir) do
-              exception = assert_raises(RuntimeError) do
-                ::Katello::Pulp3::ContentViewVersion::Import.check_permissions!(import_export_dir)
-              end
-              assert_match(/Could not find metadata/, exception.message)
-            end
-          end
-
-          it "fails if not able to read metadata json" do
-            import_export_dir = File.join(Katello::Engine.root, 'test/fixtures/import-export')
-            File.expects(:readable?).with("#{import_export_dir}/metadata.json").returns(false)
-
-            stub_constant(::Katello::Pulp3::ContentViewVersion::Import, :BASEDIR, import_export_dir) do
-              exception = assert_raises(RuntimeError) do
-                ::Katello::Pulp3::ContentViewVersion::Import.check_permissions!(import_export_dir)
-              end
-              assert_match(/Unable to read the metadata/, exception.message)
-            end
-          end
-
-          it "fails if pulp user is not able to access metadata json" do
+          it "fails if pulp user is not able to access the export path" do
             import_export_dir = File.join(Katello::Engine.root, 'test/fixtures/import-export')
             ::Katello::Pulp3::ContentViewVersion::Import.expects(:pulp_user_accessible?).with(import_export_dir).returns(false)
 

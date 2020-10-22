@@ -5,15 +5,16 @@ module Katello
         include ImportExportCommon
         BASEDIR = '/var/lib/pulp'.freeze
 
-        def initialize(smart_proxy:, content_view_version: nil, path: nil)
+        def initialize(smart_proxy:, content_view_version: nil, path: nil, metadata: nil)
           @smart_proxy = smart_proxy
           @content_view_version = content_view_version
           @path = path
+          @metadata = metadata
         end
 
         def repository_mapping
           mapping = {}
-          metadata[:repository_mapping].each do |key, value|
+          @metadata[:repository_mapping].each do |key, value|
             repo = @content_view_version.importable_repositories.joins(:root, :product).
                         where("#{::Katello::Product.table_name}" => {:name => value[:product]},
                                                   "#{::Katello::RootRepository.table_name}" => {:name => value[:repository]}).first
@@ -30,7 +31,7 @@ module Katello
         end
 
         def create_import(importer_href)
-          [api.import_api.create(importer_href, toc: "#{@path}/#{metadata[:toc]}")]
+          [api.import_api.create(importer_href, toc: "#{@path}/#{@metadata[:toc]}")]
         end
 
         def fetch_import(importer_href)
@@ -43,24 +44,13 @@ module Katello
           api.importer_api.delete(importer_href)
         end
 
-        def metadata
-          @metadata ||= self.class.metadata(@path)
-        end
-
         class << self
-          def metadata(path)
-            JSON.parse(File.read("#{path}/#{Export::METADATA_FILE}")).with_indifferent_access
-          end
-
           def check_permissions!(path)
             fail _("Invalid path specified.") if path.blank? || !File.directory?(path)
             fail _("The import path must be in a subdirectory under '%s'." % BASEDIR) unless path.starts_with?(BASEDIR)
-            metadata_file = "#{path}/#{::Katello::Pulp3::ContentViewVersion::Export::METADATA_FILE}"
-            fail _("Could not find metadata.json at '%s'." % metadata_file) unless File.exist?(metadata_file)
-            fail _("Unable to read the metadata.json at '%s'." % metadata_file) unless File.readable?(metadata_file)
             fail _("Pulp user or group unable to read content in '%s'." % path) unless pulp_user_accessible?(path)
+
             Dir.glob("#{path}/*").each do |file|
-              next if file == metadata_file
               fail _("Pulp user or group unable to read '%s'." % file) unless pulp_user_accessible?(file)
             end
           end
