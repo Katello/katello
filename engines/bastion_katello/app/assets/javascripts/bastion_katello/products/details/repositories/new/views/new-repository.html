@@ -39,23 +39,6 @@
         </select>
       </div>
 
-      <div
-        bst-form-group label="{{ 'Restrict to OS version' | translate }}"
-        ng-if="repository.content_type === 'yum'"
-        ng-click="formatRequiredTags()"
-      >
-       <div bst-checkbox-list="repository.required_tags"
-           icon-show="true"
-           formatter="arrayToString"
-           deletable="true"
-           selector="repository.required_tags"
-           display-value="formatRequiredTags()"
-           options="requiredTagsOptions()"
-           button-config="none"
-           >
-       </div>
-      </div>
-
       <div class="alert alert-warning" ng-if="repository.content_type === 'ostree' || repository.content_type === 'puppet'">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>Deprecation Warning: </strong>Puppet and OSTree will no longer be supported in Katello 4.0.
@@ -71,6 +54,27 @@
           Choose <b>Default</b> to enable the repository for all architectures
         </p>
       </div>
+
+      <div
+        bst-form-group label="{{ 'Restrict to OS version' | translate }}"
+        ng-if="repository.content_type === 'yum'"
+        ng-click="formatRequiredTags()"
+      >
+       <div bst-checkbox-list="repository.required_tags"
+           icon-show="true"
+           formatter="arrayToString"
+           deletable="true"
+           selector="repository.required_tags"
+           display-value="formatRequiredTags()"
+           options="requiredTagsOptions()"
+           button-config="none"
+           >
+       </div>
+       <p class="help-block" translate>
+         The repository will be enabled by default on content hosts with the selected OS versions.  Leave blank to enable regardless of OS version.
+       </p>
+      </div>
+
     </div>
     <div ng-show="repository.content_type !== undefined">
       <h4 translate> Sync Settings </h4>
