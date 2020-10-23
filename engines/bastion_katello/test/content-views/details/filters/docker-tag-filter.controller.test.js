@@ -158,7 +158,8 @@ describe('Controller: DockerTagFilterController', function() {
     it("should provide a method to filter repos by type", function() {
         var result;
         $scope.filter.repositories = [{id: 1, content_type: "yum"}, {id: 2, content_type: "yum"},
-                                      {id: 3, content_type: "docker"}, {id: 4, content_type: "docker"}];
+                                      {id: 3, content_type: "docker"}, {id: 4, content_type: "docker"},
+                                      {id: 5, content_type: "deb"}, {id: 6, content_type: "deb"}];
 
         result = $scope.filterRepositoriesByType();
         expect(result.length).toBe(2);

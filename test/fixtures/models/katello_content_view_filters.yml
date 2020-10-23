@@ -33,3 +33,13 @@ extra_filter:
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
   type:            <%= Katello::ContentViewErratumFilter.name %>
 
+simple_deb_filter:
+  name:            Simple Deb Filter
+  type:            <%= Katello::ContentViewDebFilter.name %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
+
+populated_deb_filter:
+  name:            Populated Deb Filter
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
+  type:            <%= Katello::ContentViewDebFilter.name %>
+

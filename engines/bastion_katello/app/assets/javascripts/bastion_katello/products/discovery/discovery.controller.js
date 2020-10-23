@@ -34,6 +34,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
 
         $scope.contentTypes = [
             {id: "yum", name: "Yum Repositories"},
+            {id: "deb", name: "Deb Repositories"},
             {id: "docker", name: "Container Images"}
         ];
         $scope.hideSwitcher = true;

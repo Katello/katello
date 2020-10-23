@@ -28,4 +28,8 @@ FactoryBot.define do
           :class => Katello::ContentViewDockerFilter,
           :parent => :katello_content_view_filter do
   end
+  factory :katello_content_view_deb_filter,
+          :class => Katello::ContentViewDebFilter,
+          :parent => :katello_content_view_filter do
+  end
 end

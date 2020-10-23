@@ -13,7 +13,19 @@
         return BastionResource('katello/api/v2/debs/:id',
             {'id': '@id', 'organization_id': CurrentOrganization},
             {
-                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
+                'autocompleteName': {method: 'GET', isArray: false, params: {id: 'auto_complete_name'},
+                    transformResponse: function (data) {
+                        data = angular.fromJson(data);
+                        return {results: data};
+                    }
+                },
+                'autocompleteArch': {method: 'GET', isArray: false, params: {id: 'auto_complete_arch'},
+                    transformResponse: function (data) {
+                        data = angular.fromJson(data);
+                        return {results: data};
+                    }
+                }
             }
         );
 

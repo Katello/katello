@@ -9,7 +9,7 @@ module Katello
     MODULE_STREAM   = ModuleStream::CONTENT_TYPE
     DEB             = Deb::CONTENT_TYPE
     CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA, DOCKER, DEB, MODULE_STREAM].freeze
-    CONTENT_OPTIONS = { _('Packages') => RPM, _('Module Streams') => ModuleStream, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Container Images') => DOCKER, _('deb Packages') => DEB }.freeze
+    CONTENT_OPTIONS = { _('Packages') => RPM, _('Module Streams') => ModuleStream, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Container Images') => DOCKER, _('Deb Packages') => DEB }.freeze
 
     belongs_to :content_view,
                :class_name => "Katello::ContentView",
@@ -31,6 +31,7 @@ module Katello
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :type, :rename => :content_type,
                   :complete_value => {Rpm::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageFilter",
+                                      Deb::CONTENT_TYPE.to_sym => "Katello::ContentViewDebFilter",
                                       PackageGroup::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageGroupFilter",
                                       Erratum::CONTENT_TYPE.to_sym => "Katello::ContentViewErratumFilter",
                                       DOCKER.to_sym => "Katello::ContentViewDockerFilter",
@@ -47,8 +48,7 @@ module Katello
     end
 
     def self.deb
-      # TODO
-      []
+      where(:type => ::Katello::ContentViewDebFilter.name)
     end
 
     def self.docker
@@ -69,6 +69,7 @@ module Katello
 
     def content_type
       {
+        ContentViewDebFilter => DEB,
         ContentViewPackageFilter => RPM,
         ContentViewErratumFilter => ERRATA,
         ContentViewPackageGroupFilter => PACKAGE_GROUP,
@@ -79,6 +80,8 @@ module Katello
 
     def self.class_for(content_type)
       case content_type
+      when DEB
+        ContentViewDebFilter
       when RPM
         ContentViewPackageFilter
       when PACKAGE_GROUP
@@ -97,6 +100,8 @@ module Katello
 
     def self.rule_class_for(filter)
       case filter.type
+      when ContentViewDebFilter.name
+        ContentViewDebFilterRule
       when ContentViewPackageFilter.name
         ContentViewPackageFilterRule
       when ContentViewPackageGroupFilter.name
@@ -115,6 +120,8 @@ module Katello
 
     def self.rule_ids_for(filter)
       case filter.type
+      when ContentViewDebFilter.name
+        filter.deb_rule_ids
       when ContentViewPackageFilter.name
         filter.package_rule_ids
       when ContentViewPackageGroupFilter.name

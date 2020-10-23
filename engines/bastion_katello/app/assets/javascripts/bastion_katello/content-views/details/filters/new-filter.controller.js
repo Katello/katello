@@ -29,7 +29,10 @@ angular.module('Bastion.content-views').controller('NewFilterController',
                 state = 'content-view.yum.filter.module-stream.available';
             } else if (filterType === 'docker') {
                 state = 'content-view.docker.filter.tag.details';
+            } else if (filterType === 'deb') {
+                state = 'content-view.deb.filter.deb.details';
             }
+
 
             $scope.$emit('filter.created');
             $scope.transitionTo(state, {filterId: filter.id, contentViewId: filter['content_view'].id});
@@ -78,6 +81,11 @@ angular.module('Bastion.content-views').controller('NewFilterController',
                 {id: 'erratumId', name: translate('Erratum - by ID')},
                 {id: 'erratumDateType', name: translate('Erratum - Date and Type')},
                 {id: 'modulemd', name: translate('Module Stream')}
+            ];
+        } else if ($scope.stateIncludes('content-view.deb')) {
+            $scope.filter.type = "deb";
+            $scope.filterChoices = [
+                {id: 'deb', name: translate('Deb Package')}
             ];
         } else {
             $scope.filter.type = "docker";

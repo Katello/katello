@@ -1,5 +1,5 @@
-describe('Controller: PackageFilterController', function() {
-    var $scope, Rule, Package, Notification, $uibModal;
+describe('Controller: DebFilterController', function() {
+    var $scope, Rule, Deb, Notification, $uibModal;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -16,7 +16,7 @@ describe('Controller: PackageFilterController', function() {
           }
         };
 
-        Package = $injector.get('MockResource').$new();
+        Deb = $injector.get('MockResource').$new();
 
         Notification = {
             setSuccessMessage: function () {}
@@ -31,13 +31,13 @@ describe('Controller: PackageFilterController', function() {
 
         $scope.contentView = {'repository_ids': []};
 
-        Package.autocompleteName = function () {
+        Deb.autocompleteName = function () {
             return {
                 $promise: $q.defer().promise
             };
         };
 
-        Package.autocompleteArch = function () {
+        Deb.autocompleteArch = function () {
             return {
                 $promise: $q.defer().promise
             };
@@ -57,11 +57,11 @@ describe('Controller: PackageFilterController', function() {
             }
         };
 
-        $controller('PackageFilterController', {
+        $controller('DebFilterController', {
             $scope: $scope,
             translate: translate,
             Rule: Rule,
-            Package: Package,
+            Deb: Deb,
             Notification: Notification,
             $uibModal: $uibModal
         });
@@ -104,52 +104,28 @@ describe('Controller: PackageFilterController', function() {
         });
     });
 
-    it("should provide a method to clear a rule", function() {
-        var rule = {
-            name: 'test',
-            min_version: '2',
-            max_version: '3',
-        };
-
-        $scope.clearValues(rule);
-
-        expect(rule.min_version).toBe(undefined);
-        expect(rule.max_version).toBe(undefined);
-    });
 
     it("should provide a method to backup a rule", function() {
         var rule = {
             name: 'test',
-            type: 'all',
-            version: '1',
-            min_version: '2',
-            max_version: '3'
+            type: 'all'
         };
 
         $scope.backupPrevious(rule);
 
         expect(rule.previous.name).toBe(rule.name);
         expect(rule.previous.type).toBe(rule.type);
-        expect(rule.previous.version).toBe(rule.version);
-        expect(rule.previous.min_version).toBe(rule.min_version);
-        expect(rule.previous.max_version).toBe(rule.max_version);
     });
 
     it("should provide a method to restore a rule", function() {
         var rule = {
             id: 1,
             name: 'current',
-            type: 'all',
-            version: '1',
-            min_version: '2',
-            max_version: '3'
+            type: 'all'
         }, previousRule = {
             id: 1,
             name: 'previous',
-            type: 'previous all',
-            version: '10',
-            min_version: '20',
-            max_version: '30'
+            type: 'previous all'
         };
         rule.previous = previousRule;
 
@@ -157,9 +133,6 @@ describe('Controller: PackageFilterController', function() {
 
         expect(rule.name).toBe(previousRule.name);
         expect(rule.type).toBe(previousRule.type);
-        expect(rule.version).toBe(previousRule.version);
-        expect(rule.min_version).toBe(previousRule.min_version);
-        expect(rule.max_version).toBe(previousRule.max_version);
         expect(Object.keys(rule.previous).length).toBe(0)
     });
 
@@ -181,65 +154,24 @@ describe('Controller: PackageFilterController', function() {
         expect(result).toBe(false);
     });
 
-    it("should provide a method to determine if a rule is valid if no version and type is 'equal'", function() {
-        var result,
-            rule = {
-                type: 'equal'
-            };
-
-        result = $scope.valid(rule);
-        expect(result).toBe(false);
-    });
-
-    it("should provide a method to determine if a rule is valid if no max_version and type is 'less'", function() {
-        var result,
-            rule = {
-                type: 'less'
-            };
-
-        result = $scope.valid(rule);
-        expect(result).toBe(false);
-    });
-
-    it("should provide a method to determine if a rule is valid if no min_version and type is 'greater'", function() {
-        var result,
-            rule = {
-                type: 'greater'
-            };
-
-        result = $scope.valid(rule);
-        expect(result).toBe(false);
-    });
-
-    it("should provide a method to determine if a rule is valid if min_version but not max_version and type is 'range'", function() {
-        var result,
-            rule = {
-                type: 'range',
-                min_version: '2'
-            };
-
-        result = $scope.valid(rule);
-        expect(result).toBe(false);
-    });
-
     it("should provide a method to retrieve autocomplete name results", function () {
         var autocomplete;
 
-        spyOn(Package, 'autocompleteName').and.callThrough();
+        spyOn(Deb, 'autocompleteName').and.callThrough();
         autocomplete = $scope.fetchAutocompleteName('gir');
 
         expect(autocomplete.then).toBeDefined();
-        expect(Package.autocompleteName).toHaveBeenCalled();
+        expect(Deb.autocompleteName).toHaveBeenCalled();
     });
 
     it("should provide a method to retrieve autocomplete arch results", function () {
         var autocomplete;
 
-        spyOn(Package, 'autocompleteArch').and.callThrough();
+        spyOn(Deb, 'autocompleteArch').and.callThrough();
         autocomplete = $scope.fetchAutocompleteArch('x86');
 
         expect(autocomplete.then).toBeDefined();
-        expect(Package.autocompleteArch).toHaveBeenCalled();
+        expect(Deb.autocompleteArch).toHaveBeenCalled();
     });
 
     it("should provide a method to filter repos by type", function() {
@@ -250,8 +182,8 @@ describe('Controller: PackageFilterController', function() {
 
         result = $scope.filterRepositoriesByType();
         expect(result.length).toBe(2);
-        expect(result[0].id).toBe(1);
-        expect(result[1].id).toBe(2);
+        expect(result[0].id).toBe(5);
+        expect(result[1].id).toBe(6);
     });
 
     it("can show matching content", function () {
@@ -263,7 +195,7 @@ describe('Controller: PackageFilterController', function() {
 
         result = $uibModal.open.calls.argsFor(0)[0];
 
-        expect(result.templateUrl).toContain('content-views/details/filters/views/filter-rule-matching-package-modal.html');
-        expect(result.controller).toBe('FilterRuleMatchingPackageModal');
+        expect(result.templateUrl).toContain('content-views/details/filters/views/filter-rule-matching-deb-modal.html');
+        expect(result.controller).toBe('FilterRuleMatchingDebModal');
     });
 });
