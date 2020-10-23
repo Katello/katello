@@ -30,6 +30,14 @@ module Katello
       @host_collection2 = katello_host_collections(:another_simple_host_collection)
     end
 
+    let(:host_one_trace) do
+      Katello::HostTracer.create!(host: @host1, application: 'kernel', app_type: 'static', helper: 'reboot the system')
+    end
+
+    let(:host_two_trace) do
+      Katello::HostTracer.create!(host: @host2, application: 'dbus', app_type: 'static', helper: 'reboot the system')
+    end
+
     def setup
       setup_controller_defaults_api
       login_user(User.find(users(:admin).id))
@@ -232,7 +240,7 @@ module Katello
     end
 
     def test_bulk_add_host_collections_permissions
-      good_perms = [@update_permission]
+      good_perms = [[@update_permission, :edit_host_collections]]
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
 
@@ -242,7 +250,7 @@ module Katello
     end
 
     def test_bulk_remove_host_collections_permissions
-      good_perms = [@update_permission]
+      good_perms = [[@update_permission, :edit_host_collections]]
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
       assert_protected_action(:bulk_remove_host_collections, good_perms, bad_perms) do
@@ -288,7 +296,7 @@ module Katello
     end
 
     def test_environment_content_view_permission
-      good_perms = [@update_permission]
+      good_perms = [[@update_permission, :edit_lifecycle_environments, :edit_content_views]]
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
 
@@ -416,8 +424,8 @@ module Katello
     end
 
     def test_get_host_traces
-      Katello::HostTracer.create(host_id: @host1.id, application: 'kernel', app_type: 'static', helper: 'reboot the system')
-      Katello::HostTracer.create(host_id: @host2.id, application: 'dbus', app_type: 'static', helper: 'reboot the system')
+      host_one_trace
+      host_two_trace
 
       post :traces, params: {
         organization_id: @org.id,
@@ -435,18 +443,28 @@ module Katello
     end
 
     def test_resolve_traces
-      trace_one = Katello::HostTracer.create(host_id: @host1.id, application: 'rsyslog', app_type: 'daemon', helper: 'systemctl restart rsyslog')
       job_invocation = {"description" => "Restart Services", "id" => 1, "job_category" => "Katello"}
 
-      Katello::HostTraceManager.expects(:resolve_traces).with([trace_one]).returns([job_invocation])
+      Katello::HostTraceManager.expects(:resolve_traces).with([host_one_trace]).returns([job_invocation])
 
-      put :resolve_traces, params: { :trace_ids => [trace_one.id] }
+      put :resolve_traces, params: { :trace_ids => [host_one_trace.id] }
 
       assert_response :success
 
       body = JSON.parse(response.body)
 
       assert_equal [job_invocation], body
+    end
+
+    def test_resolve_traces_permission
+      good_perms = [@update_permission]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
+      host_one_trace
+
+      assert_protected_action(:resolve_traces, good_perms, bad_perms) do
+        put :resolve_traces, params: { trace_ids: [host_one_trace.id] }
+      end
     end
   end
 end
