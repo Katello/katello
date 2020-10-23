@@ -71,10 +71,22 @@ module Katello
 
     def test_add_components_protected
       @content_view = katello_content_views(:library_dev_view)
-      allowed_perms = [@update_permission]
+
+      allowed_perms = [[@update_permission, {:name => "view_content_views", :search => "name=\"#{@content_view.name}\"" }]]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
+        put :add_components, params: { :composite_content_view_id => @composite.id, :components => [{:content_view_id => @content_view.id, :latest => true}] }
+      end
+    end
+
+    def test_add_components_protected_object
+      @content_view = katello_content_views(:library_dev_view)
+
+      allowed_perms = [[@update_permission, {:name => "view_content_views", :search => "name=\"#{@content_view.name}\"" }]]
+      denied_perms = [[@update_permission, {:name => "view_content_views", :search => "name=\"someothername\"" }]]
+
+      assert_protected_object(:create, allowed_perms, denied_perms) do
         put :add_components, params: { :composite_content_view_id => @composite.id, :components => [{:content_view_id => @content_view.id, :latest => true}] }
       end
     end
@@ -114,7 +126,6 @@ module Katello
     def test_update_latest_true
       component = create_component
       computed_version = component.latest_version.id
-
       component.update!(:latest => true, :content_view_version_id => nil)
       put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :latest => true }
       assert_response :success
@@ -139,6 +150,17 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
+        put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :content_view_version_id => component.latest_version.id, :latest => false }
+      end
+    end
+
+    def test_update_protected_object
+      component = create_component
+
+      allowed_perms = [{:name => "edit_content_views", :search => "name=\"#{@composite.name}\"" }]
+      denied_perms = [{:name => "edit_content_views", :search => "name=\"some_name\"" }]
+
+      assert_protected_object(:update, allowed_perms, denied_perms) do
         put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :content_view_version_id => component.latest_version.id, :latest => false }
       end
     end
