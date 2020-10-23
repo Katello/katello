@@ -1,5 +1,6 @@
 require "katello_test_helper"
 
+# rubocop:disable Metrics/ClassLength
 module Katello
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
@@ -259,12 +260,17 @@ module Katello
                        [@dev_env_promote_permission, @cv_promote_permission],
                        [@env_promote_permission, @library_dev_staging_view_promote_permission]
                       ]
-      denied_perms = [@view_permission, @create_permission, @update_permission, @destroy_permission,
-                      @env_promote_permission, @cv_promote_permission,
-                      [diff_env_promote_permission, @cv_promote_permission],
-                      [@env_promote_permission, diff_view_promote_permission]
-                     ]
+
+      #ENV['test'] = 'asd'
+      denied_perms = [[@view_permission, @create_permission, @update_permission, @destroy_permission]]
       assert_protected_action(:promote, allowed_perms, denied_perms) do
+        post :promote, params: { :id => @library_dev_staging_view.versions.first.id, :environment_ids => [@dev.id] }
+      end
+
+      denied_perms = [[@view_permission, @create_permission, @update_permission, @destroy_permission,
+                       diff_view_promote_permission, diff_env_promote_permission]]
+
+      assert_protected_object(:promote, allowed_perms, denied_perms) do
         post :promote, params: { :id => @library_dev_staging_view.versions.first.id, :environment_ids => [@dev.id] }
       end
     end
@@ -365,8 +371,12 @@ module Katello
 
       allowed_perms = [@destroy_permission]
 
-      denied_perms = [@view_permission, @create_permission, @update_permission, @cv_promote_permission, diff_view_destroy_permission]
+      denied_perms = [[@view_permission, @create_permission, @update_permission, @cv_promote_permission, diff_view_destroy_permission]]
+      assert_protected_object(:destroy, allowed_perms, denied_perms) do
+        post :destroy, params: { :id => @library_dev_staging_view.versions.first.id }
+      end
 
+      denied_perms = [[@view_permission, @create_permission, @update_permission, @cv_promote_permission]]
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         post :destroy, params: { :id => @library_dev_staging_view.versions.first.id }
       end
