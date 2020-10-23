@@ -1,7 +1,8 @@
 module Katello
   class Api::V2::ContentViewComponentsController < Api::V2::ApiController
-    before_action :find_composite_content_view
-    before_action :find_content_view_component, :only => [:show, :update]
+    before_action :find_composite_content_view, :only => [:show, :index]
+    before_action :find_composite_content_view_for_edit, :only => [:add_components, :remove_components, :update]
+    before_action :find_authorized_katello_resource, :only => [:show, :update]
 
     wrap_parameters :include => %w(composite_content_view_id content_view_version_id content_view_id latest)
 
@@ -13,7 +14,7 @@ module Katello
     end
 
     def index_response
-      results = @view.content_view_components
+      results = @view.content_view_components.readable
       {
         :results => results.uniq,
         :subtotal => results.count,
@@ -31,15 +32,26 @@ module Katello
       param :latest, :bool, :desc => N_("true if the latest version of the component's content view is desired")
     end
     def add_components
+      @view.add_components(authorized_components)
+      @view.save!
+      respond_for_index(:collection => index_response, :template => "index")
+    end
+
+    private def authorized_components
       components = params.require(:components).map do |component|
         component = component.permit([:latest, :content_view_version_id, :content_view_id])
         options = {}
         options[:latest] = ::Foreman::Cast.to_bool(component[:latest]) if component.key?(:latest)
-        options.merge(component.slice(:content_view_version_id, :content_view_id))
+        options.merge(component.slice(:content_view_version_id, :content_view_id)).with_indifferent_access
       end
-      @view.add_components(components)
-      @view.save!
-      respond_for_index(:collection => index_response, :template => "index")
+
+      components.each do |component|
+        if component[:content_view_version_id] && Katello::ContentViewVersion.readable.find_by(id: component[:content_view_version_id]).nil?
+          throw_resource_not_found(name: 'content_view_version', id: component[:content_view_version_id])
+        elsif component[:content_view_id] && Katello::ContentView.readable.find_by(id: component[:content_view_id]).nil?
+          throw_resource_not_found(name: 'content_view', id: component[:content_view_id])
+        end
+      end
     end
 
     api :PUT, "/content_views/:composite_content_view_id/content_view_components/remove",
@@ -56,7 +68,7 @@ module Katello
     param :composite_content_view_id, :number, :desc => N_("composite content view numeric identifier"), :required => true
     param :id, :number, :desc => N_("content view component ID. Identifier of the component association"), :required => true
     def show
-      respond :resource => @component
+      respond :resource => @content_view_component
     end
 
     api :PUT, "/content_views/:composite_content_view_id/content_view_components/:id",
@@ -67,6 +79,9 @@ module Katello
     param :latest, :bool, :desc => N_("true if the latest version of the components content view is desired")
     def update
       cvv_id = component_params[:content_view_version_id]
+      if cvv_id && Katello::ContentViewVersion.readable.find_by(id: cvv_id).nil?
+        throw_resource_not_found(name: 'content view version', id: cvv_id)
+      end
       if component_params.key?(:latest) && component_params.key?(:content_view_version_id)
         latest = ::Foreman::Cast.to_bool(component_params[:latest])
         if latest && cvv_id.present?
@@ -75,22 +90,24 @@ module Katello
         end
       end
       if cvv_id.present?
-        @component.update!(:content_view_version_id => cvv_id, :latest => false)
+        @content_view_component.update!(:content_view_version_id => cvv_id, :latest => false)
       elsif component_params.key?(:latest)
         latest = ::Foreman::Cast.to_bool(component_params[:latest])
-        @component.update!(:content_view_version_id => nil, :latest => latest)
+        @content_view_component.update!(:content_view_version_id => nil, :latest => latest)
       end
-      respond :resource => @component
+      respond :resource => @content_view_component
     end
 
     private
 
     def find_composite_content_view
-      @view = ContentView.composite.non_default.find(params[:composite_content_view_id])
+      @view = ContentView.composite.non_default.readable.find_by(id: params[:composite_content_view_id])
+      throw_resource_not_found(name: 'composite content view', id: params[:composite_content_view_id]) if @view.nil?
     end
 
-    def find_content_view_component
-      @component = ContentViewComponent.find(params[:id])
+    def find_composite_content_view_for_edit
+      @view = ContentView.composite.non_default.editable.find_by(id: params[:composite_content_view_id])
+      throw_resource_not_found(name: 'composite content view', id: params[:composite_content_view_id]) if @view.nil?
     end
 
     def component_params
