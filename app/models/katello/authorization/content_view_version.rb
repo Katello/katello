@@ -10,12 +10,32 @@ module Katello
     end
 
     module ClassMethods
+      def with_content_view_scope(scope)
+        joins(:content_view).merge(Katello::ContentView.send(scope))
+      end
+
       def readable
-        joins(:content_view).merge(::Katello::ContentView.readable)
+        with_content_view_scope(:readable)
       end
 
       def exportable
-        joins(:content_view).merge(::Katello::ContentView.exportable)
+        with_content_view_scope(:exportable)
+      end
+
+      def editable
+        with_content_view_scope(:editable)
+      end
+
+      def publishable
+        with_content_view_scope(:publishable)
+      end
+
+      def deletable
+        with_content_view_scope(:deletable)
+      end
+
+      def promotable_or_removable
+        with_content_view_scope(:promotable_or_removable)
       end
     end
   end
