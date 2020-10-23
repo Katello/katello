@@ -21,46 +21,18 @@ angular
         };
 
         this.getRequiredTagsOptions = function (repo) {
-            var options = [
-                { name: 'Red Hat Enterprise Linux 8', tag: 'rhel-8', selected: undefined },
-                { name: 'Red Hat Enterprise Linux 7 Server', tag: 'rhel-7-server', selected: undefined },
-                { name: 'Red Hat Enterprise Linux 7 Workstation', tag: 'rhel-7-workstation', selected: undefined },
-                { name: 'Red Hat Enterprise Linux 7 Client', tag: 'rhel-7-client', selected: undefined },
-                { name: 'Red Hat Enterprise Linux 6 Server', tag: 'rhel-6-server', selected: undefined },
-                { name: 'Red Hat Enterprise Linux 6 Workstation', tag: 'rhel-6-workstation', selected: undefined }
+            return [
+                { name: 'Default', id: '' },
+                { name: 'Red Hat Enterprise Linux 8', id: 'rhel-8' },
+                { name: 'Red Hat Enterprise Linux 7', id: 'rhel-7' },
+                { name: 'Red Hat Enterprise Linux 6', id: 'rhel-6' },
             ];
-            var tagNames = options.map(function (option) {
-                return option.tag;
-            });
-            if (angular.isUndefined(repo.required_tags)) {
-                return options;
-            }
-            // If a repo has other required tags that don't match the options above,
-            // make sure to display those as well
-            angular.forEach(repo.required_tags, function (tag) {
-                if (!tagNames.includes(tag)) {
-                    options.push({
-                      name: tag,
-                      tag: tag,
-                      selected: undefined
-                    });
-                }
-            });
-            return options;
         };
 
         // return an array of required tags
-        this.requiredTagsParam = function (tagList) {
-            var selectedItems;
-            if (!tagList) {
-                return [];
-            }
-            selectedItems = tagList.filter(function (item) {
-                return item.selected;
-            });
-            return selectedItems.map(function (item) {
-                return item.tag;
-            });
+        // we don't support multiple tags so this is pretty simple
+        this.requiredTagsParam = function (tag) {
+            return [tag];
         };
 
         // return the tags as comma-separated string

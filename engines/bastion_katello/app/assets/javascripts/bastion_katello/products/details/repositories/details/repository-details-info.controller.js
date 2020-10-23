@@ -104,7 +104,6 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 }
                 /* eslint-disable camelcase */
                 repository.required_tags = $scope.requiredTagsParam();
-
                 repository.$update(function (response) {
                     deferred.resolve(response);
                     if (!_.isEmpty(response["docker_tags_whitelist"])) {
@@ -204,25 +203,21 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             };
 
             $scope.requiredTagsOptions = function () {
-                // initial options
-                $scope.requiredTagsList = $scope.requiredTagsList || RequiredTags.getRequiredTagsOptions($scope.repository);
-                // set selected to true or false for each required tag, based on the saved object
-                $scope.requiredTagsList.forEach(function (reqTagObj) {
-                    reqTagObj.selected = RequiredTags.isRequiredTagSelected(reqTagObj.tag, $scope.repository);
-                });
-                return $scope.requiredTagsList;
+                $scope.selectedRequiredTag = $scope.formatRequiredTags();
+                return RequiredTags.getRequiredTagsOptions($scope.repository);
             };
 
             $scope.formatRequiredTags = function () {
-                return RequiredTags.formatRequiredTags($scope.requiredTagsList);
+                return RequiredTags.formatRequiredTags($scope.repository.required_tags);
             };
 
             $scope.requiredTagsParam = function () {
-                return RequiredTags.requiredTagsParam($scope.requiredTagsList);
+                return RequiredTags.requiredTagsParam($scope.selectedRequiredTag);
             };
 
             HttpProxy.queryUnpaged(function (proxies) {
                 $scope.proxies = proxies.results;
             });
+
         }]
 );
