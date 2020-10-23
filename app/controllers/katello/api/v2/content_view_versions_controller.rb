@@ -3,8 +3,11 @@ module Katello
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_content_view_version, :only => [:show, :update, :promote, :destroy, :export, :republish_repositories]
-    before_action :find_content_view, :except => [:incremental_update]
+    before_action :find_authorized_katello_resource, :only => [:show, :update, :promote, :destroy, :export, :republish_repositories]
+    before_action :find_content_view_from_version, :only => [:show, :update, :promote, :destroy, :export, :republish_repositories]
+    before_action :find_optional_readable_content_view, :only => [:index]
+    before_action :find_publishable_content_view, :only => [:import]
+
     before_action :find_environment, :only => [:index]
     before_action :find_environments, :only => [:promote]
     before_action :validate_promotable, :only => [:promote]
@@ -46,7 +49,7 @@ module Katello
     api :GET, "/content_view_versions/:id", N_("Show content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     def show
-      respond :resource => @version
+      respond :resource => @content_view_version
     end
 
     api :POST, "/content_view_versions/:id/promote", N_("Promote a content view version")
@@ -57,7 +60,7 @@ module Katello
     def promote
       is_force = ::Foreman::Cast.to_bool(params[:force])
       task = async_task(::Actions::Katello::ContentView::Promote,
-                        @version, @environments, is_force, params[:description])
+                        @content_view_version, @environments, is_force, params[:description])
       respond_for_async :resource => task
     end
 
@@ -65,20 +68,20 @@ module Katello
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :description, String, :desc => N_("The description for the content view version"), :required => true
     def update
-      history = @version.history.publish.successful.first
+      history = @content_view_version.history.publish.successful.first
       if history.blank?
         fail HttpErrors::BadRequest, _("This content view version doesn't have a history.")
       else
         history.notes = params[:description]
         history.save!
-        respond_for_show(:resource => @version)
+        respond_for_show(:resource => @content_view_version)
       end
     end
 
     api :PUT, "/content_view_versions/:id/republish_repositories", N_("Forces a republish of the version's repositories' metadata")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     def republish_repositories
-      task = async_task(::Actions::Katello::ContentViewVersion::RepublishRepositories, @version)
+      task = async_task(::Actions::Katello::ContentViewVersion::RepublishRepositories, @content_view_version)
       respond_for_async :resource => task
     end
 
@@ -97,7 +100,7 @@ module Katello
         fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
       end
 
-      if (repos = @version.content_view.on_demand_repositories).any?
+      if (repos = @content_view_version.content_view.on_demand_repositories).any?
         fail HttpErrors::BadRequest, _("This content view has on demand repositories that cannot be exported: %{repos}" % {repos: repos.pluck(:label).join(", ")})
       end
 
@@ -108,7 +111,7 @@ module Katello
           raise HttpErrors::BadRequest, _("Invalid date provided.")
         end
       end
-      task = async_task(::Actions::Katello::ContentViewVersion::Export, @version,
+      task = async_task(::Actions::Katello::ContentViewVersion::Export, @content_view_version,
                         ::Foreman::Cast.to_bool(params[:export_to_iso]),
                         params[:since].try(:to_datetime),
                         params[:iso_mb_size])
@@ -128,7 +131,7 @@ module Katello
     api :DELETE, "/content_view_versions/:id", N_("Remove content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     def destroy
-      task = async_task(::Actions::Katello::ContentViewVersion::Destroy, @version)
+      task = async_task(::Actions::Katello::ContentViewVersion::Destroy, @content_view_version)
       respond_for_async :resource => task
     end
 
@@ -168,7 +171,7 @@ module Katello
 
       validate_content(params[:add_content])
       resolve_dependencies = params.fetch(:resolve_dependencies, true)
-      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, @composite_version_environments,
+      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @content_view_version_environments, @composite_version_environments,
                         params[:add_content], resolve_dependencies, hosts, params[:description])
       respond_for_async :resource => task
     end
@@ -194,15 +197,20 @@ module Katello
       find_bulk_hosts(:edit_hosts, params[:update_hosts], restrict_hosts)
     end
 
-    def find_content_view_version
-      @version = ContentViewVersion.find(params[:id])
-    end
-
-    def find_content_view
-      @view = @version ? @version.content_view : ContentView.where(:id => params[:content_view_id]).first
+    def find_content_view_from_version
+      @view = @content_view_version.content_view
       if @view&.default? && params[:action] == "promote"
         fail HttpErrors::BadRequest, _("The default content view cannot be promoted")
       end
+    end
+
+    def find_optional_readable_content_view
+      @view = ContentView.readable.find_by(:id => params[:content_view_id])
+    end
+
+    def find_publishable_content_view
+      @view = ContentView.publishable.find_by(:id => params[:content_view_id])
+      throw_resource_not_found(name: 'product', id: params[:product_id]) if @view.nil?
     end
 
     def find_version_environments
@@ -212,7 +220,7 @@ module Katello
       list = params[:content_view_version_environments]
       fail _("At least one Content View Version must be specified") if list.empty?
 
-      @version_environments = []
+      @content_view_version_environments = []
       @composite_version_environments = []
       list.each do |combination|
         version_environment = {
@@ -236,7 +244,7 @@ module Katello
         if view.composite?
           @composite_version_environments << version_environment
         else
-          @version_environments << version_environment
+          @content_view_version_environments << version_environment
           @composite_version_environments += lookup_all_composites(version_environment[:content_view_version]) if params[:propagate_all_composites]
         end
       end
@@ -255,7 +263,7 @@ module Katello
     def find_version_environments_for_hosts(include_composites)
       if include_composites
         version_environments_for_systems_map = {}
-        @version_environments.each do |version_environment|
+        @content_view_version_environments.each do |version_environment|
           version_environment[:content_view_version].composites.each do |composite_version|
             version_environments_for_systems_map[composite_version.id] ||= {:content_view_version => composite_version,
                                                                             :environments => composite_version.environments}
@@ -264,7 +272,7 @@ module Katello
 
         version_environments_for_systems_map.values
       else
-        @version_environments.select { |ve| !ve[:environments].blank? }
+        @content_view_version_environments.select { |ve| !ve[:environments].blank? }
       end
     end
 
@@ -307,12 +315,12 @@ module Katello
 
     def validate_promotable
       fail HttpErrors::BadRequest, _("Could not find environments for promotion") if @environments.blank?
-      return deny_access unless @environments.all?(&:promotable_or_removable?) && @version.content_view.promotable_or_removable?
+      return deny_access unless @environments.all?(&:promotable_or_removable?) && @content_view_version.content_view.promotable_or_removable?
       true
     end
 
     def authorize_destroy
-      return deny_access unless @version.content_view.deletable?
+      return deny_access unless @content_view_version.content_view.deletable?
       true
     end
 
