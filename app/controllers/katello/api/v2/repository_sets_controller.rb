@@ -4,8 +4,11 @@ module Katello
 
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_product_or_organization
+    before_action :set_readable_product_scope, only: [:index, :show, :available_repositories, :auto_complete_search]
+    before_action :set_editable_product_scope, only: [:enable, :disable]
+    before_action :find_product
     before_action :custom_product?
+    before_action :find_organization
     before_action :find_product_content, :except => [:index, :auto_complete_search]
 
     resource_description do
@@ -102,7 +105,8 @@ module Katello
 
     def index_relation
       if @product.nil?
-        relation = @organization.product_contents.displayable
+        authorized_product_contents = Katello::ProductContent.joins(:product).merge(@product_scope)
+        relation = @organization.product_contents.merge(authorized_product_contents).displayable
       else
         relation = @product.displayable_product_contents
       end
@@ -125,25 +129,31 @@ module Katello
       if @product.present?
         @product_content = @product.product_content_by_id(params[:id])
       else
-        content = Katello::Content.find_by(:cp_content_id => params[:id], :organization_id => @organization[:id])
-        @product_content = Katello::ProductContent.find_by(:content_id => content.id)
+        content = Katello::Content.where(cp_content_id: params[:id], organization: @organization)
+        authorized_product_contents = Katello::ProductContent.joins(:product).merge(@product_scope)
+        @product_content = authorized_product_contents.joins(:content).merge(content).first
+        @product = @product_content&.product
       end
-      fail HttpErrors::NotFound, _("Couldn't find repository set with id '%s'.") % params[:id] if @product_content.nil?
-      @product = @product_content.product if @product.nil?
-    end
-
-    def find_product_or_organization
-      if params[:product_id]
-        find_product
-      else
-        @organization = find_organization
-      end
+      throw_resource_not_found(name: 'repository set', id: params[:id]) if @product_content.nil?
     end
 
     def find_product
-      @product = Product.find_by(:id => params[:product_id])
-      fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
-      @organization = @product.organization
+      if params[:product_id]
+        @product = @product_scope.find_by(id: params[:product_id])
+        throw_resource_not_found(name: 'product', id: params[:product_id]) if @product.nil?
+      end
+    end
+
+    def set_readable_product_scope
+      @product_scope = Katello::Product.readable
+    end
+
+    def set_editable_product_scope
+      @product_scope = Katello::Product.editable
+    end
+
+    def find_organization
+      @organization = @product&.organization || super
     end
 
     def custom_product?

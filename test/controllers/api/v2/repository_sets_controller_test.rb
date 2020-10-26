@@ -10,10 +10,10 @@ module Katello
     end
 
     def permissions
-      @view_permission = :view_subscriptions
+      @view_permission = :view_products
+      @edit_permission = :edit_products
       @attach_permission = :attach_subscriptions
       @unattach_permission = :unattach_subscriptions
-      @import_permission = :import_manifest
       @delete_permission = :delete_manifest
     end
 
@@ -183,7 +183,7 @@ module Katello
 
     def test_available_repositories_protected
       allowed_perms = [@view_permission]
-      denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @import_permission]
+      denied_perms = [@attach_permission, @unattach_permission, @delete_permission]
 
       assert_protected_action(:available_repositories, allowed_perms, denied_perms) do
         get :available_repositories, params: { :product_id => @product.id, :id => @content_id }
@@ -196,7 +196,7 @@ module Katello
 
       results = JSON.parse(response.body)
 
-      error_message = "Couldn't find product with id '#{fake_product_id}'"
+      error_message = "Could not find product resource with id #{fake_product_id}"
 
       assert_response :not_found
       assert_includes results["errors"], error_message
@@ -225,7 +225,7 @@ module Katello
     end
 
     def test_enable_protected
-      allowed_perms = [@import_permission]
+      allowed_perms = [@edit_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @view_permission]
 
       assert_protected_action(:enable, allowed_perms, denied_perms) do
@@ -256,7 +256,7 @@ module Katello
     end
 
     def test_disable_protected
-      allowed_perms = [@import_permission]
+      allowed_perms = [@edit_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @view_permission]
 
       assert_protected_action(:disable, allowed_perms, denied_perms) do
