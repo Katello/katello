@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Col, Row, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { Button, Spinner } from 'patternfly-react';
 import ForemanModal from 'foremanReact/components/ForemanModal';
+import Slot from 'foremanReact/components/common/Slot';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TooltipButton from '../../../components/TooltipButton';
 import { LoadingState } from '../../../components/LoadingState';
@@ -250,17 +251,17 @@ class ManageManifestModal extends Component {
                                 />
                               }
                               {canDeleteManifest &&
-                              <React.Fragment>
-                                <TooltipButton
-                                  disabled={!isManifestImported || actionInProgress}
-                                  bsStyle="danger"
-                                  onClick={this.showDeleteManifestModal}
-                                  title={__('Delete')}
-                                  tooltipId="delete-manifest-button-tooltip"
-                                  tooltipText={this.disabledTooltipText()}
-                                  tooltipPlacement="top"
-                                />
-                              </React.Fragment>
+                                <React.Fragment>
+                                  <TooltipButton
+                                    disabled={!isManifestImported || actionInProgress}
+                                    bsStyle="danger"
+                                    onClick={this.showDeleteManifestModal}
+                                    title={__('Delete')}
+                                    tooltipId="delete-manifest-button-tooltip"
+                                    tooltipText={this.disabledTooltipText()}
+                                    tooltipPlacement="top"
+                                  />
+                                </React.Fragment>
                               }
                             </div>
                             <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
@@ -280,6 +281,7 @@ class ManageManifestModal extends Component {
                     </FormGroup>
                   </React.Fragment>
                 }
+                <Slot id="katello-manage-manifest-form" multi />
               </Form>
             </Tab>
           }

@@ -5,6 +5,7 @@ import React from 'react';
 import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import { APIMiddleware, reducers as apiReducer } from 'foremanReact/redux/API';
+import { reducers as fillReducers } from 'foremanReact/components/common/Fill';
 import { reducers as foremanModalReducer } from 'foremanReact/components/ForemanModal';
 import { STATUS } from 'foremanReact/constants';
 import { render, waitFor } from '@testing-library/react';
@@ -33,6 +34,7 @@ function renderWithRedux(
     katello: allKatelloReducers,
     ...apiReducer,
     ...foremanModalReducer,
+    ...fillReducers,
   });
 
   // Namespacing the initial state as well
@@ -45,6 +47,7 @@ function renderWithRedux(
         settings: initialSettingsState,
       },
     },
+    extendable: {},
     ...initialState,
   });
   const middlewares = applyMiddleware(thunk, APIMiddleware);
