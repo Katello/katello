@@ -52,7 +52,7 @@
           <span translate>Restrict to <br />OS version</span>
           <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected OS version.  Select \'Default\' to enable regardless of OS version.' | translate }}"></i>
         </dt>
-        <dd bst-edit-select="formatRequiredTags()"
+        <dd bst-edit-select="repository.required_tags.length ? formatRequiredTags() : 'Default'"
             selector="selectedRequiredTag"
             options="requiredTagsOptions()"
             on-save="save(repository)">

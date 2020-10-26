@@ -20,19 +20,25 @@ angular
             });
         };
 
-        this.getRequiredTagsOptions = function (repo) {
+        this.getRequiredTagsOptions = function () {
             return [
                 { name: 'Default', id: '' },
-                { name: 'Red Hat Enterprise Linux 8', id: 'rhel-8' },
-                { name: 'Red Hat Enterprise Linux 7', id: 'rhel-7' },
-                { name: 'Red Hat Enterprise Linux 6', id: 'rhel-6' },
+                { name: 'Red Hat Enterprise Linux 8 ', id: 'rhel-8' },
+                { name: 'Red Hat Enterprise Linux 7 ', id: 'rhel-7' },
+                { name: 'Red Hat Enterprise Linux 6 ', id: 'rhel-6' }
             ];
         };
 
         // return an array of required tags
-        // we don't support multiple tags so this is pretty simple
         this.requiredTagsParam = function (tag) {
-            return [tag];
+            var param = tag;
+            if (tag && tag.hasOwnProperty('id')) {
+                param = tag.id;
+            }
+            // exclude null, undefined, and ''
+            return [param].filter(function (el) {
+                return el && el !== '';
+            });
         };
 
         // return the tags as comma-separated string

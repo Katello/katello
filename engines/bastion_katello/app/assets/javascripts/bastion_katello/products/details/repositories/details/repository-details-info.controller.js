@@ -204,7 +204,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.requiredTagsOptions = function () {
                 $scope.selectedRequiredTag = $scope.formatRequiredTags();
-                return RequiredTags.getRequiredTagsOptions($scope.repository);
+                return RequiredTags.getRequiredTagsOptions();
             };
 
             $scope.formatRequiredTags = function () {

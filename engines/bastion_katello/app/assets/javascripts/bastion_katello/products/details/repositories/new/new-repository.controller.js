@@ -161,17 +161,11 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 $scope.proxies = proxies.results;
             });
 
-            $scope.requiredTagsOptions = function () {
-                $scope.requiredTagsList = $scope.requiredTagsList || RequiredTags.getRequiredTagsOptions($scope.repository);
-                return $scope.requiredTagsList;
-            };
-
-            $scope.formatRequiredTags = function () {
-                return RequiredTags.formatRequiredTags($scope.requiredTagsList);
-            };
+            $scope.requiredTagsOptions = RequiredTags.getRequiredTagsOptions($scope.repository);
+            $scope.repository.required_tags = $scope.requiredTagsOptions[0]; // ensure that Default is selected initially
 
             $scope.requiredTagsParam = function () {
-                return RequiredTags.requiredTagsParam($scope.requiredTagsList);
+                return RequiredTags.requiredTagsParam($scope.repository.required_tags);
             };
 
         }]

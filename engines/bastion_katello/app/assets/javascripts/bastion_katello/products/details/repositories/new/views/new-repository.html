@@ -58,20 +58,14 @@
       <div
         bst-form-group label="{{ 'Restrict to OS version' | translate }}"
         ng-if="repository.content_type === 'yum'"
-        ng-click="formatRequiredTags()"
       >
-       <div bst-checkbox-list="repository.required_tags"
-           icon-show="true"
-           formatter="arrayToString"
-           deletable="true"
-           selector="repository.required_tags"
-           display-value="formatRequiredTags()"
-           options="requiredTagsOptions()"
-           button-config="none"
-           >
-       </div>
+       <select id="required_tags"
+               name="required_tags"
+               ng-model="repository.required_tags"
+               ng-options="tag as tag.name for tag in requiredTagsOptions track by tag.id">
+       </select>
        <p class="help-block" translate>
-         The repository will be enabled by default on content hosts with the selected OS versions.  Leave blank to enable regardless of OS version.
+         The repository will be enabled by default on content hosts with the selected OS version.  Choose <b>Default</b> to enable regardless of OS version.
        </p>
       </div>
 
