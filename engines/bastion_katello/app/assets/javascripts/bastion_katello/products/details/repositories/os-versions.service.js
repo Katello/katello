@@ -11,15 +11,6 @@ angular
     .module('Bastion.repositories')
     .service('OSVersions', function () {
 
-        this.isOSVersionSelected = function (osVersion, repo) {
-            if (!repo.os_versions) {
-                return false;
-            }
-            return !!repo.os_versions.find(function (osVersionTag) {
-                return osVersionTag === osVersion;
-            });
-        };
-
         this.getOSVersionsOptions = function () {
             return [
                 { name: 'Default', id: '' },
