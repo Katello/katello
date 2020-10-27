@@ -226,6 +226,9 @@ module Katello
       # os_versions here translate to candlepin as 'required tags'.
       # A host must provide ALL required tags in order for the repo to be enabled.
       # So os_versions such as ['rhel-7', 'rhel-8'] is not allowed, since the repo would always be disabled.
+      unless yum?
+        errors.add(:os_versions, N_("are only allowed for Yum repositories."))
+      end
       if os_versions.length > 1
         errors.add(:os_versions, N_("invalid: Repositories can only require one OS version."))
       end
