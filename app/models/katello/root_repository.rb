@@ -35,6 +35,11 @@ module Katello
       NO_DEFAULT_HTTP_PROXY,
       USE_SELECTED_HTTP_PROXY].freeze
 
+    RHEL6 = 'rhel-6'.freeze
+    RHEL7 = 'rhel-7'.freeze
+    RHEL8 = 'rhel-8'.freeze
+    ALLOWED_REQUIRED_TAGS = [RHEL6, RHEL7, RHEL8].freeze
+
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
     belongs_to :gpg_key, :inverse_of => :root_repositories, :class_name => "Katello::GpgKey"
     belongs_to :ssl_ca_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_ca_root_repos
@@ -217,9 +222,16 @@ module Katello
     end
 
     def ensure_valid_required_tags
-      return if required_tags.blank?
-      if required_tags.any? { |tag| tag.include?(',') }
-        errors.add(:required_tags, N_("must not include commas in any individual tag"))
+      return if required_tags.all?(&:blank?)
+      # A host must provide ALL required tags in order for the repo to be enabled.
+      # So required_tags such as ['rhel-7', 'rhel-8'] is not allowed, since the repo would always be disabled.
+      if required_tags.length > 1
+        errors.add(:required_tags, N_("incompatible: tags must all belong to the same OS.  Try again with a single required tag."))
+      end
+      required_tags.each do |tag|
+        unless ALLOWED_REQUIRED_TAGS.include?(tag)
+          errors.add(:required_tags, N_("must be one of: #{ALLOWED_REQUIRED_TAGS.join(', ')}"))
+        end
       end
     end
 

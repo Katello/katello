@@ -35,7 +35,7 @@ module Katello
 
     def_param_group :repo do
       param :url, String, :desc => N_("repository source url")
-      param :required_tags, Array, :desc => N_("comma-separated list of tags used to identify whether the repository should be disabled on a client with a nonmatching release version")
+      param :required_tags, Array, :desc => N_("Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: #{Katello::RootRepository::ALLOWED_REQUIRED_TAGS.join(', ')}")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :ssl_ca_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL CA Cert")
       param :ssl_client_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Cert")

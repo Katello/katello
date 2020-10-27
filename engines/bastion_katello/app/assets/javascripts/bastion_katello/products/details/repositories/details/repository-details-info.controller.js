@@ -114,9 +114,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     Notification.setSuccessMessage(translate('Repository Saved.'));
                 }, function (response) {
                     deferred.reject(response);
-                    _.each(response.data.errors, function (errorMessage) {
-                        Notification.setErrorMessage(translate("An error occurred saving the Repository: ") + errorMessage);
-                    });
+                    Notification.setErrorMessage(translate("An error occurred saving the Repository: ") + response.data.displayMessage);
                 });
 
                 return deferred.promise;
