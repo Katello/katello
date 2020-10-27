@@ -38,9 +38,9 @@
       <span ng-show="repository.content_type === 'yum'" >
         <dt>
           <span translate>Restrict to architecture</span>
-          <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected architecture. Select \'Default\' to enable regardless of architecture.' | translate }}"></i>
+          <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected architecture.' | translate }}"></i>
         </dt>
-        <dd bst-edit-select="repository.arch==='noarch'?'Default':repository.arch"
+        <dd bst-edit-select="repository.arch==='noarch'?'No restriction':repository.arch"
             selector="repository.arch"
             options="architectures()"
             on-save="save(repository)">
@@ -50,9 +50,9 @@
       <span ng-show="repository.content_type === 'yum'" >
         <dt>
           <span translate>Restrict to <br />OS version</span>
-          <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected OS version.  Select \'Default\' to enable regardless of OS version.' | translate }}"></i>
+          <i class="pficon-info" title="{{ 'The repository will be enabled by default on content hosts with the selected OS version.' | translate }}"></i>
         </dt>
-        <dd bst-edit-select="repository.os_versions.length ? formatOSVersions() : 'Default'"
+        <dd bst-edit-select="repository.os_versions.length ? formatOSVersions() : 'No restriction'"
             selector="selectedOSVersion"
             options="osVersionsOptions()"
             on-save="save(repository)">

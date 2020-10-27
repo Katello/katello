@@ -79,7 +79,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     });
                     results.unshift({
                         id: 'noarch',
-                        name: translate('Default'),
+                        name: translate('No restriction'),
                         value: null
                     });
                     deferred.resolve(results);

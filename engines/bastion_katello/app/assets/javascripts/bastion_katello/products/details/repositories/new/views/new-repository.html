@@ -50,9 +50,6 @@
                 ng-model="repository.arch"
                 ng-options="arch.id as arch.name for arch in architecture">
         </select>
-        <p class="help-block" translate>
-          Choose <b>Default</b> to enable the repository for all architectures
-        </p>
       </div>
 
       <div
@@ -65,7 +62,7 @@
                ng-options="tag as tag.name for tag in osVersionsOptions track by tag.id">
        </select>
        <p class="help-block" translate>
-         The repository will be enabled by default on content hosts with the selected OS version.  Choose <b>Default</b> to enable regardless of OS version.
+         The repository will be enabled by default on content hosts with the selected OS version.
        </p>
       </div>
 

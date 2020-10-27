@@ -13,7 +13,7 @@ angular
 
         this.getOSVersionsOptions = function () {
             return [
-                { name: 'Default', id: '' },
+                { name: 'No restriction', id: '' },
                 { name: 'Red Hat Enterprise Linux 8 ', id: 'rhel-8' },
                 { name: 'Red Hat Enterprise Linux 7 ', id: 'rhel-7' },
                 { name: 'Red Hat Enterprise Linux 6 ', id: 'rhel-6' }

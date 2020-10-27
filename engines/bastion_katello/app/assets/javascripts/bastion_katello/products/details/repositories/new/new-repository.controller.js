@@ -108,7 +108,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 var results = architecture.results;
                 var noarch = {
                     id: 'noarch',
-                    name: translate('Default'),
+                    name: translate('No restriction'),
                     value: null
                 };
                 results.map(function(i) {
@@ -129,7 +129,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 if (repository.content_type !== 'yum') {
                     repository['download_policy'] = '';
                 }
-                if (repository.arch === 'Default') {
+                if (repository.arch === 'No restriction') {
                     repository.arch = null;
                 }
                 repository.$save(success, error);
@@ -162,7 +162,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             });
 
             $scope.osVersionsOptions = OSVersions.getOSVersionsOptions($scope.repository);
-            $scope.repository.os_versions = $scope.osVersionsOptions[0]; // ensure that Default is selected initially
+            $scope.repository.os_versions = $scope.osVersionsOptions[0]; // ensure that No restriction is selected initially
 
             $scope.osVersionsParam = function () {
                 return OSVersions.osVersionsParam($scope.repository.os_versions);
