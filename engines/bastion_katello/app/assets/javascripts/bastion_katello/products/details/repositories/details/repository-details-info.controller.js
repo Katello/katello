@@ -162,7 +162,6 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.uploadedFile = true;
                 reader.addEventListener("loadend", function() {
                     var data = reader.result;
-                    /* eslint-disable camelcase */
                     $scope.repository.ansible_collection_requirements = data;
                     $scope.$apply();
                 });
