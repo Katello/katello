@@ -37,7 +37,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', ['$q', function ($q
             data: {
                 errors: {
                     name: 'Invalid name'
-                }
+                },
             }
         };
 
@@ -71,7 +71,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', ['$q', function ($q
                 }
 
                 if (this.failed) {
-                    error({ data: {errors: ['error!']}});
+                    error({ data: {errors: ['error!'], displayMessage: 'error!'}});
                 } else {
                     success(this);
                 }
