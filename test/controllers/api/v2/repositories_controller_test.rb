@@ -415,7 +415,7 @@ module Katello
     end
 
     def test_create_with_os_versions
-      os_versions = ['rhel-7-server', 'rhel-8']
+      os_versions = ['rhel-7']
       run_test_individual_attribute(:os_versions => os_versions) do |_, repo|
         repo.root.expects(:os_versions=).with(os_versions)
       end
