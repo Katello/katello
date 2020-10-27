@@ -222,15 +222,15 @@ module Katello
     end
 
     def ensure_valid_required_tags
-      return if required_tags.all?(&:blank?)
+      return if required_tags.empty?
       # A host must provide ALL required tags in order for the repo to be enabled.
       # So required_tags such as ['rhel-7', 'rhel-8'] is not allowed, since the repo would always be disabled.
       if required_tags.length > 1
-        errors.add(:required_tags, N_("incompatible: tags must all belong to the same OS.  Try again with a single required tag."))
+        errors.add(:required_tags, N_("invalid: Repositories can only have one required tag."))
       end
       required_tags.each do |tag|
         unless ALLOWED_REQUIRED_TAGS.include?(tag)
-          errors.add(:required_tags, N_("must be one of: #{ALLOWED_REQUIRED_TAGS.join(', ')}"))
+          errors.add(:required_tags, N_("must be one of: %s" % ALLOWED_REQUIRED_TAGS.join(', ')))
         end
       end
     end
