@@ -113,6 +113,14 @@ Katello::Engine.routes.draw do
           end
         end
 
+        api_resources :content_exports, :only => [] do
+          collection do
+            post :version
+            get :index
+            get :api_status
+          end
+        end
+
         api_resources :content_view_versions, :except => [:create] do
           member do
             post :promote
@@ -121,8 +129,6 @@ Katello::Engine.routes.draw do
             get :available_errata, :controller => :errata
           end
           collection do
-            get :export_histories
-            get :export_api_status
             get :auto_complete_search
             post :incremental_update
             post :import

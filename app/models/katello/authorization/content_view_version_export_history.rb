@@ -4,7 +4,7 @@ module Katello
 
     module ClassMethods
       def readable
-        where(:content_view_version_id => Katello::ContentViewVersion.readable)
+        joins(:content_view_version).merge(Katello::ContentViewVersion.readable)
       end
     end
   end
