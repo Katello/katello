@@ -87,7 +87,9 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
 
         $scope.$watch('contentView.import_only', function () {
             if ($scope.contentView.import_only) {
+                /* eslint-disable camelcase */
                 $scope.contentView.solve_dependencies = false;
+                /* eslint-enable camelcase */
             }
         });
     }]
