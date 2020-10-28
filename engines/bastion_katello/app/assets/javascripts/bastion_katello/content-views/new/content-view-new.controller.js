@@ -54,8 +54,9 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
         $scope.$watch('contentView.import_only', function () {
             if ($scope.contentView.import_only) {
                 $scope.contentView.composite = false;
+                $scope.contentView.solve_dependencies = false;
             }
-        }
+        });
 
         $scope.$watch('contentView.composite', function () {
             if ($scope.contentView.composite) {

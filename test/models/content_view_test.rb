@@ -661,5 +661,10 @@ module Katello
       cv = FactoryBot.build(:katello_content_view, :import_only, :composite)
       refute cv.valid?
     end
+
+    def test_import_only_dep_solve
+      cv = FactoryBot.build(:katello_content_view, :import_only, solve_dependencies: true)
+      refute cv.valid?
+    end
   end
 end

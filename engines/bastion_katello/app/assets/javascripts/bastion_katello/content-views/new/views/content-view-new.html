@@ -84,7 +84,7 @@
         <p class="help-block" translate>Designate whether this Content View is for importing from an upstream server. Import-only Content Views can not be published directly.</p>
       </div>
 
-      <div bst-form-group ng-hide="contentView.composite">
+      <div bst-form-group ng-hide="contentView.composite || contentView.import_only">
         <div class="checkbox">
           <label for="solve_dependencies">
             <input id="solve_dependencies"

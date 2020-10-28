@@ -84,5 +84,11 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         $scope.fetchContentView();
+
+        $scope.$watch('contentView.import_only', function () {
+            if ($scope.contentView.import_only) {
+                $scope.contentView.solve_dependencies = false;
+            }
+        });
     }]
 );

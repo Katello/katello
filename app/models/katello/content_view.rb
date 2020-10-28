@@ -71,6 +71,9 @@ module Katello
     validates :import_only,
               inclusion: { in: [false], message: "Import-only Content Views can not be Composite"},
               if: :composite
+    validates :import_only,
+              inclusion: { in: [false], message: "Import-only Content Views can not solve dependencies"},
+              if: :solve_dependencies
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
