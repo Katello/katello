@@ -17,7 +17,7 @@
  * @requires OstreeUpstreamSyncPolicy
  * @requires Architecture
  * @requires RepositoryTypesService
- * @requires RequiredTags
+ * @requires OSVersions
  * @requires YumContentUnits
  * #requires HttpProxyPolicy
  *
@@ -25,8 +25,8 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'RequiredTags',
-        function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, RequiredTags) {
+    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
+        function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, OSVersions) {
 
             function success() {
                 Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -124,7 +124,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                     repository.unprotected = false;
                 }
                 if (repository.content_type === 'yum') {
-                    repository.required_tags = $scope.requiredTagsParam();
+                    repository.os_versions = $scope.osVersionsParam();
                 }
                 if (repository.content_type !== 'yum') {
                     repository['download_policy'] = '';
@@ -161,11 +161,11 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 $scope.proxies = proxies.results;
             });
 
-            $scope.requiredTagsOptions = RequiredTags.getRequiredTagsOptions($scope.repository);
-            $scope.repository.required_tags = $scope.requiredTagsOptions[0]; // ensure that Default is selected initially
+            $scope.osVersionsOptions = OSVersions.getOSVersionsOptions($scope.repository);
+            $scope.repository.os_versions = $scope.osVersionsOptions[0]; // ensure that Default is selected initially
 
-            $scope.requiredTagsParam = function () {
-                return RequiredTags.requiredTagsParam($scope.repository.required_tags);
+            $scope.osVersionsParam = function () {
+                return OSVersions.osVersionsParam($scope.repository.os_versions);
             };
 
         }]

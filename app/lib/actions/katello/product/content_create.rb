@@ -13,7 +13,7 @@ module Actions
                                            type:          root.content_type,
                                            arches:        root.format_arches,
                                            label:         root.custom_content_label,
-                                           required_tags: root.required_tags&.join(','),
+                                           os_versions:   root.os_versions&.join(','),
                                            content_url:   root.custom_content_path)
               content_id = content_create.output[:response][:id]
               plan_action(Candlepin::Product::ContentAdd, owner: root.product.organization.label,

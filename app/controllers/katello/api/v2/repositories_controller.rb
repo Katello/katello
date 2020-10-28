@@ -35,7 +35,7 @@ module Katello
 
     def_param_group :repo do
       param :url, String, :desc => N_("repository source url")
-      param :required_tags, Array, :desc => N_("Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: #{Katello::RootRepository::ALLOWED_REQUIRED_TAGS.join(', ')}")
+      param :os_versions, Array, :desc => N_("Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: #{Katello::RootRepository::ALLOWED_OS_VERSIONS.join(', ')}")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :ssl_ca_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL CA Cert")
       param :ssl_client_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Cert")
@@ -477,7 +477,7 @@ module Katello
 
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username, :download_concurrency,
-              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, {:required_tags => []},
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, {:os_versions => []},
               :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
               {:ignorable_content => []}
              ]
@@ -528,7 +528,7 @@ module Katello
       root.ansible_collection_requirements = repo_params[:ansible_collection_requirements] if root.ansible_collection?
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
-      root.required_tags = repo_params.fetch(:required_tags, []) if root.yum?
+      root.os_versions = repo_params.fetch(:os_versions, []) if root.yum?
 
       if root.ostree?
         root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]

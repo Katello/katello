@@ -3,7 +3,7 @@ module Katello
     audited :except => [:content_id]
     serialize :ignorable_content
     serialize :docker_tags_whitelist
-    serialize :required_tags
+    serialize :os_versions
 
     include Ext::LabelFromName
     include Encryptable
@@ -38,7 +38,7 @@ module Katello
     RHEL6 = 'rhel-6'.freeze
     RHEL7 = 'rhel-7'.freeze
     RHEL8 = 'rhel-8'.freeze
-    ALLOWED_REQUIRED_TAGS = [RHEL6, RHEL7, RHEL8].freeze
+    ALLOWED_OS_VERSIONS = [RHEL6, RHEL7, RHEL8].freeze
 
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
     belongs_to :gpg_key, :inverse_of => :root_repositories, :class_name => "Katello::GpgKey"
@@ -69,7 +69,7 @@ module Katello
     validate :ensure_compatible_download_policy, :if => :yum?
     validate :ensure_valid_ignorable_content
     validate :ensure_valid_docker_tags_whitelist
-    validate :ensure_valid_required_tags
+    validate :ensure_valid_os_versions
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
     validate :ensure_no_checksum_on_demand
@@ -221,16 +221,17 @@ module Katello
       end
     end
 
-    def ensure_valid_required_tags
-      return if required_tags.empty?
+    def ensure_valid_os_versions
+      return if os_versions.empty?
+      # os_versions here translate to candlepin as 'required tags'.
       # A host must provide ALL required tags in order for the repo to be enabled.
-      # So required_tags such as ['rhel-7', 'rhel-8'] is not allowed, since the repo would always be disabled.
-      if required_tags.length > 1
-        errors.add(:required_tags, N_("invalid: Repositories can only have one required tag."))
+      # So os_versions such as ['rhel-7', 'rhel-8'] is not allowed, since the repo would always be disabled.
+      if os_versions.length > 1
+        errors.add(:os_versions, N_("invalid: Repositories can only require one OS version."))
       end
-      required_tags.each do |tag|
-        unless ALLOWED_REQUIRED_TAGS.include?(tag)
-          errors.add(:required_tags, N_("must be one of: %s" % ALLOWED_REQUIRED_TAGS.join(', ')))
+      os_versions.each do |tag|
+        unless ALLOWED_OS_VERSIONS.include?(tag)
+          errors.add(:os_versions, N_("must be one of: %s" % ALLOWED_OS_VERSIONS.join(', ')))
         end
       end
     end
@@ -357,7 +358,7 @@ module Katello
       property :url, String, desc: 'Returns repository source URL'
     end
     class Jail < ::Safemode::Jail
-      allow :name, :label, :docker_upstream_name, :url, :required_tags
+      allow :name, :label, :docker_upstream_name, :url, :os_versions
     end
   end
 end

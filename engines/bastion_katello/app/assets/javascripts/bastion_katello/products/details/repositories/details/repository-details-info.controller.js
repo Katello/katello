@@ -14,14 +14,14 @@
  * @requires Architecture
  * @requires YumContentUnits
  * @requires HttpProxyPolicy
- * @requires RequiredTags
+ * @requires OSVersions
  *
  * @description
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'YumContentUnits', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'RequiredTags',
-        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, YumContentUnits, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, RequiredTags) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'YumContentUnits', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
+        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, YumContentUnits, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions) {
             $scope.organization = CurrentOrganization;
 
             $scope.progress = {uploading: false};
@@ -103,7 +103,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     repository["docker_tags_whitelist"] = [];
                 }
                 /* eslint-disable camelcase */
-                repository.required_tags = $scope.requiredTagsParam();
+                repository.os_versions = $scope.osVersionsParam();
                 repository.$update(function (response) {
                     deferred.resolve(response);
                     if (!_.isEmpty(response["docker_tags_whitelist"])) {
@@ -200,17 +200,17 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 return HttpProxyPolicy.displayHttpProxyName($scope.proxies, proxyId);
             };
 
-            $scope.requiredTagsOptions = function () {
-                $scope.selectedRequiredTag = $scope.formatRequiredTags();
-                return RequiredTags.getRequiredTagsOptions();
+            $scope.osVersionsOptions = function () {
+                $scope.selectedOSVersion = $scope.formatOSVersions();
+                return OSVersions.getOSVersionsOptions();
             };
 
-            $scope.formatRequiredTags = function () {
-                return RequiredTags.formatRequiredTags($scope.repository.required_tags);
+            $scope.formatOSVersions = function () {
+                return OSVersions.formatOSVersions($scope.repository.os_versions);
             };
 
-            $scope.requiredTagsParam = function () {
-                return RequiredTags.requiredTagsParam($scope.selectedRequiredTag);
+            $scope.osVersionsParam = function () {
+                return OSVersions.osVersionsParam($scope.selectedOSVersion);
             };
 
             HttpProxy.queryUnpaged(function (proxies) {

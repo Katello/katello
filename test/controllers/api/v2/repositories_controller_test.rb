@@ -414,10 +414,10 @@ module Katello
       end
     end
 
-    def test_create_with_required_tags
-      required_tags = ['rhel-7-server', 'rhel-8']
-      run_test_individual_attribute(:required_tags => required_tags) do |_, repo|
-        repo.root.expects(:required_tags=).with(required_tags)
+    def test_create_with_os_versions
+      os_versions = ['rhel-7-server', 'rhel-8']
+      run_test_individual_attribute(:os_versions => os_versions) do |_, repo|
+        repo.root.expects(:os_versions=).with(os_versions)
       end
     end
 

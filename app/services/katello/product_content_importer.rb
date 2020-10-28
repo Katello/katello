@@ -10,7 +10,7 @@ module Katello
     #       "name":"Red Hat Satellite 5.7 (ISOs)",
     #       "vendor":"Red Hat",
     #       "contentUrl":"/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso",
-    #       "requiredTags":"rhel-6-server",
+    #       "osVersions":"rhel-6",
     #       "gpgUrl":"file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release",
     #       "modifiedProductIds":[],
     #       "arches":"x86_64",
