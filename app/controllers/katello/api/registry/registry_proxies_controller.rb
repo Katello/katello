@@ -493,7 +493,9 @@ module Katello
     end
 
     def confirm_settings
-      return true if SETTINGS.dig(:katello, :container_image_registry)
+      if SETTINGS.dig(:katello, :container_image_registry) || SmartProxy.pulp_primary&.pulp3_repository_type_support?(::Katello::Repository::DOCKER_TYPE)
+        return true
+      end
       render_error('custom_error', :status => :not_found,
                    :locals => { :message => "Registry not configured" })
     end

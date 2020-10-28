@@ -23,7 +23,6 @@ module Katello
       class RegistryResource < HttpResource
         class << self
           def load_class
-            container_config = SETTINGS.dig(:katello, :container_image_registry)
             registry_url = nil
             pulp_primary = ::SmartProxy.pulp_primary
 
@@ -35,7 +34,7 @@ module Katello
 
               # Assume the registry uses the same CA as the Smart Proxy
               ca_cert_file = Setting[:ssl_ca_file]
-            elsif container_config
+            elsif (container_config = SETTINGS.dig(:katello, :container_image_registry))
               registry_url = container_config[:crane_url]
               ca_cert_file = container_config[:registry_ca_cert_file]
             end
