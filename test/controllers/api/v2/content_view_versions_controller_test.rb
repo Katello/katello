@@ -127,52 +127,31 @@ module Katello
       assert_template 'api/v2/content_view_versions/show'
     end
 
-    def test_export_api_status_true_for_pulp3
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-      get :export_api_status
-      assert_response :success
-      assert JSON.parse(@response.body)["api_usable"]
+    def test_export_assert_invalid_params
+      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
+
+      version = @library_dev_staging_view.versions.first
+      post :export, params: { :id => version.id, :chunk_size_mb => 5, :destination_server => "foo"}
+      assert_response :bad_request
     end
 
-    def test_export_api_status_false_for_pulp2
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
-      get :export_api_status
-      assert_response :success
-      refute JSON.parse(@response.body)["api_usable"]
-    end
-
-    def test_export_histories_protected
-      allowed_perms = [@view_permission, @export_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:export_histories, allowed_perms, denied_perms) do
-        get :export_histories, params: { :content_view_id => @library_dev_staging_view.id }
-      end
-    end
-
-    def test_export_api_status_protected
-      allowed_perms = [@export_permission, @view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:export_api_status, allowed_perms, denied_perms) do
-        get :export_api_status
-      end
-    end
-
-    def test_export_pulp3_assert_invalid_params
+    def test_exportlegacy_with_pulp3_fail
       SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
 
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id, :iso_mb_size => 5, :export_to_iso => "foo"}
+      response = JSON.parse(@response.body)['displayMessage']
+      assert_equal response, 'Invalid usage for Pulp 3 repositories. Use hammer content-export for Yum repositories'
       assert_response :bad_request
     end
 
-    def test_export_pulp3_missing_destination
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
+    def test_export_protected
+      allowed_perms = [@export_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission, @view_permission]
 
-      version = @library_dev_staging_view.versions.first
-      post :export, params: { :id => version.id}
-      assert_response :bad_request
+      assert_protected_action(:export, allowed_perms, denied_perms) do
+        post :export, params: { :id => @library_dev_staging_view.versions.first.id }
+      end
     end
 
     def test_export
@@ -204,17 +183,6 @@ module Katello
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id, :iso_mb_size => 5 }
       assert_response 400
-    end
-
-    def test_export_protected
-      allowed_perms = [@export_permission]
-      denied_perms = [@create_permission, @update_permission,
-                      @destroy_permission, @view_permission]
-      version = @library_dev_staging_view.versions.first
-
-      assert_protected_action(:export, allowed_perms, denied_perms) do
-        post :export, params: { :id => version.id }
-      end
     end
 
     def test_import
