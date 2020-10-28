@@ -67,6 +67,10 @@ module Katello
     validates :composite,
               inclusion: { in: [false], message: "Composite Content Views can not solve dependencies"},
               if: :solve_dependencies
+    validates :import_only, :inclusion => [true, false]
+    validates :import_only,
+              inclusion: { in: [false], message: "Import-only Content Views can not be Composite"},
+              if: :composite
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -580,16 +584,23 @@ module Katello
     end
 
     def check_ready_to_import!
-      fail _("User must be logged in.") if ::User.current.nil?
       fail _("Cannot import a composite content view") if composite?
+      fail _("This Content View must be set to Import-only before performing an import") unless import_only?
       true
     end
 
-    def check_ready_to_publish!
+    def check_ready_to_publish!(importing: false)
       fail _("User must be logged in.") if ::User.current.nil?
       fail _("Cannot publish default content view") if default?
-      check_composite_action_allowed!(organization.library)
-      check_docker_repository_names!([organization.library])
+
+      if importing
+        check_ready_to_import!
+      else
+        fail _("Import-only content views can not be published directly") if import_only?
+        check_composite_action_allowed!(organization.library)
+        check_docker_repository_names!([organization.library])
+      end
+
       true
     end
 

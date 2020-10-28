@@ -21,6 +21,7 @@ module Katello
       param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
       param :auto_publish, :bool, :desc => N_("Enable/Disable auto publish of composite view")
       param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
+      param :import_only, :bool, :desc => N_("Designate this Content View for importing from upstream servers only. Defaults to false")
     end
 
     def filtered_associations
@@ -237,7 +238,7 @@ module Katello
     end
 
     def view_params
-      attrs = [:name, :description, :force_puppet_environment, :auto_publish, :solve_dependencies,
+      attrs = [:name, :description, :force_puppet_environment, :auto_publish, :solve_dependencies, :import_only,
                :default, :created_at, :updated_at, :next_version, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
       if (!@content_view || !@content_view.composite?)

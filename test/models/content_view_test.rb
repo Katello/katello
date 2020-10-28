@@ -656,5 +656,10 @@ module Katello
       assert_equal 'Katello::ContentView', recent_audit.auditable_type
       assert_equal 'destroy', recent_audit.action
     end
+
+    def test_import_only_composite
+      cv = FactoryBot.build(:katello_content_view, :import_only, :composite)
+      refute cv.valid?
+    end
   end
 end

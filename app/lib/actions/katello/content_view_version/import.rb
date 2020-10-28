@@ -6,6 +6,7 @@ module Actions
 
         def plan(content_view, path:, metadata:)
           content_view.check_ready_to_import!
+
           unless SmartProxy.pulp_primary.pulp3_repository_type_support?(::Katello::Repository::YUM_TYPE)
             fail ::Katello::HttpErrors::BadRequest, _("This API endpoint is only valid for Pulp 3 repositories.")
           end
@@ -23,7 +24,7 @@ module Actions
           plan_action(::Actions::Katello::ContentView::Publish, content_view, '',
                         path: path,
                         metadata: metadata,
-                        import_only: true,
+                        importing: true,
                         major: major,
                         minor: minor)
         end

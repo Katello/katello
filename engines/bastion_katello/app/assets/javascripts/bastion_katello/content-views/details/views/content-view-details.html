@@ -13,7 +13,7 @@
   </div>
 
   <nav data-block="item-actions">
-    <button type="button" class="btn btn-primary" ng-hide="denied('publish_content_views', contentView)"
+    <button type="button" class="btn btn-primary" ng-hide="denied('publish_content_views', contentView) || contentView.import_only"
             ui-sref="content-view.publish">
       <span translate>Publish New Version</span>
     </button>
@@ -82,21 +82,21 @@
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.repositories.deb')}"
-          ng-hide="contentView.composite || !repositoryTypeEnabled('deb')">
+          ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('deb')">
         <a ui-sref="content-view.repositories.deb.list" translate>
           Apt Repositories
         </a>
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.repositories.file')}"
-          ng-hide="contentView.composite || !repositoryTypeEnabled('file')">
+          ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('file')">
         <a ui-sref="content-view.repositories.file.list" translate>
           File Repositories
         </a>
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.puppet-modules')}"
-          ng-hide="contentView.composite || !repositoryTypeEnabled('puppet')">
+          ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('puppet')">
         <a ui-sref="content-view.puppet-modules.list" translate>
           Puppet Modules
         </a>
@@ -104,7 +104,7 @@
 
       <li uib-dropdown
           ng-class="{active: stateIncludes('content-view.repositories.docker') || stateIncludes('content-view.docker.filters')}"
-          ng-hide="contentView.composite || !repositoryTypeEnabled('docker')">
+          ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('docker')">
         <a uib-dropdown-toggle>
           <span translate>Container Images</span>
           <i class="fa fa-chevron-down"></i>
@@ -124,7 +124,7 @@
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.repositories.ostree')}"
-          ng-hide="contentView.composite || !repositoryTypeEnabled('ostree')">
+          ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('ostree')">
         <a ui-sref="content-view.repositories.ostree.list" translate>
           OSTree Content
         </a>

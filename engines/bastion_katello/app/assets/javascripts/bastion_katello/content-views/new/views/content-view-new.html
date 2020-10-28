@@ -56,7 +56,7 @@
         </textarea>
       </div>
 
-      <div bst-form-group>
+      <div bst-form-group ng-hide="contentView.import_only">
         <div class="checkbox">
           <label for="composite">
             <input id="composite"
@@ -68,6 +68,20 @@
           </label>
         </div>
         <p class="help-block" translate>A composite view contains other content views.</p>
+      </div>
+
+      <div bst-form-group ng-hide="contentView.composite">
+        <div class="checkbox">
+          <label for="import_only">
+            <input id="import_only"
+                   name="import_only"
+                   ng-model="contentView.import_only"
+                   type="checkbox"
+                   tabindex="4"/>
+            <span translate>Import-only</span>
+          </label>
+        </div>
+        <p class="help-block" translate>Designate whether this Content View is for importing from an upstream server. Import-only Content Views can not be published directly.</p>
       </div>
 
       <div bst-form-group ng-hide="contentView.composite">

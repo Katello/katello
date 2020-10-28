@@ -51,10 +51,17 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
             }
         });
 
+        $scope.$watch('contentView.import_only', function () {
+            if ($scope.contentView.import_only) {
+                $scope.contentView.composite = false;
+            }
+        }
+
         $scope.$watch('contentView.composite', function () {
             if ($scope.contentView.composite) {
                 /* eslint-disable camelcase */
                 $scope.contentView.solve_dependencies = false;
+                $scope.contentView.import_only = false;
             } else {
                 $scope.contentView.auto_publish = false;
                 /* eslint-enable camelcase */
