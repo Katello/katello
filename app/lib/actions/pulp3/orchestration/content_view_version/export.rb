@@ -77,12 +77,13 @@ module Actions
             export_metadata[:incremental] = from_cvv.present?
             toc = Dir.glob("#{path}/*toc.json").first
             export_metadata[:toc] = File.basename(toc) if toc
-            ::Katello::ContentViewVersionExportHistory.create!(
+            history = ::Katello::ContentViewVersionExportHistory.create!(
               content_view_version_id: input[:content_view_version_id],
               destination_server: input[:destination_server],
               path: path,
               metadata: export_metadata
             )
+            output[:export_history_id] = history.id
           end
 
           def humanized_name

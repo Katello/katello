@@ -11,8 +11,11 @@ module Katello
 
     module ClassMethods
       def readable
-        view_ids = ::Katello::ContentView.readable.collect { |v| v.id }
-        joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
+        joins(:content_view).merge(::Katello::ContentView.readable)
+      end
+
+      def exportable
+        joins(:content_view).merge(::Katello::ContentView.exportable)
       end
     end
   end

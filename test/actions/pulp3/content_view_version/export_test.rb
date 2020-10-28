@@ -68,6 +68,7 @@ module ::Actions::Pulp3::ContentView
       refute_empty output[:export_path]
       assert output[:exported_file_checksum].length > 1
       assert_includes output[:export_path], 'foo'
+      assert_equal output[:export_history_id], export_history.id
     end
   end
 end

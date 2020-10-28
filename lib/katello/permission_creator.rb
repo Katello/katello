@@ -74,7 +74,8 @@ module Katello
                    'katello/api/v2/content_view_histories' => [:index, :auto_complete_search],
                    'katello/api/v2/content_view_puppet_modules' => [:index, :show, :auto_complete_search],
                    'katello/api/v2/content_view_repositories' => [:show_all],
-                   'katello/api/v2/content_view_versions' => [:index, :show, :auto_complete_search, :export_histories, :export_api_status],
+                   'katello/api/v2/content_view_versions' => [:index, :show, :auto_complete_search],
+                   'katello/api/v2/content_exports' => [:api_status],
                    'katello/api/v2/content_view_components' => [:index, :show],
                    'katello/api/v2/packages' => [:index],
                    'katello/api/v2/package_groups' => [:index, :show, :auto_complete_search, :compare],
@@ -152,7 +153,8 @@ module Katello
                          :finder_scope => :promotable_or_removable
       @plugin.permission :export_content_views,
                          {
-                           'katello/api/v2/content_view_versions' => [:export, :export_histories, :export_api_status]
+                           'katello/api/v2/content_view_versions' => [:export],
+                           'katello/api/v2/content_exports' => [:version, :index, :api_status]
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :exportable
