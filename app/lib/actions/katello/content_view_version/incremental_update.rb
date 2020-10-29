@@ -88,11 +88,15 @@ module Actions
                 end
               end
 
-              sequence do
-                new_puppet_environment = plan_action(Katello::ContentViewPuppetEnvironment::Clone, old_version,
-                                                   :new_version => new_content_view_version).new_puppet_environment
-                check_puppet_module_duplicates(content[:puppet_module_ids])
-                copy_action_outputs += copy_puppet_content(new_puppet_environment, content[:puppet_module_ids], old_version) unless content[:puppet_module_ids].blank?
+              if SmartProxy.pulp_primary.has_feature?(SmartProxy::PULP_FEATURE) && SETTINGS[:katello][:content_types][:puppet]
+                sequence do
+                  new_puppet_environment = plan_action(Katello::ContentViewPuppetEnvironment::Clone, old_version,
+                                                     :new_version => new_content_view_version).new_puppet_environment
+                  check_puppet_module_duplicates(content[:puppet_module_ids])
+                  unless content[:puppet_module_ids].blank?
+                    copy_action_outputs += copy_puppet_content(new_puppet_environment, content[:puppet_module_ids], old_version)
+                  end
+                end
               end
             end
 
