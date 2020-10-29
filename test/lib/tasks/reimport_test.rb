@@ -8,6 +8,7 @@ module Katello
       Rake::Task['katello:reimport'].reenable
       Rake::Task['katello:check_ping'].reenable
       Rake::Task.define_task(:environment)
+      Rake::Task.define_task('dynflow:client')
     end
 
     def test_reimport_with_bad_ping
