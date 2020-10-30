@@ -11,4 +11,6 @@ export const ADDED = 'Added';
 export const NOT_ADDED = 'Not added';
 export const ALL_STATUSES = 'All';
 
+export const REPOSITORY_TYPES = 'REPOSITORY_TYPES';
+
 export default CONTENT_VIEWS_KEY;

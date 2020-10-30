@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { Bullseye, Split, SplitItem } from '@patternfly/react-core';
 import { TableVariant, fitContent } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
@@ -8,37 +8,46 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import PropTypes from 'prop-types';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
-import { getContentViewRepositories } from '../ContentViewDetailActions';
-import { selectCVRepos, selectCVReposStatus, selectCVReposError } from '../ContentViewDetailSelectors';
+import { getContentViewRepositories, getRepositoryTypes } from '../ContentViewDetailActions';
+import {
+  selectCVRepos,
+  selectCVReposStatus,
+  selectCVReposError,
+  selectRepoTypes,
+  selectRepoTypesStatus,
+} from '../ContentViewDetailSelectors';
 import { ADDED, NOT_ADDED, ALL_STATUSES } from '../../ContentViewsConstants';
 import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
 import RepoAddedStatus from './RepoAddedStatus';
 import RepoIcon from './RepoIcon';
 import SelectableDropdown from './SelectableDropdown';
+import { capitalize } from '../../../../utils/helpers';
 
 const allRepositories = 'All repositories';
 
-// checkbox_name: API_name
-const repoTypes = {
-  [allRepositories]: 'all',
-  'Yum repositories': 'yum',
-  'File repositories': 'file',
-  'Container repositories': 'docker',
-  'OSTree repositories': 'ostree', // ostree is deprecated?
+// Add any exceptions to the display names here
+// [API_value]: displayed_value
+const repoTypeNames = {
+  docker: 'Container',
+  ostree: 'OSTree',
 };
 
 const ContentViewRepositories = ({ cvId }) => {
+  const dispatch = useDispatch();
   const response = useSelector(state => selectCVRepos(state, cvId), shallowEqual);
   const status = useSelector(state => selectCVReposStatus(state, cvId), shallowEqual);
   const error = useSelector(state => selectCVReposError(state, cvId), shallowEqual);
+  const repoTypesResponse = useSelector(state => selectRepoTypes(state), shallowEqual);
+  const repoTypesStatus = useSelector(state => selectRepoTypesStatus(state), shallowEqual);
 
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [typeSelected, setTypeSelected] = useState(allRepositories);
   const [statusSelected, setStatusSelected] = useState(ALL_STATUSES);
-
+  // repoTypes object format: [displayed_value]: API_value
+  const [repoTypes, setRepoTypes] = useState({});
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
@@ -109,6 +118,25 @@ const ContentViewRepositories = ({ cvId }) => {
     }
   }, [JSON.stringify(response)]);
 
+  useEffect(() => {
+    dispatch(getRepositoryTypes());
+  }, []);
+
+  // Get repo type filter selections dynamically from the API
+  useEffect(() => {
+    if (repoTypesStatus === STATUS.RESOLVED && repoTypesResponse) {
+      const allRepoTypes = {};
+      allRepoTypes[allRepositories] = 'all';
+      repoTypesResponse.forEach((type) => {
+        const { name } = type;
+        const typeFullName = Object.prototype.hasOwnProperty.call(repoTypeNames, name) ?
+          repoTypeNames[name] : capitalize(name);
+        allRepoTypes[`${typeFullName} Repositories`] = name;
+      });
+      setRepoTypes(allRepoTypes);
+    }
+  }, [JSON.stringify(repoTypesResponse), repoTypesStatus]);
+
   const emptyContentTitle = __("You currently don't have any repositories to add to this content view.");
   const emptyContentBody = __('Please add some repositories.'); // needs link
   const emptySearchTitle = __('No matching repositories found');
@@ -146,6 +174,8 @@ const ContentViewRepositories = ({ cvId }) => {
             selected={typeSelected}
             setSelected={setTypeSelected}
             placeholderText="Type"
+            loading={repoTypesStatus === STATUS.PENDING}
+            error={repoTypesStatus === STATUS.ERROR}
           />
         </SplitItem>
         <SplitItem>
