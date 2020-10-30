@@ -144,43 +144,6 @@ http_interactions:
     http_version: 
   recorded_at: Mon, 23 Mar 2020 22:26:49 GMT
 - request:
-    method: delete
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/scenario_test/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      User-Agent:
-      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
-      Content-Type:
-      - application/json
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Mon, 23 Mar 2020 23:42:50 GMT
-      Server:
-      - Apache
-      Content-Length:
-      - '172'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzIzNzQyYTU5LThmMTgtNDRkMC1hMWM5LTJkYzFjNGE4YTMzZC8iLCAi
-        dGFza19pZCI6ICIyMzc0MmE1OS04ZjE4LTQ0ZDAtYTFjOS0yZGMxYzRhOGEz
-        M2QifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Mon, 23 Mar 2020 23:42:50 GMT
-- request:
     method: get
     uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/tasks/23742a59-8f18-44d0-a1c9-2dc1c4a8a33d/
     body:
@@ -235,7 +198,98 @@ http_interactions:
   recorded_at: Mon, 23 Mar 2020 23:42:50 GMT
 - request:
     method: delete
-    uri: https://centos7-katello-devel-stable.example.com:8443/candlepin/owners/scenario_test
+    uri: https://centos7-katello-devel.redhatlaptop.example.com/pulp/api/v2/repositories/scenario_test/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 30 Oct 2020 19:52:33 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2NiNWI4OGViLTgyZjItNDVmZS05Mzc4LTMzZmQxN2JmYzE4Mi8iLCAi
+        dGFza19pZCI6ICJjYjViODhlYi04MmYyLTQ1ZmUtOTM3OC0zM2ZkMTdiZmMx
+        ODIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Fri, 30 Oct 2020 19:52:33 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-devel.redhatlaptop.example.com/pulp/api/v2/tasks/cb5b88eb-82f2-45fe-9378-33fd17bfc182/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 30 Oct 2020 19:52:33 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"168eff3d82de899d4273245aeec2dadd-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '375'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9jYjViODhlYi04MmYyLTQ1ZmUtOTM3OC0zM2ZkMTdiZmMx
+        ODIvIiwgInRhc2tfaWQiOiAiY2I1Yjg4ZWItODJmMi00NWZlLTkzNzgtMzNm
+        ZDE3YmZjMTgyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiAiMjAyMC0xMC0zMFQxOTo1MjozM1oiLCAiX25zIjogInRhc2tfc3RhdHVz
+        IiwgInN0YXJ0X3RpbWUiOiAiMjAyMC0xMC0zMFQxOTo1MjozM1oiLCAidHJh
+        Y2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNz
+        X3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTFAY2VudG9zNy1rYXRlbGxvLWRldmVsLnJlZGhhdGxhcHRvcC5leGFt
+        cGxlLmNvbS5kcTIiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29ya2VyX25h
+        bWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAY2VudG9zNy1rYXRl
+        bGxvLWRldmVsLnJlZGhhdGxhcHRvcC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVmOWM2
+        ZjAxMDZlOTRhMGY2YmFjZjdkYyJ9LCAiaWQiOiAiNWY5YzZmMDEwNmU5NGEw
+        ZjZiYWNmN2RjIn0=
+    http_version: 
+  recorded_at: Fri, 30 Oct 2020 19:52:33 GMT
+- request:
+    method: delete
+    uri: https://localhost:8443/candlepin/owners/scenario_test
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -245,9 +299,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
       Authorization:
-      - OAuth oauth_consumer_key="twkedQc87NUdaR7BQLLBZej8gRb3tp3X", oauth_nonce="LAnxFQSdzE5Fyh3rCCESP71PS4sGOJNTivoRZXeD3g",
-        oauth_signature="4w4uBWkR%2FREGr4EW7EzCr%2BYt2Dg%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1585006970", oauth_version="1.0"
+      - OAuth oauth_consumer_key="HsoBifEx2GrKXRGWqwBwKNzWNYA4VV4p", oauth_nonce="gZRjhaCmUSgl6dv3jLubgT3p3MViKSi4DD8rZPhxa0",
+        oauth_signature="wxbT37MA9jetltdegLtzI8s5JiQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1604087554", oauth_version="1.0"
       Cp-User:
       - foreman_admin
       Accept-Encoding:
@@ -260,14 +314,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 4924bf94-da5a-4c35-a3ab-fa0cbed393d2
+      - e0d2a9f3-d86d-461a-b59b-cc39ea8f2ea4
       X-Version:
-      - 3.1.3-1
+      - 3.1.21-1
       Date:
-      - Mon, 23 Mar 2020 23:42:50 GMT
+      - Fri, 30 Oct 2020 19:52:34 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Mon, 23 Mar 2020 23:42:50 GMT
+  recorded_at: Fri, 30 Oct 2020 19:52:34 GMT
 recorded_with: VCR 3.0.3
