@@ -35,7 +35,7 @@ module Katello
       @repo.yum_metadata_files = [@ymf1, @ymf2]
       repo2.yum_metadata_files = [@ymf1, @ymf2]
 
-      assert_equal YumMetadataFile.in_repositories([@repo, repo2]), [@ymf1, @ymf2]
+      assert_equal YumMetadataFile.in_repositories([@repo, repo2]).to_a.sort, [@ymf1, @ymf2].sort
     end
 
     def test_with_identifiers
