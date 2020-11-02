@@ -62,7 +62,7 @@ module Katello
 
     def find_repositories
       params.require(:ids)
-      @repositories = Repository.where(:id => params[:ids])
+      @repositories = Repository.readable.where(:id => params[:ids])
     end
   end
 end
