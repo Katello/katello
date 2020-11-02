@@ -24,6 +24,10 @@
       <dd ng-show="contentView.composite" translate>Yes</dd>
       <dd ng-hide="contentView.composite" translate>No</dd>
 
+      <dt translate>Import-only</dt>
+      <dd ng-show="contentView.import_only" translate>Yes</dd>
+      <dd ng-hide="contentView.import_only" translate>No</dd>
+
       <dt translate>Force Puppet Environment</dt>
       <dd>
         <div bst-edit-checkbox="contentView.force_puppet_environment"
@@ -61,20 +65,6 @@
           <p class="help-text" translate>
             This will solve RPM and Module Stream dependencies on every publish of this Content View. Dependency solving significantly increases publish time (publishes can take over three times as long) and filters will be ignored when adding packages to solve
             dependencies. Also, certain scenarios involving errata may still cause dependency errors.
-          </p>
-        </dd>
-      </div>
-
-      <div>
-        <dt translate>Import-only</dt>
-        <dd>
-          <div bst-edit-checkbox="contentView.import_only"
-               formatter="booleanToYesNo"
-               on-save="save(contentView)"
-               readonly="denied('edit_content_views', contentView) || contentView.composite">
-          </div>
-          <p class="help-text" translate>
-            Designate whether this Content View is for importing exported content from an upstream server. Import-only Content Views can not be published directly.
           </p>
         </dd>
       </div>

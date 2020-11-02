@@ -74,6 +74,7 @@ module Katello
     validates :import_only,
               inclusion: { in: [false], message: "Import-only Content Views can not solve dependencies"},
               if: :solve_dependencies
+    validate :import_only_immutable
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -711,6 +712,12 @@ module Katello
     end
 
     private
+
+    def import_only_immutable
+      if import_only_changed? && self.persisted?
+        errors.add(:import_only, _("Import-only can not be changed after creation"))
+      end
+    end
 
     def generate_cp_environment_label(env)
       # The label for a default view, will simply be the env label; otherwise, it
