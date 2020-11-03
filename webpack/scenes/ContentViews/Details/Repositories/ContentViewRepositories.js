@@ -21,7 +21,7 @@ import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
 import RepoAddedStatus from './RepoAddedStatus';
 import RepoIcon from './RepoIcon';
-import SelectableDropdown from './SelectableDropdown';
+import SelectableDropdown from '../../../../components/SelectableDropdown';
 import { capitalize } from '../../../../utils/helpers';
 
 const allRepositories = 'All repositories';

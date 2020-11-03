@@ -9,8 +9,8 @@ const SelectableDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const icon = () => {
-    if (error) return <ErrorCircleOIcon color="red" />;
-    if (loading) return <Spinner size="sm" />;
+    if (error) return <span aria-label={`${title} error`}><ErrorCircleOIcon color="red" /></span>;
+    if (loading) return <span aria-label={`${title} spinner`}><Spinner size="sm" /></span>;
     return null;
   };
   const onSelect = (_event, selection) => {

@@ -64,11 +64,11 @@ export const getContentViewRepositories = (cvId, params, status) => {
   });
 };
 
-export const getRepositoryTypes = () => async dispatch => dispatch(get({
+export const getRepositoryTypes = () => get({
   type: API_OPERATIONS.GET,
   key: REPOSITORY_TYPES,
-  handleError: error => dispatch(apiError(null, error)),
+  errorToast: error => `Something went wrong while retrieving the repository types! ${error}`,
   url: api.getApiUrl('/repositories/repository_types'),
-}));
+});
 
 export default getContentViewDetails;
