@@ -11,6 +11,7 @@ module Actions
 
           repo_params[:url] = nil if repo_params[:url] == ''
           update_cv_cert_protected = repo_params.key?(:unprotected) && (repo_params[:unprotected] != repository.unprotected)
+
           root.update!(repo_params)
 
           if root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
@@ -32,7 +33,9 @@ module Actions
                         :gpg_key_url => repository.yum_gpg_key_url,
                         :label => content.label,
                         :type => root.content_type,
-                        :arches => root.format_arches)
+                        :arches => root.format_arches,
+                        :os_versions => root.os_versions&.join(',')
+                      )
 
             content.update!(name: root.name,
                                        content_url: root.custom_content_path,

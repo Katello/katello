@@ -37,6 +37,31 @@ module Katello
       assert_equal 'yum', @root.content_type
     end
 
+    def test_valid_with_os_versions
+      @root.content_type = 'yum'
+      @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
+      @root.os_versions = ['rhel-8']
+      assert_valid @root
+    end
+
+    def test_invalid_os_versions
+      @root.content_type = 'yum'
+      @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
+      @root.os_versions = ['rhel-8', 'rhel-9']
+      assert_not_valid @root
+      assert_equal @root.errors.full_messages, [
+        "Os versions invalid: Repositories can only require one OS version.",
+        "Os versions must be one of: rhel-6, rhel-7, rhel-8"
+      ]
+    end
+
+    def test_invalid_content_type_with_os_versions
+      @root.content_type = 'docker'
+      @root.os_versions = ['rhel-7']
+      assert_not_valid @root
+      assert_equal @root.errors[:os_versions], ["are only allowed for Yum repositories."]
+    end
+
     test_attributes :pid => 'daa10ded-6de3-44b3-9707-9f0ac983d2ea'
     def test_create_with_content_type_puppet
       @root.download_policy = nil

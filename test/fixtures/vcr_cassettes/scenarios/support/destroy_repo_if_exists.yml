@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v2/repositories/scenario_test/
+    uri: https://centos7-katello-devel.redhatlaptop.example.com/pulp/api/v2/repositories/scenario_test/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -17,32 +17,69 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
     status:
-      code: 404
-      message: Not Found
+      code: 200
+      message: OK
     headers:
       Date:
-      - Mon, 23 Mar 2020 23:41:45 GMT
+      - Fri, 30 Oct 2020 19:51:26 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"7d6546b031b7a23b1f121b1ac36832cd-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '220'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiU2NlbmFyaW8g
+        eXVtIHByb2R1Y3QiLCAiZGVzY3JpcHRpb24iOiBudWxsLCAibGFzdF91bml0
+        X2FkZGVkIjogbnVsbCwgIm5vdGVzIjogeyJfcmVwby10eXBlIjogInJwbS1y
+        ZXBvIn0sICJsYXN0X3VuaXRfcmVtb3ZlZCI6IG51bGwsICJjb250ZW50X3Vu
+        aXRfY291bnRzIjoge30sICJfbnMiOiAicmVwb3MiLCAiX2lkIjogeyIkb2lk
+        IjogIjVmOWM2MzE4ZTM4MmFhMzI3YjMyNzdiOCJ9LCAiaWQiOiAic2NlbmFy
+        aW9fdGVzdCIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9yaWVz
+        L3NjZW5hcmlvX3Rlc3QvIn0=
+    http_version: 
+  recorded_at: Fri, 30 Oct 2020 19:51:26 GMT
+- request:
+    method: delete
+    uri: https://centos7-katello-devel.redhatlaptop.example.com/pulp/api/v2/repositories/scenario_test/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (linux-gnu x86_64) ruby/2.5.5p157
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 30 Oct 2020 19:51:26 GMT
       Server:
       - Apache
       Content-Length:
-      - '422'
-      Etag:
-      - '"5ac546ec21028925462ba3914390e451"'
+      - '172'
       Content-Type:
       - application/json; charset=utf-8
     body:
       encoding: UTF-8
       base64_string: |
-        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
-        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
-        ZXBvc2l0b3J5PXNjZW5hcmlvX3Rlc3QiLCAiX2hyZWYiOiAiL3B1bHAvYXBp
-        L3YyL3JlcG9zaXRvcmllcy9zY2VuYXJpb190ZXN0Lz8iLCAiaHR0cF9zdGF0
-        dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEi
-        OiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJzY2VuYXJpb190ZXN0
-        In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVw
-        b3NpdG9yeT1zY2VuYXJpb190ZXN0IiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
-        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
-        InNjZW5hcmlvX3Rlc3QifX0=
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzE3YTVlN2VkLWQ4ZGItNGFmYi1hNTY3LTY4MDhhZTBiZTUyZS8iLCAi
+        dGFza19pZCI6ICIxN2E1ZTdlZC1kOGRiLTRhZmItYTU2Ny02ODA4YWUwYmU1
+        MmUifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Mon, 23 Mar 2020 23:41:45 GMT
+  recorded_at: Fri, 30 Oct 2020 19:51:26 GMT
 recorded_with: VCR 3.0.3

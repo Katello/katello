@@ -9,6 +9,7 @@ module Actions
           param :label
           param :content_url
           param :owner
+          param :os_versions
         end
 
         def run
@@ -19,6 +20,7 @@ module Actions
                      type: input[:type],
                      arches: input[:arches],
                      label: input[:label],
+                     requiredTags: input[:os_versions],
                      metadataExpire: 1,
                      vendor: ::Katello::Provider::CUSTOM)
         end

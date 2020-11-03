@@ -263,6 +263,7 @@ module Katello
       assert_response_ids response, @rpm.repository_ids
     end
 
+    # rubocop:disable Metrics/MethodLength
     def test_create
       product = mock
       product.expects(:add_repo).with({
@@ -288,7 +289,13 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::CreateRoot, @repository.root)
 
       stub_editable_product_find(product)
-      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :description => 'My Description', :url => 'http://www.google.com', :content_type => 'yum' }
+      post :create, params: {
+        :name => 'Fedora Repository',
+        :product_id => @product.id,
+        :description => 'My Description',
+        :url => 'http://www.google.com',
+        :content_type => 'yum'
+      }
       assert_response 201
       assert_template 'api/v2/common/create'
     end
@@ -405,6 +412,13 @@ module Katello
       ignorable_content = ["srpm", "erratum"]
       run_test_individual_attribute(:ignorable_content => ignorable_content) do |_, repo|
         repo.root.expects(:ignorable_content=).with(ignorable_content)
+      end
+    end
+
+    def test_create_with_os_versions
+      os_versions = ['rhel-7']
+      run_test_individual_attribute(:os_versions => os_versions) do |_, repo|
+        repo.root.expects(:os_versions=).with(os_versions)
       end
     end
 

@@ -35,6 +35,8 @@ module Katello
 
     def_param_group :repo do
       param :url, String, :desc => N_("repository source url")
+      param :os_versions, Array,
+            :desc => N_("Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: %s") % Katello::RootRepository::ALLOWED_OS_VERSIONS.join(', ')
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :ssl_ca_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL CA Cert")
       param :ssl_client_cert_id, :number, :desc => N_("Identifier of the content credential containing the SSL Client Cert")
@@ -42,7 +44,7 @@ module Katello
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
-      param :docker_tags_whitelist, Array, :desc => N_("Comma separated list of tags to sync for Container Image repository")
+      param :docker_tags_whitelist, Array, :desc => N_("Comma-separated list of tags to sync for Container Image repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background (deprecated)')")
       param :download_concurrency, :number, :desc => N_("Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed")
@@ -51,9 +53,9 @@ module Katello
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
       param :ostree_upstream_sync_policy, ::Katello::RootRepository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories")
       param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided")
-      param :deb_releases, String, :desc => N_("comma separated list of releases to be synched from deb-archive")
-      param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
-      param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
+      param :deb_releases, String, :desc => N_("comma-separated list of releases to be synced from deb-archive")
+      param :deb_components, String, :desc => N_("comma-separated list of repo components to be synced from deb-archive")
+      param :deb_architectures, String, :desc => N_("comma-separated list of architectures to be synced from deb-archive")
       param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing"), :deprecated => true
       param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % RootRepository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
       param :ansible_collection_requirements, String, :desc => N_("Contents of requirement yaml file to sync from URL")
@@ -476,7 +478,7 @@ module Katello
 
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username, :download_concurrency,
-              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy,
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, {:os_versions => []},
               :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
               {:ignorable_content => []}
              ]
@@ -527,6 +529,7 @@ module Katello
       root.ansible_collection_requirements = repo_params[:ansible_collection_requirements] if root.ansible_collection?
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
+      root.os_versions = repo_params.fetch(:os_versions, []) if root.yum?
 
       if root.ostree?
         root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]

@@ -7,7 +7,7 @@ attributes :relative_path, :container_repository_name, :full_path, :library_inst
 attributes :version_href, :remote_href, :publication_href
 
 glue(@object.root) do
-  attributes :content_type, :url, :arch, :content_id
+  attributes :content_type, :url, :arch, :os_versions, :content_id
   attributes :major, :minor
 
   child :product do |_product|
