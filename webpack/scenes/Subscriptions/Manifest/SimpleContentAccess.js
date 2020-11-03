@@ -23,8 +23,11 @@ const SimpleContentAccess = (props) => {
   };
 
   const simpleContentAccessText = () => {
-    if (!simpleContentAccessEligible && !isSimpleContentAccessEnabled) {
-      return __('Simple Content Access has been disabled by the upstream organization administrator.');
+    // don't show this text unless explicitly told to
+    if (simpleContentAccessEligible !== undefined) {
+      if (!simpleContentAccessEligible && !isSimpleContentAccessEnabled) {
+        return __('Simple Content Access has been disabled by the upstream organization administrator.');
+      }
     }
 
     return __('Toggling Simple Content Access will refresh your manifest.');
@@ -86,7 +89,7 @@ SimpleContentAccess.propTypes = {
 };
 
 SimpleContentAccess.defaultProps = {
-  simpleContentAccessEligible: false,
+  simpleContentAccessEligible: undefined,
 };
 
 export default SimpleContentAccess;

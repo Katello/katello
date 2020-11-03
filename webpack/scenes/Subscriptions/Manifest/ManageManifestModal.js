@@ -351,7 +351,7 @@ ManageManifestModal.defaultProps = {
   isManifestImported: false,
   canEditOrganizations: false,
   simpleContentAccess: false,
-  simpleContentAccessEligible: false,
+  simpleContentAccessEligible: undefined,
   manifestActionStarted: false,
 };
 
