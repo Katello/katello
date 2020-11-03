@@ -24,6 +24,12 @@ module Katello
             raise ::Katello::Errors::UpstreamConsumerGone
           end
 
+          def content_access
+            JSON.parse(self['content_access'].get).with_indifferent_access
+          rescue RestClient::NotFound
+            {}
+          end
+
           def remove_entitlement(entitlement_id)
             fail ArgumentError, "No entitlement ID given to remove." if entitlement_id.blank?
 

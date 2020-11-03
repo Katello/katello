@@ -77,7 +77,14 @@ module Katello
       render json: { status: 'OK' }
     end
 
-    api :PUT, "/organizations/:organization_id/simple_content_access/enable",
+    api :GET, "/organizations/:organization_id/upstream_subscriptions/simple_content_access/eligible",
+      N_("Check if the specified organization is eligible for Simple Content Access")
+    def simple_content_access_eligible
+      eligible = @organization.upstream_consumer.simple_content_access_eligible?
+      render json: { simple_content_access_eligible: eligible }
+    end
+
+    api :PUT, "/organizations/:organization_id/upstream_subscriptions/simple_content_access/enable",
       N_("Enable simple content access for a manifest")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def enable_simple_content_access
@@ -85,7 +92,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/organizations/:organization_id/simple_content_access/disable",
+    api :PUT, "/organizations/:organization_id/upstream_subscriptions/simple_content_access/disable",
       N_("Disable simple content access for a manifest")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def disable_simple_content_access

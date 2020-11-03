@@ -93,6 +93,7 @@ class ManageManifestModal extends Component {
       isManifestImported,
       canEditOrganizations,
       simpleContentAccess,
+      simpleContentAccessEligible,
       enableSimpleContentAccess,
       disableSimpleContentAccess,
       taskInProgress,
@@ -104,6 +105,8 @@ class ManageManifestModal extends Component {
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
     const showManifestTab = (showRedHatProviderDetails || showSubscriptionManifest);
     const disableSCASwitch = (
+      // allow users to turn SCA off even if they are not eligible to turn it back on
+      (!simpleContentAccessEligible && !simpleContentAccess) ||
       disableManifestActions ||
       !isManifestImported ||
       actionInProgress ||
@@ -194,14 +197,17 @@ class ManageManifestModal extends Component {
                       <Grid>
                         <h3>{__('Subscription Manifest')}</h3>
                         <hr />
-                        <Row>
-                          <SimpleContentAccess
-                            enableSimpleContentAccess={enableSimpleContentAccess}
-                            disableSimpleContentAccess={disableSimpleContentAccess}
-                            isSimpleContentAccessEnabled={simpleContentAccess}
-                            canToggleSimpleContentAccess={!disableSCASwitch}
-                          />
-                        </Row>
+                        { isManifestImported &&
+                          <Row>
+                            <SimpleContentAccess
+                              enableSimpleContentAccess={enableSimpleContentAccess}
+                              disableSimpleContentAccess={disableSimpleContentAccess}
+                              isSimpleContentAccessEnabled={simpleContentAccess}
+                              canToggleSimpleContentAccess={!disableSCASwitch}
+                              simpleContentAccessEligible={simpleContentAccessEligible}
+                            />
+                          </Row>
+                        }
                         <Row>
                           <Col sm={5}>
                             <strong>{__('Subscription Allocation')}</strong>
@@ -325,6 +331,7 @@ ManageManifestModal.propTypes = {
   saveOrganization: PropTypes.func.isRequired,
   taskInProgress: PropTypes.bool.isRequired,
   simpleContentAccess: PropTypes.bool,
+  simpleContentAccessEligible: PropTypes.bool,
   manifestHistory: PropTypes.shape({
     loading: PropTypes.bool,
     // Disabling rule as existing code failed due to an eslint-plugin-react update
@@ -344,6 +351,7 @@ ManageManifestModal.defaultProps = {
   isManifestImported: false,
   canEditOrganizations: false,
   simpleContentAccess: false,
+  simpleContentAccessEligible: undefined,
   manifestActionStarted: false,
 };
 

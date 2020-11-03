@@ -5,6 +5,8 @@ import {
   selectDeleteModalOpened,
   selectDeleteButtonDisabled,
   selectSubscriptionsTask,
+  selectHasUpstreamConnection,
+  selectSimpleContentAccessEligible,
 } from '../SubscriptionsSelectors';
 
 const state = {
@@ -14,6 +16,8 @@ const state = {
       deleteModalOpened: false,
       taskModalOpened: false,
       deleteButtonDisabled: true,
+      hasUpstreamConnection: false,
+      simpleContentAccessEligible: false,
       task: {},
     },
   },
@@ -25,6 +29,8 @@ const fixtures = {
   'should select delete-modal-opened': () => selectDeleteModalOpened(state),
   'should select delete-button-disabled': () => selectDeleteButtonDisabled(state),
   'should select subscriptions task': () => selectSubscriptionsTask(state),
+  'should select whether we have an upstream connection': () => selectHasUpstreamConnection(state),
+  'should select whether we are simple content access eligible': () => selectSimpleContentAccessEligible(state),
 };
 
 describe('Subscriptions selectors', () => testSelectorsSnapshotWithFixtures(fixtures));

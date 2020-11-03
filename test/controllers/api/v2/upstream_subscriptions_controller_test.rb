@@ -157,5 +157,13 @@ module Katello
 
       assert_response :success
     end
+
+    def test_simple_content_access_eligible
+      Katello::Candlepin::UpstreamConsumer.any_instance.expects(:simple_content_access_eligible?).returns(true)
+
+      get :simple_content_access_eligible, params: { organization_id: @organization.id }
+
+      assert_response :success
+    end
   end
 end

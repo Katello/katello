@@ -9,7 +9,15 @@ import api from '../../../../services/api';
 afterEach(cleanup);
 
 const noop = jest.fn();
-const organization = { id: 1, redhat_repository_url: 'https://redhat.com' };
+const organization = {
+  id: 1,
+  redhat_repository_url: 'https://redhat.com',
+  owner_details: {
+    upstreamConsumer: {
+      webUrl: 'https://example.com/',
+    },
+  },
+};
 
 const defaultProps = {
   disableManifestActions: false,

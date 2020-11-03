@@ -22,6 +22,9 @@ import {
   DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST,
   DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
   DISABLE_SIMPLE_CONTENT_ACCESS_FAILURE,
+  SIMPLE_CONTENT_ACCESS_ELIGIBLE_REQUEST,
+  SIMPLE_CONTENT_ACCESS_ELIGIBLE_SUCCESS,
+  SIMPLE_CONTENT_ACCESS_ELIGIBLE_FAILURE,
 } from './ManifestConstants';
 
 export const uploadManifest = file => async (dispatch) => {
@@ -78,6 +81,20 @@ export const deleteManifest = (extendedParams = {}) => async (dispatch) => {
     });
   } catch (error) {
     return dispatch(apiError(DELETE_MANIFEST_FAILURE, error));
+  }
+};
+
+export const checkSimpleContentAccessEligible = () => async (dispatch) => {
+  dispatch({ type: SIMPLE_CONTENT_ACCESS_ELIGIBLE_REQUEST });
+
+  try {
+    const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions/simple_content_access/eligible`, {});
+    return dispatch({
+      type: SIMPLE_CONTENT_ACCESS_ELIGIBLE_SUCCESS,
+      response: data,
+    });
+  } catch (error) {
+    return dispatch(apiError(SIMPLE_CONTENT_ACCESS_ELIGIBLE_FAILURE, error));
   }
 };
 

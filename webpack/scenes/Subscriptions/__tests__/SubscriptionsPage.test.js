@@ -6,6 +6,7 @@ import SubscriptionsPage from '../SubscriptionsPage';
 import { successState, settingsSuccessState, permissionDeniedState } from './subscriptions.fixtures';
 import { loadAvailableQuantities, loadSubscriptions, updateQuantity, loadTableColumns } from '../SubscriptionActions';
 import { pingUpstreamSubscriptions } from '../UpstreamSubscriptions/UpstreamSubscriptionsActions';
+import { checkSimpleContentAccessEligible } from '../Manifest/ManifestActions';
 import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
 jest.mock('foremanReact/components/PermissionDenied');
@@ -43,6 +44,7 @@ describe('subscriptions page', () => {
     loadSubscriptions={loadSubscriptions}
     loadAvailableQuantities={loadAvailableQuantities}
     pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+    checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
     updateQuantity={updateQuantity}
     handleStartTask={handleStartTask}
     handleFinishedTask={handleFinishedTask}
@@ -78,6 +80,7 @@ describe('subscriptions page', () => {
     loadSubscriptions={loadSubscriptions}
     loadAvailableQuantities={loadAvailableQuantities}
     pingUpstreamSubscriptions={pingUpstreamSubscriptions}
+    checkSimpleContentAccessEligible={checkSimpleContentAccessEligible}
     updateQuantity={updateQuantity}
     handleStartTask={handleStartTask}
     handleFinishedTask={handleFinishedTask}
