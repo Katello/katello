@@ -771,6 +771,7 @@ msgid "An error occurred saving the Environment:"
 msgstr "環境の保存時にエラーが発生しました:"
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/edit-filter.controller.js
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-details.controller.js
 msgid "An error occurred saving the Filter:"
 msgstr "フィルターの保存時にエラーが発生しました:"
 
@@ -1432,6 +1433,18 @@ msgid ""
 "newer to be installed on this host."
 msgstr ""
 "デフォルト設定を変更するには、subscription-manager バージョン 1.10 以降をこのホスト上にインストールする必要があります。"
+
+#: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
+msgid ""
+"Changing the Content View will not affect the Content Host until its next checkin.\n"
+"                To update the Content Host immediately run the following command:"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
+msgid ""
+"Changing the Content View will not affect the Content Hosts until their next checkin.\n"
+"        To update the Content Hosts immediately run the following command:"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-info.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-info.html
@@ -2282,6 +2295,11 @@ msgstr "編集"
 msgid "Enable"
 msgstr "有効化"
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Enable on Registration"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Enable Traces"
@@ -2453,6 +2471,10 @@ msgstr "イベント"
 msgid "Exclude"
 msgstr "除外"
 
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
+msgid "Exclude all Module Streams with no errata."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Exclude all RPMs with no errata."
 msgstr "エラータがないすべての RPM を除外します。"
@@ -2553,6 +2575,10 @@ msgstr "フィルタールールが正常に更新されました。"
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/edit-filter.controller.js
 msgid "Filter Saved"
 msgstr "フィルターが保存されました"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-details.controller.js
+msgid "Filter Updated -"
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-details.html
 msgid "Filter:"
@@ -2842,6 +2868,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/filter-helper.service.js
 msgid "Include"
 msgstr "組み込み"
+
+#: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
+msgid "Include all Module Streams with no errata."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 msgid "Include all RPMs with no errata."
@@ -5060,6 +5090,12 @@ msgstr ""
 "「完全な同期」を選択すると、選択された製品の Yum "
 "リポジトリーのみが同期します。「コンテンツの検証」を選択すると、「即時」または「バックグラウンド」ダウンロードポリシーを使用する Yum "
 "リポジトリーのみが同期します。"
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid ""
+"Selecting this option will automatically enable this Repository when a Host "
+"registers and consumes this subscription."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""

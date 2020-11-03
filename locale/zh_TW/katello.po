@@ -417,6 +417,9 @@ msgstr "已新增內容："
 msgid "Adding content units"
 msgstr ""
 
+msgid "Adding multiple versions of the same Puppet Module is not supported by incremental update.  The following Puppet Modules have duplicate versions in the incremental update content list: %{dup_list}"
+msgstr ""
+
 msgid "Addons"
 msgstr ""
 
@@ -521,6 +524,9 @@ msgstr ""
 msgid "Artifacts"
 msgstr ""
 
+msgid "Assign system purpose attributes on one or more hosts"
+msgstr ""
+
 msgid "Assign the %{count} host with no %{taxonomy_single} to %{taxonomy_name}"
 msgid_plural "Assign all %{count} hosts with no %{taxonomy_single} to %{taxonomy_name}"
 msgstr[0] "將沒有 %{taxonomy_single} 的 %{count} 部主機指定至 %{taxonomy_name}"
@@ -564,9 +570,6 @@ msgid "Attempted to destroy consumer %s from candlepin, but consumer does not ex
 msgstr ""
 
 msgid "Author"
-msgstr ""
-
-msgid "Auto Enablement may only be set on custom repositories."
 msgstr ""
 
 msgid "Auto Publish - Triggered by '%s'"
@@ -782,6 +785,9 @@ msgstr ""
 msgid "Cannot delete view while it exists in environments"
 msgstr "無法刪除還存在環境中的視域"
 
+msgid "Cannot import a composite content view"
+msgstr ""
+
 msgid "Cannot import a custom subscription from a redhat product."
 msgstr ""
 
@@ -856,6 +862,9 @@ msgid "Checksum of the repository, currently 'sha1' & 'sha256' are supported"
 msgstr ""
 
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
+msgstr ""
+
+msgid "Chunk export-tarfile into pieces of chunk_size mega bytes. Relevant only for Pulp 3 repositories"
 msgstr ""
 
 msgid "Click here to go to the tasks page for the task."
@@ -988,7 +997,13 @@ msgstr ""
 msgid "Content View Version not set"
 msgstr ""
 
+msgid "Content View Version specified in the metadata - '%{name}' already exists. If you wish to replace the existing version, delete %{name} and try again. "
+msgstr ""
+
 msgid "Content View and Environment not set for registration."
+msgstr ""
+
+msgid "Content View id"
 msgstr ""
 
 # translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author tchuang
@@ -1050,11 +1065,11 @@ msgstr ""
 msgid "Copy an activation key"
 msgstr "複製啟動金鑰"
 
+msgid "Copy version units to library"
+msgstr ""
+
 msgid "Cores: %s"
 msgstr "核心：%s"
-
-msgid "Could not calculate errata status, ensure host is registered and the katello-host-tools package is installed"
-msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
 msgid "Could not delete organization '%s'."
@@ -1064,6 +1079,9 @@ msgid "Could not find %{content} with id '%{id}' in repository."
 msgstr "軟體庫中找不到擁有  '%{id}' 的 %{content}。"
 
 msgid "Could not find %{count} errata.  Only found: %{found}"
+msgstr ""
+
+msgid "Could not find %{name} resource with id %{id}"
 msgstr ""
 
 msgid "Could not find Environment with ids: %s"
@@ -1098,9 +1116,6 @@ msgstr ""
 
 msgid "Couldn't find %{type} Filter with id %{id}"
 msgstr "找不到擁有 ID %{id} 的 %{type} 篩選器"
-
-msgid "Couldn't find Content Credential '%s'"
-msgstr ""
 
 msgid "Couldn't find ContentViewFilter with id=%s"
 msgstr "找不到 id 為「%s」的 ContentViewFilter"
@@ -1199,10 +1214,6 @@ msgstr ""
 # translation auto-copied from project CFSE, version sam-1.2, document app, author dchen
 msgid "Couldn't find subject of synchronization"
 msgstr "找不到要同步的東西"
-
-# translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
-msgid "Couldn't find sync plan '%{plan}' in organization '%{org}'"
-msgstr "在「%{org}」組織中找不到同步計劃「%{plan}」"
 
 msgid "Count"
 msgstr ""
@@ -1486,6 +1497,15 @@ msgstr ""
 msgid "Desired quantity of the pool"
 msgstr ""
 
+msgid "Destination Server Name required for Pulp3 repositories"
+msgstr ""
+
+msgid "Destination Server name"
+msgstr ""
+
+msgid "Destination Server name, required for Pulp3"
+msgstr ""
+
 # translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Destroy"
 msgstr "銷毀"
@@ -1539,6 +1559,9 @@ msgstr "詳細資料"
 msgid "Directly setting package lists on composite content views is not allowed. Please update the components, then re-publish the composite."
 msgstr ""
 
+msgid "Directory containing the exported Content View Version"
+msgstr ""
+
 # translation auto-copied from project Satellite6 Foreman Discovery, version 6.1, document foreman_discovery, author ccheng
 msgid "Disable"
 msgstr "停用"
@@ -1553,6 +1576,9 @@ msgid "Disable a repository from the set"
 msgstr ""
 
 msgid "Disable simple content access for a manifest"
+msgstr ""
+
+msgid "Disabling Simple Content Access failed for '%{subject}'."
 msgstr ""
 
 msgid "Disconnected mode"
@@ -1638,6 +1664,9 @@ msgid "Enabled"
 msgstr ""
 
 msgid "Enabled Repositories"
+msgstr ""
+
+msgid "Enabling Simple Content Access failed for '%{subject}'."
 msgstr ""
 
 msgid "End Date"
@@ -1768,6 +1797,9 @@ msgid "Export as CSV"
 msgstr ""
 
 msgid "Export to ISO format"
+msgstr ""
+
+msgid "Export to ISO format. Relevant only for Pulp 2 repositories"
 msgstr ""
 
 msgid "Exported version"
@@ -1910,10 +1942,6 @@ msgstr ""
 msgid "GPG Key URL"
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
-msgid "GPG Keys"
-msgstr "GPG 金鑰"
-
 # translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author Chester Cheng
 msgid "Generate and Download"
 msgstr "產生與下載"
@@ -2020,6 +2048,9 @@ msgstr "主機集是空的。"
 
 msgid "Host content and subscription details"
 msgstr "主機內容和訂閱詳細資料"
+
+msgid "Host creation was skipped for %s because it shares a BIOS UUID with %s. To report this hypervisor, override its dmi.system.uuid fact or set 'candlepin.use_system_uuid_for_matching' to 'true' in the Candlepin configuration."
+msgstr ""
 
 msgid "Host did not finish content action in %s seconds.  The task has been cancelled."
 msgstr ""
@@ -2241,6 +2272,12 @@ msgstr ""
 msgid "Immediate"
 msgstr ""
 
+msgid "Import"
+msgstr ""
+
+msgid "Import Content View Version"
+msgstr ""
+
 msgid "Import Manifest"
 msgstr "匯入清單"
 
@@ -2260,6 +2297,9 @@ msgid "Import a Manifest to manage your Entitlements."
 msgstr ""
 
 msgid "Import a Manifest using the manifest tab above."
+msgstr ""
+
+msgid "Import a content view version"
 msgstr ""
 
 msgid "Import facts"
@@ -2433,6 +2473,9 @@ msgstr ""
 msgid "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'"
 msgstr "指定了無效的篩選器規則，'version' 不可指定為與 'min_version' 或 'max_version' 相同的變數值組"
 
+msgid "Invalid parameters provided - %{params}. These are only relevant for Pulp 2 repositories"
+msgstr ""
+
 # translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
 msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "此作業的請求中傳送了無效的參數。請聯絡系統管理員。"
@@ -2445,6 +2488,9 @@ msgid "Invalid params provided - content_type must be one of %s"
 msgstr ""
 
 msgid "Invalid params provided - date_type must be one of %s"
+msgstr ""
+
+msgid "Invalid path specified."
 msgstr ""
 
 msgid ""
@@ -2522,9 +2568,6 @@ msgid "Latest Errata"
 msgstr ""
 
 msgid "Learn more about adding Subscription Manifests"
-msgstr ""
-
-msgid "Learn more about your overall subscription usage (opens in a new tab)"
 msgstr ""
 
 msgid "Library lifecycle environments may not be deleted."
@@ -2779,6 +2822,9 @@ msgstr ""
 msgid "List srpms"
 msgstr ""
 
+msgid "List subscriptions"
+msgstr ""
+
 msgid "List sync plans"
 msgstr "列出同步計劃"
 
@@ -2865,6 +2911,9 @@ msgid "Message"
 msgstr "訊息"
 
 msgid "Messaging connection"
+msgstr ""
+
+msgid "Metadata taken from the upstream export history for this Content View Version"
 msgstr ""
 
 msgid "Mismatched"
@@ -3012,10 +3061,16 @@ msgstr ""
 msgid "No hosts registered with subscription-manager found in selection."
 msgstr ""
 
+msgid "No installed packages and/or enabled repositories have been reported by %s."
+msgstr ""
+
 msgid "No manifest file uploaded"
 msgstr "未上傳清單檔案"
 
 msgid "No matching content views found"
+msgstr ""
+
+msgid "No matching repositories found"
 msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
@@ -3157,6 +3212,9 @@ msgstr ""
 msgid "On-disk location for exported repositories"
 msgstr ""
 
+msgid "On-disk location for pulp 3 exported repositories"
+msgstr ""
+
 msgid "One of parameters [ %s ] required but not specified."
 msgstr "需要其中一項 [%s] 參數，不過尚未指定。"
 
@@ -3187,6 +3245,9 @@ msgid "Operators"
 msgstr "操作器"
 
 msgid "Optional date of last export (ex: 2010-01-01T12:00:00Z)"
+msgstr ""
+
+msgid "Optional date of last export (ex: 2010-01-01T12:00:00Z). Relevant only for Pulp 2 repositories"
 msgstr ""
 
 # translation auto-copied from project Satellite6 Hammer CLI Katello, version 6.1, document hammer-cli-katello
@@ -3473,6 +3534,9 @@ msgstr "實體的"
 msgid "Plan numeric identifier"
 msgstr "計畫的數字識別元"
 
+msgid "Please add some repositories."
+msgstr ""
+
 msgid "Please enter a positive number above zero"
 msgstr ""
 
@@ -3607,6 +3671,9 @@ msgstr ""
 msgid "Pulp"
 msgstr ""
 
+msgid "Pulp 3 export destination filepath"
+msgstr ""
+
 msgid "Pulp 3 migration cannot run. Types %s have already been migrated."
 msgstr ""
 
@@ -3660,6 +3727,12 @@ msgstr ""
 
 msgid "Pulp task error"
 msgstr "Pulp 任務錯誤"
+
+msgid "Pulp user or group unable to read '%s'."
+msgstr ""
+
+msgid "Pulp user or group unable to read content in '%s'."
+msgstr ""
 
 msgid "Pulpcore"
 msgstr ""
@@ -3799,6 +3872,9 @@ msgstr "要啟用的發行版本"
 msgid "Reload data"
 msgstr "重新載入資料"
 
+msgid "Remote action:"
+msgstr ""
+
 msgid "Removal of package group(s) requested: %{groups}"
 msgstr ""
 
@@ -3885,6 +3961,9 @@ msgstr "正在移除套件..."
 msgid "Repo Type"
 msgstr ""
 
+msgid "Report"
+msgstr ""
+
 # translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author tchuang
 msgid "Repositories"
 msgstr "軟體庫"
@@ -3960,6 +4039,9 @@ msgid "Reset Puppet Environment"
 msgstr ""
 
 msgid "Resolve Traces"
+msgstr ""
+
+msgid "Resolve traces for one or more hosts"
 msgstr ""
 
 msgid "Resource"
@@ -4039,6 +4121,9 @@ msgid "Return the content of a repo gpg key, used directly by yum"
 msgstr "回傳軟體庫 GPG 金鑰的內容，直接由 yum 所使用"
 
 msgid "Role"
+msgstr ""
+
+msgid "Role of host"
 msgstr ""
 
 msgid "Run Sync Plan:"
@@ -4142,6 +4227,9 @@ msgstr "服務等級 %s"
 msgid "Service Level (SLA)"
 msgstr ""
 
+msgid "Service level of host"
+msgstr ""
+
 msgid "Service level to be used for autoheal"
 msgstr ""
 
@@ -4236,6 +4324,9 @@ msgstr "顯示內容主機的可用發行版本"
 msgid "Show the available repository types"
 msgstr ""
 
+msgid "Show the export history for a content view version"
+msgstr ""
+
 msgid "Shows status of Katello system and it's subcomponents"
 msgstr ""
 
@@ -4243,6 +4334,12 @@ msgid "Shows version information"
 msgstr "顯示版本資訊"
 
 msgid "Simple Content Access"
+msgstr ""
+
+msgid "Simple Content Access has been disabled for '%{subject}'."
+msgstr ""
+
+msgid "Simple Content Access has been enabled for '%{subject}'."
 msgstr ""
 
 msgid "Size of file to upload"
@@ -4492,6 +4589,9 @@ msgstr "同步一或多項產品"
 msgid "Sync plan identifier to attach"
 msgstr "同步要連接的計畫識別子"
 
+msgid "Sync state"
+msgstr ""
+
 msgid "Synced Content"
 msgstr ""
 
@@ -4603,6 +4703,9 @@ msgstr "下列主機含有套用至它們的勘誤："
 msgid "The id of the host to alter"
 msgstr ""
 
+msgid "The import path must be in a subdirectory under '%s'."
+msgstr ""
+
 msgid "The list of environments to promote the specified Content View Version to (replacing the older version)"
 msgstr ""
 
@@ -4649,6 +4752,9 @@ msgid "The requested resource does not belong to the specified Organization"
 msgstr ""
 
 msgid "The requested resource does not belong to the specified organization"
+msgstr ""
+
+msgid "The requested traces were not found for this host"
 msgstr ""
 
 msgid "The selected content source and lifecycle environment do not match"
@@ -4712,6 +4818,9 @@ msgid "There was an issue with the backend service %s: "
 msgstr ""
 
 msgid "There's no running synchronization for this smart proxy."
+msgstr ""
+
+msgid "This API endpoint is only valid for Pulp 3 repositories."
 msgstr ""
 
 msgid "This Host is not currently registered with subscription-manager."
@@ -4853,10 +4962,13 @@ msgstr ""
 msgid "Unable to detect puppet path"
 msgstr ""
 
-msgid "Unable to export, 'pulp_export_destination' setting is not a writable directory."
+msgid "Unable to export, 'pulp_export_destination' setting is not set to a valid directory."
 msgstr ""
 
-msgid "Unable to export, 'pulp_export_destination' setting is not set to a valid directory."
+msgid "Unable to export. 'pulp_export_destination' setting is not a writable directory."
+msgstr ""
+
+msgid "Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory."
 msgstr ""
 
 msgid "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id."
@@ -5072,6 +5184,12 @@ msgstr ""
 msgid "Updating Package..."
 msgstr "正在更新套件……"
 
+msgid "Updating System Purpose for host"
+msgstr ""
+
+msgid "Updating System Purpose for host %s"
+msgstr ""
+
 # translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author Chester Cheng
 msgid "Updating package group..."
 msgstr "更新套件群組......"
@@ -5127,7 +5245,13 @@ msgstr ""
 msgid "Usage Type"
 msgstr ""
 
+msgid "Usage of host"
+msgstr ""
+
 msgid "Use remote execution by default"
+msgstr ""
+
+msgid "Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10"
 msgstr ""
 
 msgid "User '%s' did not specify an organization ID and does not have a default organization."
@@ -5154,6 +5278,15 @@ msgstr ""
 msgid "Value must either be a boolean or 'default' for 'enabled'"
 msgstr ""
 
+msgid "Verify checksum"
+msgstr ""
+
+msgid "Verify checksum for one or more products"
+msgstr ""
+
+msgid "Verify checksum of repository contents"
+msgstr ""
+
 msgid "Version"
 msgstr ""
 
@@ -5171,7 +5304,7 @@ msgstr ""
 msgid "Virtual"
 msgstr "虛擬"
 
-msgid "When Simple Content Access is enabled, hosts can consume from all repositories in their Content View regardless of subscription status."
+msgid "When Simple Content Access is enabled, hosts are not required to have subscriptions attached to access repositories."
 msgstr ""
 
 msgid "When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"
@@ -5238,6 +5371,9 @@ msgid "You cannot set an organization's parent_id. This feature is disabled."
 msgstr "您不能設置組織的 parent_id。這項功能已停用。"
 
 msgid "You currently don't have any Content Views."
+msgstr ""
+
+msgid "You currently don't have any repositories to add to this content view."
 msgstr ""
 
 msgid "You do not have permissions to delete %s"
@@ -5659,9 +5795,6 @@ msgstr ""
 msgid "if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA"
 msgstr ""
 
-msgid "if true, the repositories will be automatically enabled on a registered host subscribed to this product. Default: true"
-msgstr ""
-
 msgid "if true, will ignore the globally configured proxy when syncing"
 msgstr ""
 
@@ -5739,6 +5872,9 @@ msgid "maximum number of registered content hosts"
 msgstr "已註冊的內容主機之最大數量"
 
 msgid "maximum size of each ISO in MB"
+msgstr ""
+
+msgid "maximum size of each ISO in MB. Relevant only for Pulp 2 repositories"
 msgstr ""
 
 msgid "may not be less than the number of hosts associated with the host collection."
@@ -6026,6 +6162,9 @@ msgstr ""
 
 msgid "the uuid of the puppet module to associate"
 msgstr "欲相聯的 puppet 模組之 UUID"
+
+msgid "true if the export api is pulp3 ready and usable. This API is intended for use by hammer-cli only."
+msgstr ""
 
 msgid "true if the latest version of the component's content view is desired"
 msgstr ""

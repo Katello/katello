@@ -19,7 +19,11 @@ module Actions
         end
 
         def humanized_name
-          _("Updating System Purpose for host %s") % input[:hostname]
+          if input&.dig(:hostname)
+            _("Updating System Purpose for host %s") % input[:hostname]
+          else
+            _("Updating System Purpose for host")
+          end
         end
       end
     end
