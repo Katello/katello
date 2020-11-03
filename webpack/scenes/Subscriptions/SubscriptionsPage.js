@@ -51,6 +51,7 @@ class SubscriptionsPage extends Component {
       settings,
       subscriptions,
       task,
+      checkSimpleContentAccessEligible,
     } = this.props;
 
     const { disconnected } = settings;
@@ -79,6 +80,10 @@ class SubscriptionsPage extends Component {
     }
 
     if (hasUpstreamConnection) {
+      if (hasUpstreamConnection !== prevProps.hasUpstreamConnection) {
+        checkSimpleContentAccessEligible();
+      }
+
       const subscriptionsChanged = subscriptions.results !== prevProps.subscriptions.results;
       if (subscriptionsChanged || !this.state.availableQuantitiesLoaded) {
         const poolIds = filterRHSubscriptions(subscriptions.results).map(subs => subs.id);
@@ -305,6 +310,7 @@ class SubscriptionsPage extends Component {
 
 SubscriptionsPage.propTypes = {
   pingUpstreamSubscriptions: PropTypes.func.isRequired,
+  checkSimpleContentAccessEligible: PropTypes.func.isRequired,
   loadSubscriptions: PropTypes.func.isRequired,
   loadAvailableQuantities: PropTypes.func.isRequired,
   uploadManifest: PropTypes.func.isRequired,

@@ -7,7 +7,7 @@ module Katello
 
       module Overrides
         def edit
-          @can_toggle_sca = Katello::UpstreamConnectionChecker.new(@taxonomy).can_connect?
+          @can_toggle_sca = Katello::UpstreamConnectionChecker.new(@taxonomy).can_connect? && @taxonomy.upstream_consumer.simple_content_access_eligible?
           super
         end
 

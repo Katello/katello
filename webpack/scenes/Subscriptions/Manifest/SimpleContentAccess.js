@@ -11,6 +11,7 @@ const SimpleContentAccess = (props) => {
     isSimpleContentAccessEnabled,
     enableSimpleContentAccess,
     disableSimpleContentAccess,
+    simpleContentAccessEligible,
   } = props;
 
   const toggleSimpleContentAccess = () => {
@@ -19,6 +20,14 @@ const SimpleContentAccess = (props) => {
     } else {
       enableSimpleContentAccess();
     }
+  };
+
+  const simpleContentAccessText = () => {
+    if (!simpleContentAccessEligible && !isSimpleContentAccessEnabled) {
+      return __('Simple Content Access has been disabled by the upstream organization administrator.');
+    }
+
+    return __('Toggling Simple Content Access will refresh your manifest.');
   };
 
   return (
@@ -61,7 +70,7 @@ const SimpleContentAccess = (props) => {
           />
         </div>
         <div>
-          <i>{__('Toggling Simple Content Access will refresh your manifest.')}</i>
+          <i>{simpleContentAccessText()}</i>
         </div>
       </Col>
     </div>
@@ -73,6 +82,11 @@ SimpleContentAccess.propTypes = {
   disableSimpleContentAccess: PropTypes.func.isRequired,
   isSimpleContentAccessEnabled: PropTypes.bool.isRequired,
   canToggleSimpleContentAccess: PropTypes.bool.isRequired,
+  simpleContentAccessEligible: PropTypes.bool,
+};
+
+SimpleContentAccess.defaultProps = {
+  simpleContentAccessEligible: false,
 };
 
 export default SimpleContentAccess;

@@ -7,7 +7,7 @@ import * as organizationActions from '../../Organizations/OrganizationActions';
 import * as tasksActions from '../../Tasks/TaskActions';
 import history from './ManifestHistoryReducer';
 import { selectSimpleContentAccessEnabled, selectIsManifestImported } from '../../Organizations/OrganizationSelectors';
-import { selectManifestActionStarted } from '../SubscriptionsSelectors';
+import { selectManifestActionStarted, selectSimpleContentAccessEligible } from '../SubscriptionsSelectors';
 
 import ManifestModal from './ManageManifestModal';
 
@@ -21,6 +21,7 @@ const mapStateToProps = state => ({
   isManifestImported: selectIsManifestImported(state),
   modalOpenState: state.foremanModals.ManageManifestModal,
   manifestActionStarted: selectManifestActionStarted(state),
+  simpleContentAccessEligible: selectSimpleContentAccessEligible(state),
 });
 
 // map action dispatchers to props

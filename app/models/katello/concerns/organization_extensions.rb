@@ -244,6 +244,10 @@ module Katello
           # doesn't provide much benefit for the frustration it creates.
           self.save(validate: false)
         end
+
+        def upstream_consumer
+          Katello::Candlepin::UpstreamConsumer.new(self)
+        end
       end
     end
   end
