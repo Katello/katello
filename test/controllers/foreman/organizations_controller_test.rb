@@ -68,6 +68,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     Organization.any_instance.stubs(:service_level)
     Organization.any_instance.stubs(:service_levels).returns []
     Katello::UpstreamConnectionChecker.any_instance.expects(:can_connect?).returns true
+    Katello::Candlepin::UpstreamConsumer.any_instance.expects(:simple_content_access_eligible?).returns(true)
     Organization.any_instance.expects(:simple_content_access?).returns true
     get :edit, params: { id: org.id }
     assert_response :success

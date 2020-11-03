@@ -41,6 +41,7 @@ import {
   ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST,
   ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
   DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
+  SIMPLE_CONTENT_ACCESS_ELIGIBLE_SUCCESS,
   UPLOAD_MANIFEST_FAILURE,
   UPLOAD_MANIFEST_REQUEST,
   DELETE_MANIFEST_FAILURE,
@@ -68,6 +69,8 @@ const initialState = Immutable({
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SIMPLE_CONTENT_ACCESS_ELIGIBLE_SUCCESS:
+      return state.set('simpleContentAccessEligible', action.response.simple_content_access_eligible);
     case PING_UPSTREAM_SUBSCRIPTIONS_SUCCESS:
       return state.set('hasUpstreamConnection', true);
     case PING_UPSTREAM_SUBSCRIPTIONS_FAILURE:

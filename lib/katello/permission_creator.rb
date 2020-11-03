@@ -371,7 +371,7 @@ module Katello
                          :resource_type => 'Katello::Subscription'
       @plugin.permission :manage_subscription_allocations,
                          {
-                           'katello/api/v2/upstream_subscriptions' => [:index, :create, :destroy, :update, :ping, :enable_simple_content_access, :disable_simple_content_access]
+                           'katello/api/v2/upstream_subscriptions' => [:index, :create, :destroy, :update, :ping, :enable_simple_content_access, :disable_simple_content_access, :simple_content_access_eligible]
                          },
                          :resource_type => 'Katello::Subscription'
     end

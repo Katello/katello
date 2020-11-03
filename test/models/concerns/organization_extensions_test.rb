@@ -26,5 +26,9 @@ module Katello
       end
       assert_equal @org.manifest_refreshed_at.to_i, current_time.to_i
     end
+
+    def test_upstream_consumer
+      assert @org.upstream_consumer
+    end
   end
 end
