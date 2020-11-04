@@ -60,12 +60,14 @@ module Actions
 
           module_stream_profile = updated_profiles + unassociated_profiles
 
-          unless module_stream_profile.empty?
-            begin
-              ::Katello::Pulp::Consumer.new(host.content_facet.uuid).
-                upload_module_stream_profile(module_stream_profile)
-            rescue RestClient::ResourceNotFound
-              Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % host.id)
+          unless SmartProxy.pulp_primary&.pulp3_repository_type_support?(::Katello::Repository::YUM_TYPE)
+            unless module_stream_profile.empty?
+              begin
+                ::Katello::Pulp::Consumer.new(host.content_facet.uuid).
+                  upload_module_stream_profile(module_stream_profile)
+              rescue RestClient::ResourceNotFound
+                Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % host.id)
+              end
             end
           end
         end
