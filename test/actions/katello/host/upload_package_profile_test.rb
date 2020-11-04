@@ -94,6 +94,22 @@ module Katello::Host
         plan_action action, @host, profile.to_json
         run_action action
       end
+
+      it 'runs and skips Pulp::Consumer with Pulp 3 yum support' do
+        profile = [{:name => "foo", :version => "1", :release => "3"}]
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        mock_smart_proxy = mock
+        mock_smart_proxy.expects(:pulp3_repository_type_support?).returns(true)
+        ::SmartProxy.expects(:pulp_primary).returns(mock_smart_proxy)
+        ::Host.expects(:find_by).returns(@host)
+        ::Katello::Pulp::Consumer.expects(:new).never
+        @host.expects(:import_package_profile).with(any_parameters)
+
+        plan_action action, @host, profile.to_json
+        run_action action
+      end
     end
   end
 end

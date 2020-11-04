@@ -181,6 +181,26 @@ module Katello::Host
         run_action action
       end
 
+      it 'runs and skips Pulp::Consumer with Pulp 3 yum support' do
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        mock_smart_proxy = mock
+        mock_smart_proxy.expects(:pulp3_repository_type_support?).twice.returns(true)
+        ::SmartProxy.expects(:pulp_primary).twice.returns(mock_smart_proxy)
+
+        ::Host.expects(:find_by).returns(@host).at_least_once
+        ::Katello::Pulp::Consumer.expects(:new).never
+        @host.expects(:import_package_profile).with do |packages|
+          expected_packages = rpm_profiles.map { |prof| ::Katello::Pulp::SimplePackage.new(prof) }
+          packages.map(&:nvra).must_equal(expected_packages.map(&:nvra))
+        end
+        @host.expects(:import_enabled_repositories).with(enabled_repos)
+
+        plan_action action, @host, profile.to_json
+        run_action action
+      end
+
       describe "Debian Profile Upload" do
         let(:deb_package) { {"name" => "pi", "architecture" => "transcendent", "version" => "3.14159"} }
         let(:deb_package_profile) do
