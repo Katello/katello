@@ -39,7 +39,9 @@ module Actions
             Rails.logger.warn("Host with ID %s has no content facet, continuing" % host_id)
           else
             begin
-              ::Katello::Pulp::Consumer.new(host.content_facet.uuid).upload_package_profile(profile)
+              unless SmartProxy.pulp_primary&.pulp3_repository_type_support?(::Katello::Repository::YUM_TYPE)
+                ::Katello::Pulp::Consumer.new(host.content_facet.uuid).upload_package_profile(profile)
+              end
               simple_packages = profile.map { |item| ::Katello::Pulp::SimplePackage.new(item) }
               host.import_package_profile(simple_packages)
             rescue RestClient::ResourceNotFound
