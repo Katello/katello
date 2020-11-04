@@ -1,6 +1,7 @@
 describe('Controller: ContentViewsController', function() {
     var $scope,
         ContentView,
+        RepositoryTypesService,
         Nutupane;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
@@ -14,6 +15,9 @@ describe('Controller: ContentViewsController', function() {
             this.enableSelectAllResults = function() {}
         };
         ContentView = {};
+        RepositoryTypesService = {
+          pulp3Supported: function(){},
+        };
     });
 
     beforeEach(inject(function($injector) {
@@ -24,7 +28,8 @@ describe('Controller: ContentViewsController', function() {
             $scope: $scope,
             Nutupane: Nutupane,
             ContentView: ContentView,
-            CurrentOrganization: 'CurrentOrganization'
+            CurrentOrganization: 'CurrentOrganization',
+            RepositoryTypesService: RepositoryTypesService
         });
     }));
 

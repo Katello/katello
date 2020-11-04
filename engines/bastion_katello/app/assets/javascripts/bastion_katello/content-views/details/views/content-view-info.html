@@ -24,9 +24,11 @@
       <dd ng-show="contentView.composite" translate>Yes</dd>
       <dd ng-hide="contentView.composite" translate>No</dd>
 
-      <dt translate>Import-only</dt>
-      <dd ng-show="contentView.import_only" translate>Yes</dd>
-      <dd ng-hide="contentView.import_only" translate>No</dd>
+      <div ng-show="importOnlyEnabled()">
+        <dt translate>Import-only</dt>
+        <dd ng-show="contentView.import_only" translate>Yes</dd>
+        <dd ng-hide="contentView.import_only" translate>No</dd>
+      </div>
 
       <dt translate>Force Puppet Environment</dt>
       <dd>

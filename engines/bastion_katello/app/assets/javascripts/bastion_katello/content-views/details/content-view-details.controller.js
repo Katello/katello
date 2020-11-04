@@ -92,5 +92,9 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
                 /* eslint-enable camelcase */
             }
         });
+
+        $scope.importOnlyEnabled = function() {
+            return RepositoryTypesService.pulp3Supported('yum');
+        };
     }]
 );

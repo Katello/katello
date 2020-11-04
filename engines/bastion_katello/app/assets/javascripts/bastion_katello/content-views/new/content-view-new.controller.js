@@ -11,8 +11,8 @@
  * @description
  */
 angular.module('Bastion.content-views').controller('NewContentViewController',
-    ['$scope', 'ContentView', 'FormUtils', 'CurrentOrganization', 'contentViewSolveDependencies',
-    function ($scope, ContentView, FormUtils, CurrentOrganization, contentViewSolveDependencies) {
+    ['$scope', 'ContentView', 'FormUtils', 'CurrentOrganization', 'contentViewSolveDependencies', 'RepositoryTypesService',
+    function ($scope, ContentView, FormUtils, CurrentOrganization, contentViewSolveDependencies, RepositoryTypesService) {
 
         function success(response) {
             var successState = 'content-view.repositories.yum.available';
@@ -44,8 +44,12 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
             contentView.$save(success, error);
         };
 
+        $scope.importOnlyEnabled = function() {
+            return RepositoryTypesService.pulp3Supported('yum');
+        };
+
         $scope.$watch('contentView.name', function () {
-            if ($scope.contentViewForm.name) {
+            if ($scope.contentViewForm && $scope.contentViewForm.name) {
                 $scope.contentViewForm.name.$setValidity('server', true);
                 FormUtils.labelize($scope.contentView);
             }

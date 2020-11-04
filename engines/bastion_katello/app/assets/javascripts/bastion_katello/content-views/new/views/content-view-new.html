@@ -70,7 +70,7 @@
         <p class="help-block" translate>A composite view contains other content views.</p>
       </div>
 
-      <div bst-form-group ng-hide="contentView.composite">
+      <div bst-form-group ng-hide="!importOnlyEnabled() || contentView.composite">
         <div class="checkbox">
           <label for="import_only">
             <input id="import_only"
