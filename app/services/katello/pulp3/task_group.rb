@@ -73,6 +73,12 @@ module Katello
       end
 
       def cancel
+        tasks_api = ::Katello::Pulp3::Api::Core.new(@smart_proxy).tasks_api
+        tasks_response = tasks_api.list(task_group: task_group_data['pulp_href'])
+        data = PulpcoreClient::TaskResponse.new(state: 'canceled')
+        tasks_response.results.collect do |result|
+          tasks_api.tasks_cancel(result.pulp_href, data)
+        end
       end
     end
   end

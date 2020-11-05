@@ -74,6 +74,7 @@ module Actions
 
       def cancel
         pulp_tasks.each { |task| task.cancel }
+        task_groups.each { |task_group| task_group.cancel }
       end
 
       def rescue_external_task(error)
