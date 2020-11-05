@@ -43,7 +43,7 @@ module Katello
     end
 
     def self.generate_rpm_clauses(package_filenames = [])
-      { 'filename' => { "$in" => package_filenames } } unless package_filenames.empty?
+      { 'filename' => { "$in" => package_filenames.sort } } unless package_filenames.empty?
     end
 
     def applicable_rpms
