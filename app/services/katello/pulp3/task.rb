@@ -79,7 +79,7 @@ module Katello
 
       def error
         if task_data[:state] == CANCELED
-          self.new(_("Task canceled"))
+          _("Task canceled")
         elsif task_data[:state] == FAILED
           if task_data[:error][:description].blank?
             _("Pulp task error")
@@ -90,8 +90,8 @@ module Katello
       end
 
       def cancel
-        data = PulpcoreClient::Task.new(state: 'canceled')
-        tasks_api.tasks_cancel(pulp_task['pulp_href'], data)
+        data = PulpcoreClient::TaskResponse.new(state: 'canceled')
+        tasks_api.tasks_cancel(task_data['pulp_href'], data)
         #the main task may have completed, so cancel spawned tasks too
         task_data['spawned_tasks']&.each { |spawned| tasks_api.tasks_cancel(spawned['pulp_href'], data) }
       end
