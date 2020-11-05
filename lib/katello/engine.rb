@@ -75,7 +75,7 @@ module Katello
 
     # make sure the Katello plugin is initialized before `after_initialize`
     # hook so that the resumed Dynflow tasks can rely on everything ready.
-    initializer 'katello.register_plugin', :before => :finisher_hook do
+    initializer 'katello.register_plugin', :before => :finisher_hook, :after => 'foreman_remote_execution.register_plugin' do
       ::Foreman::AccessControl::Permission.prepend ::Katello::Concerns::PermissionExtensions
       require 'katello/plugin'
 
