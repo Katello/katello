@@ -67,7 +67,7 @@ module Katello
           3.times { data.config << { content: content } }
 
           mock_api = "test"
-          Katello::Pulp3::Api::Yum.any_instance.expects(:copy_api).returns(mock_api).times(10)
+          Katello::Pulp3::Api::Yum.any_instance.expects(:copy_api).returns(mock_api).times(12)
           mock_api.stubs(:copy_content).returns("copied")
 
           @repo_service.copy_content_chunked(data)
