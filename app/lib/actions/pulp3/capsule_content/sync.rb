@@ -2,6 +2,7 @@ module Actions
   module Pulp3
     module CapsuleContent
       class Sync < Pulp3::AbstractAsyncTask
+        include ::Actions::Helpers::SmartProxySyncHistoryHelper
         def plan(repository, smart_proxy, options = {})
           sequence do
             plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :options => options)

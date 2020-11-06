@@ -49,6 +49,8 @@ module Katello
         has_many :content_facets, :class_name => "::Katello::Host::ContentFacet", :foreign_key => :content_source_id,
                                   :inverse_of => :content_source, :dependent => :nullify
 
+        has_many :smart_proxy_sync_histories, :class_name => "::Katello::SmartProxySyncHistory", :inverse_of => :smart_proxy, dependent: :delete_all
+
         has_many :hostgroup_content_facets, :class_name => "::Katello::Hostgroup::ContentFacet", :foreign_key => :content_source_id,
                               :inverse_of => :content_source, :dependent => :nullify
         has_many :hostgroups, :class_name => "::Hostgroup", :through => :hostgroup_content_facets

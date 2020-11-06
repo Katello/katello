@@ -1,8 +1,8 @@
 module Support
   module CapsuleSupport
     def pulp_features
-      @pulp_node_feature ||= Feature.create(name: SmartProxy::PULP_NODE_FEATURE)
-      @pulp3_feature ||= Feature.create(name: SmartProxy::PULP3_FEATURE)
+      @pulp_node_feature ||= Feature.where(name: SmartProxy::PULP_NODE_FEATURE).first_or_create
+      @pulp3_feature ||= Feature.where(name: SmartProxy::PULP3_FEATURE).first_or_create
       [@pulp_node_feature, @pulp3_feature]
     end
 
