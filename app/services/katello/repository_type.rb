@@ -70,7 +70,8 @@ module Katello
       {
         :name => self.id.to_s,
         :id => self.id,
-        :creatable => @allow_creation_by_user
+        :creatable => @allow_creation_by_user,
+        :pulp3_support => SmartProxy.pulp_primary.pulp3_repository_type_support?(self)
       }
     end
 

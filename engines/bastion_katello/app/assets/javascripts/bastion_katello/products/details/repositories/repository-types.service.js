@@ -11,7 +11,6 @@
      *   current state of the application.
      */
     function RepositoryTypesService(repositoryTypes) {
-
         this.repositoryTypes = function () {
             return repositoryTypes;
         };
@@ -27,6 +26,14 @@
                 return type.id === desiredType;
             });
             return angular.isDefined(found);
+        };
+
+        this.pulp3Supported = function(desiredType) {
+            var found = _.find(repositoryTypes, function(type) {
+                return type.id === desiredType;
+            });
+
+            return found.pulp3_support;
         };
     }
 
