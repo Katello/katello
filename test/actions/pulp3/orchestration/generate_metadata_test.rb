@@ -3,6 +3,7 @@ require 'katello_test_helper'
 module ::Actions::Pulp3
   class GenerateMetadataTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
+    include Support::CapsuleSupport
 
     def setup
       @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
@@ -32,11 +33,13 @@ module ::Actions::Pulp3
       @repo.reload
       @clone = katello_repositories(:generic_file_dev)
       assert_equal 1, Katello::Pulp3::DistributionReference.where(repository_id: @repo.id).count
-
       ensure_creatable(@clone, @primary)
+      @clone.create_smart_proxy_sync_history(proxy_with_pulp)
+      assert_equal @clone.smart_proxy_sync_histories.count, 1
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @clone, @primary, source_repository: @repo)
       assert_equal @repo.publication_href, @clone.reload.publication_href
       assert_equal 1, Katello::Pulp3::DistributionReference.where(repository_id: @clone.id).count
+      assert_equal @clone.smart_proxy_sync_histories.count, 0
     end
   end
 end

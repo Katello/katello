@@ -4,8 +4,10 @@ module Actions
     module Repository
       class ImportUpload < Actions::EntryAction
         include Actions::Katello::PulpSelector
+        # rubocop:disable Metrics/MethodLength
         def plan(repository, uploads, options = {})
           action_subject(repository)
+          repository.clear_smart_proxy_sync_histories
           repo_service = repository.backend_service(::SmartProxy.pulp_primary)
 
           upload_ids = uploads.pluck('id')

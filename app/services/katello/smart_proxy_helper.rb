@@ -21,6 +21,15 @@ module Katello
       end
     end
 
+    def clear_smart_proxy_sync_histories(repo_list = [])
+      if repo_list.empty?
+        @smart_proxy.smart_proxy_sync_histories.delete_all
+        return
+      end
+      repo_ids = repo_list.map(&:id)
+      @smart_proxy.smart_proxy_sync_histories.where("repository_id IN (?)", repo_ids).delete_all
+    end
+
     def combined_repos_available_to_capsule(environment = nil, content_view = nil, repository = nil)
       lifecycle_environment_check(environment, repository)
       if repository
