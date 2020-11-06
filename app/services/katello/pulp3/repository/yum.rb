@@ -159,8 +159,7 @@ module Katello
 
             data_dup.config[i][:content] = leftover_units.pop(copy_amount)
             unit_copy_counter += copy_amount
-            # Do copy call if limit is reached or if we're under the limit but on the last repo config.
-            if unit_copy_counter >= UNIT_LIMIT || (i == data_dup.config.size - 1 && leftover_units.empty?)
+            if unit_copy_counter != 0
               tasks << api.copy_api.copy_content(data_dup)
               unit_copy_counter = 0
             end
