@@ -144,9 +144,19 @@ module Katello
 
     def test_update_protected
       allowed_perms = [@update_permission]
-      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission,
+                      {:name => "read_content_views", :search => "name=\"#{@filter.content_view.name}\"" }]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
+        put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name" }
+      end
+    end
+
+    def test_update_protected_object
+      allowed_perms = [{:name => "edit_content_views", :search => "name=\"#{@filter.content_view.name}\"" }]
+      denied_perms = [{:name => "edit_content_views", :search => "name=\"some_name\"" }]
+
+      assert_protected_object(:update, allowed_perms, denied_perms) do
         put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name" }
       end
     end
