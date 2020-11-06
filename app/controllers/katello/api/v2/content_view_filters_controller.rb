@@ -2,9 +2,9 @@ module Katello
   class Api::V2::ContentViewFiltersController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_content_view
+    before_action :find_editable_content_view, :only => [:create, :update, :destroy]
+    before_action :find_readable_content_view, :only => [:show, :index, :auto_complete_search]
     before_action :find_filter, :except => [:index, :create, :auto_complete_search]
-
     wrap_parameters :include => (ContentViewFilter.attribute_names + %w(repository_ids))
 
     api :get, "/content_views/:content_view_id/filters", N_("list filters")
@@ -73,7 +73,7 @@ module Katello
       respond :resource => @filter
     end
 
-    api :delete, "/content_views/:content_view_id/filters/:id", N_("delete a filter")
+    api :delefind_filterte, "/content_views/:content_view_id/filters/:id", N_("delete a filter")
     api :delete, "/content_view_filters/:id", N_("delete a filter")
     param :content_view_id, :number, :desc => N_("content view identifier")
     param :id, :number, :desc => N_("filter identifier"), :required => true
@@ -84,18 +84,27 @@ module Katello
 
     private
 
-    def find_content_view
-      @view = ContentView.find(params[:content_view_id]) if params[:content_view_id]
+    def find_readable_content_view
+      @view = ContentView.readable.find_by(id: params[:content_view_id]) if params[:content_view_id]
+      throw_resource_not_found(name: 'content view', id: params[:content_view_id]) if params[:content_view_id] && @view.nil?
+    end
+
+    def find_editable_content_view
+      @view = ContentView.editable.find_by(id: params[:content_view_id]) if params[:content_view_id]
+      throw_resource_not_found(name: 'content view', id: params[:content_view_id]) if params[:content_view_id] && @view.nil?
     end
 
     def find_filter
       if @view
         @filter = @view.filters.find_by(:id => params[:id])
-        fail HttpErrors::NotFound, _("Couldn't find ContentViewFilter with id=%s") % params[:id] unless @filter
+      elsif params[:action] == 'show'
+        @filter = ContentViewFilter.readable.find_by(id: params[:id])
+        @view = @filter&.content_view
       else
-        @filter = ContentViewFilter.find(params[:id])
-        @view = @filter.content_view
+        @filter = ContentViewFilter.editable.find_by(id: params[:id])
+        @view = @filter&.content_view
       end
+      fail HttpErrors::NotFound, _("Couldn't find ContentViewFilter with id=%s") % params[:id] unless @filter
     end
 
     def filter_params
