@@ -165,10 +165,16 @@ module Katello
         process_distributions(pulp3_api, migrated_repo.pulp3_distribution_hrefs)
       end
 
+      def distribution_path_from_cache(href, pulp3_api)
+        @distribution_cache ||= {}
+        @distribution_cache[href] ||= pulp3_api.distributions_api.read(href).base_path
+        @distribution_cache[href]
+      end
+
       def process_distributions(pulp3_api, dist_hrefs_list)
         #distribution_path_hash(pulp3_api, dist_hrefs_list).each do |relative_path, href|
         dist_hrefs_list.each do |href|
-          relative_path = pulp3_api.distributions_api.read(href).base_path
+          relative_path = distribution_path_from_cache(href, pulp3_api)
 
           dist_ref = Katello::Pulp3::DistributionReference.find_or_initialize_by(:path => relative_path)
           if (distribution_repo = Katello::Repository.find_by(:relative_path => relative_path) || Katello::Repository.find_by(:container_repository_name => relative_path))
