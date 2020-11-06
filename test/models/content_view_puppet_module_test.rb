@@ -104,5 +104,15 @@ module Katello
       modules = modules.where(:name => puppet_module_apt.name)
       assert content_view_puppet_module.latest_in_modules_by_author?(modules)
     end
+
+    def test_import_only_content_view
+      cv = katello_content_views(:import_only_view)
+      puppet_module = katello_puppet_modules(:acmecorp_motd)
+      content_view_puppet_module = ContentViewPuppetModule.new(
+        :uuid => puppet_module.pulp_id,
+        :content_view => cv
+      )
+      refute content_view_puppet_module.valid?
+    end
   end
 end

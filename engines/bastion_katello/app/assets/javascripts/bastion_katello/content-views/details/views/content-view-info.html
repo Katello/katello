@@ -24,6 +24,12 @@
       <dd ng-show="contentView.composite" translate>Yes</dd>
       <dd ng-hide="contentView.composite" translate>No</dd>
 
+      <div ng-show="importOnlyEnabled()">
+        <dt translate>Import-only</dt>
+        <dd ng-show="contentView.import_only" translate>Yes</dd>
+        <dd ng-hide="contentView.import_only" translate>No</dd>
+      </div>
+
       <dt translate>Force Puppet Environment</dt>
       <dd>
         <div bst-edit-checkbox="contentView.force_puppet_environment"
@@ -50,7 +56,7 @@
         </dd>
       </div>
 
-      <div>
+      <div ng-if="!contentView.import_only">
         <dt translate>Solve Dependencies</dt>
         <dd>
           <div bst-edit-checkbox="contentView.solve_dependencies"

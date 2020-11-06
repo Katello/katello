@@ -7,6 +7,10 @@ module Katello
                                 Repository::DEB_TYPE
                                ].freeze
 
+    ALLOWED_IMPORT_REPOSITORY_TYPES = [
+      Repository::YUM_TYPE
+    ].freeze
+
     belongs_to :content_view, :inverse_of => :content_view_repositories,
                               :class_name => "Katello::ContentView"
     belongs_to :repository, :inverse_of => :content_view_repositories,
@@ -27,7 +31,7 @@ module Katello
     end
 
     def ensure_repository_type
-      unless ALLOWED_REPOSITORY_TYPES.include?(repository.content_type)
+      unless allowed_repository_types.include?(repository.content_type)
         errors.add(:base, _("Cannot add %s repositories to a content view.") % repository.content_type)
       end
     end
@@ -39,6 +43,14 @@ module Katello
 
       unless self.repository.content_view.default?
         errors.add(:base, _("Repositories from published Content Views are not allowed."))
+      end
+    end
+
+    def allowed_repository_types
+      if self.content_view.import_only?
+        ALLOWED_IMPORT_REPOSITORY_TYPES
+      else
+        ALLOWED_REPOSITORY_TYPES
       end
     end
   end

@@ -81,12 +81,32 @@ module Katello
 
     test_attributes :pid => '80d36498-2e71-4aa9-b696-f0a45e86267f'
     def test_create
+      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+
       post :create, params: { :name => "My View", :label => "My_View", :description => "Cool",
                               :organization_id => @organization.id, :solve_dependencies => true }
 
       assert_response :success
       assert_template :layout => 'katello/api/v2/layouts/resource'
       assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_create_import_only_pulp3
+      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+
+      post :create, params: { :name => "My View", :label => "My_View", :description => "Cool",
+                              :organization_id => @organization.id, :import_only => true }
+
+      assert_response :success
+    end
+
+    def test_create_import_only_pulp2
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+
+      post :create, params: { :name => "My View", :label => "My_View", :description => "Cool",
+                              :organization_id => @organization.id, :import_only => true }
+
+      assert_response :bad_request
     end
 
     def test_publish_with_version_params
