@@ -109,6 +109,8 @@ module Katello
     has_many :distribution_references, :class_name => 'Katello::Pulp3::DistributionReference', :foreign_key => :repository_id,
              :dependent => :destroy, :inverse_of => :repository
 
+    has_many :smart_proxy_sync_histories, :class_name => "::Katello::SmartProxySyncHistory", :inverse_of => :repository, :dependent => :delete_all
+
     validates_with Validators::ContainerImageNameValidator, :attributes => :container_repository_name, :allow_blank => false, :if => :docker?
     validates :container_repository_name, :if => :docker?, :uniqueness => {message: ->(object, _data) do
       _("for repository '%{name}' is not unique and cannot be created in '%{env}'. Its Container Repository Name (%{container_name}) conflicts with an existing repository.  Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.") %
@@ -529,6 +531,30 @@ module Katello
 
       clone.relative_path = clone.docker? ? clone.generate_docker_repo_path : clone.generate_repo_path
       clone
+    end
+
+    def self.synced_on_capsule(smart_proxy)
+      smart_proxy.smart_proxy_sync_histories.map { |sph| sph.repository unless sph.finished_at.nil? }
+    end
+
+    def clear_smart_proxy_sync_histories(smart_proxy = nil)
+      if smart_proxy
+        self.smart_proxy_sync_histories.where(:smart_proxy_id => smart_proxy.id).try(:delete_all)
+      else
+        self.smart_proxy_sync_histories.delete_all
+      end
+    end
+
+    def create_smart_proxy_sync_history(smart_proxy)
+      clear_smart_proxy_sync_histories(smart_proxy)
+      sp_history_args = {
+        :smart_proxy_id => smart_proxy.id,
+        :repository_id => self.id,
+        :started_at => Time.now
+      }
+      sp_history = ::Katello::SmartProxySyncHistory.create sp_history_args
+      sp_history.save!
+      sp_history.id
     end
 
     def latest_sync_audit

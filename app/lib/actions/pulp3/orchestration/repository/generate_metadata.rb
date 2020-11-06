@@ -8,7 +8,7 @@ module Actions
             publication_content_type = !::Katello::RepositoryTypeManager.find(repository.content_type).pulp3_skip_publication
             sequence do
               if options[:source_repository] && publication_content_type
-                plan_self(source_repository_id: options[:source_repository].id, target_repository_id: repository.id)
+                plan_self(source_repository_id: options[:source_repository].id, target_repository_id: repository.id, smart_proxy_id: smart_proxy.id)
               elsif publication_content_type
                 plan_action(Actions::Pulp3::Repository::CreatePublication, repository, smart_proxy, options)
               end
@@ -21,6 +21,9 @@ module Actions
             #we don't have to actually generate a publication, we can reuse the old one
             target_repo = ::Katello::Repository.find(input[:target_repository_id])
             source_repo = ::Katello::Repository.find(input[:source_repository_id])
+            if (target_repo.publication_href != source_repo.publication_href && smart_proxy.pulp_primary?)
+              target_repo.clear_smart_proxy_sync_histories
+            end
             target_repo.update!(publication_href: source_repo.publication_href)
           end
         end
