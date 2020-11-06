@@ -3,6 +3,7 @@ describe('Controller: NewContentViewController', function() {
         $controller,
         dependencies,
         FormUtils,
+        RepositoryTypesService,
         ContentView;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
@@ -11,6 +12,9 @@ describe('Controller: NewContentViewController', function() {
         $controller = $injector.get('$controller');
 
         ContentView = $injector.get('MockResource').$new();
+        RepositoryTypesService = {
+          pulp3Supported: function(){},
+        };
 
         $scope = $injector.get('$rootScope').$new();
         FormUtils = {
@@ -24,7 +28,8 @@ describe('Controller: NewContentViewController', function() {
             ContentView: ContentView,
             FormUtils: FormUtils,
             CurrentOrganization: 'CurrentOrganization',
-            contentViewSolveDependencies: 'false'
+            contentViewSolveDependencies: 'false',
+            RepositoryTypesService: RepositoryTypesService
         };
 
         $controller('NewContentViewController', dependencies);

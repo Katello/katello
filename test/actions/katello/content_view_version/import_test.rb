@@ -54,6 +54,7 @@ module ::Actions::Katello::ContentViewVersion
   class ImportTest < TestBase
     before do
       setup_proxy
+      content_view.import_only = true
     end
 
     it 'Import should fail on importing content for an existing versions' do
@@ -75,7 +76,7 @@ module ::Actions::Katello::ContentViewVersion
                                   content_view, '',
                                   path: @import_export_dir,
                                   metadata: metadata,
-                                  import_only: true,
+                                  importing: true,
                                   major: metadata[:content_view_version][:major],
                                   minor: metadata[:content_view_version][:minor])
     end

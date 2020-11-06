@@ -84,5 +84,17 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         $scope.fetchContentView();
+
+        $scope.$watch('contentView.import_only', function () {
+            if ($scope.contentView.import_only) {
+                /* eslint-disable camelcase */
+                $scope.contentView.solve_dependencies = false;
+                /* eslint-enable camelcase */
+            }
+        });
+
+        $scope.importOnlyEnabled = function() {
+            return RepositoryTypesService.pulp3Supported('yum');
+        };
     }]
 );

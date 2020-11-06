@@ -17,6 +17,8 @@ module Katello
 
     before_validation :set_attributes
 
+    validate :import_only_content_view
+
     def puppet_module
       PuppetModule.find_by(:pulp_id => self.uuid)
     end
@@ -41,6 +43,12 @@ module Katello
     end
 
     private
+
+    def import_only_content_view
+      if self.content_view.import_only?
+        errors.add(:base, "Cannot add puppet modules to an import-only content view.")
+      end
+    end
 
     def set_attributes
       if self.uuid.present?

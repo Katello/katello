@@ -106,6 +106,17 @@ composite_view:
   updated_at: <%= Time.now %>
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
+import_only_view:
+  name:           Import-only content view
+  description:    This CV may not be published except through CVV import
+  label:          import_only_view
+  default:        false
+  import_only:    true
+  next_version:   2
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+
 library_view_solve_deps:
   name:               Solve Dependencies CV
   description:        A content view

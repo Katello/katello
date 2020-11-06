@@ -7,5 +7,9 @@ FactoryBot.define do
     trait :composite do
       composite { true }
     end
+
+    trait :import_only do
+      import_only { true }
+    end
   end
 end

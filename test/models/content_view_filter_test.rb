@@ -30,6 +30,14 @@ module Katello
       refute ContentViewFilter.exists?(filter.id)
     end
 
+    def test_import_only_view
+      cv = katello_content_views(:import_only_view)
+
+      cv.filters << FactoryBot.build(:katello_content_view_filter)
+
+      refute cv.valid?
+    end
+
     def test_bad_name
       filter = FactoryBot.build(:katello_content_view_filter, :name => "")
       assert filter.invalid?

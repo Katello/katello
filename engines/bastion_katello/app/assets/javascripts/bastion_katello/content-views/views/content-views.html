@@ -29,6 +29,7 @@
         <tr bst-table-head>
           <th bst-table-column><span translate>Name</span></th>
           <th bst-table-column><span translate>Composite View?</span></th>
+          <th bst-table-column ng-show="importOnlyEnabled()"><span translate>Import-only?</span></th>
           <th bst-table-column><span translate>Last Published</span></th>
           <th bst-table-column><span translate>Environments</span></th>
           <th bst-table-column><span translate>Repositories</span></th>
@@ -45,6 +46,10 @@
           <td bst-table-cell>
             <span ng-show="contentView.composite" translate>Yes</span>
             <span ng-hide="contentView.composite" translate>No</span>
+          </td>
+          <td bst-table-cell ng-show="importOnlyEnabled()">
+            <span ng-show="contentView.import_only" translate>Yes</span>
+            <span ng-hide="contentView.import_only" translate>No</span>
           </td>
           <td bst-table-cell>
             <span ng-show="contentView.last_published"><long-date-time date="contentView.last_published" /></span>

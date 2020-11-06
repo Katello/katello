@@ -6,10 +6,10 @@ module Actions
         include ::Katello::ContentViewHelper
         attr_accessor :version
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
-        def plan(content_view, description = "", options = {})
+        def plan(content_view, description = "", options = {importing: false})
           action_subject(content_view)
-          import_only = options.fetch(:import_only, false)
-          content_view.check_ready_to_publish! unless import_only
+
+          content_view.check_ready_to_publish!(importing: options[:importing])
 
           if options[:repos_units].present?
             valid_labels_from_cv = content_view.repositories.map(&:label)
@@ -52,7 +52,8 @@ module Actions
 
             if separated_repo_map[:pulp3_yum].keys.flatten.present? &&
                 SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
-              if import_only
+
+              if options[:importing]
                 handle_import(version, options.slice(:path, :metadata))
               else
                 plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)

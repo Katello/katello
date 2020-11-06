@@ -28,6 +28,15 @@ module ::Actions::Katello::ContentView
       plan_action(action, content_view)
     end
 
+    it 'fails when planning if the cv is import only' do
+      content_view = katello_content_views(:import_only_view)
+      action.stubs(:task).returns(success_task)
+
+      assert_raises(RuntimeError) do
+        plan_action(action, content_view)
+      end
+    end
+
     context 'run phase' do
       it 'creates auto-publish events for non-composite views' do
         composite_view = katello_content_views(:composite_view)
