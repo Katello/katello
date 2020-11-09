@@ -314,7 +314,7 @@ module Katello
     end
 
     def find_host_collections
-      throw_each_resource_not_found(name: 'host collection', expected_ids: params[:host_collection_ids]) do
+      throw_resources_not_found(name: 'host collection', expected_ids: params[:host_collection_ids]) do
         @host_collections = HostCollection.editable.where(id: params[:host_collection_ids])
       end
     end
@@ -391,7 +391,7 @@ module Katello
     end
 
     def find_traces
-      throw_each_resource_not_found(name: 'host trace', expected_ids: params[:trace_ids]) do
+      throw_resources_not_found(name: 'host trace', expected_ids: params[:trace_ids]) do
         @traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
       end
     end
