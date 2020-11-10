@@ -1,8 +1,8 @@
 module Katello
   class ContentViewPuppetEnvironment < Katello::Model
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::Pulp::Repo if SETTINGS[:katello][:use_pulp]
-    include Glue if SETTINGS[:katello][:use_pulp]
+    include Glue::Pulp::Repo
+    include Glue
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment",
                              :inverse_of => :content_view_puppet_environments

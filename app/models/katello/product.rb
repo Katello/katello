@@ -4,8 +4,8 @@ module Katello
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Product
-    include Glue::Pulp::Repos if SETTINGS[:katello][:use_pulp]
-    include Glue if SETTINGS[:katello][:use_pulp]
+    include Glue::Pulp::Repos
+    include Glue
 
     include Katello::Authorization::Product
 

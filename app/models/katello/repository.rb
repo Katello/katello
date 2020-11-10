@@ -12,9 +12,9 @@ module Katello
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Repository
-    include Glue::Pulp::Repo if SETTINGS[:katello][:use_pulp]
+    include Glue::Pulp::Repo
 
-    include Glue if SETTINGS[:katello][:use_pulp]
+    include Glue
     include Authorization::Repository
     include Katello::Engine.routes.url_helpers
 

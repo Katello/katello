@@ -17,7 +17,7 @@ module Actions
                         :force => force)
             plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id)
 
-            if manifest_update && SETTINGS[:katello][:use_pulp]
+            if manifest_update
               repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
               repositories.each do |repo|
                 plan_action(Katello::Repository::RefreshRepository, repo)
