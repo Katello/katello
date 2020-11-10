@@ -12,11 +12,9 @@ module Actions
           organization.save!
 
           sequence do
-            if ::SETTINGS[:katello][:use_cp]
-              cp_create = plan_action(Candlepin::Owner::Create,
-                                      label:  organization.label,
-                                      name: organization.name)
-            end
+            cp_create = plan_action(Candlepin::Owner::Create,
+                                    label:  organization.label,
+                                    name: organization.name)
             plan_action(Katello::Environment::LibraryCreate, organization.library)
           end
           if cp_create

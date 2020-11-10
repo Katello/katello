@@ -14,7 +14,7 @@ module Katello
     include Glue::Candlepin::Repository
     include Glue::Pulp::Repo if SETTINGS[:katello][:use_pulp]
 
-    include Glue if (SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp])
+    include Glue if SETTINGS[:katello][:use_pulp]
     include Authorization::Repository
     include Katello::Engine.routes.url_helpers
 
