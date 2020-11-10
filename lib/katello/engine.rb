@@ -24,7 +24,6 @@ module Katello
 
     initializer 'katello.load_default_settings', :before => 'katello.register_plugin' do
       default_settings = {
-        :use_pulp => true,
         :rest_client_timeout => 30,
         :gpg_strict_validation => false,
         :redhat_repository_url => 'https://cdn.redhat.com',
