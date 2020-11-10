@@ -17,7 +17,7 @@ module Actions
             remove_providers(organization)
             remove_environments(organization)
             plan_self
-            plan_action(Candlepin::Owner::Destroy, label: organization.label) if ::SETTINGS[:katello][:use_cp]
+            plan_action(Candlepin::Owner::Destroy, label: organization.label)
           end
         end
 

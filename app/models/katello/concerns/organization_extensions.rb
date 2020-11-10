@@ -9,8 +9,8 @@ module Katello
 
         include ForemanTasks::Concerns::ActionSubject
         prepend ForemanTasks::Concerns::ActionTriggering
-        include Glue::Candlepin::Owner if SETTINGS[:katello][:use_cp]
-        include Glue if SETTINGS[:katello][:use_cp]
+        include Glue::Candlepin::Owner
+        include Glue
 
         include Katello::Authorization::Organization
         include Ext::LabelFromName

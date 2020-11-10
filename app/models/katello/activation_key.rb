@@ -1,8 +1,8 @@
 module Katello
   class ActivationKey < Katello::Model
     audited :except => [:cp_id], :associations => [:host_collections]
-    include Glue::Candlepin::ActivationKey if SETTINGS[:katello][:use_cp]
-    include Glue if SETTINGS[:katello][:use_cp]
+    include Glue::Candlepin::ActivationKey
+    include Glue
     include Katello::Authorization::ActivationKey
     include ForemanTasks::Concerns::ActionSubject
     include ScopedSearchExtensions

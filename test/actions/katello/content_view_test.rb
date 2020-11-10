@@ -170,7 +170,6 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
-      SETTINGS[:katello].stubs(:use_cp).returns(true)
       content_view_environment.expects(:save!)
       plan_action(action, content_view_environment)
       content_view = content_view_environment.content_view

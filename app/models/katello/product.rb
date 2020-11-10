@@ -3,9 +3,9 @@ module Katello
     audited
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::Candlepin::Product if SETTINGS[:katello][:use_cp]
+    include Glue::Candlepin::Product
     include Glue::Pulp::Repos if SETTINGS[:katello][:use_pulp]
-    include Glue if SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp]
+    include Glue if SETTINGS[:katello][:use_pulp]
 
     include Katello::Authorization::Product
 
