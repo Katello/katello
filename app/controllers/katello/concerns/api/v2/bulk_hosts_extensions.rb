@@ -3,37 +3,41 @@ module Katello
     module Api::V2::BulkHostsExtensions
       extend ActiveSupport::Concern
 
+      def bulk_hosts_relation(permission, org)
+        relation = ::Host::Managed.authorized(permission)
+        relation = relation.where(organization: org) if org
+        relation
+      end
+
       def find_bulk_hosts(permission, bulk_params, restrict_to = nil)
         #works on a structure of param_group bulk_params and transforms it into a list of systems
-        find_organization
         bulk_params[:included] ||= {}
         bulk_params[:excluded] ||= {}
-        @hosts = []
-
-        unless bulk_params[:included][:ids].blank?
-          @hosts = ::Host::Managed.authorized(permission).where(:id => bulk_params[:included][:ids])
-          @hosts = @hosts.where(:organization_id => @organization.id) if @organization
-        end
-
-        if bulk_params[:included][:search]
-          search_hosts = ::Host::Managed.authorized(permission)
-          search_hosts = search_hosts.where(:organization_id => @organization.id) if @organization
-          search_hosts = search_hosts.search_for(bulk_params[:included][:search])
-          if @hosts.any?
-            @hosts = ::Host.where(id: @hosts).or(::Host.where(id: search_hosts))
-          else
-            @hosts = search_hosts
-          end
-        end
-
-        @hosts = restrict_to.call(@hosts) if restrict_to
-        @hosts = @hosts.where.not(id: bulk_params[:excluded][:ids]) unless bulk_params[:excluded][:ids].blank?
 
         if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
           fail HttpErrors::BadRequest, _("No hosts have been specified.")
-        elsif @hosts.empty?
-          fail HttpErrors::Forbidden, _("Action unauthorized to be performed on selected hosts.")
         end
+
+        find_organization
+        @hosts = bulk_hosts_relation(permission, @organization)
+
+        if bulk_params[:included][:ids].present?
+          @hosts = @hosts.where(id: bulk_params[:included][:ids])
+        end
+
+        if bulk_params[:included][:search]
+          search_hosts = bulk_hosts_relation(permission, @organization).search_for(bulk_params[:included][:search])
+          @hosts = @hosts.merge(search_hosts)
+        end
+
+        @hosts = restrict_to.call(@hosts) if restrict_to
+
+        if bulk_params[:excluded][:ids].present?
+          @hosts = @hosts.where.not(id: bulk_params[:excluded][:ids])
+        end
+
+        fail HttpErrors::Forbidden, _("Action unauthorized to be performed on selected hosts.") if @hosts.empty?
+
         @hosts
       end
 
