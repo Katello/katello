@@ -7,11 +7,12 @@ module Katello
     before_action :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_action :find_environment, :only => [:environment_content_view]
     before_action :find_content_view, :only => [:environment_content_view]
-    before_action :find_editable_hosts, :except => [:destroy_hosts, :applicable_errata, :installable_errata, :resolve_traces]
+    before_action :find_editable_hosts, :except => [:destroy_hosts, :resolve_traces]
     before_action :find_deletable_hosts, :only => [:destroy_hosts]
     before_action :find_readable_hosts, :only => [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, :only => [:available_incremental_updates]
     before_action :find_organization, :only => [:add_subscriptions]
+    before_action :find_traces, :only => [:resolve_traces]
     before_action :deprecate_katello_agent, :only => [:install_content, :update_content, :remove_content]
 
     before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
@@ -241,8 +242,7 @@ module Katello
     param_group :bulk_params
     param :trace_ids, Array, :required => true, :desc => N_("Array of Trace IDs")
     def resolve_traces
-      traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
-      result = Katello::HostTraceManager.resolve_traces(traces)
+      result = Katello::HostTraceManager.resolve_traces(@traces)
 
       render json: result
     end
@@ -314,7 +314,9 @@ module Katello
     end
 
     def find_host_collections
-      @host_collections = HostCollection.where(:id => params[:host_collection_ids])
+      throw_resources_not_found(name: 'host collection', expected_ids: params[:host_collection_ids]) do
+        @host_collections = HostCollection.editable.where(id: params[:host_collection_ids])
+      end
     end
 
     def find_readable_hosts
@@ -377,11 +379,21 @@ module Katello
     end
 
     def find_environment
-      @environment = KTEnvironment.find(params[:environment_id])
+      @environment = KTEnvironment.editable.find(params[:environment_id])
+      throw_resource_not_found(name: 'lifecycle environment', id: params[:environment_id]) unless @environment
+      @environment
     end
 
     def find_content_view
-      @view = ContentView.find(params[:content_view_id])
+      @view = ContentView.editable.find(params[:content_view_id])
+      throw_resource_not_found(name: 'content view', id: params[:content_view_id]) unless @view
+      @view
+    end
+
+    def find_traces
+      throw_resources_not_found(name: 'host trace', expected_ids: params[:trace_ids]) do
+        @traces = Katello::HostTracer.resolvable.where(id: params[:trace_ids])
+      end
     end
 
     def disable_erratum_hosts_count
