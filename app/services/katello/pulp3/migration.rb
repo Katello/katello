@@ -22,7 +22,7 @@ module Katello
       end
 
       def initialize(smart_proxy, repository_types = Migration.repository_types_for_migration, options = {})
-        self.reimport_all = options.fetch(:reimport, false)
+        self.reimport_all = options.fetch(:reimport_all, false)
 
         if (repository_types - smart_proxy.supported_pulp_types[:pulp3][:overriden_to_pulp2]).any?
           fail ::Katello::Errors::Pulp3MigrationError, _("Pulp 3 migration cannot run. Types %s have already been migrated.") %
@@ -62,6 +62,15 @@ module Katello
         [YumMetadataFile]
       end
 
+      def last_successful_migration_time
+        task = ForemanTasks::Task.where(:label => Actions::Pulp3::ContentMigration.to_s, :result => 'success').order("started_at desc").first
+        if reimport_all || task.nil?
+          0
+        else
+          task.started_at.to_i
+        end
+      end
+
       def content_types_for_migration
         content_types = @repository_types.collect do |repository_type_label|
           Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index
@@ -78,7 +87,7 @@ module Katello
             end
 
             Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index.each do |content_type|
-              Katello::Logging.time("CONTENT_MIGRATION - Importing Content", data: {type: content_type}) do
+              Katello::Logging.time("CONTENT_MIGRATION - Importing Content", data: {type: content_type.label}) do
                 import_content_type(content_type)
               end
             end
@@ -189,14 +198,15 @@ module Katello
       end
 
       def operate_on_errata
+        last_migration_time = last_successful_migration_time
         offset = 0
-        limit = 300
-        response = pulp2_content_api.list(pulp2_content_type_id: 'erratum', offset: offset, limit: limit)
+        limit = 2000
+        response = pulp2_content_api.list(pulp2_content_type_id: 'erratum', offset: offset, limit: limit, pulp2_last_updated__gt: last_migration_time)
         total_count = response.count
         yield(response.results)
         until (offset + limit > total_count)
           offset += limit
-          response = pulp2_content_api.list(pulp2_content_type_id: 'erratum', offset: offset, limit: limit)
+          response = pulp2_content_api.list(pulp2_content_type_id: 'erratum', offset: offset, limit: limit, pulp2_last_updated__gt: last_migration_time)
           yield(response.results)
         end
       end
