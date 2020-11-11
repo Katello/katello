@@ -150,5 +150,11 @@ module Katello
         @controller.find_bulk_hosts(@edit, bulk_params)
       end
     end
+
+    def test_empty_params
+      assert_raises(HttpErrors::BadRequest) do
+        @controller.find_bulk_hosts(@edit, {})
+      end
+    end
   end
 end
