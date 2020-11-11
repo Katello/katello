@@ -42,6 +42,16 @@ module Katello
         fail HttpErrors::NotFound, _("Could not find %{name} resource with id %{id}") % {id: id, name: name}
       end
 
+      def throw_resources_not_found(name:, expected_ids: [])
+        resources = yield
+        found_ids = resources.map(&:id)
+        missing_ids = expected_ids.map(&:to_i) - found_ids
+
+        if missing_ids.any?
+          fail HttpErrors::NotFound, _("Could not find %{name} resources with ids %{ids}") % {ids: missing_ids.join(', '), name: name}
+        end
+      end
+
       def check_association_ids
         if filtered_associations
           wrapped_params = params[self._wrapper_options.name]
