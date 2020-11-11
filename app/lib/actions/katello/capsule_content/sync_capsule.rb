@@ -20,10 +20,14 @@ module Actions
                                     Actions::Pulp3::CapsuleContent::Sync],
                                      repo, smart_proxy,
                                      skip_metadata_check: skip_metadata_check)
+                end
+              end
 
+              concurrence do
+                repo_batch.each do |repo|
                   if repo.is_a?(::Katello::Repository) &&
-                    repo.distribution_bootable? &&
-                    repo.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+                      repo.distribution_bootable? &&
+                      repo.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
                     plan_action(Katello::Repository::FetchPxeFiles,
                                 id: repo.id,
                                 capsule_id: smart_proxy.id)
