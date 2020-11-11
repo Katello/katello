@@ -118,7 +118,7 @@ module Katello
       refute_includes result, @host3
     end
 
-    def test_ids_with_scoped_search
+    def test_included_ids_with_nil_scoped_search
       bulk_params = {
         :included => {
           :ids => [@host1.id, @host2.id],
@@ -128,9 +128,24 @@ module Katello
 
       result = @controller.find_bulk_hosts(@edit, bulk_params)
 
-      assert_includes result.pluck(:id), @host1.id
-      assert_includes result.pluck(:id), @host2.id
-      refute_includes result.pluck(:id), @host3.id
+      assert_includes result, @host1
+      assert_includes result, @host2
+      refute_includes result, @host3
+    end
+
+    def test_ids_with_scoped_search
+      bulk_params = {
+        :included => {
+          :ids => [@host1.id, @host2.id],
+          :search => "name != #{@host2.name}"
+        }
+      }
+
+      result = @controller.find_bulk_hosts(@edit, bulk_params)
+
+      assert_includes result, @host1
+      refute_includes result, @host2
+      refute_includes result, @host3
     end
   end
 end
