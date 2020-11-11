@@ -40,9 +40,7 @@ module Katello
       }
       result = @controller.find_bulk_hosts(@edit, bulk_params)
 
-      assert_includes result, @host1
-      refute_includes result, @host2
-      refute_includes result, @host3
+      assert_equal result, [@host1]
     end
 
     def test_search_restrict
@@ -83,9 +81,7 @@ module Katello
       }
       result = @controller.find_bulk_hosts(@edit, bulk_params)
 
-      assert_includes result, @host1
-      assert_includes result, @host2
-      refute_includes result, @host3
+      assert_equal result, [@host1, @host2]
     end
 
     def test_ids_excluded
@@ -99,9 +95,7 @@ module Katello
       }
       result = @controller.find_bulk_hosts(@edit, bulk_params)
 
-      assert_includes result, @host1
-      refute_includes result, @host2
-      refute_includes result, @host3
+      assert_equal result, [@host1]
     end
 
     def test_ids_restricted
@@ -113,9 +107,7 @@ module Katello
       restrict = lambda { |hosts| hosts.where("id != #{@host2.id}") }
       result = @controller.find_bulk_hosts(@edit, bulk_params, restrict)
 
-      assert_includes result, @host1
-      refute_includes result, @host2
-      refute_includes result, @host3
+      assert_equal result, [@host1]
     end
 
     def test_included_ids_with_nil_scoped_search
@@ -128,9 +120,7 @@ module Katello
 
       result = @controller.find_bulk_hosts(@edit, bulk_params)
 
-      assert_includes result, @host1
-      assert_includes result, @host2
-      refute_includes result, @host3
+      assert_equal result, [@host1, @host2]
     end
 
     def test_ids_with_scoped_search
@@ -143,9 +133,22 @@ module Katello
 
       result = @controller.find_bulk_hosts(@edit, bulk_params)
 
-      assert_includes result, @host1
-      refute_includes result, @host2
-      refute_includes result, @host3
+      assert_equal result, [@host1]
+    end
+
+    def test_forbidden
+      bulk_params = {
+        :included => {
+          :ids => [@host1.id]
+        },
+        :excluded => {
+          :ids => [@host1.id]
+        }
+      }
+
+      assert_raises(HttpErrors::Forbidden) do
+        @controller.find_bulk_hosts(@edit, bulk_params)
+      end
     end
   end
 end
