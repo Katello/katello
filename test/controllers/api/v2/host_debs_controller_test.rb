@@ -33,6 +33,12 @@ module Katello
       assert_response :success
     end
 
+    def test_unable_to_find_host
+      get :index, params: { :host_id => 22 }
+
+      assert_response 404
+    end
+
     def test_view_permissions
       good_perms = [@view_permission]
       bad_perms = [@update_permission, @create_permission, @destroy_permission]

@@ -29,6 +29,7 @@ module Katello
 
     def find_host
       @host = resource_finder(::Host::Managed.authorized(:view_hosts, ::Host::Managed), params[:host_id])
+      throw_resource_not_found(name: 'host', id: params[:host_id]) if @host.nil?
     end
   end
 end
