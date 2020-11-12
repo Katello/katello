@@ -97,7 +97,7 @@ module Katello
         end
 
         def self.sync_needed?(environment)
-          unscoped.with_environment(environment).any?
+          Setting[:foreman_proxy_content_auto_sync] && unscoped.with_environment(environment).any?
         end
       end
 
@@ -107,9 +107,9 @@ module Katello
 
       def update_puppet_path
         if has_feature?(PULP_FEATURE)
-          path = ProxyAPI::Pulp.new(:url => self.url).capsule_puppet_path['puppet_content_dir']
+          path = ::ProxyAPI::Pulp.new(:url => self.url).capsule_puppet_path['puppet_content_dir']
         elsif has_feature?(PULP_NODE_FEATURE)
-          path = ProxyAPI::PulpNode.new(:url => self.url).capsule_puppet_path['puppet_content_dir']
+          path = ::ProxyAPI::PulpNode.new(:url => self.url).capsule_puppet_path['puppet_content_dir']
         end
         self.update_attribute(:puppet_path, path || '') if persisted?
         path

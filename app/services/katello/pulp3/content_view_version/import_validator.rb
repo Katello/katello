@@ -12,9 +12,11 @@ module Katello
 
         def check!
           check_permissions!
-          ensure_importing_cvv_does_not_exist!
-          ensure_from_cvv_exists!
-          ensure_repositories_metadata_and_content_view_match!
+          unless content_view.default?
+            ensure_importing_cvv_does_not_exist!
+            ensure_from_cvv_exists!
+          end
+          ensure_repositories_metadata_are_in_the_library!
         end
 
         def ensure_importing_cvv_does_not_exist!
@@ -43,23 +45,28 @@ module Katello
           end
         end
 
-        def ensure_repositories_metadata_and_content_view_match!
-          product_repos_in_content_view = content_view.repositories.yum_type.map { |repo| [repo.product.name, repo.name, repo.redhat?] }
+        def ensure_repositories_metadata_are_in_the_library!
+          repos_in_library = Katello::Repository.
+                              in_default_view.
+                              yum_type.
+                              joins(:product => :provider, :content_view_version => :content_view).
+                              joins(:root).
+                              where("#{::Katello::ContentView.table_name}.organization_id" => content_view.organization_id).
+                              pluck("#{::Katello::Product.table_name}.name",
+                                    "#{::Katello::RootRepository.table_name}.name",
+                                    "#{::Katello::Provider.table_name}.provider_type"
+                                    )
+
+          # repos_in_library look like [["prod1", "repo1", "Anonymous"], ["prod2", "repo2", "Red Hat"]]
+          product_repos_in_library = repos_in_library.map { |product, repo, provider| [product, repo, provider == ::Katello::Provider::REDHAT] }
           product_repos_in_metadata = metadata[:repository_mapping].values.map { |repo| [repo[:product], repo[:repository], repo[:redhat]] }
-
-          product_repos_in_content_view.sort!
-          product_repos_in_metadata.sort!
-          # product_repos_in_content_view & product_repos_in_metadata look like [["prod1", "repo1", false], ["prod2", "repo2", false]]
-
-          if product_repos_in_content_view != product_repos_in_metadata
-            repos_in_content_view = generate_product_repo_i18n_string(product_repos_in_content_view)
-            repos_in_import = generate_product_repo_i18n_string(product_repos_in_metadata)
-
-            fail _("Repositories in the importing content view do not match the repositories provided in the import metadata.\n "\
-                    "Repositories in Content View '%{content_view}': %{repos_in_content_view}\n "\
-                    "Repositories in the Import Metadata: %{repos_in_import}" % { content_view: content_view.name,
-                                                                                  repos_in_content_view: repos_in_content_view.join(""),
-                                                                                  repos_in_import: repos_in_import.join("")}
+          # product_repos_in_library & product_repos_in_metadata look like [["prod1", "repo1", false], ["prod2", "repo2", false]]
+          product_repos_not_in_library = product_repos_in_metadata - product_repos_in_library
+          unless product_repos_not_in_library.blank?
+            repos_in_import = generate_product_repo_i18n_string(product_repos_not_in_library)
+            fail _("The following repositories provided in the import metadata are either not available in the Library or are of incorrect Respository Type. "\
+                    "Please add or enable the repositories before importing\n "\
+                    "%{repos}" % { content_view: content_view.name, repos: repos_in_import.join("")}
                   )
           end
         end

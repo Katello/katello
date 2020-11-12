@@ -131,7 +131,13 @@ Katello::Engine.routes.draw do
           collection do
             get :auto_complete_search
             post :incremental_update
-            post :import
+          end
+        end
+
+        api_resources :content_imports, :only => [] do
+          collection do
+            post :version
+            post :library
           end
         end
 
