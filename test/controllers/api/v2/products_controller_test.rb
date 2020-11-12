@@ -16,6 +16,7 @@ module Katello
     end
 
     def permissions
+      @resource_type = "Katello::Product"
       @read_permission = :view_products
       @create_permission = :create_products
       @update_permission = :edit_products
@@ -185,6 +186,15 @@ module Katello
       denied_perms = [@read_permission, @delete_permission, @create_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
+        put :update, params: { :id => @product.id, :product => {:name => 'New Name'} }
+      end
+    end
+
+    def test_update_protected_specific_instance
+      allowed_perms = [{:name => @update_permission, :search => "name=\"#{@product.name}\"" }]
+      denied_perms = [{:name => @update_permission, :search => "name=\"some_name\"" }]
+
+      assert_protected_object(:update, allowed_perms, denied_perms) do
         put :update, params: { :id => @product.id, :product => {:name => 'New Name'} }
       end
     end

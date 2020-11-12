@@ -301,7 +301,8 @@ module Katello
                            'katello/api/v2/products' => [:create],
                            'katello/api/v2/package_groups' => [:create]
                          },
-                         :resource_type => 'Katello::Product'
+                         :resource_type => 'Katello::Product',
+                         :finder_scope => :editable
       @plugin.permission :edit_products,
                          {
                            'katello/api/v2/products' => [:update],
