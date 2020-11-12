@@ -47,7 +47,6 @@ module ::Actions::Katello::ContentViewVersion
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:list).returns(nil)
       ::Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:create).returns(nil)
       ::Katello::Repository.any_instance.stubs(:pulp_scratchpad_checksum_type).returns(nil)
-      @import_export_dir = File.join(Katello::Engine.root, 'test/fixtures/import-export')
     end
   end
 
@@ -56,65 +55,70 @@ module ::Actions::Katello::ContentViewVersion
       setup_proxy
       content_view.import_only = true
     end
+    describe 'Import' do
+      it 'should fail on importing content for an existing versions' do
+        path = @import_export_dir
+        ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:check_permissions!).returns
 
-    it 'Import should fail on importing content for an existing versions' do
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir).returns
+        exception = assert_raises(RuntimeError) do
+          plan_action(action, content_view, path: path, metadata: metadata)
+        end
+        assert_match(/'#{content_view_version.name}' already exists/, exception.message)
+      end
 
-      exception = assert_raises(RuntimeError) do
+      it 'should plan properly' do
+        metadata[:content_view_version][:major] += 10
+        path = @import_export_dir
+        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view, metadata: metadata, path: path).returns
+
         plan_action(action, content_view, path: @import_export_dir, metadata: metadata)
-      end
-      assert_match(/'#{content_view_version.name}' already exists/, exception.message)
-    end
-
-    it 'Import should plan properly' do
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir).returns
-
-      metadata[:content_view_version][:major] += 10
-      plan_action(action, content_view, path: @import_export_dir, metadata: metadata)
-      assert_action_planned_with(action,
-                                  ::Actions::Katello::ContentView::Publish,
-                                  content_view, '',
-                                  path: @import_export_dir,
-                                  metadata: metadata,
-                                  importing: true,
-                                  major: metadata[:content_view_version][:major],
-                                  minor: metadata[:content_view_version][:minor])
-    end
-
-    it 'Import should plan the full tree appropriately' do
-      ::Katello::Pulp3::ContentViewVersion::Import.expects(:check_permissions!).with(@import_export_dir).returns
-      metadata[:content_view_version][:major] += 10
-      generated_cvv = nil
-      tree = plan_action_tree(action_class, content_view, path: @import_export_dir, metadata: metadata)
-
-      assert_empty tree.errors
-      assert_tree_planned_steps(tree, Actions::Katello::ContentView::AddToEnvironment)
-      assert_tree_planned_steps(tree, Actions::Katello::ContentViewVersion::CreateRepos)
-      assert_tree_planned_steps(tree, Actions::Pulp3::Orchestration::ContentViewVersion::Import)
-      assert_tree_planned_steps(tree, Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary)
-
-      assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::CreateImporter) do |input|
-        assert_equal SmartProxy.pulp_primary.id, input[:smart_proxy_id]
-        assert_equal @import_export_dir, input[:path]
-        generated_cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-        assert_equal content_view_version.content_view.id, generated_cvv.content_view.id
-        assert_equal metadata[:content_view_version][:major], generated_cvv.major
-        assert_equal metadata[:content_view_version][:minor], generated_cvv.minor
+        assert_action_planned_with(action,
+                                    ::Actions::Katello::ContentView::Publish,
+                                    content_view, '',
+                                    path: path,
+                                    metadata: metadata,
+                                    importing: true,
+                                    major: metadata[:content_view_version][:major],
+                                    minor: metadata[:content_view_version][:minor])
       end
 
-      assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::Import) do |input|
-        assert_equal SmartProxy.pulp_primary.id, input[:smart_proxy_id]
-        assert_equal @import_export_dir, input[:path]
-        assert_equal generated_cvv.id, input[:content_view_version_id]
-        refute_nil input[:importer_data]
-      end
-      assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::DestroyImporter)
+      it 'should plan the full tree appropriately' do
+        path = @import_export_dir
+        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view, metadata: metadata, path: path).returns
 
-      assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyContent) do |input|
-        assert input[:copy_all]
-        refute_nil input[:source_repository_id]
-        refute_nil input[:target_repository_id]
-        refute_nil input[:smart_proxy_id]
+        metadata[:content_view_version][:major] += 10
+        generated_cvv = nil
+        tree = plan_action_tree(action_class, content_view, path: path, metadata: metadata)
+
+        assert_empty tree.errors
+        assert_tree_planned_steps(tree, Actions::Katello::ContentView::AddToEnvironment)
+        assert_tree_planned_steps(tree, Actions::Katello::ContentViewVersion::CreateRepos)
+        assert_tree_planned_steps(tree, Actions::Pulp3::Orchestration::ContentViewVersion::Import)
+        assert_tree_planned_steps(tree, Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary)
+
+        assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::CreateImporter) do |input|
+          assert_equal SmartProxy.pulp_primary.id, input[:smart_proxy_id]
+          assert_equal @import_export_dir, input[:path]
+          generated_cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
+          assert_equal content_view_version.content_view.id, generated_cvv.content_view.id
+          assert_equal metadata[:content_view_version][:major], generated_cvv.major
+          assert_equal metadata[:content_view_version][:minor], generated_cvv.minor
+        end
+
+        assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::Import) do |input|
+          assert_equal SmartProxy.pulp_primary.id, input[:smart_proxy_id]
+          assert_equal @import_export_dir, input[:path]
+          assert_equal generated_cvv.id, input[:content_view_version_id]
+          refute_nil input[:importer_data]
+        end
+        assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::DestroyImporter)
+
+        assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyContent) do |input|
+          assert input[:copy_all]
+          refute_nil input[:source_repository_id]
+          refute_nil input[:target_repository_id]
+          refute_nil input[:smart_proxy_id]
+        end
       end
     end
   end
