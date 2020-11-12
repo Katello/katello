@@ -4,7 +4,7 @@ module Katello
 
     before_action :find_activation_key, :only => [:index]
     before_action :find_organization, :only => [:create, :index, :auto_complete_search]
-    before_action :find_product, :only => [:update, :destroy, :sync]
+    before_action :find_authorized_katello_resource, :only => [:update, :destroy, :sync]
     before_action :find_organization_from_product, :only => [:update]
     before_action :authorize_gpg_key, :only => [:update, :create]
     before_action :authorize_ssl_ca_cert, :only => [:update, :create]
@@ -131,14 +131,14 @@ module Katello
     protected
 
     def find_product(options = {})
-      @product = Product.includes(options[:includes] || []).find_by(:id => params[:id])
-      fail HttpErrors::NotFound, _("Couldn't find product '%s'") % params[:id] unless @product
+      @product = Product.includes(options[:includes] || []).readable.find_by(:id => params[:id])
+      throw_resource_not_found(name: 'product', id: params[:id]) if @product.nil?
     end
 
     def find_activation_key
       if params[:activation_key_id]
-        @activation_key = ActivationKey.find_by(:id => params[:activation_key_id])
-        fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:activation_key_id] if @activation_key.nil?
+        @activation_key = ActivationKey.readable.find_by(:id => params[:activation_key_id])
+        throw_resource_not_found(name: 'Activation Key', id: params[:activation_key_id]) if @activation_key.nil?
         @organization = @activation_key.organization
       end
     end
@@ -151,7 +151,7 @@ module Katello
       gpg_key_id = product_params[:gpg_key_id]
       if gpg_key_id
         gpg_key = GpgKey.readable.where(:id => gpg_key_id, :organization_id => @organization).first
-        fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % gpg_key_id if gpg_key.nil?
+        throw_resource_not_found(name: 'gpg key', id: gpg_key_id) if gpg_key.nil?
       end
     end
 
@@ -159,7 +159,7 @@ module Katello
       ssl_ca_cert_id = product_params[:ssl_ca_cert_id]
       if ssl_ca_cert_id
         ssl_ca_cert = GpgKey.readable.where(:id => ssl_ca_cert_id, :organization_id => @organization).first
-        fail HttpErrors::NotFound, _("Couldn't find ssl ca cert '%s'") % ssl_ca_cert_id if ssl_ca_cert.nil?
+        throw_resource_not_found(name: 'ssl ca cert', id: ssl_ca_cert_id) if ssl_ca_cert.nil?
       end
     end
 
@@ -167,7 +167,7 @@ module Katello
       ssl_client_cert_id = product_params[:ssl_client_cert_id]
       if ssl_client_cert_id
         ssl_client_cert = GpgKey.readable.where(:id => ssl_client_cert_id, :organization_id => @organization).first
-        fail HttpErrors::NotFound, _("Couldn't find ssl client cert '%s'") % ssl_client_cert_id if ssl_client_cert.nil?
+        throw_resource_not_found(name: 'ssl client cert', id: ssl_client_cert_id) if ssl_client_cert.nil?
       end
     end
 
@@ -175,7 +175,7 @@ module Katello
       ssl_client_key_id = product_params[:ssl_client_key_id]
       if ssl_client_key_id
         ssl_client_key = GpgKey.readable.where(:id => ssl_client_key_id, :organization_id => @organization).first
-        fail HttpErrors::NotFound, _("Couldn't find ssl client key '%s'") % ssl_client_key_id if ssl_client_key.nil?
+        throw_resource_not_found(name: 'ssl client key', id: ssl_client_key_id) if ssl_client_key.nil?
       end
     end
 
