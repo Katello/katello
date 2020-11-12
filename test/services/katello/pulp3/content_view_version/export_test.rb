@@ -30,6 +30,26 @@ module Katello
               assert_equal repo_info[:redhat], repo.redhat?
             end
           end
+
+          it "fails on validate_incremental_export if the 'from' repositories and 'to' repositories point to different hrefs" do
+            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
+            from_version = katello_content_view_versions(:library_view_version_1)
+            version = katello_content_view_versions(:library_view_version_2)
+            destination_server = "whereami.com"
+            export = fetch_exporter(smart_proxy: proxy,
+                                         content_view_version: version,
+                                         destination_server: destination_server,
+                                         from_content_view_version: from_version)
+            ::Katello::Pulp3::ContentViewVersion::Export.define_method(:version_href_to_repository_href) do |href|
+              href
+            end
+
+            exception = assert_raises(RuntimeError) do
+              export.validate_incremental_export!
+            end
+            assert_match(/cannot be incrementally updated/, exception.message)
+          end
         end
       end
     end
