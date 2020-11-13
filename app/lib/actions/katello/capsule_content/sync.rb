@@ -39,7 +39,7 @@ module Actions
                                              environment:  environment,
                                              repository: repository)
           sequence do
-            plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+            plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options) if smart_proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE)
             plan_action(Actions::Pulp3::CapsuleContent::RefreshContentGuard, smart_proxy) if repositories.any? { |repo| smart_proxy.pulp3_support?(repo) }
             plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options) if smart_proxy.pulp3_enabled?
             plan_action(SyncCapsule, smart_proxy, refresh_options)

@@ -93,14 +93,14 @@ module Katello
 
     def find_editable_capsule
       @capsule = SmartProxy.unscoped.authorized(:manage_capsule_content).find(params[:id])
-      unless @capsule&.has_feature?(SmartProxy::PULP_NODE_FEATURE)
+      unless @capsule&.pulp_mirror?
         fail _("This request may only be performed on a Smart proxy that has the Pulp Node feature.")
       end
     end
 
     def find_capsule
       @capsule = SmartProxy.unscoped.authorized(:view_capsule_content).find(params[:id])
-      unless @capsule&.has_feature?(SmartProxy::PULP_NODE_FEATURE)
+      unless @capsule&.pulp_mirror?
         fail _("This request may only be performed on a Smart proxy that has the Pulp Node feature.")
       end
     end
