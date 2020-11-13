@@ -8,6 +8,7 @@ module Actions
           param :id, Integer
           param :dependency, Hash
           param :contents_changed
+          param :matching_content
           param :source_repository_id
         end
 

@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 require "pulpcore_client"
 module Katello
   module Pulp3
@@ -45,6 +46,10 @@ module Katello
       rescue api.class.api_exception_class => e
         raise e unless e.code == 404
         nil
+      end
+
+      def published?
+        !repo.publication_href.nil?
       end
 
       def skip_types

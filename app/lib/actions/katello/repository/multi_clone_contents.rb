@@ -3,6 +3,8 @@ module Actions
     module Repository
       class MultiCloneContents < Actions::Base
         include Actions::Katello::PulpSelector
+        include Actions::Katello::CheckMatchingContent
+
         def plan(extended_repo_mapping, options)
           generate_metadata = options.fetch(:generate_metadata, true)
           copy_contents = options.fetch(:copy_contents, true)
@@ -18,32 +20,27 @@ module Actions
 
             concurrence do
               extended_repo_mapping.each do |source_repos, dest_repo_map|
+                dest_repo_map[:matching_content] = check_matching_content(dest_repo_map[:dest_repo], source_repos)
+
                 if generate_metadata
-                  metadata_generate(source_repos, dest_repo_map[:dest_repo], dest_repo_map[:filters])
+                  metadata_generate(source_repos, dest_repo_map[:dest_repo], dest_repo_map[:filters], dest_repo_map[:matching_content])
                 end
               end
 
               extended_repo_mapping.values.each do |dest_repo_map|
-                plan_action(Katello::Repository::IndexContent, id: dest_repo_map[:dest_repo].id)
+                plan_action(Katello::Repository::IndexContent, id: dest_repo_map[:dest_repo].id, matching_content: dest_repo_map[:matching_content])
               end
             end
           end
         end
 
-        def metadata_generate(source_repositories, new_repository, filters)
+        def metadata_generate(source_repositories, new_repository, filters, matching_content)
           metadata_options = {}
+
+          metadata_options[:matching_content] = matching_content
 
           if source_repositories.count == 1 && filters.empty?
             metadata_options[:source_repository] = source_repositories.first
-          end
-
-          check_matching_content = ::Katello::RepositoryTypeManager.find(new_repository.content_type).metadata_publish_matching_check
-          if new_repository.environment && source_repositories.count == 1 && check_matching_content
-            match_check_output = plan_action(Katello::Repository::CheckMatchingContent,
-                                :source_repo_id => source_repositories.first.id,
-                                :target_repo_id => new_repository.id).output
-
-            metadata_options[:matching_content] = match_check_output[:matching_content]
           end
 
           plan_action(Katello::Repository::MetadataGenerate, new_repository, metadata_options)
