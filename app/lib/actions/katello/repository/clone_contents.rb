@@ -3,6 +3,8 @@ module Actions
     module Repository
       class CloneContents < Actions::Base
         include Actions::Katello::PulpSelector
+        include Actions::Katello::CheckMatchingContent
+
         def plan(source_repositories, new_repository, options)
           filters = options.fetch(:filters, nil)
           rpm_filenames = options.fetch(:rpm_filenames, nil)
@@ -20,10 +22,12 @@ module Actions
                           filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
             end
 
-            metadata_generate(source_repositories, new_repository, filters, rpm_filenames) if generate_metadata
+            matching_content = check_matching_content(new_repository, source_repositories)
+            metadata_generate(source_repositories, new_repository, filters, rpm_filenames, matching_content) if generate_metadata
 
             index_options = {id: new_repository.id}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
+            index_options[:matching_content] = matching_content
             plan_action(Katello::Repository::IndexContent, index_options)
 
             if purge_empty_contents && new_repository.backend_service(SmartProxy.pulp_primary).should_purge_empty_contents?
@@ -32,20 +36,13 @@ module Actions
           end
         end
 
-        def metadata_generate(source_repositories, new_repository, filters, rpm_filenames)
+        def metadata_generate(source_repositories, new_repository, filters, rpm_filenames, matching_content)
           metadata_options = {}
+
+          metadata_options[:matching_content] = matching_content
 
           if source_repositories.count == 1 && filters.empty? && rpm_filenames.empty?
             metadata_options[:source_repository] = source_repositories.first
-          end
-
-          check_matching_content = ::Katello::RepositoryTypeManager.find(new_repository.content_type).metadata_publish_matching_check
-          if new_repository.environment && source_repositories.count == 1 && check_matching_content && !SmartProxy.pulp_primary.pulp3_support?(new_repository)
-            match_check_output = plan_action(Katello::Repository::CheckMatchingContent,
-                                :source_repo_id => source_repositories.first.id,
-                                :target_repo_id => new_repository.id).output
-
-            metadata_options[:matching_content] = match_check_output[:matching_content]
           end
 
           plan_action(Katello::Repository::MetadataGenerate, new_repository, metadata_options)
