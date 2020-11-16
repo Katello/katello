@@ -3,7 +3,7 @@ require 'katello/repository_types.rb'
 require 'katello/host_status_manager.rb'
 # rubocop:disable Metrics/BlockLength
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 1.24'
+  requires_foreman '>= 2.3'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
            :icon => 'fa fa-book', :after => :monitor_menu do
@@ -282,6 +282,11 @@ Foreman::Plugin.register :katello do
 
   # Extend Global Registration endpoint
   extend_allowed_registration_vars :activation_key
+
+  # Extend Global Registration UI
+  extend_page 'registration/_form' do |cx|
+    cx.add_pagelet :global_registration, name: N_('Katello'), partial: 'foreman/hosts/registration', priority: 100, id: 'katello'
+  end
 
   extend_page "smart_proxies/show" do |cx|
     cx.add_pagelet :details_content,

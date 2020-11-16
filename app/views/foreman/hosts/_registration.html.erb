@@ -1,0 +1,12 @@
+<div class='form-group'>
+  <label class='col-md-2 control-label'>
+    <%= _('Activation Key(s)') %>
+    <% help = _('Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3.') %>
+    <a rel="popover" data-content="<%= help %>" data-trigger="focus" data-container="body" data-html="true" tabindex="-1">
+      <span class="pficon pficon-info "></span>
+    </a>
+  </label>
+  <div class='col-md-4'>
+    <%= text_field_tag 'activation_key', params[:activation_key], class: 'form-control' %>
+  </div>
+</div>
