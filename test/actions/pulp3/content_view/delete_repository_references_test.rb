@@ -13,13 +13,15 @@ module ::Actions::Pulp3::ContentView
 
     def test_create
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Create, @repo, @primary)
-      repo_reference = Katello::Pulp3::RepositoryReference.find_by(:content_view => @content_view, :root_repository_id => @repo.root_id)
+      repo_reference = Katello::Pulp3::RepositoryReference.find_by(:content_view => @content_view, :root_repository_id => @repo.root.id)
+      library_repo_ref = Katello::Pulp3::RepositoryReference.create!(:root_repository_id => @repo.root.id, :content_view_id => @repo.library_instance.content_view.id, :repository_href => '/some/fake/href')
+
       assert repo_reference
       assert Katello::Pulp3::Api::File.new(@primary).repositories_api.read(repo_reference.repository_href)
 
       ForemanTasks.sync_task(::Actions::Pulp3::ContentView::DeleteRepositoryReferences, @content_view, @primary)
       refute Katello::Pulp3::RepositoryReference.find_by(:id => repo_reference.id)
-
+      assert Katello::Pulp3::RepositoryReference.find_by(:id => library_repo_ref.id)
       assert_raises(PulpFileClient::ApiError) do
         Katello::Pulp3::Api::File.new(@primary).repositories_api.read(repo_reference.repository_href)
       end
