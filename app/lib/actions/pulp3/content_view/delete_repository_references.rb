@@ -14,7 +14,7 @@ module Actions
           content_view.repository_references.each do |repository_reference|
             repo = repository_reference.root_repository.library_instance
             #force pulp3 in case we've done migrations, but haven't switched over yet
-            tasks << repo.backend_service(smart_proxy, true).delete(repository_reference.repository_href)
+            tasks << repo.backend_service(smart_proxy, true).delete_repository(repository_reference)
           end
           content_view.repository_references.destroy_all
 
