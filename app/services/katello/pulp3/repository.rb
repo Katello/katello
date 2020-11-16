@@ -1,5 +1,4 @@
 require "pulpcore_client"
-
 module Katello
   module Pulp3
     class Repository
@@ -188,8 +187,9 @@ module Katello
         api.repositories_api.read(repository_reference.try(:repository_href))
       end
 
-      def delete(href = repository_reference.try(:repository_href))
-        repository_reference.try(:destroy)
+      def delete_repository(repo_reference = repository_reference)
+        href = repo_reference.try(:repository_href)
+        repo_reference.try(:destroy)
         ignore_404_exception { api.repositories_api.delete(href) } if href
       end
 
