@@ -19,7 +19,7 @@ module Katello
 
       tasks = []
       if (repo = service.list(name: service.generate_backend_object_name).first)
-        tasks << service.delete(repo.pulp_href)
+        tasks << service.api.repositories_api.delete(repo.pulp_href) rescue service.api.class.api_exception_class
       end
 
       if (remote = service.api.remotes_list(name: service.generate_backend_object_name).first)
