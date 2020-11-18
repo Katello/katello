@@ -101,6 +101,10 @@ module Katello
         end
       end
 
+      def update_unauthenticated_repo_list(repo_names)
+        ProxyAPI::ContainerGateway.new(url: self.url).unauthenticated_repository_list("repositories": repo_names)
+      end
+
       def puppet_path
         self[:puppet_path] || update_puppet_path
       end

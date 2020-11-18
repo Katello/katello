@@ -35,6 +35,15 @@ module Actions
               end
             end
           end
+          update_unauthenticated_repo_list(smart_proxy) if smart_proxy.has_feature?("Container_Gateway")
+        end
+
+        def update_unauthenticated_repo_list(smart_proxy)
+          unauthenticated_repo_list =
+            ::Katello::SmartProxyHelper.new(smart_proxy).combined_repos_available_to_capsule.select do |repo|
+              repo.docker? && repo.environment.registry_unauthenticated_pull
+            end
+          smart_proxy.update_unauthenticated_repo_list(unauthenticated_repo_list.map(&:container_repository_name))
         end
 
         def repos_to_sync(smart_proxy, environment, content_view, repository, skip_metatadata_check = false)
