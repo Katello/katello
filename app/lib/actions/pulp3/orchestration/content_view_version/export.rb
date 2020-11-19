@@ -18,7 +18,9 @@ module Actions
           end
 
           # rubocop:disable Metrics/MethodLength
-          def plan(content_view_version, destination_server:, chunk_size: nil, from_history: nil)
+          def plan(content_view_version:, destination_server: nil,
+                   chunk_size: nil, from_history: nil, validate_incremental: true)
+            content_view_version = ::Katello::ContentViewVersion.find(content_view_version) if content_view_version.is_a? Integer
             action_subject(content_view_version)
             unless File.directory?(Setting['pulpcore_export_destination'])
               fail ::Foreman::Exception, N_("Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory.")
@@ -27,7 +29,7 @@ module Actions
             sequence do
               smart_proxy = SmartProxy.pulp_primary!
               from_content_view_version = from_history&.content_view_version
-              if from_content_view_version.present?
+              if from_content_view_version.present? && validate_incremental
                 export_service = ::Katello::Pulp3::ContentViewVersion::Export.new(
                                                        smart_proxy: smart_proxy,
                                                        content_view_version: content_view_version,
@@ -74,7 +76,6 @@ module Actions
                                                        content_view_version: cvv,
                                                        smart_proxy: smart_proxy,
                                                        from_content_view_version: from_cvv).generate_metadata
-            export_metadata[:incremental] = from_cvv.present?
             toc = Dir.glob("#{path}/*toc.json").first
             export_metadata[:toc] = File.basename(toc) if toc
             history = ::Katello::ContentViewVersionExportHistory.create!(

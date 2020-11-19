@@ -63,6 +63,7 @@ module ::Actions::Katello::ContentViewVersion
       setup_proxy
       content_view.import_only = true
     end
+
     describe 'Import' do
       it 'should fail on importing content for an existing versions' do
         path = @import_export_dir

@@ -672,5 +672,18 @@ module Katello
       cv.import_only = false
       refute cv.valid?
     end
+
+    def test_find_library_export_view
+      org =  get_organization
+      assert_nil ContentView.find_library_export_view(organization: org,
+                                                      create_by_default: false,
+                                                      destination_server: nil)
+      # now create it
+      destination_server = "example.com"
+      cv = ContentView.find_library_export_view(organization: org,
+                                                  create_by_default: true,
+                                                  destination_server: destination_server)
+      assert_equal cv.name, "Export-Library-#{destination_server}"
+    end
   end
 end

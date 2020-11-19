@@ -99,7 +99,8 @@ module Katello
           ret = { organization: @content_view_version.organization.name,
                   repository_mapping: {},
                   content_view: @content_view_version.content_view.name,
-                  content_view_version: @content_view_version.slice(:major, :minor)
+                  content_view_version: @content_view_version.slice(:major, :minor),
+                  incremental: @from_content_view_version.present?
           }
 
           unless @from_content_view_version.blank?

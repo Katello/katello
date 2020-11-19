@@ -116,8 +116,16 @@ Katello::Engine.routes.draw do
         api_resources :content_exports, :only => [] do
           collection do
             post :version
+            post :library
             get :index
             get :api_status
+          end
+        end
+
+        api_resources :content_export_incrementals, :only => [] do
+          collection do
+            post :version
+            post :library
           end
         end
 
