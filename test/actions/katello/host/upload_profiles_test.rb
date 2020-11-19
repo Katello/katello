@@ -10,6 +10,9 @@ module Katello::Host
       User.current = users(:admin)
       @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => katello_content_views(:library_dev_view),
                                  :lifecycle_environment => katello_environments(:library), :id => 343)
+      @mock_smart_proxy = mock
+      @mock_smart_proxy.stubs(:has_feature?).with(::SmartProxy::PULP_FEATURE).returns(true)
+      ::SmartProxy.stubs(:pulp_primary).returns(@mock_smart_proxy)
     end
 
     describe 'Host UploadProfiles' do
@@ -181,14 +184,11 @@ module Katello::Host
         run_action action
       end
 
-      it 'runs and skips Pulp::Consumer with Pulp 3 yum support' do
+      it 'runs and skips Pulp::Consumer with pulp2 is not present' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        mock_smart_proxy = mock
-        mock_smart_proxy.expects(:pulp3_repository_type_support?).twice.returns(true)
-        ::SmartProxy.expects(:pulp_primary).twice.returns(mock_smart_proxy)
-
+        @mock_smart_proxy.stubs(:has_feature?).with(::SmartProxy::PULP_FEATURE).returns(false)
         ::Host.expects(:find_by).returns(@host).at_least_once
         ::Katello::Pulp::Consumer.expects(:new).never
         @host.expects(:import_package_profile).with do |packages|
