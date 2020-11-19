@@ -60,7 +60,7 @@ module Actions
 
           module_stream_profile = updated_profiles + unassociated_profiles
 
-          unless SmartProxy.pulp_primary&.pulp3_repository_type_support?(::Katello::Repository::YUM_TYPE)
+          if SmartProxy.pulp_primary&.has_feature?(SmartProxy::PULP_FEATURE)
             unless module_stream_profile.empty?
               begin
                 ::Katello::Pulp::Consumer.new(host.content_facet.uuid).
