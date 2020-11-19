@@ -8,6 +8,7 @@ import {
   UPDATE_CONTENT_VIEW_SUCCESS,
   NOT_ADDED,
   ALL_STATUSES,
+  REPOSITORY_TYPES,
   cvDetailsKey,
   cvDetailsRepoKey,
 } from '../ContentViewsConstants';
@@ -62,5 +63,12 @@ export const getContentViewRepositories = (cvId, params, status) => {
     params: apiParams,
   });
 };
+
+export const getRepositoryTypes = () => get({
+  type: API_OPERATIONS.GET,
+  key: REPOSITORY_TYPES,
+  errorToast: error => `Something went wrong while retrieving the repository types! ${error}`,
+  url: api.getApiUrl('/repositories/repository_types'),
+});
 
 export default getContentViewDetails;

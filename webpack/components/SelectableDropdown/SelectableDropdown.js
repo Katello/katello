@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Select, SelectOption, SelectVariant, Level, LevelItem } from '@patternfly/react-core';
+import { Spinner, Select, SelectOption, SelectVariant, Level, LevelItem } from '@patternfly/react-core';
+import { ErrorCircleOIcon } from '@patternfly/react-icons';
+
 
 const SelectableDropdown = ({
-  items, title, selected, setSelected,
+  items, title, selected, setSelected, loading, error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const onSelect = (event, selection) => {
+  const icon = () => {
+    if (error) return <span aria-label={`${title} error`}><ErrorCircleOIcon color="red" /></span>;
+    if (loading) return <span aria-label={`${title} spinner`}><Spinner size="sm" /></span>;
+    return null;
+  };
+  const onSelect = (_event, selection) => {
     setSelected(selection);
     setIsOpen(false);
   };
@@ -30,6 +37,8 @@ const SelectableDropdown = ({
           onSelect={onSelect}
           selections={selected}
           isOpen={isOpen}
+          isDisabled={loading || error}
+          toggleIcon={icon()}
         >
           {selectItems}
         </Select>
@@ -43,6 +52,14 @@ SelectableDropdown.propTypes = {
   title: PropTypes.string.isRequired,
   selected: PropTypes.string.isRequired,
   setSelected: PropTypes.func.isRequired,
+  // If the items are loaded dynamically, you can pass in loading or error states
+  loading: PropTypes.bool,
+  error: PropTypes.bool,
+};
+
+SelectableDropdown.defaultProps = {
+  loading: false,
+  error: false,
 };
 
 

@@ -8,7 +8,7 @@ import { APIMiddleware, reducers as apiReducer } from 'foremanReact/redux/API';
 import { reducers as fillReducers } from 'foremanReact/components/common/Fill';
 import { reducers as foremanModalReducer } from 'foremanReact/components/ForemanModal';
 import { STATUS } from 'foremanReact/constants';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -63,7 +63,10 @@ function renderWithRedux(
 
 // When the tests run slower, they can hit the default waitFor timeout, which is 1000ms
 // There doesn't seem to be a way to set it globally for r-t-lib, so using this wrapper function
-export const patientlyWaitFor = waitForFunc => waitFor(waitForFunc, { timeout: 5000 });
+const rtlTimeout = 5000;
+export const patientlyWaitFor = waitForFunc => waitFor(waitForFunc, { timeout: rtlTimeout });
+export const patientlyWaitForRemoval = waitForFunc =>
+  waitForElementToBeRemoved(waitForFunc, { timeout: rtlTimeout });
 
 // re-export everything, so the library can be used from this wrapper.
 export * from '@testing-library/react';
