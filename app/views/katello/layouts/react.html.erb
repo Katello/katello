@@ -10,7 +10,8 @@
     <%= notifications %>
     <div id="organization-id" data-id="<%= Organization.current.id if Organization.current %>" ></div>
     <div id="user-id" data-id="<%= User.current.id if User.current %>" ></div>
-    <div id="reactRoot"></div>
-    <%= mount_react_component('katello', '#reactRoot') %>
+    <div id="reactRoot">
+      <%= react_component('katello') %>
+    </div>
 <% end %>
 <%= render file: "layouts/base" %>
