@@ -2,7 +2,7 @@ module Actions
   module Pulp3
     module Repository
       class SaveVersion < Pulp3::Abstract
-        def plan(repository, options)
+        def plan(repository, options = {})
           fail "Cannot accept tasks and repository_details into Save Version." if options[:tasks].present? && options[:repository_details].present?
           plan_self(:repository_id => repository.id, :tasks => options[:tasks], :repository_details => options[:repository_details], :force_fetch_version => options.fetch(:force_fetch_version, false))
         end

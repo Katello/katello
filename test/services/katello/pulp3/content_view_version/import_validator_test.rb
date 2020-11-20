@@ -145,7 +145,7 @@ module Katello
               assert_match(/ does not exist/, exception.message)
             end
 
-            it "fails on metadata if the 'from' repositories in the content view does not match repositories in the metadata" do
+            it "fails on metadata if the repositories in the metadata are not in the library" do
               cv = katello_content_views(:acme_default)
               cvv = cv.versions.last
               exception = assert_raises(RuntimeError) do
@@ -160,7 +160,7 @@ module Katello
                 }
                 validator(content_view: cvv.content_view, metadata: metadata).check!
               end
-              assert_match(/importing content view do not match the repositories provided in the import metadata/, exception.message)
+              assert_match(/repositories provided in the import metadata are either not available in the Library or are of incorrect Respository Type./, exception.message)
             end
           end
         end

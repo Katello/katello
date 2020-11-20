@@ -30,6 +30,17 @@ library_view:
   updated_at: <%= Time.now %>
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
+library_non_filter_view:
+  name:           No Filter Published LIbrary view
+  description:    A content view
+  label:          'no_filter_published_library_view'
+  default:        false
+  next_version:   8
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  import_only:    true
+
 no_environment_view:
   name:           No environment view
   description:    A content view

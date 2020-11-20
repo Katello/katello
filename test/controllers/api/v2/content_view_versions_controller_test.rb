@@ -1,7 +1,6 @@
 require "katello_test_helper"
 
 module Katello
-  # rubocop:disable Metrics/ClassLength
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
@@ -183,33 +182,6 @@ module Katello
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id, :iso_mb_size => 5 }
       assert_response 400
-    end
-
-    def test_import
-      metadata = {
-        organization: "org name",
-        repository_mapping: {
-          'repo name' => {
-            repository: 'root repo name',
-            product: 'product name',
-            redhat: true
-          }
-        },
-        toc: "toc file name",
-        content_view: "cv name",
-        content_view_version: {
-          major: "4",
-          minor: "5"
-        }
-      }
-
-      metadata_params = ActionController::Parameters.new(metadata).permit!
-
-      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Import, @library_view, path: '/tmp', metadata: metadata_params).returns({})
-
-      post :import, params: { content_view_id: @library_view.id, path: '/tmp', metadata: metadata}
-
-      assert_response :success
     end
 
     def test_show_protected

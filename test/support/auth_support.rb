@@ -33,7 +33,6 @@ module Katello
         "or_remove_content_views_to_environment" => "Katello::KTEnvironment",
         "or_remove_content_view" => "Katello::ContentView"
       }
-
       mapping[resource_name] || verify_resource(resource_name.camelize)
     end
 
