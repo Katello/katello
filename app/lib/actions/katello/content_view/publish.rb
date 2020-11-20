@@ -137,7 +137,7 @@ module Actions
           history.save!
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
           view = ::Katello::ContentView.find(input[:content_view_id])
-          if SmartProxy.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync] && !input[:skip_promotion]
+          if SmartProxy.sync_needed?(environment) && !input[:skip_promotion]
             ForemanTasks.async_task(ContentView::CapsuleSync,
                                     view,
                                     environment)
