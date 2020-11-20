@@ -46,6 +46,39 @@ module Katello
         def self.check!(content_view:, metadata:, path:)
           ImportValidator.new(content_view: content_view, metadata: metadata, path: path).check!
         end
+
+        def self.reset_content_view_repositories_from_metadata!(content_view:, metadata:)
+          # Given metadata from the dump and a content view
+          # this method
+          # 1) Fetches ids of the library repos whose product name, repo name amd redhat?
+          # =>  match values provided in the metadata's repository mapping
+          # 2) Removes all the repositories associated to this content view
+          # 3) Adds the repositories matched from the dump
+          # The main intent of this method is to assume that the user intends for the
+          # content view to exaclty look like what is specified in metadata
+
+          repos_in_library = Katello::Repository.
+                    in_default_view.
+                    yum_type.
+                    joins(:product => :provider, :content_view_version => :content_view).
+                    joins(:root).
+                    where("#{::Katello::ContentView.table_name}.organization_id" => content_view.organization_id).
+                    pluck("#{::Katello::Repository.table_name}.id",
+                          "#{::Katello::RootRepository.table_name}.name",
+                          "#{::Katello::Product.table_name}.name",
+                          "#{::Katello::Provider.table_name}.provider_type"
+                          )
+          repos_in_library_map = {}
+          # repos_in_library_map is going to look like {['repo1', 'product1', false] => 100, ['repo1', 'product1', true] => 200 }
+          repos_in_library.each do |id, repo, product, provider_type|
+            repos_in_library_map[[repo, product, provider_type == Katello::Provider::REDHAT]] = id
+          end
+
+          repo_ids = metadata[:repository_mapping].values.map do |repo|
+            repos_in_library_map[[repo[:repository], repo[:product], repo[:redhat]]]
+          end
+          content_view.update!(repository_ids: repo_ids)
+        end
       end
     end
   end

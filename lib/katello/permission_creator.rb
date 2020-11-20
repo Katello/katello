@@ -11,6 +11,7 @@ module Katello
       content_credential_permissions
       host_collections_permissions
       lifecycle_environment_permissions
+      organization_permissions
       product_permissions
       subscription_permissions
       sync_plan_permissions
@@ -140,7 +141,8 @@ module Katello
       @plugin.permission :publish_content_views,
                          {
                            'katello/api/v2/content_views' => [:publish],
-                           'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories, :import]
+                           'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories],
+                           'katello/api/v2/content_imports' => [:version]
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :publishable
@@ -418,6 +420,14 @@ module Katello
                            'katello/api/rhsm/candlepin_proxies' => [:list_owners]
                          },
                          :public => true
+    end
+
+    def organization_permissions
+      @plugin.permission :import_library_content,
+                         {
+                           'katello/api/v2/content_imports' => [:library]
+                         },
+                         :resource_type => 'Organization'
     end
   end
 end

@@ -71,7 +71,7 @@ module Actions
         private
 
         def sync_proxies?(environment)
-          Setting[:foreman_proxy_content_auto_sync] && ::SmartProxy.sync_needed?(environment)
+          ::SmartProxy.sync_needed?(environment)
         end
 
         def repos_to_delete(version, environment)
