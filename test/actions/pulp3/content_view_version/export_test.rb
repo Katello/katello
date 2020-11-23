@@ -10,7 +10,7 @@ module ::Actions::Pulp3::ContentView
       @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
       @repo = create_and_sync(@repo, @primary)
       @content_view = @repo.content_view
-      @content_view_version = @content_view.versions.last
+      @content_view_version = @repo.content_view_version
       @destination_server = 'dream-destination'
       ::Katello::Pulp3::ContentViewVersion::Export.any_instance.stubs(:date_dir).returns("date_dir")
     end
