@@ -41,9 +41,10 @@ module Katello
                                          content_view_version: version,
                                          destination_server: destination_server,
                                          from_content_view_version: from_version)
-            ::Katello::Pulp3::ContentViewVersion::Export.define_method(:version_href_to_repository_href) do |href|
-              href
-            end
+
+            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with(nil).returns(nil).twice
+            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with("0").returns("0")
+            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with("1").returns("1")
 
             exception = assert_raises(RuntimeError) do
               export.validate_incremental_export!
