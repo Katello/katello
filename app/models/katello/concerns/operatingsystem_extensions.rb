@@ -17,6 +17,8 @@ module Katello
           TemplateKind.all.each do |kind|
             if name == ::Operatingsystem::REDHAT_ATOMIC_HOST_OS && kind.name == "provision"
               provisioning_template_name = Setting["katello_default_atomic_provision"]
+            elsif kind.name == 'registration'
+              provisioning_template_name = 'Linux registration default'
             else
               provisioning_template_name = Setting["katello_default_#{kind.name}"]
             end
