@@ -9,8 +9,12 @@ module Actions
 
           def run
             input[:host_ids].each do |host_id|
-              content_facet = ::Host.find(host_id).content_facet
-              content_facet.calculate_and_import_applicability
+              content_facet = ::Katello::Host::ContentFacet.find_by_host_id(host_id)
+              if content_facet.present?
+                content_facet.calculate_and_import_applicability
+              else
+                Rails.logger.warn(_("Content Facet for host with id %s is non-existent. Skipping applicability calculation.") % host_id)
+              end
             end
           end
 
