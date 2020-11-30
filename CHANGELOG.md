@@ -1,3 +1,31 @@
+# 3.16.2 Tasty Taiyaki (2020-11-30)
+
+## Features
+
+### Hammer
+ * Hammer CLI is missing "resolve" (traces) option for katello-tracer ([#30735](https://projects.theforeman.org/issues/30735), [84034dc7](https://github.com/Katello/katello.git/commit/84034dc79b019cff2d0db22162a173adda27f83f), [549b9154](https://github.com/Katello/hammer-cli-katello.git/commit/549b9154bc24576856beca515b0fb7d0e3b43852))
+
+## Bug Fixes
+
+### Errata Management
+ * Katello Pulp 3 Applicability errors out when deleted hosts are plucked from the queue ([#31321](https://projects.theforeman.org/issues/31321), [9bd5110a](https://github.com/Katello/katello.git/commit/9bd5110a1c626fccea16835be8dbf3b3003f57f9))
+
+### Content Views
+ * publishing a content view w/ a filter with multiple repositories and 10K+ rpms will result in empty repos  ([#31268](https://projects.theforeman.org/issues/31268), [5e6f03a3](https://github.com/Katello/katello.git/commit/5e6f03a31772c4236a7fb54ca6d08cbfcea67416))
+ * Actions::Katello::Repository::IndexContent is performed in serial order during CV Publish ([#30827](https://projects.theforeman.org/issues/30827), [86ed3b57](https://github.com/Katello/katello.git/commit/86ed3b5756663e24c46fdbeea367cd797d4e7b8f))
+
+### Repositories
+ * “NoMethodError: undefined method `repository_href’ for nil:NilClass” when syncing yum repos ([#31247](https://projects.theforeman.org/issues/31247), [b4373c94](https://github.com/Katello/katello.git/commit/b4373c94eb4c0907faf4d6cc8e39e8811078b8c8))
+
+### Tooling
+ * foreman-rake katello:reimport fails  ([#31110](https://projects.theforeman.org/issues/31110), [23249fa9](https://github.com/Katello/katello.git/commit/23249fa92c2b632e3305f590fc998cd9e2315efe), [40e139bc](https://github.com/Katello/katello.git/commit/40e139bc252c4719a8bd55f252a5bd7b206e0f8c))
+
+### Docker
+ * update recommended docker url to not use :5000 ([#30701](https://projects.theforeman.org/issues/30701), [a236d2a4](https://github.com/Katello/katello.git/commit/a236d2a47158c86a695cd8a8917d275cafe588b6))
+
+### Other
+ * Pulp 3 task cancelling does not work ([#31223](https://projects.theforeman.org/issues/31223), [afc1e76b](https://github.com/Katello/katello.git/commit/afc1e76bf683d977619dedfc3c029f2e7ae5705a))
+ * subscription-manager returns no debian repository if architecture is set ([#31173](https://projects.theforeman.org/issues/31173), [ed89bc5c](https://github.com/Katello/katello.git/commit/ed89bc5cfb4e9ffec082be68a1c40d8efd25bbca))
 # 3.16.1.2 Tasty Taiyaki (2020-10-02)
 
 ## Bug Fixes
