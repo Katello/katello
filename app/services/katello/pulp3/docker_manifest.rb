@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class DockerManifest < PulpContentUnit
       include LazyAccessor
+      CONTENT_TYPE = "docker_manifest".freeze
 
       def self.content_api
         PulpContainerClient::ContentManifestsApi.new(Katello::Pulp3::Api::Docker.new(SmartProxy.pulp_primary!).api_client)

@@ -32,6 +32,10 @@ module Katello
           PulpContainerClient::RecursiveManage
         end
 
+        def self.tag_image_class
+          PulpContainerClient::TagImage
+        end
+
         def api_client
           PulpContainerClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpContainerClient::Configuration))
         end
