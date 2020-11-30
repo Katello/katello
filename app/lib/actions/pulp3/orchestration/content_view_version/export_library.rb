@@ -8,7 +8,8 @@ module Actions
             content_view = ::Katello::ContentView.find_library_export_view(destination_server: destination_server,
                                                                            organization: organization,
                                                                            create_by_default: true)
-            content_view.update!(repository_ids: organization.default_content_view_version.repository_ids)
+            repo_ids_in_library = organization.default_content_view_version.repositories.yum_type.pluck(:id)
+            content_view.update!(repository_ids: repo_ids_in_library)
 
             sequence do
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, content_view, '')
