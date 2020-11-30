@@ -3,7 +3,8 @@ import { Pagination, Flex, FlexItem } from '@patternfly/react-core';
 
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { usePaginationOptions, useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
+import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
+import { usePaginationOptions } from 'foremanReact/components/Pagination/PaginationHooks';
 
 import MainTable from './MainTable';
 import Search from '../../components/Search';
