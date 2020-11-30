@@ -29,5 +29,23 @@ module ::Actions::Katello::Applicability::Host
         ForemanTasks.sync_task(action_class, [@host, @host, @host, @host, @host])
       end
     end
+
+    describe 'BulkGenerate does not error out with missing hosts' do
+      let(:action_class) { ::Actions::Katello::Applicability::Hosts::BulkGenerate }
+
+      it 'runs' do
+        deleted_id = @host.id
+        @host.subscription_facet.destroy
+        @host.content_facet.destroy
+        @host.destroy
+        host2 = FactoryBot.build(:host, :with_content, :with_subscription,
+                                 :content_view => katello_content_views(:library_dev_view),
+                                 :lifecycle_environment => katello_environments(:library))
+        host2.save!
+        host3 = FactoryBot.build(:host)
+        host3.save!
+        ForemanTasks.sync_task(action_class, host_ids: [deleted_id, host2.id, host3.id])
+      end
+    end
   end
 end
