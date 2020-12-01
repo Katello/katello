@@ -1,3 +1,19 @@
+# 3.17.1 (2020-12-01)
+
+## Bug Fixes
+
+### Hosts
+ * Hypervisors upload fails with duplicate UUIDs ([#30826](https://projects.theforeman.org/issues/30826), [59210c07](https://github.com/Katello/katello.git/commit/59210c0704e6935e045d6cb20584618862bac368))
+
+ ### Errata Management 
+ * Katello Pulp 3 Applicability errors out when deleted hosts are plucked from the queue ([#31321](https://projects.theforeman.org/issues/31321), [260c0ff](https://github.com/Katello/katello/pull/9041/commits/260c0ff7e2280a686a9a06ddf77b3a686a3e46fa))
+
+ ### Repositories
+ * “NoMethodError: undefined method `repository_href’ for nil:NilClass” when syncing yum repos ([#31247](https://projects.theforeman.org/issues/31247), [6ef23ff](https://github.com/Katello/katello.git/commit/6ef23ff41adaeeb13feab7ec8fbebceb792cb313))
+
+### Content Views
+* publishing a content view w/ a filter with multiple repositories and 10K+ rpms will result in empty repos ([#31268](https://projects.theforeman.org/issues/31268), [59a20b7](https://github.com/Katello/katello.git/commit/59a20b76a851f690d2b1325180ab4e3021c5cf82))
+
 # 3.17.0 (2020-11-06)
 
 ## Features
