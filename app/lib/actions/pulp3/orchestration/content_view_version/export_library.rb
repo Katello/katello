@@ -5,7 +5,7 @@ module Actions
         class ExportLibrary < Actions::EntryAction
           def plan(organization, destination_server: nil, chunk_size: nil, from_history: nil)
             action_subject(organization)
-            content_view = ::Katello::ContentView.find_library_export_view(destination_server: destination_server,
+            content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: destination_server,
                                                                            organization: organization,
                                                                            create_by_default: true)
             repo_ids_in_library = organization.default_content_view_version.repositories.yum_type.pluck(:id)

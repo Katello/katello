@@ -29,11 +29,11 @@ module Katello
       end
     end
 
-    def test_pick_recent_history_nil_if_no_history
-      assert_empty ContentViewVersionExportHistory.pick_recent_history(@cvv.content_view)
+    def test_latest_nil_if_no_history
+      assert_empty ContentViewVersionExportHistory.latest(@cvv.content_view)
     end
 
-    def test_pick_recent_history
+    def test_latest
       content_view = @cvv.content_view
       destination = "greatest"
       path = "/tmp"
@@ -41,9 +41,9 @@ module Katello
                                                         destination_server: destination,
                                                         metadata: {foo: :bar},
                                                         path: path)
-      assert_equal history, ContentViewVersionExportHistory.pick_recent_history(content_view,
+      assert_equal history, ContentViewVersionExportHistory.latest(content_view,
                                                                                 destination_server: destination)
-      assert_nil ContentViewVersionExportHistory.pick_recent_history(@cvv.content_view)
+      assert_nil ContentViewVersionExportHistory.latest(@cvv.content_view)
     end
   end
 end

@@ -21,10 +21,9 @@ module Katello
     scoped_search :on => :content_view_version_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
 
-    def self.pick_recent_history(content_view, destination_server: nil)
-      recent_history_id = where(content_view_version: content_view.versions,
-                                destination_server: destination_server).maximum(:id)
-      find(recent_history_id) unless recent_history_id.blank?
+    def self.latest(content_view, destination_server: nil)
+      where(content_view_version: content_view.versions,
+            destination_server: destination_server).order(:created_at).last
     end
   end
 end

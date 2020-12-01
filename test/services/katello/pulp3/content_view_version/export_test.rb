@@ -51,6 +51,19 @@ module Katello
             end
             assert_match(/cannot be incrementally updated/, exception.message)
           end
+
+          it 'finds the library export view correctly' do
+            org = get_organization
+            assert_nil ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
+                                                            create_by_default: false,
+                                                            destination_server: nil)
+            # now create it
+            destination_server = "example.com"
+            cv = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(organization: org,
+                                                        create_by_default: true,
+                                                        destination_server: destination_server)
+            assert_equal cv.name, "Export-Library-#{destination_server}"
+          end
         end
       end
     end

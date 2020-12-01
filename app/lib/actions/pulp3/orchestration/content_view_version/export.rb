@@ -20,7 +20,6 @@ module Actions
           # rubocop:disable Metrics/MethodLength
           def plan(content_view_version:, destination_server: nil,
                    chunk_size: nil, from_history: nil, validate_incremental: true)
-            content_view_version = ::Katello::ContentViewVersion.find(content_view_version) if content_view_version.is_a? Integer
             action_subject(content_view_version)
             unless File.directory?(Setting['pulpcore_export_destination'])
               fail ::Foreman::Exception, N_("Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory.")

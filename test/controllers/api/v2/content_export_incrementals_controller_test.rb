@@ -65,7 +65,7 @@ module Katello
       chunk_size_mb = 100
       destination = "example.com"
       history = {foo: 100}
-      ContentViewVersionExportHistory.expects(:pick_recent_history)
+      ContentViewVersionExportHistory.expects(:latest)
                                      .with(@library_view_version.content_view,
                                            destination_server: destination)
                                      .returns(history)
@@ -113,7 +113,7 @@ module Katello
       @controller.stubs(:fail_if_not_pulp3)
       destination = "example.com"
 
-      ContentViewVersionExportHistory.expects(:pick_recent_history)
+      ContentViewVersionExportHistory.expects(:latest)
                                      .with(@library_view_version.content_view,
                                            destination_server: destination)
                                      .returns
@@ -122,7 +122,7 @@ module Katello
                                destination_server: destination
                              }
       response = JSON.parse(@response.body)['displayMessage']
-      assert_match(%r{Prior content view export history belonging to the content view '.*' was not found}, response)
+      assert_match(%r{No existing export history was found to perform an incremental export}, response)
       assert_response :not_found
     end
 
@@ -132,13 +132,14 @@ module Katello
       chunk_size_mb = 100
       destination = "example.com"
       history = {foo: 100}
-      ContentView.expects(:find_library_export_view)
+      ::Katello::Pulp3::ContentViewVersion::Export
+                 .expects(:find_library_export_view)
                  .with(create_by_default: false,
                        destination_server: destination,
                        organization: org)
                  .returns(@library_dev_staging_view)
 
-      ContentViewVersionExportHistory.expects(:pick_recent_history)
+      ContentViewVersionExportHistory.expects(:latest)
                                      .with(@library_dev_staging_view,
                                            destination_server: destination)
                                      .returns(history)

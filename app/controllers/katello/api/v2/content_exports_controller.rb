@@ -29,10 +29,11 @@ module Katello
       render json: { api_usable: SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE) }, status: :ok
     end
 
-    api :POST, "/content_exports/version", N_("Performs a full-export of a content view version.  Relevant only for Pulp 3 repositories")
+    api :POST, "/content_exports/version", N_("Performs a full-export of a content view version.")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name, required for Pulp3"), :required => false
-    param :chunk_size_mb, :number, :desc => N_("Chunk export-tarfile into pieces of chunk_size mega bytes."), :required => false
+    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
+    param :chunk_size_mb, :number, :desc => N_("Split the exported content into archives "\
+                                               "no greater than the specified size in megabytes."), :required => false
     def version
       tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export,
                           content_view_version: @version,
@@ -42,10 +43,11 @@ module Katello
       respond_for_async :resource => tasks
     end
 
-    api :POST, "/content_exports/library", N_("Performs a full-export of the repositories in library.  Relevant only for Pulp 3 repositories")
+    api :POST, "/content_exports/library", N_("Performs a full-export of the repositories in library.")
     param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name, required for Pulp3"), :required => false
-    param :chunk_size_mb, :number, :desc => N_("Chunk export-tarfile into pieces of chunk_size mega bytes."), :required => false
+    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
+    param :chunk_size_mb, :number, :desc => N_("Split the exported content into archives "\
+                                               "no greater than the specified size in megabytes."), :required => false
     def library
       tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary,
                           @organization,
