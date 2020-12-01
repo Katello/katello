@@ -8,6 +8,7 @@ import {
   TextListVariants,
   TextListItem,
   TextListItemVariants,
+  Switch,
 } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -18,6 +19,8 @@ import Loading from '../../../components/Loading';
 import ContentViewIcon from '../components/ContentViewIcon';
 import ActionableDetail from '../../../components/ActionableDetail';
 import './contentViewInfo.scss';
+import { dependenciesHelpText, autoPublishHelpText } from '../helpers';
+import { LabelImportOnly } from '../Create/ContentViewFormComponents';
 
 const ContentViewInfo = ({ cvId, details }) => {
   const dispatch = useDispatch();
@@ -29,18 +32,8 @@ const ContentViewInfo = ({ cvId, details }) => {
     composite,
     solve_dependencies: solveDependencies,
     auto_publish: autoPublish,
+    import_only: importOnly,
   } = details;
-
-  const autoPublishTooltip = __('Applicable only for composite views. Auto publish composite ' +
-    'view when a new version of a component content view is created. Also note auto publish will ' +
-    'only happen when the component is marked "latest".');
-
-  const solveDependenciesTooltip = __('This option will solve RPM and Module Stream dependencies ' +
-    'on every publish of this Content View. Dependency solving significantly increases publish ' +
-    'time (publishes can take over three times as long) and filters will be ignored when adding ' +
-    'packages to solve dependencies. Also, certain scenarios involving errata may still cause ' +
-    'dependency errors.');
-
 
   if (updating) return <Loading size="sm" showText={false} />;
   const onEdit = (val, attribute) => dispatch(updateContentView(cvId, { [attribute]: val }));
@@ -85,7 +78,7 @@ const ContentViewInfo = ({ cvId, details }) => {
             attribute="auto_publish"
             value={autoPublish}
             onEdit={onEdit}
-            tooltip={autoPublishTooltip}
+            tooltip={autoPublishHelpText}
             boolean
           />) :
           (<ActionableDetail
@@ -93,9 +86,21 @@ const ContentViewInfo = ({ cvId, details }) => {
             attribute="solve_dependencies"
             value={solveDependencies}
             onEdit={onEdit}
-            tooltip={solveDependenciesTooltip}
+            tooltip={dependenciesHelpText}
             boolean
           />)}
+        <TextListItem component={TextListItemVariants.dt}>
+          {LabelImportOnly()}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
+          <Switch
+            id="import_only_switch"
+            aria-label="import_only_switch"
+            isChecked={importOnly}
+            className="foreman-spaced-list"
+            disabled
+          />
+        </TextListItem>
       </TextList>
     </TextContent>
   );
@@ -110,6 +115,7 @@ ContentViewInfo.propTypes = {
     composite: PropTypes.bool,
     solve_dependencies: PropTypes.bool,
     auto_publish: PropTypes.bool,
+    import_only: PropTypes.bool,
   }).isRequired,
 };
 

@@ -246,4 +246,45 @@ test('No results message is shown for empty search', async (done) => {
   assertNockRequest(withSearchScope);
   assertNockRequest(searchResultScope, done);
 });
+
+test('Displays Create Content View and opens modal with Form', async () => {
+  mockAutocomplete(nockInstance, autocompleteUrl);
+
+  const noResults = {
+    total: 0,
+    subtotal: 0,
+    page: 1,
+    per_page: 20,
+    results: [],
+  };
+  nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, noResults);
+  const {
+    getByText, queryByText, getByLabelText,
+  } = renderWithRedux(<ContentViewsPage />, renderOptions);
+  await patientlyWaitFor(() => expect(queryByText('Create content view')).toBeTruthy());
+
+  expect(queryByText('Description')).not.toBeInTheDocument();
+  expect(queryByText('Name')).not.toBeInTheDocument();
+  expect(queryByText('Label')).not.toBeInTheDocument();
+  expect(queryByText('Composite Content View')).not.toBeInTheDocument();
+  expect(queryByText('Component Content View')).not.toBeInTheDocument();
+  expect(queryByText('Solve Dependencies')).not.toBeInTheDocument();
+  expect(queryByText('Auto Publish')).not.toBeInTheDocument();
+  expect(queryByText('Import Only')).not.toBeInTheDocument();
+
+  getByLabelText('create_content_view').click();
+
+  expect(getByText('Description')).toBeInTheDocument();
+  expect(getByText('Name')).toBeInTheDocument();
+  expect(getByText('Label')).toBeInTheDocument();
+  expect(getByText('Composite Content View')).toBeInTheDocument();
+  expect(getByText('Component Content View')).toBeInTheDocument();
+  expect(getByText('Solve Dependencies')).toBeInTheDocument();
+  expect(queryByText('Auto Publish')).not.toBeInTheDocument();
+  expect(getByText('Import Only')).toBeInTheDocument();
+});
+
 /* eslint-enable no-useless-escape */
