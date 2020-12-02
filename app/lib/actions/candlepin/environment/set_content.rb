@@ -9,7 +9,7 @@ module Actions
                     :new_content_id => new_content_id)
         end
 
-        def finalize
+        def finalize # rubocop:disable Metrics/AbcSize
           content_view = ::Katello::ContentView.find(input[:content_view_id])
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
           content_ids = content_view.repos(environment).map(&:content_id).uniq.compact

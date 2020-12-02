@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["ericdhelms@gmail.com", "walden@redhat.com"]
   s.homepage    = "https://github.com/Katello/bastion"
   s.license     = "GPL-2.0-or-later"
+  s.gem.required_ruby_version = ['>= 2.5.0', '< 2.7.0']
   s.summary     = "UI library of AngularJS based components for Foreman"
   s.description = "Bastion provides a UI library of AngularJS based components designed " \
                   "to integrate and work with Foreman."

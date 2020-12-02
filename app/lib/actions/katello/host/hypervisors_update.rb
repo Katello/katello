@@ -54,10 +54,10 @@ module Actions
 
         # Loads all resources needed for refreshing subscription facet
         def load_resources
-          @organizations = ::Organization.where(label: hypervisors_field(:organization_label)).map { |org| [org.label, org] }.to_h
+          @organizations = ::Organization.where(label: hypervisors_field(:organization_label)).index_by { |org| org.label }
 
           candlepin_data = ::Katello::Resources::Candlepin::Consumer.get_all_with_facts(hypervisors_field(:uuid))
-          @candlepin_attributes = candlepin_data.map { |consumer| [consumer[:uuid], consumer] }.to_h
+          @candlepin_attributes = candlepin_data.index_by { |consumer| consumer[:uuid] }
 
           @hosts = {}
           @hosts.merge!(load_hosts_by_uuid)
@@ -70,7 +70,7 @@ module Actions
           hosts_by_uuid.each do |host|
             validate_host_organization(host, host.organization.try(:id))
           end
-          hosts_by_uuid.map { |host| [host.subscription_facet.uuid, host] }.to_h
+          hosts_by_uuid.index_by { |host| host.subscription_facet.uuid }
         end
 
         def load_hosts_by_duplicate_name
@@ -82,7 +82,7 @@ module Actions
             validate_host_organization(host, duplicate_name_orgs[host.name].try(:id))
           end
 
-          hosts_by_dup_name.map { |host| [duplicate_names[host.name], host] }.to_h
+          hosts_by_dup_name.index_by { |host| duplicate_names[host.name] }
         end
 
         def create_missing_hosts

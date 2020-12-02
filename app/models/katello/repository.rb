@@ -143,7 +143,7 @@ module Katello
     scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true
     scoped_search :rename => :product_id, :on => :id, :relation => :product
     scoped_search :on => :content_type, :relation => :root, :complete_value => -> do
-      Katello::RepositoryTypeManager.repository_types.keys.each_with_object({}) { |value, hash| hash[value.to_sym] = value }
+      Katello::RepositoryTypeManager.repository_types.keys.index_by { |value| value.to_sym }
     end
     scoped_search :on => :content_view_id, :relation => :content_view_repositories, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
     scoped_search :on => :distribution_version, :complete_value => true

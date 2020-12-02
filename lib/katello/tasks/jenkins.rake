@@ -19,6 +19,6 @@ begin
       Rake::Task['rake:test:katello:test'].invoke
     end
   end
-rescue LoadError # rubocop:disable Lint/SuppressedException
+rescue LoadError
   # ci/reporter/rake/rspec not present, skipping this definition
 end

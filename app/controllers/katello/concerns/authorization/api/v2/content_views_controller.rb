@@ -107,7 +107,7 @@ module Katello
       true
     end
 
-    def authorize_remove_environments(view, options)
+    def authorize_remove_environments(view, options) # rubocop:disable Metrics/CyclomaticComplexity
       env_ids = options[:environment_ids]
 
       return true if env_ids.blank?

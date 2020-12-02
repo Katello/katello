@@ -13,6 +13,7 @@ Gem::Specification.new do |gem|
   gem.homepage    = "http://www.katello.org"
   gem.summary     = "Content and Subscription Management plugin for Foreman"
   gem.description = "Katello adds Content and Subscription Management to Foreman. For this it relies on Candlepin and Pulp."
+  gem.required_ruby_version = ['>= 2.5.0', '< 2.7.0']
 
   gem.files = Dir["{app,webpack,vendor,lib,db,ca,config,locale}/**/*"] +
     Dir['LICENSE.txt', 'README.md', 'package.json']

@@ -6,7 +6,7 @@ module Actions
         include ::Katello::ContentViewHelper
         attr_accessor :version
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
-        def plan(content_view, description = "", options = {importing: false})
+        def plan(content_view, description = "", options = {importing: false}) # rubocop:disable Metrics/PerceivedComplexity
           action_subject(content_view)
 
           content_view.check_ready_to_publish!(importing: options[:importing])

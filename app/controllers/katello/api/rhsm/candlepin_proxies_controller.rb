@@ -41,8 +41,6 @@ module Katello
             body_json['displayMessage'] = body_json['message']
           end
           response.body = body_json.to_s
-
-        # rubocop:disable Lint/SuppressedException
         rescue JSON::ParserError
           # Not a json response, leave as-is
         end

@@ -334,7 +334,7 @@ module Katello
           multi_copy_units(repo_id_map, dependency_solving)
         end
 
-        def copy_content_for_source(source_repository, options = {})
+        def copy_content_for_source(source_repository, options = {}) # rubocop:disable Metrics/CyclomaticComplexity
           filters = [ContentViewErratumFilter, ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
             filter_class.where(:id => options[:filter_ids])
           end
