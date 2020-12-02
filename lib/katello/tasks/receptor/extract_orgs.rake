@@ -1,7 +1,7 @@
 namespace :katello do
   namespace :receptor do
     desc 'Extract Organization details for Receptor and write to OUTPUT_FILE.'
-    task :extract_orgs => ["environment", "check_ping"] do
+    task :extract_orgs => ["dynflow:client", "check_ping"] do
       output_file = ENV['OUTPUT_FILE']
 
       unless output_file
