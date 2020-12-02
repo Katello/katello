@@ -11,6 +11,9 @@ module Actions
         end
 
         # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Metrics/PerceivedComplexity
         def run
           repo = ::Katello::Repository.find(input[:id])
           if repo.puppet?

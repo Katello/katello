@@ -1,4 +1,3 @@
-# rubocop:disable Lint/SuppressedException
 require "vcr"
 require "active_support/concern"
 

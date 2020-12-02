@@ -19,7 +19,7 @@ module Actions
 
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/AbcSize
-        def plan(old_version, environments, options = {})
+        def plan(old_version, environments, options = {}) # rubocop:disable Metrics/CyclomaticComplexity
           dep_solve = options.fetch(:resolve_dependencies, true)
           description = options.fetch(:description, '')
           content = options.fetch(:content, {})
@@ -205,7 +205,7 @@ module Actions
           end
         end
 
-        def run
+        def run # rubocop:disable Metrics/CyclomaticComplexity
           content = { ::Katello::Erratum::CONTENT_TYPE => [],
                       ::Katello::Rpm::CONTENT_TYPE => [],
                       ::Katello::ModuleStream::CONTENT_TYPE => [],

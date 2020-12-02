@@ -515,7 +515,7 @@ module Katello
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity
-    def construct_repo_from_params(repo_params)
+    def construct_repo_from_params(repo_params) # rubocop:disable Metrics/AbcSize
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
                                                             :checksum_type, :download_policy, :http_proxy_policy).to_h.with_indifferent_access)

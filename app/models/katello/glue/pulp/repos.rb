@@ -125,7 +125,7 @@ module Katello
             AND inner_select.resource_id = locks_foreman_tasks_tasks.resource_id")
           .distinct
 
-        max_per_repoid.map { |x| [x.resource_id, x] }.to_h
+        max_per_repoid.index_by { |x| [x.resource_id, x] }
       end
 
       def sync_state_aggregated

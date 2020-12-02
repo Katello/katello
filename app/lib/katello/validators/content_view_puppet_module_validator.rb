@@ -1,7 +1,7 @@
 module Katello
   module Validators
     class ContentViewPuppetModuleValidator < ActiveModel::Validator
-      def validate(record)
+      def validate(record) # rubocop:disable Metrics/CyclomaticComplexity
         if record.uuid.blank? && (record.name.blank? || record.author.blank?)
           record.errors[:base] << _("Invalid puppet module parameters specified. \
                                     Either 'uuid' or 'name' and 'author' must be specified.")

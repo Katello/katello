@@ -379,7 +379,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
     end
 
-    def test_search_compare_gt_lte
+    def test_search_compare_gt_lte # rubocop:disable Metrics/AbcSize
       results = Rpm.in_repositories(@repo).search_for("evr > 1.0.0")
       expected = ["abc123-2", "abc123-4", "abc123-6"]
       assert_equal expected, results.map(&:pulp_id).sort

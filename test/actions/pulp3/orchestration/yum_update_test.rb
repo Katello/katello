@@ -52,7 +52,7 @@ module ::Actions::Pulp3
         @primary)
 
       yum_remote = ::Katello::Pulp3::Api::Yum.new(@primary).remotes_api
-      assert_equal yum_remote.list.results.select { |remote| remote.name == "2_duplicate" }[0].policy, "on_demand"
+      assert_equal yum_remote.list.results.find { |remote| remote.name == "2_duplicate" }.policy, "on_demand"
     end
 
     def test_update_unset_unprotected
