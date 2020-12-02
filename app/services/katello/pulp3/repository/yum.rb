@@ -207,14 +207,20 @@ module Katello
           tasks
         end
 
-        def copy_all(source_repository)
-          data = PulpRpmClient::Copy.new
-          data.config = [{
-            source_repo_version: source_repository.version_href,
-            dest_repo: repository_reference.repository_href
-          }]
+        def copy_all(source_repository, mirror: false)
+          if mirror
+            data = PulpRpmClient::RepositoryAddRemoveContent.new(
+                      base_version: source_repository.version_href)
 
-          [api.copy_api.copy_content(data)]
+            [api.repositories_api.modify(repository_reference.repository_href, data)]
+          else
+            data = PulpRpmClient::Copy.new
+            data.config = [{
+              source_repo_version: source_repository.version_href,
+              dest_repo: repository_reference.repository_href
+            }]
+            [api.copy_api.copy_content(data)]
+          end
         end
 
         def remove_all_content_from_repo(repo_href)
