@@ -16,16 +16,20 @@
 angular.module('Bastion.content-views').controller('ContentViewVersionDeletionActivationKeysController',
     ['$scope', '$location', 'Organization', 'CurrentOrganization', 'Nutupane', 'ActivationKey',
     function ($scope, $location, Organization, CurrentOrganization, Nutupane, ActivationKey) {
-        var params, nutupane;
+        var params, nutupane, nutupaneParams;
 
         $scope.validateEnvironmentSelection();
         params = {
             'organization_id': CurrentOrganization,
-            'content_view_id': $scope.contentView.id,
             'sort_by': 'name',
             'sort_order': 'ASC'
         };
-        nutupane = new Nutupane(ActivationKey, params);
+
+        nutupaneParams = {
+            'disableAutoLoad': true
+        };
+
+        nutupane = new Nutupane(ActivationKey, params, undefined, nutupaneParams);
         $scope.controllerName = 'katello_activation_keys';
 
         nutupane.searchTransform = function (term) {
@@ -43,6 +47,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionAc
 
             return term + " AND " + addition;
         };
+        nutupane.load();
 
         $scope.table = nutupane.table;
         $scope.table.closeItem = function () {};
