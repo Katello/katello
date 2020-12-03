@@ -16,6 +16,7 @@ describe('Controller: ContentViewVersionDeletionContentHostsController', functio
         Organization.readableEnvironments = function() {return []};
         Nutupane = function () {
             this.table = {};
+            this.load = function(){};
         };
 
         $scope = $injector.get('$rootScope').$new();
