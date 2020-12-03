@@ -9,6 +9,7 @@ module Katello
       Rake::Task['katello:receptor:extract_orgs'].reenable
       Rake::Task['katello:check_ping'].reenable
       Rake::Task.define_task(:environment)
+      Rake::Task.define_task('dynflow:client')
 
       Katello::Ping.expects(:ping).returns(:status => 'ok')
     end
