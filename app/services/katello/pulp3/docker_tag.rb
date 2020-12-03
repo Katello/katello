@@ -2,6 +2,7 @@ module Katello
   module Pulp3
     class DockerTag < PulpContentUnit
       include LazyAccessor
+      CONTENT_TYPE = "docker_tag".freeze
 
       def self.content_api
         PulpContainerClient::ContentTagsApi.new(Katello::Pulp3::Api::Docker.new(SmartProxy.pulp_primary!).api_client)

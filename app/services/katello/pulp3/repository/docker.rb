@@ -52,6 +52,11 @@ module Katello
                                       api.class.recursive_manage_class.new(content_units: options[:remove_content_units]))
         end
 
+        def tag_manifest(name, digest)
+          api.repositories_api.tag(repository_reference.repository_href,
+                                   api.class.tag_image_class.new(tag: name, digest: digest))
+        end
+
         def add_content(content_unit_href)
           content_unit_href = [content_unit_href] unless content_unit_href.is_a?(Array)
           api.repositories_api.add(repository_reference.repository_href, content_units: content_unit_href)
