@@ -1,5 +1,7 @@
 module Katello
   class Api::V2::ContentExportsController < Api::V2::ApiController
+    before_action :fail_if_not_pulp3, :only => [:version, :library]
+    before_action :find_exportable_organization, :only => [:library]
     before_action :find_exportable_content_view_version, :only => [:version]
 
     api :GET, "/content_exports", N_("List export histories")
@@ -27,24 +29,30 @@ module Katello
       render json: { api_usable: SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE) }, status: :ok
     end
 
-    api :POST, "/content_exports/version", N_("Performs a full-export of a content view version.  Relevant only for Pulp 3 repositories")
+    api :POST, "/content_exports/version", N_("Performs a full-export of a content view version.")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    param :destination_server, String, :desc => N_("Destination Server name, required for Pulp3"), :required => true
-    param :chunk_size_mb, :number, :desc => N_("Chunk export-tarfile into pieces of chunk_size mega bytes."), :required => false
-    param :from_history_id, :number, :desc => N_("Export history identifier used for incremental export."), :required => false
+    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
+    param :chunk_size_mb, :number, :desc => N_("Split the exported content into archives "\
+                                               "no greater than the specified size in megabytes."), :required => false
     def version
-      fail HttpErrors::BadRequest, _("Invalid usage for Pulp 2 repositories. Use export for Yum repositories") unless SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
+      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export,
+                          content_view_version: @version,
+                          destination_server: params[:destination_server],
+                          chunk_size: params[:chunk_size_mb])
 
-      if params[:destination_server].blank?
-        fail HttpErrors::BadRequest, _("Destination Server Name required for Pulp3 repositories")
-      end
+      respond_for_async :resource => tasks
+    end
 
-      history = ::Katello::ContentViewVersionExportHistory.find(params[:from_history_id]) unless params[:from_history_id].blank?
-
-      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export, @version, destination_server: params[:destination_server],
-                                                                                         chunk_size: params[:chunk_size_mb],
-                                                                                         from_history: history)
-
+    api :POST, "/content_exports/library", N_("Performs a full-export of the repositories in library.")
+    param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
+    param :destination_server, String, :desc => N_("Destination Server name"), :required => false
+    param :chunk_size_mb, :number, :desc => N_("Split the exported content into archives "\
+                                               "no greater than the specified size in megabytes."), :required => false
+    def library
+      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary,
+                          @organization,
+                          destination_server: params[:destination_server],
+                          chunk_size: params[:chunk_size_mb])
       respond_for_async :resource => tasks
     end
 
@@ -53,6 +61,19 @@ module Katello
     def find_exportable_content_view_version
       @version = ContentViewVersion.exportable.find_by_id(params[:id])
       throw_resource_not_found(name: 'content view version', id: params[:id]) if @version.blank?
+    end
+
+    def find_exportable_organization
+      find_organization
+      unless @organization.can_export_library_content?
+        throw_resource_not_found(name: 'organization', id: params[:organization_id])
+      end
+    end
+
+    def fail_if_not_pulp3
+      unless SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
+        fail HttpErrors::BadRequest, _("Invalid usage for Pulp 2 repositories. Use export for Yum repositories")
+      end
     end
   end
 end

@@ -16,6 +16,10 @@ module Katello
       authorized?(:import_library_content)
     end
 
+    def can_export_library_content?
+      authorized?(:export_library_content)
+    end
+
     def readable_promotion_paths
       permissible_promotion_paths(KTEnvironment.readable)
     end

@@ -156,7 +156,8 @@ module Katello
       @plugin.permission :export_content_views,
                          {
                            'katello/api/v2/content_view_versions' => [:export],
-                           'katello/api/v2/content_exports' => [:version, :index, :api_status]
+                           'katello/api/v2/content_exports' => [:version, :index, :api_status],
+                           'katello/api/v2/content_export_incrementals' => [:version]
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :exportable
@@ -426,6 +427,13 @@ module Katello
       @plugin.permission :import_library_content,
                          {
                            'katello/api/v2/content_imports' => [:library]
+                         },
+                         :resource_type => 'Organization'
+
+      @plugin.permission :export_library_content,
+                         {
+                           'katello/api/v2/content_exports' => [:library],
+                           'katello/api/v2/content_export_incrementals' => [:library]
                          },
                          :resource_type => 'Organization'
     end
