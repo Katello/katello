@@ -1,6 +1,6 @@
 module Katello
   class RootRepository < Katello::Model
-    audited
+    audited :except => [:content_id]
     serialize :ignorable_content
     serialize :docker_tags_whitelist
 
@@ -103,16 +103,6 @@ module Katello
       where(:http_proxy_id => http_proxy_id)
     }
     delegate :redhat?, :provider, :organization, to: :product
-
-    # Note - Audit hook added to find records based on column except associations to display audit information
-    def self.audit_hook_to_find_records(name, change, _audit)
-      if name =~ /_id$/
-        case name
-        when 'content_id'
-          Katello::Content.find_by(:cp_content_id => change)
-        end
-      end
-    end
 
     def library_instance
       repositories.in_default_view.first
