@@ -28,5 +28,22 @@ module Katello
                                                                 path: path)
       end
     end
+
+    def test_latest_nil_if_no_history
+      assert_empty ContentViewVersionExportHistory.latest(@cvv.content_view)
+    end
+
+    def test_latest
+      content_view = @cvv.content_view
+      destination = "greatest"
+      path = "/tmp"
+      history = ContentViewVersionExportHistory.create!(content_view_version_id: @cvv.id,
+                                                        destination_server: destination,
+                                                        metadata: {foo: :bar},
+                                                        path: path)
+      assert_equal history, ContentViewVersionExportHistory.latest(content_view,
+                                                                                destination_server: destination)
+      assert_nil ContentViewVersionExportHistory.latest(@cvv.content_view)
+    end
   end
 end

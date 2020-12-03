@@ -10,11 +10,13 @@ module Katello
       @update_permission = :edit_content_views
       @destroy_permission = :destroy_content_views
       @export_permission = :export_content_views
+      @export_library_permission = :export_library_content
     end
 
     def setup
       setup_controller_defaults_api
       @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
+      @library_view_version = katello_content_view_versions(:library_dev_staging_view_version)
       permissions
     end
 
@@ -50,14 +52,6 @@ module Katello
       end
     end
 
-    def test_export_pulp3_assert_invalid_params
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
-
-      version = @library_dev_staging_view.versions.first
-      post :version, params: { :id => version.id, :iso_mb_size => 5, :export_to_iso => "foo"}
-      assert_response :bad_request
-    end
-
     def test_export_with_pulp2repo_fail
       SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
 
@@ -68,15 +62,8 @@ module Katello
       assert_response :bad_request
     end
 
-    def test_export_pulp3_missing_destination
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
-
-      version = @library_dev_staging_view.versions.first
-      post :version, params: { :id => version.id}
-      assert_response :bad_request
-    end
-
     def test_version_protected
+      @controller.stubs(:fail_if_not_pulp3)
       allowed_perms = [@export_permission]
       denied_perms = [@create_permission, @update_permission,
                       @destroy_permission, @view_permission]
@@ -85,6 +72,57 @@ module Katello
       assert_protected_action(:version, allowed_perms, denied_perms) do
         post :version, params: { :id => version.id }
       end
+    end
+
+    def test_library_protected
+      @controller.stubs(:fail_if_not_pulp3)
+      allowed_perms = [{name: @export_library_permission, :resource_type => "Organization"}]
+      denied_perms = [@create_permission, @update_permission,
+                      @destroy_permission, @view_permission, @export_permission]
+
+      org = get_organization
+      assert_protected_action(:library, allowed_perms, denied_perms, [org]) do
+        post :library, params: { organization_id: org.id}
+      end
+    end
+
+    def test_version
+      @controller.stubs(:fail_if_not_pulp3)
+      chunk_size_mb = 100
+      destination = "example.com"
+      export_task = @controller.expects(:async_task).with do |action_class, options|
+        assert_equal ::Actions::Pulp3::Orchestration::ContentViewVersion::Export, action_class
+        assert_equal options[:content_view_version].id, @library_view_version.id
+        assert_equal options[:destination_server], destination
+        assert_equal options[:chunk_size], chunk_size_mb
+        assert_nil options[:from_history]
+      end
+      export_task.returns(build_task_stub)
+      post :version, params: { id: @library_view_version.id,
+                               destination_server: destination,
+                               chunk_size_mb: chunk_size_mb
+                             }
+      assert_response :success
+    end
+
+    def test_library
+      @controller.stubs(:fail_if_not_pulp3)
+      org = get_organization
+      chunk_size_mb = 100
+      destination = "example.com"
+      export_task = @controller.expects(:async_task).with do |action_class, organization, options|
+        assert_equal ::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary, action_class
+        assert_equal organization.id, org.id
+        assert_equal options[:destination_server], destination
+        assert_equal options[:chunk_size], chunk_size_mb
+        assert_nil options[:from_history]
+      end
+      export_task.returns(build_task_stub)
+      post :library, params: { organization_id: org.id,
+                               destination_server: destination,
+                               chunk_size_mb: chunk_size_mb
+                             }
+      assert_response :success
     end
   end
 end

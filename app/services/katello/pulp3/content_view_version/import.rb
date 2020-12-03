@@ -79,6 +79,13 @@ module Katello
           end
           content_view.update!(repository_ids: repo_ids)
         end
+
+        def self.find_or_create_library_import_view(organization)
+          name = ::Katello::ContentView::IMPORT_LIBRARY
+          ::Katello::ContentView.where(name: name,
+                                       organization: organization,
+                                       import_only: true).first_or_create
+        end
       end
     end
   end
