@@ -8,6 +8,7 @@ module Katello
     include ForemanTasks::Concerns::ActionSubject
 
     CONTENT_DIR = "content_views".freeze
+    IMPORT_LIBRARY = "Import-Library".freeze
 
     belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"
 
@@ -100,6 +101,10 @@ module Katello
 
     def to_s
       name
+    end
+
+    def library_import?
+      name == IMPORT_LIBRARY
     end
 
     def content_host_count
