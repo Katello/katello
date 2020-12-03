@@ -17,16 +17,20 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
     ['$scope', '$location', 'Organization', 'CurrentOrganization', 'Nutupane', 'Host',
     function ($scope, $location, Organization, CurrentOrganization, Nutupane, Host) {
 
-        var params, nutupane;
+        var params, nutupane, nutupaneParams;
 
         $scope.validateEnvironmentSelection();
         params = {
             'organization_id': CurrentOrganization,
-            'content_view_id': $scope.contentView.id,
             'sort_by': 'name',
             'sort_order': 'ASC'
         };
-        nutupane = new Nutupane(Host, params);
+
+        nutupaneParams = {
+            'disableAutoLoad': true
+        };
+
+        nutupane = new Nutupane(Host, params, undefined, nutupaneParams);
         $scope.controllerName = 'hosts';
 
         nutupane.searchTransform = function (term) {
@@ -44,6 +48,8 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
             return term + " AND " + addition;
         };
+
+        nutupane.load();
         $scope.table = nutupane.table;
         $scope.table.closeItem = function () {};
 
