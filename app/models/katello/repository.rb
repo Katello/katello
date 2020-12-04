@@ -122,6 +122,8 @@ module Katello
 
     scope :has_url, -> { joins(:root).where.not("#{RootRepository.table_name}.url" => nil) }
     scope :on_demand, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND) }
+    scope :immediate, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE) }
+    scope :non_immediate, -> { joins(:root).where.not("#{RootRepository.table_name}.download_policy" => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE) }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
     scope :in_non_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => false) }
     scope :deb_type, -> { with_type(DEB_TYPE) }
@@ -154,6 +156,7 @@ module Katello
     scoped_search :on => :redhat, :complete_value => { :true => true, :false => false }, :ext_method => :search_by_redhat
     scoped_search :on => :container_repository_name, :complete_value => true
     scoped_search :on => :description, :relation => :root, :only_explicit => true
+    scoped_search :on => :download_policy, :relation => :root, :only_explicit => true
     scoped_search :on => :name, :relation => :product, :rename => :product_name
     scoped_search :on => :id, :relation => :product, :rename => :product_id, :only_explicit => true
     scoped_search :on => :label, :relation => :root, :complete_value => true, :only_explicit => true
@@ -285,6 +288,10 @@ module Katello
 
     def on_demand?
       root.download_policy == Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+    end
+
+    def immediate?
+      root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE
     end
 
     def yum_gpg_key_url

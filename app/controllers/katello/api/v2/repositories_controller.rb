@@ -95,6 +95,7 @@ module Katello
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."),
           :required => false
     param :with_content, RepositoryTypeManager.enabled_content_types, :desc => N_("only repositories having at least one of the specified content type ex: rpm , erratum")
+    param :download_policy, ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES, :desc => N_("limit to only repositories with this download policy")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Repository)
     def index
@@ -138,6 +139,7 @@ module Katello
     def index_relation_product(query)
       query = query.joins(:root => :product).where("#{Product.table_name}.organization_id" => @organization) if @organization
       query = query.joins(:root).where("#{RootRepository.table_name}.product_id" => @product.id) if @product
+      query = query.joins(:root).where("#{RootRepository.table_name}.download_policy" => params[:download_policy]) if params[:download_policy]
       query
     end
 

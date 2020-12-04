@@ -4,11 +4,35 @@ module Katello
       class Export
         include ImportExportCommon
 
-        def initialize(smart_proxy:, content_view_version: nil, destination_server: nil, from_content_view_version: nil)
+        def initialize(smart_proxy:,
+                        content_view_version: nil,
+                        destination_server: nil,
+                        from_content_view_version: nil)
           @smart_proxy = smart_proxy
           @content_view_version = content_view_version
           @destination_server = destination_server
           @from_content_view_version = from_content_view_version
+        end
+
+        def repository_hrefs
+          version_hrefs.map { |href| version_href_to_repository_href(href) }.uniq
+        end
+
+        def version_hrefs
+          repositories.pluck(:version_href).compact
+        end
+
+        def repositories(fetch_all: false)
+          repos = if @content_view_version.default?
+                    @content_view_version.repositories.yum_type
+                  else
+                    @content_view_version.archived_repos.yum_type
+                  end
+          if fetch_all
+            repos
+          else
+            repos.immediate
+          end
         end
 
         def generate_exporter_path
@@ -66,12 +90,29 @@ module Katello
           api.exporter_api.delete(exporter_href)
         end
 
+        def validate!(fail_on_missing_content: true, validate_incremental: true)
+          validate_repositories_immediate! if fail_on_missing_content
+          validate_incremental_export! if validate_incremental && !@from_content_view_version.blank?
+        end
+
+        def validate_repositories_immediate!
+          non_immediate_repos = repositories(fetch_all: true).non_immediate
+          if non_immediate_repos.any?
+            fail _("NOTE: Unable to fully export Content View Version '%{content_view} %{current}'"\
+                   " it contains repositories without the 'immediate' download policy."\
+                   " Update the download policy and sync affected repositories. Once synced republish the content view"\
+                   " and export the generated version. \n %{repos}" %
+                   { content_view: @content_view_version.content_view.name,
+                     current: @content_view_version.version,
+                     repos: self.class.generate_product_repo_strings(repositories: non_immediate_repos)})
+          end
+        end
+
         def validate_incremental_export!
-          return if @from_content_view_version.blank?
           from_exporter = Export.new(smart_proxy: @smart_proxy, content_view_version: @from_content_view_version)
 
-          from_exporter_repos = generate_repo_mapping(from_exporter.repositories)
-          to_exporter_repos = generate_repo_mapping(repositories)
+          from_exporter_repos = generate_repo_mapping(from_exporter.repositories(fetch_all: true))
+          to_exporter_repos = generate_repo_mapping(repositories(fetch_all: true))
 
           invalid_repos_exist = (from_exporter_repos.keys & to_exporter_repos.keys).any? do |repo_id|
             from_exporter_repos[repo_id] != to_exporter_repos[repo_id]
@@ -129,6 +170,13 @@ module Katello
           name += "-#{destination_server}" unless destination_server.blank?
           select_method = create_by_default ? :first_or_create : :first
           ::Katello::ContentView.where(name: name, organization: organization).send(select_method)
+        end
+
+        def self.generate_product_repo_strings(repositories:)
+          repositories.map do |repo|
+            _("Product: '%{product}', Repository: '%{repository}'" % { product: repo.product.name,
+                                                                       repository: repo.name})
+          end
         end
       end
     end
