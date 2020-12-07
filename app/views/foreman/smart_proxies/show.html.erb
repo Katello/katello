@@ -1,4 +1,4 @@
-<% if @smart_proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) -%>
+<% if @smart_proxy.pulp_mirror? -%>
   <div ng-controller="CapsuleContentController">
     <%= render :file => 'smart_proxies/show' %>
   </div>
