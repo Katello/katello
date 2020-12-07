@@ -11,6 +11,7 @@ import {
   REPOSITORY_TYPES,
   cvDetailsKey,
   cvDetailsRepoKey,
+  cvDetailsFilterKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 
@@ -67,8 +68,15 @@ export const getContentViewRepositories = (cvId, params, status) => {
 export const getRepositoryTypes = () => get({
   type: API_OPERATIONS.GET,
   key: REPOSITORY_TYPES,
-  errorToast: error => `Something went wrong while retrieving the repository types! ${error}`,
+  errorToast: error => __(`Something went wrong while retrieving the repository types! ${error}`),
   url: api.getApiUrl('/repositories/repository_types'),
+});
+
+export const getContentViewFilters = (cvId, params) => get({
+  key: cvDetailsFilterKey(cvId),
+  params: { content_view_id: cvId, ...params },
+  errorToast: error => __(`Something went wrong while retrieving the content view filters! ${error}`),
+  url: api.getApiUrl('/content_view_filters'),
 });
 
 export default getContentViewDetails;

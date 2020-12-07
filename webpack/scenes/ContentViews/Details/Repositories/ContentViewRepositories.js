@@ -8,6 +8,7 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import PropTypes from 'prop-types';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
+import onSelect from '../../../../components/Table/helpers';
 import { getContentViewRepositories, getRepositoryTypes } from '../ContentViewDetailActions';
 import {
   selectCVRepos,
@@ -89,18 +90,6 @@ const ContentViewRepositories = ({ cvId }) => {
     return newRows;
   };
 
-  const onSelect = (_event, isSelected, rowId) => {
-    let newRows;
-    if (rowId === -1) {
-      newRows = rows.map(row => ({ ...row, selected: isSelected }));
-    } else {
-      newRows = [...rows];
-      newRows[rowId].selected = isSelected;
-    }
-
-    setRows(newRows);
-  };
-
   const getCVReposWithOptions = (params = {}) => {
     const allParams = { ...params };
     if (typeSelected !== 'All repositories') allParams.content_type = repoTypes[typeSelected];
@@ -149,7 +138,6 @@ const ContentViewRepositories = ({ cvId }) => {
       {...{
         rows,
         metadata,
-        onSelect,
         emptyContentTitle,
         emptyContentBody,
         emptySearchTitle,
@@ -160,6 +148,7 @@ const ContentViewRepositories = ({ cvId }) => {
         status,
         activeFilters,
       }}
+      onSelect={onSelect(rows, setRows)}
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint="/repositories/auto_complete_search"

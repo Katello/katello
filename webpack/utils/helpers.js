@@ -98,6 +98,8 @@ export const apiError = (actionType, result, additionalData = {}) => (dispatch) 
 
 export const capitalize = s => s && s[0].toUpperCase() + s.slice(1);
 
+export const truncate = (str, truncateLimit = 50) => (str.length > truncateLimit ? `${str.substring(0, truncateLimit - 3)}...` : str);
+
 export default {
   getResponseErrorMsgs,
   apiError,

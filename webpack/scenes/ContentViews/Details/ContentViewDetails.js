@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import DetailsContainer from './DetailsContainer';
 import ContentViewInfo from './ContentViewInfo';
 import ContentViewRepositories from './Repositories/ContentViewRepositories';
+import ContentViewFilters from './Filters/ContentViewFilters';
 import { selectCVDetails } from './ContentViewDetailSelectors';
 import TabbedView from '../../../components/TabbedView';
 
@@ -30,7 +31,7 @@ const ContentViewDetails = ({ match }) => {
     },
     {
       title: __('Filters'),
-      content: <React.Fragment>Filters</React.Fragment>,
+      content: <ContentViewFilters cvId={cvId} />,
     },
     {
       title: __('History'),
