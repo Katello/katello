@@ -4,7 +4,12 @@ import {
   selectAPIResponse,
 } from 'foremanReact/redux/API/APISelectors';
 import { STATUS } from 'foremanReact/constants';
-import { cvDetailsKey, cvDetailsRepoKey, REPOSITORY_TYPES } from '../ContentViewsConstants';
+import {
+  cvDetailsKey,
+  cvDetailsRepoKey,
+  cvDetailsFilterKey,
+  REPOSITORY_TYPES,
+} from '../ContentViewsConstants';
 
 export const selectCVDetails = (state, cvId) =>
   selectAPIResponse(state, cvDetailsKey(cvId)) || {};
@@ -29,5 +34,14 @@ export const selectRepoTypes = state =>
 
 export const selectRepoTypesStatus = state =>
   selectAPIStatus(state, REPOSITORY_TYPES) || STATUS.PENDING;
+
+export const selectCVFilters = (state, cvId) =>
+  selectAPIResponse(state, cvDetailsFilterKey(cvId)) || {};
+
+export const selectCVFiltersStatus = (state, cvId) =>
+  selectAPIStatus(state, cvDetailsFilterKey(cvId)) || STATUS.PENDING;
+
+export const selectCVFiltersError = (state, cvId) =>
+  selectAPIError(state, cvDetailsFilterKey(cvId));
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;

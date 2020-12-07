@@ -13,6 +13,7 @@ const cvDetailsPath = api.getApiUrl('/content_views/1');
 
 // The Repositories tab will load in the background, prevent this by mocking
 jest.mock('../Repositories/ContentViewRepositories.js', () => () => 'mocked!');
+jest.mock('../Filters/ContentViewFilters.js', () => () => 'mocked!');
 
 test('Can call API and show details on page load', async (done) => {
   const { label, name, description } = cvDetailData;

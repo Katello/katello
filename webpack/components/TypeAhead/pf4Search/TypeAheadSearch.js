@@ -7,7 +7,6 @@ import keyPressHandler from '../helpers/helpers';
 import TypeAheadInput from './TypeAheadInput';
 import TypeAheadItems from './TypeAheadItems';
 import commonSearchPropTypes from '../helpers/commonPropTypes';
-import './TypeAheadSearch.scss';
 
 const TypeAheadSearch = ({
   userInputValue, clearSearch, getInputProps, getItemProps, isOpen, inputValue, highlightedIndex,
