@@ -267,7 +267,7 @@ Foreman::Plugin.register :katello do
     context.add_pagelet :details_content,
       :name => _("Content Sync"),
       :partial => "foreman/smart_proxies/content_sync",
-      :onlyif => proc { |proxy| proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) }
+      :onlyif => proc { |proxy| proxy.pulp_mirror? }
   end
 
   ::Katello::HostStatusManager::STATUSES.each do |status_class|

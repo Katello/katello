@@ -1,4 +1,4 @@
-<% if !@smart_proxy.new_record? && @smart_proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) -%>
+<% if !@smart_proxy.new_record? && @smart_proxy.pulp_mirror? -%>
   <li id="kt_environments_tab">
     <a href="#kt_environments" data-toggle="tab"><%= _('Lifecycle Environments') %></a>
   </li>
