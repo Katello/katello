@@ -8,6 +8,10 @@ module Katello
 
     let(:status) { host.get_status(Katello::SubscriptionStatus) }
 
+    def setup
+      ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
+    end
+
     def stub_status(status)
       Katello::Candlepin::Consumer.any_instance.stubs(:entitlement_status).returns(status)
     end
@@ -37,8 +41,13 @@ module Katello
     end
 
     def test_to_status_unsubscribed_hypervisor
-      stub_status('unsubscribed_hypervisor')
+      host.subscription_facet.stubs(:unsubscribed_hypervisor?).returns(true)
       assert_equal Katello::SubscriptionStatus::UNSUBSCRIBED_HYPERVISOR, status.to_status
+    end
+
+    def test_sca_enabled
+      ::Organization.any_instance.stubs(:simple_content_access?).returns(true)
+      assert_equal Katello::SubscriptionStatus::DISABLED, status.to_status
     end
 
     def test_no_subscription_facet

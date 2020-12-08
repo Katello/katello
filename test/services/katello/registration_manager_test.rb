@@ -172,8 +172,10 @@ module Katello
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid-from-katello')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).twice.with('fake-uuid-from-katello').returns({})
+        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
         ::Runcible::Extensions::Consumer.any_instance.expects(:create).with('fake-uuid-from-katello', :display_name => 'foobar')
+
+        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, @content_view_environment)
       end
@@ -186,8 +188,10 @@ module Katello
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(cvpe.cp_id, rhsm_params, ["cp_name_baz"]).returns(:uuid => 'fake-uuid-from-katello')
         Katello::ActivationKey.any_instance.stubs(:cp_name).returns('cp_name_baz')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).twice.with('fake-uuid-from-katello').returns({})
+        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
         ::Runcible::Extensions::Consumer.any_instance.expects(:create).with('fake-uuid-from-katello', :display_name => 'foobar')
+
+        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         ::Katello::RegistrationManager.register_host(new_host, rhsm_params, cvpe, [@activation_key])
 
@@ -207,8 +211,10 @@ module Katello
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid-from-katello')
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).twice.with('fake-uuid-from-katello').returns({})
+        ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
         ::Runcible::Extensions::Consumer.any_instance.expects(:create)
+
+        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         ::Katello::RegistrationManager.register_host(@host, rhsm_params, @content_view_environment)
       end
@@ -302,6 +308,7 @@ module Katello
 
         ::Host.expects(:find).returns(new_host)
         new_host.expects(:destroy)
+        new_host.organization.stubs(:simple_content_access?).returns(false)
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).raises("uhoh!")
         ::Runcible::Extensions::Consumer.any_instance.expects(:create).with('fake-uuid', :display_name => 'foobar').never
 
@@ -314,6 +321,7 @@ module Katello
 
       def test_registration_dead_pulp
         new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @library.organization)
+        new_host.organization.stubs(:simple_content_access?).returns(false)
 
         ::Katello::RegistrationManager.expects(:remove_host_artifacts).never
         ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host)
@@ -335,12 +343,15 @@ module Katello
 
         @host.content_facet.expects(:destroy).never
         @host.expects(:destroy).never
+
         ::Katello::RegistrationManager.expects(:remove_host_artifacts).twice # once on original unregister, once again after failure during re-reg
         ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host).never
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).raises("uhoh!")
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Runcible::Extensions::Consumer.any_instance.expects(:create).never
         ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
+
+        ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
         failed = lambda do
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, @content_view_environment)
