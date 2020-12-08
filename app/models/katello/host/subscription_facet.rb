@@ -282,6 +282,10 @@ module Katello
         name.gsub('_', '-').chomp('.').downcase
       end
 
+      def unsubscribed_hypervisor?
+        self.hypervisor && !self.candlepin_consumer.entitlements?
+      end
+
       def candlepin_consumer
         @candlepin_consumer ||= Katello::Candlepin::Consumer.new(self.uuid, self.host.organization.label)
       end
