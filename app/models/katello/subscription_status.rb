@@ -43,9 +43,10 @@ module Katello
 
     def to_status(options = {})
       return UNKNOWN unless host.subscription_facet.try(:uuid)
-      status_override = 'unsubscribed_hypervisor' if host.subscription_facet.hypervisor && !host.subscription_facet.candlepin_consumer.entitlements?
+      return DISABLED if host.organization.simple_content_access?
+      status_override = 'unsubscribed_hypervisor' if host.subscription_facet.unsubscribed_hypervisor?
       status_override ||= options.fetch(:status_override, nil)
-      status = status_override || Katello::Candlepin::Consumer.new(host.subscription_facet.uuid, host.organization.label).entitlement_status
+      status = status_override || host.subscription_facet.candlepin_consumer.entitlement_status
 
       case status
       when Katello::Candlepin::Consumer::ENTITLEMENTS_DISABLED
