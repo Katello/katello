@@ -311,6 +311,7 @@ msgid ""
 "Their components needing updating are listed underneath."
 msgstr "*로 표시된 컨텐츠 뷰 버전은 복합 컨텐츠 뷰 버전입니다.  업데이트해야할 구성 요소는 아래에 나열되어 있습니다."
 
+#: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "/foreman_tasks/tasks/%taskId"
 msgstr ""
@@ -1455,6 +1456,7 @@ msgstr "여기를 클릭하여 증분 업데이트를 위한 에라타를 선택
 msgid "Click to monitor task progress."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-http-proxy-modal.controller.js
 #: app/assets/javascripts/bastion_katello/products/details/product-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
@@ -2243,11 +2245,6 @@ msgstr "수정"
 #: app/assets/javascripts/bastion_katello/common/module-stream-actions.service.js
 msgid "Enable"
 msgstr "활성화"
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Enable on Registration"
-msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
@@ -3434,9 +3431,9 @@ msgstr "이름 "
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
-"Name of the upstream repository you want to sync. Example: 'busybox' or "
-"'fedora/ssh'."
-msgstr "동기화하고자 하는 업스트림 리포지터리 이름입니다. 예: 'busybox' 또는 'fedora/ssh'."
+"Name of the upstream repository you want to sync. Example: 'quay/busybox' or"
+" 'fedora/ssh'."
+msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Networking"
@@ -4175,9 +4172,11 @@ msgid "Product sync has been initiated in the background."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
-msgid ""
-"Product syncs has been initiated in the background. Click %s to monitor the "
-"progress."
+msgid "Product syncs has been initiated in the background."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/products.controller.js
+msgid "Product verify checksum has been initiated in the background."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
@@ -5017,12 +5016,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
-"Selecting this option will automatically enable this Repository when a Host "
-"registers and consumes this subscription."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid ""
 "Selecting this option will result in contents that are no longer part of the"
 " upstream repository being removed during synchronization."
 msgstr ""
@@ -5782,8 +5775,8 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/subscriptions/views/content-access-mode-banner.html
 msgid ""
-"This organization has Simple Content Access enabled. Hosts can consume from "
-"all repositories in their Content View regardless of subscription status."
+"This organization has Simple Content Access enabled.  Hosts are not required"
+" to have subscriptions attached to access repositories."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
@@ -6076,6 +6069,7 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid ""
 "URL of the registry you want to sync. Example: https://registry-1.docker.io/"
+" or https://quay.io/"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery.html
@@ -6138,6 +6132,11 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Variant"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-details.html
+#: app/assets/javascripts/bastion_katello/products/views/products.html
+msgid "Verify Content Checksum"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
