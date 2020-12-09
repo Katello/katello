@@ -325,6 +325,11 @@ module Katello
       assert_response :success
     end
 
+    def test_incremental_updates_no_ids
+      post :available_incremental_updates, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id }
+      assert_response :bad_request
+    end
+
     def test_subscription_permissions
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @destroy_permission]
