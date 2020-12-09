@@ -21,6 +21,11 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Zanata 3.6.0\n"
 
+msgid ""
+"\n"
+"* Product = '%{product}', Repository = '%{repository}', Repository Type = '%{repo_type}'"
+msgstr ""
+
 msgid " %{errata_count} Errata"
 msgstr ""
 
@@ -342,11 +347,17 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr ""
 
+msgid "Activation Key(s)"
+msgstr ""
+
 msgid "Activation Keys"
 msgstr "활성키 "
 
 msgid "Activation key ID"
 msgstr "활성키 ID"
+
+msgid "Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
+msgstr ""
 
 msgid "Activation keys and subscriptions can be managed"
 msgstr "활성키 및 서브스크립션을 관리할 수 있습니다 "
@@ -821,10 +832,16 @@ msgstr ""
 msgid "Cannot upload Container Image content."
 msgstr ""
 
+msgid "Cannot use this end point for importing to library. If you intented to upload to library, use the library endpoint."
+msgstr ""
+
 msgid "Cannot validate contents on non-yum/deb repositories."
 msgstr ""
 
 msgid "Check if a connection can be made to Red Hat Subscription Management."
+msgstr ""
+
+msgid "Check if the specified organization is eligible for Simple Content Access"
 msgstr ""
 
 msgid "Check services before actions"
@@ -840,9 +857,6 @@ msgid "Checksum of the repository, currently 'sha1' & 'sha256' are supported"
 msgstr ""
 
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
-msgstr ""
-
-msgid "Chunk export-tarfile into pieces of chunk_size mega bytes. Relevant only for Pulp 3 repositories"
 msgstr ""
 
 msgid "Click here to go to the tasks page for the task."
@@ -865,7 +879,7 @@ msgstr ""
 msgid "Combined Profile Update for %s"
 msgstr ""
 
-msgid "Comma separated list of tags to sync for Container Image repository"
+msgid "Comma-separated list of tags to sync for Container Image repository"
 msgstr ""
 
 # translation auto-copied from project [RHEL] [STORAGE] DM Multipath, version 6.4, document MPIO_Overview
@@ -921,8 +935,14 @@ msgstr ""
 msgid "Content Download URL"
 msgstr ""
 
+msgid "Content Facet for host with id %s is non-existent. Skipping applicability calculation."
+msgstr ""
+
 msgid "Content Hosts"
 msgstr "컨텐츠 호스트 "
+
+msgid "Content Migration"
+msgstr ""
 
 msgid "Content Source"
 msgstr "컨텐츠 소스 "
@@ -1022,6 +1042,9 @@ msgstr "컨텐츠 뷰 레이블 "
 msgid "Content view numeric identifier"
 msgstr "숫자로된 컨텐츠 뷰 ID "
 
+msgid "Content view version export history identifier"
+msgstr ""
+
 msgid "Content view version identifier"
 msgstr "컨텐츠 뷰 버전 ID "
 
@@ -1059,6 +1082,9 @@ msgid "Could not find %{count} errata.  Only found: %{found}"
 msgstr ""
 
 msgid "Could not find %{name} resource with id %{id}"
+msgstr ""
+
+msgid "Could not find %{name} resources with ids %{ids}"
 msgstr ""
 
 msgid "Could not find Environment with ids: %s"
@@ -1140,12 +1166,6 @@ msgstr "환경 '%s'을 찾을 수 없음 "
 msgid "Couldn't find errata ids '%s'"
 msgstr "에라타 ID '%s'을/를 찾을 수 없음 "
 
-msgid "Couldn't find gpg key '%s'"
-msgstr "GPG 키 '%s'를 찾을 수 없습니다 "
-
-msgid "Couldn't find host '%s'"
-msgstr ""
-
 msgid "Couldn't find host collection '%s'"
 msgstr "호스트 컬렉션 '%s'을 찾을 수 없습니다 "
 
@@ -1158,28 +1178,13 @@ msgstr "조직 '%s'을 찾을 수 없음 "
 msgid "Couldn't find prior-environment '%s'"
 msgstr "이전 환경 '%s'을 찾을 수 없습니다 "
 
-msgid "Couldn't find product '%s'"
-msgstr "'%s'인 제품을 찾을 수 없음 "
-
 msgid "Couldn't find product with id '%s'"
 msgstr "ID '%s'인 제품을 찾을 수 없음 "
 
 msgid "Couldn't find repository '%s'"
 msgstr "리포지터리 '%s'를 찾을 수 없음 "
 
-msgid "Couldn't find repository set with id '%s'."
-msgstr "id '%s'인 리포지터리 세트를 찾을 수 없습니다 "
-
 msgid "Couldn't find specified Content View and Lifecycle Environment."
-msgstr ""
-
-msgid "Couldn't find ssl ca cert '%s'"
-msgstr ""
-
-msgid "Couldn't find ssl client cert '%s'"
-msgstr ""
-
-msgid "Couldn't find ssl client key '%s'"
 msgstr ""
 
 msgid "Couldn't find subject of synchronization"
@@ -1253,6 +1258,9 @@ msgid "Current organization is not set."
 msgstr ""
 
 msgid "Current organization not set."
+msgstr ""
+
+msgid "Custom"
 msgstr ""
 
 msgid "Custom Content Repositories"
@@ -1463,16 +1471,13 @@ msgstr "새로 공개된 컨텐츠 뷰 버전 설명 "
 msgid "Description of the repository"
 msgstr ""
 
+msgid "Designate this Content View for importing from upstream servers only. Defaults to false"
+msgstr ""
+
 msgid "Desired quantity of the pool"
 msgstr ""
 
-msgid "Destination Server Name required for Pulp3 repositories"
-msgstr ""
-
 msgid "Destination Server name"
-msgstr ""
-
-msgid "Destination Server name, required for Pulp3"
 msgstr ""
 
 # translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
@@ -1745,7 +1750,10 @@ msgstr ""
 msgid "Export CSV"
 msgstr ""
 
-msgid "Export a content view version"
+msgid "Export Library"
+msgstr ""
+
+msgid "Export a content view version.  Relevant only for Pulp 2 repositories."
 msgstr ""
 
 msgid "Export a repository"
@@ -1754,10 +1762,13 @@ msgstr ""
 msgid "Export as CSV"
 msgstr ""
 
+msgid "Export history identifier used for incremental export. If not provided the most recent export history will be used."
+msgstr ""
+
 msgid "Export to ISO format"
 msgstr ""
 
-msgid "Export to ISO format. Relevant only for Pulp 2 repositories"
+msgid "Export to ISO format."
 msgstr ""
 
 msgid "Exported version"
@@ -2032,6 +2043,9 @@ msgstr ""
 msgid "Host id to list applicable packages for"
 msgstr ""
 
+msgid "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this Foreman"
+msgstr ""
+
 msgid "Host with ID %s already exists in the host collection."
 msgstr ""
 
@@ -2185,6 +2199,9 @@ msgstr ""
 msgid "Identifiers for Lifecycle Environment"
 msgstr ""
 
+msgid "Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: %s"
+msgstr ""
+
 msgid "If Autosearch is enabled, delay in milliseconds before executing searches while typing."
 msgstr ""
 
@@ -2233,6 +2250,9 @@ msgstr ""
 msgid "Import Content View Version"
 msgstr ""
 
+msgid "Import Default Content View"
+msgstr ""
+
 msgid "Import Manifest"
 msgstr "매니페스트 가져오기 "
 
@@ -2257,11 +2277,23 @@ msgstr ""
 msgid "Import a content view version"
 msgstr ""
 
+msgid "Import a content view version to the library"
+msgstr ""
+
 msgid "Import facts"
 msgstr "팩트 불러오기"
 
 msgid "Import uploads into a repository"
 msgstr "리포지터리에 업로드 가져오기 "
+
+msgid "Import-only can not be changed after creation"
+msgstr ""
+
+msgid "Import-only content views can not be published directly"
+msgstr ""
+
+msgid "Import-only content views will be available in a future version."
+msgstr ""
 
 msgid "Importing manifest into '%{subject}' failed."
 msgstr ""
@@ -2423,9 +2455,6 @@ msgstr ""
 msgid "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'"
 msgstr "잘못된 필터 규칙이 지정되었습니다. 'version' 을 'min_version' 또는 'max_version'과 동일한 튜플로 지정할 수 없습니다 "
 
-msgid "Invalid parameters provided - %{params}. These are only relevant for Pulp 2 repositories"
-msgstr ""
-
 msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "잘못된 매개 변수가 이 작업에 대한 요청에 전송되었습니다. 시스템 관리자에게 문의하십시오. "
 
@@ -2450,6 +2479,12 @@ msgstr ""
 msgid "Invalid puppet module. Please make sure the puppet module contains a metadata.json file and is properly compressed."
 msgstr "잘못된 puppet 모듈입니다. puppet 모듈에는 metadata.json 파일이 들어 있고 올바르게 압축되어 있는지 확인합니다. "
 
+msgid "Invalid usage for Pulp 2 repositories. Use export for Yum repositories"
+msgstr ""
+
+msgid "Invalid usage for Pulp 3 repositories. Use hammer content-export for Yum repositories"
+msgstr ""
+
 msgid "Invalid value specified for Container Image repositories."
 msgstr ""
 
@@ -2457,6 +2492,9 @@ msgid "Invalid value specified for ignorable content."
 msgstr ""
 
 msgid "Invalid value specified for ignorable content. Permissible values %s"
+msgstr ""
+
+msgid "Katello"
 msgstr ""
 
 msgid "Katello ID of local pool to update"
@@ -2617,6 +2655,9 @@ msgstr "에라타 나열 "
 
 msgid "List errata available for the content host"
 msgstr "컨텐츠 호스트에서 사용 가능한 에라타 나열 "
+
+msgid "List export histories"
+msgstr ""
 
 msgid "List filter rules"
 msgstr "필터 규칙 목록 나열 "
@@ -2996,6 +3037,9 @@ msgstr ""
 
 msgid "No errors"
 msgstr "오류 없음 "
+
+msgid "No existing export history was found to perform an incremental export. A full export must be performed"
+msgstr ""
 
 msgid "No file uploaded"
 msgstr "업로드된 파일이 없음 "
@@ -3430,6 +3474,18 @@ msgstr ""
 msgid "Perform an Incremental Update on one or more Content View Versions"
 msgstr "하나 이상의 컨텐츠 뷰 버전에서 증분 업데이트를 수행 "
 
+msgid "Performs a full-export of a content view version."
+msgstr ""
+
+msgid "Performs a full-export of the repositories in library."
+msgstr ""
+
+msgid "Performs an incremental-export of a content view version."
+msgstr ""
+
+msgid "Performs an incremental-export of the repositories in library."
+msgstr ""
+
 msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "권한이 거부되었습니다. 사용자 '%{user}'은(는) 조직 '%{org}'에 액세스할 수 있는 권한이 없습니다. "
 
@@ -3468,6 +3524,9 @@ msgid "Please select an organization to view subscription totals."
 msgstr ""
 
 msgid "Please select one from the list below and you will be redirected."
+msgstr ""
+
+msgid "Prior Content View Version specified in the metadata - '%{name}' does not exist. Please import the metadata for '%{name}' before importing '%{current}' "
 msgstr ""
 
 msgid "Processing metadata"
@@ -3717,6 +3776,9 @@ msgstr ""
 msgid "Recommended Repositories"
 msgstr ""
 
+msgid "Red Hat"
+msgstr ""
+
 msgid "Red Hat CDN URL"
 msgstr "Red Hat CDN URL"
 
@@ -3776,9 +3838,6 @@ msgstr "활성화할 Releasever "
 
 msgid "Reload data"
 msgstr "데이터 다시 불러오기 "
-
-msgid "Remote action:"
-msgstr ""
 
 msgid "Removal of package group(s) requested: %{groups}"
 msgstr ""
@@ -3862,9 +3921,6 @@ msgid "Removing Package..."
 msgstr "패키지 삭제 중..."
 
 msgid "Repo Type"
-msgstr ""
-
-msgid "Report"
 msgstr ""
 
 # translation auto-copied from project Cloudforms System Engine User Guide, version 1.0, document Repositories, author eukim
@@ -4227,9 +4283,6 @@ msgstr "컨텐츠 호스트에 사용 가능한 릴리즈 표시 "
 msgid "Show the available repository types"
 msgstr ""
 
-msgid "Show the export history for a content view version"
-msgstr ""
-
 msgid "Shows status of Katello system and it's subcomponents"
 msgstr ""
 
@@ -4237,6 +4290,9 @@ msgid "Shows version information"
 msgstr "버전 정보 표시"
 
 msgid "Simple Content Access"
+msgstr ""
+
+msgid "Simple Content Access has been disabled by the upstream organization administrator."
 msgstr ""
 
 msgid "Simple Content Access has been disabled for '%{subject}'."
@@ -4277,6 +4333,9 @@ msgid "Source RPM"
 msgstr ""
 
 msgid "Specify the list of units in each repo"
+msgstr ""
+
+msgid "Split the exported content into archives no greater than the specified size in megabytes."
 msgstr ""
 
 msgid "Stacking ID"
@@ -4552,6 +4611,9 @@ msgstr "'%s' 환경에 변경 집합을 포함할 수 없습니다! "
 msgid "The Subscription Allocation providing the imported manifest has been removed. Please create a new Subscription Allocation and import the new manifest."
 msgstr ""
 
+msgid "The TOC file specified in the metadata does not exist. %s "
+msgstr ""
+
 msgid "The action requested on this composite view cannot be performed until all of the component content view versions have been promoted to the target environment: %{env}.  This restriction is optional and can be modified in the Administrator -> Settings -> Content page using the restrict_composite_view flag."
 msgstr ""
 
@@ -4591,11 +4653,19 @@ msgstr "에라타 필터 규칙 시작 날짜가 잘못된 형식 또는 유형�
 msgid "The erratum type must be an array. Invalid value provided"
 msgstr "에라타 유형은 어레이여야 합니다. 잘못된 값이 지정되었습니다 "
 
+msgid "The exported Content View Version '%{content_view} %{current}' cannot be incrementally updated from version '%{from}'. Please do a full export."
+msgstr ""
+
 msgid "The field to sort the data by. Defaults to the created date."
 msgstr ""
 
 msgid "The following hosts have errata that apply to them: "
 msgstr "다음 호스트에는 이에 적용되는 에라타가 있습니다: "
+
+msgid ""
+"The following repositories provided in the import metadata are either not available in the Library or are of incorrect Respository Type. Please add or enable the repositories before importing\n"
+" %{repos}"
+msgstr ""
 
 msgid "The id of the host to alter"
 msgstr ""
@@ -4717,7 +4787,7 @@ msgstr ""
 msgid "There's no running synchronization for this smart proxy."
 msgstr ""
 
-msgid "This API endpoint is only valid for Pulp 3 repositories."
+msgid "This Content View must be set to Import-only before performing an import"
 msgstr ""
 
 msgid "This Host is not currently registered with subscription-manager."
@@ -4727,6 +4797,9 @@ msgid "This Organization's subscription manifest has expired. Please import a ne
 msgstr ""
 
 msgid "This action doesn't support package groups"
+msgstr ""
+
+msgid "This action will become available after the Pulp 3 content migration"
 msgstr ""
 
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
@@ -4866,6 +4939,9 @@ msgid "Unable to export. 'pulp_export_destination' setting is not a writable dir
 msgstr ""
 
 msgid "Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory."
+msgstr ""
+
+msgid "Unable to incrementally export. Do a Full Export the library content before updating from the latest increment."
 msgstr ""
 
 msgid "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id."
@@ -5376,6 +5452,9 @@ msgstr "조직 "
 msgid "an ostree branch"
 msgstr ""
 
+msgid "are only allowed for Yum repositories."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr ""
 
@@ -5393,6 +5472,9 @@ msgstr ""
 
 msgid "can't be blank"
 msgstr "빈 칸으로 두지 마십시오. "
+
+msgid "cannot add filter to import-only view"
+msgstr ""
 
 msgid "cannot be a binary file."
 msgstr "바이너리 파일을 지정할 수 없습니다. "
@@ -5450,13 +5532,13 @@ msgstr ""
 msgid "checking Pulp task status"
 msgstr ""
 
-msgid "comma separated list of architectures to be synched from deb-archive"
+msgid "comma-separated list of architectures to be synced from deb-archive"
 msgstr ""
 
-msgid "comma separated list of releases to be synched from deb-archive"
+msgid "comma-separated list of releases to be synced from deb-archive"
 msgstr ""
 
-msgid "comma separated list of repo components to be synched from deb-archive"
+msgid "comma-separated list of repo components to be synced from deb-archive"
 msgstr ""
 
 msgid "composite content view identifier"
@@ -5719,6 +5801,9 @@ msgstr ""
 msgid "invalid container image name"
 msgstr ""
 
+msgid "invalid: Repositories can only require one OS version."
+msgstr ""
+
 msgid "is already attached to the capsule"
 msgstr "capsule에 이미 할당되어 있습니다 "
 
@@ -5781,6 +5866,9 @@ msgstr "양의 정수 값이어야 합니다."
 
 msgid "must be one of the following: %s"
 msgstr "다음 중 하나이어야 합니다: %s"
+
+msgid "must be one of: %s"
+msgstr ""
 
 msgid "must be unique within one organization"
 msgstr "하나의 조직 내에서 고유한 것이어야 함 "
