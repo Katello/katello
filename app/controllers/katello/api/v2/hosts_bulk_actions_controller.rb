@@ -267,8 +267,9 @@ module Katello
     api :POST, "/hosts/bulk/available_incremental_updates", N_("Given a set of hosts and errata, lists the content view versions" \
                                                                  " and environments that need updating.")
     param_group :bulk_params
-    param :errata_ids, Array, :desc => N_("List of Errata ids")
+    param :errata_ids, Array, :desc => N_("List of Errata ids"), :required => true
     def available_incremental_updates
+      fail HttpErrors::BadRequest, _("errata_ids is a required parameter") if params[:errata_ids].empty?
       version_environments = {}
       content_facets = Katello::Host::ContentFacet.with_non_installable_errata(@errata, @hosts)
 
