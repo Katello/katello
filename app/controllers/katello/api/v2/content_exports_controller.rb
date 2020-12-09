@@ -34,12 +34,14 @@ module Katello
     param :destination_server, String, :desc => N_("Destination Server name"), :required => false
     param :chunk_size_mb, :number, :desc => N_("Split the exported content into archives "\
                                                "no greater than the specified size in megabytes."), :required => false
+    param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this version"\
+                                                         " are unexportable. False by default."), :required => false
     def version
       tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export,
                           content_view_version: @version,
                           destination_server: params[:destination_server],
-                          chunk_size: params[:chunk_size_mb])
-
+                          chunk_size: params[:chunk_size_mb],
+                          fail_on_missing_content: ::Foreman::Cast.to_bool(params[:fail_on_missing_content]))
       respond_for_async :resource => tasks
     end
 
@@ -48,11 +50,14 @@ module Katello
     param :destination_server, String, :desc => N_("Destination Server name"), :required => false
     param :chunk_size_mb, :number, :desc => N_("Split the exported content into archives "\
                                                "no greater than the specified size in megabytes."), :required => false
+    param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this organization"\
+                                                         " are unexportable. False by default."), :required => false
     def library
       tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary,
                           @organization,
                           destination_server: params[:destination_server],
-                          chunk_size: params[:chunk_size_mb])
+                          chunk_size: params[:chunk_size_mb],
+                          fail_on_missing_content: ::Foreman::Cast.to_bool(params[:fail_on_missing_content]))
       respond_for_async :resource => tasks
     end
 

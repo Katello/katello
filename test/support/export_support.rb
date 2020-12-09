@@ -1,6 +1,6 @@
 module Support
   module ExportSupport
-    def fetch_exporter(smart_proxy:, content_view_version:, destination_server:, from_content_view_version: nil)
+    def fetch_exporter(smart_proxy:, content_view_version:, destination_server: nil, from_content_view_version: nil)
       export = ::Katello::Pulp3::ContentViewVersion::Export.new(smart_proxy: smart_proxy,
                                                                  content_view_version: content_view_version,
                                                                  destination_server: destination_server,
