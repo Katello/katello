@@ -19,7 +19,9 @@ module Actions
 
           # rubocop:disable Metrics/MethodLength
           def plan(content_view_version:, destination_server: nil,
-                   chunk_size: nil, from_history: nil, validate_incremental: true)
+                   chunk_size: nil, from_history: nil,
+                   validate_incremental: true,
+                   fail_on_missing_content: false)
             action_subject(content_view_version)
             unless File.directory?(Setting['pulpcore_export_destination'])
               fail ::Foreman::Exception, N_("Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory.")
@@ -28,14 +30,13 @@ module Actions
             sequence do
               smart_proxy = SmartProxy.pulp_primary!
               from_content_view_version = from_history&.content_view_version
-              if from_content_view_version.present? && validate_incremental
-                export_service = ::Katello::Pulp3::ContentViewVersion::Export.new(
-                                                       smart_proxy: smart_proxy,
-                                                       content_view_version: content_view_version,
-                                                       destination_server: destination_server,
-                                                       from_content_view_version: from_content_view_version)
-                export_service.validate_incremental_export!
-              end
+              export_service = ::Katello::Pulp3::ContentViewVersion::Export.new(
+                                                     smart_proxy: smart_proxy,
+                                                     content_view_version: content_view_version,
+                                                     destination_server: destination_server,
+                                                     from_content_view_version: from_content_view_version)
+              export_service.validate!(fail_on_missing_content: fail_on_missing_content,
+                                       validate_incremental: validate_incremental)
 
               action_output = plan_action(::Actions::Pulp3::ContentViewVersion::CreateExporter,
                                      content_view_version_id: content_view_version.id,

@@ -30,18 +30,31 @@ module ::Actions::Pulp3::ContentView
     it 'should plan properly' do
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:version).returns(version)
       action_class.any_instance.expects(:action_subject).with(organization)
-      repo_ids_in_library = organization.default_content_view_version.repositories.yum_type.pluck(:id)
+      immediate_repo_ids_in_library = organization.default_content_view_version.repositories.yum_type.immediate.pluck(:id)
 
       plan_action(action, organization, destination_server: destination_server)
       assert_action_planned_with(action, ::Actions::Katello::ContentView::Publish) do |content_view, _|
         assert_equal content_view.name, "Export-Library-#{destination_server}"
-        assert_equal content_view.repository_ids.sort, repo_ids_in_library.sort
+        assert_equal content_view.repository_ids.sort, immediate_repo_ids_in_library.sort
       end
 
       assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::ContentViewVersion::Export) do |**options|
         assert_equal version, options[:content_view_version]
         assert_equal destination_server, options[:destination_server]
       end
+    end
+
+    it 'should fail on lazy repositories on fail_on_missing_content' do
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:version).returns(version)
+      refute_empty organization.default_content_view_version.repositories.yum_type.non_immediate
+      action_class.any_instance.expects(:action_subject).with(organization)
+      exception = assert_raises(RuntimeError) do
+        plan_action(action, organization, destination_server: destination_server, fail_on_missing_content: true)
+      end
+      assert_match(/NOTE: Unable to fully export '#{organization.name}' /, exception.message)
+
+      test_repo = organization.default_content_view_version.repositories.yum_type.non_immediate.first
+      assert_match(/#{test_repo.name}/, exception.message)
     end
   end
 end

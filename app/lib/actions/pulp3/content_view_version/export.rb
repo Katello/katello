@@ -15,8 +15,9 @@ module Actions
           from_cvv = ::Katello::ContentViewVersion.find(input[:from_content_view_version_id]) unless input[:from_content_view_version_id].blank?
           ::Katello::Pulp3::ContentViewVersion::Export.new(smart_proxy: smart_proxy,
                                                    content_view_version: cvv,
-                                                   from_content_view_version: from_cvv).create_export(input[:exporter_data][:pulp_href],
-                                                                                            chunk_size: input[:chunk_size])
+                                                   from_content_view_version: from_cvv)
+                                                   .create_export(input[:exporter_data][:pulp_href],
+                                                                        chunk_size: input[:chunk_size])
         end
       end
     end
