@@ -22,6 +22,11 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Zanata 3.6.0\n"
 
+msgid ""
+"\n"
+"* Product = '%{product}', Repository = '%{repository}', Repository Type = '%{repo_type}'"
+msgstr ""
+
 msgid " %{errata_count} Errata"
 msgstr ""
 
@@ -359,12 +364,18 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr ""
 
+msgid "Activation Key(s)"
+msgstr ""
+
 # translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author snowlet
 msgid "Activation Keys"
 msgstr "啟動金鑰"
 
 msgid "Activation key ID"
 msgstr "啟動金鑰 ID"
+
+msgid "Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
+msgstr ""
 
 msgid "Activation keys and subscriptions can be managed"
 msgstr "可管理啟動金鑰與訂閱"
@@ -843,10 +854,16 @@ msgstr ""
 msgid "Cannot upload Container Image content."
 msgstr ""
 
+msgid "Cannot use this end point for importing to library. If you intented to upload to library, use the library endpoint."
+msgstr ""
+
 msgid "Cannot validate contents on non-yum/deb repositories."
 msgstr ""
 
 msgid "Check if a connection can be made to Red Hat Subscription Management."
+msgstr ""
+
+msgid "Check if the specified organization is eligible for Simple Content Access"
 msgstr ""
 
 msgid "Check services before actions"
@@ -862,9 +879,6 @@ msgid "Checksum of the repository, currently 'sha1' & 'sha256' are supported"
 msgstr ""
 
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
-msgstr ""
-
-msgid "Chunk export-tarfile into pieces of chunk_size mega bytes. Relevant only for Pulp 3 repositories"
 msgstr ""
 
 msgid "Click here to go to the tasks page for the task."
@@ -887,7 +901,7 @@ msgstr ""
 msgid "Combined Profile Update for %s"
 msgstr ""
 
-msgid "Comma separated list of tags to sync for Container Image repository"
+msgid "Comma-separated list of tags to sync for Container Image repository"
 msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
@@ -943,8 +957,14 @@ msgstr ""
 msgid "Content Download URL"
 msgstr ""
 
+msgid "Content Facet for host with id %s is non-existent. Skipping applicability calculation."
+msgstr ""
+
 msgid "Content Hosts"
 msgstr "內容主機"
+
+msgid "Content Migration"
+msgstr ""
 
 msgid "Content Source"
 msgstr "內容來源"
@@ -1044,6 +1064,9 @@ msgstr "內容視域標籤"
 msgid "Content view numeric identifier"
 msgstr "內容視域的數字識別子"
 
+msgid "Content view version export history identifier"
+msgstr ""
+
 msgid "Content view version identifier"
 msgstr "內容視域的版本識別子"
 
@@ -1082,6 +1105,9 @@ msgid "Could not find %{count} errata.  Only found: %{found}"
 msgstr ""
 
 msgid "Could not find %{name} resource with id %{id}"
+msgstr ""
+
+msgid "Could not find %{name} resources with ids %{ids}"
 msgstr ""
 
 msgid "Could not find Environment with ids: %s"
@@ -1166,12 +1192,6 @@ msgstr "找不到環境 '%s'"
 msgid "Couldn't find errata ids '%s'"
 msgstr "找不到勘誤 id '%s'"
 
-msgid "Couldn't find gpg key '%s'"
-msgstr "找不到 GPG 金鑰「%s」"
-
-msgid "Couldn't find host '%s'"
-msgstr ""
-
 msgid "Couldn't find host collection '%s'"
 msgstr "找不到主機集「%s」"
 
@@ -1185,9 +1205,6 @@ msgstr "找不到組織「%s」"
 msgid "Couldn't find prior-environment '%s'"
 msgstr "找不到先前的環境「%s」"
 
-msgid "Couldn't find product '%s'"
-msgstr "找不到產品「%s」"
-
 # translation auto-copied from project CFSE, version sam-1.2, document app
 msgid "Couldn't find product with id '%s'"
 msgstr "找不到 id 為「%s」的產品"
@@ -1196,19 +1213,7 @@ msgstr "找不到 id 為「%s」的產品"
 msgid "Couldn't find repository '%s'"
 msgstr "找不到軟體庫「%s」"
 
-msgid "Couldn't find repository set with id '%s'."
-msgstr "找不到 id 為「%s」的軟體庫集。"
-
 msgid "Couldn't find specified Content View and Lifecycle Environment."
-msgstr ""
-
-msgid "Couldn't find ssl ca cert '%s'"
-msgstr ""
-
-msgid "Couldn't find ssl client cert '%s'"
-msgstr ""
-
-msgid "Couldn't find ssl client key '%s'"
 msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author dchen
@@ -1283,6 +1288,9 @@ msgid "Current organization is not set."
 msgstr ""
 
 msgid "Current organization not set."
+msgstr ""
+
+msgid "Custom"
 msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app
@@ -1494,16 +1502,13 @@ msgstr "新公布的內容視域版本之描述"
 msgid "Description of the repository"
 msgstr ""
 
+msgid "Designate this Content View for importing from upstream servers only. Defaults to false"
+msgstr ""
+
 msgid "Desired quantity of the pool"
 msgstr ""
 
-msgid "Destination Server Name required for Pulp3 repositories"
-msgstr ""
-
 msgid "Destination Server name"
-msgstr ""
-
-msgid "Destination Server name, required for Pulp3"
 msgstr ""
 
 # translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
@@ -1787,7 +1792,10 @@ msgstr ""
 msgid "Export CSV"
 msgstr ""
 
-msgid "Export a content view version"
+msgid "Export Library"
+msgstr ""
+
+msgid "Export a content view version.  Relevant only for Pulp 2 repositories."
 msgstr ""
 
 msgid "Export a repository"
@@ -1796,10 +1804,13 @@ msgstr ""
 msgid "Export as CSV"
 msgstr ""
 
+msgid "Export history identifier used for incremental export. If not provided the most recent export history will be used."
+msgstr ""
+
 msgid "Export to ISO format"
 msgstr ""
 
-msgid "Export to ISO format. Relevant only for Pulp 2 repositories"
+msgid "Export to ISO format."
 msgstr ""
 
 msgid "Exported version"
@@ -2076,6 +2087,9 @@ msgstr ""
 msgid "Host id to list applicable packages for"
 msgstr ""
 
+msgid "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this Foreman"
+msgstr ""
+
 msgid "Host with ID %s already exists in the host collection."
 msgstr ""
 
@@ -2230,6 +2244,9 @@ msgstr ""
 msgid "Identifiers for Lifecycle Environment"
 msgstr ""
 
+msgid "Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: %s"
+msgstr ""
+
 msgid "If Autosearch is enabled, delay in milliseconds before executing searches while typing."
 msgstr ""
 
@@ -2278,6 +2295,9 @@ msgstr ""
 msgid "Import Content View Version"
 msgstr ""
 
+msgid "Import Default Content View"
+msgstr ""
+
 msgid "Import Manifest"
 msgstr "匯入清單"
 
@@ -2302,11 +2322,23 @@ msgstr ""
 msgid "Import a content view version"
 msgstr ""
 
+msgid "Import a content view version to the library"
+msgstr ""
+
 msgid "Import facts"
 msgstr "匯入詳情"
 
 msgid "Import uploads into a repository"
 msgstr "將上傳內容匯入軟體庫中"
+
+msgid "Import-only can not be changed after creation"
+msgstr ""
+
+msgid "Import-only content views can not be published directly"
+msgstr ""
+
+msgid "Import-only content views will be available in a future version."
+msgstr ""
 
 msgid "Importing manifest into '%{subject}' failed."
 msgstr ""
@@ -2473,9 +2505,6 @@ msgstr ""
 msgid "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'"
 msgstr "指定了無效的篩選器規則，'version' 不可指定為與 'min_version' 或 'max_version' 相同的變數值組"
 
-msgid "Invalid parameters provided - %{params}. These are only relevant for Pulp 2 repositories"
-msgstr ""
-
 # translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
 msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "此作業的請求中傳送了無效的參數。請聯絡系統管理員。"
@@ -2501,6 +2530,12 @@ msgstr ""
 msgid "Invalid puppet module. Please make sure the puppet module contains a metadata.json file and is properly compressed."
 msgstr "無效的 puppet 模組。請確認 puppet 模組包含了一個 metadata.json 檔案並且已正確壓縮。"
 
+msgid "Invalid usage for Pulp 2 repositories. Use export for Yum repositories"
+msgstr ""
+
+msgid "Invalid usage for Pulp 3 repositories. Use hammer content-export for Yum repositories"
+msgstr ""
+
 msgid "Invalid value specified for Container Image repositories."
 msgstr ""
 
@@ -2508,6 +2543,9 @@ msgid "Invalid value specified for ignorable content."
 msgstr ""
 
 msgid "Invalid value specified for ignorable content. Permissible values %s"
+msgstr ""
+
+msgid "Katello"
 msgstr ""
 
 msgid "Katello ID of local pool to update"
@@ -2668,6 +2706,9 @@ msgstr "列出勘誤"
 
 msgid "List errata available for the content host"
 msgstr "列出內容主機的可用勘誤"
+
+msgid "List export histories"
+msgstr ""
 
 msgid "List filter rules"
 msgstr "列出篩選器規則"
@@ -3048,6 +3089,9 @@ msgstr ""
 # translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
 msgid "No errors"
 msgstr "無錯誤"
+
+msgid "No existing export history was found to perform an incremental export. A full export must be performed"
+msgstr ""
 
 msgid "No file uploaded"
 msgstr "未上傳檔案"
@@ -3524,6 +3568,18 @@ msgstr ""
 msgid "Perform an Incremental Update on one or more Content View Versions"
 msgstr "在一或更多個內容視域版本上執行一項遞增更新"
 
+msgid "Performs a full-export of a content view version."
+msgstr ""
+
+msgid "Performs a full-export of the repositories in library."
+msgstr ""
+
+msgid "Performs an incremental-export of a content view version."
+msgstr ""
+
+msgid "Performs an incremental-export of the repositories in library."
+msgstr ""
+
 # translation auto-copied from project CFSE, version sam-1.2, document app, author snowlet
 msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "存取被拒。使用者 '%{user}' 並沒有存取組織 '%{org}' 的權限。"
@@ -3562,6 +3618,9 @@ msgid "Please select an organization to view subscription totals."
 msgstr ""
 
 msgid "Please select one from the list below and you will be redirected."
+msgstr ""
+
+msgid "Prior Content View Version specified in the metadata - '%{name}' does not exist. Please import the metadata for '%{name}' before importing '%{current}' "
 msgstr ""
 
 msgid "Processing metadata"
@@ -3810,6 +3869,9 @@ msgstr ""
 msgid "Recommended Repositories"
 msgstr ""
 
+msgid "Red Hat"
+msgstr ""
+
 msgid "Red Hat CDN URL"
 msgstr "Red Hat CDN 網址"
 
@@ -3871,9 +3933,6 @@ msgstr "要啟用的發行版本"
 
 msgid "Reload data"
 msgstr "重新載入資料"
-
-msgid "Remote action:"
-msgstr ""
 
 msgid "Removal of package group(s) requested: %{groups}"
 msgstr ""
@@ -3959,9 +4018,6 @@ msgid "Removing Package..."
 msgstr "正在移除套件..."
 
 msgid "Repo Type"
-msgstr ""
-
-msgid "Report"
 msgstr ""
 
 # translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author tchuang
@@ -4324,9 +4380,6 @@ msgstr "顯示內容主機的可用發行版本"
 msgid "Show the available repository types"
 msgstr ""
 
-msgid "Show the export history for a content view version"
-msgstr ""
-
 msgid "Shows status of Katello system and it's subcomponents"
 msgstr ""
 
@@ -4334,6 +4387,9 @@ msgid "Shows version information"
 msgstr "顯示版本資訊"
 
 msgid "Simple Content Access"
+msgstr ""
+
+msgid "Simple Content Access has been disabled by the upstream organization administrator."
 msgstr ""
 
 msgid "Simple Content Access has been disabled for '%{subject}'."
@@ -4374,6 +4430,9 @@ msgid "Source RPM"
 msgstr ""
 
 msgid "Specify the list of units in each repo"
+msgstr ""
+
+msgid "Split the exported content into archives no greater than the specified size in megabytes."
 msgstr ""
 
 msgid "Stacking ID"
@@ -4654,6 +4713,9 @@ msgstr "'%s' 環境不可包含變更集！"
 msgid "The Subscription Allocation providing the imported manifest has been removed. Please create a new Subscription Allocation and import the new manifest."
 msgstr ""
 
+msgid "The TOC file specified in the metadata does not exist. %s "
+msgstr ""
+
 msgid "The action requested on this composite view cannot be performed until all of the component content view versions have been promoted to the target environment: %{env}.  This restriction is optional and can be modified in the Administrator -> Settings -> Content page using the restrict_composite_view flag."
 msgstr ""
 
@@ -4694,11 +4756,19 @@ msgstr "勘誤篩選器規則的開始日期之格式或類型無效。"
 msgid "The erratum type must be an array. Invalid value provided"
 msgstr "勘誤類型必須是陣列。提供的值無效"
 
+msgid "The exported Content View Version '%{content_view} %{current}' cannot be incrementally updated from version '%{from}'. Please do a full export."
+msgstr ""
+
 msgid "The field to sort the data by. Defaults to the created date."
 msgstr ""
 
 msgid "The following hosts have errata that apply to them: "
 msgstr "下列主機含有套用至它們的勘誤："
+
+msgid ""
+"The following repositories provided in the import metadata are either not available in the Library or are of incorrect Respository Type. Please add or enable the repositories before importing\n"
+" %{repos}"
+msgstr ""
 
 msgid "The id of the host to alter"
 msgstr ""
@@ -4820,7 +4890,7 @@ msgstr ""
 msgid "There's no running synchronization for this smart proxy."
 msgstr ""
 
-msgid "This API endpoint is only valid for Pulp 3 repositories."
+msgid "This Content View must be set to Import-only before performing an import"
 msgstr ""
 
 msgid "This Host is not currently registered with subscription-manager."
@@ -4830,6 +4900,9 @@ msgid "This Organization's subscription manifest has expired. Please import a ne
 msgstr ""
 
 msgid "This action doesn't support package groups"
+msgstr ""
+
+msgid "This action will become available after the Pulp 3 content migration"
 msgstr ""
 
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
@@ -4969,6 +5042,9 @@ msgid "Unable to export. 'pulp_export_destination' setting is not a writable dir
 msgstr ""
 
 msgid "Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory."
+msgstr ""
+
+msgid "Unable to incrementally export. Do a Full Export the library content before updating from the latest increment."
 msgstr ""
 
 msgid "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id."
@@ -5484,6 +5560,9 @@ msgstr "組織"
 msgid "an ostree branch"
 msgstr ""
 
+msgid "are only allowed for Yum repositories."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr ""
 
@@ -5502,6 +5581,9 @@ msgstr ""
 # translation auto-copied from project CFSE, version sam-1.2, document app, author snowlet
 msgid "can't be blank"
 msgstr "不能留白"
+
+msgid "cannot add filter to import-only view"
+msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author tchuang
 msgid "cannot be a binary file."
@@ -5560,13 +5642,13 @@ msgstr ""
 msgid "checking Pulp task status"
 msgstr ""
 
-msgid "comma separated list of architectures to be synched from deb-archive"
+msgid "comma-separated list of architectures to be synced from deb-archive"
 msgstr ""
 
-msgid "comma separated list of releases to be synched from deb-archive"
+msgid "comma-separated list of releases to be synced from deb-archive"
 msgstr ""
 
-msgid "comma separated list of repo components to be synched from deb-archive"
+msgid "comma-separated list of repo components to be synced from deb-archive"
 msgstr ""
 
 msgid "composite content view identifier"
@@ -5834,6 +5916,9 @@ msgstr ""
 msgid "invalid container image name"
 msgstr ""
 
+msgid "invalid: Repositories can only require one OS version."
+msgstr ""
+
 msgid "is already attached to the capsule"
 msgstr "已連至 capsule"
 
@@ -5898,6 +5983,9 @@ msgstr "必須是個正整數。"
 
 msgid "must be one of the following: %s"
 msgstr "必須是以下其中之一：%s"
+
+msgid "must be one of: %s"
+msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author snowlet
 msgid "must be unique within one organization"

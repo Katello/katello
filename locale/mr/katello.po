@@ -19,6 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Zanata 3.6.2\n"
 
+msgid ""
+"\n"
+"* Product = '%{product}', Repository = '%{repository}', Repository Type = '%{repo_type}'"
+msgstr ""
+
 msgid " %{errata_count} Errata"
 msgstr ""
 
@@ -402,11 +407,17 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr ""
 
+msgid "Activation Key(s)"
+msgstr ""
+
 # translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author sandeeps
 msgid "Activation Keys"
 msgstr "ॲक्टिवेशन किज्"
 
 msgid "Activation key ID"
+msgstr ""
+
+msgid "Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
 msgstr ""
 
 #, fuzzy
@@ -901,10 +912,16 @@ msgstr ""
 msgid "Cannot upload Container Image content."
 msgstr ""
 
+msgid "Cannot use this end point for importing to library. If you intented to upload to library, use the library endpoint."
+msgstr ""
+
 msgid "Cannot validate contents on non-yum/deb repositories."
 msgstr ""
 
 msgid "Check if a connection can be made to Red Hat Subscription Management."
+msgstr ""
+
+msgid "Check if the specified organization is eligible for Simple Content Access"
 msgstr ""
 
 msgid "Check services before actions"
@@ -920,9 +937,6 @@ msgid "Checksum of the repository, currently 'sha1' & 'sha256' are supported"
 msgstr ""
 
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
-msgstr ""
-
-msgid "Chunk export-tarfile into pieces of chunk_size mega bytes. Relevant only for Pulp 3 repositories"
 msgstr ""
 
 msgid "Click here to go to the tasks page for the task."
@@ -945,7 +959,7 @@ msgstr ""
 msgid "Combined Profile Update for %s"
 msgstr ""
 
-msgid "Comma separated list of tags to sync for Container Image repository"
+msgid "Comma-separated list of tags to sync for Container Image repository"
 msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app
@@ -1000,9 +1014,15 @@ msgstr ""
 msgid "Content Download URL"
 msgstr ""
 
+msgid "Content Facet for host with id %s is non-existent. Skipping applicability calculation."
+msgstr ""
+
 #, fuzzy
 msgid "Content Hosts"
 msgstr "कंटेंट"
+
+msgid "Content Migration"
+msgstr ""
 
 msgid "Content Source"
 msgstr ""
@@ -1102,6 +1122,9 @@ msgstr ""
 msgid "Content view numeric identifier"
 msgstr ""
 
+msgid "Content view version export history identifier"
+msgstr ""
+
 msgid "Content view version identifier"
 msgstr ""
 
@@ -1142,6 +1165,9 @@ msgid "Could not find %{count} errata.  Only found: %{found}"
 msgstr ""
 
 msgid "Could not find %{name} resource with id %{id}"
+msgstr ""
+
+msgid "Could not find %{name} resources with ids %{ids}"
 msgstr ""
 
 msgid "Could not find Environment with ids: %s"
@@ -1234,13 +1260,6 @@ msgstr "वातावरण '%s' आढळले नाही"
 msgid "Couldn't find errata ids '%s'"
 msgstr "संस्था '%s' शोधणे अशक्य"
 
-#, fuzzy
-msgid "Couldn't find gpg key '%s'"
-msgstr "GPG कि '%s' शोधणे अशक्य"
-
-msgid "Couldn't find host '%s'"
-msgstr ""
-
 msgid "Couldn't find host collection '%s'"
 msgstr ""
 
@@ -1255,10 +1274,6 @@ msgstr "संस्था '%s' शोधणे अशक्य"
 msgid "Couldn't find prior-environment '%s'"
 msgstr "वातावरण '%s' आढळले नाही"
 
-#, fuzzy
-msgid "Couldn't find product '%s'"
-msgstr "प्रोव्हाइडर '%s' आढळले नाही"
-
 # translation auto-copied from project CFSE, version sam-1.2, document app
 msgid "Couldn't find product with id '%s'"
 msgstr "id '%s' सह उत्पादन आढळले नाही"
@@ -1267,20 +1282,7 @@ msgstr "id '%s' सह उत्पादन आढळले नाही"
 msgid "Couldn't find repository '%s'"
 msgstr "रेपॉजिटरि '%s' शोधणे अशक्य"
 
-#, fuzzy
-msgid "Couldn't find repository set with id '%s'."
-msgstr "रेपॉजिटरि '%s' शोधणे अशक्य"
-
 msgid "Couldn't find specified Content View and Lifecycle Environment."
-msgstr ""
-
-msgid "Couldn't find ssl ca cert '%s'"
-msgstr ""
-
-msgid "Couldn't find ssl client cert '%s'"
-msgstr ""
-
-msgid "Couldn't find ssl client key '%s'"
 msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author sandeeps
@@ -1355,6 +1357,9 @@ msgid "Current organization is not set."
 msgstr ""
 
 msgid "Current organization not set."
+msgstr ""
+
+msgid "Custom"
 msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app
@@ -1570,16 +1575,13 @@ msgstr ""
 msgid "Description of the repository"
 msgstr ""
 
+msgid "Designate this Content View for importing from upstream servers only. Defaults to false"
+msgstr ""
+
 msgid "Desired quantity of the pool"
 msgstr ""
 
-msgid "Destination Server Name required for Pulp3 repositories"
-msgstr ""
-
 msgid "Destination Server name"
-msgstr ""
-
-msgid "Destination Server name, required for Pulp3"
 msgstr ""
 
 msgid "Destroy"
@@ -1858,7 +1860,10 @@ msgstr ""
 msgid "Export CSV"
 msgstr ""
 
-msgid "Export a content view version"
+msgid "Export Library"
+msgstr ""
+
+msgid "Export a content view version.  Relevant only for Pulp 2 repositories."
 msgstr ""
 
 msgid "Export a repository"
@@ -1867,10 +1872,13 @@ msgstr ""
 msgid "Export as CSV"
 msgstr ""
 
+msgid "Export history identifier used for incremental export. If not provided the most recent export history will be used."
+msgstr ""
+
 msgid "Export to ISO format"
 msgstr ""
 
-msgid "Export to ISO format. Relevant only for Pulp 2 repositories"
+msgid "Export to ISO format."
 msgstr ""
 
 msgid "Exported version"
@@ -2150,6 +2158,9 @@ msgstr ""
 msgid "Host id to list applicable packages for"
 msgstr ""
 
+msgid "Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this Foreman"
+msgstr ""
+
 msgid "Host with ID %s already exists in the host collection."
 msgstr ""
 
@@ -2304,6 +2315,9 @@ msgstr ""
 msgid "Identifiers for Lifecycle Environment"
 msgstr ""
 
+msgid "Identifies whether the repository should be disabled on a client with a non-matching OS version. Pass [] to enable regardless of OS version. Maximum length 1; allowed tags are: %s"
+msgstr ""
+
 msgid "If Autosearch is enabled, delay in milliseconds before executing searches while typing."
 msgstr ""
 
@@ -2352,6 +2366,9 @@ msgstr ""
 msgid "Import Content View Version"
 msgstr ""
 
+msgid "Import Default Content View"
+msgstr ""
+
 #, fuzzy
 msgid "Import Manifest"
 msgstr "आयात करा"
@@ -2377,11 +2394,23 @@ msgstr ""
 msgid "Import a content view version"
 msgstr ""
 
+msgid "Import a content view version to the library"
+msgstr ""
+
 #, fuzzy
 msgid "Import facts"
 msgstr "आयात करा"
 
 msgid "Import uploads into a repository"
+msgstr ""
+
+msgid "Import-only can not be changed after creation"
+msgstr ""
+
+msgid "Import-only content views can not be published directly"
+msgstr ""
+
+msgid "Import-only content views will be available in a future version."
 msgstr ""
 
 msgid "Importing manifest into '%{subject}' failed."
@@ -2554,9 +2583,6 @@ msgstr ""
 msgid "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'"
 msgstr ""
 
-msgid "Invalid parameters provided - %{params}. These are only relevant for Pulp 2 repositories"
-msgstr ""
-
 # translation auto-copied from project CFSE, version sam-1.2, document app, author sandeeps
 msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "या कार्यकरीता विनंतीमध्ये अवैध घटके पाठवले. कृपया प्रणाली प्रशासकाशी संपर्क करा."
@@ -2582,6 +2608,12 @@ msgstr ""
 msgid "Invalid puppet module. Please make sure the puppet module contains a metadata.json file and is properly compressed."
 msgstr ""
 
+msgid "Invalid usage for Pulp 2 repositories. Use export for Yum repositories"
+msgstr ""
+
+msgid "Invalid usage for Pulp 3 repositories. Use hammer content-export for Yum repositories"
+msgstr ""
+
 msgid "Invalid value specified for Container Image repositories."
 msgstr ""
 
@@ -2589,6 +2621,9 @@ msgid "Invalid value specified for ignorable content."
 msgstr ""
 
 msgid "Invalid value specified for ignorable content. Permissible values %s"
+msgstr ""
+
+msgid "Katello"
 msgstr ""
 
 msgid "Katello ID of local pool to update"
@@ -2750,6 +2785,9 @@ msgid "List errata"
 msgstr ""
 
 msgid "List errata available for the content host"
+msgstr ""
+
+msgid "List export histories"
 msgstr ""
 
 msgid "List filter rules"
@@ -3137,6 +3175,9 @@ msgstr ""
 # translation auto-copied from project CFSE, version sam-1.2, document app, author sandeeps
 msgid "No errors"
 msgstr "त्रुटी आढळली नाही"
+
+msgid "No existing export history was found to perform an incremental export. A full export must be performed"
+msgstr ""
 
 msgid "No file uploaded"
 msgstr ""
@@ -3604,6 +3645,18 @@ msgstr ""
 msgid "Perform an Incremental Update on one or more Content View Versions"
 msgstr ""
 
+msgid "Performs a full-export of a content view version."
+msgstr ""
+
+msgid "Performs a full-export of the repositories in library."
+msgstr ""
+
+msgid "Performs an incremental-export of a content view version."
+msgstr ""
+
+msgid "Performs an incremental-export of the repositories in library."
+msgstr ""
+
 # translation auto-copied from project CFSE, version sam-1.2, document app
 msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "परवानगी नकारली. वापरकर्ता '%{user}' कडे संस्था '%{org}' करीता प्रवेशसाठी परवानगी नाही."
@@ -3643,6 +3696,9 @@ msgid "Please select an organization to view subscription totals."
 msgstr ""
 
 msgid "Please select one from the list below and you will be redirected."
+msgstr ""
+
+msgid "Prior Content View Version specified in the metadata - '%{name}' does not exist. Please import the metadata for '%{name}' before importing '%{current}' "
 msgstr ""
 
 msgid "Processing metadata"
@@ -3891,6 +3947,9 @@ msgstr ""
 msgid "Recommended Repositories"
 msgstr ""
 
+msgid "Red Hat"
+msgstr ""
+
 #, fuzzy
 msgid "Red Hat CDN URL"
 msgstr "उत्पादने"
@@ -3955,9 +4014,6 @@ msgid "Releasever to enable"
 msgstr ""
 
 msgid "Reload data"
-msgstr ""
-
-msgid "Remote action:"
 msgstr ""
 
 msgid "Removal of package group(s) requested: %{groups}"
@@ -4049,9 +4105,6 @@ msgid "Removing Package..."
 msgstr "संकुल काढून टाकत आहे..."
 
 msgid "Repo Type"
-msgstr ""
-
-msgid "Report"
 msgstr ""
 
 # translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author sandeeps
@@ -4418,9 +4471,6 @@ msgstr ""
 msgid "Show the available repository types"
 msgstr ""
 
-msgid "Show the export history for a content view version"
-msgstr ""
-
 msgid "Shows status of Katello system and it's subcomponents"
 msgstr ""
 
@@ -4428,6 +4478,9 @@ msgid "Shows version information"
 msgstr ""
 
 msgid "Simple Content Access"
+msgstr ""
+
+msgid "Simple Content Access has been disabled by the upstream organization administrator."
 msgstr ""
 
 msgid "Simple Content Access has been disabled for '%{subject}'."
@@ -4468,6 +4521,9 @@ msgid "Source RPM"
 msgstr ""
 
 msgid "Specify the list of units in each repo"
+msgstr ""
+
+msgid "Split the exported content into archives no greater than the specified size in megabytes."
 msgstr ""
 
 msgid "Stacking ID"
@@ -4754,6 +4810,9 @@ msgstr "'%s' वातावरणात चेंजसेट समावि�
 msgid "The Subscription Allocation providing the imported manifest has been removed. Please create a new Subscription Allocation and import the new manifest."
 msgstr ""
 
+msgid "The TOC file specified in the metadata does not exist. %s "
+msgstr ""
+
 msgid "The action requested on this composite view cannot be performed until all of the component content view versions have been promoted to the target environment: %{env}.  This restriction is optional and can be modified in the Administrator -> Settings -> Content page using the restrict_composite_view flag."
 msgstr ""
 
@@ -4795,10 +4854,18 @@ msgstr ""
 msgid "The erratum type must be an array. Invalid value provided"
 msgstr ""
 
+msgid "The exported Content View Version '%{content_view} %{current}' cannot be incrementally updated from version '%{from}'. Please do a full export."
+msgstr ""
+
 msgid "The field to sort the data by. Defaults to the created date."
 msgstr ""
 
 msgid "The following hosts have errata that apply to them: "
+msgstr ""
+
+msgid ""
+"The following repositories provided in the import metadata are either not available in the Library or are of incorrect Respository Type. Please add or enable the repositories before importing\n"
+" %{repos}"
 msgstr ""
 
 msgid "The id of the host to alter"
@@ -4922,7 +4989,7 @@ msgstr ""
 msgid "There's no running synchronization for this smart proxy."
 msgstr ""
 
-msgid "This API endpoint is only valid for Pulp 3 repositories."
+msgid "This Content View must be set to Import-only before performing an import"
 msgstr ""
 
 msgid "This Host is not currently registered with subscription-manager."
@@ -4932,6 +4999,9 @@ msgid "This Organization's subscription manifest has expired. Please import a ne
 msgstr ""
 
 msgid "This action doesn't support package groups"
+msgstr ""
+
+msgid "This action will become available after the Pulp 3 content migration"
 msgstr ""
 
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
@@ -5071,6 +5141,9 @@ msgid "Unable to export. 'pulp_export_destination' setting is not a writable dir
 msgstr ""
 
 msgid "Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory."
+msgstr ""
+
+msgid "Unable to incrementally export. Do a Full Export the library content before updating from the latest increment."
 msgstr ""
 
 msgid "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id."
@@ -5596,6 +5669,9 @@ msgstr "संस्था"
 msgid "an ostree branch"
 msgstr ""
 
+msgid "are only allowed for Yum repositories."
+msgstr ""
+
 msgid "attempted to sync without a feed URL"
 msgstr ""
 
@@ -5614,6 +5690,9 @@ msgstr ""
 # translation auto-copied from project CFSE, version sam-1.2, document app, author sandeeps
 msgid "can't be blank"
 msgstr "रिकामे असणे अशक्य"
+
+msgid "cannot add filter to import-only view"
+msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author sandeeps
 msgid "cannot be a binary file."
@@ -5679,13 +5758,13 @@ msgstr ""
 msgid "checking Pulp task status"
 msgstr ""
 
-msgid "comma separated list of architectures to be synched from deb-archive"
+msgid "comma-separated list of architectures to be synced from deb-archive"
 msgstr ""
 
-msgid "comma separated list of releases to be synched from deb-archive"
+msgid "comma-separated list of releases to be synced from deb-archive"
 msgstr ""
 
-msgid "comma separated list of repo components to be synched from deb-archive"
+msgid "comma-separated list of repo components to be synced from deb-archive"
 msgstr ""
 
 msgid "composite content view identifier"
@@ -5954,6 +6033,9 @@ msgstr ""
 msgid "invalid container image name"
 msgstr ""
 
+msgid "invalid: Repositories can only require one OS version."
+msgstr ""
+
 msgid "is already attached to the capsule"
 msgstr ""
 
@@ -6017,6 +6099,9 @@ msgid "must be a positive integer value."
 msgstr "पॉजिटिव्ह इंटिजर मूल्य पाहिजे."
 
 msgid "must be one of the following: %s"
+msgstr ""
+
+msgid "must be one of: %s"
 msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author sandeeps
