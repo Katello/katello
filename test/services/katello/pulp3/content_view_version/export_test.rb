@@ -31,6 +31,37 @@ module Katello
             end
           end
 
+          it "fails on validate! if any 'non-immediate' repos in cvv" do
+            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
+            version = katello_content_view_versions(:library_view_version_2)
+            repo1 = version.archived_repos.yum_type.first
+            repo1.root.update!(download_policy: "on_demand")
+            export = fetch_exporter(smart_proxy: proxy,
+                                    content_view_version: version.reload)
+            exception = assert_raises(RuntimeError) do
+              export.validate!(fail_on_missing_content: true)
+            end
+
+            assert_match(/ Unable to fully export Content View Version/, exception.message)
+            assert_match(/#{repo1.name}/, exception.message)
+          end
+
+          it "does not fail on validate! if only 'immediate' repos in cvv" do
+            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
+            version = katello_content_view_versions(:library_view_version_2)
+            version.archived_repos.yum_type.each do |repo|
+              repo.root.update!(download_policy: "immediate")
+            end
+
+            export = fetch_exporter(smart_proxy: proxy,
+                                    content_view_version: version)
+            assert_nothing_raised do
+              export.validate!(fail_on_missing_content: true)
+            end
+          end
+
           it "fails on validate_incremental_export if the 'from' repositories and 'to' repositories point to different hrefs" do
             proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
@@ -38,16 +69,16 @@ module Katello
             version = katello_content_view_versions(:library_view_version_2)
             destination_server = "whereami.com"
             export = fetch_exporter(smart_proxy: proxy,
-                                         content_view_version: version,
-                                         destination_server: destination_server,
-                                         from_content_view_version: from_version)
-
+                                     content_view_version: version,
+                                     destination_server: destination_server,
+                                     from_content_view_version: from_version)
+            ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:validate_repositories_immediate!)
             ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with(nil).returns(nil).twice
             ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with("0").returns("0")
             ::Katello::Pulp3::ContentViewVersion::Export.any_instance.expects(:version_href_to_repository_href).with("1").returns("1")
 
             exception = assert_raises(RuntimeError) do
-              export.validate_incremental_export!
+              export.validate!(fail_on_missing_content: true, validate_incremental: true)
             end
             assert_match(/cannot be incrementally updated/, exception.message)
           end

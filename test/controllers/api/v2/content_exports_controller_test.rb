@@ -96,11 +96,13 @@ module Katello
         assert_equal options[:destination_server], destination
         assert_equal options[:chunk_size], chunk_size_mb
         assert_nil options[:from_history]
+        assert options[:fail_on_missing_content]
       end
       export_task.returns(build_task_stub)
       post :version, params: { id: @library_view_version.id,
                                destination_server: destination,
-                               chunk_size_mb: chunk_size_mb
+                               chunk_size_mb: chunk_size_mb,
+                               fail_on_missing_content: true
                              }
       assert_response :success
     end
@@ -115,6 +117,7 @@ module Katello
         assert_equal organization.id, org.id
         assert_equal options[:destination_server], destination
         assert_equal options[:chunk_size], chunk_size_mb
+        refute options[:fail_on_missing_content]
         assert_nil options[:from_history]
       end
       export_task.returns(build_task_stub)
