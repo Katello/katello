@@ -2,6 +2,7 @@
 
 require "katello_test_helper"
 
+#rubocop:disable Metrics/ModuleLength
 module Katello
   #rubocop:disable Metrics/BlockLength
   describe Api::Rhsm::CandlepinProxiesController do
@@ -52,6 +53,19 @@ module Katello
         ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts}, nil, [@activation_key]).returns(@host)
 
         post(:consumer_activate, params: { :organization_id => @activation_key.organization.label, :activation_keys => @activation_key.name, :facts => @facts })
+
+        assert_response :success
+      end
+
+      it "de-duplicates provided activation key names" do
+        Resources::Candlepin::Consumer.stubs(:get)
+
+        ::Katello::RegistrationManager.expects(:process_registration).with({'facts' => @facts}, nil, [@activation_key]).returns(@host)
+
+        key_names = "#{@activation_key.name},#{@activation_key.name}"
+
+        post(:consumer_activate, params: { :organization_id => @activation_key.organization.label,
+                                           :activation_keys => key_names, :facts => @facts })
 
         assert_response :success
       end
