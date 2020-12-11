@@ -45,14 +45,10 @@ module Katello
           @installed_package1 = InstalledPackage.create(name: @rpm1.name, nvra: @rpm1.nvra, epoch: @rpm1.epoch,
                                                                    version: @rpm1.version, release: @rpm1.release,
                                                                    arch: @rpm1.arch, nvrea: @rpm1.nvrea)
-          @installed_package2 = InstalledPackage.create(name: @rpm2.name, nvra: @rpm2.nvra, epoch: @rpm2.epoch,
-                                                                   version: @rpm2.version, release: @rpm2.release,
-                                                                   arch: @rpm2.arch, nvrea: @rpm2.nvrea)
 
-          trigger_evrs([@rpm_one, @rpm_two, @rpm_three, @rpm1, @rpm2, @installed_package1, @installed_package2])
+          trigger_evrs([@rpm_one, @rpm_two, @rpm_three, @rpm1, @rpm2, @installed_package1])
 
           HostInstalledPackage.create(host_id: @host.id, installed_package_id: @installed_package1.id)
-          HostInstalledPackage.create(host_id: @host.id, installed_package_id: @installed_package2.id)
 
           ErratumPackage.create(erratum_id: @erratum.id,
                                 nvrea: @rpm2.nvra, name: @rpm2.name, filename: @rpm2.filename)
@@ -69,6 +65,16 @@ module Katello
           @rpm_one_two.update(modular: false)
           ModuleStreamRpm.delete_all
           HostAvailableModuleStream.delete_all
+        end
+
+        def test_older_dup_installed_rpms_are_ignored
+          installed_package2 = InstalledPackage.create(name: @rpm2.name, nvra: @rpm2.nvra, epoch: @rpm2.epoch,
+                                                       version: @rpm2.version, release: @rpm2.release,
+                                                       arch: @rpm2.arch, nvrea: @rpm2.nvrea)
+          trigger_evrs([installed_package2])
+          HostInstalledPackage.create(host_id: @host.id, installed_package_id: installed_package2.id)
+          rpm_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).applicable_differences
+          assert_equal [[], []], rpm_differences
         end
 
         def test_rpm_content_ids_returns_something
