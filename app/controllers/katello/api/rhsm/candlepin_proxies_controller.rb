@@ -368,7 +368,7 @@ module Katello
 
       if (ak_names = params[:activation_keys])
         fail HttpErrors::NotFound, _("Organization not found") if organization.nil?
-        ak_names        = ak_names.split(",")
+        ak_names        = ak_names.split(",").uniq.compact
         activation_keys = ak_names.map do |ak_name|
           activation_key = organization.activation_keys.find_by(:name => ak_name)
           fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
