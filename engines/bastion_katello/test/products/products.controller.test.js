@@ -31,7 +31,14 @@ describe('Controller: ProductsController', function() {
                     $promise: deferred.promise,
                     then : function () {}
                 }
-            }
+            };
+            this.load = function () {
+                var deferred = $q.defer();
+                return {
+                    $promise: deferred.promise,
+                    then : function () {}
+                }
+            };
         };
         ProductBulkAction = {
             removeProducts: function () {
