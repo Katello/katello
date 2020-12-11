@@ -54,10 +54,10 @@ angular.module('Bastion.products').controller('ProductsController',
         nutupane = new Nutupane(Product, params, undefined, nutupaneParams);
         $scope.controllerName = 'katello_products';
         nutupane.primaryOnly = true;
-        nutupane.refresh().then(function () {
+        $scope.table = nutupane.table;
+        nutupane.load().then(function () {
             $scope.disableRepoDiscovery = false;
         });
-        $scope.table = nutupane.table;
 
         $scope.$on('productDelete', function (event, taskId) {
             var message = translate("Product delete operation has been initiated in the background.");
