@@ -238,6 +238,20 @@ module Katello
       end
     end
 
+    def test_import_all_removes_duplicates
+      json = random_json(1)
+      pulp_ids = json.map { |obj| obj['_id'] }
+      json.first["name"] = @rpm_one.name
+      json.first["version"] = @rpm_one.version
+      json.first["release"] = @rpm_one.release
+      json.first["epoch"] = @rpm_one.epoch
+      json.first["arch"] = @rpm_one.arch
+      Katello::Pulp::Rpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
+      refute_nil ::Katello::RepositoryRpm.find_by(rpm_id: @rpm_one.id, repository_id: @repo.id)
+      Katello::Rpm.import_all(pulp_ids, @repo)
+      assert_nil ::Katello::RepositoryRpm.find_by(rpm_id: @rpm_one.id, repository_id: @repo.id)
+    end
+
     def teardown
       SETTINGS[:katello][:pulp][:bulk_load_size] = @original_bulk_load_size
     end
