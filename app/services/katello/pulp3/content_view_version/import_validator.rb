@@ -2,7 +2,6 @@ module Katello
   module Pulp3
     module ContentViewVersion
       class ImportValidator
-        BASEDIR = '/var/lib/pulp'.freeze
         attr_accessor :metadata, :path, :content_view
         def initialize(content_view:, path:, metadata:)
           self.content_view = content_view
@@ -11,7 +10,6 @@ module Katello
         end
 
         def check!
-          check_permissions!
           unless content_view.default?
             ensure_importing_cvv_does_not_exist!
             ensure_from_cvv_exists!
@@ -69,34 +67,6 @@ module Katello
                     "%{repos}" % { content_view: content_view.name, repos: repos_in_import.join("")}
                   )
           end
-        end
-
-        def check_permissions!
-          fail _("Invalid path specified.") if path.blank? || !File.directory?(path)
-          fail _("The import path must be in a subdirectory under '%s'." % BASEDIR) unless path.starts_with?(BASEDIR)
-          fail _("Pulp user or group unable to read content in '%s'." % path) unless pulp_user_accessible?(path)
-
-          Dir.glob("#{path}/*").each do |file|
-            fail _("Pulp user or group unable to read '%s'." % file) unless pulp_user_accessible?(file)
-          end
-          toc_path = "#{path}/#{metadata[:toc]}"
-          fail _("The TOC file specified in the metadata does not exist. %s " % toc_path) unless File.exist?(toc_path)
-        end
-
-        def pulp_user_accessible?(path)
-          pulp_info = fetch_pulp_user_info
-          return false if pulp_info.blank?
-
-          stat = File.stat(path)
-          stat.gid.to_s == pulp_info.gid ||
-            stat.uid.to_s == pulp_info.uid ||
-            stat.mode.to_s(8)[-1].to_i >= 4
-        end
-
-        def fetch_pulp_user_info
-          pulp_user = nil
-          Etc.passwd { |u| pulp_user = u if u.name == 'pulp' }
-          pulp_user
         end
 
         def generate_product_repo_i18n_string(product_repos)
