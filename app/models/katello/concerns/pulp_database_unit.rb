@@ -91,6 +91,13 @@ module Katello
         service_class.pulp_units_batch_all(pulp_ids).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
+            if content_type == 'rpm' && repository
+              rpms_to_disassociate = ::Katello::Rpm.where(name: unit[:name], version: unit[:version], release: unit[:release],
+                                                          epoch: unit[:epoch], arch: unit[:arch]).select(:id)
+              if rpms_to_disassociate.any?
+                ::Katello::RepositoryRpm.where(rpm_id: rpms_to_disassociate, repository_id: repository.id).destroy_all
+              end
+            end
             model = Katello::Util::Support.active_record_retry do
               self.where(:pulp_id => unit[service_class.unit_identifier]).first_or_create
             end
