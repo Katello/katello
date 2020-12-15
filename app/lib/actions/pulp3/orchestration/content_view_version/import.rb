@@ -36,10 +36,6 @@ module Actions
           def humanized_name
             _("Import")
           end
-
-          def rescue_strategy
-            Dynflow::Action::Rescue::Skip
-          end
         end
       end
     end
