@@ -76,8 +76,10 @@ module Actions
                                                        content_view_version: cvv,
                                                        smart_proxy: smart_proxy,
                                                        from_content_view_version: from_cvv).generate_metadata
-            toc = Dir.glob("#{path}/*toc.json").first
-            export_metadata[:toc] = File.basename(toc) if toc
+
+            toc_path_info = output[:exported_file_checksum].find { |item| item.first.end_with?("toc.json") }
+            export_metadata[:toc] = File.basename(toc_path_info.first)
+
             history = ::Katello::ContentViewVersionExportHistory.create!(
               content_view_version_id: input[:content_view_version_id],
               destination_server: input[:destination_server],

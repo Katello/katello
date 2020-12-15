@@ -70,8 +70,6 @@ module ::Actions::Katello::ContentViewVersion
 
     describe 'Import' do
       it 'should fail on importing content for an existing versions' do
-        ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:check_permissions!).returns
-
         exception = assert_raises(RuntimeError) do
           plan_action(action, content_view, path: path, metadata: metadata)
         end
