@@ -35,7 +35,7 @@ namespace :katello do
       puts "Estimated migration time based on yum content: fewer than 5 minutes"
     end
     puts
-    puts "\e[33mNote:\e[0m ensure there is sufficient storage space for /var/lib/pulp/published to double in size before starting the migration process."
+    puts "\e[33mNote:\e[0m ensure there is sufficient storage space for /var/lib/pulp/published to triple in size before starting the migration process."
     puts "Check the size of /var/lib/pulp/published with 'du -sh /var/lib/pulp/published/'"
   end
 end
