@@ -15,7 +15,7 @@ namespace :katello do
     puts "Migrated/Total errata: #{migrated_errata}/#{::Katello::RepositoryErratum.count}"
     puts "Migrated/Total repositories: #{migrated_repos}/#{migratable_repos}"
     puts
-    puts "\e[33mNote:\e[0m ensure there is sufficient storage space for /var/lib/pulp/published to double in size before starting the migration process."
+    puts "\e[33mNote:\e[0m ensure there is sufficient storage space for /var/lib/pulp/published to triple in size before starting the migration process."
     puts "Check the size of /var/lib/pulp/published with 'du -sh /var/lib/pulp/published/'"
   end
 end
