@@ -18,15 +18,11 @@ child @lifecycle_environments => :lifecycle_environments do
     @capsule.environment_syncable?(env)
   end
 
-  if @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE)
+  if @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE) || @capsule.has_feature?(SmartProxy::PULP3_FEATURE)
     node :counts do |env|
-      counts = {
-        :content_hosts => env.hosts.authorized("view_hosts").count,
-        :content_views => env.content_views.non_default.count,
-        :products => env.products.enabled.count
+      {
+        :content_views => env.content_views.non_default.count
       }
-      repo_data = @capsule.smart_proxy_service.current_repositories_data(env)
-      counts.merge!(Katello::Pulp::ContentCountsCalculator.new(repo_data).calculate)
     end
 
     node :content_views do |env|
@@ -38,13 +34,11 @@ child @lifecycle_environments => :lifecycle_environments do
           :composite => content_view.composite,
           :last_published => content_view.versions.empty? ? nil : content_view.versions.last.created_at,
           :default => content_view.default,
+          :up_to_date => @capsule.repos_pending_sync(env, content_view).empty?,
           :counts => {
-            :content_hosts => content_view.hosts.authorized("view_hosts").count,
-            :products => content_view.products.enabled.count
+            :repositories => @capsule.current_repositories_data(env, content_view).try(:count)
           }
         }
-        repo_data = @capsule.smart_proxy_service.current_repositories_data(env, content_view)
-        attributes[:counts].merge!(Katello::Pulp::ContentCountsCalculator.new(repo_data).calculate)
         attributes
       end
     end

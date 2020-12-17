@@ -42,21 +42,6 @@ module Katello
         puppet_repos.where(:pulp_id => pulp_repos.map { |pulp_repo| pulp_repo['id'] })
       end
 
-      def current_repositories_data(environment = nil, content_view = nil)
-        @pulp_repositories ||= smart_proxy.pulp_repositories
-
-        repos = Katello::Repository
-        repos = repos.in_environment(environment) if environment
-        repos = repos.in_content_views([content_view]) if content_view
-        puppet_envs = Katello::ContentViewPuppetEnvironment
-        puppet_envs = puppet_envs.in_environment(environment) if environment
-        puppet_envs = puppet_envs.in_content_view(content_view) if content_view
-
-        repo_ids = repos.pluck(:pulp_id) + puppet_envs.pluck(:pulp_id)
-
-        @pulp_repositories.select { |r| repo_ids.include?(r['id']) }
-      end
-
       def orphaned_repos
         @smart_proxy.pulp_repositories.map { |x| x["id"] } - repos_available_to_capsule.map { |x| x.pulp_id }
       end
