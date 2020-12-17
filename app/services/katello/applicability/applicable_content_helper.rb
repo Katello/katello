@@ -72,9 +72,6 @@ module Katello
             katello_host_available_module_streams.status = 'enabled'",
             :content_facet_id => self.content_facet.host.id).select(:id)
 
-        newest_distinct_installed_packages = fetch_newest_distinct_installed_packages
-        return [] if newest_distinct_installed_packages.empty?
-
         ::Katello::Rpm.
           joins("INNER JOIN katello_repository_rpms ON
             katello_rpms.id = katello_repository_rpms.rpm_id").
@@ -82,7 +79,7 @@ module Katello
             katello_rpms.name = katello_installed_packages.name AND
             katello_rpms.arch = katello_installed_packages.arch AND
             katello_rpms.evr > katello_installed_packages.evr AND
-            katello_installed_packages.id in (#{newest_distinct_installed_packages.join(",")})").
+            katello_installed_packages.id in (#{newest_distinct_installed_packages_query})").
           joins("LEFT JOIN katello_module_stream_rpms ON
             katello_rpms.id = katello_module_stream_rpms.rpm_id").
           joins("INNER JOIN katello_host_installed_packages ON
@@ -96,18 +93,14 @@ module Katello
             :enabled_module_streams => enabled_module_stream_ids).pluck(:id).uniq
       end
 
-      def fetch_newest_distinct_installed_packages
-        newest_distinct_installed_packages_query =
-          "SELECT DISTINCT ON (name) katello_installed_packages.* " \
+      def newest_distinct_installed_packages_query
+        "SELECT DISTINCT ON (katello_installed_packages.name) katello_installed_packages.id " \
           "FROM katello_installed_packages INNER JOIN " \
           "katello_host_installed_packages ON " \
           "katello_installed_packages.id = " \
           "katello_host_installed_packages.installed_package_id " \
           "WHERE katello_host_installed_packages.host_id = " \
-          ":content_facet_id ORDER BY name, evr DESC"
-
-        ::Katello::InstalledPackage.find_by_sql([newest_distinct_installed_packages_query,
-                                                 content_facet_id: content_facet.host.id]).map(&:id)
+          "#{content_facet.host.id} ORDER BY katello_installed_packages.name, katello_installed_packages.evr DESC"
       end
 
       def applicable_differences
