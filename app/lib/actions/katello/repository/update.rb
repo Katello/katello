@@ -3,6 +3,7 @@ module Actions
     module Repository
       class Update < Actions::EntryAction
         include Actions::Katello::PulpSelector
+        include ActionView::Helpers::TextHelper
 
         # rubocop:disable Metrics/MethodLength
         def plan(root, repo_params)
@@ -42,6 +43,24 @@ module Actions
                                        content_type: repository.content_type,
                                        label: content.label,
                                        gpg_url: repository.yum_gpg_key_url)
+
+            if root.previous_changes.key?('os_versions')
+              # If Restrict to OS Version is changing _from_ or _to_ 'rhel-6'...
+              if root.previous_changes['os_versions'].any? { |ch| ch.include?('rhel-6') }
+                # ...force regeneration of entitlement certs on RHEL 6.8 and older
+                Rails.logger.info("Looking for RHEL 6.8 and older clients")
+                cp_consumers = ::Katello::Host::ContentFacet
+                  .joins(host: :operatingsystem)
+                  .where("operatingsystems.major = '6' AND operatingsystems.minor < '9' AND operatingsystems.name = 'RedHat'")
+                  .map(&:uuid)
+                # TODO: make this an action
+                Rails.logger.info("Marking entitlement certs dirty for #{pluralize(cp_consumers.length, 'client')}")
+                cp_consumers.each do |uuid|
+                  ::Katello::Resources::Candlepin::Entitlement.regenerate_entitlement_certificates_for_consumer(uuid, true)
+                end
+              end
+            end
+
           end
           if root.pulp_update_needed?
             sequence do
