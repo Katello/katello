@@ -173,9 +173,11 @@ module Katello
       property :package_names, array_of: String, desc: 'Returns names of packages the errata can be applied to'
       property :cves, array_of: 'ErratumCve', desc: 'Returns CVEs associated with the errata'
       property :reboot_suggested, one_of: [true, false], desc: 'Returns true if reboot is suggested after errata applying, false otherwise'
+      property :title, String, desc: 'Returns the errata title, e.g. "Important: net-snmp security update"'
+      property :summary, String, desc: 'Returns the errata summary, the length can very, it is usually in range of 60 to 1000 characters. It can include empty line characters.'
     end
     class Jail < ::Safemode::Jail
-      allow :errata_id, :errata_type, :issued, :created_at, :severity, :package_names, :cves, :reboot_suggested
+      allow :errata_id, :errata_type, :issued, :created_at, :severity, :package_names, :cves, :reboot_suggested, :title, :summary
     end
   end
 end
