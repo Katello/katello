@@ -322,7 +322,8 @@ module Katello
     end
 
     def content_counts_map
-      return {} if content_counts.blank?
+      # if its empty, calculate it on demand
+      update_content_counts! if content_counts.blank?
       counts = Hash[content_counts.map { |key, value| ["#{key}_count", value] }]
       counts.merge("module_stream_count" => counts["modulemd_count"],
                    "package_count" => counts["rpm_count"],

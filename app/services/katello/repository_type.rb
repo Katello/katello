@@ -33,7 +33,7 @@ module Katello
     end
 
     def content_types_to_index
-      if SmartProxy.pulp_primary.pulp3_repository_type_support?(self)
+      if SmartProxy.pulp_primary&.pulp3_repository_type_support?(self)
         # type.index being false supersedes type.index_on_pulp3 being true
         @content_types.select { |type| type.index && type.index_on_pulp3 }
       else
