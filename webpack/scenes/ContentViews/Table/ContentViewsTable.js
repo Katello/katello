@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-
+import { Button } from '@patternfly/react-core';
 import TableWrapper from '../../../components/Table/TableWrapper';
 import tableDataGenerator from './tableDataGenerator';
 import actionResolver from './actionResolver';
 import getContentViews from '../ContentViewsActions';
+import CreateContentViewModal from '../Create/CreateContentViewModal';
 
 const ContentViewTable = ({ response, status, error }) => {
   const [table, setTable] = useState({ rows: [], columns: [] });
@@ -14,6 +15,10 @@ const ContentViewTable = ({ response, status, error }) => {
   const [searchQuery, updateSearchQuery] = useState('');
   const { results, ...metadata } = response;
   const loadingResponse = status === STATUS.PENDING;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  function openForm() {
+    setIsModalOpen(true);
+  }
 
   useEffect(
     () => {
@@ -99,7 +104,14 @@ const ContentViewTable = ({ response, status, error }) => {
       canSelectAll={false}
       cells={columns}
       autocompleteEndpoint="/content_views/auto_complete_search"
-    />
+    >
+      <React.Fragment>
+        <Button onClick={openForm} variant="primary" aria-label="create_content_view">
+          Create content view
+        </Button>
+        <CreateContentViewModal show={isModalOpen} setIsOpen={setIsModalOpen} aria-label="create_content_view_modal" />
+      </React.Fragment>
+    </TableWrapper>
   );
 };
 

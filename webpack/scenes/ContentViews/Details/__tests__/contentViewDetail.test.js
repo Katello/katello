@@ -99,6 +99,10 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
   fireEvent.click(getByLabelText(checkboxLabel));
   await patientlyWaitFor(() => expect(getByLabelText(checkboxLabel).checked).toBeTruthy());
 
+  const disabledImportLabel = /import_only_switch/;
+  expect(getByLabelText(disabledImportLabel)).toBeInTheDocument();
+  expect(getByLabelText(disabledImportLabel)).toHaveAttribute('disabled');
+
   assertNockRequest(getscope);
   assertNockRequest(updatescope);
   assertNockRequest(afterUpdateScope, done);
