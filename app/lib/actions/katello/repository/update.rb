@@ -9,6 +9,10 @@ module Actions
         def plan(root, repo_params)
           repository = root.library_instance
           action_subject root.library_instance
+          action_params = {
+            repository_id: root.library_instance.id,
+            cp_consumers: []
+          }
 
           repo_params[:url] = nil if repo_params[:url] == ''
           update_cv_cert_protected = repo_params.key?(:unprotected) && (repo_params[:unprotected] != repository.unprotected)
@@ -47,17 +51,14 @@ module Actions
             if root.previous_changes.key?('os_versions')
               # If Restrict to OS Version is changing _from_ or _to_ 'rhel-6'...
               if root.previous_changes['os_versions'].any? { |ch| ch.include?('rhel-6') }
-                # ...force regeneration of entitlement certs on RHEL 6.8 and older
+                # ...force regeneration of entitlement certs on RHEL 6.8 and older (see run method)
                 Rails.logger.info("Looking for RHEL 6.8 and older clients")
                 cp_consumers = ::Katello::Host::ContentFacet
                   .joins(host: :operatingsystem)
                   .where("operatingsystems.major = '6' AND operatingsystems.minor < '9' AND operatingsystems.name = 'RedHat'")
                   .map(&:uuid)
-                # TODO: make this an action
-                Rails.logger.info("Marking entitlement certs dirty for #{pluralize(cp_consumers.length, 'client')}")
-                cp_consumers.each do |uuid|
-                  ::Katello::Resources::Candlepin::Entitlement.regenerate_entitlement_certificates_for_consumer(uuid, true)
-                end
+                action_params[:cp_consumers] = cp_consumers
+                action_params[:org_label] = root.organization.label
               end
             end
 
@@ -68,18 +69,25 @@ module Actions
                                 ::Actions::Pulp3::Orchestration::Repository::Update],
                                repository,
                                SmartProxy.pulp_primary)
-              plan_self(:repository_id => root.library_instance.id)
               if update_cv_cert_protected
                 plan_optional_pulp_action([::Actions::Pulp3::Orchestration::Repository::TriggerUpdateRepoCertGuard], repository, ::SmartProxy.pulp_primary)
               end
             end
           end
+          plan_self(action_params)
         end
 
         def run
           repository = ::Katello::Repository.find(input[:repository_id])
           ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository)
           repository.clear_smart_proxy_sync_histories
+          if input[:cp_consumers].present?
+            ForemanTasks.async_task(
+              ::Actions::Candlepin::Consumer::RegenerateEntitlementCertificates,
+              input[:cp_consumers],
+              input[:org_label]
+            )
+          end
         end
 
         private

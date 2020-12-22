@@ -110,6 +110,11 @@ module Katello
             JSON.parse(response).with_indifferent_access
           end
 
+          def regenerate_entitlement_certificates(uuid, lazy_regen = true)
+            response = self.put(join_path(path(uuid), "certificates") + "?lazy_regen=#{lazy_regen}", nil, self.default_headers).body
+            response
+          end
+
           def export(uuid)
             # Export is a zip file
             headers = self.default_headers

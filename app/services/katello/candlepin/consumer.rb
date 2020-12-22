@@ -36,6 +36,10 @@ module Katello
         Resources::Candlepin::Consumer.regenerate_identity_certificates(self.uuid)
       end
 
+      def regenerate_entitlement_certificates(lazy_regen = true)
+        Resources::Candlepin::Consumer.regenerate_entitlement_certificates(self.uuid, lazy_regen)
+      end
+
       def checkin(checkin_time)
         Resources::Candlepin::Consumer.checkin(uuid, checkin_time)
       end
