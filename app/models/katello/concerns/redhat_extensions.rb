@@ -44,8 +44,8 @@ module Katello
 
       def kickstart_repos(host)
         distros = distribution_repositories(host).where(distribution_bootable: true)
-        if distros && host.content_source
-          distros.map { |distro| distro.to_hash(host.content_source) }
+        if distros && host.content_facet.content_source
+          distros.map { |distro| distro.to_hash(host.content_facet.content_source) }
         else
           []
         end
