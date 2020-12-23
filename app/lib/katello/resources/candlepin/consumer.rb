@@ -111,7 +111,7 @@ module Katello
           end
 
           def regenerate_entitlement_certificates(uuid, lazy_regen = true)
-            response = self.put(join_path(path(uuid), "certificates") + "?lazy_regen=#{lazy_regen}", nil, self.default_headers).body
+            response = self.put(join_path(path(uuid), "certificates") + "?lazy_regen=#{lazy_regen}", nil, self.default_headers).code
             response
           end
 
