@@ -107,3 +107,22 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
   assertNockRequest(updatescope);
   assertNockRequest(afterUpdateScope, done);
 });
+
+test('Can link to view tasks', async () => {
+  const scope = nockInstance
+    .get(cvDetailsPath)
+    .query(true)
+    .reply(200, cvDetailData);
+
+  const { getByText } = renderWithRedux(
+    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    expect(getByText(/view tasks/i).closest('a'))
+      .toHaveAttribute('href', '/foreman_tasks/tasks?search=resource_type%3D+Katello%3A%3AContentView+resource_id%3D1');
+  });
+
+  assertNockRequest(scope);
+});

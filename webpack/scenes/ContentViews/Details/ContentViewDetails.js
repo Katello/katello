@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Grid, GridItem, TextContent, Text, TextVariants } from '@patternfly/react-core';
+import { Grid, GridItem, TextContent, Text, TextVariants, Button } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 
@@ -37,20 +38,28 @@ const ContentViewDetails = ({ match }) => {
       title: __('History'),
       content: <React.Fragment>History</React.Fragment>,
     },
-    {
-      title: __('Tasks'),
-      content: <React.Fragment>Tasks</React.Fragment>,
-    },
   ];
 
   return (
     <Grid className="grid-with-margin">
       <DetailsContainer cvId={cvId}>
         <React.Fragment>
-          <GridItem span={12}>
+          <GridItem span={8}>
             <TextContent>
               <Text component={TextVariants.h1}>{`${name} content view`}</Text>
             </TextContent>
+          </GridItem>
+          <GridItem span={4} style={{ textAlign: 'right' }}>
+            <Button
+              component="a"
+              aria-label="view tasks button"
+              href={`/foreman_tasks/tasks?search=resource_type%3D+Katello%3A%3AContentView+resource_id%3D${cvId}`}
+              target="_blank"
+              variant="secondary"
+            >
+              {'View tasks '}
+              <ExternalLinkAltIcon />
+            </Button>
           </GridItem>
           <GridItem span={12}>
             <TabbedView tabs={tabs} />
