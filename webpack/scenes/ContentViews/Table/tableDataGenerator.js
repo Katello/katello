@@ -41,7 +41,6 @@ const buildRow = (contentView, openColumn) => {
     },
   ];
   if (openColumn) row[openColumn].props.isOpen = true;
-
   return row;
 };
 
@@ -100,7 +99,7 @@ const buildRowsAndMapping = (contentViews, newRowMapping) => {
   const rows = [];
 
   contentViews.forEach((contentView) => {
-    const { id } = contentView;
+    const { id, name } = contentView;
     const rowIndex = rows.length;
     const needsUpdate = !Object.keys(updatedRowMap).find(i => updatedRowMap[i].id === id) ||
                         !Object.keys(updatedRowMap[rowIndex] || {}).includes('expandedColumn');
@@ -109,7 +108,9 @@ const buildRowsAndMapping = (contentViews, newRowMapping) => {
     const cells = buildRow(contentView, openColumn);
     const isOpen = !!openColumn;
 
-    rows.push({ isOpen, cells });
+    rows.push({
+      cvId: id, cvName: name, isOpen, cells,
+    });
     rows.push(...buildDetailDropdowns(id, rowIndex, openColumn));
   });
 

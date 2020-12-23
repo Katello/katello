@@ -1,7 +1,7 @@
 import { translate as __ } from 'foremanReact/common/I18n';
 import { API_OPERATIONS, get, post } from 'foremanReact/redux/API';
 import api, { orgId } from '../../services/api';
-import CONTENT_VIEWS_KEY, { CREATE_CONTENT_VIEW_KEY } from './ContentViewsConstants';
+import CONTENT_VIEWS_KEY, { CREATE_CONTENT_VIEW_KEY, COPY_CONTENT_VIEW_KEY } from './ContentViewsConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
 
 export const createContentViewsParams = extraParams => ({
@@ -36,4 +36,12 @@ export const createContentView = params => post({
   errorToast: error => cvErrorToast(error),
 });
 
+export const copyContentView = params => post({
+  type: API_OPERATIONS.POST,
+  key: COPY_CONTENT_VIEW_KEY,
+  url: api.getApiUrl(`/content_views/${params.id}/copy`),
+  params,
+  successToast: response => cvSuccessToast(response),
+  errorToast: error => cvErrorToast(error),
+});
 export default getContentViews;
