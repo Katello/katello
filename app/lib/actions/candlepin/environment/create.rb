@@ -13,7 +13,7 @@ module Actions
           ::Katello::Resources::Candlepin::Environment.create(input['organization_label'],
                                                    input['cp_id'],
                                                    input['name'],
-                                                   input['description'])
+                                                   input['description'].try(:truncate, 255))
         end
       end
     end
