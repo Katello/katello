@@ -9,32 +9,37 @@ module Katello
       data_string = data.map { |k, v| "#{k}=#{v}" }.join(' ')
 
       logger.send(level, "#{message} #{data_string}")
-      "#{message} #{data_string}"
     end
 
     class Timer
       def initialize(key = "default")
         @key = key
         @start_time = Time.now
-        @@timers ||= {}
-        @@timers[key] = self
+        Thread.current[:timers] ||= {}
+        Thread.current[:timers][key] = self
       end
 
       def start
+        Rails.logger.info "Timer #{@key} already started; resetting start time" if @start_time
         Rails.logger.info "Timer #{@key} starting at #{Time.now}"
         @start_time = Time.now
         self
       end
 
       def stop
+        fail ::StandardError, "Timer #{@key} is not started" unless @start_time
         duration = (Time.now - @start_time).truncate(2)
         @start_time = nil
         Rails.logger.info "Timer #{@key} stopping at #{Time.now}: #{duration} sec"
-        "Timer #{@key} stopping at #{Time.now}: #{duration} sec"
       end
 
       def self.find_by_key(key)
-        @@timers[key]
+        if Thread.current&.[](:timers)&.[](key)
+          Thread.current[:timers][key]
+        else
+          Rails.logger.warn "Timer #{key} not found on current thread; creating a new timer"
+          self.new(key)
+        end
       end
     end
   end
