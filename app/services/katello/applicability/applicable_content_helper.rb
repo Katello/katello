@@ -78,7 +78,8 @@ module Katello
           joins("INNER JOIN katello_installed_packages ON
             katello_rpms.name = katello_installed_packages.name AND
             katello_rpms.arch = katello_installed_packages.arch AND
-            katello_rpms.evr > katello_installed_packages.evr").
+            katello_rpms.evr > katello_installed_packages.evr AND
+            katello_installed_packages.id in (#{newest_distinct_installed_packages_query})").
           joins("LEFT JOIN katello_module_stream_rpms ON
             katello_rpms.id = katello_module_stream_rpms.rpm_id").
           joins("INNER JOIN katello_host_installed_packages ON
@@ -90,6 +91,16 @@ module Katello
           where("katello_module_stream_rpms.module_stream_id is null or
             katello_module_stream_rpms.module_stream_id in (:enabled_module_streams)",
             :enabled_module_streams => enabled_module_stream_ids).pluck(:id).uniq
+      end
+
+      def newest_distinct_installed_packages_query
+        "SELECT DISTINCT ON (katello_installed_packages.name) katello_installed_packages.id " \
+          "FROM katello_installed_packages INNER JOIN " \
+          "katello_host_installed_packages ON " \
+          "katello_installed_packages.id = " \
+          "katello_host_installed_packages.installed_package_id " \
+          "WHERE katello_host_installed_packages.host_id = " \
+          "#{content_facet.host.id} ORDER BY katello_installed_packages.name, katello_installed_packages.evr DESC"
       end
 
       def applicable_differences
