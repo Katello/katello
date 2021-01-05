@@ -25,7 +25,7 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     let(:library_repo) do
-      katello_repositories(:rhel_7_x86_64)
+      katello_repositories(:fedora_17_x86_64)
     end
 
     it 'plans' do
@@ -33,7 +33,7 @@ module ::Actions::Katello::ContentViewVersion
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
       ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
       stub_remote_user
-      @rpm = katello_rpms(:one)
+      @rpm = library_repo.rpms.first
 
       new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
       repository_mapping = {}
@@ -50,6 +50,29 @@ module ::Actions::Katello::ContentViewVersion
                                 library_repo, new_repo,
                                 Katello::Rpm.with_identifiers(@rpm.id),
                                 :incremental_update => true)
+    end
+
+    it 'does not plan CopyUnits if rpm not there in repo.' do
+      SmartProxy.stubs(:pulp_primary).returns(SmartProxy.find_by(name: "Unused Proxy"))
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(false)
+      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.stubs(:pulp3_dest_base_version).returns(1)
+      stub_remote_user
+      new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
+      repository_mapping = {}
+      repository_mapping[[library_repo]] = new_repo
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
+      ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      action.stubs(:task).returns(task)
+      action.expects(:action_subject).with(content_view_version.content_view)
+
+      # create a nonexistent rpm, and ask it to be incrementally copied over.
+      # Copy Units should not happen in that case since this rpm is not any of the repos in the cvv.
+      rpm = ::Katello::Rpm.create!(pulp_id: "I_dont_exist_really_in_a_repo")
+      plan_action(action, content_view_version, [library], :content => {:package_ids => [rpm.id]})
+
+      refute_action_planed action, ::Actions::Pulp::Repository::CopyUnits
     end
 
     it 'removes the correct puppet content during inc update' do
@@ -104,6 +127,10 @@ module ::Actions::Katello::ContentViewVersion
 
       let(:new_repo) do
         ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
+      end
+
+      let(:library_repo) do
+        katello_repositories(:rhel_7_x86_64)
       end
 
       def pulp3_cvv_setup
