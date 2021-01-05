@@ -1,3 +1,27 @@
+# 3.18.1 (2021-01-05)
+
+## Bug Fixes
+
+### Inter Server Sync
+ * hammer content-import -: do not  check for 'pulp' things  ([#31504](https://projects.theforeman.org/issues/31504), [13d0dd04](https://github.com/Katello/katello.git/commit/13d0dd0452743a80ebe01d453427788a916c7bbd))
+ * hammer content-export should take a --lifecycle-environment ([#31487](https://projects.theforeman.org/issues/31487), [54b62a91](https://github.com/Katello/hammer-cli-katello.git/commit/54b62a91fb8297b5056d449ed1951934f6a9ec0b))
+
+### Subscriptions
+ * When in Simple Content Access mode, hypervisors with no subscription attached show as 'unsubscribed hypervisor' in their Subscription sub-status ([#31479](https://projects.theforeman.org/issues/31479), [aec2e8c0](https://github.com/Katello/katello.git/commit/aec2e8c06b44a94459cbe4b1e74562ae1a5a7033))
+
+### API
+ * API doc is incorrect for /api/hosts/bulk/available_incremental_updates ([#31470](https://projects.theforeman.org/issues/31470), [6587a9d8](https://github.com/Katello/katello.git/commit/6587a9d89e2af779f5aff01eff7fe6249c73f6e7))
+
+### Foreman Proxy Content
+ * smart proxy sync fails with puppet content, leading to paused tasks. ([#31469](https://projects.theforeman.org/issues/31469), [82b9562c](https://github.com/Katello/katello.git/commit/82b9562c650e264200580e5f5beb3e8993121539))
+
+### Repositories
+ * Web UI shows duplicate rpms when user uploads the same rpm that signed with different checksum ([#31455](https://projects.theforeman.org/issues/31455), [ba98fcfe](https://github.com/Katello/katello.git/commit/ba98fcfe9e6a7c1ae2ae8d290cdbd86bb2738660))
+
+### Content Views
+ * When deleting a content view version, all hosts have been listed as affected even hosts are not using it ([#31445](https://projects.theforeman.org/issues/31445), [54812395](https://github.com/Katello/katello.git/commit/54812395cc997e140e8f9f22a64fa43fa5162f2d))
+ * Incremental update should depsolve only on repos containing units ([#31427](https://projects.theforeman.org/issues/31427), [44e6d911](https://github.com/Katello/katello.git/commit/44e6d9119d55a98469586d285c7ace69d2cd8763))
+
 # 3.18.0 (2020-12-09)
 
 ## Features
