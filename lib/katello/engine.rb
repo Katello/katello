@@ -200,6 +200,7 @@ module Katello
       require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
       require "#{Katello::Engine.root}/lib/proxy_api/pulp"
       require "#{Katello::Engine.root}/lib/proxy_api/pulp_node"
+      require "#{Katello::Engine.root}/lib/proxy_api/container_gateway"
 
       # We need to explicitly load this files because Foreman has
       # similar strucuture and if the Foreman files are loaded first,
