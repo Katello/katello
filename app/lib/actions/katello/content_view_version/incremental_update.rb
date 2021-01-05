@@ -356,20 +356,36 @@ module Actions
         end
 
         def copy_yum_content(new_repo, dep_solve, package_ids, errata_ids)
+          return [] unless new_repo.content_type == ::Katello::Repository::YUM_TYPE
+
           copy_outputs = []
-          if new_repo.content_type == ::Katello::Repository::YUM_TYPE
-            unless errata_ids.blank?
+
+          unless errata_ids.blank?
+            content_present_in_this_repo = new_repo
+                                            .library_instance
+                                            .errata
+                                            .with_identifiers(errata_ids)
+                                            .exists?
+            if content_present_in_this_repo
               copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
                                           ::Katello::Erratum.with_identifiers(errata_ids),
                                           incremental_update: dep_solve).output
             end
+          end
 
-            unless package_ids.blank?
+          unless package_ids.blank?
+            content_present_in_this_repo = new_repo
+                                            .library_instance
+                                            .rpms
+                                            .with_identifiers(package_ids)
+                                            .exists?
+            if content_present_in_this_repo
               copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
                                           ::Katello::Rpm.with_identifiers(package_ids),
                                           incremental_update: dep_solve).output
             end
           end
+
           copy_outputs
         end
 
