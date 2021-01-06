@@ -22,31 +22,13 @@ module Katello
     end
 
     def test_host_redhat_subscriptions_consumed
-      redhat_product = katello_products(:redhat)
-      fedora_product = katello_products(:fedora)
-
-      redhat_pool = FactoryBot.create(:katello_pool, cp_id: '12345', products: [redhat_product])
-      custom_pool = FactoryBot.create(:katello_pool, cp_id: '6789', products: [fedora_product])
-
-      @host.subscription_facet.pools << redhat_pool
-      @host.subscription_facet.pools << custom_pool
-
-      entitlements = [
-        {
-          'pool' => {
-            'id' => redhat_pool.cp_id
-          },
-          quantity: 15
-        },
-        {
-          'pool' => {
-            'id' => custom_pool.cp_id
-          },
-          quantity: 4
-        }
+      subscriptions = [
+        stub(redhat?: false, quantity_consumed: 4),
+        stub(redhat?: true, quantity_consumed: 15)
       ]
 
-      ::Katello::Candlepin::Consumer.any_instance.expects(:entitlements).returns(entitlements)
+      ::Katello::Candlepin::Consumer.any_instance.expects(:entitlements).returns([])
+      ::Katello::HostSubscriptionsPresenter.any_instance.expects(:subscriptions).returns(subscriptions)
 
       source = ::Foreman::Renderer::Source::String.new(
         name: 'Parameter',

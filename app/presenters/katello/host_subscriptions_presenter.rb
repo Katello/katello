@@ -1,13 +1,15 @@
 module Katello
   class HostSubscriptionsPresenter
-    def initialize(host)
-      @pools = host.subscription_facet.pools.group_by(&:cp_id)
-      @entitlements = host.subscription_facet.candlepin_consumer.entitlements if @pools.any?
-      @entitlements ||= []
-    end
+    attr_reader :subscriptions
 
-    def subscriptions
-      @entitlements.map do |e|
+    def initialize(host)
+      pools = host.subscription_facet&.pools || []
+      @pools = pools.group_by(&:cp_id)
+
+      entitlements = host.subscription_facet.candlepin_consumer.entitlements if @pools.any?
+      entitlements ||= []
+
+      @subscriptions = entitlements.map do |e|
         HostSubscriptionPresenter.new(pool: pool_for_entitlement(e), entitlement: e)
       end
     end
