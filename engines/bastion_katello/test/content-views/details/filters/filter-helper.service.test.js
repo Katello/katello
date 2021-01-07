@@ -16,6 +16,7 @@ describe('Service: FilterHelper', function() {
         expect(FilterHelper.contentType('erratum')).toBe('Errata');
         expect(FilterHelper.contentType('package_group')).toBe('Package Groups');
         expect(FilterHelper.contentType('docker')).toBe('Container Image Tags');
+        expect(FilterHelper.contentType('deb')).toBe('DEB');
     });
 
 });

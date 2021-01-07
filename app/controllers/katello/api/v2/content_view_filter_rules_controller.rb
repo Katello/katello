@@ -27,7 +27,7 @@ module Katello
     api :POST, "/content_view_filters/:content_view_filter_id/rules",
         N_("Create a filter rule. The parameters included should be based upon the filter type.")
     param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
-    param :name, Array, of: [String], :desc => N_("package, package group, or docker tag names")
+    param :name, Array, of: [String], :desc => N_("deb, package, package group, or docker tag names")
     param :uuid, String, :desc => N_("package group: uuid")
     param :version, String, :desc => N_("package: version")
     param :architecture, String, :desc => N_("package: architecture")

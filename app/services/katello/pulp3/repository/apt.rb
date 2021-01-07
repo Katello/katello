@@ -4,9 +4,10 @@ module Katello
   module Pulp3
     class Repository
       class Apt < ::Katello::Pulp3::Repository
-        SIGNING_SERVICE_NAME = 'katello_deb_sign'.freeze
+        include Katello::Util::PulpcoreContentFilters
 
         UNIT_LIMIT = 10_000
+        SIGNING_SERVICE_NAME = 'katello_deb_sign'.freeze
 
         def remote_options
           deb_remote_options = {
@@ -96,6 +97,7 @@ module Katello
               dest_repo = ::Katello::Repository.find(dest_repo_id_map[:dest_repo])
               dest_repo_href = ::Katello::Pulp3::Repository::Apt.new(dest_repo, SmartProxy.pulp_primary).repository_reference.repository_href
               content_unit_hrefs = dest_repo_id_map[:content_unit_hrefs]
+              # Not needed during incremental update due to dest_base_version
               source_repo_ids.each do |source_repo_id|
                 source_repo_version = ::Katello::Repository.find(source_repo_id).version_href
                 config = { source_repo_version: source_repo_version, dest_repo: dest_repo_href, content: content_unit_hrefs }
@@ -209,9 +211,70 @@ module Katello
           api.repositories_api.modify(repository_reference.repository_href, data)
         end
 
-        def copy_content_for_source
-          # TODO
-          fail NotImplementedError
+        def add_filter_content(source_repo_ids, filters, filter_list_map)
+          filters.each do |filter|
+            if filter.inclusion
+              source_repo_ids.each do |repo_id|
+                filter_list_map[:whitelist_ids] += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+              end
+            else
+              source_repo_ids.each do |repo_id|
+                filter_list_map[:blacklist_ids] += filter.content_unit_pulp_ids(::Katello::Repository.find(repo_id))
+              end
+            end
+          end
+          filter_list_map
+        end
+
+        def add_debs(source_repo_ids, filters, filter_list_map)
+          if (filter_list_map[:whitelist_ids].empty? && filters.select { |filter| filter.inclusion }.empty?)
+            filter_list_map[:whitelist_ids] += source_repo_ids.collect do |source_repo_id|
+              source_repo = ::Katello::Repository.find(source_repo_id)
+              source_repo.debs.pluck(:pulp_id).sort
+            end
+          end
+          filter_list_map
+        end
+
+        def copy_content_from_mapping(repo_id_map, options = {})
+          repo_id_map.each do |source_repo_ids, dest_repo_map|
+            filters = ContentViewDebFilter.where(:id => dest_repo_map[:filter_ids])
+
+            filter_list_map = { whitelist_ids: [], blacklist_ids: [] }
+            filter_list_map = add_filter_content(source_repo_ids, filters, filter_list_map)
+            filter_list_map = add_debs(source_repo_ids, filters, filter_list_map)
+
+            whitelist_ids = filter_list_map[:whitelist_ids].flatten&.uniq
+            blacklist_ids = filter_list_map[:blacklist_ids].flatten&.uniq
+            content_unit_hrefs = whitelist_ids - blacklist_ids
+
+            dest_repo_map[:content_unit_hrefs] = content_unit_hrefs.uniq.sort
+          end
+
+          dependency_solving = options[:solve_dependencies] || false
+
+          multi_copy_units(repo_id_map, dependency_solving)
+        end
+
+        def copy_content_for_source(source_repository, options = {})
+          # copy_units_by_href(source_repository.debs.pluck(:pulp_id))
+          filters = ContentViewDebFilter.where(:id => options[:filter_ids])
+
+          whitelist_ids = []
+          blacklist_ids = []
+          filters.each do |filter|
+            if filter.inclusion
+              whitelist_ids += filter.content_unit_pulp_ids(source_repository)
+            else
+              blacklist_ids += filter.content_unit_pulp_ids(source_repository)
+            end
+          end
+
+          whitelist_ids = source_repository.debs.pluck(:pulp_id).sort if (whitelist_ids.empty? && filters.select { |filter| filter.inclusion }.empty?)
+
+          content_unit_hrefs = whitelist_ids - blacklist_ids
+          dependency_solving = options[:solve_dependencies] || false
+          copy_units(source_repository, content_unit_hrefs.uniq, dependency_solving)
         end
 
         def regenerate_applicability

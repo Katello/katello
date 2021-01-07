@@ -86,18 +86,18 @@
                     library: true
                 }
             },
-            'apt': {
+            'deb': {
                 type: Repository,
                 repositoryType: 'deb',
                 params: {
                     'content_type': 'deb',
                     'content_view_version_id': $scope.$stateParams.versionId,
-                    library: true
+                    archived: true
                 }
             },
-            'deb': {
+            'debs': {
                 type: Deb,
-                repositoryType: 'deb'
+                repositoryType: 'apt'
             }
         };
 

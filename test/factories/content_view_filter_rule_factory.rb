@@ -27,4 +27,10 @@ FactoryBot.define do
           :class => Katello::ContentViewModuleStreamFilterRule do
     association :filter, :factory => :katello_content_view_module_stream_filter
   end
+
+  factory :katello_content_view_deb_filter_rule,
+          :class => Katello::ContentViewDebFilterRule do
+    sequence(:name) { |n| "deb #{n}" }
+    association :filter, :factory => :katello_content_view_deb_filter
+  end
 end

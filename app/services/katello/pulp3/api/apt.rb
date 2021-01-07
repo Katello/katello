@@ -36,6 +36,10 @@ module Katello
           PulpDebClient::DebVerbatimPublication
         end
 
+        def self.add_remove_content_class
+          PulpDebClient::RepositoryAddRemoveContent
+        end
+
         def api_client
           api_client_class(PulpDebClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpDebClient::Configuration)))
         end

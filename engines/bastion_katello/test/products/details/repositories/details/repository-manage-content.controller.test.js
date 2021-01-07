@@ -45,7 +45,8 @@ describe('Controller: RepositoryManageContentController', function() {
             DockerManifestList: DockerManifestList,
             OstreeBranch: OstreeBranch,
             ModuleStream: ModuleStream,
-            AnsibleCollection: AnsibleCollection
+            AnsibleCollection: AnsibleCollection,
+            Deb: Deb
         });
     }));
 
@@ -87,6 +88,11 @@ describe('Controller: RepositoryManageContentController', function() {
         expect(manifest.unselectable).not.toBe(true);
 
         $scope.currentState = "packages";
+        manifest = {manifest_lists: [1]};
+        $scope.updateSelectable(manifest);
+        expect(manifest.unselectable).not.toBe(true);
+
+        $scope.currentState = "debs";
         manifest = {manifest_lists: [1]};
         $scope.updateSelectable(manifest);
         expect(manifest.unselectable).not.toBe(true);
