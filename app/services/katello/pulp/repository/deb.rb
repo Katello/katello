@@ -52,19 +52,11 @@ module Katello
           smart_proxy.pulp_api.extensions.repository.regenerate_applicability_by_ids([repo.pulp_id], true)
         end
 
-        def copy_repo_contents(destination_repo, _options = {})
-          [
-            @smart_proxy.pulp_api.extensions.deb.copy(@repo.pulp_id, destination_repo.pulp_id, fields: ::Katello::Pulp::Deb::PULP_SELECT_FIELDS),
-            @smart_proxy.pulp_api.extensions.deb_release.copy(@repo.pulp_id, destination_repo.pulp_id, {}),
-            @smart_proxy.pulp_api.extensions.deb_component.copy(@repo.pulp_id, destination_repo.pulp_id, {})
-          ]
-        end
-
         def copy_contents(destination_repo, options = {})
           if options[:filters]
             deb_copy_clauses, deb_remove_clauses = generate_copy_clauses(options[:filters])
           end
-          tasks = []
+
           if deb_copy_clauses
             tasks << smart_proxy.pulp_api.extensions.deb.copy(repo.pulp_id, destination_repo.pulp_id,
                       deb_copy_clauses)
@@ -81,6 +73,9 @@ module Katello
         end
 
         def generate_copy_clauses(filters)
+          copy_clauses = {}
+          remove_clauses = nil
+
           if filters
             clause_gen = ::Katello::Util::DebClauseGenerator.new(repo, filters)
             clause_gen.generate
@@ -92,6 +87,7 @@ module Katello
             remove_clauses = {filters: {unit: remove}} if remove
           end
 
+          copy_clauses&.merge!(fields: ::Katello::Pulp::Deb::PULP_SELECT_FIELDS)
           [copy_clauses, remove_clauses]
         end
       end
