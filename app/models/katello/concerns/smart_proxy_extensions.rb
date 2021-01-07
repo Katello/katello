@@ -179,7 +179,9 @@ module Katello
       end
 
       def fix_pulp3_capabilities(type)
-        if missing_pulp3_capabilities? && !pulp2_preferred_for_type?(type)
+        repository_type_obj = type.is_a?(String) ||  type.is_a?(Symbol) ? Katello::RepositoryTypeManager.repository_types[type] : type
+
+        if missing_pulp3_capabilities? && repository_type_obj.pulp3_plugin && !pulp2_preferred_for_type?(repository_type_obj.id)
           self.refresh
           if self.capabilities(::SmartProxy::PULP3_FEATURE).empty?
             fail Katello::Errors::PulpcoreMissingCapabilities
