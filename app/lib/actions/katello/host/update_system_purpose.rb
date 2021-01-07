@@ -14,7 +14,7 @@ module Actions
             host.subscription_facet.purpose_addons = purpose_addon_objects
           end
 
-          host.subscription_facet.save!
+          host.save!
           plan_self(:hostname => host.name)
         end
 
