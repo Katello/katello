@@ -3,13 +3,31 @@ module Katello
     module RegistrationCommandsControllerExtensions
       extend ActiveSupport::Concern
 
-      included do
-        before_action :format_activation_key, only: [:create]
+      def plugin_data
+        aks = ActivationKey.authorized(:view_activation_keys)
+                           .where(organization_id: registration_params[:organization_id])
+                           .order(:name)
+                           .map { |ak| { name: ak.name, lce: ak.environment&.name } }
+
+        lces = KTEnvironment.readable
+                            .where(organization_id: registration_params[:organization_id])
+                            .order(:name)
+
+        data = { activationKeys: aks, lifeCycleEnvironments: lces }
+
+        if registration_params[:hostgroup_id].present?
+          host_group = ::Hostgroup.authorized(:view_hostgroups).find(registration_params[:hostgroup_id])
+          data[:hostGroupActivationKeys] = host_group.params['kt_activation_keys']
+          data[:hostGroupEnvironment] = host_group.lifecycle_environment&.name
+        end
+
+        super.merge(data)
       end
 
-      def format_activation_key
-        return if registration_params[:activation_key].blank?
-        registration_params[:activation_key] = registration_params[:activation_key].split(',').map(&:strip).reject(&:blank?).join(',')
+      def registration_args
+        args = super
+        args['activation_keys'] = args['activation_keys'].join(',') if args['activation_keys']
+        args
       end
     end
   end

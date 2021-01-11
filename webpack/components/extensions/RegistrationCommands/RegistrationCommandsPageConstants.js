@@ -1,0 +1,2 @@
+export default 'REGISTRATION_COMMANDS_DATA';
+

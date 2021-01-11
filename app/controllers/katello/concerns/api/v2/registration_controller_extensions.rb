@@ -16,6 +16,14 @@ module Katello
           super
         end
       end
+
+      def host_setup_extension
+        if params['host']['lifecycle_environment_id']
+          @host.update!(lifecycle_environment: KTEnvironment.readable.find(params['host']['lifecycle_environment_id']))
+        end
+
+        super
+      end
     end
   end
 end
