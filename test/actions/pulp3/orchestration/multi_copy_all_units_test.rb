@@ -448,6 +448,7 @@ module ::Actions::Pulp3
     end
 
     def test_module_streams_copied_with_include_modular_filter_rules
+      skip "skip until https://pulp.plan.io/issues/8114 is in Pulpcore 3.9"
       filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
       duck = @repo.module_streams.where(:name => "duck").first
       FactoryBot.create(:katello_content_view_module_stream_filter_rule,
@@ -466,6 +467,7 @@ module ::Actions::Pulp3
     end
 
     def test_module_streams_copied_with_modular_exclude_filter_rules
+      skip "skip until https://pulp.plan.io/issues/8114 is in Pulpcore 3.9"
       filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => false)
       duck = @repo.module_streams.where(:name => "duck").first
       FactoryBot.create(:katello_content_view_module_stream_filter_rule,
