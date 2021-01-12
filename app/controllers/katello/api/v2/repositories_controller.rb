@@ -61,6 +61,7 @@ module Katello
       param :ansible_collection_requirements, String, :desc => N_("Contents of requirement yaml file to sync from URL")
       param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for HTTP proxy for content sync")
       param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
+      param :arch, String, :desc => N_("Architecture of content in the repository")
     end
 
     def_param_group :repo_create do
