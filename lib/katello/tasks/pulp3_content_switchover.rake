@@ -1,3 +1,5 @@
+load "#{Katello::Engine.root}/lib/katello/tasks/common.rake"
+
 require File.expand_path("../engine", File.dirname(__FILE__))
 require "#{Katello::Engine.root}/app/services/katello/pulp3/migration_switchover"
 
