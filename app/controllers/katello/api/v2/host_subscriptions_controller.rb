@@ -42,9 +42,8 @@ module Katello
     def index_response(reload_host = false)
       # Host needs to be reloaded because of lazy accessor
       @host.reload if reload_host
-      entitlements = @host.subscription_facet.candlepin_consumer.entitlements
-      subscriptions = entitlements.map { |entitlement| ::Katello::HostSubscriptionPresenter.new(entitlement) }
-      full_result_response(subscriptions)
+      presenter = ::Katello::HostSubscriptionsPresenter.new(@host)
+      full_result_response(presenter.subscriptions)
     end
 
     api :PUT, "/hosts/:host_id/subscriptions/auto_attach", N_("Trigger an auto-attach of subscriptions")

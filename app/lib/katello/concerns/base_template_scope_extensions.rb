@@ -19,6 +19,11 @@ module Katello
         host.subscriptions.redhat.pluck(:name)
       end
 
+      def host_redhat_subscriptions_consumed(host)
+        presenter = ::Katello::HostSubscriptionsPresenter.new(host)
+        presenter.subscriptions.select(&:redhat?).sum(&:quantity_consumed)
+      end
+
       def host_content_facet(host)
         host.content_facet
       end
