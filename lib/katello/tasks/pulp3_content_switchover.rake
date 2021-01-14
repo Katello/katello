@@ -1,11 +1,9 @@
-load "#{Katello::Engine.root}/lib/katello/tasks/common.rake"
-
 require File.expand_path("../engine", File.dirname(__FILE__))
 require "#{Katello::Engine.root}/app/services/katello/pulp3/migration_switchover"
 
 namespace :katello do
   desc "Runs a Pulp 3 migration of pulp3 hrefs to pulp ids for supported content types."
-  task :pulp3_content_switchover => [:environment, :disable_dynflow] do
+  task :pulp3_content_switchover => ["dynflow:client"] do
     begin
       User.current = User.anonymous_admin
 

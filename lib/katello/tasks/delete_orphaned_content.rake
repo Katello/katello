@@ -1,9 +1,7 @@
-load "#{Katello::Engine.root}/lib/katello/tasks/common.rake"
-
 namespace :katello do
   desc "Remove orphaned and unneeded content/repos from a smart proxy.\
         Run with SMART_PROXY_ID=1 to run for a single smart proxy."
-  task :delete_orphaned_content => ["environment", "disable_dynflow"] do
+  task :delete_orphaned_content => ["dynflow:client"] do
     User.current = User.anonymous_admin
     smart_proxy_id = ENV['SMART_PROXY_ID']
     if smart_proxy_id

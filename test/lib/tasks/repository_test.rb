@@ -9,10 +9,12 @@ module Katello
       Rake.application.rake_require 'katello/tasks/repository'
       Rake.application.rake_require 'katello/tasks/reimport'
 
+      Rake::Task.define_task('dynflow:client')
+
       Rake::Task['katello:regenerate_repo_metadata'].reenable
       Rake::Task['katello:refresh_pulp_repo_details'].reenable
       Rake::Task['katello:correct_repositories'].reenable
-      Rake::Task['katello:disable_dynflow'].reenable
+      Rake::Task['dynflow:client'].reenable
       Rake::Task['katello:correct_puppet_environments'].reenable
       Rake::Task['katello:check_ping'].reenable
       Rake::Task['katello:change_download_policy'].reenable
