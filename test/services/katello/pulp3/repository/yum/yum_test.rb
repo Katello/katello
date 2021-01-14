@@ -22,6 +22,19 @@ module Katello
             assert_equal "http://foo.com/bar/", service.remote_options[:url]
             assert_equal 'mytoken', service.remote_options[:sles_auth_token]
           end
+
+          def test_delete_version_zero
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            @repo.version_href = '/pulp/api/v3/repositories/rpm/rpm/22c9e84b-f49c-4c70-9b4c-49e8c041220f/versions/0/'
+            refute service.delete_version
+          end
+
+          def test_delete_version
+            PulpRpmClient::RepositoriesRpmVersionsApi.any_instance.expects(:delete).returns({})
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            @repo.version_href = '/pulp/api/v3/repositories/rpm/rpm/22c9e84b-f49c-4c70-9b4c-49e8c041220f/versions/1/'
+            assert service.delete_version
+          end
         end
       end
     end
