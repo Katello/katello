@@ -39,8 +39,7 @@ module Katello
     end
 
     def deprecate_katello_agent
-      ::Foreman::Deprecation.api_deprecation_warning("Remote actions using katello-agent are deprecated and will be removed in Katello 4.0.  " \
-                                                         "You may consider switching to Remote Execution.")
+      ::Foreman::Deprecation.api_deprecation_warning("Katello-agent is deprecated and will be removed in a future release.")
     end
 
     def full_result_response(collection)
