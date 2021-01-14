@@ -27,6 +27,7 @@ module Katello
       @task_name = 'katello:pulp3_post_migration_check'
       Rake::Task[@task_name].reenable
       Rake::Task.define_task(:environment)
+      Rake::Task.define_task('dynflow:client')
 
       ForemanTasks.stubs(:sync_task)
     end
