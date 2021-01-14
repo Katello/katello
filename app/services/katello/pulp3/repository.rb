@@ -262,8 +262,12 @@ module Katello
         create_version(:base_version => from_repository.version_href)
       end
 
+      def version_zero?
+        repo.version_href.ends_with?('/versions/0/')
+      end
+
       def delete_version
-        ignore_404_exception { api.repository_versions_api.delete(repo.version_href) }
+        ignore_404_exception { api.repository_versions_api.delete(repo.version_href) } unless version_zero?
       end
 
       def create_version(options = {})
