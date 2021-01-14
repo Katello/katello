@@ -1,9 +1,7 @@
 require File.expand_path("../engine", File.dirname(__FILE__))
-load "#{Katello::Engine.root}/lib/katello/tasks/common.rake"
-
 namespace :katello do
   desc "Runs a post Pulp3 migration check for supported content types."
-  task :pulp3_post_migration_check => [:environment, :disable_dynflow] do
+  task :pulp3_post_migration_check => ["dynflow:client"] do
     User.current = User.anonymous_admin
     repository_types = Katello::Pulp3::Migration.repository_types_for_migration
 

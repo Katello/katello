@@ -7,6 +7,7 @@ module Katello
       Rake.application.rake_require 'katello/tasks/delete_orphaned_content'
       Rake::Task['katello:delete_orphaned_content'].reenable
       Rake::Task.define_task(:environment)
+      Rake::Task.define_task('dynflow:client')
       @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @mirror = FactoryBot.create(:smart_proxy, :pulp_mirror)
     end
