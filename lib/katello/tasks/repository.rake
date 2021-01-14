@@ -1,12 +1,10 @@
-load "#{Katello::Engine.root}/lib/katello/tasks/common.rake"
-
 namespace :katello do
   def commit?
     ENV['COMMIT'] == 'true' || ENV['FOREMAN_UPGRADE'] == '1'
   end
 
   desc "Check for repositories that have not been published since their last sync, and republish if they have."
-  task :publish_unpublished_repositories => ["environment", "disable_dynflow", "check_ping"] do
+  task :publish_unpublished_repositories => ["dynflow:client", "check_ping"] do
     needing_publish = []
     Organization.find_each do |org|
       if org.default_content_view && !org.default_content_view.versions.empty?
@@ -27,7 +25,7 @@ namespace :katello do
   end
 
   desc "Regnerate metadata for all repositories. Specify CONTENT_VIEW=name and LIFECYCLE_ENVIRONMENT=name to narrow repositories."
-  task :regenerate_repo_metadata => ["environment", "disable_dynflow", "check_ping"] do
+  task :regenerate_repo_metadata => ["dynflow:client", "check_ping"] do
     User.current = User.anonymous_api_admin
     repos = lookup_repositories
 
@@ -40,7 +38,7 @@ namespace :katello do
   end
 
   desc "Refresh repository metadata for all repositories. Specify CONTENT_VIEW=name and LIFECYCLE_ENVIRONMENT=name to narrow repositories."
-  task :refresh_pulp_repo_details => ["environment", "disable_dynflow", "check_ping"] do
+  task :refresh_pulp_repo_details => ["dynflow:client", "check_ping"] do
     User.current = User.anonymous_api_admin
     repos = lookup_repositories
 

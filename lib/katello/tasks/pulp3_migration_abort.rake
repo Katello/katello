@@ -1,6 +1,6 @@
 namespace :katello do
   desc "Cancels all running Pulp 2 to 3 migration tasks."
-  task :pulp3_migration_abort => ["environment", "disable_dynflow"] do
+  task :pulp3_migration_abort => ["dynflow:client"] do
     migration_tasks = ForemanTasks::Task::DynflowTask.where(:label => "Actions::Pulp3::ContentMigration").where.not(:state => ["stopped", "paused"])
     cancelled_tasks_count = 0
     migration_tasks.each do |task|
