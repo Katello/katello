@@ -185,6 +185,10 @@ module Katello
                                           :release => simple_package.release,
                                           :arch => simple_package.arch)
         end
+        if installed_packages.any?
+          ::Katello::InstalledPackageHelper.
+            associate_modularity_with_installed_packages(installed_packages)
+        end
         InstalledPackage.import(installed_packages, validate: false, on_duplicate_key_ignore: true)
         #re-lookup all imported to pickup any duplicates/conflicts
         imported = InstalledPackage.where(:nvrea => installed_packages.map(&:nvrea)).select(:id).to_a

@@ -88,8 +88,10 @@ module Katello
             :bound_library_repos => self.bound_library_instance_repos).
           where("katello_host_installed_packages.host_id = :content_facet_id",
             :content_facet_id => self.content_facet.host.id).
-          where("katello_module_stream_rpms.module_stream_id is null or
-            katello_module_stream_rpms.module_stream_id in (:enabled_module_streams)",
+          where("(katello_module_stream_rpms.module_stream_id IS NULL AND
+            (katello_installed_packages.modular IS NULL OR katello_installed_packages.modular = FALSE)) OR
+            (katello_module_stream_rpms.module_stream_id IN (:enabled_module_streams)
+            AND katello_installed_packages.modular = TRUE)",
             :enabled_module_streams => enabled_module_stream_ids).pluck(:id).uniq
       end
 
