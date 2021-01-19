@@ -30,18 +30,18 @@ module Actions
 
           fail _("Action not allowed for the default smart proxy.") if smart_proxy.pulp_primary?
 
-          smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
-          repositories = smart_proxy_helper.combined_repos_available_to_capsule(environment, content_view, repository)
-
-          smart_proxy.ping_pulp if repositories.any? { |repo| !smart_proxy.pulp3_support?(repo) }
-
           refresh_options = options.merge(content_view: content_view,
                                              environment:  environment,
                                              repository: repository)
           sequence do
-            plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options) if smart_proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE)
-            plan_action(Actions::Pulp3::CapsuleContent::RefreshContentGuard, smart_proxy) if repositories.any? { |repo| smart_proxy.pulp3_support?(repo) }
-            plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options) if smart_proxy.pulp3_enabled?
+            if smart_proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE)
+              plan_action(Actions::Pulp::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+            end
+
+            if smart_proxy.has_feature?(SmartProxy::PULP3_FEATURE)
+              plan_action(Actions::Pulp3::CapsuleContent::RefreshContentGuard, smart_proxy)
+              plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
+            end
             plan_action(SyncCapsule, smart_proxy, refresh_options)
           end
         end
