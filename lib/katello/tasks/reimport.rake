@@ -12,17 +12,15 @@ namespace :katello do
       if ping_results[:status] != "ok"
         pp ping_results
         services = ping_results[:services]
-        if services.has_value?({:status=>"FAIL", :message=>"503 Service Unavailable"}) &&
+        if services.value?({:status => "FAIL", :message => "503 Service Unavailable"}) &&
             retry_count < (RETRIES - 1)
           pp "Services unavailable - retrying..."
           sleep RETRY_INTERVAL
         else
           fail("Not all the services have been started. Check the status report above and try again.")
-          break
         end
       end
     end
-
   end
 
   desc "Reimports information from backend systems"
