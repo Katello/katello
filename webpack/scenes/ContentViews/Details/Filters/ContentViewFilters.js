@@ -5,6 +5,7 @@ import { TableVariant } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -18,22 +19,7 @@ import {
 import { truncate } from '../../../../utils/helpers';
 import ContentType from './ContentType';
 
-// won't be needed when details pages are built, linking to old pages for now
-const cvFilterUrl = (cvId, filterId, type, errataByDate) => {
-  const repoType = type === 'docker' ? 'docker' : 'yum';
-  const filterType = errataByDate ? 'errata_by_date' : type;
-  const base = `/content_views/${cvId}/repositories/${repoType}/filters/${filterId}`;
-  const endings = {
-    rpm: '/package/details',
-    package_group: '/package-group/list',
-    erratum: '/errata/list',
-    errata_by_date: '/errata/date_type',
-    modulemd: '/module-stream/list',
-    docker: '/docker/details',
-  };
-
-  return base + endings[filterType];
-};
+const cvFilterUrl = (cvId, filterId) => `/labs/content_views/${cvId}/filters/${filterId}`;
 
 const ContentViewFilters = ({ cvId }) => {
   const response = useSelector(state => selectCVFilters(state, cvId), shallowEqual);
@@ -62,7 +48,7 @@ const ContentViewFilters = ({ cvId }) => {
       if (filter.type === 'erratum' && filter.rules[0].types) errataByDate = true;
 
       const cells = [
-        { title: <a href={cvFilterUrl(cvId, id, type, errataByDate)}>{name}</a> },
+        { title: <Link to={cvFilterUrl(cvId, id)}>{name}</Link> },
         truncate(description || ''),
         { title: <LongDateTime date={updatedAt} showRelativeTimeTooltip /> },
         { title: <ContentType type={type} errataByDate={errataByDate} /> },

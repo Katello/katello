@@ -4,39 +4,53 @@ import { Grid, GridItem, TextContent, Text, TextVariants, Button } from '@patter
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 
 import DetailsContainer from './DetailsContainer';
 import ContentViewInfo from './ContentViewInfo';
 import ContentViewRepositories from './Repositories/ContentViewRepositories';
 import ContentViewFilters from './Filters/ContentViewFilters';
+import ContentViewFilterDetails from './Filters/ContentViewFilterDetails';
 import { selectCVDetails } from './ContentViewDetailSelectors';
-import TabbedView from '../../../components/TabbedView';
+import RoutedTabs from '../../../components/RoutedTabs';
 
-const ContentViewDetails = ({ match }) => {
-  const cvId = parseInt(match.params.id, 10);
+const ContentViewDetails = () => {
+  const { id } = useParams();
+  const cvId = parseInt(id, 10);
   const details = useSelector(state => selectCVDetails(state, cvId), shallowEqual);
 
   const { name } = details;
   const tabs = [
     {
+      key: "details",
       title: __('Details'),
       content: <ContentViewInfo {...{ cvId, details }} />,
+      link: `/labs/content_views/${cvId}/details`,
     },
     {
+      key: "versions",
       title: __('Versions'),
       content: <React.Fragment>Versions</React.Fragment>,
+      link: `/labs/content_views/${cvId}/versions`,
     },
     {
+      key: "repositories",
       title: __('Repositories'),
       content: <ContentViewRepositories {...{ cvId, details }} />,
+      link: `/labs/content_views/${cvId}/repositories`,
     },
     {
+      key: "filters",
       title: __('Filters'),
       content: <ContentViewFilters cvId={cvId} />,
+      link: `/labs/content_views/${cvId}/filters`,
+      detailContent: <ContentViewFilterDetails />,
     },
     {
+      key: "history",
       title: __('History'),
       content: <React.Fragment>History</React.Fragment>,
+      link: `/labs/content_views/${cvId}/history`,
     },
   ];
 
@@ -62,7 +76,7 @@ const ContentViewDetails = ({ match }) => {
             </Button>
           </GridItem>
           <GridItem span={12}>
-            <TabbedView tabs={tabs} />
+            <RoutedTabs tabs={tabs} />
           </GridItem>
         </React.Fragment>
       </DetailsContainer>
