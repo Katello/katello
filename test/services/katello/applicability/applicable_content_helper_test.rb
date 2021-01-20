@@ -31,8 +31,7 @@ module Katello
           @rpm_three = katello_rpms(:three)
           @rpm_one_two = katello_rpms(:one_two)
 
-          @rpm1 = Rpm.where(nvra: "one-1.0-1.el7.x86_64").first
-          @rpm2 = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
+          @rpm_one_v2 = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
 
           @erratum = Erratum.find_by(errata_id: "RHBA-2014-013")
 
@@ -42,23 +41,23 @@ module Katello
                                            available_module_stream_id: AvailableModuleStream.find_by(name: "Ohio").id,
                                            status: "enabled")
 
-          @installed_package1 = InstalledPackage.create(name: @rpm1.name, nvra: @rpm1.nvra, epoch: @rpm1.epoch,
-                                                                   version: @rpm1.version, release: @rpm1.release,
-                                                                   arch: @rpm1.arch, nvrea: @rpm1.nvrea)
+          @installed_package1 = InstalledPackage.create(name: @rpm_one.name, nvra: @rpm_one.nvra, epoch: @rpm_one.epoch,
+                                                                   version: @rpm_one.version, release: @rpm_one.release,
+                                                                   arch: @rpm_one.arch, nvrea: @rpm_one.nvrea)
 
-          trigger_evrs([@rpm_one, @rpm_two, @rpm_three, @rpm1, @rpm2, @installed_package1])
+          trigger_evrs([@rpm_one, @rpm_two, @rpm_three, @rpm_one, @rpm_one_v2, @installed_package1])
 
           HostInstalledPackage.create(host_id: @host.id, installed_package_id: @installed_package1.id)
 
           ErratumPackage.create(erratum_id: @erratum.id,
-                                nvrea: @rpm2.nvra, name: @rpm2.name, filename: @rpm2.filename)
+                                nvrea: @rpm_one_v2.nvra, name: @rpm_one_v2.name, filename: @rpm_one_v2.filename)
 
           Katello::ContentFacetRepository.create(content_facet_id: @host.content_facet.id, repository_id: @repo.id)
           Katello::RepositoryErratum.create(erratum_id: @erratum.id, repository_id: @repo.id)
         end
 
         def teardown
-          ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).remove(@rpm2.id)
+          ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).remove(@rpm_one_v2.id)
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).remove(@erratum.id)
 
           @rpm_one.update(modular: false)
@@ -68,9 +67,9 @@ module Katello
         end
 
         def test_older_dup_installed_rpms_are_ignored
-          installed_package2 = InstalledPackage.create(name: @rpm2.name, nvra: @rpm2.nvra, epoch: @rpm2.epoch,
-                                                       version: @rpm2.version, release: @rpm2.release,
-                                                       arch: @rpm2.arch, nvrea: @rpm2.nvrea)
+          installed_package2 = InstalledPackage.create(name: @rpm_one_v2.name, nvra: @rpm_one_v2.nvra, epoch: @rpm_one_v2.epoch,
+                                                       version: @rpm_one_v2.version, release: @rpm_one_v2.release,
+                                                       arch: @rpm_one_v2.arch, nvrea: @rpm_one_v2.nvrea)
           trigger_evrs([installed_package2])
           HostInstalledPackage.create(host_id: @host.id, installed_package_id: installed_package2.id)
           rpm_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).applicable_differences
@@ -79,7 +78,7 @@ module Katello
 
         def test_rpm_content_ids_returns_something
           package_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).fetch_content_ids
-          assert_equal [@rpm2.id], package_content_ids
+          assert_equal [@rpm_one_v2.id], package_content_ids
         end
 
         def test_rpm_content_ids_returns_nothing
@@ -102,7 +101,7 @@ module Katello
 
         def test_applicable_differences_adds_rpm_id
           rpm_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).applicable_differences
-          assert_equal [[@rpm2.id], []], rpm_differences
+          assert_equal [[@rpm_one_v2.id], []], rpm_differences
         end
 
         def test_applicable_differences_adds_and_removes_no_rpm_ids
@@ -115,7 +114,7 @@ module Katello
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
           @installed_package1.destroy
           rpm_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).applicable_differences
-          assert_equal [[], [@rpm2.id]], rpm_differences
+          assert_equal [[], [@rpm_one_v2.id]], rpm_differences
         end
 
         def test_applicable_differences_adds_erratum_id
@@ -184,6 +183,12 @@ module Katello
 
           module_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::ModuleStream, bound_repos(@host)).applicable_differences
           assert_equal [[], [@module_stream.id]], module_differences
+        end
+
+        def test_non_modular_rpm_ignored_if_module_enabled
+          ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one.id)
+          rpm_applicable_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).applicable_differences
+          assert_equal [[], []], rpm_applicable_differences
         end
       end
     end

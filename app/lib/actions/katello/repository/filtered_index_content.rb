@@ -49,10 +49,6 @@ module Actions
               ::Katello::Srpm.import_all(unit_ids, repo)
             else
               ::Katello::Rpm.import_all(unit_ids, repo)
-              if unit_ids.any?
-                ::Katello::InstalledPackageHelper.
-                  associate_modularity_with_indexed_packages(::Katello::Rpm.where(pulp_id: unit_ids))
-              end
             end
           end
         end

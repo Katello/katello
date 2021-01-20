@@ -135,10 +135,6 @@ module Katello
           end
         end
         sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map) if self.many_repository_associations
-        if content_type == 'rpm' && pulp_id_href_map.present?
-          ::Katello::InstalledPackageHelper.
-            associate_modularity_with_indexed_packages(::Katello::Rpm.where(pulp_id: pulp_id_href_map.keys))
-        end
       end
 
       def sync_repository_associations(repository, options = {})

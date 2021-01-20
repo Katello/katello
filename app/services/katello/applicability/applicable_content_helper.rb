@@ -60,17 +60,7 @@ module Katello
       end
 
       def fetch_rpm_content_ids
-        # Query for applicable RPM ids
-        # -> Include all non-modular rpms or rpms that exist within installed module streams
-        enabled_module_stream_ids = ::Katello::ModuleStream.
-          joins("inner join katello_available_module_streams on
-            katello_module_streams.name = katello_available_module_streams.name and
-            katello_module_streams.stream = katello_available_module_streams.stream").
-          joins("inner join katello_host_available_module_streams on
-            katello_available_module_streams.id = katello_host_available_module_streams.available_module_stream_id").
-          where("katello_host_available_module_streams.host_id = :content_facet_id and
-            katello_host_available_module_streams.status = 'enabled'",
-            :content_facet_id => self.content_facet.host.id).select(:id)
+        enabled_module_stream_ids = fetch_enabled_module_stream_ids
 
         ::Katello::Rpm.
           joins("INNER JOIN katello_repository_rpms ON
@@ -89,10 +79,36 @@ module Katello
           where("katello_host_installed_packages.host_id = :content_facet_id",
             :content_facet_id => self.content_facet.host.id).
           where("(katello_module_stream_rpms.module_stream_id IS NULL AND
-            (katello_installed_packages.modular IS NULL OR katello_installed_packages.modular = FALSE)) OR
+            katello_installed_packages.id NOT IN (:locked_modular_installed_packages)) OR
             (katello_module_stream_rpms.module_stream_id IN (:enabled_module_streams)
-            AND katello_installed_packages.modular = TRUE)",
-            :enabled_module_streams => enabled_module_stream_ids).pluck(:id).uniq
+            AND katello_installed_packages.id IN (:locked_modular_installed_packages))",
+            :enabled_module_streams => enabled_module_stream_ids,
+            :locked_modular_installed_packages => locked_modular_installed_packages(enabled_module_stream_ids)).pluck(:id).uniq
+      end
+
+      def fetch_enabled_module_stream_ids
+        # Query for applicable RPM ids
+        # -> Include all non-modular rpms or rpms that exist within installed module streams
+        ::Katello::ModuleStream.
+          joins("inner join katello_available_module_streams on
+            katello_module_streams.name = katello_available_module_streams.name and
+            katello_module_streams.stream = katello_available_module_streams.stream").
+          joins("inner join katello_host_available_module_streams on
+            katello_available_module_streams.id = katello_host_available_module_streams.available_module_stream_id").
+          where("katello_host_available_module_streams.host_id = :content_facet_id and
+            katello_host_available_module_streams.status = 'enabled'",
+            :content_facet_id => self.content_facet.host.id).select(:id)
+      end
+
+      # Installed packages that are locked for the host due to enabled module stream membership
+      def locked_modular_installed_packages(enabled_module_streams)
+        rpms_in_enabled_module_streams = ::Katello::Rpm.
+          joins("INNER JOIN katello_module_stream_rpms ON katello_rpms.id = katello_module_stream_rpms.rpm_id").
+          where("katello_module_stream_rpms.module_stream_id IN (:enabled_module_streams)",
+                :enabled_module_streams => enabled_module_streams).select(:nvra, :epoch)
+
+        ::Katello::InstalledPackage.where(nvra: rpms_in_enabled_module_streams.map(&:nvra),
+                                          epoch: rpms_in_enabled_module_streams.map(&:epoch)).select(:id)
       end
 
       def newest_distinct_installed_packages_query
