@@ -18,7 +18,8 @@ module ::Actions::Pulp::Repository
         ping[service][:status] = ::Katello::Ping::OK_RETURN_CODE
       end
 
-      ::Katello::Ping.stubs(:ping).returns(:services => ping)
+      ::Katello::Ping.stubs(:ping).returns(
+        :services => ping, :status => ::Katello::Ping::OK_RETURN_CODE)
     end
 
     describe 'Refresh' do
