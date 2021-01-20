@@ -2,27 +2,25 @@ module Actions
   module Katello
     module Host
       module Erratum
-        class Install < Actions::EntryAction
-          include Helpers::Presenter
-
+        class Install < Actions::Katello::AgentAction
           def plan(host, errata_ids)
             Type! host, ::Host::Managed
 
             action_subject(host, :hostname => host.name, :errata => errata_ids)
-            if Setting['erratum_install_batch_size'] && Setting['erratum_install_batch_size'] > 0
-              errata_ids.each_slice(Setting['erratum_install_batch_size']) do |errata_ids_batch|
-                plan_action(Pulp::Consumer::ContentInstall,
-                            consumer_uuid: host.content_facet.uuid,
-                            type:          'erratum',
-                            args:          errata_ids_batch)
-              end
-            else
-              plan_action(Pulp::Consumer::ContentInstall,
-                          consumer_uuid: host.content_facet.uuid,
-                          type:          'erratum',
-                          args:          errata_ids)
-            end
-            plan_self(:host_id => host.id)
+
+            plan_self(:host_id => host.id, errata_ids: errata_ids)
+          end
+
+          def dispatch_agent_action
+            ::Katello::Agent::Dispatcher.dispatch(
+              :install_errata,
+              host_id: input[:host_id],
+              errata_ids: input[:errata_ids]
+            )
+          end
+
+          def agent_action_type
+            :content_install
           end
 
           def humanized_name
@@ -39,10 +37,6 @@ module Actions
 
           def resource_locks
             :link
-          end
-
-          def presenter
-            Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentInstall))
           end
 
           def finalize

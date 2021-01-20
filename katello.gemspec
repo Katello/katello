@@ -39,6 +39,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "stomp"
   gem.add_dependency "scoped_search", ">= 4.1.9"
 
+  gem.add_dependency "qpid_messaging"
   gem.add_dependency "gettext_i18n_rails"
   gem.add_dependency "apipie-rails", ">= 0.5.14"
 

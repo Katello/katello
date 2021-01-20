@@ -2,16 +2,22 @@ module Actions
   module Katello
     module Host
       module PackageGroup
-        class Remove < Actions::EntryAction
-          include Helpers::Presenter
-
+        class Remove < Actions::Katello::AgentAction
           def plan(host, groups)
             action_subject(host, :groups => groups)
-            plan_action(Pulp::Consumer::ContentUninstall,
-                        consumer_uuid: host.content_facet.uuid,
-                        type:          'package_group',
-                        args:          groups)
-            plan_self(:host_id => host.id)
+            plan_self(:host_id => host.id, groups: groups)
+          end
+
+          def dispatch_agent_action
+            ::Katello::Agent::Dispatcher.dispatch(
+              :remove_package_group,
+              host_id: input[:host_id],
+              groups: input[:groups]
+            )
+          end
+
+          def agent_action_type
+            :content_uninstall
           end
 
           def humanized_name
@@ -20,15 +26,6 @@ module Actions
 
           def humanized_input
             [input[:groups].join(', ')] + super
-          end
-
-          def presenter
-            Helpers::Presenter::Delegated.new(
-                self, planned_actions(Pulp::Consumer::ContentUninstall))
-          end
-
-          def rescue_strategy
-            Dynflow::Action::Rescue::Skip
           end
 
           def finalize

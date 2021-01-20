@@ -2,18 +2,25 @@ module Actions
   module Katello
     module Host
       module Package
-        class Update < Actions::EntryAction
-          include Helpers::Presenter
-
+        class Update < Actions::Katello::AgentAction
           def plan(host, packages)
             Type! host, ::Host::Managed
 
             action_subject(host, :hostname => host.name, :packages => packages)
-            plan_action(Pulp::Consumer::ContentUpdate,
-                        consumer_uuid: host.content_facet.uuid,
-                        type:          'rpm',
-                        args:          packages)
-            plan_self(:host_id => host.id)
+
+            plan_self(:host_id => host.id, :packages => packages)
+          end
+
+          def dispatch_agent_action
+            ::Katello::Agent::Dispatcher.dispatch(
+              :update_package,
+              host_id: input[:host_id],
+              packages: input[:packages]
+            )
+          end
+
+          def agent_action_type
+            :content_install
           end
 
           def humanized_name
@@ -26,14 +33,6 @@ module Actions
 
           def humanized_input
             [(input[:packages].present? && input[:packages].join(", ") || "all packages")] + super
-          end
-
-          def presenter
-            Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentUpdate))
-          end
-
-          def rescue_strategy
-            Dynflow::Action::Rescue::Skip
           end
 
           def finalize

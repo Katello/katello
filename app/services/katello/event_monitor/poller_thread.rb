@@ -1,5 +1,6 @@
 module Katello
   module EventMonitor
+    # TODO: Move this class to app/lib/katello/event_daemon/services with other service definitions
     class PollerThread
       SLEEP_INTERVAL = 3
 

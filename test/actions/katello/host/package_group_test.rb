@@ -1,99 +1,45 @@
-require 'katello_test_helper'
+require_relative '../agent_action_tests.rb'
 
 module ::Actions::Katello::Host::PackageGroup
-  class TestBase < ActiveSupport::TestCase
-    include Dynflow::Testing
-    include Support::Actions::Fixtures
+  class InstallTest < ActiveSupport::TestCase
+    include Actions::Katello::AgentActionTests
 
-    let(:content_facet) { mock('a_system', uuid: 'uuid').mimic!(::Katello::Host::ContentFacet) }
-    let(:host) { mock('a_host', content_facet: content_facet, id: 42).mimic!(::Host::Managed) }
+    let(:action_class) { ::Actions::Katello::Host::PackageGroup::Install }
+    let(:package_groups) { %w(backup) }
 
     let(:action) do
       action = create_action action_class
-      action.expects(:plan_self)
-      action.stubs(:action_subject).with(host, :groups => package_groups = %w(backup))
+      action.stubs(:action_subject).with(host, :groups => package_groups)
       plan_action action, host, package_groups
+    end
+
+    let(:dispatcher_method) { :install_package_group }
+    let(:dispatcher_params) do
+      {
+        host_id: host.id,
+        groups: package_groups
+      }
     end
   end
 
-  class InstallTest < TestBase
-    let(:action_class) { ::Actions::Katello::Host::PackageGroup::Install }
-    let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentInstall }
+  class RemoveTest < ActiveSupport::TestCase
+    include Actions::Katello::AgentActionTests
 
-    specify { assert_action_planed action, pulp_action_class }
+    let(:action_class) { ::Actions::Katello::Host::PackageGroup::Remove }
+    let(:package_groups) { %w(backup) }
+    let(:dispatcher_method) { :remove_package_group }
 
-    describe '#humanized_output' do
-      let :action do
-        create_action(action_class).tap do |action|
-          action.stubs(planned_actions: [pulp_action])
-        end
-      end
-      let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
-
-      describe 'successfully installed' do
-        let(:fixture_variant) { :package_group_success }
-
-        specify do
-          assert_equal action.humanized_output, <<~OUTPUT.chomp
-            amanda-2.6.1p2-8.el6.x86_64
-            amanda-client-2.6.1p2-8.el6.x86_64
-          OUTPUT
-        end
-      end
-
-      describe 'no packages installed' do
-        let(:fixture_variant) { :package_group_no_packages }
-
-        specify do
-          assert_equal 'No new packages installed', action.humanized_output
-        end
-      end
-
-      describe 'with error' do
-        let(:fixture_variant) { :error }
-
-        specify do
-          assert_equal action.humanized_output, <<~MSG.chomp
-            No new packages installed
-            emacss: No package(s) available to install
-          MSG
-        end
-      end
+    let(:action) do
+      action = create_action action_class
+      action.stubs(:action_subject).with(host, :groups => package_groups)
+      plan_action action, host, package_groups
     end
 
-    class RemoveTest < TestBase
-      let(:action_class) { ::Actions::Katello::Host::PackageGroup::Remove }
-      let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentUninstall }
-
-      specify { assert_action_planed action, pulp_action_class }
-
-      describe '#humanized_output' do
-        let :action do
-          create_action_presentation(action_class).tap do |action|
-            action.stubs(planned_actions: [pulp_action])
-          end
-        end
-        let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
-
-        describe 'successfully uninstalled' do
-          let(:fixture_variant) { :package_group_success }
-
-          specify do
-            assert_equal action.humanized_output, <<~OUTPUT.chomp
-              amanda-2.6.1p2-8.el6.x86_64
-              amanda-client-2.6.1p2-8.el6.x86_64
-            OUTPUT
-          end
-        end
-
-        describe 'no packages uninstalled' do
-          let(:fixture_variant) { :package_group_no_packages }
-
-          specify do
-            assert_equal 'No packages removed', action.humanized_output
-          end
-        end
-      end
+    let(:dispatcher_params) do
+      {
+        host_id: host.id,
+        groups: package_groups
+      }
     end
   end
 end

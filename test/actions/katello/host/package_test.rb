@@ -1,107 +1,66 @@
-require 'katello_test_helper'
+require_relative '../agent_action_tests.rb'
 
 module ::Actions::Katello::Host::Package
-  class TestBase < ActiveSupport::TestCase
-    include Dynflow::Testing
-    include Support::Actions::Fixtures
+  class InstallTest < ActiveSupport::TestCase
+    include Actions::Katello::AgentActionTests
 
-    let(:content_facet) { mock('a_system', uuid: 'uuid').mimic!(::Katello::Host::ContentFacet) }
-    let(:host) do
-      host_mock = mock('a_host', content_facet: content_facet, id: 42).mimic!(::Host::Managed)
-      host_mock.stubs('name').returns('foobar')
-      host_mock
-    end
-
+    let(:packages) { %w(vim vi) }
     let(:action) do
       action = create_action action_class
-      action.expects(:plan_self)
-      action.stubs(:action_subject).with(host, :hostname => host.name, :packages => packages = %w(vim vi))
+      action.stubs(:action_subject).with(host, :hostname => host.name, :packages => packages)
       plan_action action, host, packages
+    end
+
+    let(:action_class) { ::Actions::Katello::Host::Package::Install }
+
+    let(:dispatcher_method) { :install_package }
+    let(:dispatcher_params) do
+      {
+        host_id: host.id,
+        packages: packages
+      }
     end
   end
 
-  class InstallTest < TestBase
-    let(:action_class) { ::Actions::Katello::Host::Package::Install }
-    let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentInstall }
+  class RemoveTest < ActiveSupport::TestCase
+    include Actions::Katello::AgentActionTests
 
-    specify { assert_action_planed action, pulp_action_class }
-
-    describe '#humanized_output' do
-      let :action do
-        create_action(action_class).tap do |action|
-          action.stubs(planned_actions: [pulp_action])
-        end
-      end
-      let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
-
-      describe 'successfully installed' do
-        let(:fixture_variant) { :success }
-
-        specify do
-          assert_equal action.humanized_output, <<~OUTPUT.chomp
-            1:emacs-23.1-21.el6_2.3.x86_64
-            libXaw-1.0.11-2.el6.x86_64
-            libXmu-1.1.1-2.el6.x86_64
-            libotf-0.9.9-3.1.el6.x86_64
-          OUTPUT
-        end
-      end
-
-      describe 'no packages installed' do
-        let(:fixture_variant) { :no_packages }
-
-        specify do
-          assert_equal 'No new packages installed', action.humanized_output
-        end
-      end
-
-      describe 'with error' do
-        let(:fixture_variant) { :error }
-
-        specify do
-          assert_equal action.humanized_output, <<~MSG.chomp
-            No new packages installed
-            emacss: No package(s) available to install
-          MSG
-        end
-      end
+    let(:packages) { %w(vim vi) }
+    let(:action) do
+      action = create_action action_class
+      action.stubs(:action_subject).with(host, :hostname => host.name, :packages => packages)
+      plan_action action, host, packages
     end
 
-    class RemoveTest < TestBase
-      let(:action_class) { ::Actions::Katello::Host::Package::Remove }
-      let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentUninstall }
+    let(:action_class) { ::Actions::Katello::Host::Package::Remove }
 
-      specify { assert_action_planed action, pulp_action_class }
+    let(:dispatcher_method) { :remove_package }
+    let(:dispatcher_params) do
+      {
+        host_id: host.id,
+        packages: packages
+      }
+    end
+  end
 
-      describe '#humanized_output' do
-        let :action do
-          create_action_presentation(action_class).tap do |action|
-            action.stubs(planned_actions: [pulp_action])
-          end
-        end
-        let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
+  class UpdateTest < ActiveSupport::TestCase
+    include Actions::Katello::AgentActionTests
 
-        describe 'successfully uninstalled' do
-          let(:fixture_variant) { :success }
+    let(:packages) { %w(vim vi) }
+    let(:action) do
+      action = create_action action_class
+      action.stubs(:action_subject).with(host, :hostname => host.name, :packages => packages)
+      plan_action action, host, packages
+    end
 
-          specify do
-            assert_equal action.humanized_output, <<~OUTPUT.chomp
-              1:emacs-23.1-21.el6_2.3.x86_64
-              libXaw-1.0.11-2.el6.x86_64
-              libXmu-1.1.1-2.el6.x86_64
-              libotf-0.9.9-3.1.el6.x86_64
-            OUTPUT
-          end
-        end
+    let(:action_class) { ::Actions::Katello::Host::Package::Update }
 
-        describe 'no packages uninstalled' do
-          let(:fixture_variant) { :no_packages }
-
-          specify do
-            assert_equal 'No packages removed', action.humanized_output
-          end
-        end
-      end
+    let(:dispatcher_method) { :update_package }
+    let(:dispatcher_params) do
+      {
+        host_id: host.id,
+        packages: packages
+      }
     end
   end
 end
