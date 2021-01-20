@@ -19,6 +19,7 @@ namespace :katello do
         else
           fail("Not all the services have been started. Check the status report above and try again.")
         end
+        break
       end
     end
   end
