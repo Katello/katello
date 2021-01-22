@@ -6,11 +6,11 @@ module Actions
       class DispatchHistoryPresenterTest < ActiveSupport::TestCase
         let(:content_type) { "rpm" }
         let(:action_type) { @action_type || :content_install }
-        let(:dispatch_history) { stub(status: @status) }
+        let(:dispatch_history) { stub(result: @result) }
         let(:presenter) { Actions::Katello::Agent::DispatchHistoryPresenter.new(dispatch_history, action_type) }
 
         def test_humanized_output_packages
-          @status = {
+          @result = {
             content_type => {
               "details" => {
                 "resolved" => [
@@ -35,7 +35,7 @@ module Actions
         end
 
         def test_humanized_output_message
-          @status = {
+          @result = {
             content_type => {
               "details" => {
                 "message" => "Got into trouble"
@@ -48,7 +48,7 @@ module Actions
         end
 
         def test_humanized_output_install_no_packages
-          @status = {
+          @result = {
             content_type => {
               "details" => {
               }
@@ -60,7 +60,7 @@ module Actions
 
         def test_humanized_output_uninstall_no_packages
           @action_type = :content_uninstall
-          @status = {
+          @result = {
             content_type => {
               "details" => {
                 "resolved" => [],
@@ -74,7 +74,7 @@ module Actions
         end
 
         def test_error_messages
-          @status = {
+          @result = {
             content_type => {
               "details" => {
                 "message" => "Got into trouble"

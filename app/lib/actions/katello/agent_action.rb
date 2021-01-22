@@ -1,7 +1,7 @@
 module Actions
   module Katello
     class AgentAction < Actions::EntryAction
-      include Actions::Base::Polling
+      include Dynflow::Action::Timeouts
       include Helpers::Presenter
 
       def dispatch_agent_action
@@ -13,37 +13,24 @@ module Actions
       end
 
       def run(event = nil)
-        unless event == Dynflow::Action::Skip
-          super
+        case event
+        when nil
+          suspend do |suspended_action|
+            history = dispatch_agent_action
+            output[:dispatch_history_id] = history.id
+
+            history.dynflow_execution_plan_id = suspended_action.execution_plan_id
+            history.dynflow_step_id = suspended_action.step_id
+            history.save!
+
+            schedule_timeout(accept_timeout)
+          end
+        when 'accepted'
+          schedule_timeout(finish_timeout)
+          suspend
+        else
+          fail_on_errors
         end
-      end
-
-      def on_finish
-        fail_on_errors
-      end
-
-      def done?
-        dispatch_history&.status&.present?
-      end
-
-      def invoke_external_task
-        history = dispatch_agent_action
-        output[:dispatch_history_id] = history.id
-        schedule_timeout(accept_timeout)
-      end
-
-      def poll_external_task
-        history = dispatch_history
-        progress = if history&.status&.present?
-                     1
-                   elsif history&.accepted_at
-                     0.1
-                   else
-                     0
-                   end
-        {
-          progress: progress
-        }
       end
 
       def accept_timeout
@@ -61,7 +48,7 @@ module Actions
           fail _("Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?") % accept_timeout
         end
 
-        if history&.status.blank?
+        if history&.result.blank?
           fail _("Host did not finish content action in %s seconds.  The task has been cancelled.") % finish_timeout
         end
       end

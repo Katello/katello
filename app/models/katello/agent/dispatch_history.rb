@@ -3,7 +3,7 @@ module Katello
     class DispatchHistory < Katello::Model
       self.table_name = 'katello_agent_dispatch_histories'
 
-      serialize :status, Hash
+      serialize :result, Hash
     end
   end
 end

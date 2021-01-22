@@ -17,6 +17,8 @@ module Actions
           run_action action
 
           assert_equal host.id, dispatch_history.host_id
+          assert dispatch_history.dynflow_execution_plan_id
+          assert dispatch_history.dynflow_step_id
         end
 
         def test_process_timeout_accept
@@ -38,7 +40,7 @@ module Actions
 
         def test_process_timeout_noop
           dispatch_history.accepted_at = Time.now
-          dispatch_history.status = { :foo => "bar" }
+          dispatch_history.result = { :foo => "bar" }
           action.expects(:dispatch_history).returns(dispatch_history)
 
           action.process_timeout

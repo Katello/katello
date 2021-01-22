@@ -65,7 +65,8 @@ module Katello
         message = fetch_message(receiver)
         while message
           begin
-            yield(message)
+            received = Katello::Messaging::ReceivedMessage.new(body: message.content)
+            yield(received)
           ensure
             ack(message, receiver)
           end

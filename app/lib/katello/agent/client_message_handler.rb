@@ -6,17 +6,9 @@ module Katello
       end
 
       def self.handle(message)
-        logger.debug("client message: #{message.content}")
+        logger.debug("client message: #{message.body}")
 
-        begin
-          json = JSON.parse(message.content)
-        rescue
-          logger.error("client message didn't contain valid JSON")
-          logger.error("message content: #{message.content}")
-          return
-        end
-
-        dispatch_history_id = json.dig('data', 'dispatch_history_id')
+        dispatch_history_id = message.body.dig(:data, :dispatch_history_id)
         unless dispatch_history_id
           logger.error("No dispatch history in message. Nothing to do")
           return
@@ -28,18 +20,46 @@ module Katello
           return
         end
 
-        if json['status'] == 'accepted'
+        if message.body[:status] == 'accepted'
           logger.debug("Updating accept time for dispatch_history=#{dispatch_history_id}")
           dispatch_history.accepted_at = DateTime.now
         end
 
-        result_details = json.dig('result', 'retval', 'details')
+        result_details = message.body.dig(:result, :retval, :details)
         if result_details
           logger.debug("Updating final status for dispatch_history=#{dispatch_history_id}")
-          dispatch_history.status = result_details
+          dispatch_history.result = result_details
         end
 
         dispatch_history.save!
+
+        unless dispatch_history.dynflow_execution_plan_id && dispatch_history.dynflow_step_id
+          logger.error("No dynflow attributes found for dispatch_history_id=#{dispatch_history.id}")
+          return
+        end
+
+        task_exists = ForemanTasks::Task.exists?(external_id: dispatch_history.dynflow_execution_plan_id, result: 'pending')
+
+        unless task_exists
+          logger.warn("Couldn't find task with external_id=#{dispatch_history.dynflow_execution_plan_id} dispatch_history_id=#{dispatch_history.id}")
+          return
+        end
+
+        begin
+          if message.body[:status] == 'accepted'
+            ForemanTasks.dynflow.world.event(dispatch_history.dynflow_execution_plan_id, dispatch_history.dynflow_step_id, 'accepted')
+            logger.debug("Sent accepted event to execution_plan_id=#{dispatch_history.dynflow_execution_plan_id}")
+            return
+          end
+
+          if result_details
+            ForemanTasks.dynflow.world.event(dispatch_history.dynflow_execution_plan_id, dispatch_history.dynflow_step_id, 'finished')
+            logger.debug("Sent finished event to execution_plan_id=#{dispatch_history.dynflow_execution_plan_id}")
+            return
+          end
+        rescue Dynflow::Error => e
+          logger.error("Dynflow error when sending event to execution_plan=#{dispatch_history.dynflow_execution_plan_id} error=#{e.message}")
+        end
       end
     end
   end
