@@ -21,13 +21,11 @@ module Katello
         end
 
         if message.body[:status] == 'accepted'
-          logger.debug("Updating accept time for dispatch_history=#{dispatch_history_id}")
           dispatch_history.accepted_at = DateTime.now
         end
 
         result_details = message.body.dig(:result, :retval, :details)
         if result_details
-          logger.debug("Updating final status for dispatch_history=#{dispatch_history_id}")
           dispatch_history.result = result_details
         end
 
@@ -48,13 +46,11 @@ module Katello
         begin
           if message.body[:status] == 'accepted'
             ForemanTasks.dynflow.world.event(dispatch_history.dynflow_execution_plan_id, dispatch_history.dynflow_step_id, 'accepted')
-            logger.debug("Sent accepted event to execution_plan_id=#{dispatch_history.dynflow_execution_plan_id}")
             return
           end
 
           if result_details
             ForemanTasks.dynflow.world.event(dispatch_history.dynflow_execution_plan_id, dispatch_history.dynflow_step_id, 'finished')
-            logger.debug("Sent finished event to execution_plan_id=#{dispatch_history.dynflow_execution_plan_id}")
             return
           end
         rescue Dynflow::Error => e
