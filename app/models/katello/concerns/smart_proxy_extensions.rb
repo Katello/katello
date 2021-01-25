@@ -352,6 +352,26 @@ module Katello
         end
       end
 
+      def repos_in_env_cv(environment = nil, content_view = nil)
+        repos = Katello::Repository
+        repos = repos.in_environment(environment) if environment
+        repos = repos.in_content_views([content_view]) if content_view
+        repos
+      end
+
+      def repos_in_sync_history
+        smart_proxy_sync_histories.map { |sync_history| sync_history.repository }
+      end
+
+      def current_repositories_data(environment = nil, content_view = nil)
+        return repos_in_sync_history unless (environment || content_view)
+        repos_in_sync_history & repos_in_env_cv(environment, content_view)
+      end
+
+      def repos_pending_sync(environment = nil, content_view = nil)
+        repos_in_env_cv(environment, content_view) - repos_in_sync_history
+      end
+
       def smart_proxy_service
         @smart_proxy_service ||= Pulp::SmartProxyRepository.new(self)
       end

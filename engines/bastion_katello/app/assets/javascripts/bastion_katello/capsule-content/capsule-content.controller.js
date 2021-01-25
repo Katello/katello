@@ -116,7 +116,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         };
 
         $scope.syncState = syncState;
-
+        $scope.smartProxyId = capsuleId;
         $scope.expandEnvironments = {};
 
         refreshSyncStatus();
