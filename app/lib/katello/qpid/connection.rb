@@ -1,106 +1,77 @@
-require 'qpid_messaging'
+require 'qpid_proton'
 
 module Katello
   module Qpid
     class Connection
-      def initialize
-        @connection = ::Qpid::Messaging::Connection.new(
-          url: settings[:url],
-          options: {
-            transport: 'ssl'
-          }
-        )
+      class Sender < ::Qpid::Proton::MessagingHandler
+        def initialize(url, address, message)
+          super()
+          @url = url
+          @address = address
+          @message = message
+        end
+
+        def on_container_start(container)
+          c = container.connect(@url)
+          c.open_sender(@address)
+        end
+
+        def on_sendable(sender)
+          msg = ::Qpid::Proton::Message.new
+          msg.body = @message.to_s
+          sender.send(msg)
+          sender.close
+        end
+
+        def on_tracker_accept(tracker)
+          tracker.connection.close
+        end
       end
 
-      def open
-        @connection.open
-      end
+      class Receiver < ::Qpid::Proton::MessagingHandler
+        def initialize(url, address, handler)
+          super()
+          @url = url
+          @address = address
+          @handler = handler
+        end
 
-      def close
-        return unless open?
-        @connection.close
-        Rails.logger.debug("Qpid connection #{self.object_id} closed")
+        def on_container_start(container)
+          c = container.connect(@url,
+            idle_timeout: 4
+          )
+          c.open_receiver(@address)
+        end
+
+        def on_message(delivery, message)
+          received = Katello::Messaging::ReceivedMessage.new(body: message.body)
+          @handler.handle(received)
+
+          delivery.accept
+        end
       end
 
       def send_message(address, message)
-        with_connection do |connection|
-          session = connection.create_session
-          sender = session.create_sender(address)
-          send(sender, message)
-          sender.close
-          session.close
-        end
+        sender = Sender.new(settings[:url], address, message)
+        with_connection(sender)
       end
 
-      def send(sender, message)
-        Rails.logger.debug("Sending with sender=#{sender.object_id} session=#{sender.session.object_id} connection=#{sender.session.connection.object_id}")
-        sender.send(::Qpid::Messaging::Message.new(message))
-      end
-
-      # Use a single connection, session, and receiver to fetch messages from a queue
-      # Drains messages from the queue and sleeps for the specified time before repeating
-      def receive_messages(address:, sleep_seconds: nil)
-        with_connection do |connection|
-          session = connection.create_session
-          receiver = session.create_receiver(address)
-
-          begin
-            loop do
-              receive(receiver) do |received|
-                yield(received)
-              end
-
-              break if sleep_seconds.blank?
-
-              sleep(sleep_seconds)
-            end
-          ensure
-            receiver.close
-            session.close
-          end
-        end
-      end
-
-      def receive(receiver)
-        message = fetch_message(receiver)
-        while message
-          begin
-            received = Katello::Messaging::ReceivedMessage.new(body: message.content)
-            yield(received)
-          ensure
-            ack(message, receiver)
-          end
-          message = fetch_message(receiver)
-        end
-      rescue NoMessageAvailable
-        # this is not an error for us
-      end
-
-      def open?
-        @connection&.open?
+      def receive_messages(address:, handler:)
+        receiver = Receiver.new(settings[:url], address, handler)
+        with_connection(receiver)
       end
 
       private
 
-      def with_connection
-        @connection.open unless @connection.open?
-
-        yield(@connection)
-      end
-
-      def ack(message, receiver)
-        receiver.session.acknowledge(message: message, sync: true)
-      rescue => e
-        receiver.session.release(message)
-        raise e
-      end
-
-      def fetch_message(receiver)
-        receiver.fetch(::Qpid::Messaging::Duration::SECOND)
-      end
-
       def settings
         SETTINGS[:katello][:qpid]
+      end
+
+      def with_connection(handler)
+        container = ::Qpid::Proton::Container.new(handler)
+        container.run
+      ensure
+        container&.stop
       end
     end
   end

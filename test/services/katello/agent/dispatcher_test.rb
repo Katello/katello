@@ -12,7 +12,7 @@ module Katello
 
       def test_dispatch
         Katello::Agent::Dispatcher.register_message(:test, TestMessage)
-        Katello::Agent::Dispatcher.expects(:send_message)
+        Katello::Agent::Connection.any_instance.expects(:send_message)
         TestMessage.expects(:new).with(valid_params).returns(agent_message)
 
         Katello::Agent::Dispatcher.dispatch(:test, valid_params)

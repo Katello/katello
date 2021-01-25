@@ -5,6 +5,7 @@ module Katello
         ::Foreman::Logging.logger('katello/agent')
       end
 
+      # rubocop:disable Metrics/MethodLength
       def self.handle(message)
         logger.debug("client message: #{message.body}")
 

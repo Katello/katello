@@ -1,40 +1,18 @@
 module Katello
   module Agent
-    module Connection
-      extend ActiveSupport::Concern
+    class Connection
+      def send_message(message)
+        connection = ::Katello::Qpid::Connection.new
+        connection.send_message(message.recipient_address, message)
+      end
 
-      included do
-        @agent_connection = Katello::Qpid::Connection.new
+      def fetch_agent_messages(handler = ClientMessageHandler)
+        connection = ::Katello::Qpid::Connection.new
+        connection.receive_messages(address: settings[:queue_name], handler: handler)
+      end
 
-        at_exit do
-          close_connection
-        end
-
-        def self.send_message(message)
-          Rails.logger.info("sending message #{message.to_s}")
-          @agent_connection.send_message(message.recipient_address, content: message.to_s)
-        end
-
-        def self.fetch_agent_messages(sleep_seconds:)
-          @agent_connection.receive_messages(
-            address: settings[:queue_name],
-            sleep_seconds: sleep_seconds
-          ) do |received|
-            yield(received)
-          end
-        end
-
-        def self.close_connection
-          @agent_connection.close
-        end
-
-        def self.agent_connection_open?
-          @agent_connection.open?
-        end
-
-        def self.settings
-          SETTINGS[:katello][:agent]
-        end
+      def settings
+        SETTINGS[:katello][:agent]
       end
     end
   end

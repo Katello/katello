@@ -5,17 +5,17 @@ module Katello
     module Services
       class AgentEventReceiverTest < ActiveSupport::TestCase
         def test_run
-          AgentEventReceiver.stubs(:fetch_agent_messages).returns(true)
+          Thread.expects(:new)
 
-          assert AgentEventReceiver.run
+          AgentEventReceiver.run
         end
 
         def test_close
-          refute AgentEventReceiver.close
+          AgentEventReceiver.close
         end
 
         def test_status
-          assert AgentEventReceiver.status
+          AgentEventReceiver.status
         end
       end
     end

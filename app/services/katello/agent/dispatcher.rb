@@ -1,8 +1,6 @@
 module Katello
   module Agent
     class Dispatcher
-      include Katello::Agent::Connection
-
       @supported_messages = {}
 
       def self.register_message(name, klass)
@@ -29,7 +27,8 @@ module Katello
 
         message.dispatch_history_id = history.id
 
-        send_message(message)
+        connection = Connection.new
+        connection.send_message(message)
         history
       end
     end
