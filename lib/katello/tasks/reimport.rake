@@ -2,7 +2,7 @@ require File.expand_path("../engine", File.dirname(__FILE__))
 
 namespace :katello do
   desc "Runs a katello ping and prints out the statuses of each service"
-  task :check_ping => :environment do
+  task :check_ping => [:environment, "dynflow:client"] do
     ::User.current = ::User.anonymous_admin
     ping_results = Katello::Ping.ping
     if ping_results[:status] != "ok"
