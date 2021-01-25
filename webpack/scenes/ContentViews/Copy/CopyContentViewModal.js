@@ -5,17 +5,27 @@ import CopyContentViewForm from './CopyContentViewForm';
 
 const CopyContentViewModal = ({
   cvId, cvName, show, setIsOpen,
-}) => (
-  <Modal
-    title={`Copy content view ${cvName}`}
-    variant={ModalVariant.large}
-    isOpen={show}
-    width="50%"
-    onClose={() => { setIsOpen(false); }}
-    appendTo={document.body}
-  ><CopyContentViewForm cvId={cvId} setModalOpen={setIsOpen} />
-  </Modal>
-);
+}) => {
+  const description = (
+    <p>
+      This will create a copy of <b>{cvName}</b>, including details,
+      repositories, and filters. Generated data such
+      as history, tasks and versions will not be copied.
+    </p>
+  );
+  return (
+    <Modal
+      title="Copy content view"
+      variant={ModalVariant.small}
+      isOpen={show}
+      description={description}
+      onClose={() => {
+        setIsOpen(false);
+      }}
+      appendTo={document.body}
+    ><CopyContentViewForm cvId={cvId} setModalOpen={setIsOpen} />
+    </Modal>);
+};
 
 CopyContentViewModal.propTypes = {
   cvId: PropTypes.string,

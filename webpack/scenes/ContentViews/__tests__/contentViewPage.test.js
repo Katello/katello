@@ -269,8 +269,8 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(queryByText('Description')).not.toBeInTheDocument();
   expect(queryByText('Name')).not.toBeInTheDocument();
   expect(queryByText('Label')).not.toBeInTheDocument();
-  expect(queryByText('Composite Content View')).not.toBeInTheDocument();
-  expect(queryByText('Component Content View')).not.toBeInTheDocument();
+  expect(queryByText('Composite content view')).not.toBeInTheDocument();
+  expect(queryByText('Component content view')).not.toBeInTheDocument();
   expect(queryByText('Solve Dependencies')).not.toBeInTheDocument();
   expect(queryByText('Auto Publish')).not.toBeInTheDocument();
   expect(queryByText('Import Only')).not.toBeInTheDocument();
@@ -280,8 +280,8 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(getByText('Description')).toBeInTheDocument();
   expect(getByText('Name')).toBeInTheDocument();
   expect(getByText('Label')).toBeInTheDocument();
-  expect(getByText('Composite Content View')).toBeInTheDocument();
-  expect(getByText('Component Content View')).toBeInTheDocument();
+  expect(getByText('Composite content view')).toBeInTheDocument();
+  expect(getByText('Component content view')).toBeInTheDocument();
   expect(getByText('Solve Dependencies')).toBeInTheDocument();
   expect(queryByText('Auto Publish')).not.toBeInTheDocument();
   expect(getByText('Import Only')).toBeInTheDocument();
