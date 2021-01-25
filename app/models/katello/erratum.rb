@@ -113,8 +113,11 @@ module Katello
       statement = query_clauses.join(" OR ")
 
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
+          joins("inner join #{Katello::Rpm.table_name} on #{Katello::Rpm.table_name}.filename = #{Katello::ErratumPackage.table_name}.filename").
+          joins("inner join #{Katello::RepositoryRpm.table_name} on #{Katello::Rpm.table_name}.id = #{Katello::RepositoryRpm.table_name}.rpm_id").
+          where("#{Katello::RepositoryRpm.table_name}.repository_id = #{repo.id}").
           where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
-          where(statement).pluck(:filename)
+          where(statement).pluck("#{Katello::Rpm.table_name}.filename")
     end
 
     def self.list_modular_streams_by_clauses(repo, clauses)
