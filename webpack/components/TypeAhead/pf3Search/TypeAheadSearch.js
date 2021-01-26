@@ -1,6 +1,7 @@
 import React from 'react';
 import { InputGroup, Button, Icon } from 'patternfly-react';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 import TypeAheadInput from './TypeAheadInput';
 import TypeAheadItems from './TypeAheadItems';
@@ -46,7 +47,7 @@ TypeAheadSearch.propTypes = {
 };
 
 TypeAheadSearch.defaultProps = {
-  actionText: 'Search',
+  actionText: __('Search'),
 };
 
 export default TypeAheadSearch;
