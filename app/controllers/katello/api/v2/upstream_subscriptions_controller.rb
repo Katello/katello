@@ -2,7 +2,7 @@ module Katello
   class Api::V2::UpstreamSubscriptionsController < Api::V2::ApiController
     before_action :find_organization
     before_action :check_upstream_connection
-
+    before_action :deprecated, only: [:simple_content_access_eligible, :enable_simple_content_access, :disable_simple_content_access]
     resource_description do
       description "Red Hat subscriptions management platform."
       api_version 'v2'
@@ -78,14 +78,14 @@ module Katello
     end
 
     api :GET, "/organizations/:organization_id/upstream_subscriptions/simple_content_access/eligible",
-      N_("Check if the specified organization is eligible for Simple Content Access")
+      N_("Check if the specified organization is eligible for Simple Content Access"), :deprecated => true
     def simple_content_access_eligible
       eligible = @organization.upstream_consumer.simple_content_access_eligible?
       render json: { simple_content_access_eligible: eligible }
     end
 
     api :PUT, "/organizations/:organization_id/upstream_subscriptions/simple_content_access/enable",
-      N_("Enable simple content access for a manifest")
+      N_("Enable simple content access for a manifest"), :deprecated => true
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def enable_simple_content_access
       task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Enable, params[:organization_id])
@@ -93,7 +93,7 @@ module Katello
     end
 
     api :PUT, "/organizations/:organization_id/upstream_subscriptions/simple_content_access/disable",
-      N_("Disable simple content access for a manifest")
+      N_("Disable simple content access for a manifest"), :deprecated => true
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     def disable_simple_content_access
       task = async_task(::Actions::Katello::Organization::SimpleContentAccess::Disable, params[:organization_id])
@@ -123,6 +123,10 @@ module Katello
       params.permit(pools: [:id, :quantity])[:pools].map do |pool|
         { "pool" => pool[:id], "quantity" => pool[:quantity] } if pool
       end
+    end
+
+    def deprecated
+      ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 4.0, Please see /api/v2/simple_content_access")
     end
   end
 end
