@@ -113,12 +113,6 @@ module Katello
         backend_service(capsule).generate_distributors
       end
 
-      def populate_from(repos_map)
-        found = repos_map[self.pulp_id]
-        prepopulate(found) if found
-        !found.nil?
-      end
-
       def package_group_count
         content_unit_counts = 0
         if self.pulp_repo_facts

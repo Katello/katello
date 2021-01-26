@@ -12,27 +12,6 @@ module Katello
       "#{path_prefix}/#{path}"
     end
 
-    def self.prepopulate!(products, environment, repos = [], content_view = nil)
-      if content_view.nil?
-        if environment.library?
-          content_view = environment.default_content_view
-        else
-          fail "No content view specified for a Non library environment #{environment.inspect}"
-        end
-      end
-
-      items = Katello.pulp_server.extensions.repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
-      full_repos = {}
-      items.each { |item| full_repos[item["id"]] = item }
-
-      products.each do |prod|
-        prod.repos(environment, content_view).each do |repo|
-          repo.populate_from(full_repos)
-        end
-      end
-      repos.each { |repo| repo.populate_from(full_repos) }
-    end
-
     module InstanceMethods
       def distributions(env)
         to_ret = []

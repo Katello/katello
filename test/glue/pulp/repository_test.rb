@@ -94,10 +94,6 @@ module Katello
     SHA1 = "sha1".freeze
     SHA256 = "sha256".freeze
 
-    def test_populate_from
-      assert @fedora_17_x86_64.populate_from(@fedora_17_x86_64.pulp_id => {})
-    end
-
     def test_distributors_match_yum
       yum_config = {
         'relative_url' => '/foo/bar',
