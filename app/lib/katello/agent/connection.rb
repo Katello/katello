@@ -2,13 +2,13 @@ module Katello
   module Agent
     class Connection
       def send_message(message)
-        connection = ::Katello::Qpid::Connection.new
+        connection = ::Katello::Qpid::Connection.new(settings[:broker_url])
         connection.send_message(message.recipient_address, message)
       end
 
       def fetch_agent_messages(handler = ClientMessageHandler)
-        connection = ::Katello::Qpid::Connection.new
-        connection.receive_messages(address: settings[:queue_name], handler: handler)
+        connection = ::Katello::Qpid::Connection.new(settings[:broker_url])
+        connection.receive_messages(address: settings[:event_queue_name], handler: handler)
       end
 
       def settings

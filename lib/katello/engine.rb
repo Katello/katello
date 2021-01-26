@@ -56,8 +56,10 @@ module Katello
           :subscription_name => 'candlepin_events',
           :client_id => 'katello_candlepin_event_monitor'
         },
-        :qpid => {
-
+        :agent => {
+          :client_queue_format => 'pulp.agent.%s',
+          :broker_url => 'amqp:ssl:localhost:5671',
+          :event_queue_name => 'pulp.task'
         }
       }
 
@@ -148,7 +150,7 @@ module Katello
       Katello::EventDaemon::Runner.initialize
       Katello::EventDaemon::Runner.register_service(:candlepin_events, Katello::CandlepinEventListener)
       Katello::EventDaemon::Runner.register_service(:katello_events, Katello::EventMonitor::PollerThread)
-      Katello::EventDaemon::Runner.register_service(:katello_agent, Katello::EventDaemon::Services::AgentEventReceiver)
+      Katello::EventDaemon::Runner.register_service(:katello_agent_events, Katello::EventDaemon::Services::AgentEventReceiver)
 
       FastGettext.add_text_domain('katello',
                                     :path => File.expand_path("../../../locale", __FILE__),

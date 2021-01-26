@@ -1,19 +1,18 @@
 module Katello
   module Agent
     class BaseMessage
-      attr_accessor :dispatch_history_id
-      attr_reader :host_id
+      attr_accessor :dispatch_history_id, :recipient_address, :reply_to
 
       def json
         {
           data: {
-            consumer_id: consumer_id,
-            dispatch_history_id: self.dispatch_history_id
+            consumer_id: @consumer_id,
+            dispatch_history_id: dispatch_history_id
           },
-          replyto: "pulp.task",
+          replyto: reply_to,
           request: {
             args: [
-              self.units,
+              units,
               {
                 importkeys: true
               }
@@ -33,14 +32,6 @@ module Katello
 
       def to_s
         json.to_json
-      end
-
-      def recipient_address
-        "pulp.agent.#{consumer_id}"
-      end
-
-      def consumer_id
-        @consumer_id ||= ::Katello::Host::ContentFacet.where(host_id: @host_id).pluck(:uuid).first
       end
     end
   end

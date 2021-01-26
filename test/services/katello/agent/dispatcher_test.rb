@@ -4,8 +4,9 @@ module Katello
   module Agent
     class DispatcherTest < ActiveSupport::TestCase
       let(:host) { hosts(:one) }
+      let(:consumer_id) { "pulp.agent.#{host.content_facet.uuid}" }
       let(:valid_params) { { arg1: :foo, host_id: host.id } }
-      let(:agent_message) { stub('dispatch_history_id=' => 100, 'recipient_address' => 'nowhere') }
+      let(:agent_message) { stub('dispatch_history_id=' => 100, 'recipient_address=' => consumer_id, 'reply_to=' => 'pulp.task') }
 
       class TestMessage
       end

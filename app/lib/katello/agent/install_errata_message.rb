@@ -1,9 +1,9 @@
 module Katello
   module Agent
     class InstallErrataMessage < BaseMessage
-      def initialize(errata_ids:, host_id:)
+      def initialize(errata_ids:, consumer_id:)
         @errata_ids = errata_ids
-        @host_id = host_id
+        @consumer_id = consumer_id
         @content_type = 'erratum'
         @method = 'install'
       end

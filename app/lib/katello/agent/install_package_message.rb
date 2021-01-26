@@ -1,9 +1,9 @@
 module Katello
   module Agent
     class InstallPackageMessage < BaseMessage
-      def initialize(packages:, host_id:)
+      def initialize(packages:, consumer_id:)
         @packages = packages
-        @host_id = host_id
+        @consumer_id = consumer_id
         @content_type = 'rpm'
         @method = 'install'
       end

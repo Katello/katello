@@ -1,9 +1,9 @@
 module Katello
   module Agent
     class RemovePackageGroupMessage < BaseMessage
-      def initialize(groups:, host_id:)
+      def initialize(groups:, consumer_id:)
         @groups = groups
-        @host_id = host_id
+        @consumer_id = consumer_id
         @content_type = 'package_group'
         @method = 'uninstall'
       end
