@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 import TypeAheadSearch from './pf3Search/TypeAheadSearch';
 // eslint-disable-next-line import/no-named-default
@@ -101,7 +102,7 @@ TypeAhead.propTypes = {
 };
 
 TypeAhead.defaultProps = {
-  actionText: 'Search',
+  actionText: __('Search'),
   initialInputValue: '',
   patternfly4: false,
 };
