@@ -7,6 +7,7 @@ module Katello
         Rake.application.rake_require 'katello/tasks/pulp3_content_switchover'
         Rake::Task['katello:pulp3_content_switchover'].reenable
         Rake::Task.define_task(:environment)
+        Rake::Task.define_task('dynflow:client')
 
         @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
         SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => true, :docker => true}
