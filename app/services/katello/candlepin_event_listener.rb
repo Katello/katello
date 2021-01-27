@@ -1,6 +1,5 @@
 module Katello
   class CandlepinEventListener
-    STATUS_CACHE_KEY = 'candlepin_events_status'.freeze
 
     Event = Struct.new(:subject, :content)
 
@@ -29,7 +28,6 @@ module Katello
       @processed_count = 0
       @failed_count = 0
       @running = false
-      Rails.cache.delete(STATUS_CACHE_KEY)
     end
 
     def self.run
@@ -41,14 +39,12 @@ module Katello
       @running = true
     end
 
-    def self.status(refresh: true)
-      Rails.cache.fetch(STATUS_CACHE_KEY, force: refresh) do
-        {
-          processed_count: @processed_count,
-          failed_count: @failed_count,
-          running: running?
-        }
-      end
+    def self.status
+      {
+        processed_count: @processed_count,
+        failed_count: @failed_count,
+        running: running?
+      }
     end
 
     def self.handle_message(message)
