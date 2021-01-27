@@ -190,8 +190,8 @@ module Katello
 
     api :PUT, "/content_views/:id/remove", N_("Remove versions and/or environments from a content view and reassign systems and keys")
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
-    param :environment_ids, :number, :desc => N_("environment numeric identifiers to be removed")
-    param :content_view_version_ids, :number, :desc => N_("content view version identifiers to be deleted")
+    param :environment_ids, Array, of: :number, :desc => N_("environment numeric identifiers to be removed")
+    param :content_view_version_ids, Array, of: :number, :desc => N_("content view version identifiers to be deleted")
     param :system_content_view_id, :number, :desc => N_("content view to reassign orphaned systems to")
     param :system_environment_id, :number, :desc => N_("environment to reassign orphaned systems to")
     param :key_content_view_id, :number, :desc => N_("content view to reassign orphaned activation keys to")
