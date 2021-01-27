@@ -57,7 +57,7 @@ export const links = [
     component: withHeader(ContentViews, { title: __('Content Views') }),
   },
   {
-    path: 'labs/content_views/:id([0-9]+)/:tab?/:subContentId([0-9]+)?',
+    path: 'labs/content_views/:id([0-9]+)',
     component: withHeader(ContentViewDetails, { title: __('Content View Details') }),
   },
 ];

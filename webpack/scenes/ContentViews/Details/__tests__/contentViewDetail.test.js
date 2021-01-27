@@ -11,7 +11,7 @@ const cvDetailData = require('./contentViewDetails.fixtures.json');
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvDetailsPath = api.getApiUrl('/content_views/1');
 
-// The Repositories tab will load in the background, prevent this by mocking
+// The tabs will load in the background, prevent this by mocking
 jest.mock('../Repositories/ContentViewRepositories.js', () => () => 'mocked!');
 jest.mock('../Filters/ContentViewFilters.js', () => () => 'mocked!');
 

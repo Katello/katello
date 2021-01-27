@@ -19,7 +19,7 @@ import {
 import { truncate } from '../../../../utils/helpers';
 import ContentType from './ContentType';
 
-const cvFilterUrl = (cvId, filterId) => `/labs/content_views/${cvId}/filters/${filterId}`;
+const cvFilterUrl = (cvId, filterId) => `/labs/content_views/${cvId}#filters?subContentId=${filterId}`;
 
 const ContentViewFilters = ({ cvId }) => {
   const response = useSelector(state => selectCVFilters(state, cvId), shallowEqual);
