@@ -110,8 +110,8 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
         $scope.save(repo);
 
-        expect(repo.upstream_username).toBe(undefined);
-        expect(repo.upstream_password).toBe(undefined);
+        expect(repo.upstream_username).toBe(null);
+        expect(repo.upstream_password).toBe(null);
     });
 
     it('should not ignore upstream auth on save unless specified', function() {
