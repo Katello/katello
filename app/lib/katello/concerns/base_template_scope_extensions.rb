@@ -129,13 +129,14 @@ module Katello
             seen_errata_ids = (seen_errata_ids + parse_errata(task)).uniq
             seen_host_ids << task.input['host']['id'].to_i if include_last_reboot == 'yes'
           end
+          seen_host_ids &= only_host_ids if only_host_ids
 
           # preload errata in one query for this batch
           preloaded_errata = Katello::Erratum.where(:errata_id => seen_errata_ids).pluck(:errata_id, :errata_type)
-          preloaded_hosts = ::Host.where(:id => seen_host_ids & only_host_ids).includes(:reported_data)
+          preloaded_hosts = ::Host.where(:id => seen_host_ids).includes(:reported_data)
 
           batch.each do |task|
-            next unless only_host_ids.include?(task.input['host']['id'].to_i)
+            next if !only_host_ids.nil? && only_host_ids.include?(task.input['host']['id'].to_i)
             parse_errata(task).each do |erratum_id|
               current_erratum_errata_type = preloaded_errata.find { |k, _| k == erratum_id }.last
 
