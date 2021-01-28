@@ -9,7 +9,6 @@ module Katello
     param :content_view_id, :number, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
-    param :uuid, String, :desc => N_("uuid of the puppet module"), :deprecated => true
     param_group :search, ::Katello::Api::V2::ApiController
     add_scoped_search_description_for(ContentViewPuppetModule)
     def index
@@ -22,7 +21,6 @@ module Katello
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
     param :id, String, :desc => N_("the id of the puppet module to associate")
-    param :uuid, String, :desc => N_("the uuid of the puppet module to associate"), :deprecated => true
     def create
       params[:content_view_puppet_module][:uuid] ||= PuppetModule.find(params[:id]).try(:pulp_id) if params[:id]
       respond resource: ContentViewPuppetModule.create!(puppet_module_params.merge(content_view: @view))
@@ -41,7 +39,6 @@ module Katello
     param :id, :number, :desc => N_("puppet module ID"), :required => true
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
-    param :uuid, String, :desc => N_("the uuid of the puppet module to associate"), :deprecated => true
     def update
       @puppet_module.update!(puppet_module_params)
       respond :resource => @puppet_module

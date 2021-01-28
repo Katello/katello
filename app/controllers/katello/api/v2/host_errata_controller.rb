@@ -49,16 +49,6 @@ module Katello
       respond_for_index :collection => collection
     end
 
-    api :PUT, "/hosts/:host_id/errata/apply", N_("Schedule errata for installation")
-    param :host_id, :number, :desc => N_("Host ID"), :required => true
-    param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => false, :deprecated => true
-
-    param_group :bulk_errata_ids
-    def apply
-      task = async_task(::Actions::Katello::Host::Erratum::Install, @host, @errata_ids)
-      respond_for_async :resource => task
-    end
-
     api :GET, "/hosts/:host_id/errata/:id", N_("Retrieve a single errata for a host")
     param :host_id, :number, :desc => N_("Host ID"), :required => true
     param :id, String, :desc => N_("Errata id of the erratum (RHSA-2012:108)"), :required => true

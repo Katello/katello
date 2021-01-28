@@ -4,8 +4,6 @@ module Katello
     include ForemanTasks::Triggers
     include AbstractController::Callbacks
 
-    before_action :deprecated, only: :deb_package_profile
-
     skip_before_action :authorize, :only => [:upload_package_profile, :upload_profiles, :deb_package_profile]
     before_action :find_host, :only => [:upload_package_profile, :upload_profiles, :deb_package_profile]
     before_action :authorize_client_or_user, :only => [:upload_package_profile, :upload_profiles, :deb_package_profile]
@@ -39,10 +37,6 @@ module Katello
         param :version, String, :required => true
       end
     end
-    param :id, String, :desc => N_("UUID of the system"), :required => true
-    def deb_package_profile
-      upload_profiles
-    end
 
     def find_host(uuid = nil)
       params = request.path_parameters
@@ -66,8 +60,5 @@ module Katello
       authorized
     end
 
-    def deprecated
-      ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 4.0. Please use /consumers/:id/profiles instead.")
-    end
   end
 end

@@ -85,40 +85,6 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :POST, "/content_view_versions/:id/export", N_("Export a content view version.  Relevant only for Pulp 2 repositories.")
-    param :id, :number, :desc => N_("Content view version identifier"), :required => true
-    param :export_to_iso, :bool, :desc => N_("Export to ISO format."), :required => false
-    param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB. Relevant only for Pulp 2 repositories"), :required => false
-    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z). Relevant only for Pulp 2 repositories"), :required => false
-    def export
-      if SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
-        fail HttpErrors::BadRequest, _("Invalid usage for Pulp 3 repositories. "\
-                                       "Use hammer content-export for Yum repositories")
-      end
-      ::Foreman::Deprecation.api_deprecation_warning("Export is being deprecated and will be removed in a future version of Katello. Use hammer content-view version export instead.")
-      if params[:export_to_iso].blank? && params[:iso_mb_size].present?
-        fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
-      end
-
-      if (repos = @content_view_version.content_view.on_demand_repositories).any?
-        fail HttpErrors::BadRequest, _("This content view has on demand repositories that cannot be exported: %{repos}" % {repos: repos.pluck(:label).join(", ")})
-      end
-
-      if params[:since].present?
-        begin
-          params[:since].to_datetime
-        rescue
-          raise HttpErrors::BadRequest, _("Invalid date provided.")
-        end
-      end
-      task = async_task(::Actions::Katello::ContentViewVersion::Export, @content_view_version,
-                        ::Foreman::Cast.to_bool(params[:export_to_iso]),
-                        params[:since].try(:to_datetime),
-                        params[:iso_mb_size])
-
-      respond_for_async :resource => task
-    end
-
     api :POST, "/content_view_versions/import", N_("Import a content view version")
     param :content_view_id, :number, :desc => N_("Content view identifier"), :required => true
     param :path, String, :desc => N_("Directory containing the exported Content View Version"), :required => true
