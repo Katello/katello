@@ -1,9 +1,9 @@
 module Katello
   module Agent
     class UpdatePackageMessage < BaseMessage
-      def initialize(packages:, host_id:)
-        @packages = packages
-        @host_id = host_id
+      def initialize(content:, consumer_id:)
+        @packages = content
+        @consumer_id = consumer_id
         @content_type = 'rpm'
         @method = 'update'
       end

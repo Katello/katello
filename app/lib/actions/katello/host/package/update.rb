@@ -3,20 +3,8 @@ module Actions
     module Host
       module Package
         class Update < Actions::Katello::AgentAction
-          def plan(host, packages)
-            Type! host, ::Host::Managed
-
-            action_subject(host, :hostname => host.name, :packages => packages)
-
-            plan_self(:host_id => host.id, :packages => packages)
-          end
-
-          def dispatch_agent_action
-            ::Katello::Agent::Dispatcher.dispatch(
-              :update_package,
-              host_id: input[:host_id],
-              packages: input[:packages]
-            )
+          def self.agent_message
+            :update_package
           end
 
           def agent_action_type

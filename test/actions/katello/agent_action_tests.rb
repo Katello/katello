@@ -58,18 +58,18 @@ module Actions
         end
 
         def test_process_timeout_accept
-          action.expects(:dispatch_history).returns(dispatch_history)
+          dispatched_action.expects(:dispatch_history).returns(dispatch_history)
 
-          error = assert_raises(StandardError) { action.process_timeout }
+          error = assert_raises(StandardError) { dispatched_action.process_timeout }
 
           assert_match(/did not respond/, error.message)
         end
 
         def test_process_timeout_finish
           dispatch_history.accepted_at = Time.now
-          action.expects(:dispatch_history).returns(dispatch_history)
+          dispatched_action.expects(:dispatch_history).returns(dispatch_history)
 
-          error = assert_raises(StandardError) { action.process_timeout }
+          error = assert_raises(StandardError) { dispatched_action.process_timeout }
 
           assert_match(/did not finish/, error.message)
         end
@@ -77,15 +77,15 @@ module Actions
         def test_process_timeout_noop
           dispatch_history.accepted_at = Time.now
           dispatch_history.result = { :foo => "bar" }
-          action.expects(:dispatch_history).returns(dispatch_history)
+          dispatched_action.expects(:dispatch_history).returns(dispatch_history)
 
-          action.process_timeout
+          dispatched_action.process_timeout
         end
 
         def test_humanized_output
           Actions::Katello::Agent::DispatchHistoryPresenter.any_instance.expects(:humanized_output)
 
-          action.humanized_output
+          dispatched_action.humanized_output
         end
       end
     end

@@ -3,20 +3,8 @@ module Actions
     module Host
       module PackageGroup
         class Install < Actions::Katello::AgentAction
-          def plan(host, groups)
-            Type! host, ::Host::Managed
-
-            action_subject(host, :groups => groups)
-
-            plan_self(:host_id => host.id, :groups => groups)
-          end
-
-          def dispatch_agent_action
-            ::Katello::Agent::Dispatcher.dispatch(
-              :install_package_group,
-              host_id: input[:host_id],
-              groups: input[:groups]
-            )
+          def self.agent_message
+            :install_package_group
           end
 
           def agent_action_type
@@ -28,12 +16,12 @@ module Actions
           end
 
           def humanized_input
-            [input[:groups].join(", ")] + super
+            [input[:content].join(", ")] + super
           end
 
           def finalize
             host = ::Host.find_by(:id => input[:host_id])
-            host.update(audit_comment: (_("Installation of package group(s) requested: %{groups}") % {groups: input[:groups].join(", ")}).truncate(255))
+            host.update(audit_comment: (_("Installation of package group(s) requested: %{groups}") % {groups: input[:content].join(", ")}).truncate(255))
           end
         end
       end

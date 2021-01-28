@@ -40,7 +40,7 @@ module Katello
 
       if params[:groups]
         groups = extract_group_names(params[:groups])
-        task   = async_task(::Actions::Katello::Host::PackageGroup::Install, @host, groups)
+        task   = async_task(::Actions::Katello::Host::PackageGroup::Install, @host, content: groups)
         respond_for_async :resource => task
       end
     end
@@ -51,7 +51,7 @@ module Katello
     def upgrade
       if params[:packages]
         packages = validate_package_list_format(params[:packages])
-        task     = async_task(::Actions::Katello::Host::Package::Update, @host, packages)
+        task     = async_task(::Actions::Katello::Host::Package::Update, @host, content: packages)
         respond_for_async :resource => task
       end
     end
@@ -59,7 +59,7 @@ module Katello
     api :PUT, "/hosts/:host_id/packages/upgrade_all", N_("Update packages remotely")
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
     def upgrade_all
-      task = async_task(::Actions::Katello::Host::Package::Update, @host, [])
+      task = async_task(::Actions::Katello::Host::Package::Update, @host, content: [])
       respond_for_async :resource => task
     end
 
@@ -69,14 +69,14 @@ module Katello
     def remove
       if params[:packages]
         packages = validate_package_list_format(params[:packages])
-        task     = async_task(::Actions::Katello::Host::Package::Remove, @host, packages)
+        task     = async_task(::Actions::Katello::Host::Package::Remove, @host, content: packages)
         respond_for_async :resource => task
         return
       end
 
       if params[:groups]
         groups = extract_group_names(params[:groups])
-        task   = async_task(::Actions::Katello::Host::PackageGroup::Remove, @host, groups)
+        task   = async_task(::Actions::Katello::Host::PackageGroup::Remove, @host, content: groups)
         respond_for_async :resource => task
       end
     end
