@@ -20,7 +20,7 @@ module Actions
           end
 
           def humanized_input
-            [(input[:packages].present? && input[:packages].join(", ") || "all packages")] + super
+            [(input[:content].present? && input[:content].join(", ") || "all packages")] + super
           end
 
           def finalize
@@ -29,8 +29,8 @@ module Actions
           end
 
           def audit_comment
-            if input[:packages].present?
-              (_("Update of package(s) requested: %{packages}") % {packages: input[:packages].join(", ")}).truncate(255)
+            if input[:content].present?
+              (_("Update of package(s) requested: %{packages}") % {packages: input[:content].join(", ")}).truncate(255)
             else
               _("Update of all packages requested")
             end
