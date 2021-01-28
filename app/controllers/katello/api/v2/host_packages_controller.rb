@@ -33,7 +33,7 @@ module Katello
     def install
       if params[:packages]
         packages = validate_package_list_format(params[:packages])
-        task     = async_task(::Actions::Katello::Host::Package::Install, @host, packages)
+        task     = async_task(::Actions::Katello::Host::Package::Install, @host, content: packages)
         respond_for_async :resource => task
         return
       end

@@ -4,7 +4,7 @@ module Actions
       include Dynflow::Action::Timeouts
       include Helpers::Presenter
 
-      def dispatch_agent_action
+      def self.agent_message
         fail NotImplementedError
       end
 
@@ -12,18 +12,45 @@ module Actions
         nil
       end
 
+      def plan(host, options)
+        action_subject(host)
+
+        # if already dispatched by bulk action use the provided history ID
+        dispatch_history_id = options[:dispatch_histories]&.dig(host.id.to_s)
+
+        unless dispatch_history_id
+          histories = ::Katello::Agent::Dispatcher.dispatch(
+            self.class.agent_message,
+            [host.id],
+            content: options[:content]
+          )
+
+          dispatch_history_id = histories.first.id
+        end
+
+        plan_self(
+          host_id: host.id,
+          hostname: host.name,
+          content: options[:content],
+          dispatch_history_id: dispatch_history_id
+        )
+      end
+
       def run(event = nil)
         case event
         when nil
           suspend do |suspended_action|
-            history = dispatch_agent_action
-            output[:dispatch_history_id] = history.id
+            history = dispatch_history
 
             history.dynflow_execution_plan_id = suspended_action.execution_plan_id
             history.dynflow_step_id = suspended_action.step_id
             history.save!
 
-            schedule_timeout(accept_timeout)
+            if !history.accepted?
+              schedule_timeout(accept_timeout)
+            elsif !history.finished?
+              schedule_timeout(finish_timeout)
+            end
           end
         when 'accepted'
           schedule_timeout(finish_timeout)
@@ -44,22 +71,20 @@ module Actions
       def process_timeout
         history = dispatch_history
 
-        if history&.accepted_at.blank?
+        unless history.accepted?
           fail _("Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?") % accept_timeout
         end
 
-        if history&.result.blank?
+        unless history.finished?
           fail _("Host did not finish content action in %s seconds.  The task has been cancelled.") % finish_timeout
         end
       end
 
       def fail_on_errors
-        if output[:dispatch_history_id]
-          errors = presenter.error_messages
+        errors = presenter.error_messages
 
-          if errors.any?
-            fail errors.join("\n")
-          end
+        if errors.any?
+          fail errors.join("\n")
         end
       end
 
@@ -72,8 +97,8 @@ module Actions
       end
 
       def dispatch_history
-        if output[:dispatch_history_id]
-          ::Katello::Agent::DispatchHistory.find_by_id(output[:dispatch_history_id])
+        if input[:dispatch_history_id]
+          ::Katello::Agent::DispatchHistory.find_by_id(input[:dispatch_history_id])
         end
       end
     end

@@ -13,15 +13,15 @@ module Katello
 
       def test_dispatch
         Katello::Agent::Dispatcher.register_message(:test, TestMessage)
-        Katello::Agent::Connection.any_instance.expects(:send_message)
+        Katello::Agent::Connection.any_instance.expects(:send_messages)
         TestMessage.expects(:new).with(valid_params).returns(agent_message)
 
-        Katello::Agent::Dispatcher.dispatch(:test, valid_params)
+        Katello::Agent::Dispatcher.dispatch(:test, [host.id], valid_params)
       end
 
       def test_dispatch_unregistered
         assert_raises(StandardError) do
-          Katello::Agent::Dispatcher.dispatch(:test, valid_params)
+          Katello::Agent::Dispatcher.dispatch(:test, [host.id], valid_params)
         end
       end
     end
