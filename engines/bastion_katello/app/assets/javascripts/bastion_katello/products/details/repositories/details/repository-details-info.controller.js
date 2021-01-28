@@ -91,8 +91,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 var deferred = $q.defer();
 
                 if (!saveUpstreamAuth) {
-                    delete repository.upstream_username;
-                    delete repository.upstream_password;
+                    repository['upstream_username'] = null;
+                    repository['upstream_password'] = null;
                 }
 
                 if (!_.isEmpty(repository.commaTagsWhitelist)) {
