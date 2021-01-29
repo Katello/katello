@@ -9,6 +9,7 @@ module Katello
       Rake::Task['katello:upgrades:3.10:update_gpg_key_urls'].reenable
       Rake::Task['katello:check_ping'].reenable
       Rake::Task.define_task(:environment)
+      Rake::Task.define_task('dynflow:client')
     end
 
     def test_update_gpg_key_urls
