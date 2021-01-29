@@ -329,7 +329,7 @@ class MigrateContentHosts < ActiveRecord::Migration[4.2]
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def up
-    if User.where(:login => User::ANONYMOUS_API_ADMIN).first.nil?
+    unless User.unscoped.where(:login => User::ANONYMOUS_API_ADMIN).exists?
       logger.warn("Foreman anonymous admin does not exist, skipping content host migration.")
       return
     end
