@@ -59,6 +59,5 @@ module Katello
       authorized = (User.current.uuid == @host.subscription_facet.uuid) if @host && User.consumer?
       authorized
     end
-
   end
 end
