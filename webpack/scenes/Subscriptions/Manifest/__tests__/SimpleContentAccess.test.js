@@ -55,8 +55,8 @@ const initialState = {
   },
 };
 
-const enableSimpleContetAccessPath = api.getApiUrl('/organizations/1/upstream_subscriptions/simple_content_access/enable');
-const disableSimpleContetAccessPath = api.getApiUrl('/organizations/1/upstream_subscriptions/simple_content_access/disable');
+const enableSimpleContetAccessPath = api.getApiUrl('/organizations/1/simple_content_access/enable');
+const disableSimpleContetAccessPath = api.getApiUrl('/organizations/1/simple_content_access/disable');
 const manifestHistoryPath = api.getApiUrl('/organizations/1/subscriptions/manifest_history');
 
 test('Enable Simple Content Access after toggle switch value to true', async (done) => {

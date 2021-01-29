@@ -136,7 +136,7 @@ describe('manifest actions', () => {
 });
 
 describe('creates ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST', () => {
-  const url = '/katello/api/v2/organizations/1/upstream_subscriptions/simple_content_access/enable';
+  const url = '/katello/api/v2/organizations/1/simple_content_access/enable';
 
   it('and then fails with 422', async () => {
     mockErrorRequest({
@@ -158,7 +158,7 @@ describe('creates ENABLE_SIMPLE_CONTENT_ACCESS_REQUEST', () => {
 });
 
 describe('creates DISABLE_SIMPLE_CONTENT_ACCESS_REQUEST', () => {
-  const url = '/katello/api/v2/organizations/1/upstream_subscriptions/simple_content_access/disable';
+  const url = '/katello/api/v2/organizations/1/simple_content_access/disable';
 
   it('and then fails with 422', async () => {
     mockErrorRequest({

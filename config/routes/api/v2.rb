@@ -371,6 +371,14 @@ Katello::Engine.routes.draw do
             end
           end
 
+          api_resources :simple_content_access, only: [] do
+            collection do
+              put :enable
+              put :disable
+              get :eligible
+            end
+          end
+
           api_resources :upstream_subscriptions, only: [:index, :create] do
             collection do
               delete :destroy

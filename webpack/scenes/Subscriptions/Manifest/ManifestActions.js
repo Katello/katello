@@ -88,7 +88,7 @@ export const checkSimpleContentAccessEligible = () => async (dispatch) => {
   dispatch({ type: SIMPLE_CONTENT_ACCESS_ELIGIBLE_REQUEST });
 
   try {
-    const { data } = await api.get(`/organizations/${orgId()}/upstream_subscriptions/simple_content_access/eligible`, {});
+    const { data } = await api.get(`/organizations/${orgId()}/simple_content_access/eligible`, {});
     return dispatch({
       type: SIMPLE_CONTENT_ACCESS_ELIGIBLE_SUCCESS,
       response: data,
@@ -106,7 +106,7 @@ export const enableSimpleContentAccess = (extendedParams = {}) => async (dispatc
   };
 
   try {
-    const { data } = await api.put(`/organizations/${orgId()}/upstream_subscriptions/simple_content_access/enable`, {}, params);
+    const { data } = await api.put(`/organizations/${orgId()}/simple_content_access/enable`, {}, params);
     return dispatch({
       type: ENABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
       response: data,
@@ -124,7 +124,7 @@ export const disableSimpleContentAccess = (extendedParams = {}) => async (dispat
   };
 
   try {
-    const { data } = await api.put(`/organizations/${orgId()}/upstream_subscriptions/simple_content_access/disable`, {}, params);
+    const { data } = await api.put(`/organizations/${orgId()}/simple_content_access/disable`, {}, params);
     return dispatch({
       type: DISABLE_SIMPLE_CONTENT_ACCESS_SUCCESS,
       response: data,
