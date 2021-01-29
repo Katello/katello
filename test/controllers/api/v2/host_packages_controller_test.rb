@@ -33,90 +33,6 @@ module Katello
       assert_response :success
     end
 
-    def test_install_package
-      assert_async_task ::Actions::Katello::Host::Package::Install do |host, packages|
-        host.id == @host.id && packages == %w(foo)
-      end
-
-      put :install, params: { :host_id => @host.id, :packages => %w(foo) }
-
-      assert_response :success
-    end
-
-    def test_install_bad_package
-      put :install, params: { :host_id => @host.id, :packages => ["foo343434*"] }
-
-      assert_response 400
-    end
-
-    def test_install_group
-      assert_async_task ::Actions::Katello::Host::PackageGroup::Install do |host, groups|
-        host.id == @host.id && groups == %w(blah)
-      end
-
-      put :install, params: { :host_id => @host.id, :groups => %w(blah) }
-
-      assert_response :success
-    end
-
-    def test_upgrade
-      assert_async_task ::Actions::Katello::Host::Package::Update do |host, packages|
-        host.id == @host.id && packages == %w(foo bar)
-      end
-
-      put :upgrade, params: { :host_id => @host.id, :packages => %w(foo bar) }
-
-      assert_response :success
-    end
-
-    def test_upgrade_group_fail
-      put :upgrade, params: { :host_id => @host.id, :groups => %w(foo bar) }
-
-      assert_response 400
-    end
-
-    def test_upgrade_all
-      assert_async_task ::Actions::Katello::Host::Package::Update do |host, packages|
-        host.id == @host.id && packages == []
-      end
-
-      put :upgrade_all, params: { :host_id => @host.id }
-
-      assert_response :success
-    end
-
-    def test_remove
-      assert_async_task ::Actions::Katello::Host::Package::Remove do |host, packages|
-        host.id == @host.id && packages == %w(foo)
-      end
-
-      put :remove, params: { :host_id => @host.id, :packages => %w(foo) }
-
-      assert_response :success
-    end
-
-    def test_invalid_package_input
-      methods = [:remove, :install, :upgrade]
-
-      methods.each do |method|
-        put method, params: { host_id: @host.id, packages: [{name: 'foo'}] }
-        assert_response 400
-
-        put method, params: { host_id: @host.id, packages: %w(*) }
-        assert_response 400
-      end
-    end
-
-    def test_remove_group
-      assert_async_task ::Actions::Katello::Host::PackageGroup::Remove do |host, groups|
-        host.id == @host.id && groups == %w(blah)
-      end
-
-      put :remove, params: { :host_id => @host.id, :groups => %w(blah) }
-
-      assert_response :success
-    end
-
     def test_view_permissions
       ::Host.any_instance.stubs(:check_host_registration).returns(true)
 
@@ -133,35 +49,6 @@ module Katello
         end
 
         get :index, params: { :host_id => @host.id }
-      end
-    end
-
-    def test_permissions
-      ::Host.any_instance.stubs(:check_host_registration).returns(true)
-
-      good_perms = [@update_permission]
-      bad_perms = [@view_permission, @create_permission, @destroy_permission]
-
-      # Ensure the user that will run the actions has access to the host taxonomies
-      users(:restricted).update_attribute(:organizations, [taxonomies(:organization1)])
-      @host.update_attribute(:organization, taxonomies(:organization1))
-      users(:restricted).update_attribute(:locations, [taxonomies(:location1)])
-      @host.update_attribute(:location, taxonomies(:location1))
-
-      assert_protected_action(:install, good_perms, bad_perms) do
-        put :install, params: { :host_id => @host.id, :packages => ["foo*"] }
-      end
-
-      assert_protected_action(:upgrade, good_perms, bad_perms) do
-        put :upgrade, params: { :host_id => @host.id, :packages => ["foo*"] }
-      end
-
-      assert_protected_action(:upgrade_all, good_perms, bad_perms) do
-        put :upgrade_all, params: { :host_id => @host.id, :packages => ["foo*"] }
-      end
-
-      assert_protected_action(:remove, good_perms, bad_perms) do
-        put :remove, params: { :host_id => @host.id, :packages => ["foo*"] }
       end
     end
   end
