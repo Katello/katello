@@ -1,6 +1,5 @@
 require "katello_test_helper"
 
-# rubocop:disable Metrics/ClassLength
 module Katello
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
