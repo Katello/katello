@@ -65,8 +65,9 @@ module Katello
     end
 
     def test_install_package
-      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+      assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::Package::Install
+        assert_equal ['foo'], options[:content]
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end
@@ -77,8 +78,9 @@ module Katello
     end
 
     def test_update_package
-      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+      assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::Package::Update
+        assert_equal ['foo'], options[:content]
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end
@@ -89,8 +91,9 @@ module Katello
     end
 
     def test_remove_package
-      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+      assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::Package::Remove
+        assert_equal ['foo'], options[:content]
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end
@@ -101,8 +104,9 @@ module Katello
     end
 
     def test_install_package_group
-      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+      assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Install
+        assert_equal ['foo group'], options[:content]
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end
@@ -113,8 +117,9 @@ module Katello
     end
 
     def test_update_package_group
-      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+      assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Install
+        assert_equal ['foo group'], options[:content]
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end
@@ -125,8 +130,9 @@ module Katello
     end
 
     def test_remove_package_group
-      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+      assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Remove
+        assert_equal ['foo group'], options[:content]
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end

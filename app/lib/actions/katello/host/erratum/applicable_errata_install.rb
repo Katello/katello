@@ -15,7 +15,7 @@ module Actions
             if applicable_errata.empty?
               plan_self(:hostname => host.name, :skip => true)
             else
-              plan_action(Actions::Katello::Host::Erratum::Install, host, applicable_errata.pluck(:errata_id))
+              plan_action(Actions::Katello::Host::Erratum::Install, host, content: applicable_errata.pluck(:errata_id))
               plan_self(:hostname => host.name, :skip => false)
             end
           end
