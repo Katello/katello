@@ -13,9 +13,7 @@ module Katello
     before_action :find_errata, :only => [:available_incremental_updates]
     before_action :find_organization, :only => [:add_subscriptions]
     before_action :find_traces, :only => [:resolve_traces]
-    before_action :deprecate_katello_agent, :only => [:install_content, :update_content, :remove_content]
 
-    before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
     before_action :validate_organization, :only => [:add_subscriptions]
 
     # disable *_count fields on erratum rabl, since they perform N+1 queries
@@ -25,22 +23,6 @@ module Katello
       api_version 'v2'
       api_base_url "/api"
     end
-
-    PARAM_ACTIONS = {
-      :install_content => {
-        :package => ::Actions::Katello::Host::Package::Install,
-        :package_group => ::Actions::Katello::Host::PackageGroup::Install,
-        :errata => :install_errata
-      },
-      :update_content => {
-        :package => ::Actions::Katello::Host::Package::Update,
-        :package_group => ::Actions::Katello::Host::PackageGroup::Install
-      },
-      :remove_content => {
-        :package => ::Actions::Katello::Host::Package::Remove,
-        :package_group => ::Actions::Katello::Host::PackageGroup::Remove
-      }
-    }.with_indifferent_access
 
     def_param_group :bulk_params do
       param :organization_id, :number, :required => true, :desc => N_("ID of the organization")
@@ -113,37 +95,6 @@ module Katello
     def installable_errata
       respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_hosts(@hosts), 'updated', 'desc',
                                                      :resource_class => Erratum))
-    end
-
-    api :PUT, "/hosts/bulk/install_content", N_("Install content on one or more hosts")
-    param_group :bulk_params
-    param :content_type, String,
-          :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
-          :required => true
-    param :content, Array, :desc => N_("List of content (e.g. package names, package group names or errata ids)")
-    def install_content
-      content_action
-    end
-
-    api :PUT, "/hosts/bulk/update_content", N_("Update content on one or more hosts")
-    param_group :bulk_params
-    param :content_type, String,
-          :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
-          :required => true
-    param :content, Array, :desc => N_("List of content (e.g. package or package group names)"), :required => true
-    param :update_all, :bool, :desc => N_("Updates all packages on the host(s)")
-    def update_content
-      content_action
-    end
-
-    api :PUT, "/hosts/bulk/remove_content", N_("Remove content on one or more hosts")
-    param_group :bulk_params
-    param :content_type, String,
-          :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
-          :required => true
-    param :content, Array, :desc => N_("List of content (e.g. package or package group names)"), :required => true
-    def remove_content
-      content_action
     end
 
     api :PUT, "/hosts/bulk/destroy", N_("Destroy one or more hosts")
@@ -367,15 +318,6 @@ module Katello
         end
         task = async_task(::Actions::BulkAction, PARAM_ACTIONS[params[:action]][params[:content_type]], @hosts, content)
         respond_for_async :resource => task
-      end
-    end
-
-    def validate_content_action
-      fail HttpErrors::BadRequest, _("A content_type must be provided.") if params[:content_type].blank?
-      fail HttpErrors::BadRequest, _("No content has been provided.") if params[:content].blank? && !params[:update_all]
-
-      if PARAM_ACTIONS[params[:action]][params[:content_type]].nil?
-        fail HttpErrors::BadRequest, _("Invalid content type %s") % params[:content_type]
       end
     end
 
