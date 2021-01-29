@@ -12,7 +12,6 @@ angular.module('Bastion.repositories').service('DownloadPolicy',
 
         this.downloadPolicies = {
             'on_demand': translate('On Demand'),
-            'background': translate('Background (Deprecated)'),
             'immediate': translate('Immediate')
         };
 

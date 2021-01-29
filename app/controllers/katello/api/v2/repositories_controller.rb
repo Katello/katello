@@ -25,7 +25,6 @@ module Katello
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE }
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE }
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_KEY_TYPE }
-    before_action :check_ignore_global_proxy, :only => [ :update, :create ]
     skip_before_action :authorize, :only => [:gpg_key_content]
     skip_before_action :check_media_type, :only => [:upload_content]
 
@@ -45,7 +44,7 @@ module Katello
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
       param :docker_tags_whitelist, Array, :desc => N_("Comma-separated list of tags to sync for Container Image repository")
-      param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background (deprecated)')")
+      param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for yum repos (either 'immediate' or 'on_demand')")
       param :download_concurrency, :number, :desc => N_("Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed")
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
@@ -56,7 +55,6 @@ module Katello
       param :deb_releases, String, :desc => N_("comma-separated list of releases to be synced from deb-archive")
       param :deb_components, String, :desc => N_("comma-separated list of repo components to be synced from deb-archive")
       param :deb_architectures, String, :desc => N_("comma-separated list of architectures to be synced from deb-archive")
-      param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing"), :deprecated => true
       param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % RootRepository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
       param :ansible_collection_requirements, String, :desc => N_("Contents of requirement yaml file to sync from URL")
       param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for HTTP proxy for content sync")
@@ -225,10 +223,6 @@ module Katello
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")
         fail HttpErrors::UnprocessableEntity, msg
-      end
-
-      if repo_params['content_type'] == "puppet" || repo_params['content_type'] == "ostree"
-        ::Foreman::Deprecation.api_deprecation_warning("Puppet and OSTree will no longer be supported in Katello 4.0")
       end
 
       gpg_key = get_content_credential(repo_params, CONTENT_CREDENTIAL_GPG_KEY_TYPE)
@@ -494,17 +488,6 @@ module Katello
                  :checksum_type]
       end
       params.require(:repository).permit(*keys).to_h.with_indifferent_access
-    end
-
-    def check_ignore_global_proxy
-      if params.key?(:ignore_global_proxy)
-        ::Foreman::Deprecation.api_deprecation_warning("The parameter ignore_global_proxy will be removed in a future Katello release. Please update to use the http_proxy_policy parameter.")
-        if ::Foreman::Cast.to_bool(params[:ignore_global_proxy])
-          params[:repository][:http_proxy_policy] = RootRepository::NO_DEFAULT_HTTP_PROXY
-        else
-          params[:repository][:http_proxy_policy] = RootRepository::GLOBAL_DEFAULT_HTTP_PROXY
-        end
-      end
     end
 
     def get_content_credential(repo_params, content_type)

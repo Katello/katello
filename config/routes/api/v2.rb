@@ -207,14 +207,6 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :gpg_keys, :only => [:index, :show, :create, :update, :destroy] do
-          member do
-            get :content
-            post :content, :action => :set_content
-          end
-          get :auto_complete_search, :on => :collection
-        end
-
         api_resources :host_collections, :only => [:index, :show, :create, :update, :destroy] do
           member do
             post :copy
@@ -359,8 +351,6 @@ Katello::Engine.routes.draw do
               match ':sync_plan_id/products', :to => 'products#index', :via => :get
             end
           end
-
-          api_resources :gpg_keys, :only => [:index]
 
           api_resources :content_views, :only => [:index, :create]
           api_resources :subscriptions, :only => [:index, :upload, :delete_manifest, :refresh_manifest, :show] do
