@@ -254,7 +254,19 @@ module Katello
     end
 
     def available_packages
-      library_packages.where.not(:id => packages)
+      # The simple/obvious solution is:
+      #   library_packages.where.not(:id => packages)
+      # However, when the list of exclusions is large, the SQL "NOT IN" clause
+      # is extremely inefficient, and it is much better to use a
+      # "LEFT OUTER JOIN" with a subquery.
+      # ActiveRecord .joins() only supports subqueries by supplying raw SQL.  We
+      # use .to_sql to avoid hard-coding raw SQL for self.packages, although
+      # .to_sql may also be somewhat brittle.  For example, see:
+      # https://github.com/rails/rails/issues/18379
+      library_packages.joins(
+        "LEFT OUTER JOIN (#{packages.select('id').to_sql}) AS exclude_rpms ON " \
+        'katello_rpms.id = exclude_rpms.id'
+      ).where('exclude_rpms.id IS NULL')
     end
 
     def srpms
@@ -285,7 +297,19 @@ module Katello
     end
 
     def available_errata
-      library_errata.where.not(:id => errata)
+      # The simple/obvious solution is:
+      #   library_errata.where.not(:id => errata)
+      # However, when the list of exclusions is large, the SQL "NOT IN" clause
+      # is extremely inefficient, and it is much better to use a
+      # "LEFT OUTER JOIN" with a subquery.
+      # ActiveRecord .joins() only supports subqueries by supplying raw SQL.  We
+      # use .to_sql to avoid hard-coding raw SQL for self.errata, although
+      # .to_sql may also be somewhat brittle.  For example, see:
+      # https://github.com/rails/rails/issues/18379
+      library_errata.joins(
+        "LEFT OUTER JOIN (#{errata.select('id').to_sql}) AS exclude_errata ON " \
+        'katello_errata.id = exclude_errata.id'
+      ).where('exclude_errata.id IS NULL')
     end
 
     def file_units
