@@ -41,7 +41,7 @@ module Katello
                         :start_date, :end_date, :available, :quantity, :account_number, :contract_number,
                         :support_level, :ram, :stacking_id, :multi_entitlement, :type, :product_id,
                         :unmapped_guest, :virt_only, :virt_who, :upstream?],
-                       ['Pool Id', 'Subscription Id', 'Name', 'Candlepin Id', 'Organization Id',
+                       ['Pool Id Number', 'Subscription Id', 'Name', 'Pool Id', 'Organization Id',
                         'Sockets', 'Cores', 'Start Date', 'End Date', 'Available', 'Quantity', 'Account Number',
                         'Contract Number', 'Support Level', 'RAM', 'Stacking Id', 'Multi Entitlement', 'Type',
                         'Product Id', 'Unmapped Guest', 'Virt Only', 'Requires Virt Who', 'Upstream'])
