@@ -221,7 +221,7 @@
         </p>
       </div>
 
-      <div class="checkbox" ng-if="repository.content_type === 'yum' || repository.content_type === 'deb' || repository.content_type === 'puppet'">
+      <div class="checkbox" ng-hide="repository.content_type === 'ostree' || repository.content_type === 'puppet'">
         <label>
           <input id="mirror_on_sync" name="mirror_on_sync" ng-model="repository.mirror_on_sync" type="checkbox"/>
           <span translate>Mirror on Sync</span>
