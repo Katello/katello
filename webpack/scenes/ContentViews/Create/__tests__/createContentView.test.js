@@ -64,14 +64,12 @@ test('Form closes itself upon save', async (done) => {
 });
 
 test('Displays dependent fields correctly', () => {
-  const {
-    getByText, queryByText, getByLabelText, getByRole,
-  } = renderWithRedux(form);
+  const { getByText, queryByText, getByLabelText } = renderWithRedux(form);
   expect(getByText('Description')).toBeInTheDocument();
   expect(getByText('Name')).toBeInTheDocument();
   expect(getByText('Label')).toBeInTheDocument();
-  expect(getByText('Composite Content View')).toBeInTheDocument();
-  expect(getByText('Component Content View')).toBeInTheDocument();
+  expect(getByText('Composite content view')).toBeInTheDocument();
+  expect(getByText('Component content view')).toBeInTheDocument();
   expect(getByText('Solve Dependencies')).toBeInTheDocument();
   expect(queryByText('Auto Publish')).not.toBeInTheDocument();
   expect(getByText('Import Only')).toBeInTheDocument();
@@ -81,13 +79,13 @@ test('Displays dependent fields correctly', () => {
   expect(getByLabelText('input_label')).toHaveAttribute('value', '123_2123');
 
   // display Auto Publish when Composite CV
-  fireEvent.click(getByRole('radio', { name: 'composite Composite Content View' }));
+  fireEvent.click(getByLabelText('composite_tile'));
   expect(queryByText('Solve Dependencies')).not.toBeInTheDocument();
   expect(getByText('Auto Publish')).toBeInTheDocument();
   expect(queryByText('Import Only')).not.toBeInTheDocument();
 
   // display Solve Dependencies when Component CV
-  fireEvent.click(getByRole('radio', { name: 'single Component Content View' }));
+  fireEvent.click(getByLabelText('component_tile'));
   expect(getByText('Solve Dependencies')).toBeInTheDocument();
   expect(queryByText('Auto Publish')).not.toBeInTheDocument();
   expect(getByText('Import Only')).toBeInTheDocument();

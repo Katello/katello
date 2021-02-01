@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Form, FormGroup, TextInput, TextArea, Checkbox, Radio, ActionGroup, Button } from '@patternfly/react-core';
+import { Form, FormGroup, TextInput, TextArea, Checkbox, ActionGroup, Button, Tile, Grid, GridItem } from '@patternfly/react-core';
 import { createContentView } from '../ContentViewsActions';
 import { selectCreateContentViews, selectCreateContentViewStatus, selectCreateContentViewError } from './ContentViewCreateSelectors';
-import { LabelComponent, LabelComposite, LabelDependencies, LabelAutoPublish, LabelImportOnly } from './ContentViewFormComponents';
+import { LabelDependencies, LabelAutoPublish, LabelImportOnly } from './ContentViewFormComponents';
+import ContentViewIcon from '../components/ContentViewIcon';
 
 const CreateContentViewForm = ({ setModalOpen }) => {
   const dispatch = useDispatch();
@@ -95,27 +96,35 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           onChange={value => setDescription(value)}
         />
       </FormGroup>
-      <FormGroup isInline fieldId="component">
-        <Radio
-          id="component"
-          name="component"
-          role="radio"
-          label={LabelComponent()}
-          isChecked={component}
-          onChange={(checked) => { setComponent(checked); setComposite(!checked); }}
-          description="Consists of repositories"
-        />
-      </FormGroup>
-      <FormGroup isInline fieldId="composite">
-        <Radio
-          id="composite"
-          name="composite"
-          role="radio"
-          label={LabelComposite()}
-          isChecked={composite}
-          onChange={(checked) => { setComposite(checked); setComponent(!checked); }}
-          description="Consists of more than one component view"
-        />
+      <FormGroup isInline fieldId="type" label="Type">
+        <Grid hasGutter>
+          <GridItem span={6}>
+            <Tile
+              isStacked
+              aria-label="component_tile"
+              icon={<ContentViewIcon composite={false} />}
+              id="component"
+              title="Component content view"
+              onClick={() => { setComponent(true); setComposite(false); }}
+              isSelected={component}
+            >
+              Single content view consisting of repositories
+            </Tile>
+          </GridItem>
+          <GridItem span={6}>
+            <Tile
+              isStacked
+              aria-label="composite_tile"
+              icon={<ContentViewIcon composite />}
+              id="composite"
+              title="Composite content view"
+              onClick={() => { setComposite(true); setComponent(false); }}
+              isSelected={composite}
+            >
+              Consists of component content views
+            </Tile>
+          </GridItem>
+        </Grid>
       </FormGroup>
       {!composite &&
         <FormGroup isInline fieldId="dependencies">
@@ -148,7 +157,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           />
         </FormGroup>}
       <ActionGroup>
-        <Button aria-label="create_content_view" variant="primary" isDisabled={saving} onClick={() => onSave()}>Create Content View</Button>
+        <Button aria-label="create_content_view" variant="primary" isDisabled={saving} onClick={() => onSave()}>Create content view</Button>
         <Button variant="link" onClick={() => setModalOpen(false)}>Cancel</Button>
       </ActionGroup>
     </Form>

@@ -6,9 +6,8 @@ import CreateContentViewForm from './CreateContentViewForm';
 const CreateContentViewModal = ({ show, setIsOpen }) => (
   <Modal
     title="Create content view"
-    variant={ModalVariant.large}
+    variant={ModalVariant.small}
     isOpen={show}
-    width="50%"
     onClose={() => { setIsOpen(false); }}
     appendTo={document.body}
   ><CreateContentViewForm setModalOpen={setIsOpen} />
