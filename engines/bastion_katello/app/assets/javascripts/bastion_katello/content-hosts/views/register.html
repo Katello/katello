@@ -9,22 +9,25 @@
   <div data-block="content">
     <p translate>To register a content host to this server, follow these steps.</p>
     <ol>
-      <li ng-hide="noCapsulesFound">
+      <li>
+        <p>Select an Operating System:</p>
+        <p><select ng-init="selectedUserOs = 'client'" ng-model="selectedUserOs">
+          <option value="client">CentOS/RHEL</option>
+          <option value="deb-client">Debian/Ubuntu</option>
+          <option value="oracle-client">OracleLinux</option>
+          <option value="sles-client">SLES/Suse</option>
+        </select></p>
+      </li>
+      <li ng-hide="noCapsulesFound || selectedUserOs == 'deb-client'">
         <p translate>Select a Content Source:</p>
         <p><select ng-model="selectedCapsule" ng-options="capsule.name for capsule in capsules.results"></select></p>
       </li>
-      <li>
+      <li ng-hide="selectedUserOs === 'deb-client'">
         <p translate>Install the pre-built bootstrap RPM:</p>
-        <pre><code>curl --insecure --output {{ consumerCertRPM }} https://{{ noCapsulesFound ? katelloHostname : hostname(selectedCapsule.url) }}/pub/{{ consumerCertRPM }}<br />yum localinstall {{ consumerCertRPM }} </code></pre>
+        <pre><code>curl --insecure --output {{ consumerCertRPM }} https://{{ noCapsulesFound ? katelloHostname : hostname(selectedCapsule.url) }}/pub/{{ consumerCertRPM }}<br />{{(selectedUserOs === 'sles-client') ? 'zypper' : 'yum' }} localinstall {{ consumerCertRPM }} </code></pre>
       </li>
-      <li>
-        <p translate>Register using subscription-manager:</p>
-        <p translate>Using an Activation Key:</p>
-        <pre><code>subscription-manager register --org="{{ organization.label }}" --activationkey="&ltActivation Key Name&gt"</code></pre>
-        <p translate>Using a username and password:</p>
-        <pre><code>subscription-manager register --org="{{ organization.label }}" --environment="Library"</code></pre>
-      </li>
-      <register-client />
+
+      <register-os-client user-os="selectedUserOs"></register-os-client>
     </ol>
   </div>
 </section>

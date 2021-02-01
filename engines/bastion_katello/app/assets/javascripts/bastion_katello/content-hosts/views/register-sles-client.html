@@ -9,17 +9,17 @@
   <p translate>Install client package:</p>
 
   <p translate>To report package & errata information:</p>
-  <pre><code>yum -y install katello-host-tools</code></pre>
+  <pre><code>zypper -y install katello-host-tools</code></pre>
 
   <p translate>Tracer helps administrators identify applications that need to be restarted after a system is patched. To optionally report tracer information:</p>
-  <pre><code>yum -y install katello-host-tools-tracer</code></pre>
+  <pre><code>zypper -y install katello-host-tools-tracer</code></pre>
 
-  <p  ng-hide="remoteExecutionByDefault" translate>For remote actions via katello-agent:</p>
-  <pre ng-hide="remoteExecutionByDefault" ><code>yum -y install katello-agent</code></pre>
-  <section ng-hide="remoteExecutionByDefault" >
+  <p translate>For remote actions via katello-agent:</p>
+  <pre><code>zypper -y install katello-agent</code></pre>
+  <section>
     <p bst-alert="warning" >
     <span translate>
-      Katello-agent is deprecated and will be removed in a future release.
+      Katello-agent is deprecated and will be removed in Katello 4.0.  Consider migrating to Remote Execution.
     </span>
     </p>
   </section>

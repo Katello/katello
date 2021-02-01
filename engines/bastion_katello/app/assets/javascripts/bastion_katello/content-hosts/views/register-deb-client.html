@@ -1,0 +1,38 @@
+<div ng-controller="ContentHostRegisterController">
+<li ng-hide="noCapsulesFound">
+    <p translate>Select a Content Source:</p>
+    <p><select ng-model="selectedCapsule" ng-options="capsule.name for capsule in capsules.results"></select></p>
+</li>
+
+<li>
+  <p>Add the GPG public key used to sign DEB packages from your system to download the Debian/Ubuntu client from your system:</p>
+
+<pre><code>apt-get -y install gnupg
+mkdir -p /etc/apt/trusted.gpg.d
+wget "https://{{ noCapsulesFound ? katelloHostname : hostname(selectedCapsule.url) }}/pub/pulp_deb_signing.key" -O - | apt-key add -</code></pre>
+</li>
+
+<li>
+Create a new repository file which contains the Debian/Ubuntu client. This example chooses Ubuntu 20.04:
+
+<pre><code>mkdir -p /etc/apt/sources.list.d
+cat &lt /etc/apt/sources.list &lt&lt'EOF'
+deb http://{{  noCapsulesFound ? katelloHostname : hostname(selectedCapsule.url) }}/pulp/deb/{{ organization.label }}/Library/custom/Ubuntu_Client/Ubuntu_Client_20_04/ default all
+EOF</code></pre>
+<p>Here Ubuntu_Client is a product name, Ubuntu_Client_20_04 is the repository inside the product, and Library is a lifecycle environment.</p>
+</li>
+<li>
+Install apt-transport-katello and katello-upload-profile. This depends on and automatically installs the subscription-manager for Debian/Ubuntu:
+
+<pre><code>apt-get update && apt-get -y install apt-transport-katello katello-upload-profile</code></pre></li>
+<li>
+Download and execute a script from your system to install all necessary certificates:
+
+<pre><code>wget --no-check-certificate -O katello-rhsm-consumer https://{{ noCapsulesFound ? katelloHostname : hostname(selectedCapsule.url) }}/pub/katello-rhsm-consumer
+/bin/bash -x katello-rhsm-consumer 2&lt /root/katello-rhsm-consumer.log</code></pre></li>
+<li>
+Register your host with an appropriate activation key:
+
+<pre><code>subscription-manager register --org="{{ organization.label }}" --name="&ltHost Name&gt" --activationkey="&ltActivation Key Name&gt"</code></pre>
+
+</li></div>
