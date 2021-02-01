@@ -73,7 +73,7 @@ module Katello
       respond :resource => @filter
     end
 
-    api :delefind_filterte, "/content_views/:content_view_id/filters/:id", N_("delete a filter")
+    api :delete, "/content_views/:content_view_id/filters/:id", N_("delete a filter")
     api :delete, "/content_view_filters/:id", N_("delete a filter")
     param :content_view_id, :number, :desc => N_("content view identifier")
     param :id, :number, :desc => N_("filter identifier"), :required => true
