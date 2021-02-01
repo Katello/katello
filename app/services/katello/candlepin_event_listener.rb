@@ -1,6 +1,5 @@
 module Katello
   class CandlepinEventListener
-
     Event = Struct.new(:subject, :content)
 
     cattr_accessor :client_factory
@@ -13,21 +12,19 @@ module Katello
     end
 
     def self.running?
-      @running == true && @client&.running?
+      @client&.running? || false
     end
 
     def self.close
-      return unless running?
-
-      logger.info("Closing candlepin event listener")
-      @client&.close
+      if @client&.close
+        logger.info("Closed candlepin event listener")
+      end
       reset
     end
 
     def self.reset
       @processed_count = 0
       @failed_count = 0
-      @running = false
     end
 
     def self.run
@@ -35,8 +32,6 @@ module Katello
       @client.subscribe do |message|
         handle_message(message)
       end
-
-      @running = true
     end
 
     def self.status

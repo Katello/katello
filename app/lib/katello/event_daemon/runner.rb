@@ -1,7 +1,7 @@
 module Katello
   module EventDaemon
     class Runner
-      STATUS_CACHE_KEY = "katello_event_daemon_status"
+      STATUS_CACHE_KEY = "katello_event_daemon_status".freeze
       @services = {}
       @cache = ActiveSupport::Cache::MemoryStore.new
 
@@ -93,7 +93,6 @@ module Katello
         def service_status(service_name = nil)
           Rails.cache.read(STATUS_CACHE_KEY)&.dig(service_name)
         end
-
       end
     end
   end

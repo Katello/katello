@@ -77,7 +77,6 @@ module Katello
       end
 
       def poll_for_events
-        @thread&.kill
         @thread = Thread.new do
           @logger.info("Polling Katello Event Queue")
           loop do
