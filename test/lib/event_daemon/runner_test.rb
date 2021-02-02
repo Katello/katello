@@ -39,6 +39,17 @@ module Katello
 
         Katello::EventDaemon::Runner.stop
       end
+
+      def test_service_status
+        expected_status = {
+          running: true,
+          processed_count: 1,
+          failed_count: 0
+        }
+        Rails.cache.expects(:read).returns(mock_service: expected_status)
+        result = Katello::EventDaemon::Runner.service_status(:mock_service)
+        assert_equal result, expected_status
+      end
     end
   end
 end

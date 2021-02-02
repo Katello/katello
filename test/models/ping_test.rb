@@ -92,6 +92,17 @@ module Katello
       assert_equal '0 Processed, 0 Failed', result[:message]
     end
 
+    def test_ping_candlepin_events_starting
+      Katello::EventDaemon::Runner
+        .expects(:service_status).with(:candlepin_events)
+        .returns(running: 'starting')
+
+      result = Katello::Ping.ping_candlepin_events({})
+
+      assert_equal 'ok', result[:status]
+      assert_equal '0 Processed, 0 Failed', result[:message]
+    end
+
     def test_ping_candlepin_not_running
       Katello::EventDaemon::Runner
         .expects(:service_status).with(:candlepin_events)
@@ -107,6 +118,17 @@ module Katello
       Katello::EventDaemon::Runner
         .expects(:service_status).with(:katello_events)
         .returns(processed_count: 0, failed_count: 0, running: true)
+
+      result = Katello::Ping.ping_katello_events({})
+
+      assert_equal 'ok', result[:status]
+      assert_equal '0 Processed, 0 Failed', result[:message]
+    end
+
+    def test_ping_katello_events_starting
+      Katello::EventDaemon::Runner
+        .expects(:service_status).with(:katello_events)
+        .returns(running: 'starting')
 
       result = Katello::Ping.ping_katello_events({})
 

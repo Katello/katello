@@ -22,7 +22,7 @@ module Katello
 
         MockService.expects(:run).never
 
-        monitor.check_services(nil, nil)
+        monitor.check_services
       end
 
       def test_cache_written
@@ -30,7 +30,7 @@ module Katello
 
         Rails.cache.expects(:write).once
 
-        monitor.check_services(nil, nil)
+        monitor.check_services
       end
 
       def test_monitor_not_running
@@ -39,7 +39,33 @@ module Katello
 
         MockService.expects(:run)
 
-        monitor.check_services(nil, nil)
+        monitor.check_services
+      end
+
+      def test_monitor_starting
+        Rails.cache.expects(:write).with(
+          "katello_event_daemon_status",
+          { mock_service: { running: 'starting' } }
+        )
+        monitor = Katello::EventDaemon::Monitor.new(mock_service: MockService)
+        monitor.stubs(:check_services).raises(StandardError) # prevent infinite loop by raising error
+        assert_raises(StandardError) { monitor.start }
+      end
+
+      def test_check_services_overwrites_initial_status
+        monitor = Katello::EventDaemon::Monitor.new(mock_service: MockService)
+        mock_status = {
+          running: true,
+          processed_count: 1,
+          failed_count: 0
+        }
+        MockService.stubs(:status).returns(mock_status)
+        Rails.cache.expects(:write).with(
+          "katello_event_daemon_status",
+          { mock_service: mock_status }
+        )
+
+        monitor.check_services
       end
 
       def test_monitor_no_status
@@ -48,7 +74,7 @@ module Katello
 
         MockService.expects(:run)
 
-        monitor.check_services(nil, nil)
+        monitor.check_services
       end
     end
   end

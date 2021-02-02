@@ -10,16 +10,20 @@ module Katello
       end
 
       def start
-        Rails.cache.write(
-          Katello::EventDaemon::Runner::STATUS_CACHE_KEY,
-          @service_statuses
-        )
+        write_statuses_to_cache
         loop do
           Rails.application.executor.wrap do
             check_services
           end
           sleep 15
         end
+      end
+
+      def write_statuses_to_cache
+        Rails.cache.write(
+          Katello::EventDaemon::Runner::STATUS_CACHE_KEY,
+          @service_statuses
+        )
       end
 
       def check_services
@@ -42,10 +46,7 @@ module Katello
             end
           end
         end
-        Rails.cache.write(
-          Katello::EventDaemon::Runner::STATUS_CACHE_KEY,
-          @service_statuses
-        )
+        write_statuses_to_cache
       end
     end
   end
