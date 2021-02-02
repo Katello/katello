@@ -25,6 +25,7 @@ module Katello
     def self.reset
       @processed_count = 0
       @failed_count = 0
+      @client = nil
     end
 
     def self.run

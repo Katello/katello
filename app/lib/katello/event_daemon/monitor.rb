@@ -4,7 +4,7 @@ module Katello
       def initialize(services)
         @services = services
         @service_statuses = {}
-        @services.each do |service_name, service_class|
+        @services.keys.each do |service_name|
           @service_statuses[service_name] = { running: 'starting' }
         end
       end

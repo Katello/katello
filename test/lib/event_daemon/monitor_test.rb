@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require_relative '../../../app/lib/katello/event_daemon/monitor.rb'
 
 module Katello
   module EventDaemon
