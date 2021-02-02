@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import qs from 'query-string';
 import { shape, string, number, element, arrayOf } from 'prop-types';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useHistory, useLocation } from 'react-router-dom';
 import './RoutedTabs.scss';
+import paramsFromHash from '../../utils/paramsFromHash';
 
 /*
   Creates tabs that change url hash based on the tab selected.
@@ -13,10 +13,8 @@ import './RoutedTabs.scss';
 */
 const RoutedTabs = ({ tabs, baseUrl, defaultTabIndex }) => {
   const history = useHistory();
-  const { hash = '' } = useLocation();
-  const [routedTab, queryParams = {}] = hash.split('?');
-  const { subContentId } = qs.parse(queryParams);
-  const tabFromUrl = routedTab.replace('#', '');
+  const { hash } = useLocation();
+  const { hash: tabFromUrl, params: { subContentId } } = paramsFromHash(hash);
 
   const buildLink = tabKey => `${baseUrl}#${tabKey}`;
 
