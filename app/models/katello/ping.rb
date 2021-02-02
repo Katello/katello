@@ -56,7 +56,7 @@ module Katello
         running = status&.dig(:running)
 
         if running
-          result[:message] = "#{status[:processed_count]} Processed, #{status[:failed_count]} Failed"
+          result[:message] = "#{status[:processed_count].to_i} Processed, #{status[:failed_count].to_i} Failed"
         else
           result[:status] = FAIL_RETURN_CODE
           result[:message] = _("Not running")

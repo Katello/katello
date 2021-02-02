@@ -4,9 +4,16 @@ module Katello
       def initialize(services)
         @services = services
         @service_statuses = {}
+        @services.each do |service_name, service_class|
+          @service_statuses[service_name] = { running: 'starting' }
+        end
       end
 
       def start
+        Rails.cache.write(
+          Katello::EventDaemon::Runner::STATUS_CACHE_KEY,
+          @service_statuses
+        )
         loop do
           Rails.application.executor.wrap do
             check_services
