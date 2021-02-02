@@ -40,7 +40,7 @@ module Katello
           end
 
           def import(organization_name, path_to_file, options)
-            path = join_path(path(organization_name), 'imports')
+            path = join_path(path(organization_name), 'imports/async')
             if options[:force] || SETTINGS[:katello].key?(:force_manifest_import)
               path += "?force=#{SETTINGS[:katello][:force_manifest_import]}"
             end

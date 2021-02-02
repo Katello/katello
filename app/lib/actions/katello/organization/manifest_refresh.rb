@@ -26,7 +26,13 @@ module Actions
                         :label => organization.label,
                         :path => path,
                         :dependency => export_action.output)
-            import_products = plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id, :dependency => owner_import.output)
+            concurrence do
+              async_import = plan_action(
+                Candlepin::Owner::AsyncImport,
+                :task_id => owner_import.output[:task_id]
+              )
+              import_products = plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id, :dependency => owner_import.output)
+            end
 
             if manifest_update
               repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
@@ -34,7 +40,11 @@ module Actions
                 plan_action(Katello::Repository::RefreshRepository, repo, :dependency => import_products.output)
               end
             end
-            plan_self(:organization_id => organization.id)
+            plan_self(
+              :organization_id => organization.id,
+              :organization_name => organization.name,
+              :candlepin_task => owner_import.output[:task]
+            )
           end
         end
 
@@ -57,6 +67,21 @@ module Actions
 
         def humanized_name
           _("Refresh Manifest")
+        end
+
+        # results in correct grammar on Tasks page,
+        # e.g. "Refresh manifest for organization Default Organization"
+        def humanized_input
+          [
+            [:organization, {
+              :text=>"for organization '#{input[:organization_name]}'",
+              :link=>"/organizations/#{input[:organization_id]}/edit"
+            }]
+          ]
+        end
+
+        def run
+          output[:candlepin_task] = input[:candlepin_task]
         end
 
         def finalize

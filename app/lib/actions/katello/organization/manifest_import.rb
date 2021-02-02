@@ -11,11 +11,17 @@ module Actions
           manifest_update = organization.products.redhat.any?
 
           sequence do
-            plan_action(Candlepin::Owner::Import,
+            cp_import_task = plan_action(Candlepin::Owner::Import,
                         :label => organization.label,
                         :path => path,
                         :force => force)
-            plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id)
+            concurrence do
+              plan_action(
+                Candlepin::Owner::AsyncImport,
+                :task_id => cp_import_task.output[:task_id]
+              )
+              plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id)
+            end
 
             if manifest_update
               repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
@@ -23,7 +29,7 @@ module Actions
                 plan_action(Katello::Repository::RefreshRepository, repo)
               end
             end
-            plan_self
+            plan_self(candlepin_task: cp_import_task.output[:task])
           end
         end
 
@@ -42,6 +48,21 @@ module Actions
 
         def humanized_name
           _("Import Manifest")
+        end
+
+        # results in correct grammar on Tasks page,
+        # e.g. "Import manifest for organization Default Organization"
+        def humanized_input
+          [
+            [:organization, {
+              :text=>"for organization '#{input[:organization_name]}'",
+              :link=>"/organizations/#{input[:organization_id]}/edit"
+            }]
+          ]
+        end
+
+        def run
+          output[:candlepin_task] = input[:candlepin_task]
         end
 
         def finalize

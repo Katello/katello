@@ -11,7 +11,11 @@ module Actions
 
         def run
           options = input.slice(:force, :upstream)
-          output[:response] = ::Katello::Resources::Candlepin::Owner.import(input[:label], input[:path], options)
+          cp_response = JSON.parse(
+            ::Katello::Resources::Candlepin::Owner.import(input[:label], input[:path], options)
+          )
+          output[:task] = cp_response # this also sets external_task
+          output[:task_id] = cp_response['id']
         end
       end
     end
