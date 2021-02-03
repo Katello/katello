@@ -23,12 +23,11 @@ module Katello
         fail("Couldn't find all hosts specified") unless host_ids.size == uuid_data.size
 
         host_data = uuid_data.map do |host_id, consumer_id|
-          args[:consumer_id] = consumer_id
           {
             host_id: host_id,
             consumer_id: consumer_id,
             history: Katello::Agent::DispatchHistory.new(host_id: host_id),
-            message: message_class.new(**args)
+            message: message_class.new(**args.merge(consumer_id: consumer_id))
           }
         end
 
