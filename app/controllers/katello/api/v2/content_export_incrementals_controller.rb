@@ -58,7 +58,7 @@ module Katello
                                                                 organization: @organization,
                                                                 create_by_default: false)
       if @view.blank?
-        msg = _("Unable to incrementally export. Do a Full Export the library content "\
+        msg = _("Unable to incrementally export. Do a Full Export on the library content "\
                 "before updating from the latest increment.")
         fail HttpErrors::BadRequest, msg
       end

@@ -73,13 +73,13 @@ module Katello
       ::Katello::ContentViewVersionExportHistory.destroy_all
       destination = "greatest"
       path = "/tmp"
-      assert_empty ContentViewVersionExportHistory.search_for("export_type = complete ")
+      assert_empty ContentViewVersionExportHistory.search_for("type = complete")
       ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: @cvv.id,
                                                             destination_server: destination,
                                                             metadata: {foo: :bar},
                                                             path: path)
 
-      refute_empty ContentViewVersionExportHistory.search_for("export_type = complete ")
+      refute_empty ContentViewVersionExportHistory.search_for("type = complete")
     end
   end
 end
