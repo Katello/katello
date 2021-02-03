@@ -55,7 +55,7 @@ module Katello
 
     param_group :bulk_errata_ids
     def apply
-      task = async_task(::Actions::Katello::Host::Erratum::Install, @host, @errata_ids)
+      task = async_task(::Actions::Katello::Host::Erratum::Install, @host, content: @errata_ids)
       respond_for_async :resource => task
     end
 

@@ -130,8 +130,8 @@ module Katello
     end
 
     def test_apply
-      assert_async_task ::Actions::Katello::Host::Erratum::Install do |host, errata|
-        host.id == @host.id && errata == %w(RHSA-1999-1231)
+      assert_async_task ::Actions::Katello::Host::Erratum::Install do |host, options|
+        host.id == @host.id && options[:content] == %w(RHSA-1999-1231)
       end
 
       put :apply, params: { :host_id => @host.id, :errata_ids => %w(RHSA-1999-1231) }
