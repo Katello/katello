@@ -1,6 +1,7 @@
 object @resource
 
 attributes :destination_server, :path, :id, :metadata
+attributes :export_type => :type
 
 node :content_view_version do |h|
   h.content_view_version.name

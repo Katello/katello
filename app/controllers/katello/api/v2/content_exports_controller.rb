@@ -10,6 +10,9 @@ module Katello
     param :destination_server, String, :desc => N_("Destination Server name"), :required => false
     param :organization_id, :number, :desc => N_("Organization identifier"), :required => false
     param :id, :number, :desc => N_("Content view version export history identifier"), :required => false
+    param :type, ::Katello::ContentViewVersionExportHistory::EXPORT_TYPES,
+                                  :desc => N_("Export Types"),
+                                  :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ContentViewVersionExportHistory)
     def index
@@ -17,6 +20,7 @@ module Katello
       history = history.where(:id => params[:id]) unless params[:id].blank?
       history = history.where(:content_view_version_id => params[:content_view_version_id]) unless params[:content_view_version_id].blank?
       history = history.where(:destination_server => params[:destination_server]) unless params[:destination_server].blank?
+      history = history.where(:export_type => params[:type]) unless params[:type].blank?
       history = history.with_organization_id(params[:organization_id]) unless params[:organization_id].blank?
       history = history.with_content_view_id(params[:content_view_id]) unless params[:content_view_id].blank?
       respond_with_template_collection("index", 'content_view_version_export_histories',
