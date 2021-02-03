@@ -21,14 +21,19 @@ module Katello
     api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
     api :GET, "/subscriptions", N_("List subscriptions")
     param_group :search, Api::V2::ApiController
-    param :organization_id, :number, :desc => N_("Organization ID"), :required => false
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param :host_id, String, :desc => N_("id of a host"), :required => false
     param :activation_key_id, String, :desc => N_("Activation key ID"), :required => false
+    param :name, String, :desc => N_("name of the subscription"), :required => false
     param :available_for, String, :desc => N_("Object to show subscriptions available for, either 'host' or 'activation_key'"), :required => false
     param :match_host, :bool, :desc => N_("Ignore subscriptions that are unavailable to the specified host")
     param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products of the specified host")
     param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
     def index
+      unless @organization || @activation_key
+        fail HttpErrors::NotFound, _("Organization Information not provided.")
+      end
+
       options = { resource_class: Pool, includes: [:subscription] }
       base_args = [index_relation.distinct, :name, :asc]
 
@@ -63,6 +68,7 @@ module Katello
       return for_host if params[:host_id]
       return available_for_activation_key if params[:available_for] == "activation_key"
       collection = Pool.readable
+      collection = collection.where("#{Katello::Subscription.table_name}.name" => params[:name]) if params[:name]
       collection = collection.where(:unmapped_guest => false)
       collection = collection.where(organization: Organization.find(params[:organization_id])) if params[:organization_id]
       collection = collection.for_activation_key(@activation_key) if params[:activation_key_id]
