@@ -16,7 +16,7 @@ module Actions
         action_subject(host)
 
         # if already dispatched by bulk action use the provided history ID
-        dispatch_history_id = options[:dispatch_histories]&.dig(host.id.to_s)
+        dispatch_history_id = options.dig(:dispatch_histories, host.id.to_s)
 
         unless dispatch_history_id
           histories = ::Katello::Agent::Dispatcher.dispatch(
