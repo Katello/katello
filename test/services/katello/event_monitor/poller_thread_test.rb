@@ -30,7 +30,7 @@ module Katello
         }
         Katello::EventMonitor::PollerThread.initialize
 
-        assert_equal status, Katello::EventMonitor::PollerThread.status(refresh: true)
+        assert_equal status, Katello::EventMonitor::PollerThread.status
       end
     end
   end

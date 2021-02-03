@@ -56,7 +56,7 @@ module Katello
         running = status&.dig(:running)
 
         if running
-          result[:message] = "#{status[:processed_count]} Processed, #{status[:failed_count]} Failed"
+          result[:message] = "#{status[:processed_count].to_i} Processed, #{status[:failed_count].to_i} Failed"
         else
           result[:status] = FAIL_RETURN_CODE
           result[:message] = _("Not running")
@@ -65,14 +65,14 @@ module Katello
 
       def ping_katello_events(result)
         exception_watch(result) do
-          status = Katello::EventMonitor::PollerThread.status(refresh: false)
+          status = Katello::EventDaemon::Runner.service_status(:katello_events)
           event_daemon_status(status, result)
         end
       end
 
       def ping_candlepin_events(result)
         exception_watch(result) do
-          status = Katello::CandlepinEventListener.status(refresh: false)
+          status = Katello::EventDaemon::Runner.service_status(:candlepin_events)
           event_daemon_status(status, result)
         end
       end

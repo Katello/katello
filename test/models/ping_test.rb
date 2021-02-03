@@ -82,7 +82,20 @@ module Katello
     end
 
     def test_ping_candlepin_events
-      Katello::CandlepinEventListener.stubs(:status).returns(processed_count: 0, failed_count: 0, running: true)
+      Katello::EventDaemon::Runner
+        .expects(:service_status).with(:candlepin_events)
+        .returns(processed_count: 0, failed_count: 0, running: true)
+
+      result = Katello::Ping.ping_candlepin_events({})
+
+      assert_equal 'ok', result[:status]
+      assert_equal '0 Processed, 0 Failed', result[:message]
+    end
+
+    def test_ping_candlepin_events_starting
+      Katello::EventDaemon::Runner
+        .expects(:service_status).with(:candlepin_events)
+        .returns(running: 'starting')
 
       result = Katello::Ping.ping_candlepin_events({})
 
@@ -91,7 +104,9 @@ module Katello
     end
 
     def test_ping_candlepin_not_running
-      Katello::CandlepinEventListener.expects(:status).returns(processed_count: 10, failed_count: 5, running: false)
+      Katello::EventDaemon::Runner
+        .expects(:service_status).with(:candlepin_events)
+        .returns(processed_count: 10, failed_count: 5, running: false)
 
       result = Katello::Ping.ping_candlepin_events({})
 
@@ -100,7 +115,20 @@ module Katello
     end
 
     def test_ping_katello_events
-      Katello::EventMonitor::PollerThread.stubs(:status).returns(processed_count: 0, failed_count: 0, running: true)
+      Katello::EventDaemon::Runner
+        .expects(:service_status).with(:katello_events)
+        .returns(processed_count: 0, failed_count: 0, running: true)
+
+      result = Katello::Ping.ping_katello_events({})
+
+      assert_equal 'ok', result[:status]
+      assert_equal '0 Processed, 0 Failed', result[:message]
+    end
+
+    def test_ping_katello_events_starting
+      Katello::EventDaemon::Runner
+        .expects(:service_status).with(:katello_events)
+        .returns(running: 'starting')
 
       result = Katello::Ping.ping_katello_events({})
 
@@ -109,7 +137,9 @@ module Katello
     end
 
     def test_ping_katello_events_not_running
-      Katello::EventMonitor::PollerThread.expects(:status).returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
+      Katello::EventDaemon::Runner
+        .expects(:service_status).with(:katello_events)
+        .returns(processed_count: 10, failed_count: 5, queue_depth: 1001)
 
       result = Katello::Ping.ping_katello_events({})
 

@@ -2,7 +2,6 @@ module Katello
   module EventMonitor
     class PollerThread
       SLEEP_INTERVAL = 3
-      STATUS_CACHE_KEY = 'katello_events_status'.freeze
 
       cattr_accessor :instance
 
@@ -15,7 +14,6 @@ module Katello
           self.instance.close
           self.instance = nil
         end
-        reset_status
       end
 
       def self.run
@@ -24,14 +22,8 @@ module Katello
         instance.poll_for_events
       end
 
-      def self.status(refresh: true)
-        Rails.cache.fetch(STATUS_CACHE_KEY, force: refresh) do
-          instance&.status
-        end
-      end
-
-      def self.reset_status
-        Rails.cache.delete(STATUS_CACHE_KEY)
+      def self.status
+        instance&.status
       end
 
       def initialize(logger = nil)
@@ -85,7 +77,6 @@ module Katello
       end
 
       def poll_for_events
-        @thread&.kill
         @thread = Thread.new do
           @logger.info("Polling Katello Event Queue")
           loop do

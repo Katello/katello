@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class CandlepinEventListenerTest < ActiveSupport::TestCase
     def test_run_close
-      client = mock('client', close: true, running?: true, subscribe: true)
+      client = mock('client', close: true, subscribe: true)
       Katello::CandlepinEventListener.stubs(:client_factory).returns(proc { client })
 
       Katello::CandlepinEventListener.run
