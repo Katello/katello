@@ -39,19 +39,24 @@ module Actions
       def run(event = nil)
         case event
         when nil
-          suspend do |suspended_action|
-            history = dispatch_history
+          history = dispatch_history
 
+          if history.finished?
+            fail_on_errors
+            return
+          elsif history.accepted?
+            schedule_timeout(finish_timeout)
+          else
+            schedule_timeout(accept_timeout)
+          end
+
+          suspend do |suspended_action|
             history.dynflow_execution_plan_id = suspended_action.execution_plan_id
             history.dynflow_step_id = suspended_action.step_id
             history.save!
-
-            if !history.accepted?
-              schedule_timeout(accept_timeout)
-            elsif !history.finished?
-              schedule_timeout(finish_timeout)
-            end
           end
+        when Dynflow::Action::Timeouts::Timeout
+          process_timeout
         when 'accepted'
           schedule_timeout(finish_timeout)
           suspend
@@ -97,9 +102,7 @@ module Actions
       end
 
       def dispatch_history
-        if input[:dispatch_history_id]
-          ::Katello::Agent::DispatchHistory.find_by_id(input[:dispatch_history_id])
-        end
+        ::Katello::Agent::DispatchHistory.find_by_id(input[:dispatch_history_id])
       end
     end
   end
