@@ -2,18 +2,13 @@ module Actions
   module Katello
     module Host
       module Package
-        class Update < Actions::EntryAction
-          include Helpers::Presenter
+        class Update < Actions::Katello::AgentAction
+          def self.agent_message
+            :update_package
+          end
 
-          def plan(host, packages)
-            Type! host, ::Host::Managed
-
-            action_subject(host, :hostname => host.name, :packages => packages)
-            plan_action(Pulp::Consumer::ContentUpdate,
-                        consumer_uuid: host.content_facet.uuid,
-                        type:          'rpm',
-                        args:          packages)
-            plan_self(:host_id => host.id)
+          def agent_action_type
+            :content_install
           end
 
           def humanized_name
@@ -25,15 +20,7 @@ module Actions
           end
 
           def humanized_input
-            [(input[:packages].present? && input[:packages].join(", ") || "all packages")] + super
-          end
-
-          def presenter
-            Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentUpdate))
-          end
-
-          def rescue_strategy
-            Dynflow::Action::Rescue::Skip
+            [(input[:content].present? && input[:content].join(", ") || "all packages")] + super
           end
 
           def finalize
@@ -42,8 +29,8 @@ module Actions
           end
 
           def audit_comment
-            if input[:packages].present?
-              (_("Update of package(s) requested: %{packages}") % {packages: input[:packages].join(", ")}).truncate(255)
+            if input[:content].present?
+              (_("Update of package(s) requested: %{packages}") % {packages: input[:content].join(", ")}).truncate(255)
             else
               _("Update of all packages requested")
             end

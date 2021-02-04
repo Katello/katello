@@ -33,6 +33,8 @@ module Katello
       included do
         prepend Overrides
 
+        has_many :dispatch_histories, :class_name => "::Katello::Agent::DispatchHistory", :foreign_key => :host_id, :dependent => :delete_all
+
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :delete_all
         has_many :installed_packages, :class_name => "::Katello::InstalledPackage", :through => :host_installed_packages
 

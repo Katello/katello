@@ -365,7 +365,7 @@ module Katello
         if params[:action] == :update_content && params[:update_all]
           content = []
         end
-        task = async_task(::Actions::BulkAction, PARAM_ACTIONS[params[:action]][params[:content_type]], @hosts, content)
+        task = async_task(Actions::Katello::BulkAgentAction, PARAM_ACTIONS[params[:action]][params[:content_type]], @hosts, content: content)
         respond_for_async :resource => task
       end
     end

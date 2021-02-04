@@ -28,7 +28,7 @@ module ::Actions::Katello::Host::Erratum
           plan_action action, host, :errata_ids => errata_ids
 
           assert_action_planned_with action, Actions::Katello::Host::Erratum::Install,
-            host, applicable_errata_list.pluck(:errata_id)
+            host, content: applicable_errata_list.pluck(:errata_id)
         end
       end
 
