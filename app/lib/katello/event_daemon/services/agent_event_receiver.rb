@@ -14,7 +14,7 @@ module Katello
 
           def handle(message)
             ::Katello::Util::Support.with_db_connection do
-              ::Katello::Agent::ClientMessageHandler.handle(message)
+              ::Katello::Agent::ClientMessageHandler.new(message).handle
               @processed += 1
             rescue => e
               @failed += 1

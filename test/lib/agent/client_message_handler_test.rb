@@ -12,6 +12,12 @@ module Katello
         }
       end
 
+      def test_handle_no_dispatch_history
+        assert_raises(StandardError) do
+          ClientMessageHandler.new(stub(body: {}.to_json))
+        end
+      end
+
       def test_handle_accepted
         dispatch_history = Katello::Agent::DispatchHistory.create!(
           host_id: @host.id,
@@ -31,8 +37,8 @@ module Katello
           status: 'accepted'
         }
 
-        message = stub(body: content)
-        ClientMessageHandler.handle(message)
+        message = stub(body: content.to_json)
+        ClientMessageHandler.new(message).handle
         dispatch_history.reload
 
         assert_empty dispatch_history.result
@@ -62,8 +68,8 @@ module Katello
           }
         }
 
-        message = stub(body: content)
-        ClientMessageHandler.handle(message)
+        message = stub(body: content.to_json)
+        ClientMessageHandler.new(message).handle
         dispatch_history.reload
 
         refute dispatch_history.accepted_at
@@ -88,8 +94,8 @@ module Katello
           }
         }
 
-        message = stub(body: content)
-        ClientMessageHandler.handle(message)
+        message = stub(body: content.to_json)
+        ClientMessageHandler.new(message).handle
         dispatch_history.reload
 
         refute dispatch_history.accepted_at
