@@ -7,7 +7,9 @@ import { STATUS } from 'foremanReact/constants';
 import {
   cvDetailsKey,
   cvDetailsRepoKey,
-  cvDetailsFilterKey,
+  cvDetailsFiltersKey,
+  cvFilterDetailsKey,
+  cvFilterPackageGroupsKey,
   REPOSITORY_TYPES,
 } from '../ContentViewsConstants';
 
@@ -36,12 +38,30 @@ export const selectRepoTypesStatus = state =>
   selectAPIStatus(state, REPOSITORY_TYPES) || STATUS.PENDING;
 
 export const selectCVFilters = (state, cvId) =>
-  selectAPIResponse(state, cvDetailsFilterKey(cvId)) || {};
+  selectAPIResponse(state, cvDetailsFiltersKey(cvId)) || {};
 
 export const selectCVFiltersStatus = (state, cvId) =>
-  selectAPIStatus(state, cvDetailsFilterKey(cvId)) || STATUS.PENDING;
+  selectAPIStatus(state, cvDetailsFiltersKey(cvId)) || STATUS.PENDING;
 
 export const selectCVFiltersError = (state, cvId) =>
-  selectAPIError(state, cvDetailsFilterKey(cvId));
+  selectAPIError(state, cvDetailsFiltersKey(cvId));
+
+export const selectCVFilterDetails = (state, cvId, filterId) =>
+  selectAPIResponse(state, cvFilterDetailsKey(cvId, filterId)) || {};
+
+export const selectCVFilterDetailStatus = (state, cvId, filterId) =>
+  selectAPIStatus(state, cvFilterDetailsKey(cvId, filterId)) || STATUS.PENDING;
+
+export const selectCVFilterDetailError = (state, cvId, filterId) =>
+  selectAPIError(state, cvFilterDetailsKey(cvId, filterId));
+
+export const selectCVFilterPackageGroups = (state, cvId, filterId) =>
+  selectAPIResponse(state, cvFilterPackageGroupsKey(cvId, filterId));
+
+export const selectCVFilterPackageGroupStatus = (state, cvId, filterId) =>
+  selectAPIStatus(state, cvFilterPackageGroupsKey(cvId, filterId)) || STATUS.PENDING;
+
+export const selectCVFilterPackageGroupError = (state, cvId, filterId) =>
+  selectAPIError(state, cvFilterPackageGroupsKey(cvId, filterId))
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;

@@ -27,6 +27,7 @@ function renderWithRedux(
     apiNamespace, // namespace if using API middleware
     initialApiState = { response: {}, status: STATUS.PENDING }, // Default state for API middleware
     initialState = {}, // Override full state
+    routerParams = {},
   } = {},
 ) {
   // Adding the reducer in the expected namespaced format
@@ -54,7 +55,7 @@ function renderWithRedux(
   const store = createStore(combinedReducers, initialFullState, middlewares);
   const connectedComponent = (
     <Provider store={store}>
-      <MemoryRouter>{component}</MemoryRouter>
+      <MemoryRouter {...routerParams} >{component}</MemoryRouter>
     </Provider>
   );
 

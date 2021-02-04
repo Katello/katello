@@ -3,7 +3,6 @@ import { shape, string, number, element, arrayOf } from 'prop-types';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useHistory, useLocation } from 'react-router-dom';
 import paramsFromHash from '../../utils/paramsFromHash';
-import './RoutedTabs.scss';
 
 /*
   Creates tabs that change url hash based on the tab selected.

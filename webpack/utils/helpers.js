@@ -100,6 +100,8 @@ export const capitalize = s => s && s[0].toUpperCase() + s.slice(1);
 
 export const truncate = (str, truncateLimit = 50) => (str.length > truncateLimit ? `${str.substring(0, truncateLimit - 3)}...` : str);
 
+export const repoType = (type) => ['rpm', 'modulemd', 'erratum', 'package_group'].includes(type) ? 'yum' : type;
+
 export default {
   getResponseErrorMsgs,
   apiError,

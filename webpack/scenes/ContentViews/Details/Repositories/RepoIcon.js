@@ -17,7 +17,11 @@ const RepoIcon = ({ type }) => {
 };
 
 RepoIcon.propTypes = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
 };
+
+RepoIcon.defaultProps = {
+  type: "" // prevent errors if data isn't loaded yet
+}
 
 export default RepoIcon;
