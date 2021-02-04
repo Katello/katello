@@ -6,6 +6,7 @@ module Katello
       @repo = katello_repositories(:fedora_17_x86_64)
       @server_pg = katello_package_groups(:server_pg)
       @mammals_pg = katello_package_groups(:mammals_pg)
+      @filter = katello_content_view_filters(:populated_package_group_filter)
     end
 
     def test_repositories
@@ -34,6 +35,11 @@ module Katello
 
     def test_search_by_repository
       assert_includes PackageGroup.search_for('repository = "Fedora 17 x86_64"'), @mammals_pg
+    end
+
+    def test_in_content_view_filter
+      assert @server_pg.in_content_view_filter?(@filter)
+      refute @mammals_pg.in_content_view_filter?(@filter)
     end
   end
 end
