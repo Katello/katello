@@ -64,11 +64,6 @@ module Katello
         @url = url
       end
 
-      def send_message(address, message)
-        sender = Sender.new(@url, address, [message])
-        with_connection(sender)
-      end
-
       def send_messages(messages)
         sender = Sender.new(@url, nil, messages)
         with_connection(sender)

@@ -10,10 +10,10 @@ module Katello
         connection.fetch_agent_messages(Class)
       end
 
-      def test_send_message
-        message = mock(recipient_address: 'pulp.agent.foo')
-        ::Katello::Qpid::Connection.any_instance.expects(:send_message)
-        connection.send_message(message)
+      def test_send_messages
+        message = mock
+        ::Katello::Qpid::Connection.any_instance.expects(:send_messages).with([message])
+        connection.send_messages([message])
       end
     end
   end
