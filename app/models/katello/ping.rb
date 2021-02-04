@@ -14,7 +14,7 @@ module Katello
 
       def services(capsule_id = nil)
         proxy = fetch_proxy(capsule_id)
-        services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
+        services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events, :katello_agent]
         services += [:pulp3] if proxy&.pulp3_enabled? && pulpcore_enabled
         if proxy.nil? || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) || proxy.has_feature?(SmartProxy::PULP_FEATURE)
           services += [:pulp, :pulp_auth]
@@ -38,6 +38,7 @@ module Katello
         ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
         ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
         ping_candlepin_events(result[:candlepin_events]) if result.include?(:candlepin_events)
+        ping_katello_agent(result[:katello_agent]) if result.include?(:katello_agent)
 
         # set overall status result code
         result = {:services => result}
@@ -73,6 +74,13 @@ module Katello
       def ping_candlepin_events(result)
         exception_watch(result) do
           status = Katello::EventDaemon::Runner.service_status(:candlepin_events)
+          event_daemon_status(status, result)
+        end
+      end
+
+      def ping_katello_agent(result)
+        exception_watch(result) do
+          status = Katello::EventDaemon::Services::AgentEventReceiver.status(refresh: false)
           event_daemon_status(status, result)
         end
       end

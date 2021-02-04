@@ -2,18 +2,13 @@ module Actions
   module Katello
     module Host
       module Package
-        class Install < Actions::EntryAction
-          include Helpers::Presenter
+        class Install < Actions::Katello::AgentAction
+          def self.agent_message
+            :install_package
+          end
 
-          def plan(host, packages)
-            Type! host, ::Host::Managed
-
-            action_subject(host, :hostname => host.name, :packages => packages)
-            plan_action(Pulp::Consumer::ContentInstall,
-                        consumer_uuid: host.content_facet.uuid,
-                        type:          'rpm',
-                        args:          packages)
-            plan_self(:host_id => host.id)
+          def agent_action_type
+            :content_install
           end
 
           def humanized_name
@@ -25,20 +20,12 @@ module Actions
           end
 
           def humanized_input
-            [input[:packages].join(", ")] + super
-          end
-
-          def presenter
-            Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentInstall))
-          end
-
-          def rescue_strategy
-            Dynflow::Action::Rescue::Skip
+            [input[:content].join(", ")] + super
           end
 
           def finalize
             host = ::Host.find_by(:id => input[:host_id])
-            host.update(audit_comment: (_("Installation of package(s) requested: %{packages}") % {packages: input[:packages].join(", ")}).truncate(255))
+            host.update(audit_comment: (_("Installation of package(s) requested: %{packages}") % {packages: input[:content].join(", ")}).truncate(255))
           end
         end
       end

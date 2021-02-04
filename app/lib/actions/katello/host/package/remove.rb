@@ -2,16 +2,13 @@ module Actions
   module Katello
     module Host
       module Package
-        class Remove < Actions::EntryAction
-          include Helpers::Presenter
+        class Remove < Actions::Katello::AgentAction
+          def self.agent_message
+            :remove_package
+          end
 
-          def plan(host, packages)
-            action_subject(host, :hostname => host.name, :packages => packages)
-            plan_action(Pulp::Consumer::ContentUninstall,
-                        consumer_uuid: host.content_facet.uuid,
-                        type:          'rpm',
-                        args:          packages)
-            plan_self(:host_id => host.id)
+          def agent_action_type
+            :content_uninstall
           end
 
           def humanized_name
@@ -27,7 +24,7 @@ module Actions
           end
 
           def humanized_package_names
-            input[:packages].inject([]) do |result, package|
+            input[:content].inject([]) do |result, package|
               if package.is_a?(Hash)
                 new_name = package.include?(:name) ? package[:name] : ""
                 new_name += '-' + package[:version] if package.include?(:version)
@@ -40,18 +37,9 @@ module Actions
             end
           end
 
-          def presenter
-            Helpers::Presenter::Delegated.new(
-                self, planned_actions(Pulp::Consumer::ContentUninstall))
-          end
-
-          def rescue_strategy
-            Dynflow::Action::Rescue::Skip
-          end
-
           def finalize
             host = ::Host.find_by(:id => input[:host_id])
-            host.update(audit_comment: (_("Removal of package(s) requested: %{packages}") % {packages: input[:packages].join(", ")}).truncate(255))
+            host.update(audit_comment: (_("Removal of package(s) requested: %{packages}") % {packages: input[:content].join(", ")}).truncate(255))
           end
         end
       end
