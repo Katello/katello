@@ -13,7 +13,7 @@ module Actions
       end
 
       def plan(host, options)
-        action_subject(host)
+        action_subject(host, :hostname => host.name, :content => options[:content])
 
         # if already dispatched by bulk action use the provided history ID
         dispatch_history_id = options.dig(:dispatch_histories, host.id.to_s)
@@ -30,8 +30,6 @@ module Actions
 
         plan_self(
           host_id: host.id,
-          hostname: host.name,
-          content: options[:content],
           dispatch_history_id: dispatch_history_id
         )
       end

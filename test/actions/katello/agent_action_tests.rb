@@ -18,13 +18,13 @@ module Actions
 
         let(:action) do
           action = create_action action_class
-          action.stubs(:action_subject).with(host)
+          action.stubs(:action_subject).with(host, hostname: host.name, content: content)
           plan_action action, host, { content: content }
         end
 
         let(:dispatched_action) do
           action = create_action action_class
-          action.stubs(:action_subject).with(host)
+          action.stubs(:action_subject).with(host, hostname: host.name, content: content)
           plan_action action, host, { content: content, dispatch_histories: dispatch_histories }
         end
 
