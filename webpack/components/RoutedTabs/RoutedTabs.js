@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { shape, string, number, element, arrayOf } from 'prop-types';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useHistory, useLocation } from 'react-router-dom';
-import './RoutedTabs.scss';
 import paramsFromHash from '../../utils/paramsFromHash';
+import './RoutedTabs.scss';
 
 /*
   Creates tabs that change url hash based on the tab selected.
@@ -11,7 +11,9 @@ import paramsFromHash from '../../utils/paramsFromHash';
   The url format is: "/my/base/url#currentTab?subContentId=1"
   Influenced by https://github.com/ansible/awx/blob/devel/awx/ui_next/src/components/RoutedTabs/RoutedTabs.jsx
 */
-const RoutedTabs = ({ tabs, baseUrl, defaultTabIndex }) => {
+const RoutedTabs = ({
+  tabs, baseUrl, defaultTabIndex, titleComponent,
+}) => {
   const history = useHistory();
   const { hash } = useLocation();
   const { hash: tabFromUrl, params: { subContentId } } = paramsFromHash(hash);
@@ -59,8 +61,7 @@ const RoutedTabs = ({ tabs, baseUrl, defaultTabIndex }) => {
             aria-label={title}
             eventKey={key}
             key={key}
-            link={`${baseUrl}#${key}`}
-            title={<TabTitleText>{title}</TabTitleText>}
+            title={titleComponent || <TabTitleText>{title}</TabTitleText>}
           >
             <div className="tab-body-with-spacing">
               {showContent(tab)}
@@ -80,10 +81,12 @@ RoutedTabs.propTypes = {
   })).isRequired,
   baseUrl: string.isRequired,
   defaultTabIndex: number,
+  titleComponent: element, // when you want to a custom tab title
 };
 
 RoutedTabs.defaultProps = {
   defaultTabIndex: 0,
+  titleComponent: null,
 };
 
 export default RoutedTabs;
