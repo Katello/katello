@@ -9,8 +9,6 @@ module Actions
               ret << task_result_packages
             elsif task_result_packages.any?
               ret.concat(task_result_packages.map { |package| package[:qname] })
-            else
-              ret << humanized_no_package
             end
             if humanized_errors
               ret.concat(humanized_errors)
@@ -95,15 +93,6 @@ module Actions
 
         def humanized_errors
           task_errors&.map { |k, v| "#{k}: #{v}" }
-        end
-
-        def humanized_no_package
-          case action
-          when Consumer::ContentInstall
-            _("No new packages installed")
-          when Consumer::ContentUninstall
-            _("No packages removed")
-          end
         end
       end
     end

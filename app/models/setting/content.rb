@@ -120,8 +120,6 @@ class Setting::Content < Setting
                '', N_('Subscription manager name registration fact'), nil),
       self.set('register_hostname_fact_strict_match', N_('If true, and register_hostname_fact is set and provided, registration will look for a new host by name only '\
                 'using that fact, and will skip all hostname matching'), false, N_('Subscription manager name registration fact strict matching'), nil),
-      self.set('erratum_install_batch_size', N_("Errata installed via katello-agent will be triggered in batches of this size. Set to 0 to install all errata in one batch."),
-               0, N_('Erratum Install Batch Size')),
       self.set('default_location_subscribed_hosts',
                N_('Default Location where new subscribed hosts will put upon registration'),
                nil, N_('Default Location subscribed hosts'), nil,

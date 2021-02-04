@@ -1,4 +1,5 @@
 module Katello
+  # TODO: Move this class to app/lib/katello/event_daemon/services with other service definitions
   class CandlepinEventListener
     Event = Struct.new(:subject, :content)
 

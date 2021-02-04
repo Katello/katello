@@ -34,8 +34,8 @@ module Katello
     end
 
     def test_install_package
-      assert_async_task ::Actions::Katello::Host::Package::Install do |host, packages|
-        host.id == @host.id && packages == %w(foo)
+      assert_async_task ::Actions::Katello::Host::Package::Install do |host, options|
+        host.id == @host.id && options[:content] == %w(foo)
       end
 
       put :install, params: { :host_id => @host.id, :packages => %w(foo) }
@@ -50,8 +50,8 @@ module Katello
     end
 
     def test_install_group
-      assert_async_task ::Actions::Katello::Host::PackageGroup::Install do |host, groups|
-        host.id == @host.id && groups == %w(blah)
+      assert_async_task ::Actions::Katello::Host::PackageGroup::Install do |host, options|
+        host.id == @host.id && options[:content] == %w(blah)
       end
 
       put :install, params: { :host_id => @host.id, :groups => %w(blah) }
@@ -60,8 +60,8 @@ module Katello
     end
 
     def test_upgrade
-      assert_async_task ::Actions::Katello::Host::Package::Update do |host, packages|
-        host.id == @host.id && packages == %w(foo bar)
+      assert_async_task ::Actions::Katello::Host::Package::Update do |host, options|
+        host.id == @host.id && options[:content] == %w(foo bar)
       end
 
       put :upgrade, params: { :host_id => @host.id, :packages => %w(foo bar) }
@@ -76,8 +76,8 @@ module Katello
     end
 
     def test_upgrade_all
-      assert_async_task ::Actions::Katello::Host::Package::Update do |host, packages|
-        host.id == @host.id && packages == []
+      assert_async_task ::Actions::Katello::Host::Package::Update do |host, options|
+        host.id == @host.id && options[:content] == []
       end
 
       put :upgrade_all, params: { :host_id => @host.id }
@@ -86,8 +86,8 @@ module Katello
     end
 
     def test_remove
-      assert_async_task ::Actions::Katello::Host::Package::Remove do |host, packages|
-        host.id == @host.id && packages == %w(foo)
+      assert_async_task ::Actions::Katello::Host::Package::Remove do |host, options|
+        host.id == @host.id && options[:content] == %w(foo)
       end
 
       put :remove, params: { :host_id => @host.id, :packages => %w(foo) }
@@ -108,8 +108,8 @@ module Katello
     end
 
     def test_remove_group
-      assert_async_task ::Actions::Katello::Host::PackageGroup::Remove do |host, groups|
-        host.id == @host.id && groups == %w(blah)
+      assert_async_task ::Actions::Katello::Host::PackageGroup::Remove do |host, options|
+        host.id == @host.id && options[:content] == %w(blah)
       end
 
       put :remove, params: { :host_id => @host.id, :groups => %w(blah) }

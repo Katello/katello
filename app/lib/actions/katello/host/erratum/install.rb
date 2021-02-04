@@ -2,27 +2,13 @@ module Actions
   module Katello
     module Host
       module Erratum
-        class Install < Actions::EntryAction
-          include Helpers::Presenter
+        class Install < Actions::Katello::AgentAction
+          def self.agent_message
+            :install_errata
+          end
 
-          def plan(host, errata_ids)
-            Type! host, ::Host::Managed
-
-            action_subject(host, :hostname => host.name, :errata => errata_ids)
-            if Setting['erratum_install_batch_size'] && Setting['erratum_install_batch_size'] > 0
-              errata_ids.each_slice(Setting['erratum_install_batch_size']) do |errata_ids_batch|
-                plan_action(Pulp::Consumer::ContentInstall,
-                            consumer_uuid: host.content_facet.uuid,
-                            type:          'erratum',
-                            args:          errata_ids_batch)
-              end
-            else
-              plan_action(Pulp::Consumer::ContentInstall,
-                          consumer_uuid: host.content_facet.uuid,
-                          type:          'erratum',
-                          args:          errata_ids)
-            end
-            plan_self(:host_id => host.id)
+          def agent_action_type
+            :content_install
           end
 
           def humanized_name
@@ -34,20 +20,16 @@ module Actions
           end
 
           def humanized_input
-            [input[:errata].join(", ")] + super
+            [input[:content].join(", ")] + super
           end
 
           def resource_locks
             :link
           end
 
-          def presenter
-            Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentInstall))
-          end
-
           def finalize
             host = ::Host.find_by(:id => input[:host_id])
-            host.update(audit_comment: (_("Installation of errata requested: %{errata}") % {errata: input[:errata].join(", ")}).truncate(255))
+            host.update(audit_comment: (_("Installation of errata requested: %{errata}") % {errata: input[:content].join(", ")}).truncate(255))
           end
         end
       end
