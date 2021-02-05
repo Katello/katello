@@ -225,6 +225,7 @@ module Katello
 
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
+        ::Katello::EventQueue.expects(:push_event)
 
         ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
       end

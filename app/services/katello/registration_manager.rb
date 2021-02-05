@@ -115,6 +115,8 @@ module Katello
         # This can be cleaned up later via clean_backend_objects.
         pulp_consumer_destory(host.content_facet.uuid) if host.content_facet.try(:uuid) && pulp2_supported?
 
+        delete_agent_queue(host) if host.content_facet.try(:uuid)
+
         host.subscription_facet.try(:destroy!)
 
         if unregistering
@@ -264,6 +266,14 @@ module Katello
         ::Katello.pulp_server.extensions.consumer.delete(host_uuid)
       rescue RestClient::ResourceNotFound
         Rails.logger.warn(_("Pulp Consumer %s has already been removed") % host_uuid)
+      end
+
+      def delete_agent_queue(host)
+        queue_name = Katello::Agent::Dispatcher.host_queue_name(host)
+        Katello::EventQueue.push_event(::Katello::Events::DeleteHostAgentQueue::EVENT_TYPE, host.id) do |attrs|
+          attrs[:metadata] = { queue_name: queue_name }
+          attrs[:process_after] = 10.minutes.from_now
+        end
       end
 
       def populate_content_facet(host, content_view_environment, uuid)

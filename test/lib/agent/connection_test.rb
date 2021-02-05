@@ -15,6 +15,11 @@ module Katello
         ::Katello::Qpid::Connection.any_instance.expects(:send_messages).with([message])
         connection.send_messages([message])
       end
+
+      def test_delete_client_queue
+        ::Katello::Qpid::Connection.any_instance.expects(:delete_queue).with("foo")
+        connection.delete_client_queue("foo")
+      end
     end
   end
 end
