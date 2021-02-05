@@ -11,6 +11,11 @@ module Katello
         connection.receive_messages(address: settings[:event_queue_name], handler: handler)
       end
 
+      def delete_client_queue(queue_name)
+        connection = ::Katello::Qpid::Connection.new(settings[:broker_url])
+        connection.delete_queue(queue_name)
+      end
+
       def settings
         SETTINGS[:katello][:agent]
       end

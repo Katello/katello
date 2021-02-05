@@ -48,6 +48,16 @@ module Katello
         histories
       end
 
+      def self.delete_client_queue(queue_name:)
+        connection = Connection.new
+        connection.delete_client_queue(queue_name)
+      end
+
+      def self.host_queue_name(host)
+        uuid = host.content_facet.uuid
+        settings[:client_queue_format] % uuid
+      end
+
       def self.settings
         SETTINGS[:katello][:agent]
       end
