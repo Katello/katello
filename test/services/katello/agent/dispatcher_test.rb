@@ -25,6 +25,11 @@ module Katello
           Katello::Agent::Dispatcher.dispatch(:test, [host.id], dispatch_params)
         end
       end
+
+      def test_delete_client_queue
+        Katello::Agent::Connection.any_instance.expects(:delete_client_queue).with(consumer_id)
+        Katello::Agent::Dispatcher.delete_client_queue(queue_name: consumer_id)
+      end
     end
   end
 end

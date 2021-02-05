@@ -15,15 +15,13 @@ module Katello
 
         def on_container_start(container)
           c = container.connect(@url)
-          #c.open_sender(@address)
           c.open_sender
+          @receiver = c.open_receiver(@address) if @address
         end
 
         def on_sendable(sender)
-          @messages.each do |message|
-            msg = ::Qpid::Proton::Message.new
-            msg.body = message.to_s
-            msg.address = message.recipient_address
+          @messages.each do |msg|
+            msg.reply_to = @receiver.remote_source.address if @receiver
             sender.send(msg)
             @sent += 1
           end
@@ -35,6 +33,17 @@ module Katello
           @confirmed += 1
           if @confirmed == @sent
             tracker.connection.close
+          end
+        end
+
+        def on_message(_delivery, message)
+          opcode = message.properties['qmf.opcode']
+          if opcode == '_exception'
+            error_code = message.body.dig('_values', 'error_code')
+            if error_code != '7' # not found
+              error_message = message.body.dig('_values', 'error_text')
+              fail(error_message)
+            end
           end
         end
       end
@@ -64,8 +73,42 @@ module Katello
         @url = url
       end
 
+      def delete_queue(queue_name)
+        address = "qmf.default.direct"
+        message = ::Qpid::Proton::Message.new
+        message.subject = 'broker'
+        message.address = address
+        message.body = {
+          '_object_id' => {
+            '_object_name' => 'org.apache.qpid.broker:broker:amqp-broker'
+          },
+          '_method_name' => 'delete',
+          '_arguments' => {
+            'strict' => true,
+            'name' => queue_name,
+            'type' => 'queue',
+            'properties' => {}
+          }
+        }
+
+        message.properties = {
+          'qmf.opcode' => '_method_request',
+          'x-amqp-0-10.app-id' => 'qmf2',
+          'method' => 'request'
+        }
+
+        sender = Sender.new(@url, address, [message])
+        with_connection(sender)
+      end
+
       def send_messages(messages)
-        sender = Sender.new(@url, nil, messages)
+        qpid_messages = messages.map do |message|
+          msg = ::Qpid::Proton::Message.new
+          msg.body = message.to_s
+          msg.address = message.recipient_address
+          msg
+        end
+        sender = Sender.new(@url, nil, qpid_messages)
         with_connection(sender)
       end
 
