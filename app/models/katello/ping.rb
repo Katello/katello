@@ -235,9 +235,12 @@ module Katello
 
       def backend_status(url, backend)
         ca_file = SETTINGS[:katello][backend][:ca_cert_file]
+        request_id = ::Logging.mdc['request']
+
         options = {}
         options[:ssl_ca_file] = ca_file unless ca_file.nil?
         options[:verify_ssl] = SETTINGS[:katello][backend][:verify_ssl] if SETTINGS[:katello][backend].key?(:verify_ssl)
+        options[:headers] = { 'Correlation-ID' => request_id } if request_id
         client = RestClient::Resource.new("#{url}/status", options)
 
         response = client.get

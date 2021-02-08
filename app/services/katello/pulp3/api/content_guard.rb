@@ -13,7 +13,7 @@ module Katello
         end
 
         def api_client
-          PulpCertguardClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpCertguardClient::Configuration))
+          api_client_class(PulpCertguardClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpCertguardClient::Configuration)))
         end
 
         def rhsm_api_client
