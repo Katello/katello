@@ -21,6 +21,7 @@ module Katello
           Katello::Logging.time("CONTENT_SWITCHOVER - combine_duplicate_content_types") { combine_duplicate_content_types }
           Katello::Logging.time("CONTENT_SWITCHOVER - combine_duplicate_docker_tags") { combine_duplicate_docker_tags } if docker_migration?
           Katello::Logging.time("CONTENT_SWITCHOVER - migrate_pulp3_hrefs") { migrate_pulp3_hrefs }
+          Katello::Logging.time("CONTENT_SWITCHOVER - remove_missing_content") { remove_missing_content }
         end
       end
 
@@ -106,12 +107,27 @@ module Katello
         end
       end
 
-      def migrated_content_type_check
+      def remove_missing_content
         content_types.each do |content_type|
-          if content_type.model_class == Katello::Erratum
-            migrated_errata_check
-          elsif content_type.model_class.where(migrated_pulp3_href: nil).any?
-            fail SwitchOverError, "ERROR: at least one #{content_type.model_class.table_name} record has migrated_pulp3_href NULL value\n"
+          if Migration::CORRUPTABLE_CONTENT_TYPES.include?(content_type.model_class)
+            content_type.model_class.ignored_missing_migrated_content.destroy_all
+          else
+            content_type.model_class.unmigrated_content.destroy_all
+          end
+        end
+      end
+
+      def migrated_content_type_check
+        content_classes = content_types.map(&:model_class)
+        migrated_errata_check if content_classes.include?(Katello::Erratum)
+
+        (content_classes & Migration::CORRUPTABLE_CONTENT_TYPES).each do |content_type|
+          if content_type.missing_migrated_content.any?
+            fail SwitchOverError, "ERROR: at least one #{content_type.table_name} record has been detected as corrupt or missing. Run 'foreman-rake katello:pulp3_migration_stats' for more information.\n"
+          end
+
+          if content_type.unmigrated_content.any?
+            fail SwitchOverError, "ERROR: at least one #{content_type.table_name} record was not able to be migrated\n"
           end
         end
       end

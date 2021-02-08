@@ -107,6 +107,48 @@ module Katello
 
       assert_equal [@rpm_one], repo_two.reload.rpms
     end
+
+    def test_unmigrated_content
+      @rpm_one.update(:migrated_pulp3_href => '/some/path')
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => false)
+
+      refute Rpm.unmigrated_content.find_by(id: @rpm_one.id)
+      assert Rpm.unmigrated_content.find_by(id: @rpm_two.id)
+
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => true)
+      assert Rpm.unmigrated_content.find_by(id: @rpm_two.id)
+
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => true, :ignore_missing_from_migration => true)
+      refute Rpm.unmigrated_content.find_by(id: @rpm_two.id)
+    end
+
+    def test_missing_migrated_content
+      @rpm_one.update(:migrated_pulp3_href => '/some/path')
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => false)
+
+      refute Rpm.missing_migrated_content.find_by(id: @rpm_one.id)
+      refute Rpm.missing_migrated_content.find_by(id: @rpm_two.id)
+
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => true)
+      assert Rpm.missing_migrated_content.find_by(id: @rpm_two.id)
+
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => true, ignore_missing_from_migration: true)
+      refute Rpm.missing_migrated_content.find_by(id: @rpm_two.id)
+    end
+
+    def test_ignored_missing_migrated_content
+      @rpm_one.update(:migrated_pulp3_href => '/some/path')
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => false)
+
+      refute Rpm.ignored_missing_migrated_content.find_by(id: @rpm_one.id)
+      refute Rpm.ignored_missing_migrated_content.find_by(id: @rpm_two.id)
+
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => true)
+      refute Rpm.ignored_missing_migrated_content.find_by(id: @rpm_two.id)
+
+      @rpm_two.update(:migrated_pulp3_href => nil, :missing_from_migration => true, ignore_missing_from_migration: true)
+      assert Rpm.ignored_missing_migrated_content.find_by(id: @rpm_two.id)
+    end
   end
 
   class ApplicablityTest < RpmTestBase

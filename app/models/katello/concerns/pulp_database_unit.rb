@@ -218,6 +218,18 @@ module Katello
       def db_values(new_ids, pulp_id_href_map, repository)
         new_ids.map { |unit_id| [unit_id.to_i, pulp_id_href_map.dig(unit_id), repository.id.to_i, Time.now.utc.to_s(:db), Time.now.utc.to_s(:db)].compact }
       end
+
+      def unmigrated_content
+        self.where(migrated_pulp3_href: nil, ignore_missing_from_migration: false)
+      end
+
+      def missing_migrated_content #missing or corrupted content that could not be migrated
+        self.where(migrated_pulp3_href: nil, missing_from_migration: true, ignore_missing_from_migration: false)
+      end
+
+      def ignored_missing_migrated_content
+        self.where(migrated_pulp3_href: nil, missing_from_migration: true, ignore_missing_from_migration: true)
+      end
     end
   end
 end
