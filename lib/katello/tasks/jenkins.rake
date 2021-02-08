@@ -18,6 +18,11 @@ begin
       Rake::Task['jenkins:setup:minitest'].invoke
       Rake::Task['rake:test:katello:test'].invoke
     end
+
+    task 'katello:pulpcore' do
+      Rake::Task['jenkins:setup:minitest'].invoke
+      Rake::Task['rake:test:katello:pulpcore'].invoke
+    end
   end
 rescue LoadError
   # ci/reporter/rake/rspec not present, skipping this definition

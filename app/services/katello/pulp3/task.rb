@@ -72,6 +72,10 @@ module Katello
         task_data['progress_reports']
       end
 
+      def correlation_id
+        task_data['logging_cid']
+      end
+
       def poll
         task_data(true)
         self

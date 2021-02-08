@@ -29,6 +29,19 @@ module Katello
           ensure
             Faraday.default_adapter = default
           end
+
+          def test_logging_request_id_set_in_header
+            cid = 'abc123'
+            ::Logging.mdc['request'] = cid
+            client = Katello::Pulp3::Api::Core.new(@primary).core_api_client
+            assert_equal cid, client.default_headers['Correlation-ID']
+          end
+
+          def test_logging_request_id_not_set_in_header
+            ::Logging.mdc['request'] = nil
+            client = Katello::Pulp3::Api::Core.new(@primary).core_api_client
+            assert_nil client.default_headers['Correlation-ID']
+          end
         end
       end
     end

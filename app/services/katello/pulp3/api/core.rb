@@ -79,7 +79,14 @@ module Katello
         end
 
         def core_api_client
-          PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
+          client = PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
+          api_client_class(client)
+        end
+
+        def api_client_class(client)
+          request_id = ::Logging.mdc['request']
+          client.default_headers['Correlation-ID'] = request_id if request_id
+          client
         end
 
         def uploads_api

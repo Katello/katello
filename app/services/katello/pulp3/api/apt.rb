@@ -29,7 +29,7 @@ module Katello
         end
 
         def api_client
-          PulpDebClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpDebClient::Configuration))
+          api_client_class(PulpDebClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpDebClient::Configuration)))
         end
 
         def repositories_api
