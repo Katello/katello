@@ -4,24 +4,67 @@ module Katello
   class SwitchoverBase < ActiveSupport::TestCase
     def setup
       @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-      SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => true, :docker => true}
     end
 
     def teardown
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
       SETTINGS[:katello][:use_pulp_2_for_content_type][:docker] = nil
+      SETTINGS[:katello][:use_pulp_2_for_content_type][:yum] = nil
     end
   end
 
   class Pulp3YumContentSwitchoverTest < SwitchoverBase
     def setup
       super
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {:yum => true, :file => false, :docker => false}
+
+      @fake_pulp3_href = 'fake_pulp3_href'
+      @another_fake_pulp3_href = 'another_fake_pulp3_href'
+
+      migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, repository_types: ['yum'])
+      migration_service.content_types_for_migration.each do |content_type|
+        unless content_type.model_class == Katello::Erratum
+          content_type.model_class.all.each do |record|
+            record.update(:migrated_pulp3_href => @fake_pulp3_href + record.id.to_s)
+          end
+        end
+        Katello::RepositoryErratum.update_all(erratum_pulp3_href: @fake_pulp3_href)
+      end
+
+      @switchover = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary, repository_types: ['yum'])
+    end
+
+    def test_rpm_ignored_missing_gets_deleted
+      rpm = katello_rpms(:one)
+      rpm.update(migrated_pulp3_href: nil, missing_from_migration: true, ignore_missing_from_migration: true)
+
+      @switchover.run
+      refute Katello::Rpm.find_by(:id => rpm.id)
+    end
+
+    def test_rpm_corrupted_throws_error
+      rpm = katello_rpms(:one)
+      rpm.update(migrated_pulp3_href: nil, missing_from_migration: true, ignore_missing_from_migration: false)
+
+      assert_raises do
+        @switchover.run
+      end
+    end
+
+    def test_rpm_nil_href
+      rpm = katello_rpms(:one)
+      rpm.update(migrated_pulp3_href: nil, missing_from_migration: false, ignore_missing_from_migration: false)
+
+      assert_raises do
+        @switchover.run
+      end
     end
   end
 
   class Pulp3ContentSwitchoverTest < SwitchoverBase
     def setup
       super
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => true, :docker => true}
 
       @fake_pulp3_href = 'fake_pulp3_href'
       @another_fake_pulp3_href = 'another_fake_pulp3_href'
@@ -38,6 +81,7 @@ module Katello
 
     def test_file_unit_pulp_ids_updated
       file_unit = katello_files(:one)
+
       file_unit.update(:migrated_pulp3_href => @another_fake_pulp3_href)
       refute_equal @another_fake_pulp3_href, file_unit.reload.pulp_id
 
@@ -65,12 +109,13 @@ module Katello
       assert_equal @another_fake_pulp3_href, manifest.reload.pulp_id
     end
 
-    def test_docker_manifest_with_null_migrated_pulp3_href_throws_an_error
-      Katello::DockerManifest.first.update(:migrated_pulp3_href => nil)
+    def test_docker_manifest_with_null_migrated_pulp3_href_is_ignored
+      item = Katello::DockerManifest.first
+      item.update(:migrated_pulp3_href => nil)
 
-      assert_raises Katello::Pulp3::SwitchOverError do
-        @switchover.run
-      end
+      @switchover.run
+
+      refute Katello::DockerManifest.find_by(:id => item.id)
     end
 
     def test_docker_manifest_list_pulp_ids_updated
@@ -85,13 +130,13 @@ module Katello
       assert_equal @another_fake_pulp3_href, manifest_list.reload.pulp_id
     end
 
-    def test_docker_manifest_list_with_null_migrated_pulp3_href_throws_an_error
+    def test_docker_manifest_list_with_null_migrated_pulp3_href_is_not_migrated
       manifest_list = FactoryBot.create(:docker_manifest_list)
       manifest_list.update(:migrated_pulp3_href => nil)
 
-      assert_raises Katello::Pulp3::SwitchOverError do
-        @switchover.run
-      end
+      @switchover.run
+
+      refute Katello::DockerManifestList.find_by(:id => manifest_list.id)
     end
 
     def test_docker_tag_pulp_ids_updated
@@ -108,16 +153,16 @@ module Katello
       assert_equal @another_fake_pulp3_href, tag.reload.pulp_id
     end
 
-    def test_docker_manifest_tag_with_null_migrated_pulp3_href_throws_an_error
+    def test_docker_manifest_tag_with_null_migrated_pulp3_href_is_removed
       repo = Repository.find(katello_repositories(:busybox).id)
       tag = create(:docker_tag, :repositories => [repo])
       tag.update(:migrated_pulp3_href => nil)
       docker_manifest = tag.docker_taggable
       docker_manifest.update(:migrated_pulp3_href => @another_fake_pulp3_href + docker_manifest.id.to_s)
 
-      assert_raises Katello::Pulp3::SwitchOverError do
-        @switchover.run
-      end
+      @switchover.run
+
+      refute Katello::DockerTag.find_by(:id => tag.id)
     end
 
     def test_rpm_pulp_ids_not_updated
@@ -132,6 +177,7 @@ module Katello
   class Pulp3ContentSwitchoverDuplicateDockerTest < SwitchoverBase
     def setup
       super
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => true, :docker => true}
 
       @repo = katello_repositories(:busybox)
       @cv_archive_repo = katello_repositories(:busybox_view1)

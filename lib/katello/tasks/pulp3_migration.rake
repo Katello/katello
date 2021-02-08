@@ -30,6 +30,13 @@ namespace :katello do
         $stderr.print(msg)
         fail ForemanTasks::TaskError, task
       else
+        puts
+        Katello::Pulp3::Migration::CORRUPTABLE_CONTENT_TYPES.each do |type|
+          if type.missing_migrated_content.any?
+            puts "Some corrupted or missing content found, run 'foreman-maintain content migration-stats' for more information."
+            exit(-1)
+          end
+        end
         puts _("Content Migration completed successfully")
       end
     else

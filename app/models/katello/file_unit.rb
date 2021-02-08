@@ -13,6 +13,10 @@ module Katello
       order(:name)
     end
 
+    def filename
+      path
+    end
+
     def self.total_for_repositories(repos)
       self.in_repositories(repos).count
     end
