@@ -23,7 +23,9 @@
 
         <dd><select type="select"
                     ng-options="item for item in defaultServiceLevels"
-                    ng-model="selectedServiceLevels">
+                    ng-model="selectedServiceLevels"
+                    id="selectedServiceLevels"
+                    >
         </select></dd>
         <br /><br />
 
@@ -31,7 +33,9 @@
 
         <dd><select type="select"
                 ng-options="item for item in defaultUsages"
-                ng-model="selectedRoles">
+                ng-model="selectedUsages"
+                id="selectedUsages"
+                >
         </select></dd>
         <br /><br />
 
@@ -39,7 +43,9 @@
 
         <dd><select type="select"
                 ng-options="item for item in defaultRoles"
-                ng-model="selectedUsages">
+                ng-model="selectedRoles"
+                id="selectedRoles"
+                >
         </select></dd>
         <br /><br />
 
