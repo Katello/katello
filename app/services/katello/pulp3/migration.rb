@@ -15,6 +15,10 @@ module Katello
         Katello::Erratum
       ].freeze
 
+      CORRUPTABLE_CONTENT_TYPES = [
+        Katello::Rpm, Katello::FileUnit
+      ].freeze
+
       def self.repository_types_for_migration
         #we can migrate types that pulp3 supports, but are overridden to pulp2.  These are in 'migration mode'
         overridden = (SETTINGS[:katello][:use_pulp_2_for_content_type] || {}).keys.select { |key| SETTINGS[:katello][:use_pulp_2_for_content_type][key] }
@@ -104,6 +108,7 @@ module Katello
             Katello::RepositoryTypeManager.repository_types[repository_type_label].content_types_to_index.each do |content_type|
               Katello::Logging.time("CONTENT_MIGRATION - Importing Content", data: {type: content_type.label}) do
                 import_content_type(content_type)
+                mark_missing_content(content_type)
               end
             end
           end
@@ -127,7 +132,7 @@ module Katello
       end
 
       def start_migration(plan_href)
-        migration_plan_api.run(plan_href, dry_run: false, validate: true)
+        migration_plan_api.run(plan_href, dry_run: false, validate: true, skip_corrupted: true)
       end
 
       def import_repositories(repository_type_label)
@@ -259,6 +264,12 @@ module Katello
 
         Katello::RepositoryErratum.import([:erratum_id, :erratum_pulp3_href, :repository_id], to_import.values, :validate => false,
                                           on_duplicate_key_update: {conflict_target: [:erratum_id, :repository_id], columns: [:erratum_pulp3_href]})
+      end
+
+      def mark_missing_content(content_type)
+        unless [Katello::DockerTag, Katello::DockerManifest, Katello::Erratum].include?(content_type.model_class)
+          content_type.model_class.where(:migrated_pulp3_href => nil).update_all(:missing_from_migration => true)
+        end
       end
 
       def import_content_type(content_type)

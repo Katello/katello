@@ -3,13 +3,15 @@ require "#{Katello::Engine.root}/app/services/katello/pulp3/migration_switchover
 
 namespace :katello do
   desc "Runs a Pulp 3 migration of pulp3 hrefs to pulp ids for supported content types."
-  task :pulp3_content_switchover => :environment do
+  task :pulp3_content_switchover => ["dynflow:client"] do
+    dryrun = ENV['DRYRUN']
     begin
       User.current = User.anonymous_admin
 
       ActiveRecord::Base.transaction do
         switchover_service = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary)
         switchover_service.run
+        fail "Dryrun completed without error, aborting and rolling back" if dryrun
       end
     rescue Katello::Pulp3::SwitchOverError => e
       $stderr.print(e.message)
