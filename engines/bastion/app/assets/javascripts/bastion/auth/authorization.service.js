@@ -20,7 +20,7 @@ angular.module('Bastion.auth').service('Authorization', ['CurrentUser', 'Permiss
                 allowedTo = model.permissions[permissionName];
             } else {
                 angular.forEach(Permissions, function (permission) {
-                    if (permission.permission.name === permissionName) {
+                    if (permission.name === permissionName) {
                         allowedTo = true;
                     }
                 });
