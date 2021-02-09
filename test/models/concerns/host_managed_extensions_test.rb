@@ -314,12 +314,12 @@ module Katello
   end
 
   class HostAvailableModulesTest < HostManagedExtensionsTestBase
-    def make_module_json(name = "foo", status = "unknown", installed_profiles = [])
+    def make_module_json(name = "foo", status = "unknown", context = nil, installed_profiles = [])
       {
         "name" => name,
         "stream" => "8",
         "version" => "20180308143646",
-        "context" => "c2c572ec",
+        "context" => context,
         "arch" => "x86_64",
         "profiles" => [
           "development",
@@ -333,9 +333,9 @@ module Katello
 
     def test_import_modules
       modules_json = [
-        make_module_json("enabled-installed", "enabled", ["default"]),
+        make_module_json("enabled-installed", "enabled", 'blahcontext', ["default"]),
         make_module_json("enabled2", "enabled"),
-        make_module_json("disabled", "disabled"),
+        make_module_json("disabled", "disabled", "abacadaba"),
         make_module_json("unknown", "unknown")
       ]
       @foreman_host.import_module_streams(modules_json)
@@ -352,6 +352,8 @@ module Katello
       assert_equal installed_params["installed_profiles"], installed.installed_profiles
       assert_equal "enabled", installed.status
       refute_empty installed.installed_profiles
+
+      assert_equal 'abacadaba', @foreman_host.host_available_module_streams.disabled.first.available_module_stream.context
     end
 
     def test_import_modules_with_update
@@ -371,11 +373,11 @@ module Katello
       assert_empty @foreman_host.reload.host_available_module_streams
       assert_equal prior_count, HostAvailableModuleStream.count
 
-      @foreman_host.import_module_streams([make_module_json("xxxx", "enabled", ["default"])])
+      @foreman_host.import_module_streams([make_module_json("xxxx", "enabled", 'blah', ["default"])])
       assert_equal "enabled", @foreman_host.reload.host_available_module_streams.first.status
       assert_equal ["default"], @foreman_host.reload.host_available_module_streams.first.installed_profiles
 
-      @foreman_host.import_module_streams([make_module_json("xxxx", "enabled", [])])
+      @foreman_host.import_module_streams([make_module_json("xxxx", "enabled", 'blah', [])])
       assert_equal "enabled", @foreman_host.reload.host_available_module_streams.first.status
       assert_empty @foreman_host.reload.host_available_module_streams.first.installed_profiles
     end
