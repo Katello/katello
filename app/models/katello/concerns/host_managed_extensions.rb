@@ -214,6 +214,7 @@ module Katello
         streams = {}
         module_streams.each do |module_stream|
           stream = AvailableModuleStream.where(name: module_stream["name"],
+                                               context: module_stream["context"],
                                                stream: module_stream["stream"]).first_or_create!
           streams[stream.id] = module_stream
         end
