@@ -15,13 +15,11 @@ module Actions
                         :label => organization.label,
                         :path => path,
                         :force => force)
-            concurrence do
-              plan_action(
-                Candlepin::Owner::AsyncImport,
-                :task_id => cp_import_task.output[:task_id]
-              )
-              plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id)
-            end
+            plan_action(
+              Candlepin::Owner::AsyncImport,
+              :task_id => cp_import_task.output[:task_id]
+            )
+            plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id)
 
             if manifest_update
               repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
@@ -55,8 +53,8 @@ module Actions
         def humanized_input
           [
             [:organization, {
-              :text=>"for organization '#{input[:organization_name]}'",
-              :link=>"/organizations/#{input[:organization_id]}/edit"
+              :text => "for organization '#{input[:organization_name]}'",
+              :link => "/organizations/#{input[:organization_id]}/edit"
             }]
           ]
         end

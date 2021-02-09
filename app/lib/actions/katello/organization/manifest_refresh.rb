@@ -6,7 +6,7 @@ module Actions
 
         include Helpers::Notifications
 
-        def plan(organization)
+        def plan(organization) # rubocop:disable Metrics/MethodLength
           action_subject organization
           manifest_update = organization.products.redhat.any?
           path = "/tmp/#{rand}.zip"
@@ -26,18 +26,18 @@ module Actions
                         :label => organization.label,
                         :path => path,
                         :dependency => export_action.output)
-            concurrence do
-              async_import = plan_action(
-                Candlepin::Owner::AsyncImport,
-                :task_id => owner_import.output[:task_id]
-              )
-              import_products = plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id, :dependency => owner_import.output)
-            end
+            plan_action(Candlepin::Owner::AsyncImport,
+              :task_id => owner_import.output[:task_id])
+            import_products = plan_action(Candlepin::Owner::ImportProducts,
+              :organization_id => organization.id,
+              :dependency => owner_import.output)
 
             if manifest_update
               repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
               repositories.each do |repo|
-                plan_action(Katello::Repository::RefreshRepository, repo, :dependency => import_products.output)
+                plan_action(Katello::Repository::RefreshRepository,
+                  repo,
+                  :dependency => import_products.output)
               end
             end
             plan_self(
@@ -74,8 +74,8 @@ module Actions
         def humanized_input
           [
             [:organization, {
-              :text=>"for organization '#{input[:organization_name]}'",
-              :link=>"/organizations/#{input[:organization_id]}/edit"
+              :text => "for organization '#{input[:organization_name]}'",
+              :link => "/organizations/#{input[:organization_id]}/edit"
             }]
           ]
         end
