@@ -5,7 +5,7 @@ describe('Service:Authorization', function() {
 
     beforeEach(module(function($provide) {
         CurrentUser = {};
-        Permissions = [{permission: {name: 'view_tests'}}];
+        Permissions = [{name: 'view_tests'}];
 
         $provide.value('CurrentUser', CurrentUser);
         $provide.value('Permissions', Permissions);
