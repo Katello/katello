@@ -126,7 +126,7 @@ module Katello
     end
 
     def deprecated
-      ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 4.0, Please see /api/v2/simple_content_access")
+      ::Foreman::Deprecation.api_deprecation_warning("This will be removed in Katello 4.2, Please see /api/v2/simple_content_access")
     end
   end
 end
