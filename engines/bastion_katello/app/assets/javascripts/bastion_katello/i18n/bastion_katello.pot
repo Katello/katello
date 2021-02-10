@@ -269,6 +269,10 @@ msgstr ""
 msgid "{{ version.srpm_count }} Source RPMs"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-publish.html
+msgid "{{contentView.errors['messages'][0]}}"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 msgid "* These marked Content View Versions are from Composite Content Views.  Their components needing updating are listed underneath."
 msgstr ""
@@ -1045,7 +1049,7 @@ msgid "Assign Release Version"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
-msgid "Assign System Purpose:"
+msgid "Assign System Purpose"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
@@ -1122,10 +1126,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Backend Identifier"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/download-policy.service.js
-msgid "Background (Deprecated)"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
@@ -1528,10 +1528,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Content Host Status"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
-msgid "Content Host System Purpose"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
@@ -2419,6 +2415,7 @@ msgid ""
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
 msgid "For remote actions via katello-agent:"
 msgstr ""
 
@@ -2680,6 +2677,7 @@ msgid "Install"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
 msgid "Install client package:"
 msgstr ""
 
@@ -2689,6 +2687,10 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
 msgid "Install the pre-built bootstrap RPM:"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-oracle-client.html
+msgid "Install the Subscription Manager package:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -2781,6 +2783,10 @@ msgstr ""
 msgid "Katello-agent is deprecated and will be removed in a future release."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
+msgid "Katello-agent is deprecated and will be removed in Katello 4.0.  Consider migrating to Remote Execution."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
 #: app/assets/javascripts/bastion_katello/content-views/new/views/content-view-new.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
@@ -2845,6 +2851,7 @@ msgid "Latest Only"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
 msgid "Learn more about these packages in the <a href=\"https://theforeman.org/plugins/katello/\">Documentation</a>"
 msgstr ""
 
@@ -4185,7 +4192,8 @@ msgstr ""
 msgid "Register Content Host"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
 msgid "Register using subscription-manager:"
 msgstr ""
 
@@ -4765,6 +4773,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-deb-client.html
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
 msgid "Select a Content Source:"
 msgstr ""
@@ -4845,15 +4854,11 @@ msgid "Service Level (SLA)"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
-msgid "Service Level:"
+msgid "Service Level (SLA):"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Set Release Version"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
-msgid "Set System Purpose values on {{ hostCount }} selected content hosts?"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-info.html
@@ -5497,6 +5502,10 @@ msgstr ""
 msgid "This activation key may be used during system registration. For example:"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-system-purpose-modal.html
+msgid "This change will be applied to <b>{{ hostCount }} systems.</b>"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/docker-tags/details/views/docker-tag-environments.html
 msgid "This Container Image Tag is not present in any Lifecycle Environments."
 msgstr ""
@@ -5567,6 +5576,7 @@ msgid "To register a content host to this server, follow these steps."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
 msgid "To report package & errata information:"
 msgstr ""
 
@@ -5584,6 +5594,7 @@ msgid "Tracer helps administrators identify applications that need to be restart
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
 msgid "Tracer helps administrators identify applications that need to be restarted after a system is patched. To optionally report tracer information:"
 msgstr ""
 
@@ -5850,11 +5861,13 @@ msgstr ""
 msgid "Username of the upstream repository user for authentication. Leave empty if repository does not require authentication."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
 msgid "Using a username and password:"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
+#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
 msgid "Using an Activation Key:"
 msgstr ""
 
