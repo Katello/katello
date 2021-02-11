@@ -11,22 +11,26 @@ const renderValue = (rawValue, additionalData, onActivate) => {
   const value = getEntitlementsDisplayValue({
     rawValue, available, collapsible, upstreamPoolId,
   });
+  const editable = (value === rawValue);
 
   return (
-    <td className="editable">
-      <div
-        onClick={() => onActivate(additionalData)}
-        onKeyPress={(e) => {
-          if (e.keyCode === KEYCODES.ENTER) {
-            onActivate(additionalData);
-          }
-        }}
-        className="input"
-        role="textbox"
-        tabIndex={0}
-      >
-        {value}
-      </div>
+    <td className={editable ? 'editable' : ''}>
+      {editable &&
+        <div
+          onClick={() => onActivate(additionalData)}
+          onKeyPress={(e) => {
+            if (e.keyCode === KEYCODES.ENTER) {
+              onActivate(additionalData);
+            }
+          }}
+          className="input"
+          role="textbox"
+          tabIndex={0}
+        >
+          {value}
+        </div>
+      }
+      {!editable && value}
     </td>
   );
 };
