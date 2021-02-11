@@ -70,12 +70,7 @@ module Actions
         # results in correct grammar on Tasks page,
         # e.g. "Refresh manifest for organization Default Organization"
         def humanized_input
-          [
-            [:organization, {
-              :text => "for organization '#{input[:organization_name]}'",
-              :link => "/organizations/#{input[:organization_id]}/edit"
-            }]
-          ]
+          "for organization '#{input[:organization_name]}'"
         end
 
         def run

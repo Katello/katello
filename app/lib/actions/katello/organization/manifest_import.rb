@@ -23,7 +23,8 @@ module Actions
                 plan_action(Katello::Repository::RefreshRepository, repo)
               end
             end
-            plan_self(candlepin_task: cp_import_task.output[:task])
+            plan_self(candlepin_task: cp_import_task.output[:task],
+                      :organization_name => organization.name)
           end
         end
 
@@ -47,12 +48,7 @@ module Actions
         # results in correct grammar on Tasks page,
         # e.g. "Import manifest for organization Default Organization"
         def humanized_input
-          [
-            [:organization, {
-              :text => "for organization '#{input[:organization_name]}'",
-              :link => "/organizations/#{input[:organization_id]}/edit"
-            }]
-          ]
+          "for organization '#{input[:organization_name]}'"
         end
 
         def run
