@@ -4,20 +4,6 @@ namespace :katello do
     service_stop = "sudo /usr/bin/systemctl status %s > /dev/null && sudo /usr/bin/systemctl stop %s"
     service_start = "sudo /usr/bin/systemctl start %s"
 
-    task :pulp_legacy do
-      SERVICES = %w(httpd pulp_workers pulp_resource_manager pulp_celerybeat squid qpidd pulp_streamer).freeze
-
-      puts "\e[33mStarting Pulp2 Reset\e[0m\n\n"
-
-      SERVICES.each { |s| system(service_stop.gsub("%s", s)) }
-      system(service_start.gsub("%s", 'rh-mongodb34-mongod'))
-      system("mongo pulp_database --eval 'db.dropDatabase();'")
-      fail "\e[31mCannot Migrate Pulp2 Database\e[0m\n\n" unless system('sudo -u apache /usr/bin/pulp-manage-db')
-
-      SERVICES.each { |s| system(service_start.gsub("%s", s)) }
-      puts "\e[32mPulp2 Database Reset Complete\e[0m\n\n"
-    end
-
     task :pulp do
       SERVICES = %w(rh-redis5-redis pulpcore-api pulpcore-resource-manager pulpcore-content).freeze
 
@@ -62,7 +48,6 @@ namespace :katello do
   task :reset_backends do
     Rake::Task['katello:reset_backends:candlepin'].invoke
     Rake::Task['katello:reset_backends:pulp'].invoke
-    Rake::Task['katello:reset_backends:pulp_legacy'].invoke
   end
 
   task :reset => ['environment'] do
