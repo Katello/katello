@@ -23,8 +23,7 @@ module Actions
                 plan_action(Katello::Repository::RefreshRepository, repo)
               end
             end
-            plan_self(candlepin_task: cp_import_task.output[:task],
-                      :organization_name => organization.name)
+            plan_self(:organization_name => organization.name)
           end
         end
 
@@ -49,10 +48,6 @@ module Actions
         # e.g. "Import manifest for organization Default Organization"
         def humanized_input
           "for organization '#{input[:organization_name]}'"
-        end
-
-        def run
-          output[:candlepin_task] = input[:candlepin_task]
         end
 
         def finalize

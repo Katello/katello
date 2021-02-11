@@ -40,8 +40,7 @@ module Actions
             end
             plan_self(
               :organization_id => organization.id,
-              :organization_name => organization.name,
-              :candlepin_task => owner_import.output[:task]
+              :organization_name => organization.name
             )
           end
         end
@@ -71,10 +70,6 @@ module Actions
         # e.g. "Refresh manifest for organization Default Organization"
         def humanized_input
           "for organization '#{input[:organization_name]}'"
-        end
-
-        def run
-          output[:candlepin_task] = input[:candlepin_task]
         end
 
         def finalize
