@@ -15,10 +15,6 @@ module Actions
                         :label => organization.label,
                         :path => path,
                         :force => force)
-            plan_action(
-              Candlepin::Owner::AsyncImport,
-              :task_id => cp_import_task.output[:task_id]
-            )
             plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id)
 
             if manifest_update

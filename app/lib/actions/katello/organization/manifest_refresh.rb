@@ -26,8 +26,6 @@ module Actions
                         :label => organization.label,
                         :path => path,
                         :dependency => export_action.output)
-            plan_action(Candlepin::Owner::AsyncImport,
-              :task_id => owner_import.output[:task_id])
             import_products = plan_action(Candlepin::Owner::ImportProducts,
               :organization_id => organization.id,
               :dependency => owner_import.output)
