@@ -11,8 +11,8 @@ const link = id => ({
 });
 const getErrors = task => (
   <ul>
-    {task.humanized.errors.map(error => (
-      <li key={error}> {error} </li>
+    {task.humanized.errors.map(e => (
+      <li key={e}> {e} </li>
     ))}
   </ul>
 );
