@@ -1,3 +1,6 @@
+import { translate as __ } from 'foremanReact/common/I18n';
+
+
 const getMaxQuantity = (subscription, upstreamAvailable) => {
   if (upstreamAvailable === -1) {
     return upstreamAvailable;
@@ -102,3 +105,17 @@ export const buildPools = updatedQuantity =>
     id,
     quantity,
   }));
+
+export const getEntitlementsDisplayValue = ({
+  rawValue, available, collapsible, upstreamPoolId,
+}) => {
+  if (collapsible) {
+    return __('NA');
+  }
+  if ((available && available < 0) || !upstreamPoolId) {
+    return (
+      available < 0 ? __('Unlimited') : available
+    );
+  }
+  return rawValue;
+};
