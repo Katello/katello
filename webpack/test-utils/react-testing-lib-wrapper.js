@@ -11,7 +11,7 @@ import { STATUS } from 'foremanReact/constants';
 import { render, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, BrowserRouter } from 'react-router-dom';
 import { initialSettingsState } from '../scenes/Settings/SettingsReducer';
 import allKatelloReducers from '../redux/reducers/index.js';
 
@@ -61,6 +61,13 @@ function renderWithRedux(
   return { ...render(connectedComponent), store };
 }
 
+// When you actually need to change browser history
+const renderWithRouter = (ui, { route = '/' } = {}) => {
+  window.history.pushState({}, 'Test page', route);
+
+  return render(ui, { wrapper: BrowserRouter });
+};
+
 // When the tests run slower, they can hit the default waitFor timeout, which is 1000ms
 // There doesn't seem to be a way to set it globally for r-t-lib, so using this wrapper function
 const rtlTimeout = 5000;
@@ -71,4 +78,4 @@ export const patientlyWaitForRemoval = waitForFunc =>
 // re-export everything, so the library can be used from this wrapper.
 export * from '@testing-library/react';
 
-export { renderWithRedux };
+export { renderWithRedux, renderWithRouter };

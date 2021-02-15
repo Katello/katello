@@ -9,8 +9,9 @@ import DetailsContainer from './DetailsContainer';
 import ContentViewInfo from './ContentViewInfo';
 import ContentViewRepositories from './Repositories/ContentViewRepositories';
 import ContentViewFilters from './Filters/ContentViewFilters';
+import ContentViewFilterDetails from './Filters/ContentViewFilterDetails';
 import { selectCVDetails } from './ContentViewDetailSelectors';
-import TabbedView from '../../../components/TabbedView';
+import RoutedTabs from '../../../components/RoutedTabs';
 
 const ContentViewDetails = ({ match }) => {
   const cvId = parseInt(match.params.id, 10);
@@ -19,22 +20,28 @@ const ContentViewDetails = ({ match }) => {
   const { name } = details;
   const tabs = [
     {
+      key: 'details',
       title: __('Details'),
       content: <ContentViewInfo {...{ cvId, details }} />,
     },
     {
+      key: 'versions',
       title: __('Versions'),
       content: <React.Fragment>Versions</React.Fragment>,
     },
     {
+      key: 'repositories',
       title: __('Repositories'),
       content: <ContentViewRepositories {...{ cvId, details }} />,
     },
     {
+      key: 'filters',
       title: __('Filters'),
       content: <ContentViewFilters cvId={cvId} />,
+      detailContent: <ContentViewFilterDetails />,
     },
     {
+      key: 'history',
       title: __('History'),
       content: <React.Fragment>History</React.Fragment>,
     },
@@ -62,7 +69,7 @@ const ContentViewDetails = ({ match }) => {
             </Button>
           </GridItem>
           <GridItem span={12}>
-            <TabbedView tabs={tabs} />
+            <RoutedTabs tabs={tabs} baseUrl={`/labs/content_views/${cvId}`} defaultTabIndex={1} />
           </GridItem>
         </React.Fragment>
       </DetailsContainer>
