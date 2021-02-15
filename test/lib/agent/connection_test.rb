@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require_relative '../../../app/lib/katello/qpid/connection'
 
 module Katello
   module Agent
