@@ -58,8 +58,12 @@ module Katello
         },
         :agent => {
           :client_queue_format => 'pulp.agent.%s',
-          :broker_url => 'amqp:ssl:localhost:5671',
-          :event_queue_name => 'katello.agent'
+          :event_queue_name => 'katello.agent',
+          :broker_url => 'amqps://localhost:5671',
+          # puppetize these
+          :broker_ssl_cert_file => '/etc/pki/katello/qpid_router_client.crt',
+          :broker_ssl_key_file => '/etc/pki/katello/qpid_router_client.key',
+          :broker_ssl_ca_file => '/etc/pki/katello/certs/katello-default-ca.crt'
         }
       }
 
