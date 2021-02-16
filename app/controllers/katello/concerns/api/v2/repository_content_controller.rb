@@ -12,6 +12,7 @@ module Katello
         before_action :find_content_view_version, :only => [:index, :auto_complete_search]
         before_action :find_filter, :find_filter_rule, :only => [:index, :auto_complete_search]
         before_action :find_content_resource, :only => [:show]
+        before_action :check_show_all_and_available_params, only: [:index]
       end
 
       extend ::Apipie::DSL::Concern
@@ -83,9 +84,7 @@ module Katello
 
         collection = filter_by_repos(repos, collection)
         collection = filter_by_ids(params[:ids], collection) if params[:ids]
-
-        @filter = ContentViewFilter.find(params[:filterId]) if params[:filterId]
-        collection = handle_cv_filter(collection, @filter, @filter_rule, params)
+        collection = handle_cv_filter(collection, @filter, @filter_rule, params) if @filter || @filter_rule
 
         collection = self.custom_index_relation(collection) if self.respond_to?(:custom_index_relation)
         collection
@@ -215,6 +214,12 @@ module Katello
         end
       end
 
+      def check_show_all_and_available_params
+        if params[:show_all_for] && params[:available_for]
+          fail HttpErrors::UnprocessableEntity, _("params 'show_all_for' and 'available_for' must be used independently")
+        end
+      end
+
       def resource_class
         "Katello::#{controller_name.classify}".constantize
       end
@@ -274,12 +279,10 @@ module Katello
       end
 
       def handle_cv_filter(collection, filter, filter_rule, params)
-        if params[:show_all_for] == "content_view_filter" && self.respond_to?(:available_for_content_view_filter)
-          available = available_for_content_view_filter(@filter, collection)
-          added = filter_by_content_view_filter(@filter, collection)
-          collection = available.or(added)
+        if params[:show_all_for] == "content_view_filter" && self.respond_to?(:all_for_content_view_filter)
+          collection = self.all_for_content_view_filter(filter, collection)
         elsif params[:available_for] == "content_view_filter" && self.respond_to?(:available_for_content_view_filter)
-          collection = self.available_for_content_view_filter(filter, collection) if filter
+          collection = self.available_for_content_view_filter(filter, collection)
         else
           # Filtering by the CV filter rule makes filtering by the CV filter redundant, keeping these
           # exclusive to keep the queries simple.

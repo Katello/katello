@@ -30,9 +30,8 @@ module Katello
       group.default_package_names + group.conditional_package_names + group.optional_package_names + group.mandatory_package_names
     end
 
-    def in_content_view_filter?(filter)
-      return filter.package_group_rules.pluck(:uuid).include?(self.pulp_id) if filter.type == Katello::ContentViewPackageGroupFilter.to_s
-      false
+    def content_view_package_group_filters
+      Katello::ContentViewPackageGroupFilter.joins(:package_groups).where("#{self.class.table_name}.pulp_id" => self.pulp_id)
     end
   end
 end

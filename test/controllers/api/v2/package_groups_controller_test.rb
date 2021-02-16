@@ -97,6 +97,12 @@ module Katello
       assert response_uuids.length > package_group_uuids.length
     end
 
+    def test_index_mutual_exclusive_params_error
+      get :index, params: { filterId: @package_group_filter.id, show_all_for: 'content_view_filter', available_for: 'content_view_filter' }
+
+      assert_response :unprocessable_entity
+    end
+
     def test_show
       Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
       NilClass.any_instance.stubs(:pulp3_repository_type_support?).returns(false)
