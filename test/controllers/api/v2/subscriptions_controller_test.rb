@@ -41,6 +41,16 @@ module Katello
       assert_template 'api/v2/subscriptions/index'
     end
 
+    def test_index_name
+      first_sub = Pool.first.subscription
+      get :index, params: { :name => first_sub.name, :organization_id => first_sub.organization }
+      results = JSON.parse(@response.body)['results']
+      assert_equal results.count, 1
+      assert_equal results.first['name'], first_sub.name
+      assert_response :success
+      assert_template 'api/v2/subscriptions/index'
+    end
+
     def test_index_csv
       get :index, params: {:format => 'csv', :organization_id => @organization.id }
       assert_response :success
