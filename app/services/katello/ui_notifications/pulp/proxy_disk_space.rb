@@ -5,12 +5,9 @@ module Katello
         class << self
           def deliver!
             SmartProxy.unscoped.with_content.each do |proxy|
-              status = proxy.statuses[:pulp] || proxy.statuses[:pulpnode]
-              next unless (percentage = status&.storage&.dig('pulp_dir', 'percent'))
-
-              if percentage[0..2].to_i < 90 && notification_already_exists?(proxy)
+              if percentage < 90 && notification_already_exists?(proxy)
                 blueprint.notifications.where(subject: proxy).destroy_all
-              elsif update_notifications(proxy).empty? && percentage[0..2].to_i > 90
+              elsif update_notifications(proxy).empty? && percentage > 90
                 ::Notification.create!(
                   :subject => proxy,
                   :initiator => User.anonymous_admin,

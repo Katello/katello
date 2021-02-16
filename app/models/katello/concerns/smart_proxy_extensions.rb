@@ -153,6 +153,34 @@ module Katello
         end
       end
 
+      def pulp_disk_usage
+        if has_feature?(PULP_FEATURE) || has_feature?(PULP_NODE_FEATURE)
+          status = self.statuses[:pulp] || self.statuses[:pulpnode]
+          status&.storage&.map do |label, results|
+            {
+              description: results['path'],
+              total: results['1k-blocks'] * 1024,
+              used: results['used'] * 1024,
+              free: results['available'] * 1024,
+              percentage: (results['used'] / results['1k-blocks'].to_f * 100).to_i,
+              label: label
+            }.with_indifferent_access
+          end
+        elsif pulp3_enabled?
+          storage = ping_pulp3['storage']
+          [
+            {
+              description: 'Pulp Storage (/var/lib/pulp by default)',
+              total: storage['total'],
+              used: storage['used'],
+              free: storage['free'],
+              percentage: (storage['used'] / storage['total'].to_f * 100).to_i,
+              label: 'pulp_dir'
+            }.with_indifferent_access
+          ]
+        end
+      end
+
       def backend_service_type(repository)
         if pulp3_support?(repository)
           Actions::Pulp3::Abstract::BACKEND_SERVICE_TYPE
