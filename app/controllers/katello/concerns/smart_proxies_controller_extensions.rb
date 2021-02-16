@@ -26,8 +26,7 @@ module Katello
         before_action :find_resource_and_status, :only => [:pulp_storage, :pulp_status]
 
         def pulp_storage
-          pulp_connection = @proxy_status[:pulp] || @proxy_status[:pulpnode]
-          @storage = pulp_connection.storage
+          @storage = @smart_proxy.pulp_disk_usage
           respond_to do |format|
             format.html { render :layout => false }
             format.json { render :json => {:success => true, :message => @storage} }
