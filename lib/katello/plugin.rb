@@ -285,8 +285,8 @@ Foreman::Plugin.register :katello do
   extend_allowed_registration_vars :activation_key
 
   # Extend Global Registration UI
-  extend_page 'registration/_form' do |cx|
-    cx.add_pagelet :global_registration, name: N_('Katello'), partial: 'foreman/hosts/registration', priority: 100, id: 'katello'
+  extend_page 'registration_commands/_form' do |cx|
+    cx.add_pagelet :global_registration, name: N_('Katello'), partial: 'foreman/hosts/registration_commands', priority: 100, id: 'katello'
   end
 
   extend_page "smart_proxies/show" do |cx|

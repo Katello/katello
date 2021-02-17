@@ -1,6 +1,6 @@
 require 'katello_test_helper'
 
-class RegistrationControllerTest < ActionController::TestCase
+class RegistrationCommandsControllerTest < ActionController::TestCase
   def setup
     @tax_params = { organization: taxonomies(:organization1).id, location: taxonomies(:location1).id }
 
