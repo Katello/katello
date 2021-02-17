@@ -6,7 +6,7 @@ module Actions
 
         include Helpers::Notifications
 
-        def plan(organization) # rubocop:disable Metrics/MethodLength
+        def plan(organization)
           action_subject organization
           manifest_update = organization.products.redhat.any?
           path = "/tmp/#{rand}.zip"
@@ -29,19 +29,23 @@ module Actions
             import_products = plan_action(Candlepin::Owner::ImportProducts,
               :organization_id => organization.id,
               :dependency => owner_import.output)
-
             if manifest_update
-              repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
-              repositories.each do |repo|
-                plan_action(Katello::Repository::RefreshRepository,
-                  repo,
-                  :dependency => import_products.output)
-              end
+              plan_refresh_repos(import_products)
             end
+
             plan_self(
               :organization_id => organization.id,
               :organization_name => organization.name
             )
+          end
+        end
+
+        def plan_refresh_repos(import_products_action)
+          repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
+          repositories.each do |repo|
+            plan_action(Katello::Repository::RefreshRepository,
+              repo,
+              :dependency => import_products_action.output)
           end
         end
 

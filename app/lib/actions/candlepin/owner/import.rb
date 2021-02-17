@@ -11,12 +11,7 @@ module Actions
 
         def invoke_external_task
           options = input.slice(:force, :upstream)
-          cp_response = JSON.parse(
-            ::Katello::Resources::Candlepin::Owner.import(input[:label], input[:path], options)
-          )
-          output[:task] = cp_response
-          output[:task_id] = cp_response['id']
-          poll_external_task # this return value sets external_task for future calls
+          ::Katello::Resources::Candlepin::Owner.import(input[:label], input[:path], options)
         end
 
         def humanized_output

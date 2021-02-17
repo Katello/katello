@@ -45,7 +45,8 @@ module Katello
               path += "?force=#{SETTINGS[:katello][:force_manifest_import]}"
             end
 
-            self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
+            response = self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
+            JSON.parse(response)
           end
 
           def product_content(organization_name)
