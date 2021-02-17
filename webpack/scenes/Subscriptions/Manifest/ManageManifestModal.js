@@ -51,8 +51,11 @@ class ManageManifestModal extends Component {
   showDeleteManifestModal = () =>
     this.props.setModalOpen({ id: DELETE_MANIFEST_MODAL_ID });
 
-  hideDeleteManifestModal = () =>
-    this.props.setModalClosed({ id: DELETE_MANIFEST_MODAL_ID });
+  hideDeleteManifestModal = () => {
+    if (this.props.deleteManifestModalExists) {
+      this.props.setModalClosed({ id: DELETE_MANIFEST_MODAL_ID });
+    }
+  };
 
   updateRepositoryUrl = (event) => {
     this.setState({ redhat_repository_url: event.target.value });
@@ -326,6 +329,7 @@ ManageManifestModal.propTypes = {
   canImportManifest: PropTypes.bool,
   canDeleteManifest: PropTypes.bool,
   isManifestImported: PropTypes.bool,
+  deleteManifestModalExists: PropTypes.bool,
   canEditOrganizations: PropTypes.bool,
   disableManifestActions: PropTypes.bool,
   disabledReason: PropTypes.string,
@@ -351,6 +355,7 @@ ManageManifestModal.defaultProps = {
   canImportManifest: false,
   canDeleteManifest: false,
   isManifestImported: false,
+  deleteManifestModalExists: false,
   canEditOrganizations: false,
   simpleContentAccess: false,
   simpleContentAccessEligible: undefined,
