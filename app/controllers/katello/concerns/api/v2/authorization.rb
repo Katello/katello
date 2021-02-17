@@ -39,7 +39,20 @@ module Katello
       end
 
       def throw_resource_not_found(name: resource_name, id: params[:id])
-        fail HttpErrors::NotFound, _("Could not find %{name} resource with id %{id}") % {id: id, name: name}
+        perms_message = "Potential missing permissions: " +
+          missing_permissions.map(&:name).join(', ')
+        fail HttpErrors::NotFound, _("Could not find %{name} resource with id %{id}. %{perms_message}") % {id: id, name: name, perms_message: perms_message}
+      end
+
+      def missing_permissions
+        missing_perms = ::Foreman::AccessControl.permissions_for_controller_action(path_to_authenticate)
+
+        # promote_or_remove_content_views_to_environments has a special relationship to promote_or_remove_content_views
+        if path_to_authenticate["controller"] == "katello/api/v2/content_view_versions" &&
+            path_to_authenticate["action"].in?(["promote", "remove_from_environment", "remove", "republish_repositories"])
+          missing_perms << ::Permission.find_by(name: "promote_or_remove_content_views_to_environments")
+        end
+        missing_perms
       end
 
       def throw_resources_not_found(name:, expected_ids: [])
