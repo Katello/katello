@@ -10,6 +10,7 @@
 
 ### Repositories
  * creating a puppet repo with pulp3 installed but not running results in ' A capsule seems to have been refreshed without pulpcore being running.  You may want to' ([#31586](https://projects.theforeman.org/issues/31586), [b6532ce6](https://github.com/Katello/katello.git/commit/b6532ce6f476b144261fe4022500ea0044edfff8), [ac346f38](https://github.com/Katello/katello.git/commit/ac346f38d9dfb9c03a76234cd0f3897da8ab82a5))
+ *  Skip audit record creation when content changed in the root repository ([#30082](https://projects.theforeman.org/issues/30082), [51eb4925](https://github.com/Katello/katello.git/commit/51eb49258413867c5d65b08cec033c3c7ea23a85))
 
 ### Tooling
  * foreman-rake reports:daily runs all reports twice ([#31437](https://projects.theforeman.org/issues/31437))
@@ -20,33 +21,6 @@
 ### Foreman Proxy Content
  * pxe files are not properly prefetched on smart proxy sync ([#31306](https://projects.theforeman.org/issues/31306), [9b815438](https://github.com/Katello/katello.git/commit/9b815438cb7128323f23991a853da805ca4dd161))
 
-### Other
- *  Skip audit record creation when content changed in the root repository ([#30082](https://projects.theforeman.org/issues/30082), [51eb4925](https://github.com/Katello/katello.git/commit/51eb49258413867c5d65b08cec033c3c7ea23a85))
-# 3.17.2 (2021-02-04)
-
-## Bug Fixes
-
-### Tooling
- * foreman-rake katello:clean_backend_objects fails with "      "The Dynflow world was not initialized yet. If your plugin uses it, make sure to call Rails.application.dynflow.require! in some initializer"}," ([#31725](https://projects.theforeman.org/issues/31725), [b8c73d76](https://github.com/Katello/katello.git/commit/b8c73d768baed4d00b97cfd43997bb826a1a36a3), [58d14a2a](https://github.com/Katello/katello.git/commit/58d14a2ad729b658aa79c25fb06e224ad8f914c1), [e1bb601c](https://github.com/Katello/katello.git/commit/e1bb601c2a381369f7d25b1c961b574f54515794))
- * foreman-rake reports:daily runs all reports twice ([#31437](https://projects.theforeman.org/issues/31437))
-
-### Hosts
- * Host update and puppet class assignment fails ([#31624](https://projects.theforeman.org/issues/31624), [c1c9043f](https://github.com/Katello/katello.git/commit/c1c9043fd67e3b0798d20c8dbf189435039acfe8))
- * can't create a hostgroup with selected kickstart repository ([#31544](https://projects.theforeman.org/issues/31544), [1a4e20ce](https://github.com/Katello/katello.git/commit/1a4e20ce4cfb4e8118c86d57bd93080aecc9f731))
- * Old hostgroup CV,LCE,CE aren't migrated to the new hostgroup content facet table. ([#31382](https://projects.theforeman.org/issues/31382), [36772b41](https://github.com/Katello/katello.git/commit/36772b416d27c92d5fca748dc9e39051821f5de1))
- * Katello Pulp 3 Applicability is incorrect when multiple versions of a package exist ([#30964](https://projects.theforeman.org/issues/30964), [75daad0f](https://github.com/Katello/katello.git/commit/75daad0f6d04cce9fc7b9711ba536d40504fc397))
-
-### Repositories
- * creating a puppet repo with pulp3 installed but not running results in ' A capsule seems to have been refreshed without pulpcore being running.  You may want to' ([#31586](https://projects.theforeman.org/issues/31586), [b6532ce6](https://github.com/Katello/katello.git/commit/b6532ce6f476b144261fe4022500ea0044edfff8), [ac346f38](https://github.com/Katello/katello.git/commit/ac346f38d9dfb9c03a76234cd0f3897da8ab82a5))
-
-### Content Views
- * Actions::Pulp3::Repository::DeleteVersion (Can't delete version of Content View) ([#31359](https://projects.theforeman.org/issues/31359), [dc5b5817](https://github.com/Katello/katello.git/commit/dc5b5817ba570d5f4a2c32ea90fca417aaf68716))
-
-### Foreman Proxy Content
- * pxe files are not properly prefetched on smart proxy sync ([#31306](https://projects.theforeman.org/issues/31306), [9b815438](https://github.com/Katello/katello.git/commit/9b815438cb7128323f23991a853da805ca4dd161))
-
-### Other
- *  Skip audit record creation when content changed in the root repository ([#30082](https://projects.theforeman.org/issues/30082), [51eb4925](https://github.com/Katello/katello.git/commit/51eb49258413867c5d65b08cec033c3c7ea23a85))
 # 3.17.1 (2020-12-01)
 
 ## Bug Fixes
