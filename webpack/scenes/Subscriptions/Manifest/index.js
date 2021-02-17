@@ -20,6 +20,7 @@ const mapStateToProps = state => ({
   simpleContentAccess: selectSimpleContentAccessEnabled(state),
   isManifestImported: selectIsManifestImported(state),
   modalOpenState: state.foremanModals.ManageManifestModal,
+  deleteManifestModalExists: !!state.foremanModals.deleteManifestModal,
   manifestActionStarted: selectManifestActionStarted(state),
   simpleContentAccessEligible: selectSimpleContentAccessEligible(state),
 });
