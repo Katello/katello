@@ -4,6 +4,11 @@ module Katello
 
     CONTENT_TYPE = "package_group".freeze
     has_many :roots, :through => :repositories, :class_name => "Katello::RootRepository"
+    has_many :content_view_filter_rules,
+             class_name: "Katello::ContentViewPackageGroupFilterRule",
+             primary_key: :pulp_id,
+             foreign_key: :uuid,
+             dependent: :destroy
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :pulp_id, :rename => :id, :complete_value => true

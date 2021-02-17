@@ -28,6 +28,7 @@ module Katello
       param :repository_id, :number, :desc => N_("repository identifier")
       param :environment_id, :number, :desc => N_("environment identifier")
       param :ids, Array, :desc => N_("ids to filter content by")
+      param :include_filter_ids, :bool, desc: N_("Includes associated content view filter ids in response")
       param_group :search, ::Katello::Api::V2::ApiController
       def index
         sort_by, sort_order, options = sort_options
@@ -216,7 +217,7 @@ module Katello
 
       def check_show_all_and_available_params
         if params[:show_all_for] && params[:available_for]
-          fail HttpErrors::UnprocessableEntity, _("params 'show_all_for' and 'available_for' must be used independently")
+          fail HttpErrors::BadRequest, _("params 'show_all_for' and 'available_for' must be used independently")
         end
       end
 
@@ -286,9 +287,9 @@ module Katello
         else
           # Filtering by the CV filter rule makes filtering by the CV filter redundant, keeping these
           # exclusive to keep the queries simple.
-          if @filter_rule
+          if filter_rule
             collection = filter_by_content_view_filter_rule(filter_rule, collection)
-          elsif @filter
+          elsif filter
             collection = filter_by_content_view_filter(filter, collection)
           end
         end

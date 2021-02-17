@@ -7,11 +7,11 @@ module Katello
                :inverse_of => :package_group_rules,
                :foreign_key => :content_view_filter_id
 
-    has_one :package_group,
-            class_name: "Katello::PackageGroup",
-            foreign_key: :pulp_id,
-            primary_key: :uuid,
-            dependent: :nullify
+    belongs_to :package_group,
+               class_name: "Katello::PackageGroup",
+               inverse_of: :content_view_filter_rules,
+               primary_key: :uuid,
+               foreign_key: :pulp_id
 
     validates :uuid, :presence => true, :uniqueness => { :scope => :content_view_filter_id }
   end

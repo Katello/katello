@@ -100,7 +100,7 @@ module Katello
     def test_index_mutual_exclusive_params_error
       get :index, params: { filterId: @package_group_filter.id, show_all_for: 'content_view_filter', available_for: 'content_view_filter' }
 
-      assert_response :unprocessable_entity
+      assert_response :bad_request
     end
 
     def test_show
