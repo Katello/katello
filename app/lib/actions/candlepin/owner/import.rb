@@ -19,6 +19,13 @@ module Actions
           poll_external_task # this return value sets external_task for future calls
         end
 
+        def humanized_output
+          result_data = output[:task]&.[]('resultData')
+          return '' unless result_data&.[]('status').present?
+          "Candlepin job status: #{result_data['status']}\n
+          Message: #{result_data['statusMessage']}"
+        end
+
       end
     end
   end

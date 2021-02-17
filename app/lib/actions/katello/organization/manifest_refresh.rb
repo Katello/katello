@@ -72,6 +72,10 @@ module Actions
           "for organization '#{input[:organization_name]}'"
         end
 
+        def humanized_output
+          all_planned_actions(Candlepin::Owner::Import).first.humanized_output
+        end
+
         def finalize
           org = ::Organization.find(input[:organization_id])
           org.clear_manifest_expired_notifications
