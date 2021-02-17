@@ -196,7 +196,7 @@ module Katello
 
       results = JSON.parse(response.body)
 
-      error_message = "Could not find product resource with id #{fake_product_id}"
+      error_message = "Could not find product resource with id #{fake_product_id}. Potential missing permissions: edit_products"
 
       assert_response :not_found
       assert_includes results["errors"], error_message
