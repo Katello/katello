@@ -4,9 +4,10 @@ module Katello
   module Qpid
     class Connection
       class Sender < ::Qpid::Proton::MessagingHandler
-        def initialize(url, address, messages)
+        def initialize(url, connection_options, address, messages)
           super()
           @url = url
+          @connection_options = connection_options
           @address = address
           @messages = messages
           @sent = 0
@@ -14,7 +15,7 @@ module Katello
         end
 
         def on_container_start(container)
-          c = container.connect(@url)
+          c = container.connect(@url, @connection_options)
           c.open_sender
           @receiver = c.open_receiver(@address) if @address
         end
@@ -40,7 +41,7 @@ module Katello
           opcode = message.properties['qmf.opcode']
           if opcode == '_exception'
             error_code = message.body.dig('_values', 'error_code')
-            if error_code != '7' # not found
+            if error_code != 7 # not found
               error_message = message.body.dig('_values', 'error_text')
               fail(error_message)
             end
@@ -73,8 +74,8 @@ module Katello
       def initialize(url:, ssl_cert_file:, ssl_key_file:, ssl_ca_file:)
         @url = url
         ssl_domain = ::Qpid::Proton::SSLDomain.new(::Qpid::Proton::SSLDomain::MODE_CLIENT)
-        ssl_domain.credentials(ssl_cert_file, ssl_key_file, nil)
-        ssl_domain.trusted_ca_db(ssl_ca_file)
+        ssl_domain.credentials(ssl_cert_file, ssl_key_file, nil) if ssl_cert_file && ssl_key_file
+        ssl_domain.trusted_ca_db(ssl_ca_file) if ssl_ca_file
         @connection_options = {
           ssl_domain: ssl_domain,
           sasl_allowed_mechs: 'external'
@@ -130,7 +131,7 @@ module Katello
       end
 
       def open?
-        @container&.running || 0 > 0
+        (@container&.running || 0) > 0
       end
 
       private
