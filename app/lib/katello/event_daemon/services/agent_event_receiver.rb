@@ -34,17 +34,18 @@ module Katello
 
           @thread = Thread.new do
             @handler = Handler.new
-            agent_connection = ::Katello::Agent::Connection.new
-            agent_connection.fetch_agent_messages(@handler)
+            @agent_connection = ::Katello::Agent::Connection.new
+            @agent_connection.fetch_agent_messages(@handler)
           end
         end
 
         def self.close
-          @thread&.kill
+          @agent_connection&.close
+          @thread&.join
         end
 
         def self.running?
-          @thread&.status.present?
+          @agent_connection&.open? && @thread&.status.present?
         end
 
         def self.status(refresh: true)
