@@ -11,7 +11,7 @@ const renderValue = (rawValue, additionalData, onActivate) => {
   const value = getEntitlementsDisplayValue({
     rawValue, available, collapsible, upstreamPoolId,
   });
-  const editable = (value === rawValue);
+  const editable = (typeof value === 'number');
 
   return (
     <td className={editable ? 'editable' : ''}>
