@@ -30,7 +30,7 @@ module Actions
               :organization_id => organization.id,
               :dependency => owner_import.output)
             if manifest_update
-              plan_refresh_repos(import_products)
+              plan_refresh_repos(import_products, organization)
             end
 
             plan_self(
@@ -40,8 +40,8 @@ module Actions
           end
         end
 
-        def plan_refresh_repos(import_products_action)
-          repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
+        def plan_refresh_repos(import_products_action, org)
+          repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(org))
           repositories.each do |repo|
             plan_action(Katello::Repository::RefreshRepository,
               repo,

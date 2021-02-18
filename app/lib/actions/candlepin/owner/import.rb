@@ -16,11 +16,10 @@ module Actions
 
         def humanized_output
           result_data = output[:task]&.[]('resultData')
-          return '' unless result_data&.[]('status').present?
+          return '' if result_data&.[]('status').blank?
           "Candlepin job status: #{result_data['status']}\n
           Message: #{result_data['statusMessage']}"
         end
-
       end
     end
   end

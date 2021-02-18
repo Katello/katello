@@ -11,7 +11,7 @@ module Actions
           manifest_update = organization.products.redhat.any?
 
           sequence do
-            cp_import_task = plan_action(Candlepin::Owner::Import,
+            plan_action(Candlepin::Owner::Import,
                         :label => organization.label,
                         :path => path,
                         :force => force)
