@@ -14,6 +14,7 @@ import {
   cvDetailsFiltersKey,
   cvFilterDetailsKey,
   cvFilterPackageGroupsKey,
+  cvDetailsHistoryKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 
@@ -96,5 +97,16 @@ export const getCVFilterPackageGroups = (cvId, filterId, params) => get({
   errorToast: error => __(`Something went wrong while retrieving the content view filter! ${error}`),
   url: api.getApiUrl('/package_groups'),
 });
+
+export const getContentViewHistories = (cvId, params) => {
+  const apiParams = { ...params };
+  const apiUrl = `/content_views/${cvId}/history`;
+  return get({
+    key: cvDetailsHistoryKey(cvId),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the content view history! ${error}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
 
 export default getContentViewDetails;

@@ -1,0 +1,370 @@
+{
+  "total": 4,
+  "subtotal": 4,
+  "page": "1",
+  "per_page": "20",
+  "error": null,
+  "search": null,
+  "sort": {
+    "by": "content_view_version_id",
+    "order": "asc"
+  },
+  "results": [
+    {
+      "user": "admin",
+      "status": "successful",
+      "description": "description1",
+      "action": "removal",
+      "created_at": "2021-03-26 09:44:18 -0400",
+      "updated_at": "2021-03-26 09:44:20 -0400",
+      "environment": {
+        "id": 2,
+        "name": "test"
+      },
+      "task": {
+        "id": "6b2a9627-1240-4fad-9bd9-0810c65cd820",
+        "label": "Actions::Katello::ContentView::Remove",
+        "pending": false,
+        "action": "Remove Versions and Associations content view 'cv1'; organization 'Default Organization'",
+        "username": "admin",
+        "started_at": "2021-03-26 09:44:18 -0400",
+        "ended_at": "2021-03-26 09:44:20 -0400",
+        "state": "stopped",
+        "result": "success",
+        "progress": 1,
+        "input": {
+          "content_view": {
+            "id": 2,
+            "name": "cv1",
+            "label": "cv1"
+          },
+          "organization": {
+            "id": 1,
+            "name": "Default Organization",
+            "label": "Default_Organization"
+          },
+          "services_checked": [
+            "pulp3",
+            "candlepin",
+            "candlepin_auth"
+          ],
+          "content_view_id": 2,
+          "environment_ids": [
+            2
+          ],
+          "environment_names": [
+            "test"
+          ],
+          "version_ids": [],
+          "content_view_history_ids": [
+            6
+          ],
+          "locale": "en",
+          "current_request_id": "dcbe37e4-29d3-46e0-9491-5ae682a165a5",
+          "current_timezone": "America/New_York",
+          "current_organization_id": 1,
+          "current_location_id": 2,
+          "current_user_id": 4
+        },
+        "output": {},
+        "humanized": {
+          "action": "Remove Versions and Associations",
+          "input": [
+            [
+              "content_view",
+              {
+                "text": "content view 'cv1'",
+                "link": "/content_views/2/versions"
+              }
+            ],
+            [
+              "organization",
+              {
+                "text": "organization 'Default Organization'",
+                "link": "/organizations/1/edit"
+              }
+            ]
+          ],
+          "output": "",
+          "errors": []
+        },
+        "cli_example": null,
+        "start_at": "2021-03-26 09:44:18 -0400",
+        "available_actions": {
+          "cancellable": false,
+          "resumable": false
+        }
+      },
+      "version": "3.0",
+      "publish": false,
+      "version_id": 4,
+      "triggered_by": null,
+      "triggered_by_id": null
+    },
+    {
+      "user": "admin",
+      "status": "successful",
+      "description": "description2",
+      "action": "promotion",
+      "created_at": "2021-03-26 09:43:59 -0400",
+      "updated_at": "2021-03-26 09:44:03 -0400",
+      "environment": {
+        "id": 2,
+        "name": "test"
+      },
+      "task": {
+        "id": "c0ed4349-6d1e-433a-bf33-50b4700923ff",
+        "label": "Actions::Katello::ContentView::Promote",
+        "pending": false,
+        "action": "Promote content view 'cv1'; organization 'Default Organization'",
+        "username": "admin",
+        "started_at": "2021-03-26 09:43:59 -0400",
+        "ended_at": "2021-03-26 09:44:03 -0400",
+        "state": "stopped",
+        "result": "success",
+        "progress": 1,
+        "input": {
+          "content_view": {
+            "id": 2,
+            "name": "cv1",
+            "label": "cv1"
+          },
+          "organization": {
+            "id": 1,
+            "name": "Default Organization",
+            "label": "Default_Organization"
+          },
+          "environments": [
+            "test"
+          ],
+          "services_checked": [
+            "candlepin",
+            "candlepin_auth",
+            "pulp3"
+          ],
+          "locale": "en",
+          "current_request_id": "6ea7c18b-b5ed-4ca0-869d-3342d325961b",
+          "current_timezone": "America/New_York",
+          "current_organization_id": 1,
+          "current_location_id": 2,
+          "current_user_id": 4
+        },
+        "output": {},
+        "humanized": {
+          "action": "Promote",
+          "input": [
+            [
+              "content_view",
+              {
+                "text": "content view 'cv1'",
+                "link": "/content_views/2/versions"
+              }
+            ],
+            [
+              "organization",
+              {
+                "text": "organization 'Default Organization'",
+                "link": "/organizations/1/edit"
+              }
+            ]
+          ],
+          "output": "",
+          "errors": []
+        },
+        "cli_example": null,
+        "start_at": "2021-03-26 09:43:59 -0400",
+        "available_actions": {
+          "cancellable": false,
+          "resumable": false
+        }
+      },
+      "version": "3.0",
+      "publish": false,
+      "version_id": 4,
+      "triggered_by": null,
+      "triggered_by_id": null
+    },
+    {
+      "user": "admin",
+      "status": "successful",
+      "description": "description3",
+      "action": "publish",
+      "created_at": "2021-03-26 09:39:30 -0400",
+      "updated_at": "2021-03-26 09:39:35 -0400",
+      "environment": null,
+      "task": {
+        "id": "d126ec01-e308-4604-9e70-337a45e9b8d4",
+        "label": "Actions::Katello::ContentView::Publish",
+        "pending": false,
+        "action": "Publish content view 'cv1'; organization 'Default Organization'",
+        "username": "admin",
+        "started_at": "2021-03-26 09:39:30 -0400",
+        "ended_at": "2021-03-26 09:39:35 -0400",
+        "state": "stopped",
+        "result": "success",
+        "progress": 1,
+        "input": {
+          "content_view": {
+            "id": 2,
+            "name": "cv1",
+            "label": "cv1"
+          },
+          "organization": {
+            "id": 1,
+            "name": "Default Organization",
+            "label": "Default_Organization"
+          },
+          "services_checked": [
+            "pulp3",
+            "pulp",
+            "pulp_auth",
+            "candlepin",
+            "candlepin_auth"
+          ],
+          "history_id": 3,
+          "content_view_id": 2,
+          "auto_publish_composite_ids": [],
+          "content_view_version_name": "cv1 3.0",
+          "content_view_version_id": 4,
+          "environment_id": 1,
+          "user_id": 4,
+          "skip_promotion": null,
+          "locale": "en",
+          "current_request_id": "af6cc6b0-9615-4e2e-8941-16193b1a6acd",
+          "current_timezone": "America/New_York",
+          "current_organization_id": 1,
+          "current_location_id": 2,
+          "current_user_id": 4
+        },
+        "output": {
+          "content_view_id": 2,
+          "content_view_version_id": 4,
+          "skip_promotion": null
+        },
+        "humanized": {
+          "action": "Publish",
+          "input": [
+            [
+              "content_view",
+              {
+                "text": "content view 'cv1'",
+                "link": "/content_views/2/versions"
+              }
+            ],
+            [
+              "organization",
+              {
+                "text": "organization 'Default Organization'",
+                "link": "/organizations/1/edit"
+              }
+            ]
+          ],
+          "output": "",
+          "errors": []
+        },
+        "cli_example": null,
+        "start_at": "2021-03-26 09:39:30 -0400",
+        "available_actions": {
+          "cancellable": false,
+          "resumable": false
+        }
+      },
+      "version": "3.0",
+      "publish": true,
+      "version_id": 4,
+      "triggered_by": null,
+      "triggered_by_id": null
+    },
+    {
+      "user": "admin",
+      "status": "successful",
+      "description": "A new version of cv1 will be created and promoted to the Library environment. It can be promoted to other environments from the Versions tab of this Content View.\nA new version of cv1 will be created and promoted to the Library environment. It can be promoted to other environments from the Versions tab of this Content View.\nA new version of cv1 will be created and promoted to the Library environment. It can be promoted to other environments from the Versions tab of this Content View.\nA new version of cv1 will be created and promoted to the Library environment. It can be promoted to other environments from the Versions tab of this Content View.",
+      "action": "publish",
+      "created_at": "2021-03-26 11:36:27 -0400",
+      "updated_at": "2021-03-26 11:36:32 -0400",
+      "environment": null,
+      "task": {
+        "id": "65b8eff5-c144-44b8-8765-ef9c89f3fe68",
+        "label": "Actions::Katello::ContentView::Publish",
+        "pending": false,
+        "action": "Publish content view 'cv1'; organization 'Default Organization'",
+        "username": "admin",
+        "started_at": "2021-03-26 11:36:27 -0400",
+        "ended_at": "2021-03-26 11:36:32 -0400",
+        "state": "stopped",
+        "result": "success",
+        "progress": 1,
+        "input": {
+          "content_view": {
+            "id": 2,
+            "name": "cv1",
+            "label": "cv1"
+          },
+          "organization": {
+            "id": 1,
+            "name": "Default Organization",
+            "label": "Default_Organization"
+          },
+          "services_checked": [
+            "pulp3",
+            "pulp",
+            "pulp_auth",
+            "candlepin",
+            "candlepin_auth"
+          ],
+          "history_id": 8,
+          "content_view_id": 2,
+          "auto_publish_composite_ids": [],
+          "content_view_version_name": "cv1 4.0",
+          "content_view_version_id": 5,
+          "environment_id": 1,
+          "user_id": 4,
+          "skip_promotion": null,
+          "locale": "en",
+          "current_request_id": "0ea97e4c-57c1-4248-b98f-81529db7e070",
+          "current_timezone": "America/New_York",
+          "current_organization_id": 1,
+          "current_location_id": 2,
+          "current_user_id": 4
+        },
+        "output": {
+          "content_view_id": 2,
+          "content_view_version_id": 5,
+          "skip_promotion": null
+        },
+        "humanized": {
+          "action": "Publish",
+          "input": [
+            [
+              "content_view",
+              {
+                "text": "content view 'cv1'",
+                "link": "/content_views/2/versions"
+              }
+            ],
+            [
+              "organization",
+              {
+                "text": "organization 'Default Organization'",
+                "link": "/organizations/1/edit"
+              }
+            ]
+          ],
+          "output": "",
+          "errors": []
+        },
+        "cli_example": null,
+        "start_at": "2021-03-26 11:36:27 -0400",
+        "available_actions": {
+          "cancellable": false,
+          "resumable": false
+        }
+      },
+      "version": "4.0",
+      "publish": true,
+      "version_id": 5,
+      "triggered_by": null,
+      "triggered_by_id": null
+    }
+  ]
+}
