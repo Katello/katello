@@ -1,11 +1,13 @@
 describe('Controller: ApplyErrataController', function() {
-    var $controller, dependencies, $scope, translate, Notification, HostBulkAction, ContentViewVersion,
-        IncrementalUpdate, CurrentOrganization;
+    var $controller, dependencies, $scope, $window, translate, Notification, HostBulkAction, ContentViewVersion,
+        IncrementalUpdate, CurrentOrganization, BastionConfig;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
 
-    beforeEach(inject(function($injector) {
+    beforeEach(inject(function($injector, $window) {
         $controller = $injector.get('$controller'),
+        BastionConfig = { remoteExecutionPresent: false, remoteExecutionByDefault: false }
+        $window.AUTH_TOKEN = 'secret_token';
 
         translate = function (string) {
             return string;
@@ -51,20 +53,52 @@ describe('Controller: ApplyErrataController', function() {
 
         dependencies = {
             $scope: $scope,
+            $window: $window,
             translate: translate,
             Notification: Notification,
             HostBulkAction: HostBulkAction,
             IncrementalUpdate: IncrementalUpdate,
             ContentViewVersion: ContentViewVersion,
-            CurrentOrganization: CurrentOrganization
+            CurrentOrganization: CurrentOrganization,
+            BastionConfig: BastionConfig
         };
     }));
 
     it("sets the errataIds on the scope", function () {
+        var bulkContentHosts;
+
+        bulkContentHosts = {
+            included: {
+                ids: [1, 2, 3]
+            }
+        };
+        spyOn(IncrementalUpdate, 'getBulkContentHosts').and.returnValue(bulkContentHosts);
         spyOn(IncrementalUpdate, 'getErrataIds').and.returnValue([2]);
         $controller('ApplyErrataController', dependencies);
         expect(IncrementalUpdate.getErrataIds).toHaveBeenCalled();
         expect($scope.errataIds).toEqual([2]);
+    });
+
+    it("can apply errata with remote execution", function () {
+        var bulkContentHosts;
+        dependencies.BastionConfig = { remoteExecutionPresent: true, remoteExecutionByDefault: true }
+
+        bulkContentHosts = {
+            included: {
+                ids: [1, 2, 3]
+            }
+        };
+        spyOn(IncrementalUpdate, 'getBulkContentHosts').and.returnValue(bulkContentHosts);
+        spyOn(IncrementalUpdate, 'getErrataIds').and.returnValue([2]);
+        $controller('ApplyErrataController', dependencies);
+        $scope.confirmApply;
+        expect(IncrementalUpdate.getErrataIds).toHaveBeenCalled();
+        expect($scope.errataActionFormValues).toEqual({
+            authenticityToken: 'secret_token',
+            errata: '2',
+            hostIds: '1,2,3',
+            customize: false
+        });
     });
 
     describe("can apply errata", function () {
