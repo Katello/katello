@@ -318,8 +318,7 @@ module Katello
             update_import_status("Importing migrated content type #{content_type.label}: #{current_count}/#{total_count}")
             migrated_units = pulp2_content_api.list(pulp2_id__in: needing_hrefs.map { |unit| unit.pulp_id }.join(','))
             migrated_units.results.each do |migrated_unit|
-              matching_record = needing_hrefs.find { |db_unit| db_unit.pulp_id == migrated_unit.pulp2_id }
-              matching_record&.update_column(:migrated_pulp3_href, migrated_unit.pulp3_content)
+              content_type.model_class.where(pulp_id: migrated_unit.pulp2_id).update_all(migrated_pulp3_href: migrated_unit.pulp3_content)
             end
           end
         end
