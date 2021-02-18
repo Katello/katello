@@ -81,7 +81,7 @@ module Katello
       }
       result = @controller.find_bulk_hosts(@edit, bulk_params)
 
-      assert_equal result, [@host1, @host2]
+      assert_equal [@host1, @host2].sort, result.sort
     end
 
     def test_ids_excluded
@@ -120,7 +120,7 @@ module Katello
 
       result = @controller.find_bulk_hosts(@edit, bulk_params)
 
-      assert_equal result, [@host1, @host2]
+      assert_equal [@host1, @host2].sort, result.sort
     end
 
     def test_ids_with_scoped_search
