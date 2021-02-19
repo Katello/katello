@@ -8,13 +8,14 @@ module Katello
 
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :inverse_of => :export_histories
     validates_lengths_from_database
+
     validates :content_view_version_id, :presence => true
     validates :destination_server, :uniqueness => { :scope => [:content_view_version_id, :destination_server, :path] }
-    validates :export_type, :inclusion => { :in => EXPORT_TYPES,
-                                            :allow_blank => false,
-                                            :message => _("Invalid export_type from one of the following: %s" % EXPORT_TYPES.join(', '))
-                                          }
-
+    validates :export_type, :presence => true,
+              :inclusion => { :in => EXPORT_TYPES,
+                              :allow_blank => false,
+                              :message => _("must be one of the following: %s" % EXPORT_TYPES.join(', '))
+                            }
     validates :metadata, :presence => true
     serialize :metadata, Hash
 
@@ -39,7 +40,7 @@ module Katello
     end
 
     def export_type_from_metadata
-      cvve.metadata[:incremental] ? INCREMENTAL : COMPLETE
+      metadata[:incremental] ? INCREMENTAL : COMPLETE
     end
 
     def set_export_type
