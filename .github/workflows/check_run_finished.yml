@@ -1,0 +1,11 @@
+name: Notify when jenkins completes
+
+on:
+  check_run:
+    types: [ completed ]
+
+jobs:
+  notify:
+    steps:
+    - name: Echo status
+      run: echo ${{ github.event }}
