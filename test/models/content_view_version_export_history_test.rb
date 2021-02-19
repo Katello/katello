@@ -59,14 +59,23 @@ module Katello
     end
 
     def test_valid_on_blank_export_type
-      destination = "greatest"
       path = "/tmp"
       assert_nothing_raised do
-        ::Katello::ContentViewVersionExportHistory.create!(content_view_version_id: @cvv.id,
-                                                              destination_server: destination,
-                                                              metadata: {foo: :bar},
-                                                              path: path)
+        ContentViewVersionExportHistory.create!(content_view_version_id: @cvv.id,
+                                                  metadata: {foo: :bar},
+                                                  path: path)
       end
+      assert_equal ContentViewVersionExportHistory.latest(@cvv.content_view).export_type, "complete"
+    end
+
+    def test_valid_on_export_type_from_metadata
+      path = "/tmp"
+      assert_nothing_raised do
+        ContentViewVersionExportHistory.create!(content_view_version_id: @cvv.id,
+                                                  metadata: { incremental: true },
+                                                  path: path)
+      end
+      assert_equal ContentViewVersionExportHistory.latest(@cvv.content_view).export_type, "incremental"
     end
 
     def test_scoped_search_export_type
