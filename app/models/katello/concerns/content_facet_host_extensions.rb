@@ -63,7 +63,7 @@ module Katello
           property :content_view, 'ContentView', desc: 'Returns content view associated with the host'
           property :lifecycle_environment, 'KTEnvironment', desc: 'Returns lifecycle environment object associated with the host'
           property :content_source, 'SmartProxy', desc: 'Returns Smart Proxy object as the content source for the host'
-          property :applicable_errata, array_of: 'Erratum', desc: 'Returns Smart Proxy object as the content source for the host'
+          property :applicable_errata, array_of: 'Erratum', desc: 'Returns errata applicable to the host'
         end
       end
 

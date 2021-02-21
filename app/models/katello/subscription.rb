@@ -57,5 +57,15 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("Subscription")
     end
+
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Subscription'
+      refs 'Subscription'
+      sections only: %w[all additional]
+      prop_group :katello_idname_props, Katello::Model, meta: { friendly_name: 'Subscription' }
+    end
+    class Jail < ::Safemode::Jail
+      allow :id, :name
+    end
   end
 end
