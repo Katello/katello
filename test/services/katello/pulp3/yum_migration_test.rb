@@ -116,6 +116,64 @@ module Katello
           assert_empty @composite_archive.repository_errata.where(:erratum_pulp3_href => nil)
         end
 
+        def test_yum_migration_reset
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, repository_types: ['yum'])
+
+          task = migration_service.create_and_run_migrations
+          wait_on_task(@master, task)
+          migration_service.import_pulp3_content
+
+          task = migration_service.reset
+          wait_on_task(@master, task)
+          @repos.each(&:reload)
+
+          assert_nil @library_repo.version_href
+          assert_nil @library_repo.publication_href
+          assert_nil @library_repo.remote_href
+          assert_nil repository_reference(@library_repo)
+          assert_nil distribution_reference(@library_repo)
+
+          assert_nil @component_archive_repo.version_href
+          assert_nil @component_archive_repo.publication_href
+          assert_nil @component_archive_repo.remote_href
+          assert_nil repository_reference(@component_archive_repo)
+          assert_nil distribution_reference(@component_archive_repo)
+
+          assert_nil @component_env_repo.version_href
+          assert_nil @component_env_repo.publication_href
+          assert_nil @component_env_repo.remote_href
+
+          assert_nil repository_reference(@component_env_repo)
+          assert_nil distribution_reference(@component_env_repo)
+
+          assert_nil @composite_archive.version_href
+          assert_nil @composite_archive.publication_href
+          assert_nil @composite_archive.remote_href
+          assert_nil repository_reference(@composite_archive)
+          assert_nil distribution_reference(@composite_archive)
+
+          assert_nil @composite_env.version_href
+          assert_nil @composite_env.publication_href
+          assert_nil @composite_env.remote_href
+          assert_nil repository_reference(@composite_env)
+          assert_nil distribution_reference(@composite_env)
+
+          refute_empty @library_repo.repository_errata
+          refute_empty @library_repo.repository_errata.where(:erratum_pulp3_href => nil)
+
+          refute_empty @component_archive_repo.repository_errata
+          refute_empty @component_archive_repo.repository_errata.where(:erratum_pulp3_href => nil)
+
+          refute_empty @component_env_repo.repository_errata
+          refute_empty @component_env_repo.repository_errata.where(:erratum_pulp3_href => nil)
+
+          refute_empty @composite_env.repository_errata
+          refute_empty @composite_env.repository_errata.where(:erratum_pulp3_href => nil)
+
+          refute_empty @composite_archive.repository_errata
+          refute_empty @composite_archive.repository_errata.where(:erratum_pulp3_href => nil)
+        end
+
         def repository_reference(repo)
           Katello::Pulp3::RepositoryReference.find_by(:content_view => repo.content_view, :root_repository_id => repo.root_id)
         end

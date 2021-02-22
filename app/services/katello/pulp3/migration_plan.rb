@@ -21,13 +21,13 @@ module Katello
       def generate_plugins
         @repository_types.sort.map do |repository_type|
           {
-            type: pulp2_repository_type(repository_type),
+            type: self.class.pulp2_repository_type(repository_type),
             repositories: repository_migrations(repository_type)
           }
         end
       end
 
-      def pulp2_repository_type(repository_type)
+      def self.pulp2_repository_type(repository_type)
         if repository_type == 'yum'
           return 'rpm' #migration plugin uses rpm
         else
