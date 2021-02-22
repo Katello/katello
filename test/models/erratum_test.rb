@@ -33,6 +33,10 @@ module Katello
       assert_includes Katello::Erratum.search_for("modular = true"), katello_errata(:modular)
     end
 
+    def test_freeform_search_looks_for_title
+      assert_includes Katello::Erratum.search_for(@security.title[0..3]), @security
+    end
+
     def test_create_truncates_long_title
       attrs = {:pulp_id => 'foo', :title => "This life, which had been the tomb of " \
         "his virtue and of his honour is but a walking shadow; a poor player, " \
