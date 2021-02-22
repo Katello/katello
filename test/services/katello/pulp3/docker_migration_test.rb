@@ -47,6 +47,26 @@ module Katello
           refute_nil distribution_reference(@repo)
         end
 
+        def test_docker_migration_reset
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, repository_types: ['docker'])
+
+          task = migration_service.create_and_run_migrations
+          wait_on_task(@primary, task)
+
+          migration_service.import_pulp3_content
+
+          task = migration_service.reset
+          wait_on_task(@primary, task)
+
+          [@repo].each { |repo| repo.reload }
+
+          assert_nil @repo.version_href
+          assert_nil @repo.publication_href
+          assert_nil @repo.remote_href
+          assert_nil repository_reference(@repo)
+          assert_nil distribution_reference(@repo)
+        end
+
         def repository_reference(repo)
           Katello::Pulp3::RepositoryReference.find_by(:content_view => repo.content_view, :root_repository_id => repo.root_id)
         end
