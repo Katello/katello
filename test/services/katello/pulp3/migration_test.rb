@@ -78,6 +78,54 @@ module Katello
           assert_equal @cv_archive_repo.publication_href, @cv_env_repo.publication_href
         end
 
+        def test_file_migration_reset_errors_out_with_no_content_types
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, :repository_types => [])
+
+          assert_raise(::Katello::Errors::Pulp3MigrationError, 'There are no Pulp 3 content types to reset') do
+            migration_service.reset
+          end
+        end
+
+        def test_file_migration_reset
+          unit = @repo.files.first
+
+          service = Katello::Pulp::Repository::File.new(@repo, SmartProxy.pulp_primary)
+          service.copy_units(@cv_archive_repo, [unit])
+          service.copy_units(@cv_env_repo, [unit])
+          #only published repos will have their published metadata used as publications
+          ForemanTasks.sync_task(Actions::Katello::Repository::MetadataGenerate, @cv_archive_repo)
+          ForemanTasks.sync_task(Actions::Katello::Repository::MetadataGenerate, @cv_env_repo)
+
+          migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, :repository_types => ['file'])
+
+          task = migration_service.create_and_run_migrations
+          wait_on_task(@primary, task)
+
+          migration_service.import_pulp3_content
+
+          task = migration_service.reset
+          wait_on_task(@primary, task)
+          [@repo, @cv_env_repo, @cv_archive_repo].each { |repo| repo.reload }
+
+          assert_nil @repo.version_href
+          assert_nil @repo.publication_href
+          assert_nil @repo.remote_href
+          assert_nil repository_reference(@repo)
+          assert_nil distribution_reference(@repo)
+
+          assert_nil @cv_env_repo.version_href
+          assert_nil @cv_env_repo.publication_href
+          assert_nil @cv_env_repo.remote_href
+          assert_nil repository_reference(@cv_env_repo)
+          assert_nil distribution_reference(@cv_env_repo)
+
+          assert_nil @cv_archive_repo.version_href
+          assert_nil @cv_archive_repo.publication_href
+          assert_nil @cv_archive_repo.remote_href
+          assert_nil repository_reference(@cv_archive_repo)
+          assert_nil distribution_reference(@cv_archive_repo)
+        end
+
         def test_content_types_for_migration
           repo_types = ['file']
           migration_service = Katello::Pulp3::Migration.new(SmartProxy.pulp_primary, :repository_types => repo_types)
