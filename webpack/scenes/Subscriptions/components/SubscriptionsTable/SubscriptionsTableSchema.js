@@ -2,6 +2,7 @@
 import React from 'react';
 import { Icon } from 'patternfly-react';
 import { translate as __ } from 'foremanReact/common/I18n';
+import entitlementsValueFormatter from '../../../../components/pf3Table/formatters/entitlementsValueFormatter.js';
 import { entitlementsInlineEditFormatter } from '../../../../components/pf3Table/formatters/EntitlementsInlineEditFormatter';
 import { subscriptionTypeFormatter } from './SubscriptionTypeFormatter';
 import { subscriptionNameFormatter } from './SubscriptionNameFormatter';
@@ -16,7 +17,7 @@ function getEntitlementsFormatter(inlineEditController, canManageSubscriptionAll
   if (canManageSubscriptionAllocations) {
     return entitlementsInlineEditFormatter(inlineEditController);
   }
-  return cellFormatter;
+  return entitlementsValueFormatter;
 }
 
 export const createSubscriptionsTableSchema = (

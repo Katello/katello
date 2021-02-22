@@ -3,35 +3,34 @@ import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { KEYCODES } from 'foremanReact/common/keyCodes';
 import { Table, FormControl, FormGroup, HelpBlock, Spinner } from 'patternfly-react';
 import { validateQuantity } from '../../../scenes/Subscriptions/SubscriptionValidations';
+import { getEntitlementsDisplayValue } from '../../../scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableHelpers';
 
-const renderValue = (value, additionalData, onActivate) => {
+const renderValue = (rawValue, additionalData, onActivate) => {
   const { available, upstream_pool_id: upstreamPoolId, collapsible } = additionalData.rowData;
 
-  if (collapsible) {
-    return (
-      <td>{__('NA')}</td>
-    );
-  } else if (available < 0 || !upstreamPoolId) {
-    return (
-      <td>{available < 0 ? __('Unlimited') : available}</td>
-    );
-  }
+  const value = getEntitlementsDisplayValue({
+    rawValue, available, collapsible, upstreamPoolId,
+  });
+  const editable = (typeof value === 'number');
 
   return (
-    <td className="editable">
-      <div
-        onClick={() => onActivate(additionalData)}
-        onKeyPress={(e) => {
-          if (e.keyCode === KEYCODES.ENTER) {
-            onActivate(additionalData);
-          }
-        }}
-        className="input"
-        role="textbox"
-        tabIndex={0}
-      >
-        {value}
-      </div>
+    <td className={editable ? 'editable' : ''}>
+      {editable &&
+        <div
+          onClick={() => onActivate(additionalData)}
+          onKeyPress={(e) => {
+            if (e.keyCode === KEYCODES.ENTER) {
+              onActivate(additionalData);
+            }
+          }}
+          className="input"
+          role="textbox"
+          tabIndex={0}
+        >
+          {value}
+        </div>
+      }
+      {!editable && value}
     </td>
   );
 };
