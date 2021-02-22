@@ -18,6 +18,7 @@ module Katello
       end
 
       def setup
+        Katello::EventDaemon::Runner.instance_variable_set("@services", {})
         Katello::EventDaemon::Runner.register_service(:mock_service, MockService)
         Katello::EventDaemon::Runner.stubs(:runnable?).returns(true)
         Katello::EventDaemon::Runner.stubs(:pid_file).returns(Rails.root.join('tmp', 'test_katello_daemon.pid'))
