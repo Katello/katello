@@ -35,6 +35,21 @@ module Katello
             @repo.version_href = '/pulp/api/v3/repositories/rpm/rpm/22c9e84b-f49c-4c70-9b4c-49e8c041220f/versions/1/'
             assert service.delete_version
           end
+
+          def test_common_remote_options
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            @repo.root.upstream_username = 'foo'
+            @repo.root.upstream_password = 'bar'
+
+            assert_equal 'foo', service.common_remote_options[:username]
+            assert_equal 'bar', service.common_remote_options[:password]
+
+            @repo.root.upstream_username = ''
+            @repo.root.upstream_password = ''
+
+            refute service.common_remote_options[:username]
+            refute service.common_remote_options[:password]
+          end
         end
       end
     end
