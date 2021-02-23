@@ -189,7 +189,7 @@ module Katello
 
       def find_filter
         # TODO: in v2.rb some routes use "filters", others use "content_view_filters"
-        filter_id = params[:content_view_filter_id] || params[:filter_id]
+        filter_id = params[:content_view_filter_id] || params[:filter_id] || params[:filterId]
 
         if filter_id
           scoped = ContentViewFilter.all

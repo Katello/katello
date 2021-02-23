@@ -4,11 +4,6 @@ module Katello
 
     CONTENT_TYPE = "package_group".freeze
     has_many :roots, :through => :repositories, :class_name => "Katello::RootRepository"
-    has_many :content_view_filter_rules,
-             class_name: "Katello::ContentViewPackageGroupFilterRule",
-             primary_key: :pulp_id,
-             foreign_key: :uuid,
-             dependent: :destroy
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :pulp_id, :rename => :id, :complete_value => true
@@ -35,8 +30,8 @@ module Katello
       group.default_package_names + group.conditional_package_names + group.optional_package_names + group.mandatory_package_names
     end
 
-    def content_view_package_group_filters
-      Katello::ContentViewPackageGroupFilter.joins(:package_groups).where("#{self.class.table_name}.pulp_id" => self.pulp_id)
+    def content_view_filters
+      Katello::ContentViewPackageGroupFilterRule.where(uuid: self.pulp_id).eager_load(:filter).map(&:filter)
     end
   end
 end
