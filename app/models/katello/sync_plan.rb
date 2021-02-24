@@ -46,6 +46,13 @@ module Katello
       end
     end
 
+    def self.remove_disabled_product(repository)
+      if (product = repository.product) && product&.redhat? && (sync_plan = product&.sync_plan) && product&.repositories&.count == 1
+        sync_plan.product_ids = (sync_plan.product_ids - [product.id])
+        sync_plan.save!
+      end
+    end
+
     def product_enabled
       products.each do |product|
         errors.add :base, _("Can not add product %s because it is disabled.") % product.name unless product.enabled?
