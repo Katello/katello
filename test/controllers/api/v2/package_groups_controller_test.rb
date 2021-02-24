@@ -85,6 +85,24 @@ module Katello
       assert_equal response_uuids, package_group_uuids
     end
 
+    def test_index_show_all_for_cv_filter
+      get :index, params: { filterId: @package_group_filter.id, show_all_for: 'content_view_filter' }
+      assert_response :success
+      results = JSON.parse(response.body, symbolize_names: true)[:results]
+      response_uuids = results.map { |rule| rule[:uuid] }
+      package_group_uuids = @package_group_filter.package_group_rules.map(&:uuid)
+
+      # All filtered pkg groups are in but also contains the available pkg groups
+      assert package_group_uuids.all? { |uuid| response_uuids.include?(uuid) }
+      assert response_uuids.length > package_group_uuids.length
+    end
+
+    def test_index_mutual_exclusive_params_error
+      get :index, params: { filterId: @package_group_filter.id, show_all_for: 'content_view_filter', available_for: 'content_view_filter' }
+
+      assert_response :bad_request
+    end
+
     def test_show
       Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
       NilClass.any_instance.stubs(:pulp3_repository_type_support?).returns(false)

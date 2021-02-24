@@ -66,6 +66,10 @@ module Katello
       collection
     end
 
+    def all_for_content_view_filter(filter, _collection)
+      PackageGroup.joins(:repositories).merge(filter.applicable_repos)
+    end
+
     def default_sort
       %w(name asc)
     end
