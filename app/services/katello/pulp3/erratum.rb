@@ -35,7 +35,8 @@ module Katello
         custom_json["issued"] = convert_date_if_epoch(custom_json["issued"])
         custom_json["updated"] = convert_date_if_epoch(custom_json["updated"]) unless custom_json["updated"].blank?
 
-        if model.updated.blank? || (custom_json['updated'].to_datetime != model.updated.to_datetime)
+        if model.updated.blank? ||
+            (custom_json['updated'] && (custom_json['updated'].to_datetime != model.updated.to_datetime))
           custom_json['errata_id'] = custom_json.delete('id')
           custom_json['errata_type'] = custom_json.delete('type')
           custom_json['updated'] = custom_json['updated'].blank? ? custom_json['issued'] : custom_json['updated']
