@@ -8,8 +8,9 @@ module Katello
         def trigger_evrs(packages)
           packages.each do |package|
             epoch = package.epoch
-            package.update(epoch: "999999999")
-            package.update(epoch: epoch)
+            assert package.epoch
+            package.update!(epoch: "999999999")
+            package.update!(epoch: epoch)
           end
         end
 
@@ -21,20 +22,16 @@ module Katello
 
         def setup
           @repo = katello_repositories(:fedora_17_x86_64)
-          @host = FactoryBot.build(:host, :with_content, :with_subscription,
+          @host = FactoryBot.create(:host, :with_content, :with_subscription,
                                    :content_view => katello_content_views(:library_dev_view),
                                    :lifecycle_environment => katello_environments(:library))
-          @host.save!
 
           @rpm_one = katello_rpms(:one)
           @rpm_two = katello_rpms(:two)
           @rpm_three = katello_rpms(:three)
           @rpm_one_two = katello_rpms(:one_two)
-
-          @rpm_one_v2 = Rpm.where(nvra: "one-1.0-2.el7.x86_64").first
-
+          @rpm_one_v2 = Rpm.find_by(nvra: "one-1.0-2.el7.x86_64")
           @erratum = Erratum.find_by(errata_id: "RHBA-2014-013")
-
           @module_stream = ModuleStream.find_by(name: "Ohio")
 
           HostAvailableModuleStream.create(host_id: @host.id,
@@ -56,16 +53,6 @@ module Katello
           Katello::RepositoryErratum.create(erratum_id: @erratum.id, repository_id: @repo.id)
         end
 
-        def teardown
-          ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).remove(@rpm_one_v2.id)
-          ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).remove(@erratum.id)
-
-          @rpm_one.update(modular: false)
-          @rpm_one_two.update(modular: false)
-          ModuleStreamRpm.delete_all
-          HostAvailableModuleStream.delete_all
-        end
-
         def test_older_dup_installed_rpms_are_ignored
           installed_package2 = InstalledPackage.create(name: @rpm_one_v2.name, nvra: @rpm_one_v2.nvra, epoch: @rpm_one_v2.epoch,
                                                        version: @rpm_one_v2.version, release: @rpm_one_v2.release,
@@ -82,7 +69,7 @@ module Katello
         end
 
         def test_rpm_content_ids_returns_nothing
-          @installed_package1.destroy
+          @installed_package1.destroy!
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
           package_content_ids = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).fetch_content_ids
           assert_empty package_content_ids
@@ -112,7 +99,7 @@ module Katello
 
         def test_applicable_differences_removes_rpm_id
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
-          @installed_package1.destroy
+          @installed_package1.destroy!
           rpm_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).applicable_differences
           assert_equal [[], [@rpm_one_v2.id]], rpm_differences
         end
@@ -131,15 +118,15 @@ module Katello
         def test_applicable_differences_remove_erratum_id
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Erratum, bound_repos(@host)).calculate_and_import
-          @installed_package1.destroy
+          @installed_package1.destroy!
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
           erratum_differences = ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Erratum, bound_repos(@host)).applicable_differences
           assert_equal [[], [@erratum.id]], erratum_differences
         end
 
         def test_applicable_differences_adds_rpm_in_module
-          @rpm_one.update(modular: true)
-          @rpm_one_two.update(modular: true)
+          @rpm_one.update!(modular: true)
+          @rpm_one_two.update!(modular: true)
 
           ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one.id)
           ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one_two.id)
@@ -154,8 +141,8 @@ module Katello
         end
 
         def test_applicable_differences_adds_module_id
-          @rpm_one.update(modular: true)
-          @rpm_one_two.update(modular: true)
+          @rpm_one.update!(modular: true)
+          @rpm_one_two.update!(modular: true)
 
           ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one.id)
           ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one_two.id)
@@ -167,8 +154,8 @@ module Katello
         end
 
         def test_applicable_differences_removes_module_id
-          @rpm_one.update(modular: true)
-          @rpm_one_two.update(modular: true)
+          @rpm_one.update!(modular: true)
+          @rpm_one_two.update!(modular: true)
 
           ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one.id)
           ModuleStreamRpm.create(module_stream_id: @module_stream.id, rpm_id: @rpm_one_two.id)
@@ -177,7 +164,7 @@ module Katello
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::ModuleStream, bound_repos(@host)).calculate_and_import
 
           HostAvailableModuleStream.find_by(host_id: @host.id, available_module_stream_id: AvailableModuleStream.
-                                            find_by(name: "Ohio").id).update(status: "disabled")
+                                            find_by(name: "Ohio").id).update!(status: "disabled")
 
           ::Katello::Applicability::ApplicableContentHelper.new(@host.content_facet, ::Katello::Rpm, bound_repos(@host)).calculate_and_import
 
