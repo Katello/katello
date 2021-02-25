@@ -14,7 +14,16 @@ module Katello
           url, sles_token = extract_sles_token
           options = common_remote_options
           options.merge!(sles_auth_token: sles_token) if sles_token
-          options.merge!(url: url, policy: root.download_policy)
+
+          options.merge!(url: url, policy: translated_download_policy)
+        end
+
+        def translated_download_policy
+          if root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
+            ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE
+          else
+            root.download_policy
+          end
         end
 
         def extract_sles_token
