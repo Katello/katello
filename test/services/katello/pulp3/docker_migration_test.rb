@@ -15,6 +15,8 @@ module Katello
           @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @repo = katello_repositories(:busybox)
           @repo.root.docker_tags_whitelist = ["latest"]
+          @repo.root.url = 'https://quay.io/'
+          @repo.root.docker_upstream_name = 'quay/busybox'
           @repo.root.save!
 
           Katello::RootRepository.docker_type.where.not(:id => @repo.root_id).destroy_all
