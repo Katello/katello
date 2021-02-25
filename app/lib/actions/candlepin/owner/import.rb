@@ -1,7 +1,7 @@
 module Actions
   module Candlepin
     module Owner
-      class Import < Candlepin::Abstract
+      class Import < Candlepin::AbstractAsyncTask
         input_format do
           param :label
           param :path
@@ -9,9 +9,16 @@ module Actions
           param :upstream
         end
 
-        def run
+        def invoke_external_task
           options = input.slice(:force, :upstream)
-          output[:response] = ::Katello::Resources::Candlepin::Owner.import(input[:label], input[:path], options)
+          ::Katello::Resources::Candlepin::Owner.import(input[:label], input[:path], options)
+        end
+
+        def humanized_output
+          result_data = output[:task]&.[]('resultData')
+          return '' if result_data&.[]('status').blank?
+          "Candlepin job status: #{result_data['status']}\n
+          Message: #{result_data['statusMessage']}"
         end
       end
     end

@@ -40,12 +40,13 @@ module Katello
           end
 
           def import(organization_name, path_to_file, options)
-            path = join_path(path(organization_name), 'imports')
+            path = join_path(path(organization_name), 'imports/async')
             if options[:force] || SETTINGS[:katello].key?(:force_manifest_import)
               path += "?force=#{SETTINGS[:katello][:force_manifest_import]}"
             end
 
-            self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
+            response = self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
+            JSON.parse(response)
           end
 
           def product_content(organization_name)

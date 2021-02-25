@@ -23,7 +23,7 @@ module Actions
                 plan_action(Katello::Repository::RefreshRepository, repo)
               end
             end
-            plan_self
+            plan_self(:organization_name => organization.name)
           end
         end
 
@@ -42,6 +42,12 @@ module Actions
 
         def humanized_name
           _("Import Manifest")
+        end
+
+        # results in correct grammar on Tasks page,
+        # e.g. "Import manifest for organization Default Organization"
+        def humanized_input
+          "for organization '#{input[:organization_name]}'"
         end
 
         def finalize

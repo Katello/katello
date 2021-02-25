@@ -26,15 +26,26 @@ module Actions
                         :label => organization.label,
                         :path => path,
                         :dependency => export_action.output)
-            import_products = plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id, :dependency => owner_import.output)
-
+            import_products = plan_action(Candlepin::Owner::ImportProducts,
+              :organization_id => organization.id,
+              :dependency => owner_import.output)
             if manifest_update
-              repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(organization))
-              repositories.each do |repo|
-                plan_action(Katello::Repository::RefreshRepository, repo, :dependency => import_products.output)
-              end
+              plan_refresh_repos(import_products, organization)
             end
-            plan_self(:organization_id => organization.id)
+
+            plan_self(
+              :organization_id => organization.id,
+              :organization_name => organization.name
+            )
+          end
+        end
+
+        def plan_refresh_repos(import_products_action, org)
+          repositories = ::Katello::Repository.in_default_view.in_product(::Katello::Product.redhat.in_org(org))
+          repositories.each do |repo|
+            plan_action(Katello::Repository::RefreshRepository,
+              repo,
+              :dependency => import_products_action.output)
           end
         end
 
@@ -57,6 +68,16 @@ module Actions
 
         def humanized_name
           _("Refresh Manifest")
+        end
+
+        # results in correct grammar on Tasks page,
+        # e.g. "Refresh manifest for organization Default Organization"
+        def humanized_input
+          "for organization '#{input[:organization_name]}'"
+        end
+
+        def humanized_output
+          all_planned_actions(Candlepin::Owner::Import).first.humanized_output
         end
 
         def finalize
