@@ -22,7 +22,6 @@ module Katello
         param :smart_proxy_ids, Array, N_("Smart proxy IDs"), :required => false
         param :compute_resource_ids, Array, N_("Compute resource IDs"), :required => false
         param :medium_ids, Array, N_("Medium IDs"), :required => false
-        param :config_template_ids, Array, N_("Provisioning template IDs. Will be removed in Katello 4.1."), required: false, deprecated: true
         param :ptable_ids, Array, N_("Partition template IDs"), :required => false
         param :provisioning_template_ids, Array, N_("Provisioning template IDs"), :required => false
         param :domain_ids, Array, N_("Domain IDs"), :required => false
