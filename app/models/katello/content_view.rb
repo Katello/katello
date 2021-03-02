@@ -35,10 +35,6 @@ module Katello
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
                             :after_remove => :remove_repository
 
-    has_many :content_view_puppet_modules, :class_name => "Katello::ContentViewPuppetModule",
-                                           :dependent => :destroy
-    alias_method :puppet_modules, :content_view_puppet_modules
-
     has_many :filters, :dependent => :destroy, :class_name => "Katello::ContentViewFilter"
 
     has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict_with_exception
@@ -61,7 +57,6 @@ module Katello
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
     validates :organization_id, :presence => true
     validate :check_non_composite_components
-    validate :check_puppet_conflicts
     validate :check_docker_conflicts
     validate :check_non_composite_auto_publish
     validates :composite, :inclusion => [true, false]
@@ -185,16 +180,9 @@ module Katello
 
       copy_components(new_view)
 
-      self.content_view_puppet_modules.each do |puppet_module|
-        new_view.content_view_puppet_modules << puppet_module.dup
-      end
       copy_filters(new_view)
       new_view.save!
       new_view
-    end
-
-    def publish_puppet_environment?
-      force_puppet_environment? || puppet_modules.any? || component_modules_to_publish.present?
     end
 
     def promoted?
@@ -229,12 +217,6 @@ module Katello
 
     def total_deb_package_count(env)
       Katello::Deb.in_repositories(self.repos(env)).count
-    end
-
-    def total_puppet_module_count(env)
-      repoids = self.repos(env).collect { |r| r.pulp_id }
-      result = Katello::PuppetModule.legacy_search('*', :page_size => 1, :repoids => repoids)
-      result.length > 0 ? result.total : 0
     end
 
     def in_environment?(env)
@@ -272,11 +254,6 @@ module Katello
       (self.repositories.collect { |r| r.product }).uniq
     end
 
-    def puppet_repos
-      # These are the repos that may contain puppet modules that can be associated with the content view
-      self.organization.library.repositories.puppet_type
-    end
-
     def repos(env = nil)
       if env
         repo_ids = versions.flat_map { |version| version.repositories.in_environment(env) }.map(&:id)
@@ -284,15 +261,6 @@ module Katello
         repo_ids = versions.flat_map { |version| version.repositories }.map(&:id)
       end
       Repository.where(:id => repo_ids)
-    end
-
-    def puppet_env(env)
-      if env
-        ids = versions.flat_map { |version| version.content_view_puppet_environments.in_environment(env) }.map(&:id)
-      else
-        ids = []
-      end
-      ContentViewPuppetEnvironment.where(:id => ids).first
     end
 
     def library_repos
@@ -368,18 +336,6 @@ module Katello
       end
     end
 
-    # Returns actual puppet modules associated with all components
-    def component_modules_to_publish
-      composite? ? components.flat_map { |version| version.puppet_modules } : nil
-    end
-
-    # Returns the content view puppet modules associated with the content view
-    #
-    # @returns array of ContentViewPuppetModule
-    def puppet_modules_to_publish
-      composite? ? nil : content_view_puppet_modules
-    end
-
     def component_repositories
       components.map(&:archived_repos).flatten
     end
@@ -447,14 +403,6 @@ module Katello
       Repository.where(:id => ids)
     end
 
-    def duplicate_puppet_modules
-      modules = puppet_modules_to_publish || component_modules_to_publish
-      counts = modules.each_with_object(Hash.new(0)) do |puppet_module, h|
-        h[puppet_module.name] += 1
-      end
-      counts.select { |_k, v| v > 1 }.keys
-    end
-
     def duplicate_docker_repos
       duplicate_repositories.docker_type
     end
@@ -468,15 +416,6 @@ module Katello
     def check_non_composite_auto_publish
       if !composite? && auto_publish
         errors.add(:base, _("Cannot set auto publish to a non-composite content view"))
-      end
-    end
-
-    def check_puppet_conflicts
-      duplicate_puppet_modules.each do |name|
-        versions = components.select { |v| v.puppet_modules.map(&:name).include?(name) }
-        names = versions.map(&:name).join(", ")
-        msg = _("Puppet module conflict: '%{mod}' is in %{versions}.") % {mod: name, versions: names}
-        errors.add(:base, msg)
       end
     end
 
@@ -542,58 +481,6 @@ module Katello
 
       update(:next_version => major.to_i + 1) unless major.to_i < next_version
       version
-    end
-
-    def build_puppet_env(options)
-      if options[:environment] && options[:version]
-        fail "Cannot create into both an environment and a content view version archive"
-      end
-
-      to_env       = options[:environment]
-      version      = options[:version]
-      content_view = self
-      to_version   = version || content_view.version(to_env)
-
-      ContentViewPuppetEnvironment.new(
-        :environment => to_env,
-        :content_view_version => to_version,
-        :name => self.name
-      )
-    end
-
-    def create_puppet_env(options)
-      build_puppet_env(options).save!
-    end
-
-    def computed_modules_by_repoid
-      names_and_authors = []
-      puppet_modules = []
-
-      if composite?
-        puppet_modules = component_modules_to_publish
-      else
-        puppet_modules_to_publish.each do |cvpm|
-          if cvpm.uuid
-            puppet_modules << cvpm.puppet_module
-          else
-            names_and_authors << { :name => cvpm.name, :author => cvpm.author }
-          end
-        end
-      end
-
-      if names_and_authors.present?
-        names_and_authors.each do |name_and_author|
-          puppet_module = ::Katello::PuppetModule.latest_module(
-            name_and_author[:name],
-            name_and_author[:author],
-            self.organization.library.repositories.puppet_type
-          )
-          puppet_modules << puppet_module if puppet_module
-        end
-      end
-
-      # In order to minimize the number of copy requests, organize the data by repoid.
-      PuppetModule.group_by_repoid(puppet_modules.flatten)
     end
 
     def check_ready_to_import!

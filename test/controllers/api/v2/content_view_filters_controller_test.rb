@@ -22,7 +22,7 @@ module Katello
       ::Katello::Erratum.any_instance.stubs(:repositories).returns([])
       models
       permissions
-      [:package_group_count, :package_count, :puppet_module_count].each do |content_type_count|
+      [:package_group_count, :package_count].each do |content_type_count|
         Repository.any_instance.stubs(content_type_count).returns(0)
       end
     end

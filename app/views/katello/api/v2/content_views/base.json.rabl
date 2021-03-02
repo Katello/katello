@@ -4,7 +4,6 @@ extends 'katello/api/v2/common/org_reference'
 attributes :composite
 attributes :component_ids
 attributes :default
-attributes :force_puppet_environment
 attributes :version_count
 attributes :latest_version
 attributes :auto_publish
@@ -42,12 +41,6 @@ else
   attributes :repository_ids
 end
 
-child :puppet_modules => :puppet_modules do
-  attributes :id, :name, :author, :uuid
-  attributes :created_at
-  attributes :updated_at
-end
-
 child :versions => :versions do
   attributes :id, :version
   attributes :created_at => :published
@@ -65,7 +58,7 @@ node :permissions do |cv|
 end
 
 child :components => :components do
-  attributes :id, :name, :label, :content_view_id, :version, :puppet_module_count
+  attributes :id, :name, :label, :content_view_id, :version
 
   child :environments => :environments do
     attributes :id, :name, :label

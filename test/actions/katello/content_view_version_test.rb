@@ -39,7 +39,6 @@ module ::Actions::Katello::ContentViewVersion
       repository_mapping = {}
       repository_mapping[[library_repo]] = new_repo
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
-      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
       ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
       task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
       action.stubs(:task).returns(task)
@@ -61,7 +60,6 @@ module ::Actions::Katello::ContentViewVersion
       repository_mapping = {}
       repository_mapping[[library_repo]] = new_repo
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
-      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
       ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
       task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
       action.stubs(:task).returns(task)
@@ -73,51 +71,6 @@ module ::Actions::Katello::ContentViewVersion
       plan_action(action, content_view_version, [library], :content => {:package_ids => [rpm.id]})
 
       refute_action_planed action, ::Actions::Pulp::Repository::CopyUnits
-    end
-
-    it 'removes the correct puppet content during inc update' do
-      clone = katello_repositories(:lib_p_forge)
-      module1 = ::Katello::PuppetModule.create(
-        :pulp_id => "pulp_id1",
-        :name => "name1",
-        :author => "author1",
-        :version => "1.2.3"
-      )
-      module2 = ::Katello::PuppetModule.create(
-        :pulp_id => "pulp_id2",
-        :name => "name1",
-        :author => "author1",
-        :version => "2.2.3"
-      )
-      cvpe = ::Katello::ContentViewPuppetEnvironment.create(content_view_version_id: clone.content_view_version.id, pulp_id: "pulpidforcontentviewpuppetenviroment", name: "contentviewpuppetenvironment")
-      ::Katello::ContentViewPuppetEnvironmentPuppetModule.create(puppet_module_id: module1.id, content_view_puppet_environment_id: cvpe.id)
-      ::Katello::ContentViewPuppetEnvironmentPuppetModule.create(puppet_module_id: module2.id, content_view_puppet_environment_id: cvpe.id)
-
-      action.expects(:remove_puppet_modules).with(clone, [module1.id, module2.id]).returns(true)
-      mock_copy_puppet_module_output = "mock"
-      mock_copy_puppet_module_output.stubs(:output).returns("output")
-      action.stubs(:copy_puppet_module).returns(mock_copy_puppet_module_output)
-      action.expects(:plan_action).with(::Actions::Pulp::ContentViewPuppetEnvironment::IndexContent, id: clone.id).returns(true)
-      action.send(:copy_puppet_content, clone, [module2.id], clone.content_view_version)
-    end
-
-    it 'does not allow inc updating with multiple puppet modules of same name and author' do
-      module1 = ::Katello::PuppetModule.create(
-        :pulp_id => "pulp_id1",
-        :name => "name1",
-        :author => "author1",
-        :version => "1.2.3"
-      )
-      module2 = ::Katello::PuppetModule.create(
-        :pulp_id => "pulp_id2",
-        :name => "name1",
-        :author => "author1",
-        :version => "2.2.3"
-      )
-
-      assert_raise RuntimeError, "Adding multiple versions of the same Puppet Module is not supported by incremental update.  The following Puppet Modules have duplicate versions in the incremental update content list: [\"name1-author1\"]" do
-        action.send(:check_puppet_module_duplicates, [module1.id, module2.id])
-      end
     end
 
     describe 'pulp3' do
@@ -146,7 +99,6 @@ module ::Actions::Katello::ContentViewVersion
         new_repo.save!
         repository_mapping[[library_repo]] = new_repo
         Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns(repository_mapping)
-        Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
         ::Actions::Katello::ContentViewVersion::IncrementalUpdate.any_instance.expects(:repos_to_copy).returns(repository_mapping.keys)
         task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
         action.stubs(:task).returns(task)

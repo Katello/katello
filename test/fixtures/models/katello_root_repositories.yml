@@ -85,14 +85,6 @@ rhel_7_no_arch_root:
   url:                 'https://cdn.example.com/rhel/7/os'
   download_policy: on_demand
 
-p_forge_root:
-  name:                 P Forge
-  content_id:           1
-  content_type:         puppet
-  label:                p_forge
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-
 fedora_17_unpublished_root:
   name:                 Fedora 17 x86_64 unpublished
   content_id:           8374837483743

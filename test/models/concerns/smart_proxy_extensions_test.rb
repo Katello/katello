@@ -52,7 +52,6 @@ module Katello
       assert_equal 0, @proxy_mirror.organizations.all.count
 
       assert_equal @proxy.locations.first.title, Setting[:default_location_subscribed_hosts]
-      assert_equal @proxy.locations.first.title, Setting[:default_location_puppet_content]
       assert_equal @proxy_mirror.locations.all.count, 0
 
       assert_not_equal Katello::KTEnvironment.all.count, 0
@@ -65,7 +64,6 @@ module Katello
     def setup
       @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @file_repo = katello_repositories(:generic_file)
-      @puppet_repo = katello_repositories(:p_forge)
 
       @pulp3_feature = Feature.find_by(:name => SmartProxy::PULP3_FEATURE)
     end
@@ -76,17 +74,14 @@ module Katello
 
     def test_pulp3_repository_support
       refute @primary.pulp3_support?(nil)
-      refute @primary.pulp3_support?(@puppet_repo)
       assert @primary.pulp3_support?(@file_repo)
     end
 
     def test_pulp3_repository_type_support
-      refute @primary.pulp3_repository_type_support?(Katello::Repository::PUPPET_TYPE)
       assert @primary.pulp3_repository_type_support?(Katello::Repository::FILE_TYPE)
     end
 
     def test_pulp3_content_type_support
-      refute @primary.pulp3_content_support?(Katello::PuppetModule::CONTENT_TYPE)
       assert @primary.pulp3_content_support?(Katello::DockerManifest::CONTENT_TYPE)
     end
 
@@ -104,7 +99,6 @@ module Katello
 
       assert_includes expected_types_map[:pulp3][:supported_types], "yum"
       refute_includes expected_types_map[:pulp3][:overriden_to_pulp2], "file"
-      assert_includes expected_types_map[:pulp2][:supported_types], "puppet"
     end
 
     def test_pulp_supported_types_map_with_overrides
@@ -114,7 +108,6 @@ module Katello
       expected_types_map = @primary.supported_pulp_types
       assert_includes expected_types_map[:pulp3][:supported_types], "yum"
       assert_includes expected_types_map[:pulp3][:overriden_to_pulp2], "file"
-      assert_includes expected_types_map[:pulp2][:supported_types], "puppet"
     ensure
       SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
     end

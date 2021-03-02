@@ -156,29 +156,6 @@ rhel_7_no_arch:
   distribution_variant: "TestVariant"
   distribution_bootable: false
 
-p_forge:
-  root_id:              <%= ActiveRecord::FixtureSet.identify(:p_forge_root) %>
-  pulp_id:              4
-  relative_path:        'ACME_Corporation/library/LibraryView/p_forge'
-  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-
-lib_p_forge:
-  library_instance:     p_forge
-  root_id:              <%= ActiveRecord::FixtureSet.identify(:p_forge_root) %>
-  pulp_id:              10
-  relative_path:        'ACME_Corporation/library/LibraryView/p_forge'
-  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-
-dev_p_forge:
-  library_instance:     p_forge
-  root_id:              <%= ActiveRecord::FixtureSet.identify(:p_forge_root) %>
-  pulp_id:              5
-  relative_path:        'ACME_Corporation/library/DevView/p_forge'
-  environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
-
 rhel_6_x86_64_library_view_1:
   library_instance:     rhel_6_x86_64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>

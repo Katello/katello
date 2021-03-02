@@ -90,15 +90,6 @@
                 parent: 'product.repository.info'
             }
         })
-        .state('product.repository.manage-content.puppet-modules', {
-            url: '/content/puppet_modules',
-            permission: 'view_products',
-            templateUrl: 'products/details/repositories/details/views/repository-manage-puppet-modules.html',
-            ncyBreadcrumb: {
-                label: "{{'Manage Puppet Modules' | translate }}",
-                parent: 'product.repository.info'
-            }
-        })
         .state('product.repository.manage-content.docker-manifests', {
             url: '/content/docker_manifests',
             permission: 'view_products',

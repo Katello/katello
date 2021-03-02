@@ -130,16 +130,6 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             parent: 'content-view.version.details'
         }
     })
-    .state('content-view.version.puppet-modules', {
-        url: '/puppet_modules',
-        permission: 'view_content_views',
-        controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-puppet-modules.html',
-        ncyBreadcrumb: {
-            label: '{{ "Puppet Modules" | translate }}',
-            parent: 'content-view.version.details'
-        }
-    })
     .state('content-view.version.ostree-branches', {
         url: '/ostree_branches',
         permission: 'view_content_views',
@@ -406,52 +396,6 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         ncyBreadcrumb: {
             label: '{{ "Add Content Views" | translate }}',
             parent: 'content-view.info'
-        }
-    })
-    .state('content-view.puppet-modules', {
-        abstract: true,
-        template: '<div ui-view></div>'
-    })
-    .state('content-view.puppet-modules.list', {
-        url: '/puppet_modules',
-        permission: 'view_content_views',
-        controller: 'ContentViewPuppetModulesController',
-        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-modules.html',
-        ncyBreadcrumb: {
-            label: '{{ "Puppet Modules" | translate }}',
-            parent: 'content-view.info'
-        }
-    })
-    .state('content-view.puppet-modules.names', {
-        url: '/puppet_modules/names',
-        permission: 'edit_content_views',
-        controller: 'ContentViewPuppetModuleNamesController',
-        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-names.html',
-        ncyBreadcrumb: {
-            label: '{{ "Add Puppet Module" | translate }}',
-            parent: 'content-view.puppet-modules.list'
-        }
-    })
-    .state('content-view.puppet-modules.versions', {
-        url: '/puppet_modules/:moduleName/versions',
-        permission: 'edit_content_views',
-        controller: 'ContentViewPuppetModuleVersionsController',
-        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html',
-        ncyBreadcrumb: {
-            label: '{{ "Version for Module:" | translate }} {{ }}',
-            parent: 'content-view.puppet-modules.names'
-        }
-    })
-    // Necessary until ui-router supports optional parameters, see https://github.com/angular-ui/ui-router/issues/108
-    .state('content-view.puppet-modules.versionsForModule', {
-        collapsed: true,
-        url: '/puppet_modules/:moduleName/versions/:moduleId',
-        permission: 'edit_content_views',
-        controller: 'ContentViewPuppetModuleVersionsController',
-        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html',
-        ncyBreadcrumb: {
-            label: '{{ "Versions for Module" | translate }}',
-            parent: 'content-view.puppet-modules.versions'
         }
     })
     .state('content-view.history', {

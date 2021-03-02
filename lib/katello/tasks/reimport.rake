@@ -19,7 +19,6 @@ namespace :katello do
     models = [
       Katello::Subscription,
       Katello::Pool,
-      Katello::ContentViewPuppetEnvironment,
       Katello::Content
     ]
 

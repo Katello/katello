@@ -51,12 +51,6 @@ class HostsControllerTest < ActionController::TestCase
     assert_equal new_location.id, @host.reload.location_id
   end
 
-  test 'puppet environment for content_view' do
-    get :puppet_environment_for_content_view, params: { :content_view_id => @library_dev_staging_view.id, :lifecycle_environment_id => @library.id }
-
-    assert_response :success
-  end
-
   test 'empty content facet parameters are removed' do
     post :create, params: { :host => {
       :name => 'test_content',

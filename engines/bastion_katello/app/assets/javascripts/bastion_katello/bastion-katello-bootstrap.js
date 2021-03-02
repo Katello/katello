@@ -11,7 +11,6 @@ BASTION_MODULES.push(
     'Bastion.ansible-collections',
     'Bastion.ostree-branches',
     'Bastion.hosts',
-    'Bastion.puppet-modules',
     'Bastion.ostree-branches',
     'Bastion.module-streams',
     'Bastion.environments',

@@ -15,6 +15,8 @@ class AddSortableVersionToPuppetModules < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_puppet_modules, :sortable_version, :string
 
+    return unless Object.const_defined?('::Katello::PuppetModule')
+
     Katello::PuppetModule.find_each do |puppet_mod|
       puppet_mod.update_attribute(:sortable_version, sortable_version(puppet_mod.version))
     end

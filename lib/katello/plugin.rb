@@ -174,17 +174,6 @@ Foreman::Plugin.register :katello do
            :engine => Katello::Engine,
            :turbolinks => false
     end
-
-    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::PUPPET_TYPE)
-      menu :top_menu,
-           :puppet_modules,
-           :caption => N_('Puppet Modules'),
-           :url => '/puppet_modules',
-           :url_hash => {:controller => 'katello/api/v2/puppet_modules',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
-    end
   end
 
   menu :top_menu,

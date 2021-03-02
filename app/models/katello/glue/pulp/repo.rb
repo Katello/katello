@@ -94,7 +94,6 @@ module Katello
           srpms.count != pulp_counts['srpm'].to_i ||
           errata.count != pulp_counts['erratum'].to_i ||
           package_groups.count != pulp_counts['package_group'].to_i ||
-          puppet_modules.count != pulp_counts['puppet_module'].to_i ||
           docker_manifests.count != pulp_counts['docker_manifest'].to_i ||
           docker_tags.count != pulp_counts['docker_tag'].to_i ||
           ostree_branches.count != pulp_counts['ostree'].to_i
@@ -146,7 +145,6 @@ module Katello
       def content_types
         [Katello.pulp_server.extensions.errata,
          Katello.pulp_server.extensions.package_group,
-         Katello.pulp_server.extensions.puppet_module,
          Katello.pulp_server.extensions.module_stream
         ]
       end
@@ -223,8 +221,6 @@ module Katello
         case content_type
         when Repository::YUM_TYPE
           "rpm"
-        when Repository::PUPPET_TYPE
-          "puppet_module"
         when Repository::DOCKER_TYPE
           "docker_manifest"
         when Repository::OSTREE_TYPE
@@ -244,10 +240,6 @@ module Katello
 
       def docker?
         self.content_type == Repository::DOCKER_TYPE
-      end
-
-      def puppet?
-        self.content_type == Repository::PUPPET_TYPE
       end
 
       def file?
@@ -371,8 +363,6 @@ module Katello
         "#{pulp_uri.host.downcase}/#{container_repository_name}"
       elsif file?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{relative_path}/"
-      elsif puppet?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}/"
       elsif ostree?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{relative_path}"
       elsif deb?

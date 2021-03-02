@@ -10,7 +10,6 @@
  * @requires Repository
  * @requires Package
  * @requires PackageGroup
- * @requires PuppetModule
  * @requires DockerManifest
  * @requires DockerManifestList
  * @requires DockerTag
@@ -24,8 +23,8 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb', 'ModuleStream', 'AnsibleCollection',
-    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb, ModuleStream, AnsibleCollection) {
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb', 'ModuleStream', 'AnsibleCollection',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb, ModuleStream, AnsibleCollection) {
         var contentTypes;
 
         function success(response, selected) {
@@ -57,7 +56,6 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
         contentTypes = {
             'packages': { type: Package, controllerName: 'katello_rpms' },
             'package-groups': { type: PackageGroup, controllerName: 'katello_package_groups' },
-            'puppet-modules': { type: PuppetModule, controllerName: 'katello_puppet_modules' },
             'docker-manifests': { type: DockerManifest, controllerName: 'katello_docker_manifests' },
             'docker-manifest-lists': { type: DockerManifestList, controllerName: 'katello_docker_manifest_lists' },
             'docker-tags': {type: DockerTag, controllerName: 'katello_docker_tags'},

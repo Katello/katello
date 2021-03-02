@@ -7,7 +7,7 @@ namespace :katello do
       or(::Katello::Rpm.where.not(migrated_pulp3_href: nil)).count
     migrated_erratum_count = ::Katello::RepositoryErratum.where.not(erratum_pulp3_href: nil).count
     migrated_repo_count = ::Katello::Repository.where.not(version_href: nil).count
-    migratable_repo_count = ::Katello::Repository.count - ::Katello::Repository.puppet_type.count -
+    migratable_repo_count = ::Katello::Repository.count -
       ::Katello::Repository.ostree_type.count - ::Katello::Repository.deb_type.count
 
     on_demand_rpm_count = Katello::RepositoryRpm.where(:repository_id => Katello::Repository.yum_type.on_demand).distinct.count

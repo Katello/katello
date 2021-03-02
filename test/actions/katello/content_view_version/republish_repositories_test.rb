@@ -21,10 +21,6 @@ module Katello::Host
         plan_action(action, @version)
 
         assert_action_planed_with(action, ::Actions::Katello::Repository::BulkMetadataGenerate, @version.repositories, :force => true)
-
-        @version.content_view_puppet_environments.each do |cvpe|
-          assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, cvpe, :force => true)
-        end
       end
     end
   end

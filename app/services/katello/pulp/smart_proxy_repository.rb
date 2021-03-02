@@ -17,8 +17,7 @@ module Katello
 
       def current_repositories(environment_id = nil, content_view_id = nil)
         yum_repos = current_yum_repos(environment_id, content_view_id) || []
-        puppet_envs = current_puppet_environments(environment_id, content_view_id) || []
-        yum_repos + puppet_envs
+        yum_repos
       end
 
       def current_yum_repos(environment_id = nil, content_view_id = nil)
@@ -32,31 +31,17 @@ module Katello
         katello_repos.where(:pulp_id => pulp_repo_ids)
       end
 
-      def current_puppet_environments(environment_id = nil, content_view_id = nil)
-        puppet_repos = Katello::ContentViewPuppetEnvironment.all
-        puppet_repos = puppet_repos.where(:environment_id => environment_id) if environment_id
-        puppet_repos = puppet_repos.in_content_view(content_view_id) if content_view_id
-
-        pulp_repos = self.smart_proxy.pulp_api.extensions.repository.search_by_repository_ids(puppet_repos.pluck(:pulp_id))
-
-        puppet_repos.where(:pulp_id => pulp_repos.map { |pulp_repo| pulp_repo['id'] })
-      end
-
       def orphaned_repos
         @smart_proxy.pulp_repositories.map { |x| x["id"] } - repos_available_to_capsule.map { |x| x.pulp_id }
       end
 
       def repos_available_to_capsule
-        yum_repos_available_to_capsule + puppet_environments_available_to_capsule
+        yum_repos_available_to_capsule
       end
 
       def yum_repos_available_to_capsule
         yum_repos = Katello::Repository.in_environment(@smart_proxy.lifecycle_environments)
         yum_repos.find_all { |repo| repo.node_syncable? }
-      end
-
-      def puppet_environments_available_to_capsule
-        Katello::ContentViewPuppetEnvironment.in_environment(@smart_proxy.lifecycle_environments)
       end
 
       def delete_orphaned_repos

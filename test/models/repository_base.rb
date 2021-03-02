@@ -12,7 +12,6 @@ module Katello
       @fedora_17_x86_64_dev             = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_library_library_view   = katello_repositories(:fedora_17_library_library_view)
       @fedora_17_dev_library_view       = katello_repositories(:fedora_17_dev_library_view)
-      @puppet_forge                     = katello_repositories(:p_forge)
       @redis                            = katello_repositories(:redis)
       @ostree                           = katello_repositories(:ostree)
       @fedora                           = katello_products(:fedora)
@@ -22,7 +21,6 @@ module Katello
       @unassigned_gpg_key               = katello_gpg_keys(:unassigned_gpg_key)
       @library_dev_staging_view         = katello_content_views(:library_dev_staging_view)
       @library_view                     = katello_content_views(:library_view)
-      @content_view_puppet_environment  = katello_content_view_puppet_environments(:archive_view_puppet_environment)
       @admin                            = users(:admin)
     end
 

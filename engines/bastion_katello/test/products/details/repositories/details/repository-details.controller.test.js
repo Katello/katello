@@ -101,12 +101,6 @@ describe('Controller: RepositoryDetailsController', function() {
         expect($scope.canRemove(repository, product)).toBe(true);
     });
 
-    it('should properly hide sync button when force is true', function() {
-        expect($scope.hideSyncButton(syncableRepo, true)).toBe(false);
-        syncableRepo.content_type = 'puppet';
-        expect($scope.hideSyncButton(syncableRepo, true)).toBe(true);
-    });
-
     it('should properly hide sync button when syncing', function() {
         expect($scope.hideSyncButton(syncableRepo, false)).toBe(false);
         syncableRepo.last_sync.state = 'pending';

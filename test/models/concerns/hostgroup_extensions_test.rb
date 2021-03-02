@@ -74,17 +74,6 @@ module Katello
       assert_equal @library, @child.lifecycle_environment
       assert_nil @root.lifecycle_environment
     end
-
-    def test_content_and_puppet_match?
-      @root.content_view = @view
-      @root.lifecycle_environment = @library
-      @root.environment = @view.version(@library).puppet_env(@library).puppet_environment
-
-      assert @root.content_and_puppet_match?
-
-      @root.lifecycle_environment = @dev
-      refute @root.content_and_puppet_match?
-    end
   end
 
   class HostgroupExtensionsKickstartTest < ActiveSupport::TestCase

@@ -25,7 +25,7 @@ module Actions
             end
 
             if composite_version_environments.any?
-              handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description, content[:puppet_module_ids])
+              handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description)
             end
 
             if hosts.any? && !content[:errata_ids].blank?
@@ -37,7 +37,7 @@ module Actions
           end
         end
 
-        def handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description, puppet_module_ids)
+        def handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description)
           concurrence do
             composite_version_environments.each do |version_environment|
               composite_version = version_environment[:content_view_version]
@@ -50,8 +50,7 @@ module Actions
               end
 
               action = plan_action(ContentViewVersion::IncrementalUpdate, composite_version, environments,
-                                   :new_components => new_components, :description => description,
-                                                           :content => {:puppet_module_ids => puppet_module_ids})
+                                   :new_components => new_components, :description => description)
               unless SmartProxy.pulp_primary.pulp3_repository_type_support?("yum")
                 output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
               end
@@ -84,7 +83,6 @@ module Actions
                 total_count[:errata_count] = added_units[:erratum].try(:count)
                 total_count[:modulemd_count] = added_units[:modulemd].try(:count)
                 total_count[:rpm_count] = added_units[:rpm].try(:count)
-                total_count[:puppet_module_count] = added_units[:puppet_module].try(:count)
               end
             end
           end
@@ -127,11 +125,6 @@ module Actions
           if total_count[:rpm_count] && total_count[:rpm_count] > 0
             rpm = _(" %{package_count} Package(s)" % {:package_count => total_count[:rpm_count]})
             content << rpm
-          end
-          if total_count[:puppet_module_count] && total_count[:puppet_module_count] > 0
-            puppet_module = _(" %{puppet_module_count} Puppet Module(s)" %
-                              {:puppet_module_count => total_count[:puppet_module_count]})
-            content << puppet_module
           end
           content
         end

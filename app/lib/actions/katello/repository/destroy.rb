@@ -20,7 +20,6 @@ module Actions
             fail repository.errors.messages.values.join("\n")
           end
 
-          plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
           plan_pulp_action([Actions::Pulp::Orchestration::Repository::Delete,
                             Actions::Pulp3::Orchestration::Repository::Delete],
                            repository,

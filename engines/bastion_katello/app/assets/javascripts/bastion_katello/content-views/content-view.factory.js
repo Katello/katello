@@ -33,12 +33,6 @@ angular.module('Bastion.content-views').factory('ContentView',
                     var contentView = angular.fromJson(data);
                     return {results: contentView.content_view_components};
                 }},
-                availablePuppetModules: {method: 'GET', params: {action: 'available_puppet_modules'},
-                    transformResponse: function (data) {
-                        return angular.fromJson(data);
-                    }
-                },
-                availablePuppetModuleNames: {method: 'GET', params: {action: 'available_puppet_module_names'}},
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
             }
         );

@@ -76,14 +76,6 @@ module Actions
               end
             end
 
-            if SmartProxy.pulp_primary.has_feature?(SmartProxy::PULP_FEATURE)
-              has_modules = content_view.publish_puppet_environment?
-              plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
-              unless options[:skip_promotion]
-                plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
-                    :puppet_modules_present => has_modules)
-              end
-            end
             plan_action(Candlepin::Environment::SetContent, content_view, library, content_view.content_view_environment(library)) unless options[:skip_promotion]
             plan_action(Katello::Foreman::ContentUpdate, library, content_view) unless options[:skip_promotion]
             plan_action(ContentView::ErrataMail, content_view, library) unless options[:skip_promotion]

@@ -34,29 +34,4 @@ module Katello
       assert_equal 1, present.comparison.size
     end
   end
-
-  class ContentViewVersionComparePresenterPuppetTest < ActiveSupport::TestCase
-    def setup
-      @complete_version = katello_content_view_versions(:library_view_version_1)
-      @incomplete_version = katello_content_view_versions(:library_view_version_2)
-      @versions = [@complete_version, @incomplete_version]
-
-      @complete_module = katello_puppet_modules(:dhcp)
-      @incomplete_module = katello_puppet_modules(:abrt)
-    end
-
-    test "both views match" do
-      present = ContentViewVersionComparePresenter.new(@complete_module, @versions, nil)
-      assert_includes present.comparison, @complete_version.id
-      assert_includes present.comparison, @incomplete_version.id
-      assert_equal 2, present.comparison.size
-    end
-
-    test "only one view matches" do
-      present = ContentViewVersionComparePresenter.new(@incomplete_module, @versions, nil)
-      assert_includes present.comparison, @incomplete_version.id
-      refute_includes present.comparison, @complete_version.id
-      assert_equal 1, present.comparison.size
-    end
-  end
 end

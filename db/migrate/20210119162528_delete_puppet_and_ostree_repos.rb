@@ -24,8 +24,15 @@ class DeletePuppetAndOstreeRepos < ActiveRecord::Migration[6.0]
     self.table_name = 'katello_ostree_branches'
   end
 
+  def puppet_repositories
+    puppet_query = "SELECT \"katello_repositories\".* FROM \"katello_repositories\"" \
+      " INNER JOIN \"katello_root_repositories\" ON \"katello_root_repositories\".\"id\" =" \
+      " \"katello_repositories\".\"root_id\" WHERE \"katello_root_repositories\".\"content_type\" = 'puppet'"
+    ::Katello::Repository.find_by_sql(puppet_query)
+  end
+
   def up
-    if Katello::Repository.ostree_type.any? || Katello::Repository.puppet_type.any?
+    if Katello::Repository.ostree_type.any? || puppet_repositories.any?
       User.as_anonymous_admin do
         FakeContentViewPuppetModule.delete_all
         FakeContentViewPuppetEnvironmentPuppetModule.delete_all
@@ -34,7 +41,7 @@ class DeletePuppetAndOstreeRepos < ActiveRecord::Migration[6.0]
         FakeContentViewPuppetEnvironment.delete_all
         FakePuppetModule.delete_all
 
-        Katello::Repository.puppet_type.delete_all
+        ::Katello::Repository.delete(puppet_repositories)
 
         FakeRepositoryOstreeBranch.delete_all
         FakeOstreeBranch.delete_all

@@ -29,11 +29,10 @@ module Katello
       ContentView.any_instance.stubs(:reindex_on_association_change).returns(true)
       ContentViewVersion.any_instance.stubs(:package_count).returns(0)
       ContentViewVersion.any_instance.stubs(:errata_count).returns(0)
-      ContentViewVersion.any_instance.stubs(:puppet_module_count).returns(0)
 
       models
       permissions
-      [:package_group_count, :package_count, :puppet_module_count].each do |content_type_count|
+      [:package_group_count, :package_count].each do |content_type_count|
         Repository.any_instance.stubs(content_type_count).returns(0)
       end
     end
@@ -194,7 +193,7 @@ module Katello
     test_attributes :pid => '3f1457f2-586b-472c-8053-99017c4a4909'
     def test_update
       params = { :name => "My View", :description => "New description", :solve_dependencies => true,
-                 :force_puppet_environment => false, :auto_publish => false, :label => "test_label", :default => "test_default",
+                 :auto_publish => false, :label => "test_label", :default => "test_default",
                  :created_at => "test_created_at", :updated_at => "test_updated_at", :composite => false,
                  :next_version => "test_next_version" }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
@@ -292,79 +291,6 @@ module Katello
       put :update, params: { :id => @library_dev_staging_view.id, :content_view => { :name => '' } }
       assert_response :unprocessable_entity
       assert_match "Name can't be blank", @response.body
-    end
-
-    def test_available_puppet_modules
-      get :available_puppet_modules, params: { :id => @library_dev_staging_view.id }
-
-      assert_response :success
-      assert_template 'katello/api/v2/content_views/puppet_modules'
-    end
-
-    def test_available_puppet_modules_filtered_order
-      # the UI relies on these being ordered by author/name/version
-      create(:puppet_module, :version => "1.12.0")
-      create(:puppet_module, :version => "1.3.0")
-      PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
-
-      get :available_puppet_modules, params: { :id => @library_dev_staging_view.id, :name => "trystero" }
-
-      results = JSON.parse(response.body)['results']
-      assert_equal '1.12.0', results.first['version']
-    end
-
-    def test_available_puppet_modules_with_use_latest
-      create(:puppet_module, :version => "1.2.0")
-      create(:puppet_module, :version => "1.3.0")
-      PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
-
-      get :available_puppet_modules, params: { :id => @library_dev_staging_view.id, :name => "trystero" }
-      results = JSON.parse(response.body)['results']
-
-      assert_equal '1.3.0', results.first['version']
-      use_latest_rec = results.last
-      assert_equal 'Always Use Latest (currently 1.3.0)', use_latest_rec['version']
-      assert_nil use_latest_rec['uuid']
-    end
-
-    def test_available_puppet_modules_when_latest_module_already_selected
-      content_view = katello_content_views(:library_view)
-      create(:puppet_module, :name => 'm1', :author => 'kavy', :version => "1.2.0")
-      puppet_module2 = create(:puppet_module, :name => 'm1', :author => 'kavy', :version => "1.3.0")
-      cv_puppet_module = ContentViewPuppetModule.find(katello_content_view_puppet_modules(:library_view_m1_module).id)
-      cv_puppet_module.uuid = puppet_module2.pulp_id
-      cv_puppet_module.save
-      PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
-      get :available_puppet_modules, params: { :id => content_view.id, :name => 'm1' }
-      results = JSON.parse(response.body)['results']
-      assert_equal '1.2.0', results.first['version']
-      assert_equal 2, results.count
-      assert_match(/\(currently 1\.3\.0\)/, results.last['version'])
-    end
-
-    def test_available_puppet_modules_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, :destroy_content_views]
-
-      assert_protected_action(:available_puppet_modules, allowed_perms, denied_perms) do
-        get :available_puppet_modules, params: { :id => @library_dev_staging_view.id }
-      end
-    end
-
-    def test_available_puppet_module_names
-      get :available_puppet_module_names, params: { :id => @library_dev_staging_view.id }
-
-      assert_response :success
-      assert_template 'katello/api/v2/content_views/../puppet_modules/names'
-    end
-
-    def test_available_puppet_module_names_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, :destroy_content_views]
-
-      assert_protected_action(:available_puppet_module_names, allowed_perms, denied_perms) do
-        get :available_puppet_module_names, params: { :id => @library_dev_staging_view.id }
-      end
     end
 
     def test_publish_default_view

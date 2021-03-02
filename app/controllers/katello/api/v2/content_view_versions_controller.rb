@@ -12,13 +12,11 @@ module Katello
     before_action :validate_promotable, :only => [:promote]
     before_action :authorize_destroy, :only => [:destroy]
     before_action :find_version_environments, :only => [:incremental_update]
-    before_action :find_puppet_module, :only => [:index]
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")
     param :content_view_id, :number, :desc => N_("Content view identifier"), :required => false
     param :environment_id, :number, :desc => N_("Filter versions by environment"), :required => false
-    param :puppet_module_id, :number, :desc => N_("Filter versions by puppet module"), :required => false
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
     param :composite_version_id, :number, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
     param :organization_id, :number, :desc => N_("Organization identifier")
@@ -40,7 +38,6 @@ module Katello
       versions = versions.where(:content_view_id => @view.id) if @view
       versions = versions.for_version(version_number) if version_number
       versions = versions.in_environment(@environment) if @environment
-      versions = versions.with_puppet_module(@puppet_module) if @puppet_module
       versions = versions.component_of(params[:composite_version_id]) if params[:composite_version_id]
       versions
     end
@@ -103,7 +100,6 @@ module Katello
       param :errata_ids, Array, :desc => "Errata ids to copy into the new versions"
       param :package_ids, Array, :desc => "Package ids to copy into the new versions"
       param :deb_ids, Array, :desc => "Deb Package ids to copy into the new versions"
-      param :puppet_module_ids, Array, :desc => "Puppet Module ids to copy into the new versions"
     end
     param :update_hosts, Hash, :desc => N_("After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently.") do
       param :included, Hash, :required => true, :action_aware => true do
@@ -237,11 +233,6 @@ module Katello
       @environment = KTEnvironment.find(params[:environment_id])
     end
 
-    def find_puppet_module
-      return unless params.key?(:puppet_module_id)
-      @puppet_module = PuppetModule.with_identifiers([params[:puppet_module_id]]).first
-    end
-
     def validate_content(content)
       if content[:errata_ids]
         errata = Erratum.with_identifiers(content[:errata_ids])
@@ -258,10 +249,6 @@ module Katello
 
       if content[:deb_ids]
         fail _("deb_ids is not an array") unless content[:deb_ids].is_a?(Array)
-      end
-
-      if content[:puppet_module_ids]
-        fail _("puppet_module_ids is not an array") unless content[:puppet_module_ids].is_a?(Array)
       end
     end
 

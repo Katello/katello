@@ -55,14 +55,13 @@ module Actions
             end
           else
             repositories = smart_proxy_helper.repositories_available_to_capsule(environment, content_view).by_rpm_count
-            puppet_envs = smart_proxy_helper.puppet_environments_available_to_capsule(environment, content_view)
             repositories_to_skip = []
             if skip_metatadata_check
               smart_proxy_helper.clear_smart_proxy_sync_histories repositories
             else
               repositories_to_skip = ::Katello::Repository.synced_on_capsule smart_proxy
             end
-            repositories - repositories_to_skip + puppet_envs
+            repositories - repositories_to_skip
           end
         end
 

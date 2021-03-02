@@ -41,7 +41,6 @@ Foreman::AccessControl.permission(:edit_hosts).actions.concat [
 
 Foreman::AccessControl.permission(:view_hosts).actions.concat [
   'hosts/content_hosts',
-  'hosts/puppet_environment_for_content_view',
   'katello/api/v2/host_autocomplete/auto_complete_search',
   'katello/api/v2/host_errata/index',
   'katello/api/v2/host_errata/show',

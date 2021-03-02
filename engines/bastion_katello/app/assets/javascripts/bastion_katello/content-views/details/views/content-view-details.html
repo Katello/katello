@@ -95,13 +95,6 @@
         </a>
       </li>
 
-      <li ng-class="{active: stateIncludes('content-view.puppet-modules')}"
-          ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('puppet')">
-        <a ui-sref="content-view.puppet-modules.list" translate>
-          Puppet Modules
-        </a>
-      </li>
-
       <li uib-dropdown
           ng-class="{active: stateIncludes('content-view.repositories.docker') || stateIncludes('content-view.docker.filters')}"
           ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('docker')">

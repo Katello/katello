@@ -119,11 +119,7 @@ module Katello
         repos = Repository.readable
         repos = repos.where(:id => @repo) if @repo
         repos = repos.where(:id => Repository.readable.in_organization(@organization)) if @organization
-        if @environment && (@environment.library? || resource_class != Katello::PuppetModule)
-          # if the environment is not library and this is for puppet modules,
-          # we can skip environment filter, as those would be associated to
-          # content view puppet environments and handled by the puppet modules
-          # controller.
+        if @environment&.library?
           repos = repos.where(:id => @environment.repositories)
         end
         repos
@@ -249,8 +245,6 @@ module Katello
           _("Source RPM")
         when "Katello::PackageGroup"
           _("Package Group")
-        when "Katello::PuppetModule"
-          _("Puppet Module")
         when "Katello::DockerManifest"
           _("Container Image Manifest")
         when "Katello::DockerMetaTag"

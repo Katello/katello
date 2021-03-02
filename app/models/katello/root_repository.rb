@@ -99,7 +99,6 @@ module Katello
     scope :deb_type, -> { where(:content_type => Repository::DEB_TYPE) }
     scope :yum_type, -> { where(:content_type => Repository::YUM_TYPE) }
     scope :file_type, -> { where(:content_type => Repository::FILE_TYPE) }
-    scope :puppet_type, -> { where(:content_type => Repository::PUPPET_TYPE) }
     scope :docker_type, -> { where(:content_type => Repository::DOCKER_TYPE) }
     scope :ostree_type, -> { where(:content_type => Repository::OSTREE_TYPE) }
     scope :ansible_collection_type, -> { where(:content_type => Repository::ANSIBLE_COLLECTION_TYPE) }
@@ -271,10 +270,6 @@ module Katello
 
     def docker?
       self.content_type == Repository::DOCKER_TYPE
-    end
-
-    def puppet?
-      self.content_type == Repository::PUPPET_TYPE
     end
 
     def file?

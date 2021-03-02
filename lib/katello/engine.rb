@@ -167,7 +167,6 @@ module Katello
       ::Foreman::Renderer::Scope::Variables::Base.include Katello::Concerns::RendererExtensions
 
       # Model extensions
-      ::Environment.include Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.include Katello::Concerns::HostManagedExtensions
       ::Hostgroup.include Katello::Concerns::HostgroupExtensions
       ::Location.include Katello::Concerns::LocationExtensions
@@ -206,7 +205,6 @@ module Katello
       ::OrganizationsController.include Katello::Concerns::OrganizationsControllerExtensions
 
       # Service extensions
-      require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
       require "#{Katello::Engine.root}/lib/proxy_api/pulp"
       require "#{Katello::Engine.root}/lib/proxy_api/pulp_node"
       require "#{Katello::Engine.root}/lib/proxy_api/container_gateway"
@@ -219,7 +217,6 @@ module Katello
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
       require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
       require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
-      ::PuppetClassImporter.include Katello::Services::PuppetClassImporterExtensions
 
       #Api controller extensions
       ::Api::V2::HostsController.include Katello::Concerns::Api::V2::HostsControllerExtensions
@@ -227,14 +224,6 @@ module Katello
       ::Api::V2::SmartProxiesController.include Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
       ::Api::V2::RegistrationController.prepend Katello::Concerns::Api::V2::RegistrationControllerExtensions
       ::Api::V2::RegistrationCommandsController.include Katello::Concerns::Api::V2::RegistrationCommandsControllerExtensions
-
-      ::HostsController.class_eval do
-        helper Katello::Concerns::HostsAndHostgroupsHelperExtensions
-      end
-
-      ::HostgroupsController.class_eval do
-        helper Katello::Concerns::HostsAndHostgroupsHelperExtensions
-      end
 
       ::AuditSearch::ClassMethods.prepend Katello::Concerns::AuditSearch
       ::Widget.singleton_class.prepend Katello::Concerns::WidgetExtensions::ClassMethods

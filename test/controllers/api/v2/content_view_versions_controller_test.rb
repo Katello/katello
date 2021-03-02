@@ -36,7 +36,6 @@ module Katello
       permissions
       ContentViewVersion.any_instance.stubs(:package_count).returns(0)
       ContentViewVersion.any_instance.stubs(:errata_count).returns(0)
-      ContentViewVersion.any_instance.stubs(:puppet_module_count).returns(0)
     end
 
     def test_index
@@ -46,14 +45,12 @@ module Katello
     end
 
     def test_index_with_content_view
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       get :index, params: { :content_view_id => @library_dev_staging_view.id }
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
     end
 
     def test_index_with_content_view_sorted
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       get :index, params: { :content_view_id => @library_dev_staging_view.id, :order => 'version ASC' }
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
@@ -120,7 +117,6 @@ module Katello
     end
 
     def test_show
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       get :show, params: { :id => @library_dev_staging_view.versions.first.id }
       assert_response :success
       assert_template 'api/v2/content_view_versions/show'

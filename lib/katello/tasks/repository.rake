@@ -69,21 +69,6 @@ namespace :katello do
     end
   end
 
-  desc "Correct missing pulp repositories for puppet environments. Specify CONTENT_VIEW=name and LIFECYCLE_ENVIRONMENT=name to narrow repositories.  COMMIT=true to perform operation."
-  task :correct_puppet_environments => ["environment", "check_ping"] do
-    puts "All operations will be skipped.  Re-run with COMMIT=true to perform corrections." unless commit?
-
-    User.current = User.anonymous_api_admin
-    puppet_envs = lookup_puppet_environments
-
-    puppet_envs.find_each.with_index do |puppet_env, index|
-      puts "Processing Puppet Environment #{index + 1}/#{puppet_envs.count}: #{puppet_env.pulp_id} (#{puppet_env.id})"
-      unless repo_exists?(puppet_env)
-        handle_missing_puppet_env(puppet_env)
-      end
-    end
-  end
-
   desc "Change the download policy of all repos. Specify DOWNLOAD_POLICY=policy. Options are #{::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')}."
   task :change_download_policy => ["environment", "check_ping"] do
     policy = ENV['DOWNLOAD_POLICY']
@@ -126,16 +111,6 @@ namespace :katello do
     repos
   end
 
-  def lookup_puppet_environments
-    lifecycle_envs = Katello::KTEnvironment.where(:name => ENV['LIFECYCLE_ENVIRONMENT']) if ENV['LIFECYCLE_ENVIRONMENT']
-    content_views = Katello::ContentView.where(:name => ENV['CONTENT_VIEW']) if ENV['CONTENT_VIEW']
-
-    repos = ::Katello::ContentViewPuppetEnvironment
-    repos = repos.in_environment(lifecycle_envs) if lifecycle_envs
-    repos = repos.in_content_view(content_views) if content_views
-    repos
-  end
-
   def repo_exists?(repo)
     if SmartProxy.pulp_primary!.pulp3_support?(repo)
       backend_service = repo.backend_service(SmartProxy.pulp_primary!)
@@ -161,10 +136,5 @@ namespace :katello do
 
   def handle_missing_root_repo(root_repo)
     root_repo.destroy! if commit?
-  end
-
-  def handle_missing_puppet_env(puppet_env)
-    puts "Content View Puppet Environment #{puppet_env.id} Missing, Creating."
-    ForemanTasks.sync_task(::Actions::Katello::ContentViewPuppetEnvironment::Create, puppet_env) if commit?
   end
 end

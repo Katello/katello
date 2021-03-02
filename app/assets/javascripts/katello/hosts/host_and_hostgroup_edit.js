@@ -9,12 +9,6 @@ $(document).on('ContentLoad', function(){
     $("#hostgroup_lifecycle_environment_id").change(KT.hosts.environmentChanged);
     $("#host_lifecycle_environment_id").change(KT.hosts.environmentChanged);
 
-    $("#hostgroup_content_view_id").change(KT.hosts.contentViewSelected);
-    $("#host_content_view_id").change(KT.hosts.contentViewSelected);
-    $("#reset_puppet_environment").click(function() {
-        KT.hosts.getPuppetEnvironmentSelect().data('content_puppet_match', 'true');
-        KT.hosts.setDefaultPuppetEnvironment(KT.hosts.getSelectedContentView(), KT.hosts.getSelectedEnvironment());
-    });
     KT.hosts.update_media_enablement();
     KT.hosts.set_media_selection_bindings();
 });
@@ -66,33 +60,6 @@ KT.hosts.signalContentViewFetch = function(fetching) {
         select2.show();
         $('#' + spinner_id).remove();
     }
-};
-
-
-KT.hosts.contentViewSelected = function() {
-    if (KT.hosts.getPuppetEnvironmentSelect().data('content_puppet_match')) {
-        KT.hosts.setDefaultPuppetEnvironment(KT.hosts.getSelectedContentView(), KT.hosts.getSelectedEnvironment());
-    }
-};
-
-KT.hosts.setDefaultPuppetEnvironment = function(view_id, env_id) {
-    if (view_id && env_id) {
-        $.get('/hosts/puppet_environment_for_content_view', {content_view_id: view_id, lifecycle_environment_id: env_id}, function (data) {
-            var select = KT.hosts.getPuppetEnvironmentSelect();
-            if (data !== null) {
-                select.val(data.id);
-                select.trigger('change');
-            }
-        })
-    }
-};
-
-KT.hosts.getPuppetEnvironmentSelect = function() {
-    var select = $("#host_environment_id").first();
-    if(select.length === 0) {
-        select = $("#hostgroup_environment_id").first();
-    }
-    return select;
 };
 
 KT.hosts.getContentViewSelect2 = function() {

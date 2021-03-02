@@ -13,14 +13,11 @@ module Actions
           sequence do
             plan_action(ContentView::AddToEnvironment, version, environment)
             concurrence do
-              version.archived_repos.non_puppet.each do |repository|
+              version.archived_repos.each do |repository|
                 sequence do
                   plan_action(Repository::CloneToEnvironment, repository, environment)
                 end
               end
-
-              plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => environment,
-                          :puppet_modules_present => version.promote_puppet_environment?)
 
               repos_to_delete(version, environment).each do |repo|
                 plan_action(Repository::Destroy, repo, :skip_environment_update => true)

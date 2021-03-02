@@ -26,10 +26,8 @@ module Katello
         loc_ids = Location.default_location_ids
         default_location_subs = Location.find_by_title(
           Setting[:default_location_subscribed_hosts])
-        default_location_puppet = Location.find_by_title(
-          Setting[:default_location_puppet_content])
         refute_nil loc_ids
-        assert_equal([default_location_subs.id, default_location_puppet.id].uniq,
+        assert_equal([default_location_subs.id].uniq,
                      loc_ids)
       end
 
@@ -37,12 +35,10 @@ module Katello
         loc = Location.first
         org = Organization.first
         Setting[:default_location_subscribed_hosts] = loc.title
-        Setting[:default_location_puppet_content] = loc.title
 
         loc.organizations << org
         loc.update!(:name => 'foo_bar')
         assert_equal 'foo_bar', Setting[:default_location_subscribed_hosts]
-        assert_equal 'foo_bar', Setting[:default_location_puppet_content]
       end
     end
   end

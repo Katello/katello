@@ -46,11 +46,6 @@
                 display: translate('Packages'),
                 repositoryType: 'yum'
             }, {
-                state: 'puppet-modules',
-                resource: 'PuppetModule',
-                display: translate('Puppet Modules'),
-                repositoryType: 'puppet'
-            }, {
                 state: 'docker',
                 resource: 'DockerTag',
                 display: translate('Container Image Tags'),

@@ -74,14 +74,7 @@ Katello::Engine.routes.draw do
             post :copy
             post :publish
             put :remove
-            get :available_puppet_modules
-            get :available_puppet_module_names
             match '/environments/:environment_id' => "content_views#remove_from_environment", :via => :delete
-          end
-          api_resources :content_view_puppet_modules do
-            collection do
-              get :auto_complete_search
-            end
           end
           api_resources :filters, :controller => :content_view_filters do
             collection do
@@ -95,7 +88,6 @@ Katello::Engine.routes.draw do
               get :auto_complete_search
             end
           end
-          api_resources :puppet_modules, :only => [:index]
           api_resources :repositories, :only => [:index] do
             collection do
               match '/show_all' => "content_view_repositories#show_all", :via => :get
@@ -196,7 +188,6 @@ Katello::Engine.routes.draw do
 
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
           api_resources :activation_keys, :only => [:index, :create]
-          api_resources :puppet_modules, :only => [:index]
         end
 
         api_resources :errata, :only => [:index, :show] do
@@ -296,12 +287,6 @@ Katello::Engine.routes.draw do
             end
           end
         end
-        api_resources :puppet_modules, :only => [:index, :show] do
-          collection do
-            get :auto_complete_search
-            get :compare
-          end
-        end
 
         api_resources :repositories, :only => [:index, :create, :show, :destroy, :update] do
           collection do
@@ -394,7 +379,6 @@ Katello::Engine.routes.draw do
           api_resources :package_groups, :only => [:index, :show]
           api_resources :files, :only => [:index, :show], :controller => 'file_units'
           api_resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
-          api_resources :puppet_modules, :only => [:index, :show]
           api_resources :docker_manifests, :only => [:index, :show]
           api_resources :docker_manifest_lists, :only => [:index, :show]
           api_resources :docker_tags, :only => [:index, :show]
@@ -409,7 +393,6 @@ Katello::Engine.routes.draw do
           member do
             get :gpg_key_content
             put :remove_packages, :action => :remove_content
-            put :remove_puppet_modules, :action => :remove_content
             put :remove_docker_manifests, :action => :remove_content
             put :remove_content
             post :sync

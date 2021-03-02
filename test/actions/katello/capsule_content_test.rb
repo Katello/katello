@@ -235,7 +235,6 @@ module ::Actions::Katello::CapsuleContent
       with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(dev_environment)
       repos_in_dev = Katello::Repository.in_environment(dev_environment).pluck(:pulp_id)
-      cvpes_in_dev = Katello::ContentViewPuppetEnvironment.in_environment(dev_environment).pluck(:pulp_id)
 
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :environment_id => dev_environment.id)
       options = { smart_proxy_id: capsule_content.smart_proxy.id,
@@ -250,16 +249,16 @@ module ::Actions::Katello::CapsuleContent
         assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
         assert_includes repos_in_dev, input[:repo_pulp_id]
         repo = ::Katello::Repository.find_by(pulp_id: input[:repo_pulp_id])
-        refute_includes ['yum', 'puppet'], repo.content_type
+        refute_includes ['yum'], repo.content_type
         refute capsule_content.smart_proxy.pulp3_support?(repo)
       end
 
       assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
-        assert_includes (repos_in_dev + cvpes_in_dev), input[:repo_pulp_id]
+        assert_includes repos_in_dev, input[:repo_pulp_id]
         if repos_in_dev.include?(input[:repo_pulp_id])
           repo = ::Katello::Repository.find_by(pulp_id: input[:repo_pulp_id])
-          if ["deb", "yum", "puppet"].include?(repo.content_type)
+          if ["deb", "yum"].include?(repo.content_type)
             assert input[:sync_options][:remove_missing]
           else
             refute input[:sync_options][:remove_missing]
@@ -269,8 +268,6 @@ module ::Actions::Katello::CapsuleContent
         else
           # test cvpe's
           assert input[:sync_options][:remove_missing]
-          cvpes_in_dev.delete(input[:repo_pulp_id])
-          cvpe = Katello::ContentViewPuppetEnvironment.find_by(pulp_id: input[:repo_pulp_id])
           refute capsule_content.smart_proxy.pulp3_support?(cvpe.nonpersisted_repository)
         end
       end
@@ -295,7 +292,6 @@ module ::Actions::Katello::CapsuleContent
       end
 
       assert_empty repos_in_dev
-      assert_empty cvpes_in_dev
     end
 
     it 'fails when trying to sync to the default capsule' do

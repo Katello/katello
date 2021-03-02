@@ -16,7 +16,6 @@ module Katello
       @content_view_version = katello_content_view_versions(:library_view_version_1)
       @fedora_dev = katello_repositories(:fedora_17_x86_64_dev)
       @on_demand_repo = katello_repositories(:fedora_17_x86_64)
-      @puppet_repo = katello_repositories(:p_forge)
       @docker_repo = katello_repositories(:busybox)
       @smart_proxy = smart_proxies(:one)
       @srpm_repo = katello_repositories(:srpm_repo)
@@ -942,7 +941,7 @@ module Katello
     end
 
     def test_export_wrong_type
-      post :export, params: { :id => @puppet_repo.id }
+      post :export, params: { :id => @on_demand_repo.id }
       assert_response 400
     end
 
