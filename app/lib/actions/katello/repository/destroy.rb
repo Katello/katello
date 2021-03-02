@@ -58,6 +58,7 @@ module Actions
         end
 
         def delete_record(repository, options = {})
+          ::Katello::SyncPlan.remove_disabled_product(repository) if repository.redhat?
           repository.destroy!
           repository.root.destroy! if repository.root.repositories.empty?
           ::Katello::DockerMetaTag.cleanup_tags if options[:docker_cleanup]

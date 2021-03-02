@@ -1,7 +1,7 @@
 require 'katello_test_helper'
 
 module Katello
-  class SyncPlanTest < ActiveSupport::TestCase
+  class SyncPlanTest < ActiveSupport::TestCase  # rubocop:disable Metrics/ClassLength
     def setup
       @organization = get_organization
       @plan = SyncPlan.new(:name => 'Norman Rockwell', :organization => @organization, :sync_date => Time.now, :interval => 'daily')
@@ -359,6 +359,17 @@ module Katello
       p = SyncPlan.find_by_name('Sync plan')
       p.cancel_recurring_logic
       assert_equal "cancelled", p.foreman_tasks_recurring_logic.state
+    end
+
+    def test_remove_disabled_product
+      product = katello_products(:redhat)
+      repository = product.repositories.first
+      Product.any_instance.stubs(:repositories).returns([repository])
+      @plan.products << product
+      @plan.save!
+      ::Katello::SyncPlan.remove_disabled_product(repository)
+      product.reload
+      assert_nil product.sync_plan
     end
   end
 end
