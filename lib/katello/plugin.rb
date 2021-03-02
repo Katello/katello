@@ -283,6 +283,7 @@ Foreman::Plugin.register :katello do
 
   # Extend Global Registration endpoint
   extend_allowed_registration_vars :activation_key
+  extend_allowed_registration_vars :force
 
   # Extend Global Registration UI
   extend_page 'registration_commands/_form' do |cx|

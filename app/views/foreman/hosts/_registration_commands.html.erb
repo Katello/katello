@@ -1,5 +1,18 @@
 <div class='form-group'>
   <label class='col-md-2 control-label'>
+    <%= _('Force') %>
+    <% help = _('Remove any `katello-ca-consumer` rpms before registration and run subscription-manager with `--force` argument.') %>
+    <a rel="popover" data-content="<%= help %>" data-trigger="focus" data-container="body" data-html="true" tabindex="-1">
+      <span class="pficon pficon-info "></span>
+    </a>
+  </label>
+  <div class='col-md-4'>
+    <%= check_box_tag 'force', 'true', params[:force] %>
+  </div>
+</div>
+
+<div class='form-group'>
+  <label class='col-md-2 control-label'>
     <%= _('Activation Key(s) *') %>
     <% help = _('Activation key(s) for Subscription Manager. Multiple keys should be comma-separated, for example: key1,key2,key3.') %>
     <a rel="popover" data-content="<%= help %>" data-trigger="focus" data-container="body" data-html="true" tabindex="-1">
