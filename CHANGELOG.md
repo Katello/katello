@@ -1,3 +1,10 @@
+# 3.17.3 (2021-03-02)
+
+## Bug Fixes
+
+### Tooling
+* Upgrade pulp-rpm to 3.9 for 3.17([#31902]https://projects.theforeman.org/issues/31902)
+
 # 3.17.2 (2021-02-09)
 
 ## Bug Fixes
