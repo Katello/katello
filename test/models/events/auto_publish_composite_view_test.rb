@@ -23,7 +23,7 @@ module Katello
       end
 
       def test_run_with_lock_error
-        ForemanTasks.expects(:async_task).raises(ForemanTasks::Lock::LockConflict.new(mock(name: 'foo'), []))
+        ForemanTasks.expects(:async_task).raises(ForemanTasks::Lock::LockConflict.new(mock, []))
 
         instance = AutoPublishCompositeView.new(composite_view.id) do |event|
           event.metadata = {}
