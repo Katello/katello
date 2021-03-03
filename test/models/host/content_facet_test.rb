@@ -421,12 +421,24 @@ module Katello
       assert_empty content_facet.bound_repositories
 
       content_facet.update_repositories_by_paths([
-                                                   "/pulp/repos/#{repo.relative_path}",
+                                                   "/pulp/content/#{repo.relative_path}",
                                                    "/pulp/deb/#{deb_repo.relative_path}",
                                                    "/pulp/unknown_content_type/Library/test/"
                                                  ])
 
       assert_equal content_facet.bound_repositories, [deb_repo, repo]
+    end
+
+    def test_save_bound_old_repo_path_by_paths
+      content_facet.content_view = repo.content_view
+      content_facet.lifecycle_environment = repo.environment
+      ForemanTasks.expects(:async_task).with(Actions::Katello::Host::GenerateApplicability, [host])
+      content_facet.expects(:propagate_yum_repos)
+      assert_empty content_facet.bound_repositories
+
+      content_facet.update_repositories_by_paths(["/pulp/repos/#{repo.relative_path}"])
+
+      assert_equal content_facet.bound_repositories, [repo]
     end
 
     def test_save_bound_repos_by_paths_same_path
