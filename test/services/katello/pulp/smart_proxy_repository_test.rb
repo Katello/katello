@@ -63,7 +63,7 @@ module Katello
           @tasks[:running2] = FactoryBot.create(:dynflow_task, :running)
 
           @tasks.each_value do |task|
-            ForemanTasks::Lock.link!(capsule_content.smart_proxy, task.id)
+            ForemanTasks::Link.link!(capsule_content.smart_proxy, task)
           end
 
           # create one more successful task that's not linked to the capsule
@@ -111,7 +111,7 @@ module Katello
 
         test "returns true when there's CV version published after last sync" do
           task = FactoryBot.create(:dynflow_task)
-          ForemanTasks::Lock.link!(capsule_content.smart_proxy, task.id)
+          ForemanTasks::Link.link!(capsule_content.smart_proxy, task)
 
           environment.content_view_environments.last.update(
               :updated_at => task.ended_at.change(:month => task.ended_at.month + 1)
@@ -124,7 +124,7 @@ module Katello
           cv_update_date = environment.content_view_environments.last.updated_at
 
           task = FactoryBot.create(:dynflow_task, :started_at => cv_update_date + 1.month)
-          ForemanTasks::Lock.link!(capsule_content.smart_proxy, task.id)
+          ForemanTasks::Link.link!(capsule_content.smart_proxy, task)
 
           refute capsule_content.smart_proxy.environment_syncable?(environment)
         end
