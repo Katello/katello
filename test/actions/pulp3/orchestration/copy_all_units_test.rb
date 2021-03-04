@@ -625,8 +625,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexPackageGroups, @repo_clone)
       @repo_clone.reload
 
-      refute_empty @repo.package_groups
-      assert_equal @repo_clone.package_groups, @repo.package_groups
+      assert_equal 'bird', @repo_clone.package_groups.first.name
     end
 
     def test_package_groups_as_a_filter_rule
@@ -647,22 +646,6 @@ module ::Actions::Pulp3
       refute_empty @repo.package_groups
       assert_equal ['bird'], @repo_clone.package_groups.pluck(:name)
       assert_equal ['penguin', 'duck'].sort, @repo_clone.rpms.pluck(:name).uniq.sort
-    end
-
-    def test_package_groups_copied_if_indicated_by_copied_packages
-      filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
-      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => 'cheetah')
-
-      module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
-      @repo_clone_original_version_href = @repo_clone.version_href
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
-                             @repo_clone, @primary, [@repo], filters: [filter, module_stream_filter])
-      @repo_clone.reload
-      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexPackageGroups, @repo_clone)
-      @repo_clone.reload
-
-      refute_empty @repo.package_groups
-      assert_equal ["mammal"], @repo_clone.package_groups.pluck(:name)
     end
   end
 
