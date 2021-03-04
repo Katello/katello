@@ -111,6 +111,10 @@ module Katello
         backend_data['rpm_license']
       end
 
+      def parse_filename(path)
+        File.split(path).last unless path.blank?
+      end
+
       def update_model(model)
         custom_json = {}
         custom_json['modular'] = backend_data['is_modular']
@@ -119,7 +123,7 @@ module Katello
           each { |field| custom_json[field] = backend_data[field] }
         custom_json['release_sortable'] = Util::Package.sortable_version(backend_data['release'])
         custom_json['version_sortable'] = Util::Package.sortable_version(backend_data['version'])
-        custom_json['filename'] = backend_data['location_href']
+        custom_json['filename'] = parse_filename(backend_data['location_href']) #location_href is the relative path of the rpm in the upstream repo
         custom_json['checksum'] = backend_data['pkgId']
         custom_json['sourcerpm'] = backend_data['rpm_sourcerpm']
         model.assign_attributes(custom_json)

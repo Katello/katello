@@ -518,8 +518,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexPackageGroups, @repo_clone)
       @repo_clone.reload
 
-      refute_empty @repo.package_groups
-      assert_equal @repo_clone.package_groups, @repo.package_groups
+      assert_equal 'bird', @repo_clone.package_groups.first.name
     end
 
     def test_package_groups_as_a_filter_rule
@@ -543,19 +542,30 @@ module ::Actions::Pulp3
     end
 
     def test_package_groups_copied_if_indicated_by_copied_packages
+      group = @repo.package_groups.find_by(:name => 'bird')
+
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
-      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => 'cheetah')
+      group.package_names.each do |pkg_name|
+        FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => pkg_name)
+      end
 
       module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
+      @repo.module_streams.each do |stream|
+        FactoryBot.create(:katello_content_view_module_stream_filter_rule,
+                          :filter => module_stream_filter,
+                          :module_stream => stream)
+      end
+
       @repo_clone_original_version_href = @repo_clone.version_href
       extended_repo_map = { [@repo] => { :dest_repo => @repo_clone, :filters => [filter, module_stream_filter] } }
+
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::MultiCopyAllUnits, extended_repo_map, @primary)
       @repo_clone.reload
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexPackageGroups, @repo_clone)
       @repo_clone.reload
 
       refute_empty @repo.package_groups
-      assert_equal ["mammal"], @repo_clone.package_groups.pluck(:name)
+      assert_equal ["bird"], @repo_clone.package_groups.pluck(:name)
     end
   end
 
