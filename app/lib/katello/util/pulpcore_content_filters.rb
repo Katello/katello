@@ -8,7 +8,7 @@ module Katello
       def filter_package_groups_by_pulp_href(package_groups, package_pulp_hrefs)
         rpms = Katello::Rpm.where(:pulp_id => package_pulp_hrefs)
         package_groups.reject do |package_group|
-          (package_group.package_names & rpms.pluck(:name)).empty?
+          (package_group.package_names - rpms.pluck(:name)).any?
         end
       end
 
