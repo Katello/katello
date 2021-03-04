@@ -18,14 +18,12 @@ const typeName = (type, errataByDate) => {
   return capitalize(type.replace('_', ' '));
 };
 
-const ContentType = ({ type, errataByDate }) => {
-  return (
-    <Fragment>
-      <span style={{ marginRight: '5px' }}><RepoIcon type={repoType(type)} /></span>
-      {typeName(type, errataByDate)}
-    </Fragment>
-  );
-};
+const ContentType = ({ type, errataByDate }) => (
+  <Fragment>
+    <span style={{ marginRight: '5px' }}><RepoIcon type={repoType(type)} /></span>
+    {typeName(type, errataByDate)}
+  </Fragment>
+);
 
 ContentType.propTypes = {
   type: PropTypes.string.isRequired,

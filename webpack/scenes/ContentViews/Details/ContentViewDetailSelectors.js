@@ -62,6 +62,6 @@ export const selectCVFilterPackageGroupStatus = (state, cvId, filterId) =>
   selectAPIStatus(state, cvFilterPackageGroupsKey(cvId, filterId)) || STATUS.PENDING;
 
 export const selectCVFilterPackageGroupError = (state, cvId, filterId) =>
-  selectAPIError(state, cvFilterPackageGroupsKey(cvId, filterId))
+  selectAPIError(state, cvFilterPackageGroupsKey(cvId, filterId));
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;

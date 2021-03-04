@@ -74,7 +74,7 @@ module Katello
       param :available_for, :string, :desc => N_("Return content that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported.")
       param :show_all_for, :bool,
             :desc => N_("Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported")
-      param :filterId, :integer, :desc => N_("Content View Filter id")
+      param :filterId, :integer, :desc => N_("Content View Filter id"), deprecated: true
       def index_relation
         if @version && params[:available_for] == "content_view_version" && self.respond_to?(:available_for_content_view_version)
           collection = self.available_for_content_view_version(@version)

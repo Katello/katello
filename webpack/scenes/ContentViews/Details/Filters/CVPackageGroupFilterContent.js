@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
-import { Tabs, Tab, TabTitleText, Grid, GridItem } from '@patternfly/react-core';
+import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -18,9 +18,12 @@ import { getCVFilterPackageGroups } from '../ContentViewDetailActions';
 
 
 const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
-  const response = useSelector(state => selectCVFilterPackageGroups(state, cvId, filterId), shallowEqual);
-  const status = useSelector(state => selectCVFilterPackageGroupStatus(state, cvId, filterId), shallowEqual);
-  const error = useSelector(state => selectCVFilterPackageGroupError(state, cvId, filterId), shallowEqual);
+  const response = useSelector(state =>
+    selectCVFilterPackageGroups(state, cvId, filterId), shallowEqual);
+  const status = useSelector(state =>
+    selectCVFilterPackageGroupStatus(state, cvId, filterId), shallowEqual);
+  const error = useSelector(state =>
+    selectCVFilterPackageGroupError(state, cvId, filterId), shallowEqual);
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
@@ -43,7 +46,7 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
         description,
         repository: {
           name: repositoryName,
-          product: { name: productName }
+          product: { name: productName },
         },
         filter_ids: filterIds,
       } = packageGroups;
@@ -51,8 +54,8 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
         { title: name },
         { title: productName },
         { title: repositoryName },
-        { title: description},
-        { title: <AddedStatusLabel added={filterIds.includes(parseInt(filterId))} /> },
+        { title: description },
+        { title: <AddedStatusLabel added={filterIds.includes(parseInt(filterId, 10))} /> },
       ];
 
       newRows.push({ cells });
@@ -71,15 +74,15 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
     }
   }, [JSON.stringify(response)]);
 
-  const emptyContentTitle = __("You currently don't have any package groups associated with this filter.");
-  const emptyContentBody = __("Add to this filter using the 'Add package group' button above.");
-  const emptySearchTitle = __('No matching package groups found');
+  const emptyContentTitle = __('No package groups have been added to this filter.');
+  const emptyContentBody = __("Add to this filter using the 'Add package group' button.");
+  const emptySearchTitle = __('No matching package groups found.');
   const emptySearchBody = __('Try changing your search settings.');
 
   return (
     <Tabs activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
-      <Tab eventKey={0} title={<TabTitleText>{__("Package groups")}</TabTitleText>}>
-        <div className={"tab-body-with-spacing"}>
+      <Tab eventKey={0} title={<TabTitleText>{__('Package groups')}</TabTitleText>}>
+        <div className="tab-body-with-spacing">
           <TableWrapper
             {...{
               rows,
@@ -104,6 +107,11 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
       </Tab>
     </Tabs>
   );
-}
+};
+
+CVPackageGroupFilterContent.propTypes = {
+  cvId: PropTypes.number.isRequired,
+  filterId: PropTypes.number.isRequired,
+};
 
 export default CVPackageGroupFilterContent;

@@ -1,18 +1,17 @@
 import React from 'react';
 import { Label } from '@patternfly/react-core';
 import { CheckCircleIcon } from '@patternfly/react-icons';
-// TODO move constants here and use in CV
-//import { ADDED, NOT_ADDED } from '../../ContentViewsConstants';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 const AddedStatusLabel = ({ added }) => {
   if (added) {
     return (
       <Label variant="outline" color="green" icon={<CheckCircleIcon />}>
-        {"Added"}
+        {__('Added')}
       </Label>
     );
   }
-  return "Not added";
+  return __('Not added');
 };
 
 export default AddedStatusLabel;

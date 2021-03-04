@@ -21,7 +21,7 @@ RepoIcon.propTypes = {
 };
 
 RepoIcon.defaultProps = {
-  type: "" // prevent errors if data isn't loaded yet
-}
+  type: '', // prevent errors if data isn't loaded yet
+};
 
 export default RepoIcon;
