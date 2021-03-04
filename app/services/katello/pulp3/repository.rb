@@ -1,6 +1,7 @@
 require "pulpcore_client"
 module Katello
   module Pulp3
+    # rubocop:disable Metrics/ClassLength
     class Repository
       include Katello::Util::HttpProxy
       attr_accessor :repo
