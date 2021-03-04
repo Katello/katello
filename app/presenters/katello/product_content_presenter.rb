@@ -9,21 +9,19 @@ module Katello
     end
 
     def override
+      return 'default' if overrides.blank?
       override = overrides.find { |pc| pc.content_label == content.label && pc.name == "enabled" }
       override.nil? ? 'default' : override.value
     end
 
     def enabled_content_override
+      return nil if overrides.blank?
       overrides.find { |pc| pc.content_label == content.label && pc.name == "enabled" }
     end
 
     def content_overrides
+      return [] if overrides.blank?
       overrides.select { |pc| pc.content_label == content.label }
-    end
-
-    def legacy_content_override
-      override = @overrides.find { |pc| pc.content_label == content.label && pc.name == "enabled" }
-      override.nil? ? 'default' : override.value
     end
   end
 end

@@ -8,6 +8,8 @@ module Katello
     before_action :set_editable_product_scope, only: [:enable, :disable]
     before_action :find_product
     before_action :custom_product?
+    before_action :find_authorized_activation_key, :only => [:index, :auto_complete_search]
+    before_action :find_authorized_host, :only => [:index, :auto_complete_search]
     before_action :find_organization
     before_action :find_product_content, :except => [:index, :auto_complete_search]
 
@@ -23,10 +25,18 @@ module Katello
     param :with_active_subscription, :bool, :required => false, :desc => N_("If true, only return repository sets that are associated with an active subscriptions")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param :with_custom, :bool, :required => false, :desc => N_("If true, return custom repository sets along with redhat repos")
+    param :activation_key_id, :number, :desc => N_("activation key identifier"), :required => false
+    param :host_id, :number, :desc => N_("Id of the host"), :required => false
+    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions. Relevant for Activation Keys only")
+    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the activation key's content view version. Relevant for Activation Keys only")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::ProductContent)
     def index
-      respond(:collection => scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent))
+      collection = scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent)
+      collection[:results] = ProductContentFinder.wrap_with_overrides(
+          product_contents: collection[:results],
+          overrides: @consumable&.content_overrides)
+      respond(:collection => collection)
     end
 
     api :GET, "/repository_sets/:id", N_("Get info about a repository set")
@@ -100,7 +110,7 @@ module Katello
     protected
 
     def resource_class
-      Katello::Content
+      Katello::ProductContent
     end
 
     def index_relation
@@ -122,7 +132,20 @@ module Katello
 
       relation = relation.where(Katello::Content.table_name => {:name => params[:name]}) if params[:name].present?
       relation = relation.redhat unless ::Foreman::Cast.to_bool(params[:with_custom])
-      relation
+      index_relation_with_consumable_overrides(relation)
+    end
+
+    def index_relation_with_consumable_overrides(relation)
+      return relation if @consumable.blank?
+
+      content_access_mode_all = ::Foreman::Cast.to_bool(params[:content_access_mode_all])
+      content_access_mode_env = ::Foreman::Cast.to_bool(params[:content_access_mode_env])
+
+      content_finder = ProductContentFinder.new(
+          :match_subscription => !content_access_mode_all,
+          :match_environment => content_access_mode_env,
+          :consumable => @consumable)
+      relation.merge(content_finder.product_content)
     end
 
     def find_product_content
@@ -153,7 +176,7 @@ module Katello
     end
 
     def find_organization
-      @organization = @product&.organization || super
+      @organization = @product&.organization || @consumable&.organization || super
     end
 
     def custom_product?
@@ -162,6 +185,19 @@ module Katello
 
     def substitutions
       params.permit(:basearch, :releasever).to_h
+    end
+
+    def find_authorized_activation_key
+      return unless params[:activation_key_id]
+      @activation_key = ActivationKey.readable.find_by(:id => params[:activation_key_id])
+      @consumable = @activation_key
+      throw_resource_not_found(name: 'activation_key', id: params[:activation_key_id]) if @activation_key.blank?
+    end
+
+    def find_authorized_host
+      return unless params[:host_id]
+      find_host_with_subscriptions(params[:host_id], :view_hosts)
+      @consumable = @host.subscription_facet
     end
   end
 end

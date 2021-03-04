@@ -6,7 +6,7 @@ module Katello
     before_action :find_environment, :only => [:index, :create, :update]
     before_action :find_optional_organization, :only => [:index, :create, :show]
     before_action :find_content_view, :only => [:index]
-    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :available_releases, :product_content,
+    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :available_releases,
                                                                :available_host_collections, :add_host_collections, :remove_host_collections,
                                                                :content_override, :add_subscriptions, :remove_subscriptions,
                                                                :subscriptions]
@@ -137,29 +137,6 @@ module Katello
         :results => @activation_key.available_releases,
         :total => @activation_key.available_releases.size,
         :subtotal => @activation_key.available_releases.size
-      }
-      respond_for_index :collection => response
-    end
-
-    api :GET, "/activation_keys/:id/product_content", N_("Show content available for an activation key")
-    param :id, String, :desc => N_("ID of the activation key"), :required => true
-    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions")
-    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the activation key's content view version")
-    def product_content
-      content_access_mode_all = ::Foreman::Cast.to_bool(params[:content_access_mode_all])
-      content_access_mode_env = ::Foreman::Cast.to_bool(params[:content_access_mode_env])
-
-      content_finder = ProductContentFinder.new(
-          :match_subscription => !content_access_mode_all,
-          :match_environment => content_access_mode_env,
-          :consumable => @activation_key
-      )
-
-      content = content_finder.presenter_with_overrides(@activation_key.content_overrides)
-      response = {
-        :results => content,
-        :total => content.size,
-        :subtotal => content.size
       }
       respond_for_index :collection => response
     end

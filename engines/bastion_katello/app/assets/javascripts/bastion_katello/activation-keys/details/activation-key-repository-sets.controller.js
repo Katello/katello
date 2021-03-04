@@ -6,28 +6,27 @@
  * @requires translate
  * @requires Nutupane
  * @requires ActivationKey
+ * @requires RepositorySet
  * @requires ContentOverrideHelper
  * @requires Notification
- * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the activation-key products action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySetsController',
-    ['$scope', 'translate', 'Nutupane', 'ActivationKey', 'ContentOverrideHelper', 'Notification', 'CurrentOrganization',
-    function ($scope, translate, Nutupane, ActivationKey, ContentOverrideHelper, Notification, CurrentOrganization) {
+    ['$scope', 'translate', 'Nutupane', 'ActivationKey', 'RepositorySet', 'ContentOverrideHelper', 'Notification',
+    function ($scope, translate, Nutupane, ActivationKey, RepositorySet, ContentOverrideHelper, Notification) {
         var params, saveContentOverride, success, error;
 
         params = {
-            id: $scope.$stateParams.activationKeyId,
-            'organization_id': CurrentOrganization,
-            'content_access_mode_all': $scope.simpleContentAccessEnabled
+            'activation_key_id': $scope.$stateParams.activationKeyId,
+            'content_access_mode_all': $scope.simpleContentAccessEnabled,
+            'sort_order': 'ASC',
+            'paged': true
         };
-
-        $scope.controllerName = 'katello_products';
-        $scope.nutupane = new Nutupane(ActivationKey, params, 'repositorySets');
+        $scope.nutupane = new Nutupane(RepositorySet, params);
+        $scope.nutupane.primaryOnly = true;
         $scope.table = $scope.nutupane.table;
-
         $scope.contentAccessModes = {
             contentAccessModeAll: $scope.simpleContentAccessEnabled,
             contentAccessModeEnv: false

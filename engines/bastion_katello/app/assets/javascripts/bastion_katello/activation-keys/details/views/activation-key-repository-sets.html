@@ -10,12 +10,6 @@
 </div>
 
 <div data-extend-template="layouts/partials/table.html">
-  <div data-block="search">
-    <input type="text" class="form-control" stop-event="click"
-           placeholder="{{ 'Filter...' | translate }}"
-           ng-model="repositorySetFilter"/>
-  </div>
-
   <div data-block="filters">
     <label class="checkbox-inline" title="{{ 'Show all Repository Sets in Organization' | translate }}" ng-if="!simpleContentAccessEnabled">
       <input type="checkbox" ng-model="contentAccessModes.contentAccessModeAll" ng-change="toggleFilters()"/>
@@ -26,7 +20,6 @@
       <span translate>Limit to Environment</span>
     </label>
   </div>
-
 
   <div data-block="list-actions">
     <div class="btn-group" select-action-dropdown>
@@ -73,13 +66,13 @@
 
       <tbody>
         <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="productRepoSet in table.rows | filter:repositorySetFilter" row-select="productRepoSet">
-          <td bst-table-cell>{{ productRepoSet.content.name }}</td>
+          <td bst-table-cell>{{ productRepoSet.name }}</td>
           <td bst-table-cell>
             <a ui-sref="product.info({productId: productRepoSet.product.id})">
               {{ productRepoSet.product.name }}
             </a>
           </td>
-          <td bst-table-cell>{{ productRepoSet.content.content_url }}</td>
+          <td bst-table-cell>{{ productRepoSet.contentUrl }}</td>
           <td bst-table-cell>{{ productRepoSet | repositorySetsEnabled }}</td>
         </tr>
       </tbody>

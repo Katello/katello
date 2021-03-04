@@ -6,30 +6,28 @@
  * @requires translate
  * @requires Nutupane
  * @requires HostSubscription
+ * @requires RepositorySet
  * @requires ContentOverrideHelper
  * @requires Notification
- * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the content-host products action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsController',
-    ['$scope', 'translate', 'Nutupane', 'HostSubscription', 'ContentOverrideHelper', 'Notification', 'CurrentOrganization',
-    function ($scope, translate, Nutupane, HostSubscription, ContentOverrideHelper, Notification, CurrentOrganization) {
+    ['$scope', 'translate', 'Nutupane', 'HostSubscription', 'RepositorySet', 'ContentOverrideHelper', 'Notification',
+    function ($scope, translate, Nutupane, HostSubscription, RepositorySet, ContentOverrideHelper, Notification) {
         var params, saveContentOverride, success, error;
 
         params = {
-            id: $scope.$stateParams.hostId,
-            'organization_id': CurrentOrganization,
-            enabled: true,
-            'full_result': true,
-            'include_available_content': true,
-            'content_access_mode_all': $scope.simpleContentAccessEnabled
+            'host_id': $scope.$stateParams.hostId,
+            'content_access_mode_all': $scope.simpleContentAccessEnabled,
+            'sort_order': 'ASC',
+            'paged': true
         };
 
-        $scope.controllerName = 'katello_products';
-        $scope.nutupane = new Nutupane(HostSubscription, params, 'repositorySets');
+        $scope.nutupane = new Nutupane(RepositorySet, params);
         $scope.table = $scope.nutupane.table;
+        $scope.nutupane.primaryOnly = true;
 
         $scope.contentAccessModes = {
             contentAccessModeAll: $scope.simpleContentAccessEnabled,

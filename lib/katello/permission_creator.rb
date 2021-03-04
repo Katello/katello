@@ -23,7 +23,8 @@ module Katello
                          {
                            'katello/activation_keys' => [:all, :index],
                            'katello/api/v2/activation_keys' => [:index, :show, :available_host_collections, :available_releases,
-                                                                :product_content, :auto_complete_search]
+                                                                :product_content, :auto_complete_search],
+                           'katello/api/v2/repository_sets' => [:index, :auto_complete_search]
                          },
                          :resource_type => 'Katello::ActivationKey',
                          :finder_scope => :readable

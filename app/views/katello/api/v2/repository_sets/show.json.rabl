@@ -25,7 +25,29 @@ if @resource.product
   end
 end
 
+# For backwards compatibility with the original
+# ActivationKeys#product_contents
+
+child :content => :content do
+  attributes :id, :name, :label, :vendor, :content_type, :content_url, :gpg_url
+end
+
 child @resource.repositories => :repositories do
   attributes :id, :name, :arch
   attributes :minor => :releasever
+end
+
+node :override do |pc|
+  pc.override
+end
+
+node :overrides do |pc|
+  pc.content_overrides.map do |override|
+    {:name => override.name, :value => override.computed_value}
+  end
+end
+
+node :enabled_content_override do |pc|
+  override = pc.enabled_content_override
+  override&.computed_value
 end

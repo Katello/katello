@@ -36,6 +36,8 @@ module Katello
       DMI_UUID_ALLOWED_DUPS = ['', 'Not Settable', 'Not Present'].freeze
       DMI_UUID_OVERRIDE_PARAM = 'dmi_uuid_override'.freeze
 
+      delegate :content_overrides, to: :candlepin_consumer, allow_nil: true
+
       def host_type
         host_facts = self.host.facts
         host_facts["virt::host_type"] || host_facts["hypervisor::type"]

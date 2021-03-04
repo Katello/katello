@@ -174,12 +174,8 @@ module Katello
         end
 
         def enabled_product_content_for(roots)
-          return [] if roots.blank?
-          content_ids = roots.pluck(:content_id)
-
-          filtered_product_content do |pc|
-            content_ids.include?(pc.content.cp_content_id) && pc.product.enabled?
-          end
+          Katello::ProductContent.joins(:content).where(:product_id => self.products.enabled,
+                             "#{::Katello::Content.table_name}.cp_content_id" => roots.select(:content_id))
         end
 
         def enabled_product_content

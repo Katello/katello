@@ -18,7 +18,7 @@ module Katello
       if match_environment
         environment = consumable.lifecycle_environment
         view = consumable.content_view
-        return [] unless environment && view
+        return ProductContent.none unless environment && view
         version = ContentViewVersion.in_environment(environment).where(:content_view_id => view).first
       end
 
@@ -28,6 +28,10 @@ module Katello
       roots = roots.in_content_view_version(version) if version
 
       consumable.organization.enabled_product_content_for(roots)
+    end
+
+    def self.wrap_with_overrides(product_contents:, overrides:)
+      product_contents.map { |pc| ProductContentPresenter.new(pc, overrides) }
     end
 
     def presenter_with_overrides(overrides)
