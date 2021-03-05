@@ -225,11 +225,38 @@ module Katello
       end
 
       def refresh_distributions
-        dist_ref = distribution_reference
-        if dist_ref
-          update_distribution
+        if repo.docker?
+          dist = lookup_distributions(base_path: repo.container_repository_name).first
         else
+          dist = lookup_distributions(base_path: repo.relative_path).first
+        end
+
+        # First check if the distribution exists
+        if dist
+          dist_ref = distribution_reference
+          # If we have a DistributionReference, update the distribution
+          if dist_ref
+            return update_distribution
+          # If no DistributionReference, create a DistributionReference and return
+          else
+            save_distribution_references([dist.pulp_href])
+            return []
+          end
+        end
+
+        # So far, it looks like there is no distribution. Try to create one.
+        begin
           create_distribution(relative_path)
+        rescue api.class.client_module::ApiError => e
+          # Now it seems there is a distribution. Fetch it and save the reference.
+          if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
+              e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
+            dist = lookup_distributions(base_path: repo.relative_path).first
+            save_distribution_references([dist.pulp_href])
+            return []
+          else
+            raise e
+          end
         end
       end
 
@@ -279,7 +306,8 @@ module Katello
           pulp3_distribution_data = api.get_distribution(href)
           path, content_guard_href = pulp3_distribution_data&.base_path, pulp3_distribution_data&.content_guard
           unless distribution_reference
-            DistributionReference.create!(path: path, href: href, repository_id: repo.id, content_guard_href: content_guard_href)
+            # Ensure that duplicates won't be created in the case of a race condition
+            DistributionReference.where(path: path, href: href, repository_id: repo.id, content_guard_href: content_guard_href).first_or_create!
           end
         end
       end
