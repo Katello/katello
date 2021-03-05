@@ -1,3 +1,41 @@
+# 3.18.2 (2021-03-05)
+
+## Bug Fixes
+
+### Repositories
+ * Unable to create repositories in Pulp 3 mode with Firefox as the browser - username : This field may not be blank. ([#31949](https://projects.theforeman.org/issues/31949), [efc22f61](https://github.com/Katello/katello.git/commit/efc22f6156dce605006282fa4a511210be08af3d))
+ * katello_yum_metadata_files record has migrated_pulp3_href NULL value ([#31919](https://projects.theforeman.org/issues/31919))
+ * support skip_corrupted=True for pulp 2to3 migration ([#31636](https://projects.theforeman.org/issues/31636))
+ * support pulp3 migration reset flag to let users 'restart' from scratch ([#31336](https://projects.theforeman.org/issues/31336))
+ * Katello Pulp 3 Applicability erroneously shows non-modular RPMs upgradable from modular RPMs with same name but older version ([#31270](https://projects.theforeman.org/issues/31270), [56fb9e52](https://github.com/Katello/katello.git/commit/56fb9e52dba2ba45f5d3e6342572bec531496ab5))
+
+### Tooling
+ * upgrade 3.18 to pulp migration plugin 0.7 ([#31863](https://projects.theforeman.org/issues/31863), [ce4c229a](https://github.com/Katello/katello.git/commit/ce4c229a53c32a218bcf1e82475a63c645439aad))
+ * support migration 'reset' ([#31654](https://projects.theforeman.org/issues/31654))
+ * pulp migration stats says 2x /var/lib/pulp/published, but should be 3x ([#31528](https://projects.theforeman.org/issues/31528), [a147ee2b](https://github.com/Katello/katello.git/commit/a147ee2b2479d5115964815c6f3a917929c534e4))
+ * remove 'load' from rake tasks ([#31424](https://projects.theforeman.org/issues/31424), [3b1fd352](https://github.com/Katello/katello.git/commit/3b1fd352a2b9a481772355990d5632d58b0899e9))
+
+### Subscriptions
+ * WebUI not getting updated when you modify entitlements quantity like add or less in subscriptions ([#31854](https://projects.theforeman.org/issues/31854), [854fe802](https://github.com/Katello/katello.git/commit/854fe802d7d536a9925d8cf191da2b0a7b25cc0c))
+
+### Content Views
+ * User with viewer role can see "Create Content View" button ([#31839](https://projects.theforeman.org/issues/31839), [50821807](https://github.com/Katello/katello.git/commit/508218070026e8a1a2ea7993d80f105f9e136ced))
+ * hammer content-view filter delete fails ([#31775](https://projects.theforeman.org/issues/31775), [72d67aa9](https://github.com/Katello/katello.git/commit/72d67aa9872da7415e3d3166cbadbaccd590030d))
+
+### Hosts
+ * Global Registration: Unable to re-register with satellite using the Curl Command ([#31810](https://projects.theforeman.org/issues/31810))
+ * System Purpose bulk setting is not reflected on host ([#31591](https://projects.theforeman.org/issues/31591), [f15e3021](https://github.com/Katello/katello.git/commit/f15e30213887249ba25b413abd6e71f1a27a325d))
+ * Update Host Bulk Actions SystemPurpose UI ([#31580](https://projects.theforeman.org/issues/31580), [a2451014](https://github.com/Katello/katello.git/commit/a2451014fa9e1a2b5b1d5a2cc8b36f60e19c89a3))
+
+### Hammer
+ * hammer content-export list not searching by content view  id ([#31683](https://projects.theforeman.org/issues/31683), [63d3c072](https://github.com/Katello/hammer-cli-katello.git/commit/63d3c07256868cba45f1f1701f810736edcb205d))
+
+### Modularity
+ * [Foreman 2.3] [zh_CN/ja_JP] Unlocalized string on web element, Search button on "Content -> Module Streams" page needs to be marked as translated. ([#31353](https://projects.theforeman.org/issues/31353), [7761fcbd](https://github.com/Katello/katello.git/commit/7761fcbd677da67c5b5b3686b44725b63559ba67))
+
+### Sync Plans
+ * User drop down menu(upper right corner) under sync status is whited out ([#31320](https://projects.theforeman.org/issues/31320), [a09cb408](https://github.com/Katello/katello.git/commit/a09cb408b0f0622f1b782cbdbdd3569fb303ae0e))
+
 # 3.18.1 (2021-01-05)
 
 ## Bug Fixes
