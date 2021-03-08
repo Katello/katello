@@ -15,7 +15,6 @@ import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
 import CVPackageGroupFilterContent from './CVPackageGroupFilterContent';
 
 const ContentViewFilterDetails = () => {
-  // TODO remove default params for testing
   const { id: cvId } = useParams();
   const { params: { subContentId: filterId } } = useUrlParamsWithHash();
   const dispatch = useDispatch();
@@ -37,7 +36,7 @@ const ContentViewFilterDetails = () => {
 
   return (
     <Grid hasGutter>
-      { loaded && details ?
+      { loaded && (Object.keys(details).length > 0) ?
         <ContentViewFilterDetailsHeader details={details} /> :
         <div>Loading...</div>
       }

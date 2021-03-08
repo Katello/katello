@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Split, SplitItem, GridItem, TextContent, Text, TextVariants, Label } from '@patternfly/react-core';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 import RepoIcon from '../Repositories/RepoIcon';
 import { repoType, capitalize } from '../../../../utils/helpers';
@@ -22,7 +23,7 @@ const ContentViewFilterDetailsHeader = ({ details }) => {
       <GridItem span={10}>
         <Split hasGutter>
           <SplitItem>
-            <Label color="blue">{inclusion ? 'Include' : 'Exclude' }</Label>
+            <Label color="blue">{inclusion ? __('Include') : __('Exclude') }</Label>
           </SplitItem>
           <SplitItem>
             <RepoIcon type={repositoryType} />
@@ -45,10 +46,10 @@ const ContentViewFilterDetailsHeader = ({ details }) => {
 
 ContentViewFilterDetailsHeader.propTypes = {
   details: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    inclusion: PropTypes.bool.isRequired,
-    description: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    type: PropTypes.string,
+    inclusion: PropTypes.bool,
+    description: PropTypes.string,
   }).isRequired,
 };
 

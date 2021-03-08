@@ -110,8 +110,8 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
 };
 
 CVPackageGroupFilterContent.propTypes = {
-  cvId: PropTypes.number.isRequired,
-  filterId: PropTypes.number.isRequired,
+  cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 export default CVPackageGroupFilterContent;

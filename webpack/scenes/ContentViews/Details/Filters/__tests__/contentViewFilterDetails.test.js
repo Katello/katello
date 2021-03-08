@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
 import { cvFilterDetailsKey } from '../../../ContentViewsConstants';
@@ -19,7 +20,13 @@ const packageGroupsPath = api.getApiUrl('/package_groups');
 const autocompleteUrl = '/package_groups/auto_complete_search';
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 1),
+  routerParams: {
+    initialEntries: [{ hash: '#filters?subContentId=1', pathname: '/labs/content_views/2' }],
+    initialIndex: 1,
+  },
 };
+
+const withCVRoute = component => <Route path="/labs/content_views/:id">{component}</Route>;
 
 let searchDelayScope;
 let autoSearchScope;
@@ -48,7 +55,7 @@ test('Can show filter details and package groups on page load', async (done) => 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText } =
-    renderWithRedux(<ContentViewFilterDetails cvId={1} />, renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
@@ -85,7 +92,7 @@ test('Can search for package groups in package group filter', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(<ContentViewFilterDetails cvId={1} />, renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
 
   // Basic results showing
   await patientlyWaitFor(() => {
