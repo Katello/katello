@@ -54,7 +54,7 @@ module Actions
           proxy_details = {}
           if (proxy = ::HttpProxy.default_global_content_proxy)
             uri = URI(proxy.url)
-            proxy_details[:proxy_host] = "#{uri.host}#{uri.path}"
+            proxy_details[:proxy_host] = "#{uri.scheme}://#{uri.host}#{uri.path}"
             proxy_details[:proxy_port] = uri.port
             proxy_details[:proxy_user] = proxy.username
             proxy_details[:proxy_password] = proxy.password
