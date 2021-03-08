@@ -20,8 +20,8 @@ import {
 import { ADDED, NOT_ADDED, ALL_STATUSES } from '../../ContentViewsConstants';
 import ContentCounts from './ContentCounts';
 import LastSync from './LastSync';
-import RepoAddedStatus from './RepoAddedStatus';
 import RepoIcon from './RepoIcon';
+import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import SelectableDropdown from '../../../../components/SelectableDropdown';
 import { capitalize } from '../../../../utils/helpers';
 
@@ -81,7 +81,7 @@ const ContentViewRepositories = ({ cvId }) => {
         { title: <LastSync {...{ lastSyncWords, lastSync }} /> },
         { title: <ContentCounts {...{ counts, productId }} repoId={id} /> },
         {
-          title: <RepoAddedStatus added={addedToCV || statusSelected === ADDED} />,
+          title: <AddedStatusLabel added={addedToCV || statusSelected === ADDED} />,
         },
       ];
 

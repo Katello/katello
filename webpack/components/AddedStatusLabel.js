@@ -1,17 +1,17 @@
 import React from 'react';
 import { Label } from '@patternfly/react-core';
 import { CheckCircleIcon } from '@patternfly/react-icons';
-import { ADDED, NOT_ADDED } from '../../ContentViewsConstants';
+import { translate as __ } from 'foremanReact/common/I18n';
 
-const RepoAddedStatus = ({ added }) => {
+const AddedStatusLabel = ({ added }) => {
   if (added) {
     return (
       <Label variant="outline" color="green" icon={<CheckCircleIcon />}>
-        {ADDED}
+        {__('Added')}
       </Label>
     );
   }
-  return NOT_ADDED;
+  return __('Not added');
 };
 
-export default RepoAddedStatus;
+export default AddedStatusLabel;
