@@ -3,7 +3,9 @@ module Katello
     attr_reader :found, :crawled, :to_follow
 
     # rubocop:disable Metrics/ParameterLists
-    def initialize(url, content_type = 'yum', upstream_username = nil, upstream_password = nil, search = '*', proxy = {}, crawled = [], found = [], to_follow = [])
+    def initialize(url, content_type = 'yum', upstream_username = nil,
+      upstream_password = nil, search = '*', proxy = {}, crawled = [],
+      found = [], to_follow = [])
       @uri = uri(url)
       @content_type = content_type
       @upstream_username = upstream_username.empty? ? nil : upstream_username
@@ -45,6 +47,18 @@ module Katello
       }
       params[:user] = @upstream_username unless @upstream_username.empty?
       params[:password] = @upstream_password unless @upstream_password.empty?
+
+      RestClient.proxy = nil
+
+      if @proxy && @proxy[:proxy_host]
+        proxy_uri = URI(@proxy[:proxy_host])
+        proxy_uri.user = @proxy[:proxy_user] if @proxy[:proxy_user]
+        proxy_uri.password = @proxy[:proxy_password] if @proxy[:proxy_password]
+        proxy_uri.port = @proxy[:proxy_port] if @proxy[:proxy_port]
+
+        RestClient.proxy = proxy_uri.to_s
+      end
+
       begin
         results = RestClient.get(@uri.to_s + "v1/search?q=#{@search}", params)
         JSON.parse(results)['results'].each do |result|
