@@ -11,6 +11,7 @@ namespace :katello do
     wait = ::Foreman::Cast.to_bool(ENV['wait'] || 'true')
     preserve_output = ::Foreman::Cast.to_bool(ENV['preserve_output'])
 
+    User.current = User.anonymous_api_admin
     task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration, SmartProxy.pulp_primary, reimport_all: reimport_all)
 
     if wait
