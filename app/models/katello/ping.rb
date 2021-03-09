@@ -23,26 +23,18 @@ module Katello
         services
       end
 
-      # Calls "status" services in all backend engines.
       def ping(services: nil, capsule_id: nil)
-        services ||= self.services(capsule_id)
-        result = {}
-        services.each { |service| result[service] = {} }
+        ping_services_for_capsule(services, capsule_id)
+      end
 
-        ping_pulp3_without_auth(result[:pulp3], capsule_id) if result.include?(:pulp3)
-        ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
-        ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
+      def ping!(services: nil, capsule_id: nil)
+        result = ping_services_for_capsule(services, capsule_id)
 
-        ping_pulp_with_auth(result[:pulp_auth], result[:pulp][:status]) if result.include?(:pulp_auth)
-        ping_candlepin_with_auth(result[:candlepin_auth]) if result.include?(:candlepin_auth)
-        ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
-        ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
-        ping_candlepin_events(result[:candlepin_events]) if result.include?(:candlepin_events)
-        ping_katello_agent(result[:katello_agent]) if result.include?(:katello_agent)
+        if result[:status] != OK_RETURN_CODE
+          failed_names = failed_services(result).keys
+          fail("The following services have not been started or are reporting errors: #{failed_names.join(', ')}")
+        end
 
-        # set overall status result code
-        result = {:services => result}
-        result[:status] = result[:services].each_value.any? { |v| v[:status] == FAIL_RETURN_CODE } ? FAIL_RETURN_CODE : OK_RETURN_CODE
         result
       end
 
@@ -228,6 +220,34 @@ module Katello
       end
 
       private
+
+      def failed_services(result)
+        result[:services].reject do |_name, details|
+          details[:status] != OK_RETURN_CODE
+        end
+      end
+
+      def ping_services_for_capsule(services, capsule_id)
+        services ||= self.services(capsule_id)
+        result = {}
+        services.each { |service| result[service] = {} }
+
+        ping_pulp3_without_auth(result[:pulp3], capsule_id) if result.include?(:pulp3)
+        ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
+        ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
+
+        ping_pulp_with_auth(result[:pulp_auth], result[:pulp][:status]) if result.include?(:pulp_auth)
+        ping_candlepin_with_auth(result[:candlepin_auth]) if result.include?(:candlepin_auth)
+        ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
+        ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
+        ping_candlepin_events(result[:candlepin_events]) if result.include?(:candlepin_events)
+        ping_katello_agent(result[:katello_agent]) if result.include?(:katello_agent)
+
+        # set overall status result code
+        result = {:services => result}
+        result[:status] = result[:services].each_value.any? { |v| v[:status] == FAIL_RETURN_CODE } ? FAIL_RETURN_CODE : OK_RETURN_CODE
+        result
+      end
 
       def fetch_proxy(capsule_id)
         capsule_id ? SmartProxy.unscoped.find(capsule_id) : SmartProxy.pulp_primary
