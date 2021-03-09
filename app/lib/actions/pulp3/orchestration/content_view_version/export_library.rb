@@ -18,7 +18,7 @@ module Actions
 
             sequence do
               publish_action = plan_action(::Actions::Katello::ContentView::Publish, content_view, '')
-              export_action = plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Export,
+              export_action = plan_action(Actions::Katello::ContentViewVersion::Export,
                                           content_view_version: publish_action.version,
                                           destination_server: destination_server,
                                           chunk_size: chunk_size,

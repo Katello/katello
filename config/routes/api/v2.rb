@@ -118,7 +118,6 @@ Katello::Engine.routes.draw do
             post :version
             post :library
             get :index
-            get :api_status
           end
         end
 

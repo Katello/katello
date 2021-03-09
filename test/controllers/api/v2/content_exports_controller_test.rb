@@ -20,20 +20,6 @@ module Katello
       permissions
     end
 
-    def test_export_api_status_true_for_pulp3
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-      get :api_status
-      assert_response :success
-      assert JSON.parse(@response.body)["api_usable"]
-    end
-
-    def test_export_api_status_false_for_pulp2
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
-      get :api_status
-      assert_response :success
-      refute JSON.parse(@response.body)["api_usable"]
-    end
-
     def test_index_protected
       allowed_perms = [@export_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
@@ -43,27 +29,7 @@ module Katello
       end
     end
 
-    def test_export_api_status_protected
-      allowed_perms = [@export_permission, @view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:api_status, allowed_perms, denied_perms) do
-        get :api_status
-      end
-    end
-
-    def test_export_with_pulp2repo_fail
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
-
-      version = @library_dev_staging_view.versions.first
-      post :version, params: { :id => version.id, :iso_mb_size => 5, :export_to_iso => "foo"}
-      response = JSON.parse(@response.body)['displayMessage']
-      assert_equal response, 'Invalid usage for Pulp 2 repositories. Use export for Yum repositories'
-      assert_response :bad_request
-    end
-
     def test_version_protected
-      @controller.stubs(:fail_if_not_pulp3)
       allowed_perms = [@export_permission]
       denied_perms = [@create_permission, @update_permission,
                       @destroy_permission, @view_permission]
@@ -75,7 +41,6 @@ module Katello
     end
 
     def test_library_protected
-      @controller.stubs(:fail_if_not_pulp3)
       allowed_perms = [{name: @export_library_permission, :resource_type => "Organization"}]
       denied_perms = [@create_permission, @update_permission,
                       @destroy_permission, @view_permission, @export_permission]
@@ -87,11 +52,10 @@ module Katello
     end
 
     def test_version
-      @controller.stubs(:fail_if_not_pulp3)
       chunk_size_mb = 100
       destination = "example.com"
       export_task = @controller.expects(:async_task).with do |action_class, options|
-        assert_equal ::Actions::Pulp3::Orchestration::ContentViewVersion::Export, action_class
+        assert_equal Actions::Katello::ContentViewVersion::Export, action_class
         assert_equal options[:content_view_version].id, @library_view_version.id
         assert_equal options[:destination_server], destination
         assert_equal options[:chunk_size], chunk_size_mb
@@ -108,7 +72,6 @@ module Katello
     end
 
     def test_library
-      @controller.stubs(:fail_if_not_pulp3)
       org = get_organization
       chunk_size_mb = 100
       destination = "example.com"

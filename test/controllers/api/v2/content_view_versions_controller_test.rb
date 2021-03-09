@@ -1,6 +1,5 @@
 require "katello_test_helper"
 
-# rubocop:disable Metrics/ClassLength
 module Katello
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
@@ -125,64 +124,6 @@ module Katello
       get :show, params: { :id => @library_dev_staging_view.versions.first.id }
       assert_response :success
       assert_template 'api/v2/content_view_versions/show'
-    end
-
-    def test_export_assert_invalid_params
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
-
-      version = @library_dev_staging_view.versions.first
-      post :export, params: { :id => version.id, :chunk_size_mb => 5, :destination_server => "foo"}
-      assert_response :bad_request
-    end
-
-    def test_exportlegacy_with_pulp3_fail
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3))
-
-      version = @library_dev_staging_view.versions.first
-      post :export, params: { :id => version.id, :iso_mb_size => 5, :export_to_iso => "foo"}
-      response = JSON.parse(@response.body)['displayMessage']
-      assert_equal response, 'Invalid usage for Pulp 3 repositories. Use hammer content-export for Yum repositories'
-      assert_response :bad_request
-    end
-
-    def test_export_protected
-      allowed_perms = [@export_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission, @view_permission]
-
-      assert_protected_action(:export, allowed_perms, denied_perms) do
-        post :export, params: { :id => @library_dev_staging_view.versions.first.id }
-      end
-    end
-
-    def test_export
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
-      version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Export,
-                                            version, false, nil, nil).returns({})
-      post :export, params: { :id => version.id }
-      assert_response :success
-    end
-
-    def test_export_fails_on_demand
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
-      ContentView.any_instance.stubs(:on_demand_repositories).returns([katello_repositories(:fedora_17_x86_64)])
-      version = @library_dev_staging_view.versions.first
-      post :export, params: { :id => version.id }
-      assert_response :bad_request
-    end
-
-    def test_export_bad_date
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
-      version = @library_dev_staging_view.versions.first
-      post :export, params: { :id => version.id, :since => "a really bad date" }
-      assert_response 400
-    end
-
-    def test_export_size_sans_iso_param
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
-      version = @library_dev_staging_view.versions.first
-      post :export, params: { :id => version.id, :iso_mb_size => 5 }
-      assert_response 400
     end
 
     def test_show_protected

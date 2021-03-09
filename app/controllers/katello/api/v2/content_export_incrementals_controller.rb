@@ -1,6 +1,5 @@
 module Katello
   class Api::V2::ContentExportIncrementalsController < Api::V2::ApiController
-    before_action :fail_if_not_pulp3, :only => [:version, :library]
     before_action :find_exportable_organization, :only => [:library]
     before_action :find_exportable_content_view_version, :only => [:version]
     before_action :find_library_export_view, :only => [:library]
@@ -16,7 +15,7 @@ module Katello
     param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this version"\
                                                          " are unexportable. False by default."), :required => false
     def version
-      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export,
+      tasks = async_task(Actions::Katello::ContentViewVersion::Export,
                           content_view_version: @version,
                           destination_server: params[:destination_server],
                           chunk_size: params[:chunk_size_mb],
@@ -86,12 +85,6 @@ module Katello
       find_organization
       unless @organization.can_export_library_content?
         throw_resource_not_found(name: 'organization', id: params[:organization_id])
-      end
-    end
-
-    def fail_if_not_pulp3
-      unless SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
-        fail HttpErrors::BadRequest, _("Invalid usage for Pulp 2 repositories. Use export for Yum repositories")
       end
     end
   end

@@ -1,6 +1,5 @@
 module Katello
   class Api::V2::ContentExportsController < Api::V2::ApiController
-    before_action :fail_if_not_pulp3, :only => [:version, :library]
     before_action :find_exportable_organization, :only => [:library]
     before_action :find_exportable_content_view_version, :only => [:version]
 
@@ -27,12 +26,6 @@ module Katello
                                        :collection => scoped_search(history, 'id', 'asc', resource_class: ContentViewVersionExportHistory))
     end
 
-    api :GET, "/content_exports/api_status", N_("true if the export api is pulp3 ready and usable. This API is intended for use by hammer-cli only.")
-    def api_status
-      ::Foreman::Deprecation.api_deprecation_warning("/content_exports/api_status is being deprecated and will be removed in Katello 4.1.")
-      render json: { api_usable: SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE) }, status: :ok
-    end
-
     api :POST, "/content_exports/version", N_("Performs a full-export of a content view version.")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :destination_server, String, :desc => N_("Destination Server name"), :required => false
@@ -41,7 +34,7 @@ module Katello
     param :fail_on_missing_content, :bool, :desc => N_("Fails if any of the repositories belonging to this version"\
                                                          " are unexportable. False by default."), :required => false
     def version
-      tasks = async_task(::Actions::Pulp3::Orchestration::ContentViewVersion::Export,
+      tasks = async_task(::Actions::Katello::ContentViewVersion::Export,
                           content_view_version: @version,
                           destination_server: params[:destination_server],
                           chunk_size: params[:chunk_size_mb],
@@ -76,12 +69,6 @@ module Katello
       find_organization
       unless @organization.can_export_library_content?
         throw_resource_not_found(name: 'organization', id: params[:organization_id])
-      end
-    end
-
-    def fail_if_not_pulp3
-      unless SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
-        fail HttpErrors::BadRequest, _("Invalid usage for Pulp 2 repositories. Use export for Yum repositories")
       end
     end
   end

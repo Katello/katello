@@ -21,7 +21,7 @@ module Katello
       param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
       param :auto_publish, :bool, :desc => N_("Enable/Disable auto publish of composite view")
       param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
-      param :import_only, :bool, :desc => N_("Designate this Content View for importing from upstream servers only. Defaults to false") if pulp3_yum?
+      param :import_only, :bool, :desc => N_("Designate this Content View for importing from upstream servers only. Defaults to false")
     end
 
     def filtered_associations
@@ -29,10 +29,6 @@ module Katello
         :component_ids => Katello::ContentViewVersion,
         :repository_ids => Katello::Repository
       }
-    end
-
-    def self.pulp3_yum?
-      SmartProxy.pulp_primary&.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE)
     end
 
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
@@ -72,10 +68,6 @@ module Katello
     param :composite, :bool, :desc => N_("Composite content view")
     param_group :content_view
     def create
-      if ::Foreman::Cast.to_bool(params[:content_view][:import_only])
-        fail HttpErrors::BadRequest, _("Import-only content views will be available in a future version.") unless self.class.pulp3_yum?
-      end
-
       @content_view = ContentView.create!(view_params) do |view|
         view.organization = @organization
         view.label ||= labelize_params(params[:content_view])
