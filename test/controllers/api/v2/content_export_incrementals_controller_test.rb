@@ -20,18 +20,7 @@ module Katello
       permissions
     end
 
-    def test_export_with_pulp2repo_fail
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
-
-      version = @library_dev_staging_view.versions.first
-      post :version, params: { :id => version.id, :iso_mb_size => 5, :export_to_iso => "foo"}
-      response = JSON.parse(@response.body)['displayMessage']
-      assert_equal response, 'Invalid usage for Pulp 2 repositories. Use export for Yum repositories'
-      assert_response :bad_request
-    end
-
     def test_version_protected
-      @controller.stubs(:fail_if_not_pulp3)
       @controller.stubs(:find_library_export_view)
       @controller.stubs(:find_history)
 
@@ -46,7 +35,6 @@ module Katello
     end
 
     def test_library_protected
-      @controller.stubs(:fail_if_not_pulp3)
       @controller.stubs(:find_library_export_view)
       @controller.stubs(:find_history)
 
@@ -61,7 +49,6 @@ module Katello
     end
 
     def test_version_recent_history
-      @controller.stubs(:fail_if_not_pulp3)
       chunk_size_mb = 100
       destination = "example.com"
       history = {foo: 100}
@@ -70,7 +57,7 @@ module Katello
                                            destination_server: destination)
                                      .returns(history)
       export_task = @controller.expects(:async_task).with do |action_class, options|
-        assert_equal ::Actions::Pulp3::Orchestration::ContentViewVersion::Export, action_class
+        assert_equal Actions::Katello::ContentViewVersion::Export, action_class
         assert_equal options[:content_view_version].id, @library_view_version.id
         assert_equal options[:destination_server], destination
         assert_equal options[:chunk_size], chunk_size_mb
@@ -85,7 +72,6 @@ module Katello
     end
 
     def test_version_recent_history_with_history_id
-      @controller.stubs(:fail_if_not_pulp3)
       chunk_size_mb = 100
       destination = "example.com"
       history = {id: 100}
@@ -94,7 +80,7 @@ module Katello
                                      .returns(history)
 
       export_task = @controller.expects(:async_task).with do |action_class, options|
-        assert_equal ::Actions::Pulp3::Orchestration::ContentViewVersion::Export, action_class
+        assert_equal Actions::Katello::ContentViewVersion::Export, action_class
         assert_equal options[:content_view_version].id, @library_view_version.id
         assert_equal options[:destination_server], destination
         assert_equal options[:chunk_size], chunk_size_mb
@@ -111,7 +97,6 @@ module Katello
     end
 
     def test_version_not_found_on_incremental
-      @controller.stubs(:fail_if_not_pulp3)
       destination = "example.com"
 
       ContentViewVersionExportHistory.expects(:latest)
@@ -128,7 +113,6 @@ module Katello
     end
 
     def test_library
-      @controller.stubs(:fail_if_not_pulp3)
       org = get_organization
       chunk_size_mb = 100
       destination = "example.com"
@@ -163,7 +147,6 @@ module Katello
     end
 
     def test_library_bad_request_on_incremental
-      @controller.stubs(:fail_if_not_pulp3)
       org = get_organization
       post :library, params: { organization_id: org.id,
                                from_latest_increment: true
@@ -174,7 +157,6 @@ module Katello
     end
 
     def test_library_not_found_on_incremental
-      @controller.stubs(:fail_if_not_pulp3)
       org = get_organization
       post :library, params: { organization_id: org.id,
                                from_latest_increment: true }

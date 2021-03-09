@@ -38,7 +38,7 @@ module ::Actions::Pulp3::ContentView
         assert_equal content_view.repository_ids.sort, immediate_repo_ids_in_library.sort
       end
 
-      assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::ContentViewVersion::Export) do |**options|
+      assert_action_planned_with(action, Actions::Katello::ContentViewVersion::Export) do |**options|
         assert_equal version, options[:content_view_version]
         assert_equal destination_server, options[:destination_server]
       end
