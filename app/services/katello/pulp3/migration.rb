@@ -132,7 +132,7 @@ module Katello
         plan = { plugins: plugins }
 
         # TODO: Don't provide the plan as a string once this is resolved: https://pulp.plan.io/issues/8211
-        migration_plan_api.reset(migration_plan_api.create(plan: plan).pulp_href, plan.to_json)
+        migration_plan_api.reset(migration_plan_api.create(plan: plan).pulp_href)
 
         content_types_for_migration.each do |content_type|
           if content_type.model_class == ::Katello::Erratum
