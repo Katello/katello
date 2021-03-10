@@ -1,6 +1,9 @@
 namespace :katello do
   desc "Runs a Pulp 2 to 3 Content Migration for supported types.  May be run multiple times.  Use wait=false to immediately return with a task url."
-  task :pulp3_migration => ["dynflow:client", "check_ping"] do
+  task :pulp3_migration => ["dynflow:client"] do
+    services = [:candlepin, :foreman_tasks, :pulp3, :pulp, :pulp_auth]
+    Katello::Ping.ping!(services: services)
+
     puts "Starting task."
     SmartProxy.pulp_primary.refresh
 
@@ -8,6 +11,7 @@ namespace :katello do
     wait = ::Foreman::Cast.to_bool(ENV['wait'] || 'true')
     preserve_output = ::Foreman::Cast.to_bool(ENV['preserve_output'])
 
+    User.current = User.anonymous_api_admin
     task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration, SmartProxy.pulp_primary, reimport_all: reimport_all)
 
     if wait
