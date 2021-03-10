@@ -205,7 +205,7 @@ module Katello
         filter_errata_type = filter_errata_type.presence || 'all'
         search_up_to = up_to.present? ? "ended_at < \"#{up_to}\"" : nil
         search_since = since.present? ? "ended_at > \"#{since}\"" : nil
-        search_result = status.present? ? "result = #{status}" : nil
+        search_result = status.present? && status != 'all' ? "result = #{status}" : nil
         search = [search_up_to, search_since, search_result].compact.join(' and ')
 
         if Katello.with_remote_execution?
