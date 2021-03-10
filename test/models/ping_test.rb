@@ -19,6 +19,14 @@ module Katello
                         }
     end
 
+    def test_ping_with_errors
+      exception = assert_raises(StandardError) do
+        Katello::Ping.ping!
+      end
+
+      assert_match(/The following services/, exception.message)
+    end
+
     def test_all_workers_present_ok_status
       assert Katello::Ping.all_pulp_workers_present?(@ok_pulp_status)
     end
