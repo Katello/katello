@@ -111,6 +111,8 @@ module Katello
         content_types.each do |content_type|
           if Migration::CORRUPTABLE_CONTENT_TYPES.include?(content_type.model_class)
             content_type.model_class.ignored_missing_migrated_content.destroy_all
+          elsif content_type.model_class == Katello::Erratum
+            Katello::RepositoryErratum.where(:erratum_pulp3_href => nil).delete_all
           else
             content_type.model_class.unmigrated_content.destroy_all
           end
