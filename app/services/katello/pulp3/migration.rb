@@ -133,8 +133,7 @@ module Katello
         end
         plan = { plugins: plugins }
 
-        # TODO: Don't provide the plan as a string once this is resolved: https://pulp.plan.io/issues/8211
-        pulp3_task = migration_plan_api.reset(migration_plan_api.create(plan: plan).pulp_href, plan.to_json)
+        pulp3_task = migration_plan_api.reset(migration_plan_api.create(plan: plan).pulp_href)
 
         content_types_for_migration.each do |content_type|
           if content_type.model_class == ::Katello::Erratum
@@ -331,7 +330,7 @@ module Katello
           unmigrated_units.select(:id, :pulp_id).find_in_batches(batch_size: GET_QUERY_ID_LENGTH) do |needing_hrefs|
             current_count += needing_hrefs.count
             update_import_status("Importing migrated content type #{content_type.label}: #{current_count}/#{total_count}")
-            migrated_units = pulp2_content_api.list(pulp2_id__in: needing_hrefs.map { |unit| unit.pulp_id }.join(','))
+            migrated_units = pulp2_content_api.list(pulp2_id__in: needing_hrefs.map(&:pulp_id))
             migrated_units.results.each do |migrated_unit|
               content_type.model_class.where(pulp_id: migrated_unit.pulp2_id).update_all(migrated_pulp3_href: migrated_unit.pulp3_content)
             end
