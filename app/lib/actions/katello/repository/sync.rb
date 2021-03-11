@@ -72,7 +72,11 @@ module Actions
               end
               plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
                         :contents_changed => contents_changed)
-              plan_action(Katello::Repository::ImportApplicability, :repo_id => repo.id, :contents_changed => contents_changed) if generate_applicability
+
+              if generate_applicability && !SETTINGS[:katello][:katello_applicability]
+                plan_action(Katello::Repository::ImportApplicability, :repo_id => repo.id, :contents_changed => contents_changed)
+              end
+
               plan_action(Katello::Repository::SyncHook, :id => repo.id)
             end
           end
