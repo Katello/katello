@@ -94,16 +94,6 @@ module Katello
       assert_includes @foreman_host.info['parameters']['foreman_host_collections'], host_collection.name
     end
 
-    def test_info_with_katello_deprecated
-      assert_nil @foreman_host.info['parameters']['kt_cv']
-      assert_nil @foreman_host.info['parameters']['kt_env']
-
-      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
-
-      assert_equal @foreman_host.info['parameters']['kt_cv'], @foreman_host.content_view.label
-      assert_equal @foreman_host.info['parameters']['kt_env'], @foreman_host.lifecycle_environment.label
-    end
-
     def test_update_with_cv_env
       host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_facet.content_view = @library_view
