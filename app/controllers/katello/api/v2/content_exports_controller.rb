@@ -29,7 +29,7 @@ module Katello
 
     api :GET, "/content_exports/api_status", N_("true if the export api is pulp3 ready and usable. This API is intended for use by hammer-cli only.")
     def api_status
-      ::Foreman::Deprecation.api_deprecation_warning("/content_exports/api_status is being deprecated and will be removed in a future version of Katello.")
+      ::Foreman::Deprecation.api_deprecation_warning("/content_exports/api_status is being deprecated and will be removed in Katello 4.1.")
       render json: { api_usable: SmartProxy.pulp_primary.pulp3_repository_type_support?(Katello::Repository::YUM_TYPE) }, status: :ok
     end
 
