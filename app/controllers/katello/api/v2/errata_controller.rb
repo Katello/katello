@@ -62,7 +62,7 @@ module Katello
       collection
     end
 
-    api :GET, "/content_view_versions/:id/available_errata", N_("Return errata that can be added to the Content View Version via an Incremental Update"), :deprecated => true
+    api :GET, "/content_view_versions/:id/available_errata", N_("Return errata that can be added to the Content View Version via an Incremental Update. Will be removed in Katello 4.1."), :deprecated => true
     param :id, :number, :desc => N_("Content View Version identifier"), :required => true
     param :organization_id, :number, :desc => N_("Organization identifier")
     param :content_view_filter_id, :number, :desc => N_("Content View Filter identifier")

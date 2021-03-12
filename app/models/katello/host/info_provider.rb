@@ -6,8 +6,6 @@ module Katello
       def host_info
         info = {}
         info['parameters'] = {
-          'kt_env' => host.lifecycle_environment.try(:label), #deprecated
-          'kt_cv' => host.content_view.try(:label), #deprecated
           'foreman_host_collections' => host.host_collections.map(&:name),
           'lifecycle_environment' => host.lifecycle_environment.try(:label),
 

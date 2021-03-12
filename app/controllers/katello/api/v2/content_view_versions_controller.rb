@@ -95,7 +95,7 @@ module Katello
         fail HttpErrors::BadRequest, _("Invalid usage for Pulp 3 repositories. "\
                                        "Use hammer content-export for Yum repositories")
       end
-      ::Foreman::Deprecation.api_deprecation_warning("Export is being deprecated and will be removed in a future version of Katello. Use hammer content-view version export instead.")
+      ::Foreman::Deprecation.api_deprecation_warning("Pulp 2 export is deprecated and will not work as of Katello 4.0. To export using Pulp 3, use hammer content-export version.")
       if params[:export_to_iso].blank? && params[:iso_mb_size].present?
         fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
       end
