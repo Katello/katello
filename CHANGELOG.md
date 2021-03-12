@@ -1,3 +1,16 @@
+# 3.18.2.1 (2021-03-12)
+
+## Bug Fixes
+
+### Repositories
+ * errata are deleted after content switchover ([#32066](https://projects.theforeman.org/issues/32066))
+
+### Tooling
+ * Pulp3 migration reports failed services ([#32058](https://projects.theforeman.org/issues/32058), [1cb62370](https://github.com/Katello/katello.git/commit/1cb62370d82cca17806420c0b1f671a95a65a71f))
+
+### Errata Management
+ * clients using /pulp/content/ for their repo path do not have applicability calculated properly ([#32005](https://projects.theforeman.org/issues/32005), [fdcf4d76](https://github.com/Katello/katello.git/commit/fdcf4d760f39f649b4d6b2aa2c17e7c95c8abbba))
+
 # 3.18.2 (2021-03-05)
 
 ## Bug Fixes
