@@ -17,7 +17,7 @@ module Katello
     let(:subscription_facet) { host.subscription_facet }
     let(:centos_76) do
       FactoryBot.create(:operatingsystem,
-        :with_os_defaults, :with_associations,
+        :with_associations,
         name: 'CentOS',
         major: 7,
         minor: 6,
@@ -252,7 +252,7 @@ module Katello
 
     def test_update_foreman_facts_with_os_version
       FactoryBot.create(:operatingsystem,
-        :with_os_defaults, :with_associations,
+        :with_associations,
         name: 'Redhat',
         major: 8,
         minor: 2,
