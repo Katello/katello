@@ -30,5 +30,9 @@ module Katello
     def kickstart_repo
       @kickstart_repo ||= entity.try(:content_facet).try(:kickstart_repository) || entity.try(:kickstart_repository)
     end
+
+    def architecture_name
+      kickstart_repo.try(:distribution_arch)
+    end
   end
 end
