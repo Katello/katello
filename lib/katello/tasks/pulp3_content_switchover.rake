@@ -18,7 +18,7 @@ namespace :katello do
       exit 1
     end
 
-    task = ForemanTasks.sync_task(Actions::Pulp3::ContentGuard::RefreshAllDistributions, SmartProxy.pulp_primary)
+    task = ForemanTasks.async_task(Actions::Pulp3::ContentGuard::RefreshAllDistributions, SmartProxy.pulp_primary)
     until !task.pending? || task.paused?
       sleep(10)
       task = ForemanTasks::Task.find(task.id)
