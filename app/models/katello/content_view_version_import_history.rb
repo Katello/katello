@@ -27,11 +27,11 @@ module Katello
     scoped_search :on => :id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
 
     def self.generate_audit_comment(user:, path:, content_view_name:)
-    _("Content imported from %{path} into content view '%{name}' by %{user}") % {
-      path: path,
-      user: user.to_label,
-      name: content_view_name
-    }
+      _("Content imported from %{path} into content view '%{name}' by %{user}") % {
+        path: path,
+        user: user.to_label,
+        name: content_view_name
+      }
     end
   end
 end

@@ -61,6 +61,15 @@ module Katello
       end
     end
 
+    def test_index_protected
+      allowed_perms = [{name: @org_import_permission, :resource_type => "Organization"}]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:index, allowed_perms, denied_perms) do
+        get :index, params: { :content_view_id => @library_view.id }
+      end
+    end
+
     def test_version
       metadata_params = ActionController::Parameters.new(METADATA).permit!
       path = "/tmp"

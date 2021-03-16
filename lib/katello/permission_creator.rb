@@ -141,7 +141,7 @@ module Katello
                          {
                            'katello/api/v2/content_views' => [:publish],
                            'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories],
-                           'katello/api/v2/content_imports' => [:version]
+                           'katello/api/v2/content_imports' => [:version, :index]
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :publishable
@@ -426,13 +426,13 @@ module Katello
     def organization_permissions
       @plugin.permission :import_library_content,
                          {
-                           'katello/api/v2/content_imports' => [:library]
+                           'katello/api/v2/content_imports' => [:library, :index]
                          },
                          :resource_type => 'Organization'
 
       @plugin.permission :export_library_content,
                          {
-                           'katello/api/v2/content_exports' => [:library],
+                           'katello/api/v2/content_exports' => [:library, :index],
                            'katello/api/v2/content_export_incrementals' => [:library]
                          },
                          :resource_type => 'Organization'
