@@ -10,12 +10,9 @@
     <a href="/hosts/content_hosts.csv?{{csvQuery()}}" class="btn btn-default" target="_self">
       <span translate>Export</span>
     </a>
-    <button class="btn btn-default"
-            type="button"
-            ng-show="permitted('create_hosts')"
-            ui-sref="content-hosts.register">
-      <span translate>Register Content Host</span>
-    </button>
+    <a class="btn btn-default" href="/hosts/register" ng-show="permitted('create_hosts')" translate>
+      Register Content Host
+    </a>
 
     <span select-action-dropdown>
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
