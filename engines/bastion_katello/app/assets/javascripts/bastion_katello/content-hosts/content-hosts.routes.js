@@ -23,20 +23,6 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         }
     });
 
-    $stateProvider.state('content-hosts.register', {
-        url: '/register',
-        permission: 'view_hosts',
-        views: {
-            '@': {
-                controller: 'ContentHostRegisterController',
-                templateUrl: 'content-hosts/views/register.html'
-            }
-        },
-        ncyBreadcrumb: {
-            label: "{{ 'Register a Host' | translate }}"
-        }
-    });
-
     $stateProvider.state('content-hosts.bulk-task', {
         url: '/bulk-tasks/:taskId',
         permission: ['view_hosts'],
