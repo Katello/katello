@@ -16,7 +16,6 @@ module Actions
           param :export_path, String
         end
 
-        # rubocop:disable Metrics/MethodLength
         def plan(content_view_version:, destination_server: nil,
                  chunk_size: nil, from_history: nil,
                  validate_incremental: true,
