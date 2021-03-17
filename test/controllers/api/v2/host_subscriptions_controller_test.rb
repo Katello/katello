@@ -146,6 +146,9 @@ module Katello
       }]
       expected_consumer_params = {
         'type' => 'system',
+        'role' => 'MyRole',
+        'usage' => 'MyUsage',
+        'addOns' => 'Addon1,Addon2',
         'facts' => facts,
         'installedProducts' => [{
           'productId' => '1',
@@ -156,7 +159,17 @@ module Katello
       Resources::Candlepin::Consumer.stubs(:get)
 
       ::Katello::RegistrationManager.expects(:process_registration).with(expected_consumer_params, content_view_environment).returns(@host)
-      post(:create, params: { :lifecycle_environment_id => content_view_environment.environment_id, :content_view_id => content_view_environment.content_view_id, :facts => facts, :installed_products => installed_products })
+      post(:create,
+        params: {
+          :lifecycle_environment_id => content_view_environment.environment_id,
+          :content_view_id => content_view_environment.content_view_id,
+          :facts => facts,
+          :installed_products => installed_products,
+          :purpose_role => 'MyRole',
+          :purpose_usage => 'MyUsage',
+          :purpose_addons => 'Addon1,Addon2'
+        }
+      )
 
       assert_response :success
     end

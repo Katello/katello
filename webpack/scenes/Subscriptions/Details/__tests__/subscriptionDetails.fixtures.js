@@ -25,7 +25,7 @@ export const subDetails = Immutable({
   arch: 'ia64,ppc,ppc64,ppc64le,s390,s390x,x86,x86_64',
   description: 'OpenShift Enterprise',
   support_type: 'L1-L3',
-  role: 'Test Role',
+  roles: 'Test Role',
   usage: ' Development',
   addons: 'Addon1, Addon2',
   id: 48,

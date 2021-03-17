@@ -90,8 +90,8 @@ module Katello
     def params_to_rhsm_params
       rhsm_params = params.slice(:facts, :uuid, :name).to_unsafe_h
       rhsm_params[:releaseVer] = params['release_version'] if params['release_version']
-      rhsm_params[:usage] = parms['purpose_usage'] if params['purpose_usage']
-      rhsm_params[:role] = parms['purpose_role'] if params['purpose_role']
+      rhsm_params[:usage] = params['purpose_usage'] if params['purpose_usage']
+      rhsm_params[:role] = params['purpose_role'] if params['purpose_role']
       rhsm_params[:addOns] = params['purpose_addons'] if params['purpose_addons']
       rhsm_params[:serviceLevel] = params['service_level'] if params['service_level']
       rhsm_params[:guestIds] = params['hypervisor_guest_uuids'] if params[:hypervisor_guest_uuids]
