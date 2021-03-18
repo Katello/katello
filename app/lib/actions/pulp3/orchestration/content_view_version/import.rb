@@ -26,10 +26,22 @@ module Actions
 
               plan_action(Actions::Pulp3::Repository::SaveVersions, content_view_version.importable_repositories.pluck(:id),
                           tasks: import_output[:pulp_tasks])
-
+              plan_action(
+                ::Actions::Pulp3::ContentViewVersion::CreateImportHistory,
+                content_view_version_id: content_view_version.id,
+                path: path,
+                metadata: metadata,
+                content_view_name: content_view_version.name
+              )
               plan_action(::Actions::Pulp3::ContentViewVersion::DestroyImporter,
                             smart_proxy_id: smart_proxy.id,
                             importer_data: importer_output[:importer_data])
+              plan_self(
+                content_view_name: content_view_version.name,
+                metadata: metadata,
+                path: path,
+                content_view_version_id: content_view_version.id
+              )
             end
           end
 

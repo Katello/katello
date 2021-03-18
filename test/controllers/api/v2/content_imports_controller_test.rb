@@ -74,5 +74,11 @@ module Katello
       post :version, params: { content_view_id: @library_view.id, path: path, metadata: metadata_params}
       assert_response :success
     end
+
+    def test_history_index
+      get :index
+      assert_response :success
+      assert_template 'api/v2/content_view_version_import_histories/index'
+    end
   end
 end

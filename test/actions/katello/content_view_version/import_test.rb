@@ -117,6 +117,13 @@ module ::Actions::Katello::ContentViewVersion
           assert_equal generated_cvv.id, input[:content_view_version_id]
           refute_nil input[:importer_data]
         end
+
+        assert_tree_planned_with(tree, ::Actions::Pulp3::ContentViewVersion::CreateImportHistory) do |input|
+          assert_equal path, input[:path]
+          assert_equal generated_cvv.id, input[:content_view_version_id]
+          assert_equal generated_cvv.name, input[:content_view_name]
+          refute_nil input[:metadata]
+        end
         assert_tree_planned_with(tree, Actions::Pulp3::ContentViewVersion::DestroyImporter)
 
         assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyContent) do |input|

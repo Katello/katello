@@ -51,6 +51,12 @@ module Katello
       end
     end
 
+    def test_history_index
+      get :index
+      assert_response :success
+      assert_template 'api/v2/content_view_version_export_histories/index'
+    end
+
     def test_version
       chunk_size_mb = 100
       destination = "example.com"

@@ -25,7 +25,8 @@ module Katello
 
     has_many :export_histories, :class_name => "Katello::ContentViewVersionExportHistory", :dependent => :destroy,
              :inverse_of => :content_view_version, :foreign_key => :content_view_version_id
-
+    has_many :import_histories, :class_name => "Katello::ContentViewVersionImportHistory", :dependent => :destroy,
+             :inverse_of => :content_view_version, :foreign_key => :content_view_version_id
     has_many :repositories, :class_name => "::Katello::Repository", :dependent => :destroy
     has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
                                                 :dependent => :destroy
