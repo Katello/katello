@@ -35,14 +35,16 @@ module Actions
           toc_path_info = output[:exported_file_checksum].find { |item| item.first.end_with?("toc.json") }
           export_metadata[:toc] = File.basename(toc_path_info.first)
 
-          history = ::Katello::ContentViewVersionExportHistory.new(
+          history = ::Katello::ContentViewVersionExportHistory.create!(
             content_view_version_id: input[:content_view_version_id],
             destination_server: input[:destination_server],
             path: path,
-            metadata: export_metadata
+            metadata: export_metadata,
+            audit_comment: ::Katello::ContentViewVersionExportHistory.generate_audit_comment(content_view_version: cvv,
+                                                                                             user: User.current,
+                                                                                             from_version: from_cvv,
+                                                                                             metadata: export_metadata)
           )
-          history.audit_comment = history.generate_audit_comment(user: User.current)
-          history.save!
           output[:export_history_id] = history.id
         end
 

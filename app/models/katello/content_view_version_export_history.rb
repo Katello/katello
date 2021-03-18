@@ -22,9 +22,7 @@ module Katello
     validates :metadata, :presence => true
     serialize :metadata, Hash
 
-    after_initialize do |history|
-      history.set_export_type if history.metadata
-    end
+    before_validation :set_export_type
 
     scope :with_organization_id, ->(organization_id) do
       where(:content_view_version_id => ContentViewVersion.with_organization_id(organization_id))
@@ -44,20 +42,22 @@ module Katello
             destination_server: destination_server).order(:created_at).last
     end
 
-    def export_type_from_metadata
+    def self.export_type_from_metadata(metadata)
       metadata[:incremental] ? INCREMENTAL : COMPLETE
     end
 
     def set_export_type
-      self.export_type ||= export_type_from_metadata
+      self.export_type ||= self.class.export_type_from_metadata(metadata)
     end
 
-    def generate_audit_comment(user:)
-      export_descriptor = if content_view_version.content_view.library_export?
-                            "library export"
-                          else
-                            "export of content view '#{content_view_version.content_view.name}' version #{content_view_version.version}"
-                          end
+    def self.generate_audit_comment(user:, content_view_version:, from_version: nil, metadata:)
+      export_type = export_type_from_metadata(metadata)
+      if content_view_version.content_view.library_export?
+        export_descriptor = "library export"
+      else
+        export_descriptor = "export of content view '#{content_view_version.content_view.name}' version #{content_view_version.version}"
+        export_descriptor += " from #{from_version.name}" if from_version
+      end
       "#{export_type&.capitalize} #{export_descriptor} created by #{user.to_label}"
     end
   end

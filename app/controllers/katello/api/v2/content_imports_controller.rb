@@ -9,6 +9,9 @@ module Katello
     param :content_view_id, :number, :desc => N_("Content view identifier"), :required => false
     param :organization_id, :number, :desc => N_("Organization identifier"), :required => false
     param :id, :number, :desc => N_("Content view version import history identifier"), :required => false
+    param :type, ::Katello::ContentViewVersionExportHistory::EXPORT_TYPES,
+                                  :desc => N_("Import Types"),
+                                  :required => false
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ContentViewVersionImportHistory)
     def index
@@ -17,6 +20,7 @@ module Katello
       history = history.where(:content_view_version_id => params[:content_view_version_id]) unless params[:content_view_version_id].blank?
       history = history.with_organization_id(params[:organization_id]) unless params[:organization_id].blank?
       history = history.with_content_view_id(params[:content_view_id]) unless params[:content_view_id].blank?
+      history = history.where(:import_type => params[:type]) unless params[:type].blank?
       respond_with_template_collection("index", 'content_view_version_import_histories',
                                        :collection => scoped_search(history, 'id', 'asc', resource_class: ContentViewVersionImportHistory))
     end
@@ -67,7 +71,9 @@ module Katello
         :content_view,
         :repository_mapping,
         :toc,
-        content_view_version: [:major, :minor]
+        :incremental,
+        content_view_version: [:major, :minor],
+        from_content_view_version: [:major, :minor]
       ).tap do |nested|
         nested[:repository_mapping] = params[:metadata].require(:repository_mapping).permit!
       end
