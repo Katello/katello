@@ -71,8 +71,11 @@ module Katello
       end
 
       def error
+        return if task_group_data[WAITING] > 0 || task_group_data[RUNNING] > 0
         if task_group_data[FAILED] > 0
           "#{task_group_data[FAILED]} subtask(s) failed for task group #{@href}."
+        elsif task_group_data[CANCELLED] > 0
+          "#{task_group_data[CANCELLED]} subtask(s) cancelled for task group #{@href}."
         end
       end
 
