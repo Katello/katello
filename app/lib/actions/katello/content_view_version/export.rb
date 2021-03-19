@@ -72,7 +72,7 @@ module Actions
         def run
           output.update(
             export_history_id: input[:export_history_id],
-            path: input[:path]
+            export_path: input[:path]
           )
         end
 
