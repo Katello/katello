@@ -4,7 +4,6 @@ module Katello
   module Service
     class Repository
       class YumCopyUnitsTest < ::ActiveSupport::TestCase
-        # rubocop:disable Metrics/MethodLength
         include RepositorySupport
 
         def setup

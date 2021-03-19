@@ -14,7 +14,6 @@ module Katello
       @puppet_module       = katello_puppet_modules(:abrt)
     end
 
-    # rubocop:disable Metrics/MethodLength
     def test_docker_promote
       org = @organization
       product = create(:katello_product, provider: org.anonymous_provider,
@@ -60,7 +59,6 @@ module Katello
         cvv2repo1.save!
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     should_not allow_values(*invalid_name_list).for(:name)
     should_not allow_values(*invalid_name_list).for(:label)

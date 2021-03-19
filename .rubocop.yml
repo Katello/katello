@@ -30,6 +30,10 @@ AllCops:
 Metrics/MethodLength:
   Description: 'Avoid methods longer than 30 lines of code.'
   Max: 30 # default is 10
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
 
 Style/HashSyntax:
   Enabled: false # don't force 1.9 hash syntax

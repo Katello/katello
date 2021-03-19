@@ -65,7 +65,7 @@ module Katello
                          :resource_type => "SmartProxy"
     end
 
-    def content_view_permissions # rubocop:disable Metrics/MethodLength
+    def content_view_permissions
       @plugin.permission :view_content_views,
                  {
                    'katello/api/v2/content_views' => [:index, :show, :available_puppet_modules, :auto_complete_search,
@@ -251,7 +251,7 @@ module Katello
                          :finder_scope => :promotable
     end
 
-    def product_permissions # rubocop:disable Metrics/MethodLength
+    def product_permissions
       @plugin.permission :view_products,
                          {
                            'katello/products' => [:auto_complete, :auto_complete_search],
@@ -348,7 +348,7 @@ module Katello
                          :finder_scope => :exportable
     end
 
-    def subscription_permissions # rubocop:disable Metrics/MethodLength
+    def subscription_permissions
       @plugin.permission :view_subscriptions,
                          {
                            'katello/api/v2/subscriptions' => [:index, :show, :available, :manifest_history, :auto_complete_search]

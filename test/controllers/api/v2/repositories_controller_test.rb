@@ -263,7 +263,6 @@ module Katello
       assert_response_ids response, @rpm.repository_ids
     end
 
-    # rubocop:disable Metrics/MethodLength
     def test_create
       product = mock
       product.expects(:add_repo).with({

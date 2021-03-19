@@ -4,7 +4,6 @@ module Actions
       class Update < Actions::EntryAction
         include Actions::Katello::PulpSelector
 
-        # rubocop:disable Metrics/MethodLength
         def plan(root, repo_params)
           repository = root.library_instance
           action_subject root.library_instance

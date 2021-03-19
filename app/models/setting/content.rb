@@ -1,5 +1,4 @@
 class Setting::Content < Setting
-  #rubocop:disable Metrics/MethodLength
   #rubocop:disable Metrics/AbcSize
 
   validate :content_default_http_proxy, if: proc { |s| s.name == 'content_default_http_proxy' && HttpProxy.table_exists? }
