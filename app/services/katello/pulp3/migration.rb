@@ -298,10 +298,11 @@ module Katello
               to_import[[errata_id, repo_id]] ||= {erratum_id: errata_id, erratum_pulp3_href: pulp3_href, repository_id: repo_id}
             end
           end
-        end
 
-        Katello::RepositoryErratum.import([:erratum_id, :erratum_pulp3_href, :repository_id], to_import.values, :validate => false,
-                                          on_duplicate_key_update: {conflict_target: [:erratum_id, :repository_id], columns: [:erratum_pulp3_href]})
+          Katello::RepositoryErratum.import([:erratum_id, :erratum_pulp3_href, :repository_id], to_import.values, :validate => false,
+                                            on_duplicate_key_update: {conflict_target: [:erratum_id, :repository_id], columns: [:erratum_pulp3_href]})
+          to_import = {}
+        end
       end
 
       def mark_missing_content(content_type)
