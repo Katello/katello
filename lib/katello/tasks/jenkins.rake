@@ -22,7 +22,7 @@ begin
     desc "Runs puplcore integration tests"
     task 'katello:pulpcore' do
       Rake::Task['jenkins:setup:minitest'].invoke
-      Rake::Task['rake:test:katello:pulpcore'].invoke
+      Rake::Task['rake:test:katello:test:pulpcore'].invoke
     end
   end
 rescue LoadError
