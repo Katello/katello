@@ -25,6 +25,8 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
 
             if ($scope.stateIncludes('content-view.yum')) {
                 repositoryType = 'yum';
+            } else if ($scope.stateIncludes('content-view.deb')) {
+                repositoryType = 'deb';
             } else {
                 repositoryType = 'docker';
             }

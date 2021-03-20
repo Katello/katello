@@ -8,7 +8,12 @@
       <span translate>New Filter</span>
     </button>
     <button type="button" class="btn btn-default"
-            ng-hide="denied('edit_content_views', contentView) || stateIncludes('content-view.yum')"
+            ng-hide="denied('edit_content_views', contentView) || !stateIncludes('content-view.deb') || stateIncludes('content-view.docker')"
+            ui-sref="content-view.deb.filters.new">
+      <span translate>New Filter</span>
+    </button>
+    <button type="button" class="btn btn-default"
+            ng-hide="denied('edit_content_views', contentView) || !stateIncludes('content-view.docker') || stateIncludes('content-view.deb')"
             ui-sref="content-view.docker.filters.new">
       <span translate>New Filter</span>
     </button>
@@ -66,6 +71,10 @@
             </a>
             <a ng-if="filter.type === 'docker'"
                ui-sref="content-view.docker.filter.tag.details({filterId: filter.id})">
+              {{ filter.name }}
+            </a>
+            <a ng-if="filter.type === 'deb'"
+               ui-sref="content-view.deb.filter.deb.details({filterId: filter.id})">
               {{ filter.name }}
             </a>
           </td>

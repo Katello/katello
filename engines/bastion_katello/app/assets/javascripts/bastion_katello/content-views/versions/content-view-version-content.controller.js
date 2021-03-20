@@ -101,7 +101,7 @@
             },
             'deb': {
                 type: Deb,
-                repositoryType: 'deb'
+                repositoryType: 'apt'
             }
         };
 

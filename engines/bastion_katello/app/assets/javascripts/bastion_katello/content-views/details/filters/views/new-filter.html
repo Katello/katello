@@ -1,6 +1,7 @@
 <span page-title ng-model="contentView">{{ 'New Filter for Content View:' | translate }} {{ contentView.name }}</span>
 
 <h3 ng-show="stateIncludes('content-view.yum')" translate>Add New Yum Filter</h3>
+<h3 ng-show="stateIncludes('content-view.deb')" translate>Add New Deb Filter</h3>
 <h3 ng-show="stateIncludes('content-view.docker')" translate>Add New Container Image Tag Filter</h3>
 
 <div class="row">
@@ -49,6 +50,12 @@
            on-cancel="transitionTo('content-view.yum.filters', {contentViewId: contentView.id})"
            on-save="save(filter, contentView)"
            ng-show="stateIncludes('content-view.yum')"
+           working="working">
+      </div>
+      <div bst-form-buttons
+           on-cancel="transitionTo('content-view.deb.filters', {contentViewId: contentView.id})"
+           on-save="save(filter, contentView)"
+           ng-show="stateIncludes('content-view.deb')"
            working="working">
       </div>
       <div bst-form-buttons

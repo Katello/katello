@@ -1,0 +1,27 @@
+deb_rule:
+  name:                    deb abc
+  version:                 1.0
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:populated_deb_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>
+
+test_deb:
+  name:                    deb def
+  version:                 1.0
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_deb_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>
+
+one_deb_rule:
+  name:                    uno
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_deb_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>
+
+one_deb_rule_empty_strings:
+  name:                    uno
+  architecture:            ""
+  version:                 ""
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_deb_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>

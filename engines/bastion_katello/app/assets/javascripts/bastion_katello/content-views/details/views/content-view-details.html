@@ -81,11 +81,26 @@
         </ul>
       </li>
 
-      <li ng-class="{active: stateIncludes('content-view.repositories.deb')}"
-          ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('deb')">
-        <a ui-sref="content-view.repositories.deb.list" translate>
-          Apt Repositories
+      <li uib-dropdown
+          ng-class="{active: stateIncludes('content-view.repositories.deb') || stateIncludes('content-view.deb.filters')}"
+          ng-hide="contentView.composite || !repositoryTypeEnabled('deb')">
+
+        <a uib-dropdown-toggle>
+          <span translate>Deb Content</span>
+          <i class="fa fa-chevron-down"></i>
         </a>
+        <ul uib-dropdown-menu>
+          <li>
+            <a ui-sref="content-view.repositories.deb.list" translate>
+              Repositories
+            </a>
+          </li>
+          <li>
+            <a ui-sref="content-view.deb.filters" translate>
+              Filters
+            </a>
+          </li>
+        </ul>
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.repositories.file')}"
