@@ -139,5 +139,30 @@ module Katello
 
       @primary.fix_pulp3_capabilities('file')
     end
+
+    pulpcore_features = {
+      'pulp_rpm': Katello::Repository::YUM_TYPE,
+      'rpm': Katello::Repository::YUM_TYPE,
+      'pulp_file': Katello::Repository::FILE_TYPE,
+      'file': Katello::Repository::FILE_TYPE,
+      'pulp_container': Katello::Repository::DOCKER_TYPE,
+      'container': Katello::Repository::DOCKER_TYPE,
+      'pulp_ansible': Katello::Repository::ANSIBLE_COLLECTION_TYPE,
+      'ansible': Katello::Repository::ANSIBLE_COLLECTION_TYPE,
+      'pulp_deb': Katello::Repository::DEB_TYPE,
+      'deb': Katello::Repository::DEB_TYPE
+    }
+
+    pulpcore_features.each_pair do |feature_name, repo_type|
+      test "pulpcore_feature_#{feature_name}_is_supported" do
+        SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
+
+        @primary.smart_proxy_feature_by_name(@pulp3_feature.name)
+          .update(:capabilities => [feature_name.to_s])
+
+        assert @primary.pulp3_repository_type_support?(repo_type.to_s),
+          "Repostitory type \"#{repo_type}\" is not supported by smart proxy with capabilties named \"#{feature_name}\""
+      end
+    end
   end
 end
