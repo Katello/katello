@@ -99,7 +99,7 @@ module Katello
     def readable_repositories
       table_name = Repository.table_name
       in_unauth_environments = Repository.joins(:environment).where("#{Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true).select(:id)
-      Repository.readable.or(Repository.joins(:root).where("#{table_name}.id in (?)", in_unauth_environments))
+      Repository.readable.or(Repository.joins(:root).where("#{table_name}.id in (?)", in_unauth_environments)).non_archived
     end
 
     def find_readable_repository
@@ -113,7 +113,10 @@ module Katello
 
     def require_user_authorization?(repository = @repository)
       !(params['action'] == 'token' && params['scope'].blank? && params['account'].blank?) &&
-        (!repository || (!repository.environment.registry_unauthenticated_pull && !ssl_client_authorized?(repository.organization.label)))
+        (!repository ||
+          (!repository.archive? &&
+            !repository.environment.registry_unauthenticated_pull &&
+            !ssl_client_authorized?(repository.organization.label)))
     end
 
     def ssl_client_authorized?(org_label)
@@ -485,7 +488,7 @@ module Katello
       return nil unless scope
 
       scopes = scope.split(':')
-      scopes[2] == 'pull' ? Repository.docker_type.find_by_container_repository_name(scopes[1]) : nil
+      scopes[2] == 'pull' ? Repository.docker_type.non_archived.find_by_container_repository_name(scopes[1]) : nil
     end
 
     def disable_strong_params
