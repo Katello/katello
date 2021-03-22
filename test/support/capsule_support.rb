@@ -14,7 +14,7 @@ module Support
             proxy.features << pulp_feature
           end
         end
-        proxy.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:pulpcore])
+        proxy.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:core])
       end
     end
 

@@ -356,14 +356,36 @@ module Katello
         assert_response 200
       end
 
-      it "show two repositories" do
+      it "does not show archived versions" do
         User.current = User.find(users('admin').id)
+        repo = katello_repositories(:busybox)
+        repo.set_container_repository_name
+        repo.environment_id = nil
+        assert repo.save!
+        assert repo.archive?
 
-        get :v1_search, params: { n: 4 }
-        assert true
+        non_archive_repo = katello_repositories(:busybox_dev)
+        non_archive_repo.set_container_repository_name
+        non_archive_repo.save!
+        refute non_archive_repo.archive?
+
+        get :v1_search
         assert_response 200
         body = JSON.parse(response.body)
-        assert_equal body["results"].length, 4
+
+        refute_includes body["results"],
+          { "name" => repo.container_repository_name, "description" => nil }
+        assert_includes body["results"],
+          { "name" => non_archive_repo.container_repository_name, "description" => nil }
+      end
+
+      it "shows N repositories" do
+        User.current = User.find(users('admin').id)
+
+        get :v1_search, params: { n: 2 }
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal 2, body["results"].length
       end
     end
 
