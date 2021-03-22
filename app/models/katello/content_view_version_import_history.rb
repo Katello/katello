@@ -6,7 +6,7 @@ module Katello
     delegate :organization, to: :content_view_version
     delegate :id, to: :organization, prefix: true
 
-    belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :inverse_of => :import_histories
+    belongs_to :content_view_version, :class_name => "::Katello::ContentViewVersion", :inverse_of => :import_histories
     validates_lengths_from_database
 
     validates :content_view_version_id, presence: true

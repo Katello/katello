@@ -65,6 +65,7 @@ module Actions
               content_view_version_id: content_view_version.id,
               from_content_view_version_id: from_content_view_version&.id,
               export_history_id: history_output[:export_history_id],
+              exported_file_checksum: history_output[:exported_file_checksum],
               path: history_output[:path])
           end
         end
@@ -72,7 +73,8 @@ module Actions
         def run
           output.update(
             export_history_id: input[:export_history_id],
-            export_path: input[:path]
+            export_path: input[:path],
+            exported_file_checksum: input[:exported_file_checksum]
           )
         end
 
