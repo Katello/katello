@@ -227,7 +227,8 @@ module Katello
 
         pulp3_supported = repository_type_obj.pulp3_plugin.present? &&
                           pulp3_enabled? &&
-                          self.capabilities(PULP3_FEATURE).try(:include?, repository_type_obj.pulp3_plugin)
+                          (self.capabilities(PULP3_FEATURE).try(:include?, repository_type_obj.pulp3_plugin) ||
+                           self.capabilities(PULP3_FEATURE).try(:include?, 'pulp_' + repository_type_obj.pulp3_plugin))
 
         check_pulp2_preferred ? pulp3_supported && !pulp2_preferred_for_type?(repository_type_obj.id) : pulp3_supported
       end
