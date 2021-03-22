@@ -75,8 +75,8 @@ module Katello
           next if association.options.key?(:through)
           conditioned = association.options.key? :conditions
           describe "has_(many|one): #{association.name.inspect} #{'with conditions' if conditioned}" do
-            it("#{conditioned ? 'has' : 'has not'} :dependent option") do
-              unless association.class_name.start_with?('Audited::Audit')
+            it("#{conditioned ? 'has' : 'has no'} :dependent option") do
+              unless association.class_name.start_with?(Audited.audit_class.name)
                 refute_equal(association.options.key?(:dependent), conditioned,
                        if conditioned
                          'conditioned association is not responsible for :dependent objects'
