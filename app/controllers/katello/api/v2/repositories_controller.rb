@@ -57,6 +57,8 @@ module Katello
       param :deb_architectures, String, :desc => N_("comma-separated list of architectures to be synced from deb-archive")
       param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % RootRepository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
       param :ansible_collection_requirements, String, :desc => N_("Contents of requirement yaml file to sync from URL")
+      param :ansible_collection_auth_url, String, :desc => N_("The URL to receive a session token from, e.g. used with Automation Hub.")
+      param :ansible_collection_auth_token, String, :desc => N_("The token key to use for authentication.")
       param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for HTTP proxy for content sync")
       param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
       param :arch, String, :desc => N_("Architecture of content in the repository")
@@ -481,7 +483,7 @@ module Katello
              ]
 
       keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
-      keys += [:ansible_collection_requirements] if params[:action] == 'create' || @repository&.ansible_collection?
+      keys += [:ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
         keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name,
@@ -501,6 +503,7 @@ module Katello
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def construct_repo_from_params(repo_params) # rubocop:disable Metrics/AbcSize
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
@@ -512,7 +515,6 @@ module Katello
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       root.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
       root.ignorable_content = repo_params[:ignorable_content] if root.yum? && repo_params.key?(:ignorable_content)
-      root.ansible_collection_requirements = repo_params[:ansible_collection_requirements] if root.ansible_collection?
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
       root.os_versions = repo_params.fetch(:os_versions, []) if root.yum?
@@ -525,6 +527,12 @@ module Katello
         root.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
         root.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
         root.deb_architectures = repo_params[:deb_architectures] if repo_params[:deb_architectures]
+      end
+
+      if root.ansible_collection?
+        root.ansible_collection_requirements = repo_params[:ansible_collection_requirements] if repo_params[:ansible_collection_requirements]
+        root.ansible_collection_auth_url = repo_params[:ansible_collection_auth_url] if repo_params[:ansible_collection_auth_url]
+        root.ansible_collection_auth_token = repo_params[:ansible_collection_auth_token] if repo_params[:ansible_collection_auth_token]
       end
 
       root
