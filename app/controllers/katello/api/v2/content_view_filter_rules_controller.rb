@@ -1,5 +1,6 @@
 module Katello
   class Api::V2::ContentViewFilterRulesController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     before_action :find_filter
     before_action :find_rule, :except => [:index, :create]
 

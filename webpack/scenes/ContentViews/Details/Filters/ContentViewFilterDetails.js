@@ -13,6 +13,7 @@ import useUrlParamsWithHash from '../../../../utils/useUrlParams';
 import Loading from '../../../../components/Loading';
 import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
 import CVPackageGroupFilterContent from './CVPackageGroupFilterContent';
+import CVRpmFilterContent from './CVRpmFilterContent';
 
 const ContentViewFilterDetails = () => {
   const { id: cvId } = useParams();
@@ -32,7 +33,7 @@ const ContentViewFilterDetails = () => {
     if (loaded) setDetails(response);
   }, [JSON.stringify(response), loaded]);
 
-  const { type } = details;
+  const { type, inclusion } = details;
 
   return (
     <Grid hasGutter>
@@ -44,6 +45,7 @@ const ContentViewFilterDetails = () => {
         {
           {
             package_group: <CVPackageGroupFilterContent cvId={cvId} filterId={filterId} />,
+            rpm: <CVRpmFilterContent filterId={filterId} inclusion={inclusion} />,
           }[type] || <Loading />
         }
       </GridItem>
