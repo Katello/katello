@@ -2,12 +2,6 @@ module Katello
   module Validators
     class HostgroupKickstartRepositoryValidator < ActiveModel::Validator
       def validate(facet)
-        # check content source first, otherwise it's meaningless to proceed
-        if facet.content_source && facet.lifecycle_environment
-          valid = facet.content_source.lifecycle_environments.include?(facet.lifecycle_environment)
-          facet.errors.add(:base, _("The selected content source and lifecycle environment do not match")) && return unless valid
-        end
-
         return unless facet.kickstart_repository_id
 
         msg = if facet.content_source.blank?

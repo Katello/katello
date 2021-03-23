@@ -13,7 +13,6 @@ module Katello
 
       @repos = [{:name => "foo", :id => 4}]
       @error_messages = {
-        :mismatched_cs_lce => 'The selected content source and lifecycle environment do not match',
         :missing_os => 'Please select an operating system before assigning a kickstart repository',
         :missing_arch => 'Please select an architecture before assigning a kickstart repository',
         :invalid_os => 'Kickstart repositories can only be assigned to hosts in the Red Hat family',
@@ -37,14 +36,6 @@ module Katello
       @validator.validate(@content_facet)
 
       assert_empty @content_facet.errors[:base]
-    end
-
-    test 'it invalidates on content source and environment mismatch' do
-      @content_facet.expects(:content_source).twice.returns(FactoryBot.create(:smart_proxy))
-
-      @validator.validate(@content_facet)
-
-      assert_equal @error_messages[:mismatched_cs_lce], @content_facet.errors[:base].first
     end
 
     test 'it invalidates on missing OS' do
