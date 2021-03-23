@@ -1,6 +1,7 @@
 module Katello
   class ContentViewDockerFilterRule < Katello::Model
     include ::Katello::Concerns::ContentViewFilterRuleCommon
+    include ScopedSearchExtensions
     belongs_to :filter,
                :class_name => "Katello::ContentViewDockerFilter",
                :inverse_of => :docker_rules,

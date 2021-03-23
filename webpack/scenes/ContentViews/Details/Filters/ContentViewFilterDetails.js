@@ -10,9 +10,8 @@ import {
 } from '../ContentViewDetailSelectors';
 import { getCVFilterDetails } from '../ContentViewDetailActions';
 import useUrlParamsWithHash from '../../../../utils/useUrlParams';
-import Loading from '../../../../components/Loading';
 import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
-import CVPackageGroupFilterContent from './CVPackageGroupFilterContent';
+import CVFilterDetailType from './CVFilterDetailType';
 
 const ContentViewFilterDetails = () => {
   const { id: cvId } = useParams();
@@ -32,7 +31,7 @@ const ContentViewFilterDetails = () => {
     if (loaded) setDetails(response);
   }, [JSON.stringify(response), loaded]);
 
-  const { type } = details;
+  const { type, inclusion } = details;
 
   return (
     <Grid hasGutter>
@@ -41,11 +40,7 @@ const ContentViewFilterDetails = () => {
         <div>Loading...</div>
       }
       <GridItem span={12}>
-        {
-          {
-            package_group: <CVPackageGroupFilterContent cvId={cvId} filterId={filterId} />,
-          }[type] || <Loading />
-        }
+        <CVFilterDetailType cvId={cvId} filterId={filterId} inclusion={inclusion} type={type} />
       </GridItem>
     </Grid>
   );

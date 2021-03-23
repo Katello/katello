@@ -1,7 +1,8 @@
 module Katello
   class Api::V2::ContentViewFilterRulesController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     before_action :find_filter
-    before_action :find_rule, :except => [:index, :create]
+    before_action :find_rule, :except => [:index, :create, :auto_complete_search]
 
     api :GET, "/content_view_filters/:content_view_filter_id/rules", N_("List filter rules")
     param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
@@ -17,6 +18,10 @@ module Katello
       query = query.where(:name => params[:name]) if params[:name]
       query = query.where(:errata_id => params[:errata_id]) if params[:errata_id]
       query
+    end
+
+    def resource_class
+      ContentViewFilter.rule_class_for(@filter)
     end
 
     api :POST, "/content_view_filters/:content_view_filter_id/rules",

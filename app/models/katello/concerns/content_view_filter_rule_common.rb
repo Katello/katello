@@ -4,8 +4,8 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        scoped_search on: :id
-        scoped_search on: :name
+        scoped_search on: :id, :complete_value => true
+        scoped_search on: :name, :complete_value => true
 
         validates_lengths_from_database
       end
