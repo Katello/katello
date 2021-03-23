@@ -28,6 +28,10 @@ module Katello
           PulpFileClient::RepositorySyncURL
         end
 
+        def self.add_remove_content_class
+          PulpFileClient::RepositoryAddRemoveContent
+        end
+
         def api_client
           api_client_class(PulpFileClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpFileClient::Configuration)))
         end

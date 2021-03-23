@@ -282,6 +282,24 @@ module Katello
         tasks
       end
 
+      def copy_all(source_repository, mirror: false)
+        if mirror
+          data = api.class.add_remove_content_class.new(
+                    base_version: source_repository.version_href)
+
+          [api.repositories_api.modify(repository_reference.repository_href, data)]
+        elsif api.respond_to? :copy_api
+          data = api.class.copy_class.new
+          data.config = [{
+            source_repo_version: source_repository.version_href,
+            dest_repo: repository_reference.repository_href
+          }]
+          [api.copy_api.copy_content(data)]
+        else
+          copy_content_for_source(source_repository)
+        end
+      end
+
       def copy_version(from_repository)
         create_version(:base_version => from_repository.version_href)
       end

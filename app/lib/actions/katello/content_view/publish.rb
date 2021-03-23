@@ -49,9 +49,8 @@ module Actions
 
             # Split Pulp 3 Yum repos out of the repository_mapping.  Only Pulp 3 RPM plugin has multi repo copy support.
             separated_repo_map = separated_repo_mapping(repository_mapping)
-
             if separated_repo_map[:pulp3_yum].keys.flatten.present? &&
-                SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
+              SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
 
               if options[:importing]
                 handle_import(version, options.slice(:path, :metadata))
@@ -64,8 +63,12 @@ module Actions
               source_repositories.each do |repositories|
                 sequence do
                   if repositories.present? && separated_repo_map[:other].keys.include?(repositories)
-                    plan_action(Repository::CloneToVersion, repositories, version, repository_mapping[repositories],
-                                :repos_units => options[:repos_units])
+                    if options[:importing]
+                      handle_import(version, options.slice(:path, :metadata))
+                    else
+                      plan_action(Repository::CloneToVersion, repositories, version, repository_mapping[repositories],
+                                  :repos_units => options[:repos_units])
+                    end
                   end
                   plan_action(Repository::CloneToEnvironment, repository_mapping[repositories], library) unless options[:skip_promotion]
                 end
@@ -181,11 +184,15 @@ module Actions
         end
 
         def handle_import(version, path:, metadata:)
-          plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, path: path, metadata: metadata)
-          plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary, version)
-          concurrence do
-            version.importable_repositories.pluck(:id).each do |id|
-              plan_action(Katello::Repository::IndexContent, id: id)
+          return if @imported
+          @imported = true
+          sequence do
+            plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, path: path, metadata: metadata)
+            plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary, version)
+            concurrence do
+              version.importable_repositories.pluck(:id).each do |id|
+                plan_action(Katello::Repository::IndexContent, id: id)
+              end
             end
           end
         end

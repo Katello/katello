@@ -4,12 +4,11 @@ module Katello
                                 Repository::DOCKER_TYPE,
                                 Repository::OSTREE_TYPE,
                                 Repository::FILE_TYPE,
-                                Repository::DEB_TYPE
+                                Repository::DEB_TYPE,
+                                Repository::ANSIBLE_COLLECTION_TYPE
                                ].freeze
 
-    ALLOWED_IMPORT_REPOSITORY_TYPES = [
-      Repository::YUM_TYPE
-    ].freeze
+    ALLOWED_IMPORT_REPOSITORY_TYPES = Repository::EXPORTABLE_TYPES
 
     belongs_to :content_view, :inverse_of => :content_view_repositories,
                               :class_name => "Katello::ContentView"

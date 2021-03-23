@@ -32,6 +32,14 @@ module Katello
           PulpRpmClient::RpmPackageGroup
         end
 
+        def self.copy_class
+          PulpRpmClient::Copy
+        end
+
+        def self.add_remove_content_class
+          PulpRpmClient::RepositoryAddRemoveContent
+        end
+
         def api_client
           api_client_class(PulpRpmClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpRpmClient::Configuration)))
         end

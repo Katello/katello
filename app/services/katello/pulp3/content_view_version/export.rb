@@ -24,14 +24,14 @@ module Katello
 
         def repositories(fetch_all: false)
           repos = if @content_view_version.default?
-                    @content_view_version.repositories.yum_type
+                    @content_view_version.repositories.exportable
                   else
-                    @content_view_version.archived_repos.yum_type
+                    @content_view_version.archived_repos.exportable
                   end
           if fetch_all
             repos
           else
-            repos.immediate
+            repos.immediate_or_none
           end
         end
 
