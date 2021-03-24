@@ -941,6 +941,13 @@ module Katello
       DockerMetaTag.cleanup_tags
     end
 
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Repository'
+      refs 'Repository'
+      sections only: %w[all additional]
+      prop_group :katello_basic_props, Katello::Model, meta: { friendly_name: 'Repository' }
+      property :docker_upstream_name, String, desc: 'Returns name of the upstream docker repository'
+    end
     class Jail < ::Safemode::Jail
       allow :name, :label, :docker_upstream_name
     end

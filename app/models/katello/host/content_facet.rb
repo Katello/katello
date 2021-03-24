@@ -242,6 +242,7 @@ module Katello
         name 'Content Facet'
         refs 'ContentFacet'
         sections only: %w[all additional]
+        desc "Content facet is an object containing the host's content-related metadata and associations"
         property :id, Integer, desc: 'Returns ID of the facet'
         property :uuid, String, desc: 'Returns UUID of the facet'
         property :applicable_module_stream_count, Integer, desc: 'Returns applicable Module Stream count'
