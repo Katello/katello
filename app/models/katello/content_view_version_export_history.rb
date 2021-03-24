@@ -53,7 +53,7 @@ module Katello
     end
 
     def generate_audit_comment(user:)
-      export_descriptor = if content_view_version.content_view.name == "Export-Library"
+      export_descriptor = if content_view_version.content_view.library_export?
                             "library export"
                           else
                             "export of content view '#{content_view_version.content_view.name}' version #{content_view_version.version}"
