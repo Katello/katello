@@ -58,7 +58,6 @@ module ::Actions::Pulp3::ContentView
 
     def test_export
       Actions::Katello::ContentViewVersion::Export.any_instance.expects(:action_subject).with(@content_view_version)
-      File.expects(:directory?).returns(true).at_least_once
 
       output = ForemanTasks.sync_task(Actions::Katello::ContentViewVersion::Export,
                                        content_view_version: @content_view_version,
