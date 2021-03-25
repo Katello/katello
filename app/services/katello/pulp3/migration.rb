@@ -70,7 +70,9 @@ module Katello
 
       def last_successful_migration_time
         task = ForemanTasks::Task.where(:label => Actions::Pulp3::ContentMigration.to_s, :result => 'success').order("started_at desc").first
-        if reimport_all || task.nil?
+        reset_task = ForemanTasks::Task.where(:label => Actions::Pulp3::ContentMigrationReset.to_s).order("started_at desc").first
+        reset_more_recent = reset_task && task && reset_task.started_at > task.started_at
+        if reimport_all || task.nil? || reset_more_recent
           0
         else
           task.started_at.to_i
@@ -132,29 +134,31 @@ module Katello
         plan = { plugins: plugins }
 
         # TODO: Don't provide the plan as a string once this is resolved: https://pulp.plan.io/issues/8211
-        migration_plan_api.reset(migration_plan_api.create(plan: plan).pulp_href, plan.to_json)
+        pulp3_task = migration_plan_api.reset(migration_plan_api.create(plan: plan).pulp_href, plan.to_json)
 
         content_types_for_migration.each do |content_type|
           if content_type.model_class == ::Katello::Erratum
             ::Katello::RepositoryErratum.update_all(erratum_pulp3_href: nil)
           else
-            content_type.model_class.update_all(migrated_pulp3_href: nil)
+            content_type.model_class.update_all(migrated_pulp3_href: nil, missing_from_migration: false, ignore_missing_from_migration: false)
           end
         end
 
         @repository_types.each do |repo_type|
           if repo_type == "file"
-            ::Katello::Repository.file_type.update(remote_href: nil, publication_href: nil, version_href: nil)
+            ::Katello::Repository.file_type.update_all(remote_href: nil, publication_href: nil, version_href: nil)
           elsif repo_type == "docker"
-            ::Katello::Repository.docker_type.update(remote_href: nil, publication_href: nil, version_href: nil)
+            ::Katello::Repository.docker_type.update_all(remote_href: nil, publication_href: nil, version_href: nil)
           elsif repo_type == "yum"
-            ::Katello::Repository.yum_type.update(remote_href: nil, publication_href: nil, version_href: nil)
+            ::Katello::Repository.yum_type.update_all(remote_href: nil, publication_href: nil, version_href: nil)
           end
         end
 
         ::Katello::Pulp3::RepositoryReference.destroy_all
         ::Katello::Pulp3::DistributionReference.destroy_all
         ::Katello::Pulp3::ContentGuard.destroy_all
+
+        pulp3_task
       end
 
       def create_migrations
