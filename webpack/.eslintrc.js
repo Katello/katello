@@ -1,10 +1,6 @@
 const path = require('path');
-const { foremanLocation, foremanRelativePath } = require('@theforeman/find-foreman');
-const foremanFull = foremanLocation();
-const foremanLintingRelative = './node_modules/@theforeman/vendor-dev/eslint.extends.js'
-const foremanLintingConfig = foremanRelativePath(foremanLintingRelative);
-const foremanVendorRelative = './node_modules/@theforeman/vendor-core/';
-const foremanVendorDir = foremanRelativePath(foremanVendorRelative);
+const createSettings = require('@theforeman/eslint-plugin-foreman/src/config/settings');
+const { getPackageJsonDirectories } = require('@theforeman/eslint-plugin-foreman/src/config/helpers');
 
 module.exports = {
   env: {
@@ -14,7 +10,6 @@ module.exports = {
   'extends': [
     'airbnb',
     'plugin:jest/recommended',
-    `${foremanLintingConfig}`,
   ],
   plugins: [
     'jest',
@@ -23,6 +18,7 @@ module.exports = {
     'promise'
   ],
   parser: 'babel-eslint',
+  settings: createSettings(true),
   rules: {
     'babel/semi': 1,
     'react/jsx-filename-extension': 'off',
@@ -33,7 +29,7 @@ module.exports = {
       "error",
       {
         // Need to check Katello, Foreman, and Foreman's meta package for dependencies
-        "packageDir": [path.join(__dirname, '../../katello'), foremanFull, foremanVendorDir]
+        "packageDir": [path.join(__dirname, '../../katello'), ...getPackageJsonDirectories(true)]
       }
     ],
     'jsx-a11y/anchor-is-valid': [
