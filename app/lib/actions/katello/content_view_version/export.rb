@@ -21,9 +21,6 @@ module Actions
                  validate_incremental: true,
                  fail_on_missing_content: false)
           action_subject(content_view_version)
-          unless File.directory?(Setting['pulpcore_export_destination'])
-            fail ::Foreman::Exception, N_("Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory.")
-          end
 
           sequence do
             smart_proxy = SmartProxy.pulp_primary!
