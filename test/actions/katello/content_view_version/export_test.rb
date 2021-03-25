@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'fileutils'
 
 module ::Actions::Katello::ContentViewVersion
   class ExportTest < ActiveSupport::TestCase
@@ -13,7 +12,6 @@ module ::Actions::Katello::ContentViewVersion
       @content_view = @repo.content_view
       @content_view_version = @repo.content_view_version
       @destination_server = 'dream-destination'
-      FileUtils.mkdir_p(Setting['pulpcore_export_destination']) if recording_mode?
       ::Katello::Pulp3::ContentViewVersion::Export.any_instance.stubs(:date_dir).returns("date_dir")
     end
 
