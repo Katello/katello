@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'fileutils'
 
 module ::Actions::Pulp3::ContentView
   class ExportTest < ActiveSupport::TestCase
@@ -13,12 +12,12 @@ module ::Actions::Pulp3::ContentView
       @content_view = @repo.content_view
       @content_view_version = @repo.content_view_version
       @destination_server = 'dream-destination'
-      FileUtils.mkdir_p(Setting['pulpcore_export_destination'])
       ::Katello::Pulp3::ContentViewVersion::Export.any_instance.stubs(:date_dir).returns("date_dir")
     end
 
     def teardown
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      File.unstub(:directory)
     end
 
     def create_exporter
@@ -60,12 +59,13 @@ module ::Actions::Pulp3::ContentView
 
     def test_export
       Actions::Katello::ContentViewVersion::Export.any_instance.expects(:action_subject).with(@content_view_version)
-
+      File.expects(:directory?).at_least_once
+        .returns(true)
+        .then.returns(false)
       output = ForemanTasks.sync_task(Actions::Katello::ContentViewVersion::Export,
                                        content_view_version: @content_view_version,
                                        destination_server: "foo",
                                        chunk_size: 0.1).output
-
       export_history = Katello::ContentViewVersionExportHistory.find_by(content_view_version_id: @content_view_version.id, destination_server: 'foo')
 
       assert export_history.metadata
