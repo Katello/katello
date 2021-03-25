@@ -21,9 +21,6 @@ module Actions
                  validate_incremental: true,
                  fail_on_missing_content: false)
           action_subject(content_view_version)
-          unless File.directory?(Setting['pulpcore_export_destination'])
-            fail ::Foreman::Exception, N_("Unable to export. 'pulpcore_export_destination' setting is not set to a valid directory.")
-          end
 
           sequence do
             smart_proxy = SmartProxy.pulp_primary!
@@ -48,43 +45,34 @@ module Actions
                                    chunk_size: chunk_size,
                                    from_content_view_version_id: from_content_view_version&.id)
 
-            plan_self(exporter_data: action_output[:exporter_data], smart_proxy_id: smart_proxy.id,
-                      destination_server: destination_server,
-                      content_view_version_id: content_view_version.id,
-                      from_content_view_version_id: from_content_view_version&.id)
-
+            history_output = plan_action(
+              ::Actions::Pulp3::ContentViewVersion::CreateExportHistory,
+              smart_proxy_id: smart_proxy.id,
+              exporter_data: action_output[:exporter_data],
+              pulp_href: action_output[:exporter_data][:pulp_href],
+              content_view_version_id: content_view_version.id,
+              from_content_view_version_id: from_content_view_version&.id,
+              destination_server: destination_server
+            ).output
             plan_action(::Actions::Pulp3::ContentViewVersion::DestroyExporter,
-                          smart_proxy_id: smart_proxy.id,
-                          exporter_data: action_output[:exporter_data])
+              smart_proxy_id: smart_proxy.id,
+              exporter_data: action_output[:exporter_data])
+            plan_self(exporter_data: action_output[:exporter_data], smart_proxy_id: smart_proxy.id,
+              destination_server: destination_server,
+              content_view_version_id: content_view_version.id,
+              from_content_view_version_id: from_content_view_version&.id,
+              export_history_id: history_output[:export_history_id],
+              exported_file_checksum: history_output[:exported_file_checksum],
+              path: history_output[:path])
           end
         end
 
         def run
-          smart_proxy = ::SmartProxy.find(input[:smart_proxy_id])
-          api = ::Katello::Pulp3::Api::Core.new(smart_proxy)
-          export_data = api.export_api.list(input[:exporter_data][:pulp_href]).results.first
-          output[:exported_file_checksum] = export_data.output_file_info
-          file_name = output[:exported_file_checksum].first&.first
-          path = File.dirname(file_name.to_s)
-          output[:export_path] = path
-          cvv = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
-          from_cvv = ::Katello::ContentViewVersion.find(input[:from_content_view_version_id]) unless input[:from_content_view_version_id].blank?
-
-          export_metadata = ::Katello::Pulp3::ContentViewVersion::Export.new(
-                                                     content_view_version: cvv,
-                                                     smart_proxy: smart_proxy,
-                                                     from_content_view_version: from_cvv).generate_metadata
-
-          toc_path_info = output[:exported_file_checksum].find { |item| item.first.end_with?("toc.json") }
-          export_metadata[:toc] = File.basename(toc_path_info.first)
-
-          history = ::Katello::ContentViewVersionExportHistory.create!(
-            content_view_version_id: input[:content_view_version_id],
-            destination_server: input[:destination_server],
-            path: path,
-            metadata: export_metadata
+          output.update(
+            export_history_id: input[:export_history_id],
+            export_path: input[:path],
+            exported_file_checksum: input[:exported_file_checksum]
           )
-          output[:export_history_id] = history.id
         end
 
         def humanized_name

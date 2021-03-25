@@ -1,6 +1,6 @@
 require 'katello_test_helper'
 
-module ::Actions::Pulp3::ContentView
+module ::Actions::Katello::ContentViewVersion
   class ExportTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
 
@@ -58,15 +58,11 @@ module ::Actions::Pulp3::ContentView
 
     def test_export
       Actions::Katello::ContentViewVersion::Export.any_instance.expects(:action_subject).with(@content_view_version)
-      File.expects(:directory?).returns(true).at_least_once
-
       output = ForemanTasks.sync_task(Actions::Katello::ContentViewVersion::Export,
                                        content_view_version: @content_view_version,
                                        destination_server: "foo",
                                        chunk_size: 0.1).output
-
       export_history = Katello::ContentViewVersionExportHistory.find_by(content_view_version_id: @content_view_version.id, destination_server: 'foo')
-
       assert export_history.metadata
       refute_empty output[:export_path]
       assert output[:exported_file_checksum].length > 1

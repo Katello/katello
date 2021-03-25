@@ -113,13 +113,15 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :content_exports, :only => [] do
+        api_resources :content_exports, :only => [:index] do
           collection do
             post :version
             post :library
             get :index
           end
         end
+
+        api_resources :content_imports, :only => [:index]
 
         api_resources :content_export_incrementals, :only => [] do
           collection do

@@ -75,7 +75,8 @@ module Katello
       end
 
       total = scoped_search_total(query, group)
-
+      # If you get an ArgumentError here (wrong number of arguments given)
+      # it's probably because query is an array and not an ActiveRecord::Relation
       query = query.select(:id) if query.respond_to?(:select)
       query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
 

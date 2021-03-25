@@ -273,8 +273,12 @@ class ActiveSupport::TestCase
     status
   end
 
+  def recording_mode?
+    ['all', 'new_episodes'].include?(ENV['mode'])
+  end
+
   def stub_certs
-    unless ['all', 'new_episodes'].include?(ENV['mode'])
+    unless recording_mode?
       Cert::Certs.stubs(:ca_cert).returns("file")
       Cert::Certs.stubs(:ssl_client_cert).returns("ssl_client_cert")
       Cert::Certs.stubs(:ssl_client_key).returns("ssl_client_key")

@@ -1,12 +1,15 @@
 module Katello
   class ContentViewVersionExportHistory < Katello::Model
     include Authorization::ContentViewVersionExportHistory
+    audited except: :metadata
+    delegate :organization, to: :content_view_version
+    delegate :id, to: :organization, prefix: true
 
     COMPLETE = "complete".freeze
     INCREMENTAL = "incremental".freeze
     EXPORT_TYPES = [COMPLETE, INCREMENTAL].freeze
 
-    belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :inverse_of => :export_histories
+    belongs_to :content_view_version, :class_name => "::Katello::ContentViewVersion", :inverse_of => :export_histories, foreign_key: 'content_view_version_id'
     validates_lengths_from_database
 
     validates :content_view_version_id, :presence => true
@@ -19,7 +22,9 @@ module Katello
     validates :metadata, :presence => true
     serialize :metadata, Hash
 
-    before_validation :set_export_type, :if => -> { export_type.blank? }
+    after_initialize do |history|
+      history.set_export_type if history.metadata
+    end
 
     scope :with_organization_id, ->(organization_id) do
       where(:content_view_version_id => ContentViewVersion.with_organization_id(organization_id))
@@ -44,7 +49,16 @@ module Katello
     end
 
     def set_export_type
-      self.export_type = export_type_from_metadata
+      self.export_type ||= export_type_from_metadata
+    end
+
+    def generate_audit_comment(user:)
+      export_descriptor = if content_view_version.content_view.library_export?
+                            "library export"
+                          else
+                            "export of content view '#{content_view_version.content_view.name}' version #{content_view_version.version}"
+                          end
+      "#{export_type&.capitalize} #{export_descriptor} created by #{user.to_label}"
     end
   end
 end

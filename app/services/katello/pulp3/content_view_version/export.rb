@@ -166,7 +166,7 @@ module Katello
         def self.find_library_export_view(create_by_default: false,
                                           destination_server:,
                                           organization:)
-          name = "Export-Library"
+          name = ::Katello::ContentView::EXPORT_LIBRARY
           name += "-#{destination_server}" unless destination_server.blank?
           select_method = create_by_default ? :first_or_create : :first
           ::Katello::ContentView.where(name: name, organization: organization).send(select_method)

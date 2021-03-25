@@ -61,6 +61,15 @@ module Katello
       end
     end
 
+    def test_index_protected
+      allowed_perms = [{name: @org_import_permission, :resource_type => "Organization"}]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:index, allowed_perms, denied_perms) do
+        get :index, params: { :content_view_id => @library_view.id }
+      end
+    end
+
     def test_version
       metadata_params = ActionController::Parameters.new(METADATA).permit!
       path = "/tmp"
@@ -73,6 +82,12 @@ module Katello
       import_task.returns(build_task_stub)
       post :version, params: { content_view_id: @library_view.id, path: path, metadata: metadata_params}
       assert_response :success
+    end
+
+    def test_history_index
+      get :index
+      assert_response :success
+      assert_template 'api/v2/content_view_version_import_histories/index'
     end
   end
 end
