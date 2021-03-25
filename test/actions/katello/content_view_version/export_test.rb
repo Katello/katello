@@ -1,6 +1,7 @@
 require 'katello_test_helper'
+require 'fileutils'
 
-module ::Actions::Pulp3::ContentView
+module ::Actions::Katello::ContentViewVersion
   class ExportTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
 
@@ -17,7 +18,6 @@ module ::Actions::Pulp3::ContentView
 
     def teardown
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
-      File.unstub(:directory)
     end
 
     def create_exporter
@@ -58,16 +58,16 @@ module ::Actions::Pulp3::ContentView
     end
 
     def test_export
+      FileUtils.mkdir_p(Rails.root.join('tmp'))
+      real_setting = Setting['pulpcore_export_destination']
+      Setting['pulpcore_export_destination'] = Rails.root.join('tmp')
       Actions::Katello::ContentViewVersion::Export.any_instance.expects(:action_subject).with(@content_view_version)
-      File.expects(:directory?).at_least_once
-        .returns(true)
-        .then.returns(false)
       output = ForemanTasks.sync_task(Actions::Katello::ContentViewVersion::Export,
                                        content_view_version: @content_view_version,
                                        destination_server: "foo",
                                        chunk_size: 0.1).output
       export_history = Katello::ContentViewVersionExportHistory.find_by(content_view_version_id: @content_view_version.id, destination_server: 'foo')
-
+      Setting['pulpcore_export_destination'] = real_setting
       assert export_history.metadata
       refute_empty output[:export_path]
       assert output[:exported_file_checksum].length > 1
