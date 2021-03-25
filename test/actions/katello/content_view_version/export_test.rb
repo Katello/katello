@@ -59,7 +59,6 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     def test_export
-      FileUtils.mkdir_p(Rails.root.join('tmp'))
       Actions::Katello::ContentViewVersion::Export.any_instance.expects(:action_subject).with(@content_view_version)
       output = ForemanTasks.sync_task(Actions::Katello::ContentViewVersion::Export,
                                        content_view_version: @content_view_version,
