@@ -16,7 +16,6 @@ module ::Actions::Katello::Repository
     let(:repository_ansible_collection_pulp3) { katello_repositories(:pulp3_ansible_collection_1) }
     let(:repository_apt_pulp3) { katello_repositories(:pulp3_deb_1) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
-    let(:puppet_repository) { katello_repositories(:p_forge) }
     let(:docker_repository) { katello_repositories(:redis) }
     let(:proxy) { smart_proxies(:one) }
     let(:capsule_content) { ::Katello::Pulp::SmartProxyRepository.new(proxy) }
@@ -238,27 +237,6 @@ module ::Actions::Katello::Repository
     setup { FactoryBot.create(:smart_proxy, :default_smart_proxy) }
     let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::UploadContent }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
-    it 'plans for Pulp' do
-      action = create_action pulp2_action_class
-      file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
-      action.execution_plan.stub_planned_action(::Actions::Pulp::Repository::CreateUploadRequest) do |content_create|
-        content_create.stubs(output: { upload_id: 123 })
-      end
-
-      plan_action action, puppet_repository, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'puppet_module'
-      assert_action_planed(action, ::Actions::Pulp::Repository::CreateUploadRequest)
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::UploadFile,
-                                upload_id: 123, file: file)
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::ImportUpload,
-                                puppet_repository, proxy,
-                  pulp_id: puppet_repository.pulp_id,
-                  unit_type_id: "puppet_module",
-                  unit_key: {},
-                  upload_id: 123)
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::DeleteUploadRequest,
-                                upload_id: 123)
-    end
-
     it 'plans for Pulp3 without duplicate' do
       proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => nil))))
       action = create_action pulp3_action_class
@@ -387,16 +365,6 @@ module ::Actions::Katello::Repository
       plan_action action, custom_repository, :content_type => 'rpm'
       assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
     end
-
-    it "does plan metadata generate for puppet repository" do
-      plan_action action, puppet_repository, :content_type => 'puppet_module'
-      assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
-    end
-
-    it "does not plan metadata generate for puppet repository" do
-      plan_action action, puppet_repository, :generate_metadata => false, :content_type => 'puppet_module'
-      refute_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
-    end
   end
 
   class SyncTest < TestBase
@@ -404,20 +372,6 @@ module ::Actions::Katello::Repository
     let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::Sync }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Sync }
     let(:pulp3_metadata_generate_action_class) { ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata }
-
-    it 'plans' do
-      action = create_action action_class
-      action.stubs(:action_subject).with(repository)
-      plan_action action, repository
-      assert_action_planed_with(action, pulp2_action_class, repository, proxy, source_url: nil)
-      assert_action_planed action, ::Actions::Katello::Repository::IndexContent
-      assert_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
-      assert_action_planed action, ::Actions::Katello::Repository::ImportApplicability
-      assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
-        contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-        assert_equal repository.id, repo.id
-      end
-    end
 
     it 'skips applicability if non-yum' do
       action = create_action action_class

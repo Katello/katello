@@ -39,11 +39,6 @@
         </select>
       </div>
 
-      <div class="alert alert-warning" ng-if="repository.content_type === 'ostree' || repository.content_type === 'puppet'">
-        <span class="pficon pficon-warning-triangle-o"></span>
-        <strong>Deprecation Warning: </strong>Puppet and OSTree will no longer be supported in Katello 4.0.
-      </div>
-
       <div bst-form-group label="{{ 'Restrict to Architecture' | translate }}" ng-show="repository.content_type === 'yum'">
         <select id="architecture_restricted"
                 name="architecture_restricted"
@@ -221,7 +216,7 @@
         </p>
       </div>
 
-      <div class="checkbox" ng-hide="repository.content_type === 'ostree' || repository.content_type === 'puppet'">
+      <div class="checkbox" ng-hide="repository.content_type === 'ostree'">
         <label>
           <input id="mirror_on_sync" name="mirror_on_sync" ng-model="repository.mirror_on_sync" type="checkbox"/>
           <span translate>Mirror on Sync</span>
@@ -256,7 +251,7 @@
       </span>
     </div>
 
-    <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet' || repository.content_type === 'deb' || repository.content_type === 'file'">
+    <div ng-show="repository.content_type === 'yum' || repository.content_type === 'deb' || repository.content_type === 'file'">
       <h4 ng-show="repository.content_type !== undefined" translate> Published Repository Information </h4>
 
       <div bst-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type === 'yum'">

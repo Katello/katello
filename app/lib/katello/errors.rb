@@ -4,8 +4,6 @@ module Katello
 
     class InvalidRepositoryContent < StandardError; end
 
-    class InvalidPuppetModuleError < InvalidRepositoryContent; end
-
     class NotFound < StandardError; end
 
     class RegistrationError < StandardError; end
@@ -88,14 +86,6 @@ module Katello
         else
           "#{to_s}: #{errors.join(', ')}"
         end
-      end
-    end
-
-    class PuppetConflictException < StandardError
-      attr_accessor :conflicts
-
-      def initialize(conflicts)
-        self.conflicts = conflicts
       end
     end
 

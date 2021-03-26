@@ -1,3 +1,0 @@
-object @object
-
-attributes :name

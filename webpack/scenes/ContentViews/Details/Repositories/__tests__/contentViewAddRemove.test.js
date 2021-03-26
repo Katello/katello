@@ -11,7 +11,7 @@ const repoData = require('./contentViewDetailRepos.fixtures.json');
 const autocompleteUrl = '/repositories/auto_complete_search';
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvAllRepos = api.getApiUrl('/content_views/1/repositories/show_all');
-const repoTypesResponse = [{ name: 'deb' }, { name: 'docker' }, { name: 'file' }, { name: 'ostree' }, { name: 'puppet' }, { name: 'yum' }];
+const repoTypesResponse = [{ name: 'deb' }, { name: 'docker' }, { name: 'file' }, { name: 'ostree' }, { name: 'yum' }];
 const cvDetailData = require('../../__tests__/contentViewDetails.fixtures.json');
 
 const cvDetailsPath = api.getApiUrl('/content_views/1');

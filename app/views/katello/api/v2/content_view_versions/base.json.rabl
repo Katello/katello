@@ -45,10 +45,6 @@ version = @object || @resource
 child :environments => :environments do
   attributes :id, :name, :label
 
-  node :puppet_environment_id do |environment|
-    version.puppet_env(environment).try(:puppet_environment).try(:id)
-  end
-
   node :permissions do |env|
     {
       :readable => env.readable?,

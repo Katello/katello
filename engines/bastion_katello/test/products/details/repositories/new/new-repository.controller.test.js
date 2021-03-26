@@ -37,7 +37,7 @@ describe('Controller: NewRepositoryController', function() {
 
         RepositoryTypesService = {};
         RepositoryTypesService.creatable = function () {
-            return [{name: 'yum', name: 'puppet'}]
+            return [{name: 'yum'}]
         };
 
         Setting.get = function (data, succ, err) {

@@ -10,8 +10,6 @@ module Actions
     let(:pulp_publish_class) { ::Actions::Pulp::Repository::DistributorPublish }
     let(:yum_repo) { katello_repositories(:fedora_17_x86_64) }
     let(:yum_repo2) { katello_repositories(:fedora_17_x86_64_dev) }
-    let(:puppet_repo) { katello_repositories(:p_forge) }
-    let(:content_view_puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
     let(:action_options) do
       { :force => false,
         :source_repository => nil,
@@ -43,16 +41,6 @@ module Actions
                                 action_options)
     ensure
       Location.current = old_location
-    end
-
-    it 'plans with a content view puppet env' do
-      action = create_action(action_class)
-      content_view_puppet_env.puppet_environment = ::Environment.create(:name => 'foobar')
-
-      plan_action(action, content_view_puppet_env)
-
-      assert_action_planed_with(action, pulp_publish_class, content_view_puppet_env, SmartProxy.pulp_primary,
-              action_options)
     end
 
     it 'plans a yum refresh with force true' do

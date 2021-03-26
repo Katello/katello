@@ -435,7 +435,7 @@ module ::Actions::Katello::ContentView
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, component, [],
                                 :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, composite_version, [library],
-                                :content => {:puppet_module_ids => nil}, :new_components => [new_version],
+                                :new_components => [new_version],
                                 :description => "BadDescription")
     end
 
@@ -456,8 +456,7 @@ module ::Actions::Katello::ContentView
                      :rpm =>
                       ["shark-0.1-1.noarch",
                        "penguin-0.9.1-1.noarch",
-                       "walrus-5.21-1.noarch"],
-                     :puppet_module => []
+                       "walrus-5.21-1.noarch"]
                     }
                   }
                 }]

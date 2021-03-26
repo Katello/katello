@@ -62,15 +62,6 @@ module Katello
       assert_equal @root.errors[:os_versions], ["are only allowed for Yum repositories."]
     end
 
-    test_attributes :pid => 'daa10ded-6de3-44b3-9707-9f0ac983d2ea'
-    def test_create_with_content_type_puppet
-      @root.download_policy = nil
-      @root.content_type = 'puppet'
-      @root.url = 'http://davidd.fedorapeople.org/repos/random_puppet/'
-      assert_valid @root
-      assert_equal 'puppet', @root.content_type
-    end
-
     test_attributes :pid => '1b17fe37-cdbf-4a79-9b0d-6813ea502754'
     def test_create_with_authenticated_yum_repo
       @root.content_type = 'yum'
@@ -152,19 +143,6 @@ module Katello
       @root.download_policy = new_download_policy
       assert_valid @root
       assert_equal new_download_policy, @root.download_policy
-    end
-
-    test_attributes :pid => 'af9e4f0f-d128-43d2-a680-0a62c7dab266'
-    def test_positive_create_with_authenticated_puppet_repo
-      @root.download_policy = nil
-      @root.content_type = 'puppet'
-      valid_http_credentials_list(true).each do |credential|
-        url = "http://#{credential[:login]}:#{credential[:pass]}@rplevka.fedorapeople.org/fakepuppet01/"
-        @root.url = url
-        assert @root.valid?, "Validation failed for create with valid url: '#{url}'"
-        assert_equal url, @root.url
-        assert_equal 'puppet', @root.content_type
-      end
     end
 
     test_attributes :pid => 'c3678878-758a-4501-a038-a59503fee453'
@@ -289,7 +267,7 @@ module Katello
     test_attributes :pid => '8a59cb31-164d-49df-b3c6-9b90634919ce'
     def test_create_non_yum_with_download_policy
       @root.download_policy = 'on_demand'
-      %w[puppet docker ostree].each do |content_type|
+      %w[docker ostree].each do |content_type|
         @root.content_type = content_type
         refute @root.valid?, "Validation succeed for create with download_policy and non-yum repository: #{content_type}"
         assert @root.errors.key?(:download_policy)
@@ -606,7 +584,7 @@ module Katello
       @root.ostree_upstream_sync_depth = 123
       assert @root.valid?
 
-      @root.content_type = 'puppet'
+      @root.content_type = 'file'
       refute @root.valid?
       assert_includes @root.errors, :ostree_upstream_sync_policy
     end
@@ -655,7 +633,7 @@ module Katello
       assert_includes @root.errors, :ignorable_content
 
       @root.ignorable_content = ["srpm"]
-      @root.content_type = Repository::PUPPET_TYPE
+      @root.content_type = Repository::FILE_TYPE
       @root.download_policy = nil
       refute @root.valid?
       assert_includes @root.errors, :ignorable_content
@@ -705,9 +683,6 @@ module Katello
     end
 
     def test_capsule_download_policy
-      proxy = SmartProxy.new(:download_policy => 'on_demand')
-      assert_nil @content_view_puppet_environment.capsule_download_policy(proxy)
-      assert_nil @puppet_forge.capsule_download_policy(proxy)
       assert_not_nil @fedora_17_x86_64.download_policy
     end
 

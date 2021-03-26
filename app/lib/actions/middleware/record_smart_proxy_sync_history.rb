@@ -8,11 +8,6 @@ module Actions
           smart_proxy_id = action.input[:smart_proxy_id] || action.input[:capsule_id]
           smart_proxy = ::SmartProxy.find_by(id: smart_proxy_id)
 
-          #skip pulp2 puppet syncs
-          if (repo_pulp_id = action.input[:repo_pulp_id])
-            return if ::Katello::ContentViewPuppetEnvironment.find_by(pulp_id: repo_pulp_id)
-          end
-
           if repo && smart_proxy
             self.action.output[:smart_proxy_history_id] = repo.create_smart_proxy_sync_history(smart_proxy)
           else

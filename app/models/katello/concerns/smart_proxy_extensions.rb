@@ -10,7 +10,6 @@ module Katello
       module Overrides
         def refresh
           errors = super
-          update_puppet_path
           errors
         end
       end
@@ -103,20 +102,6 @@ module Katello
 
       def update_unauthenticated_repo_list(repo_names)
         ProxyAPI::ContainerGateway.new(url: self.url).unauthenticated_repository_list("repositories": repo_names)
-      end
-
-      def puppet_path
-        self[:puppet_path] || update_puppet_path
-      end
-
-      def update_puppet_path
-        if has_feature?(PULP_FEATURE)
-          path = ::ProxyAPI::Pulp.new(:url => self.url).capsule_puppet_path['puppet_content_dir']
-        elsif has_feature?(PULP_NODE_FEATURE)
-          path = ::ProxyAPI::PulpNode.new(:url => self.url).capsule_puppet_path['puppet_content_dir']
-        end
-        self.update_attribute(:puppet_path, path || '') if persisted?
-        path
       end
 
       def pulp_url
@@ -295,12 +280,10 @@ module Katello
 
       def associate_default_locations
         return unless self.pulp_primary?
-        ['puppet_content', 'subscribed_hosts'].each do |type|
-          default_location = ::Location.unscoped.find_by_title(
-            ::Setting[:"default_location_#{type}"])
-          if default_location.present? && !locations.include?(default_location)
-            self.locations << default_location
-          end
+        default_location = ::Location.unscoped.find_by_title(
+          ::Setting[:default_location_subscribed_hosts])
+        if default_location.present? && !locations.include?(default_location)
+          self.locations << default_location
         end
       end
 

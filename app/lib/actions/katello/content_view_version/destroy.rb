@@ -8,21 +8,11 @@ module Actions
           destroy_env_content = !options.fetch(:skip_destroy_env_content, false)
           repos = destroy_env_content ? version.repositories : version.archived_repos
 
-          puppet_envs = []
-          if destroy_env_content
-            puppet_envs = version.content_view_puppet_environments
-          elsif version.archive_puppet_environment
-            puppet_envs = [version.archive_puppet_environment]
-          end
-
           sequence do
             concurrence do
               repos.each do |repo|
                 repo_options = options.clone
                 plan_action(Repository::Destroy, repo, repo_options)
-              end
-              puppet_envs.each do |cvpe|
-                plan_action(ContentViewPuppetEnvironment::Destroy, cvpe) unless version.default?
               end
             end
           end

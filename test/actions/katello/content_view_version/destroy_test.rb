@@ -22,22 +22,6 @@ module Katello::Host
         @version.repositories.each do |repo|
           assert_action_planed_with(action, Actions::Katello::Repository::Destroy, repo, options)
         end
-
-        @version.content_view_puppet_environments.each do |cvpe|
-          assert_action_planed_with(action, Actions::Katello::ContentViewPuppetEnvironment::Destroy, cvpe)
-        end
-      end
-
-      it 'plans with nil content_view_puppet_environments values' do
-        @version.stubs(:archive_puppet_environment).returns(nil)
-        options = {:skip_environment_check => true, :skip_destroy_env_content => true}
-        plan_action(action, @version, options)
-
-        @version.archived_repos.each do |repo|
-          assert_action_planed_with(action, Actions::Katello::Repository::Destroy, repo, options)
-        end
-
-        refute_action_planed(action, Actions::Katello::ContentViewPuppetEnvironment::Destroy)
       end
     end
   end

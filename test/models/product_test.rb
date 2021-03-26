@@ -241,15 +241,6 @@ module Katello
       assert @redhat_product.used_by_another_org?
     end
 
-    def test_subscribable_with_puppet_repo
-      puppet_repo = katello_root_repositories(:p_forge_root)
-      product = katello_products(:fedora)
-      Repository.any_instance.stubs(:exist_for_environment?).returns(true)
-      product.root_repositories = [puppet_repo]
-
-      refute_includes Product.subscribable, product
-    end
-
     def test_subscribable_without_repos
       product = katello_products(:fedora)
       product.root_repositories = []
@@ -269,27 +260,19 @@ module Katello
       assert_equal expected, found_content.content.cp_content_id
     end
 
-    def test_subscribable_puppet_and_yum_repos
-      product = katello_products(:fedora)
-      Repository.any_instance.stubs(:exist_for_environment?).returns(true)
-      product.root_repositories << katello_root_repositories(:p_forge_root)
-
-      assert_includes Product.subscribable, product
-    end
-
     def test_available_content
       product = katello_products(:fedora)
       fedora = katello_repositories(:fedora_17_x86_64)
-      puppet = katello_repositories(:p_forge)
+      file = katello_repositories(:generic_file)
 
       fedora_content = product.product_contents.to_a
-      puppet.root.update(content_id: 2)
+      file.root.update(content_id: 2)
 
-      content = FactoryBot.create(:katello_content, cp_content_id: puppet.content_id, organization_id: puppet.product.organization_id)
+      content = FactoryBot.create(:katello_content, cp_content_id: file.content_id, organization_id: file.product.organization_id)
       FactoryBot.create(:katello_product_content, content: content, product: product)
 
       Repository.any_instance.stubs(:exist_for_environment?).returns(true)
-      product.root_repositories = [fedora.root, puppet.root]
+      product.root_repositories = [fedora.root, file.root]
 
       assert_equal fedora_content, product.available_content.to_a
     end

@@ -17,7 +17,6 @@ module Actions
 
         def finalize
           User.as_anonymous_admin do
-            environment  = ::Katello::KTEnvironment.find(input[:environment_id])
             content_view = ::Katello::ContentView.find(input[:content_view_id])
             repository = ::Katello::Repository.find(input[:repository_id]) if input[:repository_id]
 
@@ -27,8 +26,6 @@ module Actions
                 arch = Architecture.where(:name => repository.distribution_arch).first_or_create!
                 os.architectures << arch unless os.architectures.include?(arch)
               end
-            else
-              ::Katello::Foreman.update_puppet_environment(content_view, environment)
             end
           end
         end

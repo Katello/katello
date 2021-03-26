@@ -20,8 +20,6 @@ module Katello
     has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
                                          :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict_with_exception
-    has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
-                                                :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict_with_exception
     has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
     has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
     has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
@@ -216,10 +214,6 @@ module Katello
 
     def products
       self.library? ? Product.in_org(self.organization) : Product.where(id: repositories.map(&:product_id))
-    end
-
-    def puppet_repositories
-      self.repositories.readable.puppet_type
     end
 
     def as_json(_options = {})

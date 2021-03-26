@@ -12,13 +12,10 @@ module Actions
 
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/CyclomaticComplexity
-        # rubocop:disable Metrics/AbcSize
         # rubocop:disable Metrics/PerceivedComplexity
         def run
           repo = ::Katello::Repository.find(input[:id])
-          if repo.puppet?
-            ::Katello::PuppetModule.import_for_repository(repo)
-          elsif repo.docker?
+          if repo.docker?
             ::Katello::DockerManifest.import_for_repository(repo)
             ::Katello::DockerTag.import_for_repository(repo)
             ::Katello::DockerManifestList.import_for_repository(repo)

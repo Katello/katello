@@ -12,6 +12,10 @@ msgstr ""
 msgid "-- select an interval --"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/subscriptions/subscription-start-date.directive.js
+msgid "(future)"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
 msgid "(Not all Activation Keys editable )"
 msgstr ""
@@ -22,10 +26,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-add-subscriptions.html
 msgid "{{ 'Add Selected' | translate }}"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite-available-content-views.html
-msgid "{{ componentContentView.puppet_modules.length || 0 }} Puppet Modules"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite-available-content-views.html
@@ -44,10 +44,6 @@ msgstr ""
 msgid ""
 "{{ contentView.name }} cannot be deleted as one or more Content View Versions are still promoted to a Lifecycle Environment.\n"
 "      Each Content View Version must be removed from their Lifecycle Environments before the Content View can be deleted."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite-content-views-list.html
-msgid "{{ contentViewComponent.content_view_version.puppet_module_count || 0 }} Puppet Modules"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/components/views/content-view-composite-content-views-list.html
@@ -118,10 +114,6 @@ msgstr ""
 msgid "{{ product.name }}"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module.html
-msgid "{{ puppetModule.name }}"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "{{ repository.content_counts.ansible_collection || 0 }} Ansible Collections"
 msgstr ""
@@ -180,10 +172,6 @@ msgstr ""
 msgid "{{ repository.content_counts.ostree_branch || 0 }} OSTree Branches"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
-msgid "{{ repository.content_counts.puppet_module || 0 }} Puppet Modules"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-yum.html
@@ -205,7 +193,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
 msgid "{{ repository.last_sync_words }} ago"
 msgstr ""
 
@@ -259,10 +246,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
 msgid "{{ version.package_count }} Packages"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
-msgid "{{ version.puppet_module_count }} Puppet Modules"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
@@ -419,9 +402,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-module-streams.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-details.html
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/content-view-deletion.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-info.html
 msgid "Actions"
@@ -510,10 +490,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
 msgid "Add New Environment"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
-msgid "Add New Module"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/new-filter.html
@@ -729,8 +705,6 @@ msgid "An error occurred trying to auto-attach subscriptions.  Please check your
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/content-view-details.controller.js
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/content-view-puppet-module-versions.controller.js
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/content-view-puppet-modules.controller.js
 msgid "An error occurred updating the Content View:"
 msgstr ""
 
@@ -974,12 +948,6 @@ msgid_plural "Are you sure you want to remove {{ table.getSelected().length }} p
 msgstr[0] ""
 msgstr[1] ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
-msgid "Are you sure you want to remove the {{ table.getSelected()[0].name }} Puppet Module?"
-msgid_plural "Are you sure you want to remove the {{ table.numSelected }} Puppet Modules?"
-msgstr[0] ""
-msgstr[1] ""
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "Are you sure you want to remove the {{ table.getSelected()[0].name }} repository?"
 msgid_plural "Are you sure you want to remove {{ table.getSelected().length }} repositories?"
@@ -1065,14 +1033,7 @@ msgstr ""
 msgid "Attached"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
-#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-puppet-modules.html
-#: app/assets/javascripts/bastion_katello/environments/details/views/environment-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
 msgid "Author"
 msgstr ""
 
@@ -1105,10 +1066,6 @@ msgstr ""
 msgid "Available Module Streams"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
-msgid "Available Puppet Modules for Content View:"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/docker-tags/views/docker-tags.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-docker-tags.html
 msgid "Available Schema Versions"
@@ -1138,7 +1095,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 msgid "Basic Information"
 msgstr ""
@@ -1614,7 +1570,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
 #: app/assets/javascripts/bastion_katello/environments/views/environments.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module.html
 #: app/assets/javascripts/bastion_katello/environments/content.service.js
 msgid "Content Views"
 msgstr ""
@@ -1639,20 +1594,12 @@ msgstr ""
 msgid "Content Views for File:"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-content-views.html
-msgid "Content Views for Puppet Module:"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-content-views.html
 msgid "Content Views that contain this Deb"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/files/details/views/file-content-views.html
 msgid "Content Views that contain this File"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-content-views.html
-msgid "Content Views that contain this Puppet Module"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
@@ -1787,14 +1734,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-subscriptions-list.html
 msgid "Current Subscriptions for Activation Key:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/content-view-puppet-modules.controller.js
-msgid "Currently %s"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
-msgid "Currently Selected Puppet Modules"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
@@ -1944,7 +1883,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
 #: app/assets/javascripts/bastion_katello/products/new/views/product-new-form.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
@@ -1977,7 +1915,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-details.html
 #: app/assets/javascripts/bastion_katello/tasks/views/task-details.html
 msgid "Details"
@@ -2146,7 +2083,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/files/details/views/file-content-views.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-add-hosts.html
 #: app/assets/javascripts/bastion_katello/host-collections/details/views/host-collection-hosts-list.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-content-views.html
 msgid "Environment"
 msgstr ""
 
@@ -2381,8 +2317,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
 msgid "Filter..."
 msgstr ""
 
@@ -2423,10 +2357,6 @@ msgstr ""
 msgid "Force Promote?"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
-msgid "Force Puppet Environment"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/http-proxy-service.js
 msgid "Global Default"
 msgstr ""
@@ -2463,6 +2393,10 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
 msgid "Group Remove"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
+msgid "Guests of"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-traces-modal.html
@@ -2825,7 +2759,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
 msgid "Last Sync"
 msgstr ""
 
@@ -2838,7 +2771,6 @@ msgid "Last Updated On"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/components/content-view-composite-content-views-list.controller.js
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/content-view-puppet-modules.controller.js
 msgid "Latest (Currently %s)"
 msgstr ""
 
@@ -2869,7 +2801,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module.html
 msgid "Library Repositories"
 msgstr ""
 
@@ -2881,16 +2812,11 @@ msgstr ""
 msgid "Library Repositories that contain this File."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
-msgid "Library Repositories that contain this Puppet Module."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-hosts/content/content-host-errata.controller.js
 msgid "Library Synced Content"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
 msgid "License"
 msgstr ""
 
@@ -3036,14 +2962,6 @@ msgstr ""
 msgid "Manage Packages for Repository:"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
-msgid "Manage Puppet Modules for {{ repository.name }}"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
-msgid "Manage Puppet Modules for Repository:"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Manage Repository Sets"
 msgstr ""
@@ -3097,10 +3015,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-errata.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 msgid "Modular"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/content-view-puppet-modules.controller.js
-msgid "Module %s removed from Content View."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/new-filter.controller.js
@@ -3167,7 +3081,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
 #: app/assets/javascripts/bastion_katello/errata/errata-severity.filter.js
 msgid "N/A"
 msgstr ""
@@ -3200,8 +3113,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/new-filter.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter-details.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-docker-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-file-repositories.html
@@ -3216,7 +3127,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-ostree-branches.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-package-groups.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-packages.html
-#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-yum.html
 #: app/assets/javascripts/bastion_katello/content-views/views/content-views.html
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-content-views.html
@@ -3229,7 +3139,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-module-streams.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-ostree.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-packages.html
-#: app/assets/javascripts/bastion_katello/environments/details/views/environment-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-repositories.html
 #: app/assets/javascripts/bastion_katello/environments/views/new-environment.html
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-content-hosts.html
@@ -3253,16 +3162,12 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-files.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-package-groups.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-packages.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/views/product-info.html
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
 #: app/assets/javascripts/bastion_katello/products/new/views/product-new-form.html
 #: app/assets/javascripts/bastion_katello/products/views/products.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-content-views.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-info.html
 #: app/assets/javascripts/bastion_katello/sync-plans/details/views/sync-plan-products.html
 #: app/assets/javascripts/bastion_katello/sync-plans/new/views/new-sync-plan-form.html
@@ -3417,10 +3322,6 @@ msgstr ""
 msgid "No Content Views contain this File"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-content-views.html
-msgid "No Content Views contain this Puppet Module"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-environment-modal.html
 msgid "No content views exist for {{selected.environment.name}}"
 msgstr ""
@@ -3477,10 +3378,6 @@ msgstr ""
 msgid "No products are have been added to this Sync Plan."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
-msgid "No puppet modules found"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-release-version-modal.html
 msgid "No releases exist in the Library."
 msgstr ""
@@ -3505,10 +3402,6 @@ msgstr ""
 msgid "No Repositories contain this Package."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
-msgid "No Repositories contain this Puppet Module"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-repository-sets.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-repository-sets.html
 msgid "No repository sets provided through subscriptions."
@@ -3530,10 +3423,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks-table.html
 msgid "No tasks exist for this resource."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
-msgid "No versions found for {{ $stateParams.moduleName }}"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/views/products.html
@@ -3566,7 +3455,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
 msgid "Not Synced"
 msgstr ""
 
@@ -3862,6 +3750,10 @@ msgstr ""
 msgid "Performs a complete sync, verifying the checksum of all packages afterwards. Any missing or corrupt package will be re-downloaded. This option will take the longest amount of time. Choose this option if:"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
+msgid "Physical"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/sync-plans/details/sync-plan-details-info.controller.js
 msgid "Please enter cron below"
 msgstr ""
@@ -3930,7 +3822,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-repositories.html
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
 msgid "Product"
 msgstr ""
 
@@ -4000,10 +3891,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-add-subscriptions.html
 msgid "Products not covered"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
-msgid "Project Page"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-promotion.html
@@ -4101,37 +3988,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-provisioning-info.html
 msgid "Puppet Environment"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/content-view-puppet-module-versions.controller.js
-msgid "Puppet module added to Content View"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
-msgid ""
-"Puppet module metadata generation has been initiated in the background.\n"
-"      Click <a ng-href=\"{{ taskUrl() }}\">Here</a> to monitor the progress."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module.html
-msgid "Puppet Module:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-details.html
-#: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
-#: app/assets/javascripts/bastion_katello/environments/content.service.js
-msgid "Puppet Modules"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/environments/views/environments.html
-msgid "Puppet Modules <div>{{ library.counts.puppet_modules || 0 }}</div>"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
-msgid "Puppet Modules for Content View:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/common/views/subscription-add-or-remove.html
@@ -4328,10 +4184,6 @@ msgstr ""
 msgid "Remove Host Collection \"{{ hostCollection.name }}\"?"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
-msgid "Remove Module"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
 msgid "Remove Module Stream"
 msgstr ""
@@ -4365,16 +4217,6 @@ msgid "Remove product?"
 msgid_plural "Remove {{ table.getSelected().length }} products?"
 msgstr[0] ""
 msgstr[1] ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
-msgid "Remove Puppet Module?"
-msgid_plural "Remove {{ table.numSelected  }} Puppet Modules?"
-msgstr[0] ""
-msgstr[1] ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
-msgid "Remove Puppet Modules"
-msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-deb-repositories.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-docker-repositories.html
@@ -4466,7 +4308,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-details.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-info.html
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-products.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-details.html
 #: app/assets/javascripts/bastion_katello/content-views/views/content-views.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-content-views.html
@@ -4525,10 +4366,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
 msgid "Repositories for Product:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
-msgid "Repositories for Puppet Module:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/discovery/views/discovery-create.html
@@ -4778,20 +4615,8 @@ msgstr ""
 msgid "Select a Content Source:"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
-msgid "Select A New Puppet Module To Add"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
-msgid "Select a Version"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/common/views/select-action-dropdown.html
 msgid "Select Action"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
-msgid "Select an Available Version of {{ $stateParams.moduleName }}"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/organizations/views/organization-selector.html
@@ -4811,16 +4636,8 @@ msgstr ""
 msgid "Select Environment"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
-msgid "Select new version"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-environments.html
 msgid "Select the Lifecycle Environments you would like to remove Version {{ version.version }} from:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
-msgid "Select Version"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
@@ -4929,10 +4746,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/common/api-error-handler.service.js
 msgid "Something went wrong when saving the resource."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
-msgid "Source"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
@@ -5143,11 +4956,8 @@ msgid "Successfully uploaded content:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/filter-rule-matching-package-modal.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
 #: app/assets/javascripts/bastion_katello/packages/details/views/package-info.html
 #: app/assets/javascripts/bastion_katello/packages/views/packages.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
 msgid "Summary"
 msgstr ""
 
@@ -5287,6 +5097,10 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/views/product-details.html
 #: app/assets/javascripts/bastion_katello/tasks/views/tasks.html
 msgid "Tasks"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
+msgid "Temporary"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
@@ -5634,10 +5448,6 @@ msgstr ""
 msgid "Type: {{ filter.inclusion | filterType }} {{ filter.type | filterContentType }}"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/content-view-puppet-modules.controller.js
-msgid "Unable to determine version"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-details.html
 msgid "Unauthenticated Pull"
 msgstr ""
@@ -5753,10 +5563,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Upload Package"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-msgid "Upload Puppet Module"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -5897,8 +5703,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/module-stream-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
 #: app/assets/javascripts/bastion_katello/content-views/details/histories/views/content-view-history.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-publish.html
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-components.html
@@ -5911,7 +5715,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-module-streams.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-ostree.html
 #: app/assets/javascripts/bastion_katello/environments/details/views/environment-packages.html
-#: app/assets/javascripts/bastion_katello/environments/details/views/environment-puppet-modules.html
 #: app/assets/javascripts/bastion_katello/errata/views/apply-errata-confirm.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-content-views.html
 #: app/assets/javascripts/bastion_katello/module-streams/views/partials/module-streams-table.html
@@ -5921,10 +5724,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-debs.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ostree-branches.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-puppet-modules.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-content-views.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-info.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
 msgid "Version"
 msgstr ""
 
@@ -5950,10 +5749,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-versions.html
 msgid "Versions for Content View:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
-msgid "Versions for Puppet Module:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
@@ -5997,6 +5792,10 @@ msgstr ""
 msgid "View job invocations."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
+msgid "Virtual"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Virtual Guest"
 msgstr ""
@@ -6024,10 +5823,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
 msgid "When validating content, repositories using the \"On Demand\" download policy will download all packages within the repository."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
-msgid "With this option selected, a puppet environment will be created during publish and promote even if no puppet modules have been added to the Content View"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
@@ -6159,14 +5954,6 @@ msgstr ""
 msgid "You currently don't have any Products<span bst-feature-flag=\"custom_products\">, you can add Products using the button on the right</span>."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
-msgid "You currently don't have any Puppet Modules included in this Content View, you can add Puppet Modules using the button on the right."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
-msgid "You currently don't have any Puppet Modules."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-credentials/details/views/content-credential-repositories.html
 msgid "You currently don't have any Repositories associated with this Content Credential."
 msgstr ""
@@ -6248,7 +6035,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-content-views.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-content-views.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-content-views.html
 msgid "Your search returned zero Content Views"
 msgstr ""
 
@@ -6311,15 +6097,8 @@ msgstr ""
 msgid "Your search returned zero Products."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-names.html
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-modules.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/views/puppet-modules.html
-msgid "Your search returned zero Puppet Modules."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/debs/details/views/deb-repositories.html
 #: app/assets/javascripts/bastion_katello/files/details/views/file-repositories.html
-#: app/assets/javascripts/bastion_katello/puppet-modules/details/views/puppet-module-repositories.html
 msgid "Your search returned zero Repositories"
 msgstr ""
 
@@ -6359,10 +6138,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "Your search returned zero Traces."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-views/details/puppet-modules/views/content-view-puppet-module-versions.html
-msgid "Your search returned zero versions for {{ $stateParams.moduleName }}"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-details.html

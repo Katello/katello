@@ -43,7 +43,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(ContentView)
     def index
-      content_view_includes = [:activation_keys, :content_view_puppet_modules, :content_view_versions,
+      content_view_includes = [:activation_keys, :content_view_versions,
                                :environments, :organization, :repositories]
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc, :includes => content_view_includes))
     end
@@ -120,53 +120,6 @@ module Katello
       respond :resource => @content_view
     end
 
-    api :GET, "/content_views/:id/available_puppet_modules",
-        N_("Get puppet modules that are available to be added to the content view")
-    param :id, :number, :desc => N_("content view numeric identifier"), :required => true
-    param :name, String, :desc => N_("module name to restrict modules for"), :required => false
-    def available_puppet_modules
-      current_cv_puppet_modules = @content_view.content_view_puppet_modules.where("uuid is NOT NULL")
-      current_uuids = current_cv_puppet_modules.pluck(:uuid)
-      repositories = @content_view.organization.library.puppet_repositories
-      query = PuppetModule.in_repositories(repositories)
-      selected_latest_versions = []
-      if params[:name]
-        query = query.where(:name => params[:name])
-        if current_uuids.present?
-          module_by_name = current_cv_puppet_modules.find_by(:name => params[:name])
-          if module_by_name&.latest_in_modules_by_author?(query)
-            current_uuids.delete(module_by_name.uuid)
-            selected_latest_versions.push(module_by_name.uuid)
-          end
-        end
-      end
-      query = query.where("#{PuppetModule.table_name}.pulp_id NOT in (?)", current_uuids) if current_uuids.present?
-      custom_sort = ->(sort_query) { sort_query.order('author, name, sortable_version DESC') }
-      sorted_records = scoped_search(query, nil, nil, :resource_class => PuppetModule, :custom_sort => custom_sort)
-      if params[:name]
-        sorted_records_with_use_latest = add_use_latest_records(sorted_records[:results].to_a, selected_latest_versions)
-        sorted_records[:results] = sorted_records_with_use_latest
-        sorted_records[:total] = sorted_records_with_use_latest.count
-        sorted_records[:subtotal] = sorted_records_with_use_latest.count
-      end
-      respond_for_index :template => 'puppet_modules', :collection => sorted_records
-    end
-
-    api :GET, "/content_views/:id/available_puppet_module_names",
-        N_("Get puppet modules names that are available to be added to the content view")
-    param :id, :number, :desc => N_("content view numeric identifier"), :required => true
-    def available_puppet_module_names
-      current_names = @content_view.content_view_puppet_modules.where("name is NOT NULL").pluck(:name)
-
-      repos = @content_view.organization.library.puppet_repositories
-
-      modules = PuppetModule.in_repositories(repos)
-      modules = modules.where('name NOT in (?)', current_names) if current_names.present?
-
-      respond_for_index :template => '../puppet_modules/names',
-                        :collection => scoped_search(modules, 'name', 'ASC', :resource_class => PuppetModule, :group => :name)
-    end
-
     api :DELETE, "/content_views/:id/environments/:environment_id", N_("Remove a content view from an environment")
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     param :environment_id, :number, :desc => N_("environment numeric identifier"), :required => true
@@ -238,7 +191,7 @@ module Katello
     end
 
     def view_params
-      attrs = [:name, :description, :force_puppet_environment, :auto_publish, :solve_dependencies, :import_only,
+      attrs = [:name, :description, :auto_publish, :solve_dependencies, :import_only,
                :default, :created_at, :updated_at, :next_version, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
       if (!@content_view || !@content_view.composite?)

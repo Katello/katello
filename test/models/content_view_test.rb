@@ -11,7 +11,6 @@ module Katello
       @library_view        = katello_content_views(:library_view)
       @library_dev_view    = katello_content_views(:library_dev_view)
       @no_environment_view = katello_content_views(:no_environment_view)
-      @puppet_module       = katello_puppet_modules(:abrt)
     end
 
     def test_docker_promote
@@ -119,17 +118,6 @@ module Katello
     def test_content_view_environments
       assert_includes @library_view.environments, @library
       assert_includes @library.content_views, @library_view
-    end
-
-    def test_environment_content_view_env_destroy_should_fail
-      User.current = User.find(users(:admin).id)
-      ContentViewPuppetEnvironment.any_instance.stubs(:clear_content_indices)
-      env = @dev
-      cve = env.content_views.first.content_view_environments.where(:environment_id => env.id).first
-      assert_raises(RuntimeError) do
-        env.destroy!
-      end
-      refute_nil ContentViewEnvironment.find_by_id(cve.id)
     end
 
     def test_promote
@@ -324,7 +312,6 @@ module Katello
     end
 
     def test_repositories_to_publish
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       composite = ContentView.find(katello_content_views(:composite_view).id)
       v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       composite.update(:component_ids => [v1.id])
@@ -336,7 +323,6 @@ module Katello
     end
 
     def test_repo_conflicts
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       composite = ContentView.find(katello_content_views(:composite_view).id)
       v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       v2 = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version).id)
@@ -353,24 +339,6 @@ module Katello
 
       assert view.repositories.to_a.all? { |repo| repo.library_instance? } #should all be library instances
       assert_empty view.duplicate_repositories_to_publish
-    end
-
-    def test_puppet_module_conflicts
-      composite = ContentView.find(katello_content_views(:composite_view).id)
-      view1 = create(:katello_content_view)
-      version1 = create(:katello_content_view_version, :content_view => view1)
-
-      view2 = create(:katello_content_view)
-      version2 = create(:katello_content_view_version, :content_view => view2)
-
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([stub(:name => "httpd")]).times(4)
-      refute composite.update(component_ids: [version1.id, version2.id])
-      assert_equal 1, composite.errors.count
-      assert composite.errors.full_messages.first =~ /^Puppet module conflict/
-
-      assert_raises(RuntimeError) do
-        composite.components << version1
-      end
     end
 
     def test_docker_repo_conflicts
@@ -432,14 +400,6 @@ module Katello
       assert composite.valid?
       assert_raises(RuntimeError) do
         composite.check_docker_repository_names!([@dev])
-      end
-    end
-
-    def test_puppet_repos
-      @p_forge = Repository.find(katello_repositories(:p_forge).id)
-
-      assert_raises(ActiveRecord::RecordInvalid) do
-        @library_view.repositories << @p_forge
       end
     end
 
@@ -620,19 +580,6 @@ module Katello
 
     def test_search_composite_true
       refute_includes ContentView.search_for("composite = true"), @library_view
-    end
-
-    def test_publish_puppet_environment?
-      @library_view.content_view_puppet_modules.destroy_all
-      refute @library_view.publish_puppet_environment?
-
-      @library_view.content_view_puppet_modules.create(:name => 'foo', :author => 'bar')
-      assert @library_view.publish_puppet_environment?
-
-      @library_view.content_view_puppet_modules.destroy_all
-      @library_view.force_puppet_environment = true
-
-      assert @library_view.publish_puppet_environment?
     end
 
     def test_audit_on_content_view_creation

@@ -37,9 +37,6 @@ msgstr ""
 msgid " %{package_count} Package(s)"
 msgstr ""
 
-msgid " %{puppet_module_count} Puppet Module(s)"
-msgstr ""
-
 msgid " Content view updated."
 msgstr ""
 
@@ -350,7 +347,7 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr ""
 
-msgid "Activation Key(s)"
+msgid "Activation Key(s) *"
 msgstr ""
 
 msgid "Activation Keys"
@@ -358,6 +355,9 @@ msgstr "Ключи активации"
 
 msgid "Activation key ID"
 msgstr "ID ключа активации"
+
+msgid "Activation key(s) for Subscription Manager. Multiple keys should be comma-separated, for example: key1,key2,key3."
+msgstr ""
 
 msgid "Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
 msgstr ""
@@ -373,9 +373,6 @@ msgstr "Активные"
 
 msgid "Add Subscriptions"
 msgstr ""
-
-msgid "Add a puppet module to the content view"
-msgstr "Добавить модуль Puppet в представление"
 
 msgid "Add a subscription to a host"
 msgstr ""
@@ -410,13 +407,16 @@ msgstr ""
 msgid "Add subscriptions to one or more hosts"
 msgstr ""
 
+msgid "Add to this filter using the 'Add package group' button."
+msgstr ""
+
+msgid "Added"
+msgstr ""
+
 msgid "Added Content:"
 msgstr "Добавлено содержимое:"
 
 msgid "Adding content units"
-msgstr ""
-
-msgid "Adding multiple versions of the same Puppet Module is not supported by incremental update.  The following Puppet Modules have duplicate versions in the incremental update content list: %{dup_list}"
 msgstr ""
 
 msgid "Addons"
@@ -769,13 +769,10 @@ msgstr "Вы не можете удалить провайдер, который
 msgid "Cannot delete redhat product content"
 msgstr ""
 
-msgid "Cannot delete the default Location for Puppet content. If you no longer want this Location, change the default Location for Puppet content under Administer > Settings, tab Content."
-msgstr ""
-
 msgid "Cannot delete the default Location for subscribed hosts. If you no longer want this Location, change the default Location for subscribed hosts under Administer > Settings, tab Content."
 msgstr ""
 
-msgid "Cannot delete the last Location. Foreman needs at least one Location to put newly published Puppet content and Hosts registered via subscription-manager"
+msgid "Cannot delete the last Location."
 msgstr ""
 
 msgid "Cannot delete version while it is in environment %s"
@@ -988,9 +985,6 @@ msgstr ""
 msgid "Content View"
 msgstr "Представление"
 
-msgid "Content View %s  cannot be published without an internal capsule."
-msgstr ""
-
 msgid "Content View %{view}: Versions: %{versions}"
 msgstr ""
 
@@ -1121,7 +1115,7 @@ msgstr "%{content} с идентификатором «%{id}» в репозит
 msgid "Could not find %{count} errata.  Only found: %{found}"
 msgstr ""
 
-msgid "Could not find %{name} resource with id %{id}"
+msgid "Could not find %{name} resource with id %{id}. %{perms_message}"
 msgstr ""
 
 msgid "Could not find %{name} resources with ids %{ids}"
@@ -1132,9 +1126,6 @@ msgstr "Окружения не найдены: %s"
 
 msgid "Could not find Lifecycle Environment with id '%{id}'."
 msgstr "Окружение с идентификатором «%{id}» не найдено."
-
-msgid "Could not find Repository for module %s."
-msgstr "Репозиторий для модуля %s не найден."
 
 msgid "Could not find a host with id %s"
 msgstr ""
@@ -1151,9 +1142,6 @@ msgstr ""
 msgid "Could not remove the lifecycle environment from the smart proxy"
 msgstr ""
 
-msgid "Could not unarchive puppet module. Please make sure the puppet module has been compressed properly."
-msgstr "Не удалось извлечь модуль Puppet. Проверьте архив."
-
 msgid "Couldn't find %{content_type} with id '%{id}'"
 msgstr ""
 
@@ -1165,9 +1153,6 @@ msgstr "Фильтр представления с идентификаторо�
 
 msgid "Couldn't find Organization '%s'."
 msgstr "Организация «%s» не найдена."
-
-msgid "Couldn't find Puppet Module with id '%s'"
-msgstr "Модуль Puppet с идентификатором «%s» не найден."
 
 msgid "Couldn't find activation key '%s'"
 msgstr "Ключ активации «%s» не найден."
@@ -1342,13 +1327,7 @@ msgstr ""
 msgid "Default HTTP proxy"
 msgstr ""
 
-msgid "Default Location Puppet content"
-msgstr ""
-
 msgid "Default Location subscribed hosts"
-msgstr ""
-
-msgid "Default Location where new Puppet content will be put upon Content View publish"
 msgstr ""
 
 msgid "Default Location where new subscribed hosts will put upon registration"
@@ -1761,6 +1740,9 @@ msgstr ""
 msgid "Exceeds available quantity"
 msgstr ""
 
+msgid "Exclude"
+msgstr ""
+
 msgid "Exit"
 msgstr ""
 
@@ -1783,9 +1765,6 @@ msgstr ""
 msgid "Export Types"
 msgstr ""
 
-msgid "Export a content view version.  Relevant only for Pulp 2 repositories."
-msgstr ""
-
 msgid "Export a repository"
 msgstr ""
 
@@ -1796,9 +1775,6 @@ msgid "Export history identifier used for incremental export. If not provided th
 msgstr ""
 
 msgid "Export to ISO format"
-msgstr ""
-
-msgid "Export to ISO format."
 msgstr ""
 
 msgid "Exported version"
@@ -1815,12 +1791,6 @@ msgstr ""
 
 msgid "Failed to delete %{host}: %{errors}"
 msgstr ""
-
-msgid "Failed to download %s module."
-msgid_plural "Failed to download %s modules."
-msgstr[0] "Не удалось загрузить %s модуль."
-msgstr[1] "Не удалось загрузить %s модуля."
-msgstr[2] "Не удалось загрузить %s модулей."
 
 msgid "Failed to download %s package."
 msgid_plural "Failed to download %s packages."
@@ -1900,9 +1870,6 @@ msgstr ""
 msgid "Filter versions by environment"
 msgstr "Выбор версий по окружению"
 
-msgid "Filter versions by puppet module"
-msgstr ""
-
 msgid "Filter versions by version number"
 msgstr "Выбор по номеру версии"
 
@@ -1922,6 +1889,9 @@ msgid "Finished"
 msgstr ""
 
 msgid "For pages that support it, automatically perform search while typing in search input."
+msgstr ""
+
+msgid "Force"
 msgstr ""
 
 msgid ""
@@ -1977,12 +1947,6 @@ msgstr "Получить информацию о наборе репозитор
 
 msgid "Get list of available repositories for the repository set"
 msgstr ""
-
-msgid "Get puppet modules names that are available to be added to the content view"
-msgstr "Получить имена модулей Puppet для добавления в представление"
-
-msgid "Get puppet modules that are available to be added to the content view"
-msgstr "Получить модули Puppet для добавления в представление"
 
 msgid "Get status of repo synchronisation for given product"
 msgstr "Получить статус синхронизации репозиториев для продукта"
@@ -2340,15 +2304,18 @@ msgstr ""
 msgid "Import-only content views can not be published directly"
 msgstr ""
 
-msgid "Import-only content views will be available in a future version."
-msgstr ""
-
 msgid "Importing manifest into '%{subject}' failed."
 msgstr ""
 
 # translation auto-copied from project evolution, version 3.8.5, document evolution-3.8
 msgid "In Progress"
 msgstr "Выполняется"
+
+msgid "Include"
+msgstr ""
+
+msgid "Includes associated content view filter ids in response"
+msgstr ""
 
 msgid "Inclusion type"
 msgstr ""
@@ -2505,9 +2472,6 @@ msgstr "Неверные типы исправлений: %{invalid_types}. До
 msgid "Invalid event_type %s"
 msgstr ""
 
-msgid "Invalid export_type from one of the following: %s"
-msgstr ""
-
 msgid "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'"
 msgstr "Неверное правило: «version» не может использоваться вместе с «min_version» и «max_version»"
 
@@ -2522,20 +2486,6 @@ msgid "Invalid params provided - content_type must be one of %s"
 msgstr ""
 
 msgid "Invalid params provided - date_type must be one of %s"
-msgstr ""
-
-msgid ""
-"Invalid puppet module parameters specified. \\\n"
-"                                    Either 'uuid' or 'name' and 'author' must be specified."
-msgstr ""
-
-msgid "Invalid puppet module. Please make sure the puppet module contains a metadata.json file and is properly compressed."
-msgstr "Недопустимый модуль Puppet. Модуль должен содержать файл metadata.json и представлен в сжатом виде."
-
-msgid "Invalid usage for Pulp 2 repositories. Use export for Yum repositories"
-msgstr ""
-
-msgid "Invalid usage for Pulp 3 repositories. Use hammer content-export for Yum repositories"
 msgstr ""
 
 msgid "Invalid value specified for Container Image repositories."
@@ -2687,9 +2637,6 @@ msgstr ""
 msgid "List components attached to this content view"
 msgstr ""
 
-msgid "List content view puppet modules"
-msgstr "Показать модули Puppet"
-
 msgid "List content view versions"
 msgstr "Показать версии представления"
 
@@ -2735,8 +2682,8 @@ msgstr ""
 msgid "List of Errata ids"
 msgstr "Показать идентификаторы исправлений"
 
-msgid "List of Errata ids to install"
-msgstr "Список идентификаторов устанавливаемых исправлений "
+msgid "List of Errata ids to install. Will be removed in Katello 4.1."
+msgstr ""
 
 msgid "List of Products for sync plan"
 msgstr ""
@@ -3133,6 +3080,9 @@ msgstr ""
 msgid "No matching filters found"
 msgstr ""
 
+msgid "No matching package groups found."
+msgstr ""
+
 msgid "No matching repositories found"
 msgstr ""
 
@@ -3141,6 +3091,9 @@ msgstr "Нет новых пакетов"
 
 msgid "No new packages."
 msgstr "Нет новых пакетов."
+
+msgid "No package groups have been added to this filter."
+msgstr ""
 
 msgid "No packages removed"
 msgstr "Пакеты не удалены"
@@ -3221,6 +3174,9 @@ msgid "Not Specified"
 msgstr ""
 
 msgid "Not a number"
+msgstr ""
+
+msgid "Not added"
 msgstr ""
 
 msgid "Not all necessary pulp workers running at %s."
@@ -3305,9 +3261,6 @@ msgstr "Операторы"
 msgid "Optional date of last export (ex: 2010-01-01T12:00:00Z)"
 msgstr ""
 
-msgid "Optional date of last export (ex: 2010-01-01T12:00:00Z). Relevant only for Pulp 2 repositories"
-msgstr ""
-
 msgid "Organization"
 msgstr "Организация"
 
@@ -3318,6 +3271,9 @@ msgid "Organization ID"
 msgstr "ID организации"
 
 msgid "Organization ID is required"
+msgstr ""
+
+msgid "Organization Information not provided."
 msgstr ""
 
 msgid "Organization cannot be blank."
@@ -3491,6 +3447,9 @@ msgstr "Не удалось обновить группу пакетов"
 # translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Package group update timed out"
 msgstr "Время ожидания обновления группы пакетов истекло"
+
+msgid "Package groups"
+msgstr ""
 
 msgid "Package identifiers to filter content by"
 msgstr ""
@@ -3771,35 +3730,6 @@ msgstr "Ошибка задачи Pulp"
 msgid "Pulpcore"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
-msgid "Puppet Environment"
-msgstr "Окружение Puppet"
-
-msgid "Puppet Module"
-msgstr "Модуль Puppet"
-
-msgid ""
-"Puppet Module does not belong to content view organization\\\n"
-"                                      '%{name}'"
-msgstr ""
-
-msgid ""
-"Puppet Module with name='%{name}' and author='%{author}' does\\\n"
-"                                    not exist"
-msgstr ""
-
-msgid ""
-"Puppet Module with uuid='%{uuid}' does not\\\n"
-"                                    exist"
-msgstr ""
-
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
-msgid "Puppet Modules"
-msgstr "Модули Puppet"
-
-msgid "Puppet module conflict: '%{mod}' is in %{versions}."
-msgstr "Модуль «%{mod}» входит в состав %{versions}."
-
 msgid "Quantity"
 msgstr ""
 
@@ -3910,6 +3840,9 @@ msgstr "Включить $releasever "
 msgid "Reload data"
 msgstr "Перезагрузить"
 
+msgid "Remote action:"
+msgstr ""
+
 msgid "Removal of package group(s) requested: %{groups}"
 msgstr ""
 
@@ -3928,8 +3861,8 @@ msgstr "Удалить версии и соответствия"
 msgid "Remove a content view from an environment"
 msgstr "Удалить представление из окружения"
 
-msgid "Remove a puppet module from the content view"
-msgstr "Удалить модуль Puppet из представления"
+msgid "Remove any `katello-ca-consumer` rpms before registration and run subscription-manager with `--force` argument."
+msgstr ""
 
 msgid "Remove components from the content view"
 msgstr ""
@@ -4064,9 +3997,6 @@ msgstr ""
 msgid "Requires Virt-Who"
 msgstr ""
 
-msgid "Reset Puppet Environment"
-msgstr ""
-
 msgid "Resolve Traces"
 msgstr ""
 
@@ -4107,7 +4037,7 @@ msgstr ""
 msgid "Return errata that are upgradable on one or more hosts"
 msgstr ""
 
-msgid "Return errata that can be added to the Content View Version via an Incremental Update"
+msgid "Return errata that can be added to the Content View Version via an Incremental Update. Will be removed in Katello 4.1."
 msgstr ""
 
 msgid "Return errata that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported."
@@ -4145,6 +4075,9 @@ msgstr ""
 
 msgid "Return the content of a repo gpg key, used directly by yum"
 msgstr "Вернуть содержимое ключа GPG, используемого в yum"
+
+msgid "Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported"
+msgstr ""
 
 msgid "Role"
 msgstr ""
@@ -4276,9 +4209,6 @@ msgstr ""
 msgid "Sets whether the Host will autoheal subscriptions upon checkin"
 msgstr ""
 
-msgid "Setting 'default_location_puppet_content' is not set to a valid location."
-msgstr ""
-
 msgid "Setting 'default_location_subscribed_hosts' is not set to a valid location."
 msgstr ""
 
@@ -4297,9 +4227,6 @@ msgstr "Показать представление"
 
 msgid "Show a content view component"
 msgstr ""
-
-msgid "Show a content view puppet module"
-msgstr "Показать модуль Puppet представления"
 
 msgid "Show a content view's history"
 msgstr "Показать журнал представления"
@@ -4390,6 +4317,9 @@ msgid "Solve dependencies"
 msgstr ""
 
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view filter! ${error}"
 msgstr ""
 
 msgid "Something went wrong while retrieving the content view filters! ${error}"
@@ -4716,6 +4646,12 @@ msgstr "Описание новых версий представления"
 msgid "The email notification will include subscriptions expiring in this number of days or fewer."
 msgstr ""
 
+msgid "The environment %{name} is in use by %{count} Host Group(s) including %{names}"
+msgstr ""
+
+msgid "The environment %{name} is in use by %{count} Host(s) including %{names}"
+msgstr ""
+
 msgid "The erratum filter rule end date is in an invalid format or type."
 msgstr "Недействительный формат или тип даты окончания в правиле фильтрации."
 
@@ -4771,12 +4707,6 @@ msgstr "%{content_view} добавлен в %{environment}.  Доступно и
 
 msgid "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts."
 msgstr "%{content_view} добавлен в  <b>%{environment}</b>.  Обязательных исправлений: %{count}."
-
-msgid "The puppet environment %{name} is in use by %{count} Host Group(s) including %{names}"
-msgstr "Окружение %{name} используется %{count} группой/группами узлов, в том числе %{names}"
-
-msgid "The puppet environment %{name} is in use by %{count} Host(s) including %{names}"
-msgstr "Окружение %{name} используется %{count} узлом/узлами, в том числе %{names}"
 
 msgid "The repository is already enabled"
 msgstr "Репозиторий уже включен"
@@ -4835,9 +4765,6 @@ msgstr "Нет продуктов и репозиториев. Настройт�
 msgid "There either were no environments nor versions specified or there were invalid environments/versions specified. Please check environment_ids and content_view_version_ids parameters."
 msgstr "Окружения и версии не заданы или определены неверно. Проверьте параметры environment_ids и content_view_version_ids."
 
-msgid "There is already a module named \"%{value}\" in this content view."
-msgstr ""
-
 msgid "There is no Manifest History to display."
 msgstr ""
 
@@ -4868,14 +4795,8 @@ msgstr ""
 msgid "This action doesn't support package groups"
 msgstr ""
 
-msgid "This action will become available after the Pulp 3 content migration"
-msgstr ""
-
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
 msgstr "Сертификат позволяет просмотреть репозитории окружения из окна браузера."
-
-msgid "This content view has on demand repositories that cannot be exported: %{repos}"
-msgstr ""
 
 msgid "This content view version doesn't have a history."
 msgstr ""
@@ -4946,9 +4867,6 @@ msgstr "Название"
 
 msgid "Toggling Simple Content Access will refresh your manifest."
 msgstr ""
-
-msgid "Total module count: %s."
-msgstr "Всего модулей: %s"
 
 msgid "Total steps: "
 msgstr ""
@@ -5134,9 +5052,6 @@ msgstr "Обновить правило фильтрации. Список па�
 
 msgid "Update a host collection"
 msgstr "Обновить коллекцию узлов"
-
-msgid "Update a puppet module associated with the content view"
-msgstr "Обновить модуль Puppet для этого представления"
 
 msgid "Update a repository"
 msgstr "Обновить репозиторий"
@@ -5483,9 +5398,6 @@ msgstr "пакет"
 msgid "a package group"
 msgstr "группа пакетов"
 
-msgid "a puppet module"
-msgstr "модуль Puppet"
-
 msgid "actions not found"
 msgstr ""
 
@@ -5516,6 +5428,9 @@ msgstr "не удалось обновить все пакеты"
 msgid "allow unauthenticed pull of container images"
 msgstr ""
 
+msgid "already belongs to the content view"
+msgstr ""
+
 msgid "already taken"
 msgstr "уже используется"
 
@@ -5536,9 +5451,6 @@ msgstr ""
 
 msgid "attempted to sync without a feed URL"
 msgstr ""
-
-msgid "author of the puppet module"
-msgstr "автор модуля Puppet"
 
 msgid "auto attach subscriptions upon registration"
 msgstr "автоматический выбор подписок при регистрации"
@@ -5631,7 +5543,7 @@ msgstr ""
 msgid "content release version"
 msgstr "версия содержимого"
 
-msgid "content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')"
+msgid "content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')"
 msgstr ""
 
 msgid "content view component ID. Identifier of the component association"
@@ -5909,14 +5821,8 @@ msgstr "максимальное число зарегистрированных
 msgid "maximum size of each ISO in MB"
 msgstr ""
 
-msgid "maximum size of each ISO in MB. Relevant only for Pulp 2 repositories"
-msgstr ""
-
 msgid "may not be less than the number of hosts associated with the host collection."
 msgstr ""
-
-msgid "module name to restrict modules for"
-msgstr "имя модуля для органичения"
 
 msgid "module stream ids"
 msgstr ""
@@ -5980,11 +5886,11 @@ msgstr "имя фильтра"
 msgid "name of the organization"
 msgstr "имя организации"
 
-msgid "name of the puppet module"
-msgstr "имя модуля Puppet"
-
 msgid "name of the repository"
 msgstr "имя репозитория"
+
+msgid "name of the subscription"
+msgstr ""
 
 # translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "name: %s doesn't exist "
@@ -6051,6 +5957,9 @@ msgstr "пакет: версия"
 msgid "package_ids is not an array"
 msgstr "package_ids не является массивом"
 
+msgid "params 'show_all_for' and 'available_for' must be used independently"
+msgstr ""
+
 msgid "pattern for container image names"
 msgstr ""
 
@@ -6071,12 +5980,6 @@ msgstr ""
 
 msgid "product numeric identifier"
 msgstr "числовой идентификатор продукта"
-
-msgid "puppet module ID"
-msgstr "ID модуля Puppet"
-
-msgid "puppet_module_ids is not an array"
-msgstr "puppet_module_ids не является массивом"
 
 msgid "register_hostname_fact set for %s, but no fact found, or was localhost."
 msgstr ""
@@ -6175,15 +6078,6 @@ msgstr ""
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Не удалось обновить атрибуты провайдера Red Hat: [ %s ]"
 
-msgid "the id of the puppet module to associate"
-msgstr ""
-
-msgid "the uuid of the puppet module to associate"
-msgstr "UUID модуля Puppet для сопоставления"
-
-msgid "true if the export api is pulp3 ready and usable. This API is intended for use by hammer-cli only."
-msgstr ""
-
 msgid "true if the latest version of the component's content view is desired"
 msgstr ""
 
@@ -6225,9 +6119,6 @@ msgstr "обновление пакетов..."
 
 msgid "url not defined."
 msgstr "URL не задан."
-
-msgid "uuid of the puppet module"
-msgstr ""
 
 msgid "waiting for Candlepin to finish the task"
 msgstr ""

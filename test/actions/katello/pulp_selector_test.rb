@@ -32,15 +32,6 @@ module ::Actions::Katello
 
     let(:smart_proxy) { SmartProxy.new }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
-    let(:content_view_puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
-
-    def test_plans_puppet_env
-      action = create_action KatelloAction
-
-      plan_action(action, [Pulp2TestAction, Pulp3TestAction], content_view_puppet_env, smart_proxy)
-
-      assert_action_planed_with(action, Pulp2TestAction, content_view_puppet_env, smart_proxy)
-    end
 
     def test_plans_pulp2
       smart_proxy.stubs(:pulp3_support?).returns(false)

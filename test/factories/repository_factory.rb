@@ -44,11 +44,6 @@ FactoryBot.define do
       relative_path { "empty_organization-fedora_label-dockeruser_repo" }
     end
 
-    trait :puppet do
-      association :root, :puppet_root, :factory => :katello_root_repository, :strategy => :build
-      download_policy { "" }
-    end
-
     trait :iso do
       association :root, :iso_root, :factory => :katello_root_repository, :strategy => :build
     end

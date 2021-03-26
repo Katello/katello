@@ -71,9 +71,7 @@ module Actions
           # For repo sync tasks older than katello 3.14, we only have pulp_id available in input.
           repo ||= ::Katello::Repository.where(:pulp_id => input['pulp_id']).first if input['pulp_id']
 
-          if repo.try(:puppet?)
-            Presenters::PuppetPresenter.new(self)
-          elsif repo.try(:yum?)
+          if repo.try(:yum?)
             Presenters::YumPresenter.new(self)
           elsif repo.try(:file?)
             Presenters::FileUnitPresenter.new(self)

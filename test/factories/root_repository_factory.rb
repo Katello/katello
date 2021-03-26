@@ -27,11 +27,6 @@ FactoryBot.define do
       unprotected { true }
     end
 
-    trait :puppet_root do
-      content_type { "puppet" }
-      download_policy { "" }
-    end
-
     trait :iso_root do
       content_type { "file" }
       download_policy { "" }

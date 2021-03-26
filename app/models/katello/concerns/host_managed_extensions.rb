@@ -50,7 +50,6 @@ module Katello
 
         has_many :hypervisor_pools, :class_name => '::Katello::Pool', :foreign_key => :hypervisor_id, :dependent => :nullify
 
-        before_save :correct_puppet_environment
         before_validation :correct_kickstart_repository
         before_update :check_host_registration, :if => proc { organization_id_changed? }
 
@@ -146,23 +145,6 @@ module Katello
 
       def self.available_locks
         [:update]
-      end
-
-      def correct_puppet_environment
-        if content_and_puppet_matched?
-          new_environment = content_facet.content_view.puppet_env(content_facet.lifecycle_environment).try(:puppet_environment)
-          self.environment = new_environment if new_environment
-        end
-      end
-
-      def content_and_puppet_matched?
-        content_facet && content_facet.content_view_id_was == environment.try(:content_view).try(:id) &&
-          content_facet.lifecycle_environment_id_was == self.environment.try(:lifecycle_environment).try(:id)
-      end
-
-      def content_and_puppet_match?
-        content_facet && content_facet.content_view_id == environment.try(:content_view).try(:id) &&
-          content_facet.lifecycle_environment_id == self.environment.try(:lifecycle_environment).try(:id)
       end
 
       def import_package_profile(simple_packages)

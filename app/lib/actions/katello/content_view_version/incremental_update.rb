@@ -9,8 +9,7 @@ module Actions
         HUMANIZED_TYPES = {
           ::Katello::Erratum::CONTENT_TYPE => "Errata",
           ::Katello::Rpm::CONTENT_TYPE => "Packages",
-          ::Katello::Deb::CONTENT_TYPE => "Deb Packages",
-          ::Katello::PuppetModule::CONTENT_TYPE => "Puppet Modules"
+          ::Katello::Deb::CONTENT_TYPE => "Deb Packages"
         }.freeze
 
         def humanized_name
@@ -19,7 +18,7 @@ module Actions
 
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/AbcSize
-        def plan(old_version, environments, options = {}) # rubocop:disable Metrics/CyclomaticComplexity
+        def plan(old_version, environments, options = {})
           dep_solve = options.fetch(:resolve_dependencies, true)
           description = options.fetch(:description, '')
           content = options.fetch(:content, {})
@@ -84,17 +83,6 @@ module Actions
                                                       new_content_view_version,
                                                       content,
                                                       dep_solve)
-                  end
-                end
-              end
-
-              if SmartProxy.pulp_primary.has_feature?(SmartProxy::PULP_FEATURE) && SETTINGS[:katello][:content_types][:puppet]
-                sequence do
-                  new_puppet_environment = plan_action(Katello::ContentViewPuppetEnvironment::Clone, old_version,
-                                                     :new_version => new_content_view_version).new_puppet_environment
-                  check_puppet_module_duplicates(content[:puppet_module_ids])
-                  unless content[:puppet_module_ids].blank?
-                    copy_action_outputs += copy_puppet_content(new_puppet_environment, content[:puppet_module_ids], old_version)
                   end
                 end
               end
@@ -209,8 +197,7 @@ module Actions
           content = { ::Katello::Erratum::CONTENT_TYPE => [],
                       ::Katello::Rpm::CONTENT_TYPE => [],
                       ::Katello::ModuleStream::CONTENT_TYPE => [],
-                      ::Katello::Deb::CONTENT_TYPE => [],
-                      ::Katello::PuppetModule::CONTENT_TYPE => []
+                      ::Katello::Deb::CONTENT_TYPE => []
                     }
 
           base_repos = ::Katello::ContentViewVersion.find(input[:old_version]).repositories
@@ -251,8 +238,6 @@ module Actions
                       content[::Katello::Rpm::CONTENT_TYPE] << ::Katello::Util::Package.build_nvra(unit)
                     when ::Katello::Deb::CONTENT_TYPE
                       content[::Katello::Deb::CONTENT_TYPE] << "#{unit['name']}_#{unit['version']}_#{unit['architecture']}"
-                    when ::Katello::PuppetModule::CONTENT_TYPE
-                      content[::Katello::PuppetModule::CONTENT_TYPE] << "#{unit['author']}-#{unit['name']}-#{unit['version']}"
                     end
                   end
                 end
@@ -293,7 +278,7 @@ module Actions
 
         def generate_description(version, content)
           humanized_lines = []
-          [::Katello::Erratum, ::Katello::Rpm, ::Katello::PuppetModule].each do |content_type|
+          [::Katello::Erratum, ::Katello::Rpm].each do |content_type|
             unless content[content_type::CONTENT_TYPE].blank?
               humanized_lines << "#{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
               humanized_lines += content[content_type::CONTENT_TYPE].sort.map { |unit| "    #{unit}" }
@@ -387,44 +372,6 @@ module Actions
           end
 
           copy_outputs
-        end
-
-        def check_puppet_module_duplicates(puppet_module_ids)
-          puppet_module_dup_counts = ::Katello::PuppetModule.where(id: puppet_module_ids).
-            select(:name, :author).group(:name, :author).having("count(*) > 1").size
-          if puppet_module_dup_counts.present?
-            offending_puppet_modules = puppet_module_dup_counts.keys.collect do |dup|
-              "#{dup[0]}-#{dup[1]}"
-            end
-            fail _("Adding multiple versions of the same Puppet Module is not supported by incremental update.  The following Puppet Modules have duplicate versions in the incremental update content list: %{dup_list}" % {:dup_list => offending_puppet_modules})
-          end
-        end
-
-        def remove_puppet_modules(repo, puppet_module_ids)
-          plan_action(Pulp::Repository::RemoveUnits, :content_view_puppet_environment_id => repo.id, :contents => puppet_module_ids, :content_unit_type => ::Katello::PuppetModule::CONTENT_TYPE)
-        end
-
-        def copy_puppet_content(new_repo, puppet_module_ids, old_version)
-          copy_outputs = []
-          # Remove older versions
-          query = 'SELECT a.* FROM katello_puppet_modules a LEFT JOIN katello_puppet_modules b ON a.name = b.name AND a.author = b.author AND a.sortable_version < b.sortable_version WHERE b.sortable_version IS NOT NULL AND a.id IN (:old_version_puppet_module_ids)'
-          old_puppet_module_ids = ::Katello::PuppetModule.find_by_sql([query, :old_version_puppet_module_ids => old_version.puppet_modules.map(&:id)]).map(&:id)
-          unless puppet_module_ids.blank?
-            remove_puppet_modules(new_repo, (old_puppet_module_ids + puppet_module_ids).uniq)
-            copy_outputs = puppet_module_ids.map { |module_id| copy_puppet_module(new_repo, module_id).output }
-            plan_action(Pulp::ContentViewPuppetEnvironment::IndexContent, id: new_repo.id)
-          end
-          copy_outputs
-        end
-
-        def find_puppet_modules(ids)
-          ::Katello::PuppetModule.with_identifiers(ids)
-        end
-
-        def copy_puppet_module(new_repo, module_id)
-          puppet_module = find_puppet_modules([module_id]).first
-          possible_repos = puppet_module.repositories.in_organization(new_repo.organization).in_default_view
-          plan_action(Pulp::ContentViewPuppetEnvironment::CopyContents, new_repo, source_repository_id: possible_repos.first.id, puppet_modules: [puppet_module])
         end
 
         def plan_copy(action_class, source_repo, target_repo, clauses = nil, override_config = nil)

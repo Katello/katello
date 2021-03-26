@@ -1,5 +1,4 @@
 module Katello
-  # rubocop:disable Metrics/ClassLength
   class ContentViewVersion < Katello::Model
     include Authorization::ContentViewVersion
     include ForemanTasks::Concerns::ActionSubject
@@ -28,8 +27,6 @@ module Katello
     has_many :import_histories, :class_name => "::Katello::ContentViewVersionImportHistory", :dependent => :destroy,
              :inverse_of => :content_view_version, :foreign_key => :content_view_version_id
     has_many :repositories, :class_name => "::Katello::Repository", :dependent => :destroy
-    has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
-                                                :dependent => :destroy
     has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
     has_many :content_view_components, :class_name => "Katello::ContentViewComponent",
@@ -101,11 +98,6 @@ module Katello
       query
     end
 
-    def self.with_puppet_module(puppet_module)
-      joins(:content_view_puppet_environments)
-        .where("#{Katello::ContentViewPuppetEnvironment.table_name}.id" => puppet_module.content_view_puppet_environments)
-    end
-
     def to_s
       name
     end
@@ -158,14 +150,6 @@ module Katello
 
     def repos(env)
       self.repositories.in_environment(env)
-    end
-
-    def puppet_env(env)
-      self.content_view_puppet_environments.in_environment(env).first
-    end
-
-    def promote_puppet_environment?
-      (!content_counts.blank? && content_counts.dig(PuppetModule::CONTENT_TYPE) > 0) || self.content_view.force_puppet_environment?
     end
 
     def archived_repos
@@ -224,18 +208,6 @@ module Katello
       all_environments = target_envs + environments
       target_envs.all? do |environment|
         all_environments.include?(environment.prior) || environments.empty? && environment == organization.library
-      end
-    end
-
-    def archive_puppet_environment
-      content_view_puppet_environments.archived.first
-    end
-
-    def puppet_modules
-      if archive_puppet_environment
-        archive_puppet_environment.puppet_modules
-      else
-        []
       end
     end
 
@@ -318,7 +290,6 @@ module Katello
           content_counts[content_type::CONTENT_TYPE] = content_type.in_repositories(self.repositories.archived).count
         end
       end
-      self.content_counts[PuppetModule::CONTENT_TYPE] = self.puppet_modules.count
       save!
     end
 

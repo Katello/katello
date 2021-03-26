@@ -10,7 +10,7 @@
      *   ui-router state.
      */
     function ContentViewVersionContentController($scope, translate, Nutupane, Package, Erratum,
-                                                 PackageGroup, PuppetModule, OstreeBranch, ModuleStream, Deb, Repository,
+                                                 PackageGroup, OstreeBranch, ModuleStream, Deb, Repository,
                                                  ContentViewVersion) {
         var nutupane, contentTypes, currentState, params;
 
@@ -51,10 +51,6 @@
             'errata': {
                 type: Erratum,
                 repositoryType: 'yum'
-            },
-            'puppet-modules': {
-                type: PuppetModule,
-                repositoryType: 'puppet'
             },
             'ostree-branches': {
                 type: OstreeBranch,
@@ -147,6 +143,6 @@
         .controller('ContentViewVersionContentController', ContentViewVersionContentController);
 
     ContentViewVersionContentController.$inject = ['$scope', 'translate', 'Nutupane', 'Package', 'Erratum',
-                                                   'PackageGroup', 'PuppetModule', 'OstreeBranch', 'ModuleStream', 'Deb', 'Repository', 'ContentViewVersion'];
+                                                   'PackageGroup', 'OstreeBranch', 'ModuleStream', 'Deb', 'Repository', 'ContentViewVersion'];
 
 })();

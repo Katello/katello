@@ -20,7 +20,6 @@ module Katello
       @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                  :lifecycle_environment => @environment, :organization => @content_view.organization)
       location = taxonomies(:location1)
-      Setting[:default_location_puppet_content] = location.title
       Setting[:default_location_subscribed_hosts] = location.title
     end
 

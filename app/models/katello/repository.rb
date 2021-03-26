@@ -26,7 +26,6 @@ module Katello
     DEB_TYPE = 'deb'.freeze
     YUM_TYPE = 'yum'.freeze
     FILE_TYPE = 'file'.freeze
-    PUPPET_TYPE = 'puppet'.freeze
     DOCKER_TYPE = 'docker'.freeze
     OSTREE_TYPE = 'ostree'.freeze
     ANSIBLE_COLLECTION_TYPE = 'ansible_collection'.freeze
@@ -59,9 +58,6 @@ module Katello
     has_many :repository_file_units, :class_name => "Katello::RepositoryFileUnit", :dependent => :delete_all
     has_many :files, :through => :repository_file_units, :source => :file_unit
     alias_attribute :file_units, :files
-
-    has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :delete_all
-    has_many :puppet_modules, :through => :repository_puppet_modules
 
     has_many :repository_docker_manifests, :class_name => "Katello::RepositoryDockerManifest", :dependent => :delete_all
     has_many :docker_manifests, :through => :repository_docker_manifests
@@ -129,11 +125,9 @@ module Katello
     scope :deb_type, -> { with_type(DEB_TYPE) }
     scope :yum_type, -> { with_type(YUM_TYPE) }
     scope :file_type, -> { with_type(FILE_TYPE) }
-    scope :puppet_type, -> { with_type(PUPPET_TYPE) }
     scope :docker_type, -> { with_type(DOCKER_TYPE) }
     scope :ostree_type, -> { with_type(OSTREE_TYPE) }
     scope :ansible_collection_type, -> { with_type(ANSIBLE_COLLECTION_TYPE) }
-    scope :non_puppet, -> { with_type(RepositoryTypeManager.repository_types.keys - [PUPPET_TYPE]) }
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
     scope :in_published_environments, -> { in_content_views(Katello::ContentView.non_default).where.not(:environment_id => nil) }
@@ -163,7 +157,7 @@ module Katello
     scoped_search :on => :content_label, :ext_method => :search_by_content_label
 
     delegate :product, :redhat?, :custom?, :to => :root
-    delegate :yum?, :docker?, :puppet?, :deb?, :file?, :ostree?, :ansible_collection?, :to => :root
+    delegate :yum?, :docker?, :deb?, :file?, :ostree?, :ansible_collection?, :to => :root
     delegate :name, :label, :docker_upstream_name, :url, :download_concurrency, :to => :root
 
     delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :arch, :label, :url, :unprotected,
@@ -605,18 +599,6 @@ module Katello
 
     def url?
       root.url.present?
-    end
-
-    def name_conflicts
-      if puppet?
-        modules = PuppetModule.search("*", :repoids => self.pulp_id,
-                                           :fields => [:name],
-                                           :page_size => self.puppet_modules.count)
-
-        modules.map(&:name).group_by(&:to_s).select { |_, v| v.size > 1 }.keys
-      else
-        []
-      end
     end
 
     def related_resources

@@ -30,10 +30,8 @@ module Katello
     def self.create_repo(repo, override_relative_path = true)
       FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_primary
 
-      repo.relative_path = (repo.puppet? ? PULP_TMP_DIR : 'test_path') if !repo.file? && override_relative_path
-      if repo.puppet?
-        repo.root.url = @puppet_repo_url
-      elsif repo.yum?
+      repo.relative_path = 'test_path' if !repo.file? && override_relative_path
+      if repo.yum?
         repo.root.url = @repo_url
       end
 

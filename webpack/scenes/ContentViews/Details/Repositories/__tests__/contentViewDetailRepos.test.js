@@ -12,7 +12,7 @@ const autocompleteUrl = '/repositories/auto_complete_search';
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvAllRepos = api.getApiUrl('/content_views/1/repositories/show_all');
 const cvRepos = api.getApiUrl('/content_views/1/repositories');
-const repoTypesResponse = [{ name: 'deb' }, { name: 'docker' }, { name: 'file' }, { name: 'ostree' }, { name: 'puppet' }, { name: 'yum' }];
+const repoTypesResponse = [{ name: 'deb' }, { name: 'docker' }, { name: 'file' }, { name: 'ostree' }, { name: 'yum' }];
 
 let firstRepo;
 let searchDelayScope;

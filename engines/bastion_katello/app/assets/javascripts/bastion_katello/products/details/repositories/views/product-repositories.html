@@ -105,12 +105,6 @@
             <span ng-hide="repository.url" translate>N/A</span>
           </td>
           <td bst-table-cell>
-            <span ng-show="repository.content_type == 'puppet'">
-              <a translate ui-sref="product.repository.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})">
-                {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
-              </a>
-            </span>
-
             <span ng-show="repository.content_type == 'yum'">
               <div>
                 <a translate ui-sref="product.repository.manage-content.packages({productId: product.id, repositoryId: repository.id})">

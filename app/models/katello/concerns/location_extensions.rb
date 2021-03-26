@@ -20,9 +20,6 @@ module Katello
           if ::Setting[:default_location_subscribed_hosts] == self.title_before_last_save
             ::Setting[:default_location_subscribed_hosts] = self.title
           end
-          if ::Setting[:default_location_puppet_content] == self.title_before_last_save
-            ::Setting[:default_location_puppet_content] = self.title
-          end
         end
       end
 
@@ -34,9 +31,7 @@ module Katello
         if ::Location.unscoped.count == 1
           errors.add(
             :base,
-            _('Cannot delete the last Location. '\
-              'Foreman needs at least one Location to put newly published '\
-              'Puppet content and Hosts registered via subscription-manager'))
+            _('Cannot delete the last Location.'))
           false
         elsif title == ::Setting[:default_location_subscribed_hosts]
           errors.add(
@@ -44,14 +39,6 @@ module Katello
             _('Cannot delete the default Location for subscribed hosts. If you '\
               'no longer want this Location, change the default Location for '\
               'subscribed hosts under Administer > Settings, tab Content.')
-          )
-          false
-        elsif title == ::Setting[:default_location_puppet_content]
-          errors.add(
-            :base,
-            _('Cannot delete the default Location for Puppet content. If you '\
-              'no longer want this Location, change the default Location for '\
-              'Puppet content under Administer > Settings, tab Content.')
           )
           false
         else
@@ -67,16 +54,6 @@ module Katello
       end
 
       module ClassMethods
-        def default_puppet_content_location
-          ::Location.unscoped.find_by_title(::Setting[:default_location_puppet_content]) if ::Setting[:default_location_puppet_content].present?
-        end
-
-        def default_puppet_content_location!
-          location = default_puppet_content_location
-          fail _("Setting 'default_location_puppet_content' is not set to a valid location.") if location.nil?
-          location
-        end
-
         def default_host_subscribe_location
           ::Location.unscoped.find_by_title(::Setting[:default_location_subscribed_hosts]) if ::Setting[:default_location_subscribed_hosts].present?
         end
@@ -88,7 +65,7 @@ module Katello
         end
 
         def default_location_ids
-          [default_host_subscribe_location, default_puppet_content_location].compact.map(&:id).uniq
+          [default_host_subscribe_location].compact.map(&:id).uniq
         end
       end
     end

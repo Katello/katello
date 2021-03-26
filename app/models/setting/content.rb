@@ -123,10 +123,6 @@ class Setting::Content < Setting
                N_('Default Location where new subscribed hosts will put upon registration'),
                nil, N_('Default Location subscribed hosts'), nil,
                :collection => proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] }),
-      self.set('default_location_puppet_content',
-               N_('Default Location where new Puppet content will be put upon Content View publish'),
-               nil, N_('Default Location Puppet content'), nil,
-               :collection => proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] }),
       self.set('expire_soon_days', N_('The number of days remaining in a subscription before you will be reminded about renewing it.'),
                120, N_('Expire soon days')),
       self.set('content_view_solve_dependencies',
@@ -158,7 +154,7 @@ class Setting::Content < Setting
 
   def self.load_defaults
     BLANK_ATTRS.concat %w(register_hostname_fact default_location_subscribed_hosts
-                          default_location_puppet_content content_default_http_proxy host_dmi_uuid_duplicates cdn_ssl_version)
+                          content_default_http_proxy host_dmi_uuid_duplicates cdn_ssl_version)
     super
   end
 

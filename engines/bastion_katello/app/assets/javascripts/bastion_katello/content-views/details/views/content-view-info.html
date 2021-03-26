@@ -30,18 +30,6 @@
         <dd ng-hide="contentView.import_only" translate>No</dd>
       </div>
 
-      <dt translate>Force Puppet Environment</dt>
-      <dd>
-        <div bst-edit-checkbox="contentView.force_puppet_environment"
-             formatter="booleanToYesNo"
-             on-save="save(contentView)"
-             readonly="denied('edit_content_views', contentView)">
-        </div>
-        <p class="help-text" translate>
-          With this option selected, a puppet environment will be created during publish and promote even if no puppet modules have been added to the Content View
-        </p>
-      </dd>
-
       <div ng-if="contentView.composite">
         <dt translate>Auto Publish</dt>
         <dd>

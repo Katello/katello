@@ -35,9 +35,6 @@ msgstr ""
 msgid " %{package_count} Package(s)"
 msgstr ""
 
-msgid " %{puppet_module_count} Puppet Module(s)"
-msgstr ""
-
 msgid " Content view updated."
 msgstr ""
 
@@ -347,7 +344,7 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr ""
 
-msgid "Activation Key(s)"
+msgid "Activation Key(s) *"
 msgstr ""
 
 msgid "Activation Keys"
@@ -355,6 +352,9 @@ msgstr "활성키 "
 
 msgid "Activation key ID"
 msgstr "활성키 ID"
+
+msgid "Activation key(s) for Subscription Manager. Multiple keys should be comma-separated, for example: key1,key2,key3."
+msgstr ""
 
 msgid "Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
 msgstr ""
@@ -370,9 +370,6 @@ msgstr "활성화된 경우에만 "
 
 msgid "Add Subscriptions"
 msgstr ""
-
-msgid "Add a puppet module to the content view"
-msgstr "컨텐츠 뷰에 puppet 모듈을 추가합니다 "
 
 msgid "Add a subscription to a host"
 msgstr ""
@@ -407,13 +404,16 @@ msgstr ""
 msgid "Add subscriptions to one or more hosts"
 msgstr ""
 
+msgid "Add to this filter using the 'Add package group' button."
+msgstr ""
+
+msgid "Added"
+msgstr ""
+
 msgid "Added Content:"
 msgstr "추가된 컨텐츠: "
 
 msgid "Adding content units"
-msgstr ""
-
-msgid "Adding multiple versions of the same Puppet Module is not supported by incremental update.  The following Puppet Modules have duplicate versions in the incremental update content list: %{dup_list}"
 msgstr ""
 
 msgid "Addons"
@@ -765,13 +765,10 @@ msgstr "할당된 제품을 갖는 공급자를 삭제할 수 없습니다 "
 msgid "Cannot delete redhat product content"
 msgstr ""
 
-msgid "Cannot delete the default Location for Puppet content. If you no longer want this Location, change the default Location for Puppet content under Administer > Settings, tab Content."
-msgstr ""
-
 msgid "Cannot delete the default Location for subscribed hosts. If you no longer want this Location, change the default Location for subscribed hosts under Administer > Settings, tab Content."
 msgstr ""
 
-msgid "Cannot delete the last Location. Foreman needs at least one Location to put newly published Puppet content and Hosts registered via subscription-manager"
+msgid "Cannot delete the last Location."
 msgstr ""
 
 msgid "Cannot delete version while it is in environment %s"
@@ -984,9 +981,6 @@ msgstr ""
 msgid "Content View"
 msgstr "컨텐츠 보기 "
 
-msgid "Content View %s  cannot be published without an internal capsule."
-msgstr ""
-
 msgid "Content View %{view}: Versions: %{versions}"
 msgstr ""
 
@@ -1117,7 +1111,7 @@ msgstr "리포지터리에서 id '%{id}'를 갖는 %{content}을(를) 찾을 수
 msgid "Could not find %{count} errata.  Only found: %{found}"
 msgstr ""
 
-msgid "Could not find %{name} resource with id %{id}"
+msgid "Could not find %{name} resource with id %{id}. %{perms_message}"
 msgstr ""
 
 msgid "Could not find %{name} resources with ids %{ids}"
@@ -1128,9 +1122,6 @@ msgstr "다음의 ID를 갖는 환경을 찾을 수 없습니다: %s"
 
 msgid "Could not find Lifecycle Environment with id '%{id}'."
 msgstr "id '%{id}'인 라이프 사이클 환경을 찾을 수 없습니다."
-
-msgid "Could not find Repository for module %s."
-msgstr "모듈 %s의 리포지터리를 찾을 수 없습니다. "
 
 msgid "Could not find a host with id %s"
 msgstr ""
@@ -1147,9 +1138,6 @@ msgstr ""
 msgid "Could not remove the lifecycle environment from the smart proxy"
 msgstr ""
 
-msgid "Could not unarchive puppet module. Please make sure the puppet module has been compressed properly."
-msgstr "puppet 모듈을 압축 해제할 수 없습니다. puppet 모듈이 올바르게 압축되어 있는지 확인하십시오. "
-
 msgid "Couldn't find %{content_type} with id '%{id}'"
 msgstr ""
 
@@ -1161,9 +1149,6 @@ msgstr " id=%s인 컨텐츠 뷰 필터를 찾을 수 없습니다 "
 
 msgid "Couldn't find Organization '%s'."
 msgstr "조직 '%s'을 찾을 수 없습니다."
-
-msgid "Couldn't find Puppet Module with id '%s'"
-msgstr "id '%s'의 Puppet 모듈을 찾을 수 없습니다 "
 
 msgid "Couldn't find activation key '%s'"
 msgstr "활성키 '%s'를 찾을 수 없음 "
@@ -1336,13 +1321,7 @@ msgstr ""
 msgid "Default HTTP proxy"
 msgstr ""
 
-msgid "Default Location Puppet content"
-msgstr ""
-
 msgid "Default Location subscribed hosts"
-msgstr ""
-
-msgid "Default Location where new Puppet content will be put upon Content View publish"
 msgstr ""
 
 msgid "Default Location where new subscribed hosts will put upon registration"
@@ -1755,6 +1734,9 @@ msgstr ""
 msgid "Exceeds available quantity"
 msgstr ""
 
+msgid "Exclude"
+msgstr ""
+
 msgid "Exit"
 msgstr ""
 
@@ -1777,9 +1759,6 @@ msgstr ""
 msgid "Export Types"
 msgstr ""
 
-msgid "Export a content view version.  Relevant only for Pulp 2 repositories."
-msgstr ""
-
 msgid "Export a repository"
 msgstr ""
 
@@ -1790,9 +1769,6 @@ msgid "Export history identifier used for incremental export. If not provided th
 msgstr ""
 
 msgid "Export to ISO format"
-msgstr ""
-
-msgid "Export to ISO format."
 msgstr ""
 
 msgid "Exported version"
@@ -1809,10 +1785,6 @@ msgstr ""
 
 msgid "Failed to delete %{host}: %{errors}"
 msgstr ""
-
-msgid "Failed to download %s module."
-msgid_plural "Failed to download %s modules."
-msgstr[0] "%s 모듈 다운로드에 실패했습니다 "
 
 msgid "Failed to download %s package."
 msgid_plural "Failed to download %s packages."
@@ -1890,9 +1862,6 @@ msgstr ""
 msgid "Filter versions by environment"
 msgstr "환경에 따라 버전을 필터링 "
 
-msgid "Filter versions by puppet module"
-msgstr ""
-
 msgid "Filter versions by version number"
 msgstr "버전 번호에 따라 버전을 필터링 "
 
@@ -1912,6 +1881,9 @@ msgid "Finished"
 msgstr ""
 
 msgid "For pages that support it, automatically perform search while typing in search input."
+msgstr ""
+
+msgid "Force"
 msgstr ""
 
 msgid ""
@@ -1967,12 +1939,6 @@ msgstr "리포지터리 세트 정보 가져오기 "
 
 msgid "Get list of available repositories for the repository set"
 msgstr ""
-
-msgid "Get puppet modules names that are available to be added to the content view"
-msgstr "컨텐츠 뷰에 추가할 수 있는 puppet 모듈 이름 가져오기 "
-
-msgid "Get puppet modules that are available to be added to the content view"
-msgstr "컨텐츠 보기에 추가할 수 있는 puppet 모듈 가져오기 "
 
 msgid "Get status of repo synchronisation for given product"
 msgstr "주어진 제품에 대한 리포지터리 동기화 상태 가져오기 "
@@ -2328,14 +2294,17 @@ msgstr ""
 msgid "Import-only content views can not be published directly"
 msgstr ""
 
-msgid "Import-only content views will be available in a future version."
-msgstr ""
-
 msgid "Importing manifest into '%{subject}' failed."
 msgstr ""
 
 msgid "In Progress"
 msgstr "진행 중 "
+
+msgid "Include"
+msgstr ""
+
+msgid "Includes associated content view filter ids in response"
+msgstr ""
 
 msgid "Inclusion type"
 msgstr ""
@@ -2491,9 +2460,6 @@ msgstr "잘못된 에라타 유형 %{invalid_types}이 지정되었습니다. �
 msgid "Invalid event_type %s"
 msgstr ""
 
-msgid "Invalid export_type from one of the following: %s"
-msgstr ""
-
 msgid "Invalid filter rule specified, 'version' cannot be specified in the same tuple as 'min_version' or 'max_version'"
 msgstr "잘못된 필터 규칙이 지정되었습니다. 'version' 을 'min_version' 또는 'max_version'과 동일한 튜플로 지정할 수 없습니다 "
 
@@ -2508,20 +2474,6 @@ msgid "Invalid params provided - content_type must be one of %s"
 msgstr ""
 
 msgid "Invalid params provided - date_type must be one of %s"
-msgstr ""
-
-msgid ""
-"Invalid puppet module parameters specified. \\\n"
-"                                    Either 'uuid' or 'name' and 'author' must be specified."
-msgstr ""
-
-msgid "Invalid puppet module. Please make sure the puppet module contains a metadata.json file and is properly compressed."
-msgstr "잘못된 puppet 모듈입니다. puppet 모듈에는 metadata.json 파일이 들어 있고 올바르게 압축되어 있는지 확인합니다. "
-
-msgid "Invalid usage for Pulp 2 repositories. Use export for Yum repositories"
-msgstr ""
-
-msgid "Invalid usage for Pulp 3 repositories. Use hammer content-export for Yum repositories"
 msgstr ""
 
 msgid "Invalid value specified for Container Image repositories."
@@ -2671,9 +2623,6 @@ msgstr ""
 msgid "List components attached to this content view"
 msgstr ""
 
-msgid "List content view puppet modules"
-msgstr "컨텐츠 뷰 puppet 모듈 목록 나열"
-
 msgid "List content view versions"
 msgstr "컨텐츠 뷰 버전 목록 나열 "
 
@@ -2719,8 +2668,8 @@ msgstr ""
 msgid "List of Errata ids"
 msgstr "에라타 ID 목록 "
 
-msgid "List of Errata ids to install"
-msgstr "설치할 에라타 ID 목록 "
+msgid "List of Errata ids to install. Will be removed in Katello 4.1."
+msgstr ""
 
 msgid "List of Products for sync plan"
 msgstr ""
@@ -3117,6 +3066,9 @@ msgstr ""
 msgid "No matching filters found"
 msgstr ""
 
+msgid "No matching package groups found."
+msgstr ""
+
 msgid "No matching repositories found"
 msgstr ""
 
@@ -3125,6 +3077,9 @@ msgstr "설치된 새 패키지가 없음 "
 
 msgid "No new packages."
 msgstr "새 패키지가 없습니다. "
+
+msgid "No package groups have been added to this filter."
+msgstr ""
 
 msgid "No packages removed"
 msgstr "삭제된 패키지가 없음 "
@@ -3205,6 +3160,9 @@ msgid "Not Specified"
 msgstr ""
 
 msgid "Not a number"
+msgstr ""
+
+msgid "Not added"
 msgstr ""
 
 msgid "Not all necessary pulp workers running at %s."
@@ -3289,9 +3247,6 @@ msgstr "운영자 "
 msgid "Optional date of last export (ex: 2010-01-01T12:00:00Z)"
 msgstr ""
 
-msgid "Optional date of last export (ex: 2010-01-01T12:00:00Z). Relevant only for Pulp 2 repositories"
-msgstr ""
-
 msgid "Organization"
 msgstr "조직 "
 
@@ -3302,6 +3257,9 @@ msgid "Organization ID"
 msgstr "조직 ID"
 
 msgid "Organization ID is required"
+msgstr ""
+
+msgid "Organization Information not provided."
 msgstr ""
 
 msgid "Organization cannot be blank."
@@ -3475,6 +3433,9 @@ msgstr "패키지 그룹 업데이트를 실패"
 # translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author eukim
 msgid "Package group update timed out"
 msgstr "패키지 그룹 업데이트 시간 초과 "
+
+msgid "Package groups"
+msgstr ""
 
 msgid "Package identifiers to filter content by"
 msgstr ""
@@ -3756,35 +3717,6 @@ msgstr "Pulp 작업 오류 "
 msgid "Pulpcore"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
-msgid "Puppet Environment"
-msgstr "Puppet 환경 "
-
-msgid "Puppet Module"
-msgstr "Puppet 모듈 "
-
-msgid ""
-"Puppet Module does not belong to content view organization\\\n"
-"                                      '%{name}'"
-msgstr ""
-
-msgid ""
-"Puppet Module with name='%{name}' and author='%{author}' does\\\n"
-"                                    not exist"
-msgstr ""
-
-msgid ""
-"Puppet Module with uuid='%{uuid}' does not\\\n"
-"                                    exist"
-msgstr ""
-
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
-msgid "Puppet Modules"
-msgstr "Puppet 모듈 "
-
-msgid "Puppet module conflict: '%{mod}' is in %{versions}."
-msgstr "Puppet 모듈 충돌: '%{mod}'가 %{versions}에 있습니다."
-
 msgid "Quantity"
 msgstr ""
 
@@ -3894,6 +3826,9 @@ msgstr "활성화할 Releasever "
 msgid "Reload data"
 msgstr "데이터 다시 불러오기 "
 
+msgid "Remote action:"
+msgstr ""
+
 msgid "Removal of package group(s) requested: %{groups}"
 msgstr ""
 
@@ -3912,8 +3847,8 @@ msgstr "버전 및 연결 삭제 "
 msgid "Remove a content view from an environment"
 msgstr "환경에서 컨텐츠 뷰 삭제 "
 
-msgid "Remove a puppet module from the content view"
-msgstr "컨텐츠 뷰에서 puppet 모듈 삭제 "
+msgid "Remove any `katello-ca-consumer` rpms before registration and run subscription-manager with `--force` argument."
+msgstr ""
 
 msgid "Remove components from the content view"
 msgstr ""
@@ -4048,9 +3983,6 @@ msgstr ""
 msgid "Requires Virt-Who"
 msgstr ""
 
-msgid "Reset Puppet Environment"
-msgstr ""
-
 msgid "Resolve Traces"
 msgstr ""
 
@@ -4091,7 +4023,7 @@ msgstr ""
 msgid "Return errata that are upgradable on one or more hosts"
 msgstr ""
 
-msgid "Return errata that can be added to the Content View Version via an Incremental Update"
+msgid "Return errata that can be added to the Content View Version via an Incremental Update. Will be removed in Katello 4.1."
 msgstr ""
 
 msgid "Return errata that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported."
@@ -4129,6 +4061,9 @@ msgstr ""
 
 msgid "Return the content of a repo gpg key, used directly by yum"
 msgstr "yum에 직접 사용되는 리포지터리 gpg 키의 컨텐츠를 반환 "
+
+msgid "Returns content that can be both added and is currently added to the object. The value 'content_view_filter' is supported"
+msgstr ""
 
 msgid "Role"
 msgstr ""
@@ -4262,9 +4197,6 @@ msgstr ""
 msgid "Sets whether the Host will autoheal subscriptions upon checkin"
 msgstr ""
 
-msgid "Setting 'default_location_puppet_content' is not set to a valid location."
-msgstr ""
-
 msgid "Setting 'default_location_subscribed_hosts' is not set to a valid location."
 msgstr ""
 
@@ -4283,9 +4215,6 @@ msgstr "컨텐츠 뷰 표시 "
 
 msgid "Show a content view component"
 msgstr ""
-
-msgid "Show a content view puppet module"
-msgstr "컨텐츠 뷰 puppet 모듈 표시 "
 
 msgid "Show a content view's history"
 msgstr "컨텐츠 뷰의 기록 표시 "
@@ -4376,6 +4305,9 @@ msgid "Solve dependencies"
 msgstr ""
 
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view filter! ${error}"
 msgstr ""
 
 msgid "Something went wrong while retrieving the content view filters! ${error}"
@@ -4699,6 +4631,12 @@ msgstr "새로 생성된 컨텐츠 뷰 버전 설명 "
 msgid "The email notification will include subscriptions expiring in this number of days or fewer."
 msgstr ""
 
+msgid "The environment %{name} is in use by %{count} Host Group(s) including %{names}"
+msgstr ""
+
+msgid "The environment %{name} is in use by %{count} Host(s) including %{names}"
+msgstr ""
+
 msgid "The erratum filter rule end date is in an invalid format or type."
 msgstr "에라타 필터 규칙 종료 날짜가 잘못된 형식 또는 유형으로 되어 있습니다."
 
@@ -4754,12 +4692,6 @@ msgstr "%{content_view}의 %{environment}으로의 승격이 완료되었습니�
 
 msgid "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts."
 msgstr "%{content_view}의 <b>%{environment}</b>으로의 승격이 완료되었습니다. %{count}개의 필요한 에라타를 호스트에 설치할 수 있습니다. "
-
-msgid "The puppet environment %{name} is in use by %{count} Host Group(s) including %{names}"
-msgstr "puppet 환경 %{name}은(는) %{names}을 포함하여 %{count} 호스트 그룹에서 사용되고 있습니다 "
-
-msgid "The puppet environment %{name} is in use by %{count} Host(s) including %{names}"
-msgstr "puppet 환경 %{name}은(는) %{names}을 포함하여 %{count} 호스트에서 사용되고 있습니다 "
 
 msgid "The repository is already enabled"
 msgstr "리포지터리가 이미 활성화되어 있습니다 "
@@ -4818,9 +4750,6 @@ msgstr "활성화된 제품 또는 리포지터리가 없습니다. %{custom} �
 msgid "There either were no environments nor versions specified or there were invalid environments/versions specified. Please check environment_ids and content_view_version_ids parameters."
 msgstr "환경이나 버전이 지정되어 있지 않거나 잘못된 환경/버전이 지정되어 있습니다. environment_ids 및 content_view_version_ids 매개 변수를 확인하십시오. "
 
-msgid "There is already a module named \"%{value}\" in this content view."
-msgstr ""
-
 msgid "There is no Manifest History to display."
 msgstr ""
 
@@ -4851,14 +4780,8 @@ msgstr ""
 msgid "This action doesn't support package groups"
 msgstr ""
 
-msgid "This action will become available after the Pulp 3 content migration"
-msgstr ""
-
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
 msgstr "이 인증서를 통해 사용자는 브라우저에서 모든 환경에 있는 리포지터리를 볼 수 있습니다."
-
-msgid "This content view has on demand repositories that cannot be exported: %{repos}"
-msgstr ""
 
 msgid "This content view version doesn't have a history."
 msgstr ""
@@ -4929,9 +4852,6 @@ msgstr "제목"
 
 msgid "Toggling Simple Content Access will refresh your manifest."
 msgstr ""
-
-msgid "Total module count: %s."
-msgstr "총 모듈 수: %s."
 
 msgid "Total steps: "
 msgstr ""
@@ -5117,9 +5037,6 @@ msgstr "필터 규칙을 업데이트합니다. 포함된 매개 변수는 필�
 
 msgid "Update a host collection"
 msgstr "호스트 컬렉션 업데이트 "
-
-msgid "Update a puppet module associated with the content view"
-msgstr "컨텐츠 뷰에 연결된 puppet 모듈 업데이트 "
 
 msgid "Update a repository"
 msgstr "리포지터리 업데이트 "
@@ -5465,9 +5382,6 @@ msgstr "패키지 "
 msgid "a package group"
 msgstr "패키지 그룹  "
 
-msgid "a puppet module"
-msgstr "Puppet 모듈 "
-
 msgid "actions not found"
 msgstr ""
 
@@ -5498,6 +5412,9 @@ msgstr "모든 패키지 업데이트 실패 "
 msgid "allow unauthenticed pull of container images"
 msgstr ""
 
+msgid "already belongs to the content view"
+msgstr ""
+
 msgid "already taken"
 msgstr "이미 사용되고 있습니다 "
 
@@ -5518,9 +5435,6 @@ msgstr ""
 
 msgid "attempted to sync without a feed URL"
 msgstr ""
-
-msgid "author of the puppet module"
-msgstr "puppet 모듈 저자 "
 
 msgid "auto attach subscriptions upon registration"
 msgstr "등록 시 서브스크립션을 자동으로 첨부 "
@@ -5614,7 +5528,7 @@ msgstr ""
 msgid "content release version"
 msgstr "컨텐츠 릴리즈 버전 "
 
-msgid "content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')"
+msgid "content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')"
 msgstr ""
 
 msgid "content view component ID. Identifier of the component association"
@@ -5892,14 +5806,8 @@ msgstr "등록된 최대 컨텐츠 호스트 수 "
 msgid "maximum size of each ISO in MB"
 msgstr ""
 
-msgid "maximum size of each ISO in MB. Relevant only for Pulp 2 repositories"
-msgstr ""
-
 msgid "may not be less than the number of hosts associated with the host collection."
 msgstr ""
-
-msgid "module name to restrict modules for"
-msgstr "모듈을 제한하기 위한 모듈 이름 "
 
 msgid "module stream ids"
 msgstr ""
@@ -5962,11 +5870,11 @@ msgstr "필터 이름 "
 msgid "name of the organization"
 msgstr "조직 이름 "
 
-msgid "name of the puppet module"
-msgstr "puppet 모듈 이름 "
-
 msgid "name of the repository"
 msgstr "리포지터리 이름 "
+
+msgid "name of the subscription"
+msgstr ""
 
 msgid "name: %s doesn't exist "
 msgstr "이름: %s이 존재하지 않습니다 "
@@ -6032,6 +5940,9 @@ msgstr "패키지: 버전 "
 msgid "package_ids is not an array"
 msgstr "package_ids는 배열이 아닙니다 "
 
+msgid "params 'show_all_for' and 'available_for' must be used independently"
+msgstr ""
+
 msgid "pattern for container image names"
 msgstr ""
 
@@ -6052,12 +5963,6 @@ msgstr ""
 
 msgid "product numeric identifier"
 msgstr "숫자로된 제품 ID "
-
-msgid "puppet module ID"
-msgstr "Puppet 모듈 ID"
-
-msgid "puppet_module_ids is not an array"
-msgstr "puppet_module_ids는 배열이 아닙니다 "
 
 msgid "register_hostname_fact set for %s, but no fact found, or was localhost."
 msgstr ""
@@ -6155,15 +6060,6 @@ msgstr ""
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "다음 속성은 Red Hat 공급자 [ %s ]에 대해 업데이트될 수 없습니다 "
 
-msgid "the id of the puppet module to associate"
-msgstr ""
-
-msgid "the uuid of the puppet module to associate"
-msgstr "연결할 puppet 모듈의 uuid "
-
-msgid "true if the export api is pulp3 ready and usable. This API is intended for use by hammer-cli only."
-msgstr ""
-
 msgid "true if the latest version of the component's content view is desired"
 msgstr ""
 
@@ -6205,9 +6101,6 @@ msgstr "패키지 업데이트 중..."
 
 msgid "url not defined."
 msgstr "url이 설정되어 있지 않습니다. "
-
-msgid "uuid of the puppet module"
-msgstr ""
 
 msgid "waiting for Candlepin to finish the task"
 msgstr ""

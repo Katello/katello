@@ -35,7 +35,7 @@ module Katello
       if repository
         [repository]
       else
-        repositories_available_to_capsule(environment, content_view) + puppet_environments_available_to_capsule(environment, content_view)
+        repositories_available_to_capsule(environment, content_view)
       end
     end
 
@@ -44,13 +44,6 @@ module Katello
       yum_repos = Katello::Repository.in_environment(environments)
       yum_repos = yum_repos.in_content_views([content_view]) if content_view
       yum_repos.smart_proxy_syncable
-    end
-
-    def puppet_environments_available_to_capsule(environments, content_view)
-      environments = @smart_proxy.lifecycle_environments if environments.nil?
-      puppet_environments = Katello::ContentViewPuppetEnvironment.in_environment(environments)
-      puppet_environments = puppet_environments.in_content_view(content_view) if content_view
-      puppet_environments
     end
   end
 end

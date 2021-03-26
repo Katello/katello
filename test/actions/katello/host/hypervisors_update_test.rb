@@ -14,7 +14,6 @@ module Katello::Host
       User.current = users(:admin)
       @organization = FactoryBot.build(:katello_organization)
       location = taxonomies(:location1)
-      Setting[:default_location_puppet_content] = location.title
       Setting[:default_location_subscribed_hosts] = location.title
 
       @content_view = katello_content_views(:library_dev_view)

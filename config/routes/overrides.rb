@@ -22,7 +22,6 @@ Foreman::Application.routes.draw do
   match "/api/v2/organizations/:id", via: :delete, to: proc { [404, {}, [override_message]] }
 
   resources :hosts, :only => [] do
-    get 'puppet_environment_for_content_view', :on => :collection
     get :content_hosts, :on => :collection
   end
 

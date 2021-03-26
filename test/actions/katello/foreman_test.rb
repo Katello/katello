@@ -32,13 +32,4 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
 
     assert_equal expected, action.input
   end
-
-  it 'updates the foreman content' do
-    ::Katello::Foreman.expects(:update_puppet_environment).with do |view, env|
-      assert_equal environment.id, env.id
-      assert_equal content_view.id, view.id
-    end
-    plan_action(action, environment, content_view)
-    finalize_action(action)
-  end
 end

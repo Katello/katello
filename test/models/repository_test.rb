@@ -248,8 +248,6 @@ module Katello
     end
 
     def test_primary_link
-      assert @puppet_forge.primary?
-
       assert @fedora_17_x86_64.primary?
       refute @fedora_17_x86_64.link?
 
@@ -405,7 +403,6 @@ module Katello
     def test_search_content_type
       repos = Repository.search_for("content_type = yum")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
     end
 
     def test_search_name_fulltext
@@ -421,19 +418,16 @@ module Katello
     def test_search_product
       repos = Repository.search_for("product = \"#{@fedora_17_x86_64.product.name}\"")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
     end
 
     def test_search_product_name
       repos = Repository.search_for("product_name = \"#{@fedora_17_x86_64.product.name}\"")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
     end
 
     def test_search_product_id
       repos = Repository.search_for("product_id = \"#{@fedora_17_x86_64.product.id}\"")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
     end
 
     def test_search_content_view_id
@@ -449,7 +443,6 @@ module Katello
     def test_search_distribution_version
       repos = Repository.search_for("distribution_version = \"#{@fedora_17_x86_64.distribution_version}\"")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
 
       empty = Repository.search_for("distribution_version = 100")
       assert_empty empty
@@ -458,7 +451,6 @@ module Katello
     def test_search_distribution_arch
       repos = Repository.search_for("distribution_arch = \"#{@fedora_17_x86_64.distribution_arch}\"")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
 
       empty = Repository.search_for("distribution_arch = x_fake_arch")
       assert_empty empty
@@ -467,7 +459,6 @@ module Katello
     def test_search_distribution_family
       repos = Repository.search_for("distribution_family = \"#{@fedora_17_x86_64.distribution_family}\"")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
 
       empty = Repository.search_for("distribution_family = not_a_family")
       assert_empty empty
@@ -476,7 +467,6 @@ module Katello
     def test_search_distribution_variant
       repos = Repository.search_for("distribution_variant = \"#{@fedora_17_x86_64.distribution_variant}\"")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
 
       empty = Repository.search_for("distribution_variant = not_variant")
       assert_empty empty
@@ -485,7 +475,6 @@ module Katello
     def test_search_distribution_bootable
       repos = Repository.search_for("distribution_bootable = \"#{@fedora_17_x86_64.distribution_bootable}\"")
       assert_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
     end
 
     def test_search_redhat
@@ -496,7 +485,6 @@ module Katello
       assert_includes repos, rhel_6
       assert_includes repos, rhel_7
       refute_includes repos, @fedora_17_x86_64
-      refute_includes repos, @puppet_forge
     end
 
     def test_search_content_label
@@ -571,7 +559,7 @@ module Katello
     end
 
     def test_promoted?
-      assert @puppet_forge.promoted?
+      assert @fedora_17_x86_64.promoted?
 
       repo = katello_repositories(:rhel_7_x86_64)
 
@@ -591,17 +579,6 @@ module Katello
       assert_equal rpm_ids, @fedora_17_x86_64.units_for_removal(rpm_ids).map(&:id).sort
       assert_equal rpm_ids, @fedora_17_x86_64.units_for_removal(rpm_ids.map(&:to_s)).map(&:id).sort
       assert_equal rpm_uuids, @fedora_17_x86_64.units_for_removal(rpm_uuids).map(&:pulp_id).sort
-    end
-
-    def test_units_for_removal_puppet
-      puppet_modules = @puppet_forge.puppet_modules
-      puppet_ids = puppet_modules.map(&:id).sort
-      puppet_uuids = puppet_modules.map(&:pulp_id).sort
-
-      refute_empty puppet_modules
-      assert_equal puppet_ids, @puppet_forge.units_for_removal(puppet_ids).map(&:id).sort
-      assert_equal puppet_ids, @puppet_forge.units_for_removal(puppet_ids.map(&:to_s)).map(&:id).sort
-      assert_equal puppet_uuids, @puppet_forge.units_for_removal(puppet_uuids).map(&:pulp_id).sort
     end
 
     def test_packages_without_errata
@@ -718,13 +695,11 @@ module Katello
 
     def test_node_syncable
       lib_yum_repo = katello_repositories(:rhel_6_x86_64)
-      lib_puppet_repo = katello_repositories(:p_forge)
       lib_iso_repo = katello_repositories(:generic_file)
       lib_docker_repo = katello_repositories(:busybox)
       lib_ostree_repo = katello_repositories(:ostree)
 
       assert lib_yum_repo.node_syncable?
-      assert lib_puppet_repo.node_syncable?
       assert lib_iso_repo.node_syncable?
       assert lib_docker_repo.node_syncable?
       assert lib_ostree_repo.node_syncable?
@@ -744,9 +719,6 @@ module Katello
     end
 
     def test_capsule_download_policy
-      proxy = SmartProxy.new(:download_policy => 'on_demand')
-      assert_nil @content_view_puppet_environment.capsule_download_policy(proxy)
-      assert_nil @puppet_forge.capsule_download_policy(proxy)
       assert_not_nil @fedora_17_x86_64.download_policy
     end
 

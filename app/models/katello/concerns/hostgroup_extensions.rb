@@ -90,11 +90,6 @@ module Katello
         end
       end
 
-      def content_and_puppet_match?
-        self.content_view && self.lifecycle_environment && self.content_view == self.environment.try(:content_view) &&
-            self.lifecycle_environment == self.environment.try(:lifecycle_environment)
-      end
-
       def equivalent_kickstart_repository
         return unless operatingsystem &&
                       kickstart_repository &&

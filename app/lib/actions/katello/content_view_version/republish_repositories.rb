@@ -6,10 +6,6 @@ module Actions
           action_subject(content_view_version.content_view)
           plan_self(:version_id => content_view_version.id)
           plan_action(::Actions::Katello::Repository::BulkMetadataGenerate, content_view_version.repositories, :force => true)
-
-          content_view_version.content_view_puppet_environments.each do |repo|
-            plan_action(::Actions::Katello::Repository::MetadataGenerate, repo, :force => true)
-          end
         end
 
         def run

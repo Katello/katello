@@ -25,10 +25,6 @@ module Actions
           tasks = []
           environment = ::Katello::KTEnvironment.find_by(:id => input[:environment_id]) if input[:environment_id]
           repository = ::Katello::Repository.find_by(:id => input[:repository_id]) if input[:repository_id]
-          if repository.nil? && input[:repository_id]
-            repository = ::Katello::ContentViewPuppetEnvironment.find(input[:repository_id])
-            repository = repository.nonpersisted_repository
-          end
           content_view = ::Katello::ContentView.find_by(:id => input[:content_view_id]) if input[:content_view_id]
           smart_proxy = SmartProxy.unscoped.find(input[:smart_proxy_id])
           smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
@@ -39,9 +35,6 @@ module Actions
 
           list_of_repos_to_sync = smart_proxy_helper.combined_repos_available_to_capsule(environment, content_view, repository)
           list_of_repos_to_sync.each do |repo|
-            if repo.is_a?(Katello::ContentViewPuppetEnvironment)
-              repo = repo.nonpersisted_repository
-            end
             next unless act_on_repo?(repo, smart_proxy)
 
             pulp_repo = repo.backend_service(smart_proxy)

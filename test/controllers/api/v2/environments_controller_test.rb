@@ -22,7 +22,6 @@ module Katello
     def setup
       setup_controller_defaults_api
       login_user(User.find(users(:admin).id))
-      Katello::PuppetModule.stubs(:module_count).returns(0)
       models
       permissions
     end

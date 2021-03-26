@@ -15,7 +15,6 @@ module Katello
       Rake::Task['katello:refresh_pulp_repo_details'].reenable
       Rake::Task['katello:correct_repositories'].reenable
       Rake::Task['dynflow:client'].reenable
-      Rake::Task['katello:correct_puppet_environments'].reenable
       Rake::Task['katello:check_ping'].reenable
       Rake::Task['katello:change_download_policy'].reenable
       Katello::Ping.expects(:ping).returns(:status => 'ok')
@@ -27,10 +26,7 @@ module Katello
       @cv_repo = katello_repositories(:fedora_17_dev_library_view)
       ::Katello::Pulp3::RepositoryReference.new(repository_href: "test_repo_2/", root_repository_id: @cv_repo.root_id, content_view_id: @cv_repo.content_view.id).save
 
-      @puppet_env = katello_content_view_puppet_environments(:dev_view_puppet_environment)
-
       Katello::Repository.where("id not in (#{@library_repo.id},#{@cv_repo.id})").destroy_all
-      Katello::ContentViewPuppetEnvironment.where("id != #{@puppet_env.id}").destroy_all
       ENV['COMMIT'] = nil
       ENV['CONTENT_VIEW'] = nil
       ENV['LIFECYCLE_ENVIRONMENT'] = nil
@@ -172,33 +168,6 @@ module Katello
       assert_raise ActiveRecord::RecordNotFound do
         root.reload
       end
-    end
-
-    def test_correct_puppet_environments
-      ENV['CONTENT_VIEW'] = @puppet_env.content_view.name
-      Runcible::Extensions::Repository.any_instance.expects(:retrieve).once.with(@puppet_env.pulp_id).returns({})
-
-      ForemanTasks.expects(:sync_task).never
-
-      Rake.application.invoke_task('katello:correct_puppet_environments')
-    end
-
-    def test_correct_puppet_environments_missing
-      ENV['CONTENT_VIEW'] = @puppet_env.content_view.name
-      Runcible::Extensions::Repository.any_instance.expects(:retrieve).once.with(@puppet_env.pulp_id).raises(RestClient::ResourceNotFound)
-
-      ForemanTasks.expects(:sync_task).never
-      Rake.application.invoke_task('katello:correct_puppet_environments')
-    end
-
-    def test_correct_puppet_environments_missing_commit
-      ENV['COMMIT'] = 'true'
-      ENV['CONTENT_VIEW'] = @puppet_env.content_view.name
-      Runcible::Extensions::Repository.any_instance.expects(:retrieve).once.with(@puppet_env.pulp_id).raises(RestClient::ResourceNotFound)
-
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::ContentViewPuppetEnvironment::Create, @puppet_env)
-
-      Rake.application.invoke_task('katello:correct_puppet_environments')
     end
 
     def test_change_download_policy

@@ -20,8 +20,6 @@ module Katello
         seed_location
         # check that default_location_subscribed_hosts gets set
         assert_equal Setting['default_location_subscribed_hosts'], Location.first.title
-        # check that default_location_puppet_content gets set
-        assert_equal Setting['default_location_puppet_content'], Location.first.title
       end
     end
 

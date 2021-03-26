@@ -13,6 +13,3 @@ end
 if Setting[:default_location_subscribed_hosts].empty?
   Setting[:default_location_subscribed_hosts] = default_location.title
 end
-if Setting[:default_location_puppet_content].empty?
-  Setting[:default_location_puppet_content] = default_location.title
-end

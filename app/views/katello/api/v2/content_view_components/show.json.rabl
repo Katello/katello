@@ -13,7 +13,7 @@ child :content_view => :content_view do
 end
 
 child :latest_version => :content_view_version do
-  attributes :id, :name, :label, :content_view_id, :version, :puppet_module_count
+  attributes :id, :name, :label, :content_view_id, :version
 
   child :content_view => :content_view do
     attributes :id, :name, :label, :description

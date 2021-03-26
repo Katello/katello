@@ -57,13 +57,6 @@
       </a>
     </li>
 
-    <li ng-class="{active: isState('content-view.version.puppet-modules')}"
-        ng-show="version.puppet_module_count !== 0">
-      <a ui-sref="content-view.version.puppet-modules({versionId: version.id})">
-        <span translate>Puppet Modules</span>
-      </a>
-    </li>
-
     <li ng-class="{active: isState('content-view.version.docker')}"
         ng-show="version.docker_tag_count !== 0 || version.docker_manifest_count !== 0">
       <a ui-sref="content-view.version.docker({versionId: version.id})">

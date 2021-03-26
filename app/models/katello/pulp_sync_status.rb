@@ -10,7 +10,6 @@ module Katello
         ht = HashUtil.new
 
         details = ht.null_safe_get(progress_attrs, nil, %w(progress_report yum_importer content)) ||
-                  ht.null_safe_get(progress_attrs, nil, %w(progress_report puppet_importer modules)) ||
                   ht.null_safe_get(progress_attrs, nil, %w(progress_report details packages sync_report)) ||
                   ht.null_safe_get(progress_attrs, nil, %w(progress_report iso_importer))
 
@@ -26,15 +25,6 @@ module Katello
         else
           @total_size  = ht.null_safe_get(details, 0, ['size_total'])
           @size_left   = ht.null_safe_get(details, 0, ['size_left'])
-
-          if progress_attrs['progress_report']['puppet_importer']
-            @total_count   = ht.null_safe_get(details, 0, ['total_count'])
-            finished_count = ht.null_safe_get(details, 0, ['finished_count'])
-            @items_left    = @total_count - finished_count
-          else
-            @total_count = ht.null_safe_get(details, 0, ['items_total'])
-            @items_left  = ht.null_safe_get(details, 0, ['items_left'])
-          end
         end
 
         @error_details = errors(progress_attrs['progress_report'])

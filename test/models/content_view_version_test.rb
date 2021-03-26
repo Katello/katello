@@ -119,7 +119,6 @@ module Katello
       counts = cvv.content_counts_map
       assert_equal manifest_count, counts["docker_manifest_count"]
       assert_equal tag_count, counts["docker_tag_count"]
-      assert_equal 0, counts["puppet_module_count"]
     end
 
     def test_active_history_nil_task
@@ -189,26 +188,6 @@ module Katello
 
     def test_with_organization_id
       assert_includes(Katello::ContentViewVersion.with_organization_id(@cvv.organization.id), @cvv)
-    end
-
-    def test_with_puppet_module
-      puppet_module = katello_puppet_modules(:abrt)
-      katello_content_view_puppet_environments(:library_dev_staging_view_library_puppet_env).puppet_modules << puppet_module
-      puppet_cv_env = katello_content_view_puppet_environments(:dev_view_puppet_environment)
-      puppet_cv_env.puppet_modules << puppet_module
-
-      assert_include ContentViewVersion.with_puppet_module(puppet_module), puppet_cv_env.content_view_version
-    end
-
-    def test_promote_puppet_environment?
-      refute @cvv.promote_puppet_environment?
-
-      @cvv.content_view.force_puppet_environment = true
-      assert @cvv.promote_puppet_environment?
-
-      @cvv.content_view.force_puppet_environment = false
-      @cvv.content_counts = { "puppet_module" => 2 }
-      assert @cvv.promote_puppet_environment?
     end
 
     def test_validate_destroyable!
