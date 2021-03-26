@@ -1,6 +1,9 @@
-# 4.0.0 (2021-03-15)
+# 4.0.0 (2021-03-26)
 
 ## Features
+
+### Documentation
+ * use yum.theforeman.org in documentation ([#32169](https://projects.theforeman.org/issues/32169))
 
 ### SElinux
  * Allow connections to qpid from rails ([#31784](https://projects.theforeman.org/issues/31784))
@@ -35,12 +38,25 @@
  * Katello should send unauthenticated docker repos to the smart_proxy_container_gateway plugin at proxy sync time ([#31337](https://projects.theforeman.org/issues/31337), [c325db86](https://github.com/Katello/katello.git/commit/c325db86364f352b780c9d4f62835d20ae0c8737))
 
 ### Other
+ * use yum.theforeman.org for Katello in foreman-operations-collection ([#32172](https://projects.theforeman.org/issues/32172))
+ * use yum.theforeman.org for Katello in forklift ([#32171](https://projects.theforeman.org/issues/32171))
+ * use yum.theforeman.org in katello-repos RPM ([#32168](https://projects.theforeman.org/issues/32168))
  * - Recover space of old container image versions ([#31782](https://projects.theforeman.org/issues/31782), [8480a867](https://github.com/Katello/katello.git/commit/8480a8679396001876e7586331bc0772f06b7ad5))
  * Extend API params for generating registration command  ([#31712](https://projects.theforeman.org/issues/31712), [67d8fb89](https://github.com/Katello/katello.git/commit/67d8fb895d364ee1a1a83b45d4a51cc3de338d6c))
  * The container gateway's unauthenticated repo cache should update at smart proxy sync time and unauthenticated pulls should be rejected against other repos ([#31485](https://projects.theforeman.org/issues/31485))
  * Add Content View Version to Reporting Engine Template ([#30703](https://projects.theforeman.org/issues/30703), [123fb89f](https://github.com/Katello/katello.git/commit/123fb89f0a5c01edc67eeeb29b828ceb687e9836))
 
 ## Bug Fixes
+
+### Repositories
+ * remove old pulp2-based upgrade tasks (warnings on 4.0 install) ([#32007](https://projects.theforeman.org/issues/32007), [d415fe0a](https://github.com/Katello/katello.git/commit/d415fe0a7c25ff2b682a351450cd4e8d757e150d))
+ * sync management page tries to talk to pulp2 ([#31729](https://projects.theforeman.org/issues/31729), [3f689237](https://github.com/Katello/katello.git/commit/3f689237d2379bcab17340582232823dbbd83462))
+ * remove puppet repos and ostree repos on upgrade ([#31682](https://projects.theforeman.org/issues/31682), [56668d54](https://github.com/Katello/katello.git/commit/56668d54bc16b1bf0115918e6baf9990f32fcd98))
+ * Update recommended repos for sat/tools from 6.8 to 6.9 ([#31657](https://projects.theforeman.org/issues/31657), [6f5be4a5](https://github.com/Katello/katello.git/commit/6f5be4a5c358948fd56e886bc29dd1a4ec615e7c))
+ * Document 'arch' parameter for repositories ([#31615](https://projects.theforeman.org/issues/31615), [717688d7](https://github.com/Katello/katello.git/commit/717688d78da571bcc4bba52ff886f0febd06f209))
+ * Get rid of use_pulp ([#31293](https://projects.theforeman.org/issues/31293), [7d61a7f5](https://github.com/Katello/katello.git/commit/7d61a7f52d22d4caf72fa45359092d84d3c9f931))
+ * Content Repo Discovery Succeeds but fails ([#31222](https://projects.theforeman.org/issues/31222))
+ * Repository Upstream Authentication can never be removed ([#29592](https://projects.theforeman.org/issues/29592), [e7a0436a](https://github.com/Katello/katello.git/commit/e7a0436ae9498c07d6265c0a82cdf689883f328e))
 
 ### Tests
  * support foreman tasks 4.0 ([#32006](https://projects.theforeman.org/issues/32006), [6dba93df](https://github.com/Katello/katello.git/commit/6dba93df7cbd26bf2e62cd04601b5eeffa766836))
@@ -56,6 +72,9 @@
 ### API
  * Katello::Ping.pulpcore_enabled queries systemd by shelling out without catching output ([#31887](https://projects.theforeman.org/issues/31887), [248d5d39](https://github.com/Katello/katello.git/commit/248d5d39b82712c2e8a989f94e89350dcbdc53a6))
  * Katello 4.0.0 deprecations ([#30939](https://projects.theforeman.org/issues/30939), [c3ae5c6d](https://github.com/Katello/katello.git/commit/c3ae5c6dddf94d77ef3708f1244cefb5e9c810b6), [4deff8e4](https://github.com/Katello/hammer-cli-katello.git/commit/4deff8e4023c08aa3bc4fb5ea25e661f8453b2cf))
+
+### Client/Agent
+ * Correctly use SSL for Qpid connections ([#31880](https://projects.theforeman.org/issues/31880), [05618e42](https://github.com/Katello/katello.git/commit/05618e42ef313b0dbbb861a77f9014af713e5241))
 
 ### Tooling
  * Remove pulp2 from reset script ([#31865](https://projects.theforeman.org/issues/31865), [43bb25c4](https://github.com/Katello/katello.git/commit/43bb25c49b3a953313dca86f6e4311884b237abb))
@@ -90,15 +109,6 @@
  * support disk space widget when pulp3 is on the smart proxy (and when both pulp2 and pulp3 are there) ([#31506](https://projects.theforeman.org/issues/31506), [293291bc](https://github.com/Katello/katello.git/commit/293291bc27707c058b0e964eccf728416cec5343))
  * smart proxy details with a pure pulp3 proxy does not show sync widget ([#31465](https://projects.theforeman.org/issues/31465), [494416c7](https://github.com/Katello/katello.git/commit/494416c72c839b0e0698357aa4aff6e85db66d0a))
 
-### Repositories
- * sync management page tries to talk to pulp2 ([#31729](https://projects.theforeman.org/issues/31729), [3f689237](https://github.com/Katello/katello.git/commit/3f689237d2379bcab17340582232823dbbd83462))
- * remove puppet repos and ostree repos on upgrade ([#31682](https://projects.theforeman.org/issues/31682), [56668d54](https://github.com/Katello/katello.git/commit/56668d54bc16b1bf0115918e6baf9990f32fcd98))
- * Update recommended repos for sat/tools from 6.8 to 6.9 ([#31657](https://projects.theforeman.org/issues/31657), [6f5be4a5](https://github.com/Katello/katello.git/commit/6f5be4a5c358948fd56e886bc29dd1a4ec615e7c))
- * Document 'arch' parameter for repositories ([#31615](https://projects.theforeman.org/issues/31615), [717688d7](https://github.com/Katello/katello.git/commit/717688d78da571bcc4bba52ff886f0febd06f209))
- * Get rid of use_pulp ([#31293](https://projects.theforeman.org/issues/31293), [7d61a7f5](https://github.com/Katello/katello.git/commit/7d61a7f52d22d4caf72fa45359092d84d3c9f931))
- * Content Repo Discovery Succeeds but fails ([#31222](https://projects.theforeman.org/issues/31222))
- * Repository Upstream Authentication can never be removed ([#29592](https://projects.theforeman.org/issues/29592), [e7a0436a](https://github.com/Katello/katello.git/commit/e7a0436ae9498c07d6265c0a82cdf689883f328e))
-
 ### Content Views
  * Command exceeded timeout while Installer executes foreman-rake db:migrate ([#31540](https://projects.theforeman.org/issues/31540), [5a48018f](https://github.com/Katello/katello.git/commit/5a48018fe47074ff5cc24080ce9bc0a83d10196b))
  * New Content View Page - Tasks tab ([#31314](https://projects.theforeman.org/issues/31314), [b6faf29d](https://github.com/Katello/katello.git/commit/b6faf29de6cc6a6f2669476636280f088b20a2c5))
@@ -124,3 +134,4 @@
  * Katello 4.0 - decide the fate of un-versioned deprecations ([#31760](https://projects.theforeman.org/issues/31760), [b47484c4](https://github.com/Katello/katello.git/commit/b47484c497d994872e6cbb72f14d6883f3e69066))
  * katello_events and candlepin_events intermittently showing as not started ([#31740](https://projects.theforeman.org/issues/31740), [37c2d873](https://github.com/Katello/katello.git/commit/37c2d873243055c9cbdd37b4b94b1477b5cc9cdd))
  * Javascript error on Products page 'self.table.allSelected is not a function' ([#31496](https://projects.theforeman.org/issues/31496), [6fca2a2c](https://github.com/Katello/katello.git/commit/6fca2a2cb428ef4b5abb3665ee7fdc9732a7e288))
+ * EL8 clients do not always show available package updates and errata ([#31201](https://projects.theforeman.org/issues/31201))
