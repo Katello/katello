@@ -110,6 +110,8 @@ class Setting::Content < Setting
                "/etc/pki/katello/private/pulp-client.key", N_('Pulp client key')),
       self.set('pulp_client_cert', N_("Path for ssl cert used for pulp server auth"),
                "/etc/pki/katello/certs/pulp-client.crt", N_('Pulp client cert')),
+      self.set('sync_connect_timeout', N_("Total timeout in seconds for connections when syncing"),
+               300, N_('Sync Connection Timeout')),
       self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"),
                false, N_('Use remote execution by default')),
       self.set('unregister_delete_host', N_("When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host " \

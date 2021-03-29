@@ -333,7 +333,8 @@ module Katello
           tls_validation: root.verify_ssl_on_sync,
           name: generate_backend_object_name,
           url: root.url,
-          proxy_url: root.http_proxy&.full_url
+          proxy_url: root.http_proxy&.full_url,
+          total_timeout: Setting[:sync_connect_timeout]
         }
         remote_options[:url] = root.url unless root.url.blank?
         remote_options[:download_concurrency] = root.download_concurrency unless root.download_concurrency.blank?
