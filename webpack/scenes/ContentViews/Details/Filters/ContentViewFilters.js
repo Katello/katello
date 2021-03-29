@@ -73,7 +73,8 @@ const ContentViewFilters = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(response), buildRows, loading]);
 
   const emptyContentTitle = __("You currently don't have any filters for this content view.");
   const emptyContentBody = __("Add filters using the 'Add filter' button above."); // needs link

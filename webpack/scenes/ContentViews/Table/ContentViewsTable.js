@@ -34,6 +34,7 @@ const ContentViewTable = ({ response, status, error }) => {
         setRowMapping(updatedRowMap);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [results, JSON.stringify(rowMapping)], // use JSON to check obj values eq not reference eq
   );
 

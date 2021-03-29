@@ -72,7 +72,8 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(response), buildRows, loading]);
 
   const emptyContentTitle = __('No package groups have been added to this filter.');
   const emptyContentBody = __("Add to this filter using the 'Add package group' button.");

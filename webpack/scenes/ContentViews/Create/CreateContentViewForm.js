@@ -34,7 +34,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }
-  }, [JSON.stringify(response), status, error]);
+  }, [JSON.stringify(response), status, error]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSave = () => {
     setSaving(true);

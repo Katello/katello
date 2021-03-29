@@ -26,11 +26,11 @@ const ContentViewFilterDetails = () => {
 
   useEffect(() => {
     dispatch(getCVFilterDetails(cvId, filterId));
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (loaded) setDetails(response);
-  }, [JSON.stringify(response), loaded]);
+  }, [JSON.stringify(response), loaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { type } = details;
 
