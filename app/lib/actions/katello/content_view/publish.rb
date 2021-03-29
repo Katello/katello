@@ -3,7 +3,9 @@ module Actions
   module Katello
     module ContentView
       class Publish < Actions::EntryAction
+        extend ApipieDSL::Class
         include ::Katello::ContentViewHelper
+        include ::Actions::ObservableAction
         attr_accessor :version
         # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
         def plan(content_view, description = "", options = {importing: false}) # rubocop:disable Metrics/PerceivedComplexity
@@ -188,6 +190,33 @@ module Actions
               plan_action(Katello::Repository::IndexContent, id: id)
             end
           end
+        end
+
+        def content_view_version_id
+          input['content_view_version_id']
+        end
+
+        def content_view_version_name
+          input['content_view_version_name']
+        end
+
+        apipie :class, "A class representing #{self} object" do
+          desc 'This object is available as **@object** variable in
+                webhook templates when a corresponding event occures.
+                The following properties can be used to retrieve the needed information.'
+          name "#{class_scope}"
+          refs "#{class_scope}"
+          sections only: %w[all webhooks]
+          property :task, object_of: 'Task', desc: 'Returns the task to which this action belongs'
+          property :content_view_version_id, Integer, desc: 'Returns published content view version id'
+          property :content_view_version_name, String, desc: 'Returns published content view version name'
+        end
+        include Actions::Katello::JailConcern::Organization
+        include Actions::Katello::JailConcern::ContentView
+        class Jail < ::Actions::ObservableAction::Jail
+          allow :organization_id, :organization_name, :organization_label,
+                :content_view_id, :content_view_name, :content_view_label,
+                :content_view_version_id, :content_view_version_name
         end
       end
     end

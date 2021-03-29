@@ -3,7 +3,7 @@ require 'katello/repository_types.rb'
 require 'katello/host_status_manager.rb'
 # rubocop:disable Metrics/BlockLength
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 2.3'
+  requires_foreman '>= 2.4'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
            :icon => 'fa fa-book', :after => :monitor_menu do
@@ -218,7 +218,8 @@ Foreman::Plugin.register :katello do
   apipie_documented_controllers ["#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"]
   apipie_ignored_controllers %w(::Api::V2::OrganizationsController)
   ApipieDSL.configuration.dsl_classes_matchers.concat [
-    "#{Katello::Engine.root}/app/models/katello/**/*.rb"
+    "#{Katello::Engine.root}/app/models/katello/**/*.rb",
+    "#{Katello::Engine.root}/app/lib/actions/**/*.rb"
   ]
 
   parameter_filter ::Host::Managed, :host_collection_ids => [],
@@ -403,4 +404,6 @@ Foreman::Plugin.register :katello do
   precompile.concat(bastion_locale_files)
 
   precompile_assets(precompile)
+
+  extend_observable_events(::Dynflow::Action.descendants.select { |klass| klass <= ::Actions::ObservableAction }.map(&:namespaced_event_names))
 end
