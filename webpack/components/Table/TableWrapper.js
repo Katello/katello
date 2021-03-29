@@ -30,31 +30,37 @@ const TableWrapper = ({
   const [total, setTotal] = useState(0);
 
   const updatePagination = (data) => {
+    console.log('updatePagination')
     const { subtotal: newTotal, page: newPage, per_page: newPerPage } = data;
     if (newTotal !== undefined) setTotal(parseInt(newTotal, 10));
     if (newPage !== undefined) setPage(parseInt(newPage, 10));
     if (newPerPage !== undefined) setPerPage(parseInt(newPerPage, 10));
   };
   // eslint-disable-next-line no-underscore-dangle
-  const _paginationParams = () => ({ per_page: perPage, page });
-  const paginationParams = useCallback(_paginationParams, [page, perPage]);
-
-  useEffect(() => updatePagination(metadata), [metadata]);
+  const paginationParams = () => ({ per_page: perPage, page });
+  // const paginationParams = useCallback(_paginationParams, [page, perPage]);
+let counter = React.useRef(1);
+  // useEffect(() => updatePagination(metadata), [metadata]);
 
   // The search component will update the search query when a search is performed, listen for that
   // and perform the search so we can be sure the searchQuery is updated when search is performed.
   useEffect(() => {
     const fetchWithParams = (allParams = {}) => {
-      dispatch(fetchItems({ ...paginationParams(), ...allParams }));
+      dispatch(fetchItems({ per_page: perPage, page, ...allParams }));
     };
     if (searchQuery || activeFilters) {
       // Reset page back to 1 when filter or search changes
+      console.log('fetchWithParams with searchQuery')
       fetchWithParams({ search: searchQuery, page: 1 });
     } else {
-      fetchWithParams();
+      console.log('fetchWithParams')
+      counter.current += 1;
+      // if (counter.current > 10) debugger;
+      // fetchWithParams();
+      if (counter.current < 10) fetchWithParams();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, ...additionalListeners, activeFilters, dispatch, fetchItems, paginationParams]);
+  }, [searchQuery, ...additionalListeners, activeFilters, dispatch, fetchItems, page, perPage]);
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
