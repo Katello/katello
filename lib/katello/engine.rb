@@ -81,16 +81,6 @@ module Katello
       require 'katello/apipie/validators'
     end
 
-    # make sure the Katello plugin is initialized before `after_initialize`
-    # hook so that the resumed Dynflow tasks can rely on everything ready.
-    initializer 'katello.register_plugin', :before => :finisher_hook, :after => 'foreman_remote_execution.register_plugin' do
-      ::Foreman::AccessControl::Permission.prepend ::Katello::Concerns::PermissionExtensions
-      require 'katello/plugin'
-
-      # extend builtin permissions from core with new actions
-      require 'katello/permissions'
-    end
-
     initializer "katello.register_actions", :before => :finisher_hook do |_app|
       ForemanTasks.dynflow.require!
       if (Setting.table_exists? rescue(false)) && Setting['host_tasks_workers_pool_size'].to_i > 0
@@ -101,6 +91,17 @@ module Katello
                         #{Katello::Engine.root}/app/lib/headpin/actions
                         #{Katello::Engine.root}/app/lib/katello/actions)
       ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
+      ForemanTasks.dynflow.eager_load_actions!
+    end
+
+    # make sure the Katello plugin is initialized before `after_initialize`
+    # hook so that the resumed Dynflow tasks can rely on everything ready.
+    initializer 'katello.register_plugin', :before => :finisher_hook, :after => 'foreman_remote_execution.register_plugin' do
+      ::Foreman::AccessControl::Permission.prepend ::Katello::Concerns::PermissionExtensions
+      require 'katello/plugin'
+
+      # extend builtin permissions from core with new actions
+      require 'katello/permissions'
     end
 
     initializer "katello.set_dynflow_middlewares", :before => :finisher_hook do |_app|

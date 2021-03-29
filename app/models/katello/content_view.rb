@@ -6,6 +6,7 @@ module Katello
     include Ext::LabelFromName
     include Katello::Authorization::ContentView
     include ForemanTasks::Concerns::ActionSubject
+    include Foreman::ObservableModel
 
     CONTENT_DIR = "content_views".freeze
     IMPORT_LIBRARY = "Import-Library".freeze
@@ -85,6 +86,17 @@ module Katello
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :composite, :complete_value => true
+
+    set_crud_hooks :content_view
+
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Content View'
+      refs 'ContentView'
+      sections only: %w[all additional]
+      prop_group :katello_idname_props, Katello::Model, meta: { friendly_name: 'Content View' }
+      property :label, String, desc: 'Returns label of the Content View'
+      property :organization, 'Organization', desc: 'Returns organization object'
+    end
 
     def self.in_environment(env)
       joins(:content_view_environments).
@@ -649,14 +661,8 @@ module Katello
       self.organization
     end
 
-    apipie :class, desc: "A class representing #{model_name.human} object" do
-      name 'Content View'
-      refs 'ContentView'
-      sections only: %w[all additional]
-      prop_group :katello_basic_props, Katello::Model, meta: { friendly_name: 'Content View' }
-    end
     class Jail < ::Safemode::Jail
-      allow :name, :label, :version
+      allow :id, :name, :label, :version, :organization
     end
   end
 end
