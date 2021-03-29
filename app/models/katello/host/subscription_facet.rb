@@ -225,7 +225,7 @@ module Katello
 
         name = rhsm_facts['distribution.name']
         version = rhsm_facts['distribution.version']
-        major, minor = version.split('.')
+        major, minor = version&.split('.')
         return host_os.name == 'CentOS' &&
           !host_os.major.nil? &&
           name == 'CentOS' &&

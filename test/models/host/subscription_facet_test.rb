@@ -271,6 +271,15 @@ module Katello
       assert_equal '2', host.operatingsystem.minor
     end
 
+    def test_update_foreman_facts_without_distribution_version
+      host.operatingsystem = centos_76
+      Katello::Host::SubscriptionFacet.update_facts(host, 'distribution.name' => 'Redhat')
+
+      assert_equal 'CentOS', host.operatingsystem.name
+      assert_equal '7', host.operatingsystem.major
+      assert_equal "6", host.operatingsystem.minor
+    end
+
     def test_subscription_status
       status = Katello::SubscriptionStatus.new(:host => host)
       status.status = Katello::SubscriptionStatus::INVALID
