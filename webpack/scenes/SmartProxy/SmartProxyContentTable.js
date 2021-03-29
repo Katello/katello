@@ -127,7 +127,7 @@ const SmartProxyContentTable = ({ smartProxyId }) => {
   };
 
 
-  useEffect(() => fetchWithParams(), []);
+  useEffect(() => fetchWithParams(), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useDeepCompareEffect(() => {
     if (status !== STATUS.PENDING && response) {
