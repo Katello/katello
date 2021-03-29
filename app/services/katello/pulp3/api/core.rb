@@ -66,6 +66,10 @@ module Katello
           PulpcoreClient::ImportersPulpApi.new(core_api_client)
         end
 
+        def importer_check_api
+          PulpcoreClient::ImportersCoreImportCheckApi.new(core_api_client)
+        end
+
         def export_api
           PulpcoreClient::ExportersCoreExportsApi.new(core_api_client)
         end

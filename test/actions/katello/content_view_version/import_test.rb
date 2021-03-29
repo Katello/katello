@@ -68,6 +68,7 @@ module ::Actions::Katello::ContentViewVersion
     before do
       setup_proxy
       content_view.import_only = true
+      ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.stubs(:ensure_pulp_importable!).returns
     end
 
     describe 'Import' do
@@ -80,7 +81,10 @@ module ::Actions::Katello::ContentViewVersion
 
       it 'should plan properly' do
         metadata[:content_view_version][:major] += 10
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view, metadata: metadata, path: path).returns
+        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view,
+                                                                           metadata: metadata,
+                                                                           path: path,
+                                                                          smart_proxy: SmartProxy.pulp_primary).returns
 
         plan_action(action, content_view: content_view, path: path, metadata: metadata)
         assert_action_planned_with(action,
@@ -112,7 +116,10 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       it 'should plan the full tree appropriately' do
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view, metadata: metadata, path: path).returns
+        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view,
+                                                                           metadata: metadata,
+                                                                           path: path,
+                                                                          smart_proxy: SmartProxy.pulp_primary).returns
 
         metadata[:content_view_version][:major] += 10
         generated_cvv = nil

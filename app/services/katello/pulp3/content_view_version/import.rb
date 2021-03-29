@@ -43,8 +43,11 @@ module Katello
           api.importer_api.delete(importer_href)
         end
 
-        def self.check!(content_view:, metadata:, path:)
-          ImportValidator.new(content_view: content_view, metadata: metadata, path: path).check!
+        def self.check!(content_view:, metadata:, path:, smart_proxy:)
+          ImportValidator.new(smart_proxy: smart_proxy,
+                               content_view: content_view,
+                               metadata: metadata,
+                               path: path).check!
         end
 
         def self.reset_content_view_repositories_from_metadata!(content_view:, metadata:)

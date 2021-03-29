@@ -10,8 +10,10 @@ module Actions
                                                                                                    name: metadata[:content_view])
           end
           content_view.check_ready_to_import!
-
-          ::Katello::Pulp3::ContentViewVersion::Import.check!(content_view: content_view, metadata: metadata, path: path)
+          ::Katello::Pulp3::ContentViewVersion::Import.check!(content_view: content_view,
+                                                              metadata: metadata,
+                                                              path: path,
+                                                              smart_proxy: SmartProxy.pulp_primary!)
           ::Katello::Pulp3::ContentViewVersion::Import.reset_content_view_repositories_from_metadata!(content_view: content_view, metadata: metadata)
 
           major = metadata[:content_view_version][:major]

@@ -6,17 +6,41 @@ module Katello
         class ImportValidatorTest < ActiveSupport::TestCase
           include Support::Actions::Fixtures
 
-          def validator(content_view: nil, path: nil, metadata: {})
+          def validator(content_view: nil, path: nil, metadata: {}, smart_proxy: nil)
+            smart_proxy ||= smart_proxies(:one)
             content_view ||= katello_content_views(:acme_default)
             ::Katello::Pulp3::ContentViewVersion::ImportValidator.new(
                                                         content_view: content_view,
                                                         path: path,
-                                                        metadata: metadata)
+                                                        metadata: metadata,
+                                                        smart_proxy: smart_proxy)
           end
 
           describe "Metadata" do
+            it "fails on pulp error" do
+              cvv = katello_content_view_versions(:library_view_version_2)
+              invalid_message = "Pulp error!"
+              toc = mock(is_valid: false, messages: [invalid_message])
+              response = mock
+              response.expects(:toc).returns(toc).at_least_once
+              api = mock
+              api.expects(:pulp_import_check_post).returns(response)
+
+              ::Katello::Pulp3::Api::Core.
+                any_instance.
+                expects(:importer_check_api).
+                returns(api)
+
+              exception = assert_raises(RuntimeError) do
+                metadata = { content_view: cvv.content_view.name, content_view_version: cvv.slice(:major, :minor) }
+                validator(content_view: cvv.content_view, metadata: metadata).check!
+              end
+              assert_equal(invalid_message, exception.message)
+            end
+
             it "fails on metadata if content view already exists" do
               cvv = katello_content_view_versions(:library_view_version_2)
+              ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
               exception = assert_raises(RuntimeError) do
                 metadata = { content_view: cvv.content_view.name, content_view_version: cvv.slice(:major, :minor) }
                 validator(content_view: cvv.content_view, metadata: metadata).check!
@@ -26,6 +50,8 @@ module Katello
 
             it "fails on metadata if from content view does not exist" do
               cvv = katello_content_view_versions(:library_view_version_2)
+              ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
+
               exception = assert_raises(RuntimeError) do
                 metadata = { content_view: cvv.content_view.name,
                              content_view_version: { major: cvv.major + 10, minor: cvv.minor },
@@ -39,6 +65,8 @@ module Katello
             it "fails on metadata if the repositories in the metadata are not in the library" do
               cv = katello_content_views(:acme_default)
               cvv = cv.versions.last
+              ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
+
               exception = assert_raises(RuntimeError) do
                 metadata = { content_view: cv.name,
                              content_view_version: { major: cvv.major + 10, minor: cvv.minor },
