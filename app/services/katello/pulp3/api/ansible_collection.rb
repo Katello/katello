@@ -21,7 +21,7 @@ module Katello
         end
 
         def self.repository_sync_url_class
-          PulpAnsibleClient::RepositorySyncURL
+          PulpAnsibleClient::AnsibleRepositorySyncURL
         end
 
         def api_client
