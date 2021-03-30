@@ -187,8 +187,8 @@ module Katello
                          'application/vnd.docker.distribution.manifest.v1+prettyjws'
                        end
         end
-
-        render json: manifest_response, content_type: media_type
+        response.headers['Content-Type'] = media_type
+        render json: manifest_response
       end
     end
 
