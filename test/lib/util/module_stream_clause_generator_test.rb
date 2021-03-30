@@ -34,7 +34,7 @@ module Katello
 
       clause_gen = setup_whitelist_filter([foo_rule, goo_rule])
       expected = combined
-      assert_equal expected, clause_gen.copy_clause
+      assert_equal expected.sort, clause_gen.copy_clause.sort
       assert_nil clause_gen.remove_clause
 
       blacklist_expected = combined
