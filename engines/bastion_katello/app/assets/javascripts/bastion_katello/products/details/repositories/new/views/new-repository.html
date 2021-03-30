@@ -96,6 +96,25 @@
         </a></p>
       </div>
 
+      <div ng-show="repository.content_type === 'ansible_collection'" bst-form-group label="{{ 'Auth URL' | translate }}">
+        <input id="ansible_collection_auth_url"
+               name="ansible_collection_auth_url"
+               ng-model="repository.ansible_collection_auth_url"
+               type="text"/>
+        <p class="help-block" ng-show="repository.content_type === 'ansible_collection'" translate>
+          The URL to receive a session token from, e.g. used with Automation Hub.
+        </p>
+      </div>
+
+      <div ng-show="repository.content_type === 'ansible_collection'" bst-form-group label="{{ 'Auth Token' | translate }}">
+        <input id="ansible_collection_auth_token"
+               name="ansible_collection_auth_token"
+               ng-model="repository.ansible_collection_auth_token"
+               type="text"/>
+        <p class="help-block" ng-show="repository.content_type === 'ansible_collection'" translate>
+          The token key to use for authentication.
+        </p>
+      </div>
 
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Releases' | translate }}">
         <input id="deb_releases"

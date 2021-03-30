@@ -13,7 +13,7 @@ glue(@resource.root) do
   attributes :container_repository_name
   attributes :download_policy
   attributes :url
-  attributes :ansible_collection_requirements
+  attributes :ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token
   attributes :gpg_key_id
   attributes :ssl_ca_cert_id
   attributes :ssl_client_cert_id

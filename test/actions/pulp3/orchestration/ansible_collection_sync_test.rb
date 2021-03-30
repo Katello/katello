@@ -7,6 +7,7 @@ module ::Actions::Pulp3
     def setup
       @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:pulp3_ansible_collection_1)
+      @repo.root.update(:ansible_collection_auth_url => nil, :ansible_collection_auth_token => nil)
       create_repo(@repo, @primary)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo)

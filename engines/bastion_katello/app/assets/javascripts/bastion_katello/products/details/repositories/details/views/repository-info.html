@@ -111,6 +111,18 @@
         </dd>
       </span>
 
+      <dt ng-show="repository.content_type == 'ansible_collection'" translate>Auth URL</dt>
+      <dd bst-edit-text="repository.ansible_collection_auth_url"
+          on-save="save(repository)"
+          readonly="product.redhat || denied('edit_products', product)">
+      </dd>
+
+      <dt ng-show="repository.content_type == 'ansible_collection'" translate>Auth Token</dt>
+      <dd bst-edit-text="repository.ansible_collection_auth_token"
+          on-save="save(repository)"
+          readonly="product.redhat || denied('edit_products', product)">
+      </dd>
+
       <dt translate>Verify SSL</dt>
       <dd bst-edit-checkbox="repository.verify_ssl_on_sync"
           formatter="booleanToYesNo"
