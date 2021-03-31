@@ -28,7 +28,14 @@ module Katello
 
     module ClassMethods
       def candlepin_data(cp_id)
-        Katello::Resources::Candlepin::Pool.find(cp_id)
+        begin
+          Katello::Resources::Candlepin::Pool.find(cp_id)
+        rescue RestClient::ResourceNotFound => e
+          pool_id = ::Katello::Pool.find_by_cp_id(cp_id)&.id
+          Katello::EventQueue.push_event(::Katello::Events::DeletePool::EVENT_TYPE, pool_id) if pool_id
+          # make sure this is well logged
+          {}
+        end
       end
 
       def get_for_owner(organization)
@@ -58,6 +65,10 @@ module Katello
     module InstanceMethods
       def import_lazy_attributes
         json = self.backend_data
+
+        if json.blank?
+          return {}
+        end
 
         pool_attributes = json["attributes"] + json["productAttributes"]
         json["virt_only"] = false
@@ -97,6 +108,8 @@ module Katello
       def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
+
+        return if pool_json.blank?
 
         self.organization ||= Organization.find_by(:label => pool_json['owner']['key'])
         product_attributes = pool_json["productAttributes"] + pool_json["attributes"]
