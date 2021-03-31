@@ -30,7 +30,8 @@ const ContentViewFilterDetails = () => {
 
   useEffect(() => {
     if (loaded) setDetails(response);
-  }, [JSON.stringify(response), loaded]); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(response), loaded, setDetails]);
 
   const { type } = details;
 
