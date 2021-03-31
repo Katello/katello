@@ -41,12 +41,12 @@ module Katello
     end
 
     def test_version_protected
-      allowed_perms = [@publish_permission]
-      denied_perms = [@create_permission, @update_permission,
+      allowed_perms = [[@publish_permission, @create_permission]]
+      denied_perms = [@create_permission, @publish_permission, @update_permission,
                       @destroy_permission, @view_permission, @export_permission]
-
-      assert_protected_action(:version, allowed_perms, denied_perms) do
-        post :version, params: { content_view_id: @library_view.id, path: '/tmp', metadata: METADATA}
+      org = get_organization
+      assert_protected_action(:version, allowed_perms, denied_perms, [org]) do
+        post :version, params: { organization_id: org.id, path: '/tmp', metadata: METADATA}
       end
     end
 
@@ -73,14 +73,15 @@ module Katello
     def test_version
       metadata_params = ActionController::Parameters.new(METADATA).permit!
       path = "/tmp"
-      import_task = @controller.expects(:async_task).with do |action_class, content_view, options|
+      org = get_organization
+      import_task = @controller.expects(:async_task).with do |action_class, options|
         assert_equal ::Actions::Katello::ContentViewVersion::Import, action_class
-        assert_equal content_view.id, @library_view.id
+        assert_equal options[:organization], org
         assert_equal options[:path], path
         assert_equal options[:metadata], METADATA
       end
       import_task.returns(build_task_stub)
-      post :version, params: { content_view_id: @library_view.id, path: path, metadata: metadata_params}
+      post :version, params: { organization_id: org.id, path: path, metadata: metadata_params}
       assert_response :success
     end
 

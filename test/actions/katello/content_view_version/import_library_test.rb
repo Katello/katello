@@ -66,9 +66,10 @@ module ::Actions::Katello::ContentViewVersion
                                                 name: ::Katello::ContentView::IMPORT_LIBRARY).first
         action_class.any_instance.expects(:action_subject).with(organization)
         plan_action(action, organization, path: path, metadata: metadata)
-        assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Import) do |view, options|
-          assert view.library_import?
-          assert view.import_only?
+        assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Import) do |options|
+          options = options.first if options.is_a? Array
+          assert options[:content_view].library_import?
+          assert options[:content_view].import_only?
           assert_equal options[:metadata], metadata
           assert_equal options[:path], path
         end

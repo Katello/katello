@@ -81,7 +81,10 @@ module Katello
         end
 
         def self.find_or_create_library_import_view(organization)
-          name = ::Katello::ContentView::IMPORT_LIBRARY
+          find_or_create_import_view(organization: organization, name: ::Katello::ContentView::IMPORT_LIBRARY)
+        end
+
+        def self.find_or_create_import_view(organization:, name:)
           ::Katello::ContentView.where(name: name,
                                        organization: organization,
                                        import_only: true).first_or_create

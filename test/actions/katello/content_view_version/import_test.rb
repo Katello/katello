@@ -15,6 +15,10 @@ module ::Actions::Katello::ContentViewVersion
       create_action action_class
     end
 
+    let(:organization) do
+      content_view.organization
+    end
+
     let(:content_view) do
       content_view_version.content_view
     end
@@ -69,7 +73,7 @@ module ::Actions::Katello::ContentViewVersion
     describe 'Import' do
       it 'should fail on importing content for an existing versions' do
         exception = assert_raises(RuntimeError) do
-          plan_action(action, content_view, path: path, metadata: metadata)
+          plan_action(action, content_view: content_view, path: path, metadata: metadata)
         end
         assert_match(/'#{content_view_version.name}' already exists/, exception.message)
       end
@@ -78,7 +82,25 @@ module ::Actions::Katello::ContentViewVersion
         metadata[:content_view_version][:major] += 10
         ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view, metadata: metadata, path: path).returns
 
-        plan_action(action, content_view, path: path, metadata: metadata)
+        plan_action(action, content_view: content_view, path: path, metadata: metadata)
+        assert_action_planned_with(action,
+                                    ::Actions::Katello::ContentView::Publish,
+                                    content_view, '',
+                                    path: path,
+                                    metadata: metadata,
+                                    importing: true,
+                                    major: metadata[:content_view_version][:major],
+                                    minor: metadata[:content_view_version][:minor])
+      end
+
+      it 'should create a non existent cv and plan properly' do
+        metadata[:content_view] = "non_existent_view"
+        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).returns
+
+        plan_action(action, organization: organization, path: path, metadata: metadata)
+        content_view = ::Katello::ContentView.find_by(name: metadata[:content_view], organization_id: organization)
+        refute_nil content_view
+        assert content_view.import_only?
         assert_action_planned_with(action,
                                     ::Actions::Katello::ContentView::Publish,
                                     content_view, '',
@@ -94,7 +116,7 @@ module ::Actions::Katello::ContentViewVersion
 
         metadata[:content_view_version][:major] += 10
         generated_cvv = nil
-        tree = plan_action_tree(action_class, content_view, path: path, metadata: metadata)
+        tree = plan_action_tree(action_class, content_view: content_view, path: path, metadata: metadata)
 
         assert_empty tree.errors
         assert_tree_planned_steps(tree, Actions::Katello::ContentView::AddToEnvironment)
