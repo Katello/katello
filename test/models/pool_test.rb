@@ -9,6 +9,7 @@ module Katello
       @pool_two = katello_pools(:pool_two)
       @custom_pool = katello_pools(:custom_pool)
       @host_one = hosts(:one)
+      @organization = taxonomies(:organization1)
     end
 
     def test_upstream
@@ -123,6 +124,40 @@ module Katello
       Pool.expects(:in_organization).with(org).returns([@pool_one])
       Pool.import_all(org)
       refute Pool.find_by_id(@pool_one.id)
+    end
+
+    def test_import_pool
+      Pool.expects(:candlepin_data).returns(
+        {
+          'id' => 'abcd',
+          'productAttributes' => [],
+          'attributes' => [],
+          'providedProducts' => [],
+          'derivedProvidedProducts' => [],
+          'owner' => {
+            'key' => @organization.label
+          }
+        }
+      )
+      Resources::Candlepin::ActivationKey.expects(:get).returns([])
+      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
+
+      Pool.import_pool('abcd')
+
+      assert Pool.find_by_cp_id('abcd')
+    end
+
+    def test_import_pool_no_org
+      Pool.expects(:candlepin_data).returns(
+        'id' => 'abcd',
+        'owner' => {
+          'key' => 'cdefg'
+        }
+      )
+
+      Pool.import_pool('abcd')
+
+      refute Pool.find_by_cp_id('abcd')
     end
 
     def test_import_hosts

@@ -28,14 +28,12 @@ module Katello
 
     module ClassMethods
       def candlepin_data(cp_id)
-        begin
-          Katello::Resources::Candlepin::Pool.find(cp_id)
-        rescue RestClient::ResourceNotFound => e
-          pool_id = ::Katello::Pool.find_by_cp_id(cp_id)&.id
-          Katello::EventQueue.push_event(::Katello::Events::DeletePool::EVENT_TYPE, pool_id) if pool_id
-          # make sure this is well logged
-          {}
-        end
+        Katello::Resources::Candlepin::Pool.find(cp_id)
+      rescue RestClient::ResourceNotFound
+        pool_id = ::Katello::Pool.find_by_cp_id(cp_id)&.id
+        Katello::EventQueue.push_event(::Katello::Events::DeletePool::EVENT_TYPE, pool_id) if pool_id
+        # make sure this is well logged
+        {}
       end
 
       def get_for_owner(organization)
@@ -44,8 +42,15 @@ module Katello
 
       def import_pool(cp_pool_id, index_hosts = true)
         json = candlepin_data(cp_pool_id)
+        org = Organization.find_by(:label => json['owner']['key'])
+
+        if org.nil?
+          Rails.logger.warn("Could not import pool cp_id=#{cp_pool_id} because no matching organization could be found with label=#{json['owner']['key']}")
+          return
+        end
+
         ::Katello::Util::Support.active_record_retry do
-          pool = Katello::Pool.where(:cp_id => cp_pool_id, :organization => Organization.find_by(:label => json['owner']['key'])).first_or_create
+          pool = Katello::Pool.where(:cp_id => cp_pool_id, :organization => org).first_or_create
           pool.backend_data = json
           pool.import_data(index_hosts)
         end
