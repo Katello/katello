@@ -97,6 +97,7 @@ module Katello
           :required => false
     param :with_content, RepositoryTypeManager.enabled_content_types, :desc => N_("only repositories having at least one of the specified content type ex: rpm , erratum")
     param :download_policy, ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES, :desc => N_("limit to only repositories with this download policy")
+    param :username, String, :desc => N_("only show the repositories readable by this user with this username")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Repository)
     def index

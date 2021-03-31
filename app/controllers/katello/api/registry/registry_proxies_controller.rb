@@ -93,20 +93,11 @@ module Katello
       true
     end
 
-    # Reduce visible repos to include lifecycle env permissions
-    # http://projects.theforeman.org/issues/22914
-    # Also include repositories in lifecycle environments with registry_unauthenticated_pull=true
-    def readable_repositories
-      table_name = Repository.table_name
-      in_unauth_environments = Repository.joins(:environment).where("#{Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true).select(:id)
-      Repository.readable.or(Repository.joins(:root).where("#{table_name}.id in (?)", in_unauth_environments)).non_archived
-    end
-
     def find_readable_repository
       return nil unless params[:repository]
       repository = Repository.docker_type.find_by(container_repository_name: params[:repository])
       if require_user_authorization?(repository)
-        repository = readable_repositories.docker_type.find_by(container_repository_name: params[:repository])
+        repository = Repository.readable_docker_catalog.find_by(container_repository_name: params[:repository])
       end
       repository
     end
@@ -336,7 +327,7 @@ module Katello
       params[:per_page] = params[:n] || 25
       params[:search] = params[:q]
 
-      search_results = scoped_search(readable_repositories.docker_type.distinct,
+      search_results = scoped_search(Repository.readable_docker_catalog.distinct,
                                      :container_repository_name, :asc, options)
 
       results = {
@@ -350,7 +341,7 @@ module Katello
     end
 
     def catalog
-      repositories = readable_repositories.docker_type.collect do |repository|
+      repositories = Repository.readable_docker_catalog.collect do |repository|
         repository.container_repository_name
       end
       render json: { repositories: repositories }
