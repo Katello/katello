@@ -24,7 +24,7 @@ module Katello
         end
 
         def partial_repo_path
-          "/pulp/repos/#{repo.relative_path}/".sub('//', '/')
+          "/pulp/content/#{repo.relative_path}/".sub('//', '/')
         end
 
         def importer_class

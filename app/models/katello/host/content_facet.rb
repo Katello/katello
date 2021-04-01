@@ -35,7 +35,7 @@ module Katello
         prefixes = %w(/pulp/deb/ /pulp/repos/ /pulp/content/)
         relative_paths = []
 
-        # paths == ["/pulp/repos/Default_Organization/Library/custom/Test_product/test2"]
+        # paths == ["/pulp/content/Default_Organization/Library/custom/Test_product/test2"]
         paths.each do |path|
           if (prefix = prefixes.find { |pre| path.start_with?(pre) })
             relative_paths << path.gsub(prefix, '')

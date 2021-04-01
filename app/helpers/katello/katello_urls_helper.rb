@@ -20,7 +20,7 @@ module Katello
       "#{prefix}/pub/#{config}"
     end
 
-    def repository_url(content_path, content_type = 'repos', schema = 'http')
+    def repository_url(content_path, _content_type = nil, schema = 'http')
       return content_path if content_path =~ %r|^([\w\-\+]+)://|
       url = if @host.content_source
               "#{schema}://#{@host.content_source.hostname}"
@@ -33,7 +33,7 @@ module Katello
       end
       path = ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(
         @host.lifecycle_environment, content_path)
-      "#{url}/pulp/#{content_type}/#{path}"
+      "#{url}/pulp/content/#{path}"
     end
   end
 end

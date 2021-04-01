@@ -9,7 +9,7 @@ module Katello
     end
 
     def medium_uri(path = "")
-      url = kickstart_repo.full_path(entity.content_source)
+      url = kickstart_repo.full_path(entity.content_source, true)
       url += '/' + path unless path.empty?
       URI.parse(url)
     end

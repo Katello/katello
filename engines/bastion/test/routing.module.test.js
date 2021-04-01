@@ -37,8 +37,8 @@ describe('config: Bastion.routing', function () {
         });
 
         it("doesn't remove slashes if whitelisted", function () {
-            goTo('/pulp/repos/');
-            expect($window.location.href).toBe('/pulp/repos/');
+            goTo('/pulp/content/');
+            expect($window.location.href).toBe('/pulp/content/');
         });
     });
 
