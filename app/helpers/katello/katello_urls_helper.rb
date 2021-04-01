@@ -39,11 +39,11 @@ module Katello
 
     apipie :method, 'Generates an absolute path to the file' do
       required :content_path, String, desc: "Relative path to the file or it's name"
-      optional :content_type, String, desc: 'Content type', default: 'repos'
       optional :schema, String, desc: 'Optional URL schema for the content source', default: 'http'
+      optional :content_type, String, desc: 'Content type', default: 'repos'
       returns String, desc: 'Absolute path to a file'
     end
-    def repository_url(content_path, content_type = 'repos', schema = 'http')
+    def repository_url(content_path, _content_type = nil, schema = 'http')
       return content_path if content_path =~ %r|^([\w\-\+]+)://|
       url = if @host.content_source
               "#{schema}://#{@host.content_source.hostname}"
@@ -56,7 +56,7 @@ module Katello
       end
       path = ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(
         @host.lifecycle_environment, content_path)
-      "#{url}/pulp/#{content_type}/#{path}"
+      "#{url}/pulp/content/#{path}"
     end
   end
 end

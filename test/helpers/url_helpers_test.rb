@@ -39,11 +39,11 @@ class HostUrlHelpers < UrlHelperBase
   end
 
   test 'repository_url must render the right path based on host configuration' do
-    path = "http://#{@host.content_source.hostname}/pulp/repos/#{@host.lifecycle_environment.organization.label}/#{@host.lifecycle_environment.label}/custom/zoo/zoo/".freeze
+    path = "http://#{@host.content_source.hostname}/pulp/content/#{@host.lifecycle_environment.organization.label}/#{@host.lifecycle_environment.label}/custom/zoo/zoo/".freeze
     assert_equal path, repository_url('/custom/zoo/zoo/')
 
     @host.content_view = katello_content_views(:library_dev_view)
-    path = "http://#{@host.content_source.hostname}/pulp/repos/#{@host.lifecycle_environment.organization.label}/#{@host.lifecycle_environment.label}/#{@host.content_view.label}/custom/zoo/zoo/".freeze
+    path = "http://#{@host.content_source.hostname}/pulp/content/#{@host.lifecycle_environment.organization.label}/#{@host.lifecycle_environment.label}/#{@host.content_view.label}/custom/zoo/zoo/".freeze
     assert_equal path, repository_url('/custom/zoo/zoo/')
   end
 end

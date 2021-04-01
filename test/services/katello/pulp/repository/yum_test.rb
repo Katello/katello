@@ -57,10 +57,10 @@ module Katello
           service = Katello::Pulp::Repository::Yum.new(@rhel6, @mirror)
           host = URI(@primary.url).host.chomp('/')
 
-          assert_equal service.generate_importer.feed, "https://#{host}/pulp/repos/elbow/"
+          assert_equal service.generate_importer.feed, "https://#{host}/pulp/content/elbow/"
 
           @rhel6.root.unprotected = true
-          assert_equal service.generate_importer.feed, "https://#{host}/pulp/repos/elbow/"
+          assert_equal service.generate_importer.feed, "https://#{host}/pulp/content/elbow/"
         end
 
         def test_external_url_primary
@@ -71,11 +71,11 @@ module Katello
           host = URI(@primary.url).host.chomp('/')
 
           assert_equal service.generate_importer.feed, @rhel6.root.url
-          assert_equal service.external_url, "https://#{host}/pulp/repos/elbow/"
+          assert_equal service.external_url, "https://#{host}/pulp/content/elbow/"
 
           @rhel6.root.unprotected = true
-          assert_equal service.external_url, "http://#{host}/pulp/repos/elbow/"
-          assert_equal service.external_url(true), "https://#{host}/pulp/repos/elbow/"
+          assert_equal service.external_url, "http://#{host}/pulp/content/elbow/"
+          assert_equal service.external_url(true), "https://#{host}/pulp/content/elbow/"
         end
 
         def test_class_distribution_bootable?

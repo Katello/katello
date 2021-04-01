@@ -75,7 +75,7 @@ module Katello
 
       def uri
         uri = URI.parse(SETTINGS[:katello][:pulp][:url])
-        "https://#{uri.host}/pulp/repos/#{relative_path}"
+        "https://#{uri.host}/pulp/content/#{relative_path}"
       end
 
       def to_hash
@@ -356,21 +356,17 @@ module Katello
       end
     end
 
-    def full_path(smart_proxy = nil, force_https = false)
+    def full_path(smart_proxy = nil, force_http = false)
       pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : SETTINGS[:katello][:pulp][:url])
-      scheme   = (self.unprotected && !force_https) ? 'http' : 'https'
+      scheme = force_http ? 'http' : 'https'
       if docker?
         "#{pulp_uri.host.downcase}/#{container_repository_name}"
-      elsif file?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{relative_path}/"
       elsif ostree?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{relative_path}"
-      elsif deb?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/deb/#{relative_path}/"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/web/#{relative_path}"
       elsif ansible_collection?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api"
       else
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}/"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
       end
     end
   end

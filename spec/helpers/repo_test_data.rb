@@ -62,7 +62,7 @@ module RepoTestData
       "requires" => [
         "/bin/sh"
       ],
-      "download_url" => "https =>//localhost//pulp/repos/1313581687514-prod_a1_dummy_repos_zoo-ACME_Corporation/elephant-0.3-0.8.noarch.rpm",
+      "download_url" => "https =>//localhost//pulp/content/1313581687514-prod_a1_dummy_repos_zoo-ACME_Corporation/elephant-0.3-0.8.noarch.rpm",
       "filename" => "elephant-0.3-0.8.noarch.rpm",
       "epoch" => "0",
       "version" => "0.3",
@@ -90,7 +90,7 @@ module RepoTestData
       "requires" => [
         "/bin/sh"
       ],
-      "download_url" => "https =>//localhost//pulp/repos/1313581687514-prod_a1_dummy_repos_zoo-ACME_Corporation/cheetah-0.3-0.8.noarch.rpm",
+      "download_url" => "https =>//localhost//pulp/content/1313581687514-prod_a1_dummy_repos_zoo-ACME_Corporation/cheetah-0.3-0.8.noarch.rpm",
       "filename" => "cheetah-0.3-0.8.noarch.rpm",
       "epoch" => "0",
       "version" => "0.3",
@@ -244,11 +244,11 @@ module RepoTestData
 
   def self.repo_distributions
     {
-      "files" => ["/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/boot.iso",
-                  "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/efiboot.img",
-                  "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/efidisk.img",
-                  "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/pxeboot/vmlinuz",
-                  "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/pxeboot/initrd.img"],
+      "files" => ["/var/lib/pulp/content/ACME_Corporation/Library/isos/images/boot.iso",
+                  "/var/lib/pulp/content/ACME_Corporation/Library/isos/images/efiboot.img",
+                  "/var/lib/pulp/content/ACME_Corporation/Library/isos/images/efidisk.img",
+                  "/var/lib/pulp/content/ACME_Corporation/Library/isos/images/pxeboot/vmlinuz",
+                  "/var/lib/pulp/content/ACME_Corporation/Library/isos/images/pxeboot/initrd.img"],
       "description" => "desc",
       "family" => "Fedora",
       "relativepath" => "",

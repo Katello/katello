@@ -422,23 +422,25 @@ module Katello
 
       content_facet.update_repositories_by_paths([
                                                    "/pulp/content/#{repo.relative_path}",
-                                                   "/pulp/deb/#{deb_repo.relative_path}",
-                                                   "/pulp/unknown_content_type/Library/test/"
+                                                   "/pulp/content/#{deb_repo.relative_path}",
+                                                   "/pulp/content/Library/test/"
                                                  ])
 
       assert_equal content_facet.bound_repositories, [deb_repo, repo]
     end
 
     def test_save_bound_old_repo_path_by_paths
+      SETTINGS[:katello][:katello_applicability] = nil
       content_facet.content_view = repo.content_view
       content_facet.lifecycle_environment = repo.environment
       ForemanTasks.expects(:async_task).with(Actions::Katello::Host::GenerateApplicability, [host])
       content_facet.expects(:propagate_yum_repos)
       assert_empty content_facet.bound_repositories
 
-      content_facet.update_repositories_by_paths(["/pulp/repos/#{repo.relative_path}"])
+      content_facet.update_repositories_by_paths(["/pulp/content/#{repo.relative_path}"])
 
       assert_equal content_facet.bound_repositories, [repo]
+      SETTINGS[:katello][:katello_applicability] = false
     end
 
     def test_save_bound_repos_by_paths_same_path
@@ -448,7 +450,7 @@ module Katello
       ForemanTasks.expects(:async_task).never
       content_facet.expects(:propagate_yum_repos).never
 
-      content_facet.update_repositories_by_paths(["/pulp/repos/#{repo.relative_path}"])
+      content_facet.update_repositories_by_paths(["/pulp/content/#{repo.relative_path}"])
 
       assert_equal content_facet.bound_repositories, [repo]
     end
@@ -457,14 +459,14 @@ module Katello
       content_facet.bound_repositories = [repo]
       Rails.logger.expects(:warn).never
 
-      content_facet.update_repositories_by_paths(["/pulp/repos/#{repo.relative_path}"])
+      content_facet.update_repositories_by_paths(["/pulp/content/#{repo.relative_path}"])
     end
 
     def test_legit_warning
       content_facet.stubs(:update_bound_repositories)
       content_facet.bound_repositories = [repo]
-      bogus_path = '/pulp/repos/Default_Organization/Library/unknown'
-      bogus_relative_path = bogus_path.gsub('/pulp/repos/', '')
+      bogus_path = '/pulp/content/Default_Organization/Library/unknown'
+      bogus_relative_path = bogus_path.gsub('/pulp/content/', '')
       expected_warning = "System #{host.name} (#{host.id}) requested binding to unknown repo #{bogus_relative_path}"
       Rails.logger.expects(:warn).with(expected_warning)
 
