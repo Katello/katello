@@ -278,10 +278,10 @@ module Katello
 
   class HostEnabledReposTest < HostManagedExtensionsTestBase
     def test_import_repos
-      repos_json = [{"repositoryid" => "good", "baseurl" => ["https://foo.com/pulp/repos/foo"]},
+      repos_json = [{"repositoryid" => "good", "baseurl" => ["https://foo.com/pulp/content/foo"]},
                     {"repositoryid" => "bad", "baseurl" => []}]
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
-      @foreman_host.content_facet.expects(:update_repositories_by_paths).with(["/pulp/repos/foo"])
+      @foreman_host.content_facet.expects(:update_repositories_by_paths).with(["/pulp/content/foo"])
       @foreman_host.import_enabled_repositories(repos_json)
     end
   end

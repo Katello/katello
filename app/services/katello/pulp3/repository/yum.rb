@@ -81,7 +81,7 @@ module Katello
         end
 
         def partial_repo_path
-          "/pulp/repos/#{repo.relative_path}/".sub('//', '/')
+          "/pulp/content/#{repo.relative_path}/".sub('//', '/')
         end
 
         def multi_copy_units(repo_id_map, dependency_solving)

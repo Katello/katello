@@ -93,6 +93,14 @@ module Katello
     SHA1 = "sha1".freeze
     SHA256 = "sha256".freeze
 
+    def test_default_url_scheme_is_https
+      assert @fedora_17_x86_64.full_path(@pulp_primary).starts_with?('https')
+    end
+
+    def test_url_scheme_is_http_when_forced
+      assert @fedora_17_x86_64.full_path(@pulp_primary, true).starts_with?('http')
+    end
+
     def test_distributors_match_yum
       yum_config = {
         'relative_url' => '/foo/bar',
