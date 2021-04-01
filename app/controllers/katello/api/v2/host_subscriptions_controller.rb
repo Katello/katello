@@ -166,25 +166,6 @@ module Katello
       product_content
     end
 
-    api :GET, "/hosts/:host_id/subscriptions/product_content", N_("Get content and overrides for the host")
-    param :host_id, String, :desc => N_("Id of the host"), :required => true
-    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions")
-    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the host's content view version")
-    def product_content
-      content_access_mode_all = ::Foreman::Cast.to_bool(params[:content_access_mode_all])
-      content_access_mode_env = ::Foreman::Cast.to_bool(params[:content_access_mode_env])
-
-      content_finder = ProductContentFinder.new(
-          :consumable => @host.subscription_facet,
-          :match_subscription => !content_access_mode_all,
-          :match_environment => content_access_mode_env
-      )
-
-      content = content_finder.presenter_with_overrides(@host.subscription_facet.candlepin_consumer.content_overrides)
-
-      respond_for_index(:collection => full_result_response(content))
-    end
-
     api :GET, "/hosts/:host_id/subscriptions/available_release_versions", N_("Show releases available for the content host")
     param :host_id, String, :desc => N_("id of host"), :required => true
     def available_release_versions
@@ -193,6 +174,12 @@ module Katello
     end
 
     private
+
+    def product_content
+      content_finder = ProductContentFinder.new(:consumable => @host.subscription_facet)
+      content = content_finder.presenter_with_overrides(@host.subscription_facet.candlepin_consumer.content_overrides)
+      respond_with_template_collection("index", 'repository_sets', :collection => full_result_response(content))
+    end
 
     def find_content_view_environment
       @content_view_environment = Katello::ContentViewEnvironment.where(:content_view_id => params[:content_view_id],

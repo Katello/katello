@@ -204,35 +204,6 @@ module Katello
       ProductContentFinder.any_instance.stubs(:product_content).returns(pc)
     end
 
-    def test_product_content_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@update_permission, @create_permission, @destroy_permission]
-
-      assert_protected_action(:product_content, allowed_perms, denied_perms) do
-        get(:product_content, params: { :host_id => @host.id })
-      end
-    end
-
-    def test_product_content
-      result = get(:product_content, params: { :host_id => @host.id })
-      content = JSON.parse(result.body)['results'][0]['content']
-
-      assert_equal('some-content', content['label'])
-      assert_response :success
-      assert_template 'api/v2/host_subscriptions/product_content'
-    end
-
-    def test_product_content_access_mode_all
-      mode_all = true
-      mode_env = false
-      result = get(:product_content, params: { :host_id => @host.id, :content_access_mode_all => mode_all, :content_view_version_env => mode_env })
-      content = JSON.parse(result.body)['results'][0]['content']
-
-      assert_equal('some-content', content['label'])
-      assert_response :success
-      assert_template 'api/v2/host_subscriptions/product_content'
-    end
-
     def test_content_override_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
@@ -256,7 +227,7 @@ module Katello
       put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides }
 
       assert_response :success
-      assert_template 'api/v2/host_subscriptions/content_override'
+      assert_template 'katello/api/v2/repository_sets/index'
     end
 
     def test_content_override_bulk
@@ -272,7 +243,7 @@ module Katello
       put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides }
 
       assert_response :success
-      assert_template 'api/v2/host_subscriptions/content_override'
+      assert_template 'katello/api/v2/repository_sets/index'
     end
 
     def test_content_override_accepts_string_values
@@ -305,7 +276,7 @@ module Katello
       put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides, :value => value }
 
       assert_response :success
-      assert_template 'api/v2/host_subscriptions/content_override'
+      assert_template 'katello/api/v2/repository_sets/index'
     end
 
     def test_available_release_versions

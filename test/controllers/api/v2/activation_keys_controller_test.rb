@@ -397,33 +397,6 @@ module Katello
       end
     end
 
-    def test_product_content_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:product_content, allowed_perms, denied_perms) do
-        get(:product_content, params: { :id => @activation_key.id })
-      end
-    end
-
-    def test_product_content
-      response = get :product_content, params: { :id => @activation_key.id, :organization_id => @organization.id }
-
-      refute_empty JSON.parse(response.body)['results']
-      assert_response :success
-      assert_template 'api/v2/activation_keys/product_content'
-    end
-
-    def test_product_content_access_modes
-      ProductContentFinder.any_instance.expects(:product_content).once.returns([])
-
-      mode_all = true
-      mode_env = false
-      get(:product_content, params: { :id => @activation_key.id, :content_access_mode_all => mode_all, :content_access_mode_env => mode_env })
-      assert_response :success
-      assert_template 'api/v2/activation_keys/product_content'
-    end
-
     def test_content_override_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
