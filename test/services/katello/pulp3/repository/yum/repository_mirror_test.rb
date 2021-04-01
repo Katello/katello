@@ -19,7 +19,7 @@ module Katello
         def test_feed_url_is_prepended_with_pulp_rpm_content_path
           pulp3_repo = Katello::Pulp3::Repository::Yum.new(@repo, @mock_smart_proxy)
 
-          assert_equal '/pulp/repos' + @repo.relative_path + '/', pulp3_repo.partial_repo_path
+          assert_equal '/pulp/content' + @repo.relative_path + '/', pulp3_repo.partial_repo_path
         end
 
         def test_mirror_remote_download_policy_matches_proxy

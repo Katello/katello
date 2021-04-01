@@ -159,12 +159,12 @@ module Katello
 
     def test_medium_uri_with_a_kickstart_repo
       @host.content_facet.kickstart_repository = @repo_with_distro
-      assert_equal @repo_with_distro.full_path(@content_source), @host.medium_provider.medium_uri.to_s
+      assert_equal @repo_with_distro.full_path(@content_source, true), @host.medium_provider.medium_uri.to_s
     end
 
     def test_medium_uri_with_a_kickstart_repo_hg
       @hostgroup.kickstart_repository = @repo_with_distro
-      assert_equal @repo_with_distro.full_path(@content_source), @hostgroup.medium_provider.medium_uri.to_s
+      assert_equal @repo_with_distro.full_path(@content_source, true), @hostgroup.medium_provider.medium_uri.to_s
     end
 
     def test_kickstart_repos_with_no_content_source

@@ -118,16 +118,16 @@ module Katello
         {
           "repos" => [
             {
-              "baseurl" => ["https://hostname/pulp/repos/foo"]
+              "baseurl" => ["https://hostname/pulp/content/foo"]
             },
             {
-              "baseurl" => ["https://hostname/pulp/repos/bar"]
+              "baseurl" => ["https://hostname/pulp/content/bar"]
             },
             {
-              "baseurl" => ["https://hostname/pulp/deb/bar"]
+              "baseurl" => ["https://hostname/pulp/content/bar"]
             },
             {
-              "baseurl" => ["https://hostname/pulp/deb/baz"]
+              "baseurl" => ["https://hostname/pulp/content/baz"]
             }
           ]
         }
@@ -136,10 +136,10 @@ module Katello
       it "should bind all" do
         Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with(
           [
-            "/pulp/repos/foo",
-            "/pulp/repos/bar",
-            "/pulp/deb/bar",
-            "/pulp/deb/baz"
+            "/pulp/content/foo",
+            "/pulp/content/bar",
+            "/pulp/content/bar",
+            "/pulp/content/baz"
           ])
         put :enabled_repos, params: { :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos }
         assert_equal 200, response.status
