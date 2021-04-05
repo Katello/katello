@@ -27,7 +27,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }
-  }, [JSON.stringify(response), status, error]);
+  }, [JSON.stringify(response), status, error]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSubmit = () => {
     setSaving(true);

@@ -126,14 +126,14 @@ const SmartProxyContentTable = ({ smartProxyId }) => {
   };
 
 
-  useEffect(() => fetchWithParams(), []);
+  useEffect(() => fetchWithParams(), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (status !== STATUS.PENDING && response) {
       const { lifecycle_environments: env } = response;
       setRows(buildrows(env));
     }
-  }, [JSON.stringify(response), status, error]);
+  }, [JSON.stringify(response), status, error]); // eslint-disable-line react-hooks/exhaustive-deps
 
 
   return (

@@ -74,48 +74,49 @@ const ContentViewRepositories = ({ cvId }) => {
   ];
   const loading = status === STATUS.PENDING;
 
-  const buildRows = (results) => {
-    const newRows = [];
-    results.forEach((repo) => {
-      const {
-        id,
-        content_type: contentType,
-        name,
-        added_to_content_view: addedToCV,
-        product: { id: productId, name: productName },
-        content_counts: counts,
-        last_sync_words: lastSyncWords,
-        last_sync: lastSync,
-      } = repo;
-
-      const cells = [
-        { title: <Bullseye><RepoIcon type={contentType} /></Bullseye> },
-        { title: <a href={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</a> },
-        productName,
-        { title: <LastSync {...{ lastSyncWords, lastSync }} /> },
-        { title: <ContentCounts {...{ counts, productId }} repoId={id} /> },
-        {
-          title: <AddedStatusLabel added={addedToCV || statusSelected === ADDED} />,
-        },
-      ];
-      newRows.push({ repoId: id, cells });
-    });
-    return newRows;
-  };
-
   useEffect(() => {
     const { results, ...meta } = response;
     setMetadata(meta);
 
+    const buildRows = () => {
+      const newRows = [];
+      results.forEach((repo) => {
+        const {
+          id,
+          content_type: contentType,
+          name,
+          added_to_content_view: addedToCV,
+          product: { id: productId, name: productName },
+          content_counts: counts,
+          last_sync_words: lastSyncWords,
+          last_sync: lastSync,
+        } = repo;
+
+        const cells = [
+          { title: <Bullseye><RepoIcon type={contentType} /></Bullseye> },
+          { title: <a href={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</a> },
+          productName,
+          { title: <LastSync {...{ lastSyncWords, lastSync }} /> },
+          { title: <ContentCounts {...{ counts, productId }} repoId={id} /> },
+          {
+            title: <AddedStatusLabel added={addedToCV || statusSelected === ADDED} />,
+          },
+        ];
+        newRows.push({ repoId: id, cells });
+      });
+      return newRows;
+    };
+
     if (!loading && results) {
-      const newRows = buildRows(results);
+      const newRows = buildRows();
       setRows(newRows);
     }
-  }, [JSON.stringify(response)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(response), loading, statusSelected]);
 
   useEffect(() => {
     dispatch(getRepositoryTypes());
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const rowsAreSelected = rows.some(row => row.selected);
@@ -135,6 +136,7 @@ const ContentViewRepositories = ({ cvId }) => {
       });
       setRepoTypes(allRepoTypes);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(repoTypesResponse), repoTypesStatus]);
 
   const toggleBulkAction = () => {
