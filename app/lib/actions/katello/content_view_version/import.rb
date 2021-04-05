@@ -2,7 +2,13 @@ module Actions
   module Katello
     module ContentViewVersion
       class Import < Actions::EntryAction
-        def plan(content_view, path:, metadata:)
+        def plan(content_view: nil, organization: nil, path:, metadata:)
+          fail _("Atleast one of ContentView or Organization must be provided") if content_view.nil? && organization.nil?
+          if organization
+            fail _("Content view not provided in the metadata") if metadata[:content_view].blank?
+            content_view = ::Katello::Pulp3::ContentViewVersion::Import.find_or_create_import_view(organization: organization,
+                                                                                                   name: metadata[:content_view])
+          end
           content_view.check_ready_to_import!
 
           ::Katello::Pulp3::ContentViewVersion::Import.check!(content_view: content_view, metadata: metadata, path: path)

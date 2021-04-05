@@ -1,6 +1,8 @@
 module Katello
   class Api::V2::ContentImportsController < Api::V2::ApiController
-    before_action :find_publishable_content_view, :only => [:version]
+    before_action :find_organization, :only => [:version]
+    before_action :check_authorized, :only => [:version]
+
     before_action :find_importable_organization, :only => [:library]
     before_action :find_default_content_view, :only => [:library]
 
@@ -26,16 +28,12 @@ module Katello
     end
 
     api :POST, "/content_imports/version", N_("Import a content view version")
-    param :content_view_id, :number, :desc => N_("Content view identifier"), :required => true
+    param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
     param :path, String, :desc => N_("Directory containing the exported Content View Version"), :required => true
     param :metadata, Hash, :desc => N_("Metadata taken from the upstream export history for this Content View Version"), :required => true
     def version
-      if @view.default?
-        fail HttpErrors::BadRequest, _("Cannot use this endpoint for importing to library. "\
-                                       "If you intended to upload to library, use /content_imports/library.")
-      end
-
-      task = async_task(::Actions::Katello::ContentViewVersion::Import, @view, path: params[:path], metadata: metadata_params.to_h)
+      task = async_task(::Actions::Katello::ContentViewVersion::Import, organization: @organization,
+                                                  path: params[:path], metadata: metadata_params.to_h)
       respond_for_async :resource => task
     end
 
@@ -50,9 +48,8 @@ module Katello
 
     private
 
-    def find_publishable_content_view
-      @view = ContentView.publishable.find(params[:content_view_id])
-      throw_resource_not_found(name: 'content_view', id: params[:content_view_id]) if @view.blank?
+    def check_authorized
+      fail HttpErrors::Forbidden, _("Action unauthorized to be performed in this organization.") unless ContentView.importable?
     end
 
     def find_default_content_view
