@@ -12,6 +12,8 @@ module Scenarios
     end
 
     def test_scenarios
+      skip "Until we can figure out testing this with pulp3"
+
       @support = ScenarioSupport.new(User.current)
 
       org = Organization.new(:name => 'scenario_test', :label => 'scenario_test')
