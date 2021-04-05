@@ -56,8 +56,10 @@ module Katello
         @pulp_data ||= tasks_api.read(@href).as_json.with_indifferent_access
       end
 
-      def tasks_api
-        ::Katello::Pulp3::Api::Core.new(@smart_proxy).tasks_api
+      delegate :tasks_api, to: :core_api
+
+      def core_api
+        ::Katello::Pulp3::Api::Core.new(@smart_proxy)
       end
 
       def task_group_href
@@ -98,10 +100,11 @@ module Katello
       end
 
       def cancel
-        data = PulpcoreClient::TaskResponse.new(state: 'canceled')
-        tasks_api.tasks_cancel(task_data['pulp_href'], data)
+        core_api.cancel_task(task_data['pulp_href'])
         #the main task may have completed, so cancel spawned tasks too
-        task_data['spawned_tasks']&.each { |spawned| tasks_api.tasks_cancel(spawned['pulp_href'], data) }
+        task_data['spawned_tasks']&.each do |spawned|
+          core_api.cancel_task(spawned['pulp_href'])
+        end
       end
     end
   end
