@@ -14,6 +14,10 @@ module Katello
     validates :path, presence: true
     serialize :metadata, Hash
 
+    before_validation do |history|
+      history.import_type = ContentViewVersionExportHistory.export_type_from_metadata(history.metadata)
+    end
+
     scope :with_organization_id, ->(organization_id) do
       where(:content_view_version_id => ContentViewVersion.with_organization_id(organization_id))
     end
@@ -25,6 +29,7 @@ module Katello
     scoped_search :on => :content_view_id, :relation => :content_view_version, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
     scoped_search :on => :content_view_version_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :import_type, :rename => :type, :complete_value => ContentViewVersionExportHistory::EXPORT_TYPES
 
     def self.generate_audit_comment(user:, path:, content_view_name:)
       _("Content imported from %{path} into content view '%{name}' by %{user}") % {
