@@ -22,7 +22,7 @@ module Actions
                      contentUrl: input[:content_url],
                      gpgUrl: input[:gpg_key_url] || '', #candlepin ignores nil
                      type: input[:type],
-                     arches: input[:arches],
+                     arches: input[:arches] || '',
                      requiredTags: input[:os_versions],
                      label: input[:label],
                      metadataExpire: 1,
