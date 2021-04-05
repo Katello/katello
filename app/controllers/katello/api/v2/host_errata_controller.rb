@@ -2,11 +2,12 @@ module Katello
   class Api::V2::HostErrataController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_host, :only => :index
-    before_action :find_host_editable, :except => :index
-    before_action :find_errata_ids, :only => :apply
-    before_action :find_environment, :only => :index
-    before_action :find_content_view, :only => :index
+    before_action :find_host, only: :index
+    before_action :find_host_editable, except: :index
+    before_action :find_errata_ids, only: :apply
+    before_action :find_environment, only: :index
+    before_action :find_content_view, only: :index
+    before_action :deprecate_katello_agent, only: :apply
 
     resource_description do
       api_version 'v2'
