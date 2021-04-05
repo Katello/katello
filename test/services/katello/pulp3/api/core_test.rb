@@ -42,6 +42,15 @@ module Katello
             client = Katello::Pulp3::Api::Core.new(@primary).core_api_client
             assert_nil client.default_headers['Correlation-ID']
           end
+
+          def test_cancel_task
+            core = Katello::Pulp3::Api::Core.new(@primary)
+            task = core.tasks_api.list.results.first
+
+            assert_nothing_raised do
+              core.cancel_task(task.pulp_href)
+            end
+          end
         end
       end
     end
