@@ -115,7 +115,7 @@ module Katello
                                                      :resource_class => Erratum))
     end
 
-    api :PUT, "/hosts/bulk/install_content", N_("Install content on one or more hosts")
+    api :PUT, "/hosts/bulk/install_content", N_("Install content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
@@ -125,7 +125,7 @@ module Katello
       content_action
     end
 
-    api :PUT, "/hosts/bulk/update_content", N_("Update content on one or more hosts")
+    api :PUT, "/hosts/bulk/update_content", N_("Update content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
@@ -136,7 +136,7 @@ module Katello
       content_action
     end
 
-    api :PUT, "/hosts/bulk/remove_content", N_("Remove content on one or more hosts")
+    api :PUT, "/hosts/bulk/remove_content", N_("Remove content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
