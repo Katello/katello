@@ -8,6 +8,7 @@ module Katello
     before_action :set_editable_product_scope, only: [:enable, :disable]
     before_action :find_product
     before_action :custom_product?
+    before_action :setup_params
     before_action :find_authorized_activation_key, :only => [:index, :auto_complete_search]
     before_action :find_authorized_host, :only => [:index, :auto_complete_search]
     before_action :find_organization
@@ -198,6 +199,15 @@ module Katello
       return unless params[:host_id]
       find_host_with_subscriptions(params[:host_id], :view_hosts)
       @consumable = @host.subscription_facet
+    end
+
+    def setup_params
+      return unless params[:id]
+      if params[:entity] == :activation_key
+        params[:activation_key_id] ||= params[:id]
+      else
+        params[:host_id] ||= params[:id]
+      end
     end
   end
 end

@@ -105,7 +105,7 @@ Foreman::Application.routes.draw do
           resources :subscriptions, :only => [:index], :controller => :host_subscriptions do
             collection do
               put :auto_attach
-              match '/product_content' => 'repository_sets#index', :via => :get
+              match '/product_content' => 'repository_sets#index', :via => :get, :entity => :host
               get :available_release_versions
               put :content_override
               put :remove_subscriptions

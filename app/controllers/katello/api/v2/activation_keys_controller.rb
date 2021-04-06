@@ -225,6 +225,15 @@ module Katello
       respond_for_show(:resource => @activation_key)
     end
 
+    api :GET, "/activation_keys/:id/product_content", N_("Show content available for an activation key")
+    param :id, String, :desc => N_("ID of the activation key"), :required => true
+    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions")
+    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the activation key's content view version")
+    def product_content
+      # note this is just there as a place holder for apipie.
+      # The routing would automatically redirect it to repository_sets#index
+    end
+
     def index_relation
       activation_keys = ActivationKey.readable
       activation_keys = activation_keys.where(:name => params[:name]) if params[:name]
