@@ -141,7 +141,7 @@ module Katello
           prod_content_importer.import
         end
 
-        self.index_subscriptions(self.organization)
+        self.index_subscriptions
         prod_content_importer
       end
 
@@ -155,7 +155,7 @@ module Katello
         product
       end
 
-      def index_subscriptions(organization = nil)
+      def index_subscriptions
         Katello::Subscription.import_all(organization)
         Katello::Pool.import_all(organization, false)
       end
