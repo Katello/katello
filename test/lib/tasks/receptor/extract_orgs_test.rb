@@ -39,7 +39,7 @@ module Katello
 
       Rake.application.invoke_task('katello:receptor:extract_orgs')
 
-      data = JSON.parse(File.read(File.open(ENV['OUTPUT_FILE'])))
+      data = JSON.parse(File.read(ENV['OUTPUT_FILE']))
 
       assert_equal orgs.size, data.size
 

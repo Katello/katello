@@ -97,10 +97,7 @@ module Katello
         data = Resources::Candlepin::UpstreamConsumer.export("#{url}#{upstream['uuid']}/export", upstream['idCert']['cert'],
                                                              upstream['idCert']['key'], ca_file)
 
-        File.open(zip_file_path, 'w') do |f|
-          f.binmode
-          f.write data
-        end
+        File.write(zip_file_path, data, mode: 'wb')
 
         return true
       end

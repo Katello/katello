@@ -49,7 +49,7 @@ module Katello
 
       content = nil
       if filepath
-        content = File.open(filepath, 'rb') { |file| file.read }
+        content = File.read(filepath, mode: 'rb')
       else
         content = params[:content]
       end
