@@ -147,6 +147,15 @@ module Katello
       respond_for_index(:collection => index_response(true), :template => "index")
     end
 
+    api :GET, "/hosts/:host_id/subscriptions/product_content", N_("Get content and overrides for the host")
+    param :host_id, String, :desc => N_("Id of the host"), :required => true
+    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions")
+    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the host's content view version")
+    def product_content
+      # note this is just there as a place holder for apipie.
+      # The routing would automatically redirect it to repository_sets#index
+    end
+
     api :PUT, "/hosts/:host_id/subscriptions/content_override", N_("Set content overrides for the host")
     param :host_id, String, :desc => N_("Id of the content host"), :required => true
     param :value, String, :desc => N_("Override to a boolean value or 'default'"), :required => false
@@ -163,7 +172,7 @@ module Katello
         validate_content_overrides_enabled(override_params)
       end
       sync_task(::Actions::Katello::Host::UpdateContentOverrides, @host, content_override_values, false)
-      product_content
+      fetch_product_content
     end
 
     api :GET, "/hosts/:host_id/subscriptions/available_release_versions", N_("Show releases available for the content host")
@@ -175,7 +184,7 @@ module Katello
 
     private
 
-    def product_content
+    def fetch_product_content
       content_finder = ProductContentFinder.new(:consumable => @host.subscription_facet)
       content = content_finder.presenter_with_overrides(@host.subscription_facet.candlepin_consumer.content_overrides)
       respond_with_template_collection("index", 'repository_sets', :collection => full_result_response(content))
