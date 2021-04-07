@@ -17,7 +17,7 @@ module Katello
         def pid
           return unless pid_file && File.exist?(pid_file)
 
-          File.open(pid_file) { |f| f.read.to_i }
+          File.read(pid_file).to_i
         end
 
         def pid_file
@@ -36,7 +36,7 @@ module Katello
           return unless pid_file
 
           FileUtils.mkdir_p(pid_dir)
-          File.open(pid_file, 'w') { |f| f.puts Process.pid }
+          File.write(pid_file, Process.pid)
         end
 
         def stop

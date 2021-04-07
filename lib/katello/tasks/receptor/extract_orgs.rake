@@ -17,9 +17,7 @@ namespace :katello do
         }
       end
 
-      File.open(output_file, 'w') do |f|
-        f.write(JSON.pretty_generate(data))
-      end
+      File.write(output_file, JSON.pretty_generate(data))
 
       puts "Wrote results to #{output_file}. Please delete it when finished."
     end

@@ -5,11 +5,11 @@ module Cert
     end
 
     def self.ca_cert
-      File.open(Setting[:ssl_ca_file], 'r').read
+      File.read(Setting[:ssl_ca_file])
     end
 
     def self.ssl_client_cert
-      @ssl_client_cert ||= OpenSSL::X509::Certificate.new(File.open(ssl_client_cert_filename, 'r').read)
+      @ssl_client_cert ||= OpenSSL::X509::Certificate.new(File.read(ssl_client_cert_filename))
     end
 
     def self.ssl_client_cert_filename
@@ -17,7 +17,7 @@ module Cert
     end
 
     def self.ssl_client_key
-      @ssl_client_key ||= OpenSSL::PKey::RSA.new(File.open(ssl_client_key_filename, 'r').read)
+      @ssl_client_key ||= OpenSSL::PKey::RSA.new(File.read(ssl_client_key_filename))
     end
 
     def self.ssl_client_key_filename

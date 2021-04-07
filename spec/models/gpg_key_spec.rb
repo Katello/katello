@@ -12,7 +12,7 @@ module Katello
     describe "create gpg key" do
       before(:each) do
         @organization = get_organization
-        @test_gpg_content = File.open("#{Katello::Engine.root}/spec/assets/gpg_test_key").read
+        @test_gpg_content = File.read("#{Katello::Engine.root}/spec/assets/gpg_test_key")
       end
 
       it "should be successful with valid parameters" do

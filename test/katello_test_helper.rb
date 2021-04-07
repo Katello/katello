@@ -95,7 +95,7 @@ module FixtureTestCase
       next unless taxonomy['type'] == 'Organization'
       taxonomy['label'] = taxonomy['name'].tr(' ', '_')
     end
-    File.open(taxonomies_file, 'w') { |file| file.write(taxonomies.to_yaml) }
+    File.write(taxonomies_file, taxonomies.to_yaml)
 
     fixtures(:all)
 

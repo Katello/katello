@@ -12,9 +12,9 @@ namespace :katello do
         filename = "subscription_facet_upgrade-#{Time.now.to_i}.log"
         path = File.join(path, filename)
 
-        file = File.open(path, 'w')
-        @errors.each { |error| file.write(error) }
-        file.close
+        File.open(path, 'w') do |file|
+          @errors.each { |error| file.write(error) }
+        end
         $stderr.print "***********************************\n"
         $stderr.print "*************WARNING***************\n"
         $stderr.print "Errors detected during upgrade step.\n"
