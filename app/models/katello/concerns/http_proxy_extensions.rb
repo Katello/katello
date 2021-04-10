@@ -49,10 +49,8 @@ module Katello
         changes = self.previous_changes
         if changes.key?(:name)
           previous_name = changes[:name].first
-          setting = Setting.find_by(name: 'content_default_http_proxy')
-
-          if setting && setting.value == previous_name && !previous_name.blank?
-            setting.update_attribute(:value, self.name)
+          if !previous_name.blank? && Setting['content_default_http_proxy'] == previous_name
+            Setting['content_default_http_proxy'] = self.name
           end
         end
       end
