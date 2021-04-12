@@ -7,8 +7,9 @@ namespace :katello do
     begin
       User.current = User.anonymous_admin
 
+      switchover_service = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary)
+      switchover_service.remove_orphaned_content #run out of transaction for easier re-run
       ActiveRecord::Base.transaction do
-        switchover_service = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary)
         switchover_service.run
       end
     rescue Katello::Pulp3::SwitchOverError => e
