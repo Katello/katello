@@ -1,7 +1,6 @@
 require "pulpcore_client"
 module Katello
   module Pulp3
-    # rubocop:disable Metrics/ClassLength
     class Repository
       include Katello::Util::HttpProxy
       attr_accessor :repo
@@ -158,10 +157,7 @@ module Katello
       end
 
       def compute_remote_options(computed_options = remote_options)
-        [:client_cert, :client_key, :ca_cert].each do |key|
-          computed_options[key] = Digest::SHA256.hexdigest(computed_options[key].chomp) if computed_options[key]
-        end
-        computed_options.except(:name)
+        computed_options.except(:name, :client_key)
       end
 
       def create
