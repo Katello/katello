@@ -13,6 +13,23 @@ module Katello
     end
   end
 
+  class ContentSwitchoverCleanOrphansTest < SwitchoverBase
+    def setup
+      super
+      SETTINGS[:katello][:use_pulp_2_for_content_type] = {:yum => true, :file => false, :docker => false}
+    end
+
+    def test_cleans_rpms
+      rpm = katello_rpms(:one)
+      rpm.repositories = []
+
+      switchover = Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary, repository_types: ['yum'])
+      switchover.remove_orphaned_content
+
+      refute Katello::Rpm.find_by(id: rpm.id)
+    end
+  end
+
   class Pulp3YumContentSwitchoverTest < SwitchoverBase
     def setup
       super
