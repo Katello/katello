@@ -4,6 +4,8 @@ module Katello
   module Pulp3
     class Migration
       attr_accessor :smart_proxy, :reimport_all, :task_id
+      attr_reader :repository_types
+
       GET_QUERY_ID_LENGTH = 90
 
       MUTABLE_CONTENT_TYPES = [
