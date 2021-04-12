@@ -9,7 +9,7 @@ import qs from 'query-string';
 const paramsFromHash = (hash) => {
   const [baseHash, queryParams = {}] = hash.split('?');
   const params = qs.parse(queryParams);
-  const trimmedHash = baseHash.replace('#', '');
+  const trimmedHash = baseHash.replace('#', '').replace('/', '');
   return { hash: trimmedHash, params };
 };
 

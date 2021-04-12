@@ -1,5 +1,6 @@
 module Katello
   class Api::V2::ContentViewComponentsController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     before_action :find_composite_content_view, :only => [:show, :index]
     before_action :find_composite_content_view_for_edit, :only => [:add_components, :remove_components, :update]
     before_action :find_authorized_katello_resource, :only => [:show, :update]
@@ -10,7 +11,12 @@ module Katello
         N_("List components attached to this content view")
     param :composite_content_view_id, :number, :desc => N_("composite content view identifier"), :required => true
     def index
-      respond :collection => index_response
+      sort_by, sort_order, options = sort_options
+      respond(:collection => scoped_search(index_relation, sort_by, sort_order, options))
+    end
+
+    def index_relation
+      @view.content_view_components.readable
     end
 
     def index_response
@@ -113,6 +119,21 @@ module Katello
     def component_params
       attrs = [:latest, :content_view_version_id, :content_view_id]
       params.require(:content_view_component).permit(*attrs)
+    end
+
+    def default_sort
+      %w(label asc)
+    end
+
+    def sort_options
+      case default_sort
+      when Array
+        [default_sort[0], default_sort[1], {}]
+      when Proc
+        [nil, nil, { :custom_sort => default_sort }]
+      else
+        fail "Unsupported default_sort type"
+      end
     end
   end
 end
