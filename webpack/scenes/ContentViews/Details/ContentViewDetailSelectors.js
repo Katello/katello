@@ -11,7 +11,7 @@ import {
   cvFilterDetailsKey,
   cvFilterPackageGroupsKey,
   cvDetailsHistoryKey,
-  REPOSITORY_TYPES,
+  REPOSITORY_TYPES, cvDetailsComponentKey,
 } from '../ContentViewsConstants';
 
 export const selectCVDetails = (state, cvId) =>
@@ -73,5 +73,15 @@ export const selectCVHistoriesStatus = (state, cvId) =>
 
 export const selectCVHistoriesError = (state, cvId) =>
   selectAPIError(state, cvDetailsHistoryKey(cvId));
+
+export const selectCVComponents = (state, cvId) =>
+  selectAPIResponse(state, cvDetailsComponentKey(cvId)) || {};
+
+export const selectCVComponentsStatus = (state, cvId) =>
+  selectAPIStatus(state, cvDetailsComponentKey(cvId)) || STATUS.PENDING;
+
+export const selectCVComponentsError = (state, cvId) =>
+  selectAPIError(state, cvDetailsComponentKey(cvId));
+
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;
