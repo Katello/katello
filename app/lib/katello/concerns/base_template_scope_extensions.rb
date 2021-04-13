@@ -209,9 +209,9 @@ module Katello
         search = [search_up_to, search_since, search_result].compact.join(' and ')
 
         if Katello.with_remote_execution?
-          condition = ["state != 'stoppped' AND (label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) OR label = 'Actions::Katello::Host::Erratum::Install'", RemoteExecutionFeature.feature('katello_errata_install').job_template_id]
+          condition = ["state != 'stopped' AND (label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) OR label = 'Actions::Katello::Host::Erratum::Install'", RemoteExecutionFeature.feature('katello_errata_install').job_template_id]
         else
-          condition = "state != 'stoppped' AND label = 'Actions::Katello::Host::Erratum::Install'"
+          condition = "state != 'stopped' AND label = 'Actions::Katello::Host::Erratum::Install'"
         end
 
         tasks = load_resource(klass: ForemanTasks::Task,
