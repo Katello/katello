@@ -58,6 +58,20 @@ module Katello
           fail NotImplementedError
         end
 
+        def self.ignore_409_exception(*)
+          yield
+        rescue => e
+          raise e unless e&.code == 409
+          nil
+        end
+
+        def cancel_task(task_href)
+          data = PulpcoreClient::TaskResponse.new(state: 'canceled')
+          self.class.ignore_409_exception do
+            tasks_api.tasks_cancel(task_href, data)
+          end
+        end
+
         def exporter_api
           PulpcoreClient::ExportersPulpApi.new(core_api_client)
         end
