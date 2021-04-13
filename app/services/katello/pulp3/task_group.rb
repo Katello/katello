@@ -76,12 +76,17 @@ module Katello
         end
       end
 
+      def core_api
+        ::Katello::Pulp3::Api::Core.new(@smart_proxy)
+      end
+
       def cancel
-        tasks_api = ::Katello::Pulp3::Api::Core.new(@smart_proxy).tasks_api
-        tasks_response = tasks_api.list(task_group: task_group_data['pulp_href'])
-        data = PulpcoreClient::TaskResponse.new(state: 'canceled')
-        tasks_response.results.collect do |result|
-          tasks_api.tasks_cancel(result.pulp_href, data)
+        tasks_api = core_api.tasks_api
+        tasks_response = core_api.fetch_from_list do |page_opts|
+          tasks_api.list(page_opts.merge(task_group: task_group_data['pulp_href'], state__in: 'running,waiting'))
+        end
+        tasks_response.collect do |result|
+          ::Katello::Pulp3::Api::Core.new(@smart_proxy).cancel_task(result.pulp_href)
         end
       end
     end
