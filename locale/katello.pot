@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: katello 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-09 17:13+0000\n"
-"PO-Revision-Date: 2020-12-09 17:13+0000\n"
+"POT-Creation-Date: 2021-04-13 10:26+0000\n"
+"PO-Revision-Date: 2021-04-13 10:26+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,24 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:25
+#: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:23
 msgid "Update installed packages, enabled repos, module inventory"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:26
+#: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:24
 msgid "UUID of the consumer"
 msgstr ""
 
-#: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:34
-msgid "Update installed deb packages"
-msgstr ""
-
-#: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:42
-#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:190
-msgid "UUID of the system"
-msgstr ""
-
-#: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:54
+#: ../app/controllers/katello/api/rhsm/candlepin_dynflow_proxy_controller.rb:39
 #: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:305
 msgid "Couldn't find consumer '%s'"
 msgstr ""
@@ -54,6 +45,10 @@ msgstr ""
 
 #: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:187
 msgid "List of enabled repo urls for the repo (Only first is used.)"
+msgstr ""
+
+#: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:190
+msgid "UUID of the system"
 msgstr ""
 
 #: ../app/controllers/katello/api/rhsm/candlepin_proxies_controller.rb:193
@@ -112,14 +107,10 @@ msgstr ""
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:60
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:88
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:96
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:29
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:45
 #: ../app/controllers/katello/api/v2/content_views_controller.rb:40
 #: ../app/controllers/katello/api/v2/environments_controller.rb:48
 #: ../app/controllers/katello/api/v2/environments_controller.rb:123
 #: ../app/controllers/katello/api/v2/environments_controller.rb:132
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:24
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:39
 #: ../app/controllers/katello/api/v2/host_collections_controller.rb:29
 #: ../app/controllers/katello/api/v2/host_collections_controller.rb:38
 #: ../app/controllers/katello/api/v2/host_collections_controller.rb:73
@@ -282,7 +273,7 @@ msgid "Show content available for an activation key"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:146
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:172
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:171
 msgid "Get all content available, not just that provided by subscriptions"
 msgstr ""
 
@@ -315,7 +306,7 @@ msgstr ""
 
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:191
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:208
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:134
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:133
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:175
 msgid "Array of subscriptions to add"
 msgstr ""
@@ -326,7 +317,7 @@ msgid "Subscription Pool uuid"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:193
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:136
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:135
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:177
 msgid "Quantity of this subscriptions to add"
 msgstr ""
@@ -348,13 +339,13 @@ msgid "Array of Content override parameters to be added in bulk"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:224
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:155
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:154
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:202
 msgid "Label of the content"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:225
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:156
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:155
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:203
 msgid "Override value. Provide a boolean value if name is 'enabled'"
 msgstr ""
@@ -366,7 +357,7 @@ msgid ""
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/activation_keys_controller.rb:227
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:158
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:157
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:205
 msgid "Set true to remove an override and reset it to 'default'"
 msgstr ""
@@ -431,29 +422,29 @@ msgstr ""
 msgid "root-node of collection contained in responses (default: 'results')"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/api_controller.rb:108
+#: ../app/controllers/katello/api/v2/api_controller.rb:107
 msgid ""
 "Your search query was invalid. Please revise it and try again. The full error "
 "has been sent to the application logs."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/api_controller.rb:143
+#: ../app/controllers/katello/api/v2/api_controller.rb:142
 msgid "One of parameters [ %s ] required but not specified."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/api_controller.rb:161
+#: ../app/controllers/katello/api/v2/api_controller.rb:160
 msgid "Couldn't find organization '%s'"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/api_controller.rb:194
+#: ../app/controllers/katello/api/v2/api_controller.rb:193
 msgid "You have not set a default organization on the user %s."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/api_controller.rb:206
+#: ../app/controllers/katello/api/v2/api_controller.rb:205
 msgid "The requested resource does not belong to the specified Organization"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/api_controller.rb:212
+#: ../app/controllers/katello/api/v2/api_controller.rb:211
 msgid "Host has not been registered with subscription-manager"
 msgstr ""
 
@@ -529,122 +520,27 @@ msgid ""
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_credentials_controller.rb:13
-msgid "identifier of the content credential"
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:30
+msgid "Name of the Content Credential"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_credentials_controller.rb:14
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:31
-msgid "type of content"
+msgid "Type of content: \"cert\", \"gpg_key\""
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_credentials_controller.rb:15
-msgid "public key block in DER encoding or certificate content"
+msgid "Public key block in DER encoding or certificate content"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_credentials_controller.rb:28
-msgid "List content credentials"
+msgid "List Content Credentials"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:30
-msgid "name of the Content Credential"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:44
-msgid "Create a content credential"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:61
-msgid "Show a content credential"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:62
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:68
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:76
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:89
-msgid "content credential numeric identifier"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:67
-msgid "Update a content credential"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:75
-msgid "Destroy a content credential"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:82
-msgid "Return the content of a content credential, used directly by yum"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:88
-msgid "Upload content credential contents"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:90
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:85
-msgid "file contents"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:99
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:94
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:389
-msgid "No file uploaded"
-msgstr ""
-
-#:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:9
-msgid "Performs an incremental-export of a content view version."
-msgstr ""
-
-#:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:10
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:8
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:33
-#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:50
-#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:56
-#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:68
-#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:82
-#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:89
-#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:132
-msgid "Content view version identifier"
-msgstr ""
-
-#:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:11
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:28
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:10
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:34
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:48
-msgid "Destination Server name"
-msgstr ""
-
-#:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:12
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:29
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:35
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:49
-msgid ""
-"Split the exported content into archives no greater than the specified size in"
-" megabytes."
-msgstr ""
-
-#:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:14
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:31
-msgid ""
-"Export history identifier used for incremental export. If not provided the mos"
-"t recent export history will be used."
-msgstr ""
-
-#:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:26
-msgid "Performs an incremental-export of the repositories in library."
-msgstr ""
-
-#:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:27
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:29
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:45
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:30
 #: ../app/controllers/katello/api/v2/content_exports_controller.rb:11
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:47
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:53
 #: ../app/controllers/katello/api/v2/content_imports_controller.rb:22
 #: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:25
 #: ../app/controllers/katello/api/v2/content_views_controller.rb:69
@@ -656,23 +552,136 @@ msgstr ""
 msgid "Organization identifier"
 msgstr ""
 
-#:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:55
-msgid ""
-"Unable to incrementally export. Do a Full Export the library content before up"
-"dating from the latest increment."
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:31
+msgid "Type of content"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:44
+msgid "Create a Content Credential"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:61
+msgid "Show a Content Credential"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:62
+msgid "Content Credential numeric identifier"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:67
+msgid "Update a Content Credential"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:68
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:76
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:89
+msgid "Content Credential ID"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:75
+msgid "Destroy a Content Credential"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:82
+msgid "Return the content of a Content Credential, used directly by yum"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:88
+msgid "Upload Content Credential contents"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:90
+msgid "File contents"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_credentials_controller.rb:99
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:386
+msgid "No file uploaded"
 msgstr ""
 
 #:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:73
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:9
+msgid "Performs an incremental-export of a content view version."
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:10
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:8
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:37
+#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:50
+#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:56
+#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:68
+#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:82
+#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:89
+#: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:132
+msgid "Content view version identifier"
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:11
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:31
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:10
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:38
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:54
+msgid "Destination Server name"
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:12
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:32
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:39
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:55
+msgid ""
+"Split the exported content into archives no greater than the specified size in"
+" megabytes."
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:14
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:34
+msgid ""
+"Export history identifier used for incremental export. If not provided the mos"
+"t recent export history will be used."
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:16
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:41
+msgid ""
+"Fails if any of the repositories belonging to this version are unexportable. F"
+"alse by default."
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:29
+msgid "Performs an incremental-export of the repositories in library."
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:36
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:57
+msgid ""
+"Fails if any of the repositories belonging to this organization are unexportab"
+"le. False by default."
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:61
+msgid ""
+"Unable to incrementally export. Do a Full Export on the library content before"
+" updating from the latest increment."
+msgstr ""
+
+#:
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:79
 msgid ""
 "No existing export history was found to perform an incremental export. A full "
 "export must be performed"
 msgstr ""
 
 #:
-#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:88
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:75
+#: ../app/controllers/katello/api/v2/content_export_incrementals_controller.rb:94
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:84
 msgid "Invalid usage for Pulp 2 repositories. Use export for Yum repositories"
 msgstr ""
 
@@ -693,17 +702,21 @@ msgstr ""
 msgid "Content view version export history identifier"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:26
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:14
+msgid "Export Types"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:30
 msgid ""
 "true if the export api is pulp3 ready and usable. This API is intended for use"
 " by hammer-cli only."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:32
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:36
 msgid "Performs a full-export of a content view version."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/content_exports_controller.rb:46
+#: ../app/controllers/katello/api/v2/content_exports_controller.rb:52
 msgid "Performs a full-export of the repositories in library."
 msgstr ""
 
@@ -752,9 +765,9 @@ msgid "Checksum of file to upload"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_uploads_controller.rb:13
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:366
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:377
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:406
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:363
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:374
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:403
 msgid ""
 "content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rp"
 "m', 'srpm')"
@@ -766,7 +779,7 @@ msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_uploads_controller.rb:21
 #: ../app/controllers/katello/api/v2/content_uploads_controller.rb:33
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:402
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:399
 msgid "Repository id"
 msgstr ""
 
@@ -1219,7 +1232,7 @@ msgid ""
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:100
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:317
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:314
 msgid "ISO export must be enabled when specifying ISO size"
 msgstr ""
 
@@ -1228,7 +1241,7 @@ msgid "This content view has on demand repositories that cannot be exported: %{r
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/content_view_versions_controller.rb:111
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:324
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:321
 msgid "Invalid date provided."
 msgstr ""
 
@@ -1693,8 +1706,8 @@ msgstr ""
 #: ../app/controllers/katello/api/v2/errata_controller.rb:15
 #: ../app/controllers/katello/api/v2/errata_controller.rb:69
 #: ../app/controllers/katello/api/v2/packages_controller.rb:36
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:260
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:311
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:257
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:308
 #: ../app/controllers/katello/api/v2/srpms_controller.rb:8
 msgid "Repository identifier"
 msgstr ""
@@ -1741,7 +1754,7 @@ msgstr ""
 #: ../app/controllers/katello/api/v2/errata_controller.rb:65
 msgid ""
 "Return errata that can be added to the Content View Version via an Incremental"
-" Update"
+" Update. Will be removed in Katello 4.1."
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/errata_controller.rb:89
@@ -1751,58 +1764,6 @@ msgstr ""
 
 #: ../app/controllers/katello/api/v2/file_units_controller.rb:6
 msgid "a file"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:11
-msgid "identifier of the gpg key"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:12
-msgid "public key block in DER encoding"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:23
-msgid "List gpg keys"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:25
-msgid "name of the GPG key"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:38
-msgid "Create a gpg key"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:55
-msgid "Show a gpg key"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:56
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:62
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:71
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:84
-msgid "gpg key numeric identifier"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:61
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:340
-msgid "Update a repository"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:70
-msgid "Destroy a gpg key"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:77
-msgid "Return the content of a gpg key, used directly by yum"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:83
-msgid "Upload gpg key contents"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/gpg_keys_controller.rb:103
-msgid "Couldn't find GPG key '%s'"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/host_collections_controller.rb:22
@@ -2002,7 +1963,7 @@ msgid "Host ID"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/host_errata_controller.rb:54
-msgid "List of Errata ids to install"
+msgid "List of Errata ids to install. Will be removed in Katello 4.1."
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/host_errata_controller.rb:62
@@ -2122,7 +2083,7 @@ msgid "List of hypervisor guest uuids"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:25
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:74
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:73
 msgid "List of products installed on the host"
 msgstr ""
 
@@ -2131,143 +2092,143 @@ msgid "List a host's subscriptions"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:36
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:51
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:62
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:115
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:133
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:171
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:50
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:61
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:114
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:132
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:170
 msgid "Id of the host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:50
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:49
 msgid "Trigger an auto-attach of subscriptions"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:54
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:53
 msgid ""
 "This host's organization is in Simple Content Access mode. Auto-attach is disa"
 "bled"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:61
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:60
 msgid "Unregister the host as a subscription consumer"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:69
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:68
 msgid "Register a host with subscription and information"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:70
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:69
 msgid "Name of the host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:71
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:70
 msgid "UUID to use for registered host, random uuid is generated if not provided"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:72
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:71
 msgid ""
 "Key-value hash of subscription-manager facts, nesting uses a period delimiter "
 "(.)"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:73
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:72
 msgid "UUIDs of the virtual guests from the host's hypervisor"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:77
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:76
 msgid "Release version of the content host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:78
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:77
 msgid "A service level for auto-healing process, e.g. SELF-SUPPORT"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:79
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:78
 msgid "Lifecycle Environment ID"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:80
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:79
 msgid "Content View ID"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:116
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:115
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:158
 msgid "Array of subscriptions to remove"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:117
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:135
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:116
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:134
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:159
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:176
 msgid "Subscription Pool id"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:118
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:117
 msgid ""
 "If specified, remove the first instance of a subscription with matching id and"
 " quantity"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:132
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:131
 msgid "Add a subscription to a host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:140
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:139
 msgid ""
 "This host's organization is in Simple Content Access mode. Attaching subscript"
 "ions is disabled."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:151
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:150
 msgid "Set content overrides for the host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:152
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:151
 msgid "Id of the content host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:153
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:152
 msgid "Override to a boolean value or 'default'"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:154
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:153
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:201
 msgid "Array of Content override parameters"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:157
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:156
 #: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:204
 msgid ""
 "Override key or name. Note if name is not provided the default name will be 'e"
 "nabled'"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:170
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:169
 msgid "Get content and overrides for the host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:173
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:172
 msgid "Limit content to just that available in the host's content view version"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:189
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:188
 msgid "Show releases available for the content host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:190
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:189
 msgid "id of host"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:201
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:200
 msgid "Couldn't find specified Content View and Lifecycle Environment."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:205
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:204
 msgid "subscriptions not specified"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:222
+#: ../app/controllers/katello/api/v2/host_subscriptions_controller.rb:221
 msgid "unknown permission for %s"
 msgstr ""
 
@@ -2429,31 +2390,35 @@ msgstr ""
 msgid "List of Errata ids"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:296
+#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:272
+msgid "errata_ids is a required parameter"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:297
 msgid "Fetch available module streams for hosts."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:313
+#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:314
 msgid "Could not find all specified errata ids: %s"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:335
+#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:336
 msgid "Organization ID is required"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:350
+#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:351
 msgid "Maximum number of content hosts exceeded for host collection(s): %s"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:373
+#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:374
 msgid "A content_type must be provided."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:374
+#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:375
 msgid "No content has been provided."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:377
+#: ../app/controllers/katello/api/v2/hosts_bulk_actions_controller.rb:378
 msgid "Invalid content type %s"
 msgstr ""
 
@@ -2510,72 +2475,73 @@ msgid "Medium IDs"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/organizations_controller.rb:25
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:27
-msgid "Provisioning template IDs"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:26
 msgid "Partition template IDs"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:28
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:26
+msgid "Provisioning template IDs"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:27
 msgid "Domain IDs"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:29
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:28
 msgid "Realm IDs"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:30
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:29
 msgid "Host group IDs"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:31
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:30
 msgid "Environment IDs"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:32
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:31
 msgid "Subnet IDs"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:34
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:33
 msgid "Associated location IDs"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:42
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:41
 msgid "List all organizations"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:50
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:49
 msgid "Show organization"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:51
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:58
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:50
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:57
 msgid "organization ID"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:57
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:56
 msgid "Update organization"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:59
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:166
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:58
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:169
 msgid "Red Hat CDN URL"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:69
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:68
 msgid "Create organization"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:84
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:83
 msgid "Delete an organization"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:85
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:92
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:84
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:91
 #: ../app/controllers/katello/api/v2/products_controller.rb:90
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:268
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:265
+#: ../app/controllers/katello/api/v2/simple_content_access_controller.rb:20
+#: ../app/controllers/katello/api/v2/simple_content_access_controller.rb:28
 #: ../app/controllers/katello/api/v2/subscriptions_controller.rb:24
 #: ../app/controllers/katello/api/v2/subscriptions_controller.rb:128
 #: ../app/controllers/katello/api/v2/sync_plans_controller.rb:23
@@ -2594,60 +2560,60 @@ msgstr ""
 msgid "Organization ID"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:91
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:90
 msgid "Discover Repositories"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:93
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:92
 msgid "Base URL to perform repo discovery on"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:94
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:93
 msgid "One of yum or docker"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:95
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:94
 msgid "Username to access URL"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:96
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:95
 msgid "Password to access URL"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:97
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:96
 msgid "Search pattern (defaults to '*')"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:99
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:98
 msgid "url not defined."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:106
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:105
 msgid "Cancel repository discovery"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:107
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:115
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:106
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:114
 msgid "Organization label"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:108
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:107
 msgid "base url to perform repo discovery on"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:114
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:113
 msgid "Download a debug certificate"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:124
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:123
 msgid "List available releases in the organization"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:125
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:124
 msgid "ID of the Organization"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/organizations_controller.rb:136
+#: ../app/controllers/katello/api/v2/organizations_controller.rb:135
 msgid "List all :resource_id"
 msgstr ""
 
@@ -2995,409 +2961,415 @@ msgstr ""
 msgid "Synchronize repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:37
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:36
 msgid "repository source url"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:39
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:38
 msgid ""
 "Identifies whether the repository should be disabled on a client with a non-ma"
 "tching OS version. Pass [] to enable regardless of OS version. Maximum length "
 "1; allowed tags are: %s"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:40
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:39
 msgid "id of the gpg key that will be assigned to the new repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:41
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:40
 msgid "Identifier of the content credential containing the SSL CA Cert"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:42
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:41
 msgid "Identifier of the content credential containing the SSL Client Cert"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:43
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:42
 msgid "Identifier of the content credential containing the SSL Client Key"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:44
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:43
 msgid "true if this repository can be published via HTTP"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:45
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:44
 msgid "Checksum of the repository, currently 'sha1' & 'sha256' are supported"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:46
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:45
 msgid "Name of the upstream docker repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:47
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:46
 msgid "Comma-separated list of tags to sync for Container Image repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:48
-msgid ""
-"download policy for yum repos (either 'immediate', 'on_demand', or 'background"
-" (deprecated)')"
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:47
+msgid "download policy for yum repos (either 'immediate' or 'on_demand')"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:49
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:48
 msgid ""
 "Used to determine download concurrency of the repository in pulp3. Use value l"
 "ess than 20. Defaults to 10"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:50
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:49
 msgid ""
 "true if this repository when synced has to be mirrored from the source and sta"
 "le rpms removed"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:51
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:50
 msgid ""
 "if true, Katello will verify the upstream url's SSL certifcates are signed by "
 "a trusted CA"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:52
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:51
 msgid "Username of the upstream repository user used for authentication"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:53
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:52
 msgid "Password of the upstream repository user used for authentication"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:54
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:53
 msgid "policies for syncing upstream ostree repositories"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:55
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:54
 msgid ""
 "if a custom sync policy is chosen for ostree repositories then a 'depth' value"
 " must be provided"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:56
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:55
 msgid "comma-separated list of releases to be synced from deb-archive"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:57
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:56
 msgid "comma-separated list of repo components to be synced from deb-archive"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:58
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:57
 msgid "comma-separated list of architectures to be synced from deb-archive"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:59
-msgid "if true, will ignore the globally configured proxy when syncing"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:60
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:58
 msgid ""
 "List of content units to ignore while syncing a yum repository. Must be subset"
 " of %s"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:61
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:59
 msgid "Contents of requirement yaml file to sync from URL"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:62
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:60
 msgid "policies for HTTP proxy for content sync"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:63
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:61
 msgid "ID of a HTTP Proxy"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:68
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:62
+msgid "Architecture of content in the repository"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:67
 msgid "Product the repository belongs to"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:69
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:68
 msgid "type of repo"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:72
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:71
 msgid "List of enabled repositories"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:73
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:72
 msgid "List of repositories for a content view"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:74
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:73
 msgid "List of repositories in an organization"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:75
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:74
 msgid "List repositories in the environment"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:76
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:75
 msgid "List of repositories for a product"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:77
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:76
 msgid "List of repositories belonging to a product in an environment"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:78
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:77
 msgid "ID of an organization to show repositories in"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:79
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:78
 msgid "ID of a product to show repositories of"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:80
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:79
 msgid "ID of an environment to show repositories in"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:81
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:80
 msgid "ID of a content view to show repositories in"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:82
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:81
 msgid "ID of a content view version to show repositories in"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:83
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:82
 msgid "Id of a deb package to find repositories that contain the deb"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:84
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:83
 msgid "Id of an erratum to find repositories that contain the erratum"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:85
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:84
 msgid "Id of a rpm package to find repositories that contain the rpm"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:86
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:85
 msgid "Id of a file to find repositories that contain the file"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:87
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:86
 msgid ""
 "Id of an ansible collection to find repositories that contain the ansible coll"
 "ection"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:88
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:87
 msgid "Id of an ostree branch to find repositories that contain that branch"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:89
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:88
 msgid "show repositories in Library and the default content view"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:90
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:89
 msgid "show archived repositories"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:91
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:90
 msgid "limit to only repositories of this type"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:92
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:91
 msgid "name of the repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:93
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:92
 msgid "label of the repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:94
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:343
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:93
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:340
 msgid "description of the repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:95
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:94
 msgid ""
 "interpret specified object to return only Repositories that can be associated "
 "with specified object.  Only 'content_view' & 'content_view_version' are suppo"
 "rted."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:97
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:96
 msgid ""
 "only repositories having at least one of the specified content type ex: rpm , "
 "erratum"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:215
-msgid "Create a custom repository"
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:97
+msgid "limit to only repositories with this download policy"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/repositories_controller.rb:216
-msgid "Name of the repository"
+msgid "Create a custom repository"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/repositories_controller.rb:217
+msgid "Name of the repository"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:218
 msgid "Description of the repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:223
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:224
 msgid "Invalid params provided - content_type must be one of %s"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:251
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:248
 msgid "Show the available repository types"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:252
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:249
 msgid "When set to 'True' repository types that are creatable will be returned"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:259
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:256
 msgid ""
 "Forces a republish of the specified repository, regenerating metadata and syml"
 "inks on the filesystem."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:266
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:263
 msgid "Show a repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:267
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:274
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:302
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:341
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:375
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:264
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:271
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:299
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:338
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:372
 msgid "repository ID"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:273
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:270
 msgid "Sync a repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:275
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:272
 msgid "temporarily override feed URL for sync"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:276
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:273
 msgid "perform an incremental import"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:277
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:274
 msgid ""
 "Force sync even if no upstream changes are detected. Only used with yum reposi"
 "tories."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:278
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:275
 msgid ""
 "Force a sync and validate the checksums of all content. Only used with yum rep"
 "ositories."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:288
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:285
 msgid "source URL is malformed"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:292
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:289
 msgid "attempted to sync without a feed URL"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:301
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:298
 msgid "Verify checksum of repository contents"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:310
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:307
 msgid "Export a repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:312
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:309
 msgid "Export to ISO format"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:313
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:310
 msgid "maximum size of each ISO in MB"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:314
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:311
 msgid "Optional date of last export (ex: 2010-01-01T12:00:00Z)"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:328
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:325
 msgid "Repository content type must be 'yum' to export."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:330
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:327
 msgid "On demand repositories cannot be exported."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:352
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:337
+msgid "Update a repository"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:349
 msgid "Destroy a custom repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:367
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:405
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:364
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:402
 msgid "Whether or not to sync an external capsule after upload. Default: true"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:370
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:367
 msgid "No content ids provided"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:374
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:371
 msgid "Upload content into the repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:376
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:373
 msgid "Content files to upload. Can be a single file or array of files."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:379
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:376
 msgid "Cannot upload Container Image content."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:401
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:398
 msgid "Import uploads into a repository"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:403
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:400
 msgid "Do not wait for the ImportUpload action to finish. Default: false"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:404
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:401
 msgid "Whether or not to regenerate the repository on disk. Default: true"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:407
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:404
 msgid "Array of uploads to import"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:412
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:409
 msgid "Needs to only be set for file repositories or docker tags"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:413
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:410
 msgid "Needs to only be set for docker tags"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:420
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:417
 msgid "No uploads param specified. An array of uploads to import is required."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:440
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:437
 msgid "Return the content of a repo gpg key, used directly by yum"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:474
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:471
 msgid "Couldn't find %{content_type} with id '%{id}'"
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:549
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:535
 msgid "Red Hat products cannot be manipulated."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/repositories_controller.rb:553
+#: ../app/controllers/katello/api/v2/repositories_controller.rb:539
 msgid "Red Hat repositories cannot be manipulated."
 msgstr ""
 
@@ -3489,6 +3461,21 @@ msgstr ""
 
 #: ../app/controllers/katello/api/v2/repository_sets_controller.rb:160
 msgid "Repository sets are not available for custom products."
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/simple_content_access_controller.rb:12
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:81
+msgid "Check if the specified organization is eligible for Simple Content Access"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/simple_content_access_controller.rb:19
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:88
+msgid "Enable simple content access for a manifest"
+msgstr ""
+
+#: ../app/controllers/katello/api/v2/simple_content_access_controller.rb:27
+#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:96
+msgid "Disable simple content access for a manifest"
 msgstr ""
 
 #: ../app/controllers/katello/api/v2/srpms_controller.rb:3
@@ -3784,18 +3771,6 @@ msgstr ""
 msgid "Check if a connection can be made to Red Hat Subscription Management."
 msgstr ""
 
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:81
-msgid "Check if the specified organization is eligible for Simple Content Access"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:88
-msgid "Enable simple content access for a manifest"
-msgstr ""
-
-#: ../app/controllers/katello/api/v2/upstream_subscriptions_controller.rb:96
-msgid "Disable simple content access for a manifest"
-msgstr ""
-
 #: ../app/controllers/katello/application_controller.rb:64
 msgid ""
 "Permission Denied. User '%{user}' does not have permissions to access organiza"
@@ -3814,21 +3789,21 @@ msgid ""
 "ving trouble with this, please contact an Administrator."
 msgstr ""
 
-#: ../app/controllers/katello/concerns/api/v2/authorization.rb:42
-msgid "Could not find %{name} resource with id %{id}"
+#: ../app/controllers/katello/concerns/api/v2/authorization.rb:44
+msgid "Could not find %{name} resource with id %{id}. %{perms_message}"
 msgstr ""
 
-#: ../app/controllers/katello/concerns/api/v2/authorization.rb:51
+#: ../app/controllers/katello/concerns/api/v2/authorization.rb:64
 msgid "Could not find %{name} resources with ids %{ids}"
 msgstr ""
 
-#: ../app/controllers/katello/concerns/api/v2/authorization.rb:63
+#: ../app/controllers/katello/concerns/api/v2/authorization.rb:76
 msgid ""
 "One or more ids (%{ids}) were not found for %{assoc}.  You may not have permis"
 "sions to see them."
 msgstr ""
 
-#: ../app/controllers/katello/concerns/api/v2/authorization.rb:67
+#: ../app/controllers/katello/concerns/api/v2/authorization.rb:80
 msgid "Unfiltered params array: %s."
 msgstr ""
 
@@ -4108,17 +4083,17 @@ msgid "Organization %s is being deleted."
 msgstr ""
 
 #:
-#: ../app/controllers/katello/concerns/smart_proxies_controller_extensions.rb:36
+#: ../app/controllers/katello/concerns/smart_proxies_controller_extensions.rb:35
 msgid "Error connecting. Got: %s"
 msgstr ""
 
 #:
-#: ../app/controllers/katello/concerns/smart_proxies_controller_extensions.rb:38
+#: ../app/controllers/katello/concerns/smart_proxies_controller_extensions.rb:37
 msgid "Error retrieving Pulp storage"
 msgstr ""
 
 #:
-#: ../app/controllers/katello/concerns/smart_proxies_controller_extensions.rb:49
+#: ../app/controllers/katello/concerns/smart_proxies_controller_extensions.rb:48
 msgid "Error connecting to Pulp service"
 msgstr ""
 
@@ -4152,25 +4127,25 @@ msgstr ""
 msgid "Reset Puppet Environment"
 msgstr ""
 
-#: ../app/helpers/katello/concerns/smart_proxy_helper_extensions.rb:36
+#: ../app/helpers/katello/concerns/smart_proxy_helper_extensions.rb:31
 msgid "On Demand"
 msgstr ""
 
-#: ../app/helpers/katello/concerns/smart_proxy_helper_extensions.rb:40
+#: ../app/helpers/katello/concerns/smart_proxy_helper_extensions.rb:35
 msgid "Background"
 msgstr ""
 
-#: ../app/helpers/katello/concerns/smart_proxy_helper_extensions.rb:44
+#: ../app/helpers/katello/concerns/smart_proxy_helper_extensions.rb:39
 msgid "Immediate"
 msgstr ""
 
-#: ../app/helpers/katello/concerns/smart_proxy_helper_extensions.rb:48
+#: ../app/helpers/katello/concerns/smart_proxy_helper_extensions.rb:43
 msgid "Inherit from Repository"
 msgstr ""
 
 #: ../app/helpers/katello/hosts_and_hostgroups_helper.rb:255
-#: ../lib/katello/plugin.rb:8 ../lib/katello/plugin.rb:264
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:57
+#: ../lib/katello/plugin.rb:8 ../lib/katello/plugin.rb:265
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:58
 msgid "Content"
 msgstr ""
 
@@ -4246,17 +4221,39 @@ msgstr ""
 #: ../app/lib/actions/katello/content_view_puppet_environment/create.rb:29
 #: ../app/lib/actions/katello/environment/library_create.rb:24
 #: ../app/lib/actions/katello/organization/create.rb:33
-#: ../app/lib/actions/katello/repository/create.rb:58
-#: ../app/lib/actions/katello/repository/create_root.rb:17 action_names.rb:6
+#: ../app/lib/actions/katello/repository/create.rb:50
+#: ../app/lib/actions/katello/repository/create_root.rb:17 action_names.rb:10
 msgid "Create"
 msgstr ""
 
-#: ../app/lib/actions/katello/activation_key/destroy.rb:19 action_names.rb:7
+#: ../app/lib/actions/katello/activation_key/destroy.rb:19 action_names.rb:69
 msgid "Delete Activation Key"
 msgstr ""
 
+#: ../app/lib/actions/katello/agent/dispatch_history_presenter.rb:56
+#: ../app/models/katello/task_status.rb:313
+msgid "No new packages installed"
+msgstr ""
+
+#: ../app/lib/actions/katello/agent/dispatch_history_presenter.rb:58
+#: ../app/models/katello/task_status.rb:311
+msgid "No packages removed"
+msgstr ""
+
+#: ../app/lib/actions/katello/agent_action.rb:78
+msgid ""
+"Host did not respond within %s seconds. The task has been cancelled. Is katell"
+"o-agent installed and goferd running on the Host?"
+msgstr ""
+
+#: ../app/lib/actions/katello/agent_action.rb:82
+msgid ""
+"Host did not finish content action in %s seconds.  The task has been cancelled"
+"."
+msgstr ""
+
 #: ../app/lib/actions/katello/applicability/host/generate.rb:22
-#: action_names.rb:9
+#: action_names.rb:71
 msgid "Generate host applicability"
 msgstr ""
 
@@ -4267,16 +4264,16 @@ msgid ""
 msgstr ""
 
 #: ../app/lib/actions/katello/applicability/hosts/bulk_generate.rb:30
-#: action_names.rb:8
+#: action_names.rb:73
 msgid "Bulk generate applicability for hosts"
 msgstr ""
 
 #: ../app/lib/actions/katello/applicability/repository/regenerate.rb:25
-#: action_names.rb:11
+#: action_names.rb:2
 msgid "Generate repository applicability"
 msgstr ""
 
-#: ../app/lib/actions/katello/capsule_content/sync.rb:14 action_names.rb:12
+#: ../app/lib/actions/katello/capsule_content/sync.rb:14 action_names.rb:3
 msgid "Synchronize smart proxy"
 msgstr ""
 
@@ -4293,11 +4290,11 @@ msgstr ""
 #: ../app/lib/actions/katello/content_view_puppet_module/destroy.rb:41
 #: ../app/lib/actions/katello/provider/destroy.rb:19
 #: ../app/lib/actions/katello/repository/destroy.rb:67
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:259
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:274
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:262
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:277
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/DeleteDialog.js:27
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:90
-#: action_names.rb:14
+#: action_names.rb:5
 msgid "Delete"
 msgstr ""
 
@@ -4361,7 +4358,7 @@ msgid "Cannot promote environment out of sequence. Use force to bypass restricti
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view/promote_to_environment.rb:43
-#: action_names.rb:18
+#: action_names.rb:20
 msgid "Promotion to Environment"
 msgstr ""
 
@@ -4375,7 +4372,7 @@ msgid ""
 "arameter."
 msgstr ""
 
-#: ../app/lib/actions/katello/content_view/publish.rb:100 action_names.rb:19
+#: ../app/lib/actions/katello/content_view/publish.rb:100 action_names.rb:9
 msgid "Publish"
 msgstr ""
 
@@ -4387,7 +4384,7 @@ msgstr ""
 msgid "Cannot delete version while it is in environment %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/content_view/remove.rb:86 action_names.rb:20
+#: ../app/lib/actions/katello/content_view/remove.rb:86 action_names.rb:28
 msgid "Remove Versions and Associations"
 msgstr ""
 
@@ -4414,12 +4411,12 @@ msgid ""
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view/remove_from_environment.rb:35
-#: action_names.rb:21
+#: action_names.rb:23
 msgid "Remove from Environment"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view/remove_version.rb:26
-#: action_names.rb:22
+#: action_names.rb:24
 msgid "Remove Version"
 msgstr ""
 
@@ -4433,8 +4430,8 @@ msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/export.rb:27
 #: ../app/lib/actions/katello/repository/export.rb:63
-#: ../app/lib/actions/pulp3/orchestration/content_view_version/export.rb:90
-#: action_names.rb:23
+#: ../app/lib/actions/pulp3/orchestration/content_view_version/export.rb:93
+#: action_names.rb:13
 msgid "Export"
 msgstr ""
 
@@ -4443,17 +4440,17 @@ msgid "This action will become available after the Pulp 3 content migration"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/import.rb:26
-#: action_names.rb:24
+#: action_names.rb:14
 msgid "Import Content View Version"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/import_library.rb:12
-#: action_names.rb:25
+#: action_names.rb:11
 msgid "Import Default Content View"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/incremental_update.rb:17
-#: action_names.rb:77
+#: action_names.rb:12
 msgid "Incremental Update"
 msgstr ""
 
@@ -4475,7 +4472,7 @@ msgid ""
 "omposite Content View %{composite} version %{version}"
 msgstr ""
 
-#: ../app/lib/actions/katello/content_view_version/incremental_update.rb:395
+#: ../app/lib/actions/katello/content_view_version/incremental_update.rb:399
 msgid ""
 "Adding multiple versions of the same Puppet Module is not supported by increme"
 "ntal update.  The following Puppet Modules have duplicate versions in the incr"
@@ -4487,25 +4484,21 @@ msgid "Republish Repositories of %{name} %{version}"
 msgstr ""
 
 #: ../app/lib/actions/katello/content_view_version/republish_repositories.rb:31
-#: action_names.rb:26
+#: action_names.rb:17
 msgid "Republish Version Repositories"
 msgstr ""
 
-#: ../app/lib/actions/katello/environment/destroy.rb:36 action_names.rb:27
+#: ../app/lib/actions/katello/environment/destroy.rb:36 action_names.rb:15
 msgid "Delete Lifecycle Environment"
 msgstr ""
 
 #: ../app/lib/actions/katello/environment/publish_repositories.rb:33
-#: action_names.rb:28
+#: action_names.rb:18
 msgid "Publish Lifecycle Environment Repositories"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/attach_subscriptions.rb:13
 msgid "Register host '%s' before attaching subscriptions"
-msgstr ""
-
-#: ../app/lib/actions/katello/host/attach_subscriptions.rb:47
-msgid "Attach subscriptions to %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/attach_subscriptions.rb:47
@@ -4518,8 +4511,12 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
+#: ../app/lib/actions/katello/host/attach_subscriptions.rb:47
+msgid "Attach subscriptions to %s"
+msgstr ""
+
 #: ../app/lib/actions/katello/host/attach_subscriptions.rb:49
-#: action_names.rb:29
+#: action_names.rb:19
 msgid "Attach subscriptions"
 msgstr ""
 
@@ -4527,7 +4524,7 @@ msgstr ""
 msgid "Destroy Content Host %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/destroy.rb:32 action_names.rb:31
+#: ../app/lib/actions/katello/host/destroy.rb:32 action_names.rb:22
 msgid "Destroy Content Host"
 msgstr ""
 
@@ -4540,7 +4537,7 @@ msgid "No applicable errata for %s, skipping"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/erratum/applicable_errata_install.rb:31
-#: action_names.rb:32
+#: action_names.rb:25
 msgid "Install Applicable Errata"
 msgstr ""
 
@@ -4548,15 +4545,15 @@ msgstr ""
 msgid "Install Applicable Errata on %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/erratum/install.rb:30
+#: ../app/lib/actions/katello/host/erratum/install.rb:16
 msgid "Install erratum for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/erratum/install.rb:32 action_names.rb:33
+#: ../app/lib/actions/katello/host/erratum/install.rb:18
 msgid "Install erratum"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/erratum/install.rb:50
+#: ../app/lib/actions/katello/host/erratum/install.rb:32
 msgid "Installation of errata requested: %{errata}"
 msgstr ""
 
@@ -4571,61 +4568,59 @@ msgstr ""
 msgid "Host '%{name}' does not belong to an organization"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/install.rb:21
+#: ../app/lib/actions/katello/host/package/install.rb:16
 msgid "Install package for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/install.rb:23 action_names.rb:36
+#: ../app/lib/actions/katello/host/package/install.rb:18
 msgid "Install package"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/install.rb:41
+#: ../app/lib/actions/katello/host/package/install.rb:28
 msgid "Installation of package(s) requested: %{packages}"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/remove.rb:19
+#: ../app/lib/actions/katello/host/package/remove.rb:16
 msgid "Remove package for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/remove.rb:21 action_names.rb:37
+#: ../app/lib/actions/katello/host/package/remove.rb:18
 msgid "Remove package"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/remove.rb:54
+#: ../app/lib/actions/katello/host/package/remove.rb:42
 msgid "Removal of package(s) requested: %{packages}"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/update.rb:21
+#: ../app/lib/actions/katello/host/package/update.rb:16
 msgid "Update package for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/update.rb:23 action_names.rb:38
+#: ../app/lib/actions/katello/host/package/update.rb:18
 msgid "Update package"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/update.rb:46
+#: ../app/lib/actions/katello/host/package/update.rb:33
 msgid "Update of package(s) requested: %{packages}"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package/update.rb:48
+#: ../app/lib/actions/katello/host/package/update.rb:35
 msgid "Update of all packages requested"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package_group/install.rb:20
-#: action_names.rb:39
+#: ../app/lib/actions/katello/host/package_group/install.rb:15
 msgid "Install package group"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package_group/install.rb:37
+#: ../app/lib/actions/katello/host/package_group/install.rb:24
 msgid "Installation of package group(s) requested: %{groups}"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package_group/remove.rb:18
-#: action_names.rb:40
+#: ../app/lib/actions/katello/host/package_group/remove.rb:15
 msgid "Remove package group"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/package_group/remove.rb:36
+#: ../app/lib/actions/katello/host/package_group/remove.rb:24
 msgid "Removal of package group(s) requested: %{groups}"
 msgstr ""
 
@@ -4638,7 +4633,7 @@ msgid "Remove subscriptions from %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/remove_subscriptions.rb:40
-#: action_names.rb:44
+#: action_names.rb:33
 msgid "Remove subscriptions"
 msgstr ""
 
@@ -4651,7 +4646,7 @@ msgid "Update Content Overrides to %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/update_content_overrides.rb:32
-#: action_names.rb:42
+#: action_names.rb:29
 msgid "Update Content Overrides"
 msgstr ""
 
@@ -4661,7 +4656,7 @@ msgstr ""
 msgid "Host %s has not been registered with subscription-manager."
 msgstr ""
 
-#: ../app/lib/actions/katello/host/update_content_view.rb:18 action_names.rb:41
+#: ../app/lib/actions/katello/host/update_content_view.rb:18 action_names.rb:30
 msgid "Update for host"
 msgstr ""
 
@@ -4674,7 +4669,7 @@ msgid "Host %{name} cannot be assigned release version %{release_version}."
 msgstr ""
 
 #: ../app/lib/actions/katello/host/update_release_version.rb:21
-#: action_names.rb:43
+#: action_names.rb:31
 msgid "Update release version for host"
 msgstr ""
 
@@ -4687,7 +4682,7 @@ msgid "Updating System Purpose for host %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/update_system_purpose.rb:25
-#: action_names.rb:76
+#: action_names.rb:32
 msgid "Updating System Purpose for host"
 msgstr ""
 
@@ -4696,7 +4691,7 @@ msgid "Package Profile Update for %s"
 msgstr ""
 
 #: ../app/lib/actions/katello/host/upload_package_profile.rb:22
-#: action_names.rb:45
+#: action_names.rb:61
 msgid "Package Profile Update"
 msgstr ""
 
@@ -4704,19 +4699,19 @@ msgstr ""
 msgid "Combined Profile Update for %s"
 msgstr ""
 
-#: ../app/lib/actions/katello/host/upload_profiles.rb:24 action_names.rb:46
+#: ../app/lib/actions/katello/host/upload_profiles.rb:24 action_names.rb:34
 msgid "Combined Profile Update"
 msgstr ""
 
-#: ../app/lib/actions/katello/organization/destroy.rb:30 action_names.rb:47
+#: ../app/lib/actions/katello/organization/destroy.rb:30 action_names.rb:35
 msgid "Destroy"
 msgstr ""
 
-#: ../app/lib/actions/katello/organization/manifest_delete.rb:39
+#: ../app/lib/actions/katello/organization/manifest_delete.rb:37
 msgid "Delete Manifest"
 msgstr ""
 
-#: ../app/lib/actions/katello/organization/manifest_delete.rb:43
+#: ../app/lib/actions/katello/organization/manifest_delete.rb:41
 msgid "Manifest deleted"
 msgstr ""
 
@@ -4748,7 +4743,7 @@ msgstr ""
 msgid "Cannot delete redhat product content"
 msgstr ""
 
-#: ../app/lib/actions/katello/product/create.rb:38 action_names.rb:48
+#: ../app/lib/actions/katello/product/create.rb:38 action_names.rb:36
 msgid "Product Create"
 msgstr ""
 
@@ -4762,7 +4757,7 @@ msgid ""
 " %{product}, %{view_versions}"
 msgstr ""
 
-#: ../app/lib/actions/katello/product/destroy.rb:65 action_names.rb:49
+#: ../app/lib/actions/katello/product/destroy.rb:65 action_names.rb:37
 msgid "Delete Product"
 msgstr ""
 
@@ -4780,8 +4775,8 @@ msgid "Cannot delete provider with attached products"
 msgstr ""
 
 #: ../app/lib/actions/katello/provider/update.rb:12
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:185
-#: action_names.rb:10
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:188
+#: action_names.rb:8
 msgid "Update"
 msgstr ""
 
@@ -4798,7 +4793,7 @@ msgid "Cannot publish a link repository if multiple component clones are specifi
 msgstr ""
 
 #: ../app/lib/actions/katello/repository/destroy_package_group.rb:21
-#: action_names.rb:52
+#: action_names.rb:40
 msgid "Delete Package Group"
 msgstr ""
 
@@ -4815,7 +4810,7 @@ msgid ""
 msgstr ""
 
 #: ../app/lib/actions/katello/repository/import_upload.rb:60
-#: ../app/lib/actions/katello/repository/upload_files.rb:46 action_names.rb:58
+#: ../app/lib/actions/katello/repository/upload_files.rb:46 action_names.rb:43
 msgid "Upload into"
 msgstr ""
 
@@ -4828,7 +4823,7 @@ msgid "Can only remove content from within the Default Content View"
 msgstr ""
 
 #: ../app/lib/actions/katello/repository/remove_content.rb:56
-#: action_names.rb:62
+#: action_names.rb:50
 msgid "Remove Content"
 msgstr ""
 
@@ -4852,22 +4847,22 @@ msgstr ""
 msgid "Synchronize: Skip Metadata Check"
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/sync.rb:98 action_names.rb:63
+#: ../app/lib/actions/katello/repository/sync.rb:98 action_names.rb:51
 msgid "Synchronize"
 msgstr ""
 
-#: ../app/lib/actions/katello/repository/upload_errata.rb:33 action_names.rb:67
+#: ../app/lib/actions/katello/repository/upload_errata.rb:33 action_names.rb:55
 msgid "Upload errata into"
 msgstr ""
 
 #: ../app/lib/actions/katello/repository/upload_package_group.rb:28
-#: action_names.rb:72
+#: action_names.rb:56
 msgid "Create Package Group"
 msgstr ""
 
 #: ../app/lib/actions/katello/repository_set/disable_repository.rb:6
 #: ../webpack/scenes/RedHatRepositories/components/EnabledRepository/EnabledRepositoryContent.js:10
-#: action_names.rb:69
+#: action_names.rb:58
 msgid "Disable"
 msgstr ""
 
@@ -4876,7 +4871,7 @@ msgid "Repository not found"
 msgstr ""
 
 #: ../app/lib/actions/katello/repository_set/enable_repository.rb:6
-#: action_names.rb:70
+#: action_names.rb:59
 msgid "Enable"
 msgstr ""
 
@@ -4884,7 +4879,7 @@ msgstr ""
 msgid "The repository is already enabled"
 msgstr ""
 
-#: ../app/lib/actions/katello/sync_plan/run.rb:36 action_names.rb:71
+#: ../app/lib/actions/katello/sync_plan/run.rb:36 action_names.rb:60
 msgid "Run Sync Plan:"
 msgstr ""
 
@@ -4958,39 +4953,8 @@ msgstr ""
 msgid "waiting for Pulp to finish the task"
 msgstr ""
 
-#: ../app/lib/actions/pulp/consumer.rb:103
-#: ../app/models/katello/task_status.rb:313
-msgid "No new packages installed"
-msgstr ""
-
-#: ../app/lib/actions/pulp/consumer.rb:105
-#: ../app/models/katello/task_status.rb:311
-msgid "No packages removed"
-msgstr ""
-
-#: ../app/lib/actions/pulp/consumer/abstract_content_action.rb:23
-msgid ""
-"Host did not respond within %s seconds. The task has been cancelled. Is katell"
-"o-agent installed and goferd running on the Host?"
-msgstr ""
-
-#: ../app/lib/actions/pulp/consumer/abstract_content_action.rb:29
-msgid ""
-"Host did not finish content action in %s seconds.  The task has been cancelled"
-"."
-msgstr ""
-
-#: ../app/lib/actions/pulp/consumer/content_install.rb:32
-#: ../app/lib/actions/pulp/repository/sync.rb:36
-#: ../app/lib/actions/pulp3/repository/sync.rb:29
-#: ../app/lib/actions/pulp3/repository/upload_file.rb:54
-msgid ""
-"An error occurred during the sync \n"
-"%{error_message}"
-msgstr ""
-
 #: ../app/lib/actions/pulp/consumer/destroy.rb:12
-#: ../app/services/katello/registration_manager.rb:266
+#: ../app/services/katello/registration_manager.rb:268
 msgid "Pulp Consumer %s has already been removed"
 msgstr ""
 
@@ -5094,6 +5058,14 @@ msgid ""
 "s"
 msgstr ""
 
+#: ../app/lib/actions/pulp/repository/sync.rb:36
+#: ../app/lib/actions/pulp3/repository/sync.rb:29
+#: ../app/lib/actions/pulp3/repository/upload_file.rb:54
+msgid ""
+"An error occurred during the sync \n"
+"%{error_message}"
+msgstr ""
+
 #: ../app/lib/actions/pulp/repository_group/create.rb:22
 msgid "Group %{id} already created."
 msgstr ""
@@ -5102,20 +5074,33 @@ msgstr ""
 msgid "Content Migration"
 msgstr ""
 
-#: ../app/lib/actions/pulp3/orchestration/content_view_version/export.rb:25
+#: ../app/lib/actions/pulp3/content_migration_reset.rb:14
+msgid "Content Migration Reset"
+msgstr ""
+
+#: ../app/lib/actions/pulp3/orchestration/content_view_version/export.rb:27
 msgid ""
 "Unable to export. 'pulpcore_export_destination' setting is not set to a valid "
 "directory."
 msgstr ""
 
 #:
-#: ../app/lib/actions/pulp3/orchestration/content_view_version/export_library.rb:31
-#: action_names.rb:74
+#: ../app/lib/actions/pulp3/orchestration/content_view_version/export_library.rb:37
+#: action_names.rb:63
 msgid "Export Library"
 msgstr ""
 
+#:
+#: ../app/lib/actions/pulp3/orchestration/content_view_version/export_library.rb:47
+msgid ""
+"NOTE: Unable to fully export '%{organization}' organization's library because "
+"it contains repositories without the 'immediate' download policy. Update the d"
+"ownload policy and sync affected repositories to include them in the export. \n"
+" %{repos}"
+msgstr ""
+
 #: ../app/lib/actions/pulp3/orchestration/content_view_version/import.rb:37
-#: action_names.rb:75
+#: action_names.rb:64
 msgid "Import"
 msgstr ""
 
@@ -6049,11 +6034,11 @@ msgstr ""
 msgid "is already attached to the capsule"
 msgstr ""
 
-#: ../app/models/katello/concerns/host_managed_extensions.rb:56
+#: ../app/models/katello/concerns/host_managed_extensions.rb:58
 msgid "Content_Host_Status"
 msgstr ""
 
-#: ../app/models/katello/concerns/host_managed_extensions.rb:112
+#: ../app/models/katello/concerns/host_managed_extensions.rb:114
 msgid "Mark Content Host Statuses as Unknown for %s"
 msgstr ""
 
@@ -6113,6 +6098,7 @@ msgstr ""
 
 #: ../app/models/katello/concerns/smart_proxy_extensions.rb:60
 #: ../app/models/katello/content_view_erratum_filter_rule.rb:26
+#: ../app/models/katello/content_view_version_export_history.rb:17
 #: ../app/models/katello/root_repository.rb:85
 #: ../app/models/katello/root_repository.rb:89
 #: ../app/models/katello/root_repository.rb:93
@@ -6123,18 +6109,18 @@ msgstr ""
 msgid "Could not find a smart proxy with pulp feature."
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:293
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:327
 msgid "Could not remove the lifecycle environment from the smart proxy"
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:296
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:330
 msgid ""
 "Lifecycle environment was not attached to the smart proxy; therefore, no chang"
 "es were made."
 msgstr ""
 
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:334
-#: ../app/models/katello/concerns/smart_proxy_extensions.rb:340
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:368
+#: ../app/models/katello/concerns/smart_proxy_extensions.rb:374
 msgid "%s is unreachable. %s"
 msgstr ""
 
@@ -6142,58 +6128,58 @@ msgstr ""
 msgid "Product with ID %s not found in Candlepin. Skipping content import for it."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:417
+#: ../app/models/katello/content_view.rb:421
 msgid "Cannot delete view while it exists in environments"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:422
+#: ../app/models/katello/content_view.rb:426
 msgid "Cannot delete from %s, view does not exist there."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:460
+#: ../app/models/katello/content_view.rb:464
 #: ../app/models/katello/content_view_version_component.rb:13
 msgid "Cannot add component versions to a non-composite content view"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:466
+#: ../app/models/katello/content_view.rb:470
 msgid "Cannot set auto publish to a non-composite content view"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:474
+#: ../app/models/katello/content_view.rb:478
 msgid "Puppet module conflict: '%{mod}' is in %{versions}."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:481
+#: ../app/models/katello/content_view.rb:485
 msgid "Container Image repo '%{repo}' is present in multiple component content views."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:596
+#: ../app/models/katello/content_view.rb:600
 msgid "Cannot import a composite content view"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:597
+#: ../app/models/katello/content_view.rb:601
 msgid "This Content View must be set to Import-only before performing an import"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:602
+#: ../app/models/katello/content_view.rb:606
 msgid "User must be logged in."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:603
+#: ../app/models/katello/content_view.rb:607
 msgid "Cannot publish default content view"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:608
+#: ../app/models/katello/content_view.rb:612
 msgid "Import-only content views can not be published directly"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:626
+#: ../app/models/katello/content_view.rb:630
 msgid ""
 "Consider changing the Lifecycle Environment's Registry Name Pattern to somethi"
 "ng more specific."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:636
+#: ../app/models/katello/content_view.rb:640
 msgid ""
 "Make sure all the component content views are published before publishing/prom"
 "oting the composite content view. This restriction is optional and can be modi"
@@ -6201,7 +6187,7 @@ msgid ""
 "site_view flag."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:646
+#: ../app/models/katello/content_view.rb:650
 msgid ""
 "The action requested on this composite view cannot be performed until all of t"
 "he component content view versions have been promoted to the target environmen"
@@ -6209,31 +6195,31 @@ msgid ""
 "tor -> Settings -> Content page using the restrict_composite_view flag."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:660
-#: ../app/models/katello/content_view.rb:679
+#: ../app/models/katello/content_view.rb:664
+#: ../app/models/katello/content_view.rb:683
 msgid "hosts"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:661
-#: ../app/models/katello/content_view.rb:680
+#: ../app/models/katello/content_view.rb:665
+#: ../app/models/katello/content_view.rb:684
 msgid "activation keys"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:666
+#: ../app/models/katello/content_view.rb:670
 msgid ""
 "Cannot remove '%{view}' from environment '%{env}' due to associated %{dependen"
 "t}: %{names}."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:678
+#: ../app/models/katello/content_view.rb:682
 msgid "environments"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:685
+#: ../app/models/katello/content_view.rb:689
 msgid "Cannot delete '%{view}' due to associated %{dependent}: %{names}."
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:695
+#: ../app/models/katello/content_view.rb:699
 #: ../app/views/dashboard/_content_views_widget.html.erb:2
 #: ../lib/katello/plugin.rb:76 ../lib/katello/plugin.rb:217
 #: ../webpack/containers/Application/config.js:57
@@ -6241,11 +6227,11 @@ msgstr ""
 msgid "Content Views"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:723
+#: ../app/models/katello/content_view.rb:727
 msgid "Import-only can not be changed after creation"
 msgstr ""
 
-#: ../app/models/katello/content_view.rb:746
+#: ../app/models/katello/content_view.rb:750
 msgid "cannot be deleted if it has been promoted."
 msgstr ""
 
@@ -6329,6 +6315,7 @@ msgstr ""
 #: ../app/models/katello/errata_status.rb:9
 #: ../app/views/dashboard/_errata_widget.html.erb:16
 #: ../lib/katello/plugin.rb:150
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentType.js:14
 msgid "Errata"
 msgstr ""
 
@@ -6420,16 +6407,16 @@ msgstr ""
 msgid ", must be unique to major and version id version."
 msgstr ""
 
-#: ../app/models/katello/content_view_version.rb:333
+#: ../app/models/katello/content_view_version.rb:334
 msgid "Default content view versions cannot be promoted"
 msgstr ""
 
-#: ../app/models/katello/content_view_version.rb:341
+#: ../app/models/katello/content_view_version.rb:342
 msgid "Cannot delete version while it is in environments: %s"
 msgstr ""
 
-#: ../app/models/katello/content_view_version.rb:346
-#: ../app/models/katello/content_view_version.rb:354
+#: ../app/models/katello/content_view_version.rb:347
+#: ../app/models/katello/content_view_version.rb:355
 msgid "Cannot delete version while it is in use by composite content views: %s"
 msgstr ""
 
@@ -6570,7 +6557,7 @@ msgstr ""
 msgid "Lifecycle Environment"
 msgstr ""
 
-#: ../app/models/katello/ping.rb:62
+#: ../app/models/katello/ping.rb:55
 msgid "Not running"
 msgstr ""
 
@@ -6689,34 +6676,34 @@ msgid ""
 " something more specific."
 msgstr ""
 
-#: ../app/models/katello/repository.rb:212
+#: ../app/models/katello/repository.rb:215
 msgid "Successfully synchronized."
 msgstr ""
 
-#: ../app/models/katello/repository.rb:503
+#: ../app/models/katello/repository.rb:510
 msgid "Cannot clone into the Default Content View"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:510
+#: ../app/models/katello/repository.rb:517
 msgid "View %{view} has not been promoted to %{env}"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:515
+#: ../app/models/katello/repository.rb:522
 msgid "Repository has already been cloned to %{cv_name} in environment %{to_env}"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:706
+#: ../app/models/katello/repository.rb:713
 msgid "Duplicate branches specified - %{branches}"
 msgstr ""
 
-#: ../app/models/katello/repository.rb:720
+#: ../app/models/katello/repository.rb:727
 msgid ""
 "Repository cannot be deleted since it has already been included in a published"
 " Content View. Please delete all Content View versions containing this reposit"
 "ory before attempting to delete it."
 msgstr ""
 
-#: ../app/models/katello/repository.rb:771
+#: ../app/models/katello/repository.rb:778
 msgid "This is not a linked repository"
 msgstr ""
 
@@ -7234,53 +7221,43 @@ msgstr ""
 msgid "Subscription manager name registration fact strict matching"
 msgstr ""
 
-#: ../app/models/setting/content.rb:123
-msgid ""
-"Errata installed via katello-agent will be triggered in batches of this size. "
-"Set to 0 to install all errata in one batch."
-msgstr ""
-
 #: ../app/models/setting/content.rb:124
-msgid "Erratum Install Batch Size"
-msgstr ""
-
-#: ../app/models/setting/content.rb:126
 msgid "Default Location where new subscribed hosts will put upon registration"
 msgstr ""
 
-#: ../app/models/setting/content.rb:127
+#: ../app/models/setting/content.rb:125
 msgid "Default Location subscribed hosts"
 msgstr ""
 
-#: ../app/models/setting/content.rb:130
+#: ../app/models/setting/content.rb:128
 msgid ""
 "Default Location where new Puppet content will be put upon Content View publis"
 "h"
 msgstr ""
 
-#: ../app/models/setting/content.rb:131
+#: ../app/models/setting/content.rb:129
 msgid "Default Location Puppet content"
 msgstr ""
 
-#: ../app/models/setting/content.rb:133
+#: ../app/models/setting/content.rb:131
 msgid ""
 "The number of days remaining in a subscription before you will be reminded abo"
 "ut renewing it."
 msgstr ""
 
-#: ../app/models/setting/content.rb:134
+#: ../app/models/setting/content.rb:132
 msgid "Expire soon days"
 msgstr ""
 
-#: ../app/models/setting/content.rb:136
+#: ../app/models/setting/content.rb:134
 msgid "The default dependency solving value for new Content Views."
 msgstr ""
 
-#: ../app/models/setting/content.rb:137
+#: ../app/models/setting/content.rb:135
 msgid "Content View Dependency Solving Default"
 msgstr ""
 
-#: ../app/models/setting/content.rb:139
+#: ../app/models/setting/content.rb:137
 msgid ""
 "How the logic of solving dependencies in a Content View is managed. Conservati"
 "ve will only add packages to solve the dependencies if the package needed does"
@@ -7288,71 +7265,71 @@ msgid ""
 "f it already does exist in the repository."
 msgstr ""
 
-#: ../app/models/setting/content.rb:142
+#: ../app/models/setting/content.rb:140
 msgid "Content View Dependency Solving Algorithm"
 msgstr ""
 
-#: ../app/models/setting/content.rb:145
+#: ../app/models/setting/content.rb:143
 msgid ""
 "If hosts fail to register because of duplicate DMI UUIDs add their comma-separ"
 "ated values here. Subsequent registrations will generate a unique DMI UUID for"
 " the affected hosts."
 msgstr ""
 
-#: ../app/models/setting/content.rb:147
+#: ../app/models/setting/content.rb:145
 msgid "Host Duplicate DMI UUIDs"
 msgstr ""
 
-#: ../app/models/setting/content.rb:148
+#: ../app/models/setting/content.rb:146
 msgid ""
 "Allow new Host registrations to assume registered profiles with matching hostn"
 "ame as long as the registering DMI UUID is not used by another host."
 msgstr ""
 
-#: ../app/models/setting/content.rb:150
+#: ../app/models/setting/content.rb:148
 msgid "Host Profile Assume"
 msgstr ""
 
-#: ../app/models/setting/content.rb:151
+#: ../app/models/setting/content.rb:149
 msgid ""
 "Amount of workers in the pool to handle the execution of host-related tasks. W"
 "hen set to 0, the default queue will be used instead. Restart of the dynflowd/"
 "foreman-tasks service is required."
 msgstr ""
 
-#: ../app/models/setting/content.rb:152
+#: ../app/models/setting/content.rb:150
 msgid "Host Tasks Workers Pool Size"
 msgstr ""
 
-#: ../app/models/setting/content.rb:153
+#: ../app/models/setting/content.rb:151
 msgid "Number of host applicability calculations to process per task."
 msgstr ""
 
-#: ../app/models/setting/content.rb:154
+#: ../app/models/setting/content.rb:152
 msgid "Applicability Batch Size"
 msgstr ""
 
-#: ../app/models/setting/content.rb:155
+#: ../app/models/setting/content.rb:153
 msgid ""
 "For pages that support it, automatically perform search while typing in search"
 " input."
 msgstr ""
 
-#: ../app/models/setting/content.rb:156
+#: ../app/models/setting/content.rb:154
 msgid "Autosearch"
 msgstr ""
 
-#: ../app/models/setting/content.rb:157
+#: ../app/models/setting/content.rb:155
 msgid ""
 "If Autosearch is enabled, delay in milliseconds before executing searches whil"
 "e typing."
 msgstr ""
 
-#: ../app/models/setting/content.rb:158
+#: ../app/models/setting/content.rb:156
 msgid "Autosearch delay"
 msgstr ""
 
-#: ../app/models/setting/content.rb:188
+#: ../app/models/setting/content.rb:186
 msgid "There is no such HTTP proxy"
 msgstr ""
 
@@ -7422,25 +7399,38 @@ msgstr ""
 msgid "Failed indexing errata, maximum retries encountered"
 msgstr ""
 
-#: ../app/services/katello/pulp3/content_view_version/export.rb:81
+#: ../app/services/katello/pulp3/content_view_version/export.rb:101
+msgid ""
+"NOTE: Unable to fully export Content View Version '%{content_view} %{current}'"
+" it contains repositories without the 'immediate' download policy. Update the "
+"download policy and sync affected repositories. Once synced republish the cont"
+"ent view and export the generated version. \n"
+" %{repos}"
+msgstr ""
+
+#: ../app/services/katello/pulp3/content_view_version/export.rb:122
 msgid ""
 "The exported Content View Version '%{content_view} %{current}' cannot be incre"
 "mentally updated from version '%{from}'. Please do a full export."
 msgstr ""
 
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:27
+#: ../app/services/katello/pulp3/content_view_version/export.rb:177
+msgid "Product: '%{product}', Repository: '%{repository}'"
+msgstr ""
+
+#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:25
 msgid ""
 "Content View Version specified in the metadata - '%{name}' already exists. If "
 "you wish to replace the existing version, delete %{name} and try again. "
 msgstr ""
 
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:41
+#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:39
 msgid ""
 "Prior Content View Version specified in the metadata - '%{name}' does not exis"
 "t. Please import the metadata for '%{name}' before importing '%{current}' "
 msgstr ""
 
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:67
+#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:65
 msgid ""
 "The following repositories provided in the import metadata are either not avai"
 "lable in the Library or are of incorrect Respository Type. Please add or enabl"
@@ -7449,34 +7439,14 @@ msgid ""
 msgstr ""
 
 #: ../app/services/katello/pulp3/content_view_version/import_validator.rb:75
-msgid "Invalid path specified."
-msgstr ""
-
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:76
-msgid "The import path must be in a subdirectory under '%s'."
-msgstr ""
-
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:77
-msgid "Pulp user or group unable to read content in '%s'."
-msgstr ""
-
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:80
-msgid "Pulp user or group unable to read '%s'."
-msgstr ""
-
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:83
-msgid "The TOC file specified in the metadata does not exist. %s "
-msgstr ""
-
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:105
 msgid "Red Hat"
 msgstr ""
 
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:105
+#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:75
 msgid "Custom"
 msgstr ""
 
-#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:106
+#: ../app/services/katello/pulp3/content_view_version/import_validator.rb:76
 msgid ""
 "\n"
 "* Product = '%{product}', Repository = '%{repository}', Repository Type = '%{r"
@@ -7492,27 +7462,27 @@ msgstr ""
 msgid "Pulp 3 migration cannot run. Types %s have already been migrated."
 msgstr ""
 
-#: ../app/services/katello/registration_manager.rb:144
+#: ../app/services/katello/registration_manager.rb:146
 msgid "Content View and Environment not set for registration."
 msgstr ""
 
-#: ../app/services/katello/registration_manager.rb:237
+#: ../app/services/katello/registration_manager.rb:239
 msgid "Host collection '%{name}' exceeds maximum usage limit of '%{limit}'"
 msgstr ""
 
-#: ../app/services/katello/registration_manager.rb:251
+#: ../app/services/katello/registration_manager.rb:253
 msgid ""
 "At least one activation key must have a lifecycle environment and content view"
 " assigned to it"
 msgstr ""
 
-#: ../app/services/katello/registration_manager.rb:258
+#: ../app/services/katello/registration_manager.rb:260
 msgid ""
 "Attempted to destroy consumer %s from candlepin, but consumer does not exist i"
 "n candlepin"
 msgstr ""
 
-#: ../app/services/katello/registration_manager.rb:260
+#: ../app/services/katello/registration_manager.rb:262
 msgid "Candlepin consumer %s has already been removed"
 msgstr ""
 
@@ -7562,7 +7532,7 @@ msgstr ""
 #: ../app/views/dashboard/_content_views_widget.html.erb:17
 #: ../app/views/dashboard/_sync_widget.html.erb:18
 #: ../webpack/components/extensions/about/SystemStatuses.js:24
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:58
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:59
 #: ../webpack/scenes/Subscriptions/Manifest/ManifestHistoryTableSchema.js:8
 msgid "Status"
 msgstr ""
@@ -7578,9 +7548,10 @@ msgstr ""
 #: ../app/views/dashboard/_errata_widget.html.erb:15
 #: ../app/views/katello/subscription_mailer/subscription_expiry.html.erb:20
 #: ../app/views/katello/subscription_mailer/subscription_expiry.text.erb:7
-#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:67
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:53
+#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:60
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:54
 #: ../webpack/scenes/ContentViews/Table/tableDataGenerator.js:19
+#: ../webpack/scenes/SmartProxy/SmartProxyContentTable.js:35
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionAttributes.js:15
 #: ../webpack/scenes/Subscriptions/SubscriptionConstants.js:90
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTableSchema.js:63
@@ -7605,8 +7576,9 @@ msgstr ""
 #: ../webpack/components/Content/Details/ContentDetailRepositoryTableSchema.js:13
 #: ../webpack/scenes/AnsibleCollections/AnsibleCollectionsTableSchema.js:14
 #: ../webpack/scenes/AnsibleCollections/Details/AnsibleCollectionsSchema.js:7
-#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:51
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:54
+#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:44
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:48
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:55
 #: ../webpack/scenes/ContentViews/Table/tableDataGenerator.js:20
 #: ../webpack/scenes/ModuleStreams/Details/ModuleDetailsSchema.js:9
 #: ../webpack/scenes/ModuleStreams/Details/Profiles/TableSchema.js:13
@@ -7688,7 +7660,7 @@ msgstr ""
 #: ../app/views/dashboard/_sync_widget.html.erb:17
 #: ../app/views/katello/sync_management/_products.html.erb:7
 #: ../webpack/components/Content/Details/ContentDetailRepositoryTableSchema.js:31
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:55
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:56
 msgid "Product"
 msgstr ""
 
@@ -7707,7 +7679,7 @@ msgid ""
 msgstr ""
 
 #: ../app/views/foreman/smart_proxies/_content_sync.html.erb:2
-#: ../lib/katello/plugin.rb:268
+#: ../lib/katello/plugin.rb:269
 msgid "Content Sync"
 msgstr ""
 
@@ -7808,6 +7780,7 @@ msgid ""
 msgstr ""
 
 #: ../app/views/katello/errata_mailer/promote_errata.text.erb:9
+#: ../webpack/scenes/SmartProxy/SmartProxyContentTable.js:27
 msgid "Environment"
 msgstr ""
 
@@ -7932,7 +7905,7 @@ msgstr ""
 #: ../app/views/katello/sync_management/_products.html.erb:16
 #: ../db/seeds.d/109-katello-notification-blueprints.rb:12
 #: ../webpack/scenes/AnsibleCollections/Details/AnsibleCollectionsSchema.js:21
-#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:20
+#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:22
 #: ../webpack/scenes/ContentViews/Table/tableDataGenerator.js:20
 #: ../webpack/scenes/ContentViews/Table/tableDataGenerator.js:33
 #: ../webpack/scenes/ContentViews/expansions/DetailsExpansion.js:5
@@ -7966,7 +7939,7 @@ msgid "Synchronize Now"
 msgstr ""
 
 #: ../app/views/katello/sync_management/index.html.erb:5
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:271
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:274
 #: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:147
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/DeleteDialog.js:30
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/components/Dialogs/UnsavedChangesDialog.js:15
@@ -8105,16 +8078,16 @@ msgstr ""
 msgid "Clone"
 msgstr ""
 
-#: ../app/views/smart_proxies/_disk_usage.html.erb:7
+#: ../app/views/smart_proxies/_disk_usage.html.erb:8
 msgid "%s Used"
 msgstr ""
 
-#: ../app/views/smart_proxies/_disk_usage.html.erb:8
+#: ../app/views/smart_proxies/_disk_usage.html.erb:9
 msgid "%{used} of %{total}"
 msgstr ""
 
-#: ../app/views/smart_proxies/_disk_usage.html.erb:10
-#: ../app/views/smart_proxies/_disk_usage.html.erb:11
+#: ../app/views/smart_proxies/_disk_usage.html.erb:12
+#: ../app/views/smart_proxies/_disk_usage.html.erb:13
 msgid "%s Available"
 msgstr ""
 
@@ -8298,84 +8271,88 @@ msgstr ""
 msgid "Puppet Modules"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:288
+#: ../lib/katello/plugin.rb:289
 msgid "Katello"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:293
+#: ../lib/katello/plugin.rb:294
 msgid "Storage"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:322
+#: ../lib/katello/plugin.rb:323
 msgid "Katello: Install Package"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:322
+#: ../lib/katello/plugin.rb:323
 msgid "Install package via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:323
+#: ../lib/katello/plugin.rb:324
 msgid "Katello: Update Package"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:323
+#: ../lib/katello/plugin.rb:324
 msgid "Update package via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:324
+#: ../lib/katello/plugin.rb:325
 msgid "Katello: Remove Package"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:324
+#: ../lib/katello/plugin.rb:325
 msgid "Remove package via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:325
+#: ../lib/katello/plugin.rb:326
 msgid "Katello: Install Package Group"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:325
+#: ../lib/katello/plugin.rb:326
 msgid "Install package group via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:326
+#: ../lib/katello/plugin.rb:327
 msgid "Katello: Update Package Group"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:326
+#: ../lib/katello/plugin.rb:327
 msgid "Update package group via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:327
+#: ../lib/katello/plugin.rb:328
 msgid "Katello: Remove Package Group"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:327
+#: ../lib/katello/plugin.rb:328
 msgid "Remove package group via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:328
+#: ../lib/katello/plugin.rb:329
 msgid "Katello: Install Errata"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:328
+#: ../lib/katello/plugin.rb:329
 msgid "Install errata via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:329
+#: ../lib/katello/plugin.rb:330
 msgid "Katello: Service Restart"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:329
+#: ../lib/katello/plugin.rb:330
 msgid "Restart Services via Katello interface"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:330
+#: ../lib/katello/plugin.rb:331
 msgid "Katello: Module Stream Actions"
 msgstr ""
 
-#: ../lib/katello/plugin.rb:331
+#: ../lib/katello/plugin.rb:332
 msgid "Perform a module stream action via Katello interface"
+msgstr ""
+
+#: ../lib/proxy_api/container_gateway.rb:18
+msgid "Unable to perform unauthenticated repository list operation"
 msgstr ""
 
 #: ../lib/proxy_api/pulp.rb:12 ../lib/proxy_api/pulp_node.rb:12
@@ -8397,7 +8374,7 @@ msgstr ""
 #: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:59
 #: ../webpack/scenes/RedHatRepositories/RedHatRepositoriesPage.js:83
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionDetails.js:83
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:289
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:292
 #: ../webpack/scenes/Subscriptions/UpstreamSubscriptions/UpstreamSubscriptionsPage.js:239
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsTable/SubscriptionsTable.js:185
 msgid "Loading"
@@ -8412,6 +8389,8 @@ msgid "Select Value"
 msgstr ""
 
 #: ../webpack/components/Search/Search.js:75
+#: ../webpack/components/TypeAhead/TypeAhead.js:105
+#: ../webpack/components/TypeAhead/pf3Search/TypeAheadSearch.js:50
 msgid "Search"
 msgstr ""
 
@@ -8529,7 +8508,8 @@ msgid "Checksum"
 msgstr ""
 
 #: ../webpack/scenes/AnsibleCollections/Details/AnsibleCollectionsSchema.js:8
-#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:77
+#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:70
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:49
 #: ../webpack/scenes/ModuleStreams/Details/ModuleDetailsSchema.js:11
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionAttributes.js:5
 msgid "Description"
@@ -8540,8 +8520,9 @@ msgid "Tags"
 msgstr ""
 
 #: ../webpack/scenes/AnsibleCollections/Details/AnsibleCollectionsSchema.js:28
-#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:28
+#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:30
 #: ../webpack/scenes/ModuleStreams/Details/ModuleDetailsSchema.js:32
+#: ../webpack/scenes/SmartProxy/SmartProxyContentTable.js:43
 msgid "Repositories"
 msgstr ""
 
@@ -8550,79 +8531,145 @@ msgstr ""
 msgid "No repositories to show"
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Details/ContentViewDetailActions.js:31
+#: ../webpack/scenes/ContentViews/ContentViewsActions.js:22
+msgid "Content view ${name} created"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Create/ContentViewFormComponents.js:22
+msgid "Composite Content View"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Create/ContentViewFormComponents.js:29
+msgid "Component Content View"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Create/ContentViewFormComponents.js:35
+msgid "Solve Dependencies"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Create/ContentViewFormComponents.js:44
+msgid "Auto Publish"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Create/ContentViewFormComponents.js:53
+msgid "Import Only"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/ContentViewDetailActions.js:32
 msgid " Content view updated."
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:24
+#: ../webpack/scenes/ContentViews/Details/ContentViewDetailActions.js:71
+msgid "Something went wrong while retrieving the repository types! ${error}"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/ContentViewDetailActions.js:78
+msgid "Something went wrong while retrieving the content view filters! ${error}"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:26
 #: ../webpack/scenes/ContentViews/Table/tableDataGenerator.js:22
 #: ../webpack/scenes/ContentViews/expansions/VersionsExpansion.js:5
 msgid "Versions"
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:32
+#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:34
 msgid "Filters"
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:36
+#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:38
 msgid "History"
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Details/ContentViewDetails.js:40
-msgid "Tasks"
-msgstr ""
-
-#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:57
+#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:50
 msgid "Label"
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:84
+#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:77
 msgid "Autopublish"
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:92
+#: ../webpack/scenes/ContentViews/Details/ContentViewInfo.js:85
 msgid "Solve dependencies"
 msgstr ""
 
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentType.js:11
+#: ../webpack/scenes/RedHatRepositories/components/SearchBar.js:21
+msgid "RPM"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentType.js:12
+msgid "Container image tag"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentType.js:13
+msgid "Module stream"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:50
+msgid "Updated"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:51
+msgid "Content type"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:52
+msgid "Inclusion type"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:92
+msgid "You currently don't have any filters for this content view."
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:93
+msgid "Add filters using the 'Add filter' button above."
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:94
+msgid "No matching filters found"
+msgstr ""
+
+#: ../webpack/scenes/ContentViews/Details/Filters/ContentViewFilters.js:95
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:132
+#: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:118
+msgid "Try changing your search settings."
+msgstr ""
+
 #:
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:56
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:57
 msgid "Sync state"
 msgstr ""
 
 #:
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:140
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:129
 msgid "You currently don't have any repositories to add to this content view."
 msgstr ""
 
 #:
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:141
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:130
 msgid "Please add some repositories."
 msgstr ""
 
 #:
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:142
+#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:131
 msgid "No matching repositories found"
 msgstr ""
 
-#:
-#: ../webpack/scenes/ContentViews/Details/Repositories/ContentViewRepositories.js:143
-#: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:78
-msgid "Try changing your search settings."
-msgstr ""
-
-#: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:75
+#: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:115
 msgid "You currently don't have any Content Views."
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:76
+#: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:116
 msgid "A content view can be added by using the \"New content view\" button below."
 msgstr ""
 
-#: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:77
+#: ../webpack/scenes/ContentViews/Table/ContentViewsTable.js:117
 msgid "No matching content views found"
 msgstr ""
 
 #: ../webpack/scenes/ContentViews/Table/tableDataGenerator.js:20
+#: ../webpack/scenes/SmartProxy/SmartProxyContentTable.js:39
 msgid "Last published"
 msgstr ""
 
@@ -8729,10 +8776,6 @@ msgid ""
 "tation%(anchorEnd)s prior to use."
 msgstr ""
 
-#: ../webpack/scenes/RedHatRepositories/components/SearchBar.js:21
-msgid "RPM"
-msgstr ""
-
 #: ../webpack/scenes/RedHatRepositories/components/SearchBar.js:23
 msgid "Debug RPM"
 msgstr ""
@@ -8777,6 +8820,14 @@ msgstr ""
 
 #: ../webpack/scenes/RedHatRepositories/helpers.js:60
 msgid "No repositories enabled."
+msgstr ""
+
+#: ../webpack/scenes/SmartProxy/SmartProxyContentTable.js:31
+msgid "Content view"
+msgstr ""
+
+#: ../webpack/scenes/SmartProxy/SmartProxyContentTable.js:47
+msgid "Synced to smart proxy"
 msgstr ""
 
 #: ../webpack/scenes/Subscriptions/Details/SubscriptionAttributes.js:6
@@ -8928,72 +8979,72 @@ msgstr ""
 msgid "Disable Red Hat Insights."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:81
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:84
 msgid "This is disabled because a manifest task is in progress"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:83
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:86
 msgid "This is disabled because no manifest exists"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:118
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:121
 msgid "There is no Manifest History to display."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:119
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:122
 msgid "Import a Manifest using the manifest tab above."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:121
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:124
 msgid "Learn more about adding Subscription Manifests"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:127
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:130
 msgid "Updating..."
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:131
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:134
 msgid "No Manifest Uploaded"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:152
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:155
 #: ../webpack/scenes/Subscriptions/components/SubscriptionsToolbar/SubscriptionsToolbar.js:74
 msgid "Manage Manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:155
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:158
 msgid "Manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:159
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:162
 msgid "Red Hat Provider Details"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:199
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:202
 msgid "Subscription Manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:214
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:217
 msgid "Subscription Allocation"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:226
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:229
 msgid "Import New Manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:248
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:251
 msgid "Refresh"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:267
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:270
 msgid "Confirm delete manifest"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:288
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:291
 msgid "Manifest History"
 msgstr ""
 
-#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:300
+#: ../webpack/scenes/Subscriptions/Manifest/ManageManifestModal.js:303
 msgid "Close"
 msgstr ""
 
@@ -9234,106 +9285,114 @@ msgstr ""
 msgid "The subscription is no longer available"
 msgstr ""
 
-#: action_names.rb:2
-msgid "Action with sub plans"
-msgstr ""
-
-#: action_names.rb:3
-msgid "Import facts"
-msgstr ""
-
 #: action_names.rb:4
-msgid "Import Puppet classes"
-msgstr ""
-
-#: action_names.rb:5
-msgid "Abstract async task"
-msgstr ""
-
-#: action_names.rb:13
 msgid "Sync capsule"
 msgstr ""
 
-#: action_names.rb:15
+#: action_names.rb:6
 msgid "Errata mail"
 msgstr ""
 
-#: action_names.rb:16
+#: action_names.rb:7
 msgid "Incremental Update of  Content View Version(s) "
 msgstr ""
 
-#: action_names.rb:17
+#: action_names.rb:16
 msgid "Promote"
 msgstr ""
 
-#: action_names.rb:30
+#: action_names.rb:21
 msgid "Auto attach subscriptions"
 msgstr ""
 
-#: action_names.rb:34
+#: action_names.rb:26
 msgid "Hypervisors"
 msgstr ""
 
-#: action_names.rb:35
+#: action_names.rb:27
 msgid "Hypervisors update"
 msgstr ""
 
-#: action_names.rb:50
+#: action_names.rb:38
 msgid "Reindex subscriptions"
 msgstr ""
 
-#: action_names.rb:51
+#: action_names.rb:39
 msgid "Update http proxy"
 msgstr ""
 
-#: action_names.rb:53
+#: action_names.rb:41
 msgid "Discover"
 msgstr ""
 
-#: action_names.rb:54
+#: action_names.rb:42
 msgid "Fetch pxe files"
 msgstr ""
 
-#: action_names.rb:55
+#: action_names.rb:44
 msgid "Filtered index content"
 msgstr ""
 
-#: action_names.rb:56
+#: action_names.rb:45
 msgid "Index content"
 msgstr ""
 
-#: action_names.rb:57
+#: action_names.rb:46
 msgid "Index errata"
 msgstr ""
 
-#: action_names.rb:59
+#: action_names.rb:47
 msgid "Index module streams"
 msgstr ""
 
-#: action_names.rb:60
+#: action_names.rb:48
 msgid "Index package groups"
 msgstr ""
 
-#: action_names.rb:61
+#: action_names.rb:49
 msgid "Instance update"
 msgstr ""
 
-#: action_names.rb:64
+#: action_names.rb:52
 msgid "Update content urls"
 msgstr ""
 
-#: action_names.rb:65
+#: action_names.rb:53
 msgid "Update http proxy details"
 msgstr ""
 
-#: action_names.rb:66
+#: action_names.rb:54
 msgid "Update redhat repository"
 msgstr ""
 
-#: action_names.rb:68
+#: action_names.rb:57
 msgid "Verify checksum"
 msgstr ""
 
-#: action_names.rb:73
+#: action_names.rb:62
 msgid "Copy version units to library"
+msgstr ""
+
+#: action_names.rb:65
+msgid "Remote action:"
+msgstr ""
+
+#: action_names.rb:66
+msgid "Import Puppet classes"
+msgstr ""
+
+#: action_names.rb:67
+msgid "Action with sub plans"
+msgstr ""
+
+#: action_names.rb:68
+msgid "Abstract async task"
+msgstr ""
+
+#: action_names.rb:70
+msgid "Agent action"
+msgstr ""
+
+#: action_names.rb:72
+msgid "Import facts"
 msgstr ""
