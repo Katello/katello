@@ -1,6 +1,6 @@
 namespace :katello do
   desc "Runs a Pulp 2 to 3 Content Migration for supported types.  May be run multiple times.  Use wait=false to immediately return with a task url."
-  task :pulp3_migration => ["dynflow:client"] do
+  task :pulp3_migration => ["dynflow:client", 'check_config'] do
     services = [:candlepin, :foreman_tasks, :pulp3, :pulp, :pulp_auth]
     Katello::Ping.ping!(services: services)
 
