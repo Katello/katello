@@ -3,8 +3,9 @@ require "#{Katello::Engine.root}/app/services/katello/pulp3/migration_switchover
 
 namespace :katello do
   desc "Runs a Pulp 3 migration of pulp3 hrefs to pulp ids for supported content types."
-  task :pulp3_content_switchover => ["dynflow:client"] do
+  task :pulp3_content_switchover => ["dynflow:client", "check_config"] do
     dryrun = ENV['DRYRUN']
+
     begin
       User.current = User.anonymous_admin
 
