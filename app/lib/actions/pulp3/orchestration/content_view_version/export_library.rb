@@ -13,7 +13,7 @@ module Actions
             content_view = ::Katello::Pulp3::ContentViewVersion::Export.find_library_export_view(destination_server: destination_server,
                                                                            organization: organization,
                                                                            create_by_default: true)
-            repo_ids_in_library = organization.default_content_view_version.repositories.yum_type.immediate.pluck(:id)
+            repo_ids_in_library = organization.default_content_view_version.repositories.exportable.immediate_or_none.pluck(:id)
             content_view.update!(repository_ids: repo_ids_in_library)
 
             sequence do

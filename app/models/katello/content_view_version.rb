@@ -333,9 +333,9 @@ module Katello
 
     def importable_repositories
       if default?
-        repositories.yum_type
+        repositories.exportable
       else
-        archived_repos.yum_type
+        archived_repos.exportable
       end
     end
 

@@ -59,7 +59,7 @@ module Katello
 
           repos_in_library = Katello::Repository.
                     in_default_view.
-                    yum_type.
+                    exportable.
                     joins(:product => :provider, :content_view_version => :content_view).
                     joins(:root).
                     where("#{::Katello::ContentView.table_name}.organization_id" => content_view.organization_id).

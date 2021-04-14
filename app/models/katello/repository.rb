@@ -30,6 +30,8 @@ module Katello
     OSTREE_TYPE = 'ostree'.freeze
     ANSIBLE_COLLECTION_TYPE = 'ansible_collection'.freeze
 
+    EXPORTABLE_TYPES = [YUM_TYPE, FILE_TYPE, ANSIBLE_COLLECTION_TYPE].freeze
+
     define_model_callbacks :sync, :only => :after
 
     belongs_to :root, :inverse_of => :repositories, :class_name => "Katello::RootRepository"
@@ -134,7 +136,11 @@ module Katello
     scope :order_by_root, ->(attr) { joins(:root).order("#{Katello::RootRepository.table_name}.#{attr}") }
     scope :with_content, ->(content) { joins(Katello::RepositoryTypeManager.find_content_type(content).model_class.repository_association_class.name.demodulize.underscore.pluralize.to_sym).distinct }
     scope :by_rpm_count, -> { left_joins(:repository_rpms).group(:id).order("count(katello_repository_rpms.id) ASC") } # smallest count first
-
+    scope :exportable, -> { with_type(EXPORTABLE_TYPES) }
+    scope :immediate_or_none, -> do
+      immediate.or(where("#{RootRepository.table_name}.download_policy" => nil)).
+        or(where("#{RootRepository.table_name}.download_policy" => ""))
+    end
     scoped_search :on => :name, :relation => :root, :complete_value => true
     scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true
     scoped_search :rename => :product_id, :on => :id, :relation => :product

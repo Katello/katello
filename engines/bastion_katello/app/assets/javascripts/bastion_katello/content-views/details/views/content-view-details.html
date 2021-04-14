@@ -13,7 +13,7 @@
   </div>
 
   <nav data-block="item-actions">
-    <button type="button" class="btn btn-primary" ng-hide="denied('publish_content_views', contentView) || contentView.import_only" 
+    <button type="button" class="btn btn-primary" ng-hide="denied('publish_content_views', contentView) || contentView.import_only"
             ui-sref="content-view.publish">
       <span translate>Publish New Version</span>
     </button>
@@ -61,7 +61,7 @@
 
       <li uib-dropdown
           ng-class="{active: stateIncludes('content-view.repositories.yum') || stateIncludes('content-view.yum.filters')}"
-          ng-hide="contentView.composite || !repositoryTypeEnabled('yum')">
+          ng-hide="contentView.composite || contentView.import_only || !repositoryTypeEnabled('yum')">
 
         <a uib-dropdown-toggle>
           <span translate>Yum Content</span>

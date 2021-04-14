@@ -30,7 +30,7 @@ module ::Actions::Pulp3::ContentView
     it 'should plan properly' do
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:version).returns(version)
       action_class.any_instance.expects(:action_subject).with(organization)
-      immediate_repo_ids_in_library = organization.default_content_view_version.repositories.yum_type.immediate.pluck(:id)
+      immediate_repo_ids_in_library = organization.default_content_view_version.repositories.exportable.immediate_or_none.pluck(:id)
 
       plan_action(action, organization, destination_server: destination_server)
       assert_action_planned_with(action, ::Actions::Katello::ContentView::Publish) do |content_view, _|
