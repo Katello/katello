@@ -45,9 +45,16 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
     assert_equal [org], relevant_organizations(@host)
   end
 
-  def test_accessible_content_proxies
+  def test_accessible_content_proxies_pulp2
     assert_includes accessible_content_proxies(@host), @smart_proxy
     assert_includes accessible_content_proxies(@group), @smart_proxy
+  end
+
+  def test_accessible_content_proxies
+    proxy = FactoryBot.create(:smart_proxy, :with_pulp3)
+
+    assert_includes accessible_content_proxies(@host), proxy
+    assert_includes accessible_content_proxies(@group), proxy
   end
 
   def test_accessible_content_proxies_no_perms
