@@ -222,7 +222,7 @@ module Katello
       private
 
       def failed_services(result)
-        result[:services].reject do |_name, details|
+        result[:services].select do |_name, details|
           details[:status] != OK_RETURN_CODE
         end
       end
