@@ -59,7 +59,7 @@ module Katello
           :in => DOWNLOAD_POLICIES,
           :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', ')
         }
-        scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE) }
+        scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE, PULP3_FEATURE) }
 
         def self.with_repo(repo)
           joins(:capsule_lifecycle_environments).
