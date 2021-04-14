@@ -7,13 +7,14 @@ module Katello
       organization: "org name",
       repository_mapping: {
         'repo name' => {
-          repository: 'root repo name',
-          product: 'product name',
+          name: 'root repo name',
+          label: 'root_label',
+          product: { name: 'product name', label: 'label' },
           redhat: true
         }
       },
       toc: "toc file name",
-      content_view: "cv name",
+      content_view: { name: "cv name", label: 'cv label' },
       content_view_version: {
         major: "4",
         minor: "5"

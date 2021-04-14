@@ -3,6 +3,9 @@ module Katello
     module ContentViewVersion
       class ImportValidator
         attr_accessor :metadata, :path, :content_view, :smart_proxy
+
+        delegate :organization, :to => :content_view
+
         def initialize(content_view:, path:, metadata:, smart_proxy:)
           self.content_view = content_view
           self.path = path
@@ -16,7 +19,8 @@ module Katello
             ensure_importing_cvv_does_not_exist!
             ensure_from_cvv_exists!
           end
-          ensure_repositories_metadata_are_in_the_library!
+          ensure_metadata_matches_repos_in_library!
+          ensure_redhat_repositories_metadata_are_in_the_library!
         end
 
         def ensure_pulp_importable!
@@ -53,21 +57,42 @@ module Katello
           end
         end
 
-        def ensure_repositories_metadata_are_in_the_library!
-          repos_in_library = Katello::Repository.
-                              in_default_view.
-                              exportable.
-                              joins(:product => :provider, :content_view_version => :content_view).
-                              joins(:root).
-                              where("#{::Katello::ContentView.table_name}.organization_id" => content_view.organization_id).
-                              pluck("#{::Katello::Product.table_name}.name",
-                                    "#{::Katello::RootRepository.table_name}.name",
-                                    "#{::Katello::Provider.table_name}.provider_type"
-                                    )
+        def repos_in_library
+          ::Katello::Pulp3::ContentViewVersion::Import.
+                              repositories_in_library(content_view.organization)
+        end
 
+        def metadata_map
+          @metadata_map ||= ::Katello::Pulp3::ContentViewVersion::Import.metadata_map(metadata)
+        end
+
+        def ensure_metadata_matches_repos_in_library!
+          interested_repos = ::Katello::Pulp3::ContentViewVersion::Import.
+                                      intersecting_repos_library_and_metadata(organization: organization,
+                                                                              metadata: metadata)
+          bad_repos = interested_repos.select do |repo|
+            repo_in_metadata = metadata_map[[repo.product.label, repo.label]]
+            repo.redhat? != repo_in_metadata[:redhat] ||
+              repo.slice(:name, :label, :content_type) != repo_in_metadata.slice(:name, :label, :content_type)
+          end
+
+          if bad_repos.any?
+            repos_to_report = bad_repos.map { |repo| [repo.product.label, repo.label] }
+            fail _("The following repositories provided in the import metadata have an incorrect content type or provider type. "\
+                    "Make sure the export and import repositories are of the same type before importing\n "\
+                    "%{repos}" % { content_view: content_view.name,
+                                   repos: generate_product_repo_i18n_string(repos_to_report).join("")}
+                  )
+          end
+        end
+
+        def ensure_redhat_repositories_metadata_are_in_the_library!
           # repos_in_library look like [["prod1", "repo1", "Anonymous"], ["prod2", "repo2", "Red Hat"]]
-          product_repos_in_library = repos_in_library.map { |product, repo, provider| [product, repo, provider == ::Katello::Provider::REDHAT] }
-          product_repos_in_metadata = metadata[:repository_mapping].values.map { |repo| [repo[:product], repo[:repository], repo[:redhat]] }
+          rh_repos_in_library = repos_in_library.redhat
+          product_repos_in_library = rh_repos_in_library.map { |repo| [repo.product.label, repo.label] }
+          product_repos_in_metadata = metadata[:repository_mapping].values.map { |repo| [repo[:product][:label], repo[:label]] if repo[:redhat] }
+          product_repos_in_metadata.compact!
+
           # product_repos_in_library & product_repos_in_metadata look like [["prod1", "repo1", false], ["prod2", "repo2", false]]
           product_repos_not_in_library = product_repos_in_metadata - product_repos_in_library
           unless product_repos_not_in_library.blank?
@@ -81,11 +106,8 @@ module Katello
 
         def generate_product_repo_i18n_string(product_repos)
           # product_repos look like [["prod1", "repo1", false], ["prod2", "repo2", false]]
-          product_repos.map do |product, repo, redhat|
-            repo_type = redhat ? _("Red Hat") : _("Custom")
-            _("\n* Product = '%{product}', Repository = '%{repository}', Repository Type = '%{repo_type}'" % { product: product,
-                                                                                                               repository: repo,
-                                                                                                               repo_type: repo_type})
+          product_repos.map do |product, repo|
+            _("\n* Product = '%{product}', Repository = '%{repository}'" % { product: product, repository: repo })
           end
         end
       end

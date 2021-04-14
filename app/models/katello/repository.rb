@@ -141,6 +141,9 @@ module Katello
       immediate.or(where("#{RootRepository.table_name}.download_policy" => nil)).
         or(where("#{RootRepository.table_name}.download_policy" => ""))
     end
+    scope :redhat, -> { joins(:product => :provider).where("#{Provider.table_name}.provider_type": Provider::REDHAT) }
+    scope :custom, -> { joins(:product => :provider).where.not("#{Provider.table_name}.provider_type": Provider::REDHAT) }
+
     scoped_search :on => :name, :relation => :root, :complete_value => true
     scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true
     scoped_search :rename => :product_id, :on => :id, :relation => :product
@@ -170,7 +173,7 @@ module Katello
              :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
              :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases, :deb_components, :deb_architectures,
-             :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id,
+             :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id, :os_versions,
              :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :ansible_collection_requirements,
              :ansible_collection_auth_url, :ansible_collection_auth_token, :http_proxy_policy, :http_proxy_id, :to => :root
 

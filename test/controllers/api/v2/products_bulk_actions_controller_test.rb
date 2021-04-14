@@ -53,9 +53,13 @@ module Katello
     end
 
     def test_sync
+      expected_repo_size = Katello::Repository.in_default_view.
+                            where(root: Katello::RootRepository.has_url.
+                                        where(product: @products.syncable)).count
+
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        assert_equal 9, repos.size
+        assert_equal expected_repo_size, repos.size
       end
 
       put :sync_products, params: { :ids => @products.collect(&:id), :organization_id => @organization.id }
