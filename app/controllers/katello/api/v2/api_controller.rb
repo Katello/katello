@@ -39,7 +39,14 @@ module Katello
     end
 
     def deprecate_katello_agent
+      check_katello_agent_not_disabled
       ::Foreman::Deprecation.api_deprecation_warning("This action uses katello-agent, which is deprecated and will be removed in #{katello_agent_removal_release}.")
+    end
+
+    def check_katello_agent_not_disabled
+      unless ::Katello.with_katello_agent?
+        fail HttpErrors::BadRequest, _("This action uses katello-agent, which is currently disabled in Settings.")
+      end
     end
 
     def katello_agent_removal_release
