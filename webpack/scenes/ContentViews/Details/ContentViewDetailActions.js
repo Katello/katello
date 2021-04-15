@@ -16,6 +16,7 @@ import {
   cvDetailsHistoryKey,
   cvFilterRulesKey,
   cvDetailsComponentKey,
+  cvDetailsVersionKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
@@ -123,6 +124,17 @@ export const getContentViewComponents = (cvId, params) => {
     key: cvDetailsComponentKey(cvId),
     params: apiParams,
     errorToast: error => __(`Something went wrong while retrieving the content view components! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
+
+export const getContentViewVersions = (cvId, params) => {
+  const apiParams = { content_view_id: cvId, ...params };
+  const apiUrl = '/content_view_versions/';
+  return get({
+    key: cvDetailsVersionKey(cvId),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the content view versions! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };

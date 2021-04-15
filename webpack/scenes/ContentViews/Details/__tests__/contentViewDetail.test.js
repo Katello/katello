@@ -15,6 +15,7 @@ const cvDetailsPath = api.getApiUrl('/content_views/1');
 jest.mock('../Repositories/ContentViewRepositories.js', () => () => 'mocked!');
 jest.mock('../Filters/ContentViewFilters.js', () => () => 'mocked!');
 jest.mock('../Histories/ContentViewHistories.js', () => () => 'mocked!');
+jest.mock('../Versions/ContentViewVersions.js', () => () => 'mocked!');
 
 test('Can call API and show details on page load', async (done) => {
   const { label, name, description } = cvDetailData;
