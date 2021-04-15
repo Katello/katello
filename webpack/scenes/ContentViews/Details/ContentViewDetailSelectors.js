@@ -11,6 +11,7 @@ import {
   cvFilterDetailsKey,
   cvFilterPackageGroupsKey,
   cvDetailsHistoryKey,
+  cvFilterRulesKey,
   REPOSITORY_TYPES,
 } from '../ContentViewsConstants';
 
@@ -73,5 +74,11 @@ export const selectCVHistoriesStatus = (state, cvId) =>
 
 export const selectCVHistoriesError = (state, cvId) =>
   selectAPIError(state, cvDetailsHistoryKey(cvId));
+
+export const selectCVFilterRules = (state, filterId) =>
+  selectAPIResponse(state, cvFilterRulesKey(filterId));
+
+export const selectCVFilterRulesStatus = (state, filterId) =>
+  selectAPIStatus(state, cvFilterRulesKey(filterId)) || STATUS.PENDING;
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;

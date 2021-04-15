@@ -15,6 +15,7 @@ import {
   cvFilterDetailsKey,
   cvFilterPackageGroupsKey,
   cvDetailsHistoryKey,
+  cvFilterRulesKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 
@@ -108,5 +109,12 @@ export const getContentViewHistories = (cvId, params) => {
     url: api.getApiUrl(apiUrl),
   });
 };
+
+export const getCVFilterRules = (filterId, params) => get({
+  key: cvFilterRulesKey(filterId),
+  params: { ...params },
+  errorToast: error => __(`Something went wrong while retrieving the content view filter rules! ${error}`),
+  url: api.getApiUrl(`/content_view_filters/${filterId}/rules`),
+});
 
 export default getContentViewDetails;

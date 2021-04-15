@@ -1,0 +1,147 @@
+{
+  "inclusion": true,
+  "original_packages": false,
+  "id": 2,
+  "name": "test_package_filter",
+  "description": null,
+  "created_at": "2021-03-30 16:00:19 -0400",
+  "updated_at": "2021-03-31 12:59:12 -0400",
+  "content_view": {
+    "composite": false,
+    "component_ids": [],
+    "default": false,
+    "version_count": 4,
+    "latest_version": "4.0",
+    "auto_publish": false,
+    "solve_dependencies": false,
+    "import_only": false,
+    "repository_ids": [
+      1,
+      2
+    ],
+    "id": 2,
+    "name": "test",
+    "label": "test",
+    "description": "",
+    "organization_id": 1,
+    "organization": {
+      "name": "Default Organization",
+      "label": "Default_Organization",
+      "id": 1
+    },
+    "created_at": "2021-03-30 11:11:07 -0400",
+    "updated_at": "2021-03-30 16:04:18 -0400",
+    "environments": [
+      {
+        "id": 1,
+        "name": "Library",
+        "label": "Library",
+        "permissions": {
+          "readable": true
+        }
+      }
+    ],
+    "repositories": [
+      {
+        "id": 1,
+        "name": "test",
+        "label": "test",
+        "content_type": "yum",
+        "product": {
+          "id": 1,
+          "name": "test"
+        },
+        "content_counts": {
+          "ostree_branch": 0,
+          "docker_manifest": 0,
+          "docker_tag": 0,
+          "rpm": 8,
+          "package": 8,
+          "package_group": 0,
+          "erratum": 2,
+          "module_stream": 0
+        }
+      },
+      {
+        "id": 2,
+        "name": "test1",
+        "label": "test1",
+        "content_type": "yum",
+        "product": {
+          "id": 1,
+          "name": "test"
+        },
+        "content_counts": {
+          "ostree_branch": 0,
+          "docker_manifest": 0,
+          "docker_tag": 0,
+          "rpm": 8,
+          "package": 8,
+          "package_group": 2,
+          "erratum": 2,
+          "module_stream": 0
+        }
+      }
+    ],
+    "versions": [
+      {
+        "id": 2,
+        "version": "1.0",
+        "published": "2021-03-30 11:11:39 -0400",
+        "environment_ids": []
+      },
+      {
+        "id": 3,
+        "version": "2.0",
+        "published": "2021-03-30 11:11:57 -0400",
+        "environment_ids": []
+      },
+      {
+        "id": 4,
+        "version": "3.0",
+        "published": "2021-03-30 16:01:42 -0400",
+        "environment_ids": []
+      },
+      {
+        "id": 5,
+        "version": "4.0",
+        "published": "2021-03-30 16:04:18 -0400",
+        "environment_ids": [
+          1
+        ]
+      }
+    ],
+    "components": [],
+    "content_view_components": [],
+    "activation_keys": [],
+    "next_version": "5.0",
+    "last_published": "2021-03-30 16:04:18 -0400",
+    "permissions": {
+      "view_content_views": true,
+      "edit_content_views": true,
+      "destroy_content_views": true,
+      "publish_content_views": true,
+      "promote_or_remove_content_views": true
+    }
+  },
+  "repositories": [],
+  "type": "rpm",
+  "rules": [
+    {
+      "content_view_filter_id": 2,
+      "max_version": "0.4",
+      "architecture": "noarch",
+      "id": 2,
+      "name": "monkey",
+      "created_at": "2021-03-30 16:14:50 -0400",
+      "updated_at": "2021-03-30 16:15:39 -0400"
+    },
+    {
+      "content_view_filter_id": 2,
+      "id": 4,
+      "name": "elephant",
+      "created_at": "2021-04-01 11:35:39 -0400",
+      "updated_at": "2021-04-01 11:35:39 -0400"
+    }
+  ]
+}

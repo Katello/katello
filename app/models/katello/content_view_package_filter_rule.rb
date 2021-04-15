@@ -10,6 +10,10 @@ module Katello
     validates :name, :presence => true
     validate :ensure_unique_attributes
     validates_with Validators::ContentViewFilterVersionValidator
+    scoped_search :on => :version, :complete_value => true
+    scoped_search :on => :min_version, :complete_value => true
+    scoped_search :on => :max_version, :complete_value => true
+    scoped_search :on => :architecture, :complete_value => true
 
     def ensure_unique_attributes
       other = self.class.where(:name => self.name,
