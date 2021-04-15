@@ -66,17 +66,7 @@ module Katello
 
       def print_debug_info(_a_path, headers = {}, payload = {})
         logger.debug "Headers: #{headers.to_json}"
-        # calling to_json on file has side-effects breaking manifest import.
-        # this fix prevents this problem
-        payload_to_print = payload.reduce({}) do |h, (k, v)|
-          h[k] = case v
-                 when File then "{{file}}"
-                 else v
-                 end
-        end
-        logger.debug "Body: #{filter_sensitive_data(payload_to_print.to_json)}"
-      rescue
-        logger.debug "Unable to print debug information"
+        logger.debug "Body: #{filter_sensitive_data(payload.to_json)}"
       end
 
       def get(a_path, headers = {})
