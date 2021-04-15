@@ -2,19 +2,29 @@ module Katello
   module Pulp3
     module ContentViewVersion
       class ImportValidator
-        attr_accessor :metadata, :path, :content_view
-        def initialize(content_view:, path:, metadata:)
+        attr_accessor :metadata, :path, :content_view, :smart_proxy
+        def initialize(content_view:, path:, metadata:, smart_proxy:)
           self.content_view = content_view
           self.path = path
           self.metadata = metadata
+          self.smart_proxy = smart_proxy
         end
 
         def check!
+          ensure_pulp_importable!
           unless content_view.default?
             ensure_importing_cvv_does_not_exist!
             ensure_from_cvv_exists!
           end
           ensure_repositories_metadata_are_in_the_library!
+        end
+
+        def ensure_pulp_importable!
+          api = ::Katello::Pulp3::Api::Core.new(@smart_proxy).importer_check_api
+          response = api.pulp_import_check_post(toc: "#{@path}/#{@metadata[:toc]}")
+          unless response.toc.is_valid
+            fail response.toc.messages.join("\n")
+          end
         end
 
         def ensure_importing_cvv_does_not_exist!
