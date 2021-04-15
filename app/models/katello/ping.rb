@@ -97,10 +97,10 @@ module Katello
         end
       end
 
-      def ping_pulp_with_auth(service_result, pulp_without_auth_status)
+      def ping_pulp_with_auth(service_result, pulp_without_auth_status, capsule_id)
         exception_watch(service_result) do
           if pulp_without_auth_status == OK_RETURN_CODE
-            Katello.pulp_server.resources.user.retrieve_all
+            Katello::Pulp::Server.config(pulp_url(capsule_id), User.remote_user).resources.user.retrieve_all
           else
             fail _("Skipped pulp_auth check after failed pulp check")
           end
@@ -161,7 +161,7 @@ module Katello
       def pulp_url(capsule_id)
         proxy = fetch_proxy(capsule_id)
         uri = URI.parse(proxy.pulp_url)
-        "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
+        "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2/"
       end
 
       # this checks Pulp is running and responding without need
@@ -236,7 +236,7 @@ module Katello
         ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
         ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
 
-        ping_pulp_with_auth(result[:pulp_auth], result[:pulp][:status]) if result.include?(:pulp_auth)
+        ping_pulp_with_auth(result[:pulp_auth], result[:pulp][:status], capsule_id) if result.include?(:pulp_auth)
         ping_candlepin_with_auth(result[:candlepin_auth]) if result.include?(:candlepin_auth)
         ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
         ping_katello_events(result[:katello_events]) if result.include?(:katello_events)
