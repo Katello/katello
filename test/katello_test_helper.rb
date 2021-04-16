@@ -299,6 +299,10 @@ class ActiveSupport::TestCase
     Katello::Ping.stubs(:ping).returns(stubbed_ping_response)
   end
 
+  def stub_organization_creator
+    Katello::OrganizationCreator.any_instance.stubs(:create_backend_objects!).returns
+  end
+
   def stub_ping
     self.class.stub_ping
   end

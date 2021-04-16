@@ -120,6 +120,7 @@ module ::Actions::Katello::ContentViewVersion
                                                                            metadata: metadata,
                                                                            path: path,
                                                                           smart_proxy: SmartProxy.pulp_primary).returns
+        ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
 
         metadata[:content_view_version][:major] += 10
         generated_cvv = nil

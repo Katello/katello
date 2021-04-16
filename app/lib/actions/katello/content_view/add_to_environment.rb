@@ -3,13 +3,15 @@ module Actions
     module ContentView
       class AddToEnvironment < Actions::Base
         def plan(content_view_version, environment)
-          content_view = content_view_version.content_view
-          if (cve = content_view.content_view_environment(environment))
-            content_view_version.content_view_environments << cve
-          else
-            cve = content_view.add_environment(environment, content_view_version)
-            plan_action(ContentView::EnvironmentCreate, cve)
-          end
+          cve = ::Katello::ContentViewManager.add_version_to_environment(
+            content_view_version: content_view_version,
+            environment: environment
+          )
+
+          ::Katello::ContentViewManager.create_candlepin_environment(
+            content_view_environment: cve
+          )
+
           content_view_version.save!
         end
       end

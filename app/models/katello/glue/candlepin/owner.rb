@@ -16,8 +16,19 @@ module Katello
     end
 
     module InstanceMethods
+      def find_owner
+        Resources::Candlepin::Owner.find(self.label)
+      end
+
+      def candlepin_owner_exists?
+        find_owner
+        true
+      rescue RestClient::ResourceNotFound
+        false
+      end
+
       def owner_details
-        @owner_details ||= Resources::Candlepin::Owner.find self.label
+        @owner_details ||= find_owner
         @owner_details['virt_who'] ||= self.subscriptions.using_virt_who.any?
 
         @owner_details

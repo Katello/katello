@@ -30,7 +30,7 @@ module Katello
           if taxonomy_class == Organization
             begin
               @taxonomy = Organization.new(resource_params)
-              sync_task(::Actions::Katello::Organization::Create, @taxonomy)
+              ::Katello::OrganizationCreator.new(@taxonomy).create!
               @taxonomy.reload
               switch_taxonomy
               if @count_nil_hosts > 0

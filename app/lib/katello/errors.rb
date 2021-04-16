@@ -1,5 +1,7 @@
 module Katello
   module Errors
+    class PingError < StandardError; end
+
     class InvalidActionOptionError < StandardError; end
 
     class InvalidRepositoryContent < StandardError; end
@@ -101,6 +103,8 @@ module Katello
         return nil
       end
     end
+
+    class CandlepinNotRunning < StandardError; end
 
     class Pulp3Error < StandardError; end
     class Pulp3MigrationError < StandardError; end

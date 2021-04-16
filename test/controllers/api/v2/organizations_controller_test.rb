@@ -154,31 +154,26 @@ module Katello
 
     context "create_organization" do
       setup do
-        Organization.any_instance.stubs(:redhat_repository_url)
-        Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
-        Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
+        stub_organization_creator
       end
 
       def test_create
         name = "Michaelangelo"
-        assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          assert_equal name, org.name
-          org.stubs(:reload)
-        end
+
         post(:create, params: { :organization => {"name" => name} })
+
+        assert ::Organization.where(name: name).any?
         assert_response :success
       end
 
       test_attributes :pid => 'c9f69ee5-c6dd-4821-bb05-0d93ffa22460'
       def test_create_with_auto_label
         name = "Organization With Label"
-        assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          assert_equal name, org.name
-          assert org.valid?
-          assert_equal org.label, name.gsub(' ', '_')
-          org.stubs(:reload)
-        end
+
         post :create, params: { :organization => {:name => name} }
+
+        org = ::Organization.find_by_name(name)
+        assert_equal name.gsub(' ', '_'), org.label
         assert_response :success
       end
 
@@ -186,27 +181,22 @@ module Katello
       def test_create_with_name_and_label
         name = "Organization With Label"
         label = "org_with_label"
-        assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          assert_equal name, org.name
-          assert_equal label, org.label
-          assert org.valid?
-          org.stubs(:reload)
-        end
+
         post :create, params: { :organization => {:name => name, :label => label} }
+
+        assert ::Organization.where(name: name, label: label).any?
         assert_response :success
       end
 
       def test_create_with_name_description_auto_label
         name = "Organization With Name Description Auto Label"
         description = "Organization Description"
-        assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          assert_equal name, org.name
-          assert_equal description, org.description
-          assert org.valid?
-          assert_equal org.label, name.gsub(' ', '_')
-          org.stubs(:reload)
-        end
+
         post :create, params: { :organization => {:name => name, :description => description} }
+
+        org = ::Organization.find_by_name(name)
+        assert_equal description, org.description
+        assert_equal name.gsub(' ', '_'), org.label
         assert_response :success
       end
 
@@ -215,14 +205,12 @@ module Katello
         name = "Organization With Name Label Description"
         label = "organization_with_name_label_description"
         description = "Organization Description"
-        assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          assert_equal name, org.name
-          assert_equal label, org.label
-          assert_equal description, org.description
-          assert org.valid?
-          org.stubs(:reload)
-        end
+
         post :create, params: { :organization => {:name => name, :label => label, :description => description} }
+
+        org = ::Organization.find_by_name(name)
+        assert_equal description, org.description
+        assert_equal label, org.label
         assert_response :success
       end
     end

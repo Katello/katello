@@ -13,14 +13,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     Organization.current = Organization.first
     name = "Test org"
 
-    Organization.any_instance.stubs(:redhat_repository_url)
-    Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
-    Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
-
-    create_task = @controller.expects(:sync_task).with do |action_class, org|
-      org.save && action_class == ::Actions::Katello::Organization::Create
-    end
-    create_task.returns(build_task_stub)
+    stub_organization_creator
 
     put :create, params: { :commit => "Submit", :organization => { :name => name } }
 

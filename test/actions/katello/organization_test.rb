@@ -40,27 +40,6 @@ module ::Actions::Katello::Organization
     end
   end
 
-  class CreateTest < TestBase
-    let(:action_class) { ::Actions::Katello::Organization::Create }
-
-    it 'plans' do
-      organization.expects(:create_library)
-      organization.expects(:create_anonymous_provider)
-      organization.expects(:create_redhat_provider)
-      organization.expects(:save!)
-      action.stubs(:action_subject).with(organization, any_parameters)
-      plan_action(action, organization)
-      assert_action_planed_with(action,
-                                ::Actions::Candlepin::Owner::Create,
-                                label:  organization.label,
-                                name: organization.name)
-
-      assert_action_planed_with(action,
-                                ::Actions::Katello::Environment::LibraryCreate,
-                                organization.library)
-    end
-  end
-
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Organization::Destroy }
     let(:action) { create_action action_class }
@@ -90,11 +69,11 @@ module ::Actions::Katello::Organization
 
       plan_action(action, organization)
 
-      assert_action_planed_with(action,
+      assert_action_planned_with(action,
                                 ::Actions::Candlepin::Owner::Destroy,
                                 label: "ACME_Corporation")
-      assert_action_planed_with(action, ::Actions::Katello::ContentView::Destroy, default_view, :check_ready_to_destroy => false, :organization_destroy => true)
-      assert_action_planed_with(action, ::Actions::Katello::Environment::Destroy, env, :skip_repo_destroy => true, :organization_destroy => true)
+      assert_action_planned_with(action, ::Actions::Katello::ContentView::Destroy, default_view, :check_ready_to_destroy => false, :organization_destroy => true)
+      assert_action_planned_with(action, ::Actions::Katello::Environment::Destroy, env, :skip_repo_destroy => true, :organization_destroy => true)
     end
   end
 

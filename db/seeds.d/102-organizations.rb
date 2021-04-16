@@ -5,11 +5,7 @@
 #
 
 unless Rails.env.test?
-  Organization.all.each do |org|
-    User.as(::User.anonymous_api_admin.login) do
-      ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org) unless org.library
-    end
-  end
+  ::Katello::OrganizationCreator.seed_all_organizations!
 end
 
 if ENV['SEED_ORGANIZATION']

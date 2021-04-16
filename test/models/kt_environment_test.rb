@@ -57,12 +57,11 @@ module Katello
 
     def test_destroy_library
       User.current = User.find(users(:admin).id)
-      org = FactoryBot.create(:katello_organization)
-      org.create_library
-      org.save!
-      env = org.library
-      env.destroy
-      refute env.destroyed?
+      org = taxonomies(:empty_organization)
+
+      org.library.destroy
+
+      refute org.library.destroyed?
     end
 
     def test_products_are_unique

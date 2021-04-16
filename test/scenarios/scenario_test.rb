@@ -6,28 +6,26 @@ module Scenarios
   class RepositoryCreateTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include ForemanTasks::TestHelpers::WithInThreadExecutor
+    include VCR::TestCase
 
     def setup
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      @org = FactoryBot.build(:organization, :name => 'scenario_test', :label => 'scenario_test')
+      @support = ScenarioSupport.new(User.current)
+      @support.create_org(@org)
+      @org.reload
     end
 
     def test_scenarios
       skip "Until we can figure out testing this with pulp3"
-
-      @support = ScenarioSupport.new(User.current)
-
-      org = Organization.new(:name => 'scenario_test', :label => 'scenario_test')
-      @support.create_org(org)
-      org.reload
-
       product = Katello::Product.new(:name => "Scenario Product")
-      @support.create_product(product, org)
+      @support.create_product(product, @org)
 
       root = Katello::RootRepository.new(:name => "Scenario yum product", :url => "file:///var/lib/pulp/sync_imports/test_repos/zoo",
                                              :content_type => 'yum', :product_id => product.id,
                                              :download_policy => 'immediate')
-      repo = Katello::Repository.new(:content_view_version => org.default_content_view.versions.first,
-                                    :environment => org.library, :relative_path => 'scenario_test', :root => root)
+      repo = Katello::Repository.new(:content_view_version => @org.default_content_view.versions.first,
+                                    :environment => @org.library, :relative_path => 'scenario_test', :root => root)
 
       repo.pulp_id = 'scenario_test'
       @support.create_repo(repo)
@@ -38,7 +36,45 @@ module Scenarios
 
       @support.update_repo(repo.root, :mirror_on_sync => false)
       @support.sleep_if_needed
-      @support.destroy_org(org, repo)
+      @support.destroy_org(@org, repo)
+    end
+
+    def test_manifest_import
+      manifest_path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'manifest_small.zip')
+      @support.import_manifest(@org.label, manifest_path)
+      @support.import_products(@org, manifest_path)
+
+      assert_equal 2, @org.products.length
+      assert_equal 5, @org.product_contents.length
+
+      manifest_path = File.join(::Katello::Engine.root, 'test', 'fixtures', 'files', 'manifest_small_modified.zip')
+      @support.import_manifest(@org.label, manifest_path)
+      @support.import_products(@org, manifest_path)
+      @org.reload
+
+      assert_equal 3, @org.products.length
+      assert_equal 9, @org.product_contents.length
+
+      assert @org.products.where(name: 'Red Hat Container Imagez').exists?
+      assert @org.product_contents.joins(:content).where("#{Katello::Content.table_name}.name = 'Red Hat Enterprise Linux 6 Server (Containerz)'").exists?
+    end
+
+    def test_update_org_service_level
+      # Without any choices, should not be able to set a service level
+      assert_nil @org.service_level
+      e = assert_raises(RestClient::BadRequest) do
+        @org.service_level = 'Premium'
+      end
+      refute_nil JSON.parse(e.response)['displayMessage']
+      assert_nil @org.service_level
+
+      # Should be able to set clear the default
+      @org.service_level = ''
+      assert_nil @org.service_level
+
+      # ...with a nil too
+      @org.service_level = nil
+      assert_nil @org.service_level
     end
   end
 end

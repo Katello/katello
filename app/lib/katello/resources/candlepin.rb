@@ -19,6 +19,16 @@ module Katello
             logger.send(debug_level, "Candlepin request #{response.headers[:x_candlepin_request_uuid]} returned with code #{response.code}")
             super
           end
+
+          def raise_rest_client_exception(error, path, http_method)
+            # this differentiates between Tomcat returning a 404 (candlepin is down or not deployed)
+            # vs a 404 from Candlepin itself
+            unless error&.response&.headers&.dig(:x_version)
+              fail ::Katello::Errors::CandlepinNotRunning
+            end
+
+            super
+          end
         end
 
         def self.logger

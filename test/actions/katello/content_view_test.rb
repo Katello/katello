@@ -146,18 +146,16 @@ module ::Actions::Katello::ContentView
 
     it 'plans' do
       refute content_view_environment
+      ::Katello::ContentViewEnvironment.any_instance.expects(:exists_in_candlepin?).returns(false)
+      ::Katello::Resources::Candlepin::Environment.expects(:create).once.returns
 
       version = content_view.create_new_version
-      action = create_and_plan_action(action_class, version, environment)
-      assert_action_planed_with(action, EnvironmentCreate) do |(cve)|
-        assert_equal environment, cve.environment
-        assert_equal content_view, cve.content_view
-      end
+      create_and_plan_action(action_class, version, environment)
       assert_equal '1.0', content_view_environment.content_view_version.version
 
+      ::Katello::ContentViewEnvironment.any_instance.expects(:exists_in_candlepin?).returns(true)
       version = content_view.create_new_version
-      action = create_and_plan_action(action_class, version, environment)
-      refute_action_planed(action, EnvironmentCreate)
+      create_and_plan_action(action_class, version, environment)
       assert_equal '2.0', content_view_environment.content_view_version.version
     end
   end
