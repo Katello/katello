@@ -80,7 +80,7 @@ describe('subscriptions table', () => {
         selectionEnabled
       />
                         </MemoryRouter>);
-    expect(page.find('#select1').is('[disabled]')).toBe(true);
+    expect(toJson(page)).toMatchSnapshot();
   });
 
   it('should render an empty state', async () => {
