@@ -243,6 +243,7 @@ module Katello
     end
 
     def test_promote_multiple_outside_org
+      ::Katello::ContentViewManager.stubs(:create_candlepin_environment).returns
       version = @library_dev_staging_view.versions.first
       post :promote, params: { :id => version.id, :environment_ids => [@beta.id, @candlepin_dev.id], :force => 1, :description => 'test with multiple environment_ids outside org' }
       assert_response 422

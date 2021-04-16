@@ -14,43 +14,6 @@ module ::Actions::Katello::Environment
     end
   end
 
-  class LibraryCreateTest < TestBase
-    let(:action_class) { ::Actions::Katello::Environment::LibraryCreate }
-    let(:action) { create_action action_class }
-
-    let(:library) do
-      katello_environments(:library)
-    end
-
-    let(:content_view) do
-      katello_content_views(:library_view_no_version)
-    end
-
-    let(:content_view_environment) do
-      katello_content_view_environments(:library_default_view_environment)
-    end
-
-    it 'plans' do
-      library.expects(:save!)
-
-      ::Katello::ContentView.expects(:create!).returns(content_view).with do |arg_hash|
-        arg_hash[:default] == true
-      end
-
-      plan_action(action, library)
-
-      assert_action_planed_with(action,
-                                ::Actions::Katello::ContentView::Create,
-                                content_view)
-      assert_action_planed_with(action,
-                                ::Actions::Katello::ContentView::AddToEnvironment,
-                                content_view.versions.first, library)
-      assert_action_planed_with(action,
-                                ::Actions::Katello::Foreman::ContentUpdate,
-                                library, content_view)
-    end
-  end
-
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Environment::Destroy }
     let(:action) { create_action action_class }

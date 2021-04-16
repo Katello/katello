@@ -10,12 +10,30 @@ class ScenarioSupport
 
   def create_org(org)
     record("support/destroy_org_if_exists") { destroy_org_if_exists(org) }
-    record("org_create") { ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org) }
+    record("org_create") { Katello::OrganizationCreator.new(org).create! }
   end
 
   def destroy_org(org, repo)
     ::Katello::Repository.expects(:find).twice.returns(repo)
     record("organization_destroy") { ForemanTasks.sync_task(::Actions::Katello::Organization::Destroy, org) }
+  end
+
+  def import_manifest(owner_label, path_to_file)
+    filename = path_to_file.split('/').last
+    record("import_manifest_#{filename}", match_requests_on: [:method, :path, :params]) do
+      path = "/candlepin/owners/#{owner_label}/imports?force=SIGNATURE_CONFLICT&force=MANIFEST_SAME"
+      client = ::Katello::Resources::Candlepin::CandlepinResource.rest_client(Net::HTTP::Post, :post, path)
+      body = {:import => File.new(path_to_file, 'rb')}
+      client.post body, {:accept => :json}.merge(User.cp_oauth_header)
+    end
+  end
+
+  def import_products(org, manifest_path = nil)
+    filename = manifest_path&.split('/')&.last
+    cassette_name = filename ? "import_products_#{filename}" : "import_products"
+    record(cassette_name) do
+      org.redhat_provider.import_products_from_cp
+    end
   end
 
   def create_product(product, org)
@@ -43,8 +61,8 @@ class ScenarioSupport
 
   private
 
-  def record(name)
-    VCR.insert_cassette("scenarios/#{name}")
+  def record(name, options = {})
+    VCR.insert_cassette("scenarios/#{name}", options)
     User.current = user
     yield
   rescue
@@ -60,11 +78,7 @@ class ScenarioSupport
   end
 
   def destroy_org_if_exists(org)
-    if org.label
-      if exists? { Katello::Resources::Candlepin::Owner.find(org.label) }
-        Katello::Resources::Candlepin::Owner.destroy(org.label)
-      end
-    end
+    Katello::Resources::Candlepin::Owner.destroy(org.label) if org.candlepin_owner_exists?
   end
 
   def exists?

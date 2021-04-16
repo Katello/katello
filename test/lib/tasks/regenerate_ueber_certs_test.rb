@@ -1,5 +1,4 @@
 require 'katello_test_helper'
-require 'support/candlepin/owner_support'
 require 'rake'
 
 module Katello

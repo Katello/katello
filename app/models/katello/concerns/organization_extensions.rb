@@ -39,6 +39,8 @@ module Katello
 
         scope :with_upstream_pools, -> { joins(:pools).merge(Katello::Pool.upstream).distinct }
         scope :having_name_or_label, ->(name_or_label) { where("name = :id or label = :id", :id => name_or_label) }
+        scope :created_in_katello, -> { where(created_in_katello: true) }
+        scope :not_created_in_katello, -> { where.not(created_in_katello: true) }
         scoped_search :on => :label, :complete_value => :true
 
         after_create :associate_default_capsule
@@ -104,14 +106,6 @@ module Katello
           self.task_statuses.where(:task_type => :repo_discovery).order('created_at DESC').first
         end
 
-        def create_library
-          self.library = Katello::KTEnvironment.new(:name => "Library", :label => "Library", :library => true, :organization => self)
-        end
-
-        def create_redhat_provider
-          self.providers << Katello::Provider.new(:name => "Red Hat", :provider_type => Katello::Provider::REDHAT)
-        end
-
         def associate_default_capsule
           smart_proxy = SmartProxy.pulp_primary
           smart_proxy.organizations << self if smart_proxy
@@ -122,10 +116,6 @@ module Katello
             default_proxy.organizations << self
             default_proxy.save
           end
-        end
-
-        def create_anonymous_provider
-          self.providers << Katello::Provider.new(:name => Katello::Provider::ANONYMOUS, :provider_type => Katello::Provider::ANONYMOUS)
         end
 
         def validate_destroy(current_org)

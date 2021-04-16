@@ -16,6 +16,9 @@ module Katello
 
       require 'katello/middleware/event_daemon'
       app.middleware.use(Katello::Middleware::EventDaemon)
+
+      require 'katello/middleware/organization_created_enforcer'
+      app.middleware.use(Katello::Middleware::OrganizationCreatedEnforcer)
     end
 
     initializer 'katello.mount_engine', :before => :sooner_routes_load, :after => :build_middleware_stack do |app|

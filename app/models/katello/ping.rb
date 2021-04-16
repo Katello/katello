@@ -32,7 +32,7 @@ module Katello
 
         if result[:status] != OK_RETURN_CODE
           failed_names = failed_services(result).keys
-          fail("The following services have not been started or are reporting errors: #{failed_names.join(', ')}")
+          fail Katello::Errors::PingError, "The following services have not been started or are reporting errors: #{failed_names.join(', ')}"
         end
 
         result

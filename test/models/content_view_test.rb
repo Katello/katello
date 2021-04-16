@@ -527,25 +527,15 @@ module Katello
 
     def test_add_repository_from_other_org
       other_org = create(:katello_organization)
-      other_org.create_library
-      other_org.create_anonymous_provider
-      other_org.save!
-      library_view = create(:katello_content_view, :default => true,
-                                                   :name => "Default Organization View",
-                                                   :organization => other_org)
       view = create(:katello_content_view, :default => false, :organization => other_org)
-
-      ::Katello::ContentViewVersion.create! do |v|
-        v.content_view = library_view
-        v.major = 1
-      end
-
       repo = katello_repositories(:rhel_6_x86_64)
 
-      assert_raises(ActiveRecord::RecordInvalid) do
+      error = assert_raises(ActiveRecord::RecordInvalid) do
         view.repositories << repo
         view.save!
       end
+
+      assert_match(/Organization other than/, error.message)
     end
 
     def test_products

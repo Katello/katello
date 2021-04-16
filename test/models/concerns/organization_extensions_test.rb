@@ -27,6 +27,11 @@ module Katello
       assert_equal @org.manifest_refreshed_at.to_i, current_time.to_i
     end
 
+    def test_manifest_history
+      @org.expects(:imports).returns([{'foo' => 'bar' }, {'foo' => 'bar'}])
+      assert_equal 'bar', @org.manifest_history[0].foo
+    end
+
     def test_upstream_consumer
       assert @org.upstream_consumer
     end

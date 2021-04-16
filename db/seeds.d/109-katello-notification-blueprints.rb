@@ -84,6 +84,18 @@ blueprints = [
     name: 'sca_disable_error',
     message: N_('Disabling Simple Content Access failed for \'%{subject}\'.'),
     level: 'error'
+  },
+  {
+    group: N_('System Status'),
+    name: 'system_status_error',
+    message: N_('Some services are not properly started. See the About page for more information.'),
+    level: 'error',
+    actions: {
+      links: [
+        path_method: :about_index_path,
+        title: N_('About page')
+      ]
+    }
   }
 ]
 

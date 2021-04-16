@@ -53,16 +53,10 @@ module Katello::Host
       Setting[:default_location_subscribed_hosts] = taxonomies(:location1).name
     end
 
-    def org_exists(label)
-      ::Katello::Resources::Candlepin::Owner.find(label)
-    rescue
-      false
-    end
-
     def create_org(org_label)
       org = Organization.find_by(:label => org_label) || Organization.new(:name => org_label, :label => org_label)
-      ForemanTasks.sync_task(::Actions::Candlepin::Owner::Destroy, :label => org_label) if org_exists(org_label)
-      ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org)
+      ForemanTasks.sync_task(::Actions::Candlepin::Owner::Destroy, :label => org_label) if org.candlepin_owner_exists?
+      ::Katello::OrganizationCreator.new(org).create!
     end
 
     def test_duplicate_hostname

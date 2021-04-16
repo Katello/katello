@@ -16,6 +16,7 @@ module Katello
     test 'params are not parsed in the controller' do
       Api::Rhsm::CandlepinDynflowProxyController.any_instance.expects(:async_task).returns(nil)
       Resources::Candlepin::Consumer.expects(:get).returns({})
+      stub_organization_creator
       packages = [{"vendor" => "CentOS", "name" => "python-six", "epoch" => 0, "version" => "1.9.0", "release" => "2.el7", "arch" => "noarch"}]
 
       put "/rhsm/consumers/#{@host.subscription_facet.uuid}/packages", params: packages.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
