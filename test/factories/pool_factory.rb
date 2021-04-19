@@ -4,9 +4,13 @@ FactoryBot.define do
     end_date { Date.today + 1.year }
     cp_id { 1 }
 
-    trait :with_organization do
-      association :organization, :factory => :katello_organization
+    association :organization, :factory => :katello_organization
+
+    after(:build) do |pool, _evaluator|
+      pool.subscription.organization = pool.organization
     end
+
+    association :subscription, :factory => :katello_subscription
 
     trait :active do
       active { true }

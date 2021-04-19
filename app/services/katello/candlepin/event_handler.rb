@@ -8,30 +8,30 @@ module Katello
       end
 
       def handle(message)
-        @logger.debug("message received from subscriptions queue ")
-        @logger.debug("message subject: #{message.subject}")
-
         ::User.current = ::User.anonymous_admin
 
-        @message_handler = ::Katello::Candlepin::MessageHandler.new(message)
-
-        case message_handler.subject
-        when /entitlement\.created/
-          message_handler.import_pool
-          message_handler.create_pool_on_host
-        when /entitlement\.deleted/
-          message_handler.import_pool
-          message_handler.remove_pool_from_host
-        when /pool\.created/
-          message_handler.import_pool
-        when /pool\.deleted/
-          message_handler.delete_pool
-        when /^compliance\.created/
-          reindex_subscription_status
-        when /system_purpose_compliance\.created/
-          reindex_purpose_status
-        when /owner_content_access_mode\.modified/
-          message_handler.handle_content_access_mode_modified
+        Katello::Logging.time("candlepin event handled", logger: @logger) do |data|
+          data[:subject] = message.subject
+          @message_handler = ::Katello::Candlepin::MessageHandler.new(message)
+          data[:entity_id] = @message_handler.entity_id
+          case message_handler.subject
+          when /entitlement\.created/
+            message_handler.import_pool
+            message_handler.create_pool_on_host
+          when /entitlement\.deleted/
+            message_handler.import_pool
+            message_handler.remove_pool_from_host
+          when /pool\.created/
+            message_handler.import_pool
+          when /pool\.deleted/
+            message_handler.delete_pool
+          when /^compliance\.created/
+            reindex_subscription_status
+          when /system_purpose_compliance\.created/
+            reindex_purpose_status
+          when /owner_content_access_mode\.modified/
+            message_handler.handle_content_access_mode_modified
+          end
         end
       end
 

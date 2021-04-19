@@ -22,6 +22,10 @@ module Katello
         @event_data ||= (data = content['eventData']) ? JSON.parse(data) : {}
       end
 
+      def entity_id
+        content['entityId']
+      end
+
       def target_name
         content['targetName']
       end
