@@ -122,20 +122,22 @@ module Katello
       end
 
       def applicable_differences
-        consumer_ids = content_facet.send(applicable_units).pluck("#{content_unit_class.table_name}.id")
-        content_ids = fetch_content_ids
+        ActiveRecord::Base.connection.uncached do
+          consumer_ids = content_facet.send(applicable_units).pluck("#{content_unit_class.table_name}.id")
+          content_ids = fetch_content_ids
 
-        to_remove = consumer_ids - content_ids
-        to_add = content_ids - consumer_ids
+          to_remove = consumer_ids - content_ids
+          to_add = content_ids - consumer_ids
 
-        [to_add, to_remove]
+          [to_add, to_remove]
+        end
       end
 
       def insert(applicable_ids)
         unless applicable_ids.empty?
           inserts = applicable_ids.map { |applicable_id| "(#{applicable_id.to_i}, #{content_facet.id.to_i})" }
           sql = "INSERT INTO #{content_facet_association_class.table_name} (#{content_unit_association_id}, content_facet_id) VALUES #{inserts.join(', ')}"
-          ActiveRecord::Base.connection.execute(sql)
+          ActiveRecord::Base.connection.exec_insert(sql)
         end
       end
 
