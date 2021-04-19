@@ -9,14 +9,19 @@
  * @requires HostPackage
  * @requires translate
  * @requires Nutupane
+ * @requires BastionConfig
  *
  * @description
  *   Provides the functionality for the content host packages list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesApplicableController',
-    ['$scope', '$timeout', '$window', 'Package', 'HostPackage', 'translate', 'Nutupane',
-    function ($scope, $timeout, $window, Package, HostPackage, translate, Nutupane) {
+    ['$scope', '$timeout', '$window', 'Package', 'HostPackage', 'translate', 'Nutupane', 'BastionConfig',
+    function ($scope, $timeout, $window, Package, HostPackage, translate, Nutupane, BastionConfig) {
         var packagesNutupane, openEventInfo;
+
+        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
+        $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
+        $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
 
         $scope.getSelectedPackages = function () {
             var selected = $scope.table.getSelected();

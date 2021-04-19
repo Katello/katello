@@ -43,6 +43,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
 
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
+        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
+        $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
         $scope.errataActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
         };
