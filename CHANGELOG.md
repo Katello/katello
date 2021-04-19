@@ -1,9 +1,12 @@
-# 4.0.0 (2021-03-26)
+# 4.0.0 (2021-04-19)
 
 ## Features
 
 ### Documentation
  * use yum.theforeman.org in documentation ([#32169](https://projects.theforeman.org/issues/32169))
+
+### Repositories
+ * update references to content (/pulp/repos/  /pulp/isos/ /pulp/deb) to point to /pulp/content/ ([#31867](https://projects.theforeman.org/issues/31867), [49fc9066](https://github.com/Katello/katello.git/commit/49fc9066fb92fbd2dd0e033b79a7fe6ce8bedfc6))
 
 ### SElinux
  * Allow connections to qpid from rails ([#31784](https://projects.theforeman.org/issues/31784))
@@ -42,14 +45,27 @@
  * use yum.theforeman.org for Katello in forklift ([#32171](https://projects.theforeman.org/issues/32171))
  * use yum.theforeman.org in katello-repos RPM ([#32168](https://projects.theforeman.org/issues/32168))
  * - Recover space of old container image versions ([#31782](https://projects.theforeman.org/issues/31782), [8480a867](https://github.com/Katello/katello.git/commit/8480a8679396001876e7586331bc0772f06b7ad5))
- * Extend API params for generating registration command  ([#31712](https://projects.theforeman.org/issues/31712), [67d8fb89](https://github.com/Katello/katello.git/commit/67d8fb895d364ee1a1a83b45d4a51cc3de338d6c))
  * The container gateway's unauthenticated repo cache should update at smart proxy sync time and unauthenticated pulls should be rejected against other repos ([#31485](https://projects.theforeman.org/issues/31485))
  * Add Content View Version to Reporting Engine Template ([#30703](https://projects.theforeman.org/issues/30703), [123fb89f](https://github.com/Katello/katello.git/commit/123fb89f0a5c01edc67eeeb29b828ceb687e9836))
 
 ## Bug Fixes
 
+### Hosts
+ * Content Source missing in Katello 4 RC3 ([#32298](https://projects.theforeman.org/issues/32298), [13538ef7](https://github.com/Katello/katello.git/commit/13538ef7e669c8c0eebac06569a25b17d47ddf8c))
+ * Delete client queue on unregister ([#31828](https://projects.theforeman.org/issues/31828), [fa46c99f](https://github.com/Katello/katello.git/commit/fa46c99f6275cb533fbb9a6dc9f3cb8c67941ecc))
+ * The Start Date field is blank for Subscriptions within Content Hosts page in Satellite WebUI ([#31770](https://projects.theforeman.org/issues/31770), [2f8652b3](https://github.com/Katello/katello.git/commit/2f8652b35e597730e91ef66d2892f29a26f43523))
+ * Content Hosts page does not show year for registered_at and last_check_in fields. ([#31403](https://projects.theforeman.org/issues/31403), [3c197757](https://github.com/Katello/katello.git/commit/3c1977576820085c89d2ad95d014a40b5565d368))
+
+### Foreman Proxy Content
+ * Katello 4.0 can't sync to a 3.18 proxy ([#32275](https://projects.theforeman.org/issues/32275), [22064258](https://github.com/Katello/katello.git/commit/22064258e3ea6de5f4378e31ed4402bc0c64be38))
+ * smart proxy sync w/ pulp3 does not properly track distribution creation/update as a task ([#31731](https://projects.theforeman.org/issues/31731), [ee7cfbc1](https://github.com/Katello/katello.git/commit/ee7cfbc132e67b2b820f597e3aa3d254bf05e3cb))
+ * syncing a pulp3 only smart proxy fails with '404' ([#31676](https://projects.theforeman.org/issues/31676), [35afcd56](https://github.com/Katello/katello.git/commit/35afcd56b147527049ae409ab518fa9ae8b46cbc))
+ * support disk space widget when pulp3 is on the smart proxy (and when both pulp2 and pulp3 are there) ([#31506](https://projects.theforeman.org/issues/31506), [293291bc](https://github.com/Katello/katello.git/commit/293291bc27707c058b0e964eccf728416cec5343))
+ * smart proxy details with a pure pulp3 proxy does not show sync widget ([#31465](https://projects.theforeman.org/issues/31465), [494416c7](https://github.com/Katello/katello.git/commit/494416c72c839b0e0698357aa4aff6e85db66d0a))
+
 ### Repositories
  * remove old pulp2-based upgrade tasks (warnings on 4.0 install) ([#32007](https://projects.theforeman.org/issues/32007), [d415fe0a](https://github.com/Katello/katello.git/commit/d415fe0a7c25ff2b682a351450cd4e8d757e150d))
+ * move pulp bulk_load_size SETTING to a Setting ([#31808](https://projects.theforeman.org/issues/31808))
  * sync management page tries to talk to pulp2 ([#31729](https://projects.theforeman.org/issues/31729), [3f689237](https://github.com/Katello/katello.git/commit/3f689237d2379bcab17340582232823dbbd83462))
  * remove puppet repos and ostree repos on upgrade ([#31682](https://projects.theforeman.org/issues/31682), [56668d54](https://github.com/Katello/katello.git/commit/56668d54bc16b1bf0115918e6baf9990f32fcd98))
  * Update recommended repos for sat/tools from 6.8 to 6.9 ([#31657](https://projects.theforeman.org/issues/31657), [6f5be4a5](https://github.com/Katello/katello.git/commit/6f5be4a5c358948fd56e886bc29dd1a4ec615e7c))
@@ -78,19 +94,12 @@
 
 ### Tooling
  * Remove pulp2 from reset script ([#31865](https://projects.theforeman.org/issues/31865), [43bb25c4](https://github.com/Katello/katello.git/commit/43bb25c49b3a953313dca86f6e4311884b237abb))
- * foreman-rake katello:clean_backend_objects fails with "      "The Dynflow world was not initialized yet. If your plugin uses it, make sure to call Rails.application.dynflow.require! in some initializer"}," ([#31725](https://projects.theforeman.org/issues/31725), [b8c73d76](https://github.com/Katello/katello.git/commit/b8c73d768baed4d00b97cfd43997bb826a1a36a3), [58d14a2a](https://github.com/Katello/katello.git/commit/58d14a2ad729b658aa79c25fb06e224ad8f914c1), [e1bb601c](https://github.com/Katello/katello.git/commit/e1bb601c2a381369f7d25b1c961b574f54515794))
  * Update Pulpcore client bindings to 3.9 ([#31608](https://projects.theforeman.org/issues/31608), [01f28c04](https://github.com/Katello/katello.git/commit/01f28c04c55c3f3c107c381b16c073a27c64736c))
  * foreman-rake reports:daily runs all reports twice ([#31418](https://projects.theforeman.org/issues/31418), [bda54ecf](https://github.com/Katello/katello.git/commit/bda54ecf8a4c1a24df83724dae33421c3cbfa6ce))
- * db seed fails with 'Unknown remote execution feature katello_module_stream_action' ([#31416](https://projects.theforeman.org/issues/31416), [c9693c16](https://github.com/Katello/katello.git/commit/c9693c16e46a1276621a86694023b5892f53eb52))
 
 ### Errata Management
  * add 'context' to AvailableModuleStream host modularity profile ([#31842](https://projects.theforeman.org/issues/31842), [2da77433](https://github.com/Katello/katello.git/commit/2da774333f332dbb7ecf854e6e906ca9cf06cf5c))
  * 'Applied Errata' report fails with error 'no implicit conversion of nil into Array' ([#31748](https://projects.theforeman.org/issues/31748), [b16e577c](https://github.com/Katello/katello.git/commit/b16e577c23c431bea930e86df27144ecac0e113c))
-
-### Hosts
- * Delete client queue on unregister ([#31828](https://projects.theforeman.org/issues/31828), [fa46c99f](https://github.com/Katello/katello.git/commit/fa46c99f6275cb533fbb9a6dc9f3cb8c67941ecc))
- * The Start Date field is blank for Subscriptions within Content Hosts page in Satellite WebUI ([#31770](https://projects.theforeman.org/issues/31770), [2f8652b3](https://github.com/Katello/katello.git/commit/2f8652b35e597730e91ef66d2892f29a26f43523))
- * Content Hosts page does not show year for registered_at and last_check_in fields. ([#31403](https://projects.theforeman.org/issues/31403), [3c197757](https://github.com/Katello/katello.git/commit/3c1977576820085c89d2ad95d014a40b5565d368))
 
 ### Hammer
  * Add a  type column to export histories ([#31788](https://projects.theforeman.org/issues/31788), [b55f1128](https://github.com/Katello/katello.git/commit/b55f11285577e17877e359ef3523d35a0939465b), [7067e4fe](https://github.com/Katello/hammer-cli-katello.git/commit/7067e4fea8e18fbb84c5e5b9831853b41bd0395f), [ef6c2559](https://github.com/Katello/katello.git/commit/ef6c25593e0281865b921a2d1914cbdd4151ca84))
@@ -102,12 +111,6 @@
  * pool id in exported csv from subscription page are wrong ([#31774](https://projects.theforeman.org/issues/31774), [be58abf5](https://github.com/Katello/katello.git/commit/be58abf5dfc2d9ba01edfc618728ea464232b1bb))
  * As a user I 'd like new api endpoints for sca ([#31734](https://projects.theforeman.org/issues/31734), [2c7eb3c2](https://github.com/Katello/hammer-cli-katello.git/commit/2c7eb3c2dae606f801c0bd7908d1010a60f7bc93), [300f68b6](https://github.com/Katello/katello.git/commit/300f68b645a00bf35a34df9abe064767a9a12fc3), [c3388b35](https://github.com/Katello/hammer-cli-katello.git/commit/c3388b35701a34ab055c23d03372a5e8a0cd6f7c))
  * Get rid of use_cp  ([#31292](https://projects.theforeman.org/issues/31292), [c76c021d](https://github.com/Katello/katello.git/commit/c76c021da542efaa26cb99051d6ec05ec80356a9))
-
-### Foreman Proxy Content
- * smart proxy sync w/ pulp3 does not properly track distribution creation/update as a task ([#31731](https://projects.theforeman.org/issues/31731), [ee7cfbc1](https://github.com/Katello/katello.git/commit/ee7cfbc132e67b2b820f597e3aa3d254bf05e3cb))
- * syncing a pulp3 only smart proxy fails with '404' ([#31676](https://projects.theforeman.org/issues/31676), [35afcd56](https://github.com/Katello/katello.git/commit/35afcd56b147527049ae409ab518fa9ae8b46cbc))
- * support disk space widget when pulp3 is on the smart proxy (and when both pulp2 and pulp3 are there) ([#31506](https://projects.theforeman.org/issues/31506), [293291bc](https://github.com/Katello/katello.git/commit/293291bc27707c058b0e964eccf728416cec5343))
- * smart proxy details with a pure pulp3 proxy does not show sync widget ([#31465](https://projects.theforeman.org/issues/31465), [494416c7](https://github.com/Katello/katello.git/commit/494416c72c839b0e0698357aa4aff6e85db66d0a))
 
 ### Content Views
  * Command exceeded timeout while Installer executes foreman-rake db:migrate ([#31540](https://projects.theforeman.org/issues/31540), [5a48018f](https://github.com/Katello/katello.git/commit/5a48018fe47074ff5cc24080ce9bc0a83d10196b))
