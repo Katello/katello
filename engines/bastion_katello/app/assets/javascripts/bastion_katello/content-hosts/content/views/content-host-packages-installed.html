@@ -2,13 +2,13 @@
 
 <h3 translate>Installed Packages</h3>
 
-<div data-extend-template="common/views/katello-agent-notice.html"></div>
+<div ng-show="katelloAgentPresent" data-extend-template="common/views/katello-agent-notice.html"></div>
 
 <section ng-hide="denied('edit_hosts', host)" bst-feature-flag="remote_actions">
-  <p bst-alert="info" ng-hide="host.content_facet_attributes.katello_agent_installed">
+  <p bst-alert="warning" ng-hide="hostToolingEnabled">
     <span translate>
-      If you are not using Remote Execution to manage content on this host, ensure that it has the katello-agent package installed.
-    </span>
+      Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent.
+      </span>
   </p>
 </section>
 
@@ -24,7 +24,7 @@
   <div data-block="list-actions" bst-feature-flag="remote_actions">
     <button class="btn btn-default" type="button"
             ng-hide="denied('edit_hosts', host)"
-            ng-disabled="working || table.numSelected === 0"
+            ng-disabled="working || table.numSelected === 0 || !hostToolingEnabled"
             ng-click="removeSelectedPackages()">
       <span translate>Remove Selected</span>
     </button>

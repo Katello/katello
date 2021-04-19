@@ -46,6 +46,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
 
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
+        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
+        $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
 
         $scope.packageActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')

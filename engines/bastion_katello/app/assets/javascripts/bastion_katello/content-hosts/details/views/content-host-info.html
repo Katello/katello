@@ -51,10 +51,10 @@
           </button>
         </dd>
 
-        <dt bst-feature-flag="remote_actions">
+        <dt bst-feature-flag="remote_actions" ng-show="katelloAgentPresent">
           <span translate>Katello Agent</span>
         </dt>
-        <dd bst-feature-flag="remote_actions">
+        <dd bst-feature-flag="remote_actions" ng-show="katelloAgentPresent">
           <span ng-show="host.content_facet_attributes.katello_agent_installed">
             <span class="{{ getHostStatusIcon(0) }}"></span>
             <span translate>Installed</span>

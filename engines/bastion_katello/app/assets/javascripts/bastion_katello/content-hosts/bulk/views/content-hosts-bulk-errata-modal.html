@@ -27,7 +27,14 @@
       </div>
     </div>
 
-    <div data-extend-template="common/views/katello-agent-notice.html"></div>
+    <div ng-show="katelloAgentPresent" data-extend-template="common/views/katello-agent-notice.html"></div>
+    <div bst-feature-flag="remote_actions">
+      <p bst-alert="warning" ng-hide="hostToolingEnabled">
+        <span translate>
+          Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent.
+          </span>
+      </p>
+    </div>
 
     <div ng-show="showTable()" data-extend-template="layouts/partials/table.html">
       <div data-block="list-actions">
@@ -39,19 +46,19 @@
 
         <span uib-dropdown class="btn-group">
           <button class="btn btn-primary" type="button"
-                  ng-disabled="table.numSelected === 0 || table.working || table.numSelected === 0"
+                  ng-disabled="table.numSelected === 0 || table.working || table.numSelected === 0 || !hostToolingEnabled"
                   ng-click="showConfirm = true;">
             <span translate>Install Selected</span>
           </button>
           <button uib-dropdown-toggle class="btn btn-primary" type="button"
-                  ng-hide="!remoteExecutionPresent"
+                  ng-show="remoteExecutionPresent"
                   ng-disabled="table.numSelected === 0 || table.working || table.numSelected === 0"
                   type="button" id="use-remote-execution">
             <span class="caret"></span>
           </button>
 
           <ul uib-dropdown-menu class="dropdown-menu-right" role="menu" aria-labelledby="use-remote-execution">
-            <li role="presentation"><a ng-click="installErrataViaKatelloAgent()" role="menuitem" translate>via Katello agent</a></li>
+            <li ng-show="katelloAgentPresent" role="presentation"><a ng-click="installErrataViaKatelloAgent()" role="menuitem" translate>via Katello agent</a></li>
             <li role="presentation"><a ng-click="installErrataViaRemoteExecution(false)" role="menuitem" translate>via remote execution</a></li>
             <li role="presentation"><a ng-click="installErrataViaRemoteExecution(true)" role="menuitem" translate>via remote execution - customize first</a></li>
           </ul>
