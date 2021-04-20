@@ -33,10 +33,10 @@ module Katello
               registry_url = uri.to_s
 
               # Assume the registry uses the same CA as the Smart Proxy
-              ca_cert_file = Setting[:ssl_ca_file]
+              ca_cert_file = ::Cert::Certs.backend_ca_cert_file(:pulp3)
             elsif (container_config = SETTINGS.dig(:katello, :container_image_registry))
               registry_url = container_config[:crane_url]
-              ca_cert_file = container_config[:registry_ca_cert_file]
+              ca_cert_file = container_config[:crane_ca_cert_file]
             end
 
             fail Errors::ContainerRegistryNotConfigured unless registry_url
