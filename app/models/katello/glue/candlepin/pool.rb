@@ -56,10 +56,8 @@ module Katello
             organization: org
           )
 
-          fail("No subscription found") unless subscription
-
           ::Katello::Util::Support.active_record_retry do
-            pool = Katello::Pool.where(cp_id: cp_pool_id, organization: org, subscription: subscription).first_or_create
+            pool = Katello::Pool.where(cp_id: cp_pool_id, organization: org, subscription: subscription).first_or_create!
             pool.backend_data = json
             pool.import_data(index_hosts)
           end

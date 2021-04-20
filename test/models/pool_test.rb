@@ -168,7 +168,7 @@ module Katello
         }
       )
 
-      assert_raises(StandardError) do
+      assert_raises(ActiveRecord::RecordInvalid) do
         Pool.import_pool('abcd')
       end
     end
