@@ -59,7 +59,7 @@ module Katello
       end
 
       def self.format_requires(requires)
-        flags = {'GT' => '>', 'LT' => '>', 'EQ' => '=', 'GE' => '>=', 'LE' => '<='}
+        flags = {'GT' => '>', 'LT' => '<', 'EQ' => '=', 'GE' => '>=', 'LE' => '<='}
         if requires['flags']
           "#{requires['name']} #{flags[requires['flags']]} #{build_vrea(requires, false)}"
         else
