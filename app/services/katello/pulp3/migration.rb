@@ -18,7 +18,9 @@ module Katello
       ].freeze
 
       CORRUPTABLE_CONTENT_TYPES = [
-        Katello::Rpm, Katello::FileUnit
+        Katello::Rpm,
+        Katello::FileUnit,
+        Katello::Deb
       ].freeze
 
       def self.repository_types_for_migration
