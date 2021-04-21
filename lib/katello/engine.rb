@@ -155,8 +155,7 @@ module Katello
       Katello::EventDaemon::Runner.initialize
       Katello::EventDaemon::Runner.register_service(:candlepin_events, Katello::CandlepinEventListener)
       Katello::EventDaemon::Runner.register_service(:katello_events, Katello::EventMonitor::PollerThread)
-      Katello::EventDaemon::Runner.register_service(:katello_agent_events, Katello::EventDaemon::Services::AgentEventReceiver)
-
+      Katello::EventDaemon::Runner.register_service(:katello_agent_events, Katello::EventDaemon::Services::AgentEventReceiver) if ::Katello.with_katello_agent?
       FastGettext.add_text_domain('katello',
                                     :path => File.expand_path("../../../locale", __FILE__),
                                     :type => :po,
