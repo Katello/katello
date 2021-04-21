@@ -17,6 +17,7 @@ module Katello
       PULP3_FEATURE = "Pulpcore".freeze
       PULP_FEATURE = "Pulp".freeze
       PULP_NODE_FEATURE = "Pulp Node".freeze
+      CONTAINER_GATEWAY_FEATURE = "Container_Gateway".freeze
 
       DOWNLOAD_INHERIT = 'inherit'.freeze
       DOWNLOAD_POLICIES = ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES + [DOWNLOAD_INHERIT]
@@ -102,6 +103,19 @@ module Katello
 
       def update_unauthenticated_repo_list(repo_names)
         ProxyAPI::ContainerGateway.new(url: self.url).unauthenticated_repository_list("repositories": repo_names)
+      end
+
+      def update_container_repo_list(repo_list)
+        ProxyAPI::ContainerGateway.new(url: self.url).repository_list({ repositories: repo_list })
+      end
+
+      def update_user_container_repo_mapping(user_repo_map)
+        ProxyAPI::ContainerGateway.new(url: self.url).user_repository_mapping(user_repo_map)
+      end
+
+      def container_gateway_users
+        usernames = ProxyAPI::ContainerGateway.new(url: self.url).users
+        ::User.where(login: usernames['users'])
       end
 
       def pulp_url

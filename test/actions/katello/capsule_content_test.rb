@@ -312,5 +312,28 @@ module ::Actions::Katello::CapsuleContent
       action = plan_action_tree(action_class, capsule_content.smart_proxy, :environment_id => staging_environment.id)
       refute_empty action.errors
     end
+
+    it 'correctly generates a container gateway repository list' do
+      with_pulp3_features(capsule_content.smart_proxy)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      repo = katello_repositories(:pulp3_file_1)
+      repo.root.update_attribute(:unprotected, true)
+
+      repo_list_update_expectation = capsule_content.smart_proxy.expects(:update_container_repo_list).with do |arg|
+        arg.include?({:repository => "busybox", :auth_required => true}) && arg.include?({:repository => "empty_organization-puppet_product-busybox", :auth_required => true})
+      end
+      repo_list_update_expectation.once.returns(true)
+
+      repo_mapping_update_expectation = capsule_content.smart_proxy.expects(:update_user_container_repo_mapping).with do |arg|
+        arg[:users].first["secret_admin"].include?({:repository => "empty_organization-puppet_product-busybox",
+                                                    :auth_required => true}) &&
+                                             arg[:users].first["secret_admin"].include?({:repository => "busybox",
+                                                                                         :auth_required => true})
+      end
+      repo_mapping_update_expectation.once.returns(true)
+
+      capsule_content.smart_proxy.expects(:container_gateway_users).returns(::User.where(login: 'secret_admin'))
+      plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+    end
   end
 end
