@@ -14,8 +14,9 @@ module Katello
 
       def services(capsule_id = nil)
         proxy = fetch_proxy(capsule_id)
-        services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events, :katello_agent]
+        services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
         services += [:pulp3] if proxy&.pulp3_enabled? && pulpcore_enabled
+        services += [:katello_agent] if ::Katello.with_katello_agent?
         if proxy.nil? || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) || proxy.has_feature?(SmartProxy::PULP_FEATURE)
           services += [:pulp, :pulp_auth]
         end
