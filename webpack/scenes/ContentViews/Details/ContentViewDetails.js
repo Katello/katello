@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Grid, GridItem, TextContent, Text, TextVariants, Button } from '@patternfly/react-core';
+import { Grid, GridItem, TextContent, Text, TextVariants, Button, Flex, FlexItem } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
@@ -13,12 +13,13 @@ import ContentViewFilters from './Filters/ContentViewFilters';
 import ContentViewFilterDetails from './Filters/ContentViewFilterDetails';
 import { selectCVDetails } from './ContentViewDetailSelectors';
 import RoutedTabs from '../../../components/RoutedTabs';
+import ContentViewIcon from '../components/ContentViewIcon';
 
 const ContentViewDetails = ({ match }) => {
   const cvId = parseInt(match.params.id, 10);
   const details = useSelector(state => selectCVDetails(state, cvId), shallowEqual);
 
-  const { name } = details;
+  const { name, composite } = details;
   const tabs = [
     {
       key: 'details',
@@ -53,9 +54,16 @@ const ContentViewDetails = ({ match }) => {
       <DetailsContainer cvId={cvId}>
         <React.Fragment>
           <GridItem span={8}>
-            <TextContent>
-              <Text component={TextVariants.h1}>{`${name} content view`}</Text>
-            </TextContent>
+            <Flex>
+              <FlexItem>
+                <TextContent>
+                  <Text component={TextVariants.h1}>{`${name} content view`}</Text>
+                </TextContent>
+              </FlexItem>
+              <FlexItem spacer={{ default: 'spacerXl' }}>
+                <Text component={TextVariants.h1}><ContentViewIcon composite={composite} /></Text>
+              </FlexItem>
+            </Flex>
           </GridItem>
           <GridItem span={4} style={{ textAlign: 'right' }}>
             <Button
