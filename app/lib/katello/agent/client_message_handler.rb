@@ -8,6 +8,7 @@ module Katello
         @dispatch_history = Katello::Agent::DispatchHistory.find_by_id(dispatch_history_id)
 
         unless @dispatch_history
+          logger.error("Invalid client message: #{@json}")
           fail("No valid dispatch history in client message")
         end
       end

@@ -3,6 +3,8 @@ module Katello
     class DispatchHistory < Katello::Model
       self.table_name = 'katello_agent_dispatch_histories'
 
+      belongs_to :host, :class_name => "::Host::Managed"
+
       serialize :result, Hash
 
       def accepted?
