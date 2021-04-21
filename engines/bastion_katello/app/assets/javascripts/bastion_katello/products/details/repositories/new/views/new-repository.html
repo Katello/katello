@@ -122,7 +122,7 @@
                ng-model="repository.deb_releases"
                type="text"/>
         <p class="help-block" translate>
-          Comma separated list of releases (suite or codename) to sync from. Default: stable
+          Whitespace-separated list of releases (suite or codename) to sync from. Default: stable
         </p>
       </div>
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Components' | translate }}">
@@ -131,7 +131,7 @@
                ng-model="repository.deb_components"
                type="text"/>
         <p class="help-block" translate>
-          Comma separated list of components to sync from (leave clear to sync all). Example: main
+          Whitespace-separated list of components to sync from (leave clear to sync all). Example: main
         </p>
       </div>
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Architectures' | translate }}">
@@ -140,7 +140,7 @@
                ng-model="repository.deb_architectures"
                type="text"/>
         <p class="help-block" translate>
-          Comma separated list of processor architectures to filter the sync by. Example: amd64
+          Whitespace-separated list of processor architectures to filter the sync by. Example: amd64
         </p>
       </div>
 
