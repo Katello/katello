@@ -9,12 +9,12 @@ import {
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { noop } from 'foremanReact/common/helpers';
 
-const LifeCycleEnvironment = ({
+const LifecycleEnvironment = ({
   pluginValues, onChange, isLoading,
-  hostGroupEnvironment, lifeCycleEnvironments,
+  hostGroupEnvironment, lifecycleEnvironments,
 }) => (
   <FormGroup
-    label={__('Lifecycle enviroment')}
+    label={__('Lifecycle environment')}
     fieldId="reg_katello_lce"
     helperText={hostGroupEnvironment && sprintf('From host group: %s', hostGroupEnvironment)}
   >
@@ -23,34 +23,34 @@ const LifeCycleEnvironment = ({
       onChange={v => onChange({ lifecycleEnvironmentId: v })}
       className="without_select2"
       id="reg_katello_lce"
-      isDisabled={isLoading || lifeCycleEnvironments.length === 0}
+      isDisabled={isLoading || lifecycleEnvironments.length === 0}
     >
       <FormSelectOption
         value=""
-        label={lifeCycleEnvironments.length === 0 ? __('No LCE to select') : ''}
+        label={lifecycleEnvironments.length === 0 ? __('No Lifecycle environment to select') : ''}
       />
-      {lifeCycleEnvironments.map(lce => (
+      {lifecycleEnvironments.map(lce => (
         <FormSelectOption key={lce.id} value={lce.id} label={lce.name} />
         ))}
     </FormSelect>
   </FormGroup>
 );
 
-LifeCycleEnvironment.propTypes = {
+LifecycleEnvironment.propTypes = {
   pluginValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   onChange: PropTypes.func,
   hostGroupEnvironment: PropTypes.string,
-  lifeCycleEnvironments: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  lifecycleEnvironments: PropTypes.array, // eslint-disable-line react/forbid-prop-types
   isLoading: PropTypes.bool,
 };
 
-LifeCycleEnvironment.defaultProps = {
+LifecycleEnvironment.defaultProps = {
   onChange: noop,
   isLoading: false,
   hostGroupEnvironment: '',
-  lifeCycleEnvironments: [],
+  lifecycleEnvironments: [],
   pluginValues: {},
 
 };
 
-export default LifeCycleEnvironment;
+export default LifecycleEnvironment;

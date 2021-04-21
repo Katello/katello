@@ -50,14 +50,14 @@ class Api::V2::RegistrationCommandsControllerTest < ActionController::TestCase
     refute_includes(JSON.parse(@response.body)['registration_command'], 'activation_key=')
   end
 
-  def test_ack_array
-    post :create, params: { activation_key: ['key1', 'key2']}
-    assert_includes(JSON.parse(@response.body)['registration_command'], 'activation_keys=key1%2Ckey2')
-  end
-
   def test_acks_array
     post :create, params: { activation_keys: ['key1', 'key2']}
     assert_includes(JSON.parse(@response.body)['registration_command'], 'activation_keys=key1%2Ckey2')
+  end
+
+  def test_ack_and_acks
+    post :create, params: { activation_key: 'key1, key2', activation_keys: ['key3', 'key4']}
+    assert_includes(JSON.parse(@response.body)['registration_command'], 'activation_keys=key3%2Ckey4')
   end
 
   def test_with_ignore_subman_errors

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { noop } from 'foremanReact/common/helpers';
 
 import ActivationKeys from './fields/ActivationKeys';
-import LifeCycleEnvironment from './fields/LifeCycleEnvironment';
+import LifecycleEnvironment from './fields/LifecycleEnvironment';
 import IgnoreSubmanErrors from './fields/IgnoreSubmanErrors';
 import Force from './fields/Force';
 
@@ -33,9 +33,9 @@ const RegistrationCommands = ({
         handleInvalidField={handleInvalidField}
         isLoading={isLoading}
       />
-      <LifeCycleEnvironment
+      <LifecycleEnvironment
         pluginValues={pluginValues}
-        lifeCycleEnvironments={pluginData?.lifeCycleEnvironments}
+        lifecycleEnvironments={pluginData?.lifecycleEnvironments}
         hostGroupEnvironment={pluginData?.hostGroupEnvironment}
         organizationId={organizationId}
         onChange={onChange}
