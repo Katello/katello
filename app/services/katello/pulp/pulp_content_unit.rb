@@ -46,7 +46,7 @@ module Katello
         Katello.pulp_server.extensions.send(self.name.demodulize.underscore)
       end
 
-      def self.pulp_units_batch_all(unit_ids = nil, page_size = SETTINGS[:katello][:pulp][:bulk_load_size])
+      def self.pulp_units_batch_all(unit_ids = nil, page_size = Setting[:bulk_load_size])
         fields = self.const_get(:PULP_INDEXED_FIELDS) if self.constants.include?(:PULP_INDEXED_FIELDS)
         criteria = {:limit => page_size, :skip => 0}
         criteria[:fields] = fields if fields
@@ -58,7 +58,7 @@ module Katello
       end
 
       def self.pulp_units_batch_for_repo(repository, options = {})
-        page_size = options.fetch(:page_size, SETTINGS[:katello][:pulp][:bulk_load_size])
+        page_size = options.fetch(:page_size, Setting[:bulk_load_size])
 
         fields = self.const_get(:PULP_INDEXED_FIELDS) if self.constants.include?(:PULP_INDEXED_FIELDS)
         criteria = {:type_ids => [const_get(:CONTENT_TYPE)], :limit => page_size, :skip => 0}
@@ -69,7 +69,7 @@ module Katello
         end
       end
 
-      def self.pulp_units_batch(criteria, page_size = SETTINGS[:katello][:pulp][:bulk_load_size], &block)
+      def self.pulp_units_batch(criteria, page_size = Setting[:bulk_load_size], &block)
         response = {}
         Enumerator.new do |yielder|
           loop do
@@ -84,7 +84,7 @@ module Katello
       def self.fetch_all
         count = 0
         results = []
-        sub_list = fetch(0, SETTINGS[:katello][:pulp][:bulk_load_size])
+        sub_list = fetch(0, Setting[:bulk_load_size])
 
         until sub_list.empty? #we can't know how many there are, so we have to keep looping until we get nothing
           count += sub_list.count
@@ -95,14 +95,14 @@ module Katello
             results.concat(sub_list)
           end
 
-          sub_list = fetch(count, SETTINGS[:katello][:pulp][:bulk_load_size])
+          sub_list = fetch(count, Setting[:bulk_load_size])
         end
         results
       end
 
       def self.fetch_by_uuids(uuids)
         results = []
-        uuids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
+        uuids.each_slice(Setting[:bulk_load_size]) do |sub_list|
           fetched = fetch(0, sub_list.length, sub_list)
           if block_given?
             value = yield(fetched)

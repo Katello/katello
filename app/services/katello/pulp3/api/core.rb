@@ -196,7 +196,7 @@ module Katello
         end
 
         def self.fetch_from_list
-          page_size = SETTINGS[:katello][:pulp][:bulk_load_size]
+          page_size = Setting[:bulk_load_size]
           page_opts = { "offset" => 0, limit: page_size }
           response = {}
 

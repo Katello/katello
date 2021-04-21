@@ -150,7 +150,9 @@ class Setting::Content < Setting
       self.set('autosearch_while_typing', N_('For pages that support it, automatically perform search while typing in search input.'),
                true, N_('Autosearch')),
       self.set('autosearch_delay', N_('If Autosearch is enabled, delay in milliseconds before executing searches while typing.'),
-               500, N_('Autosearch delay'))
+               500, N_('Autosearch delay')),
+      self.set('bulk_load_size', N_('The number of items fetched from a single paged Pulp API call.'), 2000,
+               N_('Pulp bulk load size'))
     ]
   end
 
