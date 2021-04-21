@@ -33,6 +33,18 @@ module Katello
         authorized(:view_content_views)
       end
 
+      def creatable
+        authorized(:view_content_views)
+      end
+
+      def importable?
+        creatable? && publishable?
+      end
+
+      def readable_as(user)
+        authorized_as(user, :view_content_views)
+      end
+
       def readable?
         ::User.current.can?(:view_content_views)
       end
