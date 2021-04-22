@@ -4,10 +4,10 @@ namespace :katello do
       desc "Removed orphaned pools and correct org+subscription mismatch"
       task :fix_invalid_pools => ["environment", "check_ping"] do
         logger = Logger.new(STDOUT)
-        invalid_pools = Katello::Pool.all.select { |p| p.invalid? }
+        invalid_pools = Katello::Pool.all.select(&:invalid?)
 
         # Make sure Subscriptions are up to date for any org that has invalid pools
-        org_ids = invalid_pools.map { |p| p.organization_id }.uniq.compact
+        org_ids = invalid_pools.map(&:organization_id).uniq.compact
         orgs = ::Organization.where(id: org_ids)
         orgs.each do |org|
           Katello::Subscription.import_all(org)

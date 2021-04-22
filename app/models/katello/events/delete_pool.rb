@@ -3,15 +3,15 @@ module Katello
     class DeletePool
       EVENT_TYPE = 'delete_pool'.freeze
 
-      def initialize(candlepin_id)
-        @candlepin_id = candlepin_id
+      def initialize(pool_id)
+        @pool_id = pool_id
       end
 
       def run
-        if ::Katello::Pool.where(id: @candlepin_id).destroy_all.any?
-          Rails.logger.info("Deleted pool #{@candlepin_id}")
+        if ::Katello::Pool.where(id: @pool_id).destroy_all.any?
+          Rails.logger.info("Deleted pool #{@pool_id}")
         else
-          Rails.logger.info("Pool with id=#{@candlepin_id} has already been removed")
+          Rails.logger.info("Pool with id=#{@pool_id} has already been removed")
         end
       end
     end
