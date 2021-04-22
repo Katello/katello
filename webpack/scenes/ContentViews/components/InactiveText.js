@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextContent, Text, TextVariants } from '@patternfly/react-core';
 
-const InactiveText = ({ text }) => (
+const InactiveText = props => (
   <TextContent>
-    <Text component={TextVariants.small}>{text}</Text>
+    <Text component={TextVariants.small} {...props}>{props.text}</Text>
   </TextContent>
 );
 

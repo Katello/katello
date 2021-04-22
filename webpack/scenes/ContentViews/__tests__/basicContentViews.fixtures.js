@@ -6,12 +6,14 @@ const buildContentView = id => ({
   repositories: [],
   versions: [],
   last_published: 'Not Yet Published',
+  activation_keys: [],
+  hosts: [],
 });
 
 const createBasicCVs = (amount) => {
   const response = {
-    total: 100,
-    subtotal: 100,
+    total: amount,
+    subtotal: amount,
     page: 1,
     per_page: 20,
     error: null,
@@ -23,7 +25,7 @@ const createBasicCVs = (amount) => {
     results: [],
   };
 
-  [...Array(amount).keys()].forEach((_, i) => response.results.push(buildContentView(i)));
+  [...Array(amount).keys()].forEach((_, i) => response.results.push(buildContentView(i + 1)));
 
   return response;
 };

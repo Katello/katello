@@ -1,23 +1,27 @@
 import React, { Fragment } from 'react';
-import { CheckCircleIcon, ExclamationTriangleIcon, CloseIcon } from '@patternfly/react-icons';
+import { CheckCircleIcon, ExclamationTriangleIcon, CloseIcon, InProgressIcon } from '@patternfly/react-icons';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
+import InactiveText from '../../components/InactiveText';
 
-const LastSync = ({ lastSyncWords, lastSync }) => {
+const LastSync = ({ lastSyncWords, lastSync, emptyMessage }) => {
   if (lastSync && lastSyncWords) {
     let Icon;
     let color = 'black';
     const { result, id } = lastSync;
 
-    if (result === 'success') {
+    if (result === 'success' || result === 'successful') {
       Icon = CheckCircleIcon;
       color = 'green';
     } else if (result === 'warning') {
       Icon = ExclamationTriangleIcon;
       color = 'orange';
-    } else if (result === 'error') {
+    } else if (result === 'error' || result === 'failed') {
       Icon = CloseIcon;
       color = 'red';
+    } else if (result === 'in progress') {
+      Icon = InProgressIcon;
+      color = 'blue';
     } else {
       Icon = Fragment;
     }
@@ -28,7 +32,7 @@ const LastSync = ({ lastSyncWords, lastSync }) => {
       </a>
     );
   }
-  return <div>Not Synced</div>;
+  return <InactiveText text={emptyMessage} />;
 };
 
 LastSync.propTypes = {
@@ -37,11 +41,13 @@ LastSync.propTypes = {
     id: PropTypes.string, // API returns string
     result: PropTypes.string,
   }),
+  emptyMessage: PropTypes.string,
 };
 
 LastSync.defaultProps = {
   lastSyncWords: null,
   lastSync: null,
+  emptyMessage: 'Not Synced',
 };
 
 export default LastSync;

@@ -252,8 +252,20 @@ module Katello
       latest_version_object.try(:version)
     end
 
+    def latest_version_id
+      latest_version_object.try(:id)
+    end
+
+    def latest_version_env
+      latest_version_object.try(:environments) || []
+    end
+
     def latest_version_object
       self.versions.order('major DESC').order('minor DESC').first
+    end
+
+    def last_task
+      history.order(:created_at).last
     end
 
     def history
