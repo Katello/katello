@@ -1,7 +1,6 @@
 import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { translate as __ } from 'foremanReact/common/I18n';
-
 import {
   UPDATE_CONTENT_VIEW,
   UPDATE_CONTENT_VIEW_FAILURE,
@@ -16,10 +15,10 @@ import {
   cvFilterPackageGroupsKey,
   cvDetailsHistoryKey,
   cvFilterRulesKey,
+  cvDetailsComponentKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
-
-import { apiError } from '../../../utils/helpers';
+import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
 
 const getContentViewDetails = cvId => get({
   type: API_OPERATIONS.GET,
@@ -72,21 +71,21 @@ export const getContentViewRepositories = (cvId, params, status) => {
 export const getRepositoryTypes = () => get({
   type: API_OPERATIONS.GET,
   key: REPOSITORY_TYPES,
-  errorToast: error => __(`Something went wrong while retrieving the repository types! ${error}`),
+  errorToast: error => __(`Something went wrong while retrieving the repository types! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/repositories/repository_types'),
 });
 
 export const getContentViewFilters = (cvId, params) => get({
   key: cvDetailsFiltersKey(cvId),
   params: { content_view_id: cvId, ...params },
-  errorToast: error => __(`Something went wrong while retrieving the content view filters! ${error}`),
+  errorToast: error => __(`Something went wrong while retrieving the content view filters! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/content_view_filters'),
 });
 
 export const getCVFilterDetails = (cvId, filterId, params) => get({
   key: cvFilterDetailsKey(cvId, filterId),
   params: { contentViewId: cvId, ...params },
-  errorToast: error => __(`Something went wrong while retrieving the content view filter! ${error}`),
+  errorToast: error => __(`Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl(`/content_view_filters/${filterId}`),
 });
 
@@ -95,7 +94,7 @@ export const getCVFilterPackageGroups = (cvId, filterId, params) => get({
   params: {
     filter_id: filterId, show_all_for: 'content_view_filter', include_filter_ids: true, ...params,
   },
-  errorToast: error => __(`Something went wrong while retrieving the content view filter! ${error}`),
+  errorToast: error => __(`Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/package_groups'),
 });
 
@@ -105,7 +104,7 @@ export const getContentViewHistories = (cvId, params) => {
   return get({
     key: cvDetailsHistoryKey(cvId),
     params: apiParams,
-    errorToast: error => __(`Something went wrong while retrieving the content view history! ${error}`),
+    errorToast: error => __(`Something went wrong while retrieving the content view history! ${getResponseErrorMsgs(error.response)}`),
     url: api.getApiUrl(apiUrl),
   });
 };
@@ -113,8 +112,19 @@ export const getContentViewHistories = (cvId, params) => {
 export const getCVFilterRules = (filterId, params) => get({
   key: cvFilterRulesKey(filterId),
   params: { ...params },
-  errorToast: error => __(`Something went wrong while retrieving the content view filter rules! ${error}`),
+  errorToast: error => __(`Something went wrong while retrieving the content view filter rules! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl(`/content_view_filters/${filterId}/rules`),
 });
+
+export const getContentViewComponents = (cvId, params) => {
+  const apiParams = { ...params };
+  const apiUrl = `/content_views/${cvId}/content_view_components`;
+  return get({
+    key: cvDetailsComponentKey(cvId),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the content view components! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl(apiUrl),
+  });
+};
 
 export default getContentViewDetails;

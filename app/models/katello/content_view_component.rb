@@ -18,6 +18,11 @@ module Katello
 
     before_validation :update_content_view, :on => :create
 
+    scoped_search :on => :name, :relation => :content_view, :complete_value => true
+    scoped_search :on => :organization_id, :relation => :content_view, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :label, :relation => :content_view, :complete_value => true
+    scoped_search :on => :composite, :relation => :content_view, :complete_value => true
+
     def latest_version
       if latest?
         self.content_view.latest_version_object

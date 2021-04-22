@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import DetailsContainer from './DetailsContainer';
 import ContentViewInfo from './ContentViewInfo';
 import ContentViewRepositories from './Repositories/ContentViewRepositories';
+import ContentViewComponents from './ComponentContentViews/ContentViewComponents';
 import ContentViewHistories from './Histories/ContentViewHistories';
 import ContentViewFilters from './Filters/ContentViewFilters';
 import ContentViewFilterDetails from './Filters/ContentViewFilterDetails';
@@ -31,11 +32,16 @@ const ContentViewDetails = ({ match }) => {
       title: __('Versions'),
       content: <React.Fragment>Versions</React.Fragment>,
     },
-    {
+    (composite ? {
+      key: 'contentviews',
+      title: __('Content Views'),
+      content: <ContentViewComponents {...{ cvId, details }} />,
+    } : {
       key: 'repositories',
       title: __('Repositories'),
       content: <ContentViewRepositories {...{ cvId, details }} />,
-    },
+    }
+    ),
     {
       key: 'filters',
       title: __('Filters'),
