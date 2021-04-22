@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/contentguards/certguard/rhsm/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/contentguards/certguard/rhsm/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.0.1/ruby
+      - OpenAPI-Generator/1.1.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:11 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -35,17 +35,17 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
-      - '3076'
+      - '3081'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50Z3VhcmRz
-        L2NlcnRndWFyZC9yaHNtL2ZlZmJmODJhLWJhOGUtNDkyMC05NjljLTZjMzlm
-        YTdhZTdlYS8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIwLTA4LTIwVDE5OjA2OjEx
-        Ljk5NTIzNloiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
+        L2NlcnRndWFyZC9yaHNtLzYyNTU4YTI2LWZhZGItNDY4Yi1iNWQwLWZmYWM4
+        NjZjNjQwZC8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIxLTAzLTEwVDIwOjM1OjQ0
+        LjQyNTQ5NloiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
         IjpudWxsLCJjYV9jZXJ0aWZpY2F0ZSI6IkNlcnRpZmljYXRlOlxuICAgIERh
         dGE6XG4gICAgICAgIFZlcnNpb246IDMgKDB4MilcbiAgICAgICAgU2VyaWFs
         IE51bWJlcjpcbiAgICAgICAgICAgIGZkOmJhOmJjOjcxOjZlOjI1OmEzOjc4
@@ -172,10 +172,10 @@ http_interactions:
         V3UzaGM2MTg0SE45aGVpTy9qbE1DWVBzTU5VVVE5VTFML1hnc2JXMnlicGc9
         PVxuLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLSJ9XX0=
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:11 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/file/file/?name=Default_Organization-Cabinet-My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/repositories/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -183,7 +183,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -196,61 +196,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:11 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '246'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        ZmlsZS9maWxlLzAzZWNmMjBiLTcxODItNGQ4OS1iN2M5LTQyZjNlNzgzNDYz
-        ZS8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIwLTA4LTIwVDE5OjA3OjQ3LjM5MDI1
-        NVoiLCJ2ZXJzaW9uc19ocmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmll
-        cy9maWxlL2ZpbGUvMDNlY2YyMGItNzE4Mi00ZDg5LWI3YzktNDJmM2U3ODM0
-        NjNlL3ZlcnNpb25zLyIsImxhdGVzdF92ZXJzaW9uX2hyZWYiOiIvcHVscC9h
-        cGkvdjMvcmVwb3NpdG9yaWVzL2ZpbGUvZmlsZS8wM2VjZjIwYi03MTgyLTRk
-        ODktYjdjOS00MmYzZTc4MzQ2M2UvdmVyc2lvbnMvMC8iLCJuYW1lIjoiRGVm
-        YXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1NeV9GaWxlcyIsImRlc2NyaXB0
-        aW9uIjpudWxsLCJyZW1vdGUiOm51bGx9XX0=
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:11 GMT
-- request:
-    method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/file/file/03ecf20b-7182-4d89-b7c9-42f3e783463e/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:11 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -258,23 +204,23 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '67'
+      - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2Q2ZmExZDUwLTdjNDktNDI2
-        MS1hYjA4LWJlODM2OWVkZjllMS8ifQ==
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:11 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -282,7 +228,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -295,63 +241,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:11 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '369'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUv
-        ZmlsZS80YTM3OTUyNy0xZTA4LTRlMjgtOGNjNy02MDRiNDEyZmI1NzEvIiwi
-        cHVscF9jcmVhdGVkIjoiMjAyMC0wOC0yMFQxOTowNzo0Ny41MTIyMjRaIiwi
-        bmFtZSI6IkRlZmF1bHRfT3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmlsZXMi
-        LCJ1cmwiOiJodHRwOi8vdGVzdC90ZXN0Ly9QVUxQX01BTklGRVNUIiwiY2Ff
-        Y2VydCI6IktKTDpLREYqKERGJiooKiQmKCojJEpMS0pEKEQoKEQiLCJjbGll
-        bnRfY2VydCI6IktKTDpLREYqKERGJiooKiQmKCojJEpMS0pEKEQoKEQiLCJj
-        bGllbnRfa2V5IjoiS0pMOktERiooREYmKigqJCYoKiMkSkxLSkQoRCgoRCIs
-        InRsc192YWxpZGF0aW9uIjp0cnVlLCJwcm94eV91cmwiOm51bGwsInVzZXJu
-        YW1lIjpudWxsLCJwYXNzd29yZCI6bnVsbCwicHVscF9sYXN0X3VwZGF0ZWQi
-        OiIyMDIwLTA4LTIwVDE5OjA3OjQ5LjY3MTM5MloiLCJkb3dubG9hZF9jb25j
-        dXJyZW5jeSI6MTAsInBvbGljeSI6ImltbWVkaWF0ZSJ9XX0=
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:11 GMT
-- request:
-    method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/file/file/4a379527-1e08-4e28-8cc7-604b412fb571/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:11 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -359,23 +249,23 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '67'
+      - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2U2YzNhM2I0LTQxZDEtNDMz
-        Yi04NjliLTY2OTA5ZGQwYWU3NS8ifQ==
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:11 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -383,7 +273,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -396,62 +286,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:11 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '315'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
-        L2ZpbGUvZmlsZS85NTRjNzRiYi1mNDg2LTRmY2UtODYzNi03NTEwZDE3Y2Vl
-        NzcvIiwicHVscF9jcmVhdGVkIjoiMjAyMC0wOC0yMFQxOTowNzo0OC43NTcz
-        MzlaIiwiYmFzZV9wYXRoIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFy
-        eS9NeV9GaWxlcyIsImJhc2VfdXJsIjoiaHR0cDovL2RldmVsMi5iYWxtb3Jh
-        LmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9EZWZhdWx0X09yZ2FuaXphdGlv
-        bi9saWJyYXJ5L015X0ZpbGVzLyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsIm5h
-        bWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIiwi
-        cHVibGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUv
-        ZmlsZS9lMWU0ZWEwNS0zNmRjLTQwM2EtYTkxMi02ZTZiYjg0ZmZhNWYvIn1d
-        fQ==
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:11 GMT
-- request:
-    method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/954c74bb-f486-4fce-8636-7510d17cee77/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:11 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -459,23 +294,23 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '67'
+      - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzQzNmMyYjMxLTk5N2UtNDVl
-        Ny1hZTk0LTZkN2E1MGI0MTY1NC8ifQ==
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:11 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -483,7 +318,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -496,60 +331,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:12 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '284'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
-        L2ZpbGUvZmlsZS85NTRjNzRiYi1mNDg2LTRmY2UtODYzNi03NTEwZDE3Y2Vl
-        NzcvIiwicHVscF9jcmVhdGVkIjoiMjAyMC0wOC0yMFQxOTowNzo0OC43NTcz
-        MzlaIiwiYmFzZV9wYXRoIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFy
-        eS9NeV9GaWxlcyIsImJhc2VfdXJsIjoiaHR0cDovL2RldmVsMi5iYWxtb3Jh
-        LmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9EZWZhdWx0X09yZ2FuaXphdGlv
-        bi9saWJyYXJ5L015X0ZpbGVzLyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsIm5h
-        bWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIiwi
-        cHVibGljYXRpb24iOm51bGx9XX0=
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:12 GMT
-- request:
-    method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/954c74bb-f486-4fce-8636-7510d17cee77/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:12 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -557,23 +339,23 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '67'
+      - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzQ4M2ZjYjBjLTdlMTItNGUy
-        Zi1hYzdmLTI4MTdjYzZmMWJiMS8ifQ==
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:12 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/d6fa1d50-7c49-4261-ab08-be8369edf9e1/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/contentguards/certguard/rhsm/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -581,7 +363,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
+      - OpenAPI-Generator/1.1.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -594,249 +376,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:12 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '340'
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZDZmYTFkNTAtN2M0
-        OS00MjYxLWFiMDgtYmU4MzY5ZWRmOWUxLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTEuNTcwMTcxWiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTEuNzM5MTM4
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxMS45MDE1MjBa
-        IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEyNDMxOTY4LWNhNTMtNDJmZi1hOWMzLTQwZDZhYjEzZjU2Yy8iLCJwYXJl
-        bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
-        dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
-        OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92
-        My9yZXBvc2l0b3JpZXMvZmlsZS9maWxlLzAzZWNmMjBiLTcxODItNGQ4OS1i
-        N2M5LTQyZjNlNzgzNDYzZS8iXX0=
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:12 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/e6c3a3b4-41d1-433b-869b-66909dd0ae75/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:12 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '339'
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZTZjM2EzYjQtNDFk
-        MS00MzNiLTg2OWItNjY5MDlkZDBhZTc1LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTEuNjg4NjI2WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTEuOTk4ODQ2
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxMi4wOTcyNjRa
-        IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEwZTNlNjJmLWM5NzYtNGM3YS1iMTM1LTM4MTY0ODk0NDgwNS8iLCJwYXJl
-        bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
-        dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
-        OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92
-        My9yZW1vdGVzL2ZpbGUvZmlsZS80YTM3OTUyNy0xZTA4LTRlMjgtOGNjNy02
-        MDRiNDEyZmI1NzEvIl19
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:12 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/436c2b31-997e-45e7-ae94-6d7a50b41654/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:12 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '316'
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNDM2YzJiMzEtOTk3
-        ZS00NWU3LWFlOTQtNmQ3YTUwYjQxNjU0LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTEuOTA1NjE1WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTIuMzYxNzkw
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxMi40NTExNDda
-        IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEyNDMxOTY4LWNhNTMtNDJmZi1hOWMzLTQwZDZhYjEzZjU2Yy8iLCJwYXJl
-        bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
-        dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
-        OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlz
-        dHJpYnV0aW9ucy8iXX0=
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:12 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/483fcb0c-7e12-4e2f-ac7f-2817cc6f1bb1/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:12 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '661'
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNDgzZmNiMGMtN2Ux
-        Mi00ZTJmLWFjN2YtMjgxN2NjNmYxYmIxLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTIuMTIxMDE2WiIsInN0YXRlIjoiZmFpbGVkIiwi
-        bmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVsZXRl
-        Iiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTIuNjg5MzIxWiIs
-        ImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxMi43MjQzMzZaIiwi
-        ZXJyb3IiOnsidHJhY2ViYWNrIjoiICBGaWxlIFwiL3Vzci9sb2NhbC9saWIv
-        cHl0aG9uMy42L3NpdGUtcGFja2FnZXMvcnEvd29ya2VyLnB5XCIsIGxpbmUg
-        ODgzLCBpbiBwZXJmb3JtX2pvYlxuICAgIHJ2ID0gam9iLnBlcmZvcm0oKVxu
-        ICBGaWxlIFwiL3Vzci9sb2NhbC9saWIvcHl0aG9uMy42L3NpdGUtcGFja2Fn
-        ZXMvcnEvam9iLnB5XCIsIGxpbmUgNjU3LCBpbiBwZXJmb3JtXG4gICAgc2Vs
-        Zi5fcmVzdWx0ID0gc2VsZi5fZXhlY3V0ZSgpXG4gIEZpbGUgXCIvdXNyL2xv
-        Y2FsL2xpYi9weXRob24zLjYvc2l0ZS1wYWNrYWdlcy9ycS9qb2IucHlcIiwg
-        bGluZSA2NjMsIGluIF9leGVjdXRlXG4gICAgcmV0dXJuIHNlbGYuZnVuYygq
-        c2VsZi5hcmdzLCAqKnNlbGYua3dhcmdzKVxuICBGaWxlIFwiL3Vzci9sb2Nh
-        bC9saWIvcHl0aG9uMy42L3NpdGUtcGFja2FnZXMvcHVscGNvcmUvYXBwL3Rh
-        c2tzL2Jhc2UucHlcIiwgbGluZSA5MCwgaW4gZ2VuZXJhbF9kZWxldGVcbiAg
-        ICBpbnN0YW5jZSA9IHNlcmlhbGl6ZXJfY2xhc3MuTWV0YS5tb2RlbC5vYmpl
-        Y3RzLmdldChwaz1pbnN0YW5jZV9pZCkuY2FzdCgpXG4gIEZpbGUgXCIvdXNy
-        L2xvY2FsL2xpYi9weXRob24zLjYvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIv
-        bW9kZWxzL21hbmFnZXIucHlcIiwgbGluZSA4MiwgaW4gbWFuYWdlcl9tZXRo
-        b2RcbiAgICByZXR1cm4gZ2V0YXR0cihzZWxmLmdldF9xdWVyeXNldCgpLCBu
-        YW1lKSgqYXJncywgKiprd2FyZ3MpXG4gIEZpbGUgXCIvdXNyL2xvY2FsL2xp
-        Yi9weXRob24zLjYvc2l0ZS1wYWNrYWdlcy9kamFuZ28vZGIvbW9kZWxzL3F1
-        ZXJ5LnB5XCIsIGxpbmUgNDA4LCBpbiBnZXRcbiAgICBzZWxmLm1vZGVsLl9t
-        ZXRhLm9iamVjdF9uYW1lXG4iLCJkZXNjcmlwdGlvbiI6IkZpbGVEaXN0cmli
-        dXRpb24gbWF0Y2hpbmcgcXVlcnkgZG9lcyBub3QgZXhpc3QuIn0sIndvcmtl
-        ciI6Ii9wdWxwL2FwaS92My93b3JrZXJzLzEyNDMxOTY4LWNhNTMtNDJmZi1h
-        OWMzLTQwZDZhYjEzZjU2Yy8iLCJwYXJlbnRfdGFzayI6bnVsbCwiY2hpbGRf
-        dGFza3MiOltdLCJ0YXNrX2dyb3VwIjpudWxsLCJwcm9ncmVzc19yZXBvcnRz
-        IjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJj
-        ZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlzdHJpYnV0aW9ucy8iXX0=
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:12 GMT
-- request:
-    method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/contentguards/certguard/rhsm/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/1.0.1/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:12 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -848,17 +388,17 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
-      - '3076'
+      - '3081'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50Z3VhcmRz
-        L2NlcnRndWFyZC9yaHNtL2ZlZmJmODJhLWJhOGUtNDkyMC05NjljLTZjMzlm
-        YTdhZTdlYS8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIwLTA4LTIwVDE5OjA2OjEx
-        Ljk5NTIzNloiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
+        L2NlcnRndWFyZC9yaHNtLzYyNTU4YTI2LWZhZGItNDY4Yi1iNWQwLWZmYWM4
+        NjZjNjQwZC8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIxLTAzLTEwVDIwOjM1OjQ0
+        LjQyNTQ5NloiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
         IjpudWxsLCJjYV9jZXJ0aWZpY2F0ZSI6IkNlcnRpZmljYXRlOlxuICAgIERh
         dGE6XG4gICAgICAgIFZlcnNpb246IDMgKDB4MilcbiAgICAgICAgU2VyaWFs
         IE51bWJlcjpcbiAgICAgICAgICAgIGZkOmJhOmJjOjcxOjZlOjI1OmEzOjc4
@@ -985,10 +525,10 @@ http_interactions:
         V3UzaGM2MTg0SE45aGVpTy9qbE1DWVBzTU5VVVE5VTFML1hnc2JXMnlicGc9
         PVxuLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLSJ9XX0=
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:12 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/file/file/?name=Default_Organization-Cabinet-My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/repositories/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -996,7 +536,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1009,7 +549,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:13 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1023,17 +563,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:13 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1041,7 +581,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1054,7 +594,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:13 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1068,17 +608,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:13 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1086,7 +626,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1099,7 +639,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:13 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1113,17 +653,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:13 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1131,7 +671,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1144,7 +684,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:13 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1158,17 +698,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:13 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/file/file/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/repositories/file/file/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1178,7 +718,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1191,13 +731,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:13 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/file/file/a574c158-fcaf-495e-a7ff-bc50086b0f33/"
+      - "/pulp/api/v3/repositories/file/file/a59a44cf-c6e3-47f3-8561-674be203d520/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -1207,25 +747,25 @@ http_interactions:
       Content-Length:
       - '424'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2ZpbGUv
-        ZmlsZS9hNTc0YzE1OC1mY2FmLTQ5NWUtYTdmZi1iYzUwMDg2YjBmMzMvIiwi
-        cHVscF9jcmVhdGVkIjoiMjAyMC0wOC0yMFQxOTowOToxMy4zMTE0MjFaIiwi
+        ZmlsZS9hNTlhNDRjZi1jNmUzLTQ3ZjMtODU2MS02NzRiZTIwM2Q1MjAvIiwi
+        cHVscF9jcmVhdGVkIjoiMjAyMS0wMy0xMFQyMToxNDo0OC44MTc2MDVaIiwi
         dmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZmls
-        ZS9maWxlL2E1NzRjMTU4LWZjYWYtNDk1ZS1hN2ZmLWJjNTAwODZiMGYzMy92
+        ZS9maWxlL2E1OWE0NGNmLWM2ZTMtNDdmMy04NTYxLTY3NGJlMjAzZDUyMC92
         ZXJzaW9ucy8iLCJsYXRlc3RfdmVyc2lvbl9ocmVmIjoiL3B1bHAvYXBpL3Yz
-        L3JlcG9zaXRvcmllcy9maWxlL2ZpbGUvYTU3NGMxNTgtZmNhZi00OTVlLWE3
-        ZmYtYmM1MDA4NmIwZjMzL3ZlcnNpb25zLzAvIiwibmFtZSI6IkRlZmF1bHRf
+        L3JlcG9zaXRvcmllcy9maWxlL2ZpbGUvYTU5YTQ0Y2YtYzZlMy00N2YzLTg1
+        NjEtNjc0YmUyMDNkNTIwL3ZlcnNpb25zLzAvIiwibmFtZSI6IkRlZmF1bHRf
         T3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmlsZXMiLCJkZXNjcmlwdGlvbiI6
         bnVsbCwicmVtb3RlIjpudWxsfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:13 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/file/file/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/remotes/file/file/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1237,7 +777,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1250,13 +790,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:13 GMT
+      - Wed, 10 Mar 2021 21:14:48 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/file/file/08b45eb4-7700-40da-b23e-593c0480b1ce/"
+      - "/pulp/api/v3/remotes/file/file/17d9d0be-5058-44f4-bcdf-9982c8a4d912/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -1266,37 +806,37 @@ http_interactions:
       Content-Length:
       - '436'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9maWxlL2ZpbGUv
-        MDhiNDVlYjQtNzcwMC00MGRhLWIyM2UtNTkzYzA0ODBiMWNlLyIsInB1bHBf
-        Y3JlYXRlZCI6IjIwMjAtMDgtMjBUMTk6MDk6MTMuNDE4NTQwWiIsIm5hbWUi
+        MTdkOWQwYmUtNTA1OC00NGY0LWJjZGYtOTk4MmM4YTRkOTEyLyIsInB1bHBf
+        Y3JlYXRlZCI6IjIwMjEtMDMtMTBUMjE6MTQ6NDguOTQ1Mjk1WiIsIm5hbWUi
         OiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15X0ZpbGVzIiwidXJs
         IjoiaHR0cDovL3Rlc3QvdGVzdC8vUFVMUF9NQU5JRkVTVCIsImNhX2NlcnQi
         Om51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJjbGllbnRfa2V5IjpudWxsLCJ0
         bHNfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJ1c2VybmFt
         ZSI6bnVsbCwicGFzc3dvcmQiOm51bGwsInB1bHBfbGFzdF91cGRhdGVkIjoi
-        MjAyMC0wOC0yMFQxOTowOToxMy40MTg1NThaIiwiZG93bmxvYWRfY29uY3Vy
+        MjAyMS0wMy0xMFQyMToxNDo0OC45NDUzMzJaIiwiZG93bmxvYWRfY29uY3Vy
         cmVuY3kiOjEwLCJwb2xpY3kiOiJpbW1lZGlhdGUifQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:13 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:48 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/publications/file/file/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/publications/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL2ZpbGUvZmlsZS9hNTc0YzE1OC1mY2FmLTQ5NWUtYTdmZi1iYzUwMDg2
-        YjBmMzMvdmVyc2lvbnMvMC8iLCJtYW5pZmVzdCI6IlBVTFBfTUFOSUZFU1Qi
+        aWVzL2ZpbGUvZmlsZS9hNTlhNDRjZi1jNmUzLTQ3ZjMtODU2MS02NzRiZTIw
+        M2Q1MjAvdmVyc2lvbnMvMC8iLCJtYW5pZmVzdCI6IlBVTFBfTUFOSUZFU1Qi
         fQ==
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1309,7 +849,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:13 GMT
+      - Wed, 10 Mar 2021 21:14:49 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1323,17 +863,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBiOTU1MjkyLWQ4OWYtNGNj
-        My1iOGVlLTUwY2U1ZTBjOWViZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzkzYWFjODFhLTY3NjAtNDZj
+        NC04MGEyLTYyNTg1YWI3ZDBiZS8ifQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:13 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:49 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/0b955292-d89f-4cc3-b8ee-50ce5e0c9ebe/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/tasks/93aac81a-6760-46c4-80a2-62585ab7d0be/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1341,7 +881,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
+      - OpenAPI-Generator/3.7.3/ruby
       Accept:
       - application/json
       Authorization:
@@ -1354,7 +894,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:14 GMT
+      - Wed, 10 Mar 2021 21:14:49 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1366,45 +906,90 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
       - '373'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMGI5NTUyOTItZDg5
-        Zi00Y2MzLWI4ZWUtNTBjZTVlMGM5ZWJlLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTMuNjY4MjA1WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvOTNhYWM4MWEtNjc2
+        MC00NmM0LTgwYTItNjI1ODVhYjdkMGJlLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDMtMTBUMjE6MTQ6NDkuMjE1MzMyWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBfZmlsZS5hcHAudGFza3MucHVibGlzaGluZy5wdWJs
-        aXNoIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTMuODI1MTIx
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxMy45MTY1Mzda
+        aXNoIiwic3RhcnRlZF9hdCI6IjIwMjEtMDMtMTBUMjE6MTQ6NDkuMzIyMjEy
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wMy0xMFQyMToxNDo0OS4zNzg3NDla
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEyNDMxOTY4LWNhNTMtNDJmZi1hOWMzLTQwZDZhYjEzZjU2Yy8iLCJwYXJl
+        LzczOGUxYmI0LTJjOTYtNGU1ZC1hNjMzLTBkNmY1NDhhNTYyMS8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
-        OlsiL3B1bHAvYXBpL3YzL3B1YmxpY2F0aW9ucy9maWxlL2ZpbGUvMDU2ZWQx
-        ZjMtZTA2Ni00NTNjLWIwNmYtODBjNzA1NzAzMjIyLyJdLCJyZXNlcnZlZF9y
+        OlsiL3B1bHAvYXBpL3YzL3B1YmxpY2F0aW9ucy9maWxlL2ZpbGUvOTk3OTE4
+        ZWMtMmRhNS00OTNiLWIxZGEtYTM5YjUwMThiYjA0LyJdLCJyZXNlcnZlZF9y
         ZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        ZmlsZS9maWxlL2E1NzRjMTU4LWZjYWYtNDk1ZS1hN2ZmLWJjNTAwODZiMGYz
-        My8iXX0=
+        ZmlsZS9maWxlL2E1OWE0NGNmLWM2ZTMtNDdmMy04NTYxLTY3NGJlMjAzZDUy
+        MC8iXX0=
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:14 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:49 GMT
+- request:
+    method: get
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/library/My_Files
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/1.3.0/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 10 Mar 2021 21:14:49 GMT
+      Server:
+      - gunicorn/20.0.4
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Via:
+      - 1.1 centos7-katello-3.18-stable.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 10 Mar 2021 21:14:49 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJiYXNlX3BhdGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L015
         X0ZpbGVzIiwiY29udGVudF9ndWFyZCI6bnVsbCwibmFtZSI6IkRlZmF1bHRf
         T3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmlsZXMiLCJwdWJsaWNhdGlvbiI6
-        Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvZmlsZS9maWxlLzA1NmVkMWYz
-        LWUwNjYtNDUzYy1iMDZmLTgwYzcwNTcwMzIyMi8ifQ==
+        Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvZmlsZS9maWxlLzk5NzkxOGVj
+        LTJkYTUtNDkzYi1iMWRhLWEzOWI1MDE4YmIwNC8ifQ==
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1417,7 +1002,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:14 GMT
+      - Wed, 10 Mar 2021 21:14:49 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1431,17 +1016,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzFmODA1OGVkLWQxNGItNGUw
-        MS1iZjBlLTNlZDlkN2UzMzJhMi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzhlY2UxMjE4LTczNTUtNGZi
+        YS1iYzMzLWE5YjZhMzVhNjBiMy8ifQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:14 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:49 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/1f8058ed-d14b-4e01-bf0e-3ed9d7e332a2/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/tasks/8ece1218-7355-4fba-bc33-a9b6a35a60b3/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1449,7 +1034,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
+      - OpenAPI-Generator/3.7.3/ruby
       Accept:
       - application/json
       Authorization:
@@ -1462,7 +1047,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:14 GMT
+      - Wed, 10 Mar 2021 21:14:49 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1474,30 +1059,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
-      - '346'
+      - '348'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMWY4MDU4ZWQtZDE0
-        Yi00ZTAxLWJmMGUtM2VkOWQ3ZTMzMmEyLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTQuMTQ0OTQwWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvOGVjZTEyMTgtNzM1
+        NS00ZmJhLWJjMzMtYTliNmEzNWE2MGIzLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDMtMTBUMjE6MTQ6NDkuNTA3Njc0WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
-        YXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTQuMzIzNTY2
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxNC42MzczNjFa
+        YXRlIiwic3RhcnRlZF9hdCI6IjIwMjEtMDMtMTBUMjE6MTQ6NDkuNjI0MDU1
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wMy0xMFQyMToxNDo0OS44MDE3NDBa
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEwZTNlNjJmLWM5NzYtNGM3YS1iMTM1LTM4MTY0ODk0NDgwNS8iLCJwYXJl
+        LzczOGUxYmI0LTJjOTYtNGU1ZC1hNjMzLTBkNmY1NDhhNTYyMS8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
-        OlsiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZmlsZS9maWxlLzA2ODM0
-        ZWJhLTI5OTEtNDlmMy05YzlkLWZlNDVmYjBmMjVlNi8iXSwicmVzZXJ2ZWRf
+        OlsiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZmlsZS9maWxlLzQ0MmRm
+        ZTE0LThiMzItNDExNS05YjkxLWMwOWUzYmU0YmZmNi8iXSwicmVzZXJ2ZWRf
         cmVzb3VyY2VzX3JlY29yZCI6WyIvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvIl19
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:14 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:49 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/06834eba-2991-49f3-9c9d-fe45fb0f25e6/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/442dfe14-8b32-4115-9b91-c09e3be4bff6/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1505,7 +1090,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1518,7 +1103,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:14 GMT
+      - Wed, 10 Mar 2021 21:14:49 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1530,27 +1115,28 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
-      - '284'
+      - '292'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9maWxl
-        L2ZpbGUvMDY4MzRlYmEtMjk5MS00OWYzLTljOWQtZmU0NWZiMGYyNWU2LyIs
-        InB1bHBfY3JlYXRlZCI6IjIwMjAtMDgtMjBUMTk6MDk6MTQuNjIwOTU0WiIs
+        L2ZpbGUvNDQyZGZlMTQtOGIzMi00MTE1LTliOTEtYzA5ZTNiZTRiZmY2LyIs
+        InB1bHBfY3JlYXRlZCI6IjIwMjEtMDMtMTBUMjE6MTQ6NDkuNzkzMDYwWiIs
         ImJhc2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2xpYnJhcnkvTXlf
-        RmlsZXMiLCJiYXNlX3VybCI6Imh0dHA6Ly9kZXZlbDIuYmFsbW9yYS5leGFt
-        cGxlLmNvbS9wdWxwL2NvbnRlbnQvRGVmYXVsdF9Pcmdhbml6YXRpb24vbGli
-        cmFyeS9NeV9GaWxlcy8iLCJjb250ZW50X2d1YXJkIjpudWxsLCJuYW1lIjoi
-        RGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1NeV9GaWxlcyIsInB1Ymxp
-        Y2F0aW9uIjoiL3B1bHAvYXBpL3YzL3B1YmxpY2F0aW9ucy9maWxlL2ZpbGUv
-        MDU2ZWQxZjMtZTA2Ni00NTNjLWIwNmYtODBjNzA1NzAzMjIyLyJ9
+        RmlsZXMiLCJiYXNlX3VybCI6Imh0dHBzOi8vY2VudG9zNy1rYXRlbGxvLTMu
+        MTgtc3RhYmxlLmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9EZWZhdWx0X09y
+        Z2FuaXphdGlvbi9saWJyYXJ5L015X0ZpbGVzLyIsImNvbnRlbnRfZ3VhcmQi
+        Om51bGwsIm5hbWUiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi1DYWJpbmV0LU15
+        X0ZpbGVzIiwicHVibGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRp
+        b25zL2ZpbGUvZmlsZS85OTc5MThlYy0yZGE1LTQ5M2ItYjFkYS1hMzliNTAx
+        OGJiMDQvIn0=
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:14 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:49 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/contentguards/certguard/rhsm/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/contentguards/certguard/rhsm/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1558,7 +1144,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.0.1/ruby
+      - OpenAPI-Generator/1.1.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1571,7 +1157,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:14 GMT
+      - Wed, 10 Mar 2021 21:14:49 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1583,17 +1169,17 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
-      - '3076'
+      - '3081'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9jb250ZW50Z3VhcmRz
-        L2NlcnRndWFyZC9yaHNtL2ZlZmJmODJhLWJhOGUtNDkyMC05NjljLTZjMzlm
-        YTdhZTdlYS8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIwLTA4LTIwVDE5OjA2OjEx
-        Ljk5NTIzNloiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
+        L2NlcnRndWFyZC9yaHNtLzYyNTU4YTI2LWZhZGItNDY4Yi1iNWQwLWZmYWM4
+        NjZjNjQwZC8iLCJwdWxwX2NyZWF0ZWQiOiIyMDIxLTAzLTEwVDIwOjM1OjQ0
+        LjQyNTQ5NloiLCJuYW1lIjoiUkhTTUNlcnRHdWFyZCIsImRlc2NyaXB0aW9u
         IjpudWxsLCJjYV9jZXJ0aWZpY2F0ZSI6IkNlcnRpZmljYXRlOlxuICAgIERh
         dGE6XG4gICAgICAgIFZlcnNpb246IDMgKDB4MilcbiAgICAgICAgU2VyaWFs
         IE51bWJlcjpcbiAgICAgICAgICAgIGZkOmJhOmJjOjcxOjZlOjI1OmEzOjc4
@@ -1720,10 +1306,10 @@ http_interactions:
         V3UzaGM2MTg0SE45aGVpTy9qbE1DWVBzTU5VVVE5VTFML1hnc2JXMnlicGc9
         PVxuLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLSJ9XX0=
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:14 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:49 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/file/file/?name=Default_Organization-Cabinet-My_Files_Dev
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/repositories/file/file/?name=Default_Organization-Cabinet-My_Files_Dev
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1731,7 +1317,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1744,7 +1330,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:14 GMT
+      - Wed, 10 Mar 2021 21:14:49 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1758,17 +1344,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:14 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:49 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files_Dev
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/remotes/file/file/?name=Default_Organization-Cabinet-My_Files_Dev
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1776,7 +1362,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1789,7 +1375,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:15 GMT
+      - Wed, 10 Mar 2021 21:14:50 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1803,17 +1389,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:15 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:50 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files_Dev
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/?name=Default_Organization-Cabinet-My_Files_Dev
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1821,7 +1407,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1834,7 +1420,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:15 GMT
+      - Wed, 10 Mar 2021 21:14:50 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1848,17 +1434,17 @@ http_interactions:
       Content-Length:
       - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:15 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:50 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/dev/My_Files
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/dev/My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1866,7 +1452,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1879,60 +1465,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:15 GMT
-      Server:
-      - gunicorn/20.0.4
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
-      Content-Length:
-      - '298'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
-        L2ZpbGUvZmlsZS8wZDI3MjZlOS00MThiLTQ1OWQtYjEzNi1lOTQyODNjZjdl
-        OTUvIiwicHVscF9jcmVhdGVkIjoiMjAyMC0wOC0yMFQxOTowNzo1OS4xMDY5
-        MTNaIiwiYmFzZV9wYXRoIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24vZGV2L015
-        X0ZpbGVzIiwiYmFzZV91cmwiOiJodHRwOi8vZGV2ZWwyLmJhbG1vcmEuZXhh
-        bXBsZS5jb20vcHVscC9jb250ZW50L0RlZmF1bHRfT3JnYW5pemF0aW9uL2Rl
-        di9NeV9GaWxlcy8iLCJjb250ZW50X2d1YXJkIjpudWxsLCJuYW1lIjoiNWYz
-        ZWNhMGNiMzc5ODkyYzQ0NjBlOGFiLURlZmF1bHRfT3JnYW5pemF0aW9uLUNh
-        YmluZXQtTXlfRmlsZXNfRGV2IiwicHVibGljYXRpb24iOm51bGx9XX0=
-    http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:15 GMT
-- request:
-    method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/0d2726e9-418b-459d-b136-e94283cf7e95/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Thu, 20 Aug 2020 19:09:15 GMT
+      - Wed, 10 Mar 2021 21:14:50 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -1940,23 +1473,23 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '67'
+      - '52'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzEyYTc5OWVkLTc5NTAtNGQ1
-        OC1iMDc0LTE5MzJiMWMyZGJkNS8ifQ==
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:15 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:50 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/12a799ed-7950-4d58-b074-1932b1c2dbd5/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/?base_path=Default_Organization/dev/My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1964,7 +1497,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1977,54 +1510,44 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:15 GMT
+      - Wed, 10 Mar 2021 21:14:50 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
       - application/json
       Vary:
-      - Accept,Cookie,Accept-Encoding
+      - Accept,Cookie
       Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
-      Via:
-      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '314'
+      - '52'
+      Via:
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMTJhNzk5ZWQtNzk1
-        MC00ZDU4LWIwNzQtMTkzMmIxYzJkYmQ1LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTUuMTk4Nzk3WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTUuMzY0NTM0
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxNS40MTg5Mzla
-        IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEyNDMxOTY4LWNhNTMtNDJmZi1hOWMzLTQwZDZhYjEzZjU2Yy8iLCJwYXJl
-        bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
-        dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
-        OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlz
-        dHJpYnV0aW9ucy8iXX0=
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:15 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:50 GMT
 - request:
     method: post
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/
     body:
       encoding: UTF-8
       base64_string: |
         eyJiYXNlX3BhdGgiOiJEZWZhdWx0X09yZ2FuaXphdGlvbi9kZXYvTXlfRmls
         ZXMiLCJjb250ZW50X2d1YXJkIjpudWxsLCJuYW1lIjoiRGVmYXVsdF9Pcmdh
         bml6YXRpb24tQ2FiaW5ldC1NeV9GaWxlc19EZXYiLCJwdWJsaWNhdGlvbiI6
-        Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvZmlsZS9maWxlLzA1NmVkMWYz
-        LWUwNjYtNDUzYy1iMDZmLTgwYzcwNTcwMzIyMi8ifQ==
+        Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvZmlsZS9maWxlLzk5NzkxOGVj
+        LTJkYTUtNDkzYi1iMWRhLWEzOWI1MDE4YmIwNC8ifQ==
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -2037,7 +1560,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:15 GMT
+      - Wed, 10 Mar 2021 21:14:50 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -2051,17 +1574,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzFkMmQzYmMwLTlhNjMtNDY4
-        MS1iNDJmLTgwZTEyY2FhYWQ1Mi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzg0YWQwZGFiLWMwYzctNDJj
+        ZS1iMjBhLWVjYjhmNzc0YjhjNy8ifQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:15 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:50 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/1d2d3bc0-9a63-4681-b42f-80e12caaad52/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/tasks/84ad0dab-c0c7-42ce-b20a-ecb8f774b8c7/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -2069,7 +1592,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
+      - OpenAPI-Generator/3.7.3/ruby
       Accept:
       - application/json
       Authorization:
@@ -2082,7 +1605,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:16 GMT
+      - Wed, 10 Mar 2021 21:14:50 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -2094,30 +1617,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
-      - '347'
+      - '346'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMWQyZDNiYzAtOWE2
-        My00NjgxLWI0MmYtODBlMTJjYWFhZDUyLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTUuODIyNjQ1WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvODRhZDBkYWItYzBj
+        Ny00MmNlLWIyMGEtZWNiOGY3NzRiOGM3LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDMtMTBUMjE6MTQ6NTAuMzgxODgwWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
-        YXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTYuMDIwMzQ0
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxNi4zMjkyMzBa
+        YXRlIiwic3RhcnRlZF9hdCI6IjIwMjEtMDMtMTBUMjE6MTQ6NTAuNDgxNzU0
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wMy0xMFQyMToxNDo1MC42Njk1ODVa
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEwZTNlNjJmLWM5NzYtNGM3YS1iMTM1LTM4MTY0ODk0NDgwNS8iLCJwYXJl
+        LzFlYTA2YzU0LTA5YzAtNDk5MC1hYWNlLTJlNTQxMTk4MzUwNC8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
-        OlsiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZmlsZS9maWxlL2QyYTEx
-        MmY4LWFhM2UtNDg4MS1hMmY3LTY1MDQ2Mzg2NDM5My8iXSwicmVzZXJ2ZWRf
+        OlsiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZmlsZS9maWxlL2Q2MjYz
+        ZmUyLTk3MjktNDA3Ny05ZTVlLTllNjlhMTY1NWViYi8iXSwicmVzZXJ2ZWRf
         cmVzb3VyY2VzX3JlY29yZCI6WyIvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvIl19
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:16 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:50 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/d2a112f8-aa3e-4881-a2f7-650463864393/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/d6263fe2-9729-4077-9e5e-9e69a1655ebb/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -2125,7 +1648,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -2138,7 +1661,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:16 GMT
+      - Wed, 10 Mar 2021 21:14:50 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -2150,27 +1673,28 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
-      - '283'
+      - '293'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9maWxl
-        L2ZpbGUvZDJhMTEyZjgtYWEzZS00ODgxLWEyZjctNjUwNDYzODY0MzkzLyIs
-        InB1bHBfY3JlYXRlZCI6IjIwMjAtMDgtMjBUMTk6MDk6MTYuMzEwMDY4WiIs
+        L2ZpbGUvZDYyNjNmZTItOTcyOS00MDc3LTllNWUtOWU2OWExNjU1ZWJiLyIs
+        InB1bHBfY3JlYXRlZCI6IjIwMjEtMDMtMTBUMjE6MTQ6NTAuNjU5NjAzWiIs
         ImJhc2VfcGF0aCI6IkRlZmF1bHRfT3JnYW5pemF0aW9uL2Rldi9NeV9GaWxl
-        cyIsImJhc2VfdXJsIjoiaHR0cDovL2RldmVsMi5iYWxtb3JhLmV4YW1wbGUu
-        Y29tL3B1bHAvY29udGVudC9EZWZhdWx0X09yZ2FuaXphdGlvbi9kZXYvTXlf
-        RmlsZXMvIiwiY29udGVudF9ndWFyZCI6bnVsbCwibmFtZSI6IkRlZmF1bHRf
-        T3JnYW5pemF0aW9uLUNhYmluZXQtTXlfRmlsZXNfRGV2IiwicHVibGljYXRp
-        b24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS8wNTZl
-        ZDFmMy1lMDY2LTQ1M2MtYjA2Zi04MGM3MDU3MDMyMjIvIn0=
+        cyIsImJhc2VfdXJsIjoiaHR0cHM6Ly9jZW50b3M3LWthdGVsbG8tMy4xOC1z
+        dGFibGUuZXhhbXBsZS5jb20vcHVscC9jb250ZW50L0RlZmF1bHRfT3JnYW5p
+        emF0aW9uL2Rldi9NeV9GaWxlcy8iLCJjb250ZW50X2d1YXJkIjpudWxsLCJu
+        YW1lIjoiRGVmYXVsdF9Pcmdhbml6YXRpb24tQ2FiaW5ldC1NeV9GaWxlc19E
+        ZXYiLCJwdWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMv
+        ZmlsZS9maWxlLzk5NzkxOGVjLTJkYTUtNDkzYi1iMWRhLWEzOWI1MDE4YmIw
+        NC8ifQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:16 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:50 GMT
 - request:
     method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/file/file/08b45eb4-7700-40da-b23e-593c0480b1ce/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/remotes/file/file/17d9d0be-5058-44f4-bcdf-9982c8a4d912/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -2178,7 +1702,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -2191,7 +1715,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:16 GMT
+      - Wed, 10 Mar 2021 21:14:51 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -2205,17 +1729,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2QyMGZhMmM0LWNmYmQtNGE0
-        My04ZTRhLTg3Yzk1OGQ4M2VjZS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2NlZDUwNmU2LTNmOGEtNDk5
+        Ny05ODZjLWMzODYwMzVmMzU0NS8ifQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:16 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:51 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/d20fa2c4-cfbd-4a43-8e4a-87c958d83ece/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/tasks/ced506e6-3f8a-4997-986c-c386035f3545/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -2223,7 +1747,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
+      - OpenAPI-Generator/3.7.3/ruby
       Accept:
       - application/json
       Authorization:
@@ -2236,7 +1760,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:16 GMT
+      - Wed, 10 Mar 2021 21:14:51 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -2248,30 +1772,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
-      - '337'
+      - '340'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZDIwZmEyYzQtY2Zi
-        ZC00YTQzLThlNGEtODdjOTU4ZDgzZWNlLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTYuNzM5OTExWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvY2VkNTA2ZTYtM2Y4
+        YS00OTk3LTk4NmMtYzM4NjAzNWYzNTQ1LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDMtMTBUMjE6MTQ6NTAuOTczNTQyWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTYuODk0OTY2
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxNi45NTUyNjFa
+        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjEtMDMtMTBUMjE6MTQ6NTEuMDg2MzE0
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wMy0xMFQyMToxNDo1MS4xMjU2Mjha
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEyNDMxOTY4LWNhNTMtNDJmZi1hOWMzLTQwZDZhYjEzZjU2Yy8iLCJwYXJl
+        LzFlYTA2YzU0LTA5YzAtNDk5MC1hYWNlLTJlNTQxMTk4MzUwNC8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
         OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92
-        My9yZW1vdGVzL2ZpbGUvZmlsZS8wOGI0NWViNC03NzAwLTQwZGEtYjIzZS01
-        OTNjMDQ4MGIxY2UvIl19
+        My9yZW1vdGVzL2ZpbGUvZmlsZS8xN2Q5ZDBiZS01MDU4LTQ0ZjQtYmNkZi05
+        OTgyYzhhNGQ5MTIvIl19
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:16 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:51 GMT
 - request:
     method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/file/file/06834eba-2991-49f3-9c9d-fe45fb0f25e6/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/distributions/file/file/442dfe14-8b32-4115-9b91-c09e3be4bff6/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -2279,7 +1803,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -2292,7 +1816,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:17 GMT
+      - Wed, 10 Mar 2021 21:14:51 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -2306,17 +1830,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzQxNGM5NTA0LTdkZTEtNDI2
-        Ny05MzI0LTQ4MmVhNjJmMmQ2NC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzgzNThmNTY0LTlmMmUtNGMw
+        MS1hZDQ0LWQzZTg5OTM0M2Q5NC8ifQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:17 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:51 GMT
 - request:
     method: delete
-    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/file/file/a574c158-fcaf-495e-a7ff-bc50086b0f33/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/repositories/file/file/a59a44cf-c6e3-47f3-8561-674be203d520/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -2324,7 +1848,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/1.2.0/ruby
+      - OpenAPI-Generator/1.3.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -2337,7 +1861,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:17 GMT
+      - Wed, 10 Mar 2021 21:14:51 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -2351,17 +1875,17 @@ http_interactions:
       Content-Length:
       - '67'
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M4NTkyYmYxLWM1MjQtNDI2
-        MS05NDJmLTQyMTI3ZDhiYjJmNi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzg3MTQ5MGY4LTc5ZjItNGMz
+        Yy05OTMyLTJhZGNmYzUyZWZiMC8ifQ==
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:17 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:51 GMT
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/c8592bf1-c524-4261-942f-42127d8bb2f6/
+    uri: https://centos7-katello-3.18-stable.example.com/pulp/api/v3/tasks/871490f8-79f2-4c3c-9932-2adcfc52efb0/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -2369,7 +1893,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.6.0/ruby
+      - OpenAPI-Generator/3.7.3/ruby
       Accept:
       - application/json
       Authorization:
@@ -2382,7 +1906,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 20 Aug 2020 19:09:17 GMT
+      - Wed, 10 Mar 2021 21:14:51 GMT
       Server:
       - gunicorn/20.0.4
       Content-Type:
@@ -2394,25 +1918,25 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-3.18-stable.example.com
       Content-Length:
       - '342'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYzg1OTJiZjEtYzUy
-        NC00MjYxLTk0MmYtNDIxMjdkOGJiMmY2LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjAtMDgtMjBUMTk6MDk6MTcuMTkyMjU4WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvODcxNDkwZjgtNzlm
+        Mi00YzNjLTk5MzItMmFkY2ZjNTJlZmIwLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDMtMTBUMjE6MTQ6NTEuMjc1NjgwWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjAtMDgtMjBUMTk6MDk6MTcuNDMzMDY2
-        WiIsImZpbmlzaGVkX2F0IjoiMjAyMC0wOC0yMFQxOTowOToxNy41Njc4NTJa
+        ZXRlIiwic3RhcnRlZF9hdCI6IjIwMjEtMDMtMTBUMjE6MTQ6NTEuNDU5MzUz
+        WiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wMy0xMFQyMToxNDo1MS41NDU5MDda
         IiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3JrZXJz
-        LzEyNDMxOTY4LWNhNTMtNDJmZi1hOWMzLTQwZDZhYjEzZjU2Yy8iLCJwYXJl
+        LzQxOGFmNjNkLTQ2MzItNDJhMy1iYWFmLTI4YzhmZDgzYmNiMi8iLCJwYXJl
         bnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3VwIjpu
         dWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9yZXNvdXJjZXMi
         OltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92
-        My9yZXBvc2l0b3JpZXMvZmlsZS9maWxlL2E1NzRjMTU4LWZjYWYtNDk1ZS1h
-        N2ZmLWJjNTAwODZiMGYzMy8iXX0=
+        My9yZXBvc2l0b3JpZXMvZmlsZS9maWxlL2E1OWE0NGNmLWM2ZTMtNDdmMy04
+        NTYxLTY3NGJlMjAzZDUyMC8iXX0=
     http_version: 
-  recorded_at: Thu, 20 Aug 2020 19:09:17 GMT
+  recorded_at: Wed, 10 Mar 2021 21:14:51 GMT
 recorded_with: VCR 3.0.3
