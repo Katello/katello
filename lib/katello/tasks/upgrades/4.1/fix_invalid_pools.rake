@@ -54,7 +54,7 @@ namespace :katello do
         imported_count = invalid_pools.count - orphaned_pools.count
         logger.info("Corrected #{imported_count} invalid pools")
 
-        orphaned_pools.each { |p| p.destroy }
+        orphaned_pools.each(&:destroy)
         logger.info("Removed #{orphaned_pools.count} orphaned pools")
       end
     end
