@@ -399,8 +399,8 @@ module Katello
       all_instances
     end
 
-    def to_hash(content_source = nil)
-      {id: id, name: label, url: full_path(content_source)}
+    def to_hash(content_source = nil, force_http = false)
+      {id: id, name: label, url: full_path(content_source, force_http)}
     end
 
     #is the repo cloned in the specified environment
