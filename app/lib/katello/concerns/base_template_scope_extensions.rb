@@ -209,9 +209,11 @@ module Katello
         search = [search_up_to, search_since, search_result].compact.join(' and ')
 
         if Katello.with_remote_execution?
-          condition = ["state != 'stopped' AND (label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) OR label = 'Actions::Katello::Host::Erratum::Install'", RemoteExecutionFeature.feature('katello_errata_install').job_template_id]
+          condition = ["state = 'stopped' AND ((label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) " \
+                       "OR label = 'Actions::Katello::Host::Erratum::Install' OR label = 'Actions::Katello::Host::Erratum::ApplicableErrataInstall')",
+                       RemoteExecutionFeature.feature('katello_errata_install').job_template_id]
         else
-          condition = "state != 'stopped' AND label = 'Actions::Katello::Host::Erratum::Install'"
+          condition = "state = 'stopped' AND (label = 'Actions::Katello::Host::Erratum::Install' OR label = 'Actions::Katello::Host::Erratum::ApplicableErrataInstall')"
         end
 
         tasks = load_resource(klass: ForemanTasks::Task,
@@ -219,19 +221,20 @@ module Katello
                               permission: 'view_foreman_tasks',
                               joins: 'LEFT OUTER JOIN template_invocations ON foreman_tasks_tasks.id = template_invocations.run_host_job_task_id LEFT OUTER JOIN templates ON template_invocations.template_id = templates.id',
                               select: 'foreman_tasks_tasks.*,template_invocations.id AS template_invocation_id',
-                              search: search
-        )
+                              search: search)
         only_host_ids = ::Host.search_for(host_filter).pluck(:id) if host_filter
 
         # batch of 1_000 records
         tasks.each do |batch|
+          @_tasks_input = {}
           @_tasks_errata_cache = {}
           seen_errata_ids = []
           seen_host_ids = []
 
           batch.each do |task|
+            next if skip_task?(task)
             seen_errata_ids = (seen_errata_ids + parse_errata(task)).uniq
-            seen_host_ids << task.input['host']['id'].to_i if include_last_reboot == 'yes'
+            seen_host_ids << get_task_input(task)['host']['id'].to_i if include_last_reboot == 'yes'
           end
           seen_host_ids &= only_host_ids if only_host_ids
 
@@ -240,6 +243,7 @@ module Katello
           preloaded_hosts = ::Host.where(:id => seen_host_ids).includes(:reported_data)
 
           batch.each do |task|
+            next if skip_task?(task)
             next if !only_host_ids.nil? && only_host_ids.include?(task.input['host']['id'].to_i)
             parse_errata(task).each do |erratum_id|
               current_erratum_errata_type = preloaded_errata.find { |k, _| k == erratum_id }.last
@@ -250,14 +254,15 @@ module Katello
 
               hash = {
                 :date => task.ended_at,
-                :hostname => task.input['host']['name'],
+                :hostname => get_task_input(task)['host']['name'],
                 :erratum_id => erratum_id,
                 :erratum_type => current_erratum_errata_type,
                 :status => task.result
               }
 
               if include_last_reboot == 'yes'
-                hash[:last_reboot_time] = preloaded_hosts.find { |k, _| k.id == task.input['host']['id'] }.uptime_seconds&.seconds&.ago
+                # It is possible that we can't find the host if it has been deleted.
+                hash[:last_reboot_time] = preloaded_hosts.find { |k, _| k.id == get_task_input(task)['host']['id'].to_i }&.uptime_seconds&.seconds&.ago
               end
 
               result << hash
@@ -289,14 +294,29 @@ module Katello
         host.subscription_facet
       end
 
+      def skip_task?(task)
+        # Skip task that doesn't apply errata
+        input = get_task_input(task)
+        input.blank? || input['host'].blank?
+      end
+
+      def get_task_input(task)
+        @_tasks_input[task.id] ||= if task.label == 'Actions::Katello::Host::Erratum::ApplicableErrataInstall'
+                                     task.execution_plan_action.all_planned_actions(Actions::Katello::Host::Erratum::Install).first.try(:input) || {}
+                                   else
+                                     task.input
+                                   end
+      end
+
       def parse_errata(task)
-        @_tasks_errata_cache[task.id] ||= if task.input['errata'].present?
-                                            # katello agent errata
-                                            task.input['errata']
-                                          else
-                                            # rex errata
-                                            TemplateInvocationInputValue.where(:template_invocation_id => task.template_invocation_id).limit(1).pluck(:value).first.split(',')
-                                          end
+        task_input = get_task_input(task)
+        agent_input = task_input['errata'] || task_input['content']
+        # Pick katello agent errata if present
+        # Otherwise pick rex errata. There are multiple template inputs, such as errata, pre_script and post_script we only need the
+        # errata input here.
+        @_tasks_errata_cache[task.id] ||= agent_input.presence || TemplateInvocationInputValue.joins(:template_input)
+                                            .where("template_invocation_id = ? AND template_inputs.name = ?", task.template_invocation_id, 'errata')
+                                            .first.value.split(',')
       end
     end
   end
