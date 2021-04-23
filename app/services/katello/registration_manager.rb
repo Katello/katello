@@ -50,6 +50,16 @@ module Katello
         Katello::Host::SubscriptionFacet::DMI_UUID_ALLOWED_DUPS
       end
 
+      def dmi_uuid_change_allowed?(host, host_uuid_overridden)
+        if host_uuid_overridden
+          true
+        elsif host.build && Setting[:host_profile_assume_build_can_change]
+          true
+        else
+          Setting[:host_profile_assume]
+        end
+      end
+
       def find_existing_hosts(host_name, host_uuid)
         query = ::Host.unscoped.where("#{::Host.table_name}.name = ?", host_name)
 
@@ -77,11 +87,10 @@ module Katello
           host = hosts.first
 
           if host.name == host_name
-            unless Setting[:host_profile_assume] || host.subscription_facet.nil? || host.build || host_uuid_overridden
-              current_dmi_uuid = host.subscription_facet.dmi_uuid
-              if current_dmi_uuid && current_dmi_uuid != host_uuid
-                registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
-              end
+            current_dmi_uuid = host.subscription_facet&.dmi_uuid
+            dmi_uuid_changed = current_dmi_uuid && current_dmi_uuid != host_uuid
+            if dmi_uuid_changed && !dmi_uuid_change_allowed?(host, host_uuid_overridden)
+              registration_error("This host is reporting a DMI UUID that differs from the existing registration.")
             end
 
             return true
