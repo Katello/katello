@@ -22,6 +22,10 @@ module Katello
         @event_data ||= (data = content['eventData']) ? JSON.parse(data) : {}
       end
 
+      def entity_id
+        content['entityId']
+      end
+
       def target_name
         content['targetName']
       end
@@ -73,7 +77,13 @@ module Katello
         if pool
           ::Katello::EventQueue.push_event(::Katello::Events::ImportPool::EVENT_TYPE, pool.id)
         else
-          ::Katello::Pool.import_pool(pool_id, index_hosts)
+          begin
+            ::Katello::Pool.import_pool(pool_id, index_hosts)
+          rescue ActiveRecord::RecordInvalid
+            # if we hit this block it's likely that the pool's subscription, product are being created
+            # as a result of manifest import/refresh or custom product creation
+            Rails.logger.warn("Unable to import pool. It will likely be created by another process.")
+          end
         end
       end
 

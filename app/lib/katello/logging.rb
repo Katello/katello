@@ -2,13 +2,18 @@ module Katello
   module Logging
     def self.time(message, data: {}, logger: Rails.logger, level: :info)
       start = Time.now
+      data[:success] = true
 
-      yield
-
-      data[:duration] = ((Time.now - start) * 1000).truncate(2)
-      data_string = data.map { |k, v| "#{k}=#{v}" }.join(' ')
-
-      logger.send(level, "#{message} #{data_string}")
+      begin
+        yield(data)
+      rescue => e
+        data[:success] = false
+        raise e
+      ensure
+        data[:duration] = ((Time.now - start) * 1000).truncate(2)
+        data_string = data.map { |k, v| "#{k}=#{v}" }.join(' ')
+        logger.send(level, "#{message} #{data_string}")
+      end
     end
 
     class Timer

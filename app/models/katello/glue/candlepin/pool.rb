@@ -27,8 +27,16 @@ module Katello
     end
 
     module ClassMethods
-      def candlepin_data(cp_id)
+      def candlepin_data(cp_id, rescue_gone = false)
         Katello::Resources::Candlepin::Pool.find(cp_id)
+      rescue Katello::Errors::CandlepinPoolGone => e
+        raise e unless rescue_gone
+
+        if (pool_id = ::Katello::Pool.find_by_cp_id(cp_id)&.id)
+          Katello::EventQueue.push_event(::Katello::Events::DeletePool::EVENT_TYPE, pool_id)
+          Rails.logger.warn("Sending pool delete event for missing candlepin pool cp_id=#{cp_id}")
+        end
+        {}
       end
 
       def get_for_owner(organization)
@@ -36,19 +44,39 @@ module Katello
       end
 
       def import_pool(cp_pool_id, index_hosts = true)
-        json = candlepin_data(cp_pool_id)
-        ::Katello::Util::Support.active_record_retry do
-          pool = Katello::Pool.where(:cp_id => cp_pool_id, :organization => Organization.find_by(:label => json['owner']['key'])).first_or_create
-          pool.backend_data = json
-          pool.import_data(index_hosts)
+        Katello::Logging.time("import candlepin pool", data: { cp_id: cp_pool_id }) do
+          json = candlepin_data(cp_pool_id)
+
+          org = Organization.find_by(label: json['owner']['key'])
+          fail("Organization with label #{json['owner']['key']} wasn't found while importing Candlepin pool") unless org
+
+          subscription = determine_subscription(
+            product_id: json['productId'],
+            source_stack_id: json['sourceStackId'],
+            organization: org
+          )
+
+          ::Katello::Util::Support.active_record_retry do
+            pool = Katello::Pool.where(cp_id: cp_pool_id, organization: org, subscription: subscription).first_or_create!
+            pool.backend_data = json
+            pool.import_data(index_hosts)
+          end
         end
       end
 
-      def stacking_subscription(org_label, stacking_id)
-        org = Organization.find_by(:label => org_label)
+      def determine_subscription(product_id: nil, source_stack_id: nil, organization:)
+        if source_stack_id
+          self.stacking_subscription(organization, source_stack_id)
+          # isn't it an error if we have a sourceStackID but no stacking subscription?
+        else
+          ::Katello::Subscription.find_by(:cp_id => product_id, organization: organization)
+        end
+      end
+
+      def stacking_subscription(org, stacking_id)
         subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => stacking_id)
         if subscription.nil?
-          found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org_label, stacking_id)
+          found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org.label, stacking_id)
           subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => found_product['id']) if found_product
         end
         subscription
@@ -57,7 +85,9 @@ module Katello
 
     module InstanceMethods
       def import_lazy_attributes
-        json = self.backend_data
+        json = self.class.candlepin_data(self.cp_id, true)
+
+        return {} if json.blank?
 
         pool_attributes = json["attributes"] + json["productAttributes"]
         json["virt_only"] = false
@@ -78,9 +108,7 @@ module Katello
         json["product_id"] = json["productId"] if json["productId"]
         json["upstream_entitlement_id"] = json["upstreamEntitlementId"]
 
-        if self.subscription
-          subscription.backend_data["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
-        end
+        subscription.backend_data["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
         json
       end
 
@@ -93,23 +121,12 @@ module Katello
 
       # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       # rubocop:disable Metrics/CyclomaticComplexity
-      # rubocop:disable Metrics/PerceivedComplexity
       def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
 
-        self.organization ||= Organization.find_by(:label => pool_json['owner']['key'])
         product_attributes = pool_json["productAttributes"] + pool_json["attributes"]
-
         product_attributes.map { |attr| pool_attributes[attr["name"].underscore.to_sym] = attr["value"] }
-
-        if pool_json["sourceStackId"]
-          subscription = Pool.stacking_subscription(pool_json['owner']['key'], pool_json["sourceStackId"])
-        else
-          subscription = ::Katello::Subscription.find_by(:cp_id => pool_json["productId"])
-        end
-
-        pool_attributes[:subscription_id] = subscription.id if subscription
 
         %w(accountNumber contractNumber quantity startDate endDate accountNumber consumed).each do |json_attribute|
           pool_attributes[json_attribute.underscore] = pool_json[json_attribute]

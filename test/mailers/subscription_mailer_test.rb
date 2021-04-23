@@ -6,7 +6,6 @@ module Katello
       FactoryBot.create(
         :katello_pool,
         :expiring_in_12_days,
-        :with_organization,
         cp_id: "123",
         subscription_id: ActiveRecord::FixtureSet.identify(:basic_subscription),
         pool_type: "normal",
@@ -19,7 +18,6 @@ module Katello
       FactoryBot.create(
         :katello_pool,
         :expiring_soon,
-        :with_organization,
         subscription_id: ActiveRecord::FixtureSet.identify(:other_subscription)) # Setting[:expire_soon_days] || 120
     end
   end
@@ -40,7 +38,6 @@ module Katello
 
       FactoryBot.create(:katello_pool,
                         :not_expiring_soon,
-                        :with_organization,
                         cp_id: "1234",
                         subscription_id: ActiveRecord::FixtureSet.identify(:other_subscription))
 

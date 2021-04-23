@@ -9,6 +9,7 @@ module Katello
       @pool_two = katello_pools(:pool_two)
       @custom_pool = katello_pools(:custom_pool)
       @host_one = hosts(:one)
+      @organization = @pool_one.organization
     end
 
     def test_upstream
@@ -38,12 +39,12 @@ module Katello
     end
 
     def test_stacking_id
-      assert_equal @pool_one.subscription, Pool.stacking_subscription(@pool_one.organization.label, @pool_one.subscription.cp_id)
+      assert_equal @pool_one.subscription, Pool.stacking_subscription(@pool_one.organization, @pool_one.subscription.cp_id)
     end
 
     def test_stacking_id_no_match
       ::Katello::Resources::Candlepin::Product.expects(:find_for_stacking_id).with(@pool_one.organization.label, 'fake_stack').returns('id' => @pool_two.subscription.cp_id)
-      assert_equal @pool_two.subscription, Pool.stacking_subscription(@pool_one.organization.label, 'fake_stack')
+      assert_equal @pool_two.subscription, Pool.stacking_subscription(@pool_one.organization, 'fake_stack')
     end
 
     def test_recently_expired
@@ -99,6 +100,11 @@ module Katello
       assert_equal @pool_one.quantity_available, 9
     end
 
+    def test_candlepin_data_rescue_gone
+      Katello::Resources::Candlepin::Pool.expects(:find).raises(Katello::Errors::CandlepinPoolGone)
+      assert_empty Pool.candlepin_data('abcd', true)
+    end
+
     def test_import_all_default
       org = get_organization
       Pool.expects(:import_candlepin_ids).with(org).returns([@pool_one.cp_id])
@@ -123,6 +129,56 @@ module Katello
       Pool.expects(:in_organization).with(org).returns([@pool_one])
       Pool.import_all(org)
       refute Pool.find_by_id(@pool_one.id)
+    end
+
+    def test_import_pool
+      Pool.expects(:candlepin_data).returns(
+        'id' => 'abcd',
+        'productId' => 'SKU001',
+        'productAttributes' => [],
+        'attributes' => [],
+        'providedProducts' => [],
+        'derivedProvidedProducts' => [],
+        'owner' => {
+          'key' => @organization.label
+        }
+      )
+
+      subscription = FactoryBot.create(:katello_subscription, organization: @organization, cp_id: 'SKU001')
+
+      Resources::Candlepin::ActivationKey.expects(:get).returns([])
+      Resources::Candlepin::Pool.expects(:consumer_uuids).returns([])
+
+      Pool.import_pool('abcd')
+
+      pool = Pool.find_by_cp_id('abcd')
+      assert_equal @organization, pool.organization
+      assert_equal subscription, pool.subscription
+    end
+
+    def test_import_pool_no_subscription
+      Pool.expects(:candlepin_data).returns(
+        'id' => 'abcd',
+        'productAttributes' => [],
+        'attributes' => [],
+        'providedProducts' => [],
+        'derivedProvidedProducts' => [],
+        'owner' => {
+          'key' => @organization.label
+        }
+      )
+
+      assert_raises(ActiveRecord::RecordInvalid) do
+        Pool.import_pool('abcd')
+      end
+    end
+
+    def test_import_pool_not_in_candlepin
+      Pool.expects(:candlepin_data).raises(Katello::Errors::CandlepinPoolGone)
+
+      assert_raises(Katello::Errors::CandlepinPoolGone) do
+        Pool.import_pool('abcd')
+      end
     end
 
     def test_import_hosts

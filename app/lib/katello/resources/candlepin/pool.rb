@@ -18,8 +18,12 @@ module Katello
           end
 
           def find(pool_id)
-            pool_json = self.get(path(pool_id), self.default_headers).body
-            fail ArgumentError, "pool id cannot contain ?" if pool_id["?"]
+            begin
+              pool_json = self.get(path(pool_id), self.default_headers).body
+            rescue RestClient::ResourceNotFound
+              raise Katello::Errors::CandlepinPoolGone
+            end
+
             JSON.parse(pool_json).with_indifferent_access
           end
 

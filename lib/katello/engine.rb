@@ -238,6 +238,7 @@ module Katello
       Katello::EventQueue.register_event(Katello::Events::AutoPublishCompositeView::EVENT_TYPE, Katello::Events::AutoPublishCompositeView)
       Katello::EventQueue.register_event(Katello::Events::GenerateHostApplicability::EVENT_TYPE, Katello::Events::GenerateHostApplicability)
       Katello::EventQueue.register_event(Katello::Events::DeleteHostAgentQueue::EVENT_TYPE, Katello::Events::DeleteHostAgentQueue)
+      Katello::EventQueue.register_event(Katello::Events::DeletePool::EVENT_TYPE, Katello::Events::DeletePool)
     end
 
     rake_tasks do

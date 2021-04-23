@@ -50,6 +50,15 @@ module Katello
 
     validates_lengths_from_database
 
+    validates :subscription, :presence => true
+    validates :organization, :presence => true
+
+    validate :subscription_matches_organization
+
+    def subscription_matches_organization
+      errors.add(:base, _("A Pool and its Subscription cannot belong to different organizations")) unless subscription&.organization_id == self.organization_id
+    end
+
     DAYS_RECENTLY_EXPIRED = 30
 
     def redhat?
