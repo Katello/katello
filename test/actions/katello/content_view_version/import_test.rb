@@ -31,18 +31,27 @@ module ::Actions::Katello::ContentViewVersion
       prod = katello_products(:redhat)
 
       {
-        repository_mapping: {
+        products: {
+          prod.label => prod.slice(:label, :name).merge(redhat: prod.redhat?)
+        },
+        repositories: {
           "misc-24037" => { label: prod.repositories.first.label,
-                            product: prod.slice(:label, :name),
+                            product: prod.slice(:label),
                             redhat: prod.redhat?
           }
         },
+        gpg_keys: {},
         content_view_version: {
           major: content_view_version.major,
-          minor: content_view_version.minor
+          minor: content_view_version.minor,
+          description: description
         },
         content_view: content_view.slice(:label, :name, :description)
       }.with_indifferent_access
+    end
+
+    let(:description) do
+      "cool cvv"
     end
 
     let(:path) do
@@ -90,7 +99,7 @@ module ::Actions::Katello::ContentViewVersion
         plan_action(action, organization: organization, path: path, metadata: metadata)
         assert_action_planned_with(action,
                                     ::Actions::Katello::ContentView::Publish,
-                                    content_view, '',
+                                    content_view, description,
                                     path: path,
                                     metadata: metadata,
                                     importing: true,
@@ -109,7 +118,7 @@ module ::Actions::Katello::ContentViewVersion
         assert content_view.import_only?
         assert_action_planned_with(action,
                                     ::Actions::Katello::ContentView::Publish,
-                                    content_view, '',
+                                    content_view, description,
                                     path: path,
                                     metadata: metadata,
                                     importing: true,
@@ -128,7 +137,7 @@ module ::Actions::Katello::ContentViewVersion
         assert content_view.import_only?
         assert_action_planned_with(action,
                                     ::Actions::Katello::ContentView::Publish,
-                                    content_view, '',
+                                    content_view, description,
                                     path: path,
                                     metadata: metadata,
                                     importing: true,

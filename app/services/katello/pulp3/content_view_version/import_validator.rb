@@ -90,7 +90,7 @@ module Katello
           # repos_in_library look like [["prod1", "repo1", "Anonymous"], ["prod2", "repo2", "Red Hat"]]
           rh_repos_in_library = repos_in_library.redhat
           product_repos_in_library = rh_repos_in_library.map { |repo| [repo.product.label, repo.label] }
-          product_repos_in_metadata = metadata[:repository_mapping].values.map { |repo| [repo[:product][:label], repo[:label]] if repo[:redhat] }
+          product_repos_in_metadata = metadata[:repositories].values.map { |repo| [repo[:product][:label], repo[:label]] if repo[:redhat] }
           product_repos_in_metadata.compact!
 
           # product_repos_in_library & product_repos_in_metadata look like [["prod1", "repo1", false], ["prod2", "repo2", false]]

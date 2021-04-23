@@ -26,9 +26,13 @@ module ::Actions::Katello::ContentViewVersion
       prod = katello_products(:redhat)
 
       {
-        repository_mapping: {
+        products: {
+          prod.label => prod.slice(:name, :label).merge(redhat: prod.redhat?)
+        },
+        gpg_keys: {},
+        repositories: {
           "misc-24037" => { label: prod.repositories.first.label,
-                            product: prod.slice(:name, :label),
+                            product: prod.slice(:label),
                             redhat: prod.redhat?
           }
         },

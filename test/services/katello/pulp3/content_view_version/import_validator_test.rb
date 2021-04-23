@@ -70,13 +70,16 @@ module Katello
               exception = assert_raises(RuntimeError) do
                 metadata = { content_view: cvv.content_view.slice(:name, :label, :description),
                              content_view_version: { major: cvv.major + 10, minor: cvv.minor },
-                             repository_mapping: {
+                             products: {
+                               repo.product.label => repo.product.slice(:name, :label).merge(redhat: !repo.redhat?)
+                             },
+                             repositories: {
                                "misc-24037": { label: repo.label,
                                                product: { name: repo.product.name, label: repo.product.label},
                                                redhat: !repo.redhat?
                                              }
-                             }
-
+                             },
+                             gpg_keys: {}
                 }
                 validator(content_view: cvv.content_view, metadata: metadata).check!
               end
@@ -91,9 +94,13 @@ module Katello
               exception = assert_raises(RuntimeError) do
                 metadata = { content_view: cv.slice(:name, :label, :description),
                              content_view_version: { major: cvv.major + 10, minor: cvv.minor },
-                             repository_mapping: {
+                             products: {
+                               "prod" => { name: "prod", label: 'prod'}
+                             },
+                             gpg_keys: {},
+                             repositories: {
                                "misc-24037": { label: "misc",
-                                               product: { name: "prod", label: 'prod'},
+                                               product: {label: 'prod'},
                                                "redhat": true
                                              }
                              }

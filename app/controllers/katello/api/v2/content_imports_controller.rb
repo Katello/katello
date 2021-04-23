@@ -65,14 +65,18 @@ module Katello
     def metadata_params
       params.require(:metadata).permit(
         :organization,
-        :repository_mapping,
+        :repositories,
+        :products,
+        :gpg_keys,
         :toc,
         :incremental,
         content_view: [:name, :label, :description],
-        content_view_version: [:major, :minor],
+        content_view_version: [:major, :minor, :description],
         from_content_view_version: [:major, :minor]
       ).tap do |nested|
-        nested[:repository_mapping] = params[:metadata].require(:repository_mapping).permit!
+        nested[:repositories] = params[:metadata].require(:repositories).permit!
+        nested[:products] = params[:metadata].require(:products).permit!
+        nested[:gpg_keys] = params[:metadata].require(:gpg_keys).permit!
       end
     end
   end

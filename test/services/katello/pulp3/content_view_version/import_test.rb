@@ -11,7 +11,10 @@ module Katello
             prior_repository_ids = cv.repository_ids
             repo = katello_repositories(:rhel_7_x86_64)
             metadata = { content_view: cv.name,
-                         repository_mapping: {
+                         products: {
+                           repo.product.label => repo.product.slice(:name, :label)
+                         },
+                         repositories: {
                            "misc-24037": { "label": repo.label,
                                            "product": { label: repo.product.label },
                                            "redhat": repo.redhat?
@@ -50,12 +53,16 @@ module Katello
             repos = Katello::Pulp3::ContentViewVersion::Import.intersecting_repos_library_and_metadata(
                   organization: org,
                   metadata: {
-                    repository_mapping: {
+                    products: {
+                      repo.product.label => repo.product.slice(:name, :label)
+                    },
+                    gpg_keys: {},
+                    repositories: {
                       foo: { label: repo.label,
-                             product: repo.product.slice(:name, :label)
+                             product: repo.product.slice(:label)
                       },
                       unknown: { label: "#{repo.label}-unknown-007",
-                                 product: repo.product.slice(:name, :label)
+                                 product: repo.product.slice(:label)
                       }
                     }
                   }.with_indifferent_access
@@ -67,18 +74,23 @@ module Katello
           it "Fetches the metadata map correctly" do
             repo = katello_repositories(:fedora_17_x86_64)
             unknown = "#{repo.label}-unknown-007"
-            metadata_map = Katello::Pulp3::ContentViewVersion::Import.metadata_map(
-                      repository_mapping: {
-                        foo: { label: repo.label,
-                               product: repo.product.slice(:name, :label),
-                               redhat: true
-                        },
-                        unknown: { label: unknown,
-                                   product: repo.product.slice(:name, :label),
-                                   redhat: false
-                        }
-                      }.with_indifferent_access
-              )
+            metadata_map = Katello::Pulp3::ContentViewVersion::Import.metadata_map({
+              products: {
+                repo.product.label => repo.product.slice(:name, :label)
+              },
+              gpg_keys: {},
+              repositories: {
+                foo: { label: repo.label,
+                       product: repo.product.slice(:label),
+                       redhat: true
+                },
+                unknown: { label: unknown,
+                           product: repo.product.slice(:label),
+                           redhat: false
+                      }
+              }
+            }.with_indifferent_access
+            )
 
             refute_empty metadata_map[[repo.product.label, repo.label]]
             assert metadata_map[[repo.product.label, repo.label]][:redhat]
