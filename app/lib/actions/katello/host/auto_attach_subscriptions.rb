@@ -13,10 +13,6 @@ module Actions
           plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => host.subscription_facet.uuid)
         end
 
-        def finalize
-          ::Katello::Pool.import_all
-        end
-
         def resource_locks
           :link
         end
