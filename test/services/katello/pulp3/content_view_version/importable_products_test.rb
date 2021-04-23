@@ -3,7 +3,7 @@ module Katello
   module Service
     module Pulp3
       module ContentViewVersion
-        class ImportCustomProductsTest < ActiveSupport::TestCase
+        class ImportableProductsTest < ActiveSupport::TestCase
           include Support::Actions::Fixtures
 
           it "Fetches the right products to auto create" do

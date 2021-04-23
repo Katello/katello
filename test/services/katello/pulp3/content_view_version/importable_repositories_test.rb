@@ -3,7 +3,7 @@ module Katello
   module Service
     module Pulp3
       module ContentViewVersion
-        class ImportCustomRepositoriesTest < ActiveSupport::TestCase
+        class ImportableRepositoriesTest < ActiveSupport::TestCase
           include Support::Actions::Fixtures
 
           it "Fetches the right repos to auto create" do

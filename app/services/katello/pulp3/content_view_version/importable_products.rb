@@ -25,8 +25,10 @@ module Katello
           #            These may contain updates to the product and hence ready to be updated.
           metadata_map = Import.metadata_map(metadata, product_only: true, custom_only: true)
           metadata_map.each do |product_label, params|
-            params[:gpg_key_id] = Import.create_or_update_gpg!(organization: organization,
-                                                            params: params[:gpg_key]).id
+            unless params[:gpg_key].blank?
+              params[:gpg_key_id] = Import.create_or_update_gpg!(organization: organization,
+                                                                 params: params[:gpg_key]).id
+            end
             params = params.except(:gpg_key)
             if products_in_library.include? product_label
               # add to the update list if product is already available
