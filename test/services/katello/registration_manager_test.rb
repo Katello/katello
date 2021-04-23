@@ -71,6 +71,26 @@ module Katello
           assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
         end
 
+        def test_host_profile_assume_build_mode_only_not_in_build
+          @host.subscription_facet.update(dmi_uuid: 'existing_system_uuid')
+          Setting[:host_profile_assume] = false
+          Setting[:host_profile_assume_build_can_change] = true
+          refute @host.build
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid') }
+          assert_match(/DMI UUID that differs/, error.message)
+        end
+
+        def test_host_profile_assume_build_mode_only_in_build
+          Setting[:host_profile_assume] = false
+          Setting[:host_profile_assume_build_can_change] = true
+          @host = FactoryBot.create(:host, :with_subscription, :managed, organization: @org, build: true)
+          @host.subscription_facet.update(dmi_uuid: 'existing_system_uuid')
+          # if a registering client is matched by hostname to an existing profile
+          # but its UUID has changed *and* is still unique, also it is in build mode
+          # then allow the registration when enabled
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
+        end
+
         def test_existing_uuid_and_name
           @host.subscription_facet.update(dmi_uuid: 'host3-uuid')
 
