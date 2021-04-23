@@ -164,7 +164,6 @@ module Katello
 
       assert_equal 'ok', result[:status]
       assert_equal '0 Processed, 0 Failed', result[:message]
-      assert_equal '0', result [:duration_ms]
     end
   end
 
