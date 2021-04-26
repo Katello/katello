@@ -30,7 +30,7 @@ module Katello
 
     def test_check_katello_agent_not_disabled_fail
       ::Katello.expects(:with_katello_agent?).returns(false)
-      @controller.expects(:fail).with(HttpErrors::BadRequest, "This action uses katello-agent, which is currently disabled in Settings.")
+      @controller.expects(:fail).with(HttpErrors::BadRequest, "This action uses katello-agent, which is currently disabled. Use remote execution instead.")
 
       @controller.check_katello_agent_not_disabled
     end

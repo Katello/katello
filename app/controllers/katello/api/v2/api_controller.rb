@@ -45,7 +45,7 @@ module Katello
 
     def check_katello_agent_not_disabled
       unless ::Katello.with_katello_agent?
-        fail HttpErrors::BadRequest, _("This action uses katello-agent, which is currently disabled in Settings.")
+        fail HttpErrors::BadRequest, _("This action uses katello-agent, which is currently disabled. Use remote execution instead.")
       end
     end
 
