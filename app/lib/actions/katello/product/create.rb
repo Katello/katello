@@ -9,7 +9,6 @@ module Actions
             product.setup_label_from_name
             product.cp_id = ::Katello::Product.unused_product_id
             product.save!
-
             plan_action(::Actions::Candlepin::Product::Create,
                         :owner => product.organization.label,
                         :name => product.name,

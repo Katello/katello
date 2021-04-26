@@ -32,15 +32,16 @@ module ::Actions::Katello::ContentViewVersion
 
       {
         repository_mapping: {
-          "misc-24037" => {"repository" => prod.repositories.first.name,
-                           "product" => prod.name,
-                           "redhat" => prod.redhat?
+          "misc-24037" => { label: prod.repositories.first.label,
+                            product: prod.slice(:label, :name),
+                            redhat: prod.redhat?
           }
         },
         content_view_version: {
           major: content_view_version.major,
           minor: content_view_version.minor
-        }
+        },
+        content_view: content_view.slice(:label, :name, :description)
       }.with_indifferent_access
     end
 
@@ -74,7 +75,7 @@ module ::Actions::Katello::ContentViewVersion
     describe 'Import' do
       it 'should fail on importing content for an existing versions' do
         exception = assert_raises(RuntimeError) do
-          plan_action(action, content_view: content_view, path: path, metadata: metadata)
+          plan_action(action, organization: organization, path: path, metadata: metadata)
         end
         assert_match(/'#{content_view_version.name}' already exists/, exception.message)
       end
@@ -86,7 +87,7 @@ module ::Actions::Katello::ContentViewVersion
                                                                            path: path,
                                                                           smart_proxy: SmartProxy.pulp_primary).returns
 
-        plan_action(action, content_view: content_view, path: path, metadata: metadata)
+        plan_action(action, organization: organization, path: path, metadata: metadata)
         assert_action_planned_with(action,
                                     ::Actions::Katello::ContentView::Publish,
                                     content_view, '',
@@ -98,11 +99,31 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       it 'should create a non existent cv and plan properly' do
-        metadata[:content_view] = "non_existent_view"
+        metadata[:content_view] = { name: "non_existent_view", label: "nope" }
         ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).returns
 
         plan_action(action, organization: organization, path: path, metadata: metadata)
-        content_view = ::Katello::ContentView.find_by(name: metadata[:content_view], organization_id: organization)
+        content_view = ::Katello::ContentView.find_by(label: metadata[:content_view][:label],
+                                                      organization: organization)
+        refute_nil content_view
+        assert content_view.import_only?
+        assert_action_planned_with(action,
+                                    ::Actions::Katello::ContentView::Publish,
+                                    content_view, '',
+                                    path: path,
+                                    metadata: metadata,
+                                    importing: true,
+                                    major: metadata[:content_view_version][:major],
+                                    minor: metadata[:content_view_version][:minor])
+      end
+
+      it 'should create the library cv and plan properly' do
+        metadata[:content_view] = {name: 'export-library', label: 'export_library'}
+        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).returns
+
+        plan_action(action, organization: organization, path: path, metadata: metadata, library: true)
+        content_view = ::Katello::ContentView.find_by(label: ::Katello::ContentView::IMPORT_LIBRARY,
+                                                      organization: organization)
         refute_nil content_view
         assert content_view.import_only?
         assert_action_planned_with(action,
@@ -116,15 +137,16 @@ module ::Actions::Katello::ContentViewVersion
       end
 
       it 'should plan the full tree appropriately' do
-        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).with(content_view: content_view,
-                                                                           metadata: metadata,
-                                                                           path: path,
-                                                                          smart_proxy: SmartProxy.pulp_primary).returns
-        ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
+        ::Katello::Pulp3::ContentViewVersion::Import.expects(:check!).
+            with(content_view: content_view,
+                 metadata: metadata,
+                 path: path,
+                 smart_proxy: SmartProxy.pulp_primary).returns
 
+        ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
         metadata[:content_view_version][:major] += 10
         generated_cvv = nil
-        tree = plan_action_tree(action_class, content_view: content_view, path: path, metadata: metadata)
+        tree = plan_action_tree(action_class, organization: organization, path: path, metadata: metadata)
 
         assert_empty tree.errors
         assert_tree_planned_steps(tree, Actions::Katello::ContentView::AddToEnvironment)

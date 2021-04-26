@@ -20,13 +20,13 @@ module Katello
             data = export.generate_metadata
             assert_equal data[:content_view_version][:major], version.major
             assert_equal data[:content_view_version][:minor], version.minor
-            assert_equal data[:content_view], version.content_view.name
+            assert_equal data[:content_view], version.content_view.slice(:name, :label, :description)
 
             version_repositories = version.archived_repos.yum_type
             data[:repository_mapping].each do |name, repo_info|
               repo = version_repositories[name.to_i]
-              assert_equal repo_info[:repository], repo.root.name
-              assert_equal repo_info[:product], repo.root.product.name
+              assert_equal repo_info[:repository][:name], repo.root.name
+              assert_equal repo_info[:product].slice(:name, :label), repo.root.product.slice(:name, :label)
               assert_equal repo_info[:redhat], repo.redhat?
             end
           end

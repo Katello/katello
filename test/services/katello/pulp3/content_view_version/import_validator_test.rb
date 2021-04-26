@@ -32,7 +32,7 @@ module Katello
                 returns(api)
 
               exception = assert_raises(RuntimeError) do
-                metadata = { content_view: cvv.content_view.name, content_view_version: cvv.slice(:major, :minor) }
+                metadata = { content_view: cvv.content_view.slice(:name, :label, :description), content_view_version: cvv.slice(:major, :minor) }
                 validator(content_view: cvv.content_view, metadata: metadata).check!
               end
               assert_equal(invalid_message, exception.message)
@@ -42,7 +42,7 @@ module Katello
               cvv = katello_content_view_versions(:library_view_version_2)
               ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
               exception = assert_raises(RuntimeError) do
-                metadata = { content_view: cvv.content_view.name, content_view_version: cvv.slice(:major, :minor) }
+                metadata = { content_view: cvv.content_view.slice(:name, :label, :description), content_view_version: cvv.slice(:major, :minor) }
                 validator(content_view: cvv.content_view, metadata: metadata).check!
               end
               assert_match(/already exists/, exception.message)
@@ -53,7 +53,7 @@ module Katello
               ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
 
               exception = assert_raises(RuntimeError) do
-                metadata = { content_view: cvv.content_view.name,
+                metadata = { content_view: cvv.content_view.slice(:name, :label, :description),
                              content_view_version: { major: cvv.major + 10, minor: cvv.minor },
                              from_content_view_version: { major: cvv.major + 8, minor: cvv.minor }
                 }
@@ -62,18 +62,39 @@ module Katello
               assert_match(/ does not exist/, exception.message)
             end
 
-            it "fails on metadata if the repositories in the metadata are not in the library" do
+            it "fails on metadata if repo types in metadata dont match the repos in library" do
+              cvv = katello_content_view_versions(:library_view_version_2)
+              repo = cvv.repositories.exportable.last
+              ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
+
+              exception = assert_raises(RuntimeError) do
+                metadata = { content_view: cvv.content_view.slice(:name, :label, :description),
+                             content_view_version: { major: cvv.major + 10, minor: cvv.minor },
+                             repository_mapping: {
+                               "misc-24037": { label: repo.label,
+                                               product: { name: repo.product.name, label: repo.product.label},
+                                               redhat: !repo.redhat?
+                                             }
+                             }
+
+                }
+                validator(content_view: cvv.content_view, metadata: metadata).check!
+              end
+              assert_match(/incorrect content type or provider type/, exception.message)
+            end
+
+            it "fails on metadata if redhat repositories in the metadata are not in the library" do
               cv = katello_content_views(:acme_default)
               cvv = cv.versions.last
               ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
 
               exception = assert_raises(RuntimeError) do
-                metadata = { content_view: cv.name,
+                metadata = { content_view: cv.slice(:name, :label, :description),
                              content_view_version: { major: cvv.major + 10, minor: cvv.minor },
                              repository_mapping: {
-                               "misc-24037": { "repository": "misc",
-                                               "product": "prod",
-                                               "redhat": false
+                               "misc-24037": { label: "misc",
+                                               product: { name: "prod", label: 'prod'},
+                                               "redhat": true
                                              }
                              }
                 }

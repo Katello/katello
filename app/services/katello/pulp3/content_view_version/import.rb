@@ -15,8 +15,8 @@ module Katello
           mapping = {}
           @metadata[:repository_mapping].each do |key, value|
             repo = @content_view_version.importable_repositories.joins(:root, :product).
-                        where("#{::Katello::Product.table_name}" => {:name => value[:product]},
-                                                  "#{::Katello::RootRepository.table_name}" => {:name => value[:repository]}).first
+                        where("#{::Katello::Product.table_name}" => {:label => value[:product][:label]},
+                                                  "#{::Katello::RootRepository.table_name}" => {:label => value[:label]}).first
             next unless repo&.version_href
             repo_info = fetch_repository_info(repo.version_href)
             mapping[key] = repo_info.name
@@ -50,6 +50,54 @@ module Katello
                                path: path).check!
         end
 
+        def self.create_or_update_gpg!(organization:, params:)
+          return if params.blank?
+          gpg = organization.gpg_keys.find_by(:name => params[:name])
+          if gpg
+            gpg.update!(params.except(:name))
+          else
+            gpg = organization.gpg_keys.create!(params)
+          end
+          gpg
+        end
+
+        def self.metadata_map(metadata, product_only: false, custom_only: false)
+          # Create a map that looks like -> {[product, repo]: {name: 'Foo Repo', label:.....}}
+          # these values should be curated from the metadata.
+          metadata_map = {}
+          metadata[:repository_mapping].values.each do |repo|
+            next if custom_only && repo[:redhat]
+            if product_only
+              metadata_map[repo[:product][:label]] = repo[:product]
+            else
+              metadata_map[[repo[:product][:label], repo[:label]]] = repo
+            end
+          end
+          metadata_map
+        end
+
+        def self.intersecting_repos_library_and_metadata(organization:, metadata:)
+          # Returns repositories in library that are part of the metadata
+          # In other words if metadata had repos {label:foo, product: bar}
+          # this would match it to the repo with the label foo and product bar
+          # in the library.
+          queries = metadata_map(metadata).keys.map do |product_label, repo_label|
+            repositories_in_library(organization).
+                        where("#{Katello::Product.table_name}.label": product_label,
+                              "#{Katello::RootRepository.table_name}.label": repo_label)
+          end
+          queries.inject(&:or)
+        end
+
+        def self.repositories_in_library(organization)
+          Katello::Repository.
+                    in_default_view.
+                    exportable.
+                    joins(:product => :provider, :content_view_version => :content_view).
+                    joins(:root).
+                    where("#{::Katello::ContentView.table_name}.organization_id": organization)
+        end
+
         def self.reset_content_view_repositories_from_metadata!(content_view:, metadata:)
           # Given metadata from the dump and a content view
           # this method
@@ -59,38 +107,29 @@ module Katello
           # 3) Adds the repositories matched from the dump
           # The main intent of this method is to assume that the user intends for the
           # content view to exaclty look like what is specified in metadata
-
-          repos_in_library = Katello::Repository.
-                    in_default_view.
-                    exportable.
-                    joins(:product => :provider, :content_view_version => :content_view).
-                    joins(:root).
-                    where("#{::Katello::ContentView.table_name}.organization_id" => content_view.organization_id).
-                    pluck("#{::Katello::Repository.table_name}.id",
-                          "#{::Katello::RootRepository.table_name}.name",
-                          "#{::Katello::Product.table_name}.name",
-                          "#{::Katello::Provider.table_name}.provider_type"
-                          )
-          repos_in_library_map = {}
-          # repos_in_library_map is going to look like {['repo1', 'product1', false] => 100, ['repo1', 'product1', true] => 200 }
-          repos_in_library.each do |id, repo, product, provider_type|
-            repos_in_library_map[[repo, product, provider_type == Katello::Provider::REDHAT]] = id
-          end
-
-          repo_ids = metadata[:repository_mapping].values.map do |repo|
-            repos_in_library_map[[repo[:repository], repo[:product], repo[:redhat]]]
-          end
+          repo_ids = intersecting_repos_library_and_metadata(organization: content_view.organization,
+                                                             metadata: metadata).
+                                                             pluck("#{Katello::Repository.table_name}.id")
           content_view.update!(repository_ids: repo_ids)
         end
 
-        def self.find_or_create_library_import_view(organization)
-          find_or_create_import_view(organization: organization, name: ::Katello::ContentView::IMPORT_LIBRARY)
-        end
+        def self.find_or_create_import_view(organization:, metadata:, library: false)
+          if library
+            metadata = { name: ::Katello::ContentView::IMPORT_LIBRARY,
+                         label: ::Katello::ContentView::IMPORT_LIBRARY,
+                         description: "Content View used for importing library"
+                        }
+          end
 
-        def self.find_or_create_import_view(organization:, name:)
-          ::Katello::ContentView.where(name: name,
-                                       organization: organization,
-                                       import_only: true).first_or_create
+          cv = ::Katello::ContentView.find_by(label: metadata[:label],
+                                              organization: organization,
+                                              import_only: true)
+          if cv.blank?
+            ::Katello::ContentView.create!(metadata.merge(organization: organization, import_only: true))
+          else
+            cv.update!(description: cv_metadata[:description]) if cv.description != metadata[:description]
+            cv
+          end
         end
       end
     end

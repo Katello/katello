@@ -139,7 +139,7 @@ module Katello
         def generate_metadata
           ret = { organization: @content_view_version.organization.name,
                   repository_mapping: {},
-                  content_view: @content_view_version.content_view.name,
+                  content_view: @content_view_version.content_view.slice(:name, :label, :description),
                   content_view_version: @content_view_version.slice(:major, :minor),
                   incremental: @from_content_view_version.present?
           }
@@ -154,13 +154,26 @@ module Katello
           repositories.each do |repo|
             next if repo.version_href.blank?
             pulp3_repo = fetch_repository_info(repo.version_href).name
-            ret[:repository_mapping][pulp3_repo] = {
-              repository: repo.root.name,
-              product: repo.root.product.name,
-              redhat: repo.redhat?
-            }
+            ret[:repository_mapping][pulp3_repo] = generate_repository_metadata(repo)
           end
           ret
+        end
+
+        def generate_repository_metadata(repo)
+          repo.slice(:name, :label, :description, :arch, :content_type, :unprotected, :checksum_type, :os_versions, :major, :minor).
+            merge(product: generate_product_metadata(repo.product),
+                  gpg_key: generate_gpg_metadata(repo.gpg_key),
+                  redhat: repo.redhat?)
+        end
+
+        def generate_product_metadata(product)
+          product.slice(:name, :label, :description).
+            merge(gpg_key: generate_gpg_metadata(product.gpg_key))
+        end
+
+        def generate_gpg_metadata(gpg)
+          return {} if gpg.blank?
+          gpg.slice(:name, :content_type, :content)
         end
 
         def self.find_library_export_view(create_by_default: false,

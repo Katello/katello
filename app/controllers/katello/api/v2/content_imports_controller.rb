@@ -65,10 +65,10 @@ module Katello
     def metadata_params
       params.require(:metadata).permit(
         :organization,
-        :content_view,
         :repository_mapping,
         :toc,
         :incremental,
+        content_view: [:name, :label, :description],
         content_view_version: [:major, :minor],
         from_content_view_version: [:major, :minor]
       ).tap do |nested|

@@ -27,14 +27,19 @@ module ::Actions::Katello::ContentViewVersion
 
       {
         repository_mapping: {
-          "misc-24037" => {"repository" => prod.repositories.first.name,
-                           "product" => prod.name,
-                           "redhat" => prod.redhat?
+          "misc-24037" => { label: prod.repositories.first.label,
+                            product: prod.slice(:name, :label),
+                            redhat: prod.redhat?
           }
         },
         content_view_version: {
-          major: content_view_version.major,
-          minor: content_view_version.minor
+          major: '1',
+          minor: '0'
+        },
+        content_view: {
+          name: "export-library",
+          label: 'export',
+          description: 'great'
         }
       }.with_indifferent_access
     end
@@ -68,8 +73,8 @@ module ::Actions::Katello::ContentViewVersion
         plan_action(action, organization, path: path, metadata: metadata)
         assert_action_planned_with(action, ::Actions::Katello::ContentViewVersion::Import) do |options|
           options = options.first if options.is_a? Array
-          assert options[:content_view].library_import?
-          assert options[:content_view].import_only?
+          assert_equal options[:organization], organization
+          assert options[:library]
           assert_equal options[:metadata], metadata
           assert_equal options[:path], path
         end
@@ -80,7 +85,6 @@ module ::Actions::Katello::ContentViewVersion
         ::Katello::ContentViewManager.expects(:create_candlepin_environment).returns
 
         tree = plan_action_tree(action_class, organization, path: path, metadata: metadata)
-
         assert_empty tree.errors
         assert_tree_planned_with(tree, Actions::Pulp3::Repository::CopyContent) do |input|
           assert input[:copy_all]
