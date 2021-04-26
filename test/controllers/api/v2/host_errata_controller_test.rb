@@ -130,6 +130,7 @@ module Katello
     end
 
     def test_apply
+      ::Katello.stubs(:with_katello_agent?).returns(true)
       assert_async_task ::Actions::Katello::Host::Erratum::Install do |host, options|
         host.id == @host.id && options[:content] == %w(RHSA-1999-1231)
       end
@@ -156,6 +157,7 @@ module Katello
 
     def test_apply_protected
       ::Host.any_instance.stubs(:check_host_registration).returns(true)
+      ::Katello.stubs(:with_katello_agent?).returns(true)
 
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @create_permission, @destroy_permission]

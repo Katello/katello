@@ -34,6 +34,8 @@ module Katello
     end
 
     def test_install_package
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task ::Actions::Katello::Host::Package::Install do |host, options|
         host.id == @host.id && options[:content] == %w(foo)
       end
@@ -50,6 +52,8 @@ module Katello
     end
 
     def test_install_group
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task ::Actions::Katello::Host::PackageGroup::Install do |host, options|
         host.id == @host.id && options[:content] == %w(blah)
       end
@@ -60,6 +64,8 @@ module Katello
     end
 
     def test_upgrade
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task ::Actions::Katello::Host::Package::Update do |host, options|
         host.id == @host.id && options[:content] == %w(foo bar)
       end
@@ -76,6 +82,8 @@ module Katello
     end
 
     def test_upgrade_all
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task ::Actions::Katello::Host::Package::Update do |host, options|
         host.id == @host.id && options[:content] == []
       end
@@ -86,6 +94,8 @@ module Katello
     end
 
     def test_remove
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task ::Actions::Katello::Host::Package::Remove do |host, options|
         host.id == @host.id && options[:content] == %w(foo)
       end
@@ -108,6 +118,8 @@ module Katello
     end
 
     def test_remove_group
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task ::Actions::Katello::Host::PackageGroup::Remove do |host, options|
         host.id == @host.id && options[:content] == %w(blah)
       end
@@ -138,6 +150,7 @@ module Katello
 
     def test_permissions
       ::Host.any_instance.stubs(:check_host_registration).returns(true)
+      ::Katello.stubs(:with_katello_agent?).returns(true)
 
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @create_permission, @destroy_permission]
