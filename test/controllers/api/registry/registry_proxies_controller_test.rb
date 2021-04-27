@@ -12,6 +12,7 @@ module Katello
       @docker_env_repo = katello_repositories(:busybox_view1)
       @rpm_repo = katello_repositories(:fedora_17_x86_64)
       @tag = katello_docker_tags(:one)
+      @digest = 'sha256:somedigest'
     end
 
     def setup_permissions
@@ -407,6 +408,7 @@ module Katello
 
       it "pull manifest - success" do
         manifest = '{"mediaType":"MEDIATYPE"}'
+        manifest.stubs(:headers).returns({docker_content_digest: @digest})
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
@@ -418,12 +420,13 @@ module Katello
         assert_response 200
         assert_equal(manifest, response.body)
         assert response.header['Content-Type'] =~ /MEDIATYPE/
-        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
+        assert_equal @digest, response.header['Docker-Content-Digest']
       end
 
       it "pull manifest - HTTPS Header" do
         #production installs include an HTTPS: 'on' header, which needs to be removed
         manifest = '{"mediaType":"MEDIATYPE"}'
+        manifest.stubs(:headers).returns({docker_content_digest: @digest})
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
 
@@ -443,11 +446,12 @@ module Katello
         assert_response 200
         assert_equal(manifest, response.body)
         assert response.header['Content-Type'] =~ /MEDIATYPE/
-        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
+        assert_equal @digest, response.header['Docker-Content-Digest']
       end
 
       it "pull manifest - HTTP Header - v1+json" do
         manifest = '{}'
+        manifest.stubs(:headers).returns({docker_content_digest: @digest})
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
@@ -459,11 +463,12 @@ module Katello
         assert_response 200
         assert_equal(manifest, response.body)
         assert_includes response.header['Content-Type'], 'application/vnd.docker.distribution.manifest.v1+json'
-        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
+        assert_equal @digest, response.header['Docker-Content-Digest']
       end
 
       it "pull manifest - HTTP Header - with signatures" do
         manifest = '{"signatures": [{"signature":"...."}]}'
+        manifest.stubs(:headers).returns({docker_content_digest: @digest})
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
@@ -475,11 +480,13 @@ module Katello
         assert_response 200
         assert_equal(manifest, response.body)
         assert_includes response.header['Content-Type'], 'application/vnd.docker.distribution.manifest.v1+prettyjws'
-        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
+        assert_equal @digest, response.header['Docker-Content-Digest']
       end
 
       it "pull manifest no login - success" do
         manifest = '{"mediaType":"MEDIATYPE"}'
+        manifest.stubs(:headers).returns({docker_content_digest: @digest})
+
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
@@ -491,7 +498,7 @@ module Katello
         assert_response 200
         assert_equal(manifest, response.body)
         assert response.header['Content-Type'] =~ /MEDIATYPE/
-        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
+        assert_equal @digest, response.header['Docker-Content-Digest']
       end
 
       it "pull manifest repo not found" do
