@@ -167,11 +167,9 @@ module Katello
       end
 
       if (manifest_response = redirect_client { Resources::Registry::Proxy.get(@_request.fullpath, headers) })
-        #when pulp 2 is removed, this should no longer be needed, and all clients should be redirected
-        logger.debug filter_sensitive_data(manifest_response)
+        #for some requests, we get a redirect, but for others we get the actual manifest in response
         results = JSON.parse(manifest_response)
-
-        response.header['Docker-Content-Digest'] = "sha256:#{Digest::SHA256.hexdigest(manifest_response)}"
+        response.header['Docker-Content-Digest'] = manifest_response.headers[:docker_content_digest]
         # https://docs.docker.com/registry/spec/manifest-v2-2/
         # If its v2 schema 2 only the mediaType attribute will be present in the manifest
         media_type = results['mediaType']
