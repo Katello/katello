@@ -5,9 +5,13 @@ module Katello
   class FixInvalidPoolsTest < ActiveSupport::TestCase
     def setup
       Rake.application.rake_require 'katello/tasks/upgrades/4.1/fix_invalid_pools'
+      Rake.application.rake_require 'katello/tasks/reimport' # needed for check_ping
       Rake::Task['katello:upgrades:4.1:fix_invalid_pools'].reenable
       Rake::Task.define_task(:environment)
-      Rake::Task.define_task(:check_ping)
+      Rake::Task.define_task('dynflow:client')
+      Rake::Task['katello:check_ping'].reenable
+      Rake::Task['dynflow:client'].reenable
+      Katello::Ping.expects(:ping).returns(:status => 'ok')
     end
 
     def test_import_pool_data
