@@ -3,6 +3,7 @@ module Katello
     module ContentViewVersion
       class Export
         include ImportExportCommon
+        attr_reader :smart_proxy, :content_view_version, :destination_server, :from_content_view_version
 
         def initialize(smart_proxy:,
                         content_view_version: nil,
@@ -23,10 +24,10 @@ module Katello
         end
 
         def repositories(fetch_all: false)
-          repos = if @content_view_version.default?
-                    @content_view_version.repositories.exportable
+          repos = if content_view_version.default?
+                    content_view_version.repositories.exportable
                   else
-                    @content_view_version.archived_repos.exportable
+                    content_view_version.archived_repos.exportable
                   end
           if fetch_all
             repos
@@ -36,8 +37,8 @@ module Katello
         end
 
         def generate_exporter_path
-          export_path = "#{@content_view_version.content_view}/#{@content_view_version.version}/#{@destination_server}/#{date_dir}".gsub(/\s/, '_')
-          "#{@content_view_version.organization.label}/#{export_path}"
+          export_path = "#{content_view_version.content_view}/#{content_view_version.version}/#{destination_server}/#{date_dir}".gsub(/\s/, '_')
+          "#{content_view_version.organization.label}/#{export_path}"
         end
 
         def date_dir
@@ -53,8 +54,8 @@ module Katello
         def create_export(exporter_href, chunk_size: nil)
           options = { versions: version_hrefs }
           options[:chunk_size] = "#{chunk_size}MB" if chunk_size
-          if @from_content_view_version
-            from_exporter = Export.new(smart_proxy: @smart_proxy, content_view_version: @from_content_view_version)
+          if from_content_view_version
+            from_exporter = Export.new(smart_proxy: smart_proxy, content_view_version: from_content_view_version)
             start_versions = from_exporter.version_hrefs
 
             # current_cvv - cvv_from , i.e. repos in current cvv that are not in from
@@ -92,7 +93,7 @@ module Katello
 
         def validate!(fail_on_missing_content: true, validate_incremental: true)
           validate_repositories_immediate! if fail_on_missing_content
-          validate_incremental_export! if validate_incremental && !@from_content_view_version.blank?
+          validate_incremental_export! if validate_incremental && !from_content_view_version.blank?
         end
 
         def validate_repositories_immediate!
@@ -102,14 +103,14 @@ module Katello
                    " it contains repositories without the 'immediate' download policy."\
                    " Update the download policy and sync affected repositories. Once synced republish the content view"\
                    " and export the generated version. \n %{repos}" %
-                   { content_view: @content_view_version.content_view.name,
-                     current: @content_view_version.version,
+                   { content_view: content_view_version.content_view.name,
+                     current: content_view_version.version,
                      repos: self.class.generate_product_repo_strings(repositories: non_immediate_repos)})
           end
         end
 
         def validate_incremental_export!
-          from_exporter = Export.new(smart_proxy: @smart_proxy, content_view_version: @from_content_view_version)
+          from_exporter = Export.new(smart_proxy: smart_proxy, content_view_version: from_content_view_version)
 
           from_exporter_repos = generate_repo_mapping(from_exporter.repositories(fetch_all: true))
           to_exporter_repos = generate_repo_mapping(repositories(fetch_all: true))
@@ -120,9 +121,9 @@ module Katello
 
           if invalid_repos_exist
             fail _("The exported Content View Version '%{content_view} %{current}' cannot be incrementally updated from version '%{from}'."\
-                   " Please do a full export." % { content_view: @content_view_version.content_view.name,
-                                                   current: @content_view_version.version,
-                                                   from: @from_content_view_version.version})
+                   " Please do a full export." % { content_view: content_view_version.content_view.name,
+                                                   current: content_view_version.version,
+                                                   from: from_content_view_version.version})
           end
         end
 
@@ -137,43 +138,7 @@ module Katello
         end
 
         def generate_metadata
-          ret = { organization: @content_view_version.organization.name,
-                  repository_mapping: {},
-                  content_view: @content_view_version.content_view.slice(:name, :label, :description),
-                  content_view_version: @content_view_version.slice(:major, :minor),
-                  incremental: @from_content_view_version.present?
-          }
-
-          unless @from_content_view_version.blank?
-            ret[:from_content_view_version] = {
-              major: @from_content_view_version.major,
-              minor: @from_content_view_version.minor
-            }
-          end
-
-          repositories.each do |repo|
-            next if repo.version_href.blank?
-            pulp3_repo = fetch_repository_info(repo.version_href).name
-            ret[:repository_mapping][pulp3_repo] = generate_repository_metadata(repo)
-          end
-          ret
-        end
-
-        def generate_repository_metadata(repo)
-          repo.slice(:name, :label, :description, :arch, :content_type, :unprotected, :checksum_type, :os_versions, :major, :minor).
-            merge(product: generate_product_metadata(repo.product),
-                  gpg_key: generate_gpg_metadata(repo.gpg_key),
-                  redhat: repo.redhat?)
-        end
-
-        def generate_product_metadata(product)
-          product.slice(:name, :label, :description).
-            merge(gpg_key: generate_gpg_metadata(product.gpg_key))
-        end
-
-        def generate_gpg_metadata(gpg)
-          return {} if gpg.blank?
-          gpg.slice(:name, :content_type, :content)
+          MetadataGenerator.new(export_service: self).generate!
         end
 
         def self.find_library_export_view(create_by_default: false,

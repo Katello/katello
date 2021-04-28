@@ -32,8 +32,11 @@ module Katello
             product = Katello::Product.in_org(organization).find_by(label: product_label)
             fail _("Unable to find product '%s' in organization '%s'" % [product_label, organization.name]) if product.blank?
             params = metadata_map[[product_label, repo_label]]
-            params[:gpg_key_id] = Import.create_or_update_gpg!(organization: organization,
-                                                               params: params[:gpg_key])&.id
+            if params[:gpg_key].blank?
+              params[:gpg_key_id] = nil
+            else
+              params[:gpg_key_id] = organization.gpg_keys.find_by(name: params[:gpg_key][:name]).id
+            end
             params = params.except(:redhat, :product, :gpg_key)
             if repositories_in_library.include? [product_label, repo_label]
               repo = ::Katello::RootRepository.find_by(product: product, label: repo_label)

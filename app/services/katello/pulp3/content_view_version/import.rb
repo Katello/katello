@@ -13,7 +13,7 @@ module Katello
 
         def repository_mapping
           mapping = {}
-          @metadata[:repository_mapping].each do |key, value|
+          @metadata[:repositories].each do |key, value|
             repo = @content_view_version.importable_repositories.joins(:root, :product).
                         where("#{::Katello::Product.table_name}" => {:label => value[:product][:label]},
                                                   "#{::Katello::RootRepository.table_name}" => {:label => value[:label]}).first
@@ -65,7 +65,7 @@ module Katello
           # Create a map that looks like -> {[product, repo]: {name: 'Foo Repo', label:.....}}
           # these values should be curated from the metadata.
           metadata_map = {}
-          metadata[:repository_mapping].values.each do |repo|
+          metadata[:repositories].values.each do |repo|
             next if custom_only && repo[:redhat]
             if product_only
               metadata_map[repo[:product][:label]] = repo[:product]

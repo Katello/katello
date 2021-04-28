@@ -5,11 +5,15 @@ module Katello
     include Support::ForemanTasks::Task
     METADATA = {
       organization: "org name",
-      repository_mapping: {
+      products: {
+        'label' => { name: 'product name', label: 'label' }
+      },
+      gpg_keys: {'foo' => {label: 'lol'} },
+      repositories: {
         'repo name' => {
           name: 'root repo name',
           label: 'root_label',
-          product: { name: 'product name', label: 'label' },
+          product: { label: 'label' },
           redhat: true
         }
       },

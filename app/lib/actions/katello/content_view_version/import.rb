@@ -16,12 +16,18 @@ module Actions
 
           major = metadata[:content_view_version][:major]
           minor = metadata[:content_view_version][:minor]
+          description = metadata[:content_view_version][:description]
+
+          gpg_helper = ::Katello::Pulp3::ContentViewVersion::ImportGpgKeys.
+                          new(organization: organization,
+                              metadata: metadata)
+          gpg_helper.import!
 
           sequence do
             plan_action(AutoCreateProducts, organization: content_view.organization, metadata: metadata)
             plan_action(AutoCreateRepositories, organization: content_view.organization, metadata: metadata)
             plan_action(ResetContentViewRepositoriesFromMetadata, content_view: content_view, metadata: metadata)
-            plan_action(::Actions::Katello::ContentView::Publish, content_view, '',
+            plan_action(::Actions::Katello::ContentView::Publish, content_view, description,
                           path: path,
                           metadata: metadata,
                           importing: true,

@@ -10,22 +10,29 @@ module Katello
             repo = katello_repositories(:fedora_17_x86_64)
             new_repo_1 = "New-Repo-1"
             new_repo_2 = "New-Repo-2"
-            gpg_key = "MyCoolKey10000"
+            gpg_key = katello_gpg_keys(:fedora_gpg_key)
+            product_label = repo.product.label
             metadata = {
-              repository_mapping: {
+              products: {
+                product_label => { label: product_label }
+              },
+              repositories: {
                 "misc-24037": { "label": repo.label,
-                                "product": { label: repo.product.label },
+                                "product": { label: product_label },
                                 "redhat": repo.redhat?
                               },
                 "hoo-24037": { "label": new_repo_1,
-                               "product": { label: repo.product.label },
+                               "product": { label: product_label },
                                "redhat": false
                               },
                 "hah-24037": { "label": new_repo_2,
-                               "product": { label: repo.product.label },
+                               "product": { label: product_label },
                                "redhat": false,
-                               "gpg_key": { name: gpg_key, content: "wow" }
+                               "gpg_key": { name: gpg_key.name }
                               }
+              },
+              gpg_keys: {
+                gpg_key => gpg_key.slice(:name, :content)
               }
             }.with_indifferent_access
             helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.
@@ -38,7 +45,7 @@ module Katello
             assert_includes helper.updatable.map { |r| r[:repository].label }, repo.label
             refute_includes helper.updatable.map { |r| r[:repository].label }, new_repo_1
 
-            refute_nil repo.organization.gpg_keys.find_by(name: gpg_key)
+            refute_nil repo.organization.gpg_keys.find_by(name: gpg_key.name)
           end
         end
       end
