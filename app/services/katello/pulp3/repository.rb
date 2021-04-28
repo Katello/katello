@@ -136,7 +136,10 @@ module Katello
       def remote_needs_updates?
         if repo.remote_href
           remote = get_remote
-          computed = compute_remote_options
+          # The proxy auth creds are not returned by the Pulp API.
+          # The creds don't need to be checked here because they
+          # won't be updated outside of UpdateRemote.
+          computed = compute_remote_options.slice!(:proxy_username, :proxy_password)
           computed.keys.any? { |key| remote.send(key) != computed[key] }
         elsif repo.url
           true
@@ -348,7 +351,9 @@ module Katello
           tls_validation: root.verify_ssl_on_sync,
           name: generate_backend_object_name,
           url: root.url,
-          proxy_url: root.http_proxy&.full_url,
+          proxy_url: root.http_proxy&.url,
+          proxy_username: root.http_proxy&.username,
+          proxy_password: root.http_proxy&.password,
           total_timeout: Setting[:sync_connect_timeout]
         }
         remote_options[:url] = root.url unless root.url.blank?
