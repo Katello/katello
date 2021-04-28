@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::HostErrataController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
+    include Katello::Concerns::Api::V2::HostErrataExtensions
 
     before_action :find_host, only: :index
     before_action :find_host_editable, except: :index
@@ -76,34 +77,6 @@ module Katello
       respond_for_async :resource => {}
     end
 
-    def find_bulk_errata_ids(bulk_params)
-      #works on a structure of param_group bulk_params and transforms it into a list of errata_ids
-      bulk_params[:included] ||= {}
-      bulk_params[:excluded] ||= {}
-      @errata = []
-
-      unless bulk_params[:included][:ids].blank?
-        @errata = @host.content_facet.installable_errata.where(:errata_id => bulk_params[:included][:ids])
-      end
-
-      if bulk_params[:included][:search]
-        search_errata = @host.content_facet.installable_errata
-        search_errata = search_errata.search_for(bulk_params[:included][:search])
-        if @errata.any?
-          @errata = ::Katello::Erratum.where(errata_id: @errata).or(::Katello::Erratum.where(errata_id: search_errata))
-        else
-          @errata = search_errata
-        end
-      end
-
-      @errata = @errata.where.not(errata_id: bulk_params[:excluded][:ids]) unless @errata.empty? || bulk_params[:excluded][:ids].blank?
-
-      if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
-        fail HttpErrors::BadRequest, _("No errata has been specified.")
-      end
-      @errata.pluck(:errata_id)
-    end
-
     protected
 
     def index_relation
@@ -142,7 +115,7 @@ module Katello
         fail HttpErrors::NotFound, _("Couldn't find errata ids '%s'") % missing.to_sentence if missing.any?
         @errata_ids = params[:errata_ids]
       else
-        @errata_ids = find_bulk_errata_ids(params[:bulk_errata_ids])
+        @errata_ids = find_bulk_errata_ids([@host], params[:bulk_errata_ids])
       end
     end
   end

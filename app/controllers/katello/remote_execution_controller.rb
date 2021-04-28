@@ -2,6 +2,7 @@ module Katello
   if Katello.with_remote_execution?
     class RemoteExecutionController < JobInvocationsController
       include Concerns::Api::V2::BulkHostsExtensions
+      include Concerns::Api::V2::HostErrataExtensions
 
       def new
         @composer = prepare_composer
@@ -30,21 +31,16 @@ module Katello
       end
 
       def hosts
-        host_ids = params[:host_ids].is_a?(String) ? params[:host_ids].split(',') : params[:host_ids]
+        bulk_host_ids = ActiveSupport::JSON.decode(params[:bulk_host_ids]).deep_symbolize_keys
 
-        bulk_params = {
-          included: {
-            ids: host_ids,
-            search: params[:scoped_search]
-          }
-        }
-
-        find_bulk_hosts('edit_hosts', bulk_params)
+        find_bulk_hosts('edit_hosts', bulk_host_ids)
       end
 
       def errata_inputs
         if ::Foreman::Cast.to_bool(params[:install_all])
           Erratum.installable_for_hosts(hosts).pluck(:errata_id).join(',')
+        elsif params[:bulk_errata_ids]
+          find_bulk_errata_ids(hosts, params[:bulk_errata_ids]).join(',')
         else
           params[:name]
         end
