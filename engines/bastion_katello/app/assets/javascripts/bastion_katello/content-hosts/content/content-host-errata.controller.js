@@ -135,8 +135,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
 
         $scope.performViaRemoteExecution = function(customize) {
             var errataIds = $scope.selectedErrataIds();
-            $scope.errataActionFormValues.errata = errataIds.included.ids.join(',');
-            $scope.errataActionFormValues.hostIds = $scope.host.id;
+
+            $scope.errataActionFormValues.bulkErrataIds = angular.toJson(errataIds);
+            $scope.errataActionFormValues.bulkHostIds = angular.toJson({ included: { ids: [$scope.host.id] }});
+
+            $scope.errataActionFormValues.remoteAction = 'errata_install';
             $scope.errataActionFormValues.customize = customize;
 
             $timeout(function () {

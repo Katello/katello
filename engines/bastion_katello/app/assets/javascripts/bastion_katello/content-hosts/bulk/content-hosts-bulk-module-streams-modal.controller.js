@@ -41,9 +41,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
             remoteAction: 'module_stream_action'
         };
 
-        if (hostIds.included.ids) {
-            $scope.moduleStreamActionFormValues.hostIds = hostIds.included.ids.join(',');
-        }
+        $scope.moduleStreamActionFormValues.bulkHostIds = angular.toJson(hostIds);
 
         $scope.performViaRemoteExecution = function(moduleSpec, actionType) {
             $scope.working = true;

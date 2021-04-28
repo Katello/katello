@@ -3,9 +3,9 @@
 
   <div data-block="modal-body">
     <form id="errataActionForm" name="errataActionForm" class="form" method="post" action="/katello/remote_execution">
-      <input type="hidden" name="name" ng-value="errataActionFormValues.errata"/>
       <input type="hidden" name="remote_action" ng-value="errataActionFormValues.remoteAction"/>
-      <input type="hidden" name="host_ids" ng-value="errataActionFormValues.hostIds"/>
+      <input type="hidden" name="bulk_host_ids" ng-value="errataActionFormValues.bulkHostIds"/>
+      <input type="hidden" name="bulk_errata_ids" ng-value="errataActionFormValues.bulkErrataIds"/>
       <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
       <input type="hidden" name="customize" ng-value="errataActionFormValues.customize"/>
       <input type="hidden" ng-if="allHostsSelected" name="scoped_search" ng-value="errataActionFormValues.scopedSearch"/>
