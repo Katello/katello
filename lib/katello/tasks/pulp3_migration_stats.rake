@@ -10,7 +10,8 @@ namespace :katello do
     migratable_repo_count = ::Katello::Repository.count - ::Katello::Repository.puppet_type.count -
       ::Katello::Repository.ostree_type.count - ::Katello::Repository.deb_type.count
 
-    on_demand_rpm_count = Katello::RepositoryRpm.where(:repository_id => Katello::Repository.yum_type.on_demand).distinct.count
+    on_demand_rpm_count = Katello::RepositoryRpm.where(:repository_id => Katello::Repository.yum_type.on_demand).
+      select(:rpm_id).distinct.count
     on_demand_unmigrated_rpm_count = on_demand_rpm_count - migrated_rpm_count
     immediate_unmigrated_rpm_count = ::Katello::Rpm.count - migrated_rpm_count - on_demand_unmigrated_rpm_count
 
