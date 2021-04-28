@@ -58,12 +58,12 @@ describe('Controller: ContentHostsBulkModuleStreamsModalController', function() 
         expect($uibModalInstance.dismiss).toHaveBeenCalled();
     });
 
-    it("can call module stream actions on multiple content hosts", function() { 
+    it("can call module stream actions on multiple content hosts", function() {
         formValues = {
-            authenticityToken: 'secret_token', 
-            remoteAction: 'module_stream_action', 
-            hostIds: '1,2,3', 
-            moduleSpec: 'django:1.9', 
+            authenticityToken: 'secret_token',
+            remoteAction: 'module_stream_action',
+            bulkHostIds: angular.toJson({ included: { ids: [1,2,3] }}), 
+            moduleSpec: 'django:1.9',
             moduleStreamAction: 'enable'
         };
         $scope.performViaRemoteExecution("django:1.9", "enable");;

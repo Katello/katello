@@ -34,10 +34,10 @@
   <form id="errataActionForm" method="post" action="/katello/remote_execution">
     <input type="hidden" name="remote_action" value="errata_install"/>
     <input type="hidden" name="name" ng-value="errataActionFormValues.errata"/>
-    <input type="hidden" name="host_ids" ng-value="errataActionFormValues.hostIds"/>
+    <input type="hidden" name="bulk_host_ids" ng-value="errataActionFormValues.bulkHostIds"/>
+    <input type="hidden" name="bulk_errata_ids" ng-value="errataActionFormValues.bulkErrataIds"/>
     <input type="hidden" name="customize" ng-value="errataActionFormValues.customize"/>
     <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
-    <input type="hidden" name="install_all" ng-value="table.allResultsSelected" />
   </form>
 
   <div data-extend-template="layouts/partials/table.html">

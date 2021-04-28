@@ -137,11 +137,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
                 $scope.packageActionFormValues.remoteAction = 'package_' + action;
             }
 
-            if ($scope.allHostsSelected) {
-                $scope.packageActionFormValues.scopedSearch = selectedHosts.included.search;
-            } else if (selectedHosts.included.ids.length > 0) {
-                $scope.packageActionFormValues.hostIds = selectedHosts.included.ids.join(',');
-            }
+            $scope.packageActionFormValues.bulkHostIds = angular.toJson(selectedHosts);
 
             $timeout(function () {
                 angular.element('#packageActionForm').submit();

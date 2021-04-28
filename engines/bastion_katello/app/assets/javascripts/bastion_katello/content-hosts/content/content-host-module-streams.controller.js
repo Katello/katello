@@ -49,7 +49,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
             $scope.working = true;
             $scope.moduleStreamActionFormValues.moduleSpec = moduleSpec;
             $scope.moduleStreamActionFormValues.moduleStreamAction = actionType;
-            $scope.moduleStreamActionFormValues.hostIds = $scope.host.id;
+            $scope.moduleStreamActionFormValues.bulkHostIds = angular.toJson({ included: { ids: [$scope.host.id] }});
 
             $timeout(function () {
                 angular.element('#moduleStreamActionForm').submit();
