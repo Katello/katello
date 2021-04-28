@@ -42,7 +42,7 @@
     <form id="packageActionForm" name="packageActionForm" class="form" method="post" action="/katello/remote_execution">
       <input type="hidden" name="name" ng-value="content.content"/>
       <input type="hidden" name="remote_action" ng-value="packageActionFormValues.remoteAction"/>
-      <input type="hidden" name="host_ids" ng-value="packageActionFormValues.hostIds"/>
+      <input type="hidden" name="bulk_host_ids" ng-value="packageActionFormValues.bulkHostIds"/>
       <input type="hidden" name="authenticity_token" ng-value="packageActionFormValues.authenticityToken"/>
       <input type="hidden" name="customize" ng-value="packageActionFormValues.customize"/>
       <input type="hidden" ng-if="allHostsSelected" name="scoped_search" ng-value="packageActionFormValues.scopedSearch"/>

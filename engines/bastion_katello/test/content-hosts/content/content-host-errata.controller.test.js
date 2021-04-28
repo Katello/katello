@@ -50,7 +50,7 @@ describe('Controller: ContentHostErrataController', function() {
             this.enableSelectAllResults = function () {};
             this.getAllSelectedResults = function() {
                 return {
-                    included: { ids: [mockErratum.errata_id] }
+                    included: { ids: [mockErratum.errata_id] , params: {} }
                 };
             };
         };
@@ -103,7 +103,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn($scope.table, "selectAll");
         spyOn($scope, "transitionTo");
         $scope.applySelected();
-        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, bulk_errata_ids: {included: { ids: [mockErratum.errata_id]}}},
+        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, bulk_errata_ids: {included: { ids: [mockErratum.errata_id], params: {} }}},
                                                          jasmine.any(Function));
         expect($scope.transitionTo).toHaveBeenCalledWith('content-host.tasks.details', {taskId: mockTask.id});
         expect($scope.table.selectAll).toHaveBeenCalledWith(false);
@@ -114,9 +114,9 @@ describe('Controller: ContentHostErrataController', function() {
 
         $scope.applySelected();
 
-        expect($scope.errataActionFormValues.hostIds).toEqual(host.id);
+        expect($scope.errataActionFormValues.bulkHostIds).toEqual('{"included":{"ids":[' + host.id + ']}}');
         expect($scope.errataActionFormValues.customize).toEqual(false);
-        expect($scope.errataActionFormValues.errata).toEqual(mockErratum.errata_id);
+        expect($scope.errataActionFormValues.bulkErrataIds).toEqual('{"included":{"ids":["RHSA-1024"],"params":{}}}');
     });
 
     it("provide a way to regenerate applicability", function() {

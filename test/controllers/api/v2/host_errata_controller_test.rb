@@ -44,7 +44,7 @@ module Katello
           :search => "errata_id = #{@errata.errata_id}"
         }
       }
-      result = @controller.find_bulk_errata_ids(bulk_params)
+      result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
       assert_includes result, @errata.errata_id
     end
@@ -58,7 +58,7 @@ module Katello
           :ids => [@bugfix.errata_id]
         }
       }
-      result = @controller.find_bulk_errata_ids(bulk_params)
+      result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
       refute_includes result, @bugfix.errata_id
       assert_includes result, @errata.errata_id
@@ -70,7 +70,7 @@ module Katello
           :ids => [@bugfix.errata_id]
         }
       }
-      result = @controller.find_bulk_errata_ids(bulk_params)
+      result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
       refute_includes result, @errata.errata_id
       assert_includes result, @bugfix.errata_id
@@ -85,7 +85,7 @@ module Katello
           :ids => [@bugfix.errata_id]
         }
       }
-      result = @controller.find_bulk_errata_ids(bulk_params)
+      result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
       refute_includes result, @bugfix.errata_id
       assert_includes result, @errata.errata_id
@@ -98,7 +98,7 @@ module Katello
         }
       }
       exception = assert_raises(HttpErrors::BadRequest) do
-        @controller.find_bulk_errata_ids(bulk_params)
+        @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
       end
       assert_match(/No errata has been specified/, exception.message)
     end

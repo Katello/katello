@@ -23,14 +23,12 @@
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalController',
     ['$scope', '$http', '$location', '$window', '$timeout', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'Notification', 'BastionConfig', 'hostIds',
     function ($scope, $http, $location, $window, $timeout, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, Notification, BastionConfig, hostIds) {
-        var nutupane;
-
         function installParams() {
             var params = hostIds;
             params['content_type'] = 'errata';
             params.content = _.map($scope.table.getSelected(), 'errata_id');
 
-            if (nutupane.table.allResultsSelected) {
+            if ($scope.nutupane.table.allResultsSelected) {
                 params['install_all'] = true;
             } else {
                 params['install_all'] = false;
@@ -44,20 +42,19 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
             $scope.erratum = Erratum.get({id: errataId, 'organization_id': CurrentOrganization});
         }
 
-        nutupane = new Nutupane(HostBulkAction, hostIds, 'installableErrata');
-        nutupane.enableSelectAllResults();
+        $scope.nutupane = new Nutupane(HostBulkAction, hostIds, 'installableErrata');
+        $scope.nutupane.enableSelectAllResults();
 
         $scope.controllerName = 'katello_errata';
-        nutupane.primaryOnly = true;
+        $scope.nutupane.primaryOnly = true;
         $scope.showErrata = false;
         $scope.showHosts = false;
-        $scope.table = nutupane.table;
+        $scope.table = $scope.nutupane.table;
         $scope.table.errataFilterTerm = "";
         $scope.table.initialLoad = false;
         $scope.initialLoad = true;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
-        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
         $scope.allHostsSelected = hostIds.allResultsSelected;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
 
@@ -65,11 +62,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
         };
 
-        if ($scope.allHostsSelected) {
-            $scope.errataActionFormValues.scopedSearch = hostIds.included.search;
-        } else if (hostIds.included.ids.length > 0) {
-            $scope.errataActionFormValues.hostIds = hostIds.included.ids.join(',');
-        }
+        $scope.errataActionFormValues.bulkHostIds = angular.toJson(hostIds);
 
         $scope.showTable = function () {
             return (!$scope.showErrata && !$scope.showHosts);
@@ -78,10 +71,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.fetchErrata = function () {
             var params = hostIds;
             params['organization_id'] = CurrentOrganization;
-            nutupane.setParams(params);
+            $scope.nutupane.setParams(params);
             $scope.table.working = true;
             if ($scope.table.numSelected > 0) {
-                nutupane.refresh().then(function () {
+                $scope.nutupane.refresh().then(function () {
                     $scope.table.working = false;
                 });
             } else {
@@ -98,6 +91,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.installErrata = function () {
             if ($scope.remoteExecutionByDefault) {
                 $scope.installErrataViaRemoteExecution();
+
             } else {
                 $scope.installErrataViaKatelloAgent(false);
             }
@@ -106,23 +100,28 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.installErrataViaKatelloAgent = function () {
             var params = installParams();
             HostBulkAction.installContent(params,
-                function (data) {
-                    nutupane.invalidate();
-                    $scope.ok();
-                    $scope.transitionTo('content-hosts.bulk-task', {taskId: data.id});
-                },
-                function (response) {
-                    angular.forEach(response.data.errors, function (error) {
-                        Notification.setErrorMessage(error);
-                    });
-                });
+              function (data) {
+                  $scope.nutupane.invalidate();
+                  $scope.ok();
+                  $scope.transitionTo('content-hosts.bulk-task', {taskId: data.id});
+              },
+              function (response) {
+                  angular.forEach(response.data.errors, function (error) {
+                      Notification.setErrorMessage(error);
+                  });
+              });
+        };
+
+        $scope.selectedErrataIds = function () {
+            return $scope.nutupane.getAllSelectedResults('errata_id');
         };
 
         $scope.installErrataViaRemoteExecution = function(customize) {
-            var errataIds = _.map($scope.table.getSelected(), 'errata_id');
+            var errataIds = $scope.selectedErrataIds();
+
+            $scope.errataActionFormValues.bulkErrataIds = angular.toJson(errataIds);
 
             $scope.errataActionFormValues.remoteAction = 'errata_install';
-            $scope.errataActionFormValues.errata = errataIds.join(',');
             $scope.errataActionFormValues.customize = customize;
 
             $timeout(function () {

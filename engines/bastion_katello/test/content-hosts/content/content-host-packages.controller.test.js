@@ -97,7 +97,7 @@ describe('Controller: ContentHostPackagesController', function() {
         expect(HostPackage.install).not.toHaveBeenCalled();
         expect($scope.packageActionFormValues.package).toEqual('foo bar baz');
         expect($scope.packageActionFormValues.remoteAction).toEqual('packageInstall');
-        expect($scope.packageActionFormValues.hostIds).toEqual(mockHost.id);
+        expect($scope.packageActionFormValues.bulkHostIds).toEqual('{"included":{"ids":[' + mockHost.id + ']}}');
         expect($scope.working).toBe(true);
     });
 
