@@ -67,16 +67,15 @@ module Katello
         :organization,
         :repositories,
         :products,
-        :gpg_keys,
         :toc,
         :incremental,
+        gpg_keys: {},
         content_view: [:name, :label, :description],
         content_view_version: [:major, :minor, :description],
         from_content_view_version: [:major, :minor]
       ).tap do |nested|
         nested[:repositories] = params[:metadata].require(:repositories).permit!
         nested[:products] = params[:metadata].require(:products).permit!
-        nested[:gpg_keys] = params[:metadata].require(:gpg_keys).permit!
       end
     end
   end
