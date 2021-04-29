@@ -278,6 +278,11 @@ module Katello
         Util::Package.sortable_version(version)
       end
 
+      apipie :method, 'Returns true if Katello Agent infrastructure is enabled on the server'
+      def katello_agent_enabled
+        Katello.with_katello_agent?
+      end
+
       private
 
       def host_subscription_facet(host)
