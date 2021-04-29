@@ -113,7 +113,6 @@ module Katello
 
         # if this fails, there is not much to do about it right now. We can't really re-create the candlepin consumer.
         # This can be cleaned up later via clean_backend_objects.
-        pulp_consumer_destory(host.content_facet.uuid) if host.content_facet.try(:uuid) && pulp2_supported?
 
         delete_agent_queue(host) if host.content_facet.try(:uuid)
 
@@ -156,9 +155,9 @@ module Katello
 
         User.as_anonymous_admin do
           begin
-            create_in_cp_and_pulp(host, content_view_environment, consumer_params, activation_keys)
+            create_in_candlepin(host, content_view_environment, consumer_params, activation_keys)
           rescue StandardError => e
-            # we can't call CP or pulp here since something bad already happened. Just clean up our DB as best as we can.
+            # we can't call CP here since something bad already happened. Just clean up our DB as best as we can.
             host.subscription_facet.try(:destroy!)
             new_host ? remove_partially_registered_new_host(host) : remove_host_artifacts(host)
             raise e
@@ -174,8 +173,7 @@ module Katello
           ping_results = Katello::Ping.ping
         end
         candlepin_ok = ping_results[:services][:candlepin][:status] == "ok"
-        pulp_ok = ping_results[:services][:pulp] ? ping_results[:services][:pulp][:status] == "ok" : true
-        candlepin_ok && pulp_ok
+        candlepin_ok
       end
 
       private
@@ -185,10 +183,6 @@ module Katello
         host.destroy
       rescue ActiveRecord::RecordNotFound
         Rails.logger.warn("Attempted to destroy host %s but host is already gone." % host_id)
-      end
-
-      def pulp2_supported?
-        SmartProxy.pulp_primary.has_feature?(SmartProxy::PULP_FEATURE)
       end
 
       def get_uuid(params)
@@ -204,18 +198,10 @@ module Katello
         host.subscription_facet.update_subscription_status(::Katello::SubscriptionStatus::UNKNOWN)
       end
 
-      def create_in_cp_and_pulp(host, content_view_environment, consumer_params, activation_keys)
+      def create_in_candlepin(host, content_view_environment, consumer_params, activation_keys)
         # if CP fails, nothing to clean up yet w.r.t. backend services
         cp_create = ::Katello::Resources::Candlepin::Consumer.create(content_view_environment.cp_id, consumer_params, activation_keys.map(&:cp_name))
         ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
-
-        # if pulp fails, remove the CP consumer we just made
-        begin
-          ::Katello.pulp_server.extensions.consumer.create(cp_create[:uuid], display_name: host.name) if pulp2_supported?
-        rescue StandardError => e
-          ::Katello::Resources::Candlepin::Consumer.destroy(cp_create[:uuid])
-          raise e
-        end
         cp_create[:uuid]
       end
 
@@ -260,12 +246,6 @@ module Katello
         Rails.logger.warn(_("Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin") % host_uuid)
       rescue RestClient::Gone
         Rails.logger.warn(_("Candlepin consumer %s has already been removed") % host_uuid)
-      end
-
-      def pulp_consumer_destory(host_uuid)
-        ::Katello.pulp_server.extensions.consumer.delete(host_uuid)
-      rescue RestClient::ResourceNotFound
-        Rails.logger.warn(_("Pulp Consumer %s has already been removed") % host_uuid)
       end
 
       def delete_agent_queue(host)

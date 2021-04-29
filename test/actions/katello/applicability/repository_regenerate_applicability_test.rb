@@ -12,11 +12,6 @@ module ::Actions::Katello::Applicability::Repository
                                :lifecycle_environment => katello_environments(:library))
       @host.save!
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
-      SETTINGS[:katello][:katello_applicability] = true
-    end
-
-    after :all do
-      SETTINGS[:katello][:katello_applicability] = false
     end
 
     describe 'Repository Regenerate Applicability using Katello Applicability' do

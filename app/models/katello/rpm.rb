@@ -210,10 +210,6 @@ module Katello
         where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryRpm.table_name}.repository_id").uniq
     end
 
-    def self.installable_for_hosts(hosts = nil)
-      ApplicableContentHelper.new(Rpm).installable_for_hosts(hosts)
-    end
-
     def self.applicable_to_hosts(hosts)
       self.joins(:content_facets).
         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).distinct
