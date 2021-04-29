@@ -46,6 +46,7 @@ module Katello
                      :checksum_type, :os_versions, :major, :minor).
             merge(product: generate_product_metadata(repo.product),
                   gpg_key: generate_gpg_metadata(repo.gpg_key),
+                  content: generate_content_metadata(repo.content),
                   redhat: repo.redhat?)
         end
 
@@ -58,6 +59,11 @@ module Katello
         def generate_gpg_metadata(gpg)
           return {} if gpg.blank?
           gpg.slice(:name, :content_type, :content)
+        end
+
+        def generate_content_metadata(content)
+          return {} if content.blank?
+          { id: content.cp_content_id, label: content.label }
         end
 
         def zip_gpg_keys(entities)

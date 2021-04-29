@@ -26,6 +26,7 @@ module Actions
           sequence do
             plan_action(AutoCreateProducts, organization: content_view.organization, metadata: metadata)
             plan_action(AutoCreateRepositories, organization: content_view.organization, metadata: metadata)
+            plan_action(AutoCreateRedhatRepositories, organization: content_view.organization, metadata: metadata)
             plan_action(ResetContentViewRepositoriesFromMetadata, content_view: content_view, metadata: metadata)
             plan_action(::Actions::Katello::ContentView::Publish, content_view, description,
                           path: path,

@@ -65,6 +65,7 @@ module Katello
             it "fails on metadata if repo types in metadata dont match the repos in library" do
               cvv = katello_content_view_versions(:library_view_version_2)
               repo = cvv.repositories.exportable.last
+              ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_manifest_imported!).returns
               ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
 
               exception = assert_raises(RuntimeError) do
@@ -86,10 +87,11 @@ module Katello
               assert_match(/incorrect content type or provider type/, exception.message)
             end
 
-            it "fails on metadata if redhat repositories in the metadata are not in the library" do
+            it "fails on import if manifest is not imported" do
               cv = katello_content_views(:acme_default)
               cvv = cv.versions.last
-              ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
+              org = cv.organization
+              org.stubs(:manifest_imported?).returns(false)
 
               exception = assert_raises(RuntimeError) do
                 metadata = { content_view: cv.slice(:name, :label, :description),
@@ -105,9 +107,41 @@ module Katello
                                              }
                              }
                 }
+                validator(content_view: cvv.content_view, metadata: metadata).ensure_manifest_imported!
+              end
+              assert_match(/No manifest found. Import a manifest with the appropriate subscriptions before importing content./, exception.message)
+            end
+
+            it "fails on metadata if redhat products in the metadata are not in the library" do
+              cv = katello_content_views(:acme_default)
+              cvv = cv.versions.last
+              ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_manifest_imported!).returns
+              ::Katello::Pulp3::ContentViewVersion::ImportValidator.any_instance.expects(:ensure_pulp_importable!).returns
+
+              exception = assert_raises(RuntimeError) do
+                metadata = { content_view: cv.slice(:name, :label, :description),
+                             content_view_version: { major: cvv.major + 10, minor: cvv.minor },
+                             products: {
+                               "prod" => { name: "prod", label: 'prod'},
+                               "redhat_label" => { name: 'Red Hat Linux', label: 'redhat_label'}
+                             },
+                             gpg_keys: {},
+                             repositories: {
+                               "misc-24037": { label: "misc",
+                                               product: {label: 'prod'},
+                                               "redhat": true
+                                             },
+                               "rhel-7": { label: "rhel_7",
+                                           product: {label: 'redhat_label'},
+                                           "redhat": true
+                                }
+                             }
+                }
                 validator(content_view: cvv.content_view, metadata: metadata).check!
               end
-              assert_match(/repositories provided in the import metadata are either not available in the Library or are of incorrect Respository Type./, exception.message)
+              assert_match(/The organization's manifest does not contain the subscriptions required to enable the following repositories./, exception.message)
+              assert_match(/prod/, exception.message)
+              refute_match(/redhat_label/, exception.message)
             end
           end
         end
