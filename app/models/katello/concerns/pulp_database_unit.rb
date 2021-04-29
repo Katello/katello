@@ -62,6 +62,48 @@ module Katello
         [Katello::Rpm, Katello::Srpm]
       end
 
+      def content_unit_association_id
+        "#{self.name.demodulize.underscore}_id".to_sym #Rpm => rpm_id
+      end
+
+      def repository_association_units
+        repository_association_class.name.demodulize.pluralize.underscore.to_sym
+      end
+
+      def content_units_name
+        self.name.demodulize.pluralize.underscore.to_sym
+      end
+
+      def installable_for_content_facet(facet, env = nil, content_view = nil)
+        repos = if env && content_view
+                  Katello::Repository.in_environment(env).in_content_views([content_view])
+                else
+                  facet.bound_repositories.pluck(:id)
+                end
+        facet.send("applicable_#{content_units_name}".to_sym).in_repositories(repos)
+      end
+
+      def installable_for_hosts(hosts = nil)
+        # Main goal of this query
+        # 1) Get me the applicable content units for these set of hosts
+        # 2) Now further prune this list. Only include units from repos that have been "enabled" on those hosts.
+        #    In other words, prune the list to only include the units in the "bound" repositories signified by
+        #    the inner join between ContentFacetRepository and Repository<Unit>
+
+        facet_repos = Katello::ContentFacetRepository.joins(:content_facet => :host).select(:repository_id)
+        facet_content_units = content_facet_association_class.joins(:content_facet => :host).select(content_unit_association_id)
+
+        if hosts
+          hosts = ::Host.where(id: hosts) if hosts.is_a?(Array)
+          facet_repos = facet_repos.merge(hosts).reorder(nil)
+          facet_content_units = facet_content_units.merge(hosts).reorder(nil)
+        end
+
+        self.joins(repository_association_units).
+            where(repository_association_class.table_name => {:repository_id => facet_repos,
+                                                              content_unit_association_id => facet_content_units}).distinct
+      end
+
       def with_identifiers(ids)
         ids = [ids] unless ids.is_a?(Array)
         ids.map!(&:to_s)

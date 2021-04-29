@@ -69,12 +69,11 @@ module Actions
                 plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check && repo.yum?
                 plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
                 if generate_applicability
-                  regenerate_applicability(repo, contents_changed)
+                  plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_id => repo.id, :contents_changed => contents_changed)
                 end
               end
               plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
                         :contents_changed => contents_changed)
-              plan_action(Katello::Repository::ImportApplicability, :repo_id => repo.id, :contents_changed => contents_changed) if generate_applicability
               plan_action(Katello::Repository::SyncHook, :id => repo.id)
             end
           end
@@ -112,14 +111,6 @@ module Actions
           pulp_action = planned_actions(Pulp::Repository::Sync).first
           if (pulp_task = Array(pulp_action.external_task).first)
             pulp_task.fetch(:task_id)
-          end
-        end
-
-        def regenerate_applicability(repo, contents_changed)
-          if SETTINGS[:katello][:katello_applicability]
-            plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_id => repo.id, :contents_changed => contents_changed)
-          else
-            plan_action(Pulp::Repository::RegenerateApplicability, :repository_id => repo.id, :contents_changed => contents_changed)
           end
         end
 

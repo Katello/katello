@@ -72,8 +72,8 @@ module Katello
     api :PUT, "/hosts/:host_id/errata/applicability", N_("Force regenerate applicability.")
     param :host_id, :number, :desc => N_("Host ID"), :required => true
     def applicability
-      task = async_task(::Actions::Katello::Host::GenerateApplicability, [@host], false)
-      respond_for_async :resource => task
+      Katello::Host::ContentFacet.trigger_applicability_generation(@host.id)
+      respond_for_async :resource => {}
     end
 
     def find_bulk_errata_ids(bulk_params)

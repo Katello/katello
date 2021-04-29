@@ -13,7 +13,6 @@ module Actions
 
           sequence do
             plan_self(:host_id => host.id, :hostname => host.name, :profile_string => profile_string)
-            plan_action(GenerateApplicability, [host])
           end
         end
 
@@ -33,52 +32,12 @@ module Actions
           Dynflow::Action::Rescue::Skip
         end
 
-        def self.upload_modules_to_pulp(available_streams, host)
-          query_name_streams = available_streams.map do |profile|
-            ::Katello::ModuleStream.where(profile.slice(:name, :stream))
-          end
-
-          updated_profiles = []
-          unless query_name_streams.empty?
-            query_name_streams = query_name_streams.inject(&:or)
-
-            bound_library_instances = host.content_facet.bound_repositories.map(&:library_instance_or_self)
-            query = ::Katello::ModuleStream.in_repositories(bound_library_instances).
-                                            select(:name, :stream, :version, :context, :arch).
-                                              merge(query_name_streams)
-
-            updated_profiles = query.map do |module_stream|
-              module_stream.slice(:name, :stream, :version, :context, :arch)
-            end
-          end
-
-          # We also need to pass module streams that are not found in the ModuleStream table
-          # but are present on the content host
-          unassociated_profiles = available_streams.select do |profile|
-            updated_profiles.none? { |p| p[:name] == profile[:name] && p[:stream] == profile[:stream] }
-          end
-
-          module_stream_profile = updated_profiles + unassociated_profiles
-
-          if SmartProxy.pulp_primary&.has_feature?(SmartProxy::PULP_FEATURE)
-            unless module_stream_profile.empty?
-              begin
-                ::Katello::Pulp::Consumer.new(host.content_facet.uuid).
-                  upload_module_stream_profile(module_stream_profile)
-              rescue RestClient::ResourceNotFound
-                Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % host.id)
-              end
-            end
-          end
-        end
-
         def import_module_streams(payload, host)
           enabled_payload = payload.map do |profile|
             profile.slice("name", "stream", "version", "context", "arch").with_indifferent_access if profile["status"] == "enabled"
           end
           enabled_payload.compact!
 
-          UploadProfiles.upload_modules_to_pulp(enabled_payload, host)
           host.import_module_streams(payload)
         end
 
@@ -124,6 +83,8 @@ module Actions
             module_streams.each do |module_stream_payload|
               import_module_streams(module_stream_payload, host)
             end
+
+            ::Katello::Host::ContentFacet.trigger_applicability_generation(host.id)
           end
         end
       end

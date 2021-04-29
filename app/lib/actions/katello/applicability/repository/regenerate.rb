@@ -13,12 +13,7 @@ module Actions
           def run
             host_ids = ::Katello::Repository.find(input[:repo_id]).hosts_with_applicability.pluck(:id)
             return if host_ids.empty?
-
-            host_ids.each do |host_id|
-              ::Katello::ApplicableHostQueue.push_host(host_id)
-            end
-
-            ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, 0)
+            ::Katello::Host::ContentFacet.trigger_applicability_generation(host_ids)
           end
 
           def humanized_name

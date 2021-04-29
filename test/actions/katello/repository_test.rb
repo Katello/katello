@@ -380,7 +380,6 @@ module ::Actions::Katello::Repository
       plan_action action, docker_repository
 
       refute_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
-      refute_action_planed action, ::Actions::Katello::Repository::ImportApplicability
     end
 
     it 'passes the source URL to pulp sync action when provided' do
@@ -630,18 +629,6 @@ module ::Actions::Katello::Repository
         assert_include proxy_list, smart_proxy_service_2.smart_proxy
         assert_equal repository.id, options[:repository_id]
       end
-    end
-  end
-
-  class ImportApplicabilityTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::ImportApplicability }
-
-    it 'runs' do
-      host =  FactoryBot.build(:host, :id => 343)
-      ::Katello::Repository.any_instance.stubs(:hosts_with_applicability).returns([host])
-      Katello::EventQueue.expects(:push_event).with(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host.id)
-
-      ForemanTasks.sync_task(action_class, :repo_id => repository.id, :contents_changed => true)
     end
   end
 
