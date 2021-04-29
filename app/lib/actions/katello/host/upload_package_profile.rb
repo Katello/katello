@@ -11,7 +11,6 @@ module Actions
 
           sequence do
             plan_self(:host_id => host.id, :hostname => host.name, :profile_string => profile_string)
-            plan_action(GenerateApplicability, [host])
           end
         end
 
@@ -39,13 +38,8 @@ module Actions
             Rails.logger.warn("Host with ID %s has no content facet, continuing" % host_id)
           else
             begin
-              if SmartProxy.pulp_primary&.has_feature?(SmartProxy::PULP_FEATURE)
-                ::Katello::Pulp::Consumer.new(host.content_facet.uuid).upload_package_profile(profile)
-              end
               simple_packages = profile.map { |item| ::Katello::Pulp::SimplePackage.new(item) }
               host.import_package_profile(simple_packages)
-            rescue RestClient::ResourceNotFound
-              Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % host_id)
             rescue ActiveRecord::InvalidForeignKey # this happens if the host gets deleted in between the "find_by" and "import_package_profile"
               Rails.logger.warn("Host installed package list with ID %s was not able to be written to the DB (host likely is deleted), continuing" % host_id)
             end
@@ -57,6 +51,7 @@ module Actions
           #free the huge string from the memory
           input[:profile_string] = 'TRIMMED'.freeze
           UploadPackageProfile.upload(input[:host_id], profile)
+          ::Katello::Host::ContentFacet.trigger_applicability_generation(input[:host_id])
         end
       end
     end

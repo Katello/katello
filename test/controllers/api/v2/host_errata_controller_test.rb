@@ -140,13 +140,11 @@ module Katello
     end
 
     def test_applicability
-      assert_async_task ::Actions::Katello::Host::GenerateApplicability do |hosts, use_queue|
-        hosts == [@host] && use_queue == false
-      end
-
       put :applicability, params: { :host_id => @host.id }
 
       assert_response :success
+
+      assert Katello::HostQueueElement.find_by(host_id: @host.id)
     end
 
     def test_apply_unknown_errata

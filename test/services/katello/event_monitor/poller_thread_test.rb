@@ -12,9 +12,9 @@ module Katello
       end
 
       def test_run_event
-        event = Katello::Event.new(object_id: 100, event_type: 'import_host_applicability')
+        event = Katello::Event.new(object_id: 100, event_type: 'import_pool')
         Katello::EventMonitor::PollerThread.any_instance.expects(:poll_for_events)
-        Katello::Events::ImportHostApplicability.any_instance.expects(:run)
+        Katello::Events::ImportPool.any_instance.expects(:run)
         Katello::EventMonitor::PollerThread.run
 
         Katello::EventMonitor::PollerThread.instance.run_event(event)

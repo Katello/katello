@@ -37,112 +37,6 @@ module Katello::Host
         action.stubs(:action_subject).with(@host)
 
         plan_action action, @host, profile.to_json
-
-        assert_action_planed_with action, Actions::Katello::Host::GenerateApplicability, [@host]
-      end
-
-      it 'runs' do
-        action = create_action action_class
-        action.stubs(:action_subject).with(@host)
-
-        ::Host.expects(:find_by).returns(@host).at_least_once
-        mock_consumer = mock
-        mock_consumer.expects(:upload_package_profile)
-        mock_consumer.expects(:upload_module_stream_profile)
-        ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
-        @host.expects(:import_package_profile).with do |packages|
-          expected_packages = rpm_profiles.map { |prof| ::Katello::Pulp::SimplePackage.new(prof) }
-          packages.map(&:nvra).must_equal(expected_packages.map(&:nvra))
-        end
-        @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with(modulemd_inventory)
-
-        plan_action action, @host, profile.to_json
-        run_action action
-      end
-
-      it 'selects correct modulemd payload' do
-        action = create_action action_class
-        action.stubs(:action_subject).with(@host)
-        river = katello_module_streams(:river)
-        repo = river.repositories.first.library_instance_or_self
-        @host.content_facet.expects(:bound_repositories).returns([repo])
-
-        unassociated_profile = {"name" => "foo1", "stream" => "1.1", "arch" => "x86_64",
-                                "context" => "cccc", "version" => "11111", "status" => "enabled"}
-
-        modulemd_inventory_multiple = [
-          {"name" => river.name, "stream" => river.stream, "arch" => "x86_64",
-           "context" => "cccc", "version" => river.version + '1', "status" => "enabled"},
-          unassociated_profile
-        ]
-
-        profile1 = [
-          {"content_type" => "rpm", "profile" => rpm_profiles},
-          {"content_type" => "enabled_repos", "profile" => enabled_repos},
-          {"content_type" => "modulemd", "profile" => modulemd_inventory_multiple}
-        ]
-
-        ::Host.expects(:find_by).returns(@host).at_least_once
-        mock_consumer = mock
-        mock_consumer.expects(:upload_package_profile)
-        mock_consumer.expects(:upload_module_stream_profile).with do |args|
-          assert_equal 2, args.size
-          args.first["name"].must_equal(river.name)
-          args.first["stream"].must_equal(river.stream)
-          args.first["version"].must_equal(river.version)
-          args.last['name'].must_equal(unassociated_profile["name"])
-          args.last['stream'].must_equal(unassociated_profile["stream"])
-        end
-        ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
-        @host.expects(:import_package_profile).with do |packages|
-          expected_packages = rpm_profiles.map { |prof| ::Katello::Pulp::SimplePackage.new(prof) }
-          packages.map(&:nvra).must_equal(expected_packages.map(&:nvra))
-        end
-        @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with(modulemd_inventory_multiple)
-
-        plan_action action, @host, profile1.to_json
-        run_action action
-      end
-
-      it 'runs and no raised exception when pulp 404s on packages' do
-        action = create_action action_class
-        action.stubs(:action_subject).with(@host)
-
-        ::Host.expects(:find_by).returns(@host).at_least_once
-        mock_consumer = mock
-        mock_consumer.expects(:upload_package_profile).raises(RestClient::ResourceNotFound)
-        mock_consumer.expects(:upload_module_stream_profile)
-        ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
-        @host.expects(:import_package_profile).with(any_parameters).never
-        @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with(modulemd_inventory)
-
-        plan_action action, @host, profile.to_json
-        run_action action
-      end
-
-      it 'runs and no raised exception when modulemd_inventory is empty' do
-        action = create_action action_class
-        action.stubs(:action_subject).with(@host)
-
-        profile1 = [
-          {"content_type" => "rpm", "profile" => rpm_profiles},
-          {"content_type" => "enabled_repos", "profile" => enabled_repos},
-          {"content_type" => "modulemd", "profile" => []}
-        ]
-
-        ::Host.expects(:find_by).returns(@host).at_least_once
-        mock_consumer = mock
-        mock_consumer.expects(:upload_package_profile).raises(RestClient::ResourceNotFound)
-        ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
-        @host.expects(:import_package_profile).with(any_parameters).never
-        @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with([])
-
-        plan_action action, @host, profile1.to_json
-        run_action action
       end
 
       it 'runs and no raised exception if host not found' do
@@ -150,7 +44,6 @@ module Katello::Host
         action.stubs(:action_subject).with(@host)
 
         ::Host.expects(:find_by).returns(nil)
-        ::Katello::Pulp::Consumer.expects(:new).never
 
         plan_action action, @host, profile.to_json
         run_action action
@@ -162,24 +55,7 @@ module Katello::Host
 
         ::Host.expects(:find_by).returns(@host).at_least_once
         @host.expects(:content_facet).returns(nil)
-        ::Katello::Pulp::Consumer.expects(:new).never
 
-        plan_action action, @host, profile.to_json
-        run_action action
-      end
-
-      it 'runs and no raised exception if host not found via FK error' do
-        action = create_action action_class
-        action.stubs(:action_subject).with(@host)
-
-        ::Host.expects(:find_by).returns(@host).at_least_once
-        mock_consumer = mock
-        mock_consumer.expects(:upload_package_profile)
-        mock_consumer.expects(:upload_module_stream_profile)
-        ::Katello::Pulp::Consumer.expects(:new).at_least_once.returns(mock_consumer)
-        @host.expects(:import_package_profile).with(any_parameters).raises(ActiveRecord::InvalidForeignKey)
-        @host.expects(:import_enabled_repositories).with(enabled_repos)
-        @host.expects(:import_module_streams).with(modulemd_inventory)
         plan_action action, @host, profile.to_json
         run_action action
       end
@@ -190,7 +66,6 @@ module Katello::Host
 
         @mock_smart_proxy.stubs(:has_feature?).with(::SmartProxy::PULP_FEATURE).returns(false)
         ::Host.expects(:find_by).returns(@host).at_least_once
-        ::Katello::Pulp::Consumer.expects(:new).never
         @host.expects(:import_package_profile).with do |packages|
           expected_packages = rpm_profiles.map { |prof| ::Katello::Pulp::SimplePackage.new(prof) }
           packages.map(&:nvra).must_equal(expected_packages.map(&:nvra))
@@ -216,8 +91,6 @@ module Katello::Host
           action.stubs(:action_subject).with(@host)
 
           plan_action action, @host, deb_package_profile.to_json
-
-          assert_action_planed_with action, Actions::Katello::Host::GenerateApplicability, [@host]
         end
 
         it 'runs' do
