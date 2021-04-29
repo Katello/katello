@@ -67,20 +67,6 @@ module Katello
       content_facet_rec = host1.associated_audits.where(auditable_id: content_facet1.id)
       assert content_facet_rec, "No associated audit record for content_facet"
     end
-
-    def test_pulp2_binding_with_katello_applicability
-      SETTINGS[:katello][:katello_applicability] = true
-      org = taxonomies(:empty_organization)
-      host = ::Host::Managed.create!(:name => 'foohost', :managed => false, :organization_id => org.id)
-      content_facet = Katello::Host::ContentFacet.create!(
-        :content_view_id => view.id, :lifecycle_environment_id => library.id, :host => host
-      )
-
-      ::Katello::Host::ContentFacet.expects(:propagate_yum_repos).never
-      content_facet.update_bound_repositories([::Katello::Repository.find_by(pulp_id: "Fedora_17")])
-    ensure
-      SETTINGS[:katello][:katello_applicability] = nil
-    end
   end
 
   class ContentFacetErrataTest < ContentFacetBase
@@ -298,33 +284,6 @@ module Katello
   end
 
   class ImportErrataApplicabilityTest < ContentFacetBase
-    let(:enhancement_errata) { katello_errata(:enhancement) }
-
-    def test_partial_import
-      refute_includes host.content_facet.applicable_errata, enhancement_errata
-
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([enhancement_errata.pulp_id])
-      content_facet.import_errata_applicability(true)
-
-      assert_equal [enhancement_errata], content_facet.reload.applicable_errata
-    end
-
-    def test_partial_import_empty
-      content_facet.applicable_errata << enhancement_errata
-
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([])
-      content_facet.import_errata_applicability(true)
-
-      assert_empty content_facet.reload.applicable_errata
-    end
-
-    def test_full_import
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([enhancement_errata.pulp_id])
-      content_facet.import_errata_applicability(false)
-
-      assert_equal [enhancement_errata], content_facet.reload.applicable_errata
-    end
-
     def test_errata_counts
       content_facet.installable_security_errata_count = 1
       content_facet.installable_bugfix_errata_count = 2
@@ -340,72 +299,12 @@ module Katello
     end
   end
 
-  class ImportRpmApplicabilityTest < ContentFacetBase
-    let(:rpm) { katello_rpms(:three) }
-
-    def test_partial_import
-      refute_includes host.content_facet.applicable_rpms, rpm
-
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([rpm.pulp_id])
-      content_facet.import_rpm_applicability(true)
-
-      assert_equal [rpm], content_facet.reload.applicable_rpms
-    end
-
-    def test_partial_import_empty
-      content_facet.applicable_rpms << rpm
-
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([])
-      content_facet.import_rpm_applicability(true)
-
-      assert_empty content_facet.reload.applicable_rpms
-    end
-
-    def test_full_import
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([rpm.pulp_id])
-      content_facet.import_rpm_applicability(false)
-
-      assert_equal [rpm], content_facet.reload.applicable_rpms
-    end
-  end
-
-  class ImportModuleStreamApplicabilityTest < ContentFacetBase
-    let(:module_stream) { katello_module_streams(:three) }
-
-    def test_partial_import
-      refute_includes host.content_facet.applicable_module_streams, module_stream
-
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([module_stream.pulp_id])
-      content_facet.import_module_stream_applicability(true)
-
-      assert_includes content_facet.reload.applicable_module_streams, module_stream
-    end
-
-    def test_partial_import_empty
-      content_facet.applicable_module_streams << module_stream
-
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([])
-      content_facet.import_module_stream_applicability(true)
-
-      assert_empty content_facet.reload.applicable_module_streams
-    end
-
-    def test_full_import
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([module_stream.pulp_id])
-      content_facet.import_module_stream_applicability(false)
-
-      assert_includes content_facet.reload.applicable_module_streams, module_stream
-    end
-  end
-
   class BoundReposTest < ContentFacetBase
     let(:deb_repo) { katello_repositories(:debian_9_amd64) }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
     let(:view_repo) { katello_repositories(:fedora_17_x86_64_library_view_1) }
 
     def test_save_bound_repos_by_path_empty
-      ForemanTasks.expects(:async_task).with(Actions::Katello::Host::GenerateApplicability, [host])
-      content_facet.expects(:propagate_yum_repos)
       content_facet.bound_repositories << repo
 
       content_facet.update_repositories_by_paths([])
@@ -416,8 +315,6 @@ module Katello
     def test_save_bound_repos_by_paths
       content_facet.content_view = repo.content_view
       content_facet.lifecycle_environment = repo.environment
-      ForemanTasks.expects(:async_task).with(Actions::Katello::Host::GenerateApplicability, [host])
-      content_facet.expects(:propagate_yum_repos)
       assert_empty content_facet.bound_repositories
 
       content_facet.update_repositories_by_paths([
@@ -429,26 +326,11 @@ module Katello
       assert_equal content_facet.bound_repositories, [deb_repo, repo]
     end
 
-    def test_save_bound_old_repo_path_by_paths
-      SETTINGS[:katello][:katello_applicability] = nil
-      content_facet.content_view = repo.content_view
-      content_facet.lifecycle_environment = repo.environment
-      ForemanTasks.expects(:async_task).with(Actions::Katello::Host::GenerateApplicability, [host])
-      content_facet.expects(:propagate_yum_repos)
-      assert_empty content_facet.bound_repositories
-
-      content_facet.update_repositories_by_paths(["/pulp/content/#{repo.relative_path}"])
-
-      assert_equal content_facet.bound_repositories, [repo]
-      SETTINGS[:katello][:katello_applicability] = false
-    end
-
     def test_save_bound_repos_by_paths_same_path
       content_facet.content_view = repo.content_view
       content_facet.lifecycle_environment = repo.environment
       content_facet.bound_repositories = [repo]
       ForemanTasks.expects(:async_task).never
-      content_facet.expects(:propagate_yum_repos).never
 
       content_facet.update_repositories_by_paths(["/pulp/content/#{repo.relative_path}"])
 
@@ -471,18 +353,6 @@ module Katello
       Rails.logger.expects(:warn).with(expected_warning)
 
       content_facet.update_repositories_by_paths([bogus_path])
-    end
-
-    def test_propagate_yum_repos
-      content_facet.bound_repositories << repo
-      ::Katello::Pulp::Consumer.any_instance.expects(:bind_yum_repositories).with([repo.pulp_id])
-      content_facet.propagate_yum_repos
-    end
-
-    def test_propagate_yum_repos_non_library
-      content_facet.bound_repositories << view_repo
-      ::Katello::Pulp::Consumer.any_instance.expects(:bind_yum_repositories).with([view_repo.library_instance.pulp_id])
-      content_facet.propagate_yum_repos
     end
   end
 

@@ -173,7 +173,6 @@ module Katello
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid-from-katello')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
-        ::Runcible::Extensions::Consumer.any_instance.expects(:create).with('fake-uuid-from-katello', :display_name => 'foobar')
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
@@ -189,7 +188,6 @@ module Katello
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(cvpe.cp_id, rhsm_params, ["cp_name_baz"]).returns(:uuid => 'fake-uuid-from-katello')
         Katello::ActivationKey.any_instance.stubs(:cp_name).returns('cp_name_baz')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
-        ::Runcible::Extensions::Consumer.any_instance.expects(:create).with('fake-uuid-from-katello', :display_name => 'foobar')
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
@@ -206,13 +204,11 @@ module Katello
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
 
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
 
         ::Katello::RegistrationManager.expects(:get_uuid).returns("fake-uuid-from-katello")
 
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid-from-katello')
         ::Katello::Resources::Candlepin::Consumer.expects(:get).once.with('fake-uuid-from-katello').returns({})
-        ::Runcible::Extensions::Consumer.any_instance.expects(:create)
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 
@@ -224,7 +220,6 @@ module Katello
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
 
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
         ::Katello::EventQueue.expects(:push_event)
 
         ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
@@ -236,7 +231,6 @@ module Katello
 
         ::Host.expects(:find).returns(@host)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
 
         @host.expects(:destroy).returns(true)
 
@@ -257,7 +251,6 @@ module Katello
 
         ::Host.expects(:find).returns(@host)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy).raises(RestClient::ResourceNotFound)
-        ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
 
         @host.expects(:destroy).returns(true)
 
@@ -269,7 +262,6 @@ module Katello
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
 
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy).never
-        ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
 
         @host.expects(:destroy).never
 
@@ -281,21 +273,6 @@ module Katello
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
 
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy).raises(Exception)
-        ::Runcible::Extensions::Consumer.any_instance.expects(:delete).never
-
-        failed = lambda do
-          ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
-        end
-
-        failed.must_raise(Exception)
-      end
-
-      def test_unregister_host_dead_pulp
-        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                                   :lifecycle_environment => @library, :organization => @content_view.organization)
-
-        ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Runcible::Extensions::Consumer.any_instance.expects(:delete).raises(Exception)
 
         failed = lambda do
           ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
@@ -311,24 +288,6 @@ module Katello
         new_host.expects(:destroy)
         new_host.organization.stubs(:simple_content_access?).returns(false)
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).raises("uhoh!")
-        ::Runcible::Extensions::Consumer.any_instance.expects(:create).with('fake-uuid', :display_name => 'foobar').never
-
-        failed = lambda do
-          ::Katello::RegistrationManager.register_host(new_host, rhsm_params, @content_view_environment)
-        end
-
-        failed.must_raise(Exception)
-      end
-
-      def test_registration_dead_pulp
-        new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @library.organization)
-        new_host.organization.stubs(:simple_content_access?).returns(false)
-
-        ::Katello::RegistrationManager.expects(:remove_host_artifacts).never
-        ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host)
-        ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).returns(:uuid => 'fake-uuid')
-        ::Katello::Resources::Candlepin::Consumer.expects(:destroy).with("fake-uuid")
-        ::Runcible::Extensions::Consumer.any_instance.expects(:create).with('fake-uuid', :display_name => 'foobar').raises("uhoh!")
 
         failed = lambda do
           ::Katello::RegistrationManager.register_host(new_host, rhsm_params, @content_view_environment)
@@ -349,8 +308,6 @@ module Katello
         ::Katello::RegistrationManager.expects(:remove_partially_registered_new_host).never
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).raises("uhoh!")
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
-        ::Runcible::Extensions::Consumer.any_instance.expects(:create).never
-        ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
 
         ::Organization.any_instance.stubs(:simple_content_access?).returns(false)
 

@@ -32,13 +32,13 @@ module Katello
     def upgradable?
       return false if status != ENABLED
 
-      ApplicableContentHelper.new(ModuleStream).installable_for_hosts([host_id]).
-                                         where(ModuleStream.table_name => {:name => available_module_stream.name,
-                                                                           :stream => available_module_stream.stream}).exists?
+      ModuleStream.installable_for_hosts([host_id]).
+           where(ModuleStream.table_name => {:name => available_module_stream.name,
+                                             :stream => available_module_stream.stream}).exists?
     end
 
     def self.upgradable(host)
-      upgradable_module_name_streams = ApplicableContentHelper.new(ModuleStream).installable_for_hosts([host]).select(:name, :stream)
+      upgradable_module_name_streams = ModuleStream.installable_for_hosts([host]).select(:name, :stream)
 
       enabled.joins(:available_module_stream).where(:host_id => host).
               where("(#{AvailableModuleStream.table_name}.name, #{AvailableModuleStream.table_name}.stream) in (#{upgradable_module_name_streams.to_sql})")

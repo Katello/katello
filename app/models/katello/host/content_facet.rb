@@ -54,37 +54,22 @@ module Katello
         end
 
         unless self.bound_repositories.sort == repos.sort
-          update_bound_repositories(repos)
+          self.bound_repositories = repos
+          self.save!
         end
         self.bound_repositories.pluck(:relative_path)
       end
 
-      def propagate_yum_repos
-        pulp_ids = self.bound_repositories.includes(:library_instance).map { |repo| repo.library_instance.try(:pulp_id) || repo.pulp_id }
-        Katello::Pulp::Consumer.new(self.uuid).bind_yum_repositories(pulp_ids)
-      end
-
-      def update_bound_repositories(repos)
-        self.bound_repositories = repos
-        self.save!
-        if SETTINGS[:katello][:katello_applicability]
-          ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, self.host.id)
-        else
-          self.propagate_yum_repos
-          ForemanTasks.async_task(Actions::Katello::Host::GenerateApplicability, [self.host])
-        end
-      end
-
       def installable_errata(env = nil, content_view = nil)
-        ApplicableContentHelper.new(Erratum, self).installable(env, content_view)
+        Erratum.installable_for_content_facet(self, env, content_view)
       end
 
       def installable_rpms(env = nil, content_view = nil)
-        ApplicableContentHelper.new(Rpm, self).installable(env, content_view)
+        Rpm.installable_for_content_facet(self, env, content_view)
       end
 
       def installable_module_streams(env = nil, content_view = nil)
-        ApplicableContentHelper.new(ModuleStream, self).installable(env, content_view)
+        ModuleStream.installable_for_content_facet(self, env, content_view)
       end
 
       def errata_counts
