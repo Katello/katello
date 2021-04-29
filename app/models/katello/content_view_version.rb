@@ -112,6 +112,10 @@ module Katello
       self.history.order(:created_at).last
     end
 
+    def env_promote_date(env)
+      Katello::ContentViewEnvironment.where(:environment_id => env.id, :content_view_version_id => self.id).pluck(:updated_at).try(:first)
+    end
+
     def name
       "#{content_view} #{version}"
     end

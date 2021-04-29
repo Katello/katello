@@ -13,6 +13,7 @@ export const cvFilterPackageGroupsKey =
 export const cvDetailsHistoryKey = cvId => `${CONTENT_VIEWS_KEY}_HISTORIES_${cvId}`;
 export const cvFilterRulesKey = filterId => `CONTENT_VIEW_FILTER_${filterId}_RULES`;
 export const cvDetailsComponentKey = cvId => `${CONTENT_VIEWS_KEY}_COMPONENTS_${cvId}`;
+export const cvDetailsVersionKey = cvId => `${CONTENT_VIEWS_KEY}_VERSIONS_${cvId}`;
 
 // Repo added to content view status display and key
 export const ADDED = 'Added';

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 import DetailsContainer from './DetailsContainer';
 import ContentViewInfo from './ContentViewInfo';
+import ContentViewVersions from './Versions/ContentViewVersions';
 import ContentViewRepositories from './Repositories/ContentViewRepositories';
 import ContentViewComponents from './ComponentContentViews/ContentViewComponents';
 import ContentViewHistories from './Histories/ContentViewHistories';
@@ -30,7 +31,7 @@ const ContentViewDetails = ({ match }) => {
     {
       key: 'versions',
       title: __('Versions'),
-      content: <React.Fragment>Versions</React.Fragment>,
+      content: <ContentViewVersions cvId={cvId} />,
     },
     (composite ? {
       key: 'contentviews',

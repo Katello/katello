@@ -10,7 +10,7 @@ const IconWithCount = ({ count, title, Icon }) => (
 );
 
 IconWithCount.propTypes = {
-  count: PropTypes.number.isRequired,
+  count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   title: PropTypes.string.isRequired,
   Icon: PropTypes.elementType.isRequired,
 };

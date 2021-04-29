@@ -45,6 +45,10 @@ version = @object || @resource
 child :environments => :environments do
   attributes :id, :name, :label
 
+  node :publish_date do |env|
+    time_ago_in_words(version.env_promote_date(env))
+  end
+
   node :permissions do |env|
     {
       :readable => env.readable?,
