@@ -61,12 +61,12 @@ module Katello
           gpg
         end
 
-        def self.metadata_map(metadata, product_only: false, custom_only: false)
+        def self.metadata_map(metadata, product_only: false, custom_only: false, redhat_only: false)
           # Create a map that looks like -> {[product, repo]: {name: 'Foo Repo', label:.....}}
           # these values should be curated from the metadata.
           metadata_map = {}
           metadata[:repositories].values.each do |repo|
-            next if custom_only && repo[:redhat]
+            next if (custom_only && repo[:redhat]) || (redhat_only && !repo[:redhat])
             if product_only
               metadata_map[repo[:product][:label]] = repo[:product]
             else

@@ -47,6 +47,34 @@ module Katello
 
             refute_nil repo.organization.gpg_keys.find_by(name: gpg_key.name)
           end
+
+          it "Fetches the right repos to enable" do
+            repo = katello_repositories(:rhel_7_no_arch)
+            product_label = repo.product.label
+            metadata = {
+              products: {
+                product_label => { label: product_label }
+              },
+              repositories: {
+                "misc-24037": { "label": repo.label + "foo",
+                                "product": { label: product_label },
+                                "content": repo.content.slice(:id, :label),
+                                "redhat": repo.redhat?,
+                                "arch": repo.arch,
+                                "minor": repo.minor
+                              }
+              },
+              gpg_keys: {}
+            }.with_indifferent_access
+            helper = Katello::Pulp3::ContentViewVersion::ImportableRepositories.
+                      new(organization: repo.organization, metadata: metadata, redhat: true)
+            helper.generate!
+
+            assert_includes helper.creatable.map { |r| r[:product].label }, product_label
+            assert_includes helper.creatable.map { |r| r[:content].label }, repo.content.label
+            assert_includes helper.creatable.map { |r| r[:substitutions][:basearch] }, repo.arch
+            assert_includes helper.creatable.map { |r| r[:substitutions][:releasever] }, repo.minor
+          end
         end
       end
     end
