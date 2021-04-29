@@ -98,10 +98,6 @@ module Katello
         where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id")
     end
 
-    def self.installable_for_hosts(hosts = nil)
-      ApplicableContentHelper.new(Erratum).installable_for_hosts(hosts)
-    end
-
     def self.ids_installable_for_hosts(hosts = nil)
       installable_for_hosts(hosts).select(:id)
     end
