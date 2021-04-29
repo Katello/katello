@@ -19,8 +19,9 @@ module Katello
             ensure_importing_cvv_does_not_exist!
             ensure_from_cvv_exists!
           end
+          ensure_manifest_imported!
           ensure_metadata_matches_repos_in_library!
-          ensure_redhat_repositories_metadata_are_in_the_library!
+          ensure_redhat_products_metadata_are_in_the_library!
         end
 
         def ensure_pulp_importable!
@@ -57,6 +58,14 @@ module Katello
           end
         end
 
+        def ensure_manifest_imported!
+          rh_repos = ::Katello::Pulp3::ContentViewVersion::Import.metadata_map(metadata, redhat_only: true)
+          if rh_repos.any? && !content_view.organization.manifest_imported?
+            fail _("No manifest found. Import a manifest with the appropriate subscriptions "\
+                   "before importing content.")
+          end
+        end
+
         def repos_in_library
           ::Katello::Pulp3::ContentViewVersion::Import.
                               repositories_in_library(content_view.organization)
@@ -67,6 +76,7 @@ module Katello
         end
 
         def ensure_metadata_matches_repos_in_library!
+          metadata_map = ::Katello::Pulp3::ContentViewVersion::Import.metadata_map(metadata)
           interested_repos = ::Katello::Pulp3::ContentViewVersion::Import.
                                       intersecting_repos_library_and_metadata(organization: organization,
                                                                               metadata: metadata)
@@ -86,19 +96,34 @@ module Katello
           end
         end
 
-        def ensure_redhat_repositories_metadata_are_in_the_library!
-          # repos_in_library look like [["prod1", "repo1", "Anonymous"], ["prod2", "repo2", "Red Hat"]]
-          rh_repos_in_library = repos_in_library.redhat
-          product_repos_in_library = rh_repos_in_library.map { |repo| [repo.product.label, repo.label] }
-          product_repos_in_metadata = metadata[:repositories].values.map { |repo| [repo[:product][:label], repo[:label]] if repo[:redhat] }
-          product_repos_in_metadata.compact!
+        def ensure_redhat_products_metadata_are_in_the_library!
+          products_in_library = ::Katello::Product.in_org(organization).redhat.pluck(:label)
 
-          # product_repos_in_library & product_repos_in_metadata look like [["prod1", "repo1", false], ["prod2", "repo2", false]]
-          product_repos_not_in_library = product_repos_in_metadata - product_repos_in_library
-          unless product_repos_not_in_library.blank?
-            repos_in_import = generate_product_repo_i18n_string(product_repos_not_in_library)
-            fail _("The following repositories provided in the import metadata are either not available in the Library or are of incorrect Respository Type. "\
-                    "Please add or enable the repositories before importing\n "\
+          # Map products to repositories in the metadata
+          # {product_label: [repositories with this product]}
+          products_in_metadata_map = {}
+
+          metadata[:repositories].values.each do |repo|
+            next unless repo[:redhat]
+            products_in_metadata_map[repo[:product][:label]] ||= []
+            products_in_metadata_map[repo[:product][:label]] << repo
+          end
+
+          products_not_in_library = products_in_metadata_map.keys - products_in_library
+
+          unless products_not_in_library.blank?
+            # make a list of [product_name, repo_name] pairs to report to the user
+            product_repos = []
+            products_not_in_library.each do |prod|
+              products_in_metadata_map[prod].each do |repo|
+                product_name = metadata[:products][prod][:name]
+                repo_name = repo[:name]
+                product_repos << [product_name, repo_name]
+              end
+            end
+
+            repos_in_import = generate_product_repo_i18n_string(product_repos)
+            fail _("The organization's manifest does not contain the subscriptions required to enable the following repositories.\n "\
                     "%{repos}" % { content_view: content_view.name, repos: repos_in_import.join("")}
                   )
           end
