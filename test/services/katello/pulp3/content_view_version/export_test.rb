@@ -95,6 +95,38 @@ module Katello
                                                         destination_server: destination_server)
             assert_equal cv.name, "Export-Library-#{destination_server}"
           end
+
+          it "does not fail on validate! if chunk_size is not specified" do
+            export = setup_environment
+
+            assert_nothing_raised do
+              export.validate!(fail_on_missing_content: false, validate_incremental: false, chunk_size: nil)
+            end
+          end
+
+          it "does not fail on validate! if chunk_size is less than 1_000_000GB" do
+            export = setup_environment
+
+            assert_nothing_raised do
+              export.validate!(fail_on_missing_content: false, validate_incremental: false, chunk_size: 1e5)
+            end
+          end
+
+          it "fails on validate! if chunk_size is >= 1_000_000GB" do
+            export = setup_environment
+
+            exception = assert_raises(RuntimeError) do
+              export.validate!(fail_on_missing_content: false, validate_incremental: false, chunk_size: 1e6)
+            end
+            assert_match(/Specify an export chunk size less than 1_000_000 GB/, exception.message)
+          end
+
+          def setup_environment
+            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
+            version = katello_content_view_versions(:library_view_version_2)
+            fetch_exporter(smart_proxy: proxy, content_view_version: version)
+          end
         end
       end
     end

@@ -58,20 +58,20 @@ module Katello
     end
 
     def test_version
-      chunk_size_mb = 100
+      chunk_size_gb = 100
       destination = "example.com"
       export_task = @controller.expects(:async_task).with do |action_class, options|
         assert_equal Actions::Katello::ContentViewVersion::Export, action_class
         assert_equal options[:content_view_version].id, @library_view_version.id
         assert_equal options[:destination_server], destination
-        assert_equal options[:chunk_size], chunk_size_mb
+        assert_equal options[:chunk_size], chunk_size_gb
         assert_nil options[:from_history]
         assert options[:fail_on_missing_content]
       end
       export_task.returns(build_task_stub)
       post :version, params: { id: @library_view_version.id,
                                destination_server: destination,
-                               chunk_size_mb: chunk_size_mb,
+                               chunk_size_gb: chunk_size_gb,
                                fail_on_missing_content: true
                              }
       assert_response :success
@@ -79,20 +79,20 @@ module Katello
 
     def test_library
       org = get_organization
-      chunk_size_mb = 100
+      chunk_size_gb = 100
       destination = "example.com"
       export_task = @controller.expects(:async_task).with do |action_class, organization, options|
         assert_equal ::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary, action_class
         assert_equal organization.id, org.id
         assert_equal options[:destination_server], destination
-        assert_equal options[:chunk_size], chunk_size_mb
+        assert_equal options[:chunk_size], chunk_size_gb
         refute options[:fail_on_missing_content]
         assert_nil options[:from_history]
       end
       export_task.returns(build_task_stub)
       post :library, params: { organization_id: org.id,
                                destination_server: destination,
-                               chunk_size_mb: chunk_size_mb
+                               chunk_size_gb: chunk_size_gb
                              }
       assert_response :success
     end
