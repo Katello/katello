@@ -53,7 +53,7 @@ module Katello
 
         def create_export(exporter_href, chunk_size: nil)
           options = { versions: version_hrefs }
-          options[:chunk_size] = "#{chunk_size}MB" if chunk_size
+          options[:chunk_size] = "#{chunk_size}GB" if chunk_size
           if from_content_view_version
             from_exporter = Export.new(smart_proxy: smart_proxy, content_view_version: from_content_view_version)
             start_versions = from_exporter.version_hrefs
@@ -91,9 +91,18 @@ module Katello
           api.exporter_api.delete(exporter_href)
         end
 
-        def validate!(fail_on_missing_content: true, validate_incremental: true)
+        def validate_chunk_size(size)
+          return if size.blank?
+
+          unless size.is_a?(Numeric) && size > 0 && size < 1e6
+            fail _("Specify an export chunk size less than 1_000_000 GB")
+          end
+        end
+
+        def validate!(fail_on_missing_content: true, validate_incremental: true, chunk_size: nil)
           validate_repositories_immediate! if fail_on_missing_content
           validate_incremental_export! if validate_incremental && !from_content_view_version.blank?
+          validate_chunk_size(chunk_size)
         end
 
         def validate_repositories_immediate!

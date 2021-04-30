@@ -49,7 +49,7 @@ module Katello
     end
 
     def test_version_recent_history
-      chunk_size_mb = 100
+      chunk_size_gb = 100
       destination = "example.com"
       history = {foo: 100}
       ContentViewVersionExportHistory.expects(:latest)
@@ -60,19 +60,19 @@ module Katello
         assert_equal Actions::Katello::ContentViewVersion::Export, action_class
         assert_equal options[:content_view_version].id, @library_view_version.id
         assert_equal options[:destination_server], destination
-        assert_equal options[:chunk_size], chunk_size_mb
+        assert_equal options[:chunk_size], chunk_size_gb
         assert_equal options[:from_history], history
       end
       export_task.returns(build_task_stub)
       post :version, params: { id: @library_view_version.id,
                                destination_server: destination,
-                               chunk_size_mb: chunk_size_mb
+                               chunk_size_gb: chunk_size_gb
                              }
       assert_response :success
     end
 
     def test_version_recent_history_with_history_id
-      chunk_size_mb = 100
+      chunk_size_gb = 100
       destination = "example.com"
       history = {id: 100}
       ContentViewVersionExportHistory.expects(:find)
@@ -83,14 +83,14 @@ module Katello
         assert_equal Actions::Katello::ContentViewVersion::Export, action_class
         assert_equal options[:content_view_version].id, @library_view_version.id
         assert_equal options[:destination_server], destination
-        assert_equal options[:chunk_size], chunk_size_mb
+        assert_equal options[:chunk_size], chunk_size_gb
         refute options[:fail_on_missing_content]
         assert_equal options[:from_history], history
       end
       export_task.returns(build_task_stub)
       post :version, params: { id: @library_view_version.id,
                                destination_server: destination,
-                               chunk_size_mb: chunk_size_mb,
+                               chunk_size_gb: chunk_size_gb,
                                from_history_id: history[:id]
                              }
       assert_response :success
@@ -114,7 +114,7 @@ module Katello
 
     def test_library
       org = get_organization
-      chunk_size_mb = 100
+      chunk_size_gb = 100
       destination = "example.com"
       history = {foo: 100}
       ::Katello::Pulp3::ContentViewVersion::Export
@@ -133,14 +133,14 @@ module Katello
         assert_equal ::Actions::Pulp3::Orchestration::ContentViewVersion::ExportLibrary, action_class
         assert_equal organization.id, org.id
         assert_equal options[:destination_server], destination
-        assert_equal options[:chunk_size], chunk_size_mb
+        assert_equal options[:chunk_size], chunk_size_gb
         assert_equal options[:from_history], history
         assert options[:fail_on_missing_content]
       end
       export_task.returns(build_task_stub)
       post :library, params: { organization_id: org.id,
                                destination_server: destination,
-                               chunk_size_mb: chunk_size_mb,
+                               chunk_size_gb: chunk_size_gb,
                                fail_on_missing_content: true
                              }
       assert_response :success
