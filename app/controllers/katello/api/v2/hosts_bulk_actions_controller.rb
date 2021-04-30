@@ -4,19 +4,19 @@ module Katello
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::Api::V2::ContentOverridesController
 
-    before_action :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
-    before_action :find_environment, :only => [:environment_content_view]
-    before_action :find_content_view, :only => [:environment_content_view]
-    before_action :find_editable_hosts, :except => [:destroy_hosts, :resolve_traces]
-    before_action :find_deletable_hosts, :only => [:destroy_hosts]
-    before_action :find_readable_hosts, :only => [:applicable_errata, :installable_errata, :available_incremental_updates]
-    before_action :find_errata, :only => [:available_incremental_updates]
-    before_action :find_organization, :only => [:add_subscriptions]
-    before_action :find_traces, :only => [:resolve_traces]
-    before_action :deprecate_katello_agent, :only => [:install_content, :update_content, :remove_content]
+    before_action :find_host_collections, only: [:bulk_add_host_collections, :bulk_remove_host_collections]
+    before_action :find_environment, only: [:environment_content_view]
+    before_action :find_content_view, only: [:environment_content_view]
+    before_action :find_editable_hosts, except: [:destroy_hosts, :resolve_traces]
+    before_action :find_deletable_hosts, only: [:destroy_hosts]
+    before_action :find_readable_hosts, only: [:applicable_errata, :installable_errata, :available_incremental_updates]
+    before_action :find_errata, only: [:available_incremental_updates]
+    before_action :find_organization, only: [:add_subscriptions]
+    before_action :find_traces, only: [:resolve_traces]
+    before_action :deprecate_katello_agent, only: [:install_content, :update_content, :remove_content]
 
-    before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
-    before_action :validate_organization, :only => [:add_subscriptions]
+    before_action :validate_content_action, only: [:install_content, :update_content, :remove_content]
+    before_action :validate_organization, only: [:add_subscriptions]
 
     # disable *_count fields on erratum rabl, since they perform N+1 queries
     before_action :disable_erratum_hosts_count
@@ -115,7 +115,7 @@ module Katello
                                                      :resource_class => Erratum))
     end
 
-    api :PUT, "/hosts/bulk/install_content", N_("Install content on one or more hosts")
+    api :PUT, "/hosts/bulk/install_content", N_("Install content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
@@ -125,7 +125,7 @@ module Katello
       content_action
     end
 
-    api :PUT, "/hosts/bulk/update_content", N_("Update content on one or more hosts")
+    api :PUT, "/hosts/bulk/update_content", N_("Update content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
@@ -136,7 +136,7 @@ module Katello
       content_action
     end
 
-    api :PUT, "/hosts/bulk/remove_content", N_("Remove content on one or more hosts")
+    api :PUT, "/hosts/bulk/remove_content", N_("Remove content on one or more hosts using katello-agent. %s") % katello_agent_deprecation_text, deprecated: true
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),

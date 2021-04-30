@@ -65,6 +65,8 @@ module Katello
     end
 
     def test_install_package
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::Package::Install
         assert_equal ['foo'], options[:content]
@@ -78,6 +80,8 @@ module Katello
     end
 
     def test_update_package
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::Package::Update
         assert_equal ['foo'], options[:content]
@@ -91,6 +95,8 @@ module Katello
     end
 
     def test_remove_package
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::Package::Remove
         assert_equal ['foo'], options[:content]
@@ -104,6 +110,8 @@ module Katello
     end
 
     def test_install_package_group
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Install
         assert_equal ['foo group'], options[:content]
@@ -117,6 +125,8 @@ module Katello
     end
 
     def test_update_package_group
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Install
         assert_equal ['foo group'], options[:content]
@@ -130,6 +140,8 @@ module Katello
     end
 
     def test_remove_package_group
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       assert_async_task(::Actions::Katello::BulkAgentAction) do |action_class, hosts, options|
         assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Remove
         assert_equal ['foo group'], options[:content]
@@ -145,6 +157,7 @@ module Katello
     def test_install_errata
       errata = katello_errata("bugfix")
       @host1.content_facet.applicable_errata << errata
+      ::Katello.stubs(:with_katello_agent?).returns(true)
       @controller.expects(:async_task).with(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall,
                                             [@host1], :errata_ids => [errata.errata_id]).returns({})
 
@@ -265,6 +278,8 @@ module Katello
     end
 
     def test_install_content_permissions
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
@@ -274,6 +289,8 @@ module Katello
     end
 
     def test_update_content_permissions
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
@@ -283,6 +300,8 @@ module Katello
     end
 
     def test_remove_content_permissions
+      ::Katello.stubs(:with_katello_agent?).returns(true)
+
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
