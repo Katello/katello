@@ -17,8 +17,8 @@ module Katello
             :debug => true
           },
           :cert_auth => {
-            :ssl_client_cert => ::Cert::Certs.ssl_client_cert,
-            :ssl_client_key => ::Cert::Certs.ssl_client_key
+            :ssl_client_cert => ::Cert::Certs.ssl_client_cert(use_admin_as_cn_pulp_cert: true),
+            :ssl_client_key => ::Cert::Certs.ssl_client_key(use_admin_as_cn_pulp_cert: true)
           }
         }
 
