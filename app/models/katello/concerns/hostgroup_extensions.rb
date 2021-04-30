@@ -121,7 +121,7 @@ module Katello
           facet_model = Facets.registered_facets[facet].hostgroup_configuration.model
           value = facet_model.where.not(attribute => nil).joins(:hostgroup).merge(
             ::Hostgroup.where(id: self.ancestor_ids).reorder(ancestry: :desc)
-          ).limit(1).pluck(attribute)
+          ).limit(1).pluck(attribute).first
         end
         value
       end
