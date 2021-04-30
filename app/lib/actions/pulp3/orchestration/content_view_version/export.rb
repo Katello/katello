@@ -30,7 +30,8 @@ module Actions
                   destination_server: destination_server,
                   from_content_view_version: from_content_view_version)
               export_service.validate!(fail_on_missing_content: fail_on_missing_content,
-                                       validate_incremental: validate_incremental)
+                                       validate_incremental: validate_incremental,
+                                       chunk_size: chunk_size)
 
               action_output = plan_action(::Actions::Pulp3::ContentViewVersion::CreateExporter,
                                           content_view_version_id: content_view_version.id,
