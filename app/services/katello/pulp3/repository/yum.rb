@@ -61,7 +61,7 @@ module Katello
             )
             unless distribution.results.first.variants.empty?
               unless distribution.results.first.variants.first.name.nil?
-                repo.update!(:distribution_variant => distribution.results.first.variants.first.name)
+                repo.update!(:distribution_variant => distribution.results.first.variants.map(&:name).join(','))
               end
             end
           end
