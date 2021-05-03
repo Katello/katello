@@ -51,17 +51,14 @@ module Katello
         end
       end
 
-      def variant_repo(host, variant)
+      def variant_repos(host, variant)
         if variant && host.content_source
           product_id = host.try(:content_facet).try(:kickstart_repository).try(:product_id) || host.try(:kickstart_repository).try(:product_id)
-          distro = distribution_repositories(host)
+          distros = distribution_repositories(host)
             .joins(:product)
-            .where(
-              distribution_variant: variant,
-              "#{Katello::Product.table_name}.id": product_id
-            ).first
-
-          distro&.to_hash(host.content_source)
+            .where("#{Katello::Repository.table_name}.distribution_variant LIKE :variant", { variant: "%#{variant}%" })
+            .where("#{Katello::Product.table_name}.id": product_id).collect { |repo| repo.to_hash(host.content_source, true) }
+          distros
         end
       end
 
