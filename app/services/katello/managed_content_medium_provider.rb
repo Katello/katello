@@ -14,11 +14,11 @@ module Katello
       URI.parse(url)
     end
 
-    # If there is an 'AppStream' variant, we need to make it
+    # If there are any 'AppStream' variants, we need to make them
     # available to Anaconda
     def additional_media
-      appstream = entity.operatingsystem.variant_repo(entity, 'AppStream')
-      super + (appstream ? [appstream] : [])
+      appstream_repos = entity.operatingsystem.variant_repos(entity, 'AppStream')
+      super + (appstream_repos.present? ? appstream_repos : [])
     end
 
     def unique_id
