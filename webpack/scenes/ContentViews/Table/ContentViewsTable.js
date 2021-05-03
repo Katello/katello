@@ -142,7 +142,7 @@ const ContentViewTable = ({ response, status, error }) => {
     >
       <React.Fragment>
         <Button onClick={openForm} variant="primary" aria-label="create_content_view">
-          Create content view
+          {__('Create content view')}
         </Button>
         <CreateContentViewModal show={isModalOpen} setIsOpen={setIsModalOpen} aria-label="create_content_view_modal" />
       </React.Fragment>

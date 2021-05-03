@@ -1,6 +1,8 @@
+/* eslint-disable translation/no-strings-without-translations */
 import React, { Fragment } from 'react';
 import { CheckCircleIcon, ExclamationTriangleIcon, CloseIcon } from '@patternfly/react-icons';
 import { foremanUrl } from 'foremanReact/common/helpers';
+import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 
 const LastSync = ({ lastSyncWords, lastSync }) => {
@@ -28,7 +30,7 @@ const LastSync = ({ lastSyncWords, lastSync }) => {
       </a>
     );
   }
-  return <div>Not Synced</div>;
+  return <div>{__('Not Synced')}</div>;
 };
 
 LastSync.propTypes = {

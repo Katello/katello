@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 import {
   Bullseye,
   Title,
@@ -14,7 +15,7 @@ const Loading = ({ size, showText }) => (
       <EmptyStateIcon size={size} variant="container" component={Spinner} />
       {showText && (
         <Title size={size} headingLevel="h4">
-          Loading
+          {__('Loading')}
         </Title>)}
     </EmptyState>
   </Bullseye>

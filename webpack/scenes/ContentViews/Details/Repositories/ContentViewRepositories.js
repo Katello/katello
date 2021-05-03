@@ -36,7 +36,7 @@ import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import SelectableDropdown from '../../../../components/SelectableDropdown';
 import { capitalize } from '../../../../utils/helpers';
 
-const allRepositories = 'All repositories';
+const allRepositories = __('All repositories');
 
 // Add any exceptions to the display names here
 // [API_value]: displayed_value
@@ -201,10 +201,10 @@ const ContentViewRepositories = ({ cvId }) => {
     (statusSelected && statusSelected !== ALL_STATUSES);
   const dropdownItems = [
     <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!bulkActionEnabled} component="button" onClick={addBulk}>
-      Add
+      {__('Add')}
     </DropdownItem>,
     <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={removeBulk}>
-      Remove
+      {__('Remove')}
     </DropdownItem>,
   ];
 
@@ -256,7 +256,7 @@ const ContentViewRepositories = ({ cvId }) => {
           <ActionList>
             <ActionListItem>
               <Button onClick={addBulk} isDisabled={!bulkActionEnabled} variant="secondary" aria-label="add_repositories">
-                Add repositories
+                {__('Add repositories')}
               </Button>
             </ActionListItem>
             <ActionListItem>

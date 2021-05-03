@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Form, FormGroup, TextInput, ActionGroup, Button } from '@patternfly/react-core';
+import { translate as __ } from 'foremanReact/common/I18n';
 import {
   selectCopyContentViewError, selectCopyContentViews,
   selectCopyContentViewStatus,
@@ -56,8 +57,8 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
         />
       </FormGroup>
       <ActionGroup>
-        <Button aria-label="copy_content_view" variant="primary" isDisabled={saving} onClick={() => onSubmit()}>Copy content view</Button>
-        <Button variant="link" onClick={() => setModalOpen(false)}>Cancel</Button>
+        <Button aria-label="copy_content_view" variant="primary" isDisabled={saving} onClick={() => onSubmit()}>{__('Copy content view')}</Button>
+        <Button variant="link" onClick={() => setModalOpen(false)}>{__('Cancel')}</Button>
       </ActionGroup>
     </Form>
   );

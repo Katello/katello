@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { Form, FormGroup, TextInput, TextArea, Checkbox, ActionGroup, Button, Tile, Grid, GridItem } from '@patternfly/react-core';
 import { createContentView } from '../ContentViewsActions';
 import { selectCreateContentViews, selectCreateContentViewStatus, selectCreateContentViewError } from './ContentViewCreateSelectors';
@@ -108,7 +109,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               onClick={() => { setComponent(true); setComposite(false); }}
               isSelected={component}
             >
-              Single content view consisting of repositories
+              {__('Single content view consisting of repositories')}
             </Tile>
           </GridItem>
           <GridItem span={6}>
@@ -121,7 +122,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               onClick={() => { setComposite(true); setComponent(false); }}
               isSelected={composite}
             >
-              Consists of component content views
+              {__('Consists of component content views')}
             </Tile>
           </GridItem>
         </Grid>
@@ -157,8 +158,8 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           />
         </FormGroup>}
       <ActionGroup>
-        <Button aria-label="create_content_view" variant="primary" isDisabled={saving} onClick={() => onSave()}>Create content view</Button>
-        <Button variant="link" onClick={() => setModalOpen(false)}>Cancel</Button>
+        <Button aria-label="create_content_view" variant="primary" isDisabled={saving} onClick={() => onSave()}>{__('Create content view')}</Button>
+        <Button variant="link" onClick={() => setModalOpen(false)}>{__('Cancel')}</Button>
       </ActionGroup>
     </Form>
   );

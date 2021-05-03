@@ -20,7 +20,8 @@ module.exports = {
     'jest',
     'react',
     'babel',
-    'promise'
+    'promise',
+    'translation',
   ],
   parser: 'babel-eslint',
   rules: {
@@ -67,6 +68,7 @@ module.exports = {
         ignoreRestSiblings: true,
         argsIgnorePattern: '^_'
       }
-    ]
+    ],
+    'translation/no-strings-without-translations': 'warn',
   }
 }

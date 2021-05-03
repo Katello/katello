@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { Grid, GridItem } from '@patternfly/react-core';
 
 import {
@@ -37,7 +38,7 @@ const ContentViewFilterDetails = () => {
     <Grid hasGutter>
       { loaded && (Object.keys(details).length > 0) ?
         <ContentViewFilterDetailsHeader details={details} /> :
-        <div>Loading...</div>
+        <div>{__('Loading...')}</div>
       }
       <GridItem span={12}>
         <CVFilterDetailType cvId={cvId} filterId={filterId} inclusion={inclusion} type={type} />

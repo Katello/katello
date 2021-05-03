@@ -7,7 +7,7 @@ const EnvironmentsExpansion = ({ cvId }) => {
   return (
     <React.Fragment>
       <div id={identifier}>{__('Environments')}</div>
-      <div>this should be showing but will be replaced by something else later</div>
+      <div>{__('this should be showing but will be replaced by something else later')}</div>
     </React.Fragment>
   );
 };

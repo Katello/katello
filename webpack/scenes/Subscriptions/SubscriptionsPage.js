@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
@@ -271,11 +272,15 @@ class SubscriptionsPage extends Component {
             <div id="subscriptions-table" className="modal-container">
               {simpleContentAccess && (
                 <Alert type="info">
-                  This organization has Simple Content Access enabled.
-                  Hosts are not required to have subscriptions attached to access repositories.
-                  <br />
-                  Learn more about your overall subscription usage at
-                  {' '}<a href={SUBSCRIPTION_WATCH_URL} target="_blank" rel="noreferrer">Subscription Watch</a>.
+                  <div
+                    dangerouslySetInnerHTML={{
+                    __html: __(`This organization has Simple Content Access enabled.
+                      Hosts are not required to have subscriptions attached to access repositories.
+                      <br />
+                      Learn more about your overall subscription usage at <a href=${SUBSCRIPTION_WATCH_URL} target="_blank" rel="noreferrer">Subscription Watch</a>
+                      `),
+                    }}
+                  />
                 </Alert>
               )}
               <SubscriptionsTable

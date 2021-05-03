@@ -55,9 +55,9 @@ const ContentViewHistories = ({ cvId }) => {
       const taskType = task ? task.label : taskTypes[action];
 
       if (taskType === taskTypes.removal) {
-        return <React.Fragment> Deleted from <Label key="1" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
+        return <React.Fragment> {__('Deleted from')} <Label key="1" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
       } else if (taskType === taskTypes.promotion) {
-        return <React.Fragment> Promoted to <Label key="2" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
+        return <React.Fragment> {__('Promoted to')} <Label key="2" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
       } else if (taskType === taskTypes.publish) {
         return ('Published new version');
       } else if (taskType === taskTypes.export) {

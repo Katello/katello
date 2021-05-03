@@ -1,17 +1,21 @@
+/* eslint-disable react/no-danger */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, ModalVariant } from '@patternfly/react-core';
+import { translate as __ } from 'foremanReact/common/I18n';
 import CopyContentViewForm from './CopyContentViewForm';
 
 const CopyContentViewModal = ({
   cvId, cvName, show, setIsOpen,
 }) => {
   const description = (
-    <p>
-      This will create a copy of <b>{cvName}</b>, including details,
-      repositories, and filters. Generated data such
-      as history, tasks and versions will not be copied.
-    </p>
+    <p
+      dangerouslySetInnerHTML={{
+        __html: __(`This will create a copy of <b>${cvName}</b>, including details,
+    repositories, and filters. Generated data such
+    as history, tasks and versions will not be copied.`),
+      }}
+    />
   );
   return (
     <Modal
@@ -23,8 +27,10 @@ const CopyContentViewModal = ({
         setIsOpen(false);
       }}
       appendTo={document.body}
-    ><CopyContentViewForm cvId={cvId} setModalOpen={setIsOpen} />
-    </Modal>);
+    >
+      <CopyContentViewForm cvId={cvId} setModalOpen={setIsOpen} />
+    </Modal>
+  );
 };
 
 CopyContentViewModal.propTypes = {

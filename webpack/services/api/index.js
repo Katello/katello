@@ -68,6 +68,7 @@ class Api {
 
   /* eslint-disable class-methods-use-this */
   createUrlParams(params) {
+    // eslint-disable-next-line translation/no-strings-without-translations
     let urlParams = '?';
     Object.keys(params).forEach((key) => {
       if (urlParams !== '?') {

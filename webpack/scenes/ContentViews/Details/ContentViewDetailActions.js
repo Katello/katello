@@ -130,6 +130,7 @@ export const getContentViewComponents = (cvId, params) => {
 
 export const getContentViewVersions = (cvId, params) => {
   const apiParams = { content_view_id: cvId, ...params };
+  // eslint-disable-next-line translation/no-strings-without-translations
   const apiUrl = '/content_view_versions/';
   return get({
     key: cvDetailsVersionKey(cvId),
