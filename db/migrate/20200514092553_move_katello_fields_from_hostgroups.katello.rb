@@ -25,6 +25,16 @@ class MoveKatelloFieldsFromHostgroups < ActiveRecord::Migration[6.0]
     end
   end
 
+  # If an ID is not nil but the associated record does not exist, return false.
+  def all_records_exist?(content_source_id, kickstart_repository_id, content_view_id, lifecycle_environment_id)
+    return false if content_source_id.present? && ::SmartProxy.where(id: content_source_id).empty?
+    return false if kickstart_repository_id.present? && ::Katello::Repository.where(id: kickstart_repository_id).empty?
+    return false if content_view_id.present? && ::Katello::ContentView.where(id: content_view_id).empty?
+    return false if lifecycle_environment_id.present? && ::Katello::KTEnvironment.where(id: lifecycle_environment_id).empty?
+
+    true
+  end
+
   def copy_data_from_hostgroup
     hg_table = ::Hostgroup.arel_table
     hostgroups = ::Hostgroup.unscoped.where(
@@ -41,6 +51,10 @@ class MoveKatelloFieldsFromHostgroups < ActiveRecord::Migration[6.0]
         :content_view_id,
         :lifecycle_environment_id
       ).each do |hostgroup_id, content_source_id, kickstart_repository_id, content_view_id, lifecycle_environment_id|
+        unless all_records_exist?(content_source_id, kickstart_repository_id, content_view_id, lifecycle_environment_id)
+          Rails.logger.warn("Unable to save content facet hostgroup for #{Hostgroup.find(hostgroup_id).inspect} due to bad hostgroup data.")
+          next
+        end
         content_facet = ::Katello::Hostgroup::ContentFacet.find_or_create_by(hostgroup_id: hostgroup_id)
         content_facet.content_source_id = content_source_id
         content_facet.kickstart_repository_id = kickstart_repository_id
