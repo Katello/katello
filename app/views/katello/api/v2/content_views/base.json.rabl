@@ -5,13 +5,27 @@ attributes :composite
 attributes :component_ids
 attributes :default
 attributes :version_count
-attributes :latest_version
+attributes :latest_version, :latest_version_id
 attributes :auto_publish
 attributes :solve_dependencies
 attributes :import_only
 
 node :next_version do |content_view|
   content_view.next_version.to_f.to_s
+end
+
+child :last_task => :last_task do |_task|
+  attributes :task_id => :id
+  attributes :status => :result
+  node :last_sync_words do |object|
+    if object.try(:created_at)
+      time_ago_in_words(Time.parse(object.created_at.to_s))
+    end
+  end
+end
+
+child :latest_version_env => :latest_version_environments do
+  attributes :id, :name, :label
 end
 
 node :last_published do |content_view|
@@ -78,6 +92,10 @@ child :content_view_components => :content_view_components do
 end
 
 child :activation_keys => :activation_keys do
+  attributes :id, :name
+end
+
+child :hosts => :hosts do
   attributes :id, :name
 end
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { Button } from '@patternfly/react-core';
+import { TableVariant } from '@patternfly/react-table';
 import TableWrapper from '../../../components/Table/TableWrapper';
 import tableDataGenerator from './tableDataGenerator';
 import getContentViews from '../ContentViewsActions';
@@ -11,7 +12,7 @@ import CopyContentViewModal from '../Copy/CopyContentViewModal';
 
 const ContentViewTable = ({ response, status, error }) => {
   const [table, setTable] = useState({ rows: [], columns: [] });
-  const [rowMapping, setRowMapping] = useState({});
+  const [rowMappingIds, setRowMappingIds] = useState([]);
   const [searchQuery, updateSearchQuery] = useState('');
   const { results, ...metadata } = response;
   const loadingResponse = status === STATUS.PENDING;
@@ -26,15 +27,12 @@ const ContentViewTable = ({ response, status, error }) => {
   useEffect(
     () => {
       if (!loadingResponse && results) {
-        const { updatedRowMap, ...tableData } = tableDataGenerator(
-          results,
-          rowMapping,
-        );
+        const { newRowMappingIds, ...tableData } = tableDataGenerator(results);
         setTable(tableData);
-        setRowMapping(updatedRowMap);
+        setRowMappingIds(newRowMappingIds);
       }
     },
-    [results, JSON.stringify(rowMapping)], // use JSON to check obj values eq not reference eq
+    [results, loadingResponse, setTable, setRowMappingIds],
   );
 
   const onSelect = (_event, isSelected, rowId) => {
@@ -49,19 +47,13 @@ const ContentViewTable = ({ response, status, error }) => {
     setTable(prevTable => ({ ...prevTable, rows }));
   };
 
-  const onExpand = (_event, rowIndex, colIndex, isOpen) => {
-    const { rows } = table;
-    // adjust for the selection checkbox cell being counted in the index
-    const adjustedColIndex = colIndex - 1;
-
-    if (!isOpen) {
-      setRowMapping((prev) => {
-        const updatedMap = { ...prev[rowIndex], expandedColumn: adjustedColIndex };
-        return { ...prev, [rowIndex]: updatedMap };
-      });
+  const onCollapse = (event, rowId, isOpen) => {
+    let rows;
+    if (rowId === -1) {
+      rows = table.rows.map(row => ({ ...row, isOpen }));
     } else {
-      // Keep id in object to not throw off tableStatus id checks
-      setRowMapping(prev => ({ ...prev, [rowIndex]: { id: prev[rowIndex].id } }));
+      rows = [...table.rows];
+      rows[rowId].isOpen = isOpen;
     }
 
     setTable(prevTable => ({ ...prevTable, rows }));
@@ -69,19 +61,21 @@ const ContentViewTable = ({ response, status, error }) => {
 
   const actionResolver = (rowData, { _rowIndex }) => {
     // don't show actions for the expanded parts
-    if (rowData.parent || rowData.compoundParent || rowData.noactions) return null;
+    if (rowData.parent !== undefined || rowData.compoundParent || rowData.noactions) return null;
 
     // printing to the console for now until these are hooked up
     /* eslint-disable no-console */
     return [
       {
         title: 'Publish and Promote',
+        isDisabled: true,
         onClick: (_event, rowId, rowInfo) => {
           console.log(`clicked on row ${JSON.stringify(rowInfo)}`);
         },
       },
       {
         title: 'Promote',
+        isDisabled: true,
         onClick: (_event, rowId, rowInfo) => console.log(`clicked on row ${rowInfo.cvName}`),
       },
       {
@@ -94,6 +88,7 @@ const ContentViewTable = ({ response, status, error }) => {
       },
       {
         title: 'Delete',
+        isDisabled: true,
         onClick: (_event, rowId, _rowInfo) => console.log(`clicked on row ${rowId}`),
       },
     ];
@@ -102,7 +97,6 @@ const ContentViewTable = ({ response, status, error }) => {
   // Prevents flash of "No Content" before rows are loaded
   const tableStatus = () => {
     if (typeof results === 'undefined') return status; // will handle errored state
-    const rowMappingIds = Object.values(rowMapping).map(row => row.id);
     const resultsIds = Array.from(results.map(result => result.id));
     // All results are accounted for in row mapping, the page is ready to load
     if (resultsIds.length === rowMappingIds.length &&
@@ -129,13 +123,14 @@ const ContentViewTable = ({ response, status, error }) => {
         emptySearchTitle,
         emptySearchBody,
         onSelect,
-        onExpand,
         actionResolver,
         searchQuery,
         updateSearchQuery,
       }}
+      variant={TableVariant.compact}
       status={tableStatus()}
       fetchItems={getContentViews}
+      onCollapse={onCollapse}
       canSelectAll={false}
       cells={columns}
       autocompleteEndpoint="/content_views/auto_complete_search"

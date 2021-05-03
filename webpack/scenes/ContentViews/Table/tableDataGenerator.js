@@ -1,137 +1,86 @@
 import React from 'react';
-import { compoundExpand, fitContent } from '@patternfly/react-table';
-import {
-  ScreenIcon,
-  ContainerNodeIcon,
-} from '@patternfly/react-icons';
+import { fitContent, expandable } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
-
-import IconWithCount from '../components/IconWithCount';
-import DetailsExpansion from '../expansions/DetailsExpansion';
-import EnvironmentsExpansion from '../expansions/EnvironmentsExpansion';
-import VersionsExpansion from '../expansions/VersionsExpansion';
+import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import ContentViewIcon from '../components/ContentViewIcon';
-import DetailsContainer from '../Details/DetailsContainer';
+import DetailsExpansion from '../expansions/DetailsExpansion';
+import ContentViewVersionCell from './ContentViewVersionCell';
+import InactiveText from '../components/InactiveText';
+import LastSync from '../Details/Repositories/LastSync';
 
 export const buildColumns = () => [
-  { title: __('Type'), transforms: [fitContent] },
-  __('Name'), __('Last published'), __('Details'),
-  { title: __('Environments'), cellTransforms: [compoundExpand] },
-  { title: __('Versions'), cellTransforms: [compoundExpand] },
+  { title: __('Type'), cellFormatters: [expandable], transforms: [fitContent] },
+  __('Name'), __('Last published'), __('Last task'), __('Latest version'),
 ];
 
-const buildRow = (contentView, openColumn) => {
+const buildRow = (contentView) => {
+  /* eslint-disable max-len */
   const {
-    id, composite, name, environments, versions, last_published: lastPublished,
+    id, composite, name, last_published: lastPublished, latest_version: latestVersion, latest_version_id: latestVersionId,
+    latest_version_environments: latestVersionEnvironments, last_task: lastTask,
   } = contentView;
+  /* eslint-enable max-len */
+  const { last_sync_words: lastSyncWords } = lastTask || {};
   const row = [
     { title: <ContentViewIcon composite={composite ? true : undefined} /> },
     { title: <Link to={urlBuilder('labs/content_views', '', id)}>{name}</Link> },
-    lastPublished || 'Not yet published',
-    { title: __('Details'), props: { isOpen: false, ariaControls: `cv-details-expansion-${id}` } },
+    { title: lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} /> },
+    { title: <LastSync lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /> },
     {
-      title: <IconWithCount Icon={ScreenIcon} count={environments.length} title={`environments-icon-${id}`} />,
-      props: { isOpen: false, ariaControls: `cv-environments-expansion-${id}` },
-    },
-    {
-      title: <IconWithCount Icon={ContainerNodeIcon} count={versions.length} title={`versions-icon-${id}`} />,
-      props: { isOpen: false, ariaControls: `cv-versions-expansion-${id}` },
+      title: latestVersion ? <ContentViewVersionCell {...{
+ id, latestVersion, latestVersionId, latestVersionEnvironments,
+}}
+      /> : <InactiveText style={{ marginTop: '0.5em', marginBottom: '0.5em' }} text={__('Not yet published')} />,
     },
   ];
-  if (openColumn) row[openColumn].props.isOpen = true;
   return row;
 };
 
-const buildDetailDropdowns = (id, rowIndex, openColumn) => {
-  const cvId = { cvId: id };
-  const expansionProps = { ...cvId, className: 'pf-m-no-padding' };
-  const containerProps = column => ({ ...cvId, isOpen: openColumn === column });
-  const offsetColumn = 3; // index of first expandable column
-
-  let detailDropdowns = [
-    {
-      compoundParent: offsetColumn,
-      cells: [
-        {
-          title: (
-            <DetailsContainer {...containerProps(offsetColumn + 1)}>
-              <DetailsExpansion {...expansionProps} />
-            </DetailsContainer>),
-          props: { colSpan: 6 },
-        },
-      ],
-    },
-    {
-      compoundParent: offsetColumn + 1,
-      cells: [
-        {
-          title: (
-            <DetailsContainer {...containerProps(offsetColumn + 2)}>
-              <EnvironmentsExpansion {...expansionProps} />
-            </DetailsContainer>),
-          props: { colSpan: 6 },
-        },
-      ],
-    },
-    {
-      compoundParent: offsetColumn + 2,
-      cells: [
-        {
-          title: (
-            <DetailsContainer {...containerProps(offsetColumn + 3)}>
-              <VersionsExpansion {...expansionProps} />
-            </DetailsContainer>),
-          props: { colSpan: 6 },
-        },
-      ],
-    },
-  ];
-
-  detailDropdowns = detailDropdowns.map(detail => ({ ...detail, parent: rowIndex }));
-
-  return detailDropdowns;
-};
-
-const buildRowsAndMapping = (contentViews, newRowMapping) => {
-  const updatedRowMap = { ...newRowMapping };
+const buildExpandableRows = (contentViews) => {
   const rows = [];
+  let cvCount = 0;
 
   contentViews.forEach((contentView) => {
-    const { id, name } = contentView;
-    const rowIndex = rows.length;
-    const needsUpdate = !Object.keys(updatedRowMap).find(i => updatedRowMap[i].id === id) ||
-                        !Object.keys(updatedRowMap[rowIndex] || {}).includes('expandedColumn');
-    if (needsUpdate) updatedRowMap[rowIndex] = { expandedColumn: null, id };
-    const openColumn = updatedRowMap[rowIndex].expandedColumn;
-    const cells = buildRow(contentView, openColumn);
-    const isOpen = !!openColumn;
-
-    rows.push({
-      cvId: id, cvName: name, isOpen, cells,
-    });
-    rows.push(...buildDetailDropdowns(id, rowIndex, openColumn));
+    const {
+      id, name, description, activation_keys: activationKeys, hosts,
+    } = contentView;
+    const cells = buildRow(contentView);
+    const cellParent = {
+      cvId: id, cvName: name, isOpen: false, cells,
+    };
+    rows.push(cellParent);
+    const cellChild = {
+      parent: cvCount,
+      cells: [
+        {
+          title: <DetailsExpansion cvId={id} {...{ activationKeys, hosts }} />,
+          props: {
+            colSpan: 2,
+          },
+        },
+        {
+          title: description || <InactiveText text={__('No description')} />,
+          props: {
+            colSpan: 4,
+          },
+        },
+      ],
+    };
+    rows.push(cellChild);
+    cvCount = rows.length;
   });
-
-  return { rows, updatedRowMap };
+  return { rows };
 };
 
-const tableDataGenerator = (results, rowMapping) => {
-  // If a search was performed or perPage has changed, we can clear mapping
-  const prevRowMapping = (results.length === Object.keys(rowMapping).length) ? rowMapping : {};
-  const newRowMapping = {};
+const tableDataGenerator = (results) => {
   const contentViews = results || [];
   const columns = buildColumns();
-  const contentViewIds = contentViews.map(cv => cv.id);
-
-  // Only keep the relevant rows to keep the table status check accurate
-  Object.entries(prevRowMapping).forEach(([rowId, value]) => {
-    if (contentViewIds.includes(value.id)) newRowMapping[rowId] = value;
-  });
-  const { updatedRowMap, rows } = buildRowsAndMapping(contentViews, newRowMapping);
-
-  return { updatedRowMap, rows, columns };
+  const newRowMappingIds = [];
+  const { rows } = buildExpandableRows(contentViews);
+  rows.forEach(row => row.cvId && newRowMappingIds.push(row.cvId));
+  return { newRowMappingIds, rows, columns };
 };
 
 export default tableDataGenerator;

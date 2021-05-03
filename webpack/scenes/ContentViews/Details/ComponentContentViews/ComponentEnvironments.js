@@ -5,7 +5,7 @@ import { Label, Flex, FlexItem } from '@patternfly/react-core';
 const ComponentEnvironments = ({ environments }) => {
   const envList = environments.map(env =>
     (
-      <FlexItem key={env.id} style={{ marginTop: '0.5em' }}>
+      <FlexItem key={env.id} style={{ marginTop: '0.25em', marginBottom: '0.25em' }}>
         <Label color="purple" href={`/lifecycle_environments/${env.id}`}>{`${env.name}`}</Label>
       </FlexItem>
     ));

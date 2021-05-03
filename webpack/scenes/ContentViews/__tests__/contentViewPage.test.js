@@ -56,6 +56,101 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
+test('Can show last task and link to it', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, cvIndexData);
+
+  const { getByText, queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
+
+  expect(queryByText(firstCV.name)).toBeNull();
+
+  await patientlyWaitFor(() => {
+    expect(queryByText(firstCV.name)).toBeTruthy();
+    // Reads task details and displays link to the task
+    expect(getByText('3 days ago').closest('a'))
+      .toHaveAttribute('href', '/foreman_tasks/tasks/54088dac-b990-491c-a891-1d7d1a3f5161/');
+    // If no task is found display empty text N/A
+    expect(queryByText('N/A')).toBeTruthy();
+  });
+  // Assert request was made and completed, see helper function
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can show latest version and link to it', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, cvIndexData);
+
+  const {
+    getByText,
+    queryByText,
+    queryAllByText,
+  } = renderWithRedux(<ContentViewsPage />, renderOptions);
+
+  expect(queryByText(firstCV.name)).toBeNull();
+
+  await patientlyWaitFor(() => {
+    expect(queryByText(firstCV.name)).toBeTruthy();
+    // Displays link to the latest version
+    expect(getByText('Version 1.0').closest('a'))
+      .toHaveAttribute('href', '/content_views/2/versions/11/');
+    // If no task is found display empty text Not yet published if latest version is null
+    expect(queryAllByText('Not yet published')[0]).toBeTruthy();
+    // Able to display Environment labels with link to the environment
+    expect(getByText('Library').closest('a'))
+      .toHaveAttribute('href', '/lifecycle_environments/1');
+    expect(getByText('dev').closest('a'))
+      .toHaveAttribute('href', '/lifecycle_environments/2');
+  });
+  // Assert request was made and completed, see helper function
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can expand cv and show activation keys and hosts', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(cvIndexPath)
+    .query(true)
+    .reply(200, cvIndexData);
+
+  const {
+    queryByLabelText,
+    getAllByLabelText,
+    queryByText,
+  } = renderWithRedux(<ContentViewsPage />, renderOptions);
+
+  expect(queryByText(firstCV.name)).toBeNull();
+
+  await patientlyWaitFor(() => {
+    expect(queryByText(firstCV.name)).toBeTruthy();
+  });
+
+  expect(getAllByLabelText('Details')[0]).toHaveAttribute('aria-expanded', 'false');
+  // Expand content for first CV
+  getAllByLabelText('Details')[0].click();
+
+  await patientlyWaitFor(() => {
+    expect(getAllByLabelText('Details')[0]).toHaveAttribute('aria-expanded', 'true');
+    // Displays activation key link with count
+    expect(queryByLabelText('activation_keys_link_2')).toHaveAttribute('href', '/activation_keys?search=content_view_id+%3D+2');
+    expect(queryByLabelText('activation_keys_link_2').textContent).toEqual('1');
+
+    // Displays hosts link with count
+    expect(queryByLabelText('host_link_2')).toHaveAttribute('href', '/hosts?search=content_view_id+%3D+2');
+    expect(queryByLabelText('host_link_2').textContent).toEqual('1');
+  });
+  // Assert request was made and completed, see helper function
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
 test('Can handle no Content Views being present', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
