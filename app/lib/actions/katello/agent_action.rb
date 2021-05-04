@@ -15,22 +15,15 @@ module Actions
       def plan(host, options)
         action_subject(host, :hostname => host.name, :content => options[:content])
 
-        # if already dispatched by bulk action use the provided history ID
-        dispatch_history_id = options.dig(:dispatch_histories, host.id.to_s)
-
-        unless dispatch_history_id
-          histories = ::Katello::Agent::Dispatcher.dispatch(
-            self.class.agent_message,
-            [host.id],
-            content: options[:content]
-          )
-
-          dispatch_history_id = histories.first.id
-        end
+        dispatch_history_id = options.dig(:dispatch_histories, host.id.to_s) || ::Katello::Agent::Dispatcher.create_histories(
+          host_ids: [host.id]
+        ).first.id
 
         plan_self(
           host_id: host.id,
-          dispatch_history_id: dispatch_history_id
+          dispatch_history_id: dispatch_history_id,
+          content: options[:content],
+          bulk: options[:bulk]
         )
       end
 
@@ -38,20 +31,23 @@ module Actions
         case event
         when nil
           history = dispatch_history
+          timeout = accept_timeout
 
           if history.finished?
             fail_on_errors
             return
           elsif history.accepted?
-            schedule_timeout(finish_timeout)
-          else
-            schedule_timeout(accept_timeout)
+            timeout = finish_timeout
           end
 
           suspend do |suspended_action|
             history.dynflow_execution_plan_id = suspended_action.execution_plan_id
             history.dynflow_step_id = suspended_action.step_id
             history.save!
+
+            dispatch_message(history) unless input[:bulk]
+
+            schedule_timeout(timeout)
           end
         when Dynflow::Action::Timeouts::Timeout
           process_timeout
@@ -61,6 +57,14 @@ module Actions
         else
           fail_on_errors
         end
+      end
+
+      def dispatch_message(history)
+        ::Katello::Agent::Dispatcher.dispatch(
+          self.class.agent_message,
+          [history],
+          content: input[:content]
+        )
       end
 
       def accept_timeout
