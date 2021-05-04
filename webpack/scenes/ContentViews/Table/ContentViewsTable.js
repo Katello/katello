@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { Button } from '@patternfly/react-core';
@@ -9,30 +9,71 @@ import tableDataGenerator from './tableDataGenerator';
 import getContentViews from '../ContentViewsActions';
 import CreateContentViewModal from '../Create/CreateContentViewModal';
 import CopyContentViewModal from '../Copy/CopyContentViewModal';
+import PublishContentViewWizard from '../Publish/PublishContentViewWizard';
+import { selectContentViews, selectContentViewStatus, selectContentViewError } from '../ContentViewSelectors';
 
-const ContentViewTable = ({ response, status, error }) => {
+const ContentViewTable = () => {
+  const response = useSelector(selectContentViews);
+  const status = useSelector(selectContentViewStatus);
+  const error = useSelector(selectContentViewError);
   const [table, setTable] = useState({ rows: [], columns: [] });
   const [rowMappingIds, setRowMappingIds] = useState([]);
   const [searchQuery, updateSearchQuery] = useState('');
-  const { results, ...metadata } = response;
   const loadingResponse = status === STATUS.PENDING;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copy, setCopy] = useState(false);
+  const [cvResults, setCvResults] = useState([]);
+  const [metadata, setMetadata] = useState({});
+  const [cvTableStatus, setCvTableStatus] = useState(STATUS.PENDING);
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [actionableCvDetails, setActionableCvDetails] = useState({});
   const [actionableCvId, setActionableCvId] = useState('');
   const [actionableCvName, setActionableCvName] = useState('');
-  function openForm() {
-    setIsModalOpen(true);
-  }
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const openForm = () => setIsModalOpen(true);
+
+  const openPublishModal = (rowInfo) => {
+    setActionableCvDetails({
+      id: rowInfo.cvId.toString(),
+      name: rowInfo.cvName,
+      composite: rowInfo.cvComposite,
+      version_count: rowInfo.cvVersionCount,
+      next_version: rowInfo.cvNextVersion,
+    });
+    setIsPublishModalOpen(true);
+  };
+
+  // Prevents flash of "No Content" before rows are loaded
+  const tableStatus = () => {
+    if (typeof cvResults === 'undefined' || status === STATUS.ERROR) return status; // will handle errored state
+    const resultsIds = Array.from(cvResults.map(result => result.id));
+    // All results are accounted for in row mapping, the page is ready to load
+    if (resultsIds.length === rowMappingIds.length &&
+      resultsIds.every(id => rowMappingIds.includes(id))) {
+      return status;
+    }
+    return STATUS.PENDING; // Fallback to pending
+  };
 
   useEffect(
     () => {
+      const { results, ...meta } = response;
+      if (status === STATUS.ERROR) {
+        setCvTableStatus(tableStatus());
+      }
       if (!loadingResponse && results) {
+        setCvResults(results);
+        setMetadata(meta);
+        setCurrentStep(1);
         const { newRowMappingIds, ...tableData } = tableDataGenerator(results);
         setTable(tableData);
         setRowMappingIds(newRowMappingIds);
+        setCvTableStatus(tableStatus());
       }
     },
-    [results, loadingResponse, setTable, setRowMappingIds],
+    [JSON.stringify(response), status, loadingResponse, setTable, setRowMappingIds,
+      setCvResults, setCvTableStatus, setCurrentStep, setMetadata],
   );
 
   const onSelect = (_event, isSelected, rowId) => {
@@ -67,19 +108,18 @@ const ContentViewTable = ({ response, status, error }) => {
     /* eslint-disable no-console */
     return [
       {
-        title: 'Publish and Promote',
-        isDisabled: true,
+        title: __('Publish'),
         onClick: (_event, rowId, rowInfo) => {
-          console.log(`clicked on row ${JSON.stringify(rowInfo)}`);
+          openPublishModal(rowInfo);
         },
       },
       {
-        title: 'Promote',
+        title: __('Promote'),
         isDisabled: true,
         onClick: (_event, rowId, rowInfo) => console.log(`clicked on row ${rowInfo.cvName}`),
       },
       {
-        title: 'Copy',
+        title: __('Copy'),
         onClick: (_event, rowId, rowInfo) => {
           setCopy(true);
           setActionableCvId(rowInfo.cvId.toString());
@@ -87,25 +127,15 @@ const ContentViewTable = ({ response, status, error }) => {
         },
       },
       {
-        title: 'Delete',
+        title: __('Delete'),
         isDisabled: true,
         onClick: (_event, rowId, _rowInfo) => console.log(`clicked on row ${rowId}`),
       },
     ];
     /* eslint-enable no-console */
   };
-  // Prevents flash of "No Content" before rows are loaded
-  const tableStatus = () => {
-    if (typeof results === 'undefined') return status; // will handle errored state
-    const resultsIds = Array.from(results.map(result => result.id));
-    // All results are accounted for in row mapping, the page is ready to load
-    if (resultsIds.length === rowMappingIds.length &&
-        resultsIds.every(id => rowMappingIds.includes(id))) {
-      return status;
-    }
-    return STATUS.PENDING; // Fallback to pending
-  };
 
+  const additionalListeners = new Array(isPublishModalOpen);
   const emptyContentTitle = __("You currently don't have any Content Views.");
   const emptyContentBody = __('A content view can be added by using the "New content view" button below.');
   const emptySearchTitle = __('No matching content views found');
@@ -126,42 +156,38 @@ const ContentViewTable = ({ response, status, error }) => {
         actionResolver,
         searchQuery,
         updateSearchQuery,
+        additionalListeners,
       }}
       variant={TableVariant.compact}
-      status={tableStatus()}
+      status={cvTableStatus}
       fetchItems={getContentViews}
       onCollapse={onCollapse}
       canSelectAll={false}
       cells={columns}
       autocompleteEndpoint="/content_views/auto_complete_search"
     >
-      <React.Fragment>
+      <>
         <Button onClick={openForm} variant="primary" aria-label="create_content_view">
           Create content view
         </Button>
         <CreateContentViewModal show={isModalOpen} setIsOpen={setIsModalOpen} aria-label="create_content_view_modal" />
-      </React.Fragment>
-      <React.Fragment>
+      </>
+      <>
         <CopyContentViewModal cvId={actionableCvId} cvName={actionableCvName} show={copy} setIsOpen={setCopy} aria-label="copy_content_view_modal" />
-      </React.Fragment>
+      </>
+      {isPublishModalOpen &&
+        <>
+          <PublishContentViewWizard
+            details={actionableCvDetails}
+            show={isPublishModalOpen}
+            setIsOpen={setIsPublishModalOpen}
+            currentStep={currentStep}
+            setCurrentStep={setCurrentStep}
+            aria-label="publish_content_view_modal"
+          />
+        </>}
     </TableWrapper>
   );
-};
-
-ContentViewTable.propTypes = {
-  response: PropTypes.shape({
-    results: PropTypes.arrayOf(PropTypes.shape({})),
-  }),
-  status: PropTypes.string.isRequired,
-  error: PropTypes.oneOfType([
-    PropTypes.shape({}),
-    PropTypes.string,
-  ]),
-};
-
-ContentViewTable.defaultProps = {
-  error: null,
-  response: { results: [] },
 };
 
 export default ContentViewTable;

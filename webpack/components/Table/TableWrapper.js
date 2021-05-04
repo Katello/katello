@@ -118,6 +118,7 @@ TableWrapper.propTypes = {
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
+    PropTypes.bool,
   ])),
   activeFilters: PropTypes.bool,
 };

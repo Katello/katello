@@ -15,11 +15,11 @@ node :next_version do |content_view|
 end
 
 child :last_task => :last_task do |_task|
-  attributes :task_id => :id
-  attributes :status => :result
+  attributes :id
+  attributes :result => :result
   node :last_sync_words do |object|
-    if object.try(:created_at)
-      time_ago_in_words(Time.parse(object.created_at.to_s))
+    if object.try(:started_at)
+      time_ago_in_words(Time.parse(object.started_at.to_s))
     end
   end
 end
