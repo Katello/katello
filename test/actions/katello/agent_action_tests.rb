@@ -8,11 +8,11 @@ module Actions
 
       included do
         let(:host) { hosts(:one) }
-        let(:dispatch_history) { ::Katello::Agent::DispatchHistory.create!(host_id: host.id) }
-
+        let(:dispatch_history) { ::Katello::Agent::DispatchHistory.find(action.input[:dispatch_history_id]) }
+        let(:dispatched_history) { ::Katello::Agent::Dispatcher.create_histories(host_ids: [host.id]).first }
         let(:dispatch_histories) do
           {
-            host.id.to_s => dispatch_history.id
+            host.id.to_s => dispatched_history.id
           }
         end
 
@@ -22,10 +22,10 @@ module Actions
           plan_action action, host, { content: content }
         end
 
-        let(:dispatched_action) do
+        let(:bulk_action) do
           action = create_action action_class
           action.stubs(:action_subject).with(host, hostname: host.name, content: content)
-          plan_action action, host, { content: content, dispatch_histories: dispatch_histories }
+          plan_action action, host, { content: content, dispatch_histories: dispatch_histories, bulk: true }
         end
 
         let(:dispatcher_params) do
@@ -35,7 +35,7 @@ module Actions
         end
 
         def test_run
-          ::Katello::Agent::Dispatcher.expects(:dispatch).with(action_class.agent_message, [host.id], dispatcher_params).returns([dispatch_history])
+          ::Katello::Agent::Dispatcher.expects(:dispatch).once
 
           run_action action
 
@@ -46,30 +46,30 @@ module Actions
           assert dispatch_history.dynflow_step_id
         end
 
-        def test_run_already_dispatched
+        def test_run_bulk
           ::Katello::Agent::Dispatcher.expects(:dispatch).never
-          ::Katello::Agent::DispatchHistory.expects(:find_by_id).returns(dispatch_history)
 
-          run_action dispatched_action
+          run_action bulk_action
+          dispatched_history.reload
 
-          assert_equal host.id, dispatch_history.host_id
-          assert dispatch_history.dynflow_execution_plan_id
-          assert dispatch_history.dynflow_step_id
+          assert_equal host.id, dispatched_history.host_id
+          assert dispatched_history.dynflow_execution_plan_id
+          assert dispatched_history.dynflow_step_id
         end
 
         def test_process_timeout_accept
-          dispatched_action.expects(:dispatch_history).returns(dispatch_history)
+          bulk_action.expects(:dispatch_history).returns(dispatch_history)
 
-          error = assert_raises(StandardError) { dispatched_action.process_timeout }
+          error = assert_raises(StandardError) { bulk_action.process_timeout }
 
           assert_match(/did not respond/, error.message)
         end
 
         def test_process_timeout_finish
           dispatch_history.accepted_at = Time.now
-          dispatched_action.expects(:dispatch_history).returns(dispatch_history)
+          bulk_action.expects(:dispatch_history).returns(dispatch_history)
 
-          error = assert_raises(StandardError) { dispatched_action.process_timeout }
+          error = assert_raises(StandardError) { bulk_action.process_timeout }
 
           assert_match(/did not finish/, error.message)
         end
@@ -77,15 +77,15 @@ module Actions
         def test_process_timeout_noop
           dispatch_history.accepted_at = Time.now
           dispatch_history.result = { :foo => "bar" }
-          dispatched_action.expects(:dispatch_history).returns(dispatch_history)
+          bulk_action.expects(:dispatch_history).returns(dispatch_history)
 
-          dispatched_action.process_timeout
+          bulk_action.process_timeout
         end
 
         def test_humanized_output
           Actions::Katello::Agent::DispatchHistoryPresenter.any_instance.expects(:humanized_output)
 
-          dispatched_action.humanized_output
+          bulk_action.humanized_output
         end
       end
     end
