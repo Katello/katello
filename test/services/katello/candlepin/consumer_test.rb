@@ -62,6 +62,8 @@ module Katello
 
         assert_equal 'OracleLinux', Candlepin::Consumer.distribution_to_puppet_os('Oracle Linux Server')
 
+        assert_equal 'AlmaLinux', Candlepin::Consumer.distribution_to_puppet_os('AlmaLinux')
+
         assert_equal 'Unknown', Candlepin::Consumer.distribution_to_puppet_os('RedHot')
       end
 

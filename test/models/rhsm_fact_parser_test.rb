@@ -142,6 +142,17 @@ module Katello
       assert_equal parser.operatingsystem.minor, '7'
     end
 
+    def test_operatingsystem_almalinux
+      @facts['distribution.name'] = 'AlmaLinux'
+      @facts['distribution.version'] = '8.3'
+      @facts['distribution.id'] = 'Purple Manul'
+
+      assert_equal parser.operatingsystem.name, 'AlmaLinux'
+      assert_equal parser.operatingsystem.type, 'Redhat'
+      assert_equal parser.operatingsystem.major, '8'
+      assert_equal parser.operatingsystem.minor, '3'
+    end
+
     def test_uname_architecture
       @facts['uname.machine'] = 'i686'
 

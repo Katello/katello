@@ -155,6 +155,8 @@ module Katello
           'Ubuntu'
         elsif name =~ /oracle/
           'OracleLinux'
+        elsif name =~ /almalinux/
+          'AlmaLinux'
         else
           'Unknown'
         end
