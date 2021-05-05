@@ -11,7 +11,7 @@ module Katello
     def test_repositories
       assert_includes @server_pg.repository_ids, @repo.id
       assert_equal @server_pg.repository, @repo
-      assert_equal @repo.package_groups, [@server_pg, @mammals_pg]
+      assert_equal @repo.package_groups.sort, [@server_pg, @mammals_pg]
     end
 
     def test_create
