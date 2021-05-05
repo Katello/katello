@@ -147,6 +147,14 @@ module Actions
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
+        def content_view_version_id
+          input['content_view_version_id']
+        end
+
+        def content_view_version_name
+          input['content_view_version_name']
+        end
+
         private
 
         def include_other_components(override_components, content_view)
@@ -198,14 +206,6 @@ module Actions
               plan_action(Katello::Repository::IndexContent, id: id)
             end
           end
-        end
-
-        def content_view_version_id
-          input['content_view_version_id']
-        end
-
-        def content_view_version_name
-          input['content_view_version_name']
         end
 
         apipie :class, "A class representing #{self} object" do
