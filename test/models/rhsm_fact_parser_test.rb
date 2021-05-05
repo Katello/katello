@@ -90,6 +90,15 @@ module Katello
       assert_nil os.release_name
     end
 
+    def test_operatingsystem_rockylinux
+      @facts['distribution.name'] = 'Rocky Linux'
+      @facts['distribution.version'] = '8.3'
+
+      assert_equal parser.operatingsystem.name, 'RockyLinux'
+      assert_equal parser.operatingsystem.major, '8'
+      assert_equal parser.operatingsystem.minor, '3'
+    end
+
     def test_operatingsystem_debian
       @facts['distribution.name'] = 'Debian GNU/Linux'
       @facts['distribution.version'] = '9'
