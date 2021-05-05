@@ -155,6 +155,8 @@ module Katello
           'Ubuntu'
         elsif name =~ /oracle/
           'OracleLinux'
+        elsif name =~ /rocky\s*linux/
+          'RockyLinux'
         else
           'Unknown'
         end
