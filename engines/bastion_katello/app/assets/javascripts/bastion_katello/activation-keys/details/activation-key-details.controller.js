@@ -51,9 +51,13 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             ];
         };
 
+        $scope.setOriginalEnvironment = function(newEnvironment) {
+            $scope.originalEnvironment = newEnvironment;
+        };
+
         $scope.activationKey = ActivationKey.get({id: $scope.$stateParams.activationKeyId}, function (activationKey) {
-            $scope.$broadcast('activationKey.loaded', activationKey);
             $scope.panel.loading = false;
+            $scope.setOriginalEnvironment(activationKey.environment);
         }, function (response) {
             $scope.panel.loading = false;
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
