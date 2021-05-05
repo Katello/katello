@@ -27,8 +27,7 @@ module Katello
           popts = super(repository_version)
           popts.merge!(
             {
-              # structured is not necessary for subscription-manager
-              #structured: true, # publish real suites (e.g. 'stable')
+              structured: true, # publish real suites (e.g. 'stable')
               simple: true # publish all into 'default'-suite
             }
           )
