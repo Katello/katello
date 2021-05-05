@@ -59,8 +59,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
             $scope.editContentView = false;
             $scope.editEnvironment = false;
             $scope.save(activationKey).then(function (actKey) {
-                $scope.setOriginalEnvironment(actKey.environment);
-                $scope.resetEnvironmentPathSelector(activationKey);
+                $scope.resetEnvironmentPathSelector(actKey);
             });
             $scope.disableEnvironmentSelection = false;
         };
