@@ -24,7 +24,7 @@ const RoutedTabs = ({
     if (matchedTab) {
       history.push(buildLink(matchedTab.key));
     } else {
-      history.push(buildLink(tabs[defaultTabIndex].key)); // go to first tab if no tab selected
+      history.replace(buildLink(tabs[defaultTabIndex].key)); // go to first tab if no tab selected
     }
   };
 
