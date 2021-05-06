@@ -50,17 +50,21 @@ module Katello
           org = Organization.find_by(label: json['owner']['key'])
           fail("Organization with label #{json['owner']['key']} wasn't found while importing Candlepin pool") unless org
 
-          subscription = determine_subscription(
-            product_id: json['productId'],
-            source_stack_id: json['sourceStackId'],
-            organization: org
-          )
+          pool = import_candlepin_record(record: json, organization: org)
+          pool.backend_data = json
+          pool.import_data(index_hosts)
+        end
+      end
 
-          ::Katello::Util::Support.active_record_retry do
-            pool = Katello::Pool.where(cp_id: cp_pool_id, organization: org, subscription: subscription).first_or_create!
-            pool.backend_data = json
-            pool.import_data(index_hosts)
-          end
+      def import_candlepin_record(record:, organization:)
+        subscription = determine_subscription(
+          product_id: record['productId'],
+          source_stack_id: record['sourceStackId'],
+          organization: organization
+        )
+
+        super do |attrs|
+          attrs[:subscription] = subscription
         end
       end
 

@@ -24,8 +24,8 @@ module Katello
     scope :upstream, -> { where.not(upstream_pool_id: nil) }
     scope :redhat, -> { joins(:products).merge(Katello::Product.redhat).distinct }
 
-    include Glue::Candlepin::Pool
     include Glue::Candlepin::CandlepinObject
+    include Glue::Candlepin::Pool
 
     scoped_search :on => :cp_id, :complete_value => true, :rename => :id, :only_explicit => true
     scoped_search :on => :upstream_pool_id, :complete_value => true, :only_explicit => true
