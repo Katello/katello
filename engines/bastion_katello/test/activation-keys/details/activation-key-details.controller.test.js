@@ -4,18 +4,20 @@ describe('Controller: ActivationKeyDetailsController', function() {
         ActivationKey,
         CurrentOrganization,
         Organization,
+        Notification,
+        mockEnvironment,
         mockOrg,
         mockActivationKey;
 
     beforeEach(module(
         'Bastion.activation-keys',
-        'Bastion.organizations',
-        'activation-keys/views/activation-keys.html'));
+        'Bastion.organizations'));
 
     beforeEach(inject(function(_$controller_, $rootScope, $state, $injector) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
         $httpBackend = $injector.get('$httpBackend');
+        Notification = $injector.get('Notification');
 
         mockOrg = {
             id: '1',
@@ -26,6 +28,10 @@ describe('Controller: ActivationKeyDetailsController', function() {
             }
         }
 
+        mockEnvironment = {
+          id: 1000
+        }
+
         Organization = $injector.get('Organization');
         spyOn(Organization, 'get').and.callThrough();
         $httpBackend.expectGET('/katello/api/v2/organizations/1').respond(mockOrg);
@@ -34,6 +40,7 @@ describe('Controller: ActivationKeyDetailsController', function() {
 
         mockActivationKey = {
             id: 1,
+            environment: mockEnvironment,
             purpose_usage: 'current-usage',
             purpose_role: 'current-role',
             purpose_addons: ['current-addon'],
@@ -70,10 +77,24 @@ describe('Controller: ActivationKeyDetailsController', function() {
             $state: $state,
             ActivationKey: ActivationKey,
             CurrentOrganization: CurrentOrganization,
+            Notification: Notification,
             Organization: Organization,
             simpleContentAccessEnabled: 'simpleContentAccessEnabled'
         });
     }));
+
+    it("stores activation key original environment on the scope", function() {
+        expect($scope.originalEnvironment).toEqual(mockEnvironment);
+    });
+
+    it("stores activation key original environment on the scope after saving", function() {
+        var newEnvironment = { id: 25 };
+        mockActivationKey.environment = newEnvironment;
+        spyOn(Notification, "setSuccessMessage");
+        $scope.save(mockActivationKey);
+
+        expect($scope.originalEnvironment).toEqual(newEnvironment);
+    });
 
     it("provides a list of system purpose roles", function() {
         $scope.purposeRoles().then(function(roles) {
