@@ -7,6 +7,32 @@ module Katello
       @other = katello_subscriptions(:other_subscription)
     end
 
+    def test_import_all
+      org = FactoryBot.create(:organization)
+      provider = FactoryBot.create(:katello_provider, organization: org)
+      product = FactoryBot.create(:katello_product, organization: org, provider: provider, cp_id: '12345')
+      Katello::Resources::Candlepin::Product.expects(:get).returns(
+        [
+          {
+            'id' => product.cp_id,
+            'attributes' => {}
+          }
+        ]
+      )
+
+      product_data = [
+        {
+          'id' => product.cp_id
+        }
+      ]
+
+      Katello::Resources::Candlepin::Product.expects(:all).returns(product_data)
+
+      Subscription.import_all(org)
+
+      refute_empty org.subscriptions
+    end
+
     def test_subscription_returns_pools
       assert @other.pools.count > 0
     end
