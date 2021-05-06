@@ -3,18 +3,35 @@ module Katello
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def get_candlepin_ids(organization)
-        self.get_for_owner(organization.label).map { |subscription| subscription["id"] }
+      def candlepin_records_by_id(organization)
+        records = get_for_owner(organization.label)
+        records_by_id = {}
+        records.each do |record|
+          records_by_id[record['id']] = record
+        end
+        records_by_id
       end
 
-      def import_candlepin_ids(organization)
-        candlepin_ids = self.get_candlepin_ids(organization)
-        candlepin_ids.each do |cp_id|
-          Katello::Util::Support.active_record_retry do
-            self.where(:cp_id => cp_id, :organization_id => organization.id).first_or_create unless cp_id.nil?
-          end
+      def import_candlepin_records(candlepin_objects, org)
+        candlepin_objects.each do |object|
+          import_candlepin_record(record: object, organization: org)
         end
-        candlepin_ids
+      end
+
+      def import_candlepin_record(record:, organization:)
+        db_attrs = {
+          cp_id: record['id'],
+          organization: organization
+        }
+
+        yield(db_attrs) if block_given?
+
+        persisted = nil
+        Katello::Util::Support.active_record_retry do
+          persisted = self.where(db_attrs).first_or_create!
+        end
+
+        persisted
       end
 
       def with_identifier(ids)
@@ -32,11 +49,12 @@ module Katello
         organizations = organization ? [organization] : Organization.all
 
         organizations.each do |org|
-          candlepin_ids = import_candlepin_ids(org)
+          candlepin_records = candlepin_records_by_id(org)
+          import_candlepin_records(candlepin_records.values, org)
 
           objects = self.in_organization(org)
           objects.each do |item|
-            exists_in_candlepin = candlepin_ids.include?(item.cp_id)
+            exists_in_candlepin = candlepin_records.key?(item.cp_id)
 
             Katello::Logging.time("Imported #{self}", data: { cp_id: item.cp_id, destroyed: !exists_in_candlepin }) do
               if exists_in_candlepin
