@@ -4,25 +4,16 @@ namespace :katello do
     class BackendCleaner
       def initialize
         @candlepin_uuids = []
-        @pulp_uuids = []
         @katello_candlepin_uuids = []
-        @katello_pulp_uuids = []
       end
 
       def populate!
         @candlepin_uuids = Katello::Resources::Candlepin::Consumer.all_uuids
         @katello_candlepin_uuids = Katello::Host::SubscriptionFacet.pluck(:uuid).compact
-
-        @pulp_uuids = ::Katello.pulp_server.extensions.consumer.retrieve_all.map { |consumer| consumer['id'] }
-        @katello_pulp_uuids = Katello::Host::ContentFacet.pluck(:uuid).compact
       end
 
       def hosts_with_no_subscriptions
         ::Host.where(:id => Katello::Host::SubscriptionFacet.where(:uuid => @katello_candlepin_uuids - @candlepin_uuids).select(:host_id))
-      end
-
-      def hosts_with_no_content
-        ::Host.where(:id => Katello::Host::ContentFacet.where(:uuid => @katello_pulp_uuids - @pulp_uuids).select(:host_id))
       end
 
       def hosts_with_nil_facets
@@ -32,10 +23,6 @@ namespace :katello do
 
       def cp_orphaned_host_uuids
         @candlepin_uuids - @katello_candlepin_uuids
-      end
-
-      def pulp_orphaned_host_uuids
-        @pulp_uuids - @katello_pulp_uuids
       end
     end
 
@@ -49,11 +36,6 @@ namespace :katello do
         print "Host #{host.id} #{host.name} #{host.subscription_facet.try(:uuid)} is partially missing subscription information.  Un-registering\n"
         execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host, host_unregister_options(host)) }
       end
-
-      cleaner.hosts_with_no_content.each do |host|
-        print "Host #{host.id} #{host.name} #{host.content_facet.try(:uuid)} is partially missing content information.  Un-registering\n"
-        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host, host_unregister_options(host)) }
-      end
     end
 
     def clean_backend_orphans(cleaner)
@@ -62,13 +44,6 @@ namespace :katello do
       print "Candlepin orphaned consumers: #{cp_uuids}\n"
       cp_uuids.each do |consumer_id|
         execute("exception when destroying candlepin consumer #{consumer_id}") { Katello::Resources::Candlepin::Consumer.destroy(consumer_id) }
-      end
-
-      pulp_uuids = cleaner.pulp_orphaned_host_uuids
-      print "#{pulp_uuids.count} orphaned consumer id(s) found in pulp.\n"
-      print "Pulp orphaned consumers: #{pulp_uuids}\n"
-      pulp_uuids.each do |consumer_id|
-        execute("exception when destroying pulp consumer #{consumer_id}") { Katello.pulp_server.extensions.consumer.delete(consumer_id) }
       end
     end
 
