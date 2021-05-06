@@ -25,10 +25,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
 
         $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
 
-        $scope.$on('activationKey.loaded', function () {
-            $scope.originalEnvironment = $scope.activationKey.environment;
-        });
-
         $scope.$watch('activationKey.environment', function (environment) {
             if ($scope.originalEnvironment) {
                 if (environment) {
@@ -63,8 +59,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
             $scope.editContentView = false;
             $scope.editEnvironment = false;
             $scope.save(activationKey).then(function (actKey) {
-                $scope.originalEnvironment = actKey.environment;
-                $scope.resetEnvironmentPathSelector(activationKey);
+                $scope.resetEnvironmentPathSelector(actKey);
             });
             $scope.disableEnvironmentSelection = false;
         };
