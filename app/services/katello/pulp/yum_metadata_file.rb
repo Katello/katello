@@ -7,8 +7,12 @@ module Katello
         shared_attributes = backend_data.keys & model.class.column_names
         shared_json = backend_data.select { |key, _v| shared_attributes.include?(key) }
         repo = ::Katello::Repository.find_by(:pulp_id => backend_data['repo_id']).try(:id)
-        model.update!(shared_json.merge(repository_id: repo,
-                                                  name: find_name_from_json(backend_data)))
+        filename = find_name_from_json(backend_data)
+        model.update!(shared_json.merge(repository_id: repo, name: filename))
+        if repo
+          Katello::YumMetadataFile.where("id != ? AND repository_id = ? AND name = ? AND checksum = ?",
+                                         model.id, repo, filename, model.checksum).delete_all
+        end
       end
 
       def find_name_from_json(json)
