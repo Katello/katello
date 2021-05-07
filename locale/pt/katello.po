@@ -1,24 +1,27 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the katello package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
+# Bryan Kearney <bryan.kearney@gmail.com>, 2017
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: version 0.0.1\n"
+"Project-Id-Version: katello 2.4.0-RC1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2012-09-10 13:11+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: pt\n"
+"PO-Revision-Date: 2017-12-19 20:14+0000\n"
+"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2017\n"
+"Language-Team: Portuguese (https://www.transifex.com/foreman/teams/114/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid ""
 "\n"
-"* Product = '%{product}', Repository = '%{repository}', Repository Type = '%{repo_type}'"
+"* Product = '%{product}', Repository = '%{repository}'"
 msgstr ""
 
 msgid " %{errata_count} Errata"
@@ -34,6 +37,9 @@ msgid " Content view updated."
 msgstr ""
 
 msgid " Either select the latest content view or the content view version. Cannot set both."
+msgstr ""
+
+msgid " RPMs"
 msgstr ""
 
 msgid " environment cannot be set to an environment already on its path"
@@ -284,6 +290,9 @@ msgstr ""
 msgid "A CV version already exists with the same major and minor version (%{major}.%{minor})"
 msgstr ""
 
+msgid "A Pool and its Subscription cannot belong to different organizations"
+msgstr ""
+
 msgid "A backend service [ %s ] is unreachable"
 msgstr ""
 
@@ -320,6 +329,9 @@ msgstr ""
 msgid "A summary of new errata after a repository is synchronized"
 msgstr ""
 
+msgid "About page"
+msgstr ""
+
 msgid "Abstract async task"
 msgstr ""
 
@@ -344,22 +356,25 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr ""
 
-msgid "Activation Key(s) *"
-msgstr ""
-
 msgid "Activation Keys"
 msgstr ""
 
 msgid "Activation key ID"
 msgstr ""
 
-msgid "Activation key(s) for Subscription Manager. Multiple keys should be comma-separated, for example: key1,key2,key3."
+msgid "Activation key for subscription-manager client. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
 msgstr ""
 
-msgid "Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
+msgid "Activation key(s) for Subscription Manager."
+msgstr ""
+
+msgid "Activation key(s) for subscription-manager client. Required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys"
 msgstr ""
 
 msgid "Activation keys and subscriptions can be managed"
+msgstr ""
+
+msgid "Activation keys: "
 msgstr ""
 
 msgid "Active Subscriptions"
@@ -404,6 +419,9 @@ msgstr ""
 msgid "Add subscriptions to one or more hosts"
 msgstr ""
 
+msgid "Add to this filter using the 'Add RPM' button."
+msgstr ""
+
 msgid "Add to this filter using the 'Add package group' button."
 msgstr ""
 
@@ -414,6 +432,9 @@ msgid "Added Content:"
 msgstr ""
 
 msgid "Adding content units"
+msgstr ""
+
+msgid "Additional content"
 msgstr ""
 
 msgid "Addons"
@@ -473,6 +494,9 @@ msgid "Applicability Batch Size"
 msgstr ""
 
 msgid "Arch"
+msgstr ""
+
+msgid "Architecture"
 msgstr ""
 
 msgid "Architecture of content in the repository"
@@ -558,12 +582,8 @@ msgstr ""
 msgid "At least one organization must exist."
 msgstr ""
 
-msgid "Atleast one of ContentView or Organization must be provided"
-msgstr ""
-
-#, fuzzy
 msgid "Attach a subscription"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Attach subscriptions"
 msgstr ""
@@ -583,9 +603,8 @@ msgstr ""
 msgid "Auto Publish - Triggered by '%s'"
 msgstr ""
 
-#, fuzzy
 msgid "Auto attach subscriptions"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Autopublish"
 msgstr ""
@@ -602,9 +621,8 @@ msgstr ""
 msgid "Available Repositories"
 msgstr ""
 
-#, fuzzy
 msgid "Backend System Status"
-msgstr "Sistema"
+msgstr ""
 
 msgid "Background"
 msgstr ""
@@ -687,9 +705,8 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#, fuzzy
 msgid "Cancel repository discovery"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Cancel running smart proxy synchronization"
 msgstr ""
@@ -832,7 +849,7 @@ msgstr ""
 msgid "Cannot specify content for composite views"
 msgstr ""
 
-msgid "Cannot sync file:// repositories with On Demand or Background Download Policies"
+msgid "Cannot sync file:// repositories with the On Demand Download Policy"
 msgstr ""
 
 msgid "Cannot upload Container Image content."
@@ -862,12 +879,14 @@ msgstr ""
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
 msgstr ""
 
+msgid "Clear any previous registration and run subscription-manager with --force."
+msgstr ""
+
 msgid "Click here to go to the tasks page for the task."
 msgstr ""
 
-#, fuzzy
 msgid "Clone"
-msgstr "Nenhum"
+msgstr ""
 
 msgid "Close"
 msgstr ""
@@ -896,9 +915,8 @@ msgstr ""
 msgid "Composite Content View '%{subject}' failed auto-publish"
 msgstr ""
 
-#, fuzzy
 msgid "Composite content view"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Compute resource IDs"
 msgstr ""
@@ -954,13 +972,11 @@ msgstr ""
 msgid "Content Facet for host with id %s is non-existent. Skipping applicability calculation."
 msgstr ""
 
-#, fuzzy
 msgid "Content Hosts"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "Content Source"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Content Sync"
 msgstr ""
@@ -1139,17 +1155,14 @@ msgstr ""
 msgid "Couldn't find %{type} Filter with id %{id}"
 msgstr ""
 
-#, fuzzy
 msgid "Couldn't find ContentViewFilter with id=%s"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find Organization '%s'."
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find activation key '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
 msgid "Couldn't find activation key content view id '%s'"
 msgstr ""
@@ -1157,9 +1170,8 @@ msgstr ""
 msgid "Couldn't find activation key environment '%s'"
 msgstr ""
 
-#, fuzzy
 msgid "Couldn't find consumer '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
 msgid "Couldn't find content host content view id '%s'"
 msgstr ""
@@ -1167,48 +1179,38 @@ msgstr ""
 msgid "Couldn't find content host environment '%s'"
 msgstr ""
 
-#, fuzzy
 msgid "Couldn't find content view '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find content view version '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find content view versions '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find environment '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find errata ids '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find host collection '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
 msgid "Couldn't find host with host id '%s'"
 msgstr ""
 
-#, fuzzy
 msgid "Couldn't find organization '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find prior-environment '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find product with id '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
-#, fuzzy
 msgid "Couldn't find repository '%s'"
-msgstr "Não foi possível encontrar modelo '%s'"
+msgstr ""
 
 msgid "Couldn't find specified Content View and Lifecycle Environment."
 msgstr ""
@@ -1237,9 +1239,8 @@ msgstr ""
 msgid "Create a Content Credential"
 msgstr ""
 
-#, fuzzy
 msgid "Create a content view"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Create a custom repository"
 msgstr ""
@@ -1253,9 +1254,8 @@ msgstr ""
 msgid "Create a package group"
 msgstr ""
 
-#, fuzzy
 msgid "Create a product"
-msgstr "Arquitetura"
+msgstr ""
 
 msgid "Create a sync plan"
 msgstr ""
@@ -1263,9 +1263,8 @@ msgstr ""
 msgid "Create an activation key"
 msgstr ""
 
-#, fuzzy
 msgid "Create an environment"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Create an environment in an organization"
 msgstr ""
@@ -1291,12 +1290,8 @@ msgstr ""
 msgid "Current organization not set."
 msgstr ""
 
-msgid "Custom"
-msgstr ""
-
-#, fuzzy
 msgid "Custom Content Repositories"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Custom cron expression only needs to be set for interval value of custom cron"
 msgstr ""
@@ -1436,31 +1431,26 @@ msgstr ""
 msgid "Delete Host upon unregister"
 msgstr ""
 
-#, fuzzy
 msgid "Delete Lifecycle Environment"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "Delete Manifest"
-msgstr "Arquitetura"
+msgstr ""
 
 msgid "Delete Package Group"
 msgstr ""
 
-#, fuzzy
 msgid "Delete Product"
-msgstr "Arquitetura"
+msgstr ""
 
 msgid "Delete Upstream Subscription"
 msgstr ""
 
-#, fuzzy
 msgid "Delete a content view"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "Delete a filter rule"
-msgstr "Arquitetura"
+msgstr ""
 
 msgid "Delete a package group"
 msgstr ""
@@ -1483,9 +1473,8 @@ msgstr ""
 msgid "Deleted consumer '%s'"
 msgstr ""
 
-#, fuzzy
 msgid "Deleted from %{environment}"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Deleting manifest in '%{subject}' failed."
 msgstr ""
@@ -1514,9 +1503,8 @@ msgstr ""
 msgid "Destroy"
 msgstr ""
 
-#, fuzzy
 msgid "Destroy Content Host"
-msgstr "Sistema"
+msgstr ""
 
 msgid "Destroy Content Host %s"
 msgstr ""
@@ -1539,9 +1527,8 @@ msgstr ""
 msgid "Destroy an activation key"
 msgstr ""
 
-#, fuzzy
 msgid "Destroy an environment"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Destroy an environment in an organization"
 msgstr ""
@@ -1588,9 +1575,8 @@ msgstr ""
 msgid "Discover"
 msgstr ""
 
-#, fuzzy
 msgid "Discover Repositories"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Do not include this array of content views"
 msgstr ""
@@ -1752,6 +1738,9 @@ msgid "Exceeds available quantity"
 msgstr ""
 
 msgid "Exclude"
+msgstr ""
+
+msgid "Excluded"
 msgstr ""
 
 msgid "Exit"
@@ -2079,6 +2068,9 @@ msgstr ""
 msgid "Hosts with Installable Errata"
 msgstr ""
 
+msgid "Hosts: "
+msgstr ""
+
 msgid "How many repositories should be synced concurrently on the capsule.  A smaller number may lead to longer sync times.  A larger number will increase dynflow load."
 msgstr ""
 
@@ -2121,9 +2113,8 @@ msgstr ""
 msgid "ID of the activation key"
 msgstr ""
 
-#, fuzzy
 msgid "ID of the environment"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "ID of the host"
 msgstr ""
@@ -2233,7 +2224,7 @@ msgstr ""
 msgid "If set to true, a composite content view may not be published or promoted, unless the component content view versions that it includes exist in the target environment."
 msgstr ""
 
-msgid "If set to true, use the remote execution over katello-agent for remote actions"
+msgid "If set to true, use remote execution instead of katello-agent for remote actions"
 msgstr ""
 
 msgid "If specified, remove the first instance of a subscription with matching id and quantity"
@@ -2258,6 +2249,15 @@ msgid "If true, will publish a new composite version using any specified content
 msgstr ""
 
 msgid "Ignorable content can be only set for Yum repositories."
+msgstr ""
+
+msgid "Ignore errors"
+msgstr ""
+
+msgid "Ignore subscription manager errors"
+msgstr ""
+
+msgid "Ignore subscription-manager errors for `subscription-manager register` command"
 msgstr ""
 
 msgid "Ignore subscriptions that are unavailable to the specified host"
@@ -2329,6 +2329,9 @@ msgstr ""
 msgid "Include"
 msgstr ""
 
+msgid "Included"
+msgstr ""
+
 msgid "Includes associated content view filter ids in response"
 msgstr ""
 
@@ -2380,7 +2383,7 @@ msgstr ""
 msgid "Install Applicable Errata on %s"
 msgstr ""
 
-msgid "Install content on one or more hosts"
+msgid "Install content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Install errata via Katello interface"
@@ -2407,7 +2410,7 @@ msgstr ""
 msgid "Install package via Katello interface"
 msgstr ""
 
-msgid "Install packages remotely"
+msgid "Install packages remotely using katello-agent. %s"
 msgstr ""
 
 msgid "Installable errata from Content View"
@@ -2509,9 +2512,6 @@ msgstr ""
 msgid "Invalid value specified for ignorable content. Permissible values %s"
 msgstr ""
 
-msgid "Katello"
-msgstr ""
-
 msgid "Katello ID of local pool to update"
 msgstr ""
 
@@ -2566,7 +2566,16 @@ msgstr ""
 msgid "Last published"
 msgstr ""
 
+msgid "Last task"
+msgstr ""
+
+msgid "Latest (automatically updates)"
+msgstr ""
+
 msgid "Latest Errata"
+msgstr ""
+
+msgid "Latest version"
 msgstr ""
 
 msgid "Learn more about adding Subscription Manifests"
@@ -2581,9 +2590,8 @@ msgstr ""
 msgid "Lifecycle"
 msgstr ""
 
-#, fuzzy
 msgid "Lifecycle Environment"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Lifecycle Environment %s has associated Activation Keys. Please change or remove the associated Activation Keys before trying to delete this lifecycle environment."
 msgstr ""
@@ -2594,14 +2602,19 @@ msgstr ""
 msgid "Lifecycle Environment ID"
 msgstr ""
 
-#, fuzzy
 msgid "Lifecycle Environments"
-msgstr "Repositórios"
+msgstr ""
+
+msgid "Lifecycle environment"
+msgstr ""
 
 msgid "Lifecycle environment '%{environment}' is not attached to this capsule."
 msgstr ""
 
 msgid "Lifecycle environment ID"
+msgstr ""
+
+msgid "Lifecycle environment for the host."
 msgstr ""
 
 msgid "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made."
@@ -2655,16 +2668,14 @@ msgstr ""
 msgid "List content view versions"
 msgstr ""
 
-#, fuzzy
 msgid "List content views"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "List deb packages installed on the host"
 msgstr ""
 
-#, fuzzy
 msgid "List environment paths"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "List environments in an organization"
 msgstr ""
@@ -2681,9 +2692,8 @@ msgstr ""
 msgid "List filter rules"
 msgstr ""
 
-#, fuzzy
 msgid "List host collections"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "List host collections in an activation key"
 msgstr ""
@@ -2739,9 +2749,8 @@ msgstr ""
 msgid "List of host collection IDs to disassociate from the activation key"
 msgstr ""
 
-#, fuzzy
 msgid "List of host collection ids"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "List of host collection ids to update"
 msgstr ""
@@ -2797,9 +2806,8 @@ msgstr ""
 msgid "List of repositories in an organization"
 msgstr ""
 
-#, fuzzy
 msgid "List of repository ids"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "List of subscription products in a subscription"
 msgstr ""
@@ -2816,9 +2824,8 @@ msgstr ""
 msgid "List packages installed on the host"
 msgstr ""
 
-#, fuzzy
 msgid "List products"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "List repositories in the environment"
 msgstr ""
@@ -2955,7 +2962,13 @@ msgstr ""
 msgid "Must supply at least one of mandatory_package_names, optional_package_names, conditional_package_names, default_package_names parameters"
 msgstr ""
 
+msgid "N/A"
+msgstr ""
+
 msgid "NA"
+msgstr ""
+
+msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
 msgstr ""
 
 msgid ""
@@ -3010,13 +3023,11 @@ msgstr ""
 msgid "New blobs: %{count}."
 msgstr ""
 
-#, fuzzy
 msgid "New content view name"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "New host collection name"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "New name cannot be blank"
 msgstr ""
@@ -3027,13 +3038,25 @@ msgstr ""
 msgid "New packages: %{count} (%{size})."
 msgstr ""
 
+msgid "New version is available: Version ${latestVersion}"
+msgstr ""
+
 msgid "No"
+msgstr ""
+
+msgid "No Activation Keys selected"
+msgstr ""
+
+msgid "No Activation keys to select"
 msgstr ""
 
 msgid "No Content View"
 msgstr ""
 
 msgid "No Content found"
+msgstr ""
+
+msgid "No Lifecycle environment to select"
 msgstr ""
 
 msgid "No Manifest Uploaded"
@@ -3066,10 +3089,22 @@ msgstr ""
 msgid "No content view history events found."
 msgstr ""
 
+msgid "No content views belong to ${label}"
+msgstr ""
+
 msgid "No content_view_version_ids provided"
 msgstr ""
 
+msgid "No description"
+msgstr ""
+
 msgid "No enabled repositories match your search criteria."
+msgstr ""
+
+msgid "No environment"
+msgstr ""
+
+msgid "No environments"
 msgstr ""
 
 msgid "No errata has been specified."
@@ -3112,6 +3147,12 @@ msgid "No matching package groups found."
 msgstr ""
 
 msgid "No matching repositories found"
+msgstr ""
+
+msgid "No matching rules found."
+msgstr ""
+
+msgid "No matching version found"
 msgstr ""
 
 msgid "No new packages installed"
@@ -3168,6 +3209,9 @@ msgstr ""
 msgid "No repository sets match your search criteria."
 msgstr ""
 
+msgid "No rules have been added to this filter."
+msgstr ""
+
 msgid "No services defined, is this class extended?"
 msgstr ""
 
@@ -3211,6 +3255,9 @@ msgid "Not all necessary pulp workers running at %s."
 msgstr ""
 
 msgid "Not running"
+msgstr ""
+
+msgid "Not yet published"
 msgstr ""
 
 msgid "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available."
@@ -3348,9 +3395,8 @@ msgstr ""
 msgid "Package"
 msgstr ""
 
-#, fuzzy
 msgid "Package Group"
-msgstr "Domínio"
+msgstr ""
 
 msgid "Package Group Install"
 msgstr ""
@@ -3421,9 +3467,8 @@ msgstr ""
 msgid "Package Profile Update for %s"
 msgstr ""
 
-#, fuzzy
 msgid "Package Remove"
-msgstr "Domínio"
+msgstr ""
 
 msgid "Package Remove Canceled"
 msgstr ""
@@ -3545,6 +3590,9 @@ msgstr ""
 msgid "Plan numeric identifier"
 msgstr ""
 
+msgid "Please add some content views."
+msgstr ""
+
 msgid "Please add some repositories."
 msgstr ""
 
@@ -3596,25 +3644,22 @@ msgstr ""
 msgid "Product ID"
 msgstr ""
 
-#, fuzzy
 msgid "Product and Repositories"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Product architecture"
 msgstr ""
 
-#, fuzzy
 msgid "Product description"
-msgstr "Repositórios"
+msgstr ""
 
 msgid ""
 "Product id as listed from a host's installed products, \\\n"
 "        this is not the same product id as the products api returns"
 msgstr ""
 
-#, fuzzy
 msgid "Product name"
-msgstr "Nome"
+msgstr ""
 
 msgid "Product name as listed from a host's installed products"
 msgstr ""
@@ -3679,9 +3724,8 @@ msgstr ""
 msgid "Publish Lifecycle Environment Repositories"
 msgstr ""
 
-#, fuzzy
 msgid "Publish a content view"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Published new version"
 msgstr ""
@@ -3699,6 +3743,9 @@ msgid "Pulp Consumer %s has already been removed"
 msgstr ""
 
 msgid "Pulp Docker registry port"
+msgstr ""
+
+msgid "Pulp bulk load size"
 msgstr ""
 
 msgid "Pulp client cert"
@@ -3779,6 +3826,9 @@ msgstr ""
 msgid "RPM"
 msgstr ""
 
+msgid "RPM name"
+msgstr ""
+
 msgid "RPMs"
 msgstr ""
 
@@ -3794,18 +3844,14 @@ msgstr ""
 msgid "Recommended Repositories"
 msgstr ""
 
-msgid "Red Hat"
-msgstr ""
-
 msgid "Red Hat CDN URL"
 msgstr ""
 
 msgid "Red Hat Provider Details"
 msgstr ""
 
-#, fuzzy
 msgid "Red Hat Repositories"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Red Hat products cannot be manipulated."
 msgstr ""
@@ -3819,9 +3865,8 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#, fuzzy
 msgid "Refresh Manifest"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Refresh previously imported manifest for Red Hat provider"
 msgstr ""
@@ -3868,13 +3913,11 @@ msgstr ""
 msgid "Removal of package(s) requested: %{packages}"
 msgstr ""
 
-#, fuzzy
 msgid "Remove Content"
-msgstr "Domínio"
+msgstr ""
 
-#, fuzzy
 msgid "Remove Version"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Remove Versions and Associations"
 msgstr ""
@@ -3888,15 +3931,14 @@ msgstr ""
 msgid "Remove components from the content view"
 msgstr ""
 
-msgid "Remove content on one or more hosts"
+msgid "Remove content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Remove content view version"
 msgstr ""
 
-#, fuzzy
 msgid "Remove from Environment"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Remove hosts from the host collection"
 msgstr ""
@@ -3916,9 +3958,8 @@ msgstr ""
 msgid "Remove package for %s"
 msgstr ""
 
-#, fuzzy
 msgid "Remove package group"
-msgstr "Arquitetura"
+msgstr ""
 
 msgid "Remove package group via Katello interface"
 msgstr ""
@@ -3950,16 +3991,14 @@ msgstr ""
 msgid "Repo Type"
 msgstr ""
 
-#, fuzzy
 msgid "Repositories"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Repositories from published Content Views are not allowed."
 msgstr ""
 
-#, fuzzy
 msgid "Repository"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Repository %s cannot be deleted since it has already been included in a published Content View."
 msgstr ""
@@ -3988,9 +4027,8 @@ msgstr ""
 msgid "Repository has already been cloned to %{cv_name} in environment %{to_env}"
 msgstr ""
 
-#, fuzzy
 msgid "Repository id"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Repository identifier"
 msgstr ""
@@ -4001,9 +4039,8 @@ msgstr ""
 msgid "Repository metadata publish"
 msgstr ""
 
-#, fuzzy
 msgid "Repository not found"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Repository set name to search on"
 msgstr ""
@@ -4131,7 +4168,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-msgid "Schedule errata for installation"
+msgid "Schedule errata for installation using katello-agent. %s"
 msgstr ""
 
 msgid "Search"
@@ -4140,9 +4177,8 @@ msgstr ""
 msgid "Search pattern (defaults to '*')"
 msgstr ""
 
-#, fuzzy
 msgid "Search string"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Search string for erratum to perform an action on"
 msgstr ""
@@ -4168,13 +4204,11 @@ msgstr ""
 msgid "Select All"
 msgstr ""
 
-#, fuzzy
 msgid "Select Content View"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "Select None"
-msgstr "Domínio"
+msgstr ""
 
 msgid "Select Organization"
 msgstr ""
@@ -4245,9 +4279,8 @@ msgstr ""
 msgid "Show a Content Credential"
 msgstr ""
 
-#, fuzzy
 msgid "Show a content view"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Show a content view component"
 msgstr ""
@@ -4264,9 +4297,8 @@ msgstr ""
 msgid "Show a repository"
 msgstr ""
 
-#, fuzzy
 msgid "Show a subscription"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Show a sync plan"
 msgstr ""
@@ -4274,9 +4306,8 @@ msgstr ""
 msgid "Show an activation key"
 msgstr ""
 
-#, fuzzy
 msgid "Show an environment"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Show content available for an activation key"
 msgstr ""
@@ -4344,16 +4375,28 @@ msgstr ""
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view filter! ${error}"
+msgid "Some services are not properly started. See the About page for more information."
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view filters! ${error}"
+msgid "Something went wrong while retrieving the content view components! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view history! ${error}"
+msgid "Something went wrong while retrieving the content view filter rules! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
-msgid "Something went wrong while retrieving the repository types! ${error}"
+msgid "Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view filters! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view history! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view versions! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the repository types! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
 msgid "Sort field and order, eg. 'id DESC'"
@@ -4542,9 +4585,8 @@ msgstr ""
 msgid "Sync Smart Proxies after Content View promotion"
 msgstr ""
 
-#, fuzzy
 msgid "Sync Status"
-msgstr "Sistema"
+msgstr ""
 
 msgid "Sync Summary"
 msgstr ""
@@ -4552,9 +4594,8 @@ msgstr ""
 msgid "Sync Summary for %s"
 msgstr ""
 
-#, fuzzy
 msgid "Sync a repository"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Sync all repositories for a product"
 msgstr ""
@@ -4592,9 +4633,8 @@ msgstr ""
 msgid "Synchronize capsule content"
 msgstr ""
 
-#, fuzzy
 msgid "Synchronize repository"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Synchronize smart proxy"
 msgstr ""
@@ -4612,6 +4652,9 @@ msgid "Syncing Complete."
 msgstr ""
 
 msgid "System Purpose"
+msgstr ""
+
+msgid "System Status"
 msgstr ""
 
 msgid "Tags"
@@ -4700,6 +4743,11 @@ msgid ""
 " %{repos}"
 msgstr ""
 
+msgid ""
+"The following repositories provided in the import metadata have an incorrect content type or provider type. Make sure the export and import repositories are of the same type before importing\n"
+" %{repos}"
+msgstr ""
+
 msgid "The id of the host to alter"
 msgstr ""
 
@@ -4710,6 +4758,9 @@ msgid "The manifest imported within Organization %{subject} is no longer valid. 
 msgstr ""
 
 msgid "The number of days remaining in a subscription before you will be reminded about renewing it."
+msgstr ""
+
+msgid "The number of items fetched from a single paged Pulp API call."
 msgstr ""
 
 msgid "The offset in the file where the content starts"
@@ -4817,6 +4868,9 @@ msgid "This Organization's subscription manifest has expired. Please import a ne
 msgstr ""
 
 msgid "This action doesn't support package groups"
+msgstr ""
+
+msgid "This action uses katello-agent, which is currently disabled. Use remote execution instead."
 msgstr ""
 
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
@@ -4957,10 +5011,13 @@ msgstr ""
 msgid "Unable to export. 'pulp_export_destination' setting is not a writable directory."
 msgstr ""
 
-msgid "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment."
+msgid "Unable to find product '%s' in organization '%s'"
 msgstr ""
 
-msgid "Unable to perform unauthenticated repository list operation"
+msgid "Unable to get users"
+msgstr ""
+
+msgid "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment."
 msgstr ""
 
 msgid "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id."
@@ -4984,6 +5041,12 @@ msgstr ""
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr ""
 
+msgid "Unable to update the repository list"
+msgstr ""
+
+msgid "Unable to update the user-repository mapping"
+msgstr ""
+
 msgid "Unapplied Errata"
 msgstr ""
 
@@ -4999,7 +5062,7 @@ msgstr ""
 msgid "Unfiltered params array: %s."
 msgstr ""
 
-msgid "Uninstall packages remotely"
+msgid "Uninstall packages remotely using katello-agent. %s"
 msgstr ""
 
 msgid "Unknown"
@@ -5062,9 +5125,8 @@ msgstr ""
 msgid "Update a component associated with the content view"
 msgstr ""
 
-#, fuzzy
 msgid "Update a content view"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Update a content view version"
 msgstr ""
@@ -5075,9 +5137,8 @@ msgstr ""
 msgid "Update a host collection"
 msgstr ""
 
-#, fuzzy
 msgid "Update a repository"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Update a sync plan"
 msgstr ""
@@ -5085,14 +5146,13 @@ msgstr ""
 msgid "Update an activation key"
 msgstr ""
 
-#, fuzzy
 msgid "Update an environment"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "Update an environment in an organization"
 msgstr ""
 
-msgid "Update content on one or more hosts"
+msgid "Update content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Update content urls"
@@ -5134,7 +5194,7 @@ msgstr ""
 msgid "Update package via Katello interface"
 msgstr ""
 
-msgid "Update packages remotely"
+msgid "Update packages remotely using katello-agent. %s"
 msgstr ""
 
 msgid "Update redhat repository"
@@ -5281,6 +5341,9 @@ msgstr ""
 msgid "Versions"
 msgstr ""
 
+msgid "Versions will appear here when the content view is published."
+msgstr ""
+
 msgid "View %{view} has not been promoted to %{env}"
 msgstr ""
 
@@ -5368,6 +5431,9 @@ msgstr ""
 msgid "You currently don't have any repositories to add to this content view."
 msgstr ""
 
+msgid "You currently don't have any versions for this content view."
+msgstr ""
+
 msgid "You do not have permissions to delete %s"
 msgstr ""
 
@@ -5416,15 +5482,17 @@ msgstr ""
 msgid "a file"
 msgstr ""
 
+msgid "a future release"
+msgstr ""
+
 msgid "a module stream"
 msgstr ""
 
 msgid "a package"
 msgstr ""
 
-#, fuzzy
 msgid "a package group"
-msgstr "Arquitetura"
+msgstr ""
 
 msgid "actions not found"
 msgstr ""
@@ -5549,15 +5617,6 @@ msgstr ""
 msgid "checking Pulp task status"
 msgstr ""
 
-msgid "comma-separated list of architectures to be synced from deb-archive"
-msgstr ""
-
-msgid "comma-separated list of releases to be synced from deb-archive"
-msgstr ""
-
-msgid "comma-separated list of repo components to be synced from deb-archive"
-msgstr ""
-
 msgid "composite content view identifier"
 msgstr ""
 
@@ -5633,9 +5692,8 @@ msgstr ""
 msgid "delete a filter"
 msgstr ""
 
-#, fuzzy
 msgid "description"
-msgstr "Arquitetura"
+msgstr ""
 
 msgid "description of the environment"
 msgstr ""
@@ -5652,13 +5710,11 @@ msgstr ""
 msgid "enables or disables synchronization"
 msgstr ""
 
-#, fuzzy
 msgid "environment"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "environment id"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "environment identifier"
 msgstr ""
@@ -5675,9 +5731,8 @@ msgstr ""
 msgid "environment to reassign orphaned systems to"
 msgstr ""
 
-#, fuzzy
 msgid "environments"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "errata_id of the content view filter rule"
 msgstr ""
@@ -5832,9 +5887,8 @@ msgstr ""
 msgid "list of packages names"
 msgstr ""
 
-#, fuzzy
 msgid "list of repository ids"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "list of rpm filename strings to include in published version"
 msgstr ""
@@ -5893,9 +5947,8 @@ msgstr ""
 msgid "must not contain leading or trailing white spaces."
 msgstr ""
 
-#, fuzzy
 msgid "name"
-msgstr "Nome"
+msgstr ""
 
 msgid "name not defined."
 msgstr ""
@@ -5906,9 +5959,8 @@ msgstr ""
 msgid "name of the content view filter rule"
 msgstr ""
 
-#, fuzzy
 msgid "name of the environment"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "name of the filter"
 msgstr ""
@@ -5916,9 +5968,8 @@ msgstr ""
 msgid "name of the organization"
 msgstr ""
 
-#, fuzzy
 msgid "name of the repository"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "name of the subscription"
 msgstr ""
@@ -5945,6 +5996,9 @@ msgid "of environment must be unique within one organization"
 msgstr ""
 
 msgid "only repositories having at least one of the specified content type ex: rpm , erratum"
+msgstr ""
+
+msgid "only show the repositories readable by this user with this username"
 msgstr ""
 
 msgid "optional package names to include in the package group"
@@ -6028,25 +6082,20 @@ msgstr ""
 msgid "repo label"
 msgstr ""
 
-#, fuzzy
 msgid "repository ID"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "repository id"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "repository identifier"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "repository source url"
-msgstr "Repositórios"
+msgstr ""
 
-#, fuzzy
 msgid "repository url"
-msgstr "Repositórios"
+msgstr ""
 
 msgid "repository_id"
 msgstr ""
@@ -6160,6 +6209,15 @@ msgid "waiting for Pulp to finish the task"
 msgstr ""
 
 msgid "waiting for Pulp to start the task"
+msgstr ""
+
+msgid "whitespace-separated list of architectures to be synced from deb-archive"
+msgstr ""
+
+msgid "whitespace-separated list of releases to be synced from deb-archive"
+msgstr ""
+
+msgid "whitespace-separated list of repo components to be synced from deb-archive"
 msgstr ""
 
 msgid "with"

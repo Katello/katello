@@ -1,31 +1,34 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the katello package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Miroslav Suchy <msuchy@redhat.com>, 2012-2013.
-# Nikolay Parukhin <parukhin@gmail.com>, 2013.
-# ypoyarko <ypoyarko@redhat.com>, 2013. #zanata
-# ypoyarko <ypoyarko@redhat.com>, 2014. #zanata
-# ypoyarko <ypoyarko@redhat.com>, 2015. #zanata
+# Alexander Savchenko, 2017
+# Denis Denis <stereodenis@gmail.com>, 2017
+# Vladimir Pavlov <v.pavlov@i-teco.ru>, 2020
+# Yulia <yulia.poyarkova@redhat.com>, 2021
+# 0868a4d1af5275b3f70b0a6dac4c99a4, 2021
+# Bryan Kearney <bryan.kearney@gmail.com>, 2021
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: version 0.0.1\n"
+"Project-Id-Version: katello 2.4.0-RC1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-04-29 12:08+0000\n"
-"Last-Translator: ypoyarko <ypoyarko@redhat.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: ru\n"
+"PO-Revision-Date: 2017-12-19 20:14+0000\n"
+"Last-Translator: Bryan Kearney <bryan.kearney@gmail.com>, 2021\n"
+"Language-Team: Russian (https://www.transifex.com/foreman/teams/114/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
-"4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Zanata 3.6.0\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=1"
+"1 && n%100<=14)? 2 : 3);\n"
 
 msgid ""
 "\n"
-"* Product = '%{product}', Repository = '%{repository}', Repository Type = '%{repo_type}'"
+"* Product = '%{product}', Repository = '%{repository}'"
 msgstr ""
 
 msgid " %{errata_count} Errata"
@@ -43,15 +46,17 @@ msgstr ""
 msgid " Either select the latest content view or the content view version. Cannot set both."
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
+msgid " RPMs"
+msgstr ""
+
 msgid " environment cannot be set to an environment already on its path"
-msgstr "это окружение уже есть в цепочке"
+msgstr "это окружение уже в цепочке"
 
 msgid "%s %s has %s Hosts and %s Hostgroups that will need to be reassociated post deletion. Delete %s?"
 msgstr ""
 
 msgid "%s Available"
-msgstr ""
+msgstr "%s доступно"
 
 msgid "%s Errata"
 msgstr "Исправления: %s"
@@ -62,7 +67,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "%s Used"
-msgstr ""
+msgstr "%s занято"
 
 msgid "%s ago"
 msgstr "%s назад"
@@ -263,7 +268,7 @@ msgid "%{unused_substitutions} cannot be specified for %{content_name} as that i
 msgstr ""
 
 msgid "%{used} of %{total}"
-msgstr ""
+msgstr "%{used} из %{total}"
 
 msgid "%{view_label} could not be promoted to %{environment_label} because the content view and the environment are not in the same organization!"
 msgstr ""
@@ -277,12 +282,11 @@ msgstr ""
 msgid ", must be unique to major and version id version."
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid ": '%s' is a built-in environment"
-msgstr "«%s» — встроенное окружение"
+msgstr ""
 
 msgid ":a_resource identifier"
-msgstr "Идентификатор :a_resource"
+msgstr ""
 
 msgid "<b>PROMOTION</b> SUMMARY"
 msgstr ""
@@ -293,14 +297,17 @@ msgstr ""
 msgid "A CV version already exists with the same major and minor version (%{major}.%{minor})"
 msgstr ""
 
+msgid "A Pool and its Subscription cannot belong to different organizations"
+msgstr ""
+
 msgid "A backend service [ %s ] is unreachable"
-msgstr "Служба [ %s ] недоступна"
+msgstr "Базовая служба [ %s ] недоступна"
 
 msgid "A content view can be added by using the \"New content view\" button below."
 msgstr ""
 
 msgid "A content_type must be provided."
-msgstr "Необходимо предоставить content_type."
+msgstr "Необходимо определить content_type."
 
 msgid "A large number of errata are unapplied in this content view, so only the first 100 are shown."
 msgstr "Показаны первые 100 непримененных исправлений."
@@ -312,7 +319,7 @@ msgid "A list of subscriptions expiring soon"
 msgstr ""
 
 msgid "A post-promotion summary of hosts with installable errata"
-msgstr ""
+msgstr "Сводный отчет после переноса представлений со списком узлов, для которых доступны исправления"
 
 msgid "A server operating in disconnected mode does not communicate with the Red Hat CDN."
 msgstr ""
@@ -324,10 +331,13 @@ msgid "A smart proxy seems to have been refreshed without pulpcore being running
 msgstr ""
 
 msgid "A summary of available and applicable errata for your hosts"
-msgstr "Обзор исправлений для ваших узлов"
+msgstr "Краткий обзор исправлений для ваших узлов"
 
 msgid "A summary of new errata after a repository is synchronized"
-msgstr "Обзор новых исправлений после синхронизации репозитория"
+msgstr "Краткий обзор новых исправлений после синхронизации репозитория"
+
+msgid "About page"
+msgstr ""
 
 msgid "Abstract async task"
 msgstr "Абстрактная асинхронная задача"
@@ -336,10 +346,10 @@ msgid "Accept action timeout"
 msgstr ""
 
 msgid "Account Number"
-msgstr ""
+msgstr "Номер учетной записи"
 
 msgid "Action"
-msgstr ""
+msgstr "Команда"
 
 msgid "Action not allowed for the default smart proxy."
 msgstr ""
@@ -351,28 +361,31 @@ msgid "Action unauthorized to be performed on selected hosts."
 msgstr ""
 
 msgid "Action with sub plans"
-msgstr ""
-
-msgid "Activation Key(s) *"
-msgstr ""
+msgstr "Действия с подпланами"
 
 msgid "Activation Keys"
 msgstr "Ключи активации"
 
 msgid "Activation key ID"
-msgstr "ID ключа активации"
+msgstr "Идентификатор ключа активации"
 
-msgid "Activation key(s) for Subscription Manager. Multiple keys should be comma-separated, for example: key1,key2,key3."
+msgid "Activation key for subscription-manager client. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
 msgstr ""
 
-msgid "Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
+msgid "Activation key(s) for Subscription Manager."
+msgstr ""
+
+msgid "Activation key(s) for subscription-manager client. Required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys"
 msgstr ""
 
 msgid "Activation keys and subscriptions can be managed"
 msgstr "Управление ключами активации и подписками: "
 
-msgid "Active Subscriptions"
+msgid "Activation keys: "
 msgstr ""
+
+msgid "Active Subscriptions"
+msgstr "Активные подписки"
 
 msgid "Active only"
 msgstr "Активные"
@@ -381,7 +394,7 @@ msgid "Add Subscriptions"
 msgstr ""
 
 msgid "Add a subscription to a host"
-msgstr ""
+msgstr "Выделить подписки узлу"
 
 msgid "Add components to the content view"
 msgstr ""
@@ -393,7 +406,7 @@ msgid "Add filters using the 'Add filter' button above."
 msgstr ""
 
 msgid "Add host to the host collection"
-msgstr ""
+msgstr "Добавить узел в коллекцию"
 
 msgid "Add lifecycle environments to the smart proxy"
 msgstr ""
@@ -405,12 +418,15 @@ msgid "Add ons"
 msgstr ""
 
 msgid "Add products to sync plan"
-msgstr "Добавить продукты в план синхронизации"
+msgstr "Включить продукты в план синхронизации"
 
 msgid "Add subscriptions consumed by a manifest from Red Hat Subscription Management"
 msgstr ""
 
 msgid "Add subscriptions to one or more hosts"
+msgstr ""
+
+msgid "Add to this filter using the 'Add RPM' button."
 msgstr ""
 
 msgid "Add to this filter using the 'Add package group' button."
@@ -420,9 +436,12 @@ msgid "Added"
 msgstr ""
 
 msgid "Added Content:"
-msgstr "Добавлено содержимое:"
+msgstr ""
 
 msgid "Adding content units"
+msgstr ""
+
+msgid "Additional content"
 msgstr ""
 
 msgid "Addons"
@@ -441,13 +460,13 @@ msgid "All available architectures for this repo are enabled."
 msgstr ""
 
 msgid "All errata applied"
-msgstr ""
+msgstr "Все исправления применены"
 
 msgid "Allow new Host registrations to assume registered profiles with matching hostname as long as the registering DMI UUID is not used by another host."
 msgstr ""
 
 msgid "Alter a hosts host collections"
-msgstr ""
+msgstr "Изменить коллекции для указанного узла"
 
 msgid "Always Use Latest (currently %{version})"
 msgstr ""
@@ -465,6 +484,8 @@ msgid ""
 "An error occurred during the sync \n"
 "%{error_message}"
 msgstr ""
+"Во время синхронизации произошла ошибка:\n"
+"%{error_message}"
 
 msgid "Another component already includes content view with ID %s"
 msgstr ""
@@ -482,13 +503,16 @@ msgid "Applicability Batch Size"
 msgstr ""
 
 msgid "Arch"
+msgstr "Архитектура"
+
+msgid "Architecture"
 msgstr ""
 
 msgid "Architecture of content in the repository"
 msgstr ""
 
 msgid "Architecture(s)"
-msgstr ""
+msgstr "Архитектура"
 
 msgid "Are you sure you want to delete the manifest?"
 msgstr ""
@@ -512,7 +536,7 @@ msgid "Array of content view component IDs to remove. Identifier of the componen
 msgstr ""
 
 msgid "Array of host ids"
-msgstr ""
+msgstr "Список идентификаторов узлов"
 
 msgid "Array of local pool IDs. Only pools originating upstream are accepted."
 msgstr ""
@@ -524,7 +548,7 @@ msgid "Array of subscriptions to add"
 msgstr "Массив добавляемых подписок"
 
 msgid "Array of subscriptions to remove"
-msgstr ""
+msgstr "Массив удаляемых подписок"
 
 msgid "Array of uploads to import"
 msgstr ""
@@ -540,9 +564,8 @@ msgstr ""
 
 msgid "Assign the %{count} host with no %{taxonomy_single} to %{taxonomy_name}"
 msgid_plural "Assign all %{count} hosts with no %{taxonomy_single} to %{taxonomy_name}"
-msgstr[0] "Выделить %{taxonomy_name} %{count} узел без %{taxonomy_single}"
-msgstr[1] "Выделить %{taxonomy_name} %{count} узла без %{taxonomy_single}"
-msgstr[2] "Выделить %{taxonomy_name} %{count} узлов без %{taxonomy_single}"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Assign the environment and content view to one or more hosts"
 msgstr ""
@@ -554,7 +577,7 @@ msgid "Associated location IDs"
 msgstr ""
 
 msgid "Associations"
-msgstr ""
+msgstr "Связи"
 
 msgid "At least one Content View Version must be specified"
 msgstr "Необходимо выбрать хотя бы одну версию представления"
@@ -568,24 +591,20 @@ msgstr "По крайней мере одному ключу активации 
 msgid "At least one organization must exist."
 msgstr "Должна существовать как минимум одна организация."
 
-msgid "Atleast one of ContentView or Organization must be provided"
-msgstr ""
-
-# translation auto-copied from project rhsm-web, version 0.0, document management, author ypoyarko
 msgid "Attach a subscription"
 msgstr "Назначить подписку"
 
 msgid "Attach subscriptions"
-msgstr ""
+msgstr "Выделить подписки"
 
 msgid "Attach subscriptions to %s"
-msgstr ""
+msgstr "Выделить подписки %s"
 
 msgid "Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin"
 msgstr ""
 
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
 msgid "Auto Publish"
 msgstr ""
@@ -612,7 +631,7 @@ msgid "Available Repositories"
 msgstr ""
 
 msgid "Backend System Status"
-msgstr "Системный статус"
+msgstr "Состояние базовой системы"
 
 msgid "Background"
 msgstr ""
@@ -629,7 +648,6 @@ msgstr "Включить $basearch"
 msgid "Batch size to sync repositories in."
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Beta"
 msgstr "Beta"
 
@@ -645,11 +663,9 @@ msgstr ""
 msgid "Branches updated"
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app
 msgid "Bug Fix"
-msgstr "Исправление ошибки"
+msgstr "Исправление"
 
-# translation auto-copied from project Satellite6 Bastion Katello, version 6.1, document bastion_katello
 msgid "Bugfix"
 msgstr "Исправление ошибок"
 
@@ -660,13 +676,13 @@ msgid "CDN SSL version"
 msgstr ""
 
 msgid "CDN loading error: %s not found"
-msgstr "Ошибка загрузки CDN: %s не найден."
+msgstr ""
 
 msgid "CDN loading error: access denied to %s"
-msgstr "Ошибка загрузки CDN: %s отказано в доступе."
+msgstr ""
 
 msgid "CDN loading error: access forbidden to %s"
-msgstr "Ошибка загрузки CDN: доступ к %s запрещен"
+msgstr ""
 
 msgid "CVE identifier"
 msgstr "Идентификатор CVE"
@@ -687,16 +703,14 @@ msgid "Can only destroy on Yum Repositories."
 msgstr ""
 
 msgid "Can only remove content from within the Default Content View"
-msgstr "Контент может удаляться только из исходного представления"
+msgstr "Содержимое может удаляться только из представления, используемого по умолчанию"
 
 msgid "Can only upload to Yum Repositories."
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Can't update the '%s' environment"
 msgstr "Не удалось обновить окружение «%s»"
 
-# translation auto-copied from project Satellite6 Foreman Discovery, version 6.1, document foreman_discovery
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -706,10 +720,8 @@ msgstr "Отменить поиск репозиториев"
 msgid "Cancel running smart proxy synchronization"
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
-#, fuzzy
 msgid "Canceled"
-msgstr "Отменено."
+msgstr "Отменена"
 
 msgid "Cancelled"
 msgstr ""
@@ -736,16 +748,16 @@ msgid "Cannot add a repository from an Organization other than %s."
 msgstr "Репозитории могут добавляться только из организации %s."
 
 msgid "Cannot add component versions to a non-composite content view"
-msgstr "Версии компонентов не могут быть добавлены в сложное представление"
+msgstr "Версии, составляющие сложное представление, не могут добавляться в простое представление"
 
 msgid "Cannot add composite versions to a composite content view"
-msgstr "Сложные версии не могут быть добавлены в сложное представление"
+msgstr "Составные версии не могут быть добавлены в составное представление"
 
 msgid "Cannot add composite versions to another composite content view"
 msgstr "Сложные версии не могут добавляться в другое сложное представление"
 
 msgid "Cannot add default content view to composite content view"
-msgstr "Исходное представление не может быть добавлено в сложное представление"
+msgstr "Исходное представление не может входить в составное представление"
 
 msgid "Cannot add repositories to a composite content view"
 msgstr "Нельзя добавлять репозитории в сложное представление"
@@ -760,12 +772,11 @@ msgid "Cannot clone into the Default Content View"
 msgstr ""
 
 msgid "Cannot delete '%{view}' due to associated %{dependent}: %{names}."
-msgstr "«%{view}» не может быть удалено из-за существующих зависимостей %{dependent}: %{names}."
+msgstr ""
 
 msgid "Cannot delete Red Hat product: %{product}"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Cannot delete from %s, view does not exist there."
 msgstr "Нельзя удалить представление из %s, так как его там нет"
 
@@ -788,7 +799,7 @@ msgid "Cannot delete version while it is in environment %s"
 msgstr "Прежде чем удалить версию, исключите ее из окружения %s"
 
 msgid "Cannot delete version while it is in environments: %s"
-msgstr "Прежде чем удалить версию, исключите ее из окружений: %s"
+msgstr ""
 
 msgid "Cannot delete version while it is in use by composite content views: %s"
 msgstr ""
@@ -820,15 +831,14 @@ msgstr ""
 msgid "Cannot publish default content view"
 msgstr "Исходное представление не может быть опубликовано"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Cannot register a system to the '%s' environment"
 msgstr "Не удалось зарегистрировать систему в окружении «%s»"
 
 msgid "Cannot remove '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}."
-msgstr "«%{view}» не может быть удалено из окружения «%{env}» из-за связей %{dependent}: %{names}."
+msgstr ""
 
 msgid "Cannot remove content from a non-custom repository"
-msgstr "Нельзя удалить контент из репозиториев Red Hat."
+msgstr "Содержимое репозиториев Red Hat не может быть удалено."
 
 msgid "Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'."
 msgstr "Представление «%{view}» не входит в окружение «%{env}»."
@@ -846,9 +856,9 @@ msgid "Cannot specify components for non-composite views"
 msgstr "Простые представления не могут содержать другие представления"
 
 msgid "Cannot specify content for composite views"
-msgstr "Сложное представление не может напрямую включать контент"
+msgstr "Сложное представление не может включать в себя содержимое напрямую"
 
-msgid "Cannot sync file:// repositories with On Demand or Background Download Policies"
+msgid "Cannot sync file:// repositories with the On Demand Download Policy"
 msgstr ""
 
 msgid "Cannot upload Container Image content."
@@ -867,7 +877,7 @@ msgid "Check services before actions"
 msgstr ""
 
 msgid "Checksum"
-msgstr ""
+msgstr "Контрольная сумма"
 
 msgid "Checksum of file to upload"
 msgstr ""
@@ -878,17 +888,18 @@ msgstr ""
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
 msgstr ""
 
+msgid "Clear any previous registration and run subscription-manager with --force."
+msgstr ""
+
 msgid "Click here to go to the tasks page for the task."
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Clone"
 msgstr "Клонировать"
 
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Collapse All"
 msgstr "Свернуть все"
 
@@ -901,7 +912,6 @@ msgstr ""
 msgid "Comma-separated list of tags to sync for Container Image repository"
 msgstr ""
 
-# translation auto-copied from project Customer Portal Core Files, version 1, document interface, author ypoyarko
 msgid "Component"
 msgstr "Компонент"
 
@@ -915,10 +925,10 @@ msgid "Composite Content View '%{subject}' failed auto-publish"
 msgstr ""
 
 msgid "Composite content view"
-msgstr "Сложное представление"
+msgstr "Составное представление"
 
 msgid "Compute resource IDs"
-msgstr ""
+msgstr "Идентификаторы ресурсов"
 
 msgid "Confirm Deletion"
 msgstr ""
@@ -930,7 +940,7 @@ msgid "Consider changing the Lifecycle Environment's Registry Name Pattern to so
 msgstr ""
 
 msgid "Consumed"
-msgstr ""
+msgstr "Используется"
 
 msgid "Container Image Manifest"
 msgstr ""
@@ -953,7 +963,6 @@ msgstr ""
 msgid "Container image tag"
 msgstr ""
 
-# translation auto-copied from project Red Hat Satellite User Guide, version 6.0, document appe-Glossary_of_Terms
 msgid "Content"
 msgstr "Содержимое"
 
@@ -967,7 +976,7 @@ msgid "Content Credentials"
 msgstr ""
 
 msgid "Content Download URL"
-msgstr ""
+msgstr "URL загрузки содержимого"
 
 msgid "Content Facet for host with id %s is non-existent. Skipping applicability calculation."
 msgstr ""
@@ -979,12 +988,11 @@ msgid "Content Source"
 msgstr "Источник содержимого"
 
 msgid "Content Sync"
-msgstr ""
+msgstr "Синхронизация содержимого"
 
 msgid "Content Types"
 msgstr ""
 
-# translation auto-copied from project Red Hat Satellite User Guide, version 6.0, document appe-Glossary_of_Terms
 msgid "Content View"
 msgstr "Представление"
 
@@ -1000,10 +1008,8 @@ msgstr ""
 msgid "Content View Details"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
-#, fuzzy
 msgid "Content View Filter id"
-msgstr "Представления"
+msgstr "Идентификатор фильтра представления"
 
 msgid "Content View Filter identifier"
 msgstr ""
@@ -1027,12 +1033,11 @@ msgid "Content View Version specified in the metadata - '%{name}' already exists
 msgstr ""
 
 msgid "Content View and Environment not set for registration."
-msgstr ""
+msgstr "Для регистрации необходимо представить представление и окружение."
 
 msgid "Content View id"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Content Views"
 msgstr "Представления"
 
@@ -1060,7 +1065,6 @@ msgstr ""
 msgid "Content view ${name} created"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Content view '%{view}' is not in environment '%{env}'"
 msgstr "Представление «%{view} не входит в окружение «%{env}»."
 
@@ -1104,10 +1108,10 @@ msgid "Context"
 msgstr ""
 
 msgid "Contract"
-msgstr ""
+msgstr "Контракт"
 
 msgid "Contract Number"
-msgstr ""
+msgstr "Номер контракта"
 
 msgid "Copy an activation key"
 msgstr "Копировать ключ активации"
@@ -1116,10 +1120,10 @@ msgid "Copy version units to library"
 msgstr ""
 
 msgid "Cores: %s"
-msgstr "Ядра: %s"
+msgstr ""
 
 msgid "Could not delete organization '%s'."
-msgstr "Не удалось удалить организацию \"%s\"."
+msgstr "Ошибка удаления организации «%s»."
 
 msgid "Could not find %{content} with id '%{id}' in repository."
 msgstr "%{content} с идентификатором «%{id}» в репозитории не найдено."
@@ -1134,7 +1138,7 @@ msgid "Could not find %{name} resources with ids %{ids}"
 msgstr ""
 
 msgid "Could not find Environment with ids: %s"
-msgstr "Окружения не найдены: %s"
+msgstr ""
 
 msgid "Could not find Lifecycle Environment with id '%{id}'."
 msgstr "Окружение с идентификатором «%{id}» не найдено."
@@ -1146,7 +1150,7 @@ msgid "Could not find a smart proxy with pulp feature."
 msgstr ""
 
 msgid "Could not find all specified errata ids: %s"
-msgstr "Исправления не найдены: %s"
+msgstr ""
 
 msgid "Could not find environments for promotion"
 msgstr ""
@@ -1161,7 +1165,7 @@ msgid "Couldn't find %{type} Filter with id %{id}"
 msgstr "Фильтр %{type}  с идентификатором %{id} не найден."
 
 msgid "Couldn't find ContentViewFilter with id=%s"
-msgstr "Фильтр представления с идентификатором %s не найден."
+msgstr "Фильтр с идентификатором %s не найден."
 
 msgid "Couldn't find Organization '%s'."
 msgstr "Организация «%s» не найдена."
@@ -1182,9 +1186,8 @@ msgid "Couldn't find content host content view id '%s'"
 msgstr "Представление с идентификатором «%s» для узла содержимого не найдено."
 
 msgid "Couldn't find content host environment '%s'"
-msgstr "Окружение «%s» узла содержимого не найдено."
+msgstr "Окружение «%s» не найдено."
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Couldn't find content view '%s'"
 msgstr "Представление «%s» не найдено."
 
@@ -1192,7 +1195,7 @@ msgid "Couldn't find content view version '%s'"
 msgstr "Версия «%s» не найдена."
 
 msgid "Couldn't find content view versions '%s'"
-msgstr "Версии «%s» не найдены."
+msgstr "Версии «%s» не обнаружены."
 
 msgid "Couldn't find environment '%s'"
 msgstr "Окружение «%s» не найдено."
@@ -1204,9 +1207,8 @@ msgid "Couldn't find host collection '%s'"
 msgstr "Коллекция «%s» не найдена"
 
 msgid "Couldn't find host with host id '%s'"
-msgstr ""
+msgstr "Узел с идентификатором «%s» не найден"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app
 msgid "Couldn't find organization '%s'"
 msgstr "Организация «%s» не найдена"
 
@@ -1228,7 +1230,6 @@ msgstr "Не удалось найти объект синхронизации"
 msgid "Count"
 msgstr ""
 
-# translation auto-copied from project NetworkManager, version 0.9.9.0, document NetworkManager, author ypoyarko
 msgid "Create"
 msgstr "Создать"
 
@@ -1254,7 +1255,7 @@ msgid "Create a custom repository"
 msgstr "Создать дополнительный репозиторий"
 
 msgid "Create a filter rule. The parameters included should be based upon the filter type."
-msgstr "Создать правило фильтрации. Список параметров зависит от типа фильтра."
+msgstr "Создать правило фильтрации. Список параметров определяется типом фильтра."
 
 msgid "Create a host collection"
 msgstr "Создать коллекцию"
@@ -1266,7 +1267,7 @@ msgid "Create a product"
 msgstr "Создать продукт"
 
 msgid "Create a sync plan"
-msgstr "Создать план"
+msgstr "Создать план синхронизации"
 
 msgid "Create an activation key"
 msgstr "Создать ключ активации"
@@ -1298,9 +1299,6 @@ msgstr ""
 msgid "Current organization not set."
 msgstr ""
 
-msgid "Custom"
-msgstr ""
-
 msgid "Custom Content Repositories"
 msgstr "Другие репозитории"
 
@@ -1308,15 +1306,14 @@ msgid "Custom cron expression only needs to be set for interval value of custom 
 msgstr ""
 
 msgid "Custom repositories cannot be disabled."
-msgstr "Дополнительные репозитории не могут быть отключены."
+msgstr "Дополнительно настроенные репозитории не могут быть отключены."
 
 msgid "Database connection"
-msgstr ""
+msgstr "Подключение к базе данных"
 
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Date format is incorrect."
 msgstr "Неверный формат даты."
 
@@ -1332,9 +1329,8 @@ msgstr ""
 msgid "Deb Packages"
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Debug Certificate"
-msgstr "Сертификат"
+msgstr "Сертификат отладки"
 
 msgid "Debug RPM"
 msgstr ""
@@ -1370,10 +1366,10 @@ msgid "Default Smart Proxy download policy"
 msgstr ""
 
 msgid "Default System SLA"
-msgstr "Соглашение об обслуживании"
+msgstr "SLA по умолчанию"
 
 msgid "Default content view versions cannot be promoted"
-msgstr "Исходные версии представления не могут быть продвинуты"
+msgstr "Используемое по умолчанию представление не может переноситься."
 
 msgid "Default download policy for Smart Proxy syncs (either 'inherit', immediate', 'on_demand', or 'background')"
 msgstr ""
@@ -1435,11 +1431,9 @@ msgstr ""
 msgid "Default user data for new Operating Systems created from synced content"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman Discovery, version 6.1, document foreman_discovery
 msgid "Delete"
 msgstr "Удалить"
 
-# translation auto-copied from project RHN Satellite UI, version 5.6, document java/code/src/com/redhat/rhn/frontend/strings/jsp/StringResource
 msgid "Delete Activation Key"
 msgstr "Удалить ключ активации"
 
@@ -1449,7 +1443,6 @@ msgstr ""
 msgid "Delete Lifecycle Environment"
 msgstr "Удалить окружение"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Delete Manifest"
 msgstr "Удалить манифест"
 
@@ -1496,7 +1489,7 @@ msgid "Deleting manifest in '%{subject}' failed."
 msgstr ""
 
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 msgid "Description for the content view"
 msgstr "Описание представления"
@@ -1516,7 +1509,6 @@ msgstr ""
 msgid "Destination Server name"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Destroy"
 msgstr "Удалить"
 
@@ -1530,7 +1522,7 @@ msgid "Destroy a Content Credential"
 msgstr ""
 
 msgid "Destroy a custom repository"
-msgstr "Удалить репозиторий"
+msgstr "Удалить настроенный репозиторий"
 
 msgid "Destroy a host collection"
 msgstr "Удалить коллекцию"
@@ -1539,7 +1531,7 @@ msgid "Destroy a product"
 msgstr "Удалить продукт"
 
 msgid "Destroy a sync plan"
-msgstr "Удалить план"
+msgstr "Удалить план синхронизации"
 
 msgid "Destroy an activation key"
 msgstr "Удалить ключ активации"
@@ -1568,7 +1560,6 @@ msgstr ""
 msgid "Directory containing the exported Content View Version"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman Discovery, version 6.1, document foreman_discovery, author ypoyarko
 msgid "Disable"
 msgstr "Отключить"
 
@@ -1591,13 +1582,13 @@ msgid "Disconnected mode"
 msgstr ""
 
 msgid "Discover"
-msgstr ""
+msgstr "Поиск"
 
 msgid "Discover Repositories"
 msgstr "Поиск репозиториев"
 
 msgid "Do not include this array of content views"
-msgstr "Не включать этот массив представлений"
+msgstr "Исключить указанный массив представлений"
 
 msgid "Do not wait for the ImportUpload action to finish. Default: false"
 msgstr ""
@@ -1606,7 +1597,7 @@ msgid "Do not wait for the update action to finish. Default: true"
 msgstr ""
 
 msgid "Domain IDs"
-msgstr ""
+msgstr "Идентификаторы доменов"
 
 msgid "Download Policy of the capsule, must be one of %s"
 msgstr ""
@@ -1617,14 +1608,12 @@ msgstr "Загрузить сертификат отладки"
 msgid "Duplicate branches specified - %{branches}"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author ypoyarko
 msgid "Duration"
 msgstr "Продолжительность"
 
 msgid "ERRATA ADVISORY"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Edit"
 msgstr "Изменить"
 
@@ -1632,7 +1621,7 @@ msgid "Editing Entitlements"
 msgstr ""
 
 msgid "Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified"
-msgstr "«content_view_id» и «environment_id» должны быть указаны вместе"
+msgstr "content_view_id и environment_id не могут использоваться по отдельности"
 
 msgid "Either environments or versions must be specified."
 msgstr "Необходимо указать окружение или версию"
@@ -1641,7 +1630,7 @@ msgid "Either organization ID or environment ID needs to be specified"
 msgstr "Необходимо указать ID организации или окружения"
 
 msgid "Either packages or groups must be provided"
-msgstr ""
+msgstr "Необходимо предоставить список пакетов или их групп "
 
 msgid "Either set the content view with the latest flag or set the content view version"
 msgstr ""
@@ -1649,7 +1638,6 @@ msgstr ""
 msgid "Either set the latest content view or the content view version. Cannot set both"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman Discovery, version 6.1, document foreman_discovery, author ypoyarko
 msgid "Enable"
 msgstr "Включить"
 
@@ -1666,23 +1654,22 @@ msgid "Enable/Disable auto publish of composite view"
 msgstr ""
 
 msgid "Enabled"
-msgstr ""
+msgstr "Включен"
 
 msgid "Enabled Repositories"
-msgstr ""
+msgstr "Активные репозитории"
 
 msgid "Enabling Simple Content Access failed for '%{subject}'."
 msgstr ""
 
 msgid "End Date"
-msgstr ""
+msgstr "Срок действия"
 
 msgid "Ends"
-msgstr ""
+msgstr "Заканчивается"
 
-# translation auto-copied from project RHN Satellite UI, version 5.6, document java/code/src/com/redhat/rhn/frontend/strings/jsp/StringResource, author ypoyarko
 msgid "Enhancement"
-msgstr "Дополнение"
+msgstr "Расширенные функции"
 
 msgid "Entitlements"
 msgstr ""
@@ -1691,7 +1678,7 @@ msgid "Environment"
 msgstr "Окружение"
 
 msgid "Environment IDs"
-msgstr ""
+msgstr "Идентификаторы окружений"
 
 msgid "Environment cannot be in its own promotion path"
 msgstr "Путь переноса не может быть таким же как исходный путь"
@@ -1700,14 +1687,13 @@ msgid "Environment identifier"
 msgstr ""
 
 msgid "Environments"
-msgstr ""
+msgstr "Окружения"
 
 msgid "Errata"
 msgstr "Исправления"
 
-# translation auto-copied from project Satellite6 Hammer CLI Katello, version 6.1, document hammer-cli-katello
 msgid "Errata ID"
-msgstr "ID исправления"
+msgstr "Идентификатор"
 
 msgid "Errata Install"
 msgstr "Установка исправлений"
@@ -1716,7 +1702,7 @@ msgid "Errata Install scheduled by %s"
 msgstr "Установка назначена: %s"
 
 msgid "Errata id of the erratum (RHSA-2012:108)"
-msgstr "Код исправления (RHSA-2012:108)"
+msgstr ""
 
 msgid "Errata mail"
 msgstr "Почта"
@@ -1742,12 +1728,11 @@ msgstr "Не удалось установить исправление"
 msgid "Erratum Install Timed Out"
 msgstr "Время ожидания установки исправления истекло"
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Error"
 msgstr "Ошибка"
 
 msgid "Error connecting to Pulp service"
-msgstr ""
+msgstr "Произошла ошибка при подключении к сервису Pulp"
 
 msgid "Error connecting. Got: %s"
 msgstr ""
@@ -1756,18 +1741,20 @@ msgid "Error refreshing status for %s: "
 msgstr ""
 
 msgid "Error retrieving Pulp storage"
-msgstr ""
+msgstr "Произошла ошибка при извлечении хранилища Pulp"
 
 msgid "Exceeds available quantity"
 msgstr ""
 
 msgid "Exclude"
+msgstr "Исключить"
+
+msgid "Excluded"
 msgstr ""
 
 msgid "Exit"
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Expand All"
 msgstr "Развернуть все"
 
@@ -1775,7 +1762,7 @@ msgid "Expire soon days"
 msgstr ""
 
 msgid "Export"
-msgstr ""
+msgstr "Экспорт"
 
 msgid "Export CSV"
 msgstr ""
@@ -1787,7 +1774,7 @@ msgid "Export Types"
 msgstr ""
 
 msgid "Export a repository"
-msgstr ""
+msgstr "Экспорт репозитория"
 
 msgid "Export as CSV"
 msgstr ""
@@ -1805,19 +1792,18 @@ msgid "Facts successfully updated."
 msgstr "Системная статистика обновлена."
 
 msgid "Failed"
-msgstr "Ошибка"
+msgstr "Сбой"
 
 msgid "Failed indexing errata, maximum retries encountered"
-msgstr ""
+msgstr "Не удалось проиндексировать исправления. Превышено максимальное число повторов."
 
 msgid "Failed to delete %{host}: %{errors}"
 msgstr ""
 
 msgid "Failed to download %s package."
 msgid_plural "Failed to download %s packages."
-msgstr[0] "Не удалось загрузить %s пакет."
-msgstr[1] "Не удалось загрузить %s пакета."
-msgstr[2] "Не удалось загрузить %s пакетов."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Failed to find %{content} with id '%{id}'."
 msgstr "%{content} с идентификатором «%{id}» не найдено."
@@ -1874,19 +1860,19 @@ msgid "Filter out default content views"
 msgstr "Исключить исходные представления"
 
 msgid "Filter products by host id"
-msgstr ""
+msgstr "Отфильтровать результаты по идентификатору узла"
 
 msgid "Filter products by name"
-msgstr "Выбор продуктов по имени"
+msgstr "Список продуктов по имени"
 
 msgid "Filter products by organization"
-msgstr "Выбор продуктов по организации"
+msgstr "Список продуктов по организации"
 
 msgid "Filter products by subscription"
-msgstr "Выбор продуктов по подпискам"
+msgstr "Список продуктов по подписке"
 
 msgid "Filter products by sync plan id"
-msgstr ""
+msgstr "Список продуктов по идентификатору плана синхронизации"
 
 msgid "Filter versions by environment"
 msgstr "Выбор версий по окружению"
@@ -1898,10 +1884,10 @@ msgid "Filter versions that are components in the specified composite version"
 msgstr "Отфильтровать составляющие сложной версии"
 
 msgid "Filtered index content"
-msgstr ""
+msgstr "Содержимое фильтруемого индекса"
 
 msgid "Filters"
-msgstr ""
+msgstr "Фильтры"
 
 msgid "Finish action timeout"
 msgstr ""
@@ -1939,12 +1925,11 @@ msgid "Forces a republish of the version's repositories' metadata"
 msgstr ""
 
 msgid "Fully entitled"
-msgstr ""
+msgstr "Полные полномочия"
 
 msgid "GPG Key URL"
-msgstr ""
+msgstr "URL ключа GPG"
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Generate and Download"
 msgstr "Создать и загрузить"
 
@@ -1988,7 +1973,7 @@ msgid "Group %{id} already created."
 msgstr ""
 
 msgid "Guests of"
-msgstr ""
+msgstr "Гости"
 
 msgid "HTTP Proxies"
 msgstr ""
@@ -2000,12 +1985,11 @@ msgid "Has to be > 0"
 msgstr ""
 
 msgid "History"
-msgstr ""
+msgstr "Журнал"
 
 msgid "History will appear here when the content view is published or promoted."
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author ypoyarko
 msgid "Host"
 msgstr "Узел"
 
@@ -2016,13 +2000,13 @@ msgid "Host %{name} cannot be assigned release version %{release_version}."
 msgstr ""
 
 msgid "Host '%{name}' does not belong to an organization"
-msgstr ""
+msgstr "Узел «%{name}» не принадлежит ни одной организации"
 
 msgid "Host Collection name"
 msgstr "Имя коллекции"
 
 msgid "Host Collections"
-msgstr "Коллекции"
+msgstr "Коллекции узлов"
 
 msgid "Host Duplicate DMI UUIDs"
 msgstr ""
@@ -2031,7 +2015,7 @@ msgid "Host Errata Advisory"
 msgstr ""
 
 msgid "Host ID"
-msgstr ""
+msgstr "Идентификатор узла"
 
 msgid "Host Profile Assume"
 msgstr ""
@@ -2043,7 +2027,7 @@ msgid "Host Tasks Workers Pool Size"
 msgstr ""
 
 msgid "Host collection '%{name}' exceeds maximum usage limit of '%{limit}'"
-msgstr "Коллекция «%{name}» превышает допустимое ограничение %{limit}"
+msgstr "Коллекция «%{name}» превысила максимально допустимое ограничение %{limit}"
 
 msgid "Host collection is empty."
 msgstr "Пустая коллекция."
@@ -2055,19 +2039,19 @@ msgid "Host creation was skipped for %s because it shares a BIOS UUID with %s. T
 msgstr ""
 
 msgid "Host did not finish content action in %s seconds.  The task has been cancelled."
-msgstr ""
+msgstr "Узел не смог завершить операцию с содержимым по истечении %s секунд. Задача была отменена."
 
 msgid "Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?"
-msgstr ""
+msgstr "Узел не отвечает на протяжении %s секунд, поэтому задача была отменена. Убедитесь, что  на узле установлен katello-agent и запущен goferd."
 
 msgid "Host errata advisory"
 msgstr ""
 
 msgid "Host group IDs"
-msgstr ""
+msgstr "Идентификаторы группы узлов"
 
 msgid "Host has not been registered with subscription-manager"
-msgstr ""
+msgstr "Узел не был зарегистрирован в subscription-manager"
 
 msgid "Host has not been registered with subscription-manager."
 msgstr ""
@@ -2093,6 +2077,9 @@ msgstr ""
 msgid "Hosts with Installable Errata"
 msgstr "Узлы с доступными для установки исправлениями"
 
+msgid "Hosts: "
+msgstr ""
+
 msgid "How many repositories should be synced concurrently on the capsule.  A smaller number may lead to longer sync times.  A larger number will increase dynflow load."
 msgstr ""
 
@@ -2100,13 +2087,13 @@ msgid "How the logic of solving dependencies in a Content View is managed. Conse
 msgstr ""
 
 msgid "How to order the sorted results (e.g. ASC for ascending)"
-msgstr "Функции сортировки (например, ASC — по возрастанию)"
+msgstr "Порядок сортировки (например, ASC — по возрастанию)"
 
 msgid "Hypervisors"
-msgstr ""
+msgstr "Гипервизоры"
 
 msgid "Hypervisors update"
-msgstr ""
+msgstr "Обновление гипервизоров"
 
 msgid "ID of a HTTP Proxy"
 msgstr ""
@@ -2115,10 +2102,10 @@ msgid "ID of a content view to show repositories in"
 msgstr "Идентификатор представления для репозиториев"
 
 msgid "ID of a content view version to show repositories in"
-msgstr "Идентификатор версии представления для просмотра репозиториев"
+msgstr "Идентификатор версии представления для получения списка репозиториев"
 
 msgid "ID of a product to list repository sets from"
-msgstr "Идентификатор продукта для получения комплекта репозиториев"
+msgstr "Идентификатор продукта для получения набора репозиториев"
 
 msgid "ID of a product to show repositories of"
 msgstr "Идентификатор продукта для получения списка репозиториев"
@@ -2139,7 +2126,7 @@ msgid "ID of the environment"
 msgstr "Идентификатор окружения"
 
 msgid "ID of the host"
-msgstr ""
+msgstr "Идентификатор узла"
 
 msgid "ID of the host collection"
 msgstr "Идентификатор коллекции"
@@ -2162,9 +2149,8 @@ msgstr "Идентификатор набора репозиториев для 
 msgid "ID of the sync plan"
 msgstr "Идентификатор плана синхронизации"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "ID: %s doesn't exist "
-msgstr "%s не существует"
+msgstr ""
 
 msgid "ISO export must be enabled when specifying ISO size"
 msgstr ""
@@ -2182,7 +2168,7 @@ msgid "Id of an ansible collection to find repositories that contain the ansible
 msgstr ""
 
 msgid "Id of an erratum to find repositories that contain the erratum"
-msgstr ""
+msgstr "Идентификатор исправления для получения списка репозиториев"
 
 msgid "Id of an ostree branch to find repositories that contain that branch"
 msgstr ""
@@ -2191,22 +2177,22 @@ msgid "Id of the content host"
 msgstr ""
 
 msgid "Id of the environment to limit the synchronization on"
-msgstr ""
+msgstr "Идентификатор синхронизируемого окружения"
 
 msgid "Id of the host"
-msgstr ""
+msgstr "Идентификатор узла"
 
 msgid "Id of the host collection"
 msgstr "Идентификатор коллекции"
 
 msgid "Id of the lifecycle environment"
-msgstr ""
+msgstr "Идентификатор окружения жизненного цикла"
 
 msgid "Id of the organization to get the status for"
-msgstr ""
+msgstr "Идентификатор организации"
 
 msgid "Id of the organization to limit environments on"
-msgstr ""
+msgstr "Идентификатор организации для выборки окружений"
 
 msgid "Id of the smart proxy"
 msgstr ""
@@ -2245,13 +2231,13 @@ msgid "If hosts fail to register because of duplicate DMI UUIDs add their comma-
 msgstr ""
 
 msgid "If set to true, a composite content view may not be published or promoted, unless the component content view versions that it includes exist in the target environment."
-msgstr ""
+msgstr "«true» означает, что действия публикации и переноса составных представлений разрешаются только при условии, что целевое окружение уже содержит версии представлений, входящих в его состав."
 
-msgid "If set to true, use the remote execution over katello-agent for remote actions"
+msgid "If set to true, use remote execution instead of katello-agent for remote actions"
 msgstr ""
 
 msgid "If specified, remove the first instance of a subscription with matching id and quantity"
-msgstr ""
+msgstr "Если задано, удалить указанное число подписок в соответствии с заданным идентификатором"
 
 msgid "If true, and register_hostname_fact is set and provided, registration will look for a new host by name only using that fact, and will skip all hostname matching"
 msgstr ""
@@ -2274,14 +2260,23 @@ msgstr ""
 msgid "Ignorable content can be only set for Yum repositories."
 msgstr ""
 
-msgid "Ignore subscriptions that are unavailable to the specified host"
+msgid "Ignore errors"
 msgstr ""
+
+msgid "Ignore subscription manager errors"
+msgstr ""
+
+msgid "Ignore subscription-manager errors for `subscription-manager register` command"
+msgstr ""
+
+msgid "Ignore subscriptions that are unavailable to the specified host"
+msgstr "Показать доступные подписки для указанного узла"
 
 msgid "Immediate"
 msgstr ""
 
 msgid "Import"
-msgstr ""
+msgstr "Импорт"
 
 msgid "Import Content View Version"
 msgstr ""
@@ -2337,11 +2332,13 @@ msgstr ""
 msgid "Importing manifest into '%{subject}' failed."
 msgstr ""
 
-# translation auto-copied from project evolution, version 3.8.5, document evolution-3.8
 msgid "In Progress"
 msgstr "Выполняется"
 
 msgid "Include"
+msgstr "Включить"
+
+msgid "Included"
 msgstr ""
 
 msgid "Includes associated content view filter ids in response"
@@ -2366,19 +2363,19 @@ msgid "Incremental update requires at least one content unit"
 msgstr ""
 
 msgid "Incremental update specified for composite %{name} version %{version}, but no components updated."
-msgstr "Для %{name} %{version} назначено инкрементное обновление, но компоненты не обновлялись."
+msgstr "Для %{name} %{version} было выбрано инкрементное обновление, но изменений компонентов не зарегистрировано."
 
 msgid "Index content"
-msgstr ""
+msgstr "Индексировать содержимое"
 
 msgid "Index errata"
-msgstr "Индекс исправлений"
+msgstr "Индексировать исправления"
 
 msgid "Index module streams"
 msgstr ""
 
 msgid "Index package groups"
-msgstr ""
+msgstr "Индексировать группы пакетов"
 
 msgid "Informable Type must be one of the following [ %{list} ]"
 msgstr "Тип может принимать значения: [ %{list} ]"
@@ -2387,7 +2384,7 @@ msgid "Inherit from Repository"
 msgstr ""
 
 msgid "Initiate a sync of the products attached to the sync plan"
-msgstr ""
+msgstr "Инициировать синхронизацию продуктов в соответствии с планом синхронизации"
 
 msgid "Install Applicable Errata"
 msgstr "Установить исправления"
@@ -2395,7 +2392,7 @@ msgstr "Установить исправления"
 msgid "Install Applicable Errata on %s"
 msgstr ""
 
-msgid "Install content on one or more hosts"
+msgid "Install content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Install errata via Katello interface"
@@ -2407,7 +2404,6 @@ msgstr "Установить исправление"
 msgid "Install erratum for %s"
 msgstr ""
 
-# translation auto-copied from project gnome-packagekit, version 3.8.2, document gnome-packagekit
 msgid "Install package"
 msgstr "Установить пакет"
 
@@ -2423,8 +2419,8 @@ msgstr ""
 msgid "Install package via Katello interface"
 msgstr ""
 
-msgid "Install packages remotely"
-msgstr "Установить пакеты удаленно"
+msgid "Install packages remotely using katello-agent. %s"
+msgstr ""
 
 msgid "Installable errata from Content View"
 msgstr ""
@@ -2438,7 +2434,6 @@ msgstr ""
 msgid "Installation of package(s) requested: %{packages}"
 msgstr ""
 
-# translation auto-copied from project RHN Satellite UI, version 5.6, document java/code/src/com/redhat/rhn/frontend/strings/jsp/StringResource
 msgid "Installed Packages"
 msgstr "Установленные пакеты"
 
@@ -2455,13 +2450,13 @@ msgid "Instance update"
 msgstr ""
 
 msgid "Instance-based"
-msgstr ""
+msgstr "Экземпляр"
 
 msgid "Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported."
-msgstr ""
+msgstr "Ограничивает результаты только теми коллекциями, которые доступны для указанного здесь объекта. Поддерживается значение «host»."
 
 msgid "Interpret specified object to return only Products that can be associated with specified object.  Only 'sync_plan' is supported."
-msgstr ""
+msgstr "Ограничивает результаты только теми продуктами, которые  доступны для указанного здесь объекта. На данный момент поддерживается только значение «sync_plan»."
 
 msgid "Interval cannot be nil"
 msgstr ""
@@ -2470,22 +2465,22 @@ msgid "Interval not set correctly"
 msgstr ""
 
 msgid "Invalid"
-msgstr ""
+msgstr "Недействительные"
 
 msgid "Invalid association of the content view id. Content View must match the content view version being saved"
 msgstr ""
 
 msgid "Invalid content label: %s"
-msgstr "Недопустимая метка контента: %s"
+msgstr ""
 
 msgid "Invalid content type %s"
-msgstr "Недопустимый тип контента: %s"
+msgstr "Недопустимый тип содержимого: %s"
 
 msgid "Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}"
-msgstr ""
+msgstr "Предоставлен неверный тип содержимого: «%{ content_type }». Тип может быть одним из %{ content_types }"
 
 msgid "Invalid date provided."
-msgstr ""
+msgstr "Указана неверная дата."
 
 msgid "Invalid date range. The erratum filter rule start date must come before the end date"
 msgstr "Недопустимый диапазон. Дата начала не может быть позднее даты окончания."
@@ -2494,7 +2489,7 @@ msgid "Invalid erratum filter rule specified, 'errata_id' cannot be specified in
 msgstr "Недопустимое правило: «errata_id» не может использоваться вместе со «start_date», «end_date», «types»"
 
 msgid "Invalid erratum filter rule specified, Must specify at least one of the following: 'errata_id', 'start_date', 'end_date' or 'types'"
-msgstr "Недопустимое правило: необходимо определить хотя бы один параметр: «errata_id», «start_date», «end_date», «types»"
+msgstr ""
 
 msgid "Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}"
 msgstr "Неверные типы исправлений: %{invalid_types}. Допускается: %{valid_types}"
@@ -2508,15 +2503,14 @@ msgstr "Неверное правило: «version» не может испол�
 msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "Запрос операции содержит недопустимые параметры. Обратитесь к администратору."
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Invalid parameters sent. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator."
-msgstr "Недопустимые параметры. Проверьте адрес. При повторе ошибки обратитесь к администратору."
+msgstr "Отправлены неверные параметры. Возможно, был введен неверный адрес. Если ошибка повторится, обратитесь к администратору."
 
 msgid "Invalid params provided - content_type must be one of %s"
-msgstr ""
+msgstr "Неверные значения параметров. Параметр content_type может принимать следующие значения: %s"
 
 msgid "Invalid params provided - date_type must be one of %s"
-msgstr ""
+msgstr "Неверные значения параметров. Параметр date_type может принимать следующие значения: %s"
 
 msgid "Invalid value specified for Container Image repositories."
 msgstr ""
@@ -2525,9 +2519,6 @@ msgid "Invalid value specified for ignorable content."
 msgstr ""
 
 msgid "Invalid value specified for ignorable content. Permissible values %s"
-msgstr ""
-
-msgid "Katello"
 msgstr ""
 
 msgid "Katello ID of local pool to update"
@@ -2576,7 +2567,7 @@ msgid "Kickstart repository was not set for host '%{host}'"
 msgstr ""
 
 msgid "Label"
-msgstr ""
+msgstr "Метка"
 
 msgid "Label of the content"
 msgstr "Метка содержимого"
@@ -2584,7 +2575,16 @@ msgstr "Метка содержимого"
 msgid "Last published"
 msgstr ""
 
+msgid "Last task"
+msgstr ""
+
+msgid "Latest (automatically updates)"
+msgstr ""
+
 msgid "Latest Errata"
+msgstr "Последние исправления"
+
+msgid "Latest version"
 msgstr ""
 
 msgid "Learn more about adding Subscription Manifests"
@@ -2594,12 +2594,11 @@ msgid "Library lifecycle environments may not be deleted."
 msgstr "Окружения Library не могут быть удалены."
 
 msgid "Library repository id to restrict comparisons to"
-msgstr "Ограничить сравнение по идентификатору репозитория Library"
+msgstr "Идентификатор репозитория Library для проведения сравнения"
 
 msgid "Lifecycle"
 msgstr ""
 
-# translation auto-copied from project Red Hat Satellite User Guide, version 6.0, document Host_Groups, author ypoyarko
 msgid "Lifecycle Environment"
 msgstr "Окружение"
 
@@ -2612,14 +2611,19 @@ msgstr ""
 msgid "Lifecycle Environment ID"
 msgstr ""
 
-# translation auto-copied from project Red Hat Satellite User Guide, version 6.0, document chap-Configuring_Organizations_Locations_and_Lifecycle_Environments, author ypoyarko
 msgid "Lifecycle Environments"
 msgstr "Окружения жизненного цикла"
+
+msgid "Lifecycle environment"
+msgstr ""
 
 msgid "Lifecycle environment '%{environment}' is not attached to this capsule."
 msgstr "Окружение «%{environment}» не связано с этой капсулой."
 
 msgid "Lifecycle environment ID"
+msgstr ""
+
+msgid "Lifecycle environment for the host."
 msgstr ""
 
 msgid "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made."
@@ -2638,22 +2642,22 @@ msgid "Limit content to just that available in the host's content view version"
 msgstr ""
 
 msgid "Limits"
-msgstr ""
+msgstr "Ограничения"
 
 msgid "List :resource_id"
-msgstr "Показать :resource_id"
+msgstr ""
 
 msgid "List Content Credentials"
 msgstr ""
 
 msgid "List a host's subscriptions"
-msgstr ""
+msgstr "Возвращает список подписок для заданного узла"
 
 msgid "List activation keys"
 msgstr "Показать ключи активации"
 
 msgid "List all :resource_id"
-msgstr "Показать все :resource_id"
+msgstr "Список всех :resource_id"
 
 msgid "List all organizations"
 msgstr "Показать все организации"
@@ -2698,16 +2702,16 @@ msgid "List filter rules"
 msgstr "Показать правила фильтрации"
 
 msgid "List host collections"
-msgstr "Показать коллекции узлов"
+msgstr "Возвращает коллекции узлов"
 
 msgid "List host collections in an activation key"
-msgstr "Показать коллекции для ключа активации"
+msgstr "Возвращает коллекции для заданного ключа активации"
 
 msgid "List host collections the activation key does not belong to"
 msgstr ""
 
 msgid "List host collections within an organization"
-msgstr "Показать коллекции в организации"
+msgstr "Возвращает коллекции в организации"
 
 msgid "List import histories"
 msgstr ""
@@ -2716,13 +2720,13 @@ msgid "List module streams available to the host"
 msgstr ""
 
 msgid "List of Errata ids"
-msgstr "Показать идентификаторы исправлений"
+msgstr "Список идентификаторов исправлений"
 
 msgid "List of Errata ids to install. Will be removed in Katello 4.1."
 msgstr ""
 
 msgid "List of Products for sync plan"
-msgstr ""
+msgstr "Список продуктов в плане синхронизации"
 
 msgid "List of component content view version ids for composite views"
 msgstr "Список идентификаторов версий компонентов для сложных представлений"
@@ -2740,7 +2744,7 @@ msgid "List of enabled repo urls for the repo (Only first is used.)"
 msgstr "Список адресов репозиториев (будет использоваться первый адрес)"
 
 msgid "List of enabled repositories"
-msgstr "Список активных репозиториев"
+msgstr "Список подключенных репозиториев"
 
 msgid "List of errata ids to exclude and not run an action on, (ex: RHSA-2019:1168)"
 msgstr ""
@@ -2758,7 +2762,7 @@ msgid "List of host collection ids"
 msgstr "Список идентификаторов коллекций"
 
 msgid "List of host collection ids to update"
-msgstr ""
+msgstr "Список идентификаторов новых коллекций узла"
 
 msgid "List of host id to list available module streams for"
 msgstr ""
@@ -2770,16 +2774,16 @@ msgid "List of host ids to perform an action on"
 msgstr ""
 
 msgid "List of host ids to replace the hosts in host collection"
-msgstr ""
+msgstr "Список идентификаторов узлов в составе коллекции"
 
 msgid "List of hypervisor guest uuids"
 msgstr ""
 
 msgid "List of package group names"
-msgstr "Список названий групп пакетов"
+msgstr "Список групп пакетов"
 
 msgid "List of package names"
-msgstr "Список имен пакетов"
+msgstr "Список названий пакетов"
 
 msgid "List of product ids"
 msgstr "Список идентификаторов продуктов"
@@ -2788,7 +2792,7 @@ msgid "List of product ids to add to the sync plan"
 msgstr "Список идентификаторов продуктов для добавления в план синхронизации"
 
 msgid "List of product ids to remove from the sync plan"
-msgstr "Список идентификаторов продуктов для удаления из плана синхронизации"
+msgstr "Список идентификаторов продуктов для исключения из плана синхронизации"
 
 msgid "List of products in an organization"
 msgstr "Список продуктов в организации"
@@ -2815,19 +2819,19 @@ msgid "List of repository ids"
 msgstr "Список идентификаторов репозиториев"
 
 msgid "List of subscription products in a subscription"
-msgstr "Список продуктов подписки"
+msgstr "Список продуктов для указанной подписки"
 
 msgid "List of subscription products in an activation key"
 msgstr "Список продуктов подписки для ключа активации"
 
 msgid "List organization subscriptions"
-msgstr "Показать подписки организации"
+msgstr "Возвращает список подписок организации"
 
 msgid "List packages"
 msgstr ""
 
 msgid "List packages installed on the host"
-msgstr ""
+msgstr "Возвращает список установленных на узле пакетов"
 
 msgid "List products"
 msgstr "Показать продукты"
@@ -2860,7 +2864,7 @@ msgid "List the lifecycle environments not attached to the smart proxy"
 msgstr ""
 
 msgid "Loading"
-msgstr ""
+msgstr "Загружается"
 
 msgid "Make copy of a content view"
 msgstr "Создать копию представления"
@@ -2872,13 +2876,13 @@ msgid "Make sure all the component content views are published before publishing
 msgstr ""
 
 msgid "Manage Manifest"
-msgstr ""
+msgstr "Манифест"
 
 msgid "Manifest"
 msgstr ""
 
 msgid "Manifest History"
-msgstr ""
+msgstr "Журнал манифеста"
 
 msgid "Manifest deleted"
 msgstr ""
@@ -2917,10 +2921,10 @@ msgid "Max Hosts (%{limit}) reached for activation key '%{name}'"
 msgstr ""
 
 msgid "Maximum number of content hosts exceeded for host collection(s): %s"
-msgstr "Превышено максимальное число узлов в коллекции: %s"
+msgstr ""
 
 msgid "Maximum number of hosts in the host collection"
-msgstr ""
+msgstr "Максимальное число узлов в коллекции"
 
 msgid "May not add a type or date range rule to a filter that has existing rules."
 msgstr "Если фильтр уже содержит правила, то правила выбора типа и диапазона времени не могут быть добавлены."
@@ -2934,12 +2938,11 @@ msgstr ""
 msgid "Medium IDs"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Hammer CLI Foreman, version 6.1, document hammer-cli-foreman
 msgid "Message"
 msgstr "Сообщение"
 
 msgid "Messaging connection"
-msgstr ""
+msgstr "Система обмена сообщениями"
 
 msgid "Metadata taken from the upstream export history for this Content View Version"
 msgstr ""
@@ -2948,7 +2951,7 @@ msgid "Mismatched"
 msgstr ""
 
 msgid "Missing arguments %{substitutions} for %{content_url}"
-msgstr ""
+msgstr "Отсутствуют аргументы %{substitutions} для %{content_url}"
 
 msgid "Module Stream"
 msgstr ""
@@ -2963,12 +2966,18 @@ msgid "Module stream"
 msgstr ""
 
 msgid "Multi-entitlement"
-msgstr ""
+msgstr "Многократные полномочия"
 
 msgid "Must supply at least one of mandatory_package_names, optional_package_names, conditional_package_names, default_package_names parameters"
 msgstr ""
 
+msgid "N/A"
+msgstr ""
+
 msgid "NA"
+msgstr "нет"
+
+msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
 msgstr ""
 
 msgid ""
@@ -3008,7 +3017,6 @@ msgstr ""
 msgid "Needs to only be set for file repositories or docker tags"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Nest"
 msgstr "Вложить"
 
@@ -3037,16 +3045,27 @@ msgid "New name for the content view"
 msgstr "Новое имя представления"
 
 msgid "New packages: %{count} (%{size})."
-msgstr "Новые пакеты: %{count} (%{size})."
-
-msgid "No"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
+msgid "New version is available: Version ${latestVersion}"
+msgstr ""
+
+msgid "No"
+msgstr "Нет"
+
+msgid "No Activation Keys selected"
+msgstr ""
+
+msgid "No Activation keys to select"
+msgstr ""
+
 msgid "No Content View"
 msgstr "Нет представления"
 
 msgid "No Content found"
+msgstr ""
+
+msgid "No Lifecycle environment to select"
 msgstr ""
 
 msgid "No Manifest Uploaded"
@@ -3056,7 +3075,7 @@ msgid "No Red Hat products currently exist, please import a manifest %(anchorBeg
 msgstr ""
 
 msgid "No Service Level Preference"
-msgstr "Не определен"
+msgstr "Уровень обслуживания не определен"
 
 msgid "No URL found for a container registry. Please check the configuration."
 msgstr ""
@@ -3071,26 +3090,37 @@ msgid "No artifacts to show"
 msgstr ""
 
 msgid "No content has been provided."
-msgstr "Нет содержимого."
+msgstr "Не указано содержимое."
 
 msgid "No content ids provided"
-msgstr ""
+msgstr "Не заданы идентификаторы содержимого"
 
 msgid "No content view history events found."
-msgstr "Нет событий в журнале представления."
+msgstr "Нет событий."
+
+msgid "No content views belong to ${label}"
+msgstr ""
 
 msgid "No content_view_version_ids provided"
-msgstr "Нет content_view_version_ids"
+msgstr "Параметр content_view_version_ids не определен"
+
+msgid "No description"
+msgstr ""
 
 msgid "No enabled repositories match your search criteria."
+msgstr ""
+
+msgid "No environment"
+msgstr ""
+
+msgid "No environments"
 msgstr ""
 
 msgid "No errata has been specified."
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "No errors"
-msgstr "Нет"
+msgstr "Нет ошибок"
 
 msgid "No existing export history was found to perform an incremental export. A full export must be performed"
 msgstr ""
@@ -3128,6 +3158,12 @@ msgstr ""
 msgid "No matching repositories found"
 msgstr ""
 
+msgid "No matching rules found."
+msgstr ""
+
+msgid "No matching version found"
+msgstr ""
+
 msgid "No new packages installed"
 msgstr "Нет новых пакетов"
 
@@ -3138,7 +3174,7 @@ msgid "No package groups have been added to this filter."
 msgstr ""
 
 msgid "No packages removed"
-msgstr "Пакеты не удалены"
+msgstr "Удаление пакетов не производилось"
 
 msgid "No packages updated"
 msgstr "Пакеты не обновлены"
@@ -3162,10 +3198,10 @@ msgid "No profiles to show"
 msgstr ""
 
 msgid "No pulp workers running."
-msgstr ""
+msgstr "Нет работающих обработчиков Pulp."
 
 msgid "No recently synced products"
-msgstr ""
+msgstr "Нет недавно синхронизированных продуктов."
 
 msgid "No recurring logic tied to the sync plan."
 msgstr ""
@@ -3182,8 +3218,11 @@ msgstr ""
 msgid "No repository sets match your search criteria."
 msgstr ""
 
-msgid "No services defined, is this class extended?"
+msgid "No rules have been added to this filter."
 msgstr ""
+
+msgid "No services defined, is this class extended?"
+msgstr "Сервисы не определены. Возможно, это расширение класса?"
 
 msgid "No start time currently available."
 msgstr "Время начала не определено."
@@ -3198,7 +3237,7 @@ msgid "No uploads param specified. An array of uploads to import is required."
 msgstr ""
 
 msgid "Non-security errata applicable"
-msgstr ""
+msgstr "Доступны исправления общего характера"
 
 msgid "Non-security errata installable"
 msgstr ""
@@ -3227,8 +3266,11 @@ msgstr ""
 msgid "Not running"
 msgstr ""
 
+msgid "Not yet published"
+msgstr ""
+
 msgid "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available."
-msgstr "Примечание. В скобках приведено число подходящих исправлений из окружения Library. Чтобы получить к ним доступ, необходимо перенести контент в соответствующее представление."
+msgstr ""
 
 msgid "Nothing selected"
 msgstr ""
@@ -3246,7 +3288,7 @@ msgid "Number to Allocate"
 msgstr ""
 
 msgid "OSTree"
-msgstr ""
+msgstr "OSTree"
 
 msgid "OSTree Branch"
 msgstr ""
@@ -3258,7 +3300,7 @@ msgid "OSTree Repositories cannot be unprotected."
 msgstr ""
 
 msgid "Object to show subscriptions available for, either 'host' or 'activation_key'"
-msgstr ""
+msgstr "Ограничивает результаты только теми подписками, которые доступны для указанного здесь объекта. Допустимые значения: «host», «activation_key»."
 
 msgid "On Demand"
 msgstr ""
@@ -3267,7 +3309,7 @@ msgid "On demand repositories cannot be exported."
 msgstr ""
 
 msgid "On-disk location for exported repositories"
-msgstr ""
+msgstr "Расположение экспортируемых репозиториев на диске"
 
 msgid "On-disk location for pulp 3 exported repositories"
 msgstr ""
@@ -3291,12 +3333,11 @@ msgid "One or more processes require restarting"
 msgstr ""
 
 msgid "Only one Red Hat provider permitted for an Organization"
-msgstr "Для каждой организации допускается добавление только одного провайдера Red Hat."
+msgstr "Для каждой организации может быть добавлен только один провайдер Red Hat."
 
 msgid "Only returns id and quantity fields"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Operators"
 msgstr "Операторы"
 
@@ -3307,10 +3348,10 @@ msgid "Organization"
 msgstr "Организация"
 
 msgid "Organization %s is being deleted."
-msgstr "Удаление организации %s..."
+msgstr "Организация %s удаляется."
 
 msgid "Organization ID"
-msgstr "ID организации"
+msgstr "Код организации"
 
 msgid "Organization ID is required"
 msgstr ""
@@ -3322,7 +3363,7 @@ msgid "Organization cannot be blank."
 msgstr "Организация не может быть пустой."
 
 msgid "Organization id"
-msgstr "ID организации"
+msgstr "Идентификатор организации"
 
 msgid "Organization identifier"
 msgstr "Идентификатор организации"
@@ -3336,7 +3377,6 @@ msgstr ""
 msgid "Organization required"
 msgstr "Требуется организация"
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Other"
 msgstr "Другие"
 
@@ -3361,11 +3401,9 @@ msgstr ""
 msgid "Override value. Provide a boolean value if name is 'enabled'"
 msgstr ""
 
-# translation auto-copied from project rhn-client-tools, version 6.5, document rhn-client-tools
 msgid "Package"
 msgstr "Пакет"
 
-# translation auto-copied from project RHEL Virtualization Deployment and Administration Guide, version 7.0, document Host_Installation
 msgid "Package Group"
 msgstr "Группа пакетов"
 
@@ -3433,10 +3471,10 @@ msgid "Package Install scheduled by %s"
 msgstr "Установку пакета назначил: %s"
 
 msgid "Package Profile Update"
-msgstr ""
+msgstr "Обновление профиля пакетов"
 
 msgid "Package Profile Update for %s"
-msgstr ""
+msgstr "Обновление профиля пакетов для %s"
 
 msgid "Package Remove"
 msgstr "Удаление пакета"
@@ -3474,19 +3512,15 @@ msgstr "Время ожидания обновления пакета истек
 msgid "Package Update scheduled by %s"
 msgstr "Обновление пакета назначил: %s"
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Package group update canceled"
 msgstr "Обновление группы пакетов отменено"
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Package group update complete"
 msgstr "Группа пакетов обновлена."
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Package group update failed"
 msgstr "Не удалось обновить группу пакетов"
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Package group update timed out"
 msgstr "Время ожидания обновления группы пакетов истекло"
 
@@ -3497,10 +3531,10 @@ msgid "Package identifiers to filter content by"
 msgstr ""
 
 msgid "Package install failed: \"%{package}\""
-msgstr "Не удалось установить пакет «%{package}»"
+msgstr ""
 
 msgid "Package installation: \"%{package}\" "
-msgstr "Установка пакета «%{package}»"
+msgstr ""
 
 msgid "Packages"
 msgstr "Пакеты"
@@ -3512,13 +3546,13 @@ msgid "Page number, starting at 1"
 msgstr "Номер страницы, начиная с 1"
 
 msgid "Partial"
-msgstr ""
+msgstr "Неполные"
 
 msgid "Partially entitled"
-msgstr ""
+msgstr "Частичные полномочия"
 
 msgid "Partition template IDs"
-msgstr ""
+msgstr "Код шаблона таблицы разделов"
 
 msgid "Password of the upstream repository user used for authentication"
 msgstr ""
@@ -3532,11 +3566,9 @@ msgstr ""
 msgid "Path for ssl key used for pulp server auth"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Paused"
 msgstr "Приостановлена"
 
-# translation auto-copied from project Satellite6 Hammer CLI Foreman, version 6.1, document hammer-cli-foreman
 msgid "Pending"
 msgstr "Ожидание"
 
@@ -3562,10 +3594,13 @@ msgid "Permission Denied. User '%{user}' does not have permissions to access org
 msgstr "Отказ в разрешении. У «%{user}» нет прав доступа к организации «%{org}»."
 
 msgid "Physical"
-msgstr "Физическое"
+msgstr " Физическая"
 
 msgid "Plan numeric identifier"
 msgstr "Числовой идентификатор плана"
+
+msgid "Please add some content views."
+msgstr ""
 
 msgid "Please add some repositories."
 msgstr ""
@@ -3595,7 +3630,7 @@ msgid "Please select an organization to view subscription totals."
 msgstr ""
 
 msgid "Please select one from the list below and you will be redirected."
-msgstr ""
+msgstr "Чтобы перейти на страницу, выберите организацию из списка."
 
 msgid "Prior Content View Version specified in the metadata - '%{name}' does not exist. Please import the metadata for '%{name}' before importing '%{current}' "
 msgstr ""
@@ -3606,18 +3641,17 @@ msgstr "Обработка метаданных..."
 msgid "Processing metadata."
 msgstr "Обработка метаданных..."
 
-# translation auto-copied from project Subscription Manager, version 1.8.X, document keys
 msgid "Product"
-msgstr "Компонент"
+msgstr "Продукт"
 
 msgid "Product Content"
-msgstr ""
+msgstr "Содержание продукта"
 
 msgid "Product Create"
 msgstr ""
 
 msgid "Product ID"
-msgstr ""
+msgstr "Идентификатор продукта"
 
 msgid "Product and Repositories"
 msgstr "Продукты и репозитории"
@@ -3634,13 +3668,13 @@ msgid ""
 msgstr ""
 
 msgid "Product name"
-msgstr "Имя продукта"
+msgstr "Название продукта"
 
 msgid "Product name as listed from a host's installed products"
 msgstr ""
 
 msgid "Product the repository belongs to"
-msgstr "Репозиторий"
+msgstr "Продукт, с которым будет ассоциирован новый репозиторий"
 
 msgid "Product version"
 msgstr ""
@@ -3679,13 +3713,13 @@ msgid "Promotion to Environment"
 msgstr ""
 
 msgid "Provided Products"
-msgstr ""
+msgstr "Продукты"
 
 msgid "Provided pool with id %s has no upstream entitlement"
 msgstr ""
 
 msgid "Provisioning template IDs"
-msgstr ""
+msgstr "Идентификаторы шаблонов"
 
 msgid "Proxies"
 msgstr ""
@@ -3693,7 +3727,6 @@ msgstr ""
 msgid "Public key block in DER encoding or certificate content"
 msgstr ""
 
-# translation auto-copied from project shotwell-core, version 0.14.1, document shotwell-core
 msgid "Publish"
 msgstr "Опубликовать"
 
@@ -3704,13 +3737,13 @@ msgid "Publish a content view"
 msgstr "Опубликовать представление"
 
 msgid "Published new version"
-msgstr "Новая версия опубликована"
+msgstr "Опубликована новая версия"
 
 msgid "Pulling remote branches. Downloaded %s units."
 msgstr ""
 
 msgid "Pulp"
-msgstr ""
+msgstr "Pulp"
 
 msgid "Pulp 3 export destination filepath"
 msgstr ""
@@ -3719,6 +3752,9 @@ msgid "Pulp Consumer %s has already been removed"
 msgstr ""
 
 msgid "Pulp Docker registry port"
+msgstr ""
+
+msgid "Pulp bulk load size"
 msgstr ""
 
 msgid "Pulp client cert"
@@ -3731,7 +3767,7 @@ msgid "Pulp database connection issue at %s."
 msgstr ""
 
 msgid "Pulp database connection issue."
-msgstr ""
+msgstr "Не удалось подключиться к базе данных Pulp."
 
 msgid "Pulp disk space notification"
 msgstr ""
@@ -3740,7 +3776,7 @@ msgid "Pulp does not appear to be running at %s."
 msgstr ""
 
 msgid "Pulp does not appear to be running."
-msgstr ""
+msgstr "Похоже, Pulp не выполняется."
 
 msgid "Pulp export destination filepath"
 msgstr ""
@@ -3749,19 +3785,19 @@ msgid "Pulp message bus connection issue at %s."
 msgstr ""
 
 msgid "Pulp message bus connection issue."
-msgstr ""
+msgstr "Не удалось подключиться к шине обмена сообщениями Pulp."
 
 msgid "Pulp node"
-msgstr ""
+msgstr "Узел Pulp"
 
 msgid "Pulp redis connection issue at %s."
 msgstr ""
 
 msgid "Pulp server version"
-msgstr ""
+msgstr "Версия сервера Pulp"
 
 msgid "Pulp storage"
-msgstr ""
+msgstr "Хранилище Pulp"
 
 msgid "Pulp task error"
 msgstr "Ошибка задачи Pulp"
@@ -3770,7 +3806,7 @@ msgid "Pulpcore"
 msgstr ""
 
 msgid "Quantity"
-msgstr ""
+msgstr "Количество"
 
 msgid "Quantity must not be above ${pool.available}"
 msgstr ""
@@ -3782,47 +3818,46 @@ msgid "Quantity of specified subscription to remove"
 msgstr ""
 
 msgid "Quantity of this subscription to add"
-msgstr "Число подписок для добавления"
+msgstr "Количество добавляемых подписок"
 
 msgid "Quantity of this subscriptions to add"
-msgstr "Число подписок для добавления"
+msgstr "Количество добавляемых подписок"
 
 msgid "Quantity to Allocate"
 msgstr ""
 
 msgid "RAM: %s GB"
-msgstr "ОЗУ: %s ГБ"
+msgstr ""
 
 msgid "RH Repos"
 msgstr ""
 
 msgid "RPM"
+msgstr "RPM"
+
+msgid "RPM name"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "RPMs"
 msgstr "RPM"
 
 msgid "Realm IDs"
-msgstr ""
+msgstr "Идентификаторы областей"
 
 msgid "Reboot required"
 msgstr ""
 
 msgid "Recently Expired Subscriptions"
-msgstr ""
+msgstr "Недавно закончились"
 
 msgid "Recommended Repositories"
-msgstr ""
-
-msgid "Red Hat"
 msgstr ""
 
 msgid "Red Hat CDN URL"
 msgstr "Сеть доставки содержимого Red Hat"
 
 msgid "Red Hat Provider Details"
-msgstr ""
+msgstr "Провайдер Red Hat"
 
 msgid "Red Hat Repositories"
 msgstr "Репозитории Red Hat"
@@ -3830,7 +3865,6 @@ msgstr "Репозитории Red Hat"
 msgid "Red Hat products cannot be manipulated."
 msgstr "Продукты Red Hat не могут изменяться"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Red Hat provider can not be deleted"
 msgstr "Провайдер Red Hat не может быть удален"
 
@@ -3838,7 +3872,7 @@ msgid "Red Hat repositories cannot be manipulated."
 msgstr "Репозитории Red Hat не могут быть изменены"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Обновить"
 
 msgid "Refresh Manifest"
 msgstr "Обновить манифест"
@@ -3862,13 +3896,13 @@ msgid "Registry name pattern will result in invalid container image name of memb
 msgstr ""
 
 msgid "Reindex subscriptions"
-msgstr ""
+msgstr "Повторно индексировать подписки"
 
 msgid "Release version for this Host to use (7Server, 7.1, etc)"
 msgstr ""
 
 msgid "Release version of the content host"
-msgstr "Версия для узла содержимого"
+msgstr "Версия релиза узла содержимого"
 
 msgid "Releasever to disable"
 msgstr "Выключить $releasever "
@@ -3880,7 +3914,7 @@ msgid "Reload data"
 msgstr "Перезагрузить"
 
 msgid "Remote action:"
-msgstr ""
+msgstr "Удаленное действие:"
 
 msgid "Removal of package group(s) requested: %{groups}"
 msgstr ""
@@ -3889,13 +3923,13 @@ msgid "Removal of package(s) requested: %{packages}"
 msgstr ""
 
 msgid "Remove Content"
-msgstr "Удалить контент"
+msgstr "Удалить содержимое"
 
 msgid "Remove Version"
 msgstr "Удалить версию"
 
 msgid "Remove Versions and Associations"
-msgstr "Удалить версии и соответствия"
+msgstr "Удалить версии и связи"
 
 msgid "Remove a content view from an environment"
 msgstr "Удалить представление из окружения"
@@ -3906,7 +3940,7 @@ msgstr ""
 msgid "Remove components from the content view"
 msgstr ""
 
-msgid "Remove content on one or more hosts"
+msgid "Remove content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Remove content view version"
@@ -3916,7 +3950,7 @@ msgid "Remove from Environment"
 msgstr "Удалить из окружения"
 
 msgid "Remove hosts from the host collection"
-msgstr ""
+msgstr "Удалить узлы из коллекции"
 
 msgid "Remove lifecycle environments from the smart proxy"
 msgstr ""
@@ -3943,13 +3977,13 @@ msgid "Remove package via Katello interface"
 msgstr ""
 
 msgid "Remove products from sync plan"
-msgstr "Удалить продукты из плана"
+msgstr "Исключить продукты из плана синхронизации"
 
 msgid "Remove subscriptions"
-msgstr ""
+msgstr "Удалить подписки"
 
 msgid "Remove subscriptions from %s"
-msgstr ""
+msgstr "Удалить подписки %s"
 
 msgid "Remove subscriptions from one or more hosts"
 msgstr ""
@@ -3964,16 +3998,14 @@ msgid "Removing Package..."
 msgstr "Удаление пакета..."
 
 msgid "Repo Type"
-msgstr ""
+msgstr "Тип репозитория"
 
-# translation auto-copied from project Cloudforms System Engine User Guide, version 1.0, document Repositories, author ypoyarko
 msgid "Repositories"
 msgstr "Репозитории"
 
 msgid "Repositories from published Content Views are not allowed."
 msgstr "Нельзя использовать репозитории из опубликованных представлений."
 
-# translation auto-copied from project Red Hat Satellite User Guide, version 6.0, document appe-Glossary_of_Terms
 msgid "Repository"
 msgstr "Репозиторий"
 
@@ -3993,15 +4025,14 @@ msgid "Repository Id associated with the kickstart repo used for provisioning"
 msgstr ""
 
 msgid "Repository cannot be deleted since it has already been included in a published Content View. Please delete all Content View versions containing this repository before attempting to delete it."
-msgstr ""
+msgstr "Репозиторий не может быть удален, так как он включен в опубликованное представление. Удалите все версии представления, содержащие репозиторий, и повторите попытку."
 
 msgid "Repository cannot be disabled since it has already been promoted."
-msgstr "Репозиторий не может быть отключен, так как он уже перенесён."
+msgstr "Репозиторий не может быть отключен, так как он уже был перенесен."
 
 msgid "Repository content type must be 'yum' to export."
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Repository has already been cloned to %{cv_name} in environment %{to_env}"
 msgstr "Репозиторий уже скопирован в %{cv_name} в окружении %{to_env}"
 
@@ -4023,7 +4054,6 @@ msgstr "Репозиторий не найден"
 msgid "Repository set name to search on"
 msgstr "Имя искомого набора репозиториев"
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Repository sets are not available for custom products."
 msgstr "Для дополнительных продуктов наборы репозиториев недоступны."
 
@@ -4043,7 +4073,7 @@ msgid "Resolve traces for one or more hosts"
 msgstr ""
 
 msgid "Resource"
-msgstr ""
+msgstr "Источник"
 
 msgid "Restart Services via Katello interface"
 msgstr ""
@@ -4051,12 +4081,11 @@ msgstr ""
 msgid "Restrict Composite Content View promotion"
 msgstr ""
 
-# translation auto-copied from project Red Hat Satellite Installation Guide, version 6.0, document chap-Uninstalling_Red_Hat_Satellite_Server_and_Capsule_Server
 msgid "Result"
 msgstr "Результат"
 
 msgid "Retrieve a single errata for a host"
-msgstr ""
+msgstr "Извлечь отдельное исправление для узла"
 
 msgid "Return Red Hat (non-custom) products only"
 msgstr ""
@@ -4104,10 +4133,10 @@ msgid "Return packages that can be added to the specified object.  Only the valu
 msgstr ""
 
 msgid "Return subscriptions that match installed products of the specified host"
-msgstr ""
+msgstr "Вернуть список подписок для продуктов, установленных на указанном узле"
 
 msgid "Return subscriptions which do not overlap with a currently-attached subscription"
-msgstr ""
+msgstr "Вернуть только те подписки, которые не пересекаются с уже оформленной подпиской"
 
 msgid "Return the content of a Content Credential, used directly by yum"
 msgstr ""
@@ -4119,20 +4148,19 @@ msgid "Returns content that can be both added and is currently added to the obje
 msgstr ""
 
 msgid "Role"
-msgstr ""
+msgstr "Роль"
 
 msgid "Role of host"
 msgstr ""
 
 msgid "Roles"
-msgstr ""
+msgstr "Роли"
 
 msgid "Run Sync Plan:"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author ypoyarko
 msgid "Running"
-msgstr "Выполнение"
+msgstr "Работает"
 
 msgid "SKU"
 msgstr ""
@@ -4147,13 +4175,13 @@ msgid "SUBSCRIPTIONS EXPIRING SOON"
 msgstr ""
 
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
-msgid "Schedule errata for installation"
-msgstr "Назначить установку исправлений"
+msgid "Schedule errata for installation using katello-agent. %s"
+msgstr ""
 
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 msgid "Search pattern (defaults to '*')"
 msgstr ""
@@ -4170,32 +4198,29 @@ msgstr ""
 msgid "Search string for hosts to perform an action on"
 msgstr ""
 
-# translation auto-copied from project Customer Portal Translations, version management_page, document Management_Prototype.html, author ypoyarko
 msgid "Security"
 msgstr "Безопасность"
 
 msgid "Security errata applicable"
-msgstr ""
+msgstr "Доступны исправления системы безопасности"
 
 msgid "Security errata installable"
 msgstr ""
 
 msgid "Select"
-msgstr ""
+msgstr "Выбрать"
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Select All"
 msgstr "Выбрать все"
 
 msgid "Select Content View"
 msgstr "Выберите представление"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Select None"
 msgstr "Отменить выбор"
 
 msgid "Select Organization"
-msgstr ""
+msgstr "Выберите организацию"
 
 msgid "Select Value"
 msgstr ""
@@ -4219,7 +4244,7 @@ msgid "Select the installation media that will be used to provision this host. C
 msgstr ""
 
 msgid "Service Level"
-msgstr ""
+msgstr "Уровень обслуживания"
 
 msgid "Service Level %s"
 msgstr "Уровень обслуживания %s"
@@ -4254,7 +4279,6 @@ msgstr ""
 msgid "Setting 'default_location_subscribed_hosts' is not set to a valid location."
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Severity"
 msgstr "Степень"
 
@@ -4313,7 +4337,7 @@ msgid "Show releases available for the content host"
 msgstr "Показать версии для узла содержимого"
 
 msgid "Show the available repository types"
-msgstr ""
+msgstr "Показать доступные типы репозиториев"
 
 msgid "Shows status of Katello system and it's subcomponents"
 msgstr ""
@@ -4340,14 +4364,13 @@ msgid "Skip metadata check on each repository on the smart proxy"
 msgstr ""
 
 msgid "Skipped pulp_auth check after failed pulp check"
-msgstr ""
+msgstr "Проверка pulp_auth была пропущена после неудачной проверки pulp"
 
 msgid "Smart proxy IDs"
-msgstr ""
+msgstr "Идентификаторы капсул"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Sockets: %s"
-msgstr "Сокеты: %s"
+msgstr ""
 
 msgid "Solve Dependencies"
 msgstr ""
@@ -4361,23 +4384,35 @@ msgstr ""
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view filter! ${error}"
+msgid "Some services are not properly started. See the About page for more information."
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view filters! ${error}"
+msgid "Something went wrong while retrieving the content view components! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view history! ${error}"
+msgid "Something went wrong while retrieving the content view filter rules! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
-msgid "Something went wrong while retrieving the repository types! ${error}"
+msgid "Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view filters! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view history! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view versions! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the repository types! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
 msgid "Sort field and order, eg. 'id DESC'"
 msgstr ""
 
 msgid "Source RPM"
-msgstr ""
+msgstr "Исходный код"
 
 msgid "Specify the list of units in each repo"
 msgstr ""
@@ -4386,28 +4421,25 @@ msgid "Split the exported content into archives no greater than the specified si
 msgstr ""
 
 msgid "Stacking ID"
-msgstr ""
+msgstr "Объединенный идентификатор"
 
-# translation auto-copied from project subscription-manager, version 1.10.10, document keys
 msgid "Start Date"
 msgstr "Дата начала"
 
 msgid "Start Date and Time can't be blank"
 msgstr "Дата и время начала не могут быть пустыми."
 
-# translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author ypoyarko
 msgid "Start Time"
 msgstr "Время начала"
 
 msgid "Starts"
-msgstr ""
+msgstr "Начало"
 
-# translation auto-copied from project Satellite6 Hammer CLI Foreman, version 6.1, document hammer-cli-foreman
 msgid "Status"
 msgstr "Статус"
 
 msgid "Storage"
-msgstr ""
+msgstr "Хранение данных"
 
 msgid "Stream"
 msgstr ""
@@ -4416,12 +4448,11 @@ msgid "Streams based on the host based on their status"
 msgstr ""
 
 msgid "Submit"
-msgstr ""
+msgstr "Применить"
 
 msgid "Subnet IDs"
-msgstr ""
+msgstr "Идентификаторы подсетей"
 
-# translation auto-copied from project Red Hat Satellite User Guide, version 6.0, document appe-Glossary_of_Terms
 msgid "Subscription"
 msgstr "Подписка"
 
@@ -4429,16 +4460,16 @@ msgid "Subscription Allocation"
 msgstr ""
 
 msgid "Subscription Details"
-msgstr ""
+msgstr "Подписка"
 
 msgid "Subscription ID"
-msgstr "ID подписки"
+msgstr "Идентификатор подписки"
 
 msgid "Subscription Info"
-msgstr ""
+msgstr "Сведения о подписке"
 
 msgid "Subscription Manifest"
-msgstr ""
+msgstr "Манифест подписки"
 
 msgid "Subscription Manifest validity check"
 msgstr ""
@@ -4447,7 +4478,7 @@ msgid "Subscription Name"
 msgstr ""
 
 msgid "Subscription Pool id"
-msgstr ""
+msgstr "Идентификатор пула подписок"
 
 msgid "Subscription Pool uuid"
 msgstr "UUID пула подписок"
@@ -4462,7 +4493,7 @@ msgid "Subscription expiration notification"
 msgstr ""
 
 msgid "Subscription id is nil."
-msgstr ""
+msgstr "Идентификатор подписки не определен."
 
 msgid "Subscription identifier"
 msgstr "Идентификатор подписки"
@@ -4483,10 +4514,10 @@ msgid "Subscription was not persisted - %{error_message}"
 msgstr ""
 
 msgid "Subscriptions"
-msgstr ""
+msgstr "Подписки"
 
 msgid "Subscriptions Expiring in 120 Days"
-msgstr ""
+msgstr "Подписки, истекающие в ближайшие 120 дней"
 
 msgid "Subscriptions expiring soon"
 msgstr ""
@@ -4495,7 +4526,7 @@ msgid "Subscriptions have been saved and are being updated. "
 msgstr ""
 
 msgid "Subscriptions information based on selected activation keys:"
-msgstr "Подписки определяются ключами активации:"
+msgstr ""
 
 msgid "Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}]."
 msgstr ""
@@ -4504,10 +4535,10 @@ msgid "Success"
 msgstr "Успешно"
 
 msgid "Successfully added %s Host(s)."
-msgstr ""
+msgstr "Добавлено узлов: %s"
 
 msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
-msgstr "Узлы содержимого (всего %{count} ) успешно добавлены в коллекцию %{host_collection}."
+msgstr "Узлы содержимого (всего %{count}) успешно добавлены в коллекцию %{host_collection}."
 
 msgid "Successfully changed sync plan for %s product(s)"
 msgstr "План синхронизации изменен для %s продукта(ов)."
@@ -4516,25 +4547,23 @@ msgid "Successfully initiated removal of %s product(s)"
 msgstr "Продукты будут удалены (всего %s)."
 
 msgid "Successfully removed %s Host(s)."
-msgstr ""
+msgstr "Удалено узлов: %s"
 
 msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
-msgstr "Узлы (всего %{count} ) удалены из коллекции %{host_collection}."
+msgstr "Узлы (всего %{count}) были удалены из коллекции %{host_collection}."
 
 msgid "Successfully synchronized."
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Summary"
-msgstr "Сводка"
+msgstr "Краткая информация"
 
 msgid "Support Type"
-msgstr ""
+msgstr "Тип поддержки"
 
 msgid "Supported Content Types"
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Sync Canceled"
 msgstr "Синхронизация отменена"
 
@@ -4545,19 +4574,17 @@ msgid "Sync Content View on Smart Proxy(ies)"
 msgstr ""
 
 msgid "Sync Incomplete"
-msgstr "Синхронизация не закончена"
+msgstr "Синхронизация не завершена"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Sync Overview"
 msgstr "Синхронизация"
 
 msgid "Sync Plan"
-msgstr ""
+msgstr "План синхронизации"
 
 msgid "Sync Plan: "
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Sync Plans"
 msgstr "План синхронизации"
 
@@ -4567,9 +4594,8 @@ msgstr ""
 msgid "Sync Smart Proxies after Content View promotion"
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Sync Status"
-msgstr "Статус синхронизации "
+msgstr "Статус синхронизации"
 
 msgid "Sync Summary"
 msgstr ""
@@ -4581,7 +4607,7 @@ msgid "Sync a repository"
 msgstr "Синхронизация репозитория"
 
 msgid "Sync all repositories for a product"
-msgstr ""
+msgstr "Синхронизировать все репозитории для указанного продукта"
 
 msgid "Sync capsule"
 msgstr ""
@@ -4610,12 +4636,11 @@ msgstr ""
 msgid "Synchronize"
 msgstr "Синхронизировать"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "Synchronize Now"
 msgstr "Синхронизировать"
 
 msgid "Synchronize capsule content"
-msgstr ""
+msgstr "Синхронизировать содержимое капсулы"
 
 msgid "Synchronize repository"
 msgstr "Синхронизировать репозиторий"
@@ -4638,8 +4663,11 @@ msgstr "Синхронизация завершена."
 msgid "System Purpose"
 msgstr ""
 
-msgid "Tags"
+msgid "System Status"
 msgstr ""
+
+msgid "Tags"
+msgstr "Метки"
 
 msgid "Task"
 msgstr ""
@@ -4654,9 +4682,8 @@ msgid "Task detail"
 msgstr ""
 
 msgid "Temporary"
-msgstr ""
+msgstr "Временные"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "The '%s' environment cannot contain a changeset!"
 msgstr "Окружение «%s» не может содержать набор изменений."
 
@@ -4672,7 +4699,6 @@ msgstr ""
 msgid "The actual file contents"
 msgstr "Содержимое файла"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
 msgstr "Текущая организация не может быть удалена. Перейдите в другую организацию и повторите попытку."
 
@@ -4680,7 +4706,7 @@ msgid "The default content view cannot be edited, published, or deleted."
 msgstr "Исходное представление не может быть изменено, опубликовано или удалено."
 
 msgid "The default content view cannot be promoted"
-msgstr "Продвижение используемого по умолчанию представления не разрешено."
+msgstr "Используемое по умолчанию представление не может переноситься."
 
 msgid "The default dependency solving value for new Content Views."
 msgstr ""
@@ -4719,15 +4745,20 @@ msgid "The field to sort the data by. Defaults to the created date."
 msgstr ""
 
 msgid "The following hosts have errata that apply to them: "
-msgstr "Узлы, для которых обнаружены подходящие исправления:"
+msgstr ""
 
 msgid ""
 "The following repositories provided in the import metadata are either not available in the Library or are of incorrect Respository Type. Please add or enable the repositories before importing\n"
 " %{repos}"
 msgstr ""
 
-msgid "The id of the host to alter"
+msgid ""
+"The following repositories provided in the import metadata have an incorrect content type or provider type. Make sure the export and import repositories are of the same type before importing\n"
+" %{repos}"
 msgstr ""
+
+msgid "The id of the host to alter"
+msgstr "Идентификатор узла"
 
 msgid "The list of environments to promote the specified Content View Version to (replacing the older version)"
 msgstr ""
@@ -4738,6 +4769,9 @@ msgstr ""
 msgid "The number of days remaining in a subscription before you will be reminded about renewing it."
 msgstr ""
 
+msgid "The number of items fetched from a single paged Pulp API call."
+msgstr ""
+
 msgid "The offset in the file where the content starts"
 msgstr "Смещение содержимого в файле"
 
@@ -4745,7 +4779,7 @@ msgid "The order to sort the results in. ['asc', 'desc'] Defaults to 'desc'."
 msgstr ""
 
 msgid "The page you are attempting to access requires selecting a specific organization."
-msgstr ""
+msgstr "Для доступа к этой странице надо выбрать организацию."
 
 msgid "The path %{real_path} does not seem to be a valid repository. If you think this is an error, please try refreshing your manifest."
 msgstr ""
@@ -4754,13 +4788,13 @@ msgid "The port used by Pulp Crane to provide Docker Registries"
 msgstr ""
 
 msgid "The promotion of %{content_view} to %{environment} has completed.  %{count} errata are available to your hosts."
-msgstr "%{content_view} добавлен в %{environment}.  Доступно исправлений: %{count}."
+msgstr "%{content_view} перенесено в %{environment}.  Доступно исправлений: %{count}."
 
 msgid "The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts."
-msgstr "%{content_view} добавлен в  <b>%{environment}</b>.  Обязательных исправлений: %{count}."
+msgstr "%{content_view} перенесено в  <b>%{environment}</b>. Обязательных исправлений, готовых к установке: %{count}."
 
 msgid "The repository is already enabled"
-msgstr "Репозиторий уже включен"
+msgstr "Репозиторий уже подключен"
 
 msgid "The request did not contain any repository information."
 msgstr ""
@@ -4795,10 +4829,10 @@ msgid "The token key to use for authentication."
 msgstr ""
 
 msgid "The type of content.  The following types are supported: 'package' and 'package_group."
-msgstr "Тип содержимого. Поддерживаемые типы: «package», «package_group»."
+msgstr ""
 
 msgid "The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."
-msgstr "Тип содержимого: «package», «package_group», «errata»."
+msgstr ""
 
 msgid "There are no Subscription Allocations to display"
 msgstr ""
@@ -4809,7 +4843,6 @@ msgstr ""
 msgid "There are no errata that need to be applied to registered content hosts."
 msgstr "Нет исправлений для зарегистрированных систем."
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "There are no products or repositories enabled. Try enabling via %{custom} or %{redhat}."
 msgstr "Нет продуктов и репозиториев. Настройте их на странице %{custom} или %{redhat}."
 
@@ -4844,10 +4877,13 @@ msgid "This Organization's subscription manifest has expired. Please import a ne
 msgstr ""
 
 msgid "This action doesn't support package groups"
+msgstr "Это действие неприменимо к группам пакетов."
+
+msgid "This action uses katello-agent, which is currently disabled. Use remote execution instead."
 msgstr ""
 
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
-msgstr "Сертификат позволяет просмотреть репозитории окружения из окна браузера."
+msgstr "Сертификат позволяет обращаться к репозиториям в окружении из окна браузера."
 
 msgid "This content view version doesn't have a history."
 msgstr ""
@@ -4901,10 +4937,10 @@ msgid "This subscription is not relevant to the current organization."
 msgstr ""
 
 msgid "Time in seconds to wait for a Host to finish a remote action"
-msgstr ""
+msgstr "Время ожидания завершения удаленного действия узлом (в секундах)"
 
 msgid "Time in seconds to wait for a Host to pickup a remote action"
-msgstr ""
+msgstr "Время ожидания начала выполнения удаленного действия узлом (в секундах)"
 
 msgid "Timeout when refreshing a manifest (in seconds)"
 msgstr ""
@@ -4912,9 +4948,8 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello CLI, version 6.0, document keys, author ypoyarko
 msgid "Title"
-msgstr "Название"
+msgstr "Заголовок"
 
 msgid "Toggling Simple Content Access will refresh your manifest."
 msgstr ""
@@ -4932,7 +4967,7 @@ msgid "Traces"
 msgstr ""
 
 msgid "Trigger an auto-attach of subscriptions"
-msgstr ""
+msgstr "Разрешить автоматическое выделение подписок"
 
 msgid "Trigger an auto-attach of subscriptions on one or more hosts"
 msgstr ""
@@ -4941,7 +4976,7 @@ msgid "Try changing your search settings."
 msgstr ""
 
 msgid "Trying to cancel the synchronization..."
-msgstr ""
+msgstr "Попытка отмены синхронизации..."
 
 msgid "Type"
 msgstr ""
@@ -4953,7 +4988,7 @@ msgid "Type of content: \"cert\", \"gpg_key\""
 msgstr ""
 
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 msgid "UUID of the consumer"
 msgstr ""
@@ -4974,7 +5009,7 @@ msgid "Unable to connect. Got: %s"
 msgstr ""
 
 msgid "Unable to detect pulp storage"
-msgstr ""
+msgstr "Хранилище Pulp не обнаружено"
 
 msgid "Unable to detect puppet path"
 msgstr ""
@@ -4985,10 +5020,13 @@ msgstr ""
 msgid "Unable to export. 'pulp_export_destination' setting is not a writable directory."
 msgstr ""
 
-msgid "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment."
+msgid "Unable to find product '%s' in organization '%s'"
 msgstr ""
 
-msgid "Unable to perform unauthenticated repository list operation"
+msgid "Unable to get users"
+msgstr ""
+
+msgid "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment."
 msgstr ""
 
 msgid "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id."
@@ -5007,10 +5045,16 @@ msgid "Unable to send errata e-mail notification: %{error}"
 msgstr ""
 
 msgid "Unable to sync repo. This repository does not have a feed url."
-msgstr ""
+msgstr "Не удалось синхронизировать репозиторий: не задан URL источника синхронизации"
 
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr "Не удалось синхронизировать репозитории. Недостаточно разрешений или не определен URL репозитория."
+
+msgid "Unable to update the repository list"
+msgstr ""
+
+msgid "Unable to update the user-repository mapping"
+msgstr ""
 
 msgid "Unapplied Errata"
 msgstr "Несохраненные исправления"
@@ -5022,15 +5066,14 @@ msgid "Unattach a subscription"
 msgstr "Отключить подписку"
 
 msgid "Unentitled"
-msgstr ""
+msgstr "Без полномочий"
 
 msgid "Unfiltered params array: %s."
 msgstr ""
 
-msgid "Uninstall packages remotely"
-msgstr "Удалить пакеты удаленно"
+msgid "Uninstall packages remotely using katello-agent. %s"
+msgstr ""
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "Unknown"
 msgstr "Неизвестно"
 
@@ -5038,19 +5081,19 @@ msgid "Unknown Action"
 msgstr ""
 
 msgid "Unknown errata status"
-msgstr ""
+msgstr "Неизвестный статус исправлений"
 
 msgid "Unknown or Unregistered"
 msgstr ""
 
 msgid "Unknown subscription status"
-msgstr ""
+msgstr "Неизвестный статус подписки"
 
 msgid "Unknown traces status"
 msgstr ""
 
 msgid "Unlimited"
-msgstr ""
+msgstr "∞"
 
 msgid "Unregister host %s before assigning an organization"
 msgstr ""
@@ -5067,7 +5110,6 @@ msgstr ""
 msgid "Unsubscribed hypervisor"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Unsupported URL protocol %s."
 msgstr "Протокол %s не поддерживается."
 
@@ -5108,7 +5150,7 @@ msgid "Update a repository"
 msgstr "Обновить репозиторий"
 
 msgid "Update a sync plan"
-msgstr "Обновить план"
+msgstr "Обновить план синхронизации"
 
 msgid "Update an activation key"
 msgstr "Обновить ключ активации"
@@ -5119,17 +5161,17 @@ msgstr "Обновить окружение"
 msgid "Update an environment in an organization"
 msgstr "Обновить окружение в организации"
 
-msgid "Update content on one or more hosts"
+msgid "Update content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Update content urls"
 msgstr ""
 
 msgid "Update for host"
-msgstr ""
+msgstr "Обновление узла"
 
 msgid "Update for host %s"
-msgstr ""
+msgstr "Обновление %s"
 
 msgid "Update http proxy"
 msgstr ""
@@ -5161,8 +5203,8 @@ msgstr ""
 msgid "Update package via Katello interface"
 msgstr ""
 
-msgid "Update packages remotely"
-msgstr "Обновить пакеты удаленно"
+msgid "Update packages remotely using katello-agent. %s"
+msgstr ""
 
 msgid "Update redhat repository"
 msgstr ""
@@ -5186,13 +5228,13 @@ msgid "Update the quantity of one or more subscriptions on an upstream allocatio
 msgstr ""
 
 msgid "Updated"
-msgstr ""
+msgstr "Обновлено"
 
 msgid "Updates"
 msgstr ""
 
 msgid "Updates a product"
-msgstr "Обновляет продукт"
+msgstr "Обновить продукт"
 
 msgid "Updates all packages on the host(s)"
 msgstr ""
@@ -5206,7 +5248,6 @@ msgstr ""
 msgid "Updating System Purpose for host %s"
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "Updating package group..."
 msgstr "Обновление группы пакетов..."
 
@@ -5268,7 +5309,7 @@ msgid "Used to determine download concurrency of the repository in pulp3. Use va
 msgstr ""
 
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 msgid "User '%s' did not specify an organization ID and does not have a default organization."
 msgstr "Пользователь «%s» не задал идентификатор организации и не имеет исходной организации."
@@ -5277,7 +5318,7 @@ msgid "User '%{user}' does not belong to Organization '%{organization}'."
 msgstr "Пользователь «%{user}» не входит в организацию «%{organization}»."
 
 msgid "User IDs"
-msgstr ""
+msgstr "Идентификаторы пользователей"
 
 msgid "User must be logged in."
 msgstr "Пользователь должен быть авторизован."
@@ -5289,7 +5330,7 @@ msgid "Username to access URL"
 msgstr ""
 
 msgid "Valid"
-msgstr ""
+msgstr "Действительные"
 
 msgid "Value must either be a boolean or 'default' for 'enabled'"
 msgstr ""
@@ -5304,21 +5345,22 @@ msgid "Verify checksum of repository contents"
 msgstr ""
 
 msgid "Version"
-msgstr ""
+msgstr "Версия"
 
 msgid "Versions"
+msgstr "Версия"
+
+msgid "Versions will appear here when the content view is published."
 msgstr ""
 
-# translation auto-copied from project Satellite6 Katello, version Sam-1.3.0, document katello, author ypoyarko
 msgid "View %{view} has not been promoted to %{env}"
 msgstr "Представление %{view} не было перенесено в %{env}"
 
 msgid "View a report of the affected hosts"
 msgstr ""
 
-# translation auto-copied from project nm-applet, version 0.8.1, document nm-applet, author ypoyarko
 msgid "Virtual"
-msgstr "Логическое"
+msgstr "Виртуальный"
 
 msgid "When Simple Content Access is enabled, hosts are not required to have subscriptions attached to access repositories."
 msgstr ""
@@ -5327,34 +5369,34 @@ msgid "When registering a host via subscription-manager, force use the specified
 msgstr ""
 
 msgid "When set to 'True' repository types that are creatable will be returned"
-msgstr ""
+msgstr "Если «True», список будет ограничиваться только теми типами, которые доступны для создания новых репозиториев"
 
 msgid "When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host such as virtual machines and DNS records may also be deleted."
 msgstr ""
 
 msgid "Whether or not the host collection may have unlimited hosts"
-msgstr ""
+msgstr "Позволяет снять ограничение на количество узлов в коллекции"
 
 msgid "Whether or not to auto sync the Smart Proxies after a Content View promotion."
 msgstr ""
 
 msgid "Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions."
-msgstr ""
+msgstr "Проверять состояние базовых служб (pulp, candlepin и т.п.), прежде чем выполнить некоторые действия."
 
 msgid "Whether or not to regenerate the repository on disk. Default: true"
 msgstr ""
 
 msgid "Whether or not to show all results"
-msgstr "Показывать все результаты?"
+msgstr "Показывать все результаты"
 
 msgid "Whether or not to sync an external capsule after upload. Default: true"
 msgstr ""
 
 msgid "Whether to include available content attribute in results"
-msgstr ""
+msgstr "Включить/отключить атрибут доступного содержимого в результаты"
 
 msgid "Workers"
-msgstr ""
+msgstr "Обработчики"
 
 msgid "Wrong content type submitted."
 msgstr ""
@@ -5363,7 +5405,7 @@ msgid "Yay empty state"
 msgstr ""
 
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 msgid "You are currently operating in disconnected mode where access to Red Hat Subcription Management is prohibited. If you would like to change this, please update the content setting 'Disconnected mode'."
 msgstr ""
@@ -5378,7 +5420,7 @@ msgid "You can check sync status for repositories only in the library lifecycle 
 msgstr "Статус синхронизации можно проверить только в окружении Library."
 
 msgid "You cannot have more than %{max_hosts} host(s) associated with host collection '%{host_collection}'."
-msgstr ""
+msgstr "С коллекцией «%{host_collection}» может быть связано не больше %{max_hosts} узла(ов)."
 
 msgid "You cannot set an organization's parent. This feature is disabled."
 msgstr "Вы не можете выбрать родителя организации. Эта функциональность отключена."
@@ -5398,6 +5440,9 @@ msgstr ""
 msgid "You currently don't have any repositories to add to this content view."
 msgstr ""
 
+msgid "You currently don't have any versions for this content view."
+msgstr ""
+
 msgid "You do not have permissions to delete %s"
 msgstr "Недостаточно разрешений для удаления %s"
 
@@ -5411,7 +5456,7 @@ msgid "You have unsaved changes. Do you want to exit without saving your changes
 msgstr ""
 
 msgid "You were not allowed to add %s"
-msgstr "Не разрешено добавлять %s"
+msgstr "Недостаточно разрешений для добавления %s"
 
 msgid "You were not allowed to change sync plan for %s"
 msgstr "Недостаточно разрешений для изменения плана синхронизации %s"
@@ -5446,6 +5491,9 @@ msgstr "тег Docker"
 msgid "a file"
 msgstr ""
 
+msgid "a future release"
+msgstr ""
+
 msgid "a module stream"
 msgstr ""
 
@@ -5471,7 +5519,7 @@ msgid "add all module streams without errata to the included/excluded list. (mod
 msgstr ""
 
 msgid "add all packages without errata to the included/excluded list. (package filter only)"
-msgstr ""
+msgstr "добавить все пакеты в список включенных/исключенных пакетов  за исключением исправлений (только для фильтра пакетов)"
 
 msgid "all packages"
 msgstr "все пакеты"
@@ -5507,7 +5555,7 @@ msgid "are only allowed for Yum repositories."
 msgstr ""
 
 msgid "attempted to sync without a feed URL"
-msgstr ""
+msgstr "попытка синхронизации без указания URL-адреса источника"
 
 msgid "auto attach subscriptions upon registration"
 msgstr "автоматический выбор подписок при регистрации"
@@ -5555,7 +5603,7 @@ msgid "cannot be set for non-ostree repositories."
 msgstr ""
 
 msgid "cannot be set for non-yum repositories."
-msgstr ""
+msgstr "может настраиваться только для репозиториев yum."
 
 msgid "cannot contain characters other than ascii alpha numerals, '_', '-'. "
 msgstr "может содержать символы ASCII, цифры, пробелы, '_' и '-'. "
@@ -5569,24 +5617,14 @@ msgstr "не может содержать фильтры сложного пр�
 msgid "cannot contain filters whose repositories do not belong to this content view"
 msgstr "не может содержать фильтры, если их репозитории не входят в это представление"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "cannot contain more than %s characters"
 msgstr "не может содержать больше %s знаков"
 
 msgid "checking Candlepin task status"
-msgstr ""
+msgstr "проверка состояния задачи Candlepin"
 
 msgid "checking Pulp task status"
-msgstr ""
-
-msgid "comma-separated list of architectures to be synced from deb-archive"
-msgstr ""
-
-msgid "comma-separated list of releases to be synced from deb-archive"
-msgstr ""
-
-msgid "comma-separated list of repo components to be synced from deb-archive"
-msgstr ""
+msgstr "проверка состояния задачи Pulp"
 
 msgid "composite content view identifier"
 msgstr ""
@@ -5649,7 +5687,7 @@ msgid "content view versions to compare"
 msgstr "версии представлений для сравнения"
 
 msgid "create a filter for a content view"
-msgstr ""
+msgstr "создать фильтр представления"
 
 msgid "deb Packages"
 msgstr ""
@@ -5661,9 +5699,8 @@ msgid "default package names to include in the package group"
 msgstr ""
 
 msgid "delete a filter"
-msgstr ""
+msgstr "удалить фильтр"
 
-# translation auto-copied from project webkitgtk3, version 2.0.3, document webkitgtk3, author ypoyarko
 msgid "description"
 msgstr "описание"
 
@@ -5716,22 +5753,22 @@ msgid "errata_ids or update_all must be provided"
 msgstr ""
 
 msgid "erratum: IDs or a select all object"
-msgstr "исправление: идентификаторы или выбор всех"
+msgstr ""
 
 msgid "erratum: end date (YYYY-MM-DD)"
-msgstr "исправление: дата окончания (ГГГГ-ММ-ДД)"
+msgstr ""
 
 msgid "erratum: id"
-msgstr "исправление: ID"
+msgstr ""
 
 msgid "erratum: search using the 'Issued On' or 'Updated On' column of the errata. Values are 'issued'/'updated'"
 msgstr ""
 
 msgid "erratum: start date (YYYY-MM-DD)"
-msgstr "исправление: дата начала (ГГГГ-ММ-ДД)"
+msgstr ""
 
 msgid "erratum: types (enhancement, bugfix, security)"
-msgstr "исправление: типы (enhancement, bugfix, security)"
+msgstr ""
 
 msgid "filter by interval"
 msgstr "фильтр по интервалу"
@@ -5743,7 +5780,7 @@ msgid "filter by sync date"
 msgstr "фильтр по дате синхронизации"
 
 msgid "filter content view filters by name"
-msgstr ""
+msgstr "выбор фильтра по имени"
 
 msgid "filter identifier"
 msgstr "идентификатор фильтра"
@@ -5755,21 +5792,20 @@ msgid "for repository '%{name}' is not unique and cannot be created in '%{env}'.
 msgstr ""
 
 msgid "force content view promotion and bypass lifecycle environment restriction"
-msgstr "принудительное продвижение представления в обход ограничений окружения"
+msgstr "принудительное продвижение в обход ограничений окружения"
 
 msgid "foreman-tasks service not running or is not ready yet"
-msgstr ""
+msgstr "сервис foreman-tasks не готов или не работает"
 
 msgid "has already been taken"
 msgstr "уже используется"
 
 msgid "has already been taken for a product in this organization."
-msgstr ""
+msgstr "уже используется продуктом в этой организации."
 
 msgid "has already been taken for this product."
 msgstr "уже используется для этого продукта."
 
-# translation auto-copied from project Satellite6 Foreman, version 6.1, document foreman
 msgid "here"
 msgstr "здесь"
 
@@ -5783,7 +5819,7 @@ msgid "how often synchronization should run"
 msgstr "частота синхронизации"
 
 msgid "id of a host"
-msgstr ""
+msgstr "Идентификатор узла"
 
 msgid "id of host"
 msgstr ""
@@ -5795,7 +5831,7 @@ msgid "identifier of the version of the component content view"
 msgstr ""
 
 msgid "ids to filter content by"
-msgstr "по идентификатору"
+msgstr "отфильтровать по идентификатору"
 
 msgid "if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided"
 msgstr ""
@@ -5804,10 +5840,10 @@ msgid "if true, Katello will verify the upstream url's SSL certifcates are signe
 msgstr ""
 
 msgid "initiating Candlepin task"
-msgstr ""
+msgstr "инициализация задачи Candlepin"
 
 msgid "initiating Pulp task"
-msgstr ""
+msgstr "инициализация задачи Pulp"
 
 msgid "installing errata..."
 msgstr "установка исправлений..."
@@ -5855,7 +5891,7 @@ msgid "limit to only repositories with this download policy"
 msgstr ""
 
 msgid "list filters"
-msgstr ""
+msgstr "возвращает список фильтров"
 
 msgid "list of packages names"
 msgstr "список имен пакетов"
@@ -5870,7 +5906,7 @@ msgid "mandatory package names to include in the package group"
 msgstr ""
 
 msgid "max_hosts must be given a value if this host collection is not unlimited."
-msgstr ""
+msgstr "если эта коллекция не является неограниченной, необходимо настроить число max_hosts"
 
 msgid "maximum number of registered content hosts"
 msgstr "максимальное число зарегистрированных узлов содержимого"
@@ -5879,7 +5915,7 @@ msgid "maximum size of each ISO in MB"
 msgstr ""
 
 msgid "may not be less than the number of hosts associated with the host collection."
-msgstr ""
+msgstr "не может быть меньше числа узлов, ассоциированных с коллекцией."
 
 msgid "module stream ids"
 msgstr ""
@@ -5894,7 +5930,7 @@ msgid "must be a positive integer value."
 msgstr "должно быть положительным целым числом."
 
 msgid "must be one of the following: %s"
-msgstr "допустимые значения: %s"
+msgstr ""
 
 msgid "must be one of: %s"
 msgstr ""
@@ -5902,7 +5938,6 @@ msgstr ""
 msgid "must be unique within one organization"
 msgstr "должно быть уникальным в пределах организации."
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "must contain '%s'"
 msgstr "должно содержать «%s»"
 
@@ -5921,7 +5956,6 @@ msgstr "должен содержать действительный откры�
 msgid "must not contain leading or trailing white spaces."
 msgstr "не может начинаться и заканчиваться пробелом."
 
-# translation auto-copied from project anaconda, version 19.31.34, document anaconda
 msgid "name"
 msgstr "имя"
 
@@ -5949,9 +5983,8 @@ msgstr "имя репозитория"
 msgid "name of the subscription"
 msgstr ""
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "name: %s doesn't exist "
-msgstr "имя %s не существует"
+msgstr ""
 
 msgid "new name for the filter"
 msgstr "новое имя фильтра"
@@ -5960,7 +5993,7 @@ msgid "new name to be given to the environment"
 msgstr "новое имя окружения"
 
 msgid "no"
-msgstr ""
+msgstr "нет"
 
 msgid "no global default"
 msgstr ""
@@ -5968,18 +6001,20 @@ msgstr ""
 msgid "obtain manifest history for subscriptions"
 msgstr "получить события манифеста подписок"
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "of environment must be unique within one organization"
 msgstr "должно быть уникальным в пределах организации"
 
 msgid "only repositories having at least one of the specified content type ex: rpm , erratum"
 msgstr ""
 
+msgid "only show the repositories readable by this user with this username"
+msgstr ""
+
 msgid "optional package names to include in the package group"
 msgstr ""
 
 msgid "organization ID"
-msgstr "ID организации"
+msgstr "Код организации"
 
 msgid "organization identifier"
 msgstr "идентификатор организации"
@@ -6003,16 +6038,16 @@ msgid "package: architecture"
 msgstr ""
 
 msgid "package: maximum version"
-msgstr "пакет: макс. версия"
+msgstr ""
 
 msgid "package: minimum version"
-msgstr "пакет: мин. версия"
+msgstr ""
 
 msgid "package: version"
-msgstr "пакет: версия"
+msgstr ""
 
 msgid "package_ids is not an array"
-msgstr "package_ids не является массивом"
+msgstr "package_ids не содержит массив"
 
 msgid "params 'show_all_for' and 'available_for' must be used independently"
 msgstr ""
@@ -6050,7 +6085,6 @@ msgstr "удаление групп пакетов..."
 msgid "removing package..."
 msgstr "удаление пакета..."
 
-# translation auto-copied from project CFSE, version sam-1.2, document app, author ypoyarko
 msgid "removing packages..."
 msgstr "удаление пакетов..."
 
@@ -6058,7 +6092,7 @@ msgid "repo label"
 msgstr ""
 
 msgid "repository ID"
-msgstr "ID репозитория"
+msgstr "Идентификатор репозитория"
 
 msgid "repository id"
 msgstr "ID репозитория"
@@ -6079,7 +6113,7 @@ msgid "repository_id not defined."
 msgstr ""
 
 msgid "root-node of collection contained in responses (default: 'results')"
-msgstr "корневой элемент коллекции в ответе (по умолчанию «results»)"
+msgstr ""
 
 msgid "root-node of single-resource responses (optional)"
 msgstr "корневой элемент ответа с единственным ресурсом (дополнительно)"
@@ -6100,25 +6134,25 @@ msgid "show archived repositories"
 msgstr ""
 
 msgid "show filter info"
-msgstr ""
+msgstr "показать информацию о фильтре"
 
 msgid "show repositories in Library and the default content view"
-msgstr "показать репозитории Library и в текущем представлении"
+msgstr "показать репозитории в Library и в выбранном по умолчанию представлении"
 
 msgid "some executors are not responding, check %{status_url}"
-msgstr ""
+msgstr "некоторые исполнители не отвечают; проверьте %{status_url}"
 
 msgid "source URL is malformed"
-msgstr ""
+msgstr "URL-адрес источника синхронизации неверно сформирован"
 
 msgid "specifies if content should be included or excluded, default: inclusion=false"
-msgstr "включение/исключение содержимого (по умолчанию inclusion=false)"
+msgstr ""
 
 msgid "start datetime of synchronization"
 msgstr "дата и время синхронизации"
 
 msgid "subscriptions not specified"
-msgstr ""
+msgstr "подписки не определены"
 
 msgid "sync plan description"
 msgstr "описание плана синхронизации"
@@ -6130,10 +6164,10 @@ msgid "sync plan numeric identifier"
 msgstr "числовой идентификатор плана синхронизации"
 
 msgid "temporarily override feed URL for sync"
-msgstr ""
+msgstr "временно переопределить URL-адрес источника синхронизации"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
-msgstr "Не удалось обновить атрибуты провайдера Red Hat: [ %s ]"
+msgstr ""
 
 msgid "true if the latest version of the component's content view is desired"
 msgstr ""
@@ -6142,7 +6176,7 @@ msgid "true if the latest version of the components content view is desired"
 msgstr ""
 
 msgid "true if this repository can be published via HTTP"
-msgstr "«True», если репозиторий может быть доступен по HTTP"
+msgstr "«true», если репозиторий может быть доступен по HTTP"
 
 msgid "true if this repository when synced has to be mirrored from the source and stale rpms removed"
 msgstr ""
@@ -6151,16 +6185,16 @@ msgid "type of filter (e.g. rpm, package_group, erratum, docker, modulemd)"
 msgstr ""
 
 msgid "type of repo"
-msgstr "тип репозитория"
+msgstr ""
 
 msgid "types of filters"
 msgstr ""
 
 msgid "unknown permission for %s"
-msgstr ""
+msgstr "неизвестное разрешение для %s"
 
 msgid "update a filter"
-msgstr ""
+msgstr "изменить фильтр"
 
 msgid "updating package group..."
 msgstr "обновление группы пакетов..."
@@ -6178,19 +6212,28 @@ msgid "url not defined."
 msgstr "URL не задан."
 
 msgid "waiting for Candlepin to finish the task"
-msgstr ""
+msgstr "ожидание завершения задачи Candlepin"
 
 msgid "waiting for Pulp to finish the task"
-msgstr ""
+msgstr "ожидание завершения задачи Pulp"
 
 msgid "waiting for Pulp to start the task"
+msgstr "ожидание запуска задачи Pulp"
+
+msgid "whitespace-separated list of architectures to be synced from deb-archive"
+msgstr ""
+
+msgid "whitespace-separated list of releases to be synced from deb-archive"
+msgstr ""
+
+msgid "whitespace-separated list of repo components to be synced from deb-archive"
 msgstr ""
 
 msgid "with"
 msgstr ""
 
 msgid "yes"
-msgstr ""
+msgstr "да"
 
 msgid "{0} items selected"
 msgstr ""
