@@ -7,7 +7,7 @@
 # <lzap@seznam.cz>, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: version 0.0.1\n"
+"Project-Id-Version: katello 2.4.0-RC1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2013-01-22 13:28+0000\n"
 "Last-Translator: lzap <lzap@seznam.cz>\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 msgid ""
 "\n"
-"* Product = '%{product}', Repository = '%{repository}', Repository Type = '%{repo_type}'"
+"* Product = '%{product}', Repository = '%{repository}'"
 msgstr ""
 
 msgid " %{errata_count} Errata"
@@ -36,6 +36,9 @@ msgid " Content view updated."
 msgstr ""
 
 msgid " Either select the latest content view or the content view version. Cannot set both."
+msgstr ""
+
+msgid " RPMs"
 msgstr ""
 
 msgid " environment cannot be set to an environment already on its path"
@@ -308,6 +311,9 @@ msgstr ""
 msgid "A CV version already exists with the same major and minor version (%{major}.%{minor})"
 msgstr ""
 
+msgid "A Pool and its Subscription cannot belong to different organizations"
+msgstr ""
+
 msgid "A backend service [ %s ] is unreachable"
 msgstr ""
 
@@ -345,6 +351,9 @@ msgstr ""
 msgid "A summary of new errata after a repository is synchronized"
 msgstr ""
 
+msgid "About page"
+msgstr ""
+
 msgid "Abstract async task"
 msgstr ""
 
@@ -369,9 +378,6 @@ msgstr ""
 msgid "Action with sub plans"
 msgstr ""
 
-msgid "Activation Key(s) *"
-msgstr ""
-
 msgid "Activation Keys"
 msgstr "Aktivační klíče"
 
@@ -379,13 +385,19 @@ msgstr "Aktivační klíče"
 msgid "Activation key ID"
 msgstr "Aktivační klíče"
 
-msgid "Activation key(s) for Subscription Manager. Multiple keys should be comma-separated, for example: key1,key2,key3."
+msgid "Activation key for subscription-manager client. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
 msgstr ""
 
-msgid "Activation key(s) for Subscription Manager. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3."
+msgid "Activation key(s) for Subscription Manager."
+msgstr ""
+
+msgid "Activation key(s) for subscription-manager client. Required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys"
 msgstr ""
 
 msgid "Activation keys and subscriptions can be managed"
+msgstr ""
+
+msgid "Activation keys: "
 msgstr ""
 
 msgid "Active Subscriptions"
@@ -431,6 +443,9 @@ msgstr ""
 msgid "Add subscriptions to one or more hosts"
 msgstr ""
 
+msgid "Add to this filter using the 'Add RPM' button."
+msgstr ""
+
 msgid "Add to this filter using the 'Add package group' button."
 msgstr ""
 
@@ -441,6 +456,9 @@ msgid "Added Content:"
 msgstr ""
 
 msgid "Adding content units"
+msgstr ""
+
+msgid "Additional content"
 msgstr ""
 
 msgid "Addons"
@@ -500,6 +518,9 @@ msgid "Applicability Batch Size"
 msgstr ""
 
 msgid "Arch"
+msgstr ""
+
+msgid "Architecture"
 msgstr ""
 
 msgid "Architecture of content in the repository"
@@ -585,9 +606,6 @@ msgstr ""
 
 msgid "At least one organization must exist."
 msgstr "Musí existovat alespoň jedna organizace."
-
-msgid "Atleast one of ContentView or Organization must be provided"
-msgstr ""
 
 #, fuzzy
 msgid "Attach a subscription"
@@ -864,7 +882,7 @@ msgstr ""
 msgid "Cannot specify content for composite views"
 msgstr ""
 
-msgid "Cannot sync file:// repositories with On Demand or Background Download Policies"
+msgid "Cannot sync file:// repositories with the On Demand Download Policy"
 msgstr ""
 
 msgid "Cannot upload Container Image content."
@@ -892,6 +910,9 @@ msgid "Checksum of the repository, currently 'sha1' & 'sha256' are supported"
 msgstr ""
 
 msgid "Checksum type cannot be set for yum repositories with on demand download policy."
+msgstr ""
+
+msgid "Clear any previous registration and run subscription-manager with --force."
 msgstr ""
 
 msgid "Click here to go to the tasks page for the task."
@@ -1321,9 +1342,6 @@ msgid "Current organization is not set."
 msgstr ""
 
 msgid "Current organization not set."
-msgstr ""
-
-msgid "Custom"
 msgstr ""
 
 #, fuzzy
@@ -1796,6 +1814,9 @@ msgstr ""
 msgid "Exclude"
 msgstr ""
 
+msgid "Excluded"
+msgstr ""
+
 msgid "Exit"
 msgstr ""
 
@@ -2124,6 +2145,9 @@ msgstr ""
 msgid "Hosts with Installable Errata"
 msgstr ""
 
+msgid "Hosts: "
+msgstr ""
+
 msgid "How many repositories should be synced concurrently on the capsule.  A smaller number may lead to longer sync times.  A larger number will increase dynflow load."
 msgstr ""
 
@@ -2279,7 +2303,7 @@ msgstr ""
 msgid "If set to true, a composite content view may not be published or promoted, unless the component content view versions that it includes exist in the target environment."
 msgstr ""
 
-msgid "If set to true, use the remote execution over katello-agent for remote actions"
+msgid "If set to true, use remote execution instead of katello-agent for remote actions"
 msgstr ""
 
 msgid "If specified, remove the first instance of a subscription with matching id and quantity"
@@ -2304,6 +2328,15 @@ msgid "If true, will publish a new composite version using any specified content
 msgstr ""
 
 msgid "Ignorable content can be only set for Yum repositories."
+msgstr ""
+
+msgid "Ignore errors"
+msgstr ""
+
+msgid "Ignore subscription manager errors"
+msgstr ""
+
+msgid "Ignore subscription-manager errors for `subscription-manager register` command"
 msgstr ""
 
 msgid "Ignore subscriptions that are unavailable to the specified host"
@@ -2377,6 +2410,9 @@ msgstr ""
 msgid "Include"
 msgstr ""
 
+msgid "Included"
+msgstr ""
+
 msgid "Includes associated content view filter ids in response"
 msgstr ""
 
@@ -2429,7 +2465,7 @@ msgstr ""
 msgid "Install Applicable Errata on %s"
 msgstr ""
 
-msgid "Install content on one or more hosts"
+msgid "Install content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Install errata via Katello interface"
@@ -2459,9 +2495,8 @@ msgstr ""
 msgid "Install package via Katello interface"
 msgstr ""
 
-#, fuzzy
-msgid "Install packages remotely"
-msgstr "všechny balíčky"
+msgid "Install packages remotely using katello-agent. %s"
+msgstr ""
 
 msgid "Installable errata from Content View"
 msgstr ""
@@ -2567,9 +2602,6 @@ msgstr ""
 msgid "Invalid value specified for ignorable content. Permissible values %s"
 msgstr ""
 
-msgid "Katello"
-msgstr ""
-
 msgid "Katello ID of local pool to update"
 msgstr ""
 
@@ -2624,7 +2656,16 @@ msgstr ""
 msgid "Last published"
 msgstr ""
 
+msgid "Last task"
+msgstr ""
+
+msgid "Latest (automatically updates)"
+msgstr ""
+
 msgid "Latest Errata"
+msgstr ""
+
+msgid "Latest version"
 msgstr ""
 
 msgid "Learn more about adding Subscription Manifests"
@@ -2656,10 +2697,16 @@ msgstr ""
 msgid "Lifecycle Environments"
 msgstr "prostředí"
 
+msgid "Lifecycle environment"
+msgstr ""
+
 msgid "Lifecycle environment '%{environment}' is not attached to this capsule."
 msgstr ""
 
 msgid "Lifecycle environment ID"
+msgstr ""
+
+msgid "Lifecycle environment for the host."
 msgstr ""
 
 msgid "Lifecycle environment was not attached to the smart proxy; therefore, no changes were made."
@@ -3018,7 +3065,13 @@ msgstr ""
 msgid "Must supply at least one of mandatory_package_names, optional_package_names, conditional_package_names, default_package_names parameters"
 msgstr ""
 
+msgid "N/A"
+msgstr ""
+
 msgid "NA"
+msgstr ""
+
+msgid "NOTE: Katello-agent is deprecated and will be removed in %s. Consider using remote execution instead."
 msgstr ""
 
 msgid ""
@@ -3093,7 +3146,16 @@ msgstr ""
 msgid "New packages: %{count} (%{size})."
 msgstr ""
 
+msgid "New version is available: Version ${latestVersion}"
+msgstr ""
+
 msgid "No"
+msgstr ""
+
+msgid "No Activation Keys selected"
+msgstr ""
+
+msgid "No Activation keys to select"
 msgstr ""
 
 #, fuzzy
@@ -3101,6 +3163,9 @@ msgid "No Content View"
 msgstr "Vyhledat obsah"
 
 msgid "No Content found"
+msgstr ""
+
+msgid "No Lifecycle environment to select"
 msgstr ""
 
 msgid "No Manifest Uploaded"
@@ -3135,10 +3200,22 @@ msgstr ""
 msgid "No content view history events found."
 msgstr "Vyhledat obsah"
 
+msgid "No content views belong to ${label}"
+msgstr ""
+
 msgid "No content_view_version_ids provided"
 msgstr ""
 
+msgid "No description"
+msgstr ""
+
 msgid "No enabled repositories match your search criteria."
+msgstr ""
+
+msgid "No environment"
+msgstr ""
+
+msgid "No environments"
 msgstr ""
 
 msgid "No errata has been specified."
@@ -3183,6 +3260,12 @@ msgid "No matching package groups found."
 msgstr ""
 
 msgid "No matching repositories found"
+msgstr ""
+
+msgid "No matching rules found."
+msgstr ""
+
+msgid "No matching version found"
 msgstr ""
 
 msgid "No new packages installed"
@@ -3242,6 +3325,9 @@ msgstr ""
 msgid "No repository sets match your search criteria."
 msgstr ""
 
+msgid "No rules have been added to this filter."
+msgstr ""
+
 msgid "No services defined, is this class extended?"
 msgstr ""
 
@@ -3286,6 +3372,9 @@ msgid "Not all necessary pulp workers running at %s."
 msgstr ""
 
 msgid "Not running"
+msgstr ""
+
+msgid "Not yet published"
 msgstr ""
 
 msgid "Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available."
@@ -3663,6 +3752,9 @@ msgstr ""
 msgid "Plan numeric identifier"
 msgstr ""
 
+msgid "Please add some content views."
+msgstr ""
+
 msgid "Please add some repositories."
 msgstr ""
 
@@ -3820,6 +3912,9 @@ msgstr ""
 msgid "Pulp Docker registry port"
 msgstr ""
 
+msgid "Pulp bulk load size"
+msgstr ""
+
 msgid "Pulp client cert"
 msgstr ""
 
@@ -3898,6 +3993,9 @@ msgstr ""
 msgid "RPM"
 msgstr ""
 
+msgid "RPM name"
+msgstr ""
+
 msgid "RPMs"
 msgstr ""
 
@@ -3911,9 +4009,6 @@ msgid "Recently Expired Subscriptions"
 msgstr ""
 
 msgid "Recommended Repositories"
-msgstr ""
-
-msgid "Red Hat"
 msgstr ""
 
 #, fuzzy
@@ -4009,7 +4104,7 @@ msgstr ""
 msgid "Remove components from the content view"
 msgstr ""
 
-msgid "Remove content on one or more hosts"
+msgid "Remove content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Remove content view version"
@@ -4255,7 +4350,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-msgid "Schedule errata for installation"
+msgid "Schedule errata for installation using katello-agent. %s"
 msgstr ""
 
 msgid "Search"
@@ -4476,16 +4571,28 @@ msgstr ""
 msgid "Some of your inputs contain errors. Please update them and save your changes again."
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view filter! ${error}"
+msgid "Some services are not properly started. See the About page for more information."
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view filters! ${error}"
+msgid "Something went wrong while retrieving the content view components! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
-msgid "Something went wrong while retrieving the content view history! ${error}"
+msgid "Something went wrong while retrieving the content view filter rules! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
-msgid "Something went wrong while retrieving the repository types! ${error}"
+msgid "Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view filters! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view history! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the content view versions! ${getResponseErrorMsgs(error.response)}"
+msgstr ""
+
+msgid "Something went wrong while retrieving the repository types! ${getResponseErrorMsgs(error.response)}"
 msgstr ""
 
 msgid "Sort field and order, eg. 'id DESC'"
@@ -4756,6 +4863,9 @@ msgstr "Žádné šablony"
 msgid "System Purpose"
 msgstr ""
 
+msgid "System Status"
+msgstr ""
+
 msgid "Tags"
 msgstr ""
 
@@ -4843,6 +4953,11 @@ msgid ""
 " %{repos}"
 msgstr ""
 
+msgid ""
+"The following repositories provided in the import metadata have an incorrect content type or provider type. Make sure the export and import repositories are of the same type before importing\n"
+" %{repos}"
+msgstr ""
+
 msgid "The id of the host to alter"
 msgstr ""
 
@@ -4853,6 +4968,9 @@ msgid "The manifest imported within Organization %{subject} is no longer valid. 
 msgstr ""
 
 msgid "The number of days remaining in a subscription before you will be reminded about renewing it."
+msgstr ""
+
+msgid "The number of items fetched from a single paged Pulp API call."
 msgstr ""
 
 msgid "The offset in the file where the content starts"
@@ -4961,6 +5079,9 @@ msgid "This Organization's subscription manifest has expired. Please import a ne
 msgstr ""
 
 msgid "This action doesn't support package groups"
+msgstr ""
+
+msgid "This action uses katello-agent, which is currently disabled. Use remote execution instead."
 msgstr ""
 
 msgid "This certificate allows a user to view the repositories in any environment from a browser."
@@ -5101,10 +5222,13 @@ msgstr ""
 msgid "Unable to export. 'pulp_export_destination' setting is not a writable directory."
 msgstr ""
 
-msgid "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment."
+msgid "Unable to find product '%s' in organization '%s'"
 msgstr ""
 
-msgid "Unable to perform unauthenticated repository list operation"
+msgid "Unable to get users"
+msgstr ""
+
+msgid "Unable to incrementally export. Do a Full Export on the library content before updating from the latest increment."
 msgstr ""
 
 msgid "Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id."
@@ -5128,6 +5252,12 @@ msgstr ""
 msgid "Unable to synchronize any repository. You either do not have the permission to synchronize or the selected repositories do not have a feed url."
 msgstr ""
 
+msgid "Unable to update the repository list"
+msgstr ""
+
+msgid "Unable to update the user-repository mapping"
+msgstr ""
+
 msgid "Unapplied Errata"
 msgstr ""
 
@@ -5144,7 +5274,7 @@ msgstr ""
 msgid "Unfiltered params array: %s."
 msgstr ""
 
-msgid "Uninstall packages remotely"
+msgid "Uninstall packages remotely using katello-agent. %s"
 msgstr ""
 
 msgid "Unknown"
@@ -5239,7 +5369,7 @@ msgstr "prostředí"
 msgid "Update an environment in an organization"
 msgstr ""
 
-msgid "Update content on one or more hosts"
+msgid "Update content on one or more hosts using katello-agent. %s"
 msgstr ""
 
 msgid "Update content urls"
@@ -5283,9 +5413,8 @@ msgstr ""
 msgid "Update package via Katello interface"
 msgstr ""
 
-#, fuzzy
-msgid "Update packages remotely"
-msgstr "Balíček přesunut"
+msgid "Update packages remotely using katello-agent. %s"
+msgstr ""
 
 msgid "Update redhat repository"
 msgstr ""
@@ -5434,6 +5563,9 @@ msgstr ""
 msgid "Versions"
 msgstr ""
 
+msgid "Versions will appear here when the content view is published."
+msgstr ""
+
 msgid "View %{view} has not been promoted to %{env}"
 msgstr ""
 
@@ -5522,6 +5654,9 @@ msgstr ""
 msgid "You currently don't have any repositories to add to this content view."
 msgstr ""
 
+msgid "You currently don't have any versions for this content view."
+msgstr ""
+
 msgid "You do not have permissions to delete %s"
 msgstr ""
 
@@ -5568,6 +5703,9 @@ msgid "a docker tag"
 msgstr ""
 
 msgid "a file"
+msgstr ""
+
+msgid "a future release"
 msgstr ""
 
 msgid "a module stream"
@@ -5712,15 +5850,6 @@ msgid "checking Candlepin task status"
 msgstr ""
 
 msgid "checking Pulp task status"
-msgstr ""
-
-msgid "comma-separated list of architectures to be synced from deb-archive"
-msgstr ""
-
-msgid "comma-separated list of releases to be synced from deb-archive"
-msgstr ""
-
-msgid "comma-separated list of repo components to be synced from deb-archive"
 msgstr ""
 
 msgid "composite content view identifier"
@@ -6129,6 +6258,9 @@ msgstr "Název musí být unikátní vrámci jedné organizace."
 msgid "only repositories having at least one of the specified content type ex: rpm , erratum"
 msgstr ""
 
+msgid "only show the repositories readable by this user with this username"
+msgstr ""
+
 msgid "optional package names to include in the package group"
 msgstr ""
 
@@ -6350,6 +6482,15 @@ msgid "waiting for Pulp to finish the task"
 msgstr ""
 
 msgid "waiting for Pulp to start the task"
+msgstr ""
+
+msgid "whitespace-separated list of architectures to be synced from deb-archive"
+msgstr ""
+
+msgid "whitespace-separated list of releases to be synced from deb-archive"
+msgstr ""
+
+msgid "whitespace-separated list of repo components to be synced from deb-archive"
 msgstr ""
 
 msgid "with"
