@@ -41,26 +41,26 @@ module Actions
         end
 
         def srpms_match?(source_repo, target_repo)
-          source_repo_ids = source_repo.srpm_ids.sort
-          target_repo_ids = target_repo.srpm_ids.sort
+          source_repo_ids = source_repo.srpm_ids.sort.uniq
+          target_repo_ids = target_repo.srpm_ids.sort.uniq
           source_repo_ids == target_repo_ids
         end
 
         def rpms_match?(source_repo, target_repo)
-          source_repo_ids = source_repo.rpm_ids.sort
-          target_repo_ids = target_repo.rpm_ids.sort
+          source_repo_ids = source_repo.rpm_ids.sort.uniq
+          target_repo_ids = target_repo.rpm_ids.sort.uniq
           source_repo_ids == target_repo_ids
         end
 
         def errata_match?(source_repo, target_repo)
-          source_repo_ids = source_repo.erratum_ids.sort
-          target_repo_ids = target_repo.erratum_ids.sort
+          source_repo_ids = source_repo.erratum_ids.sort.uniq
+          target_repo_ids = target_repo.erratum_ids.sort.uniq
           source_repo_ids == target_repo_ids
         end
 
         def package_groups_match?(source_repo, target_repo)
-          source_repo_ids = source_repo.package_groups.order(:name).pluck(:name)
-          target_repo_ids = target_repo.package_groups.order(:name).pluck(:name)
+          source_repo_ids = source_repo.package_groups.order(:name).pluck(:name).uniq
+          target_repo_ids = target_repo.package_groups.order(:name).pluck(:name).uniq
           source_repo_ids == target_repo_ids
         end
 
@@ -69,8 +69,8 @@ module Actions
         end
 
         def yum_metadata_files_match?(source_repo, target_repo)
-          source_repo_items = source_repo.yum_metadata_files.pluck(:name, :checksum).sort
-          target_repo_items = target_repo.yum_metadata_files.pluck(:name, :checksum).sort
+          source_repo_items = source_repo.yum_metadata_files.pluck(:name, :checksum).sort.uniq
+          target_repo_items = target_repo.yum_metadata_files.pluck(:name, :checksum).sort.uniq
           source_repo_items == target_repo_items
         end
       end
