@@ -13,7 +13,7 @@ module Katello
                             .where(organization_id: registration_params[:organization_id])
                             .order(:name)
 
-        data = { activationKeys: aks, lifeCycleEnvironments: lces }
+        data = { activationKeys: aks, lifecycleEnvironments: lces }
 
         if registration_params[:hostgroup_id].present?
           host_group = ::Hostgroup.authorized(:view_hostgroups).find(registration_params[:hostgroup_id])
