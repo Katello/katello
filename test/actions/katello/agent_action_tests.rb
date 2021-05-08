@@ -65,13 +65,22 @@ module Actions
           assert_match(/did not respond/, error.message)
         end
 
-        def test_process_timeout_finish
+        def test_process_timeout_finish_elapsed
           dispatch_history.accepted_at = Time.now
           bulk_action.expects(:dispatch_history).returns(dispatch_history)
 
-          error = assert_raises(StandardError) { bulk_action.process_timeout }
+          travel_to 2.hours.from_now do
+            error = assert_raises(StandardError) { bulk_action.process_timeout }
+            assert_match(/did not finish/, error.message)
+          end
+        end
 
-          assert_match(/did not finish/, error.message)
+        def test_process_timeout_finish_not_elapsed
+          dispatch_history.accepted_at = Time.now
+          dispatch_history.result = nil
+          bulk_action.expects(:dispatch_history).returns(dispatch_history)
+
+          bulk_action.process_timeout
         end
 
         def test_process_timeout_noop

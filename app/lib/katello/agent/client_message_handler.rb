@@ -34,9 +34,17 @@ module Katello
       private
 
       def handle_dynflow_event
-        task_exists = ForemanTasks::Task.exists?(external_id: @dispatch_history.dynflow_execution_plan_id, result: 'pending')
-        unless task_exists
-          logger.warn("Couldn't find pending task with external_id=#{@dispatch_history.dynflow_execution_plan_id} dispatch_history_id=#{@dispatch_history.id}")
+        return unless accepted? || result
+
+        task = ForemanTasks::Task.find_by_external_id(@dispatch_history.dynflow_execution_plan_id)
+
+        unless task
+          logger.info("Task external_id=#{@dispatch_history.dynflow_execution_plan_id} wasn't found. Skipping dynflow event dispatch")
+          return
+        end
+
+        unless task.result == 'pending'
+          logger.info("Task is no longer pending. Skipping dynflow event dispatch. task_result=#{task.result} external_id=#{@dispatch_history.dynflow_execution_plan_id} dispatch_history_id=#{@dispatch_history.id}")
           return
         end
 

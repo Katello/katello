@@ -83,7 +83,12 @@ module Actions
         end
 
         unless history.finished?
-          fail _("Host did not finish content action in %s seconds.  The task has been cancelled.") % finish_timeout
+          # we could be processing the accept_timeout here
+          # only fail for finish_timeout unless the actual duration has elapsed
+          finish_limit = history.accepted_at + finish_timeout
+          if finish_limit < DateTime.now
+            fail _("Host did not finish content action in %s seconds.  The task has been cancelled.") % finish_timeout
+          end
         end
       end
 
