@@ -10,7 +10,7 @@ module Actions
             source_repositories.each do |repositories|
               new_repository = repositories.first.build_clone(content_view: version.content_view,
                                                              version: version)
-              plan_action(Repository::Create, new_repository, true, false)
+              plan_action(Repository::Create, new_repository, true)
               repository_mapping[repositories] = new_repository
             end
           end

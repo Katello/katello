@@ -7,7 +7,7 @@ module Actions
     include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::ImportUpload }
-    let(:pulp_import_class) { ::Actions::Pulp::Repository::ImportUpload }
+    let(:pulp3_import_class) { ::Actions::Pulp3::Orchestration::Repository::ImportUpload }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
 
     before do
@@ -27,7 +27,7 @@ module Actions
         unit_metadata: nil
       }
 
-      assert_action_planed_with(action, pulp_import_class,
+      assert_action_planed_with(action, pulp3_import_class,
                                 repo, SmartProxy.pulp_primary,
                                 import_upload_args)
     end

@@ -3,7 +3,6 @@ module Actions
     module Repository
       class RemoveContent < Actions::EntryAction
         include Dynflow::Action::WithSubPlans
-        include Actions::Katello::PulpSelector
 
         def plan(repository, content_units, options = {})
           sync_capsule = options.fetch(:sync_capsule, true)
@@ -26,9 +25,8 @@ module Actions
               :contents => content_unit_ids,
               :content_unit_type => content_unit_type}
             repository.clear_smart_proxy_sync_histories
-            pulp_action = plan_pulp_action(
-              [Pulp::Orchestration::Repository::RemoveUnits,
-               Pulp3::Orchestration::Repository::RemoveUnits],
+            pulp_action = plan_action(
+              Pulp3::Orchestration::Repository::RemoveUnits,
               repository, SmartProxy.pulp_primary, remove_content_args)
             return if pulp_action.error
             plan_self(:content_unit_class => content_units.first.class.name, :content_unit_ids => content_unit_ids)

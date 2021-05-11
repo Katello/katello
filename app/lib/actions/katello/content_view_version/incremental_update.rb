@@ -1,7 +1,6 @@
 module Actions
   module Katello
     module ContentViewVersion
-      # rubocop:disable Metrics/ClassLength
       class IncrementalUpdate < Actions::EntryAction
         include ::Katello::ContentViewHelper
         attr_accessor :new_content_view_version
@@ -79,10 +78,7 @@ module Actions
               if separated_repo_map[:other].keys.flatten.present?
                 repos_to_clone.each do |source_repos|
                   if separated_repo_map[:other].keys.include?(source_repos)
-                    copy_action_outputs += copy_repos(repository_mapping[source_repos],
-                                                      new_content_view_version,
-                                                      content,
-                                                      dep_solve)
+                    copy_repos(repository_mapping[source_repos])
                   end
                 end
               end
@@ -138,19 +134,11 @@ module Actions
           end
         end
 
-        def copy_repos(new_repo, new_version, content, dep_solve)
-          copy_output = []
+        def copy_repos(new_repo)
           sequence do
-            solve_dependencies = new_version.content_view.solve_dependencies || dep_solve
-            copy_output += copy_deb_content(new_repo, solve_dependencies, content[:deb_ids])
-            copy_output += copy_yum_content(new_repo, solve_dependencies,
-                                            content[:package_ids],
-                                            content[:errata_ids])
-
             plan_action(Katello::Repository::MetadataGenerate, new_repo)
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
           end
-          copy_output
         end
 
         # For a given repo, find it's instances in both the new and old component versions.
@@ -326,52 +314,6 @@ module Actions
 
         def promote(new_version, environments)
           plan_action(Katello::ContentView::Promote, new_version, environments, true, nil, true)
-        end
-
-        def copy_deb_content(new_repo, dep_solve, deb_ids)
-          copy_outputs = []
-          if new_repo.content_type == ::Katello::Repository::DEB_TYPE
-            unless deb_ids.blank?
-              copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
-                                          ::Katello::Deb.with_identifiers(deb_ids),
-                                          incremental_update: dep_solve).output
-            end
-          end
-          copy_outputs
-        end
-
-        def copy_yum_content(new_repo, dep_solve, package_ids, errata_ids)
-          return [] unless new_repo.content_type == ::Katello::Repository::YUM_TYPE
-
-          copy_outputs = []
-
-          unless errata_ids.blank?
-            content_present_in_this_repo = new_repo
-                                            .library_instance
-                                            .errata
-                                            .with_identifiers(errata_ids)
-                                            .exists?
-            if content_present_in_this_repo
-              copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
-                                          ::Katello::Erratum.with_identifiers(errata_ids),
-                                          incremental_update: dep_solve).output
-            end
-          end
-
-          unless package_ids.blank?
-            content_present_in_this_repo = new_repo
-                                            .library_instance
-                                            .rpms
-                                            .with_identifiers(package_ids)
-                                            .exists?
-            if content_present_in_this_repo
-              copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
-                                          ::Katello::Rpm.with_identifiers(package_ids),
-                                          incremental_update: dep_solve).output
-            end
-          end
-
-          copy_outputs
         end
 
         def plan_copy(action_class, source_repo, target_repo, clauses = nil, override_config = nil)

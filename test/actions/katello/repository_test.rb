@@ -35,7 +35,7 @@ module ::Actions::Katello::Repository
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
       plan_action action, repository
       assert_action_planned_with action,
-        ::Actions::Pulp::Orchestration::Repository::Refresh,
+        ::Actions::Pulp3::Repository::UpdateRemote,
         repository, proxy
     end
   end
@@ -45,7 +45,8 @@ module ::Actions::Katello::Repository
     let(:candlepin_action_class) { ::Actions::Candlepin::Environment::AddContentToEnvironment }
 
     before do
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      SmartProxy.stubs(:pulp_primary).returns(proxy)
       repository.expects(:save!)
       action.expects(:action_subject).with(repository)
       action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
@@ -59,12 +60,14 @@ module ::Actions::Katello::Repository
     end
 
     it 'no clone flag means generate metadata in run phase' do
+      repository.root.update_attribute(:unprotected, true)
       plan = plan_action action, repository
       run_action plan
       assert_equal 'Actions::Katello::Repository::MetadataGenerate', plan.run.label
     end
 
     it 'clone flag disables metadata generation' do
+      repository.root.update_attribute(:unprotected, true)
       plan = plan_action action, repository, true
       run_action plan
       assert_nil plan.run
@@ -85,7 +88,6 @@ module ::Actions::Katello::Repository
 
   class UpdateTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Update }
-    let(:pulp_action_class) { ::Actions::Pulp::Orchestration::Repository::Refresh }
     let(:candlepin_action_class) { ::Actions::Candlepin::Product::ContentUpdate }
     let(:repository) { katello_repositories(:fedora_17_unpublished) }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Update }
@@ -99,16 +101,13 @@ module ::Actions::Katello::Repository
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
 
-      plan_action action, repository.root, :unprotected => false
-      assert_action_planed_with action, pulp_action_class,
-        repository, proxy
+      plan_action action, repository.root, :unprotected => true
       assert_action_planed action, candlepin_action_class
     end
   end
 
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Destroy }
-    let(:pulp_action_class) { ::Actions::Pulp::Orchestration::Repository::Delete }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Delete }
     let(:unpublished_repository) { katello_repositories(:fedora_17_unpublished) }
     let(:in_use_repository) { katello_repositories(:fedora_17_no_arch) }
@@ -126,7 +125,7 @@ module ::Actions::Katello::Repository
 
       action.expects(:plan_self)
       plan_action action, in_use_repository
-      assert_action_planed_with action, pulp_action_class,
+      assert_action_planed_with action, pulp3_action_class,
         in_use_repository, proxy
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
@@ -191,13 +190,9 @@ module ::Actions::Katello::Repository
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, to_remove
 
-      assert_action_planed_with action,
-                                ::Actions::Katello::Applicability::Repository::Regenerate,
-                                :repo_ids => [custom_repository.id]
-      assert_action_planed_with action,
-                                ::Actions::Pulp::Orchestration::Repository::RemoveUnits,
-                                custom_repository, proxy,
-                                contents: uuids, content_unit_type: "rpm"
+      assert_action_planed_with action, ::Actions::Pulp3::Orchestration::Repository::RemoveUnits,
+        custom_repository, proxy,
+        contents: uuids, content_unit_type: "rpm"
     end
 
     it "does run capsule sync for custom repository" do
@@ -231,7 +226,7 @@ module ::Actions::Katello::Repository
       plan_action action, docker_repo, docker_repo.docker_manifests
 
       assert_action_planed_with action,
-       Actions::Pulp::Orchestration::Repository::RemoveUnits,
+       Actions::Pulp3::Orchestration::Repository::RemoveUnits,
        docker_repo, proxy,
        contents: docker_repo.docker_manifests.pluck(:id), content_unit_type: "docker_manifest"
     end
@@ -311,33 +306,6 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class UploadErrataTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::UploadErrata }
-
-    it 'plans' do
-      action.expects(:action_subject).with(custom_repository)
-      action.execution_plan.stub_planned_action(::Actions::Pulp::Repository::CreateUploadRequest) do |content_create|
-        content_create.stubs(output: { upload_id: 123 })
-      end
-
-      errata = [{:unit_metadata => "our-metadata", :unit_key => "our-key"}]
-
-      plan_action action, custom_repository, errata
-
-      assert_action_planed(action, ::Actions::Pulp::Repository::CreateUploadRequest)
-
-      assert_action_planed(action, ::Actions::Pulp::Repository::ImportUpload) do |(inputs)|
-        inputs[:unit_type_id].must_equal 'erratum'
-        inputs[:unit_metadata].must_equal 'our-metadata'
-        inputs[:unit_key].must_equal "our-key"
-        inputs[:upload_id].must_equal 123
-      end
-
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::DeleteUploadRequest,
-                                upload_id: 123)
-    end
-  end
-
   class UploadDockerTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::ImportUpload }
     setup { SmartProxy.stubs(:pulp_primary).returns(SmartProxy.new) }
@@ -356,7 +324,7 @@ module ::Actions::Katello::Repository
         upload_id: 1,
         unit_metadata: nil
       }
-      assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
+      assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                  docker_repository, SmartProxy.pulp_primary,
                                  import_upload_args
                                 )
@@ -379,7 +347,7 @@ module ::Actions::Katello::Repository
         upload_id: 1,
         unit_metadata: unit_keys[0]
       }
-      assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
+      assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                  docker_repository, SmartProxy.pulp_primary,
                                  import_upload_args
                                 )
@@ -397,7 +365,6 @@ module ::Actions::Katello::Repository
 
   class SyncTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Sync }
-    let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::Sync }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Sync }
     let(:pulp3_metadata_generate_action_class) { ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata }
 
@@ -410,35 +377,13 @@ module ::Actions::Katello::Repository
       refute_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
     end
 
-    it 'passes the source URL to pulp sync action when provided' do
-      action = create_action action_class
-      action.stubs(:action_subject).with(repository)
-      plan_action action, repository, :source_url => 'file:///tmp/'
-
-      assert_action_planed_with(action, pulp2_action_class, repository, proxy,
-                                source_url: 'file:///tmp/')
-    end
-
-    it 'passes force_full when skip_metadata_check is nil' do
-      action = create_action action_class
-      action.stubs(:action_subject).with(repository)
-      plan_action action, repository, :skip_metadata_check => true
-
-      assert_action_planed_with(action, pulp2_action_class, repository, proxy,
-                                source_url: nil, force_full: true, optimize: false)
-      assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
-    end
-
     it 'calls download action when validate_contents is passed' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, :validate_contents => true
 
-      assert_action_planed_with(action, pulp2_action_class, repository, proxy,
-                                source_url: nil, download_policy: 'on_demand', force_full: true, :optimize => false)
-
-      assert_action_planed_with(action, Actions::Pulp::Repository::Download, pulp_id: repository.pulp_id,
-                                options: {:verify_all_units => true})
+      assert_action_planed_with(action, pulp3_action_class, repository, proxy,
+                                download_policy: 'on_demand', :optimize => false)
       assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
     end
 
@@ -656,67 +601,6 @@ module ::Actions::Katello::Repository
         assert_include proxy_list, smart_proxy_service_1.smart_proxy
         assert_include proxy_list, smart_proxy_service_2.smart_proxy
         assert_equal repository.id, options[:repository_id]
-      end
-    end
-  end
-
-  class ExportRepositoryTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::Export }
-    let(:repository) { katello_repositories(:rhel_6_x86_64) }
-
-    it 'plans' do
-      # required for export pre-run validation to succeed
-      Setting['pulp_export_destination'] = '/tmp'
-
-      action.stubs(:action_subject)
-      plan_action(action, [repository], false, nil, 0, "8")
-
-      # ensure arguments get transformed and bubble through to pulp actions.
-      # Org label defaults to blank for this test, hence the group ID starts
-      # with '-'.
-      assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Create,
-                                :id => "8",
-                                :pulp_ids => [repository.pulp_id])
-      assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Export) do |(inputs)|
-        inputs[:id].must_equal "8"
-        inputs[:export_to_iso].must_equal false
-        # NB: the pulp export task writes to /v/l/p, not to a katello-owned dir
-        inputs[:export_directory].must_include '/var/lib/pulp/published'
-      end
-      assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Delete,
-                                :id => "8")
-    end
-
-    it 'plans with unit copy if needed' do
-      # required for export pre-run validation to succeed
-      Setting['pulp_export_destination'] = '/tmp'
-
-      action.stubs(:action_subject)
-      repository.stubs(:link?).returns(true)
-      repository.stubs(:target_repository).returns(custom_repository)
-
-      plan_action(action, [repository], false, nil, 0, "8")
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::Clear,
-                                repository, SmartProxy.pulp_primary)
-
-      assert_action_planed_with(action, Actions::Pulp::Repository::CopyAllUnits,
-                                repository, SmartProxy.pulp_primary, custom_repository)
-    end
-
-    it 'plans without export destination' do
-      action.stubs(:action_subject)
-
-      assert_raises(Foreman::Exception) do
-        plan_action(action, [repository], false, nil, 0, "8")
-      end
-    end
-
-    it 'plans without writable destination' do
-      Setting['pulp_export_destination'] = '/'
-      action.stubs(:action_subject)
-
-      assert_raises(Foreman::Exception) do
-        plan_action(action, [repository], false, nil, 0, repository.pulp_id)
       end
     end
   end

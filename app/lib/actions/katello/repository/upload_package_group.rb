@@ -2,21 +2,12 @@ module Actions
   module Katello
     module Repository
       class UploadPackageGroup < Actions::EntryAction
-        def plan(repository, params)
+        def plan(repository, _params)
           action_subject(repository)
-          unit_key = {"repo_id": repository.pulp_id, "id": params[:name].parameterize.underscore}
 
           sequence do
-            upload_request = plan_action(Pulp::Repository::CreateUploadRequest)
-            pkg_group_upload = plan_action(Pulp::Repository::ImportUpload,
-                                           pulp_id: repository.pulp_id,
-                                           unit_type_id: 'package_group',
-                                           unit_key: unit_key,
-                                           upload_id: upload_request.output[:upload_id],
-                                           unit_metadata: params)
-
             plan_action(IndexPackageGroups, repository)
-            plan_action(FinishUpload, repository, :dependency => pkg_group_upload.output, :generate_metadata => true)
+            plan_action(FinishUpload, repository, :generate_metadata => true)
           end
         end
 

@@ -15,7 +15,7 @@ module Actions
             fail ::Katello::Errors::ConflictException, _("The repository is already enabled")
           end
           repository = mapper.build_repository
-          plan_action(Repository::Create, repository, false, true)
+          plan_action(Repository::Create, repository, false)
           action_subject(repository)
           plan_self
         end

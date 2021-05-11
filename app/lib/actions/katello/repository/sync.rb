@@ -5,7 +5,6 @@ module Actions
       class Sync < Actions::EntryAction
         extend ApipieDSL::Class
         include Helpers::Presenter
-        include Actions::Katello::PulpSelector
         include ::Actions::ObservableAction
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
@@ -20,12 +19,10 @@ module Actions
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/CyclomaticComplexity
         # rubocop:disable Metrics/PerceivedComplexity
-        # rubocop:disable Metrics/AbcSize
         def plan(repo, options = {})
           action_subject(repo)
 
           source_url = options.fetch(:source_url, nil)
-          incremental = options.fetch(:incremental, false)
           validate_contents = options.fetch(:validate_contents, false)
           skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && repo.yum?)
           generate_applicability =  options.fetch(:generate_applicability, repo.yum?)
@@ -37,12 +34,6 @@ module Actions
           pulp_sync_options = {}
           pulp_sync_options[:download_policy] = ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
 
-          #pulp2 options
-          pulp_sync_options[:force_full] = true if skip_metadata_check && repo.yum?
-          pulp_sync_options[:repair_sync] = true if validate_contents && repo.deb?
-          pulp_sync_options[:remove_missing] = false if incremental
-          pulp_sync_options[:source_url] = source_url
-
           #pulp3 options
           pulp_sync_options[:optimize] = false if skip_metadata_check && repo.yum?
 
@@ -50,12 +41,10 @@ module Actions
             if SmartProxy.pulp_primary.pulp3_support?(repo) && validate_contents
               plan_action(Katello::Repository::VerifyChecksum, repo)
             else
-              plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents && repo.yum?
-              sync_action = plan_pulp_action([Actions::Pulp::Orchestration::Repository::Sync,
-                                              Actions::Pulp3::Orchestration::Repository::Sync],
-                                             repo,
-                                             SmartProxy.pulp_primary,
-                                             pulp_sync_options)
+              sync_action = plan_action(Actions::Pulp3::Orchestration::Repository::Sync,
+                                        repo,
+                                        SmartProxy.pulp_primary,
+                                        pulp_sync_options)
               output = sync_action.output
 
               contents_changed = skip_metadata_check || output[:contents_changed]
@@ -65,7 +54,6 @@ module Actions
               plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
               plan_action(Katello::Repository::CorrectChecksum, repo)
               concurrence do
-                plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents && repo.yum?
                 plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check && repo.yum?
                 plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
                 plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repo.id]) if generate_applicability
@@ -99,17 +87,9 @@ module Actions
         end
 
         def presenter
-          found = all_planned_actions(Pulp::Repository::Sync)
           found = all_planned_actions(Pulp3::Repository::Sync) if found.empty?
           found = all_planned_actions(Pulp3::Repository::Repair) if found.empty?
           Helpers::Presenter::Delegated.new(self, found)
-        end
-
-        def pulp_task_id
-          pulp_action = planned_actions(Pulp::Repository::Sync).first
-          if (pulp_task = Array(pulp_action.external_task).first)
-            pulp_task.fetch(:task_id)
-          end
         end
 
         def rescue_strategy

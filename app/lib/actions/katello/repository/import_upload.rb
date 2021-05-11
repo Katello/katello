@@ -30,8 +30,7 @@ module Actions
                   unit_metadata: unit_metadata
                 }
 
-                import_upload = plan_pulp_action([Actions::Pulp::Repository::ImportUpload,
-                                                  Actions::Pulp3::Orchestration::Repository::ImportUpload],
+                import_upload = plan_action(Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                   repository, SmartProxy.pulp_primary, import_upload_args)
                 plan_action(FinishUpload, repository, :import_upload_task => import_upload.output,
                             generate_metadata: false, content_type: options[:content_type])
