@@ -36,8 +36,7 @@ module Actions
           end
           if root.pulp_update_needed?
             sequence do
-              plan_pulp_action([::Actions::Pulp::Orchestration::Repository::Refresh,
-                                ::Actions::Pulp3::Orchestration::Repository::Update],
+              plan_action(::Actions::Pulp3::Orchestration::Repository::Update,
                                repository,
                                SmartProxy.pulp_primary)
               plan_self(:repository_id => root.library_instance.id)

@@ -6,6 +6,15 @@ module Katello
       @sync_permission = :sync_products
     end
 
+    def build_task_stub
+      task_attrs = [:id, :label, :pending, :execution_plan, :resumable?,
+                    :username, :started_at, :ended_at, :state, :result, :progress,
+                    :input, :humanized, :cli_example].inject({}) { |h, k| h.update k => nil }
+      task_attrs[:output] = {}
+
+      stub('task', task_attrs).mimic!(::ForemanTasks::Task)
+    end
+
     def models
       @organization = get_organization
       set_organization(@organization)
@@ -18,6 +27,7 @@ module Katello
       login_user(User.find(users(:admin).id))
       models
       permissions
+      ForemanTasks.stubs(:async_task).returns(build_task_stub)
     end
 
     def test_index

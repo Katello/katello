@@ -15,8 +15,9 @@ module Actions
             repos.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|
               concurrence do
                 repo_batch.each do |repo|
-                  plan_pulp_action([Actions::Pulp::Orchestration::Repository::SmartProxySync,
-                                    Actions::Pulp3::CapsuleContent::Sync],
+                  plan_pulp_action(
+                    [Actions::Pulp::Orchestration::Repository::SmartProxySync,
+                     Actions::Pulp3::CapsuleContent::Sync],
                                      repo, smart_proxy,
                                      skip_metadata_check: skip_metadata_check)
                 end

@@ -7,26 +7,26 @@ module Actions
     include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::MetadataGenerate }
-    let(:pulp_publish_class) { ::Actions::Pulp::Repository::DistributorPublish }
+    let(:pulp_metadata_generate_class) { ::Actions::Pulp3::Orchestration::Repository::GenerateMetadata }
     let(:yum_repo) { katello_repositories(:fedora_17_x86_64) }
     let(:yum_repo2) { katello_repositories(:fedora_17_x86_64_dev) }
     let(:action_options) do
-      { :force => false,
+      {
         :source_repository => nil,
-        :matching_content => false,
-        :dependency => nil
+        :matching_content => false
       }
     end
 
     before do
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      SmartProxy.any_instance.stubs(:pulp_primary).with(proxy)
     end
 
-    it 'plans a yum refresh' do
+    it 'plans a yum metadata generate' do
       action = create_action(action_class)
       plan_action(action, yum_repo)
 
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
+      assert_action_planed_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
             action_options)
     end
 
@@ -37,20 +37,10 @@ module Actions
       action = create_action(action_class)
       plan_action(action, yum_repo)
 
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
+      assert_action_planed_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
                                 action_options)
     ensure
       Location.current = old_location
-    end
-
-    it 'plans a yum refresh with force true' do
-      action = create_action(action_class)
-      plan_action(action, yum_repo, :force => true)
-
-      yum_action_options = action_options.clone
-      yum_action_options[:force] = true
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
-            yum_action_options)
     end
 
     it 'plans a yum refresh with source repo' do
@@ -59,7 +49,8 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:source_repository] = yum_repo2
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
+
+      assert_action_planed_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
             yum_action_options)
     end
 
@@ -69,7 +60,7 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:matching_content] = true
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
+      assert_action_planed_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
                                 yum_action_options)
     end
 
@@ -80,7 +71,7 @@ module Actions
 
       yum_action_options = action_options.clone
       yum_action_options[:matching_content] = not_falsey
-      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_primary,
+      assert_action_planed_with(action, pulp_metadata_generate_class, yum_repo, SmartProxy.pulp_primary,
                                 yum_action_options)
     end
   end

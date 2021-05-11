@@ -17,7 +17,7 @@ module Katello
       @fedora_dev = katello_repositories(:fedora_17_x86_64_dev)
       @on_demand_repo = katello_repositories(:fedora_17_x86_64)
       @docker_repo = katello_repositories(:busybox)
-      @smart_proxy = smart_proxies(:one)
+      @smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @srpm_repo = katello_repositories(:srpm_repo)
     end
 
@@ -449,42 +449,6 @@ module Katello
       end
     end
 
-    def test_create_with_ostree
-      repository = katello_repositories(:ostree)
-      sync_depth = '123'
-      sync_policy = "custom"
-      product = mock
-      product.expects(:add_repo).with({
-        :label => 'Fedora_Repository',
-        :name => 'Fedora Repository',
-        :url => 'http://hub.registry.com',
-        :content_type => 'ostree',
-        :arch => 'noarch',
-        :unprotected => true,
-        :gpg_key => nil,
-        :ssl_ca_cert => nil,
-        :ssl_client_cert => nil,
-        :ssl_client_key => nil}.with_indifferent_access
-                                     ).returns(repository.root)
-
-      product.expects(:gpg_key).returns(nil)
-      product.expects(:ssl_ca_cert).returns(nil)
-      product.expects(:ssl_client_cert).returns(nil)
-      product.expects(:ssl_client_key).returns(nil)
-      product.expects(:organization).returns(@organization)
-      product.expects(:redhat?).returns(false)
-      repository.root.expects(:ostree_upstream_sync_policy=).with(sync_policy)
-      repository.root.expects(:ostree_upstream_sync_depth=).with(sync_depth)
-
-      assert_sync_task(::Actions::Katello::Repository::CreateRoot, repository.root)
-
-      stub_editable_product_find(product)
-      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://hub.registry.com', :content_type => 'ostree', :ostree_upstream_sync_policy => sync_policy, :ostree_upstream_sync_depth => sync_depth }
-
-      assert_response :success
-      assert_template 'api/v2/common/create'
-    end
-
     def test_create_without_label_or_name
       post :create, params: { :product_id => @product.id }
       #should raise an error along the lines of invalid content type provided
@@ -782,8 +746,18 @@ module Katello
       assert_response 400
     end
 
+    def build_task_stub
+      task_attrs = [:id, :label, :pending, :execution_plan, :resumable?,
+                    :username, :started_at, :ended_at, :state, :result, :progress,
+                    :input, :humanized, :cli_example].inject({}) { |h, k| h.update k => nil }
+      task_attrs[:output] = {}
+
+      stub('task', task_attrs).mimic!(::ForemanTasks::Task)
+    end
+
     def test_sync_no_feed_urls_with_override
       repo = katello_repositories(:feedless_fedora_17_x86_64)
+      @controller.stubs(:async_task).returns(build_task_stub)
       post :sync, params: { :id => repo.id, :source_url => 'http://www.wikipedia.org' }
       assert_response :success
     end
@@ -924,50 +898,6 @@ module Katello
 
       assert_protected_action(:import_uploads, allowed_perms, denied_perms) do
         put :import_uploads, params: { :id => @repository.id, :uploads => [{'id' => '1'}] }
-      end
-    end
-
-    def test_export
-      Setting['pulp_export_destination'] = '/tmp'
-      post :export, params: { :id => @repository.id }
-      assert_response :success
-    end
-
-    def test_export_with_bad_date
-      post :export, params: { :id => @repository.id, :since => 'November 32, 1970' }
-      assert_response 400
-    end
-
-    def test_export_wrong_type
-      post :export, params: { :id => @on_demand_repo.id }
-      assert_response 400
-    end
-
-    def test_export_on_demand
-      Setting['pulp_export_destination'] = '/tmp'
-      post :export, params: { :id => @on_demand_repo.id }
-      assert_response 400
-    end
-
-    def test_export_with_date
-      Setting['pulp_export_destination'] = '/tmp'
-      post :export, params: { :id => @repository.id, :since => 'November 30, 1970' }
-      assert_response :success
-    end
-
-    def test_export_with_8601_date
-      Setting['pulp_export_destination'] = '/tmp'
-      post :export, params: { :id => @repository.id, :since => '2010-01-01T00:00:00' }
-      assert_response :success
-    end
-
-    def test_export_protected
-      allowed_perms = [@export_permission]
-      denied_perms = [@sync_permission, @create_permission, @read_permission,
-                      @destroy_permission, @update_permission]
-
-      assert_protected_action(:export, allowed_perms, denied_perms) do
-        post :export, params: { :id => @repository.id }
       end
     end
 

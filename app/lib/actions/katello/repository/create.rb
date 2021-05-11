@@ -2,18 +2,15 @@ module Actions
   module Katello
     module Repository
       class Create < Actions::EntryAction
-        include Actions::Katello::PulpSelector
-
-        def plan(repository, clone = false, plan_create = false)
+        def plan(repository, clone = false)
           repository.save!
           root = repository.root
 
           action_subject(repository)
 
           org = repository.organization
-          pulp2_create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do
-            create_action = plan_pulp_action([pulp2_create_action, Pulp3::Orchestration::Repository::Create],
+            create_action = plan_action(Pulp3::Orchestration::Repository::Create,
                                         repository, SmartProxy.pulp_primary)
 
             return if create_action.error

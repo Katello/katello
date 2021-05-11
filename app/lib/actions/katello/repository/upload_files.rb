@@ -22,8 +22,7 @@ module Actions
             concurrence do
               tmp_files.each do |file|
                 sequence do
-                  upload_action = plan_pulp_action([Pulp::Orchestration::Repository::UploadContent,
-                                                    Pulp3::Orchestration::Repository::UploadContent],
+                  upload_action = plan_action(Pulp3::Orchestration::Repository::UploadContent,
                                                    repository, SmartProxy.pulp_primary!, file, unit_type_id)
 
                   upload_actions << upload_action.output

@@ -2,20 +2,18 @@ module Actions
   module Katello
     module Repository
       class CloneContents < Actions::Base
-        include Actions::Katello::PulpSelector
         include Actions::Katello::CheckMatchingContent
 
         def plan(source_repositories, new_repository, options)
           filters = options.fetch(:filters, nil)
           rpm_filenames = options.fetch(:rpm_filenames, nil)
           generate_metadata = options.fetch(:generate_metadata, true)
-          purge_empty_contents = options.fetch(:purge_empty_contents, false)
           copy_contents = options.fetch(:copy_contents, true)
           solve_dependencies = options.fetch(:solve_dependencies, false)
 
           sequence do
             if copy_contents
-              plan_pulp_action([Pulp3::Orchestration::Repository::CopyAllUnits, Pulp::Orchestration::Repository::CopyAllUnits],
+              plan_action(Pulp3::Orchestration::Repository::CopyAllUnits,
                           new_repository,
                           SmartProxy.pulp_primary,
                           source_repositories,
@@ -29,10 +27,6 @@ module Actions
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
             index_options[:matching_content] = matching_content
             plan_action(Katello::Repository::IndexContent, index_options)
-
-            if purge_empty_contents && new_repository.backend_service(SmartProxy.pulp_primary).should_purge_empty_contents?
-              plan_action(Katello::Repository::PurgeEmptyContent, id: new_repository.id)
-            end
           end
         end
 

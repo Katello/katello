@@ -2,7 +2,6 @@ module Actions
   module Katello
     module Repository
       class MultiCloneContents < Actions::Base
-        include Actions::Katello::PulpSelector
         include Actions::Katello::CheckMatchingContent
 
         def plan(extended_repo_mapping, options)

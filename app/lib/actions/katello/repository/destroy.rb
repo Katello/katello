@@ -2,7 +2,6 @@ module Actions
   module Katello
     module Repository
       class Destroy < Actions::EntryAction
-        include Actions::Katello::PulpSelector
         middleware.use ::Actions::Middleware::RemoteAction
 
         # options:
@@ -20,8 +19,7 @@ module Actions
             fail repository.errors.messages.values.join("\n")
           end
 
-          plan_pulp_action([Actions::Pulp::Orchestration::Repository::Delete,
-                            Actions::Pulp3::Orchestration::Repository::Delete],
+          plan_action(Actions::Pulp3::Orchestration::Repository::Delete,
                            repository,
                            SmartProxy.pulp_primary)
 

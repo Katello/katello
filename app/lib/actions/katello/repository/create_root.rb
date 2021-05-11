@@ -10,7 +10,7 @@ module Actions
           repository.relative_path = repository.custom_repo_path
           repository.save!
           action_subject(repository)
-          plan_action(::Actions::Katello::Repository::Create, repository, false, true)
+          plan_action(::Actions::Katello::Repository::Create, repository, false)
         end
 
         def humanized_name

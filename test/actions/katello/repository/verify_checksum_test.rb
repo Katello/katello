@@ -20,11 +20,5 @@ module Actions::Katello::Repository
       tree = plan_action_tree(action_class, repository)
       assert_tree_planned_with(tree, Actions::Pulp3::Repository::Repair)
     end
-
-    it 'plans repair for pulp2 yum repositorites' do
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
-      tree = plan_action_tree(action_class, repository)
-      assert_tree_planned_with(tree, Actions::Pulp::Repository::Sync)
-    end
   end
 end

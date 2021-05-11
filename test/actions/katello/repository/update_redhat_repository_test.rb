@@ -7,7 +7,7 @@ module Actions
     include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::UpdateRedhatRepository }
-    let(:refresh_class) { ::Actions::Pulp::Repository::Refresh }
+    let(:refresh_class) { ::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
 
     it 'plans' do

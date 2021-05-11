@@ -3,7 +3,6 @@ module Actions
     module Repository
       class VerifyChecksum < Actions::EntryAction
         include Helpers::Presenter
-        include Actions::Katello::PulpSelector
 
         def plan(repo)
           action_subject(repo)

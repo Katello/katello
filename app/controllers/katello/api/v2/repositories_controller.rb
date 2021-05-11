@@ -301,36 +301,6 @@ module Katello
       raise HttpErrors::BadRequest, e.message
     end
 
-    api :POST, "/repositories/:id/export", N_("Export a repository")
-    param :id, :number, :desc => N_("Repository identifier"), :required => true
-    param :export_to_iso, :bool, :desc => N_("Export to ISO format"), :required => false
-    param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB"), :required => false
-    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z)"), :required => false
-    def export
-      if params[:export_to_iso].blank? && params[:iso_mb_size].present?
-        fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
-      end
-
-      if params[:since].present?
-        begin
-          params[:since].to_datetime
-        rescue
-          raise HttpErrors::BadRequest, _("Invalid date provided.")
-        end
-      end
-
-      fail HttpErrors::BadRequest, _("Repository content type must be 'yum' to export.") unless @repository.content_type == 'yum'
-
-      fail HttpErrors::BadRequest, _("On demand repositories cannot be exported.") if @repository.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
-
-      task = async_task(::Actions::Katello::Repository::Export, [@repository],
-                        ::Foreman::Cast.to_bool(params[:export_to_iso]),
-                        params[:since].try(:to_datetime),
-                        params[:iso_mb_size],
-                        @repository.pulp_id)
-      respond_for_async :resource => task
-    end
-
     api :PUT, "/repositories/:id", N_("Update a repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :name, String, :required => false
