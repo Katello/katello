@@ -14,6 +14,7 @@ module Katello
       def test_changing_url_updates_associated_repositories
         proxy = FactoryBot.create(:http_proxy)
         repo = katello_repositories(:rhel_6_x86_64)
+        repo.update(remote_href: 'remote_href')
         repo.root.update(http_proxy_policy: Katello::RootRepository::USE_SELECTED_HTTP_PROXY,
                          http_proxy_id: proxy.id)
 
@@ -33,6 +34,7 @@ module Katello
       def test_changing_username_updates_associated_repositories
         proxy = FactoryBot.create(:http_proxy)
         repo = katello_repositories(:rhel_6_x86_64)
+        repo.update(remote_href: 'remote_href')
         repo.root.update(http_proxy_policy: Katello::RootRepository::USE_SELECTED_HTTP_PROXY,
                          http_proxy_id: proxy.id)
 
@@ -52,6 +54,7 @@ module Katello
       def test_changing_password_updates_associated_repositories
         proxy = FactoryBot.create(:http_proxy)
         repo = katello_repositories(:rhel_6_x86_64)
+        repo.update(remote_href: 'remote_href')
         repo.root.update(http_proxy_policy: Katello::RootRepository::USE_SELECTED_HTTP_PROXY,
                          http_proxy_id: proxy.id)
 
@@ -68,12 +71,30 @@ module Katello
         proxy.update(password: 'sekr0t')
       end
 
+      def test_missing_remotes_skips_update_http_proxy_details
+        setup_default_proxy('http://foobar.com', nil, nil)
+        repo = katello_repositories(:rhel_6_x86_64)
+        repo.root.update(http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
+
+        global_repos = RootRepository.with_global_proxy.uniq.collect(&:library_instance).sort_by(&:pulp_id)
+        ForemanTasks.expects(:async_task).with(
+          ::Actions::BulkAction,
+          ::Actions::Katello::Repository::UpdateHttpProxyDetails,
+          global_repos).never
+
+        name = Setting[:content_default_http_proxy]
+        ::HttpProxy.find_by(name: name).update(password: 'sekr0t')
+      end
+
       def test_changing_global_default_proxy_updates_associated_repositories
         setup_default_proxy('http://foobar.com', nil, nil)
         repo = katello_repositories(:rhel_6_x86_64)
         repo.root.update(http_proxy_policy: Katello::RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
 
         global_repos = RootRepository.with_global_proxy.uniq.collect(&:library_instance).sort_by(&:pulp_id)
+        global_repos.each do |global_repo|
+          global_repo.update(remote_href: 'remote_href')
+        end
         ForemanTasks.expects(:async_task).with(
           ::Actions::BulkAction,
           ::Actions::Katello::Repository::UpdateHttpProxyDetails,
