@@ -2,8 +2,6 @@ module Katello
   module EventDaemon
     module Services
       class AgentEventReceiver
-        STATUS_CACHE_KEY = 'katello_agent_events'.freeze
-
         class Handler
           attr_accessor :processed, :failed
 
@@ -48,14 +46,12 @@ module Katello
           @agent_connection&.open? && @thread&.status.present?
         end
 
-        def self.status(refresh: true)
-          Rails.cache.fetch(STATUS_CACHE_KEY, force: refresh) do
-            {
-              running: running?,
-              processed_count: @handler&.processed || 0,
-              failed_count: @handler&.failed || 0
-            }
-          end
+        def self.status
+          {
+            running: running?,
+            processed_count: @handler&.processed || 0,
+            failed_count: @handler&.failed || 0
+          }
         end
       end
     end
