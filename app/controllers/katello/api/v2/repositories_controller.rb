@@ -286,7 +286,7 @@ module Katello
         fail HttpErrors::BadRequest, _("attempted to sync without a feed URL")
       end
 
-      task = async_task(::Actions::Katello::Repository::Sync, @repository, nil, sync_options)
+      task = async_task(::Actions::Katello::Repository::Sync, @repository, sync_options)
       respond_for_async :resource => task
     rescue Errors::InvalidActionOptionError => e
       raise HttpErrors::BadRequest, e.message
