@@ -58,8 +58,7 @@ module Katello
       def update_repository_proxy_details
         changes = self.previous_changes
         if changes.key?(:url) || changes.key?(:username) || changes.key?(:password)
-
-          repos = repositories_with_proxy(id).uniq.collect(&:library_instance)
+          repos = ::Katello::Repository.where(root_id: repositories_with_proxy(id).pluck(:id)).where.not(remote_href: nil).where(library_instance_id: nil)
 
           unless repos.empty?
             ForemanTasks.async_task(
