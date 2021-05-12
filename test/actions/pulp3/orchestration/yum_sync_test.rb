@@ -53,7 +53,7 @@ module ::Actions::Pulp3
       @repo.index_content #should clear out the repo
       assert_empty @repo.rpms
 
-      ForemanTasks.sync_task(::Actions::Katello::Repository::Sync, @repo, nil, skip_metadata_check: true)
+      ForemanTasks.sync_task(::Actions::Katello::Repository::Sync, @repo, skip_metadata_check: true)
 
       @repo.reload
       assert_equal old_url, @repo.version_href

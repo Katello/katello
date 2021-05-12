@@ -740,27 +740,4 @@ module Katello
       refute rhel7.in_content_view?(view)
     end
   end
-
-  class RepositoryApplicabilityTest < RepositoryTestBase
-    def setup
-      super
-      @lib_host = FactoryBot.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
-                                     :lifecycle_environment =>  @fedora_17_x86_64.environment)
-
-      @lib_host.content_facet.bound_repositories << @fedora_17_x86_64
-      @lib_host.content_facet.save!
-
-      @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)
-
-      @view_host = FactoryBot.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
-                                     :lifecycle_environment =>  @fedora_17_x86_64.environment)
-      @view_host.content_facet.bound_repositories = [@view_repo]
-      @view_host.content_facet.save!
-    end
-
-    def test_host_with_applicability
-      assert_includes @fedora_17_x86_64.hosts_with_applicability, @lib_host
-      assert_includes @fedora_17_x86_64.hosts_with_applicability, @view_host
-    end
-  end
 end

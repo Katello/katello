@@ -156,6 +156,10 @@ module Katello
       end
     end
 
+    def self.hosts_with_applicability
+      ::Host.joins(:content_facet => :bound_repositories).where("#{Katello::Repository.table_name}.root_id" => self.select(:id))
+    end
+
     def ensure_no_download_policy
       if !yum? && download_policy.present?
         errors.add(:download_policy, _("cannot be set for non-yum repositories."))
