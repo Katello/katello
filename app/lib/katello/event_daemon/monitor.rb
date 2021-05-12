@@ -38,6 +38,7 @@ module Katello
             begin
               service_class.close
               service_class.run
+              sleep 0.1
               @service_statuses[service_name] = service_class.status
             rescue => error
               Rails.logger.error("Error occurred while starting #{service_class}")
