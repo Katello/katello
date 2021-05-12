@@ -73,7 +73,7 @@ module Katello
 
       def ping_katello_agent(result)
         exception_watch(result) do
-          status = Katello::EventDaemon::Services::AgentEventReceiver.status(refresh: false)
+          status = Katello::EventDaemon::Runner.service_status(:katello_agent_events)
           event_daemon_status(status, result)
         end
       end
