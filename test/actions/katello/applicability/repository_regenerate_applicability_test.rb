@@ -18,11 +18,21 @@ module ::Actions::Katello::Applicability::Repository
       let(:action_class) { ::Actions::Katello::Applicability::Repository::Regenerate }
 
       it 'runs' do
-        Katello::Repository.any_instance.stubs(:hosts_with_applicability).returns([@host])
-        Katello::ApplicableHostQueue.expects(:push_host).with(@host.id)
+        @repo.update(last_contents_changed: DateTime.now, last_applicability_regen: Time.at(0).to_datetime)
+        Katello::RootRepository.stubs(:hosts_with_applicability).returns([@host])
+        Katello::ApplicableHostQueue.expects(:push_hosts).with([@host.id])
         Katello::EventQueue.expects(:push_event).with(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, 0)
 
-        ForemanTasks.sync_task(action_class, :repo_id => @repo.id)
+        ForemanTasks.sync_task(action_class, :repo_ids => [@repo.id])
+      end
+
+      it 'skips applicability triggering if not needed' do
+        @repo.update(last_contents_changed: Time.at(0).to_datetime, last_applicability_regen: DateTime.now)
+        Katello::RootRepository.stubs(:hosts_with_applicability).returns([@host])
+        Katello::ApplicableHostQueue.expects(:push_hosts).never
+        Katello::EventQueue.expects(:push_event).never
+
+        ForemanTasks.sync_task(action_class, :repo_ids => [@repo.id])
       end
     end
   end

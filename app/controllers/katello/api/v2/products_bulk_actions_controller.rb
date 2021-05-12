@@ -43,7 +43,6 @@ module Katello
       task = async_task(::Actions::BulkAction,
                         ::Actions::Katello::Repository::Sync,
                         syncable_repositories,
-                        nil,
                         :skip_metadata_check => skip_metadata_check,
                         :validate_contents => validate_contents)
 

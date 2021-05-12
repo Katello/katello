@@ -21,14 +21,14 @@ module Actions
         # rubocop:disable Metrics/CyclomaticComplexity
         # rubocop:disable Metrics/PerceivedComplexity
         # rubocop:disable Metrics/AbcSize
-        def plan(repo, _pulp_sync_task_id = nil, options = {})
+        def plan(repo, options = {})
           action_subject(repo)
 
           source_url = options.fetch(:source_url, nil)
           incremental = options.fetch(:incremental, false)
           validate_contents = options.fetch(:validate_contents, false)
           skip_metadata_check = options.fetch(:skip_metadata_check, false) || (validate_contents && repo.yum?)
-          generate_applicability = repo.yum?
+          generate_applicability =  options.fetch(:generate_applicability, repo.yum?)
 
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum/deb repositories.") if validate_contents && !repo.yum? && !repo.deb?
@@ -68,9 +68,7 @@ module Actions
                 plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents && repo.yum?
                 plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check && repo.yum?
                 plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
-                if generate_applicability
-                  plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_id => repo.id, :contents_changed => contents_changed)
-                end
+                plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repo.id]) if generate_applicability
               end
               plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
                         :contents_changed => contents_changed)

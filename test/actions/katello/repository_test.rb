@@ -385,7 +385,7 @@ module ::Actions::Katello::Repository
     it 'passes the source URL to pulp sync action when provided' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
-      plan_action action, repository, nil, :source_url => 'file:///tmp/'
+      plan_action action, repository, :source_url => 'file:///tmp/'
 
       assert_action_planed_with(action, pulp2_action_class, repository, proxy,
                                 source_url: 'file:///tmp/')
@@ -394,7 +394,7 @@ module ::Actions::Katello::Repository
     it 'passes force_full when skip_metadata_check is nil' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
-      plan_action action, repository, nil, :skip_metadata_check => true
+      plan_action action, repository, :skip_metadata_check => true
 
       assert_action_planed_with(action, pulp2_action_class, repository, proxy,
                                 source_url: nil, force_full: true, optimize: false)
@@ -404,7 +404,7 @@ module ::Actions::Katello::Repository
     it 'calls download action when validate_contents is passed' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
-      plan_action action, repository, nil, :validate_contents => true
+      plan_action action, repository, :validate_contents => true
 
       assert_action_planed_with(action, pulp2_action_class, repository, proxy,
                                 source_url: nil, download_policy: 'on_demand', force_full: true, :optimize => false)
