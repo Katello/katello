@@ -740,10 +740,6 @@ module Katello
       throw :abort unless destroyable?
     end
 
-    def hosts_with_applicability
-      ::Host.joins(:content_facet => :bound_repositories).where("#{Katello::Repository.table_name}.id" => (self.clones.pluck(:id) + [self.id]))
-    end
-
     def docker_meta_tag_count
       DockerMetaTag.in_repositories(self.id).count
     end
