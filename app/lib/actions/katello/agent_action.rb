@@ -49,6 +49,8 @@ module Actions
 
             schedule_timeout(timeout)
           end
+        when Dynflow::Action::Skip
+          # Do not fail and goto a paused state, instead skip and send the state to warning so we do not block other host actions
         when Dynflow::Action::Timeouts::Timeout
           process_timeout
         when 'accepted'
