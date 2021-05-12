@@ -19,8 +19,13 @@ module Actions
             syncable_products = sync_plan.products.syncable
             syncable_roots = ::Katello::RootRepository.where(:product_id => syncable_products).has_url
 
-            plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Sync, syncable_roots.map(&:library_instance).compact) unless syncable_roots.empty?
-            plan_self(:sync_plan_name => sync_plan.name)
+            sequence do
+              plan_self(:sync_plan_name => sync_plan.name)
+              if syncable_roots.any?
+                plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Sync, syncable_roots.map(&:library_instance).compact, generate_applicability: false)
+                plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => syncable_roots.map(&:library_instance).map(&:id))
+              end
+            end
           end
         end
 

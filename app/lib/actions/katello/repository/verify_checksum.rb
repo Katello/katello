@@ -13,7 +13,7 @@ module Actions
           else
             options = {}
             options[:validate_contents] = true
-            plan_action(Actions::Katello::Repository::Sync, repo, nil, options)
+            plan_action(Actions::Katello::Repository::Sync, repo, options)
           end
         end
 

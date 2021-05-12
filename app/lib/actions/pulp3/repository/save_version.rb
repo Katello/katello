@@ -23,6 +23,7 @@ module Actions
           if version_href
             if repo.version_href != version_href || input[:force_fetch_version]
               output[:contents_changed] = true
+              repo.update(:last_contents_changed => DateTime.now)
               repo.update(:version_href => version_href)
             end
           else
