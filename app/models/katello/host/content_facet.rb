@@ -84,10 +84,7 @@ module Katello
 
       def self.trigger_applicability_generation(host_ids)
         host_ids = [host_ids] unless host_ids.is_a?(Array)
-
-        host_ids.each do |host_id|
-          ::Katello::ApplicableHostQueue.push_host(host_id)
-        end
+        ::Katello::ApplicableHostQueue.push_hosts(host_ids)
         ::Katello::EventQueue.push_event(::Katello::Events::GenerateHostApplicability::EVENT_TYPE, 0)
       end
 
