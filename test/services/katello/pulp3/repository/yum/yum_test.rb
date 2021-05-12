@@ -51,6 +51,27 @@ module Katello
             refute service.common_remote_options[:password]
           end
         end
+
+        class YumVcrTest < ::ActiveSupport::TestCase
+          include RepositorySupport
+
+          def setup
+            @repo = katello_repositories(:fedora_17_x86_64)
+            @proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+          end
+
+          def test_create_remote_with_http_proxy_creds
+            @service.stubs(:generate_backend_object_name).returns("#{@repo.name}-test")
+            HttpProxy.find_by(name: "myhttpproxy").update(username: 'username', password: 'password')
+            @repo.root.update(http_proxy_policy: ::Katello::RootRepository::USE_SELECTED_HTTP_PROXY)
+            @repo.root.update(http_proxy: HttpProxy.find_by(name: "myhttpproxy"))
+
+            remote_file_data = @service.api.class.remote_class.new(@service.remote_options)
+            remote_response = @service.api.remotes_api.create(remote_file_data)
+            @service.delete_remote(remote_response.pulp_href)
+          end
+        end
       end
     end
   end

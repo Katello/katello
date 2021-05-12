@@ -17,7 +17,7 @@ module Katello
 
       def update_global_proxies
         if saved_change_to_attribute?(:value) && name == 'content_default_http_proxy'
-          repos = RootRepository.with_global_proxy.collect(&:library_instance).uniq
+          repos = ::Katello::Repository.joins(:root).merge(Katello::RootRepository.with_global_proxy).where.not(remote_href: nil).where(library_instance_id: nil)
 
           unless repos.empty?
             ForemanTasks.async_task(
