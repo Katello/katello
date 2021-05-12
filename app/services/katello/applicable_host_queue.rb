@@ -8,8 +8,8 @@ module Katello
       ::Katello::HostQueueElement.all.size
     end
 
-    def self.push_host(host_id)
-      HostQueueElement.create!({ host_id: host_id })
+    def self.push_hosts(ids)
+      HostQueueElement.import ids.map { |host_id| { host_id: host_id } }, validate: false
     end
 
     def self.pop_hosts(amount = self.batch_size)
