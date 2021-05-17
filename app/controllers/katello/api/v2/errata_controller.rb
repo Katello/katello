@@ -3,10 +3,8 @@ module Katello
     apipie_concern_subst(:a_resource => N_("an erratum"), :resource => "errata")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
-    before_action :find_host, :only => [:index, :available_errata]
-    before_action :find_optional_organization, :only => [:index, :auto_complete_search, :available_errata]
-    before_action :find_environment, :only => :available_errata
-    before_action :find_filter, :only => :available_errata
+    before_action :find_host, :only => [:index]
+    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
 
     api :GET, "/errata", N_("List errata")
     param :organization_id, :number, :desc => N_("Organization identifier")
@@ -60,25 +58,6 @@ module Katello
         end
       end
       collection
-    end
-
-    api :GET, "/content_view_versions/:id/available_errata", N_("Return errata that can be added to the Content View Version via an Incremental Update. Will be removed in Katello 4.1."), :deprecated => true
-    param :id, :number, :desc => N_("Content View Version identifier"), :required => true
-    param :organization_id, :number, :desc => N_("Organization identifier")
-    param :content_view_filter_id, :number, :desc => N_("Content View Filter identifier")
-    param :repository_id, :number, :desc => N_("Repository identifier")
-    param :environment_id, :number, :desc => N_("Environment identifier")
-    param :cve, String, :desc => N_("CVE identifier")
-    param :host_id, :number, :desc => N_("Host id to list applicable errata for")
-    param :errata_restrict_applicable, :bool, :desc => N_("Return errata that are applicable to one or more hosts (defaults to true if host_id is specified)")
-    param :errata_restrict_installable, :bool, :desc => N_("Return errata that are upgradable on one or more hosts")
-    param_group :search, Api::V2::ApiController
-    def available_errata
-      params[:content_view_version_id] = params[:id]
-      find_content_view_version
-      params[:available_for] = "content_view_version"
-      sort_by, sort_order, options = sort_options
-      respond_for_index(:collection => scoped_search(index_relation, sort_by, sort_order, options))
     end
 
     private
