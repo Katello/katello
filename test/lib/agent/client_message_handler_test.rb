@@ -25,7 +25,8 @@ module Katello
           dynflow_step_id: 2
         )
 
-        ForemanTasks::Task.expects(:exists?).returns(true)
+        task = mock(result: 'pending')
+        ForemanTasks::Task.expects(:find_by_external_id).with(dispatch_history.dynflow_execution_plan_id).returns(task)
         mock_world = mock('mock world', event: true)
         mock_dynflow = stub('mock dynflow', world: mock_world, 'world=' => mock_world)
         ForemanTasks.stubs(:dynflow).returns(mock_dynflow)
@@ -52,7 +53,8 @@ module Katello
           dynflow_step_id: 2
         )
 
-        ForemanTasks::Task.expects(:exists?).returns(true)
+        task = mock(result: 'pending')
+        ForemanTasks::Task.expects(:find_by_external_id).with(dispatch_history.dynflow_execution_plan_id).returns(task)
         mock_world = mock('mock world', event: true)
         mock_dynflow = stub('mock dynflow', world: mock_world, 'world=' => mock_world)
         ForemanTasks.stubs(:dynflow).returns(mock_dynflow)
