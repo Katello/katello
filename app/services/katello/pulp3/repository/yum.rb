@@ -18,6 +18,7 @@ module Katello
         end
 
         def extract_sles_token
+          return [nil, nil] if root.url.blank?
           uri = URI(root.url)
           query = uri.query
           uri.query = nil
