@@ -21,6 +21,17 @@ module ::Actions::Pulp3
         ssl_client_key: katello_gpg_keys(:unassigned_gpg_key))
     end
 
+    def test_update_http_proxy_with_no_url
+      @repo.root.update(url: nil)
+      @repo.root.update(http_proxy_policy: ::Katello::RootRepository::USE_SELECTED_HTTP_PROXY)
+      @repo.root.update(http_proxy_id: ::HttpProxy.find_by(name: 'myhttpproxy'))
+
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Update,
+        @repo,
+        @primary)
+    end
+
     def test_update_ssl_validation
       refute @repo.root.verify_ssl_on_sync, "Respository verify_ssl_on_sync option was false."
       @repo.root.update(
