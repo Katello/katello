@@ -185,47 +185,5 @@ module Katello
         get :show, params: { :repository_id => @test_repo.id, :id => errata.errata_id }
       end
     end
-
-    def test_available_errata
-      get :available_errata, params: { :id => @content_view_version.id }
-
-      assert_response :success
-      assert_template "katello/api/v2/errata/available_errata"
-    end
-
-    def test_available_errata_with_repository_id
-      get :available_errata, params: { :id => @content_view_version.id, :repository_id => @test_repo.id }
-
-      assert_response :success
-      assert_template "katello/api/v2/errata/available_errata"
-    end
-
-    def test_available_errata_with_cve
-      cve = katello_erratum_cves(:cve)
-
-      get :available_errata, params: { :id => @content_view_version.id, :cve => cve.cve_id }
-
-      assert_response :success
-      assert_template "katello/api/v2/errata/available_errata"
-    end
-
-    def test_available_errata_with_applicable
-      get :available_errata, params: { :id => @content_view_version.id, :errata_restrict_applicable => true }
-
-      assert_response :success
-      assert_template "katello/api/v2/errata/available_errata"
-    end
-
-    def test_available_errata_protected
-      cv_auth_permissions = [:view_content_views]
-      cv_unauth_permissions = [
-        :create_content_views, :edit_content_views, :destroy_content_views, :publish_content_views,
-        :promote_or_remove_content_views, :export_content_views
-      ]
-      all_unauth_permissions = @auth_permissions + @unauth_permissions + cv_unauth_permissions
-      assert_protected_action(:available_errata, cv_auth_permissions, all_unauth_permissions) do
-        get :available_errata, params: { :id => @content_view_version.id }
-      end
-    end
   end
 end
