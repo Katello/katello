@@ -15,7 +15,7 @@ module Katello
 
     def_param_group :packages_or_groups do
       param :packages, Array, :desc => N_("List of package names"), :required => false
-      param :groups, Array, :desc => N_("List of package group names"), :required => false
+      param :groups, Array, :desc => N_("List of package group names (Deprecated)"), :required => false
     end
 
     api :GET, "/hosts/:host_id/packages", N_("List packages installed on the host")

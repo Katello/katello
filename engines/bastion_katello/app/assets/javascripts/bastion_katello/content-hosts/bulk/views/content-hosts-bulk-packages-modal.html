@@ -15,6 +15,11 @@
           Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent.
           </span>
       </p>
+      <p bst-alert="warning">
+        <span translate>
+          Group package actions are being deprecated, and will be removed in a future version.
+          </span>
+      </p>
     </div>
 
     <span uib-dropdown class="input-group-btn">
@@ -64,7 +69,7 @@
                  ng-change="updatePlaceholder(content.contentType)"
                  ng-disabled="content.confirm"
                  value="package_group"/>
-          <span translate>Package Group</span>
+          <span translate>Package Group (Deprecated)</span>
         </label>
       </div>
 
