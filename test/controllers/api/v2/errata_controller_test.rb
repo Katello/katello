@@ -127,7 +127,7 @@ module Katello
       cv_auth_permissions = [:view_content_views]
       cv_unauth_permissions = [
         :create_content_views, :edit_content_views, :destroy_content_views, :publish_content_views,
-        :promote_or_remove_content_views, :export_content_views
+        :promote_or_remove_content_views, :export_content
       ]
       all_unauth_permissions = @unauth_permissions + cv_unauth_permissions
       assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions) do

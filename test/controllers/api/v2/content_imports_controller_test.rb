@@ -35,8 +35,8 @@ module Katello
       @update_permission = :edit_content_views
       @destroy_permission = :destroy_content_views
       @publish_permission = :publish_content_views
-      @export_permission = :export_content_views
-      @org_import_permission = :import_library_content
+      @export_permission = :export_content
+      @org_import_permission = :import_content
     end
 
     def setup
@@ -46,7 +46,7 @@ module Katello
     end
 
     def test_version_protected
-      allowed_perms = [[@publish_permission, @create_permission]]
+      allowed_perms = [[@publish_permission, @create_permission, @org_import_permission]]
       denied_perms = [@create_permission, @publish_permission, @update_permission,
                       @destroy_permission, @view_permission, @export_permission]
       org = get_organization

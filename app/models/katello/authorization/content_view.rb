@@ -24,10 +24,6 @@ module Katello
       authorized?(:promote_or_remove_content_views) && Katello::KTEnvironment.any_promotable?
     end
 
-    def exportable?
-      authorized?(:export_content_views)
-    end
-
     module ClassMethods
       def readable
         authorized(:view_content_views)
@@ -35,10 +31,6 @@ module Katello
 
       def creatable
         authorized(:view_content_views)
-      end
-
-      def importable?
-        creatable? && publishable?
       end
 
       def readable_as(user)
@@ -75,7 +67,11 @@ module Katello
       end
 
       def exportable
-        authorized(:export_content_views)
+        where(organization: Organization.authorized(:export_content))
+      end
+
+      def importable
+        where(organization: Organization.authorized(:import_content))
       end
 
       def readable_repositories(repo_ids = nil)

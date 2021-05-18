@@ -359,6 +359,15 @@ Foreman::Plugin.register :katello do
     :view_operatingsystems, :view_smart_proxies
   ]
 
+  role 'Content Importer', [
+    :import_content, :create_products, :create_content_views,
+    :edit_products, :edit_content_views, :view_organizations
+  ], 'Role granting permission to import content views in an organization'
+
+  role 'Content Exporter', [
+    :export_content, :view_products, :view_content_views, :view_organizations
+  ], 'Role granting permission to export content views in an organization'
+
   def find_katello_assets(args = {})
     type = args.fetch(:type, nil)
     vendor = args.fetch(:vendor, false)
