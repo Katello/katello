@@ -8,6 +8,11 @@
       Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent.
       </span>
   </p>
+  <p bst-alert="warning">
+    <span translate>
+      Group package actions are being deprecated, and will be removed in a future version.
+      </span>
+  </p>
   <section>
     <div class="row">
       <form ng-submit="performPackageAction(packageAction.actionType, packageAction.term)" role="form">
@@ -17,8 +22,8 @@
             <option value="packageInstall" translate>Package Install</option>
             <option value="packageUpdate" translate>Package Update</option>
             <option value="packageRemove" translate>Package Remove</option>
-            <option value="groupInstall" translate>Group Install</option>
-            <option value="groupRemove" translate>Group Remove</option>
+            <option value="groupInstall" translate>Group Install (Deprecated)</option>
+            <option value="groupRemove" translate>Group Remove (Deprecated)</option>
           </select>
         </div>
 
