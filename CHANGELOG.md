@@ -1,3 +1,42 @@
+# 4.0.1 (2021-05-18)
+
+## Features
+
+### Notifications
+ * Expose Katello events for Webhooks ([#32224](https://projects.theforeman.org/issues/32224), [dec56858](https://github.com/Katello/katello.git/commit/dec56858822e6bf6d53adeedc0a92b9619832168))
+
+## Bug Fixes
+
+### Client/Agent
+ * katello-agent uses incorrect ping mechanism ([#32591](https://projects.theforeman.org/issues/32591), [7c9aa78f](https://github.com/Katello/katello.git/commit/7c9aa78fb5c5c14ea15af759a9d36fd4a7368377))
+ * katello-agent actions can prematurely time out ([#32569](https://projects.theforeman.org/issues/32569), [54afc67e](https://github.com/Katello/katello.git/commit/54afc67edd3aa7e85ecea53881b2f5d9e4248784))
+ * Potential race condition in katello-agent dynflow actions ([#32351](https://projects.theforeman.org/issues/32351), [ac1afc93](https://github.com/Katello/katello.git/commit/ac1afc93eb2523b7ea4dc6ad68ca635d896a2eda))
+
+### Container
+ * katello should pass Docker-Content-Digest from pulp3 to the container client ([#32426](https://projects.theforeman.org/issues/32426), [be9af1d1](https://github.com/Katello/katello.git/commit/be9af1d1c8071a29a940737bb26eaf2daef80fc9))
+
+### Repositories
+ * Need to remove background download policy message from the repo creation page ([#32402](https://projects.theforeman.org/issues/32402), [83d15b46](https://github.com/Katello/katello.git/commit/83d15b462b6e383236c47f668b6c9be4da2706b9))
+ * Update pulp-deb to at least 2.9.1 due to syncing bug ([#32395](https://projects.theforeman.org/issues/32395))
+ * separator for releases in deb repository is whitespace, not comma ([#31999](https://projects.theforeman.org/issues/31999), [bc354d0a](https://github.com/Katello/katello.git/commit/bc354d0a403eb3ab7d8976ff86368b326684f318))
+ * Katello not able to handle kickstarts with multiple variants effectively ([#31801](https://projects.theforeman.org/issues/31801), [397f6a2a](https://github.com/Katello/katello.git/commit/397f6a2a7ead98409d1a8848a165499b570dd983))
+ * repository update immediately after repository creation fails due to race condition  {"base_path":["This field must be unique."]}               ([#31322](https://projects.theforeman.org/issues/31322), [62a79f9c](https://github.com/Katello/katello.git/commit/62a79f9ca909c073d285f5775a4f3c97c44cbb00))
+
+### Hammer
+ * hammer-cli-katello: Fail on pulp2 import/export if you have pulp3 ([#32089](https://projects.theforeman.org/issues/32089))
+
+### Content Views
+ * Add API call to get all RPMs for a CV filter, both added and available ([#31971](https://projects.theforeman.org/issues/31971))
+
+### Web UI
+ * Update translations ([#31861](https://projects.theforeman.org/issues/31861), [ab1b5bee](https://github.com/Katello/katello.git/commit/ab1b5bee6c421e59b854032f79fa3730fdeed217))
+
+### Other
+ * Pin qpid_proton to "< 0.34" ([#32619](https://projects.theforeman.org/issues/32619), [a2c5bf1c](https://github.com/Katello/katello.git/commit/a2c5bf1c36c891cf5f4e4d663927576ab455ac91))
+ * Make helper methods public for webhooks context ([#32523](https://projects.theforeman.org/issues/32523), [ef1c7776](https://github.com/Katello/katello.git/commit/ef1c77769ed7293b556002e21887929c98b81869))
+ * katello:clean_backend_objects still attempts to connect to Pulp 2 ([#32475](https://projects.theforeman.org/issues/32475), [ba26191b](https://github.com/Katello/katello.git/commit/ba26191bbcdaf576c88c139794afff4f93212a21))
+ * Use pulp_deb 2.9 for Katello 4.0 ([#32471](https://projects.theforeman.org/issues/32471))
+ 
 # 4.0.0 (2021-04-19)
 
 ## Features
