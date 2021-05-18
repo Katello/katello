@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Grid, GridItem, TextContent, Text, TextVariants, Button, Flex, FlexItem } from '@patternfly/react-core';
+import { Link } from 'react-router-dom';
+import { Grid, GridItem, TextContent, Text, TextVariants, Button, Flex, FlexItem, Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
+import Skeleton from 'react-loading-skeleton';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
@@ -60,6 +62,15 @@ const ContentViewDetails = ({ match }) => {
     <Grid className="grid-with-margin">
       <DetailsContainer cvId={cvId}>
         <React.Fragment>
+          <Breadcrumb style={{ marginTop: '15px' }}>
+            <BreadcrumbItem
+              aria-label="cv_breadcrumb"
+              render={() => (<Link to="/labs/content_views" >{__('Content Views')}</Link>)}
+            />
+            <BreadcrumbItem aria-label="cv_breadcrumb_cv" isActive>
+              {name || <Skeleton />}
+            </BreadcrumbItem>
+          </Breadcrumb>
           <GridItem span={8}>
             <Flex>
               <FlexItem>
