@@ -232,15 +232,18 @@ module Katello
       end
 
       def katello_agent_installed?
-        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-agent').any?
+        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-agent').any? ||
+          self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => 'katello-agent').any?
       end
 
       def tracer_installed?
-        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-host-tools-tracer').any?
+        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-host-tools-tracer').any? ||
+          self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => 'katello-host-tools-tracer').any?
       end
 
       def host_tools_installed?
-        host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => HOST_TOOLS_PACKAGE_NAME).any?
+        host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => HOST_TOOLS_PACKAGE_NAME).any? ||
+          host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => HOST_TOOLS_PACKAGE_NAME).any?
       end
 
       def update_errata_status
