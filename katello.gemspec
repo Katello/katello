@@ -71,8 +71,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "minitest-reporters"
   gem.add_development_dependency "mocha"
   gem.add_development_dependency "vcr", "< 4.0.0"
-  # https://github.com/Katello/katello/pull/9365
-  gem.add_development_dependency "psych", "< 4.0.0"
   gem.add_development_dependency "webmock"
   gem.add_development_dependency "rubocop-checkstyle_formatter"
   gem.add_development_dependency "simplecov"
