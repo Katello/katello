@@ -254,7 +254,14 @@ module Katello
     end
 
     def ensure_valid_upstream_authorization
-      return if (self.upstream_username.blank? && self.upstream_password.blank?)
+      # Make sure that the upstream_username / upstream_password is really unset
+      # in case if the string is maybe just ""
+      if self.upstream_username.blank? && self.upstream_password.blank?
+        self.upstream_username = nil
+        self.upstream_password = nil
+        return
+      end
+
       if redhat?
         errors.add(:base, N_("Upstream username and password may only be set on custom repositories."))
       elsif self.upstream_username.blank?
