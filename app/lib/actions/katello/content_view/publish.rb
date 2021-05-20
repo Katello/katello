@@ -77,7 +77,7 @@ module Actions
             plan_action(Candlepin::Environment::SetContent, content_view, library, content_view.content_view_environment(library)) unless options[:skip_promotion]
             plan_action(Katello::Foreman::ContentUpdate, library, content_view) unless options[:skip_promotion]
             plan_action(ContentView::ErrataMail, content_view, library) unless options[:skip_promotion]
-
+            plan_action(ContentView::Promote, version, find_environments(options[:environment_ids]), options[:is_force_promote]) if options[:environment_ids]&.any?
             plan_self(history_id: history.id, content_view_id: content_view.id,
                       auto_publish_composite_ids: auto_publish_composite_ids(content_view),
                       content_view_version_name: version.name,
@@ -184,6 +184,11 @@ module Actions
           else
             content_view.create_new_version
           end
+        end
+
+        def find_environments(environment_ids)
+          return nil unless environment_ids&.any?
+          ::Katello::KTEnvironment.where(:id => environment_ids)
         end
 
         def handle_import(version, path:, metadata:)

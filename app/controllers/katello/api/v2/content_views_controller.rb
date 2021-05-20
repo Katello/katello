@@ -90,6 +90,8 @@ module Katello
     param :description, String, :desc => N_("Description for the new published content view version")
     param :major, :number, :desc => N_("Override the major version number"), :required => false
     param :minor, :number, :desc => N_("Override the minor version number"), :required => false
+    param :environment_ids, Array, :desc => N_("Identifiers for Lifecycle Environment"), :required => false
+    param :is_force_promote, :bool, :desc => N_("force content view promotion and bypass lifecycle environment restriction"), :required => false
     param :repos_units, Array, :desc => N_("Specify the list of units in each repo"), :required => false do
       param :label, String, :desc => N_("repo label"), :required => true
       param :rpm_filenames, Array, of: String, :desc => N_("list of rpm filename strings to include in published version"), :required => true
@@ -108,6 +110,8 @@ module Katello
       end
 
       task = async_task(::Actions::Katello::ContentView::Publish, @content_view, params[:description],
+                        :environment_ids => params[:environment_ids],
+                        :is_force_promote => params[:is_force_promote],
                         :major => params[:major],
                         :minor => params[:minor],
                         :repos_units => params[:repos_units])
