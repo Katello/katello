@@ -8,7 +8,7 @@ module Actions
         def plan(proxy)
           sequence do
             plan_action(Actions::Pulp::Orchestration::OrphanCleanup::RemoveOrphans, proxy)
-            if proxy.pulp3_enabled?
+            if proxy.pulp3_enabled? && ::Katello::Ping.pulpcore_enabled
               plan_action(
                 Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans,
                 proxy)
