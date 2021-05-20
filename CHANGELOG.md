@@ -1,3 +1,51 @@
+# 3.18.3 (2021-05-20)
+
+## Features
+
+### Other
+ * Enable deb content for 2to3 migration ([#32420](https://projects.theforeman.org/issues/32420))
+
+## Bug Fixes
+
+### Repositories
+ * katello:delete_orphaned_content fails on Katello 3.18 with "backend service pulp3: 503 Service Unavailable" ([#32623](https://projects.theforeman.org/issues/32623), [63a1d5ba](https://github.com/Katello/katello.git/commit/63a1d5bae152290cc0a31e9f1eea491749f8a009))
+ * pulp3_migration_stats rake task can underestimate the migration timing ([#32449](https://projects.theforeman.org/issues/32449))
+ * Deb-content should also publish original structure ([#32393](https://projects.theforeman.org/issues/32393), [c46df71a](https://github.com/Katello/katello.git/commit/c46df71a67ab07cd365194d47858f83f94b2379c))
+ * Pulp 3 migration abort fails with 409 ([#32226](https://projects.theforeman.org/issues/32226), [20425810](https://github.com/Katello/katello.git/commit/204258102b40c9e35d01f5ad1680c9d0e694bcd6), [50be17da](https://github.com/Katello/katello.git/commit/50be17daf2ae161ae95026ff50092ef9ce6b6446))
+ * Pulp3 Migration after migration reset doesn't import errata info from pulp3 ([#32210](https://projects.theforeman.org/issues/32210))
+ * excess memory consumption when importing errata during pulp3 migration ([#32142](https://projects.theforeman.org/issues/32142))
+ * pulp3 task group actions 'end' as soon as one subtask fails ([#31905](https://projects.theforeman.org/issues/31905), [a09e10c0](https://github.com/Katello/katello.git/commit/a09e10c0da42037eee63e0347d616b3b294bba50))
+ * Some repositories cannot be synchronized with error: Artifact() got an unexpected keyword argument 'sha' ([#31559](https://projects.theforeman.org/issues/31559))
+
+### Tests
+ * npm install error on nightly ([#32531](https://projects.theforeman.org/issues/32531), [5d1294c8](https://github.com/Katello/katello.git/commit/5d1294c849e98ad515922ae615bd5e460a3dd36b))
+ * Try to fix intermittent ApplicableContentHelper test ([#31954](https://projects.theforeman.org/issues/31954), [79d423fe](https://github.com/Katello/katello.git/commit/79d423fe1aa18a538e081df2f245fcad8593ea25), [35b80d22](https://github.com/Katello/katello.git/commit/35b80d22d90d19d1202a28e5441cb94b8d4a7d36))
+
+### Hosts
+ * Inherited hostgroup values are not set when creating host ([#32464](https://projects.theforeman.org/issues/32464), [23a5b7a7](https://github.com/Katello/katello.git/commit/23a5b7a70f6054a5bfcc61affef58c8061e40eee))
+
+### Content Views
+ * Do the orphans cleanup before switchover to pulp3 ([#32302](https://projects.theforeman.org/issues/32302))
+
+### Container
+ * syncing pulp3 to pulp2  container content sometimes fails with PLP0000: 'fsLayers ([#32230](https://projects.theforeman.org/issues/32230), [c01834bd](https://github.com/Katello/katello.git/commit/c01834bd2e79974988b064826f1ab5197a54c54b))
+
+### Documentation
+ * Katello 3.18 Documentation ([#32165](https://projects.theforeman.org/issues/32165))
+
+### Inter Server Sync
+ * Failed to import content view with more than 20 repositories enabled ([#32129](https://projects.theforeman.org/issues/32129))
+
+### Tooling
+ * katello content switchover rake task uses a sync task instead of an async task ([#32109](https://projects.theforeman.org/issues/32109))
+ * loosen pulp 2to3 migration bindings gem requirement ([#32062](https://projects.theforeman.org/issues/32062))
+ * foreman-rake katello:clean_backend_objects fails with "      "The Dynflow world was not initialized yet. If your plugin uses it, make sure to call Rails.application.dynflow.require! in some initializer"}," ([#31725](https://projects.theforeman.org/issues/31725), [b8c73d76](https://github.com/Katello/katello.git/commit/b8c73d768baed4d00b97cfd43997bb826a1a36a3), [58d14a2a](https://github.com/Katello/katello.git/commit/58d14a2ad729b658aa79c25fb06e224ad8f914c1), [e1bb601c](https://github.com/Katello/katello.git/commit/e1bb601c2a381369f7d25b1c961b574f54515794))
+ * db seed fails with 'Unknown remote execution feature katello_module_stream_action' ([#31416](https://projects.theforeman.org/issues/31416), [c9693c16](https://github.com/Katello/katello.git/commit/c9693c16e46a1276621a86694023b5892f53eb52))
+
+### Other
+ * Update pulp-rpm to 3.10.0 for Katello 3.18. ([#32301](https://projects.theforeman.org/issues/32301))
+ * Pulp3 services won't start after running a migration after performing switchover ([#32256](https://projects.theforeman.org/issues/32256))
+ * Hanging task when restarting services during pulp2 to pulp3 migration ([#32119](https://projects.theforeman.org/issues/32119), [a09e10c0](https://github.com/Katello/katello.git/commit/a09e10c0da42037eee63e0347d616b3b294bba50))
 # 3.18.2.1 (2021-03-12)
 
 ## Bug Fixes
