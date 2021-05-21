@@ -8,6 +8,10 @@ module Cert
       File.read(Setting[:ssl_ca_file])
     end
 
+    def self.candlepin_client_ca_cert
+      File.read(SETTINGS[:katello][:candlepin][:ca_cert_file])
+    end
+
     def self.ssl_client_cert
       @ssl_client_cert ||= OpenSSL::X509::Certificate.new(File.read(ssl_client_cert_filename))
     end
