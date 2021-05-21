@@ -12,8 +12,8 @@ module Katello
     def ensure_creatable(repo, smart_proxy)
       cert_path = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt"
       cert = File.read(cert_path)
-      Cert::Certs.stubs(:ca_cert).returns(cert)
-      Katello::Pulp3::ContentGuard.import(smart_proxy, true)
+      Cert::Certs.stubs(:candlepin_client_ca_cert).returns(cert)
+      Katello::Pulp3::ContentGuard.import(smart_proxy, true) unless repo.unprotected
       service = repo.backend_service(smart_proxy)
       service.class.any_instance.stubs(:generate_backend_object_name).returns(repo.pulp_id)
 
