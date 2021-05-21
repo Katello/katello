@@ -7,7 +7,7 @@ module ::Actions::Pulp3::ContentGuard
     def setup
       @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       cert = File.read(CERT_FIXTURE)
-      Cert::Certs.stubs(:ca_cert).returns(cert)
+      Cert::Certs.stubs(:candlepin_client_ca_cert).returns(cert)
     end
 
     def test_refresh_content_guard
