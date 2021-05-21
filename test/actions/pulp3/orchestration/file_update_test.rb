@@ -11,7 +11,7 @@ module ::Actions::Pulp3
       create_repo(@repo, @primary)
       cert_path = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt"
       cert = File.read(cert_path)
-      Cert::Certs.stubs(:ca_cert).returns(cert)
+      Cert::Certs.stubs(:candlepin_client_ca_cert).returns(cert)
 
       ForemanTasks.sync_task(
         ::Actions::Katello::Repository::MetadataGenerate, @repo)

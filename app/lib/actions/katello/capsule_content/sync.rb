@@ -39,7 +39,7 @@ module Actions
             end
 
             if smart_proxy.has_feature?(SmartProxy::PULP3_FEATURE)
-              plan_action(Actions::Pulp3::CapsuleContent::RefreshContentGuard, smart_proxy)
+              plan_action(Actions::Pulp3::ContentGuard::Refresh, smart_proxy)
               plan_action(Actions::Pulp3::Orchestration::Repository::RefreshRepos, smart_proxy, refresh_options)
             end
             plan_action(SyncCapsule, smart_proxy, refresh_options)
