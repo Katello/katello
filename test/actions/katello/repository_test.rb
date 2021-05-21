@@ -100,7 +100,7 @@ module ::Actions::Katello::Repository
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
 
-      plan_action action, repository.root, :unprotected => true
+      plan_action action, repository.root, :unprotected => false
       assert_action_planed_with action, pulp_action_class,
         repository, proxy
       assert_action_planed action, candlepin_action_class

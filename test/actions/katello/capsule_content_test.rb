@@ -52,7 +52,7 @@ module ::Actions::Katello::CapsuleContent
                 }
       assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
-      assert_tree_planned_steps(tree, ::Actions::Pulp3::CapsuleContent::RefreshContentGuard)
+      assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -84,7 +84,7 @@ module ::Actions::Katello::CapsuleContent
       }
       assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
-      assert_tree_planned_steps(tree, ::Actions::Pulp3::CapsuleContent::RefreshContentGuard)
+      assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -108,7 +108,7 @@ module ::Actions::Katello::CapsuleContent
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       repo = katello_repositories(:pulp3_docker_1)
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
-      assert_tree_planned_steps(tree, ::Actions::Pulp3::CapsuleContent::RefreshContentGuard)
+      assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -128,7 +128,7 @@ module ::Actions::Katello::CapsuleContent
 
       repo = katello_repositories(:pulp3_ansible_collection_1)
       tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
-      assert_tree_planned_steps(tree, ::Actions::Pulp3::CapsuleContent::RefreshContentGuard)
+      assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
@@ -203,7 +203,7 @@ module ::Actions::Katello::CapsuleContent
 
       assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
-      assert_tree_planned_steps(tree, ::Actions::Pulp3::CapsuleContent::RefreshContentGuard)
+      assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
       assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
         assert_equal repo.pulp_id, input[:repo_pulp_id]
