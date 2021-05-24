@@ -51,7 +51,7 @@ namespace :katello do
   end
 
   desc "Correct missing pulp repositories. Specify CONTENT_VIEW=name and LIFECYCLE_ENVIRONMENT=name to narrow repositories.  COMMIT=true to perform operation."
-  task :correct_repositories => ["environment", "check_ping"] do
+  task :correct_repositories => ["dynflow:client", "environment", "check_ping"] do
     puts "All operations will be skipped.  Re-run with COMMIT=true to perform corrections." unless commit?
 
     User.current = User.anonymous_api_admin
