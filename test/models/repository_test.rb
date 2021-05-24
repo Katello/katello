@@ -4,6 +4,8 @@ require 'katello_test_helper'
 module Katello
   class RepositoryCreateTest < RepositoryTestBase
     def setup
+      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+
       super
       User.current = @admin
       @repo = katello_repositories(:rhel_6_x86_64)
@@ -284,10 +286,16 @@ module Katello
       version_archive_repo.errata = [@errata_security, @errata_bugfix]
       version_archive_repo.save!
 
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      SmartProxy.stubs(:pulp_primary).returns(@primary)
       version_env_repo.index_content
       assert_equal version_archive_repo.rpms.sort, version_env_repo.rpms.sort
       assert_equal version_archive_repo.errata.sort, version_env_repo.errata.sort
+    end
+
+    def test_full_path_defaults_to_pulp_primary
+      repo_uri = URI(@repo.full_path)
+      primary_uri = URI(@primary.url)
+      assert_equal "#{primary_uri.scheme}//:#{primary_uri.host}", "#{repo_uri.scheme}//:#{repo_uri.host}"
     end
   end
 

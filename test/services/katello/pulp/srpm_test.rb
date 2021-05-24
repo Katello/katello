@@ -3,6 +3,10 @@ require 'support/pulp/repository_support'
 
 module Katello
   module Services
+    def setup
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+    end
+
     class SrpmNonVcrTest < ActiveSupport::TestCase
       def test_update_model
         pulp_id = 'foo'

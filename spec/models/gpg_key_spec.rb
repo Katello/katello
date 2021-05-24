@@ -22,7 +22,6 @@ module Katello
 
       it 'should be destroyable' do
         gpg_key = GpgKey.create!(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
-        disable_product_orchestration
         product = katello_products(:fedora)
         product.gpg_key = gpg_key
         product.save!
