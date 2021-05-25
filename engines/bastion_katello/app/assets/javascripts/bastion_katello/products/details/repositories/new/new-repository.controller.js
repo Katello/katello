@@ -18,15 +18,14 @@
  * @requires Architecture
  * @requires RepositoryTypesService
  * @requires OSVersions
- * @requires YumContentUnits
  * #requires HttpProxyPolicy
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'YumContentUnits', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
-        function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, YumContentUnits, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, OSVersions) {
+    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
+        function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, OSVersions) {
 
             function success() {
                 Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -80,7 +79,6 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             $scope.checksums = Checksum.checksums;
             $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
             $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
-            $scope.ignorableYumContentUnits = YumContentUnits.units;
 
             $scope.$watch('repository.name', function () {
                 if ($scope.repositoryForm && $scope.repositoryForm.name) {
@@ -125,6 +123,11 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 }
                 if (repository.content_type === 'yum') {
                     repository.os_versions = $scope.osVersionsParam();
+                    if ($scope.repositoryForm.ignore_srpms.$modelValue) {
+                        repository.ignorable_content = ["srpm"];
+                    } else {
+                        repository.ignorable_content = [];
+                    }
                 }
                 if (repository.content_type !== 'yum') {
                     repository['download_policy'] = '';

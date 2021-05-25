@@ -10,7 +10,7 @@ module Katello
 
     encrypts :upstream_password
 
-    IGNORABLE_CONTENT_UNIT_TYPES = %w(rpm drpm srpm distribution erratum).freeze
+    IGNORABLE_CONTENT_UNIT_TYPES = %w(srpm).freeze
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
 
     OSTREE_UPSTREAM_SYNC_POLICY_LATEST = "latest".freeze
