@@ -105,7 +105,15 @@ module Katello
       end
 
       def name_for_content_view(content_view, root_repo)
-        "#{content_view.label}-#{root_repo.label}"
+        name = "#{content_view.label}-#{root_repo.label}"
+
+        if Katello::RootRepository.where(:label => root_repo.label).group(:label).count(:label)[root_repo.label] > 1
+          repo_query = Katello::Repository.joins(:root, :content_view_version => :content_view).
+              where("#{::Katello::RootRepository.table_name}.id != #{root_repo.id}").
+              where("#{::Katello::RootRepository.table_name}.label" => root_repo.label, "#{::Katello::ContentView.table_name}.label" => content_view.label)
+          name += "-#{root_repo.id}" if repo_query.any?
+        end
+        name
       end
 
       def content_view_migration(content_view, root)
