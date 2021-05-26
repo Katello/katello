@@ -114,8 +114,4 @@ describe('Controller: NewRepositoryController', function() {
        expect($scope.ostreeUpstreamSyncPolicies).toBe(OstreeUpstreamSyncPolicy.syncPolicies);
     });
 
-    it ('should set yum content units', function() {
-       expect($scope.ignorableYumContentUnits).toBe(YumContentUnits.units);
-    });
-
 });

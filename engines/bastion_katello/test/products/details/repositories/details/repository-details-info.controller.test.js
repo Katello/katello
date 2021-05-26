@@ -26,6 +26,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             repositoryId: 1
         };
         $scope.repository = repository;
+        $scope.repository['ignorable_content'] = [];
 
         translate = function(message) {
             return message;
@@ -164,10 +165,6 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
     it ('should set ostree upstream sync policies', function() {
        expect($scope.ostreeUpstreamSyncPolicies).toBe(OstreeUpstreamSyncPolicy.syncPolicies);
-    });
-
-    it ('should set yum content units', function() {
-       expect($scope.ignorableYumContentUnits).toBe(YumContentUnits.units);
     });
 
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {

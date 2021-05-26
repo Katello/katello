@@ -211,20 +211,11 @@
       </span>
 
       <span ng-if="repository.content_type === 'yum'">
-        <dt translate>Ignorable Content</dt>
-        <dd bst-edit-custom="repository.ignorable_content"
-            readonly="denied('edit_products', product)"
+        <dt translate>Ignore SRPMs</dt>
+        <dd bst-edit-checkbox="repository.ignore_srpms"
+            formatter="booleanToYesNo"
             on-save="save(repository)"
-            formatter="yumIgnorableContentFilter"
-            formatter-options="repository"
-            >
-            <div translate>Use Ctrl-click to multi-select/deselect items.</div>
-            <select id="ignorable_content"
-                    name="ignorable_content"
-                    multiple="true"
-                    ng-model="repository.ignorable_content"
-                    ng-options="id as name for (id, name) in ignorableYumContentUnits">
-            </select>
+            readonly="denied('edit_products', product)">
         </dd>
       </span>
 
