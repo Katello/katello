@@ -80,7 +80,7 @@ module Katello
     def setup
       @distro = katello_repositories(:fedora_17_x86_64)
       @dev_distro = katello_repositories(:fedora_17_x86_64_acme_dev)
-      @os = ::Redhat.create_operating_system('RedHat', '17', '0')
+      @os = ::Redhat.create_operating_system("GreatOS", *@distro.distribution_version.split('.'))
       @no_family_os = FactoryBot.create(:operatingsystem,
                                         major: 1,
                                         name: 'no_family_os')
@@ -92,6 +92,22 @@ module Katello
                                           url: "http://example.com/",
                                           lifecycle_environments: [@distro_env, @dev_distro.environment])
       @medium = FactoryBot.create(:medium, operatingsystems: [@os])
+    end
+
+    def test_update_kickstart_repository
+      hg = ::Hostgroup.create(
+        name: 'kickstart_repo',
+        operatingsystem: @os,
+        architecture: @arch
+        )
+      facet = Katello::Hostgroup::ContentFacet.create!(hostgroup: hg)
+      facet.content_view = @distro_cv
+      facet.content_source = @content_source
+      facet.lifecycle_environment = @distro_env
+      facet.kickstart_repository = @distro
+      assert facet.save
+      assert_valid facet
+      assert_equal hg.reload.kickstart_repository, @distro
     end
 
     def test_set_kickstart_repository
@@ -160,6 +176,8 @@ module Katello
     end
 
     def test_change_lifecycle_environment_mismatched_kickstart
+      @os = ::Redhat.create_operating_system("GreatOS1", *@dev_distro.distribution_version.split('.'))
+
       hg = ::Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
