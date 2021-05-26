@@ -625,7 +625,7 @@ module Katello
       @root.url = "http://foo.com"
       @root.ignorable_content = nil
       assert @root.valid?
-      @root.ignorable_content = ["srpm", "erratum"]
+      @root.ignorable_content = ["srpm"]
 
       assert @root.valid?
       @root.ignorable_content = ["boo"]
