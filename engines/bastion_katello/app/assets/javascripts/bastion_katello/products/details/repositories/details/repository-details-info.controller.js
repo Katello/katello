@@ -12,7 +12,6 @@
  * @requires DownloadPolicy
  * @requires OstreeUpstreamSyncPolicy
  * @requires Architecture
- * @requires YumContentUnits
  * @requires HttpProxyPolicy
  * @requires OSVersions
  *
@@ -20,14 +19,15 @@
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'YumContentUnits', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
-        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, YumContentUnits, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
+        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions) {
             $scope.organization = CurrentOrganization;
 
             $scope.progress = {uploading: false};
 
             $scope.repository.$promise.then(function () {
                 $scope.uploadURL = 'katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
+                $scope.repository['ignore_srpms'] = $scope.repository['ignorable_content'].includes("srpm");
             });
 
             $scope.gpgKeys = function () {
@@ -89,6 +89,13 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.save = function (repository, saveUpstreamAuth) {
                 var deferred = $q.defer();
+                if (repository.content_type === 'yum' && typeof repository.ignore_srpms !== 'undefined') {
+                    if (repository['ignore_srpms']) {
+                        repository['ignorable_content'] = ["srpm"];
+                    } else {
+                        repository['ignorable_content'] = [];
+                    }
+                }
 
                 if (!saveUpstreamAuth) {
                     repository['upstream_username'] = null;
@@ -106,6 +113,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 repository.os_versions = $scope.osVersionsParam();
                 repository.$update(function (response) {
                     deferred.resolve(response);
+                    $scope.repository.ignore_srpms = $scope.repository.ignorable_content.includes("srpm");
                     if (!_.isEmpty(response["docker_tags_whitelist"])) {
                         repository.commaTagsWhitelist = repository["docker_tags_whitelist"].join(", ");
                     } else {
@@ -171,7 +179,6 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.checksums = Checksum.checksums;
             $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
             $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
-            $scope.ignorableYumContentUnits = YumContentUnits.units;
 
             $scope.checksumTypeDisplay = function (checksum) {
                 return Checksum.checksumType(checksum);
