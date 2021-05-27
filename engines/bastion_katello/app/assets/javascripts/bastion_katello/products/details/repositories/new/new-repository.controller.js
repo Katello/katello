@@ -144,13 +144,11 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
             $scope.collectionURLPopover = $sce.trustAsHtml("You can sync collections utilizing just the url:<br/>" +
           "<b>1. For all collections in Ansible Galaxy:</b><br/>" +
-          "https://galaxy.ansible.com/api/v2/collections <br/>" +
-          "<b>2. For specific collection with URL filtering:</b><br/>" +
-          "https://galaxy.ansible.com/api/v2/collections/testing/k8s_demo_collection <br/>" +
-          "<b>3. For specific collections with Requirements.yml:</b><br/>" +
+          "https://galaxy.ansible.com/api/<br/>" +
+          "<b>2. For specific collections with Requirements.yml:</b><br/>" +
           "Use base URL https://galaxy.ansible.com/ and specify requirements.yml below to specify collections");
 
-            $scope.requirementPopover = $sce.trustAsHtml("To learn more about requirement.yml specification, visit <a href='https://docs.ansible.com/ansible/devel/dev_guide/collections_tech_preview.html#install-multiple-collections-with-a-requirements-file' target=\"_blank\">documentation </a>");
+            $scope.requirementPopover = $sce.trustAsHtml("To learn more about requirement.yml specification, visit <a href='https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#install-multiple-collections-with-a-requirements-file' target=\"_blank\">documentation </a>");
 
             $scope.displayHttpProxyPolicyName = function (policy) {
                 return HttpProxyPolicy.displayHttpProxyPolicyName(policy);
