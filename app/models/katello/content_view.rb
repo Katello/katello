@@ -107,6 +107,10 @@ module Katello
       joins(:content_view_versions => :repositories).where("katello_repositories.root_id" => root_repository.id).uniq
     end
 
+    def self.in_organization(org)
+      where(organization_id: org.id)
+    end
+
     def to_s
       name
     end

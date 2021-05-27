@@ -63,6 +63,7 @@ Katello::Engine.routes.draw do
         end
 
         match '/content_views/:composite_content_view_id/content_view_components' => 'content_view_components#index', :via => :get
+        match '/content_views/:composite_content_view_id/content_view_components/show_all' => 'content_view_components#show_all', :via => :get
         match '/content_views/:composite_content_view_id/content_view_components/:id' => 'content_view_components#show', :via => :get
         match '/content_views/:composite_content_view_id/content_view_components/add' => 'content_view_components#add_components', :via => :put
         match '/content_views/:composite_content_view_id/content_view_components/remove' => 'content_view_components#remove_components', :via => :put
