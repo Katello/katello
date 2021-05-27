@@ -25,7 +25,7 @@ module Katello
         end
 
         def partial_repo_path
-          "/pulp_ansible/galaxy/#{repo.relative_path}/api/v2/collections"
+          "/pulp_ansible/galaxy/#{repo.relative_path}/api/"
         end
 
         def mirror_remote_options

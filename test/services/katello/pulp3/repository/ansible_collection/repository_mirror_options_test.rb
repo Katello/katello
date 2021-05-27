@@ -19,7 +19,7 @@ module Katello
         def test_feed_url_is_prepended_with_pulp_rpm_content_path
           pulp3_repo = Katello::Pulp3::Repository::AnsibleCollection.new(@repo, @mock_smart_proxy)
 
-          assert_equal '/pulp_ansible/galaxy/' + @repo.relative_path + '/api/v2/collections', pulp3_repo.partial_repo_path
+          assert_equal '/pulp_ansible/galaxy/' + @repo.relative_path + '/api/', pulp3_repo.partial_repo_path
         end
 
         def test_remote_options
