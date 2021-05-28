@@ -46,7 +46,7 @@ class MoveKatelloFieldsFromHostgroups < ActiveRecord::Migration[6.0]
         content_facet.kickstart_repository_id = kickstart_repository_id
         content_facet.content_view_id = content_view_id
         content_facet.lifecycle_environment_id = lifecycle_environment_id
-        unless content_facet.save
+        unless content_facet.save(validate: false)
           Rails.logger.warn("Unable to save content facet hostgroup for #{content_facet.inspect} ")
           Rails.logger.warn(content_facet.errors.full_messages.join("\n"))
         end
