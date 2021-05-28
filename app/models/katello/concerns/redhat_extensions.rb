@@ -42,10 +42,11 @@ module Katello
         end
       end
 
-      def kickstart_repos(host)
-        distros = distribution_repositories(host).where(distribution_bootable: true)
-        if distros && host&.content_facet&.content_source
-          distros.map { |distro| distro.to_hash(host.content_facet.content_source) }
+      def kickstart_repos(host, content_facet: nil)
+        distros = distribution_repositories(host, content_facet: content_facet).where(distribution_bootable: true)
+        content_facet ||= host.content_facet
+        if distros && content_facet&.content_source
+          distros.map { |distro| distro.to_hash(content_facet.content_source) }
         else
           []
         end
@@ -65,10 +66,10 @@ module Katello
         end
       end
 
-      def distribution_repositories(host)
-        content_view = host.try(:content_facet).try(:content_view) || host.try(:content_view)
-        lifecycle_environment = host.try(:content_facet).try(:lifecycle_environment) || host.try(:lifecycle_environment)
-
+      def distribution_repositories(host, content_facet: nil)
+        content_facet ||= host.content_facet
+        content_view = content_facet.try(:content_view) || host.try(:content_view)
+        lifecycle_environment = content_facet.try(:lifecycle_environment) || host.try(:lifecycle_environment)
         if content_view && lifecycle_environment && host.os && host.architecture
           Katello::Repository.in_environment(lifecycle_environment).in_content_views([content_view]).
               where(:distribution_arch => host.architecture.name).
