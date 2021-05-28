@@ -102,7 +102,9 @@ module Katello
         return true unless operatingsystem
 
         if operatingsystem.respond_to? :kickstart_repos
-          return operatingsystem.kickstart_repos(self).any? { |repo| repo[:id] == (content_facet&.kickstart_repository_id || content_facet&.kickstart_repository&.id) }
+          operatingsystem.kickstart_repos(self, content_facet: content_facet).any? do |repo|
+            repo[:id] == (content_facet&.kickstart_repository_id || content_facet&.kickstart_repository&.id)
+          end
         end
       end
 
