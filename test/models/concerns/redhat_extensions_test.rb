@@ -171,7 +171,7 @@ module Katello
       distro_repos = mock('distribution_repos').tap do |mock|
         mock.expects(:where).returns([@repo_with_distro])
       end
-      @os.expects(:distribution_repositories).with(@host).returns(distro_repos)
+      @os.expects(:distribution_repositories).with(@host, content_facet: nil).returns(distro_repos)
       @host.content_facet.content_source = nil
       assert_empty @os.kickstart_repos(@host)
     end
@@ -180,7 +180,7 @@ module Katello
       distro_repos = mock('distribution_repos').tap do |mock|
         mock.expects(:where).returns([@repo_with_distro])
       end
-      @os.expects(:distribution_repositories).with(@host).returns(distro_repos)
+      @os.expects(:distribution_repositories).with(@host, content_facet: nil).returns(distro_repos)
       repos = @os.kickstart_repos(@host)
       refute_empty repos
       assert_equal @repo_with_distro.full_path(@content_source), repos.first[:url]
