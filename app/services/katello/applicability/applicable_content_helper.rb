@@ -62,13 +62,22 @@ module Katello
       end
 
       def fetch_deb_content_ids
-        ::Katello::Deb.joins(:repositories,
-                           "INNER JOIN #{Katello::InstalledDeb.table_name} ON #{Katello::InstalledDeb.table_name}.name = #{Katello::Deb.table_name}.name",
-                           "INNER JOIN #{Katello::HostInstalledDeb.table_name} ON #{Katello::HostInstalledDeb.table_name}.installed_deb_id = #{Katello::InstalledDeb.table_name}.id")
-                    .where("deb_version_cmp(#{Katello::Deb.table_name}.version, #{Katello::InstalledDeb.table_name}.version) > 0")
-                    .where("#{Katello::HostInstalledDeb.table_name}.host_id": self.content_facet.host.id)
-                    .where("#{Katello::RepositoryDeb.table_name}.repository_id" => self.bound_library_instance_repos)
-                    .distinct.pluck(:id)
+        repo_deb = ::Katello::RepositoryDeb.arel_table
+        deb = ::Katello::Deb.arel_table
+        installed_deb = Katello::InstalledDeb.arel_table
+        host_installed_deb = Katello::HostInstalledDeb.arel_table
+        deb_version_compare = Arel::Nodes::NamedFunction.new('deb_version_cmp', [deb[:version], installed_deb[:version]]).gt(0)
+
+        content = deb.join(repo_deb).on(repo_deb[:deb_id].eq(deb[:id]))
+                     .join(installed_deb).on(installed_deb[:name].eq(deb[:name]))
+                     .join(host_installed_deb).on(host_installed_deb[:installed_deb_id].eq(installed_deb[:id]))
+                     .where(deb_version_compare)
+                     .where(host_installed_deb[:host_id].eq(self.content_facet.host.id))
+                     .where(repo_deb[:repository_id].in(self.bound_library_instance_repos))
+                     .distinct
+                     .project(deb[Arel.star])
+
+        ::Katello::Deb.find_by_sql(content.to_sql).pluck(:id)
       end
 
       def fetch_rpm_content_ids
