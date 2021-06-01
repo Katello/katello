@@ -7,6 +7,7 @@ module Katello
       include RepositorySupport
 
       def setup
+        FactoryBot.create(:smart_proxy, :default_smart_proxy)
         User.current = users(:admin)
 
         @repo = katello_repositories(:fedora_17_x86_64)

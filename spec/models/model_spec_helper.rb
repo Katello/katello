@@ -134,14 +134,6 @@ module Katello
       model.any_instance.stubs(execute_planned_action: nil)
     end
 
-    def disable_consumer_group_orchestration
-      Katello.pulp_server.extensions.consumer_group.stubs(:create).returns({})
-      Katello.pulp_server.extensions.consumer_group.stubs(:delete).returns(200)
-      Katello.pulp_server.extensions.consumer_group.stubs(:retrieve).returns({})
-      Katello.pulp_server.extensions.consumer_group.stubs(:add_consumers_by_id).returns(200)
-      Katello.pulp_server.extensions.consumer_group.stubs(:remove_consumers_by_id).returns(200)
-    end
-
     def disable_repo_orchestration
       Katello.pulp_server.extensions.repository.stubs(:create).returns({})
       Katello.pulp_server.extensions.repository.stubs(:sync_history).returns([])
