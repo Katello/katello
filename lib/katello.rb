@@ -28,6 +28,6 @@ module Katello
   require "katello/engine"
 
   def self.pulp_server
-    Katello::Pulp::Server.config(SETTINGS[:katello][:pulp][:url], User.remote_user)
+    Katello::Pulp::Server.config(::SmartProxy.pulp_primary.url + '/pulp/api/v2/', User.remote_user)
   end
 end

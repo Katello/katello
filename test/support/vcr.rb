@@ -82,11 +82,6 @@ def configure_vcr
       end
     end
 
-    if ENV['record'] == "false" && mode != :none
-      uri = URI.parse(SETTINGS[:katello][:pulp][:url])
-      c.ignore_hosts uri.host
-    end
-
     c.default_cassette_options = {
       :record => mode,
       :decode_compressed_response => true,
