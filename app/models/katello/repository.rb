@@ -395,6 +395,20 @@ module Katello
       all_instances
     end
 
+    def full_path(smart_proxy = nil, force_http = false)
+      pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : ::SmartProxy.pulp_primary.url)
+      scheme = force_http ? 'http' : 'https'
+      if docker?
+        "#{pulp_uri.host.downcase}/#{container_repository_name}"
+      elsif ostree?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/web/#{relative_path}"
+      elsif ansible_collection?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api"
+      else
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
+      end
+    end
+
     def to_hash(content_source = nil, force_http = false)
       {id: id, name: label, url: full_path(content_source, force_http)}
     end
