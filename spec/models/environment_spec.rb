@@ -7,8 +7,6 @@ module Katello
 
     describe "main" do
       before(:each) do
-        disable_product_orchestration
-        disable_repo_orchestration
         disable_org_orchestration
 
         Repository.any_instance.stubs(:save_content_orchestration).returns(true)

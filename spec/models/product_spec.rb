@@ -9,7 +9,6 @@ module Katello
     before(:each) do
       load "#{Katello::Engine.root}/spec/helpers/product_test_data.rb"
       disable_org_orchestration
-      disable_product_orchestration
 
       as_admin do
         @organization = get_organization
@@ -84,10 +83,6 @@ module Katello
     end
 
     describe "validation" do
-      before(:each) do
-        disable_product_orchestration
-      end
-
       specify { Product.new(:label => "goo", :name => 'contains /', :provider => @provider).must_be :valid? }
       specify { Product.new(:label => "boo", :name => 'contains #', :provider => @provider).must_be :valid? }
       specify { Product.new(:label => "shoo", :name => 'contains space', :provider => @provider).must_be :valid? }
@@ -104,7 +99,6 @@ module Katello
 
     describe "#environments" do
       it "should contain a unique list of environments" do
-        disable_repo_orchestration
         product = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => @organization.id))
         2.times do
           root = create(:katello_root_repository, product: product, url: "http://something")
@@ -119,7 +113,6 @@ module Katello
     end
 
     it 'should be destroyable' do
-      disable_repo_orchestration
       product = create(:katello_product, :fedora, provider: create(:katello_provider), organization: @organization)
       assert product.destroy
     end

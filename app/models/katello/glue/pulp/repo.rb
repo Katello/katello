@@ -73,11 +73,6 @@ module Katello
         pulp_repo_facts['content_unit_counts']['srpm']
       end
 
-      def uri
-        uri = URI.parse(SETTINGS[:katello][:pulp][:url])
-        "https://#{uri.host}/pulp/content/#{relative_path}"
-      end
-
       def to_hash
         pulp_repo_facts.merge(as_json).merge(:sync_state => sync_state)
       end
@@ -353,20 +348,6 @@ module Katello
           history = sort_sync_status(history)
           return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
         end
-      end
-    end
-
-    def full_path(smart_proxy = nil, force_http = false)
-      pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : SETTINGS[:katello][:pulp][:url])
-      scheme = force_http ? 'http' : 'https'
-      if docker?
-        "#{pulp_uri.host.downcase}/#{container_repository_name}"
-      elsif ostree?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/web/#{relative_path}"
-      elsif ansible_collection?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api"
-      else
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
       end
     end
   end
