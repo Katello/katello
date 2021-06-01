@@ -27,7 +27,6 @@ module Katello
 
     before(:each) do
       disable_org_orchestration
-      disable_product_orchestration
       @organization = get_organization(:organization2)
       @organization.redhat_provider.delete
     end
@@ -255,7 +254,6 @@ module Katello
     end
 
     it 'should be destroyable' do
-      disable_product_orchestration
       provider = create(:katello_provider, organization: @organization)
       create(:katello_product, :fedora, provider: provider, organization: @organization)
       assert_raise ActiveRecord::DeleteRestrictionError do

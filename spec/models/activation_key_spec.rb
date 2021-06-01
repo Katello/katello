@@ -9,8 +9,6 @@ module Katello
 
     before(:each) do
       disable_org_orchestration
-      disable_consumer_group_orchestration
-      disable_product_orchestration
       disable_activation_key_orchestration
 
       @organization = get_organization

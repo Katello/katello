@@ -3,6 +3,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::ContentViewRepositoriesControllerTest < ActionController::TestCase
     def setup
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       setup_controller_defaults_api
       @organization = get_organization
       @view = katello_content_views(:library_view)

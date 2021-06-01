@@ -3,6 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ContentTypeTest < ActiveSupport::TestCase
     def setup
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       set_user
     end
 
