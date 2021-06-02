@@ -38,16 +38,20 @@ child @resource.repositories => :repositories do
 end
 
 node :override do |pc|
-  pc.override
+  pc.override if pc.respond_to? :override
 end
 
 node :overrides do |pc|
-  pc.content_overrides.map do |override|
-    {:name => override.name, :value => override.computed_value}
+  if pc.respond_to? :content_overrides
+    pc.content_overrides.map do |override|
+      {:name => override.name, :value => override.computed_value}
+    end
   end
 end
 
 node :enabled_content_override do |pc|
-  override = pc.enabled_content_override
-  override&.computed_value
+  if pc.respond_to? :enabled_content_override
+    override = pc.enabled_content_override
+    override&.computed_value
+  end
 end
