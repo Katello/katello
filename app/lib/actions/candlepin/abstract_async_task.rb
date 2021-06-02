@@ -32,7 +32,15 @@ module Actions
       private
 
       def poll_external_task
-        ::Katello::Resources::Candlepin::Job.get(external_task[:id])
+        task = ::Katello::Resources::Candlepin::Job.get(external_task[:id])
+        check_for_errors!(task)
+        task
+      end
+
+      def check_for_errors!(task)
+        if task[:state] == 'FAILED'
+          fail ::Katello::Errors::CandlepinError, task[:resultData]
+        end
       end
     end
   end
