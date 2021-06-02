@@ -29,6 +29,10 @@ module Katello
       super
     end
 
+    def available_for_content_view_version(version)
+      version.available_debs
+    end
+
     def custom_index_relation(collection)
       applicable = ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || params[:host_id]
       upgradable = ::Foreman::Cast.to_bool(params[:packages_restrict_upgradable])
