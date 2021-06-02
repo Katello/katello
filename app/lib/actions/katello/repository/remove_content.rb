@@ -19,6 +19,8 @@ module Actions
           content_unit_ids = content_units.map(&:id)
           content_unit_type = options[:content_type] || content_units.first.class::CONTENT_TYPE
 
+          generate_applicability = options.fetch(:generate_applicability, repository.yum?)
+
           sequence do
             remove_content_args = {
               :contents => content_unit_ids,
@@ -31,6 +33,7 @@ module Actions
             return if pulp_action.error
             plan_self(:content_unit_class => content_units.first.class.name, :content_unit_ids => content_unit_ids)
             plan_action(CapsuleSync, repository) if sync_capsule
+            plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
           end
         end
 

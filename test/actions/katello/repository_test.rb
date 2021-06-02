@@ -191,9 +191,13 @@ module ::Actions::Katello::Repository
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, to_remove
 
-      assert_action_planed_with action, ::Actions::Pulp::Orchestration::Repository::RemoveUnits,
-        custom_repository, proxy,
-        contents: uuids, content_unit_type: "rpm"
+      assert_action_planed_with action,
+                                ::Actions::Katello::Applicability::Repository::Regenerate,
+                                :repo_ids => [custom_repository.id]
+      assert_action_planed_with action,
+                                ::Actions::Pulp::Orchestration::Repository::RemoveUnits,
+                                custom_repository, proxy,
+                                contents: uuids, content_unit_type: "rpm"
     end
 
     it "does run capsule sync for custom repository" do
@@ -230,6 +234,30 @@ module ::Actions::Katello::Repository
        Actions::Pulp::Orchestration::Repository::RemoveUnits,
        docker_repo, proxy,
        contents: docker_repo.docker_manifests.pluck(:id), content_unit_type: "docker_manifest"
+    end
+  end
+
+  class UploadContentTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::UploadFiles }
+    let(:cli_action_class) { ::Actions::Katello::Repository::ImportUpload }
+
+    it 'plans for applicability regen on upload' do
+      file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "squirrel-0.3-0.8.noarch.rpm")
+      action.expects(:action_subject).with(custom_repository)
+      plan_action action, custom_repository, [{:path => file, :filename => 'squirrel-0.3-0.8.noarch.rpm'}]
+      assert_action_planed_with action,
+                                ::Actions::Katello::Applicability::Repository::Regenerate,
+                                :repo_ids => [custom_repository.id]
+    end
+
+    it 'plans for applicability regen on upload through cli' do
+      action = create_action cli_action_class
+      file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "squirrel-0.3-0.8.noarch.rpm")
+      action.expects(:action_subject).with(custom_repository)
+      plan_action action, custom_repository, [{:path => file, :filename => 'squirrel-0.3-0.8.noarch.rpm'}]
+      assert_action_planed_with action,
+                                ::Actions::Katello::Applicability::Repository::Regenerate,
+                                :repo_ids => [custom_repository.id]
     end
   end
 
