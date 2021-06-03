@@ -12,12 +12,12 @@ module Katello
       authorized?(:import_manifest)
     end
 
-    def can_import_library_content?
-      authorized?(:import_library_content)
+    def can_import_content?
+      authorized?(:import_content)
     end
 
-    def can_export_library_content?
-      authorized?(:export_library_content)
+    def can_export_content?
+      authorized?(:export_content)
     end
 
     def readable_promotion_paths

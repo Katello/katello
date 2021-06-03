@@ -24,7 +24,7 @@ module Katello
       @publish_permission = :publish_content_views
       @env_promote_permission = :promote_or_remove_content_views_to_environments
       @cv_promote_permission = :promote_or_remove_content_views
-      @export_permission = :export_content_views
+      @export_permission = :export_content
 
       @dev_env_promote_permission = {:name => @env_promote_permission, :search => "name=\"#{@dev.name}\"" }
       @library_dev_staging_view_promote_permission = {:name => @cv_promote_permission, :search => "name=\"#{@library_dev_staging_view.name}\"" }
