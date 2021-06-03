@@ -83,7 +83,7 @@ module Katello
 
     def find_exportable_organization
       find_organization
-      unless @organization.can_export_library_content?
+      unless @organization.can_export_content?
         throw_resource_not_found(name: 'organization', id: params[:organization_id])
       end
     end
