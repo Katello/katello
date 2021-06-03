@@ -49,7 +49,7 @@ module Katello
     private
 
     def check_authorized
-      fail HttpErrors::Forbidden, _("Action unauthorized to be performed in this organization.") unless ContentView.importable?
+      fail HttpErrors::Forbidden, _("Action unauthorized to be performed in this organization.") unless @organization.can_import_content?
     end
 
     def find_default_content_view
@@ -59,7 +59,7 @@ module Katello
 
     def find_importable_organization
       find_organization
-      throw_resource_not_found(name: 'organization', id: params[:organization_id]) unless @organization.can_import_library_content?
+      throw_resource_not_found(name: 'organization', id: params[:organization_id]) unless @organization.can_import_content?
     end
 
     def metadata_params

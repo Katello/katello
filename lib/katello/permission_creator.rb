@@ -143,14 +143,6 @@ module Katello
                          },
                          :resource_type => 'Katello::ContentView',
                          :finder_scope => :promotable_or_removable
-      @plugin.permission :export_content_views,
-                         {
-                           'katello/api/v2/content_view_versions' => [:export],
-                           'katello/api/v2/content_exports' => [:version, :index],
-                           'katello/api/v2/content_export_incrementals' => [:version]
-                         },
-                         :resource_type => 'Katello::ContentView',
-                         :finder_scope => :exportable
     end
 
     def content_credential_permissions
@@ -409,16 +401,17 @@ module Katello
     end
 
     def organization_permissions
-      @plugin.permission :import_library_content,
+      @plugin.permission :import_content,
                          {
-                           'katello/api/v2/content_imports' => [:library, :index]
+                           'katello/api/v2/content_imports' => [:library, :version, :index]
                          },
                          :resource_type => 'Organization'
 
-      @plugin.permission :export_library_content,
+      @plugin.permission :export_content,
                          {
-                           'katello/api/v2/content_exports' => [:library, :index],
-                           'katello/api/v2/content_export_incrementals' => [:library]
+                           'katello/api/v2/content_view_versions' => [:export],
+                           'katello/api/v2/content_exports' => [:library, :version, :index],
+                           'katello/api/v2/content_export_incrementals' => [:library, :version]
                          },
                          :resource_type => 'Organization'
     end
