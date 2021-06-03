@@ -10,8 +10,15 @@ module Katello
           minor ||= '' # treat minor versions as empty string to not confuse with nil
           os = ::Redhat.where(:name => os_name, :major => major, :minor => minor).try(:first)
           return os if os
-          description = "#{os_name}-#{repo.distribution_version}"
-          create_os = lambda { ::Redhat.create!(:name => os_name, :major => major, :minor => minor, :description => description) }
+
+          if ::Redhat.where(:title => "#{os_name} #{repo.distribution_version}").present?
+            description = "#{os_name} #{repo.distribution_version} #{SecureRandom.uuid}"
+            create_os = lambda do
+              ::Redhat.create!(:name => os_name, :major => major, :minor => minor, :description => description)
+            end
+          else
+            create_os = lambda { ::Redhat.create!(:name => os_name, :major => major, :minor => minor) }
+          end
 
           begin
             create_os.call
