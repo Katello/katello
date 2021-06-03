@@ -9,8 +9,7 @@ module Katello
       @create_permission = :create_content_views
       @update_permission = :edit_content_views
       @destroy_permission = :destroy_content_views
-      @export_permission = :export_content_views
-      @export_library_permission = :export_library_content
+      @export_permission = :export_content
     end
 
     def setup
@@ -38,9 +37,9 @@ module Katello
       @controller.stubs(:find_library_export_view)
       @controller.stubs(:find_history)
 
-      allowed_perms = [{name: @export_library_permission, :resource_type => "Organization"}]
+      allowed_perms = [{name: @export_permission, :resource_type => "Organization"}]
       denied_perms = [@create_permission, @update_permission,
-                      @destroy_permission, @view_permission, @export_permission]
+                      @destroy_permission, @view_permission]
 
       org = get_organization
       assert_protected_action(:library, allowed_perms, denied_perms, [org]) do
