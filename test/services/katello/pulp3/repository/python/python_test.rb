@@ -10,7 +10,7 @@ module Katello
 
           def setup
             @repo = katello_repositories(:pulp3_python_1)
-            @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @primary = SmartProxy.pulp_primary
 
             create_repo(@repo, @primary)
             @repo.reload

@@ -25,7 +25,7 @@ module ::Actions::Pulp3
     end
 
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:pulp3_file_1)
       @repo.root.update(:url => 'https://fixtures.pulpproject.org/file2/')
       ensure_creatable(@repo, @primary)

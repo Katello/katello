@@ -32,7 +32,6 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::UpdateHttpProxyDetails }
 
     it 'plans' do
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       plan_action action, repository
       assert_action_planned_with action,
         ::Actions::Pulp3::Repository::UpdateRemote,
@@ -45,8 +44,6 @@ module ::Actions::Katello::Repository
     let(:candlepin_action_class) { ::Actions::Candlepin::Environment::AddContentToEnvironment }
 
     before do
-      proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-      SmartProxy.stubs(:pulp_primary).returns(proxy)
       repository.expects(:save!)
       action.expects(:action_subject).with(repository)
       action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
@@ -257,7 +254,6 @@ module ::Actions::Katello::Repository
   end
 
   class UploadFilesTest < TestBase
-    setup { FactoryBot.create(:smart_proxy, :default_smart_proxy) }
     let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::UploadContent }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
     it 'plans for Pulp3 without duplicate' do
@@ -377,14 +373,12 @@ module ::Actions::Katello::Repository
       refute_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
     end
 
-    it 'calls download action when validate_contents is passed' do
+    it 'plans verift checksum when validate_contents is passed' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, :validate_contents => true
 
-      assert_action_planed_with(action, pulp3_action_class, repository, proxy,
-                                download_policy: 'on_demand', :optimize => false)
-      assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::VerifyChecksum, repository)
     end
 
     it 'plans pulp3 orchestration actions with file repo' do

@@ -267,12 +267,10 @@ module Katello
     test_attributes :pid => '8a59cb31-164d-49df-b3c6-9b90634919ce'
     def test_create_non_yum_with_download_policy
       @root.download_policy = 'on_demand'
-      %w[docker ostree].each do |content_type|
-        @root.content_type = content_type
-        refute @root.valid?, "Validation succeed for create with download_policy and non-yum repository: #{content_type}"
-        assert @root.errors.key?(:download_policy)
-        assert_match(/Cannot set attribute.*#{content_type}.*/, @root.errors[:download_policy][0])
-      end
+      @root.content_type = 'docker'
+      refute @root.valid?, "Validation succeed for create with download_policy and non-yum repository: docker"
+      assert @root.errors.key?(:download_policy)
+      assert_match(/Cannot set attribute.*docker.*/, @root.errors[:download_policy][0])
     end
 
     test_attributes :pid => 'c49a3c49-110d-4b74-ae14-5c9494a4541c'
@@ -513,29 +511,6 @@ module Katello
       end
     end
 
-    test_attributes :pid => 'f3332dd3-1e6d-44e2-8f24-fae6fba2de8d'
-    def test_ostree_content_type
-      @root.content_type = "ostree"
-      @root.download_policy = nil
-      assert @root.valid?
-    end
-
-    test_attributes :pid => '4d9f1418-cc08-4c3c-a5dd-1d20fb9052a2'
-    def test_ostree_content_type_update_name
-      new_name = 'ostree new name'
-      @ostree_root.name = new_name
-      assert_valid @ostree_root
-      assert_equal new_name, @ostree_root.name
-    end
-
-    test_attributes :pid => '6ba45475-a060-42a7-bc9e-ea2824a5476b'
-    def test_ostree_content_type_update_url
-      new_url = 'https://kojipkgs.fedoraproject.org/atomic/23/'
-      @ostree_root.url = new_url
-      assert_valid @ostree_root
-      assert_equal new_url, @ostree_root.url
-    end
-
     def test_docker_repo_unprotected
       @root.name = 'docker_repo'
       @root.content_type = Repository::DOCKER_TYPE
@@ -545,80 +520,6 @@ module Katello
       assert @root.valid?
       @root.unprotected = false
       refute @root.valid?
-    end
-
-    def test_ostree_attribs
-      @root.content_type = Repository::OSTREE_TYPE
-      @root.url = "http://foo.com"
-      @root.download_policy = nil
-      assert @root.valid?
-      @root.url = ""
-      refute @root.valid?
-    end
-
-    def test_ostree_unprotected
-      @root.content_type = Repository::OSTREE_TYPE
-      @root.url = "http://foo.com"
-      @root.download_policy = nil
-      @root.unprotected = true
-      refute @root.valid?
-    end
-
-    def test_ostree_upstream_sync_policy
-      @root.content_type = Repository::OSTREE_TYPE
-      @root.url = "http://foo.com"
-      @root.download_policy = nil
-
-      @root.ostree_upstream_sync_policy = 'latest'
-      assert @root.valid?
-      @root.ostree_upstream_sync_policy = 'all'
-      assert @root.valid?
-      @root.ostree_upstream_sync_policy = 'boo'
-      refute @root.valid?
-      assert_includes @root.errors, :ostree_upstream_sync_policy
-
-      @root.ostree_upstream_sync_policy = 'custom'
-      refute @root.valid?
-      assert_includes @root.errors, :ostree_upstream_sync_depth
-
-      @root.ostree_upstream_sync_depth = 123
-      assert @root.valid?
-
-      @root.content_type = 'file'
-      refute @root.valid?
-      assert_includes @root.errors, :ostree_upstream_sync_policy
-    end
-
-    def test_ostree_upstream_sync_policy_update
-      @root.content_type = Repository::OSTREE_TYPE
-      @root.url = "http://foo.com"
-      @root.download_policy = nil
-      @root.ostree_upstream_sync_policy = 'custom'
-      @root.ostree_upstream_sync_depth = 123
-
-      assert @root.valid?
-      assert @root.save
-
-      @root.ostree_upstream_sync_policy = "all"
-      assert @root.valid?
-      assert_nil @root.ostree_upstream_sync_depth
-    end
-
-    def test_compute_ostree_upstream_sync_depth
-      @root.content_type = Repository::OSTREE_TYPE
-      @root.url = "http://foo.com"
-      @root.download_policy = nil
-
-      @root.ostree_upstream_sync_policy = 'all'
-      assert_equal(-1, @root.compute_ostree_upstream_sync_depth)
-
-      @root.ostree_upstream_sync_policy = 'latest'
-      assert_equal 0, @root.compute_ostree_upstream_sync_depth
-
-      sync_depth = 124
-      @root.ostree_upstream_sync_policy = 'custom'
-      @root.ostree_upstream_sync_depth = sync_depth
-      assert_equal sync_depth, @root.compute_ostree_upstream_sync_depth
     end
 
     def test_yum_ignorable_content
@@ -712,20 +613,6 @@ module Katello
       @fedora_root.upstream_password = 'amazing'
       @fedora_root.save!
       assert @fedora_root.pulp_update_needed?
-    end
-
-    def test_ostree_pulp_update_needed?
-      refute @ostree_root.pulp_update_needed?
-      @ostree_root.ostree_upstream_sync_policy = "custom"
-      @ostree_root.ostree_upstream_sync_depth = 10
-      @ostree_root.save!
-      assert @ostree_root.pulp_update_needed?
-
-      @ostree_root.reload
-      refute @ostree_root.pulp_update_needed?
-      @ostree_root.ostree_upstream_sync_depth = 5000
-      @ostree_root.save!
-      assert @ostree_root.pulp_update_needed?
     end
 
     def test_pulp_update_needed_with_ssl?

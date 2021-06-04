@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class PxeFilesDownloaderTest < ActiveSupport::TestCase
     def test_fetches_pxe_files
-      capsule = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      capsule = SmartProxy.pulp_primary
       repository = FactoryBot.create(
         :katello_repository,
         :with_product,

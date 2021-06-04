@@ -4,7 +4,7 @@ module ::Actions::Pulp3
   class CopyAllUnitsFileRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @file_repo = katello_repositories(:generic_file)
       @file_clone = katello_repositories(:generic_file_dev)
     end
@@ -21,7 +21,7 @@ module ::Actions::Pulp3
   class CopyAllUnitsDockerRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @docker_repo = katello_repositories(:busybox)
       @docker_repo.root.update!(docker_tags_whitelist: %w(latest uclibc musl))
       @docker_clone = katello_repositories(:busybox_dev)
@@ -94,7 +94,7 @@ module ::Actions::Pulp3
   class CopyAllUnitYumRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
@@ -377,7 +377,7 @@ module ::Actions::Pulp3
   class CopyAllUnitYumSrpmsRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'https://fixtures.pulpproject.org/srpm-unsigned/')
@@ -418,7 +418,7 @@ module ::Actions::Pulp3
   class CopyAllUnitYumErrataRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -506,7 +506,7 @@ module ::Actions::Pulp3
   class CopyAllUnitYumModuleStreamRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -592,7 +592,7 @@ module ::Actions::Pulp3
   class CopyAllUnitYumPackageGroupsRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -650,7 +650,7 @@ module ::Actions::Pulp3
   class CopyAllUnitYumPackageEnvironmentRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')
@@ -714,7 +714,7 @@ module ::Actions::Pulp3
   class CopyAllUnitYumDistributionTreesRepositoryTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/', :download_policy => 'immediate')

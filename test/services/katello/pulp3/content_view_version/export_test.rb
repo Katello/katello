@@ -9,7 +9,7 @@ module Katello
           include Support::ExportSupport
 
           it "test metadata" do
-            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
             version = katello_content_view_versions(:library_view_version_2)
             destination_server = "whereami.com"
@@ -32,7 +32,7 @@ module Katello
           end
 
           it "fails on validate! if any 'non-immediate' repos in cvv" do
-            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
             version = katello_content_view_versions(:library_view_version_2)
             repo1 = version.archived_repos.yum_type.first
@@ -48,7 +48,7 @@ module Katello
           end
 
           it "does not fail on validate! if only 'immediate' repos in cvv" do
-            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
             version = katello_content_view_versions(:library_view_version_2)
             version.archived_repos.yum_type.each do |repo|
@@ -63,7 +63,7 @@ module Katello
           end
 
           it "fails on validate_incremental_export if the 'from' repositories and 'to' repositories point to different hrefs" do
-            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
             from_version = katello_content_view_versions(:library_view_version_1)
             version = katello_content_view_versions(:library_view_version_2)
@@ -122,7 +122,7 @@ module Katello
           end
 
           def setup_environment
-            proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            proxy = SmartProxy.pulp_primary
             SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
             version = katello_content_view_versions(:library_view_version_2)
             fetch_exporter(smart_proxy: proxy, content_view_version: version)

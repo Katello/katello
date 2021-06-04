@@ -9,7 +9,7 @@ module Katello
 
           def setup
             @repo = katello_repositories(:fedora_17_x86_64)
-            @proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @proxy = SmartProxy.pulp_primary
           end
 
           def test_remote_options
@@ -57,7 +57,7 @@ module Katello
 
           def setup
             @repo = katello_repositories(:fedora_17_x86_64)
-            @proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @proxy = SmartProxy.pulp_primary
             @service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
           end
 

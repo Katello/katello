@@ -45,9 +45,9 @@ module Katello
         tasks.flatten
       end
 
-      def pulp3_enabled_repo_types(check_pulp2_preferred = true)
-        Katello::RepositoryTypeManager.repository_types.values.select do |repository_type|
-          smart_proxy.pulp3_repository_type_support?(repository_type, check_pulp2_preferred)
+      def pulp3_enabled_repo_types
+        Katello::RepositoryTypeManager.enabled_repository_types.values.select do |repository_type|
+          smart_proxy.pulp3_repository_type_support?(repository_type)
         end
       end
 

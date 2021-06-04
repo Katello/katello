@@ -5,7 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_dev)
       @repo.root.update(url: 'https://fixtures.pulpproject.org/rpm-unsigned/')
       @repo.content_view.update(default: true)

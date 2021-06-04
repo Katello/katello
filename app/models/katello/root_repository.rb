@@ -81,9 +81,9 @@ module Katello
     validates :ostree_upstream_sync_depth, :presence => true, :numericality => { :only_integer => true },
       :if => proc { |r| r.ostree? && r.ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM }
     validates :content_type, :inclusion => {
-      :in => ->(_) { Katello::RepositoryTypeManager.repository_types.keys },
+      :in => ->(_) { Katello::RepositoryTypeManager.enabled_repository_types.keys },
       :allow_blank => false,
-      :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.repository_types.keys.join(', ') }
+      :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.enabled_repository_types.keys.join(', ') }
     }
     validates :download_policy, inclusion: {
       :in => ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES,

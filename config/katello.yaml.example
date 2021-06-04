@@ -1,15 +1,4 @@
 :katello:
-  #if this block is not define, all types are enabled
-  #types are defined in lib/katello/repository_types/*.rb
-  :content_types:
-    :yum: true
-    :file: true
-    :deb: true
-    :puppet: true
-    :docker: true
-    :ostree: true
-    :ansible_collection: true
-
   :rest_client_timeout: 30
   :gpg_strict_validation: false
 
@@ -42,10 +31,6 @@
     # :bulk_load_size: 1000
   # Setup your pulp environment here
   :pulp:
-    # refers to the url of the pulp
-    # example https://localhost/pulp/api
-    :url: https://localhost/pulp/api/v2/
-
     :sync_threads: 4
     # refers to the apache certificate
     # (typically /etc/pki/tls/certs/localhost.crt) location that is needed

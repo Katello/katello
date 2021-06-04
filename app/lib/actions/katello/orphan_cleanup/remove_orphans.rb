@@ -19,7 +19,7 @@ module Actions
 
         def run
           models = []
-          ::Katello::RepositoryTypeManager.repository_types.each_value do |repo_type|
+          ::Katello::RepositoryTypeManager.enabled_repository_types.each_value do |repo_type|
             indexable_types = repo_type.content_types_to_index
             models += indexable_types&.map(&:model_class)
             models.select! { |model| model.many_repository_associations }

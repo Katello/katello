@@ -72,7 +72,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'plans correctly for a pulp3 yum repo' do
-      with_pulp3_yum_features(capsule_content.smart_proxy)
+      with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
       repo = katello_repositories(:fedora_17_x86_64)
       repo.root.update_attribute(:unprotected, true)
@@ -232,6 +232,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'allows limiting scope of the syncing to one environment' do
+      SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
       with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(dev_environment)
       repos_in_dev = Katello::Repository.in_environment(dev_environment).pluck(:pulp_id)
@@ -242,35 +243,7 @@ module ::Actions::Katello::CapsuleContent
                   repository_id: nil,
                   environment_id: dev_environment.id
                 }
-      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
-
-      assert_tree_planned_with(tree, Actions::Pulp::Consumer::UnassociateUnits) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
-        assert_includes repos_in_dev, input[:repo_pulp_id]
-        repo = ::Katello::Repository.find_by(pulp_id: input[:repo_pulp_id])
-        refute_includes ['yum'], repo.content_type
-        refute capsule_content.smart_proxy.pulp3_support?(repo)
-      end
-
-      assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
-        assert_includes repos_in_dev, input[:repo_pulp_id]
-        if repos_in_dev.include?(input[:repo_pulp_id])
-          repo = ::Katello::Repository.find_by(pulp_id: input[:repo_pulp_id])
-          if ["deb", "yum"].include?(repo.content_type)
-            assert input[:sync_options][:remove_missing]
-          else
-            refute input[:sync_options][:remove_missing]
-          end
-          refute capsule_content.smart_proxy.pulp3_support?(repo)
-          repos_in_dev.delete(input[:repo_pulp_id])
-        else
-          # test cvpe's
-          assert input[:sync_options][:remove_missing]
-          refute capsule_content.smart_proxy.pulp3_support?(cvpe.nonpersisted_repository)
-        end
-      end
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]

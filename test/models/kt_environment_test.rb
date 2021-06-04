@@ -97,7 +97,7 @@ module Katello
 
     def test_audit_on_env_creation
       env = nil
-      assert_difference 'Audit.count' do
+      assert_difference 'Audit.count', 2 do
         env = KTEnvironment.create(
           :organization => @acme_corporation,
           :name => "AuditEnv", :prior => @library)
@@ -110,7 +110,7 @@ module Katello
       env = KTEnvironment.create(:organization => @acme_corporation,
         :name => "AuditEnv", :prior => @library)
       env.destroy
-      recent_audit = Audit.last
+      recent_audit = Audit.all[-2]
       assert_equal 'Katello::KTEnvironment', recent_audit.auditable_type
       assert_equal 'destroy', recent_audit.action
     end

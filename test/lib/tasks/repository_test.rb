@@ -4,8 +4,6 @@ require 'rake'
 module Katello
   class RepositoryTaskTest < ActiveSupport::TestCase
     def setup
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-
       Rake.application.rake_require 'katello/tasks/repository'
       Rake.application.rake_require 'katello/tasks/reimport'
 

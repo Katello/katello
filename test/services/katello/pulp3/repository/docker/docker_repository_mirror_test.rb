@@ -8,7 +8,7 @@ module Katello
         include Katello::Pulp3Support
 
         def setup
-          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = SmartProxy.pulp_primary
           @repo = katello_repositories(:pulp3_docker_1)
           @repo_service = ::Katello::Pulp3::Repository::Docker.new(@repo, @primary)
           @repo_mirror = ::Katello::Pulp3::RepositoryMirror.new(@repo_service)

@@ -7,7 +7,6 @@ module Katello
         include RepositorySupport
 
         def setup
-          create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           @mock_smart_proxy = mock('smart_proxy')
           @mock_smart_proxy.stubs(:pulp3_support?).returns(true)
           @mock_smart_proxy.stubs(:pulp2_preferred_for_type?).returns(false)

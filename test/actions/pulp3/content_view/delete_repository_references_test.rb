@@ -5,7 +5,7 @@ module ::Actions::Pulp3::ContentView
     include Katello::Pulp3Support
 
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:generic_file_archive)
       @content_view = @repo.content_view
       ensure_creatable(@repo, @primary)
