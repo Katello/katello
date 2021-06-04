@@ -5,10 +5,6 @@ module Katello
   module Resources
     module Candlepin
       class UpstreamCandlepinResourceTest < ActiveSupport::TestCase
-        def setup
-          FactoryBot.create(:smart_proxy, :default_smart_proxy)
-        end
-
         def test_upstream_consumer_nil_current_organization
           Organization.stubs(:current).returns(nil)
           UpstreamCandlepinResource.upstream_consumer

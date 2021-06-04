@@ -170,7 +170,7 @@ module Katello
       end
 
       def pulp3_enabled_repo_types
-        Katello::RepositoryTypeManager.repository_types.values.select do |repository_type|
+        Katello::RepositoryTypeManager.enabled_repository_types.values.select do |repository_type|
           smart_proxy.pulp3_repository_type_support?(repository_type)
         end
       end

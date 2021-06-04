@@ -9,7 +9,6 @@ module Katello
       @rpm_three = katello_srpms(:three)
 
       Srpm.any_instance.stubs(:backend_data).returns({})
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
   end
 
@@ -54,14 +53,14 @@ module Katello
     end
 
     def random_json(count)
-      count.times.map { |i| {'_id' => SecureRandom.hex, 'name' => "somename-#{i}", 'repository_memberships' => [@repo.pulp_id]} }
+      count.times.map { |i| {'pulp_href' => SecureRandom.hex, 'name' => "somename-#{i}", 'repository_memberships' => [@repo.pulp_id]} }
     end
 
     def test_import_all
       ::Setting::Content.find_by(name: "bulk_load_size").update(value: 10)
       json = random_json(30)
       count = Katello::Srpm.all.count
-      Katello::Pulp::Srpm.stubs(:pulp_units_batch_all).returns([json[0..29]])
+      Katello::Pulp3::Srpm.stubs(:pulp_units_batch_all).returns([json[0..29]])
       Katello::Srpm.import_all
 
       assert_equal 30, Katello::Srpm.all.count - count
@@ -69,8 +68,8 @@ module Katello
 
     def test_import_all_pulp_ids
       json = random_json(10)
-      pulp_ids = json.map { |obj| obj['_id'] }
-      Katello::Pulp::Srpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
+      pulp_ids = json.map { |obj| obj['pulp_href'] }
+      Katello::Pulp3::Srpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
 
       Katello::Srpm.import_all(pulp_ids)
       pulp_ids_imported = Katello::Srpm.all.pluck(:pulp_id)
@@ -82,8 +81,8 @@ module Katello
 
     def test_import_all_pulp_ids_no_assoc
       json = random_json(10)
-      pulp_ids = json.map { |obj| obj['_id'] }
-      Katello::Pulp::Srpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
+      pulp_ids = json.map { |obj| obj['pulp_href'] }
+      Katello::Pulp3::Srpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
 
       Katello::Srpm.import_all(pulp_ids)
       pulp_ids_in_repo = @repo.reload.srpms.pluck(:pulp_id)
@@ -101,7 +100,7 @@ module Katello
   end
 
   class SrpmSortTest < ActiveSupport::TestCase
-    FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "rpms.yml")
+    FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "pulp3", "rpms.yml")
 
     def setup
       @repo = katello_repositories(:fedora_17_unpublished)
@@ -111,7 +110,7 @@ module Katello
         package.merge!(:repoids => [@repo.pulp_id])
       end
 
-      Katello::Pulp::Srpm.stubs(:pulp_units_batch_all).returns([@packages])
+      Katello::Pulp3::Srpm.stubs(:pulp_units_batch_all).returns([@packages])
       Katello::Srpm.import_for_repository(@repo)
 
       @all_ids = @repo.reload.srpms.pluck(:pulp_id).sort

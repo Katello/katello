@@ -9,7 +9,7 @@ module Katello
 
           def setup
             User.current = User.anonymous_admin
-            @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @primary = SmartProxy.pulp_primary
             @repo = katello_repositories(:pulp3_file_1)
             create_repo(@repo, @primary)
             @service = Katello::Pulp3::Repository::File.new(@repo, @primary)

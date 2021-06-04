@@ -10,7 +10,7 @@ module Katello
         def setup
           User.current = users(:admin)
 
-          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = SmartProxy.pulp_primary
           @repo = katello_repositories(:fedora_17_x86_64)
           @repo.root.update(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo/')
           @repo.root.update(:download_policy => 'immediate')

@@ -10,7 +10,6 @@ module Katello
       @rpm_one_two = katello_rpms(:one_two)
 
       Rpm.any_instance.stubs(:backend_data).returns({})
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
   end
 
@@ -199,22 +198,22 @@ module Katello
     end
 
     def random_json(count)
-      count.times.map { |i| {'_id' => SecureRandom.hex, 'name' => "somename-#{i}", 'repository_memberships' => [@repo.pulp_id]} }
+      count.times.map { |i| {'pulp_href' => SecureRandom.hex, 'name' => "somename-#{i}", 'repository_memberships' => [@repo.pulp_id]} }
     end
 
     def test_import_all
       ::Setting::Content.find_by(name: "bulk_load_size").update(value: 10)
       json = random_json(30)
       count = Katello::Rpm.all.count
-      Katello::Pulp::Rpm.stubs(:pulp_units_batch_all).returns([json[0..29]])
+      Katello::Pulp3::Rpm.stubs(:pulp_units_batch_all).returns([json[0..29]])
       Katello::Rpm.import_all
       assert_equal 30, Katello::Rpm.all.count - count
     end
 
     def test_import_all_pulp_ids
       json = random_json(10)
-      pulp_ids = json.map { |obj| obj['_id'] }
-      Katello::Pulp::Rpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
+      pulp_ids = json.map { |obj| obj['pulp_href'] }
+      Katello::Pulp3::Rpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
 
       Katello::Rpm.import_all(pulp_ids)
       # We don't create repo associations anymore
@@ -227,8 +226,10 @@ module Katello
 
     def test_import_all_pulp_ids_no_assoc
       json = random_json(10)
-      pulp_ids = json.map { |obj| obj['_id'] }
-      Katello::Pulp::Rpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
+      pulp_ids = json.map { |obj| obj['pulp_href'] }
+      #json = [[{"pulp_href"=>"/pulp/api/v3/content/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/"}]]
+      Katello::Pulp3::Rpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
+      #Katello::Pulp3::Rpm.stubs(:unit_identifier).returns('_id')
 
       Katello::Rpm.import_all(pulp_ids)
       pulp_ids_in_repo = @repo.reload.rpms.pluck(:pulp_id)
@@ -240,13 +241,13 @@ module Katello
 
     def test_import_all_removes_duplicates
       json = random_json(1)
-      pulp_ids = json.map { |obj| obj['_id'] }
+      pulp_ids = json.map { |obj| obj['pulp_href'] }
       json.first["name"] = @rpm_one.name
       json.first["version"] = @rpm_one.version
       json.first["release"] = @rpm_one.release
       json.first["epoch"] = @rpm_one.epoch
       json.first["arch"] = @rpm_one.arch
-      Katello::Pulp::Rpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
+      Katello::Pulp3::Rpm.stubs(:pulp_units_batch_all).with(pulp_ids).returns([json])
       refute_nil ::Katello::RepositoryRpm.find_by(rpm_id: @rpm_one.id, repository_id: @repo.id)
       Katello::Rpm.import_all(pulp_ids, @repo)
       assert_nil ::Katello::RepositoryRpm.find_by(rpm_id: @rpm_one.id, repository_id: @repo.id)
@@ -258,10 +259,10 @@ module Katello
   end
 
   class RpmSortTest < ActiveSupport::TestCase
-    FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "rpms.yml")
+    # TODO: test/fixtures/pulp/rpms.yml needs to be updated to support Pulp 3
+    FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "pulp3", "rpms.yml")
 
     def setup
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @repo = katello_repositories(:fedora_17_unpublished)
       @packages = YAML.load_file(FIXTURES_FILE).values.map(&:with_indifferent_access)
 
@@ -269,7 +270,7 @@ module Katello
         package.merge!(:repoids => [@repo.pulp_id])
       end
 
-      Katello::Pulp::Rpm.stubs(:pulp_units_batch_for_repo).returns([@packages])
+      Katello::Pulp3::Rpm.stubs(:pulp_units_batch_for_repo).returns([@packages])
       Katello::Rpm.import_for_repository(@repo)
 
       @all_ids = @repo.reload.rpms.pluck(:pulp_id).sort
@@ -282,40 +283,44 @@ module Katello
 
     def test_min_version_filter
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0")
-      assert_equal ["abc123-2", "abc123-4", "abc123-6"], results.map(&:pulp_id).sort
+      assert_equal ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/"], results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0", '')
-      assert_equal ["abc123-2", "abc123-4", "abc123-6"], results.map(&:pulp_id).sort
+      assert_equal ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/"], results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("1")
-      expected = @all_ids - ["abc123-8"]
+      expected = @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52057/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0-1.0")
-      expected = ["abc123-2", "abc123-4", "abc123-6"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0-1el4")
-      expected = ["abc123-1", "abc123-2", "abc123-4", "abc123-5", "abc123-6"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52050/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52054/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("0:")
-      expected = ["abc123-2"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
     end
 
     def test_max_version_filter
       results = Rpm.in_repositories(@repo).search_version_range(nil, "1:1.0.0")
-      assert_equal @all_ids - ["abc123-2"], results.map(&:pulp_id).sort
+      assert_equal @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"], results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_range('', "1:1.0.0")
-      assert_equal @all_ids - ["abc123-2"], results.map(&:pulp_id).sort
+      assert_equal @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"], results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_range(nil, "0:1.0.0")
-      assert_equal ["abc123-8"], results.map(&:pulp_id).sort
+      assert_equal ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52057/"], results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_range(nil, "1:")
-      expected = @all_ids - ["abc123-2"]
+      expected = @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
     end
 
@@ -327,31 +332,37 @@ module Katello
       assert_empty results
 
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0-1", "1.0.0-1.2")
-      expected = ["abc123-1", "abc123-5"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52050/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52054/"]
       assert_equal expected, results.map(&:pulp_id).sort
     end
 
     def test_equal_filter
       results = Rpm.in_repositories(@repo).search_version_equal("1.0.0")
-      expected = @all_ids - ["abc123-2", "abc123-4", "abc123-6", "abc123-8"]
+      expected = @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/",
+                             "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/",
+                             "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/",
+                             "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52057/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_equal("1:1.0.0")
-      expected = ["abc123-2"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_equal("1.0.0-1.0")
-      expected = ["abc123-1"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52050/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_version_equal("1:1.0.0-1.0")
-      expected = ["abc123-2"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
     end
 
     def test_search_equal
       results = Rpm.in_repositories(@repo).search_for("evr != 1.0.0")
-      expected = ["abc123-2", "abc123-4", "abc123-6", "abc123-8"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52057/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr = 1.0.0")
@@ -359,7 +370,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr = 1:1.0.0")
-      expected = ["abc123-2"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr != 1:1.0.0")
@@ -367,7 +378,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr = 1.0.0-1.0")
-      expected = ["abc123-1"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52050/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr != 1.0.0-1.0")
@@ -375,7 +386,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr = 1:1.0.0-1.0")
-      expected = ["abc123-2"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr != 1:1.0.0-1.0")
@@ -385,7 +396,7 @@ module Katello
 
     def test_search_in
       results = Rpm.in_repositories(@repo).search_for("evr ^ (1.0.0-1el5,1:1.0.0-1.0)")
-      expected = ["abc123-2", "abc123-5"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52054/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr !^ (1.0.0-1el5,1:1.0.0-1.0)")
@@ -395,7 +406,7 @@ module Katello
 
     def test_search_compare_gt_lte # rubocop:disable Metrics/AbcSize
       results = Rpm.in_repositories(@repo).search_for("evr > 1.0.0")
-      expected = ["abc123-2", "abc123-4", "abc123-6"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr <= 1.0.0")
@@ -403,7 +414,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr > 1")
-      expected = @all_ids - ["abc123-8"]
+      expected = @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52057/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr <= 1")
@@ -411,7 +422,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr > 1.0.0-1.0")
-      expected = ["abc123-2", "abc123-4", "abc123-6"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/", "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr <= 1.0.0-1.0")
@@ -419,7 +430,11 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr > 1.0.0-1el4")
-      expected = ["abc123-1", "abc123-2", "abc123-4", "abc123-5", "abc123-6"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52050/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52054/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr <= 1.0.0-1el4")
@@ -427,7 +442,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr > 0:")
-      expected = ["abc123-2"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr <= 0:")
@@ -437,7 +452,7 @@ module Katello
 
     def test_search_compare_lt_gte
       results = Rpm.in_repositories(@repo).search_for("evr < 1:1.0.0")
-      expected = @all_ids - ["abc123-2"]
+      expected = @all_ids - ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr >= 1:1.0.0")
@@ -445,7 +460,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr < 0:1.0.0")
-      expected = ["abc123-8"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52057/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr >= 0:1.0.0")
@@ -453,7 +468,7 @@ module Katello
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr >= 1:")
-      expected = ["abc123-2"]
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/"]
       assert_equal expected, results.map(&:pulp_id).sort
 
       results = Rpm.in_repositories(@repo).search_for("evr < 1:")
@@ -462,14 +477,19 @@ module Katello
     end
 
     def test_search_like
-      # Disabled until https://github.com/wvanbergen/scoped_search/pull/178 is merged
-      #results = Rpm.in_repositories(@repo).search_for("evr ~ :1.0.0-1")
-      #expected = ["abc123-1", "abc123-2", "abc123-5"]
-      #assert_equal expected, results.map(&:pulp_id).sort
+      results = Rpm.in_repositories(@repo).search_for("version ~ 1.0.0")
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52050/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52051/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52052/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52054/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52056/"]
+      assert_equal expected, results.map(&:pulp_id).sort
 
-      #results = Rpm.in_repositories(@repo).search_for("evr !~ :1.0.0-1")
-      #expected = @all_ids - ["abc123-2"]
-      #assert_equal expected, results.map(&:pulp_id).sort
+      results = Rpm.in_repositories(@repo).search_for("version !~ 1.0.0")
+      expected = ["/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52053/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52055/",
+                  "/pulp/api/v3/rpm/packages/da95886d-77ec-4b87-bbc5-d9d6f5f52057/"]
+      assert_equal expected, results.map(&:pulp_id).sort
     end
   end
 end

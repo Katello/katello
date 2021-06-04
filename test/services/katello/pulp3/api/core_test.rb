@@ -9,7 +9,7 @@ module Katello
           include Katello::Pulp3Support
 
           def setup
-            @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @primary = SmartProxy.pulp_primary
           end
 
           def test_with_excon

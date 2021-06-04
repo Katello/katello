@@ -17,7 +17,7 @@ module Katello
       @fedora_dev = katello_repositories(:fedora_17_x86_64_dev)
       @on_demand_repo = katello_repositories(:fedora_17_x86_64)
       @docker_repo = katello_repositories(:busybox)
-      @smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @smart_proxy = SmartProxy.pulp_primary
       @srpm_repo = katello_repositories(:srpm_repo)
     end
 
@@ -59,7 +59,7 @@ module Katello
 
       assert_response :success
       body = JSON.parse(response.body)
-      assert_equal RepositoryTypeManager.repository_types.size, body.size
+      assert_equal RepositoryTypeManager.enabled_repository_types.size, body.size
       body.each do |repo|
         assert RepositoryTypeManager.find(repo["name"]).present?
       end
@@ -579,17 +579,6 @@ module Katello
 
       assert_response 422
       assert_equal(expected_message, body['errors']['download_policy'][0])
-    end
-
-    def test_update_with_upstream_sync_policy
-      sync_depth = '100'
-      sync_policy = "custom"
-      repo = katello_repositories(:ostree)
-      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        attributes[:ostree_upstream_sync_policy].must_equal sync_policy
-        attributes[:ostree_upstream_sync_depth].must_equal sync_depth
-      end
-      put :update, params: { :id => repo.id, :ostree_upstream_sync_depth => sync_depth, :ostree_upstream_sync_policy => sync_policy }
     end
 
     def test_update_with_ignorable_content

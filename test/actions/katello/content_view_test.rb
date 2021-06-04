@@ -19,7 +19,6 @@ module ::Actions::Katello::ContentView
     let(:content_view) { katello_content_views(:no_environment_view) }
     before do
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:repository_mapping).returns({})
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
     it 'plans' do
       action.stubs(:task).returns(success_task)
@@ -423,7 +422,7 @@ module ::Actions::Katello::ContentView
     it 'plans with composite' do
       component = composite_version.components.first
       new_version = ::Katello::ContentViewVersion.new
-      proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      proxy = SmartProxy.pulp_primary
       SmartProxy.any_instance.stubs(:pulp_primary).returns(proxy)
 
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version).returns(new_version)

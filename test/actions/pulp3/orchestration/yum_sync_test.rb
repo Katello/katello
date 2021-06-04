@@ -6,7 +6,7 @@ module ::Actions::Pulp3
 
     def setup
       User.current = users(:admin)
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
       create_repo(@repo, @primary)

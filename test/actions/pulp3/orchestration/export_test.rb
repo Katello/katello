@@ -5,7 +5,7 @@ module ::Actions::Katello::ContentViewVersion
     include Katello::Pulp3Support
 
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.root.update!(url: 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
       @repo = create_and_sync(@repo, @primary)

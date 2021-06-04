@@ -19,7 +19,6 @@ module Katello
       @organization = get_organization
       set_organization(@organization)
       @repository = katello_repositories(:fedora_17_x86_64)
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
 
     def setup

@@ -31,10 +31,9 @@ module ::Actions::Katello::CapsuleContent
     let(:action_class) { ::Actions::Katello::OrphanCleanup::RemoveOrphans }
 
     it 'plans proxy orphans cleanup with pulp3 primary' do
-      smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      smart_proxy = SmartProxy.pulp_primary
       tree = plan_action_tree(action_class, smart_proxy)
 
-      assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveOrphans)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::RemoveOrphans)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRepositoryVersions)
     end
@@ -43,8 +42,6 @@ module ::Actions::Katello::CapsuleContent
       smart_proxy = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
       tree = plan_action_tree(action_class, smart_proxy)
 
-      assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveUnneededRepos)
-      assert_tree_planned_with(tree, Actions::Pulp::OrphanCleanup::RemoveOrphans)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::RemoveOrphans)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanDistributions)
       assert_tree_planned_with(tree, Actions::Pulp3::OrphanCleanup::DeleteOrphanRemotes)
@@ -52,7 +49,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'runs and removes orphan content units' do
-      smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      smart_proxy = SmartProxy.pulp_primary
       file_unit_orphan = Katello::FileUnit.new(:name => "file_unit", :pulp_id => "orphaned")
       file_unit_orphan.save!
       docker_unit_orphan = Katello::DockerTag.new(:name => "docker_unit", :pulp_id => "orphaned_docker")
@@ -63,32 +60,6 @@ module ::Actions::Katello::CapsuleContent
       run_action action
       assert_raises(ActiveRecord::RecordNotFound) { file_unit_orphan.reload }
       assert_raises(ActiveRecord::RecordNotFound) { docker_unit_orphan.reload }
-    end
-  end
-
-  class RemoveUnneededReposTest < TestBase
-    let(:action_class) { ::Actions::Pulp::OrphanCleanup::RemoveUnneededRepos }
-
-    it "plans removal of unneeded repos with" do
-      smart_proxy = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
-
-      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:orphaned_repos).returns([])
-      action = create_action(action_class)
-      action.expects(:plan_self)
-      plan_action(action, smart_proxy)
-    end
-  end
-
-  class RemoveOrphansTest < TestBase
-    let(:action_class) { ::Actions::Pulp::Orchestration::OrphanCleanup::RemoveOrphans }
-    it "Calls remove uneeded repos" do
-      smart_proxy = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
-
-      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:orphaned_repos).returns([])
-      action = create_action(action_class)
-      plan_action(action, smart_proxy)
-      assert_action_planed(action, ::Actions::Pulp::OrphanCleanup::RemoveUnneededRepos)
-      assert_action_planed(action, ::Actions::Pulp::OrphanCleanup::RemoveOrphans)
     end
   end
 end

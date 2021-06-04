@@ -79,8 +79,6 @@ module Katello
 
     test_attributes :pid => '80d36498-2e71-4aa9-b696-f0a45e86267f'
     def test_create
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-
       post :create, params: { :name => "My View", :label => "My_View", :description => "Cool",
                               :organization_id => @organization.id, :solve_dependencies => true }
 
@@ -90,8 +88,6 @@ module Katello
     end
 
     def test_create_import
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-
       post :create, params: { :name => "My View", :label => "My_View", :description => "Cool",
                               :organization_id => @organization.id, :import_only => true }
 

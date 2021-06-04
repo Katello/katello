@@ -5,7 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
     CERT_FIXTURE = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt".freeze
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:generic_file)
       @repo.root.update(:url => 'http://test/test/', :unprotected => false)
     end

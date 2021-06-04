@@ -38,7 +38,7 @@ module Actions
           pulp_sync_options[:optimize] = false if skip_metadata_check && repo.yum?
 
           sequence do
-            if SmartProxy.pulp_primary.pulp3_support?(repo) && validate_contents
+            if validate_contents
               plan_action(Katello::Repository::VerifyChecksum, repo)
             else
               sync_action = plan_action(Actions::Pulp3::Orchestration::Repository::Sync,

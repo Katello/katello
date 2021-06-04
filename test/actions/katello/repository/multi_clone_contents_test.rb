@@ -11,7 +11,7 @@ module Actions
 
     def setup
       get_organization #ensure we have an org label
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.update!(:environment_id => nil)
       @repo_clone = katello_repositories(:fedora_17_x86_64_dev)
