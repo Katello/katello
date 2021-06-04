@@ -48,6 +48,10 @@ module Katello
           Runcible::Models::DebImporter
         end
 
+        def regenerate_applicability
+          smart_proxy.pulp_api.extensions.repository.regenerate_applicability_by_ids([repo.pulp_id], true)
+        end
+
         def copy_contents(destination_repo, _options = {})
           [
             @smart_proxy.pulp_api.extensions.deb.copy(@repo.pulp_id, destination_repo.pulp_id, fields: ::Katello::Pulp::Deb::PULP_SELECT_FIELDS),
