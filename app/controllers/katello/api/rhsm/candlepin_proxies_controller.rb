@@ -48,7 +48,8 @@ module Katello
     end
 
     rescue_from RestClient::Exception do |e|
-      Rails.logger.error pp_exception(e)
+      Rails.logger.error(pp_exception(e, with_backtrace: false))
+      Rails.logger.error(e.backtrace.detect { |line| line.match("katello.*controller") })
       if request_from_katello_cli?
         render :json => { :errors => [e.http_body] }, :status => e.http_code
       else
@@ -295,7 +296,6 @@ module Katello
       if facet.nil?
         # check with candlepin if consumer is Gone, raises RestClient::Gone
         User.as_anonymous_admin { Resources::Candlepin::Consumer.get(uuid) }
-        fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % uuid
       end
       @host = ::Host::Managed.unscoped.find(facet.host_id)
     end
