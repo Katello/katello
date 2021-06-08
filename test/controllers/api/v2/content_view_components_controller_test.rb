@@ -91,6 +91,13 @@ module Katello
       end
     end
 
+    def test_show_all
+      get :show_all, params: { :composite_content_view_id => @composite.id }
+
+      assert_response :success
+      assert_template 'api/v2/content_view_components/index'
+    end
+
     def test_show
       component = create_component
       get :show, params: { :composite_content_view_id => @composite.id, :id => component.id }

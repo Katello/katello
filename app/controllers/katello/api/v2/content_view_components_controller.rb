@@ -1,9 +1,10 @@
 module Katello
   class Api::V2::ContentViewComponentsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
-    before_action :find_composite_content_view, :only => [:show, :index]
+    before_action :find_composite_content_view, :only => [:show, :index, :show_all]
     before_action :find_composite_content_view_for_edit, :only => [:add_components, :remove_components, :update]
     before_action :find_authorized_katello_resource, :only => [:show, :update]
+    before_action :find_organization_from_cv, :only => [:show_all]
 
     wrap_parameters :include => %w(composite_content_view_id content_view_version_id content_view_id latest)
 
@@ -26,6 +27,32 @@ module Katello
         :subtotal => results.count,
         :total => results.count
       }
+    end
+
+    # content_views/:id/components/show_all
+    # Shows all content views, added and available to add, for a content view
+    # Undocumented endpoint since the functionality exists in separate calls already.
+    # This was created for ease of pagination and search for the UI
+    # param :id, :number, desc: N_("Content View id"), required: true
+    def show_all
+      kc = Katello::ContentView.table_name
+      kcc = Katello::ContentViewComponent.table_name
+      join_query = <<-SQL
+         LEFT OUTER JOIN #{kcc}
+         ON #{kc}.id = #{kcc}.content_view_id
+         AND #{kcc}.composite_content_view_id = #{@view.id}
+      SQL
+      order_query = <<-SQL
+         CAST (#{kcc}.composite_content_view_id as BOOLEAN) ASC, #{kc}.name
+      SQL
+
+      query = Katello::ContentView.readable.in_organization(@organization)
+      query = query&.non_composite&.non_default
+      custom_sort = ->(sort_query) { sort_query.joins(join_query).order(order_query) }
+      options = { resource_class: Katello::ContentView, custom_sort: custom_sort }
+      collection = scoped_search(query, nil, nil, options)
+      collection[:results] = ComponentViewPresenter.component_presenter(@view, views: collection[:results])
+      respond_for_index(:collection => collection, :template => "index")
     end
 
     api :PUT, "/content_views/:composite_content_view_id/content_view_components/add",
@@ -134,6 +161,10 @@ module Katello
       else
         fail "Unsupported default_sort type"
       end
+    end
+
+    def find_organization_from_cv
+      @organization = @view.organization
     end
   end
 end
