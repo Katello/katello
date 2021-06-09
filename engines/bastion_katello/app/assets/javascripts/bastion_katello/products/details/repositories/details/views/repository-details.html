@@ -32,7 +32,7 @@
           </a>
         </li>
 
-        <li role="menuitem" ng-hide="hideSyncButton(repository, true)" ng-class="{disabled: disableSyncLink()}">
+        <li role="menuitem" ng-hide="hideSyncButton(repository, false)" ng-class="{disabled: disableSyncLink()}">
           <a ng-click="verifyChecksum(repository)" disable-link="disableSyncLink()" translate>
             Verify Content Checksum
           </a>
