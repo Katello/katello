@@ -23,6 +23,10 @@ module Actions
         def presenter
           Presenters::RepairPresenter.new(self)
         end
+
+        def rescue_strategy_for_self
+          Dynflow::Action::Rescue::Skip
+        end
       end
     end
   end

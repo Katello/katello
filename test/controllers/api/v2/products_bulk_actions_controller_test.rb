@@ -113,7 +113,6 @@ module Katello
 
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         refute_empty repos
-        assert repos.all? { |repo| repo.yum? }
         action_class.must_equal ::Actions::Katello::Repository::VerifyChecksum
       end
 

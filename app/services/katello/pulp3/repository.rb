@@ -60,6 +60,11 @@ module Katello
         !repo.publication_href.nil?
       end
 
+      def repair(repository_version_href)
+        data = api.class.repository_version_class.new
+        api.repository_versions_api.repair(repository_version_href, data)
+      end
+
       def skip_types
         nil
       end

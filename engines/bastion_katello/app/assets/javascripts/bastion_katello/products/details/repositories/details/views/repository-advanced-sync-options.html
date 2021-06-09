@@ -28,27 +28,3 @@
       </ul>
     </div>
   </div>
-
-  <div class="radio">
-    <label>
-      <input type="radio" ng-model="syncType" value="validateContents" />
-      <span translate>
-        Validate Content Sync
-      </span>
-    </label>
-    <div class="help-block">
-      <span translate>
-        Performs a complete sync, verifying the checksum of all packages afterwards. Any missing or corrupt package will be re-downloaded. This option will take the longest amount of time. Choose this option if:
-      </span>
-      <ul class="list-aligned">
-        <li translate>Specific packages are throwing a 404 from the package-manager.</li>
-        <li translate>Packages are corrupt, often leading to an error "Package does not match intended download" or "Hash Sum mismatch".</li>
-      </ul>
-      <span ng-show="repository.download_policy === 'on_demand' && repository.content_type === 'yum'">
-        <i class="fa fa-warning"></i>
-        <span translate>
-          When validating content, repositories using the "On Demand" download policy will download all packages within the repository.
-        </span>
-      </span>
-    </div>
-  </div>
