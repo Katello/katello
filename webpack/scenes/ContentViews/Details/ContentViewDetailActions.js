@@ -17,6 +17,10 @@ import {
   cvFilterRulesKey,
   cvDetailsComponentKey,
   cvDetailsVersionKey,
+  cvAddComponentKey,
+  cvRemoveComponentKey,
+  addComponentSuccessMessage,
+  removeComponentSuccessMessage,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
@@ -50,6 +54,24 @@ export const updateContentView = (cvId, params) => async dispatch => dispatch(pu
     FAILURE: UPDATE_CONTENT_VIEW_FAILURE,
   },
 }));
+
+export const addComponent = params => put({
+  type: API_OPERATIONS.PUT,
+  key: cvAddComponentKey(params.compositeContentViewId),
+  url: api.getApiUrl(`/content_views/${params.compositeContentViewId}/content_view_components/${params.components.id ? params.components.id : 'add'}`),
+  params: params.components.id ? params.components : params,
+  successToast: () => addComponentSuccessMessage(params.components.id),
+  errorToast: error => __(`Something went wrong while adding component! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const removeComponent = params => put({
+  type: API_OPERATIONS.PUT,
+  key: cvRemoveComponentKey(params.compositeContentViewId),
+  url: api.getApiUrl(`/content_views/${params.compositeContentViewId}/content_view_components/remove`),
+  params,
+  successToast: () => removeComponentSuccessMessage(params.component_ids.length),
+  errorToast: error => __(`Something went wrong while removing component! ${getResponseErrorMsgs(error.response)}`),
+});
 
 export const getContentViewRepositories = (cvId, params, status) => {
   const apiParams = { ...params };
@@ -117,9 +139,9 @@ export const getCVFilterRules = (filterId, params) => get({
   url: api.getApiUrl(`/content_view_filters/${filterId}/rules`),
 });
 
-export const getContentViewComponents = (cvId, params) => {
-  const apiParams = { ...params };
-  const apiUrl = `/content_views/${cvId}/content_view_components`;
+export const getContentViewComponents = (cvId, params, statusSelected) => {
+  const apiParams = { ...params, status: statusSelected };
+  const apiUrl = `/content_views/${cvId}/content_view_components/show_all`;
   return get({
     key: cvDetailsComponentKey(cvId),
     params: apiParams,
