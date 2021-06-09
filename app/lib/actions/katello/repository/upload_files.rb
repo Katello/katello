@@ -7,7 +7,7 @@ module Actions
     module Repository
       class UploadFiles < Actions::EntryAction
         include Actions::Katello::PulpSelector
-        def plan(repository, files, content_type = nil)
+        def plan(repository, files, content_type = nil, options = {})
           action_subject(repository)
           repository.clear_smart_proxy_sync_histories
           tmp_files = prepare_tmp_files(files)
@@ -15,6 +15,9 @@ module Actions
           content_type ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
           unit_type_id = SmartProxy.pulp_primary.content_service(content_type)::CONTENT_TYPE
           upload_actions = []
+
+          generate_applicability = options.fetch(:generate_applicability, repository.yum?)
+
           sequence do
             concurrence do
               tmp_files.each do |file|
@@ -30,6 +33,7 @@ module Actions
 
             plan_action(FinishUpload, repository, content_type: content_type, upload_actions: upload_actions)
             plan_self(tmp_files: tmp_files)
+            plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
           end
         ensure
           # Delete tmp files when some exception occurred. Would be

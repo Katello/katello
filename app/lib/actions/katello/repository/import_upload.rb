@@ -13,6 +13,7 @@ module Actions
           unit_keys = repo_service.unit_keys(uploads)
           generate_metadata = options.fetch(:generate_metadata, true)
           sync_capsule = options.fetch(:sync_capsule, true)
+          generate_applicability = options.fetch(:generate_applicability, repository.yum?)
 
           options[:content_type] ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
           unit_type_id = SmartProxy.pulp_primary.content_service(options[:content_type])::CONTENT_TYPE
@@ -38,6 +39,7 @@ module Actions
               end
             end
             plan_action(Katello::Repository::MetadataGenerate, repository) if generate_metadata
+            plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
             plan_self(repository_id: repository.id, sync_capsule: sync_capsule, upload_results: upload_results)
           end
         end
