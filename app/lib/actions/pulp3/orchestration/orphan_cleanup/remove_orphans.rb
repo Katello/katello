@@ -2,7 +2,7 @@ module Actions
   module Pulp3
     module Orchestration
       module OrphanCleanup
-        class RemoveOrphans < Pulp::Abstract
+        class RemoveOrphans < Pulp3::Abstract
           def plan(proxy)
             if proxy.pulp3_enabled?
               sequence do
