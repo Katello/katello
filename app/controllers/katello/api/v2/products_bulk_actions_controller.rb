@@ -53,8 +53,7 @@ module Katello
     param :ids, Array, :desc => N_("List of product ids"), :required => true
     def verify_checksum_products
       repairable_products = @products.syncable
-      repairable_roots = RootRepository.where(:product_id => repairable_products).
-        where(:content_type => ::Katello::Repository::YUM_TYPE).has_url.select { |r| r.library_instance }.uniq
+      repairable_roots = RootRepository.where(:product_id => repairable_products).has_url.select { |r| r.library_instance }.uniq
 
       repairable_repositories = Katello::Repository.where(:root_id => repairable_roots)
       task = async_task(::Actions::BulkAction,

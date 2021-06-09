@@ -65,6 +65,10 @@ module Katello
           nil
         end
 
+        def self.repository_version_class
+          client_module::RepositoryVersion
+        end
+
         def cancel_task(task_href)
           data = PulpcoreClient::TaskResponse.new(state: 'canceled')
           self.class.ignore_409_exception do
