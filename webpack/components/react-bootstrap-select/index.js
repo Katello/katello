@@ -62,7 +62,7 @@ class BootstrapSelect extends React.Component {
                         data-count-selected-text={__('{0} items selected')}
                         defaultValue={initialValue}
                         componentClass="select"
-                        className="without_select2 without_jquery_multiselect"
+                        className="btn-group without_select2 without_jquery_multiselect"
     />;
   }
 }
