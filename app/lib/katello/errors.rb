@@ -53,7 +53,7 @@ module Katello
 
     class PulpcoreMissingCapabilities < StandardError
       def message
-        _("A smart proxy seems to have been refreshed without pulpcore being running.  You may want to ")
+        _("A smart proxy seems to have been refreshed without pulpcore being running. Please refresh the smart proxy after ensuring that pulpcore services are running.")
       end
     end
 
