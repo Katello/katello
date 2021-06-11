@@ -4,7 +4,9 @@ module Katello
   module Pulp3
     module Api
       class ContentGuard < Core
-        DEFAULT_NAME = 'RHSMCertGuard'.freeze
+        def default_name
+          'RHSMCertGuard'
+        end
 
         def self.client_module
           PulpCertguardClient
@@ -27,11 +29,11 @@ module Katello
         end
 
         def refresh
-          found = list(name: DEFAULT_NAME).results.first
+          found = list(name: default_name).results.first
           if found && found.ca_certificate != ca_cert
             partial_update(found.pulp_href)
           else
-            create
+            found = create
           end
           persist_if_needed(found.pulp_href)
         end
@@ -39,16 +41,16 @@ module Katello
         def persist_if_needed(href)
           return if self.smart_proxy.pulp_mirror?
           Katello::Util::Support.active_record_retry do
-            found = Katello::Pulp3::ContentGuard.find_by(:name => DEFAULT_NAME)
+            found = Katello::Pulp3::ContentGuard.find_by(:name => default_name)
             if found
               found.update(pulp_href: href)
             else
-              Katello::Pulp3::ContentGuard.create(name: DEFAULT_NAME, pulp_href: href)
+              Katello::Pulp3::ContentGuard.create(name: default_name, pulp_href: href)
             end
           end
         end
 
-        def create(name = DEFAULT_NAME)
+        def create(name = default_name)
           data = PulpCertguardClient::CertguardRHSMCertGuard.new(name: name, ca_certificate: ca_cert)
           rhsm_api_client.create(data)
         rescue self.class.api_exception_class => e
