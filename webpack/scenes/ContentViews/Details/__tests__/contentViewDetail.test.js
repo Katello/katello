@@ -33,6 +33,8 @@ test('Can call API and show details on page load', async (done) => {
     expect(getByLabelText('name text value')).toHaveTextContent(name);
     expect(getByLabelText('label text value')).toHaveTextContent(label);
     expect(getByLabelText('description text value')).toHaveTextContent(description);
+    expect(getByLabelText('cv_breadcrumb')).toBeInTheDocument();
+    expect(getByLabelText('cv_breadcrumb_cv')).toHaveTextContent(name);
   });
 
   assertNockRequest(scope, done);
