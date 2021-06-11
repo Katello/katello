@@ -1,4 +1,4 @@
-# 3.18.3 (2021-05-20)
+# 3.18.3 (2021-06-11)
 
 ## Features
 
@@ -6,6 +6,10 @@
  * Enable deb content for 2to3 migration ([#32420](https://projects.theforeman.org/issues/32420))
 
 ## Bug Fixes
+
+### Hosts
+ * Old hostgroup with kickstart repository id aren't migrated to the new hostgroup content facet table. ([#32661](https://projects.theforeman.org/issues/32661), [c2ed31ef](https://github.com/Katello/katello.git/commit/c2ed31efd1cbd094177d5865d9a09934cf11301c))
+ * Inherited hostgroup values are not set when creating host ([#32464](https://projects.theforeman.org/issues/32464), [23a5b7a7](https://github.com/Katello/katello.git/commit/23a5b7a70f6054a5bfcc61affef58c8061e40eee))
 
 ### Repositories
  * katello:delete_orphaned_content fails on Katello 3.18 with "backend service pulp3: 503 Service Unavailable" ([#32623](https://projects.theforeman.org/issues/32623), [63a1d5ba](https://github.com/Katello/katello.git/commit/63a1d5bae152290cc0a31e9f1eea491749f8a009))
@@ -21,14 +25,12 @@
  * npm install error on nightly ([#32531](https://projects.theforeman.org/issues/32531), [5d1294c8](https://github.com/Katello/katello.git/commit/5d1294c849e98ad515922ae615bd5e460a3dd36b))
  * Try to fix intermittent ApplicableContentHelper test ([#31954](https://projects.theforeman.org/issues/31954), [79d423fe](https://github.com/Katello/katello.git/commit/79d423fe1aa18a538e081df2f245fcad8593ea25), [35b80d22](https://github.com/Katello/katello.git/commit/35b80d22d90d19d1202a28e5441cb94b8d4a7d36))
 
-### Hosts
- * Inherited hostgroup values are not set when creating host ([#32464](https://projects.theforeman.org/issues/32464), [23a5b7a7](https://github.com/Katello/katello.git/commit/23a5b7a70f6054a5bfcc61affef58c8061e40eee))
+### Container
+ * katello should pass Docker-Content-Digest from pulp3 to the container client ([#32426](https://projects.theforeman.org/issues/32426), [be9af1d1](https://github.com/Katello/katello.git/commit/be9af1d1c8071a29a940737bb26eaf2daef80fc9))
+ * syncing pulp3 to pulp2  container content sometimes fails with PLP0000: 'fsLayers ([#32230](https://projects.theforeman.org/issues/32230), [c01834bd](https://github.com/Katello/katello.git/commit/c01834bd2e79974988b064826f1ab5197a54c54b))
 
 ### Content Views
  * Do the orphans cleanup before switchover to pulp3 ([#32302](https://projects.theforeman.org/issues/32302))
-
-### Container
- * syncing pulp3 to pulp2  container content sometimes fails with PLP0000: 'fsLayers ([#32230](https://projects.theforeman.org/issues/32230), [c01834bd](https://github.com/Katello/katello.git/commit/c01834bd2e79974988b064826f1ab5197a54c54b))
 
 ### Documentation
  * Katello 3.18 Documentation ([#32165](https://projects.theforeman.org/issues/32165))
@@ -46,19 +48,6 @@
  * Update pulp-rpm to 3.10.0 for Katello 3.18. ([#32301](https://projects.theforeman.org/issues/32301))
  * Pulp3 services won't start after running a migration after performing switchover ([#32256](https://projects.theforeman.org/issues/32256))
  * Hanging task when restarting services during pulp2 to pulp3 migration ([#32119](https://projects.theforeman.org/issues/32119), [a09e10c0](https://github.com/Katello/katello.git/commit/a09e10c0da42037eee63e0347d616b3b294bba50))
-# 3.18.2.1 (2021-03-12)
-
-## Bug Fixes
-
-### Repositories
- * errata are deleted after content switchover ([#32066](https://projects.theforeman.org/issues/32066))
-
-### Tooling
- * Pulp3 migration reports failed services ([#32058](https://projects.theforeman.org/issues/32058), [1cb62370](https://github.com/Katello/katello.git/commit/1cb62370d82cca17806420c0b1f671a95a65a71f))
-
-### Errata Management
- * clients using /pulp/content/ for their repo path do not have applicability calculated properly ([#32005](https://projects.theforeman.org/issues/32005), [fdcf4d76](https://github.com/Katello/katello.git/commit/fdcf4d760f39f649b4d6b2aa2c17e7c95c8abbba))
-
 # 3.18.2 (2021-03-05)
 
 ## Bug Fixes
