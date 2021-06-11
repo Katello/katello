@@ -28,5 +28,25 @@ module ::Actions::Pulp3::ContentGuard
       content_guard_count = ::Katello::Pulp3::ContentGuard.count
       assert_equal content_guard_count, 1
     end
+
+    def test_for_creation
+      name = 'test_for_creation'
+      Katello::Pulp3::Api::ContentGuard.any_instance.stubs(:default_name).returns(name)
+
+      service = Katello::Pulp3::Api::ContentGuard.new(@primary)
+
+      results = service.list(name: name).results
+      results.each do |result|
+        service.delete(result.pulp_href)
+      end
+
+      assert_equal 0, service.list(name: name).results.count
+
+      task = ForemanTasks.sync_task(::Actions::Pulp3::ContentGuard::Refresh, @primary)
+
+      assert :success, task.state
+      assert_equal 1, ::Katello::Pulp3::ContentGuard.count
+      assert_equal 1, service.list(name: name).results.count
+    end
   end
 end
