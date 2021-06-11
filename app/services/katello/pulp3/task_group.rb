@@ -85,7 +85,7 @@ module Katello
 
       def cancel
         tasks_api = core_api.tasks_api
-        tasks_response = core_api.fetch_from_list do |page_opts|
+        tasks_response = core_api.class.fetch_from_list do |page_opts|
           tasks_api.list(page_opts.merge(task_group: task_group_data['pulp_href'], state__in: 'running,waiting'))
         end
         tasks_response.collect do |result|
