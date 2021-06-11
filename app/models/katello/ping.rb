@@ -9,7 +9,7 @@ module Katello
         SETTINGS[:katello][:use_pulp_2_for_content_type].nil? || (!SETTINGS[:katello][:use_pulp_2_for_content_type][:yum] &&
         !SETTINGS[:katello][:use_pulp_2_for_content_type][:docker] &&
         !SETTINGS[:katello][:use_pulp_2_for_content_type][:file]) ||
-        system('systemctl is-enabled pulpcore-api.service')
+        File.exist?('/etc/systemd/system/multi-user.target.wants/pulpcore-api.service')
       end
 
       def services(capsule_id = nil)
