@@ -7,7 +7,6 @@ module Katello
     def destroy_repositories
       deletion_authorized_repositories = @repositories.deletable
       unpromoted_repos = deletion_authorized_repositories.reject { |repo| repo.promoted? }
-      deletable_repositories = unpromoted_repos.reject { |repo| repo.redhat? }
 
       messages1 = format_bulk_action_messages(
           :success    => "",
@@ -23,18 +22,11 @@ module Katello
           :authorized => unpromoted_repos
       )
 
-      messages3 = format_bulk_action_messages(
-          :success    => "",
-          :error      => _("Repository %s cannot be deleted since they are Red Hat repositories."),
-          :models     => unpromoted_repos,
-          :authorized => deletable_repositories
-      )
-
-      errors = messages3[:error] + messages1[:error] + messages2[:error]
+      errors = messages1[:error] + messages2[:error]
 
       task = nil
-      if deletable_repositories.count > 0
-        task = async_task(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, deletable_repositories)
+      if unpromoted_repos.any?
+        task = async_task(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, unpromoted_repos)
       else
         status = 400
       end

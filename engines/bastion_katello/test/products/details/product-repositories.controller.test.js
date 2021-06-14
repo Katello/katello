@@ -95,8 +95,8 @@ describe('Controller: ProductRepositoriesController', function() {
         };
 
         product.redhat = true;
-        expect($scope.getRepositoriesNonDeletableReason(product)).toBe("redhat");
-        expect($scope.canRemoveRepositories(product)).toBe(false);
+        expect($scope.getRepositoriesNonDeletableReason(product)).toBe(null);
+        expect($scope.canRemoveRepositories(product)).toBe(true);
 
         product.redhat = false;
         expect($scope.getRepositoriesNonDeletableReason(product)).toBe(null);

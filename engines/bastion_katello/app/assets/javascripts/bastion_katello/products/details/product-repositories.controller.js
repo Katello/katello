@@ -97,8 +97,6 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             if (product.$resolved) {
                 if ($scope.denied('destroy_products', product)) {
                     readOnlyReason = 'permissions';
-                } else if (product.redhat) {
-                    readOnlyReason = 'redhat';
                 }
             }
 

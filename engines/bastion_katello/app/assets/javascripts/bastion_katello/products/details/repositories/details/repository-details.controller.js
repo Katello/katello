@@ -111,8 +111,6 @@
             if (repo.$resolved && product.$resolved) {
                 if (repo.promoted) {
                     readOnlyReason = 'published';
-                } else if (repo['product_type'] === "redhat") {
-                    readOnlyReason = 'redhat';
                 } else if ($scope.denied('deletable', repo)) {
                     readOnlyReason = 'permissions';
                 }
