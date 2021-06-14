@@ -13,7 +13,8 @@ module Katello
     end
 
     def_field :allow_creation_by_user, :service_class, :pulp3_service_class, :pulp3_plugin,
-              :pulp3_skip_publication, :pulp3_api_class
+              :pulp3_skip_publication, :pulp3_api_class, :repositories_api_class, :api_class, :remotes_api_class,
+              :repository_versions_api_class, :distributions_api_class, :configuration_class, :partial_repo_path
 
     attr_accessor :metadata_publish_matching_check, :index_additional_data_proc
     attr_reader :id, :unique_content_per_repo
@@ -22,6 +23,7 @@ module Katello
       @id = id.to_sym
       allow_creation_by_user(true)
       @unique_content_per_repo = false
+      @content_types = []
     end
 
     def set_unique_content_per_repo
@@ -73,6 +75,14 @@ module Katello
         :creatable => @allow_creation_by_user,
         :pulp3_support => SmartProxy.pulp_primary.pulp3_repository_type_support?(self)
       }
+    end
+
+    def pulp3_api(smart_proxy)
+      if pulp3_api_class == Katello::Pulp3::Api::Generic
+        pulp3_api_class.new(smart_proxy, self)
+      else
+        pulp3_api_class ? pulp3_api_class.new(smart_proxy) : Katello::Pulp3::Api::Core.new(smart_proxy)
+      end
     end
 
     class ContentType

@@ -55,7 +55,7 @@ module Katello
         # Each key is a Pulp 3 plugin API and each value is the list of version_hrefs
         repo_version_map = {}
         pulp3_enabled_repo_types.each do |repo_type|
-          api = repo_type.pulp3_service_class.api(smart_proxy)
+          api = repo_type.pulp3_api(smart_proxy)
           version_hrefs = api.repository_versions.select { |repo_version| repo_version.number != 0 }.map(&:pulp_href)
           repo_version_map[api] = version_hrefs - ::Katello::Repository.where(version_href: version_hrefs).pluck(:version_href)
         end
