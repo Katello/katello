@@ -20,7 +20,6 @@ module Katello
     before_action :find_content, :only => :remove_content
     before_action :find_organization_from_repo, :only => [:update]
     before_action :error_on_rh_product, :only => [:create]
-    before_action :error_on_rh_repo, :only => [:destroy]
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_GPG_KEY_TYPE }
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE }
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE }

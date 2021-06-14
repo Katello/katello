@@ -93,8 +93,8 @@ describe('Controller: RepositoryDetailsController', function() {
 
         repository.promoted = false;
         repository.product_type = "redhat";
-        expect($scope.getRepoNonDeletableReason(repository, product)).toBe("redhat");
-        expect($scope.canRemove(repository, product)).toBe(false);
+        expect($scope.getRepoNonDeletableReason(repository, product)).toBe(null);
+        expect($scope.canRemove(repository, product)).toBe(true);
 
         repository.product_type = "custom";
         expect($scope.getRepoNonDeletableReason(repository, product)).toBe(null);
