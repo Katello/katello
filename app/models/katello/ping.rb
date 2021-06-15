@@ -5,17 +5,10 @@ module Katello
     PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer).freeze
 
     class << self
-      def pulpcore_enabled # for downstream 6.9, remove in 6.10
-        SETTINGS[:katello][:use_pulp_2_for_content_type].nil? || (!SETTINGS[:katello][:use_pulp_2_for_content_type][:yum] &&
-        !SETTINGS[:katello][:use_pulp_2_for_content_type][:docker] &&
-        !SETTINGS[:katello][:use_pulp_2_for_content_type][:file]) ||
-        File.exist?('/etc/systemd/system/multi-user.target.wants/pulpcore-api.service')
-      end
-
       def services(capsule_id = nil)
         proxy = fetch_proxy(capsule_id)
-        services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events, :katello_agent]
-        services += [:pulp3] if proxy&.pulp3_enabled? && pulpcore_enabled
+        services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
+        services += [:pulp3] if proxy&.pulp3_enabled?
         if proxy.nil? || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) || proxy.has_feature?(SmartProxy::PULP_FEATURE)
           services += [:pulp, :pulp_auth]
         end
