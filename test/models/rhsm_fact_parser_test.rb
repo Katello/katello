@@ -162,6 +162,16 @@ module Katello
       assert_equal parser.operatingsystem.minor, '3'
     end
 
+    def test_operatingsystem_amazon
+      @facts['distribution.name'] = 'Amazon'
+      @facts['distribution.version'] = '2.2'
+      @facts['distribution.id'] = 'Karoo'
+
+      assert_equal parser.operatingsystem.name, 'Amazon'
+      assert_equal parser.operatingsystem.major, '2'
+      assert_equal parser.operatingsystem.minor, '2'
+    end
+
     def test_uname_architecture
       @facts['uname.machine'] = 'i686'
 
