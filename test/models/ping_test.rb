@@ -169,7 +169,6 @@ module Katello
 
   class PingTestPulp3 < ActiveSupport::TestCase
     def run_exception_test(json, message)
-      Katello::Ping.stubs(:pulpcore_enabled).returns(true)
       Katello::Ping.expects(:backend_status).returns(json)
       exception = assert_raises Exception do
         Katello::Ping.pulp3_without_auth(@url)
