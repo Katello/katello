@@ -159,6 +159,8 @@ module Katello
           'AlmaLinux'
         elsif name =~ /rocky/
           'Rocky'
+        elsif name =~ /amazon/
+          'Amazon'
         else
           'Unknown'
         end
