@@ -66,6 +66,8 @@ module Katello
 
         assert_equal 'Rocky', Candlepin::Consumer.distribution_to_puppet_os('Rocky Linux')
 
+        assert_equal 'Amazon', Candlepin::Consumer.distribution_to_puppet_os('Amazon')
+
         assert_equal 'Unknown', Candlepin::Consumer.distribution_to_puppet_os('RedHot')
       end
 
