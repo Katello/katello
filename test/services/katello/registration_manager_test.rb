@@ -91,6 +91,19 @@ module Katello
           assert @klass.validate_hosts(hosts, @org, @host.name, 'different-uuid')
         end
 
+        def test_re_register_build_mode
+          @host = FactoryBot.create(:host, :with_subscription, :managed, organization: @org)
+          @host.subscription_facet.update(dmi_uuid: 'existing_system_uuid')
+          refute @host.build
+          Setting[:host_re_register_build_only] = true
+
+          error = assert_raises(Katello::Errors::RegistrationError) { @klass.validate_hosts(hosts, @org, @host.name, nil) }
+          assert_match(/currently registered/, error.message)
+
+          @host.update(build: true)
+          assert @klass.validate_hosts(hosts, @org, @host.name, 'existing_system_uuid')
+        end
+
         def test_existing_uuid_and_name
           @host.subscription_facet.update(dmi_uuid: 'host3-uuid')
 

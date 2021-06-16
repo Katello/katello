@@ -87,6 +87,10 @@ module Katello
           host = hosts.first
 
           if host.name == host_name
+            if !host.build && Setting[:host_re_register_build_only]
+              registration_error("Host with name %{host_name} is currently registered but not in build mode (host_re_register_build_only==True). Unregister the host manually or put it into build mode to continue.", host_name: host_name)
+            end
+
             current_dmi_uuid = host.subscription_facet&.dmi_uuid
             dmi_uuid_changed = current_dmi_uuid && current_dmi_uuid != host_uuid
             if dmi_uuid_changed && !dmi_uuid_change_allowed?(host, host_uuid_overridden)
