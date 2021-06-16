@@ -6,6 +6,7 @@
  * Support global download_concurrency setting and default to 5 ([#32246](https://projects.theforeman.org/issues/32246))
  * support new 'feature' names in pulp3 ([#31968](https://projects.theforeman.org/issues/31968), [fa8a91b5](https://github.com/Katello/katello.git/commit/fa8a91b5fdb8f108f83bd5bb1cd66854249bddcc))
  * Pulp download timeouts should be configurable ([#17423](https://projects.theforeman.org/issues/17423), [0428d1dd](https://github.com/Katello/katello.git/commit/0428d1dd79743a91138289dbc737e75794633011))
+ * Katello 3.16 to 3.17 upgrade fails at the db:migrate stage with error "ERROR:  insert or update on table "katello_hostgroup_content_facets" violates foreign key constraint" ([#32498](https://projects.theforeman.org/issues/32498), [1fbe1f1d](https://github.com/Katello/katello.git/commit/1fbe1f1deb44592e9a04c77fdfeffd2643135043))
 
 ### Tooling
  * upgrade to pulpcore 3.11 ([#32234](https://projects.theforeman.org/issues/32234), [8b0b8dfe](https://github.com/Katello/katello.git/commit/8b0b8dfe18fde5a2466cf675a624daee73b70c14), [ea9570ae](https://github.com/Katello/katello.git/commit/ea9570ae2e2529b54f20f113abdab86b83371040))
