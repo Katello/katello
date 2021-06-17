@@ -7,12 +7,5 @@ namespace :katello do
     if SETTINGS[:katello][:use_pulp_2_for_content_type].nil?
       fail fail_msg
     end
-
-    if !SETTINGS[:katello][:use_pulp_2_for_content_type][:docker] &&
-      !SETTINGS[:katello][:use_pulp_2_for_content_type][:file] &&
-      !SETTINGS[:katello][:use_pulp_2_for_content_type][:yum] &&
-      !SETTINGS[:katello][:use_pulp_2_for_content_type][:deb]
-      fail fail_msg
-    end
   end
 end
