@@ -1,8 +1,18 @@
+debian_pulp_ragnarok_root:
+  name:                 Ragnarok
+  content_type:         deb
+  label:                debian_pulp_fixture_ragnarok
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:debian) %>
+  url:                  "https://fixtures.pulpproject.org/debian/"
+  deb_releases:         ragnarok
+  deb_components:       asgard
+
 debian_9_amd64_root:
   name:                 Debian 9 amd64
   content_type:         deb
   label:                debian_9_amd64_label
   product_id:           <%= ActiveRecord::FixtureSet.identify(:debian) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:debian_gpg_key) %>
   url:                  "http://ftp.debian.mymirror.org/debian"
   deb_releases:         stretch
   deb_components:       main
