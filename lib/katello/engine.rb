@@ -260,6 +260,6 @@ module Katello
   end
 
   def self.with_ansible?
-    (ForemanAnsible rescue false) ? true : false
+    (ForemanAnsible::Engine rescue false) ? true : false
   end
 end
