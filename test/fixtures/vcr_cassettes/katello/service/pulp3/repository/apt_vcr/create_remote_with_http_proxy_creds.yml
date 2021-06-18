@@ -1,0 +1,127 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/deb/apt/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJuYW1lIjoiRGViaWFuIDkgYW1kNjQtdGVzdCIsInVybCI6Imh0dHA6Ly9m
+        dHAuZGViaWFuLm15bWlycm9yLm9yZy9kZWJpYW4iLCJjYV9jZXJ0IjpudWxs
+        LCJjbGllbnRfY2VydCI6bnVsbCwiY2xpZW50X2tleSI6bnVsbCwidGxzX3Zh
+        bGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6Imh0dHBzOi8vbXl0ZXN0LmNv
+        bSIsInByb3h5X3VzZXJuYW1lIjoidXNlcm5hbWUiLCJwcm94eV9wYXNzd29y
+        ZCI6InBhc3N3b3JkIiwidG90YWxfdGltZW91dCI6MzAwLCJkaXN0cmlidXRp
+        b25zIjoic3RyZXRjaCIsImNvbXBvbmVudHMiOiJtYWluIiwiYXJjaGl0ZWN0
+        dXJlcyI6ImFtZDY0IiwiZ3Bna2V5IjoiR0pTTEdKV09FT1NER01MU0AkS0RH
+        U0ckU0ZGT09BIn0=
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/2.11.2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Mon, 28 Jun 2021 09:55:48 GMT
+      Server:
+      - gunicorn/20.0.4
+      Content-Type:
+      - application/json
+      Location:
+      - "/pulp/api/v3/remotes/deb/apt/61caf3ac-60f9-432c-a803-288c215136ae/"
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '750'
+      Correlation-Id:
+      - 55e4b14a465742dd9fd511fe630b7bf1
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos7-katello-devel-stable.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0LzYx
+        Y2FmM2FjLTYwZjktNDMyYy1hODAzLTI4OGMyMTUxMzZhZS8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIxLTA2LTI4VDA5OjU1OjQ4LjQ0MjY2N1oiLCJuYW1lIjoi
+        RGViaWFuIDkgYW1kNjQtdGVzdCIsInVybCI6Imh0dHA6Ly9mdHAuZGViaWFu
+        Lm15bWlycm9yLm9yZy9kZWJpYW4iLCJjYV9jZXJ0IjpudWxsLCJjbGllbnRf
+        Y2VydCI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6
+        Imh0dHBzOi8vbXl0ZXN0LmNvbSIsInB1bHBfbGFiZWxzIjp7fSwicHVscF9s
+        YXN0X3VwZGF0ZWQiOiIyMDIxLTA2LTI4VDA5OjU1OjQ4LjQ0MjY4M1oiLCJk
+        b3dubG9hZF9jb25jdXJyZW5jeSI6MTAsInBvbGljeSI6ImltbWVkaWF0ZSIs
+        InRvdGFsX3RpbWVvdXQiOjMwMC4wLCJjb25uZWN0X3RpbWVvdXQiOm51bGws
+        InNvY2tfY29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX3JlYWRfdGltZW91
+        dCI6bnVsbCwiaGVhZGVycyI6bnVsbCwicmF0ZV9saW1pdCI6bnVsbCwiZGlz
+        dHJpYnV0aW9ucyI6InN0cmV0Y2giLCJjb21wb25lbnRzIjoibWFpbiIsImFy
+        Y2hpdGVjdHVyZXMiOiJhbWQ2NCIsInN5bmNfc291cmNlcyI6ZmFsc2UsInN5
+        bmNfdWRlYnMiOmZhbHNlLCJzeW5jX2luc3RhbGxlciI6ZmFsc2UsImdwZ2tl
+        eSI6IkdKU0xHSldPRU9TREdNTFNAJEtER1NHJFNGRk9PQSIsImlnbm9yZV9t
+        aXNzaW5nX3BhY2thZ2VfaW5kaWNlcyI6ZmFsc2V9
+    http_version: 
+  recorded_at: Mon, 28 Jun 2021 09:55:48 GMT
+- request:
+    method: delete
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/deb/apt/61caf3ac-60f9-432c-a803-288c215136ae/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/2.11.2/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Mon, 28 Jun 2021 09:55:48 GMT
+      Server:
+      - gunicorn/20.0.4
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '67'
+      Correlation-Id:
+      - 5246a0db12e343cea762fadd1a95cd58
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 centos7-katello-devel-stable.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2EyMGMxNjE1LTEwMWMtNDM3
+        YS1iYjdlLWFhMWFkNjNlNTI3ZS8ifQ==
+    http_version: 
+  recorded_at: Mon, 28 Jun 2021 09:55:48 GMT
+recorded_with: VCR 3.0.3
