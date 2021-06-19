@@ -106,7 +106,7 @@ module Katello
       return nil unless params[:repository]
       repository = Repository.docker_type.find_by(container_repository_name: params[:repository])
       if require_user_authorization?(repository)
-        repository = readable_repositories.docker_type.find_by(container_repository_name: params[:repository])
+        repository = Repository.readable_docker_catalog.find_by(container_repository_name: params[:repository])
       end
       repository
     end
@@ -331,7 +331,7 @@ module Katello
       params[:per_page] = params[:n] || 25
       params[:search] = params[:q]
 
-      search_results = scoped_search(readable_repositories.docker_type.distinct,
+      search_results = scoped_search(Repository.readable_docker_catalog.distinct,
                                      :container_repository_name, :asc, options)
 
       results = {
@@ -345,7 +345,7 @@ module Katello
     end
 
     def catalog
-      repositories = readable_repositories.docker_type.collect do |repository|
+      repositories = Repository.readable_docker_catalog.collect do |repository|
         repository.container_repository_name
       end
       render json: { repositories: repositories }
