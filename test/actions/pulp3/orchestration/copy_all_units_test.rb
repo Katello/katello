@@ -553,6 +553,7 @@ module ::Actions::Pulp3
     end
 
     def test_module_streams_copied_with_include_modular_filter_rules
+      skip "Fixed in https://pulp.plan.io/issues/8952"
       filter = FactoryBot.build(:katello_content_view_module_stream_filter, :inclusion => true)
       duck = @repo.module_streams.where(:name => "duck").first
       FactoryBot.create(:katello_content_view_module_stream_filter_rule,
