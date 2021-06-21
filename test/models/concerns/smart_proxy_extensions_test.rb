@@ -58,6 +58,15 @@ module Katello
       assert_equal @proxy.lifecycle_environments.all, Katello::KTEnvironment.all
       assert_equal @proxy_mirror.lifecycle_environments.all.count, 0
     end
+
+    def test_rhsm_url_pulp_primary
+      assert_includes @proxy.rhsm_url, "/rhsm"
+      assert_not_includes @proxy.rhsm_url, ":8443"
+    end
+
+    def test_rhsm_url_pulp_mirror
+      assert_includes @proxy_mirror.rhsm_url, ":8443/rhsm"
+    end
   end
 
   class SmartProxyPulp3Test < ActiveSupport::TestCase
