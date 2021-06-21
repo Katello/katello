@@ -401,6 +401,14 @@ module Katello
       def smart_proxy_service
         @smart_proxy_service ||= Pulp::SmartProxyRepository.new(self)
       end
+
+      def rhsm_url
+        if pulp_primary?
+          "https://#{URI.parse(url).host}/rhsm"
+        elsif pulp_mirror?
+          "https://#{URI.parse(url).host}:8443/rhsm"
+        end
+      end
     end
   end
 end
