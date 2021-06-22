@@ -325,6 +325,22 @@ exports[`subscriptions table should render subscription name without hyperlink f
         class=""
       >
         <th
+          aria-label="Select all rows"
+          class="table-view-pf-select"
+        >
+          <label
+            class="control-label sr-only"
+            for="selectAll"
+          >
+            Select all rows
+          </label>
+          <input
+            disabled=""
+            id="selectAll"
+            type="checkbox"
+          />
+        </th>
+        <th
           class=""
         >
           Name
@@ -355,6 +371,14 @@ exports[`subscriptions table should render subscription name without hyperlink f
       <tr
         class=""
       >
+        <td
+          class="table-view-pf-select"
+        >
+          <span
+            aria-hidden="true"
+            class="fa fa-angle-right collapse-subscription-group-button"
+          />
+        </td>
         <td>
           hsdfhsdh
         </td>

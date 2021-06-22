@@ -30,13 +30,15 @@ export const createSubscriptionsTableSchema = (
     property: 'select',
     header: {
       label: __('Select all rows'),
-      formatters: [label => selectionHeaderCellFormatter(selectionController, label)],
+      formatters: [
+        label => selectionHeaderCellFormatter(selectionController, label, hasPermission),
+      ],
     },
     cell: {
       formatters: [
         (value, additionalData) => {
           // eslint-disable-next-line no-param-reassign
-          additionalData.disabled = additionalData.rowData.available === -1;
+          additionalData.disabled = !hasPermission || additionalData.rowData.available === -1;
 
           return collapseableAndSelectionCellFormatter(
             groupingController,

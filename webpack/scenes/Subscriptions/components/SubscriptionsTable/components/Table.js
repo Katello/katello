@@ -34,9 +34,12 @@ const Table = ({
     toggle: ({ rowData }) => toggleSubscriptionGroup(rowData.product_id),
   };
 
+  const collapsibleGroup =
+    Object.values(groupedSubscriptions).some(v => v.subscriptions.length > 1);
+
   const alwaysDisplayColumns = [];
 
-  if (selectionEnabled) {
+  if (selectionEnabled || collapsibleGroup) {
     alwaysDisplayColumns.push('select');
   }
 
