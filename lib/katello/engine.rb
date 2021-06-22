@@ -248,7 +248,7 @@ module Katello
 
   # check whether foreman_remote_execution to integrate is available in the system
   def self.with_remote_execution?
-    (RemoteExecutionFeature rescue false) ? true : false
+    Foreman::Plugin.installed?("foreman_remote_execution")
   end
 
   def self.with_katello_agent?
@@ -260,6 +260,6 @@ module Katello
   end
 
   def self.with_ansible?
-    (ForemanAnsible rescue false) ? true : false
+    Foreman::Plugin.installed?("foreman_ansible")
   end
 end
