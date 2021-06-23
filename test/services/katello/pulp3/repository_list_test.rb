@@ -40,7 +40,7 @@ module Katello
           end
 
           repository_list = pulp3_enabled_repo_types.collect do |repo_type|
-            repo_type.pulp3_service_class.api(@primary).list_all
+            repo_type.pulp3_api(@primary).list_all
           end
 
           Katello::Pulp3::RepositoryReference.all.each do |repo_reference|

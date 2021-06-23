@@ -219,3 +219,13 @@ pulp3_deb_root_1:
   deb_releases:         buster
   deb_components:       main
   deb_architectures:    amd64
+
+pulp3_python_root_1:
+  name:                 Pulp3 Python 1
+  content_id:           28
+  content_type:         python
+  label:                Pulp3_Python_1
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  unprotected:           <%= true %>
+  url:                  ""
