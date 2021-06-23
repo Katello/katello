@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Grid, GridItem, TextContent, Text, TextVariants, Button, Flex, FlexItem, Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
@@ -18,10 +18,13 @@ import ContentViewFilterDetails from './Filters/ContentViewFilterDetails';
 import { selectCVDetails } from './ContentViewDetailSelectors';
 import RoutedTabs from '../../../components/RoutedTabs';
 import ContentViewIcon from '../components/ContentViewIcon';
+import PublishContentViewWizard from '../Publish/PublishContentViewWizard';
 
 const ContentViewDetails = ({ match }) => {
   const cvId = parseInt(match.params.id, 10);
   const details = useSelector(state => selectCVDetails(state, cvId), shallowEqual);
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const { name, composite } = details;
   const tabs = [
@@ -83,17 +86,34 @@ const ContentViewDetails = ({ match }) => {
               </FlexItem>
             </Flex>
           </GridItem>
-          <GridItem span={4} style={{ textAlign: 'right' }}>
-            <Button
-              component="a"
-              aria-label="view tasks button"
-              href={`/foreman_tasks/tasks?search=resource_type%3D+Katello%3A%3AContentView+resource_id%3D${cvId}`}
-              target="_blank"
-              variant="secondary"
-            >
-              {'View tasks '}
-              <ExternalLinkAltIcon />
-            </Button>
+          <GridItem span={4}>
+            <Flex>
+              <FlexItem>
+                <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
+                  Publish new version
+                </Button>
+                {isPublishModalOpen && <PublishContentViewWizard
+                  details={details}
+                  show={isPublishModalOpen}
+                  setIsOpen={setIsPublishModalOpen}
+                  currentStep={currentStep}
+                  setCurrentStep={setCurrentStep}
+                  aria-label="publish_content_view_modal"
+                />}
+              </FlexItem>
+              <FlexItem>
+                <Button
+                  component="a"
+                  aria-label="view tasks button"
+                  href={`/foreman_tasks/tasks?search=resource_type%3D+Katello%3A%3AContentView+resource_id%3D${cvId}`}
+                  target="_blank"
+                  variant="secondary"
+                >
+                  {'View tasks '}
+                  <ExternalLinkAltIcon />
+                </Button>
+              </FlexItem>
+            </Flex>
           </GridItem>
           <GridItem span={12}>
             <RoutedTabs tabs={tabs} baseUrl={`/labs/content_views/${cvId}`} defaultTabIndex={1} />

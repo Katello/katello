@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { CheckCircleIcon, ExclamationTriangleIcon, CloseIcon, InProgressIcon } from '@patternfly/react-icons';
+import { CheckCircleIcon, ExclamationTriangleIcon, ExclamationCircleIcon, InProgressIcon } from '@patternfly/react-icons';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import InactiveText from '../../components/InactiveText';
@@ -17,9 +17,9 @@ const LastSync = ({ lastSyncWords, lastSync, emptyMessage }) => {
       Icon = ExclamationTriangleIcon;
       color = 'orange';
     } else if (result === 'error' || result === 'failed') {
-      Icon = CloseIcon;
+      Icon = ExclamationCircleIcon;
       color = 'red';
-    } else if (result === 'in progress') {
+    } else if (result === 'in progress' || result === 'pending') {
       Icon = InProgressIcon;
       color = 'blue';
     } else {

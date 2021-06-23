@@ -44,11 +44,24 @@ const buildExpandableRows = (contentViews) => {
 
   contentViews.forEach((contentView) => {
     const {
-      id, name, description, activation_keys: activationKeys, hosts,
+      id,
+      name,
+      composite,
+      next_version: nextVersion,
+      version_count: versionCount,
+      description,
+      activation_keys: activationKeys,
+      hosts,
     } = contentView;
     const cells = buildRow(contentView);
     const cellParent = {
-      cvId: id, cvName: name, isOpen: false, cells,
+      cvId: id,
+      cvName: name,
+      cvVersionCount: versionCount,
+      cvComposite: composite,
+      cvNextVersion: nextVersion,
+      isOpen: false,
+      cells,
     };
     rows.push(cellParent);
     const cellChild = {

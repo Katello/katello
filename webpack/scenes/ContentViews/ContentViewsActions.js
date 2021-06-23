@@ -1,8 +1,12 @@
 import { translate as __ } from 'foremanReact/common/I18n';
 import { API_OPERATIONS, get, post } from 'foremanReact/redux/API';
 import api, { orgId } from '../../services/api';
-import CONTENT_VIEWS_KEY, { CREATE_CONTENT_VIEW_KEY, COPY_CONTENT_VIEW_KEY } from './ContentViewsConstants';
+import CONTENT_VIEWS_KEY, {
+  CREATE_CONTENT_VIEW_KEY, COPY_CONTENT_VIEW_KEY,
+  cvVersionPublishKey,
+} from './ContentViewsConstants';
 import { getResponseErrorMsgs } from '../../utils/helpers';
+import { renderTaskStartedToast } from '../Tasks/helpers';
 
 export const createContentViewsParams = extraParams => ({
   organization_id: orgId(),
@@ -44,4 +48,15 @@ export const copyContentView = params => post({
   successToast: response => cvSuccessToast(response),
   errorToast: error => cvErrorToast(error),
 });
+
+export const publishContentView = params => post({
+  type: API_OPERATIONS.POST,
+  key: cvVersionPublishKey(params.id, params.versionCount),
+  url: api.getApiUrl(`/content_views/${params.id}/publish`),
+  params,
+  handleSuccess: response => renderTaskStartedToast(response.data),
+  errorToast: error => cvErrorToast(error),
+});
+
+
 export default getContentViews;
