@@ -14,7 +14,6 @@ module Katello
         Katello::Logging.time("CONTENT_MIGRATION - Generating Migration plan") do
           plan[:plugins] = generate_plugins
         end
-        Rails.logger.error("Migration Plan: #{plan.to_json}")
         plan
       end
 
