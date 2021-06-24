@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { shallowEqual, useSelector } from 'react-redux';
 import { Label } from '@patternfly/react-core';
 import { TableVariant } from '@patternfly/react-table';
@@ -65,7 +66,7 @@ const ContentViewFilters = ({ cvId }) => {
     return newRows;
   };
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const { results, ...meta } = response;
     setMetadata(meta);
 
@@ -73,7 +74,7 @@ const ContentViewFilters = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)]);
+  }, [response]);
 
   const emptyContentTitle = __("You currently don't have any filters for this content view.");
   const emptyContentBody = __("Add filters using the 'Add filter' button above."); // needs link

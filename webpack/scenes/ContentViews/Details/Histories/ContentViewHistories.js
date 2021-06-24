@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { TableVariant, TableText } from '@patternfly/react-table';
 import { Label } from '@patternfly/react-core';
@@ -44,7 +45,7 @@ const ContentViewHistories = ({ cvId }) => {
   ];
 
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const actionText = (history) => {
       const {
         action,
@@ -102,7 +103,7 @@ const ContentViewHistories = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)], setMetadata, loading, setRows);
+  }, [response, setMetadata, loading, setRows]);
 
   const emptyContentTitle = __("You currently don't have any history for this content view.");
   const emptyContentBody = __('History will appear here when the content view is published or promoted.'); // needs link
