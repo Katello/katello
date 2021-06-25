@@ -1,6 +1,6 @@
 module Katello
   module Candlepin
-    class ProfileUploader
+    class PackageProfileUploader
       def self.upload(profile_string:, host:)
         host_id = host.id
         profile = JSON.parse(profile_string)

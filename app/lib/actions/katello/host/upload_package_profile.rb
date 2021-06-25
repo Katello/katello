@@ -33,7 +33,7 @@ module Actions
         def run
           Rails.logger.info "DYNFLOW **********************************"
           host = ::Host::Managed.find(input[:host_id])
-          ::Katello::Candlepin::ProfileUploader.upload(host: host, profile_string: input[:profile_string])
+          ::Katello::Candlepin::PackageProfileUploader.upload(host: host, profile_string: input[:profile_string])
         end
       end
     end

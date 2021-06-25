@@ -16,7 +16,7 @@ module Katello
     def upload_package_profile
       User.as_anonymous_admin do
         # async_task(::Actions::Katello::Host::UploadPackageProfile, @host, request.raw_post)
-        ::Katello::Candlepin::ProfileUploader.upload(host: @host, profile_string: request.raw_post)
+        ::Katello::Candlepin::PackageProfileUploader.upload(host: @host, profile_string: request.raw_post)
       end
       render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end
