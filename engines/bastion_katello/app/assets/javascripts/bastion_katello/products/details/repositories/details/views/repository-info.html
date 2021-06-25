@@ -172,6 +172,14 @@
         </dd>
       </span>
 
+      <span ng-show="repository.content_type === 'yum' && repository.mirror_on_sync === false">
+        <dt translate>Retain package versions</dt>
+        <dd bst-edit-number="repository.retain_package_versions_count"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product)">
+        </dd>
+      </span>
+
       <span>
         <dt translate>HTTP Proxy</dt>
         <dd bst-edit-custom="repository.http_proxy_policy"

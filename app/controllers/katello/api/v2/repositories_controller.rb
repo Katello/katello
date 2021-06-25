@@ -61,6 +61,7 @@ module Katello
       param :http_proxy_policy, ::Katello::RootRepository::HTTP_PROXY_POLICIES, :desc => N_("policies for HTTP proxy for content sync")
       param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
       param :arch, String, :desc => N_("Architecture of content in the repository")
+      param :retain_package_versions_count, :number, :desc => N_("The maximum number of versions of each package to keep.")
     end
 
     def_param_group :repo_create do
@@ -441,7 +442,7 @@ module Katello
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username, :download_concurrency,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, {:os_versions => []},
-              :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
+              :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id, :retain_package_versions_count,
               {:ignorable_content => []}
              ]
 
@@ -481,6 +482,7 @@ module Katello
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
       root.os_versions = repo_params.fetch(:os_versions, []) if root.yum?
+      root.retain_package_versions_count = repo_params[:retain_package_versions_count] if root.yum? && repo_params.key?(:retain_package_versions_count)
 
       if root.ostree?
         root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
