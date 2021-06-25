@@ -310,6 +310,24 @@ module Katello
                                             on_duplicate_key_update: {conflict_target: [:erratum_id, :repository_id], columns: [:erratum_pulp3_href]})
           to_import = {}
         end
+        correct_missing_errata
+      end
+
+      def correct_missing_errata
+        Katello::RepositoryErratum.where(:erratum_pulp3_href => nil).pluck(:repository_id).uniq.each do |repo_id|
+          repo = Katello::Repository.find(repo_id)
+          if repo.link?
+            target = repo.target_repository
+            to_import = []
+            target.repository_errata.each do |repo_errata|
+              to_import << {erratum_id: repo_errata.erratum_id, erratum_pulp3_href: repo_errata.erratum_pulp3_href, repository_id: repo_id}
+            end
+            Katello::RepositoryErratum.import([:erratum_id, :erratum_pulp3_href, :repository_id], to_import, :validate => false,
+                                            on_duplicate_key_update: {conflict_target: [:erratum_id, :repository_id], columns: [:erratum_pulp3_href]})
+          else
+            Rails.logger.error("Unexpectedly found target repo (ID=#{repo_id}) with missing migrated errata!")
+          end
+        end
       end
 
       def mark_missing_content(content_type)
