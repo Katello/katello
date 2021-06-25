@@ -85,7 +85,6 @@ module Katello
           property :subscription_manager_configuration_url, String, desc: 'Returns URL for subscription manager configuration'
           property :rhsm_organization_label, String, desc: 'Returns label of the Red Hat Subscription Manager organization'
           property :host_collections, array_of: 'HostCollection', desc: 'Returns list of the host collections the host belongs to'
-          property :comment, String, desc: 'Returns comment given to the host'
           property :pools, array_of: 'Pool', desc: 'Returns subscription pool objects associated with the host'
           property :hypervisor_host, 'Host', desc: 'Returns hypervisor host object of this host'
           property :lifecycle_environment, 'KTEnvironment', desc: 'Returns lifecycle environment object associated with the host'
@@ -353,7 +352,7 @@ end
 
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
-        :host_collections, :comment, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
+        :host_collections, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
         :installed_packages
 end
 
