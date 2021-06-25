@@ -157,7 +157,9 @@ class Setting::Content < Setting
       self.set('autosearch_delay', N_('If Autosearch is enabled, delay in milliseconds before executing searches while typing.'),
                500, N_('Autosearch delay')),
       self.set('bulk_load_size', N_('The number of items fetched from a single paged Pulp API call.'), 2000,
-               N_('Pulp bulk load size'))
+               N_('Pulp bulk load size')),
+      self.set('upload_profiles_without_dynflow', N_('Allow Candlepin profile uploads to use Rails directly instead of being wrapped in Dynflow actions'), true,
+               N_('Upload profiles without Dynflow'))
     ]
   end
 

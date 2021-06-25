@@ -7,7 +7,6 @@ module Katello
         Rails.logger.info "SIZE: #{profile_string.size.to_s(:human_size)}"
         #free the huge string from the memory
         profile_string = 'TRIMMED'.freeze
-        Rails.logger.info "PROFILEUPLOADER ********************************"
         import_package_profile_for_host(host_id, profile)
         ::Katello::Host::ContentFacet.trigger_applicability_generation(host_id)
       end
