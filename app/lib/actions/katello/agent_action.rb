@@ -47,14 +47,14 @@ module Actions
 
             dispatch_message(history) unless input[:bulk]
 
-            schedule_timeout(timeout)
+            schedule_timeout(timeout, optional: true)
           end
         when Dynflow::Action::Skip
           # Do not fail and goto a paused state, instead skip and send the state to warning so we do not block other host actions
         when Dynflow::Action::Timeouts::Timeout
           process_timeout
         when 'accepted'
-          schedule_timeout(finish_timeout)
+          schedule_timeout(finish_timeout, optional: true)
           suspend
         else
           fail_on_errors
