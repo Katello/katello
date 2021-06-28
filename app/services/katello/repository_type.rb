@@ -13,8 +13,10 @@ module Katello
     end
 
     def_field :allow_creation_by_user, :service_class, :pulp3_service_class, :pulp3_plugin,
-              :pulp3_skip_publication, :pulp3_api_class, :repositories_api_class, :api_class, :remotes_api_class,
-              :repository_versions_api_class, :distributions_api_class, :configuration_class, :partial_repo_path
+              :pulp3_skip_publication, :configuration_class, :partial_repo_path, :pulp3_api_class,
+              :repositories_api_class, :api_class, :remotes_api_class, :repository_versions_api_class,
+              :distributions_api_class, :remote_class, :repo_sync_url_class, :client_module_class,
+              :distribution_class, :publication_class, :publications_api_class, :model_name, :model_version
 
     attr_accessor :metadata_publish_matching_check, :index_additional_data_proc
     attr_reader :id, :unique_content_per_repo
@@ -24,6 +26,7 @@ module Katello
       allow_creation_by_user(true)
       @unique_content_per_repo = false
       @content_types = []
+      @generic_remote_options = []
     end
 
     def set_unique_content_per_repo
@@ -32,6 +35,10 @@ module Katello
 
     def content_types
       @content_types.sort_by(&:priority)
+    end
+
+    def generic_remote_options
+      @generic_remote_options.sort_by(&:name)
     end
 
     def content_types_to_index
@@ -54,6 +61,16 @@ module Katello
     def content_type(model_class, options = {})
       @content_types ||= []
       @content_types << ContentType.new(options.merge(:model_class => model_class))
+    end
+
+    def generic_content_type(content_type, options = {})
+      @content_types ||= []
+      @content_types << GenericContentType.new(options.merge(:content_type => content_type))
+    end
+
+    def generic_remote_option(name, options = {})
+      @generic_remote_options ||= []
+      @generic_remote_options << GenericRemoteOption.new(options.merge(:name => name))
     end
 
     def prevent_unneeded_metadata_publish
@@ -101,6 +118,37 @@ module Katello
 
       def label
         self.model_class::CONTENT_TYPE
+      end
+    end
+
+    class GenericContentType < ContentType
+      attr_accessor :pulp3_api, :pulp3_model, :content_type
+
+      def initialize(options)
+        self.model_class = options[:model_class]
+        self.priority = options[:priority] || 99
+        self.pulp3_service_class = options[:pulp3_service_class]
+        self.index = options[:index].nil? ? true : options[:index]
+        self.index_on_pulp3 = options[:index_on_pulp3].nil? ? true : options[:index_on_pulp3]
+        self.uploadable = options[:uploadable] || false
+        self.removable = options[:removable] || false
+        self.pulp3_api = options[:pulp3_api]
+        self.pulp3_model = options[:pulp3_model]
+        self.content_type = options[:content_type]
+      end
+
+      def label
+        self.model_class::CONTENT_TYPE
+      end
+    end
+
+    class GenericRemoteOption
+      attr_accessor :name, :type, :description
+
+      def initialize(options)
+        self.name = options[:name]
+        self.type = options[:type]
+        self.description = options[:description]
       end
     end
   end

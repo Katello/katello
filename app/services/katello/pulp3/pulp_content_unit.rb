@@ -72,7 +72,11 @@ module Katello
               (response["count"] && page_opts["offset"] < response["count"]) ||
               page_opts["offset"] == 0)
             page_opts = page_options page_opts
-            response = fetch_content_list page_opts
+            if repository.generic?
+              response = fetch_content_list page_opts, repository.repository_type, options[:content_type]
+            else
+              response = fetch_content_list page_opts
+            end
             response = response.as_json.with_indifferent_access
             yielder.yield response[:results]
             page_opts[:offset] += page_size

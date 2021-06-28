@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class RootRepository < Katello::Model
     audited :except => [:content_id]
     serialize :ignorable_content
@@ -118,6 +119,10 @@ module Katello
 
     def self.repositories
       Repository.where(:root => self)
+    end
+
+    def repository_type
+      RepositoryTypeManager.find(self.content_type)
     end
 
     def custom?
@@ -311,6 +316,10 @@ module Katello
 
     def ansible_collection?
       self.content_type == Repository::ANSIBLE_COLLECTION_TYPE
+    end
+
+    def generic?
+      Katello::RepositoryTypeManager.generic_repository_types(enabled_only: false).values.map(&:id).map(&:to_s).flatten.include? self.content_type
     end
 
     def metadata_generate_needed?

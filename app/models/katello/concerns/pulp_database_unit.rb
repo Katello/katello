@@ -127,7 +127,7 @@ module Katello
         "#{self.name.demodulize.underscore}_id"
       end
 
-      def import_all(pulp_ids = nil, repository = nil)
+      def import_all(pulp_ids = nil, repository = nil, content_type_name = nil)
         ids_to_associate = []
         service_class = SmartProxy.pulp_primary!.content_service(content_type)
         service_class.pulp_units_batch_all(pulp_ids).each do |units|
@@ -145,21 +145,25 @@ module Katello
             end
             service = service_class.new(model.pulp_id)
             service.backend_data = unit
-            service.update_model(model)
+            if repository&.generic?
+              service.update_model(model, repository.repository_type, content_type_name)
+            else
+              service.update_model(model)
+            end
             ids_to_associate << model.pulp_id
           end
         end
         sync_repository_associations(repository, :pulp_ids => ids_to_associate, :additive => true) if self.many_repository_associations && repository && ids_to_associate.present?
       end
 
-      def import_for_repository(repository)
+      def import_for_repository(repository, content_type_name = nil)
         pulp_id_href_map = {}
         service_class = SmartProxy.pulp_primary!.content_service(content_type)
         fetch_only_ids = !repository.content_view.default? &&
                          !repository.repository_type.unique_content_per_repo &&
                          service_class.supports_id_fetch?
 
-        service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids).each do |units|
+        service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids, content_type: content_type_name).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
             pulp_id = unit[service_class.unit_identifier]
@@ -171,7 +175,11 @@ module Katello
               service = service_class.new(model.pulp_id)
               service.backend_data = unit
               model.repository_id = repository.id unless many_repository_associations
-              service.update_model(model)
+              if repository.generic?
+                service.update_model(model, repository.repository_type, content_type_name)
+              else
+                service.update_model(model)
+              end
             end
             pulp_id_href_map[pulp_id] = backend_identifier
           end
