@@ -2,7 +2,14 @@ module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController # rubocop:disable Metrics/ClassLength
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    wrap_parameters :repository, :include => RootRepository.attribute_names.concat([:ignore_global_proxy])
+    generic_repo_wrap_params = []
+    RepositoryTypeManager.generic_remote_options(defined_only: true).each do |option|
+      generic_repo_wrap_params << option.name
+    end
+
+    repo_wrap_params = RootRepository.attribute_names.concat([:ignore_global_proxy]) + generic_repo_wrap_params
+
+    wrap_parameters :repository, :include => repo_wrap_params
 
     CONTENT_CREDENTIAL_GPG_KEY_TYPE = "gpg_key".freeze
     CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE = "ssl_ca_cert".freeze
@@ -62,6 +69,10 @@ module Katello
       param :http_proxy_id, :number, :desc => N_("ID of a HTTP Proxy")
       param :arch, String, :desc => N_("Architecture of content in the repository")
       param :retain_package_versions_count, :number, :desc => N_("The maximum number of versions of each package to keep.")
+
+      RepositoryTypeManager.generic_remote_options(defined_only: true).each do |option|
+        param option.name, option.type, :desc => N_(option.description)
+      end
     end
 
     def_param_group :repo_create do
@@ -310,6 +321,14 @@ module Katello
     def update
       repo_params = repository_params
 
+      if @repository.generic?
+        generic_remote_options = generic_remote_options_hash(repo_params)
+        repo_params[:generic_remote_options] = generic_remote_options.to_json
+        RepositoryTypeManager.generic_remote_options.each do |option|
+          repo_params&.delete(option.name)
+        end
+      end
+
       sync_task(::Actions::Katello::Repository::Update, @repository.root, repo_params)
       respond_for_show(:resource => @repository)
     end
@@ -440,6 +459,7 @@ module Katello
       end
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username, :download_concurrency,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, {:os_versions => []},
@@ -450,6 +470,18 @@ module Katello
       keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
       keys += [:ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
+
+      if params[:action] == 'create' || @repository&.generic?
+        RepositoryTypeManager.generic_remote_options.each do |option|
+          if option.type == Array
+            keys += [{option.name => []}]
+          elsif option.type == Hash
+            keys += [{option.name => {}}]
+          else
+            keys += [option.name]
+          end
+        end
+      end
       if params[:action] == 'create' || @repository.custom?
         keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name,
                  :checksum_type]
@@ -467,8 +499,8 @@ module Katello
       credential_value
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/MethodLength
     def construct_repo_from_params(repo_params) # rubocop:disable Metrics/AbcSize
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
@@ -484,6 +516,11 @@ module Katello
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)
       root.os_versions = repo_params.fetch(:os_versions, []) if root.yum?
       root.retain_package_versions_count = repo_params[:retain_package_versions_count] if root.yum? && repo_params.key?(:retain_package_versions_count)
+
+      if root.generic?
+        generic_remote_options = generic_remote_options_hash(repo_params)
+        root.generic_remote_options = generic_remote_options.to_json
+      end
 
       if root.ostree?
         root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
@@ -548,6 +585,14 @@ module Katello
         query = query.where('content_view_version_id IN (?) AND environment_id IS NOT NULL', version_ids)
       end
       query
+    end
+
+    def generic_remote_options_hash(repo_params)
+      generic_remote_options = {}
+      RepositoryTypeManager.generic_remote_options(content_type: repo_params[:content_type]).each do |option|
+        generic_remote_options[option.name] = repo_params[option.name]
+      end
+      generic_remote_options
     end
   end
 end

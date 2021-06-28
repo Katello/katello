@@ -52,6 +52,13 @@ module Katello
         end
       end
 
+      def generic_repository_types(enabled_only = true)
+        repo_types = enabled_only ? enabled_repository_types : defined_repository_types
+        repo_types.select do |_, values|
+          values.pulp3_service_class == Katello::Pulp3::Repository::Generic
+        end
+      end
+
       def pulp3_plugin_installed?(repository_type)
         save_pulp_primary
         @pulp_primary&.capabilities(PULP3_FEATURE)&.include?(@defined_repository_types[repository_type].pulp3_plugin)
@@ -151,6 +158,19 @@ module Katello
           fail _("Content type %{content_type} is incompatible with repositories of type %{repo_type}") %
                  { content_type: content_type, repo_type: repository.content_type }
         end
+      end
+
+      def generic_remote_options(opts = {})
+        options = []
+        repo_types = opts[:defined_only] ? defined_repository_types : enabled_repository_types
+        repo_types.each do |_, type|
+          if opts[:content_type]
+            (options << type.generic_remote_options).flatten! if type.pulp3_service_class == Katello::Pulp3::Repository::Generic && type.id.to_s == opts[:content_type]
+          else
+            (options << type.generic_remote_options).flatten! if type.pulp3_service_class == Katello::Pulp3::Repository::Generic
+          end
+        end
+        options
       end
 
       private

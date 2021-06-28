@@ -11,6 +11,8 @@ module Katello
           def setup
             @repo = katello_repositories(:pulp3_python_1)
             @primary = SmartProxy.pulp_primary
+            @repo.root.update(url: 'https://pypi.org')
+            @repo.root.update(generic_remote_options: {includes: ['shelf-reader']}.to_json)
 
             create_repo(@repo, @primary)
             @repo.reload
@@ -37,6 +39,21 @@ module Katello
               content_view_id: @repo.content_view.id)
 
             assert_nil repo_reference
+          end
+
+          def test_index_on_sync
+            Katello::GenericContentUnit.destroy_all
+            sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+            ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+            index_args = {:id => @repo.id, :contents_changed => true}
+            ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+            @repo.reload
+
+            post_unit_count = Katello::GenericContentUnit.all.count
+            post_unit_repository_count = Katello::RepositoryGenericContentUnit.where(:repository_id => @repo.id).count
+
+            assert_equal post_unit_count, 2
+            assert_equal post_unit_repository_count, 2
           end
         end
       end

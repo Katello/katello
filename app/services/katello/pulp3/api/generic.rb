@@ -1,4 +1,5 @@
 require "pulpcore_client"
+
 module Katello
   module Pulp3
     module Api
@@ -14,24 +15,24 @@ module Katello
           fail NotImplementedError
         end
 
-        def self.client_module
-          fail NotImplementedError
+        def self.client_module(repository_type)
+          repository_type.client_module_class
         end
 
-        def self.remote_class
-          fail NotImplementedError
+        def self.remote_class(repository_type)
+          repository_type.remote_class
         end
 
-        def self.distribution_class
-          fail NotImplementedError
+        def self.distribution_class(repository_type)
+          repository_type.distribution_class
         end
 
-        def self.publication_class
-          fail NotImplementedError
+        def self.publication_class(repository_type)
+          repository_type.publication_class
         end
 
-        def self.repository_sync_url_class
-          fail NotImplementedError
+        def self.repository_sync_url_class(repository_type)
+          repository_type.repo_sync_url_class
         end
 
         def self.add_remove_content_class
@@ -55,7 +56,7 @@ module Katello
         end
 
         def publications_api
-          fail NotImplementedError
+          @repository_type.publications_api_class.new(api_client)
         end
 
         def distributions_api

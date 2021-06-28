@@ -29,6 +29,7 @@ module Katello
     DOCKER_TYPE = 'docker'.freeze
     OSTREE_TYPE = 'ostree'.freeze
     ANSIBLE_COLLECTION_TYPE = 'ansible_collection'.freeze
+    GENERIC_TYPE = 'generic'.freeze
 
     EXPORTABLE_TYPES = [YUM_TYPE, FILE_TYPE, ANSIBLE_COLLECTION_TYPE].freeze
 
@@ -56,6 +57,9 @@ module Katello
 
     has_many :repository_srpms, :class_name => "Katello::RepositorySrpm", :dependent => :delete_all
     has_many :srpms, :through => :repository_srpms
+
+    has_many :repository_generic_content_units, :class_name => "Katello::RepositoryGenericContentUnit", :dependent => :delete_all
+    has_many :generic_content_units, :through => :repository_generic_content_units
 
     has_many :repository_file_units, :class_name => "Katello::RepositoryFileUnit", :dependent => :delete_all
     has_many :files, :through => :repository_file_units, :source => :file_unit
@@ -130,6 +134,7 @@ module Katello
     scope :docker_type, -> { with_type(DOCKER_TYPE) }
     scope :ostree_type, -> { with_type(OSTREE_TYPE) }
     scope :ansible_collection_type, -> { with_type(ANSIBLE_COLLECTION_TYPE) }
+    scope :generic_type, -> { with_type(Katello::RepositoryTypeManager.enabled_repository_types.select { |_, v| v.pulp3_service_class == Katello::Pulp3::Repository::Generic }.keys) }
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
     scope :in_published_environments, -> { in_content_views(Katello::ContentView.non_default).where.not(:environment_id => nil) }
@@ -166,7 +171,7 @@ module Katello
     scoped_search :on => :content_label, :ext_method => :search_by_content_label
 
     delegate :product, :redhat?, :custom?, :to => :root
-    delegate :yum?, :docker?, :deb?, :file?, :ostree?, :ansible_collection?, :to => :root
+    delegate :yum?, :docker?, :deb?, :file?, :ostree?, :ansible_collection?, :generic?, :to => :root
     delegate :name, :label, :docker_upstream_name, :url, :download_concurrency, :to => :root
 
     delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :arch, :label, :url, :unprotected,
@@ -178,6 +183,7 @@ module Katello
              :ansible_collection_auth_url, :ansible_collection_auth_token, :http_proxy_policy, :http_proxy_id, :to => :root
 
     delegate :content_id, to: :root, allow_nil: true
+    delegate :repository_type, to: :root
 
     def self.with_type(content_type)
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)
@@ -872,10 +878,6 @@ module Katello
       parts.map { |x| x.gsub(/[^-\w]/, "_") }.join("-").downcase
     end
 
-    def repository_type
-      RepositoryTypeManager.find(self.content_type)
-    end
-
     def copy_indexed_data(source_repository)
       repository_type.content_types_to_index.each do |type|
         type.model_class.copy_repository_associations(source_repository, self)
@@ -901,7 +903,11 @@ module Katello
       else
         repository_type.content_types_to_index.each do |type|
           Katello::Logging.time("CONTENT_INDEX", data: {type: type.model_class}) do
-            type.model_class.import_for_repository(self)
+            if self.generic?
+              type.model_class.import_for_repository(self, type.content_type)
+            else
+              type.model_class.import_for_repository(self)
+            end
           end
         end
         repository_type.index_additional_data_proc&.call(self)
