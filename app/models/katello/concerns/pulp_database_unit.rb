@@ -145,7 +145,11 @@ module Katello
             end
             service = service_class.new(model.pulp_id)
             service.backend_data = unit
-            service.update_model(model)
+            if repository&.generic?
+              service.update_model(model, repository.repository_type)
+            else
+              service.update_model(model)
+            end
             ids_to_associate << model.pulp_id
           end
         end
@@ -171,7 +175,11 @@ module Katello
               service = service_class.new(model.pulp_id)
               service.backend_data = unit
               model.repository_id = repository.id unless many_repository_associations
-              service.update_model(model)
+              if repository.generic?
+                service.update_model(model, repository.repository_type)
+              else
+                service.update_model(model)
+              end
             end
             pulp_id_href_map[pulp_id] = backend_identifier
           end

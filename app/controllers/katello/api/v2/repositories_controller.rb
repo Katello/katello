@@ -43,6 +43,11 @@ module Katello
       param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
       param :docker_tags_whitelist, Array, :desc => N_("Comma-separated list of tags to sync for Container Image repository")
+      RepositoryTypeManager.repository_types.each do |_, type|
+        type.repository_remote_options.each do |option|
+          param option.name, option.type, :desc => N_(option.description)
+        end
+      end
       param :download_policy, ["immediate", "on_demand"], :desc => N_("download policy for yum repos (either 'immediate' or 'on_demand')")
       param :download_concurrency, :number, :desc => N_("Used to determine download concurrency of the repository in pulp3. Use value less than 20. Defaults to 10")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed")
@@ -446,6 +451,11 @@ module Katello
              ]
 
       keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
+      RepositoryTypeManager.repository_types.each do |_, type|
+        type.repository_remote_options.each do |option|
+          keys += [option.name] if params[:action] == 'create' || @repository&.generic?
+        end
+      end
       keys += [:ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
@@ -473,6 +483,14 @@ module Katello
                                                             :checksum_type, :download_policy, :http_proxy_policy).to_h.with_indifferent_access)
       root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       root.docker_tags_whitelist = repo_params.fetch(:docker_tags_whitelist, []) if root.docker?
+      root.generic_remote_options = repo_params.fetch(:generic_remote_options, []).to_json if root.generic?
+      generic_remote_options = {}
+      RepositoryTypeManager.repository_types.each do |_, type|
+        type.repository_remote_options.each do |option|
+          generic_remote_options[option.name] = repo_params[option.name]
+        end
+      end
+      root.generic_remote_options = generic_remote_options.to_json if root.generic?
       root.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
