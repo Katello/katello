@@ -1,14 +1,14 @@
 module Katello
-  module Candlepin
+  module Host
     class ProfilesUploader
-      def self.upload(profile_string:, host: nil, host_id: nil)
+      def self.upload(profile_string:, host: nil)
         profiles = JSON.parse(profile_string)
         #free the huge string from the memory
         profile_string = 'TRIMMED'.freeze
         if host.nil?
-          Rails.logger.warn("Host with ID %s not found; continuing" % host_id)
+          Rails.logger.warn("Host with ID %s not found; continuing" % host.id)
         elsif host.content_facet.nil? || host.content_facet.uuid.nil?
-          Rails.logger.warn("Host with ID %s has no content facet; continuing" % host_id)
+          Rails.logger.warn("Host with ID %s has no content facet; continuing" % host.id)
         elsif profiles.try(:has_key?, "deb_package_profile")
           # remove this when deb_package_profile API is removed
           payload = profiles.dig("deb_package_profile", "deb_packages") || []
@@ -19,7 +19,7 @@ module Katello
             payload = profile["profile"]
             case profile["content_type"]
             when "rpm"
-              PackageProfileUploader.import_package_profile_for_host(host_id, payload)
+              PackageProfileUploader.import_package_profile_for_host(host.id, payload)
             when "deb"
               import_deb_package_profile(host, payload)
             when "enabled_repos"
@@ -33,7 +33,6 @@ module Katello
             import_module_streams(module_stream_payload, host)
           end
 
-          ::Katello::Host::ContentFacet.trigger_applicability_generation(host.id)
         end
       end
 

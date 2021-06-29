@@ -158,7 +158,7 @@ class Setting::Content < Setting
                500, N_('Autosearch delay')),
       self.set('bulk_load_size', N_('The number of items fetched from a single paged Pulp API call.'), 2000,
                N_('Pulp bulk load size')),
-      self.set('upload_profiles_without_dynflow', N_('Allow Candlepin profile uploads to use Rails directly instead of being wrapped in Dynflow actions'), true,
+      self.set('upload_profiles_without_dynflow', N_('Allow Katello to update host installed packages, enabled repos, and module inventory directly instead of wrapped in Dynflow tasks (try turning off if Puma processes are using too much memory)'), true,
                N_('Upload profiles without Dynflow'))
     ]
   end
