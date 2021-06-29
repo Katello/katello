@@ -7,7 +7,7 @@ module Katello
     self.table_name = "katello_environments"
     include Ext::LabelFromName
 
-    belongs_to :organization, :class_name => "Organization", :inverse_of => :environments
+    belongs_to :organization, :class_name => "Organization", :inverse_of => :kt_environments
     has_many :activation_keys, :class_name => "Katello::ActivationKey",
                                :dependent => :restrict_with_exception, :foreign_key => :environment_id
 
