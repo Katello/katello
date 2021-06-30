@@ -1,6 +1,7 @@
-import { STATUS } from 'foremanReact/constants';
 import React, { useState, useEffect } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { STATUS } from 'foremanReact/constants';
+import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -64,7 +65,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
 
   return (
     <Form>
-      <FormGroup label="Name" isRequired fieldId="name">
+      <FormGroup label={__('Name')} isRequired fieldId="name">
         <TextInput
           isRequired
           type="text"
@@ -75,7 +76,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           onChange={value => setName(value)}
         />
       </FormGroup>
-      <FormGroup label="Label" isRequired fieldId="label">
+      <FormGroup label={__('Label')} isRequired fieldId="label">
         <TextInput
           isRequired
           type="text"
@@ -86,7 +87,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           onChange={value => setLabel(value)}
         />
       </FormGroup>
-      <FormGroup label="Description" fieldId="description">
+      <FormGroup label={__('Description')} fieldId="description">
         <TextArea
           isRequired
           type="text"
@@ -97,7 +98,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           onChange={value => setDescription(value)}
         />
       </FormGroup>
-      <FormGroup isInline fieldId="type" label="Type">
+      <FormGroup isInline fieldId="type" label={__('Type')}>
         <Grid hasGutter>
           <GridItem span={6}>
             <Tile
@@ -105,11 +106,11 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               aria-label="component_tile"
               icon={<ContentViewIcon composite={false} />}
               id="component"
-              title="Component content view"
+              title={__('Component content view')}
               onClick={() => { setComponent(true); setComposite(false); }}
               isSelected={component}
             >
-              Single content view consisting of repositories
+              {__('Single content view consisting of repositories')}
             </Tile>
           </GridItem>
           <GridItem span={6}>
@@ -118,11 +119,11 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               aria-label="composite_tile"
               icon={<ContentViewIcon composite />}
               id="composite"
-              title="Composite content view"
+              title={__('Composite content view')}
               onClick={() => { setComposite(true); setComponent(false); }}
               isSelected={composite}
             >
-              Consists of component content views
+              {__('Consisting of multiple component content views')}
             </Tile>
           </GridItem>
         </Grid>
@@ -158,8 +159,17 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           />
         </FormGroup>}
       <ActionGroup>
-        <Button aria-label="create_content_view" variant="primary" isDisabled={saving} onClick={() => onSave()}>Create content view</Button>
-        <Button variant="link" onClick={() => setModalOpen(false)}>Cancel</Button>
+        <Button
+          aria-label="create_content_view"
+          variant="primary"
+          isDisabled={saving}
+          onClick={() => onSave()}
+        >
+          {__('Create content view')}
+        </Button>
+        <Button variant="link" onClick={() => setModalOpen(false)}>
+          {__('Cancel')}
+        </Button>
       </ActionGroup>
     </Form>
   );
