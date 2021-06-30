@@ -10,6 +10,10 @@ module Actions
           repo = ::Katello::Repository.find(input[:repository_id])
           output[:response] = repo.backend_service(smart_proxy).create_remote
         end
+
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
       end
     end
   end
