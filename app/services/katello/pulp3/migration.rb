@@ -166,7 +166,7 @@ module Katello
 
       def create_migrations
         plan = migration_plan
-        Rails.logger.info("Migration Plan: #{plan}")
+        Rails.logger.info("Migration Plan: #{plan.to_yaml}")
 
         if plan['plugins'].empty?
           Rails.logger.error("No Repositories to migrate")
