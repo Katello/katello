@@ -71,7 +71,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
         $scope.performViaRemoteExecution = function(customize) {
             var traceHelpers = $scope.selectedTraceHelpers();
             $scope.traceActionFormValues.helper = $.grep(traceHelpers, Boolean).join(',');
-            $scope.traceActionFormValues.hostIds = $scope.host.id;
+            $scope.traceActionFormValues.bulkHostIds = angular.toJson({ included: { ids: [$scope.host.id] }});
             $scope.traceActionFormValues.customize = customize;
 
             $timeout(function () {
