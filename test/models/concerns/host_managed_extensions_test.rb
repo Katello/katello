@@ -13,12 +13,7 @@ module Katello
       @library_view = ContentView.find(katello_content_views(:library_view).id)
 
       @foreman_host = FactoryBot.create(:host)
-      @foreman_host.puppetclasses = []
       @foreman_host.save!
-
-      new_puppet_environment = Environment.find(environments(:testing).id)
-
-      @foreman_host.environment = new_puppet_environment
     end
   end
 
