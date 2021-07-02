@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
@@ -58,7 +59,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
     return newRows;
   };
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const { results, ...meta } = response;
     setMetadata(meta);
 
@@ -66,7 +67,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)]);
+  }, [response]);
 
   const emptyContentTitle = __('No rules have been added to this filter.');
   const emptyContentBody = __("Add to this filter using the 'Add RPM' button.");

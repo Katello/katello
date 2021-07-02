@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import {
   Bullseye,
@@ -103,7 +104,7 @@ const ContentViewRepositories = ({ cvId }) => {
     return newRows;
   };
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const { results, ...meta } = response;
     setMetadata(meta);
 
@@ -111,19 +112,19 @@ const ContentViewRepositories = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)]);
+  }, [response]);
 
   useEffect(() => {
     dispatch(getRepositoryTypes());
   }, []);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const rowsAreSelected = rows.some(row => row.selected);
     setBulkActionEnabled(rowsAreSelected);
   }, [rows]);
 
   // Get repo type filter selections dynamically from the API
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (repoTypesStatus === STATUS.RESOLVED && repoTypesResponse) {
       const allRepoTypes = {};
       allRepoTypes[allRepositories] = 'all';
@@ -135,7 +136,7 @@ const ContentViewRepositories = ({ cvId }) => {
       });
       setRepoTypes(allRepoTypes);
     }
-  }, [JSON.stringify(repoTypesResponse), repoTypesStatus]);
+  }, [repoTypesResponse, repoTypesStatus]);
 
   const toggleBulkAction = () => {
     setBulkActionOpen(!bulkActionOpen);

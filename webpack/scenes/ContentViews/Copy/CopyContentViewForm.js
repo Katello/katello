@@ -1,5 +1,6 @@
 import { STATUS } from 'foremanReact/constants';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -19,7 +20,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
   const status = useSelector(selectCopyContentViewStatus);
   const error = useSelector(selectCopyContentViewError);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const { id } = response;
     if (id && status === STATUS.RESOLVED) {
       setSaving(false);
@@ -27,7 +28,7 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }
-  }, [JSON.stringify(response), status, error]);
+  }, [response, status, error]);
 
   const onSubmit = () => {
     setSaving(true);

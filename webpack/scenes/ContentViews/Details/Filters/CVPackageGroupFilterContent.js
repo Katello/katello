@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
@@ -64,7 +65,7 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
     return newRows;
   };
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const { results, ...meta } = response;
     setMetadata(meta);
 
@@ -72,7 +73,7 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)]);
+  }, [response]);
 
   const emptyContentTitle = __('No package groups have been added to this filter.');
   const emptyContentBody = __("Add to this filter using the 'Add package group' button.");

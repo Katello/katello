@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useParams } from 'react-router-dom';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
@@ -27,9 +28,9 @@ const ContentViewFilterDetails = () => {
     dispatch(getCVFilterDetails(cvId, filterId));
   }, []);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (loaded) setDetails(response);
-  }, [JSON.stringify(response), loaded]);
+  }, [response, loaded]);
 
   const { type, inclusion } = details;
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
@@ -56,7 +57,7 @@ const ContentViewTable = () => {
     return STATUS.PENDING; // Fallback to pending
   };
 
-  useEffect(
+  useDeepCompareEffect(
     () => {
       const { results, ...meta } = response;
       if (status === STATUS.ERROR) {
@@ -72,7 +73,7 @@ const ContentViewTable = () => {
         setCvTableStatus(tableStatus());
       }
     },
-    [JSON.stringify(response), status, loadingResponse, setTable, setRowMappingIds,
+    [response, status, loadingResponse, setTable, setRowMappingIds,
       setCvResults, setCvTableStatus, setCurrentStep, setMetadata],
   );
 

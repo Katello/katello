@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import {
   Bullseye,
@@ -75,7 +76,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const { results, ...meta } = response;
     setMetadata(meta);
 
@@ -83,7 +84,7 @@ const ContentViewComponents = ({ cvId, details }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)]);
+  }, [response]);
 
   return (
     <TableWrapper

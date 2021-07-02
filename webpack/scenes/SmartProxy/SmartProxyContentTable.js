@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { wrappable } from '@patternfly/react-table';
@@ -128,12 +129,12 @@ const SmartProxyContentTable = ({ smartProxyId }) => {
 
   useEffect(() => fetchWithParams(), []);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (status !== STATUS.PENDING && response) {
       const { lifecycle_environments: env } = response;
       setRows(buildrows(env));
     }
-  }, [JSON.stringify(response), status, error]);
+  }, [response, status, error]);
 
 
   return (

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { TableVariant, TableText } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -38,7 +39,7 @@ const ContentViewVersions = ({ cvId }) => {
   ];
 
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const buildRows = (results) => {
       const newRows = [];
       results.forEach((cvVersion) => {
@@ -71,7 +72,7 @@ const ContentViewVersions = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [JSON.stringify(response)], setMetadata, loading, setRows);
+  }, [response, setMetadata, loading, setRows]);
 
   const emptyContentTitle = __("You currently don't have any versions for this content view.");
   const emptyContentBody = __('Versions will appear here when the content view is published.'); // needs link
