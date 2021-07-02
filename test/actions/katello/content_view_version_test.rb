@@ -91,6 +91,8 @@ module ::Actions::Katello::ContentViewVersion
                                   pulp3_repo_map,
                                   { :errata => [], :rpms => [old_rpm.id] },
                                   :dependency_solving => false)
+        assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, new_repo)
+        assert_action_planed_with(action, ::Actions::Katello::Repository::IndexContent, id: new_repo.id)
       end
 
       it 'respects dep solving true' do
