@@ -29,13 +29,13 @@ const CreateContentViewForm = ({ setModalOpen }) => {
 
   useDeepCompareEffect(() => {
     const { id } = response;
-    if (id && status === STATUS.RESOLVED) {
+    if (id && status === STATUS.RESOLVED && saving) {
       setSaving(false);
       setRedirect(true);
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }
-  }, [response, status, error]);
+  }, [response, status, error, saving]);
 
   const onSave = () => {
     setSaving(true);
