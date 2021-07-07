@@ -1,12 +1,24 @@
 module Katello
   module Host
     class PackageProfileUploader
-      def self.upload(profile_string:, host:)
-        host_id = host.id
-        profile = JSON.parse(profile_string)
+      def initialize(profile_string:, host:)
+        @profile_string = profile_string
+        @host = host
+      end
+
+      def upload
+        profile = JSON.parse(@profile_string)
         #free the huge string from the memory
-        profile_string = 'TRIMMED'.freeze
-        import_package_profile_for_host(host_id, profile)
+        @profile_string = 'TRIMMED'.freeze
+        import_package_profile(profile)
+      end
+
+      def import_package_profile(profile)
+        self.class.import_package_profile_for_host(@host.id, profile)
+      end
+
+      def trigger_applicability_generation
+        ::Katello::Host::ContentFacet.trigger_applicability_generation(@host.id)
       end
 
       def self.import_package_profile_for_host(host_id, profile)
@@ -24,6 +36,6 @@ module Katello
           end
         end
       end
-    end
+    end # of class
   end
 end

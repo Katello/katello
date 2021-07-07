@@ -31,9 +31,13 @@ module Actions
         end
 
         def run
-          host = ::Host::Managed.find(input[:host_id])
-          ::Katello::Host::PackageProfileUploader.upload(host: host, profile_string: input[:profile_string])
-          ::Katello::Host::ContentFacet.trigger_applicability_generation(input[:host_id])
+          host = ::Host.find_by(:id => input[:host_id])
+          uploader = ::Katello::Host::PackageProfileUploader.new(
+            host: host,
+            profile_string: input[:profile_string]
+          )
+          uploader.upload
+          uploader.trigger_applicability_generation
         end
       end
     end

@@ -16,8 +16,12 @@ module Katello
     def upload_package_profile
       User.as_anonymous_admin do
         if Setting['upload_profiles_without_dynflow']
-          ::Katello::Host::PackageProfileUploader.upload(host: @host, profile_string: request.raw_post)
-          ::Katello::Host::ContentFacet.trigger_applicability_generation(@host.id)
+          uploader = ::Katello::Host::PackageProfileUploader.new(
+            host: @host,
+            profile_string: request.raw_post
+          )
+          uploader.upload
+          uploader.trigger_applicability_generation
         else
           async_task(::Actions::Katello::Host::UploadPackageProfile, @host, request.raw_post)
         end
@@ -30,8 +34,12 @@ module Katello
     def upload_profiles
       User.as_anonymous_admin do
         if Setting['upload_profiles_without_dynflow']
-          ::Katello::Host::ProfilesUploader.upload(host: @host, profile_string: request.raw_post)
-          ::Katello::Host::ContentFacet.trigger_applicability_generation(@host.id)
+          uploader = ::Katello::Host::ProfilesUploader.new(
+            host: @host,
+            profile_string: request.raw_post
+          )
+          uploader.upload
+          uploader.trigger_applicability_generation
         else
           async_task(::Actions::Katello::Host::UploadProfiles, @host, request.raw_post)
         end
