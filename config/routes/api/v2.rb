@@ -403,7 +403,6 @@ Katello::Engine.routes.draw do
             put :remove_content
             post :sync
             post :verify_checksum
-            post :export
             post :upload_content
             put :import_uploads
           end

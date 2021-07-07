@@ -317,12 +317,6 @@ module Katello
                          },
                          :resource_type => 'Katello::Product',
                          :finder_scope => :syncable
-      @plugin.permission :export_products,
-                         {
-                           'katello/api/v2/repositories' => [:export]
-                         },
-                         :resource_type => 'Katello::Product',
-                         :finder_scope => :exportable
     end
 
     def subscription_permissions

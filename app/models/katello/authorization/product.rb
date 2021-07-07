@@ -31,10 +31,6 @@ module Katello
           authorized(:edit_products)
         end
 
-        def exportable
-          authorized(:export_products)
-        end
-
         def deletable
           authorized(:destroy_products)
         end

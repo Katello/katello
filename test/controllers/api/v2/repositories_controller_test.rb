@@ -27,7 +27,6 @@ module Katello
       @update_permission = :edit_products
       @destroy_permission = :destroy_products
       @sync_permission = :sync_products
-      @export_permission = :export_products
     end
 
     def backend_stubs
