@@ -30,6 +30,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "json"
   gem.add_dependency "oauth"
   gem.add_dependency "rest-client"
+  gem.add_dependency "rake", '< 13.0.4'
 
   gem.add_dependency "rabl"
   gem.add_dependency "foreman-tasks", "~> 4.0"
@@ -53,12 +54,12 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   #pulp3
-  gem.add_dependency "pulpcore_client", ">= 3.11.0", "< 3.12.0"
-  gem.add_dependency "pulp_file_client", ">= 1.6.0", "< 1.7.0"
-  gem.add_dependency "pulp_ansible_client", ">= 0.7", "< 0.8"
-  gem.add_dependency "pulp_container_client", ">= 2.4.0", "< 2.5.0"
-  gem.add_dependency "pulp_deb_client", ">= 2.10.0", "< 2.12.0"
-  gem.add_dependency "pulp_rpm_client", ">=3.10.0", "< 3.11.0"
+  gem.add_dependency "pulpcore_client", ">= 3.14.0", "< 3.15.0"
+  gem.add_dependency "pulp_file_client", ">= 1.8.0", "< 1.9.0"
+  gem.add_dependency "pulp_ansible_client", ">= 0.8", "< 0.9"
+  gem.add_dependency "pulp_container_client", ">= 2.7.0", "< 2.8.0"
+  gem.add_dependency "pulp_deb_client", ">= 2.13.0", "< 2.14.0"
+  gem.add_dependency "pulp_rpm_client", ">=3.13.0", "< 3.14.0"
   gem.add_dependency "pulp_certguard_client", "< 2.0"
 
   # UI

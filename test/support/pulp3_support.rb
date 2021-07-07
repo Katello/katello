@@ -26,6 +26,9 @@ module Katello
         tasks << service.delete_remote(remote.pulp_href)
       end
 
+      tasks.compact.each { |task| wait_on_task(smart_proxy, task) }
+      tasks = []
+
       #delete distribution by name, since its not random due to vcr
       if (dist = service.lookup_distributions(name: service.generate_backend_object_name).first)
         tasks << service.api.delete_distribution(dist.pulp_href)
