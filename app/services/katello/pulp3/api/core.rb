@@ -89,7 +89,7 @@ module Katello
         end
 
         def export_api
-          PulpcoreClient::ExportersCoreExportsApi.new(core_api_client)
+          PulpcoreClient::ExportersPulpExportsApi.new(core_api_client)
         end
 
         def import_api

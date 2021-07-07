@@ -37,7 +37,9 @@ module Katello
         end
 
         def api_client
-          api_client_class(PulpContainerClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpContainerClient::Configuration)))
+          config = smart_proxy.pulp3_configuration(PulpContainerClient::Configuration)
+          config.params_encoder = Faraday::FlatParamsEncoder
+          api_client_class(PulpContainerClient::ApiClient.new(config))
         end
 
         def repositories_api
