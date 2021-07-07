@@ -14,7 +14,7 @@ module Katello
     before_action :find_product_for_create, :only => [:create]
     before_action :find_organization_from_product, :only => [:create]
     before_action :find_unauthorized_katello_resource, :only => [:gpg_key_content]
-    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :sync, :export,
+    before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :sync,
                                                                :remove_content, :upload_content, :republish,
                                                                :import_uploads, :verify_checksum]
     before_action :find_content, :only => :remove_content
