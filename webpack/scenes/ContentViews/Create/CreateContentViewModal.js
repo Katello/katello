@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { Modal, ModalVariant } from '@patternfly/react-core';
 import CreateContentViewForm from './CreateContentViewForm';
 
 const CreateContentViewModal = ({ show, setIsOpen }) => (
   <Modal
-    title="Create content view"
+    title={__('Create content view')}
     variant={ModalVariant.small}
     isOpen={show}
     onClose={() => { setIsOpen(false); }}
     appendTo={document.body}
-  ><CreateContentViewForm setModalOpen={setIsOpen} />
+  >
+    <CreateContentViewForm setModalOpen={setIsOpen} />
   </Modal>
 );
 
