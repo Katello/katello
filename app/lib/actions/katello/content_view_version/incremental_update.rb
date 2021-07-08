@@ -19,7 +19,8 @@ module Actions
 
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/AbcSize
-        def plan(old_version, environments, options = {}) # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/CyclomaticComplexity
+        def plan(old_version, environments, options = {})
           dep_solve = options.fetch(:resolve_dependencies, true)
           description = options.fetch(:description, '')
           content = options.fetch(:content, {})
@@ -72,8 +73,18 @@ module Actions
                 unit_map = pulp3_content_mapping(content)
 
                 unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
-                  copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
-                                                     dependency_solving: dep_solve).output
+                  sequence do
+                    copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
+                                                       dependency_solving: dep_solve).output
+                    repos_to_clone.each do |source_repos|
+                      if separated_repo_map[:pulp3_yum].keys.include?(source_repos)
+                        copy_repos(repository_mapping[source_repos],
+                          new_content_view_version,
+                          content,
+                          dep_solve)
+                      end
+                    end
+                  end
                 end
               end
 
