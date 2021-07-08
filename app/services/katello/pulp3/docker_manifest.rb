@@ -15,15 +15,9 @@ module Katello
       end
 
       def self.content_unit_list(page_opts)
-        page_opts[:media_type] = "application/vnd.docker.distribution.manifest.v1+json"
-        data_v1 = self.content_api.list(page_opts)
-        page_opts[:media_type] = "application/vnd.docker.distribution.manifest.v2+json"
-        data_v2 = self.content_api.list(page_opts)
-
-        filtered = {}
-        filtered["count"] = data_v1.count + data_v2.count
-        filtered["results"] = data_v1.results + data_v2.results
-        filtered
+        page_opts[:media_type] = ['application/vnd.docker.distribution.manifest.v1+json',
+                                  'application/vnd.docker.distribution.manifest.v2+json']
+        self.content_api.list(page_opts)
       end
 
       def update_model(model)
