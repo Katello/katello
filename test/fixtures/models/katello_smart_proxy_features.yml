@@ -1,0 +1,17 @@
+---
+pulp:
+  feature: pulp
+  smart_proxy: pulp_primary
+pulpcore:
+  capabilities:
+    - ansible
+    - certguard
+    - container
+    - core
+    - deb
+    - file
+    - rpm
+    - python
+  feature: pulpcore
+  settings: '<%= { pulp_url: "https://#{Socket.gethostname}", content_app_url: "http://localhost:24816" }.to_json %>'
+  smart_proxy: pulp_primary

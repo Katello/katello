@@ -7,7 +7,7 @@ module Katello
     def setup
       @library = katello_environments(:library)
       @view = katello_content_views(:library_dev_view)
-      @proxy = FactoryBot.build(:smart_proxy, :default_smart_proxy, :url => 'http://fakepath.com/foo')
+      @proxy = SmartProxy.pulp_primary
       @proxy_mirror = FactoryBot.build(:smart_proxy, :pulp_mirror, :url => 'http://fakemirrorpath.com/foo')
       ::SmartProxy.any_instance.stubs(:associate_features)
     end
@@ -39,6 +39,8 @@ module Katello
 
     def test_save_with_organization_location
       set_default_location
+      @proxy.destroy!
+      @proxy = FactoryBot.build(:smart_proxy, :default_smart_proxy, :url => 'http://fakepath.com/foo')
       @proxy.save!
       @proxy_mirror.save!
 
@@ -71,14 +73,10 @@ module Katello
 
   class SmartProxyPulp3Test < ActiveSupport::TestCase
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @file_repo = katello_repositories(:generic_file)
 
       @pulp3_feature = Feature.find_by(:name => SmartProxy::PULP3_FEATURE)
-    end
-
-    def teardown
-      SETTINGS[:katello][:use_pulp_2_for_content_type] = {:file => false, :docker => false}
     end
 
     def test_pulp3_repository_support
@@ -94,31 +92,9 @@ module Katello
       assert @primary.pulp3_content_support?(Katello::DockerManifest::CONTENT_TYPE)
     end
 
-    def test_pulp2_preferred_for_type
-      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
-      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
-      assert @primary.pulp2_preferred_for_type?("file")
-      refute @primary.pulp2_preferred_for_type?("docker")
-    ensure
-      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
-    end
-
     def test_pulp_supported_types_map
       expected_types_map = @primary.supported_pulp_types
-
-      assert_includes expected_types_map[:pulp3][:supported_types], "yum"
-      refute_includes expected_types_map[:pulp3][:overriden_to_pulp2], "file"
-    end
-
-    def test_pulp_supported_types_map_with_overrides
-      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
-      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
-
-      expected_types_map = @primary.supported_pulp_types
-      assert_includes expected_types_map[:pulp3][:supported_types], "yum"
-      assert_includes expected_types_map[:pulp3][:overriden_to_pulp2], "file"
-    ensure
-      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
+      assert_empty ["deb", "yum", "file", "docker", "ansible_collection"] - expected_types_map
     end
 
     def test_fix_pulp3_capabilities
@@ -131,18 +107,7 @@ module Katello
       end
     end
 
-    def test_fix_pulp3_capabilities_overridden
-      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
-      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = true
-      @primary.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [])
-      @primary.expects(:refresh).never
-      @primary.fix_pulp3_capabilities('file')
-    ensure
-      SETTINGS[:katello][:use_pulp_2_for_content_type][:file] = nil
-    end
-
     def test_fix_pulp3_capabilities_not_needed
-      SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
       @primary.smart_proxy_features.where(:feature_id => @pulp3_feature.id).update(:capabilities => [:pulpcore])
       @primary.expects(:refresh).never
 
@@ -164,8 +129,6 @@ module Katello
 
     pulpcore_features.each_pair do |feature_name, repo_type|
       test "pulpcore_feature_#{feature_name}_is_supported" do
-        SETTINGS[:katello][:use_pulp_2_for_content_type] = {}
-
         @primary.smart_proxy_feature_by_name(@pulp3_feature.name)
           .update(:capabilities => [feature_name.to_s])
 

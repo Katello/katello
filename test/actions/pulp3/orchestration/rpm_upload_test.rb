@@ -5,7 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64)
       tmp_file = File.join(Katello::Engine.root, 'test/fixtures/test_repos/zoo/duck-0.7-1.noarch.rpm')
       @file = {path: tmp_file, filename: 'duck-0.7.1.noarch.rpm'}

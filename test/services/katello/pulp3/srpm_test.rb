@@ -10,7 +10,7 @@ module Katello
         def setup
           User.current = users(:admin)
 
-          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = SmartProxy.pulp_primary
           @repo = katello_repositories(:fedora_17_x86_64)
           @repo.root.update(:url => 'https://fixtures.pulpproject.org/srpm-signed/')
           ensure_creatable(@repo, @primary)

@@ -1,19 +1,24 @@
 rhel6_security:
   erratum_id: <%= ActiveRecord::FixtureSet.identify(:security) %>
   repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
+  erratum_pulp3_href: "rhel6_security_href"
 
 rhel6_bugfix:
   erratum_id: <%= ActiveRecord::FixtureSet.identify(:bugfix) %>
   repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
+  erratum_pulp3_href: "rhel6_bugfix_href"
 
 rhel6_view_security:
   erratum_id: <%= ActiveRecord::FixtureSet.identify(:security) %>
   repository_id: <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_library_view_1) %>
+  erratum_pulp3_href: "rhel6_view_security_href"
 
 fedora_17_x86_64_security:
     erratum_id: <%= ActiveRecord::FixtureSet.identify(:security) %>
     repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+    erratum_pulp3_href: "fedora_17_x86_64_security_href"
 
 fedora_17_x86_64_dev_bugfix:
     erratum_id: <%= ActiveRecord::FixtureSet.identify(:bugfix) %>
     repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_dev) %>
+    erratum_pulp3_href: "fedora_17_x86_64_dev_bugfix_href"

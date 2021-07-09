@@ -28,8 +28,6 @@ module Katello
     end
 
     def self.create_repo(repo, override_relative_path = true)
-      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_primary
-
       repo.relative_path = 'test_path' if !repo.file? && override_relative_path
       if repo.yum?
         repo.root.url = @repo_url
@@ -42,16 +40,12 @@ module Katello
     end
 
     def self.sync_repo(repo)
-      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_primary
-
       ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync,
                                repo_id: repo.id
                               )
     end
 
     def self.destroy_repo(repo)
-      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_primary
-
       ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :repository_id => repo.id, :capsule_id => ::SmartProxy.pulp_primary.id)
     rescue RestClient::ResourceNotFound => e
       puts "Failed to destroy repo #{e.message}"

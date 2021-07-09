@@ -4,19 +4,17 @@ module Katello
   class RpmViewTest < ActiveSupport::TestCase
     def setup
       @rpm = katello_rpms(:two)
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
     end
 
     def test_base
-      assert_service_not_used(Pulp::Rpm) do
+      assert_service_not_used(Pulp3::Rpm) do
         render_rabl('katello/api/v2/packages/base.json', @rpm)
       end
     end
 
     def test_show
-      assert_service_used(Pulp::Rpm) do
-        render_rabl('katello/api/v2/packages/show.json', @rpm)
-      end
+      Pulp3::Rpm.any_instance.expects(:backend_data).at_least_once.returns({ 'files' => [] })
+      render_rabl('katello/api/v2/packages/show.json', @rpm)
     end
   end
 end

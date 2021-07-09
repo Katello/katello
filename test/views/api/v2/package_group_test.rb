@@ -7,16 +7,14 @@ module Katello
     end
 
     def test_base
-      assert_service_not_used(Pulp::PackageGroup) do
+      assert_service_not_used(Pulp3::PackageGroup) do
         render_rabl('katello/api/v2/package_groups/base.json', @group)
       end
     end
 
     def test_show
-      NilClass.any_instance.stubs(:pulp3_repository_type_support?).returns(false)
-      assert_service_used(Pulp::PackageGroup) do
-        render_rabl('katello/api/v2/package_groups/show.json', @group)
-      end
+      Pulp3::PackageGroup.any_instance.expects(:backend_data).at_least_once.returns({ 'packages' => [] })
+      render_rabl('katello/api/v2/package_groups/show.json', @group)
     end
   end
 end

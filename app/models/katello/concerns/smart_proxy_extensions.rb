@@ -196,23 +196,18 @@ module Katello
         repository ? pulp3_repository_type_support?(repository.try(:content_type)) : false
       end
 
-      def pulp2_preferred_for_type?(repository_type)
-        if SETTINGS[:katello][:use_pulp_2_for_content_type].nil? ||
-            SETTINGS[:katello][:use_pulp_2_for_content_type][repository_type.to_sym].nil?
-          return false
-        else
-          return SETTINGS[:katello][:use_pulp_2_for_content_type][repository_type.to_sym]
-        end
-      end
-
       def missing_pulp3_capabilities?
         pulp3_enabled? && self.capabilities(PULP3_FEATURE).empty?
       end
 
       def fix_pulp3_capabilities(type)
-        repository_type_obj = type.is_a?(String) ||  type.is_a?(Symbol) ? Katello::RepositoryTypeManager.repository_types[type] : type
+        if type.is_a?(String) ||  type.is_a?(Symbol)
+          repository_type_obj = Katello::RepositoryTypeManager.defined_repository_types[type]
+        else
+          repository_type_obj = type
+        end
 
-        if missing_pulp3_capabilities? && repository_type_obj.pulp3_plugin && !pulp2_preferred_for_type?(repository_type_obj.id)
+        if missing_pulp3_capabilities? && repository_type_obj.pulp3_plugin
           self.refresh
           if self.capabilities(::SmartProxy::PULP3_FEATURE).empty?
             fail Katello::Errors::PulpcoreMissingCapabilities
@@ -220,23 +215,21 @@ module Katello
         end
       end
 
-      def pulp3_repository_type_support?(repository_type, check_pulp2_preferred = true)
-        repository_type_obj = repository_type.is_a?(String) ? Katello::RepositoryTypeManager.repository_types[repository_type] : repository_type
+      def pulp3_repository_type_support?(repository_type)
+        repository_type_obj = repository_type.is_a?(String) ? Katello::RepositoryTypeManager.find(repository_type) : repository_type
         fail "Cannot find repository type #{repository_type}, is it enabled?" unless repository_type_obj
 
-        pulp3_supported = repository_type_obj.pulp3_plugin.present? &&
-                          pulp3_enabled? &&
-                          (self.capabilities(PULP3_FEATURE).try(:include?, repository_type_obj.pulp3_plugin) ||
-                           self.capabilities(PULP3_FEATURE).try(:include?, 'pulp_' + repository_type_obj.pulp3_plugin))
-
-        check_pulp2_preferred ? pulp3_supported && !pulp2_preferred_for_type?(repository_type_obj.id) : pulp3_supported
+        repository_type_obj.pulp3_plugin.present? &&
+          pulp3_enabled? &&
+          (self.capabilities(PULP3_FEATURE).try(:include?, repository_type_obj.pulp3_plugin) ||
+           self.capabilities(PULP3_FEATURE).try(:include?, 'pulp_' + repository_type_obj.pulp3_plugin))
       end
 
       def pulp3_content_support?(content_type)
         content_type_obj = content_type.is_a?(String) ? Katello::RepositoryTypeManager.find_content_type(content_type) : content_type
         fail "Cannot find content type #{content_type}." unless content_type_obj
 
-        found_type = Katello::RepositoryTypeManager.repository_types.values.find { |repo_type| repo_type.content_types.include?(content_type_obj) }
+        found_type = Katello::RepositoryTypeManager.enabled_repository_types.values.find { |repo_type| repo_type.content_types.include?(content_type_obj) }
         fail "Cannot find repository type for content_type #{content_type}, is it enabled?" unless found_type
         pulp3_repository_type_support?(found_type)
       end
@@ -265,24 +258,15 @@ module Katello
       end
 
       def supported_pulp_types
-        supported_map = {
-          pulp2: { supported_types: [] },
-          pulp3: { supported_types: [], overriden_to_pulp2: [] }
-        }
+        supported_types = []
 
-        ::Katello::RepositoryTypeManager.repository_types.keys.each do |type|
-          if pulp3_repository_type_support?(type, false)
-            if pulp2_preferred_for_type?(type)
-              supported_map[:pulp3][:overriden_to_pulp2] << type
-            else
-              supported_map[:pulp3][:supported_types] << type
-            end
-          else
-            supported_map[:pulp2][:supported_types] << type
+        ::Katello::RepositoryTypeManager.enabled_repository_types.keys.each do |type|
+          if pulp3_repository_type_support?(type)
+            supported_types << type
           end
         end
 
-        supported_map
+        supported_types
       end
 
       #deprecated methods

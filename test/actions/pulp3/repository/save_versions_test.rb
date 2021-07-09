@@ -5,7 +5,7 @@ module ::Actions::Pulp3::Repository
     include Katello::Pulp3Support
 
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo1 = katello_repositories(:generic_file_archive)
       @repo2 = katello_repositories(:pulp3_file_1)
     end

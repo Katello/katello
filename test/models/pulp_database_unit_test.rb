@@ -7,7 +7,7 @@ module Katello
     extend ActiveRecord::TestFixtures
 
     def test_complete_for
-      content_types = ::Katello::RepositoryTypeManager.repository_types.values.map { |t| t.content_types.map(&:model_class) }.flatten.select { |klazz| klazz <= ::Katello::Concerns::PulpDatabaseUnit }
+      content_types = ::Katello::RepositoryTypeManager.enabled_repository_types.values.map { |t| t.content_types.map(&:model_class) }.flatten.select { |klazz| klazz <= ::Katello::Concerns::PulpDatabaseUnit }
       content_types.each do |klazz|
         if klazz.many_repository_associations
           refute_nil klazz.complete_for("repository="), "asserting #{klazz}"

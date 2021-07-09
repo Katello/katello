@@ -8,7 +8,6 @@ module Katello
 
     def setup
       super
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       User.current = @admin
       @root = build(:katello_root_repository,
                     :product => katello_products(:fedora)
