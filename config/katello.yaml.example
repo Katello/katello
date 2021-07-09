@@ -60,12 +60,6 @@
     :url: amqp:ssl:katello-devel.example.com:5671
     :subscriptions_queue_address: katello_event_queue
 
-  # Internal configuration for communication from server to pulp crane service.
-  :container_image_registry:
-    :crane_url: https://localhost:5000
-    :crane_ca_cert_file: /etc/pki/katello/certs/katello-server-ca.crt
-    :allow_push: false  # default false if omitted
-
 # Logging configuration can be changed by uncommenting the loggers
 # section and the logger configuration desired.
 #

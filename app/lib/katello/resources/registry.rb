@@ -23,30 +23,17 @@ module Katello
       class RegistryResource < HttpResource
         class << self
           def load_class
-            registry_url = nil
             pulp_primary = ::SmartProxy.pulp_primary
+            content_app_url = pulp_primary.setting(SmartProxy::PULP3_FEATURE, 'content_app_url')
 
-            # Pulp 3 has its own registry
-            if pulp_primary&.pulp3_repository_type_support?(::Katello::Repository::DOCKER_TYPE)
-              uri = URI(pulp_primary.setting(SmartProxy::PULP3_FEATURE, 'content_app_url'))
-              uri.path = "/pulpcore_registry/"
-              registry_url = uri.to_s
+            fail Errors::ContainerRegistryNotConfigured unless content_app_url
 
-              # Assume the registry uses the same CA as the Smart Proxy
-              ca_cert_file = Setting[:ssl_ca_file]
-            elsif (container_config = SETTINGS.dig(:katello, :container_image_registry))
-              registry_url = container_config[:crane_url]
-              ca_cert_file = container_config[:registry_ca_cert_file]
-            end
-
-            fail Errors::ContainerRegistryNotConfigured unless registry_url
-
-            uri = URI.parse(registry_url)
-            self.prefix = uri.path
+            uri = URI.parse(content_app_url)
+            self.prefix = "/pulpcore_registry/"
             self.site = "#{uri.scheme}://#{uri.host}:#{uri.port}"
             self.ssl_client_cert = ::Cert::Certs.ssl_client_cert
             self.ssl_client_key = ::Cert::Certs.ssl_client_key
-            self.ca_cert_file = ca_cert_file
+            self.ca_cert_file = Setting[:ssl_ca_file]
             self
           end
 
