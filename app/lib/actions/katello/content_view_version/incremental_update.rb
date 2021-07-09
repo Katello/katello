@@ -87,7 +87,7 @@ module Actions
               if separated_repo_map[:other].keys.flatten.present?
                 repos_to_clone.each do |source_repos|
                   if separated_repo_map[:other].keys.include?(source_repos)
-                    copy_action_outputs += copy_repos(repository_mapping[source_repos])
+                    copy_repos(repository_mapping[source_repos])
                   end
                 end
               end
