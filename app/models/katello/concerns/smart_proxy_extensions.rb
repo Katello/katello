@@ -118,9 +118,23 @@ module Katello
         ::User.where(login: usernames['users'])
       end
 
+      def rhsm_url
+        # TODO: We shouldn't relate this to the Pulp feature and also expose it
+        # as a setting
+        if pulp_mirror?
+          "https://#{URI.parse(url).host}:8443/rhsm"
+        elsif pulp_primary?
+          "https://#{URI.parse(url).host}/rhsm"
+        end
+      end
+
       def pulp_url
         uri = URI.parse(url)
         "#{uri.scheme}://#{uri.host}/pulp/api/v2/"
+      end
+
+      def pulp_content_url
+        setting(SmartProxy::PULP3_FEATURE, 'content_app_url')
       end
 
       def pulp_api

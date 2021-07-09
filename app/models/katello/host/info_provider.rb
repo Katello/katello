@@ -16,6 +16,15 @@ module Katello
         if host.content_facet.present?
           info['parameters']['kickstart_repository'] = host.content_facet.kickstart_repository.try(:label)
         end
+
+        if (rhsm_url = host.content_source&.rhsm_url)
+          host['rhsm_url'] = rhsm_url
+        end
+
+        if (content_url = host.content_source&.pulp_content_url)
+          host['content_url'] = content_url
+        end
+
         info
       end
 
