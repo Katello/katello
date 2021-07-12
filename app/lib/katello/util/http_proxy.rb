@@ -1,11 +1,8 @@
-require 'katello/util/proxy_uri'
-
 module Katello
   module Util
     module HttpProxy
       def proxy_uri
         #Reset the scheme to proxy(s) based on http or https to handle cgi unescaping in rest-client
-        # this relies on katello/util/proxy_uri
         if proxy
           scheme = 'proxy' if proxy_scheme == 'http'
           scheme = 'proxys' if proxy_scheme == 'https'
