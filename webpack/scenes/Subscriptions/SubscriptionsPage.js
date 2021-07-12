@@ -48,13 +48,10 @@ class SubscriptionsPage extends Component {
       organization,
       isManifestImported,
       pingUpstreamSubscriptions,
-      settings,
       subscriptions,
       task,
       checkSimpleContentAccessEligible,
     } = this.props;
-
-    const { disconnected } = settings;
 
     if (task) {
       if (isPollingTask) {
@@ -69,9 +66,6 @@ class SubscriptionsPage extends Component {
     if (organization) {
       if (!prevProps.organization || prevProps.organization.id !== organization.id) {
         this.loadData();
-      }
-
-      if (disconnected === false && disconnected !== prevProps.settings.disconnected) {
         if (isManifestImported) {
           pingUpstreamSubscriptions();
           this.state.availableQuantitiesLoaded = false;
@@ -103,15 +97,11 @@ class SubscriptionsPage extends Component {
     const {
       hasUpstreamConnection,
       task,
-      settings,
       isManifestImported,
     } = this.props;
-    const { disconnected } = settings;
     let disabledReason = null;
 
-    if (disconnected) {
-      disabledReason = __('This is disabled because disconnected mode is enabled.');
-    } else if (task) {
+    if (task) {
       disabledReason = __('This is disabled because a manifest related task is in progress.');
     } else if (deleteButton && !disabledReason) {
       disabledReason = __('This is disabled because no subscriptions are selected.');
@@ -150,7 +140,7 @@ class SubscriptionsPage extends Component {
     const {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
-      searchQuery, updateSearchQuery, simpleContentAccess, settings, hasUpstreamConnection,
+      searchQuery, updateSearchQuery, simpleContentAccess, hasUpstreamConnection,
       task, activePermissions, subscriptions, subscriptionTableSettings, isManifestImported,
     } = this.props;
     // Basic permissions - should we even show this page?
@@ -165,8 +155,7 @@ class SubscriptionsPage extends Component {
       canImportManifest,
       canEditOrganizations,
     } = permissions;
-    const { disconnected } = settings;
-    const disableManifestActions = !!task || disconnected || !hasUpstreamConnection;
+    const disableManifestActions = !!task || !hasUpstreamConnection;
 
     const openManageManifestModal = () => this.props.setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
 
@@ -320,9 +309,6 @@ SubscriptionsPage.propTypes = {
   loadTableColumns: PropTypes.func.isRequired,
   simpleContentAccess: PropTypes.bool,
   isManifestImported: PropTypes.bool,
-  settings: PropTypes.shape({
-    disconnected: PropTypes.bool,
-  }),
   subscriptions: PropTypes.shape({
     // Disabling rule as existing code failed due to an eslint-plugin-react update
     /* eslint-disable react/forbid-prop-types */
@@ -394,9 +380,6 @@ SubscriptionsPage.defaultProps = {
   activePermissions: {
     can_import_manifest: false,
     can_manage_subscription_allocations: false,
-  },
-  settings: {
-    disconnected: true,
   },
 };
 
