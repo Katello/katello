@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/repositories/rpm/rpm/?name=2_duplicate
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -23,7 +23,70 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:19 GMT
+      - Wed, 21 Jul 2021 13:31:57 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie,Accept-Encoding
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Correlation-Id:
+      - 6a6e4d2e07354a7e828cb1a18c9e9c48
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 devel2.balmora.example.com
+      Content-Length:
+      - '318'
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
+        cnBtL3JwbS8yMmYwMDU5NS02MTcyLTQ1MDYtODY0Ni0wNDc2OTZhOTZmZTkv
+        IiwicHVscF9jcmVhdGVkIjoiMjAyMS0wNy0yMVQxMzozMTozOC41ODIxNTha
+        IiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
+        cnBtL3JwbS8yMmYwMDU5NS02MTcyLTQ1MDYtODY0Ni0wNDc2OTZhOTZmZTkv
+        dmVyc2lvbnMvIiwicHVscF9sYWJlbHMiOnt9LCJsYXRlc3RfdmVyc2lvbl9o
+        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtLzIyZjAw
+        NTk1LTYxNzItNDUwNi04NjQ2LTA0NzY5NmE5NmZlOS92ZXJzaW9ucy8xLyIs
+        Im5hbWUiOiIyX2R1cGxpY2F0ZSIsImRlc2NyaXB0aW9uIjpudWxsLCJyZXRh
+        aW5lZF92ZXJzaW9ucyI6bnVsbCwicmVtb3RlIjpudWxsLCJhdXRvcHVibGlz
+        aCI6ZmFsc2UsIm1ldGFkYXRhX3NpZ25pbmdfc2VydmljZSI6bnVsbCwicmV0
+        YWluX3BhY2thZ2VfdmVyc2lvbnMiOjAsIm1ldGFkYXRhX2NoZWNrc3VtX3R5
+        cGUiOm51bGwsInBhY2thZ2VfY2hlY2tzdW1fdHlwZSI6bnVsbCwiZ3BnY2hl
+        Y2siOjAsInJlcG9fZ3BnY2hlY2siOjAsInNxbGl0ZV9tZXRhZGF0YSI6ZmFs
+        c2V9XX0=
+    http_version: 
+  recorded_at: Wed, 21 Jul 2021 13:31:57 GMT
+- request:
+    method: delete
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/22f00595-6172-4506-8646-047696a96fe9/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.13.3/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Wed, 21 Jul 2021 13:31:57 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -31,27 +94,27 @@ http_interactions:
       Vary:
       - Accept,Cookie
       Allow:
-      - GET, POST, HEAD, OPTIONS
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '52'
+      - '67'
       Correlation-Id:
-      - e2683d210b51472099fb3aafca32ad72
+      - 800a437bcc2f46388d8555e84c866704
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2NlOWQ2ZmVjLTBhYjEtNGRk
+        My05ODBjLThhOTcxZDE0ZDk4Ni8ifQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:19 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:57 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/remotes/rpm/rpm/?name=2_duplicate
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -72,7 +135,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:19 GMT
+      - Wed, 21 Jul 2021 13:31:57 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -86,21 +149,21 @@ http_interactions:
       Content-Length:
       - '52'
       Correlation-Id:
-      - 1fc8c6fb0d744f16aedcac7730628a53
+      - e1b5feeeb5b94ec1965dfb24ed1b765e
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:19 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:57 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/?name=2_duplicate
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/ce9d6fec-0ab1-4dd3-980c-8a971d14d986/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -108,7 +171,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
+      - OpenAPI-Generator/3.14.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -121,35 +184,47 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:19 GMT
+      - Wed, 21 Jul 2021 13:31:57 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Vary:
-      - Accept,Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
-      - GET, POST, HEAD, OPTIONS
+      - GET, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
-      Content-Length:
-      - '52'
       Correlation-Id:
-      - 83497398977248a08e2f558d2a8677bd
+      - 4bc0ed40ad284b6fabcc90d3a8ca4335
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
+      Content-Length:
+      - '374'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOltdfQ==
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvY2U5ZDZmZWMtMGFi
+        MS00ZGQzLTk4MGMtOGE5NzFkMTRkOTg2LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDctMjFUMTM6MzE6NTcuMDk0MDQxWiIsInN0YXRlIjoiY29tcGxldGVk
+        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
+        ZXRlIiwibG9nZ2luZ19jaWQiOiI4MDBhNDM3YmNjMmY0NjM4OGQ4NTU1ZTg0
+        Yzg2NjcwNCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTIxVDEzOjMxOjU3LjE3
+        NjU5OVoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMjFUMTM6MzE6NTcuNDk4
+        OTE5WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy9iOGQ1OTdhNC03ZGE5LTRmYWEtYWY4OC01YmRhZDJjMWE5ZTAvIiwi
+        cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
+        cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
+        Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
+        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vMjJmMDA1OTUtNjE3Mi00NTA2
+        LTg2NDYtMDQ3Njk2YTk2ZmU5LyJdfQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:19 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:57 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -170,7 +245,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:19 GMT
+      - Wed, 21 Jul 2021 13:31:57 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -184,21 +259,70 @@ http_interactions:
       Content-Length:
       - '52'
       Correlation-Id:
-      - 596504c127c74f67924977954f375ea5
+      - f7e260dbbf1c47ffb51a2be2fcbf1aaf
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:19 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:57 GMT
+- request:
+    method: get
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.13.3/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic Og==
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 21 Jul 2021 13:31:57 GMT
+      Server:
+      - gunicorn
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '52'
+      Correlation-Id:
+      - e77619bdb8394ba1b7e6f06118ddf384
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Via:
+      - 1.1 devel2.balmora.example.com
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Wed, 21 Jul 2021 13:31:57 GMT
 - request:
     method: post
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/repositories/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
@@ -221,13 +345,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:19 GMT
+      - Wed, 21 Jul 2021 13:31:58 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/repositories/rpm/rpm/83d22ef8-61c0-48a8-9396-7580bc8d9afa/"
+      - "/pulp/api/v3/repositories/rpm/rpm/9951c688-fe4b-42cf-b591-2d3c60ca7f38/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -237,22 +361,22 @@ http_interactions:
       Content-Length:
       - '628'
       Correlation-Id:
-      - 8b310d386fb84c468e812cac8137f2b6
+      - cc73fedd50ae4b27aac6b4bd456f89e7
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vODNkMjJlZjgtNjFjMC00OGE4LTkzOTYtNzU4MGJjOGQ5YWZhLyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjEtMDctMTJUMTY6MTY6MTkuNzc5NTUxWiIsInZl
+        cG0vOTk1MWM2ODgtZmU0Yi00MmNmLWI1OTEtMmQzYzYwY2E3ZjM4LyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjEtMDctMjFUMTM6MzE6NTguMDQxNTY3WiIsInZl
         cnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vODNkMjJlZjgtNjFjMC00OGE4LTkzOTYtNzU4MGJjOGQ5YWZhL3ZlcnNp
+        cG0vOTk1MWM2ODgtZmU0Yi00MmNmLWI1OTEtMmQzYzYwY2E3ZjM4L3ZlcnNp
         b25zLyIsInB1bHBfbGFiZWxzIjp7fSwibGF0ZXN0X3ZlcnNpb25faHJlZiI6
-        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS84M2QyMmVmOC02
-        MWMwLTQ4YTgtOTM5Ni03NTgwYmM4ZDlhZmEvdmVyc2lvbnMvMC8iLCJuYW1l
+        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS85OTUxYzY4OC1m
+        ZTRiLTQyY2YtYjU5MS0yZDNjNjBjYTdmMzgvdmVyc2lvbnMvMC8iLCJuYW1l
         IjoiMl9kdXBsaWNhdGUiLCJkZXNjcmlwdGlvbiI6bnVsbCwicmV0YWluZWRf
         dmVyc2lvbnMiOm51bGwsInJlbW90ZSI6bnVsbCwiYXV0b3B1Ymxpc2giOmZh
         bHNlLCJtZXRhZGF0YV9zaWduaW5nX3NlcnZpY2UiOm51bGwsInJldGFpbl9w
@@ -260,10 +384,10 @@ http_interactions:
         dWxsLCJwYWNrYWdlX2NoZWNrc3VtX3R5cGUiOm51bGwsImdwZ2NoZWNrIjow
         LCJyZXBvX2dwZ2NoZWNrIjowLCJzcWxpdGVfbWV0YWRhdGEiOmZhbHNlfQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:19 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:58 GMT
 - request:
     method: post
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/remotes/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
@@ -289,13 +413,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:19 GMT
+      - Wed, 21 Jul 2021 13:31:58 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/rpm/rpm/ee11387f-d8bd-4bfc-ab36-9e665ff23496/"
+      - "/pulp/api/v3/remotes/rpm/rpm/079f4104-4a00-4f84-9e14-65a67565d231/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -305,37 +429,37 @@ http_interactions:
       Content-Length:
       - '536'
       Correlation-Id:
-      - 9d7a01a2f6bd42faac7cf964d39c427d
+      - 94a0f43358e24cff838048a0cbabe786
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2Vl
-        MTEzODdmLWQ4YmQtNGJmYy1hYjM2LTllNjY1ZmYyMzQ5Ni8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjE5LjkwNDY2MFoiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzA3
+        OWY0MTA0LTRhMDAtNGY4NC05ZTE0LTY1YTY3NTY1ZDIzMS8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIxLTA3LTIxVDEzOjMxOjU4LjM0NTkyN1oiLCJuYW1lIjoi
         Ml9kdXBsaWNhdGUiLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNhX2Nl
         cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6
         dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1bHBf
-        bGFzdF91cGRhdGVkIjoiMjAyMS0wNy0xMlQxNjoxNjoxOS45MDQ2OTJaIiwi
+        bGFzdF91cGRhdGVkIjoiMjAyMS0wNy0yMVQxMzozMTo1OC4zNDYwNzhaIiwi
         ZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpudWxs
         LCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJ0b3RhbF90aW1lb3V0IjozMDAuMCwi
         Y29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
         bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51bGws
         InJhdGVfbGltaXQiOm51bGwsInNsZXNfYXV0aF90b2tlbiI6bnVsbH0=
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:19 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:58 GMT
 - request:
     method: post
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/publications/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/publications/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL3JwbS9ycG0vODNkMjJlZjgtNjFjMC00OGE4LTkzOTYtNzU4MGJjOGQ5
-        YWZhL3ZlcnNpb25zLzAvIiwiZ3BnY2hlY2siOjAsInJlcG9fZ3BnY2hlY2si
+        aWVzL3JwbS9ycG0vOTk1MWM2ODgtZmU0Yi00MmNmLWI1OTEtMmQzYzYwY2E3
+        ZjM4L3ZlcnNpb25zLzAvIiwiZ3BnY2hlY2siOjAsInJlcG9fZ3BnY2hlY2si
         OjAsInNxbGl0ZV9tZXRhZGF0YSI6ZmFsc2V9
     headers:
       Content-Type:
@@ -354,7 +478,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:20 GMT
+      - Wed, 21 Jul 2021 13:31:58 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -368,21 +492,21 @@ http_interactions:
       Content-Length:
       - '67'
       Correlation-Id:
-      - '0559c0550d01406a90712d1ae229f557'
+      - 8bd7f71e59b34ca88ce34485a103f87b
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA0MmQ4ZDUyLWE3ZTgtNDQz
-        ZS1iYmNkLTFiZjUzZGZkZWEyYi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2E5MzNiZjZjLWU4NDctNDFh
+        NC1hYTBhLTE5OGY5NTlhYmUwNi8ifQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:20 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:58 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/tasks/042d8d52-a7e8-443e-bbcd-1bf53dfdea2b/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/a933bf6c-e847-41a4-aa0a-198f959abe06/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -403,7 +527,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:20 GMT
+      - Wed, 21 Jul 2021 13:31:59 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -415,40 +539,40 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Correlation-Id:
-      - d8f5bcac161948b795b651fe9105cab6
+      - b99b99056ff74a64b1d94d59f028a411
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '469'
+      - '472'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMDQyZDhkNTItYTdl
-        OC00NDNlLWJiY2QtMWJmNTNkZmRlYTJiLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMDctMTJUMTY6MTY6MjAuMjc0OTA0WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYTkzM2JmNmMtZTg0
+        Ny00MWE0LWFhMGEtMTk4Zjk1OWFiZTA2LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDctMjFUMTM6MzE6NTguOTAxNTMzWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBfcnBtLmFwcC50YXNrcy5wdWJsaXNoaW5nLnB1Ymxp
-        c2giLCJsb2dnaW5nX2NpZCI6IjA1NTljMDU1MGQwMTQwNmE5MDcxMmQxYWUy
-        MjlmNTU3Iiwic3RhcnRlZF9hdCI6IjIwMjEtMDctMTJUMTY6MTY6MjAuMzI4
-        ODIwWiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wNy0xMlQxNjoxNjoyMC41NjY3
-        NzdaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3Jr
-        ZXJzLzg2MmEzNjNhLTgyOTYtNDcwMy1hODMxLTI3NDkyZjdjZjMyYS8iLCJw
+        c2giLCJsb2dnaW5nX2NpZCI6IjhiZDdmNzFlNTliMzRjYTg4Y2UzNDQ4NWEx
+        MDNmODdiIiwic3RhcnRlZF9hdCI6IjIwMjEtMDctMjFUMTM6MzE6NTkuMDQy
+        NzgxWiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wNy0yMVQxMzozMTo1OS41MzU3
+        MjdaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3Jr
+        ZXJzL2I4ZDU5N2E0LTdkYTktNGZhYS1hZjg4LTViZGFkMmMxYTllMC8iLCJw
         YXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3Vw
         IjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbeyJtZXNzYWdlIjoiR2VuZXJh
         dGluZyByZXBvc2l0b3J5IG1ldGFkYXRhIiwiY29kZSI6InB1Ymxpc2guZ2Vu
         ZXJhdGluZ19tZXRhZGF0YSIsInN0YXRlIjoiY29tcGxldGVkIiwidG90YWwi
         OjEsImRvbmUiOjEsInN1ZmZpeCI6bnVsbH1dLCJjcmVhdGVkX3Jlc291cmNl
-        cyI6WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vYjZlNGY3
-        ZDYtYmNmNi00OTEyLWFmMjAtYzg3YWZlNTNjYzI1LyJdLCJyZXNlcnZlZF9y
+        cyI6WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vZmRmNzY0
+        ZDAtZTg2Yi00YTVjLTllZmItYmY5NmNkYjI0Yzk1LyJdLCJyZXNlcnZlZF9y
         ZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS84M2QyMmVmOC02MWMwLTQ4YTgtOTM5Ni03NTgwYmM4ZDlhZmEv
+        cnBtL3JwbS85OTUxYzY4OC1mZTRiLTQyY2YtYjU5MS0yZDNjNjBjYTdmMzgv
         Il19
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:20 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:59 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -469,7 +593,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:20 GMT
+      - Wed, 21 Jul 2021 13:31:59 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -483,29 +607,29 @@ http_interactions:
       Content-Length:
       - '52'
       Correlation-Id:
-      - 1203c7b3d3b945e2aefee222616ec1b3
+      - efa5ebf5db0b4f4a9bf4a4ddcf93dd68
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:20 GMT
+  recorded_at: Wed, 21 Jul 2021 13:31:59 GMT
 - request:
     method: post
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJiYXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdf
         ZHVwbGljYXRlX2xhYmVsIiwiY29udGVudF9ndWFyZCI6bnVsbCwibmFtZSI6
         IjJfZHVwbGljYXRlIiwicHVibGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVi
-        bGljYXRpb25zL3JwbS9ycG0vYjZlNGY3ZDYtYmNmNi00OTEyLWFmMjAtYzg3
-        YWZlNTNjYzI1LyJ9
+        bGljYXRpb25zL3JwbS9ycG0vZmRmNzY0ZDAtZTg2Yi00YTVjLTllZmItYmY5
+        NmNkYjI0Yzk1LyJ9
     headers:
       Content-Type:
       - application/json
@@ -523,7 +647,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:20 GMT
+      - Wed, 21 Jul 2021 13:32:00 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -537,21 +661,21 @@ http_interactions:
       Content-Length:
       - '67'
       Correlation-Id:
-      - 634940371f364915a7f333ba55859c53
+      - 7200d9d1eaf44d3e99384f453ad73312
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2FhNjE3N2RhLWZjMTUtNGYx
-        MS04YzA4LTg4M2ZmZTUxZTUxNC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzI1ZjEzNWU2LTViZTktNGYx
+        Yi05MjczLTUwOWIwMTMyYzUzNS8ifQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:20 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:00 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/tasks/aa6177da-fc15-4f11-8c08-883ffe51e514/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/25f135e6-5be9-4f1b-9273-509b0132c535/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -572,7 +696,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:21 GMT
+      - Wed, 21 Jul 2021 13:32:00 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -584,36 +708,36 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Correlation-Id:
-      - '090f64e3a1e9406fb68bebdac41f2e93'
+      - 26dde86ec3ab494e9ee146eadf35b9d6
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '379'
+      - '382'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYWE2MTc3ZGEtZmMx
-        NS00ZjExLThjMDgtODgzZmZlNTFlNTE0LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMDctMTJUMTY6MTY6MjAuNzcyMTQxWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMjVmMTM1ZTYtNWJl
+        OS00ZjFiLTkyNzMtNTA5YjAxMzJjNTM1LyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDctMjFUMTM6MzE6NTkuOTU2MDI4WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
-        YXRlIiwibG9nZ2luZ19jaWQiOiI2MzQ5NDAzNzFmMzY0OTE1YTdmMzMzYmE1
-        NTg1OWM1MyIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTEyVDE2OjE2OjIwLjgz
-        NTY2NVoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMTJUMTY6MTY6MjEuMTQy
-        OTQwWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy85Y2JiYzNmOS1lMjgyLTQwODgtODU2Zi1mMmI5NTZiOGU3YTYvIiwi
+        YXRlIiwibG9nZ2luZ19jaWQiOiI3MjAwZDlkMWVhZjQ0ZDNlOTkzODRmNDUz
+        YWQ3MzMxMiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTIxVDEzOjMyOjAwLjA2
+        MDUwN1oiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMjFUMTM6MzI6MDAuNzM1
+        ODE4WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy9iOGQ1OTdhNC03ZGE5LTRmYWEtYWY4OC01YmRhZDJjMWE5ZTAvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
-        Y2VzIjpbIi9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL3JwbS9ycG0vZTE5
-        NGVmMjktNGQ2NC00NGRjLWFhNzAtMmUxNjYwNjNkMTViLyJdLCJyZXNlcnZl
+        Y2VzIjpbIi9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL3JwbS9ycG0vZjA4
+        MjlhMWEtODA1NC00ZTQwLTljN2YtMDEzOGQ2NzAzMWM5LyJdLCJyZXNlcnZl
         ZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlzdHJpYnV0aW9ucy8i
         XX0=
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:21 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:00 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/e194ef29-4d64-44dc-aa70-2e166063d15b/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/f0829a1a-8054-4e40-9c7f-0138d67031c9/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -634,7 +758,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:21 GMT
+      - Wed, 21 Jul 2021 13:32:00 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -646,438 +770,32 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Correlation-Id:
-      - 6417c6500e044c78b172e317a365ce45
+      - e32f410b54ea4fffb2b09b8049e768e8
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '306'
+      - '297'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9ycG0v
-        cnBtL2UxOTRlZjI5LTRkNjQtNDRkYy1hYTcwLTJlMTY2MDYzZDE1Yi8iLCJw
-        dWxwX2NyZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjIxLjExODc5MFoiLCJi
+        cnBtL2YwODI5YTFhLTgwNTQtNGU0MC05YzdmLTAxMzhkNjcwMzFjOS8iLCJw
+        dWxwX2NyZWF0ZWQiOiIyMDIxLTA3LTIxVDEzOjMyOjAwLjY4Nzc5NFoiLCJi
         YXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVw
-        bGljYXRlX2xhYmVsIiwiYmFzZV91cmwiOiJodHRwczovL2NlbnRvczcta2F0
-        ZWxsby1kZXZlbC5kaWNlcm9zLmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9B
-        Q01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xhYmVs
-        LyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsInB1bHBfbGFiZWxzIjp7fSwibmFt
-        ZSI6IjJfZHVwbGljYXRlIiwicmVwb3NpdG9yeSI6bnVsbCwicHVibGljYXRp
-        b24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vYjZlNGY3
-        ZDYtYmNmNi00OTEyLWFmMjAtYzg3YWZlNTNjYzI1LyJ9
+        bGljYXRlX2xhYmVsIiwiYmFzZV91cmwiOiJodHRwczovL2RldmVsMi5iYWxt
+        b3JhLmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9BQ01FX0NvcnBvcmF0aW9u
+        L2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xhYmVsLyIsImNvbnRlbnRfZ3Vh
+        cmQiOm51bGwsInB1bHBfbGFiZWxzIjp7fSwibmFtZSI6IjJfZHVwbGljYXRl
+        IiwicmVwb3NpdG9yeSI6bnVsbCwicHVibGljYXRpb24iOiIvcHVscC9hcGkv
+        djMvcHVibGljYXRpb25zL3JwbS9ycG0vZmRmNzY0ZDAtZTg2Yi00YTVjLTll
+        ZmItYmY5NmNkYjI0Yzk1LyJ9
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:21 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/remotes/rpm/rpm/ee11387f-d8bd-4bfc-ab36-9e665ff23496/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:21 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Correlation-Id:
-      - 38d59ad660ea46aba8b0b447150aadba
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-      Content-Length:
-      - '315'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2Vl
-        MTEzODdmLWQ4YmQtNGJmYy1hYjM2LTllNjY1ZmYyMzQ5Ni8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjE5LjkwNDY2MFoiLCJuYW1lIjoi
-        Ml9kdXBsaWNhdGUiLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNhX2Nl
-        cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6
-        dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1bHBf
-        bGFzdF91cGRhdGVkIjoiMjAyMS0wNy0xMlQxNjoxNjoxOS45MDQ2OTJaIiwi
-        ZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpudWxs
-        LCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJ0b3RhbF90aW1lb3V0IjozMDAuMCwi
-        Y29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
-        bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51bGws
-        InJhdGVfbGltaXQiOm51bGwsInNsZXNfYXV0aF90b2tlbiI6bnVsbH0=
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:21 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/e194ef29-4d64-44dc-aa70-2e166063d15b/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:21 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Correlation-Id:
-      - 0d9cf5c7549a479b8ad9a188086837e5
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-      Content-Length:
-      - '306'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9ycG0v
-        cnBtL2UxOTRlZjI5LTRkNjQtNDRkYy1hYTcwLTJlMTY2MDYzZDE1Yi8iLCJw
-        dWxwX2NyZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjIxLjExODc5MFoiLCJi
-        YXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVw
-        bGljYXRlX2xhYmVsIiwiYmFzZV91cmwiOiJodHRwczovL2NlbnRvczcta2F0
-        ZWxsby1kZXZlbC5kaWNlcm9zLmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9B
-        Q01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xhYmVs
-        LyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsInB1bHBfbGFiZWxzIjp7fSwibmFt
-        ZSI6IjJfZHVwbGljYXRlIiwicmVwb3NpdG9yeSI6bnVsbCwicHVibGljYXRp
-        b24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vYjZlNGY3
-        ZDYtYmNmNi00OTEyLWFmMjAtYzg3YWZlNTNjYzI1LyJ9
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:21 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/remotes/rpm/rpm/ee11387f-d8bd-4bfc-ab36-9e665ff23496/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:21 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Correlation-Id:
-      - b2407e348396468b87b1c1c809e9e22b
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-      Content-Length:
-      - '315'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2Vl
-        MTEzODdmLWQ4YmQtNGJmYy1hYjM2LTllNjY1ZmYyMzQ5Ni8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjE5LjkwNDY2MFoiLCJuYW1lIjoi
-        Ml9kdXBsaWNhdGUiLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNhX2Nl
-        cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6
-        dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1bHBf
-        bGFzdF91cGRhdGVkIjoiMjAyMS0wNy0xMlQxNjoxNjoxOS45MDQ2OTJaIiwi
-        ZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpudWxs
-        LCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJ0b3RhbF90aW1lb3V0IjozMDAuMCwi
-        Y29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
-        bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51bGws
-        InJhdGVfbGltaXQiOm51bGwsInNsZXNfYXV0aF90b2tlbiI6bnVsbH0=
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:21 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/e194ef29-4d64-44dc-aa70-2e166063d15b/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:21 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Correlation-Id:
-      - 3413996b55e346fc94a6bb2d857cd00f
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-      Content-Length:
-      - '306'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9ycG0v
-        cnBtL2UxOTRlZjI5LTRkNjQtNDRkYy1hYTcwLTJlMTY2MDYzZDE1Yi8iLCJw
-        dWxwX2NyZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjIxLjExODc5MFoiLCJi
-        YXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVw
-        bGljYXRlX2xhYmVsIiwiYmFzZV91cmwiOiJodHRwczovL2NlbnRvczcta2F0
-        ZWxsby1kZXZlbC5kaWNlcm9zLmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9B
-        Q01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xhYmVs
-        LyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsInB1bHBfbGFiZWxzIjp7fSwibmFt
-        ZSI6IjJfZHVwbGljYXRlIiwicmVwb3NpdG9yeSI6bnVsbCwicHVibGljYXRp
-        b24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vYjZlNGY3
-        ZDYtYmNmNi00OTEyLWFmMjAtYzg3YWZlNTNjYzI1LyJ9
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:21 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:00 GMT
 - request:
     method: patch
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/e194ef29-4d64-44dc-aa70-2e166063d15b/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb250ZW50X2d1YXJkIjpudWxsLCJiYXNlX3BhdGgiOiJmb28vb29oaGdh
-        aGJvb2dhIiwicHVibGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRp
-        b25zL3JwbS9ycG0vYjZlNGY3ZDYtYmNmNi00OTEyLWFmMjAtYzg3YWZlNTNj
-        YzI1LyJ9
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:21 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '67'
-      Correlation-Id:
-      - 299ae5f507d5424191daa2400f995237
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzdjZGZkNjgxLWFhYTYtNDgy
-        Zi1iNmM0LTZlNjUxZDU4YTZmYS8ifQ==
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:21 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/tasks/7cdfd681-aaa6-482f-b6c4-6e651d58a6fa/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.14.1/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:22 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Correlation-Id:
-      - c4200354c7d94c6cbd30287734cc679e
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-      Content-Length:
-      - '348'
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvN2NkZmQ2ODEtYWFh
-        Ni00ODJmLWI2YzQtNmU2NTFkNThhNmZhLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMDctMTJUMTY6MTY6MjEuODQ3Njk4WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfdXBk
-        YXRlIiwibG9nZ2luZ19jaWQiOiIyOTlhZTVmNTA3ZDU0MjQxOTFkYWEyNDAw
-        Zjk5NTIzNyIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTEyVDE2OjE2OjIxLjg5
-        OTkwOVoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMTJUMTY6MTY6MjIuMTYw
-        ODk0WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy84NjJhMzYzYS04Mjk2LTQ3MDMtYTgzMS0yNzQ5MmY3Y2YzMmEvIiwi
-        cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
-        cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
-        Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvYXBpL3Yz
-        L2Rpc3RyaWJ1dGlvbnMvIl19
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:22 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/remotes/rpm/rpm/ee11387f-d8bd-4bfc-ab36-9e665ff23496/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:22 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Correlation-Id:
-      - b0c0a03295f54201a16520e651934d33
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-      Content-Length:
-      - '315'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2Vl
-        MTEzODdmLWQ4YmQtNGJmYy1hYjM2LTllNjY1ZmYyMzQ5Ni8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjE5LjkwNDY2MFoiLCJuYW1lIjoi
-        Ml9kdXBsaWNhdGUiLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNhX2Nl
-        cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6
-        dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1bHBf
-        bGFzdF91cGRhdGVkIjoiMjAyMS0wNy0xMlQxNjoxNjoxOS45MDQ2OTJaIiwi
-        ZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpudWxs
-        LCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJ0b3RhbF90aW1lb3V0IjozMDAuMCwi
-        Y29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
-        bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51bGws
-        InJhdGVfbGltaXQiOm51bGwsInNsZXNfYXV0aF90b2tlbiI6bnVsbH0=
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:22 GMT
-- request:
-    method: patch
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/remotes/rpm/rpm/ee11387f-d8bd-4bfc-ab36-9e665ff23496/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/079f4104-4a00-4f84-9e14-65a67565d231/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1085,7 +803,7 @@ http_interactions:
         dXJsIjoiaHR0cDovL215cmVwby5jb20iLCJwcm94eV91cmwiOm51bGwsInBy
         b3h5X3VzZXJuYW1lIjpudWxsLCJwcm94eV9wYXNzd29yZCI6bnVsbCwidG90
         YWxfdGltZW91dCI6MzAwLCJjbGllbnRfY2VydCI6bnVsbCwiY2xpZW50X2tl
-        eSI6bnVsbCwiY2FfY2VydCI6bnVsbCwicG9saWN5Ijoib25fZGVtYW5kIn0=
+        eSI6bnVsbCwiY2FfY2VydCI6bnVsbCwicG9saWN5IjoiaW1tZWRpYXRlIn0=
     headers:
       Content-Type:
       - application/json
@@ -1103,7 +821,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:22 GMT
+      - Wed, 21 Jul 2021 13:32:01 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1117,21 +835,21 @@ http_interactions:
       Content-Length:
       - '67'
       Correlation-Id:
-      - a3a0ec4a0ed44bdcaddf913f86fbce69
+      - 2fa5488f4f414c968291994779176107
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2VkY2M3OWU0LTczMzAtNDlm
-        NC1iZDQxLWIyZThlNjMwMGViZi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBiZmU3MzkzLTE2MzEtNDg2
+        Yi1iY2ViLTk5NjZlNDAxYmI4ZC8ifQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:22 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:01 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/e194ef29-4d64-44dc-aa70-2e166063d15b/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/f0829a1a-8054-4e40-9c7f-0138d67031c9/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1152,7 +870,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:22 GMT
+      - Wed, 21 Jul 2021 13:32:01 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1164,31 +882,32 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Correlation-Id:
-      - 57fb7715855e4552b99d0969d9bea2fb
+      - b8ab8cb4975d45e0bfed5d72710a6738
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '287'
+      - '297'
     body:
       encoding: ASCII-8BIT
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9ycG0v
-        cnBtL2UxOTRlZjI5LTRkNjQtNDRkYy1hYTcwLTJlMTY2MDYzZDE1Yi8iLCJw
-        dWxwX2NyZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjIxLjExODc5MFoiLCJi
-        YXNlX3BhdGgiOiJmb28vb29oaGdhaGJvb2dhIiwiYmFzZV91cmwiOiJodHRw
-        czovL2NlbnRvczcta2F0ZWxsby1kZXZlbC5kaWNlcm9zLmV4YW1wbGUuY29t
-        L3B1bHAvY29udGVudC9mb28vb29oaGdhaGJvb2dhLyIsImNvbnRlbnRfZ3Vh
+        cnBtL2YwODI5YTFhLTgwNTQtNGU0MC05YzdmLTAxMzhkNjcwMzFjOS8iLCJw
+        dWxwX2NyZWF0ZWQiOiIyMDIxLTA3LTIxVDEzOjMyOjAwLjY4Nzc5NFoiLCJi
+        YXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVw
+        bGljYXRlX2xhYmVsIiwiYmFzZV91cmwiOiJodHRwczovL2RldmVsMi5iYWxt
+        b3JhLmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9BQ01FX0NvcnBvcmF0aW9u
+        L2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xhYmVsLyIsImNvbnRlbnRfZ3Vh
         cmQiOm51bGwsInB1bHBfbGFiZWxzIjp7fSwibmFtZSI6IjJfZHVwbGljYXRl
         IiwicmVwb3NpdG9yeSI6bnVsbCwicHVibGljYXRpb24iOiIvcHVscC9hcGkv
-        djMvcHVibGljYXRpb25zL3JwbS9ycG0vYjZlNGY3ZDYtYmNmNi00OTEyLWFm
-        MjAtYzg3YWZlNTNjYzI1LyJ9
+        djMvcHVibGljYXRpb25zL3JwbS9ycG0vZmRmNzY0ZDAtZTg2Yi00YTVjLTll
+        ZmItYmY5NmNkYjI0Yzk1LyJ9
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:22 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:01 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/tasks/edcc79e4-7330-49f4-bd41-b2e8e6300ebf/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/0bfe7393-1631-486b-bceb-9966e401bb8d/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1209,7 +928,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:22 GMT
+      - Wed, 21 Jul 2021 13:32:01 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1221,151 +940,35 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Correlation-Id:
-      - 498ac17774b440d5b7077e2bca901f20
+      - f759f5cc427941ea8fcf25899b38aa83
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '370'
+      - '373'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZWRjYzc5ZTQtNzMz
-        MC00OWY0LWJkNDEtYjJlOGU2MzAwZWJmLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMDctMTJUMTY6MTY6MjIuNTMyMTgyWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMGJmZTczOTMtMTYz
+        MS00ODZiLWJjZWItOTk2NmU0MDFiYjhkLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDctMjFUMTM6MzI6MDEuMjgzNTk1WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfdXBk
-        YXRlIiwibG9nZ2luZ19jaWQiOiJhM2EwZWM0YTBlZDQ0YmRjYWRkZjkxM2Y4
-        NmZiY2U2OSIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTEyVDE2OjE2OjIyLjYw
-        MzgzMloiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMTJUMTY6MTY6MjIuNjYw
-        MzA3WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy85Y2JiYzNmOS1lMjgyLTQwODgtODU2Zi1mMmI5NTZiOGU3YTYvIiwi
+        YXRlIiwibG9nZ2luZ19jaWQiOiIyZmE1NDg4ZjRmNDE0Yzk2ODI5MTk5NDc3
+        OTE3NjEwNyIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTIxVDEzOjMyOjAxLjM3
+        ODk1MFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMjFUMTM6MzI6MDEuNDM3
+        MzcxWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy9iOGQ1OTdhNC03ZGE5LTRmYWEtYWY4OC01YmRhZDJjMWE5ZTAvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2VlMTEzODdmLWQ4YmQtNGJmYy1hYjM2
-        LTllNjY1ZmYyMzQ5Ni8iXX0=
+        cGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzA3OWY0MTA0LTRhMDAtNGY4NC05ZTE0
+        LTY1YTY3NTY1ZDIzMS8iXX0=
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:22 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/remotes/rpm/rpm/ee11387f-d8bd-4bfc-ab36-9e665ff23496/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:22 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Correlation-Id:
-      - 3a8243bc58e9475da6f39de01a817227
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-      Content-Length:
-      - '322'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2Vl
-        MTEzODdmLWQ4YmQtNGJmYy1hYjM2LTllNjY1ZmYyMzQ5Ni8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjE5LjkwNDY2MFoiLCJuYW1lIjoi
-        Ml9kdXBsaWNhdGUiLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNhX2Nl
-        cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6
-        dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1bHBf
-        bGFzdF91cGRhdGVkIjoiMjAyMS0wNy0xMlQxNjoxNjoyMi42NTE4NzdaIiwi
-        ZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpudWxs
-        LCJwb2xpY3kiOiJvbl9kZW1hbmQiLCJ0b3RhbF90aW1lb3V0IjozMDAuMCwi
-        Y29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
-        bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51bGws
-        InJhdGVfbGltaXQiOm51bGwsInNsZXNfYXV0aF90b2tlbiI6bnVsbH0=
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:22 GMT
-- request:
-    method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/e194ef29-4d64-44dc-aa70-2e166063d15b/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.13.3/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic Og==
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 12 Jul 2021 16:16:22 GMT
-      Server:
-      - gunicorn
-      Content-Type:
-      - application/json
-      Vary:
-      - Accept,Cookie,Accept-Encoding
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-      Correlation-Id:
-      - afb5f41301aa4d4c9b968ff1610aa4fd
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
-      Content-Length:
-      - '287'
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9ycG0v
-        cnBtL2UxOTRlZjI5LTRkNjQtNDRkYy1hYTcwLTJlMTY2MDYzZDE1Yi8iLCJw
-        dWxwX2NyZWF0ZWQiOiIyMDIxLTA3LTEyVDE2OjE2OjIxLjExODc5MFoiLCJi
-        YXNlX3BhdGgiOiJmb28vb29oaGdhaGJvb2dhIiwiYmFzZV91cmwiOiJodHRw
-        czovL2NlbnRvczcta2F0ZWxsby1kZXZlbC5kaWNlcm9zLmV4YW1wbGUuY29t
-        L3B1bHAvY29udGVudC9mb28vb29oaGdhaGJvb2dhLyIsImNvbnRlbnRfZ3Vh
-        cmQiOm51bGwsInB1bHBfbGFiZWxzIjp7fSwibmFtZSI6IjJfZHVwbGljYXRl
-        IiwicmVwb3NpdG9yeSI6bnVsbCwicHVibGljYXRpb24iOiIvcHVscC9hcGkv
-        djMvcHVibGljYXRpb25zL3JwbS9ycG0vYjZlNGY3ZDYtYmNmNi00OTEyLWFm
-        MjAtYzg3YWZlNTNjYzI1LyJ9
-    http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:22 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:01 GMT
 - request:
     method: delete
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/remotes/rpm/rpm/ee11387f-d8bd-4bfc-ab36-9e665ff23496/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/079f4104-4a00-4f84-9e14-65a67565d231/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1386,7 +989,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:23 GMT
+      - Wed, 21 Jul 2021 13:32:01 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1400,21 +1003,21 @@ http_interactions:
       Content-Length:
       - '67'
       Correlation-Id:
-      - 6899eb81679840419a1d6f67888f903b
+      - 90c24455a69447d28b396057208d1765
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzJlNDI5NWQzLTZhZjUtNGQw
-        Mi04OWI1LWZkZWQxNTM3ZGQ4Yy8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzIwYjRkNzkxLWFlNmYtNGEy
+        My1iNmJhLTQyYjczZDM1MzEyMS8ifQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:23 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:01 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/tasks/2e4295d3-6af5-4d02-89b5-fded1537dd8c/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/20b4d791-ae6f-4a23-b6ba-42b73d353121/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1435,7 +1038,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:23 GMT
+      - Wed, 21 Jul 2021 13:32:02 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1447,35 +1050,35 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Correlation-Id:
-      - f94bbeda303047469ca86e9073bc996e
+      - f150a805b1994749b8a230377c986af0
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
-      - '371'
+      - '372'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMmU0Mjk1ZDMtNmFm
-        NS00ZDAyLTg5YjUtZmRlZDE1MzdkZDhjLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMDctMTJUMTY6MTY6MjMuMTgyMjY4WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMjBiNGQ3OTEtYWU2
+        Zi00YTIzLWI2YmEtNDJiNzNkMzUzMTIxLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDctMjFUMTM6MzI6MDEuODkwNzU0WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiI2ODk5ZWI4MTY3OTg0MDQxOWExZDZmNjc4
-        ODhmOTAzYiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTEyVDE2OjE2OjIzLjI2
-        MzEyOFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMTJUMTY6MTY6MjMuMzI0
-        NjI3WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy84NjJhMzYzYS04Mjk2LTQ3MDMtYTgzMS0yNzQ5MmY3Y2YzMmEvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiI5MGMyNDQ1NWE2OTQ0N2QyOGIzOTYwNTcy
+        MDhkMTc2NSIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTIxVDEzOjMyOjAxLjk4
+        NzI4NloiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMjFUMTM6MzI6MDIuMDkw
+        MTc4WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy83NGY0NWE5YS1hMjhiLTQ4NjYtYjZiMy0zOGEyZTU2NDJkZjkvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2VlMTEzODdmLWQ4YmQtNGJmYy1hYjM2
-        LTllNjY1ZmYyMzQ5Ni8iXX0=
+        cGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzA3OWY0MTA0LTRhMDAtNGY4NC05ZTE0
+        LTY1YTY3NTY1ZDIzMS8iXX0=
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:23 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:02 GMT
 - request:
     method: delete
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/distributions/rpm/rpm/e194ef29-4d64-44dc-aa70-2e166063d15b/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/f0829a1a-8054-4e40-9c7f-0138d67031c9/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1496,7 +1099,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:23 GMT
+      - Wed, 21 Jul 2021 13:32:02 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1510,21 +1113,21 @@ http_interactions:
       Content-Length:
       - '67'
       Correlation-Id:
-      - f26315581319438c8a4ec84a29a115bb
+      - 9c1a3fd099ea423e9fa961fdf89b81fd
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzYzZWQwYzA2LWZlZjMtNDZi
-        My1hYjE1LTk2MjMyZGU2OTE0ZC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzMxNmJlYzM5LWMwZTItNDEy
+        My05YWNkLTNkZmQ0NjgxMjg4ZC8ifQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:23 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:02 GMT
 - request:
     method: delete
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/repositories/rpm/rpm/83d22ef8-61c0-48a8-9396-7580bc8d9afa/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/9951c688-fe4b-42cf-b591-2d3c60ca7f38/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1545,7 +1148,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:23 GMT
+      - Wed, 21 Jul 2021 13:32:02 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1559,21 +1162,21 @@ http_interactions:
       Content-Length:
       - '67'
       Correlation-Id:
-      - 47cb3c4472384c189ba625f85e166e5b
+      - 71cab2d2ecc34d40a7722b333445e6f8
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzU4ZWM2OGUzLWI3NDItNGIx
-        Mi1iODQwLTRiYmUwYTdjYWRiNi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2YxODgxMjdkLTc5N2YtNDUy
+        MC04NzhjLTk4ODc4MjMyNTM0Zi8ifQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:23 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:02 GMT
 - request:
     method: get
-    uri: https://centos7-katello-devel.diceros.example.com/pulp/api/v3/tasks/58ec68e3-b742-4b12-b840-4bbe0a7cadb6/
+    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/f188127d-797f-4520-878c-98878232534f/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1594,7 +1197,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 12 Jul 2021 16:16:23 GMT
+      - Wed, 21 Jul 2021 13:32:03 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -1606,30 +1209,30 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Correlation-Id:
-      - 1b81ca45fa764dabbde34af139feec13
+      - 9150993641f8467b8fd3a4e21abbbf86
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.diceros.example.com
+      - 1.1 devel2.balmora.example.com
       Content-Length:
       - '374'
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNThlYzY4ZTMtYjc0
-        Mi00YjEyLWI4NDAtNGJiZTBhN2NhZGI2LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMDctMTJUMTY6MTY6MjMuNTE1ODIxWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZjE4ODEyN2QtNzk3
+        Zi00NTIwLTg3OGMtOTg4NzgyMzI1MzRmLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMDctMjFUMTM6MzI6MDIuNTQwMDk5WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiI0N2NiM2M0NDcyMzg0YzE4OWJhNjI1Zjg1
-        ZTE2NmU1YiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTEyVDE2OjE2OjIzLjU3
-        OTc3OFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMTJUMTY6MTY6MjMuNzIz
-        MDg1WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy84NjJhMzYzYS04Mjk2LTQ3MDMtYTgzMS0yNzQ5MmY3Y2YzMmEvIiwi
+        ZXRlIiwibG9nZ2luZ19jaWQiOiI3MWNhYjJkMmVjYzM0ZDQwYTc3MjJiMzMz
+        NDQ1ZTZmOCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTA3LTIxVDEzOjMyOjAyLjY2
+        NTQ3OVoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMDctMjFUMTM6MzI6MDIuOTcz
+        NzY5WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy9iOGQ1OTdhNC03ZGE5LTRmYWEtYWY4OC01YmRhZDJjMWE5ZTAvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vODNkMjJlZjgtNjFjMC00OGE4
-        LTkzOTYtNzU4MGJjOGQ5YWZhLyJdfQ==
+        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vOTk1MWM2ODgtZmU0Yi00MmNm
+        LWI1OTEtMmQzYzYwY2E3ZjM4LyJdfQ==
     http_version: 
-  recorded_at: Mon, 12 Jul 2021 16:16:23 GMT
+  recorded_at: Wed, 21 Jul 2021 13:32:03 GMT
 recorded_with: VCR 3.0.3
