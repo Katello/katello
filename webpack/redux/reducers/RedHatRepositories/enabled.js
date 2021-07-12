@@ -1,6 +1,8 @@
 import Immutable from 'seamless-immutable';
 import { isEmpty } from 'lodash';
 
+
+
 import {
   ENABLED_REPOSITORIES_REQUEST,
   ENABLED_REPOSITORIES_SUCCESS,
@@ -82,7 +84,7 @@ export default (state = initialState, action) => {
           // server can return per_page: null when there's error in the search query,
           // don't store it in such case
           // eslint-disable-next-line camelcase
-          perPage: Number(per_page || state.pagination.perPage),
+          perPage: per_page || state.pagination.perPage && Number(per_page || state.pagination.perPage),
         },
         itemCount: Number(subtotal),
         loading: false,
