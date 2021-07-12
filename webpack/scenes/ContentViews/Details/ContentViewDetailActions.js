@@ -1,10 +1,11 @@
-import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
+import { API_OPERATIONS, get, put, post } from 'foremanReact/redux/API';
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   UPDATE_CONTENT_VIEW,
   UPDATE_CONTENT_VIEW_FAILURE,
   UPDATE_CONTENT_VIEW_SUCCESS,
+  CREATE_CONTENT_VIEW_FILTER_KEY,
   NOT_ADDED,
   ALL_STATUSES,
   REPOSITORY_TYPES,
@@ -71,6 +72,15 @@ export const removeComponent = params => put({
   params,
   successToast: () => removeComponentSuccessMessage(params.component_ids.length),
   errorToast: error => __(`Something went wrong while removing component! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const createContentViewFilter = (cvId, params) => post({
+  type: API_OPERATIONS.POST,
+  key: CREATE_CONTENT_VIEW_FILTER_KEY,
+  url: api.getApiUrl(`/content_view_filters?content_view_id=${cvId}`),
+  params,
+  successToast: () => __('Filter created'),
+  errorToast: error => __(`Something went wrong while creating the filter! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const getContentViewRepositories = (cvId, params, status) => {
