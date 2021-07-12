@@ -18,6 +18,7 @@ module Actions
 
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Metrics/CyclomaticComplexity
         def plan(old_version, environments, options = {})
           dep_solve = options.fetch(:resolve_dependencies, true)
           description = options.fetch(:description, '')
@@ -71,18 +72,22 @@ module Actions
                 unit_map = pulp3_content_mapping(content)
 
                 unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
-                  copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
-                                                     dependency_solving: dep_solve).output
+                  sequence do
+                    copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
+                                                       dependency_solving: dep_solve).output
+                    repos_to_clone.each do |source_repos|
+                      if separated_repo_map[:pulp3_yum].keys.include?(source_repos)
+                        copy_repos(repository_mapping[source_repos])
+                      end
+                    end
+                  end
                 end
               end
 
               if separated_repo_map[:other].keys.flatten.present?
                 repos_to_clone.each do |source_repos|
                   if separated_repo_map[:other].keys.include?(source_repos)
-                    copy_action_outputs += copy_repos(repository_mapping[source_repos],
-                                                      new_content_view_version,
-                                                      content,
-                                                      dep_solve)
+                    copy_repos(repository_mapping[source_repos])
                   end
                 end
               end
@@ -138,19 +143,11 @@ module Actions
           end
         end
 
-        def copy_repos(new_repo, new_version, content, dep_solve)
-          copy_output = []
+        def copy_repos(new_repo)
           sequence do
-            solve_dependencies = new_version.content_view.solve_dependencies || dep_solve
-            copy_output += copy_deb_content(new_repo, solve_dependencies, content[:deb_ids])
-            copy_output += copy_yum_content(new_repo, solve_dependencies,
-                                            content[:package_ids],
-                                            content[:errata_ids])
-
             plan_action(Katello::Repository::MetadataGenerate, new_repo)
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
           end
-          copy_output
         end
 
         # For a given repo, find it's instances in both the new and old component versions.

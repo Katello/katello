@@ -8,7 +8,7 @@ module Katello
           if root.url.blank?
             super
           else
-            common_remote_options.merge(url: root.url,
+            common_remote_options.merge(url: root.url.chomp('/').concat('/'),
                                         requirements_file: root.ansible_collection_requirements.blank? ? nil : root.ansible_collection_requirements,
                                         auth_url: root.ansible_collection_auth_url,
                                         token: root.ansible_collection_auth_token,

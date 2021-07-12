@@ -67,6 +67,7 @@ module Katello
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
+    validate :ensure_valid_collection_attributes, :if => :ansible_collection?
     validate :ensure_valid_ignorable_content
     validate :ensure_valid_docker_tags_whitelist
     validate :ensure_valid_os_versions
@@ -175,6 +176,15 @@ module Katello
     def ensure_ostree_repo_protected
       if unprotected
         errors.add(:base, _("OSTree Repositories cannot be unprotected."))
+      end
+    end
+
+    def ensure_valid_collection_attributes
+      errors.add(:base, _("URL needs to have a trailing /")) if !url.blank? && url[-1] != '/'
+      begin
+        YAML.safe_load(ansible_collection_requirements) if ansible_collection_requirements
+      rescue
+        errors.add(:base, _('Requirements yaml is invalid!'))
       end
     end
 
