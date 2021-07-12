@@ -9,7 +9,7 @@ module Actions
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:repository_id])
           backend = repo.backend_service(smart_proxy)
-          backend.update_remote if backend.remote_needs_updates?
+          backend.update_remote
         end
       end
     end
