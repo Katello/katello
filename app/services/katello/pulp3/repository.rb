@@ -175,8 +175,7 @@ module Katello
 
       def create
         unless repository_reference
-          response = api.repositories_api.create(
-            name: generate_backend_object_name)
+          response = api.repositories_api.create(create_options)
           RepositoryReference.create!(
            root_repository_id: repo.root_id,
            content_view_id: repo.content_view.id,
@@ -370,6 +369,14 @@ module Katello
         remote_options.merge!(ssl_remote_options)
       end
 
+      def create_options
+        { name: generate_backend_object_name }.merge!(specific_create_options)
+      end
+
+      def specific_create_options
+        {}
+      end
+
       def secure_distribution_options(path)
         secured_distribution_options = {}
         if root.unprotected
@@ -434,6 +441,11 @@ module Katello
         uploads.map do |upload|
           upload.except('id')
         end
+      end
+
+      def retain_package_versions_count
+        return 0 if root.retain_package_versions_count.nil? || root.mirror_on_sync?
+        root.retain_package_versions_count.to_i
       end
     end
   end

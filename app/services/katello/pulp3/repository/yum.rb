@@ -17,6 +17,10 @@ module Katello
           options.merge!(url: url, policy: root.download_policy)
         end
 
+        def specific_create_options
+          { retain_package_versions: retain_package_versions_count }
+        end
+
         def extract_sles_token
           return [nil, nil] if root.url.blank?
           uri = URI(root.url)

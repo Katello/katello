@@ -413,6 +413,13 @@ module Katello
       end
     end
 
+    def test_retain_package_versions_count
+      retain_package_versions_count = 2
+      run_test_individual_attribute(:retain_package_versions_count => retain_package_versions_count) do |_, repo|
+        repo.root.expects(:retain_package_versions_count=).with(retain_package_versions_count)
+      end
+    end
+
     def test_create_with_os_versions
       os_versions = ['rhel-7']
       run_test_individual_attribute(:os_versions => os_versions) do |_, repo|
@@ -599,6 +606,15 @@ module Katello
         attributes[:ignorable_content].must_equal ignorable_content
       end
       put :update, params: { :id => repo.id, :ignorable_content => ignorable_content }
+    end
+
+    def test_update_with_retain_package_versions_count
+      retain_package_versions_count = 2
+      repo = katello_repositories(:fedora_17_unpublished)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:retain_package_versions_count].must_equal retain_package_versions_count
+      end
+      put :update, params: { :id => repo.id, :retain_package_versions_count => retain_package_versions_count }
     end
 
     def test_update_with_whitelist_tags
