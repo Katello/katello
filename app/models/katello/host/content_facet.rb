@@ -6,6 +6,7 @@ module Katello
       include Facets::Base
 
       HOST_TOOLS_PACKAGE_NAME = 'katello-host-tools'.freeze
+      HOST_TOOLS_TRACER_PACKAGE_NAME = 'katello-host-tools-tracer'.freeze
       SUBSCRIPTION_MANAGER_PACKAGE_NAME = 'subscription-manager'.freeze
 
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :foreign_key => :kickstart_repository_id, :inverse_of => :kickstart_content_facets
@@ -237,13 +238,17 @@ module Katello
       end
 
       def tracer_installed?
-        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-host-tools-tracer').any? ||
-          self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => 'katello-host-tools-tracer').any?
+        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => HOST_TOOLS_TRACER_PACKAGE_NAME).any? ||
+          self.host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => [ "python-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
+                                                                                         "python3-#{HOST_TOOLS_TRACER_PACKAGE_NAME}",
+                                                                                         HOST_TOOLS_TRACER_PACKAGE_NAME ]).any?
       end
 
       def host_tools_installed?
         host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => HOST_TOOLS_PACKAGE_NAME).any? ||
-          host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => HOST_TOOLS_PACKAGE_NAME).any?
+          host.installed_debs.where("#{Katello::InstalledDeb.table_name}.name" => [ "python-#{HOST_TOOLS_PACKAGE_NAME}",
+                                                                                    "python3-#{HOST_TOOLS_PACKAGE_NAME}",
+                                                                                    HOST_TOOLS_PACKAGE_NAME ]).any?
       end
 
       def update_errata_status
