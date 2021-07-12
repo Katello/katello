@@ -166,17 +166,21 @@ module Katello
       def test_handles_no_username_test
         setup_default_proxy('http://foobar.com', nil, nil)
 
-        assert_equal 'proxy://foobar.com', proxy_uri
+        assert_equal 'proxy://foobar.com:80', proxy_uri
       end
 
-      def test_properly_escapes_username
-        setup_default_proxy('http://foobar.com', 'red!hat', 'red@hat')
+      # https://bugzilla.redhat.com/show_bug.cgi?id=1844840
+      def test_properly_escapes_username_password
+        setup_default_proxy('http://foobar.com', 'red!hat+', 'red@hat#$@&{}[]+%')
 
-        assert_equal 'proxy://red%21hat:red%40hat@foobar.com', proxy_uri
+        assert_equal 'proxy://red%21hat%2B:red%40hat%23%24%40%26%7B%7D%5B%5D%2B%25@foobar.com:80', proxy_uri
 
         uri = URI.parse(proxy_uri)
-        assert_equal 'red!hat', uri.user
-        assert_equal 'red@hat', uri.password
+        assert_equal 'red%21hat%2B', uri.user
+        assert_equal 'red%40hat%23%24%40%26%7B%7D%5B%5D%2B%25', uri.password
+
+        assert_equal 'red!hat+', ::HttpProxy.default_global_content_proxy.username
+        assert_equal 'red@hat#$@&{}[]+%', ::HttpProxy.default_global_content_proxy.password
       end
     end
   end
