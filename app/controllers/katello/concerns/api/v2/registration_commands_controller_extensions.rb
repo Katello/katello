@@ -17,9 +17,8 @@ module Katello
           args
         end
 
-        def append_array_of_ids(hash_params)
-          return if registration_params['activation_key'].present? || registration_params['activation_keys'].present?
-          super
+        def append_array_of_ids(*)
+          return
         end
       end
 
@@ -28,8 +27,8 @@ module Katello
 
         update_api(:create) do
           param :registration_command, Hash do
-            param :activation_key, String, desc: N_('Activation key for subscription-manager client. Required for CentOS and Red Hat Enterprise Linux. Multiple keys add separated by comma, example: key1,key2,key3.'), deprecated: true
-            param :activation_keys, Array, required: true, desc: N_('Activation key(s) for subscription-manager client. Required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys')
+            param :activation_key, String, desc: N_('Activation key for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. For multiple keys use `activation_keys` param instead.'), deprecated: true
+            param :activation_keys, Array, desc: N_('Activation keys for subscription-manager client, required for CentOS and Red Hat Enterprise Linux. Required only if host group has no activation keys.')
             param :lifecycle_environment_id, :number, required: false, desc: N_('Lifecycle environment for the host.')
             param :force, :bool, required: false, desc: N_('Clear any previous registration and run subscription-manager with --force.')
             param :ignore_subman_errors, :bool, required: false, desc: N_('Ignore subscription-manager errors for `subscription-manager register` command')
@@ -40,6 +39,28 @@ module Katello
       included do
         prepend Overrides
         include ApiPieExtensions
+
+        before_action :check_activation_keys, only: [:create]
+      end
+
+      private
+
+      def check_activation_keys
+        return if params['registration_command']['activation_key'].present? ||
+                  params['registration_command']['activation_keys'].present? ||
+                  hostgroup_have_acks?
+
+        render_error 'custom_error', status: :unprocessable_entity,
+                                     locals: { message: N_('Missing activation key!') }
+      end
+
+      def hostgroup_have_acks?
+        return unless params['registration_command']['hostgroup_id']
+
+        ::Hostgroup.authorized(:view_hostgroups)
+                   .find(params['registration_command']['hostgroup_id'])
+                   .params['kt_activation_keys']
+                   .present?
       end
     end
   end
