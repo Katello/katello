@@ -129,28 +129,13 @@ module Katello
 
       def refresh_if_needed
         tasks = []
-        tasks << update_remote if remote_needs_updates?
+        tasks << update_remote #always update remote
         tasks << update_distribution if distribution_needs_update?
         tasks.compact
       end
 
       def get_remote(href = repo.remote_href)
         api.remotes_api.read(href)
-      end
-
-      def remote_needs_updates?
-        if repo.remote_href
-          remote = get_remote
-          # The proxy auth creds are not returned by the Pulp API.
-          # The creds don't need to be checked here because they
-          # won't be updated outside of UpdateRemote.
-          computed = compute_remote_options.slice!(:proxy_username, :proxy_password)
-          computed.keys.any? { |key| remote.send(key) != computed[key] }
-        elsif repo.url
-          true
-        else
-          false
-        end
       end
 
       def get_distribution(href = distribution_reference.href)

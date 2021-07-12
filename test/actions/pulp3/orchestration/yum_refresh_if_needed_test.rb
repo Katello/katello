@@ -8,6 +8,7 @@ module ::Actions::Pulp3
       @smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.root.update_attribute(:unprotected, true)
+
       create_repo(@repo, @smart_proxy)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @repo, @smart_proxy)
     end
@@ -18,18 +19,7 @@ module ::Actions::Pulp3
 
     def test_refresh_if_needed
       action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, @repo, @smart_proxy)
-      assert_empty action.output[:pulp_tasks]
-
-      @repo.update(relative_path: '/foo/oohhgahbooga')
-      action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, @repo, @smart_proxy)
-      assert_equal 1, action.output[:pulp_tasks].count
-
-      @repo.root.update(download_policy: 'on_demand')
-      action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, @repo, @smart_proxy)
-      assert_equal 1, action.output[:pulp_tasks].count
-
-      action = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, @repo, @smart_proxy)
-      assert_empty action.output[:pulp_tasks]
+      refute_empty action.output[:pulp_tasks]
     end
   end
 end
