@@ -8,6 +8,8 @@ module Katello
         class CoreTest < ActiveSupport::TestCase
           include Katello::Pulp3Support
 
+          let(:core) { Katello::Pulp3::Api::Core.new(@primary) }
+
           def setup
             @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
           end
@@ -50,6 +52,36 @@ module Katello
             assert_nothing_raised do
               core.cancel_task(task.pulp_href)
             end
+          end
+
+          def test_exporter_api
+            PulpcoreClient::ExportersPulpApi.expects(:new)
+            core.exporter_api
+          end
+
+          def test_importer_api
+            PulpcoreClient::ImportersPulpApi.expects(:new)
+            core.importer_api
+          end
+
+          def test_importer_check_api
+            PulpcoreClient::ImportersPulpImportCheckApi.expects(:new)
+            core.importer_check_api
+          end
+
+          def test_export_api
+            PulpcoreClient::ExportersPulpExportsApi.expects(:new)
+            core.export_api
+          end
+
+          def test_import_api
+            PulpcoreClient::ImportersPulpImportsApi.expects(:new)
+            core.import_api
+          end
+
+          def test_orphans_api
+            PulpcoreClient::OrphansApi.expects(:new)
+            core.orphans_api
           end
         end
       end
