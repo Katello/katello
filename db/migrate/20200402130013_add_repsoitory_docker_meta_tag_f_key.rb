@@ -17,7 +17,9 @@ class AddRepsoitoryDockerMetaTagFKey < ActiveRecord::Migration[5.2]
     add_index :katello_repository_docker_meta_tags, [:repository_id, :docker_meta_tag_id], :unique => true, :name => 'repository_docker_meta_tags_rid_dmtid'
 
     Katello::RepositoryDockerTag.where.not(:repository_id => Katello::Repository.select(:id)).delete_all
-    Katello::RepositoryDockerTag.where.not(:docker_tag_id => Katello::DockerTag.select(:id)).delete_all
+    # rubocop:disable Layout/LineLength
+    Katello::RepositoryDockerTag.delete_by('katello_repository_docker_tags.id IN (SELECT katello_repository_docker_tags.id FROM katello_repository_docker_tags LEFT JOIN katello_docker_tags d ON katello_repository_docker_tags.docker_tag_id = d.id GROUP BY katello_repository_docker_tags.id HAVING (count(d.id) = 0))')
+    # rubocop:enable Layout/LineLength
 
     add_foreign_key :katello_repository_docker_tags, :katello_repositories, :column => :repository_id
     add_foreign_key :katello_repository_docker_tags, :katello_docker_tags, :column => :docker_tag_id
