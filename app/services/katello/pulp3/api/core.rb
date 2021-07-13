@@ -85,7 +85,7 @@ module Katello
         end
 
         def importer_check_api
-          PulpcoreClient::ImportersCoreImportCheckApi.new(core_api_client)
+          PulpcoreClient::ImportersPulpImportCheckApi.new(core_api_client)
         end
 
         def export_api
@@ -93,7 +93,7 @@ module Katello
         end
 
         def import_api
-          PulpcoreClient::ImportersCoreImportsApi.new(core_api_client)
+          PulpcoreClient::ImportersPulpImportsApi.new(core_api_client)
         end
 
         def orphans_api
