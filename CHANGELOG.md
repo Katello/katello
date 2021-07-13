@@ -1,3 +1,21 @@
+# 4.1.1 (2021-07-13)
+
+## Features
+
+### Repositories
+ * Upgrade Pulpcore and plugins to 3.14 for Katello master ([#32933](https://projects.theforeman.org/issues/32933), [1aab1178](https://github.com/Katello/katello.git/commit/1aab117867341ddebf4370c8c174ee54bbfed166))
+
+## Bug Fixes
+
+### Repositories
+ * pulp_rpm_client 3.13 throws uninitialized constant PulpRpmClient::OneOfMetadataChecksumTypeEnumNullEnum ([#32974](https://projects.theforeman.org/issues/32974), [01cb7b3f](https://github.com/Katello/katello.git/commit/01cb7b3f613b7099b3ec3246f19d4907858f52df))
+ * Creating ansible collection repo fails with: "Invalid URL Ensure the URL ends '/'" but repo gets created ([#32867](https://projects.theforeman.org/issues/32867), [ae8389d2](https://github.com/Katello/katello.git/commit/ae8389d2279a0a61070f06eb69386a65085c4bc0))
+
+### Hosts
+ * Error when trying to restart Traces: TypeError in Katello::RemoteExecutionController#create  no implicit conversion of nil into String ([#32936](https://projects.theforeman.org/issues/32936), [a186876a](https://github.com/Katello/katello.git/commit/a186876abe8ba1218834d403e65d4fa4cde59a4e))
+
+### Content Views
+ * available_for content_view_version parameter to /katello/api/packages or /katello/api/errata is slow ([#31764](https://projects.theforeman.org/issues/31764), [006ecc75](https://github.com/Katello/katello.git/commit/006ecc75bc264c42b0b3052d1843bb661a6242db))
 # 4.1.0 (2021-06-16)
 
 ## Features
