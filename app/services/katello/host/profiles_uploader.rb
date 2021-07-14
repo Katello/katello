@@ -11,7 +11,7 @@ module Katello
         #free the huge string from the memory
         @profile_string = 'TRIMMED'.freeze
         if @host.nil?
-          Rails.logger.warn("Host with ID %s not found; continuing" % @host.id)
+          Rails.logger.warn("Host was not specified; continuing")
         elsif @host.content_facet.nil? || @host.content_facet.uuid.nil?
           Rails.logger.warn("Host with ID %s has no content facet; continuing" % @host.id)
         elsif profiles.try(:has_key?, "deb_package_profile")
@@ -42,7 +42,10 @@ module Katello
       end
 
       def trigger_applicability_generation
-        fail "Can't trigger applicability generation without a host ID" if @host.nil?
+        if @host.nil?
+          Rails.logger.warn "Host was not specified; can't trigger applicability generation"
+          return
+        end
         ::Katello::Host::ContentFacet.trigger_applicability_generation(@host.id)
       end
 
