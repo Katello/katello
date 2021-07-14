@@ -15,6 +15,8 @@ import {
   cvDetailsVersionKey,
   REPOSITORY_TYPES,
   cvDetailsComponentKey,
+  cvAddComponentKey,
+  cvRemoveComponentKey,
 } from '../ContentViewsConstants';
 import { pollTaskKey } from '../../Tasks/helpers';
 
@@ -107,5 +109,23 @@ export const selectPublishTaskPoll = (state, cvVersionPublishKey) =>
 
 export const selectPublishTaskPollStatus = (state, cvVersionPublishKey) =>
   selectAPIStatus(state, pollTaskKey(cvVersionPublishKey)) || STATUS.PENDING;
+
+export const selectCVComponentAdd = (state, cvId) =>
+  selectAPIResponse(state, cvAddComponentKey(cvId));
+
+export const selectCVComponentAddStatus = (state, cvId) =>
+  selectAPIStatus(state, cvAddComponentKey(cvId)) || STATUS.PENDING;
+
+export const selectCVComponentAddError = (state, cvId) =>
+  selectAPIError(state, cvAddComponentKey(cvId));
+
+export const selectCVComponentRemove = (state, cvId) =>
+  selectAPIResponse(state, cvRemoveComponentKey(cvId));
+
+export const selectCVComponentRemoveStatus = (state, cvId) =>
+  selectAPIStatus(state, cvRemoveComponentKey(cvId)) || STATUS.PENDING;
+
+export const selectCVComponentRemoveError = (state, cvId) =>
+  selectAPIError(state, cvRemoveComponentKey(cvId));
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;

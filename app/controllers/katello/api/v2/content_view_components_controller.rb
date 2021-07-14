@@ -34,6 +34,7 @@ module Katello
     # Undocumented endpoint since the functionality exists in separate calls already.
     # This was created for ease of pagination and search for the UI
     # param :id, :number, desc: N_("Content View id"), required: true
+    # param :status, ["Added", "Not added", "All"], :desc => N_("Filter to show added, not added or all components")
     def show_all
       kc = Katello::ContentView.table_name
       kcc = Katello::ContentViewComponent.table_name
@@ -51,7 +52,7 @@ module Katello
       custom_sort = ->(sort_query) { sort_query.joins(join_query).order(order_query) }
       options = { resource_class: Katello::ContentView, custom_sort: custom_sort }
       collection = scoped_search(query, nil, nil, options)
-      collection[:results] = ComponentViewPresenter.component_presenter(@view, views: collection[:results])
+      collection[:results] = ComponentViewPresenter.component_presenter(@view, params[:status], views: collection[:results])
       respond_for_index(:collection => collection, :template => "index")
     end
 

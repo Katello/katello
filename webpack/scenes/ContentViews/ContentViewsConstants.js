@@ -1,3 +1,5 @@
+import { translate as __ } from 'foremanReact/common/I18n';
+
 const CONTENT_VIEWS_KEY = 'CONTENT_VIEWS';
 export const CREATE_CONTENT_VIEW_KEY = 'CONTENT_VIEW_CREATE';
 export const COPY_CONTENT_VIEW_KEY = 'CONTENT_VIEW_COPY';
@@ -16,6 +18,13 @@ export const cvFilterRulesKey = filterId => `CONTENT_VIEW_FILTER_${filterId}_RUL
 export const cvDetailsComponentKey = cvId => `${CONTENT_VIEWS_KEY}_COMPONENTS_${cvId}`;
 export const cvDetailsVersionKey = cvId => `${CONTENT_VIEWS_KEY}_VERSIONS_${cvId}`;
 export const cvVersionPublishKey = (cvId, versionCount) => `${PUBLISH_CONTENT_VIEW_KEY}_${cvId}_VERSION_${versionCount}`;
+export const cvAddComponentKey = cvId => `${CONTENT_VIEWS_KEY}_ADD_COMPONENT_${cvId}`;
+export const cvRemoveComponentKey = cvId => `${CONTENT_VIEWS_KEY}_REMOVE_COMPONENT_${cvId}`;
+
+export const removeComponentSuccessMessage = size => (size === 1 ? __('Removed component from content view') : __('Removed components from content view'));
+
+export const addComponentSuccessMessage = component => (component ? __('Updated component details') : __('Added component to content view'));
+
 
 // Repo added to content view status display and key
 export const ADDED = 'Added';
