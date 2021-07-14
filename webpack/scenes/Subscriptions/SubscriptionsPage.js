@@ -13,7 +13,6 @@ import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
 import { filterRHSubscriptions } from './SubscriptionHelpers';
 import api, { orgId } from '../../services/api';
-import { CONTENT_DISCONNECTED } from '../Settings/SettingsConstants';
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
 import { SUBSCRIPTION_TABLE_NAME, SUBSCRIPTION_WATCH_URL } from './SubscriptionConstants';
@@ -48,13 +47,10 @@ class SubscriptionsPage extends Component {
       organization,
       isManifestImported,
       pingUpstreamSubscriptions,
-      settings,
       subscriptions,
       task,
       checkSimpleContentAccessEligible,
     } = this.props;
-
-    const { disconnected } = settings;
 
     if (task) {
       if (isPollingTask) {
@@ -69,9 +65,6 @@ class SubscriptionsPage extends Component {
     if (organization) {
       if (!prevProps.organization || prevProps.organization.id !== organization.id) {
         this.loadData();
-      }
-
-      if (disconnected === false && disconnected !== prevProps.settings.disconnected) {
         if (isManifestImported) {
           pingUpstreamSubscriptions();
           this.state.availableQuantitiesLoaded = false;
@@ -103,22 +96,18 @@ class SubscriptionsPage extends Component {
     const {
       hasUpstreamConnection,
       task,
-      settings,
       isManifestImported,
     } = this.props;
-    const { disconnected } = settings;
     let disabledReason = null;
 
-    if (disconnected) {
-      disabledReason = __('This is disabled because disconnected mode is enabled.');
+    if (!hasUpstreamConnection) {
+      disabledReason = __('This is disabled because no connection could be made to the upstream Subscription Allocation.');
     } else if (task) {
       disabledReason = __('This is disabled because a manifest related task is in progress.');
     } else if (deleteButton && !disabledReason) {
       disabledReason = __('This is disabled because no subscriptions are selected.');
     } else if (!isManifestImported) {
       disabledReason = __('This is disabled because no manifest has been uploaded.');
-    } else if (!hasUpstreamConnection) {
-      disabledReason = __('This is disabled because no connection could be made to the upstream Subscription Allocation.');
     }
 
     return disabledReason;
@@ -130,7 +119,6 @@ class SubscriptionsPage extends Component {
 
   async loadData() {
     const {
-      loadSetting,
       loadSubscriptions,
       loadTableColumns,
       loadTables,
@@ -139,7 +127,6 @@ class SubscriptionsPage extends Component {
     } = this.props;
 
     pollTasks();
-    loadSetting(CONTENT_DISCONNECTED);
     loadSubscriptions();
     await loadTables();
     loadTableColumns(subscriptionTableSettings);
@@ -150,7 +137,7 @@ class SubscriptionsPage extends Component {
     const {
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
-      searchQuery, updateSearchQuery, simpleContentAccess, settings, hasUpstreamConnection,
+      searchQuery, updateSearchQuery, simpleContentAccess, hasUpstreamConnection,
       task, activePermissions, subscriptions, subscriptionTableSettings, isManifestImported,
     } = this.props;
     // Basic permissions - should we even show this page?
@@ -165,8 +152,7 @@ class SubscriptionsPage extends Component {
       canImportManifest,
       canEditOrganizations,
     } = permissions;
-    const { disconnected } = settings;
-    const disableManifestActions = !!task || disconnected || !hasUpstreamConnection;
+    const disableManifestActions = !!task || !hasUpstreamConnection;
 
     const openManageManifestModal = () => this.props.setModalOpen({ id: MANAGE_MANIFEST_MODAL_ID });
 
@@ -320,9 +306,6 @@ SubscriptionsPage.propTypes = {
   loadTableColumns: PropTypes.func.isRequired,
   simpleContentAccess: PropTypes.bool,
   isManifestImported: PropTypes.bool,
-  settings: PropTypes.shape({
-    disconnected: PropTypes.bool,
-  }),
   subscriptions: PropTypes.shape({
     // Disabling rule as existing code failed due to an eslint-plugin-react update
     /* eslint-disable react/forbid-prop-types */
@@ -361,7 +344,6 @@ SubscriptionsPage.propTypes = {
   handleStartTask: PropTypes.func.isRequired,
   handleFinishedTask: PropTypes.func.isRequired,
   hasUpstreamConnection: PropTypes.bool,
-  loadSetting: PropTypes.func.isRequired,
   loadTables: PropTypes.func.isRequired,
   createColumns: PropTypes.func.isRequired,
   updateColumns: PropTypes.func.isRequired,
@@ -394,9 +376,6 @@ SubscriptionsPage.defaultProps = {
   activePermissions: {
     can_import_manifest: false,
     can_manage_subscription_allocations: false,
-  },
-  settings: {
-    disconnected: true,
   },
 };
 
