@@ -26,8 +26,6 @@ module Katello::Host
         ::Host.expects(:find_by).returns(@host)
         ::Katello::Host::PackageProfileUploader.any_instance.expects(:upload)
         ::Katello::Host::PackageProfileUploader.any_instance.expects(:trigger_applicability_generation)
-        # @host.expects(:import_package_profile).with(any_parameters)
-        # Katello::Host::ContentFacet.expects(:trigger_applicability_generation).with(@host.id)
 
         plan_action action, @host, profile.to_json
         run_action action
