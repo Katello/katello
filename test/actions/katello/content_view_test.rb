@@ -160,26 +160,6 @@ module ::Actions::Katello::ContentView
     end
   end
 
-  class EnvironmentCreateTest < TestBase
-    let(:action_class) { ::Actions::Katello::ContentView::EnvironmentCreate }
-
-    let(:content_view_environment) do
-      katello_content_view_environments(:library_default_view_environment)
-    end
-
-    it 'plans' do
-      content_view_environment.expects(:save!)
-      plan_action(action, content_view_environment)
-      content_view = content_view_environment.content_view
-      assert_action_planed_with(action,
-                                ::Actions::Candlepin::Environment::Create,
-                                organization_label: content_view.organization.label,
-                                cp_id:              content_view_environment.cp_id,
-                                name:               content_view_environment.label,
-                                description:        content_view.description)
-    end
-  end
-
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::Create }
 
