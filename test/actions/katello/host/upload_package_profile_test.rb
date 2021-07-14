@@ -24,8 +24,10 @@ module Katello::Host
         action.stubs(:action_subject).with(@host)
 
         ::Host.expects(:find_by).returns(@host)
-        @host.expects(:import_package_profile).with(any_parameters)
-        Katello::Host::ContentFacet.expects(:trigger_applicability_generation).with(@host.id)
+        ::Katello::Host::PackageProfileUploader.any_instance.expects(:upload)
+        ::Katello::Host::PackageProfileUploader.any_instance.expects(:trigger_applicability_generation)
+        # @host.expects(:import_package_profile).with(any_parameters)
+        # Katello::Host::ContentFacet.expects(:trigger_applicability_generation).with(@host.id)
 
         plan_action action, @host, profile.to_json
         run_action action
@@ -36,7 +38,7 @@ module Katello::Host
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        ::Host.expects(:find_by).returns(nil)
+        ::Host.expects(:find_by).twice.returns(nil)
 
         plan_action action, @host, profile.to_json
         run_action action
@@ -47,7 +49,7 @@ module Katello::Host
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        ::Host.expects(:find_by).returns(@host)
+        ::Host.expects(:find_by).twice.returns(@host)
         @host.expects(:content_facet).returns(nil)
 
         plan_action action, @host, profile.to_json
@@ -59,7 +61,7 @@ module Katello::Host
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        ::Host.expects(:find_by).returns(@host)
+        ::Host.expects(:find_by).twice.returns(@host)
         @host.expects(:import_package_profile).with(any_parameters).raises(ActiveRecord::InvalidForeignKey)
 
         plan_action action, @host, profile.to_json

@@ -1,7 +1,7 @@
 module Katello
   module Host
     class PackageProfileUploader
-      def initialize(profile_string:, host:)
+      def initialize(profile_string:, host: nil)
         @profile_string = profile_string
         @host = host
       end
@@ -14,11 +14,11 @@ module Katello
       end
 
       def import_package_profile(profile)
-        self.class.import_package_profile_for_host(@host.id, profile)
+        self.class.import_package_profile_for_host(@host&.id, profile)
       end
 
       def trigger_applicability_generation
-        ::Katello::Host::ContentFacet.trigger_applicability_generation(@host.id)
+        ::Katello::Host::ContentFacet.trigger_applicability_generation(@host&.id)
       end
 
       def self.import_package_profile_for_host(host_id, profile)
