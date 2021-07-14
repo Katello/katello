@@ -242,6 +242,14 @@
         </p>
       </div>
 
+      <div bst-form-group label="{{ 'Retain package versions' | translate }}" ng-if="(repository.content_type === 'yum' && repository.mirror_on_sync === false)">
+        <input id="retain_package_versions_count" name="retain_package_versions_count" ng-model="repository.retain_package_versions_count" type="number"/>
+
+        <p class="help-block">
+          <span translate>The maximum number of versions of each package to keep.</span><br />
+        </p>
+      </div>
+
       <div bst-form-group label="{{ 'HTTP Proxy Policy' | translate }}">
         <select required
                 id="http_proxy_policy"

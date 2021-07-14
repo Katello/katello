@@ -642,6 +642,15 @@ module Katello
       assert @root.valid?
     end
 
+    def test_yum_retain_package_versions_count
+      @root.url = "http://foo.com"
+      @root.retain_package_versions_count = nil
+      assert @root.valid?
+
+      @root.retain_package_versions_count = 2
+      assert @root.valid?
+    end
+
     def test_docker_white_tags
       @docker_root.url = "http://foo.com"
       @docker_root.docker_tags_whitelist = nil
