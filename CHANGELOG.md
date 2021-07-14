@@ -1,3 +1,26 @@
+# 3.18.4 (2021-07-13)
+
+## Bug Fixes
+
+### Repositories
+ * Promoting a content view or publishing/promoting a composite after initial migration causes errata to never be migrated ([#32888](https://projects.theforeman.org/issues/32888))
+ * pulp3 migration abort  should manually cancel all migration tasks ([#32887](https://projects.theforeman.org/issues/32887))
+ * migration plan creates ERROR line of 24000 characters in production.log ([#32869](https://projects.theforeman.org/issues/32869))
+ * [pulp3] aborting pulp3 content-migration step fails with "NoMethodError: undefined method fetch_from_list" ([#32786](https://projects.theforeman.org/issues/32786), [4506271b](https://github.com/Katello/katello.git/commit/4506271bd67c045616c79b67a0a0cf0736352273))
+
+### Upgrades
+ * Migration/switchover tasks should be no-op if switchover already done ([#32831](https://projects.theforeman.org/issues/32831))
+
+### Hammer
+ * Check for pulpcore-api.service in ping ([#32787](https://projects.theforeman.org/issues/32787))
+
+### SElinux
+ * Allow katello ping controller to check pulpcore-api ([#32765](https://projects.theforeman.org/issues/32765))
+
+### Other
+ * Fix pulpcore smart proxy error message ([#32613](https://projects.theforeman.org/issues/32613), [b9ac5ee5](https://github.com/Katello/katello.git/commit/b9ac5ee55c6117fc70452a747c5e2b92e91ffe42))
+ * Use pulp_deb 2.9 for Katello 3.18 ([#32472](https://projects.theforeman.org/issues/32472))
+
 # 3.18.3 (2021-06-11)
 
 ## Features
