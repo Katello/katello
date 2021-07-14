@@ -17,8 +17,7 @@ import {
   selectIsTaskPending,
   selectHasUpstreamConnection,
 } from './SubscriptionsSelectors';
-import { selectSettings,
-  selectTableSettings } from '../../scenes/Settings/SettingsSelectors';
+import { selectTableSettings } from '../../scenes/Settings/SettingsSelectors';
 import { selectIsPollingTask } from '../Tasks/TaskSelectors';
 import { selectOrganizationState, selectSimpleContentAccessEnabled, selectIsManifestImported } from '../Organizations/OrganizationSelectors';
 import { pingUpstreamSubscriptions } from './UpstreamSubscriptions/UpstreamSubscriptionsActions';
@@ -30,12 +29,10 @@ import SubscriptionsPage from './SubscriptionsPage';
 const mapStateToProps = (state) => {
   const subscriptions = selectSubscriptionsState(state);
   const subscriptionTableSettings = selectTableSettings(state, SUBSCRIPTION_TABLE_NAME);
-  const settings = selectSettings(state);
 
   return {
     subscriptions,
     subscriptionTableSettings,
-    settings,
     activePermissions: selectActivePermissions(state),
     simpleContentAccess: selectSimpleContentAccessEnabled(state),
     isManifestImported: selectIsManifestImported(state),

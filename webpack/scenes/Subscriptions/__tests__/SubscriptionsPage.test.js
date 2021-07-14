@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
-import { loadSetting } from 'foremanReact/components/Settings/SettingsActions';
 import SubscriptionsPage from '../SubscriptionsPage';
 import { successState, settingsSuccessState, permissionDeniedState } from './subscriptions.fixtures';
 import { loadAvailableQuantities, loadSubscriptions, updateQuantity, loadTableColumns } from '../SubscriptionActions';
@@ -36,7 +35,6 @@ describe('subscriptions page', () => {
     organization={organization}
     subscriptions={successState}
     subscriptionTableSettings={settingsSuccessState}
-    loadSetting={loadSetting}
     loadTables={loadTables}
     loadTableColumns={loadTableColumns}
     createColumns={createColumns}
@@ -72,7 +70,6 @@ describe('subscriptions page', () => {
     organization={organization}
     subscriptions={permissionDeniedState}
     subscriptionTableSettings={settingsSuccessState}
-    loadSetting={loadSetting}
     loadTables={loadTables}
     loadTableColumns={loadTableColumns}
     createColumns={createColumns}
