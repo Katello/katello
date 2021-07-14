@@ -10,33 +10,44 @@ import {
 } from '@patternfly/react-core';
 
 const ComponentVersion = ({ componentCV }) => {
-  const { latest, content_view_version: cvVersion, content_view: cv } = componentCV;
+  const {
+    id: componentId, latest, content_view_version: cvVersion, content_view: cv,
+  } = componentCV;
   const {
     id,
     latest_version: latestVersion,
   } = cv;
-  const { version } = cvVersion;
+  const { version } = cvVersion || {};
+  const noVersionText = __('Not yet published');
   const latestDescription = __('Latest (automatically updates)');
   const manualVersionText = (latestVersion === version) ? __('Latest version') : __(`New version is available: Version ${latestVersion}`);
+  if (componentId) {
+    return (
+      <>
+        <Link to={urlBuilder('labs/content_views', '', id)}>{version ? `Version ${version}` : noVersionText}</Link>
+        <TextContent>
+          <Text component={TextVariants.small}>
+            {latest ? latestDescription : manualVersionText}
+          </Text>
+        </TextContent>
+      </>
+    );
+  }
   return (
-    <>
-      <Link to={urlBuilder('labs/content_views', '', id)}> Version {version}</Link>
-      <TextContent>
-        <Text component={TextVariants.small}>{latest ? latestDescription : manualVersionText}</Text>
-      </TextContent>
-    </>
+    <Link to={urlBuilder('labs/content_views', '', id)}>{latestVersion ? `Version ${latestVersion}` : noVersionText}</Link>
   );
 };
 
 ComponentVersion.propTypes = {
   componentCV: PropTypes.shape({
+    id: PropTypes.number,
     latest: PropTypes.bool.isRequired,
     content_view_version: PropTypes.shape({
-      version: PropTypes.string.isRequired,
+      version: PropTypes.string,
     }),
     content_view: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      latest_version: PropTypes.string.isRequired,
+      latest_version: PropTypes.string,
     }),
   }).isRequired,
 };
