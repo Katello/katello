@@ -89,7 +89,7 @@ module Katello
     param :ostree_branch_id, String, :desc => N_("Id of an ostree branch to find repositories that contain that branch")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :archived, :bool, :desc => N_("show archived repositories")
-    param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
+    param :content_type, RepositoryTypeManager.defined_repository_types.keys, :desc => N_("limit to only repositories of this type")
     param :name, String, :desc => N_("name of the repository"), :required => false
     param :label, String, :desc => N_("label of the repository"), :required => false
     param :description, String, :desc => N_("description of the repository")
@@ -246,7 +246,7 @@ module Katello
     param :creatable, :bool, :desc => N_("When set to 'True' repository types that are creatable will be returned")
     def repository_types
       creatable = ::Foreman::Cast.to_bool(params[:creatable])
-      repo_types = creatable ? RepositoryTypeManager.creatable_repository_types : RepositoryTypeManager.repository_types
+      repo_types = creatable ? RepositoryTypeManager.creatable_repository_types : RepositoryTypeManager.enabled_repository_types
       render :json => repo_types.values
     end
 

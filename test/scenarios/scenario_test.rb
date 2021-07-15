@@ -9,7 +9,6 @@ module Scenarios
     include VCR::TestCase
 
     def setup
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @org = FactoryBot.build(:organization, :name => 'scenario_test', :label => 'scenario_test')
       @support = ScenarioSupport.new(User.current)
       @support.create_org(@org)

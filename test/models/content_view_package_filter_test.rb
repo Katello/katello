@@ -48,7 +48,6 @@ module Katello
     end
 
     def test_name_filter_generates_mongodb_condition_by_filename
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @filter = FactoryBot.create(:katello_content_view_package_filter)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "#{@rpm.name[0..1]}*")
 
@@ -57,7 +56,6 @@ module Katello
     end
 
     def test_name_filter_generates_pulpcore_hrefs_by_filename
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @filter = FactoryBot.create(:katello_content_view_package_filter)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "#{@rpm.name[0..1]}*")
 
@@ -65,7 +63,6 @@ module Katello
     end
 
     def test_arch_filter_generates_mongodb_conditions_by_filename
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @filter = FactoryBot.create(:katello_content_view_package_filter)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "*",
                                    :architecture => @rpm4.arch)
@@ -75,7 +72,6 @@ module Katello
     end
 
     def test_arch_filter_generates_pulpcore_hrefs
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @filter = FactoryBot.create(:katello_content_view_package_filter)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "*",
                                    :architecture => @rpm4.arch)
@@ -84,7 +80,6 @@ module Katello
     end
 
     def test_version_filter_generates_mongodb_conditions_by_filename
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @filter = FactoryBot.create(:katello_content_view_package_filter)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "*",
                                    :version => 2.0)
@@ -94,7 +89,6 @@ module Katello
     end
 
     def test_version_filter_generates_pulpcore_hrefs
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @filter = FactoryBot.create(:katello_content_view_package_filter)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "*",
                                    :version => 2.0)
@@ -103,7 +97,6 @@ module Katello
     end
 
     def test_version_range_filter_generates_mongodb_conditions_by_filename
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @filter = FactoryBot.create(:katello_content_view_package_filter)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "*",
                                    :min_version => 1.5, :max_version => 3.0)
@@ -113,7 +106,6 @@ module Katello
     end
 
     def test_version_range_filter_generates_pulpcore_hrefs
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       @filter = FactoryBot.create(:katello_content_view_package_filter)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "*",
                                    :min_version => 1.5, :max_version => 3.0)

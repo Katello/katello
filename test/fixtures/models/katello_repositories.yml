@@ -286,31 +286,6 @@ rhel_6_x86_64_composite_view_version_1_archive:
   relative_path:        'ACME_Corporation/composite/archive/rhel_6_label'
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
 
-ostree:
-  root_id:              <%= ActiveRecord::FixtureSet.identify(:ostree_root) %>
-  pulp_id:              100
-  relative_path:        'ACME_Corporation/library/ostree'
-  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-
-ostree_view1:
-  library_instance:     ostree
-  root_id:              <%= ActiveRecord::FixtureSet.identify(:ostree_root) %>
-  pulp_id:              "Default_Organization-Test-ostree"
-  relative_path:        'ACME_Corporation/library/ostree'
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
-
-ostree_view_dev:
-  library_instance:     ostree
-  root_id:              <%= ActiveRecord::FixtureSet.identify(:ostree_root) %>
-  pulp_id:              "Default_Organization-Test-ostree-dev"
-  relative_path:        'ACME_Corporation/Dev/ostree'
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-  environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
-
 generic_file:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:generic_file_root) %>
   pulp_id:              "Default_Organization-Cabinet-My_Files"

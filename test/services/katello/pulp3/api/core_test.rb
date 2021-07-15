@@ -11,7 +11,7 @@ module Katello
           let(:core) { Katello::Pulp3::Api::Core.new(@primary) }
 
           def setup
-            @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+            @primary = SmartProxy.pulp_primary
           end
 
           def test_with_excon

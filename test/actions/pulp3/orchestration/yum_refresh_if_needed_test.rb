@@ -5,7 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      @smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @smart_proxy = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       @repo.root.update_attribute(:unprotected, true)
       create_repo(@repo, @smart_proxy)

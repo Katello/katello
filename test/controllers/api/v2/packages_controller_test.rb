@@ -10,8 +10,7 @@ module Katello
       @simple_filter = katello_content_view_filters(:simple_filter)
       @one_package_rule = katello_content_view_package_filter_rules(:one_package_rule)
       @org = get_organization
-      Pulp::Rpm.any_instance.stubs(:backend_data).returns({})
-      SmartProxy.stubs(:pulp_primary).returns(FactoryBot.create(:smart_proxy, :default_smart_proxy))
+      Pulp3::Rpm.any_instance.stubs(:backend_data).returns({ 'files' => [] })
     end
 
     def setup

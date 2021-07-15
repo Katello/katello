@@ -5,7 +5,7 @@ module ::Actions::Pulp3
     include Katello::Pulp3Support
 
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64)
       tmp_file = File.join(Katello::Engine.root, 'test/fixtures/files/test-srpm01-1.0-1.src.rpm')
       @file = {path: tmp_file, filename: 'test-srpm01-1.0-1.src.rpm'}

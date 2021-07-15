@@ -160,18 +160,6 @@ busybox2_root:
   url:                  'http://docker.io'
   docker_upstream_name: 'busybox'
 
-ostree_root:
-  name:                 ostree
-  content_id:           1
-  content_type:         ostree
-  label:                ostree
-  url:                  "http://www.ostree-zoo.com/ostree"
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:ostree_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  unprotected:           <%= false %>
-  url:                  "http://cdn.qa.redhat.com/content/htb/rhel/server/7/x86_64/extras/ostree/"
-  ostree_upstream_sync_policy: latest
-
 generic_file_root:
   name:                 My Files
   content_id:           10

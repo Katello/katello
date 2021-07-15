@@ -32,16 +32,6 @@ module Katello
       File.delete("#{Rails.root}/tmp/manifest.json") if File.exist?("#{Rails.root}/tmp/manifest.json")
     end
 
-    describe "registry config" do
-      it "ping - unconfigured" do
-        SETTINGS[:katello].except!(:container_image_registry)
-        response = get :ping
-        body = JSON.parse(response.body)
-        assert_response 404
-        assert_equal('Registry not configured', body['error']['message'])
-      end
-    end
-
     describe "docker login" do
       it "ping - with cert" do
         User.current = nil

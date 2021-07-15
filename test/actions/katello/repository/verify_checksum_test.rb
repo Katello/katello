@@ -15,7 +15,6 @@ module Actions::Katello::Repository
     end
 
     it 'plans repair for pulp3 yum repositorites' do
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
       SmartProxy.any_instance.stubs(:pulp3_support?).returns(true)
       tree = plan_action_tree(action_class, repository)
       assert_tree_planned_with(tree, Actions::Pulp3::Repository::Repair)

@@ -5,7 +5,7 @@ module ::Actions::Pulp3::ContentGuard
     include Katello::Pulp3Support
     CERT_FIXTURE = "#{Katello::Engine.root}/test/fixtures/certs/content_guard.crt".freeze
     def setup
-      @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      @primary = SmartProxy.pulp_primary
       cert = File.read(CERT_FIXTURE)
       Cert::Certs.stubs(:candlepin_client_ca_cert).returns(cert)
     end

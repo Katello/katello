@@ -22,15 +22,6 @@ namespace :katello do
       Katello::Content
     ]
 
-    Katello::RepositoryTypeManager.repository_types.each_value do |repo_type|
-      indexable_types = repo_type.content_types_to_index
-      if SmartProxy.pulp_primary.pulp3_repository_type_support?(repo_type)
-        puts "\e[33mIgnoring types: #{indexable_types&.map { |type| type.model_class.name }}\e[0m\n"
-      else
-        models += indexable_types&.map(&:model_class)
-      end
-    end
-
     models.each do |model|
       print "Importing #{model.name}\n"
       model.import_all

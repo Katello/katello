@@ -21,7 +21,7 @@ module Katello
 
         def test_list_with_pagination
           User.current = users(:admin)
-          @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+          @primary = SmartProxy.pulp_primary
 
           repo1 = katello_repositories(:generic_file)
           repo1.root.update(:url => 'https://fixtures.pulpproject.org/file-many/')
@@ -35,7 +35,7 @@ module Katello
           ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, repo2)
           sync_and_reload_repo(repo2, @primary)
 
-          pulp3_enabled_repo_types = Katello::RepositoryTypeManager.repository_types.values.select do |repository_type|
+          pulp3_enabled_repo_types = Katello::RepositoryTypeManager.enabled_repository_types.values.select do |repository_type|
             @primary.pulp3_repository_type_support?(repository_type)
           end
 

@@ -20,7 +20,7 @@
     angular.module('Bastion').value('CurrentOrganization', "<%= Organization.current.id if Organization.current %>");
     angular.module('Bastion').value('simpleContentAccessEnabled', <%= Organization.current.simple_content_access? if Organization.current %>);
     angular.module('Bastion').value('foreman', tfm);
-    angular.module('Bastion').value('repositoryTypes', angular.fromJson('<%= Katello::RepositoryTypeManager.repository_types.values.to_json.html_safe %>'));
+    angular.module('Bastion').value('repositoryTypes', angular.fromJson('<%= Katello::RepositoryTypeManager.enabled_repository_types.values.to_json.html_safe %>'));
     angular.module('Bastion').value('deleteHostOnUnregister', angular.fromJson('<%= Setting[:unregister_delete_host] %>'));
     angular.module('Bastion').value('contentDisconnected', angular.fromJson('<%= Setting[:content_disconnected] %>'));
     angular.module('Bastion').value('globalContentProxy', angular.fromJson('<%= Setting[:content_default_http_proxy].empty? ? nil.to_json : Setting[:content_default_http_proxy].to_json.html_safe %>'));

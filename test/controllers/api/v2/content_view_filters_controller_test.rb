@@ -17,7 +17,6 @@ module Katello
     end
 
     def setup
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       setup_controller_defaults_api
       Repository.any_instance.stubs(:last_sync).returns(Time.now.asctime)
       ::Katello::Erratum.any_instance.stubs(:repositories).returns([])

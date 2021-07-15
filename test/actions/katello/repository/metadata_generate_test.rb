@@ -17,11 +17,6 @@ module Actions
       }
     end
 
-    before do
-      proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-      SmartProxy.any_instance.stubs(:pulp_primary).with(proxy)
-    end
-
     it 'plans a yum metadata generate' do
       action = create_action(action_class)
       plan_action(action, yum_repo)

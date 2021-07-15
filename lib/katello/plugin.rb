@@ -91,89 +91,85 @@ Foreman::Plugin.register :katello do
 
     divider :top_menu, :caption => N_('Content Types'), :parent => :content_menu
 
-    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::DEB_TYPE)
-      menu :top_menu,
-           :debs,
-           :caption => N_('Deb Packages'),
-           :url => '/debs',
-           :url_hash => {:controller => 'katello/api/v2/debs',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
-    end
+    menu :top_menu,
+         :debs,
+         :caption => N_('Deb Packages'),
+         :url => '/debs',
+         :url_hash => {:controller => 'katello/api/v2/debs',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::DEB_TYPE) }
 
-    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::DOCKER_TYPE)
-      menu :top_menu,
-           :docker_tags,
-           :caption => N_('Container Image Tags'),
-           :url => '/docker_tags',
-           :url_hash => {:controller => 'katello/api/v2/docker_tags',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
-    end
+    menu :top_menu,
+         :docker_tags,
+         :caption => N_('Container Image Tags'),
+         :url => '/docker_tags',
+         :url_hash => {:controller => 'katello/api/v2/docker_tags',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::DOCKER_TYPE) }
 
-    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::FILE_TYPE)
-      menu :top_menu,
-           :files,
-           :caption => N_('Files'),
-           :url => '/files',
-           :url_hash => {:controller => 'katello/api/v2/file_units',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
-    end
+    menu :top_menu,
+         :files,
+         :caption => N_('Files'),
+         :url => '/files',
+         :url_hash => {:controller => 'katello/api/v2/file_units',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::FILE_TYPE) }
 
-    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::OSTREE_TYPE)
-      menu :top_menu,
-           :ostree_branches,
-           :caption => N_('OSTree Branches'),
-           :url => '/ostree_branches',
-           :url_hash => {:controller => 'katello/api/v2/ostree_branches',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
-    end
+    menu :top_menu,
+         :ostree_branches,
+         :caption => N_('OSTree Branches'),
+         :url => '/ostree_branches',
+         :url_hash => {:controller => 'katello/api/v2/ostree_branches',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::OSTREE_TYPE) }
 
-    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::YUM_TYPE)
-      menu :top_menu,
-           :packages,
-           :caption => N_('Packages'),
-           :url => '/packages',
-           :url_hash => {:controller => 'katello/api/v2/packages',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
+    menu :top_menu,
+         :packages,
+         :caption => N_('Packages'),
+         :url => '/packages',
+         :url_hash => {:controller => 'katello/api/v2/packages',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::YUM_TYPE) }
 
-      menu :top_menu,
-           :errata,
-           :caption => N_('Errata'),
-           :url => '/errata',
-           :url_hash => {:controller => 'katello/api/v2/errata',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
+    menu :top_menu,
+         :errata,
+         :caption => N_('Errata'),
+         :url => '/errata',
+         :url_hash => {:controller => 'katello/api/v2/errata',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::YUM_TYPE) }
 
-      menu :top_menu,
-           :module_streams,
-           :caption => N_('Module Streams'),
-           :url => '/module_streams',
-           :url_hash => {:controller => 'katello/api/v2/module_streams',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
-    end
+    menu :top_menu,
+         :module_streams,
+         :caption => N_('Module Streams'),
+         :url => '/module_streams',
+         :url_hash => {:controller => 'katello/api/v2/module_streams',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::YUM_TYPE) }
 
-    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::ANSIBLE_COLLECTION_TYPE)
-      menu :top_menu,
-           :ansible_collections,
-           :caption => N_('Ansible Collections'),
-           :url => '/ansible_collections',
-           :url_hash => {:controller => 'katello/api/v2/ansible_collections',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
-    end
+    menu :top_menu,
+         :ansible_collections,
+         :caption => N_('Ansible Collections'),
+         :url => '/ansible_collections',
+         :url_hash => {:controller => 'katello/api/v2/ansible_collections',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::ANSIBLE_COLLECTION_TYPE) }
   end
 
   menu :top_menu,

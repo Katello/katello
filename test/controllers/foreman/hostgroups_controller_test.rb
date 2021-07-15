@@ -35,7 +35,7 @@ class HostgroupsControllerTest < ActionController::TestCase
 
   def test_create_with_ks_repo
     repo = katello_repositories(:fedora_17_x86_64)
-    smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+    smart_proxy = SmartProxy.pulp_primary
 
     os = Redhat.find_or_create_operating_system(repo)
     arch = Architecture.where(:name => repo.distribution_arch).first_or_create!

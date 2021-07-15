@@ -93,8 +93,6 @@ module Actions
     end
 
     it 'fully plans out a clone with pulp3' do
-      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-
       cloned_repo = file_repo.build_clone(content_view: version.content_view,
                                             version: version)
       cloned_repo.id = 100
@@ -105,7 +103,7 @@ module Actions
     end
 
     it 'fully plans out unit copying with multiple source repositories' do
-      primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+      primary = SmartProxy.pulp_primary
 
       file_repo2 = katello_repositories(:generic_file_dev)
       cloned_repo = file_repo.build_clone(content_view: version.content_view,
