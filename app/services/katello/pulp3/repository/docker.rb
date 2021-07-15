@@ -15,7 +15,7 @@ module Katello
         def remote_options
           options = {url: root.url, upstream_name: root.docker_upstream_name}
           if root.docker_tags_whitelist&.any?
-            options[:include_tags] = root.docker_tags_whitelist
+            options[:include_tags] = root.docker_tags_whitelist.map(&:to_s)
           else
             options[:include_tags] = nil
           end
