@@ -40,6 +40,11 @@ namespace :katello do
     puts "\e[33mNote:\e[0m ensure there is sufficient storage space for /var/lib/pulp/published to triple in size before starting the migration process."
     puts "Check the size of /var/lib/pulp/published with 'du -sh /var/lib/pulp/published/'"
 
+    puts
+    puts "\e[33mNote:\e[0m ensure there is sufficient storage space for postgresql."
+    puts "You will need additional space for your postgresql database.  The partition holding '/var/opt/rh/rh-postgresql12/lib/pgsql/data/'"
+    puts "   will need additional free space equivalent to the size of your Mongo db database (/var/lib/mongodb/)."
+
     displayed_warning = false
     found_missing = false
     path = Dir.mktmpdir('unmigratable_content-')
