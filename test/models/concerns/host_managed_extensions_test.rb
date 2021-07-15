@@ -208,31 +208,6 @@ module Katello
     end
   end
 
-  class HostManagedPuppetTest < HostManagedExtensionsTestBase
-    def setup
-      super
-      @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
-
-      @library_puppet_env = ::Environment.create!(:name => 'library_env')
-      @dev_puppet_env = ::Environment.create!(:name => 'dev_env')
-
-      @foreman_host = FactoryBot.create(:host, :with_content, :content_view => @library_dev_staging_view,
-                                     :lifecycle_environment => @library, :organization => @library.organization, :environment => @library_puppet_env)
-    end
-
-    def test_non_matching_puppet_environment
-      third_party_env = ::Environment.create!(:name => 'someotherenv',
-                                              :organizations => [@foreman_host.organization],
-                                              :locations => [@foreman_host.location])
-      @foreman_host.environment = third_party_env
-      @foreman_host.save!
-
-      @foreman_host.content_facet.lifecycle_environment = @dev
-      @foreman_host.save!
-
-      assert_equal third_party_env, @foreman_host.environment
-    end
-  end
   class HostInstalledPackagesTest < HostManagedExtensionsTestBase
     def setup
       super
