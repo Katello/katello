@@ -47,8 +47,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
 
             if (isTaskInProgress(syncTask)) {
                 state = syncState.SYNCING;
-            }
-            if (syncTask && syncTask.result !== 'success') {
+            } else if (syncTask && syncTask.result !== 'success') {
                 state = syncState.FAILURE;
             } else {
                 state = syncState.DEFAULT;
@@ -83,7 +82,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             }
 
             CapsuleContent.syncStatus(params).$promise.then(function (syncStatus) {
-                var errorCount, errorMessage;
+                var errorCount, errorMessage, activeOrFailedTask;
                 $scope.syncStatus = syncStatus;
                 if (syncStatus['last_sync_time'] === null) {
                     $scope.syncStatus['last_sync_time'] = translate('Never');
@@ -91,10 +90,13 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
 
                 if (syncStatus['active_sync_tasks'].length > 0) {
                     $scope.syncTask = aggregateTasks(syncStatus['active_sync_tasks']);
+                    activeOrFailedTask = pickLastTask(syncStatus['active_sync_tasks']);
 
                 } else if (syncStatus['last_failed_sync_tasks'].length > 0) {
+                    activeOrFailedTask = pickLastTask(syncStatus['last_failed_sync_tasks']);
+                    $scope.syncTask = activeOrFailedTask;
                     errorCount = $scope.syncTask.humanized.errors.length;
-                    $scope.syncTask = pickLastTask(syncStatus['last_failed_sync_tasks']);
+
                     if (errorCount > 0) {
                         errorMessage = $scope.syncTask.humanized.errors[0];
                         if (errorCount > 2) {
@@ -105,7 +107,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                         Notification.setErrorMessage(errorMessage);
                     }
                 }
-                $scope.syncState.set(stateFromTask($scope.syncTask));
+                $scope.syncState.set(stateFromTask(activeOrFailedTask));
             }, function (response) {
                 $scope.syncStatus = {
                     'active_sync_tasks': [],

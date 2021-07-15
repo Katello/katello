@@ -23,9 +23,9 @@ angular.module('Bastion.tasks').factory('AggregateTask',
             var taskMap = {},
                 taskSearches = {},
                 taskRepresentation = {
-                    state: undefined,
-                    result: undefined,
-                    progressbar: {}
+                    state: 'stopped',
+                    result: 'success',
+                    progressbar: {type: 'success', value: 0}
                 };
 
             var unregisterSearch = function (taskId) {
