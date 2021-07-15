@@ -197,7 +197,7 @@ Foreman::Plugin.register :katello do
   menu :labs_menu,
        :content_publication,
        :url => '/labs/content_views',
-       :url_hash => {:controller => 'katello/react',
+       :url_hash => {:controller => 'katello/api/v2/content_views',
                      :action => 'index'},
        :caption => N_('Content Views'),
        :parent => :lab_features_menu,
