@@ -36,10 +36,6 @@ module Katello
       host.reload
       host.expects(:update_candlepin_associations)
       host.update!(:content_facet_attributes => { :content_view_id => view2.id })
-      if host.environment
-        host.environment.organizations << host.organization
-        host.environment.locations << host.location
-      end
 
       host.reload
       host.content_facet.content_view_id = view.id
