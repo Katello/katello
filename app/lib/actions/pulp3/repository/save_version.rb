@@ -9,15 +9,22 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find(input[:repository_id])
-
           if input[:force_fetch_version]
             version_href = fetch_version_href(repo)
           elsif input[:repository_details].present?
             version_href = input[:repository_details][:latest_version_href]
           elsif input[:tasks].present?
-            version_href = input[:tasks].last[:created_resources].first
+            version_href = ::Katello::Pulp3::Task.version_href(input[:tasks])
           else
             version_href = fetch_version_href(repo)
+          end
+
+          output[:publication_provided] = false
+          if input[:tasks].present?
+            if (publication_href = ::Katello::Pulp3::Task.publication_href(input[:tasks]))
+              repo.update(:publication_href => publication_href)
+              output[:publication_provided] = true
+            end
           end
 
           if version_href

@@ -6,6 +6,7 @@ module Actions
           def plan(repository, smart_proxy, options = {})
             options[:contents_changed] = (options && options.key?(:contents_changed)) ? options[:contents_changed] : true
             publication_content_type = !::Katello::RepositoryTypeManager.find(repository.content_type).pulp3_skip_publication
+
             sequence do
               if options[:source_repository] && publication_content_type
                 plan_self(source_repository_id: options[:source_repository].id, target_repository_id: repository.id, smart_proxy_id: smart_proxy.id)

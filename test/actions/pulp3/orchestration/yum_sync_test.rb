@@ -32,6 +32,7 @@ module ::Actions::Pulp3
 
     def test_sync
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      @repo.update(publication_href: nil, version_href: nil) #validate that sync populates these
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
       refute_equal @repo.version_href, @repo_version_href
@@ -40,6 +41,24 @@ module ::Actions::Pulp3
           :content_view_id => @repo.content_view.id)
 
       assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
+      refute_nil @repo.version_href
+      refute_nil @repo.publication_href
+    end
+
+    def test_sync_mirror_false
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      @repo.root.update(mirror_on_sync: false)
+      @repo.update(publication_href: nil, version_href: nil) #validate that sync populates these
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      @repo.reload
+      refute_equal @repo.version_href, @repo_version_href
+      repository_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+
+      assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
+      refute_nil @repo.version_href
+      refute_nil @repo.publication_href
     end
 
     def test_optimize_false
