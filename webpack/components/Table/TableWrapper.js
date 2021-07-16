@@ -55,7 +55,7 @@ const TableWrapper = ({
   }, [
     activeFilters,
     dispatch,
-    // fetchItems,
+    fetchItems,
     paginationParams,
     searchQuery,
     additionalListeners,

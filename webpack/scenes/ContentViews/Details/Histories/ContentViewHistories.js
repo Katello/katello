@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { TableVariant, TableText } from '@patternfly/react-table';
@@ -127,7 +127,7 @@ const ContentViewHistories = ({ cvId }) => {
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint={`/content_views/${cvId}/history/auto_complete_search`}
-      fetchItems={params => getContentViewHistories(cvId, params)}
+      fetchItems={useCallback(params => getContentViewHistories(cvId, params), [cvId])}
     />);
 };
 

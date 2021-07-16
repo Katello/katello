@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -161,7 +161,7 @@ const ContentViewTable = () => {
       }}
       variant={TableVariant.compact}
       status={cvTableStatus}
-      fetchItems={getContentViews}
+      fetchItems={useCallback(getContentViews, [])}
       onCollapse={onCollapse}
       canSelectAll={false}
       cells={columns}

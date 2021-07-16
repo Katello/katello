@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -96,7 +96,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/content_view_filters/${filterId}/rules/auto_complete_search`}
-            fetchItems={params => getCVFilterRules(filterId, params)}
+            fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
           />
         </div>
       </Tab>

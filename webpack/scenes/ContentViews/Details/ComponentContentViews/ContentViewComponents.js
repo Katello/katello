@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
 import { Bullseye, Split, SplitItem, Button } from '@patternfly/react-core';
@@ -211,7 +211,7 @@ const ContentViewComponents = ({ cvId, details }) => {
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint="/content_views/auto_complete_search"
-      fetchItems={params => getContentViewComponents(cvId, params, statusSelected)}
+      fetchItems={useCallback(params => getContentViewComponents(cvId, params, statusSelected), [cvId, statusSelected])}
       additionalListeners={[statusSelected, addComponentsResolved, removeComponentsResolved]}
     >
       <Split hasGutter>
