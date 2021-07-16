@@ -109,7 +109,7 @@ const ContentViewRepositories = ({ cvId }) => {
     setMetadata(meta);
 
     if (!loading && results) {
-      const newRows = buildRows();
+      const newRows = buildRows(results);
       setRows(newRows);
     }
   }, [response]);
