@@ -47,7 +47,7 @@ const ContentViewFilters = ({ cvId }) => {
     __('Inclusion type'),
   ];
 
-  const buildRows = (results) => {
+  const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((filter) => {
       let errataByDate = false;
@@ -72,7 +72,7 @@ const ContentViewFilters = ({ cvId }) => {
       newRows.push({ cells, id });
     });
     return newRows;
-  };
+  }, [cvId]);
 
   const bulkRemove = () => {
     setBulkActionOpen(false);
@@ -94,7 +94,7 @@ const ContentViewFilters = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response]);
+  }, [response, loading, buildRows]);
 
   const actionResolver = () => [
     {

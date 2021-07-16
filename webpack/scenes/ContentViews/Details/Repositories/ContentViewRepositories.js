@@ -75,7 +75,7 @@ const ContentViewRepositories = ({ cvId }) => {
   ];
   const loading = status === STATUS.PENDING;
 
-  const buildRows = (results) => {
+  const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((repo) => {
       const {
@@ -102,7 +102,7 @@ const ContentViewRepositories = ({ cvId }) => {
       newRows.push({ repoId: id, cells });
     });
     return newRows;
-  };
+  }, [statusSelected]);
 
   useDeepCompareEffect(() => {
     const { results, ...meta } = response;
@@ -112,7 +112,7 @@ const ContentViewRepositories = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response]);
+  }, [response, loading, buildRows]);
 
   useEffect(() => {
     dispatch(getRepositoryTypes());

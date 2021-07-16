@@ -72,7 +72,7 @@ const ContentViewVersions = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response, setMetadata, loading, setRows]);
+  }, [response, setMetadata, loading, setRows, cvId]);
 
   const emptyContentTitle = __("You currently don't have any versions for this content view.");
   const emptyContentBody = __('Versions will appear here when the content view is published.'); // needs link

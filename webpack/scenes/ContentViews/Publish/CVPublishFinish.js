@@ -1,5 +1,5 @@
 import { STATUS } from 'foremanReact/constants';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
@@ -39,13 +39,9 @@ const CVPublishFinish = ({
   const pollResponseStatus = useSelector(state =>
     selectPublishTaskPollStatus(state, cvVersionPublishKey(cvId, versionCount)), shallowEqual);
 
-  const pollPublishTask = (cvPublishVersionKey, task) => {
-    if (!polling) dispatch(startPollingTask(cvPublishVersionKey, task));
-  };
-
   const progressCompleted = () => (pollResponse.progress ? pollResponse.progress * 100 : 0);
 
-  const handleEndTask = ({ taskComplete }) => {
+  const handleEndTask = useCallback(({ taskComplete }) => {
     if (currentStep !== 1) {
       dispatch(stopPollingTask(cvVersionPublishKey(cvId, versionCount)));
       setCurrentStep(1);
@@ -56,7 +52,7 @@ const CVPublishFinish = ({
         dispatch(toastTaskFinished(pollResponse));
       }
     }
-  };
+  }, [currentStep, cvId, dispatch, pollResponse, setCurrentStep, setIsOpen, versionCount]);
 
 
   useEffect(() => {
@@ -80,6 +76,10 @@ const CVPublishFinish = ({
 
   useDeepCompareEffect(() => {
     if (!response) return;
+    const pollPublishTask = (cvPublishVersionKey, task) => {
+      if (!polling) dispatch(startPollingTask(cvPublishVersionKey, task));
+    };
+
     setSaving(true);
     const { id } = response;
     if (id && status === STATUS.RESOLVED) {
@@ -90,7 +90,7 @@ const CVPublishFinish = ({
       setSaving(false);
     }
   }, [response, status, error, cvId, versionCount,
-    pollPublishTask, setPolling, setSaving]);
+    dispatch, polling, setPolling, setSaving]);
 
 
   useDeepCompareEffect(() => {

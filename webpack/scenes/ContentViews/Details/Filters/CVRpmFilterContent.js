@@ -43,7 +43,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
     return 'All versions';
   };
 
-  const buildRows = (results) => {
+  const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((rule) => {
       const { name, architecture } = rule;
@@ -57,7 +57,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
     });
 
     return newRows;
-  };
+  }, []);
 
   useDeepCompareEffect(() => {
     const { results, ...meta } = response;
@@ -67,7 +67,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response]);
+  }, [response, loading, buildRows]);
 
   const emptyContentTitle = __('No rules have been added to this filter.');
   const emptyContentBody = __("Add to this filter using the 'Add RPM' button.");

@@ -27,14 +27,6 @@ const ContentViewHistories = ({ cvId }) => {
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
 
-  const taskTypes = {
-    publish: 'Actions::Katello::ContentView::Publish',
-    promotion: 'Actions::Katello::ContentView::Promote',
-    removal: 'Actions::Katello::ContentView::Remove',
-    incrementalUpdate: 'Actions::Katello::ContentView::IncrementalUpdates',
-    export: 'Actions::Katello::ContentViewVersion::Export',
-  };
-
   const columnHeaders = [
     __('Date'),
     __('Version'),
@@ -46,6 +38,14 @@ const ContentViewHistories = ({ cvId }) => {
 
 
   useDeepCompareEffect(() => {
+    const taskTypes = {
+      publish: 'Actions::Katello::ContentView::Publish',
+      promotion: 'Actions::Katello::ContentView::Promote',
+      removal: 'Actions::Katello::ContentView::Remove',
+      incrementalUpdate: 'Actions::Katello::ContentView::IncrementalUpdates',
+      export: 'Actions::Katello::ContentViewVersion::Export',
+    };
+
     const actionText = (history) => {
       const {
         action,
@@ -103,7 +103,7 @@ const ContentViewHistories = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response, setMetadata, loading, setRows]);
+  }, [response, setMetadata, loading, setRows, cvId]);
 
   const emptyContentTitle = __("You currently don't have any history for this content view.");
   const emptyContentBody = __('History will appear here when the content view is published or promoted.'); // needs link
