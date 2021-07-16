@@ -231,18 +231,16 @@ test('Can handle pagination', async (done) => {
   const firstPageScope = nockInstance
     .get(cvIndexPath)
     // Using a custom query params matcher because parameters can be strings
-    .query(actualQueryObject => parseInt(actualQueryObject.page, 10) === 1)
+    .query(actualQueryObject => (parseInt(actualQueryObject.page, 10) === 1))
     .reply(200, cvIndexFirstPage);
 
   // Match second page API request
   const secondPageScope = nockInstance
     .get(cvIndexPath)
     // Using a custom query params matcher because parameters can be strings
-    .query(actualQueryObject => parseInt(actualQueryObject.page, 10) === 2)
+    .query(actualQueryObject => (parseInt(actualQueryObject.page, 10) === 2))
     .reply(200, cvIndexSecondPage);
-
   const { queryByText, getByLabelText } = renderWithRedux(<ContentViewsPage />, renderOptions);
-
   // Wait for first paginated page to load and assert only the first page of results are present
   await patientlyWaitFor(() => {
     expect(queryByText(results[0].name)).toBeInTheDocument();
@@ -253,14 +251,12 @@ test('Can handle pagination', async (done) => {
   // Label comes from patternfly, if this test fails, check if patternfly updated the label.
   expect(getByLabelText('Go to next page')).toBeTruthy();
   getByLabelText('Go to next page').click();
-
   // Wait for second paginated page to load and assert only the second page of results are present
   await patientlyWaitFor(() => {
     expect(queryByText(results[20].name)).toBeInTheDocument();
     expect(queryByText(results[39].name)).toBeInTheDocument();
     expect(queryByText(results[41].name)).not.toBeInTheDocument();
   });
-
   assertNockRequest(autocompleteScope);
   assertNockRequest(firstPageScope);
   assertNockRequest(secondPageScope, done); // Only pass jest callback to the last API request

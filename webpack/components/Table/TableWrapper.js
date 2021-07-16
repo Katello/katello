@@ -52,7 +52,14 @@ const TableWrapper = ({
     } else {
       fetchWithParams();
     }
-  }, [activeFilters, dispatch, fetchItems, paginationParams, searchQuery, additionalListeners]);
+  }, [
+    activeFilters,
+    dispatch,
+    // fetchItems,
+    paginationParams,
+    searchQuery,
+    additionalListeners,
+  ]);
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
@@ -64,7 +71,6 @@ const TableWrapper = ({
 
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
-    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination, search: searchQuery }));
   };
 
   return (
