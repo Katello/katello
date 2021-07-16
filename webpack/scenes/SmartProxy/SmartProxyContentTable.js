@@ -50,10 +50,6 @@ const SmartProxyContentTable = ({ smartProxyId }) => {
     },
   ];
 
-  const fetchWithParams = () => {
-    dispatch(getSmartProxyContent({ smartProxyId }));
-  };
-
   const buildrows = (results) => {
     const newRows = [];
     let envCount = 0;
@@ -126,8 +122,12 @@ const SmartProxyContentTable = ({ smartProxyId }) => {
     setRow(newRows);
   };
 
-
-  useEffect(() => fetchWithParams(), []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(
+    () => {
+      dispatch(getSmartProxyContent({ smartProxyId }));
+    }
+    , [dispatch, smartProxyId],
+  );
 
   useDeepCompareEffect(() => {
     if (status !== STATUS.PENDING && response) {

@@ -26,7 +26,7 @@ const ContentViewFilterDetails = () => {
 
   useEffect(() => {
     dispatch(getCVFilterDetails(cvId, filterId));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [dispatch, cvId, filterId]);
 
   useDeepCompareEffect(() => {
     if (loaded) setDetails(response);
