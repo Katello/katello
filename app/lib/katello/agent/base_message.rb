@@ -12,10 +12,7 @@ module Katello
           replyto: reply_to,
           request: {
             args: [
-              units,
-              {
-                importkeys: true
-              }
+              units, options
             ],
             classname: "Content",
             cntr: [[], {}],
@@ -27,6 +24,12 @@ module Katello
             recipient_address
           ],
           version: "2.0"
+        }
+      end
+
+      def options # may be overridden by children
+        {
+          importkeys: true
         }
       end
 
