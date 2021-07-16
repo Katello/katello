@@ -22,6 +22,11 @@ module Actions
         end
 
         def invoke_external_task
+          if input[:options][:sync_task_output] &&
+              ::Katello::Pulp3::Task.publication_href(input[:options][:sync_task_output]).present?
+            return input[:options][:sync_task_output]
+          end
+
           repository = ::Katello::Repository.find(input[:repository_id])
           smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
           output[:response] = repository.backend_service(smart_proxy).with_mirror_adapter.create_publication

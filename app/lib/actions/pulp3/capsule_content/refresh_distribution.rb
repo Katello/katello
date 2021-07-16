@@ -19,10 +19,8 @@ module Actions
           if options[:use_repository_version]
             repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:use_repository_version => true)
           elsif tasks && tasks[:pulp_tasks] && tasks[:pulp_tasks].first
-            publication_href = tasks[:pulp_tasks].first[:created_resources].first
-            if publication_href
-              repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:publication => publication_href)
-            end
+            publication_href = ::Katello::Pulp3::Task.publication_href(tasks[:pulp_tasks])
+            repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:publication => publication_href) if publication_href.any?
           end
         end
       end

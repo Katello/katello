@@ -23,7 +23,7 @@ module ::Actions::Pulp3
     def setup
       @primary = SmartProxy.pulp_primary
       @docker_repo = katello_repositories(:busybox)
-      @docker_repo.root.update!(docker_tags_whitelist: %w(latest uclibc musl))
+      @docker_repo.root.update!(docker_tags_whitelist: %w(latest glibc musl))
       @docker_clone = katello_repositories(:busybox_dev)
       @rule = FactoryBot.build(:katello_content_view_docker_filter_rule)
       @rule2 = FactoryBot.build(:katello_content_view_docker_filter_rule)
@@ -42,13 +42,12 @@ module ::Actions::Pulp3
       @docker_repo.reload
 
       @rule.name = "latest"
-      @rule2.name = "uclibc"
+      @rule2.name = "glibc"
       @rule.save!
       @rule2.save!
       filter = FactoryBot.build(:katello_content_view_docker_filter, :docker_rules => [@rule, @rule2])
       filter.inclusion = true
       filter.save
-
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
                              @docker_clone, @primary, [@docker_repo], filters: [filter])
       @docker_clone.reload
@@ -58,7 +57,7 @@ module ::Actions::Pulp3
       refute_nil(@docker_repo.version_href)
       refute_nil(@docker_clone.version_href)
       assert_not_equal @docker_repo.version_href, @docker_clone.version_href
-      assert_equal @docker_clone.docker_tags.pluck(:name).sort, ["latest", "uclibc"]
+      assert_equal @docker_clone.docker_tags.pluck(:name).sort, ["latest", "glibc"].sort
 
       @file_clone = katello_repositories(:generic_file_dev)
       @docker_clone = katello_repositories(:busybox_dev)
