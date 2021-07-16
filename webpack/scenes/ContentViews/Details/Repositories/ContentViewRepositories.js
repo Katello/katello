@@ -108,35 +108,6 @@ const ContentViewRepositories = ({ cvId }) => {
     const { results, ...meta } = response;
     setMetadata(meta);
 
-    const buildRows = () => {
-      const newRows = [];
-      results.forEach((repo) => {
-        const {
-          id,
-          content_type: contentType,
-          name,
-          added_to_content_view: addedToCV,
-          product: { id: productId, name: productName },
-          content_counts: counts,
-          last_sync_words: lastSyncWords,
-          last_sync: lastSync,
-        } = repo;
-
-        const cells = [
-          { title: <Bullseye><RepoIcon type={contentType} /></Bullseye> },
-          { title: <a href={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</a> },
-          productName,
-          { title: <LastSync {...{ lastSyncWords, lastSync }} /> },
-          { title: <ContentCounts {...{ counts, productId }} repoId={id} /> },
-          {
-            title: <AddedStatusLabel added={addedToCV || statusSelected === ADDED} />,
-          },
-        ];
-        newRows.push({ repoId: id, cells });
-      });
-      return newRows;
-    };
-
     if (!loading && results) {
       const newRows = buildRows();
       setRows(newRows);

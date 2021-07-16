@@ -1,5 +1,6 @@
 import { STATUS } from 'foremanReact/constants';
 import React, { useState, useEffect } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { Bullseye, Button, Grid, GridItem } from '@patternfly/react-core';
@@ -77,7 +78,7 @@ const CVPublishFinish = ({
     setDescription, setUserCheckedItems, currentStep, setCurrentStep,
     cvId, versionCount, description, forcePromote, userCheckedItems]);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (!response) return;
     setSaving(true);
     const { id } = response;
@@ -88,11 +89,11 @@ const CVPublishFinish = ({
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }
-  }, [JSON.stringify(response), status, error, cvId, versionCount,
+  }, [response, status, error, cvId, versionCount,
     pollPublishTask, setPolling, setSaving]);
 
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const { state, result } = pollResponse;
     if (state === 'paused' || result === 'error') {
       setTaskErrored(true);
@@ -105,7 +106,7 @@ const CVPublishFinish = ({
         handleEndTask({ taskComplete: true });
       }, 500);
     }
-  }, [JSON.stringify(pollResponse), dispatch, setTaskErrored,
+  }, [pollResponse, dispatch, setTaskErrored,
     setPolling, setIsOpen, pollResponseStatus, handleEndTask]);
 
   if (saving) {

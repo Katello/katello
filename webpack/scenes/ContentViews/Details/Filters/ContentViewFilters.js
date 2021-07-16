@@ -90,33 +90,6 @@ const ContentViewFilters = ({ cvId }) => {
     const { results, ...meta } = response;
     setMetadata(meta);
 
-    const buildRows = () => {
-      const newRows = [];
-      results.forEach((filter) => {
-        let errataByDate = false;
-        const {
-          id, name, type, description, updated_at: updatedAt, inclusion,
-        } = filter;
-        if (filter.type === 'erratum' && filter.rules[0].types) errataByDate = true;
-
-        const cells = [
-          { title: <Link to={cvFilterUrl(cvId, id)}>{name}</Link> },
-          truncate(description || ''),
-          { title: <LongDateTime date={updatedAt} showRelativeTimeTooltip /> },
-          { title: <ContentType type={type} errataByDate={errataByDate} /> },
-          {
-            title: (
-              <Label color={inclusion && 'blue'}>
-                {inclusion ? 'Include' : 'Exclude'}
-              </Label>),
-          },
-        ];
-
-        newRows.push({ cells });
-      });
-      return newRows;
-    };
-
     if (!loading && results) {
       const newRows = buildRows();
       setRows(newRows);

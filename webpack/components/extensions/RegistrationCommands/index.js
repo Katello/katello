@@ -18,7 +18,7 @@ const RegistrationCommands = ({
 }) => {
   useEffect(() => {
     onChange({ activationKeys: [], lifecycleEnvironmentId: '' });
-  }, [organizationId, hostGroupId]);
+  }, [onChange, organizationId, hostGroupId]);
 
   return (
     <>
@@ -78,4 +78,3 @@ RegistrationCommands.defaultProps = {
 };
 
 export default RegistrationCommands;
-

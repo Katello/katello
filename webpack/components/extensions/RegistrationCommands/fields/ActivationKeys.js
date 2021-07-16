@@ -40,7 +40,7 @@ const ActivationKeys = ({
   // Validate field when hostgroup is changed (host group may have some keys)
   useEffect(() => {
     handleInvalidField('Activation Keys', akHasValidValue(hostGroupId, pluginValues?.activationKeys, hostGroupActivationKeys));
-  }, [hostGroupId, hostGroupActivationKeys, pluginValues]);
+  }, [handleInvalidField, hostGroupId, hostGroupActivationKeys, pluginValues]);
 
   return (
     <FormGroup
