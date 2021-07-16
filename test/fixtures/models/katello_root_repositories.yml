@@ -136,8 +136,8 @@ busybox_root:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
-  url:                  'https://registry-1.docker.io'
-  docker_upstream_name: 'busybox'
+  url:                  'https://quay.io'
+  docker_upstream_name: 'libpod/busybox'
 
 busybox2_root:
   name:                 busybox
@@ -147,8 +147,8 @@ busybox2_root:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
-  url:                  'http://docker.io'
-  docker_upstream_name: 'busybox'
+  url:                  'https://quay.io'
+  docker_upstream_name: 'libpod/busybox'
 
 ostree_root:
   name:                 ostree

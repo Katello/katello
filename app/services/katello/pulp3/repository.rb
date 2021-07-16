@@ -16,6 +16,14 @@ module Katello
         @smart_proxy = smart_proxy
       end
 
+      def self.version_href?(href)
+        /.*\/versions\/\d*\//.match(href)
+      end
+
+      def self.publication_href?(href)
+        href.include?('/publications/')
+      end
+
       def partial_repo_path
         fail NotImplementedError
       end
