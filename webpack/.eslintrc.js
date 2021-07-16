@@ -26,7 +26,9 @@ module.exports = {
   rules: {
     'react/jsx-filename-extension': 'off',
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/exhaustive-deps': ["warn", {
+      "additionalHooks": "(useDeepCompareEffect)"
+    }],
     // Import rules off for now due to HoundCI issue
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
