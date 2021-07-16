@@ -51,6 +51,22 @@ module Katello
         end
       end
 
+      def self.version_href(tasks)
+        tasks = [tasks] unless tasks.is_a?(Array)
+        version_hrefs = tasks.map { |task| task[:created_resources] }.flatten
+        version_hrefs = version_hrefs.select { |href| ::Katello::Pulp3::Repository.version_href?(href) }
+        Rails.logger.error("Got multiple version_hrefs for pulp task: #{tasks}") if version_hrefs.length > 2
+        version_hrefs.last
+      end
+
+      def self.publication_href(tasks)
+        tasks = [tasks] unless tasks.is_a?(Array)
+        publication_hrefs = tasks.map { |task| task[:created_resources] }.flatten
+        publication_hrefs = publication_hrefs.select { |href| ::Katello::Pulp3::Repository.publication_href?(href) }
+        Rails.logger.error("Got multiple publication hrefs for pulp task: #{tasks}") if publication_hrefs.length > 2
+        publication_hrefs.last #return the last href to workaround https://pulp.plan.io/issues/9098
+      end
+
       def task_data(force_refresh = false)
         @pulp_data = nil if force_refresh
         @pulp_data ||= tasks_api.read(@href).as_json.with_indifferent_access

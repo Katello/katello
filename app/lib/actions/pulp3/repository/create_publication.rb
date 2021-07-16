@@ -5,14 +5,17 @@ module Actions
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
         def plan(repository, smart_proxy, options)
           sequence do
-            action = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :contents_changed => options[:contents_changed], :options => options)
+            action = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :contents_changed => options[:contents_changed],
+                               :skip_publication_creation => options[:skip_publication_creation])
             plan_action(SavePublication, repository, action.output, :contents_changed => options[:contents_changed])
           end
         end
 
         def invoke_external_task
-          repository = ::Katello::Repository.find(input[:repository_id])
-          output[:response] = repository.backend_service(smart_proxy).with_mirror_adapter.create_publication
+          unless input[:skip_publication_creation]
+            repository = ::Katello::Repository.find(input[:repository_id])
+            output[:response] = repository.backend_service(smart_proxy).with_mirror_adapter.create_publication
+          end
         end
       end
     end
