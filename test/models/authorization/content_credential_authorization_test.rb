@@ -9,15 +9,15 @@ module Katello
     end
 
     def test_readable
-      refute_empty GpgKey.readable
+      refute_empty ContentCredential.readable
     end
 
     def test_editable
-      refute_empty GpgKey.editable
+      refute_empty ContentCredential.editable
     end
 
     def test_deletable
-      refute_empty GpgKey.deletable
+      refute_empty ContentCredential.deletable
     end
 
     def test_content_credential_readable?
@@ -41,15 +41,15 @@ module Katello
     end
 
     def test_readable
-      assert_empty GpgKey.readable
+      assert_empty ContentCredential.readable
     end
 
     def test_editable
-      assert_empty GpgKey.editable
+      assert_empty ContentCredential.editable
     end
 
     def test_deletable
-      assert_empty GpgKey.deletable
+      assert_empty ContentCredential.deletable
     end
 
     def test_content_credential_readable?

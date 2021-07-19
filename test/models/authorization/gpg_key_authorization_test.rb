@@ -5,11 +5,11 @@ module Katello
     def setup
       super
       User.current = User.find(users('admin').id)
-      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
+      @key = ContentCredential.find(katello_gpg_keys('fedora_gpg_key').id)
     end
 
     def test_readable
-      refute_empty GpgKey.readable
+      refute_empty ContentCredential.readable
     end
 
     def test_key_readable?
@@ -29,11 +29,11 @@ module Katello
     def setup
       super
       User.current = User.find(users('restricted').id)
-      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
+      @key = ContentCredential.find(katello_gpg_keys('fedora_gpg_key').id)
     end
 
     def test_readable
-      assert_empty GpgKey.readable
+      assert_empty ContentCredential.readable
     end
 
     def test_key_readable?

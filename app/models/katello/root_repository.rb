@@ -42,10 +42,10 @@ module Katello
     ALLOWED_OS_VERSIONS = [RHEL6, RHEL7, RHEL8].freeze
 
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
-    belongs_to :gpg_key, :inverse_of => :root_repositories, :class_name => "Katello::GpgKey"
-    belongs_to :ssl_ca_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_ca_root_repos
-    belongs_to :ssl_client_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_client_root_repos
-    belongs_to :ssl_client_key, :class_name => "Katello::GpgKey", :inverse_of => :ssl_key_root_repos
+    belongs_to :gpg_key, :inverse_of => :root_repositories, :class_name => "Katello::ContentCredential"
+    belongs_to :ssl_ca_cert, :class_name => "Katello::ContentCredential", :inverse_of => :ssl_ca_root_repos
+    belongs_to :ssl_client_cert, :class_name => "Katello::ContentCredential", :inverse_of => :ssl_client_root_repos
+    belongs_to :ssl_client_key, :class_name => "Katello::ContentCredential", :inverse_of => :ssl_key_root_repos
     belongs_to :http_proxy, :inverse_of => :root_repositories
     has_many :repositories, :class_name => "Katello::Repository", :foreign_key => :root_id,
                           :inverse_of => :root, :dependent => :destroy

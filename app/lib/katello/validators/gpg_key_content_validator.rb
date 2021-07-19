@@ -33,7 +33,7 @@ module Katello
 
       def self.validate_line_length(record, attribute, value)
         value.each_line do |line|
-          record.errors[attribute] << _("must contain valid  Public GPG Key") if line.length > GpgKey::MAX_CONTENT_LINE_LENGTH
+          record.errors[attribute] << _("must contain valid  Public GPG Key") if line.length > ContentCredential::MAX_CONTENT_LINE_LENGTH
         end
       end
     end

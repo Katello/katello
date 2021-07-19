@@ -451,7 +451,7 @@ module Katello
       credential_var = "@#{content_type}"
 
       if params[credential_id]
-        credential_value = GpgKey.readable.where(:id => params[credential_id], :organization_id => @organization).first
+        credential_value = ContentCredential.readable.where(:id => params[credential_id], :organization_id => @organization).first
         instance_variable_set(credential_var, credential_value)
         if instance_variable_get(credential_var).nil?
           fail HttpErrors::NotFound, _("Couldn't find %{content_type} with id '%{id}'") % { :content_type => content_type, :id => params[credential_id] }

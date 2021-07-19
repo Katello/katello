@@ -15,7 +15,7 @@ module Katello
       @fedora               = Product.find(katello_products(:fedora).id)
       @library              = KTEnvironment.find(katello_environments(:library).id)
       @dev                  = KTEnvironment.find(katello_environments(:dev).id)
-      @unassigned_gpg_key   = GpgKey.find(katello_gpg_keys(:unassigned_gpg_key).id)
+      @unassigned_gpg_key   = ContentCredential.find(katello_gpg_keys(:unassigned_gpg_key).id)
     end
   end
 end

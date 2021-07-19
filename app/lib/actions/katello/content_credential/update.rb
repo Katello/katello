@@ -1,6 +1,6 @@
 module Actions
   module Katello
-    module GpgKey
+    module ContentCredential
       class Update < Actions::EntryAction
         def plan(gpg_key, gpg_key_params)
           action_subject gpg_key

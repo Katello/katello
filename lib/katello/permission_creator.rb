@@ -151,27 +151,27 @@ module Katello
                            'katello/api/v2/content_credentials' => [:index, :show, :content, :auto_complete_search],
                            'katello/api/v2/gpg_keys' => [:index, :show, :content, :auto_complete_search]
                          },
-                         :resource_type => 'Katello::GpgKey',
+                         :resource_type => 'Katello::ContentCredential',
                          :finder_scope => :readable
       @plugin.permission :create_content_credentials,
                          {
                            'katello/api/v2/content_credentials' => [:create],
                            'katello/api/v2/gpg_keys' => [:create]
                          },
-                         :resource_type => 'Katello::GpgKey'
+                         :resource_type => 'Katello::ContentCredential'
       @plugin.permission :edit_content_credentials,
                          {
                            'katello/api/v2/content_credentials' => [:update, :set_content],
                            'katello/api/v2/gpg_keys' => [:update, :set_content]
                          },
-                         :resource_type => 'Katello::GpgKey',
+                         :resource_type => 'Katello::ContentCredential',
                          :finder_scope => :editable
       @plugin.permission :destroy_content_credentials,
                          {
                            'katello/api/v2/content_credentials' => [:destroy],
                            'katello/api/v2/gpg_keys' => [:destroy]
                          },
-                         :resource_type => 'Katello::GpgKey',
+                         :resource_type => 'Katello::ContentCredential',
                          :finder_scope => :deletable
     end
 
