@@ -6,7 +6,7 @@ module Katello
     skip_before_action :check_media_type, :only => [:create, :content, :set_content]
 
     def resource_class
-      Katello::GpgKey
+      Katello::ContentCredential
     end
 
     def_param_group :content_credential do
@@ -35,7 +35,7 @@ module Katello
     end
 
     def index_relation
-      query = GpgKey.readable.where(:organization_id => @organization.id)
+      query = ContentCredential.readable.where(:organization_id => @organization.id)
       query = query.where(:name => params[:name]) if params[:name]
       query = query.where(:content_type => params[:content_type]) if params[:content_type]
       query
@@ -68,7 +68,7 @@ module Katello
     param :id, :number, :desc => N_('Content Credential ID'), :required => true
     param_group :content_credential
     def update
-      sync_task(::Actions::Katello::GpgKey::Update, @content_credential, content_credential_params.to_h)
+      sync_task(::Actions::Katello::ContentCredential::Update, @content_credential, content_credential_params.to_h)
       respond_for_show(:resource => @content_credential)
     end
 

@@ -18,7 +18,7 @@ module Katello
       :katello_content_view_version_import_histories => Katello::ContentViewVersionImportHistory,
       :katello_environments => Katello::KTEnvironment,
       :katello_files => Katello::FileUnit,
-      :katello_gpg_keys => Katello::GpgKey,
+      :katello_gpg_keys => Katello::ContentCredential,
       :katello_package_groups => Katello::PackageGroup,
       :katello_repository_package_groups => Katello::RepositoryPackageGroup,
       :katello_pools => Katello::Pool,

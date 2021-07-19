@@ -1,18 +1,18 @@
 module Katello
-  class GpgKey < Katello::Model
+  class ContentCredential < Katello::Model
     audited :associations => [:products]
 
     include ForemanTasks::Concerns::ActionSubject
-    include Katello::Authorization::GpgKey
+    include Katello::Authorization::ContentCredential
     MAX_CONTENT_LINE_LENGTH = 65
 
     GPG_KEY_TYPE = 'gpg_key'.freeze
     CERT_TYPE = 'cert'.freeze
 
-    has_many :root_repositories, :class_name => "Katello::RootRepository", :inverse_of => :gpg_key, :dependent => :nullify
+    has_many :root_repositories, :class_name => "Katello::RootRepository", :inverse_of => :gpg_key, :dependent => :nullify, :foreign_key => 'gpg_key_id'
     has_many :repositories, :through => :root_repositories
 
-    has_many :products, :class_name => "Katello::Product", :inverse_of => :gpg_key, :dependent => :nullify
+    has_many :products, :class_name => "Katello::Product", :inverse_of => :gpg_key, :dependent => :nullify, :foreign_key => 'gpg_key_id'
     has_many :ssl_ca_products, :class_name => "Katello::Product", :foreign_key => "ssl_ca_cert_id",
                                :inverse_of => :ssl_ca_cert, :dependent => :nullify
     has_many :ssl_client_products, :class_name => "Katello::Product", :foreign_key => "ssl_client_cert_id",

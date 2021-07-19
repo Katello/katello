@@ -21,7 +21,7 @@ module Katello
         # has_many :environments is already defined in Foreman taxonomy.rb
         has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :restrict_with_exception, :inverse_of => :organization
         has_one :library, lambda { where(:library => true) }, :class_name => "Katello::KTEnvironment", :dependent => :destroy
-        has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
+        has_many :gpg_keys, :class_name => "Katello::ContentCredential", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
         has_many :host_collections, :class_name => "Katello::HostCollection", :dependent => :destroy, :inverse_of => :organization
         has_many :contents, :class_name => "Katello::Content", :dependent => :destroy, :inverse_of => :organization

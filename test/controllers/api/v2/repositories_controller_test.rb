@@ -331,8 +331,8 @@ module Katello
     end
 
     def test_create_with_options
-      key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
-      cert = GpgKey.find(katello_gpg_keys('fedora_cert').id)
+      key = ContentCredential.find(katello_gpg_keys('fedora_gpg_key').id)
+      cert = ContentCredential.find(katello_gpg_keys('fedora_cert').id)
 
       product = mock
       product.expects(:add_repo).with({
@@ -516,7 +516,7 @@ module Katello
     end
 
     def test_update_with_gpg_key
-      key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
+      key = ContentCredential.find(katello_gpg_keys('fedora_gpg_key').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         root.must_equal @repository.root
         expected = { 'gpg_key_id' => key.id.to_s }
@@ -528,7 +528,7 @@ module Katello
     end
 
     def test_update_with_cert
-      cert = GpgKey.find(katello_gpg_keys('fedora_cert').id)
+      cert = ContentCredential.find(katello_gpg_keys('fedora_cert').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
         root.must_equal root
         expected = { 'ssl_ca_cert_id' => cert.id.to_s }

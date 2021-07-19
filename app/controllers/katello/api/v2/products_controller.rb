@@ -150,7 +150,7 @@ module Katello
     def authorize_gpg_key
       gpg_key_id = product_params[:gpg_key_id]
       if gpg_key_id
-        gpg_key = GpgKey.readable.where(:id => gpg_key_id, :organization_id => @organization).first
+        gpg_key = ContentCredential.readable.where(:id => gpg_key_id, :organization_id => @organization).first
         throw_resource_not_found(name: 'gpg key', id: gpg_key_id) if gpg_key.nil?
       end
     end
@@ -158,7 +158,7 @@ module Katello
     def authorize_ssl_ca_cert
       ssl_ca_cert_id = product_params[:ssl_ca_cert_id]
       if ssl_ca_cert_id
-        ssl_ca_cert = GpgKey.readable.where(:id => ssl_ca_cert_id, :organization_id => @organization).first
+        ssl_ca_cert = ContentCredential.readable.where(:id => ssl_ca_cert_id, :organization_id => @organization).first
         throw_resource_not_found(name: 'ssl ca cert', id: ssl_ca_cert_id) if ssl_ca_cert.nil?
       end
     end
@@ -166,7 +166,7 @@ module Katello
     def authorize_ssl_client_cert
       ssl_client_cert_id = product_params[:ssl_client_cert_id]
       if ssl_client_cert_id
-        ssl_client_cert = GpgKey.readable.where(:id => ssl_client_cert_id, :organization_id => @organization).first
+        ssl_client_cert = ContentCredential.readable.where(:id => ssl_client_cert_id, :organization_id => @organization).first
         throw_resource_not_found(name: 'ssl client cert', id: ssl_client_cert_id) if ssl_client_cert.nil?
       end
     end
@@ -174,7 +174,7 @@ module Katello
     def authorize_ssl_client_key
       ssl_client_key_id = product_params[:ssl_client_key_id]
       if ssl_client_key_id
-        ssl_client_key = GpgKey.readable.where(:id => ssl_client_key_id, :organization_id => @organization).first
+        ssl_client_key = ContentCredential.readable.where(:id => ssl_client_key_id, :organization_id => @organization).first
         throw_resource_not_found(name: 'ssl client key', id: ssl_client_key_id) if ssl_client_key.nil?
       end
     end
