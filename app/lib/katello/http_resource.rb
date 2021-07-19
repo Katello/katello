@@ -34,8 +34,27 @@ module Katello
       @json[key] = value
     end
 
+    REQUEST_MAP = {
+      get: Net::HTTP::Get,
+      post: Net::HTTP::Post,
+      put: Net::HTTP::Put,
+      delete: Net::HTTP::Delete
+    }.freeze
+
+    class_eval do
+      REQUEST_MAP.keys.each do |key|
+        define_singleton_method(key) do |*args|
+          issue_request(
+            method: key,
+            path: args.first,
+            headers: args.length > 1 ? args.last : nil,
+            payload: args.length > 2 ? args[1] : nil # non-GET method signatures use payload as the second argument, keeping headers as the last element
+          )
+        end
+      end
+    end
+
     class << self
-      # children must redefine
       def logger
         fail NotImplementedError
       end
@@ -64,64 +83,19 @@ module Katello
         fail RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
       end
 
-      def print_debug_info(_a_path, headers = {}, payload = {})
+      def issue_request(method:, path:, headers: {}, payload: nil)
+        logger.debug("Resource #{method.upcase} request: #{path}")
         logger.debug "Headers: #{headers.to_json}"
         logger.debug "Body: #{filter_sensitive_data(payload.to_json)}"
-      end
 
-      def get(a_path, headers = {})
-        logger.debug "Resource GET request: #{a_path}"
-        print_debug_info(a_path, headers)
-        a_path = URI.encode(a_path)
-        client = rest_client(Net::HTTP::Get, :get, a_path)
-        result = process_response(client.get(headers))
-        result
-      rescue RestClient::Exception => e
-        raise_rest_client_exception e, a_path, "GET"
-      rescue Errno::ECONNREFUSED
-        service = a_path.split("/").second
-        raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
-      end
+        client = rest_client(REQUEST_MAP[method], method, path)
+        args = [method, payload, headers].compact
 
-      def post(a_path, payload = {}, headers = {})
-        logger.debug "Resource POST request: #{a_path}, #{payload}"
-        print_debug_info(a_path, headers, payload)
-        a_path = URI.encode(a_path)
-        client = rest_client(Net::HTTP::Post, :post, a_path)
-        result = process_response(client.post(payload, headers))
-        result
+        process_response(client.send(*args))
       rescue RestClient::Exception => e
-        raise_rest_client_exception e, a_path, "POST"
+        raise_rest_client_exception e, path, method.upcase
       rescue Errno::ECONNREFUSED
-        service = a_path.split("/").second
-        raise Katello::Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
-      end
-
-      def put(a_path, payload = {}, headers = {})
-        logger.debug "Resource PUT request: #{a_path}, #{payload}"
-        print_debug_info(a_path, headers, payload)
-        a_path = URI.encode(a_path)
-        client = rest_client(Net::HTTP::Put, :put, a_path)
-        result = process_response(client.put(payload, headers))
-        result
-      rescue RestClient::Exception => e
-        raise_rest_client_exception e, a_path, "PUT"
-      rescue Errno::ECONNREFUSED
-        service = a_path.split("/").second
-        raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
-      end
-
-      def delete(a_path = nil, headers = {})
-        logger.debug "Resource DELETE request: #{a_path}"
-        print_debug_info(a_path, headers)
-        a_path = URI.encode(a_path)
-        client = rest_client(Net::HTTP::Delete, :delete, a_path)
-        result = process_response(client.delete(headers))
-        result
-      rescue RestClient::Exception => e
-        raise_rest_client_exception e, a_path, "DELETE"
-      rescue Errno::ECONNREFUSED
-        service = a_path.split("/").second
+        service = path.split("/").second
         raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
       end
 
@@ -137,10 +111,6 @@ module Katello
           so_far << '/' if (!so_far.empty? && so_far[so_far.length - 1].chr != '/') || current[0].chr != '/'
           so_far << current.strip
         end
-      end
-
-      def create_thing(request_type)
-        request_type.new
       end
 
       # Creates a RestClient::Resource class with a signed OAuth style
@@ -180,23 +150,8 @@ module Katello
         RestClient::Resource.new(url, options)
       end
 
-      # Encode url element if its not nil. This helper method is used mainly in resource path methods.
-      #
-      # @param [String] element to encode
-      # @return [String] encoded element or nil
-      def url_encode(element)
-        CGI.escape element.to_s unless element.nil?
-      end
-
       def hash_to_query(query_parameters)
-        query_parameters.inject("?") do |so_far, current|
-          so_far << "&" unless so_far == "?"
-          if current[1].is_a?(Array)
-            so_far << current[1].map { |attr| "#{current[0]}=#{attr}" }.join('&')
-          else
-            so_far << "#{current[0].to_s}=#{url_encode(current[1])}"
-          end
-        end
+        "?#{URI.encode_www_form(query_parameters)}"
       end
     end
   end
