@@ -99,12 +99,13 @@ describe('Controller: ContentHostErrataController', function() {
     });
 
     it("provide a way to apply errata", function() {
+        var bulk_errata_ids = angular.toJson({included: { ids: [mockErratum.errata_id], params: {} }});
+
         spyOn(HostErratum, "apply").and.callThrough();
         spyOn($scope.table, "selectAll");
         spyOn($scope, "transitionTo");
         $scope.applySelected();
-        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, bulk_errata_ids: {included: { ids: [mockErratum.errata_id], params: {} }}},
-                                                         jasmine.any(Function));
+        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, bulk_errata_ids: bulk_errata_ids}, jasmine.any(Function));
         expect($scope.transitionTo).toHaveBeenCalledWith('content-host.tasks.details', {taskId: mockTask.id});
         expect($scope.table.selectAll).toHaveBeenCalledWith(false);
     });

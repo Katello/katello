@@ -126,7 +126,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
 
         $scope.performViaKatelloAgent = function () {
             var errataIds = $scope.selectedErrataIds();
-            HostErratum.apply({id: $scope.host.id, 'bulk_errata_ids': errataIds},
+            HostErratum.apply({id: $scope.host.id, 'bulk_errata_ids': angular.toJson(errataIds)},
                                function (task) {
                                     $scope.table.selectAll(false);
                                     $scope.transitionTo('content-host.tasks.details', {taskId: task.id});

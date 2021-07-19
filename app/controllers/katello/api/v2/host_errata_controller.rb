@@ -115,7 +115,7 @@ module Katello
         fail HttpErrors::NotFound, _("Couldn't find errata ids '%s'") % missing.to_sentence if missing.any?
         @errata_ids = params[:errata_ids]
       else
-        @errata_ids = find_bulk_errata_ids([@host], params[:bulk_errata_ids].to_json)
+        @errata_ids = find_bulk_errata_ids([@host], params[:bulk_errata_ids])
       end
     end
   end
