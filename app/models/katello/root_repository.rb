@@ -83,7 +83,7 @@ module Katello
     validates :content_type, :inclusion => {
       :in => ->(_) { Katello::RepositoryTypeManager.enabled_repository_types.keys },
       :allow_blank => false,
-      :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.enabled_repository_types.keys.join(', ') }
+      :message => ->(_, _) { _("is not enabled. must be one of the following: %s") % Katello::RepositoryTypeManager.enabled_repository_types.keys.join(', ') }
     }
     validates :download_policy, inclusion: {
       :in => ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES,

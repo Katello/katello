@@ -30,5 +30,19 @@ module Katello
       ::Katello::RepositoryTypeManager.expects(:update_enabled_repository_type).once
       ::Katello::RepositoryTypeManager.find('yum')
     end
+
+    def test_check_content_type_matches_repo_type_fails_properly
+      @feature.update(capabilities: ['ansible', 'certguard', 'container', 'core', 'deb', 'file', 'rpm', 'python'])
+      repo = Repository.find_by(pulp_id: "pulp-uuid-rhel_6_x86_64")
+      assert_raises_with_message(RuntimeError, 'Content type ostree is incompatible with repositories of type yum') do
+        RepositoryTypeManager.check_content_matches_repo_type!(repo, 'ostree')
+      end
+    end
+
+    def test_check_content_type_matches_repo_type_passes_properly
+      @feature.update(capabilities: ['ansible', 'certguard', 'container', 'core', 'deb', 'file', 'rpm', 'python'])
+      repo = Repository.find_by(pulp_id: "pulp-uuid-rhel_6_x86_64")
+      RepositoryTypeManager.check_content_matches_repo_type!(repo, 'rpm')
+    end
   end
 end

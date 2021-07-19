@@ -229,7 +229,8 @@ module Katello
 
       def pulp3_content_support?(content_type)
         content_type_obj = content_type.is_a?(String) ? Katello::RepositoryTypeManager.find_content_type(content_type) : content_type
-        fail "Cannot find content type #{content_type}." unless content_type_obj
+        content_type_string = content_type_obj&.label || content_type
+        fail "Content type #{content_type_string} does not belong to an enabled repo type." unless content_type_obj
 
         found_type = Katello::RepositoryTypeManager.enabled_repository_types.values.find { |repo_type| repo_type.content_types.include?(content_type_obj) }
         fail "Cannot find repository type for content_type #{content_type}, is it enabled?" unless found_type
@@ -289,8 +290,17 @@ module Katello
       end
 
       def content_service(content_type)
-        content_type = RepositoryTypeManager.find_content_type(content_type) if content_type.is_a?(String)
-        pulp3_content_support?(content_type) ? content_type.pulp3_service_class : content_type.pulp2_service_class
+        if content_type.is_a?(String)
+          content_type_obj = RepositoryTypeManager.find_content_type(content_type)
+        else
+          content_type_obj = content_type
+        end
+        content_type_string = content_type_obj&.label || content_type
+        unless content_type_obj
+          fail _("Content type %{content_type_string} does not belong to an enabled repo type.") %
+                { content_type_string: content_type_string }
+        end
+        pulp3_content_support?(content_type_obj) ? content_type_obj.pulp3_service_class : content_type_obj.pulp2_service_class
       end
 
       def set_default_download_policy
