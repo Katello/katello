@@ -15,7 +15,12 @@ module Actions
           content_type ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
           ::Katello::RepositoryTypeManager.check_content_matches_repo_type!(repository, content_type)
 
-          unit_type_id = SmartProxy.pulp_primary.content_service(content_type)::CONTENT_TYPE
+          if ::Katello::RepositoryTypeManager.generic_content_type?(content_type)
+            unit_type_id = content_type
+          else
+            unit_type_id = SmartProxy.pulp_primary.content_service(content_type)::CONTENT_TYPE
+          end
+
           upload_actions = []
 
           generate_applicability = options.fetch(:generate_applicability, repository.yum?)

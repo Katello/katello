@@ -3,7 +3,10 @@ module Katello
     self.table_name = 'katello_generic_content_units'
     include Concerns::PulpDatabaseUnit
 
-    CONTENT_TYPE = 'generic_content_unit'.freeze
+    CONTENT_TYPE = 'generic'.freeze
+
+    scoped_search :on => :name, :complete_value => true
+    scoped_search :on => :id, :complete_value => true
 
     def self.default_sort
       order(:name)

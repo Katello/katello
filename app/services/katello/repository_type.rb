@@ -50,11 +50,11 @@ module Katello
       end
     end
 
-    def default_managed_content_type(model_class = nil)
-      if model_class
-        @default_managed_content_type_class = model_class
+    def default_managed_content_type(label = nil)
+      if label
+        @default_managed_content_type_label = label.to_s
       else
-        @content_types.find { |content_type| content_type.model_class == @default_managed_content_type_class }
+        @content_types.find { |content_type| content_type.label == @default_managed_content_type_label }
       end
     end
 
@@ -122,7 +122,7 @@ module Katello
     end
 
     class GenericContentType < ContentType
-      attr_accessor :pulp3_api, :pulp3_model, :content_type
+      attr_accessor :pulp3_api, :pulp3_model, :content_type, :filename_key, :duplicates_allowed
 
       def initialize(options)
         self.model_class = options[:model_class]
@@ -135,10 +135,12 @@ module Katello
         self.pulp3_api = options[:pulp3_api]
         self.pulp3_model = options[:pulp3_model]
         self.content_type = options[:content_type]
+        self.filename_key = options[:filename_key]
+        self.duplicates_allowed = options[:duplicates_allowed]
       end
 
       def label
-        self.model_class::CONTENT_TYPE
+        self.content_type
       end
     end
 

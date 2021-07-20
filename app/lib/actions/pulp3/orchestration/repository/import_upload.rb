@@ -11,11 +11,9 @@ module Actions
             docker_tag = (args.dig(:unit_type_id) == "docker_tag")
             sequence do
               if content_unit_href
-                content_backend_service = SmartProxy.pulp_primary.content_service(args.dig(:unit_type_id))
-                duplicate_sha_path_content_list = content_backend_service.content_api.list(
-                    "sha256": file[:sha256],
-                    "relative_path": file[:filename])
+                duplicate_sha_path_content_list = ::Katello::Pulp3::PulpContentUnit.find_duplicate_unit(repository, args.dig(:unit_type_id), file, file[:sha256])
                 duplicate_content_href = duplicate_sha_path_content_list&.results&.first&.pulp_href
+
                 if duplicate_content_href
                   plan_self(:commit_output => [], :content_unit_href => duplicate_content_href)
                   action_output = plan_action(Pulp3::Repository::ImportUpload, duplicate_content_href, repository, smart_proxy).output

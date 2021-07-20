@@ -1,6 +1,6 @@
 Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
   service_class Katello::Pulp::Repository::Docker
-  default_managed_content_type Katello::DockerManifest
+  default_managed_content_type Katello::DockerManifest::CONTENT_TYPE
   pulp3_service_class Katello::Pulp3::Repository::Docker
   pulp3_api_class Katello::Pulp3::Api::Docker
   pulp3_skip_publication true

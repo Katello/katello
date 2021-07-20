@@ -13,6 +13,7 @@ module ::Actions::Katello::Repository
     let(:action) { create_action action_class }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
     let(:repository_pulp3) { katello_repositories(:pulp3_file_1) }
+    let(:repository_python_pulp3) { katello_repositories(:pulp3_python_1) }
     let(:repository_ansible_collection_pulp3) { katello_repositories(:pulp3_ansible_collection_1) }
     let(:repository_apt_pulp3) { katello_repositories(:pulp3_deb_1) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
@@ -299,6 +300,55 @@ module ::Actions::Katello::Repository
                                 "demo_content/href", repository_pulp3, proxy)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
+                                tasks: [{href: "demo_task/version_href"}])
+    end
+  end
+
+  class UploadPythonTest < TestBase
+    let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
+    it 'plans for Pulp3 without duplicate' do
+      proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => nil))))
+      ::Katello::Pulp3::Api::Core.any_instance.stubs(:artifacts_api).returns(stub(:list => stub(:results => nil)))
+      action = create_action pulp3_action_class
+      file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "shelf_reader-0.1-py2-none-any.whl")
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::UploadFile) do |content_create|
+        content_create.stubs(output: { pulp_tasks: [{href: "demo_task/href"}] })
+      end
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::SaveArtifact) do |save_artifact|
+        save_artifact.stubs(output: { pulp_tasks: [{href: "demo_task/artifact_href"}] })
+      end
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
+        import_upload.stubs(output: { pulp_tasks: [{href: "demo_task/version_href"}] })
+      end
+
+      plan_action action, repository_python_pulp3, proxy, {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'}, 'python_package'
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::UploadFile,
+                                repository_python_pulp3, proxy, file)
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveArtifact,
+                                {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'},
+                                repository_python_pulp3, proxy,
+                                [{href: "demo_task/href"}],
+                                "python_package")
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+                                [{href: "demo_task/artifact_href"}], repository_python_pulp3, proxy)
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
+                                repository_python_pulp3,
+                                tasks: [{href: "demo_task/version_href"}])
+    end
+
+    it 'plans for Pulp3 with duplicate' do
+      proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => [stub(:pulp_href => "demo_content/href")]))))
+      action = create_action pulp3_action_class
+      file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "shelf_reader-0.1-py2-none-any.whl")
+      action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
+        import_upload.stubs(output: { pulp_tasks: [{href: "demo_task/version_href"}] })
+      end
+
+      plan_action action, repository_python_pulp3, proxy, {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'}, 'python_package'
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
+                                "demo_content/href", repository_python_pulp3, proxy)
+      assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
+                                repository_python_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
     end
   end

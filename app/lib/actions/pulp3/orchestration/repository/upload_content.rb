@@ -6,18 +6,13 @@ module Actions
           include Actions::Helpers::OutputPropagator
           def plan(repository, smart_proxy, file, unit_type_id)
             sequence do
-              content_backend_service = SmartProxy.pulp_primary.content_service(unit_type_id)
-              duplicate_sha_path_content_list = content_backend_service.content_api.list(
-                  "sha256": Digest::SHA256.hexdigest(File.read(file[:path])),
-                  "relative_path": file[:filename])
+              checksum = Digest::SHA256.hexdigest(File.read(file[:path]))
+              duplicate_sha_path_content_list = ::Katello::Pulp3::PulpContentUnit.find_duplicate_unit(repository, unit_type_id, file, checksum)
               duplicate_content_href = duplicate_sha_path_content_list&.results&.first&.pulp_href
 
               unless duplicate_content_href
                 duplicate_sha_artifact_list = ::Katello::Pulp3::Api::Core.new(smart_proxy).artifacts_api.list("sha256": Digest::SHA256.hexdigest(File.read(file[:path])))
                 duplicate_sha_artifact_href = duplicate_sha_artifact_list&.results&.first&.pulp_href
-              end
-
-              unless duplicate_content_href
                 if duplicate_sha_artifact_href
                   artifact_action_output = plan_action(Pulp3::Repository::SaveArtifact, file, repository, smart_proxy, nil, unit_type_id, artifact_href: duplicate_sha_artifact_href).output
                 else

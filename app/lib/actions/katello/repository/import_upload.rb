@@ -16,7 +16,11 @@ module Actions
           generate_applicability = options.fetch(:generate_applicability, repository.yum?)
 
           options[:content_type] ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
-          unit_type_id = SmartProxy.pulp_primary.content_service(options[:content_type])::CONTENT_TYPE
+          if ::Katello::RepositoryTypeManager.generic_content_type?(options[:content_type])
+            unit_type_id = options[:content_type]
+          else
+            unit_type_id = SmartProxy.pulp_primary.content_service(options[:content_type])::CONTENT_TYPE
+          end
 
           sequence do
             upload_results = concurrence do

@@ -13,7 +13,10 @@ module Actions
           fail _("Content not uploaded to pulp") unless artifact_href
           content_type = input[:unit_type_id]
           content_backend_service = SmartProxy.pulp_primary.content_service(content_type)
-          output[:pulp_tasks] = [content_backend_service.content_api_create(relative_path: input[:options][:file_name], artifact: artifact_href)]
+          output[:pulp_tasks] = [content_backend_service.content_api_create(relative_path: input[:options][:file_name],
+                                                                            artifact: artifact_href,
+                                                                            repository_id: input[:repository_id],
+                                                                            content_type: content_type)]
         end
 
         def fetch_artifact_href
