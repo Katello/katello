@@ -275,6 +275,15 @@ Katello::Engine.routes.draw do
           end
         end
 
+        Katello::RepositoryTypeManager.generic_content_types(enabled_only: false).each do |type|
+          api_resources type.pluralize.to_sym, :only => [:index, :show], :controller => 'generic_content_units', :content_type => type do
+            collection do
+              get :auto_complete_search
+              get :compare
+            end
+          end
+        end
+
         match "/ping" => "katello_ping#index", :via => :get
         match "/status" => "katello_ping#server_status", :via => :get
 
@@ -392,7 +401,9 @@ Katello::Engine.routes.draw do
           api_resources :debs, :only => [:index, :show]
           api_resources :module_streams, :only => [:index, :show]
           api_resources :ansible_collections, :only => [:index, :show]
-
+          Katello::RepositoryTypeManager.generic_content_types(enabled_only: false).each do |type|
+            api_resources type.pluralize.to_sym, :only => [:index, :show], :controller => 'generic_content_units', :content_type => type
+          end
           api_resources :ostree_branches, :only => [:index, :show]
 
           api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :update]

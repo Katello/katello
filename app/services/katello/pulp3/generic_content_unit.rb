@@ -2,7 +2,7 @@ module Katello
   module Pulp3
     class GenericContentUnit < PulpContentUnit
       include LazyAccessor
-      CONTENT_TYPE = "generic_content_unit".freeze
+      CONTENT_TYPE = "generic".freeze
 
       def self.fetch_content_list(page_opts, repository_type, content_type)
         content_unit_list page_opts, repository_type, content_type

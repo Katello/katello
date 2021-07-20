@@ -5,7 +5,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
   pulp3_plugin 'rpm'
   prevent_unneeded_metadata_publish
 
-  default_managed_content_type Katello::Rpm
+  default_managed_content_type Katello::Rpm::CONTENT_TYPE
   content_type Katello::Rpm,
     :priority => 1,
     :pulp2_service_class => ::Katello::Pulp::Rpm,

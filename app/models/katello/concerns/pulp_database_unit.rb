@@ -127,9 +127,13 @@ module Katello
         "#{self.name.demodulize.underscore}_id"
       end
 
-      def import_all(pulp_ids = nil, repository = nil, content_type_name = nil)
+      def import_all(pulp_ids = nil, repository = nil, generic_content_type = nil)
         ids_to_associate = []
-        service_class = SmartProxy.pulp_primary!.content_service(content_type)
+        if generic_content_type
+          service_class = SmartProxy.pulp_primary!.content_service(generic_content_type)
+        else
+          service_class = SmartProxy.pulp_primary!.content_service(content_type)
+        end
         service_class.pulp_units_batch_all(pulp_ids).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
@@ -146,7 +150,7 @@ module Katello
             service = service_class.new(model.pulp_id)
             service.backend_data = unit
             if repository&.generic?
-              service.update_model(model, repository.repository_type, content_type_name)
+              service.update_model(model, repository.repository_type, generic_content_type)
             else
               service.update_model(model)
             end
@@ -156,14 +160,19 @@ module Katello
         sync_repository_associations(repository, :pulp_ids => ids_to_associate, :additive => true) if self.many_repository_associations && repository && ids_to_associate.present?
       end
 
-      def import_for_repository(repository, content_type_name = nil)
+      # rubocop:disable Metrics/MethodLength
+      def import_for_repository(repository, generic_content_type = nil)
         pulp_id_href_map = {}
-        service_class = SmartProxy.pulp_primary!.content_service(content_type)
+        if generic_content_type
+          service_class = SmartProxy.pulp_primary!.content_service(generic_content_type)
+        else
+          service_class = SmartProxy.pulp_primary!.content_service(content_type)
+        end
         fetch_only_ids = !repository.content_view.default? &&
                          !repository.repository_type.unique_content_per_repo &&
                          service_class.supports_id_fetch?
 
-        service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids, content_type: content_type_name).each do |units|
+        service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids, content_type: generic_content_type).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
             pulp_id = unit[service_class.unit_identifier]
@@ -176,7 +185,7 @@ module Katello
               service.backend_data = unit
               model.repository_id = repository.id unless many_repository_associations
               if repository.generic?
-                service.update_model(model, repository.repository_type, content_type_name)
+                service.update_model(model, repository.repository_type, generic_content_type)
               else
                 service.update_model(model)
               end
@@ -186,6 +195,7 @@ module Katello
         end
         sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map) if self.many_repository_associations
       end
+      # rubocop:enable Metrics/MethodLength
 
       def sync_repository_associations(repository, options = {})
         additive = options.fetch(:additive, false)
