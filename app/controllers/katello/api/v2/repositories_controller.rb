@@ -563,12 +563,21 @@ module Katello
       content_type = params[:content_type]
 
       if content_type
+        RepositoryTypeManager.check_content_matches_repo_type!(@repository, params[:content_type]) if params[:content_type]
         @content = @repository.units_for_removal(params[:ids], content_type)
       else
         @content = @repository.units_for_removal(params[:ids])
       end
 
-      RepositoryTypeManager.check_content_matches_repo_type!(@repository, @content.first.class::CONTENT_TYPE)
+      if @repository.generic?
+        if content_type
+          RepositoryTypeManager.check_content_matches_repo_type!(@repository, @content.first.content_type)
+        else
+          RepositoryTypeManager.check_content_matches_repo_type!(@repository, @repository.repository_type.default_managed_content_type.label)
+        end
+      else
+        RepositoryTypeManager.check_content_matches_repo_type!(@repository, @content.first.class::CONTENT_TYPE)
+      end
     end
 
     def filter_by_content_view(query, content_view_id, environment_id, is_available_for)

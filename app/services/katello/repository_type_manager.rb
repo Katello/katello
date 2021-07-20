@@ -75,6 +75,19 @@ module Katello
                   flatten
       end
 
+      def generic_content_types(enabled_only = true)
+        repo_types = enabled_only ? enabled_repository_types : defined_repository_types
+        list = repo_types.values.map do |type|
+          type.content_types.select { |ct| ct.model_class::CONTENT_TYPE == Katello::GenericContentUnit::CONTENT_TYPE }
+        end
+        list.flatten.map(&:content_type)
+      end
+
+      def generic_content_type?(content_type, enabled_only = true)
+        types = generic_content_types(enabled_only)
+        types.include?(content_type)
+      end
+
       def creatable_by_user?(repository_type, enabled_only = true)
         type = enabled_only ? find(repository_type) : find_defined(repository_type)
         return false unless type

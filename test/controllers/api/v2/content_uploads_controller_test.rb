@@ -6,6 +6,7 @@ module Katello
   class Api::V2::ContentUploadsControllerTest < ActionController::TestCase
     def models
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+      @generic_repo = Repository.find(katello_repositories(:pulp3_python_1).id)
       @org = get_organization
       @environment = katello_environments(:library)
     end
@@ -28,7 +29,16 @@ module Katello
     def test_create_upload_request
       mock_pulp_server(:create_upload_request => [])
       ::Katello::RepositoryTypeManager.expects(:check_content_matches_repo_type!).returns(true)
-      post :create, params: { :repository_id => @repo.id, :size => 100, :checksum => 'test_checksum' }
+      post :create, params: { :repository_id => @repo.id, :size => 100, :checksum => 'test_checksum', :content_type => nil,
+                              :repository => @repo }
+      assert_response :success
+    end
+
+    def test_create_generic_upload_request
+      mock_pulp_server(:create_upload_request => [])
+      ::Katello::RepositoryTypeManager.expects(:check_content_matches_repo_type!).returns(true)
+      post :create, params: { :repository_id => @repo.id, :size => 100, :checksum => 'test_checksum', :content_type => 'python_package',
+                              :repository => @generic_repo }
       assert_response :success
     end
 
