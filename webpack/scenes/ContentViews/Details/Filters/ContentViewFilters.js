@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { shallowEqual, useSelector } from 'react-redux';
-import { Label } from '@patternfly/react-core';
+import { Label, Split, SplitItem, Button } from '@patternfly/react-core';
 import { TableVariant } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
@@ -19,6 +19,7 @@ import {
 } from '../ContentViewDetailSelectors';
 import { truncate } from '../../../../utils/helpers';
 import ContentType from './ContentType';
+import CVFilterAddModal from './Add/CVFilterAddModal';
 
 const cvFilterUrl = (cvId, filterId) => `/labs/content_views/${cvId}#filters?subContentId=${filterId}`;
 
@@ -30,6 +31,9 @@ const ContentViewFilters = ({ cvId }) => {
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const loading = status === STATUS.PENDING;
+  const [addModalOpen, setAddModalOpen] = useState(false);
+
+  const openAddModal = () => setAddModalOpen(true);
 
   const columnHeaders = [
     __('Name'),
@@ -44,9 +48,9 @@ const ContentViewFilters = ({ cvId }) => {
     results.forEach((filter) => {
       let errataByDate = false;
       const {
-        id, name, type, description, updated_at: updatedAt, inclusion,
+        id, name, type, description, updated_at: updatedAt, inclusion, rules,
       } = filter;
-      if (filter.type === 'erratum' && filter.rules[0].types) errataByDate = true;
+      if (type === 'erratum' && rules[0]?.types) errataByDate = true;
 
       const cells = [
         { title: (type === 'package_group' || type === 'rpm') ? <Link to={cvFilterUrl(cvId, id)}>{name}</Link> : name },
@@ -100,7 +104,23 @@ const ContentViewFilters = ({ cvId }) => {
       variant={TableVariant.compact}
       autocompleteEndpoint="/content_view_filters/auto_complete_search"
       fetchItems={params => getContentViewFilters(cvId, params)}
-    />);
+    >
+      <Split hasGutter>
+        <SplitItem>
+          <Button onClick={openAddModal} variant="secondary" aria-label="create_filter">
+            {__('Create filter')}
+          </Button>
+        </SplitItem>
+      </Split>
+      {addModalOpen &&
+      <CVFilterAddModal
+        cvId={cvId}
+        show={addModalOpen}
+        setIsOpen={setAddModalOpen}
+        aria-label="add_filter_modal"
+      />
+      }
+    </TableWrapper>);
 };
 
 
