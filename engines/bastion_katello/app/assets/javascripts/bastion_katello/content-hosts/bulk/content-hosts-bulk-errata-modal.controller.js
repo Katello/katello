@@ -55,6 +55,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.initialLoad = true;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
+        $scope.katelloAgentPresent = BastionConfig.katelloAgentPresent;
         $scope.allHostsSelected = hostIds.allResultsSelected;
         $scope.hostToolingEnabled = BastionConfig.hostToolingEnabled;
 
