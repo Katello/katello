@@ -4,11 +4,15 @@ module Katello
     class Content
       extend Katello::Abstract::Pulp::Content
       class << self
-        def create_upload(size = 0, checksum = nil, content_type = nil)
+        def create_upload(size = 0, checksum = nil, content_type = nil, repository = nil)
           content_unit_href = nil
           if checksum
             content_backend_service = SmartProxy.pulp_primary.content_service(content_type)
-            content_list = content_backend_service.content_api.list("sha256": checksum)
+            if repository&.generic?
+              content_list = content_backend_service.content_api(repository.repository_type, content_type).list("sha256": checksum)
+            else
+              content_list = content_backend_service.content_api.list("sha256": checksum)
+            end
             content_unit_href = content_list.results.first.pulp_href unless content_list.results.empty?
             return {"content_unit_href" => content_unit_href} if content_unit_href
           end

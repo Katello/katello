@@ -10,5 +10,5 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::FILE_TYPE) do
                :pulp3_service_class => ::Katello::Pulp3::FileUnit,
                :removable => true,
                :uploadable => true
-  default_managed_content_type Katello::FileUnit
+  default_managed_content_type Katello::FileUnit::CONTENT_TYPE
 end

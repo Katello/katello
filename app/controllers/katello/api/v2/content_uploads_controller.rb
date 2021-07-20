@@ -15,9 +15,12 @@ module Katello
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Ansible collections.") if @repository.ansible_collection?
       content_type = params[:content_type] || ::Katello::RepositoryTypeManager.find(@repository.content_type)&.default_managed_content_type&.label
       RepositoryTypeManager.check_content_matches_repo_type!(@repository, content_type)
-
-      unit_type_id = SmartProxy.pulp_primary.content_service(content_type).content_type
-      render :json => @repository.backend_content_service(::SmartProxy.pulp_primary).create_upload(params[:size], params[:checksum], unit_type_id)
+      if ::Katello::RepositoryTypeManager.generic_content_type?(content_type)
+        unit_type_id = content_type
+      else
+        unit_type_id = SmartProxy.pulp_primary.content_service(content_type).content_type
+      end
+      render :json => @repository.backend_content_service(::SmartProxy.pulp_primary).create_upload(params[:size], params[:checksum], unit_type_id, @repository)
     end
 
     api :PUT, "/repositories/:repository_id/content_uploads/:id", N_("Upload a chunk of the file's content")

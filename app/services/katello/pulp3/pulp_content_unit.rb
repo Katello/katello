@@ -13,7 +13,13 @@ module Katello
 
       def self.content_api_create(opts = {})
         relative_path = opts.delete(:relative_path)
-        self.content_api.create(relative_path, opts)
+        if Katello::RepositoryTypeManager.generic_content_type?(opts[:content_type])
+          repository_type = Katello::Repository.find(opts[:repository_id]).repository_type
+          content_type = opts[:content_type]
+          self.content_api(repository_type, content_type).create(relative_path, opts)
+        else
+          self.content_api.create(relative_path, opts)
+        end
       end
 
       def self.create_content
@@ -108,6 +114,25 @@ module Katello
 
       def self.fetch_content_list(page_opts)
         content_unit_list page_opts
+      end
+
+      def self.find_duplicate_unit(repository, unit_type_id, file, checksum)
+        content_backend_service = SmartProxy.pulp_primary.content_service(unit_type_id)
+        duplicates_allowed = ::Katello::RepositoryTypeManager.find_content_type(unit_type_id).try(:duplicates_allowed)
+        if repository.generic? && duplicates_allowed
+          filename_key = ::Katello::RepositoryTypeManager.find_content_type(unit_type_id).filename_key
+          duplicate_sha_path_content_list = content_backend_service.content_api(repository.repository_type, unit_type_id).list(
+            "sha256": checksum,
+            filename_key => file[:filename])
+        elsif repository.generic?
+          duplicate_sha_path_content_list = content_backend_service.content_api(repository.repository_type, unit_type_id).list(
+            "sha256": checksum)
+        else
+          duplicate_sha_path_content_list = content_backend_service.content_api.list(
+            "sha256": checksum,
+            "relative_path": file[:filename])
+        end
+        duplicate_sha_path_content_list
       end
     end
   end
