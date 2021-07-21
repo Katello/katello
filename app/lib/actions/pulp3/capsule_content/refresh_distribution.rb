@@ -19,8 +19,11 @@ module Actions
           if options[:use_repository_version]
             repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:use_repository_version => true)
           elsif tasks && tasks[:pulp_tasks] && tasks[:pulp_tasks].first
-            publication_href = ::Katello::Pulp3::Task.publication_href(tasks[:pulp_tasks])
-            repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:publication => publication_href) if publication_href.any?
+            if (publication_href = ::Katello::Pulp3::Task.publication_href(tasks[:pulp_tasks]))
+              repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:publication => publication_href)
+            else
+              fail "Unable to refresh distribution for repo #{repository.id}, could not find a publication_href"
+            end
           end
         end
       end
