@@ -33,6 +33,13 @@ module Katello
       assert_equal mapper.unprotected?, false
     end
 
+    def test_disconnected_no_http
+      Setting[:content_disconnected] = true
+      mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, {})
+      mapper.expects(:substitutor).never
+      mapper.validate!
+    end
+
     def test_download_policy
       mapper = Candlepin::RepositoryMapper.new(@product_content.product, @product_content.content, {})
 

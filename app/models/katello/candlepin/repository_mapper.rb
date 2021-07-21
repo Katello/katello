@@ -44,7 +44,7 @@ module Katello
       end
 
       def validate!
-        return if katello_content_type == Repository::OSTREE_TYPE
+        return if katello_content_type == Repository::OSTREE_TYPE || Setting[:content_disconnected]
         substitutor.validate_substitutions(content, substitutions)
       end
 
