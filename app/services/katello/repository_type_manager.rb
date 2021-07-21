@@ -45,9 +45,10 @@ module Katello
         @enabled_repository_types
       end
 
-      def creatable_repository_types
-        enabled_repository_types.select do |repo_type, _|
-          creatable_by_user?(repo_type)
+      def creatable_repository_types(enabled_only = true)
+        repo_types = enabled_only ? enabled_repository_types : defined_repository_types
+        repo_types.select do |repo_type, _|
+          creatable_by_user?(repo_type, enabled_only)
         end
       end
 
@@ -56,8 +57,9 @@ module Katello
         @pulp_primary&.capabilities(PULP3_FEATURE)&.include?(@defined_repository_types[repository_type].pulp3_plugin)
       end
 
-      def enabled_content_types
-        list = enabled_repository_types.values.map do |type|
+      def enabled_content_types(enabled_only = true)
+        repo_types = enabled_only ? enabled_repository_types : defined_repository_types
+        list = repo_types.values.map do |type|
           type.content_types.map(&:model_class).flatten.map { |ct| ct::CONTENT_TYPE }
         end
         list.flatten
@@ -70,20 +72,23 @@ module Katello
                   flatten
       end
 
-      def creatable_by_user?(repository_type)
-        return false unless (type = find(repository_type))
+      def creatable_by_user?(repository_type, enabled_only = true)
+        type = enabled_only ? find(repository_type) : find_defined(repository_type)
+        return false unless type
         type.allow_creation_by_user
       end
 
-      def removable_content_types
-        list = enabled_repository_types.values.map do |type|
+      def removable_content_types(enabled_only = true)
+        repo_types = enabled_only ? enabled_repository_types : defined_repository_types
+        list = repo_types.values.map do |type|
           type.content_types.select(&:removable)
         end
         list.flatten
       end
 
-      def uploadable_content_types
-        list = enabled_repository_types.values.map do |type|
+      def uploadable_content_types(enabled_only = true)
+        repo_types = enabled_only ? enabled_repository_types : defined_repository_types
+        list = repo_types.values.map do |type|
           type.content_types.select(&:uploadable)
         end
         list.flatten
@@ -138,6 +143,14 @@ module Katello
 
       def enabled?(repository_type)
         find(repository_type).present?
+      end
+
+      def check_content_matches_repo_type!(repository, content_type)
+        repo_content_types = repository.repository_type.content_types.collect { |type| type.label }
+        unless repo_content_types.include?(content_type)
+          fail _("Content type %{content_type} is incompatible with repositories of type %{repo_type}") %
+                 { content_type: content_type, repo_type: repository.content_type }
+        end
       end
 
       private

@@ -262,6 +262,9 @@ module Katello
     end
 
     def test_create
+      # Ensure that the content_type params don't rely on the enabled_repository_types
+      SmartProxy.pulp_primary.features.detect { |f| f.name == "Pulpcore" }.smart_proxy_features.first.update(capabilities: [])
+      ::Katello::RepositoryTypeManager.instance_variable_set(:@enabled_repository_types, {})
       product = mock
       product.expects(:add_repo).with({
         :label => 'Fedora_Repository',
@@ -666,11 +669,12 @@ module Katello
     end
 
     def test_remove_content_protected
+      @repository.rpms << @rpm
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:remove_content, allowed_perms, denied_perms) do
-        put :remove_content, params: { :id => @repository.id, :uuids => ['foo', 'bar'] }
+        put :remove_content, params: { :id => @repository.id, :ids => [@rpm.id] }
       end
     end
 

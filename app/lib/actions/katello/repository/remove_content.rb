@@ -17,6 +17,7 @@ module Actions
 
           content_unit_ids = content_units.map(&:id)
           content_unit_type = options[:content_type] || content_units.first.class::CONTENT_TYPE
+          ::Katello::RepositoryTypeManager.check_content_matches_repo_type!(repository, content_unit_type)
 
           generate_applicability = options.fetch(:generate_applicability, repository.yum?)
 

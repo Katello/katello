@@ -67,7 +67,7 @@ module Katello
     def_param_group :repo_create do
       param :label, String, :required => false
       param :product_id, :number, :required => true, :desc => N_("Product the repository belongs to")
-      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo")
+      param :content_type, RepositoryTypeManager.creatable_repository_types(false).keys, :required => true, :desc => N_("type of repo")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -95,7 +95,7 @@ module Katello
     param :description, String, :desc => N_("description of the repository")
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."),
           :required => false
-    param :with_content, RepositoryTypeManager.enabled_content_types, :desc => N_("only repositories having at least one of the specified content type ex: rpm , erratum")
+    param :with_content, RepositoryTypeManager.enabled_content_types(false), :desc => N_("only repositories having at least one of the specified content type ex: rpm , erratum")
     param :download_policy, ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES, :desc => N_("limit to only repositories with this download policy")
     param :username, String, :desc => N_("only show the repositories readable by this user with this username")
     param_group :search, Api::V2::ApiController
@@ -217,8 +217,9 @@ module Katello
     param_group :repo
     def create
       repo_params = repository_params
-      unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
-        msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")
+      unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type], false)
+        msg = _("Invalid params provided - content_type must be one of %s") %
+          RepositoryTypeManager.creatable_repository_types(false).keys.join(",")
         fail HttpErrors::UnprocessableEntity, msg
       end
 
@@ -326,7 +327,7 @@ module Katello
     desc "Remove content from a repository"
     param :id, :number, :required => true, :desc => "repository ID"
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
-    param :content_type, RepositoryTypeManager.removable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
+    param :content_type, RepositoryTypeManager.removable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     def remove_content
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
@@ -337,7 +338,7 @@ module Katello
     api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
-    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
+    param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Container Image content.") if @repository.docker?
 
@@ -366,7 +367,7 @@ module Katello
     param :async, :bool, desc: N_("Do not wait for the ImportUpload action to finish. Default: false")
     param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
-    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
+    param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
     param :uploads, Array, :desc => N_("Array of uploads to import") do
       param 'id', String, :required => true
       param 'content_unit_id', String
@@ -521,11 +522,15 @@ module Katello
     end
 
     def find_content
-      if params[:content_type]
-        @content = @repository.units_for_removal(params[:ids], params[:content_type])
+      content_type = params[:content_type]
+
+      if content_type
+        @content = @repository.units_for_removal(params[:ids], content_type)
       else
         @content = @repository.units_for_removal(params[:ids])
       end
+
+      RepositoryTypeManager.check_content_matches_repo_type!(@repository, @content.first.class::CONTENT_TYPE)
     end
 
     def filter_by_content_view(query, content_view_id, environment_id, is_available_for)

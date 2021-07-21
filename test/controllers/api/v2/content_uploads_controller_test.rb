@@ -27,6 +27,7 @@ module Katello
 
     def test_create_upload_request
       mock_pulp_server(:create_upload_request => [])
+      ::Katello::RepositoryTypeManager.expects(:check_content_matches_repo_type!).returns(true)
       post :create, params: { :repository_id => @repo.id, :size => 100, :checksum => 'test_checksum' }
       assert_response :success
     end
