@@ -89,10 +89,19 @@ module Katello
         end
 
         def self.with_environment(environment, include_default = false)
+          (pulp2_proxies_with_environment(environment, include_default) + pulpcore_proxies_with_environment(environment)).try(:uniq)
+        end
+
+        def self.pulp2_proxies_with_environment(environment, include_default = false)
           features = [PULP_NODE_FEATURE]
           features << PULP_FEATURE if include_default
 
           unscoped.with_features(features).joins(:capsule_lifecycle_environments).
+              where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
+        end
+
+        def self.pulpcore_proxies_with_environment(environment)
+          unscoped.where(id: unscoped.select { |p| p.pulp_mirror? }.pluck(:id)).joins(:capsule_lifecycle_environments).
               where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
         end
 
