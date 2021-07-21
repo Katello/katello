@@ -39,13 +39,23 @@ class DeletePuppetAndOstreeRepos < ActiveRecord::Migration[6.0]
     FakeContentViewPuppetEnvironment.delete_all
     FakePuppetModule.delete_all
 
-    ::Katello::Repository.delete(puppet_repositories) if puppet_repositories.any?
+    if puppet_repositories.any?
+      User.as_anonymous_admin do
+        ::Katello::Repository.delete(puppet_repositories)
+        ::Katello::RootRepository.where(content_type: 'puppet').destroy_all
+      end
+    end
 
     FakeRepositoryOstreeBranch.delete_all
     FakeOstreeBranch.delete_all
-    Katello::Repository.ostree_type.where.not(:library_instance_id => nil, :environment_id => nil).destroy_all #CV LCE repos
-    Katello::Repository.ostree_type.where.not(:library_instance_id => nil).destroy_all # archive repos
-    Katello::Repository.ostree_type.destroy_all #all the rest (should just be library repos)
+
+    if Katello::Repository.ostree_type.any?
+      User.as_anonymous_admin do
+        Katello::Repository.ostree_type.where.not(:library_instance_id => nil, :environment_id => nil).destroy_all #CV LCE repos
+        Katello::Repository.ostree_type.where.not(:library_instance_id => nil).destroy_all # archive repos
+        Katello::Repository.ostree_type.destroy_all #all the rest (should just be library repos)
+      end
+    end
 
     Katello::ContentViewVersion.where.not(:content_counts => nil).each do |version|
       version.content_counts.except!('ostree', 'puppet_module')
