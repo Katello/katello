@@ -9,7 +9,9 @@ import EnvironmentLabels from '../EnvironmentLabels';
 import './EnvironmentPaths.scss';
 import Loading from '../../../../components/Loading';
 
-const EnvironmentPaths = ({ userCheckedItems, setUserCheckedItems }) => {
+const EnvironmentPaths = ({
+  userCheckedItems, setUserCheckedItems, promotedEnvironments, publishing,
+}) => {
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
   const environmentPathLoading = environmentPathStatus === STATUS.PENDING;
@@ -25,6 +27,8 @@ const EnvironmentPaths = ({ userCheckedItems, setUserCheckedItems }) => {
     return <Loading />;
   }
   const { results } = environmentPathResponse || {};
+
+  const envCheckedInList = (env, envList) => envList.filter(item => item.id === env.id).length;
   /* eslint-disable react/no-array-index-key */
   return (
     <>
@@ -41,9 +45,11 @@ const EnvironmentPaths = ({ userCheckedItems, setUserCheckedItems }) => {
             <FormGroup key={`fg-${count}`} isInline fieldId="environment-checkbox-group">
               {environments.map(env =>
                 (<Checkbox
-                  isChecked={env.library ||
-                  userCheckedItems.filter(item => item.id === env.id).length}
-                  isDisabled={env.library}
+                  isChecked={(publishing && env.library) ||
+                  envCheckedInList(env, userCheckedItems) ||
+                  envCheckedInList(env, promotedEnvironments)}
+                  isDisabled={(publishing && env.library)
+                  || envCheckedInList(env, promotedEnvironments)}
                   style={{ marginRight: '3px', marginBottom: '1px' }}
                   className="env-labels-with-pointer"
                   key={`${env.id}${count}`}
@@ -66,7 +72,12 @@ const EnvironmentPaths = ({ userCheckedItems, setUserCheckedItems }) => {
 EnvironmentPaths.propTypes = {
   userCheckedItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   setUserCheckedItems: PropTypes.func.isRequired,
+  promotedEnvironments: PropTypes.arrayOf(PropTypes.shape({})),
+  publishing: PropTypes.bool,
 };
 
-
+EnvironmentPaths.defaultProps = {
+  promotedEnvironments: [],
+  publishing: true,
+};
 export default EnvironmentPaths;

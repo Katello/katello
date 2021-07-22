@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
@@ -11,6 +11,13 @@ const cvVersionsTasksData = require('./contentViewVersionsWithTask.fixtures.json
 const contentViewTaskInProgressResponseData = require('./contentViewTaskInProgressResponse.fixtures.json');
 const contentViewTaskResponseData = require('./contentViewTaskResponse.fixtures.json');
 
+const cvPromotePath = api.getApiUrl('/content_view_versions/10/promote');
+const promoteResponseData = contentViewTaskInProgressResponseData;
+
+
+const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
+const environmentPathsData = require('../../../Publish/__tests__/environmentPaths.fixtures.json');
+
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvVersions = api.getApiUrl('/content_view_versions/');
 const autocompleteUrl = '/content_view_versions/auto_complete_search';
@@ -19,16 +26,22 @@ const taskPollingUrl = '/foreman_tasks/api/tasks/6b900ff8-62bb-42ac-8c45-da86b72
 let firstVersion;
 let searchDelayScope;
 let autoSearchScope;
+let envScope;
 
 beforeEach(() => {
   const { results } = cvVersionsData;
   [firstVersion] = results;
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
+  envScope = nockInstance
+    .get(environmentPathsPath)
+    .query(true)
+    .reply(200, environmentPathsData);
 });
 
 afterEach(() => {
   nock.cleanAll();
+  assertNockRequest(envScope);
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
 });
@@ -236,4 +249,53 @@ test('Can reload versions upon task completion', async (done) => {
   assertNockRequest(taskSuccessScope);
   // Assert CV Versions API is called upon task completion
   assertNockRequest(reloadScope, done);
+});
+
+test('Can open Promote Modal', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(cvVersions)
+    .times(2)
+    .query(true)
+    .reply(200, cvVersionsData);
+  const cvPromoteParams = {
+    id: 10, versionEnvironments: [], description: '', environment_ids: [5], force: true,
+  };
+
+  const promoteScope = nockInstance
+    .post(cvPromotePath, cvPromoteParams)
+    .reply(202, promoteResponseData);
+
+  const {
+    getByText, queryByText, getByLabelText, getAllByLabelText,
+  } = renderWithRedux(
+    <ContentViewVersions cvId={5} />,
+    renderOptions,
+  );
+
+  expect(queryByText(`Version ${firstVersion.version}`)).toBeNull();
+  await patientlyWaitFor(() => {
+    expect(getByText(`Version ${firstVersion.version}`)).toBeInTheDocument();
+  });
+  // Expand Row Action
+  expect(getAllByLabelText('Actions')[1]).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(getAllByLabelText('Actions')[1]);
+  expect(getAllByLabelText('Actions')[1]).toHaveAttribute('aria-expanded', 'true');
+  fireEvent.click(getByText('Promote'));
+  await patientlyWaitFor(() => {
+    expect(getByText('Select a lifecycle environment from the available promotion paths to promote new version.')).toBeInTheDocument();
+    expect(getByLabelText('prod')).toBeInTheDocument();
+  });
+  // Select env prod
+  fireEvent.click(getByLabelText('prod'));
+  fireEvent.click(getByLabelText('promote_content_view'));
+  // Modal closes itself
+  await patientlyWaitFor(() => {
+    expect(queryByText('Select a lifecycle environment from the available promotion paths to promote new version.')).toBeNull();
+  });
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(promoteScope);
+  // Page is refreshed
+  assertNockRequest(scope, done);
 });

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
 import { TableVariant, TableText } from '@patternfly/react-table';
@@ -18,6 +18,8 @@ import {
   selectCVVersionsStatus,
   selectCVVersionsError,
 } from '../ContentViewDetailSelectors';
+import getEnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPathActions';
+import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
 import TaskPresenter from '../../components/TaskPresenter/TaskPresenter';
 import { startPollingTask } from '../../../Tasks/TaskActions';
 
@@ -28,10 +30,13 @@ const ContentViewVersions = ({ cvId }) => {
   const [pollingFinished, setPollingFinished] = useState(false);
   const loading = status === STATUS.PENDING;
   const dispatch = useDispatch();
-
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
+  const [versionIdToPromote, setVersionIdToPromote] = useState('');
+  const [versionNameToPromote, setVersionNameToPromote] = useState('');
+  const [versionEnvironments, setVersionEnvironments] = useState([]);
+  const [promoting, setPromoting] = useState(false);
 
   const columnHeaders = [
     __('Version'),
@@ -41,6 +46,13 @@ const ContentViewVersions = ({ cvId }) => {
     __('Additional content'),
     __('Description'),
   ];
+
+  useEffect(
+    () => {
+      dispatch(getEnvironmentPaths());
+    },
+    [dispatch],
+  );
 
   const buildCells = useCallback((cvVersion) => {
     const {
@@ -94,13 +106,22 @@ const ContentViewVersions = ({ cvId }) => {
       const newRows = [];
       results.forEach((cvVersion) => {
         const {
+          version,
+          id: versionId,
+          environments,
           active_history: activeHistory,
         } = cvVersion;
 
         const cells = activeHistory.length ?
           buildActiveTaskCells(cvVersion) :
           buildCells(cvVersion);
-        newRows.push({ cells });
+        newRows.push({
+          cvVersionId: versionId,
+          cvVersionName: version,
+          cvVersionEnvironments: environments,
+          activeHistory,
+          cells,
+        });
       });
       return newRows;
     };
@@ -112,6 +133,32 @@ const ContentViewVersions = ({ cvId }) => {
       setRows(newRows);
     }
   }, [response, setMetadata, buildActiveTaskCells, buildCells, dispatch, loading, setRows]);
+
+  const onPromote = ({ cvVersionId, cvVersionName, cvVersionEnvironments }) => {
+    setVersionIdToPromote(cvVersionId);
+    setVersionNameToPromote(cvVersionName);
+    setVersionEnvironments(cvVersionEnvironments);
+    setPromoting(true);
+    setPollingFinished(false);
+  };
+
+  const actionResolver = (rowData, { _rowIndex }) => [
+    {
+      title: __('Promote'),
+      isDisabled: rowData.activeHistory.length,
+      onClick: (_event, rowId, rowInfo) => {
+        onPromote({
+          cvVersionId: rowInfo.cvVersionId,
+          cvVersionName: rowInfo.cvVersionName,
+          cvVersionEnvironments: rowInfo.cvVersionEnvironments,
+        });
+      },
+    },
+    {
+      title: __('Remove'),
+      isDisabled: true,
+    },
+  ];
 
   const emptyContentTitle = __("You currently don't have any versions for this content view.");
   const emptyContentBody = __('Versions will appear here when the content view is published.'); // needs link
@@ -129,6 +176,7 @@ const ContentViewVersions = ({ cvId }) => {
         emptySearchBody,
         searchQuery,
         updateSearchQuery,
+        actionResolver,
         error,
         status,
       }}
@@ -137,7 +185,16 @@ const ContentViewVersions = ({ cvId }) => {
       autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
       fetchItems={useCallback(params => getContentViewVersions(cvId, params), [cvId])}
       additionalListeners={[pollingFinished]}
-    />);
+    >
+      {promoting && <ContentViewVersionPromote
+        cvId={cvId}
+        versionIdToPromote={versionIdToPromote}
+        versionNameToPromote={versionNameToPromote}
+        versionEnvironments={versionEnvironments}
+        setIsOpen={setPromoting}
+        aria-label="promote_content_view_modal"
+      />}
+    </TableWrapper>);
 };
 
 ContentViewVersions.propTypes = {

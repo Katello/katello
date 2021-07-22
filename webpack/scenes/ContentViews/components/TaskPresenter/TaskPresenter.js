@@ -33,7 +33,7 @@ const TaskPresenter = ({ activeHistory, setPollingFinished }) => {
       const { id } = task;
       dispatch(stopPollingTask(id));
       dispatch(toastTaskFinished(pollResponse));
-      setPollingFinished(true); // Use this boolean as activeListener in refering page table
+      setPollingFinished(true); // Use this boolean as activeListener in referring page table
     }
   }, [polling, dispatch, setPollingFinished, pollResponse, task]);
 
