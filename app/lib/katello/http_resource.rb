@@ -41,9 +41,9 @@ module Katello
       delete: Net::HTTP::Delete
     }.freeze
 
-    class_eval do
+    class << self
       REQUEST_MAP.keys.each do |key|
-        define_singleton_method(key) do |*args|
+        define_method(key) do |*args|
           issue_request(
             method: key,
             path: args.first,
@@ -52,9 +52,7 @@ module Katello
           )
         end
       end
-    end
 
-    class << self
       def logger
         fail NotImplementedError
       end
