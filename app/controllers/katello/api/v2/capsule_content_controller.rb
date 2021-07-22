@@ -51,13 +51,19 @@ module Katello
     api :POST, '/capsules/:id/content/sync', N_('Synchronize the content to the smart proxy')
     param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
     param :environment_id, Integer, :desc => N_('Id of the environment to limit the synchronization on')
+    param :content_view_id, Integer, :desc => N_('Id of the content view to limit the synchronization on')
+    param :repository_id, Integer, :desc => N_('Id of the repository to limit the synchronization on')
     param :skip_metadata_check, :bool, :desc => N_('Skip metadata check on each repository on the smart proxy')
     def sync
       find_environment if params[:environment_id]
+      find_content_view if params[:content_view_id]
+      find_repository if params[:repository_id]
       skip_metadata_check = ::Foreman::Cast.to_bool(params[:skip_metadata_check])
       task = async_task(::Actions::Katello::CapsuleContent::Sync,
                         @capsule,
                         :environment_id => @environment.try(:id),
+                        :content_view_id => @content_view.try(:id),
+                        :repository_id => @repository.try(:id),
                         :skip_metadata_check => skip_metadata_check)
       respond_for_async :resource => task
     end
@@ -107,6 +113,14 @@ module Katello
 
     def find_environment
       @environment = Katello::KTEnvironment.readable.find(params[:environment_id])
+    end
+
+    def find_content_view
+      @content_view = Katello::ContentView.readable.find(params[:content_view_id])
+    end
+
+    def find_repository
+      @repository = Katello::Repository.readable.find(params[:repository_id])
     end
 
     def smart_proxy_service
