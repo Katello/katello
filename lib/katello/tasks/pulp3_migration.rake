@@ -18,6 +18,7 @@ namespace :katello do
       preserve_output = ::Foreman::Cast.to_bool(ENV['preserve_output'])
 
       User.current = User.anonymous_api_admin
+      Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary).remove_orphaned_content
       task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration, SmartProxy.pulp_primary, reimport_all: reimport_all)
 
       if wait
