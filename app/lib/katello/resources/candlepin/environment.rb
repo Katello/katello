@@ -20,6 +20,8 @@ module Katello
 
           def destroy(id)
             self.delete(path(id), User.cp_oauth_header).code.to_i
+          rescue RestClient::NotFound => e
+            raise ::Katello::Errors::CandlepinEnvironmentGone, e.message
           end
 
           def path(id = '')
