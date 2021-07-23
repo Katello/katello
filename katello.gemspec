@@ -30,7 +30,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "json"
   gem.add_dependency "oauth"
   gem.add_dependency "rest-client"
-  gem.add_dependency "rake", '< 13.0.4'
 
   gem.add_dependency "rabl"
   gem.add_dependency "foreman-tasks", "~> 4.0"
