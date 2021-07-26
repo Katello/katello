@@ -21,3 +21,7 @@ library_view_docker2:
 library_view_solve_deps_fedora:
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view_solve_deps) %>
   repository_id:   <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+
+library_view_python:
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
+  repository_id:   <%= ActiveRecord::FixtureSet.identify(:pulp3_python_1) %>
