@@ -111,6 +111,12 @@ export const selectPublishTaskPoll = (state, cvVersionPublishKey) =>
 export const selectPublishTaskPollStatus = (state, cvVersionPublishKey) =>
   selectAPIStatus(state, pollTaskKey(cvVersionPublishKey)) || STATUS.PENDING;
 
+export const selectTaskPoll = (state, key) =>
+  selectAPIResponse(state, pollTaskKey(key)) || {};
+
+export const selectTaskPollStatus = (state, key) =>
+  selectAPIStatus(state, pollTaskKey(key)) || STATUS.PENDING;
+
 export const selectCVComponentAdd = (state, cvId) =>
   selectAPIResponse(state, cvAddComponentKey(cvId));
 
