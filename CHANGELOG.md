@@ -1,3 +1,16 @@
+# 4.1.2 (2021-07-26)
+
+## Bug Fixes
+
+### Repositories
+ * Katello saves publication as a repo's version_href at sync time if Pulp auto-creates publications ([#33044](https://projects.theforeman.org/issues/33044), [8b9fbc41](https://github.com/Katello/katello.git/commit/8b9fbc41c4c9fac5262983c2b138290835294b5c), [11ad37c1](https://github.com/Katello/katello.git/commit/11ad37c1c1addeb65f66ad709bc79ba65ff0bc1e))
+ *  Sync of content from an authenticated yum repository fails ([#32994](https://projects.theforeman.org/issues/32994), [27a2687d](https://github.com/Katello/katello.git/commit/27a2687d7b19f6ec0454e5eb528a658f5de233b0))
+
+### Client/Agent
+ * via Katello-agent option is not clickable on content host errata page ([#33036](https://projects.theforeman.org/issues/33036), [cf2fa844](https://github.com/Katello/katello.git/commit/cf2fa844048217182b473bfe1d8d4f2c63b98ca6), [b31dcd83](https://github.com/Katello/katello.git/commit/b31dcd830cb533d286a067bea01959246e2fd460))
+
+### Content Views
+ * Capsule syncing is not triggered by CV promotion ([#33014](https://projects.theforeman.org/issues/33014), [2dea3a78](https://github.com/Katello/katello.git/commit/2dea3a78574e0907686ec1364685ccf60ad26eee))
 # 4.1.1 (2021-07-13)
 
 ## Features
