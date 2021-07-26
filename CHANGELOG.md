@@ -1,3 +1,34 @@
+# 4.0.2 (2021-07-26)
+
+## Bug Fixes
+
+### Content Views
+ * Incremenal Update doesn't run MetadataGenerate or IndexContent for Pulp 3 yum content ([#32901](https://projects.theforeman.org/issues/32901), [287a0bd4](https://github.com/Katello/katello.git/commit/287a0bd46c13061dbdf25ad8dd5448a2fc4171fc))
+
+### Foreman Proxy Content
+ * pulp3 remote smart proxies do not show download policy ([#32882](https://projects.theforeman.org/issues/32882), [b9fdcad0](https://github.com/Katello/katello.git/commit/b9fdcad015752dd0a8d15544a6f8352f8291180e))
+ * Error: undefined methodpulp_href’ for nil:NilClass`  when syncing capsule ([#32784](https://projects.theforeman.org/issues/32784), [c388df7f](https://github.com/Katello/katello.git/commit/c388df7f184859256880b02af99704667f78aefe))
+* Capsule syncing is not triggered by CV promotion ([#33014](https://projects.theforeman.org/issues/33014), [2dea3a7](https://github.com/Katello/katello/commit/2dea3a78574e0907686ec1364685ccf60ad26eee))
+
+### SElinux
+ * Prevent calling systemctl from RoR process ([#32724](https://projects.theforeman.org/issues/32724), [b5a79de6](https://github.com/Katello/katello.git/commit/b5a79de628a4114106855925b5e9cb26cffd60c3))
+
+### Repositories
+ * Katello 3.18 changed the way RH operating systems are named after sync ([#32699](https://projects.theforeman.org/issues/32699), [2a9c0187](https://github.com/Katello/katello.git/commit/2a9c0187429680257a9e3e889aafa6294edfddc0))
+ * Client receives 403 forbidden when fetching RHEL content when using custom certificates ([#32624](https://projects.theforeman.org/issues/32624), [8dfd072e](https://github.com/Katello/katello.git/commit/8dfd072ef08a4dd9524dff998b305320bb83dc79))
+ * Unable to delete Red Hat repository due to "bad" root repo data from older Katello ([#32582](https://projects.theforeman.org/issues/32582), [f59a6cb3](https://github.com/Katello/katello.git/commit/f59a6cb35080bd735b795bd36daae094826ee654))
+ * katello pulp url setting in katello.yaml is no longer set by the installer and the default uses localhost rather than FQDN ([#32362](https://projects.theforeman.org/issues/32362), [1619e1c5](https://github.com/Katello/katello.git/commit/1619e1c5632e1810d06e48a79100dca7767b9c6f))
+
+### Upgrades
+ * 20210119162528_delete_puppet_and_ostree_repos.rb fails to remove puppet repos in CVs, leading to upgrade errors ([#32590](https://projects.theforeman.org/issues/32590), [49b68610](https://github.com/Katello/katello.git/commit/49b68610e1b676c4a2174422b45828a6f338d48d))
+
+### Notifications
+ * Error performing CreatePulpDiskSpaceNotifications  NameError (undefined local variable or method `percentage' for Katello::UINotifications::Pulp::ProxyDiskSpace:Class) ([#32380](https://projects.theforeman.org/issues/32380), [83a12701](https://github.com/Katello/katello.git/commit/83a1270132a3f26ec4db98625e413b9d7068f01e))
+
+### Other
+ * Deb repo calls pulp2 when checking published during matching content check ([#32761](https://projects.theforeman.org/issues/32761), [366df38d](https://github.com/Katello/katello.git/commit/366df38d1e9051c5f4bc98a4460c2201d702a22f))
+ * Katello:delete_orphaned_content still checking for pulp2 services and failing with 404s. ([#32740](https://projects.theforeman.org/issues/32740), [4bdc5a49](https://github.com/Katello/katello.git/commit/4bdc5a49b3e518bef69d28f2b99eed99c283122e))
+
 # 4.0.1 (2021-05-18)
 
 ## Features
@@ -36,7 +67,7 @@
  * Make helper methods public for webhooks context ([#32523](https://projects.theforeman.org/issues/32523), [ef1c7776](https://github.com/Katello/katello.git/commit/ef1c77769ed7293b556002e21887929c98b81869))
  * katello:clean_backend_objects still attempts to connect to Pulp 2 ([#32475](https://projects.theforeman.org/issues/32475), [ba26191b](https://github.com/Katello/katello.git/commit/ba26191bbcdaf576c88c139794afff4f93212a21))
  * Use pulp_deb 2.9 for Katello 4.0 ([#32471](https://projects.theforeman.org/issues/32471))
- 
+
 # 4.0.0 (2021-04-19)
 
 ## Features
