@@ -30,7 +30,7 @@ test('Can call API and show Wizard', async (done) => {
     setCurrentStep={() => {}}
   />);
 
-  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
   useSelectorMock.mockClear();
   assertNockRequest(scope, done);
 });
@@ -51,7 +51,7 @@ test('Can show Wizard and show environment paths', async (done) => {
     setCurrentStep={() => {}}
   />);
 
-  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
   const checkboxLabel = /promote-switch/;
   await patientlyWaitFor(() => expect(getByLabelText(checkboxLabel)).toBeInTheDocument());
   expect(getByLabelText(checkboxLabel).checked).toBeFalsy();
@@ -82,7 +82,7 @@ test('Can show and hide force promotion alert', async (done) => {
     setCurrentStep={() => {}}
   />);
 
-  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
   const promoteSwitch = /promote-switch/;
   const inOrderEnv = 'dev1';
   const outOfOrderEnv = 'prod';
@@ -136,7 +136,7 @@ test('Can show Wizard form and move to review', async (done) => {
   />);
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(environmentPathsData);
-  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
   await patientlyWaitFor(() => expect(getByText('Next')).toBeInTheDocument());
   fireEvent.click(getByText('Next'));
   // Test the review page

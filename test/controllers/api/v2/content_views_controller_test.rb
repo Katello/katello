@@ -325,6 +325,17 @@ module Katello
       assert_response :success
     end
 
+    def test_remove_filters
+      view = ContentView.create!(:name => "Cat",
+                                 :organization => @organization
+                                )
+      filter = ContentViewFilter.create(:name => "CatFilter",
+                                 :type => Katello::ContentViewPackageFilter.name,
+                                 :content_view_id => view.id)
+      put :remove_filters, params: { :id => view.id, :filter_ids => [filter.id] }
+      assert_response :success
+    end
+
     def test_publish_with_dup_params
       target_view = ContentView.find(katello_content_views(:library_dev_view).id)
       post :publish, params: { :id => target_view.id, :major => 1, :minor => 0 }

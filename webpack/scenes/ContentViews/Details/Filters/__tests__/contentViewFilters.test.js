@@ -90,3 +90,80 @@ test('Can search for filter', async (done) => {
   assertNockRequest(initialScope);
   assertNockRequest(searchResultScope, done);
 });
+
+test('Can remove a filter', async (done) => {
+  const { id } = firstFilter;
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+
+  const getContentViewScope = nockInstance
+    .get(cvFilters)
+    .query(true)
+    .reply(200, cvFilterFixtures);
+
+  const removeFilterScope = nockInstance
+    .delete(api.getApiUrl(`/content_view_filters/${id}`))
+    .query(true)
+    .reply(200, {});
+
+  const callbackGetContentViewScope = nockInstance
+    .get(cvFilters)
+    .query(true)
+    .reply(200, {});
+
+  const { getAllByLabelText, getByText } = renderWithRedux(
+    <ContentViewFilters cvId={1} />,
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'false');
+  });
+  fireEvent.click(getAllByLabelText('Actions')[0]);
+  expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
+  fireEvent.click(getByText('Remove'));
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(getContentViewScope);
+  assertNockRequest(removeFilterScope);
+  assertNockRequest(callbackGetContentViewScope, done);
+});
+
+test('Can remove multiple filters', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const getContentViewScope = nockInstance
+    .get(cvFilters)
+    .query(true)
+    .reply(200, cvFilterFixtures);
+
+  const removeFilterScope = nockInstance
+    .put(
+      api.getApiUrl('/content_views/1/remove_filters'),
+      { filter_ids: [4, 5, 6, 7, 8, 9] },
+    )
+    .reply(200, {});
+
+  const callbackGetContentViewScope = nockInstance
+    .get(cvFilters)
+    .query(true)
+    .reply(200, {});
+
+  const { getAllByLabelText, getByLabelText, getByText } = renderWithRedux(
+    <ContentViewFilters cvId={1} />,
+    renderOptions,
+  );
+
+  await patientlyWaitFor(() => {
+    fireEvent.click(getByLabelText('Select all rows'));
+    expect(getAllByLabelText('bulk_actions')[0]).toHaveAttribute('aria-expanded', 'false');
+  });
+  fireEvent.click(getAllByLabelText('bulk_actions')[0]);
+  expect(getAllByLabelText('bulk_actions')[0]).toHaveAttribute('aria-expanded', 'true');
+  await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
+  fireEvent.click(getByText('Remove'));
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(getContentViewScope);
+  assertNockRequest(removeFilterScope);
+  assertNockRequest(callbackGetContentViewScope, done);
+});

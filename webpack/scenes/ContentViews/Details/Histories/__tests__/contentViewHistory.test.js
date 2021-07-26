@@ -44,7 +44,7 @@ test('Can call API and show history on page load', async (done) => {
   // Nothing will show at first, page is loading
   expect(queryByText(firstHistory.description)).toBeNull();
   // Assert that the repo name is now showing on the screen, but wait for it to appear.
-  await patientlyWaitFor(() => expect(getByText(firstHistory.description)).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText(firstHistory.description)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -88,7 +88,7 @@ test('Can handle no History being present', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewHistories cvId={1} />, renderOptions);
 
   expect(queryByText(firstHistory.description)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText("You currently don't have any history for this content view.")).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText("You currently don't have any history for this content view.")).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });

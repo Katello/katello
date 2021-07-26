@@ -52,7 +52,7 @@ test('Can enable and disable add repositories button', async (done) => {
     renderOptions,
   );
 
-  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
   expect(getByLabelText('Select all rows')).toBeInTheDocument();
   expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'true');
   getByLabelText('Select all rows').click();
@@ -118,7 +118,7 @@ test('Can remove repositories', async (done) => {
     renderOptions,
   );
 
-  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
   expect(getByLabelText('Select all rows')).toBeInTheDocument();
   getByLabelText('Select all rows').click();
   await patientlyWaitFor(() => {

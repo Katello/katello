@@ -148,7 +148,7 @@ test('Can load for empty versions', async () => {
 
   expect(queryByText(`Version ${firstVersion.version}`)).toBeNull();
   await patientlyWaitFor(() =>
-    expect(queryByText("You currently don't have any versions for this content view.")).toBeTruthy());
+    expect(queryByText("You currently don't have any versions for this content view.")).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
 });
