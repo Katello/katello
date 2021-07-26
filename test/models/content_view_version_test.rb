@@ -121,6 +121,18 @@ module Katello
       assert_equal tag_count, counts["docker_tag_count"]
     end
 
+    def test_python_package_count
+      SmartProxy.stubs(:pulp_primary).returns(SmartProxy.pulp_primary)
+      cv = katello_content_views(:acme_default)
+      cvv = cv.versions.first
+
+      assert cvv.repositories.generic_type.count > 0
+      cvv.update_content_counts!
+      counts = cvv.content_counts_map
+
+      assert_equal 0, counts["python_package_count"]
+    end
+
     def test_active_history_nil_task
       @cvv.history = [ContentViewHistory.new(:status => ContentViewHistory::IN_PROGRESS, :user => 'admin', :action => 'publish')]
       assert_empty @cvv.active_history
