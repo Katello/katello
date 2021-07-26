@@ -311,11 +311,13 @@ module Katello
 
     def update_content_counts!
       self.content_counts = {}
-      RepositoryTypeManager.indexable_content_types.map(&:model_class).each do |content_type|
-        if content_type::CONTENT_TYPE == DockerTag::CONTENT_TYPE
+      RepositoryTypeManager.indexable_content_types.each do |content_type|
+        if content_type&.model_class::CONTENT_TYPE == DockerTag::CONTENT_TYPE
           content_counts[DockerTag::CONTENT_TYPE] = docker_tags.count
+        elsif content_type&.model_class::CONTENT_TYPE == GenericContentUnit::CONTENT_TYPE
+          content_counts[content_type.content_type] = content_type&.model_class&.in_repositories(self.repositories.archived)&.where(:content_type => content_type.content_type)&.count
         else
-          content_counts[content_type::CONTENT_TYPE] = content_type.in_repositories(self.repositories.archived).count
+          content_counts[content_type&.model_class::CONTENT_TYPE] = content_type&.model_class&.in_repositories(self.repositories.archived)&.count
         end
       end
       save!
