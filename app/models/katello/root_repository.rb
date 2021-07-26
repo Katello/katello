@@ -69,6 +69,7 @@ module Katello
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
     validate :ensure_valid_collection_attributes, :if => :ansible_collection?
+    validate :ensure_valid_auth_url_token, :if => :ansible_collection?
     validate :ensure_valid_ignorable_content
     validate :ensure_valid_docker_tags_whitelist
     validate :ensure_valid_os_versions
@@ -272,6 +273,20 @@ module Katello
         errors.add(:base, N_("Upstream password requires upstream username be set."))
       elsif !self.upstream_password
         errors.add(:base, N_("Upstream username requires upstream password be set.")) # requirement of pulp
+      end
+    end
+
+    def ensure_valid_auth_url_token
+      if self.ansible_collection_auth_url.blank? && self.ansible_collection_auth_token.blank?
+        self.ansible_collection_auth_url = nil
+        self.ansible_collection_auth_token = nil
+        return
+      end
+
+      if self.ansible_collection_auth_url.blank?
+        errors.add(:base, N_("Auth token requires Auth URL be set."))
+      elsif !self.ansible_collection_auth_token
+        errors.add(:base, N_("Auth URL requires Auth token be set."))
       end
     end
 

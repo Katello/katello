@@ -95,6 +95,17 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect($scope.repository["upstream_auth_exists"]).toBe(false);
     });
 
+    it('should clear the repo auth_url and token on clearAnsibleCollectionAuth', function() {
+        spyOn($scope, 'save');
+        $scope.repository["ansible_collection_auth_url"] = "https://abc.com";
+        $scope.repository["ansible_collection_auth_token"] = "1234";
+        $scope.clearAnsibleCollectionAuth($scope.repository);
+        expect($scope.save).toHaveBeenCalledWith($scope.repository);
+        expect($scope.repository["ansible_collection_auth_url"]).toBe(null);
+        expect($scope.repository["ansible_collection_auth_token"]).toBe(null);
+        expect($scope.repository["ansible_collection_auth_exists"]).toBe(false);
+    });
+
     it('should save the repository successfully', function() {
         spyOn(Notification, 'setSuccessMessage');
 
@@ -126,7 +137,6 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect(repo.upstream_username).toBe('autofilled');
         expect(repo.upstream_password).toBe('autofilled');
     });
-
 
     it('should fail to save the repository', function() {
         spyOn(Notification, 'setErrorMessage');
