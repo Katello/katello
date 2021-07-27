@@ -5,7 +5,7 @@ const onSelect = (rows, setRows) => (_event, isSelected, rowId) => {
     newRows = rows.map(row => ({ ...row, selected: isSelected }));
   } else {
     newRows = [...rows];
-    newRows[rowId].selected = isSelected;
+    newRows[rowId] = { ...newRows[rowId], selected: isSelected };
   }
 
   setRows(newRows);
