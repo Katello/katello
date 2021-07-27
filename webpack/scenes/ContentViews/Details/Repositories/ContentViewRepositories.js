@@ -155,9 +155,11 @@ const ContentViewRepositories = ({ cvId }) => {
   };
 
   const addBulk = () => {
+    setBulkActionEnabled(false);
     setBulkActionOpen(false);
     const reposToAdd = [];
     rows.forEach(row => row.selected && reposToAdd.push(row.repoId));
+    setRows(rows.map(row => ({ ...row, selected: false })));
     onAdd(reposToAdd);
   };
 
@@ -259,7 +261,7 @@ const ContentViewRepositories = ({ cvId }) => {
           <ActionList>
             <ActionListItem>
               <Button onClick={addBulk} isDisabled={!bulkActionEnabled} variant="secondary" aria-label="add_repositories">
-                Add repositories
+                {__('Add repositories')}
               </Button>
             </ActionListItem>
             <ActionListItem>
