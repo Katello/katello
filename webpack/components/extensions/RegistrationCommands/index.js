@@ -18,7 +18,7 @@ const RegistrationCommands = ({
 }) => {
   useEffect(() => {
     onChange({ activationKeys: [], lifecycleEnvironmentId: '' });
-  }, [onChange, organizationId, hostGroupId]);
+  }, [organizationId, hostGroupId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

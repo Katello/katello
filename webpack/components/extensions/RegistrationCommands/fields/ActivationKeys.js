@@ -40,7 +40,7 @@ const ActivationKeys = ({
   // Validate field when hostgroup is changed (host group may have some keys)
   useEffect(() => {
     handleInvalidField('Activation Keys', akHasValidValue(hostGroupId, pluginValues?.activationKeys, hostGroupActivationKeys));
-  }, [handleInvalidField, hostGroupId, hostGroupActivationKeys, pluginValues]);
+  }, [hostGroupId, hostGroupActivationKeys, pluginValues]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <FormGroup
