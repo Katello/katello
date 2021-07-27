@@ -50,7 +50,7 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
   // Assert that the CV is not showing yet by searching by name and the query returning null
   expect(queryByText(firstCV.name)).toBeNull();
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
-  await patientlyWaitFor(() => expect(queryByText(firstCV.name)).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText(firstCV.name)).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
@@ -168,7 +168,7 @@ test('Can handle no Content Views being present', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText(/don't have any Content Views/i)).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText(/don't have any Content Views/i)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -183,7 +183,7 @@ test('Can handle errored response', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText(/unable to connect/i)).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText(/unable to connect/i)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -359,7 +359,7 @@ test('Displays Create Content View and opens modal with Form', async () => {
   const {
     getByText, queryByText, getByLabelText,
   } = renderWithRedux(<ContentViewsPage />, renderOptions);
-  await patientlyWaitFor(() => expect(queryByText('Create content view')).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText('Create content view')).toBeInTheDocument());
 
   expect(queryByText('Description')).not.toBeInTheDocument();
   expect(queryByText('Name')).not.toBeInTheDocument();

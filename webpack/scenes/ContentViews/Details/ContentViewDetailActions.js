@@ -1,4 +1,4 @@
-import { API_OPERATIONS, get, put, post } from 'foremanReact/redux/API';
+import { API_OPERATIONS, APIActions, get, put, post } from 'foremanReact/redux/API';
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
@@ -6,6 +6,8 @@ import {
   UPDATE_CONTENT_VIEW_FAILURE,
   UPDATE_CONTENT_VIEW_SUCCESS,
   CREATE_CONTENT_VIEW_FILTER_KEY,
+  DELETE_CONTENT_VIEW_FILTER_KEY,
+  DELETE_CONTENT_VIEW_FILTERS_KEY,
   NOT_ADDED,
   ALL_STATUSES,
   REPOSITORY_TYPES,
@@ -42,7 +44,7 @@ const cvUpdateSuccess = (response, dispatch) => {
   }));
 };
 
-export const updateContentView = (cvId, params) => async dispatch => dispatch(put({
+export const updateContentView = (cvId, params) => dispatch => dispatch(put({
   type: API_OPERATIONS.PUT,
   key: cvDetailsKey(cvId),
   url: api.getApiUrl(`/content_views/${cvId}`),
@@ -113,6 +115,25 @@ export const getContentViewFilters = (cvId, params) => get({
   params: { content_view_id: cvId, ...params },
   errorToast: error => __(`Something went wrong while retrieving the content view filters! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/content_view_filters'),
+});
+
+export const deleteContentViewFilters = (cvId, ids, handleSuccess) => put({
+  type: API_OPERATIONS.PUT,
+  key: DELETE_CONTENT_VIEW_FILTERS_KEY,
+  url: api.getApiUrl(`/content_views/${cvId}/remove_filters`),
+  params: { filter_ids: ids },
+  handleSuccess,
+  successToast: () => __('Filters successfully deleted'),
+  errorToast: error => __(`Something went wrong while deleting filters! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const deleteContentViewFilter = (filterId, handleSuccess) => APIActions.delete({
+  type: API_OPERATIONS.DELETE,
+  key: DELETE_CONTENT_VIEW_FILTER_KEY,
+  url: api.getApiUrl(`/content_view_filters/${filterId}`),
+  handleSuccess,
+  successToast: () => __('Filter successfully deleted'),
+  errorToast: error => __(`Something went wrong while deleting this filter! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const getCVFilterDetails = (cvId, filterId, params) => get({

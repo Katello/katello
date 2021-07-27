@@ -48,7 +48,8 @@ test('Can call API and show components on page load', async (done) => {
   // Nothing will show at first, page is loading
   expect(queryByText(firstComponent.content_view.label)).toBeNull();
   // Assert that the repo name is now showing on the screen, but wait for it to appear.
-  await patientlyWaitFor(() => expect(getByText(firstComponent.content_view.label)).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText(firstComponent.content_view.label))
+    .toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -156,7 +157,7 @@ test('Can handle no components being present', async (done) => {
     renderWithRedux(<ContentViewComponents cvId={4} details={mockDetails} />, renderOptions);
 
   expect(queryByText(firstComponent.content_view.label)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText('No content views belong to test_empty')).toBeTruthy());
+  await patientlyWaitFor(() => expect(queryByText('No content views belong to test_empty')).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -241,7 +242,7 @@ test('Can add unpublished component views to content view', async (done) => {
   });
   fireEvent.click(getAllByLabelText('Actions').slice(-1)[0]);
   expect(getAllByLabelText('Actions').slice(-1)[0]).toHaveAttribute('aria-expanded', 'true');
-  await patientlyWaitFor(() => expect(getByText('Add')).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText('Add')).toBeInTheDocument());
   fireEvent.click(getByText('Add'));
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);
@@ -277,7 +278,7 @@ test('Can remove component views from content view', async (done) => {
   });
   fireEvent.click(getAllByLabelText('Actions')[0]);
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
-  await patientlyWaitFor(() => expect(getByText('Remove')).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText('Remove')).toBeInTheDocument());
   fireEvent.click(getByText('Remove'));
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope);

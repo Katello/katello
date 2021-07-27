@@ -75,6 +75,7 @@ Katello::Engine.routes.draw do
             post :copy
             post :publish
             put :remove
+            put :remove_filters
             match '/environments/:environment_id' => "content_views#remove_from_environment", :via => :delete
           end
           api_resources :filters, :controller => :content_view_filters do

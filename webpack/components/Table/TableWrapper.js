@@ -31,9 +31,9 @@ const TableWrapper = ({
 
   const updatePagination = (data) => {
     const { subtotal: newTotal, page: newPage, per_page: newPerPage } = data;
-    if (newTotal) setTotal(parseInt(newTotal, 10));
-    if (newPage) setPage(parseInt(newPage, 10));
-    if (newPerPage) setPerPage(parseInt(newPerPage, 10));
+    if (newTotal !== undefined) setTotal(parseInt(newTotal, 10));
+    if (newPage !== undefined) setPage(parseInt(newPage, 10));
+    if (newPerPage !== undefined) setPerPage(parseInt(newPerPage, 10));
   };
   const paginationParams = () => ({ per_page: perPage, page });
   const fetchWithParams = (allParams = {}) => {

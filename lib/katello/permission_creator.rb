@@ -113,7 +113,7 @@ module Katello
                          :resource_type => 'Katello::ContentView'
       @plugin.permission :edit_content_views,
                          {
-                           'katello/api/v2/content_views' => [:update],
+                           'katello/api/v2/content_views' => [:update, :remove_filters],
                            'katello/api/v2/content_view_versions' => [:update],
                            'katello/api/v2/content_view_filters' => [:create, :update, :destroy],
                            'katello/api/v2/content_view_filter_rules' => [:create, :update, :destroy],

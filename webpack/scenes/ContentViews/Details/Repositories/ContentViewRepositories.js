@@ -155,12 +155,14 @@ const ContentViewRepositories = ({ cvId }) => {
   };
 
   const addBulk = () => {
+    setBulkActionOpen(false);
     const reposToAdd = [];
     rows.forEach(row => row.selected && reposToAdd.push(row.repoId));
     onAdd(reposToAdd);
   };
 
   const removeBulk = () => {
+    setBulkActionOpen(false);
     const reposToDelete = [];
     rows.forEach(row => row.selected && reposToDelete.push(row.repoId));
     onRemove(reposToDelete);
@@ -202,10 +204,10 @@ const ContentViewRepositories = ({ cvId }) => {
     (statusSelected && statusSelected !== ALL_STATUSES);
   const dropdownItems = [
     <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!bulkActionEnabled} component="button" onClick={addBulk}>
-      Add
+      {__('Add')}
     </DropdownItem>,
     <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={removeBulk}>
-      Remove
+      {__('Remove')}
     </DropdownItem>,
   ];
 

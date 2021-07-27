@@ -168,6 +168,14 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :PUT, "/content_views/:id/remove_filters", N_("Delete multiple filters from a content view")
+    param :id, :number, :desc => N_("content view numeric identifier"), :required => true
+    param :filter_ids, Array, of: :number, :desc => N_("filter identifiers"), :required => true
+    def remove_filters
+      Katello::ContentViewFilter.where(id: params[:filter_ids]).try(:destroy_all)
+      respond_for_show(:resource => @content_view)
+    end
+
     api :DELETE, "/content_views/:id", N_("Delete a content view")
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     def destroy

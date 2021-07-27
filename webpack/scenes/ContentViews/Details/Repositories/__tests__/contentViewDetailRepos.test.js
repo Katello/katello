@@ -52,7 +52,7 @@ test('Can call API and show repositories on page load', async (done) => {
   // Nothing will show at first, page is loading
   expect(queryByText(firstRepo.name)).toBeNull();
   // Assert that the repo name is now showing on the screen, but wait for it to appear.
-  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
@@ -83,7 +83,7 @@ test('Can filter by repository type', async (done) => {
   const selectYum = getByLabelText('select Yum Repositories');
   fireEvent.click(selectYum); // select yum repos
   await patientlyWaitForRemoval(() => getByText('Loading'));
-  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeTruthy());
+  await patientlyWaitFor(() => expect(getByText(firstRepo.name)).toBeInTheDocument());
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(allTypesScope);
