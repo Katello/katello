@@ -3,10 +3,9 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
-import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
+import { Tabs, Tab, TabTitleText, Split, SplitItem, Button } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
-
 import onSelect from '../../../../components/Table/helpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import {
@@ -15,6 +14,7 @@ import {
 } from '../ContentViewDetailSelectors';
 import { getCVFilterRules } from '../ContentViewDetailActions';
 import CVRpmMatchContentModal from './MatchContentModal/CVRpmMatchContentModal';
+import AddPackageRuleModal from './Rules/Package/AddPackageRuleModal';
 
 const CVRpmFilterContent = ({ filterId, inclusion }) => {
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
@@ -29,6 +29,8 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
 
   const [showMatchContent, setShowMatchContent] = useState(false);
   const onClose = () => setShowMatchContent(false);
+  const [addRpmRuleModalOpen, setAddRpmRuleModalOpen] = useState(false);
+  const openAddRpmRuleModal = () => setAddRpmRuleModalOpen(true);
 
   const columnHeaders = [
     __('RPM name'),
@@ -75,7 +77,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
   }, [response, loading, buildRows]);
 
   const emptyContentTitle = __('No rules have been added to this filter.');
-  const emptyContentBody = __("Add to this filter using the 'Add RPM' button.");
+  const emptyContentBody = __("Add to this filter using the 'Add RPM rule' button.");
   const emptySearchTitle = __('No matching rules found.');
   const emptySearchBody = __('Try changing your search settings.');
   const tabTitle = (inclusion ? __('Included') : __('Excluded')) + __(' RPMs');
@@ -121,7 +123,20 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
                 filterRuleId={filterRuleId}
                 filterId={filterId}
                 onClose={onClose}
-              />
+              />}
+            <Split hasGutter>
+              <SplitItem>
+                <Button onClick={openAddRpmRuleModal} variant="secondary" aria-label="create_rpm_rule">
+                  {__('Add RPM rule')}
+                </Button>
+              </SplitItem>
+            </Split>
+            {addRpmRuleModalOpen &&
+            <AddPackageRuleModal
+              filterId={filterId}
+              setIsOpen={setAddRpmRuleModalOpen}
+              aria-label="add_package_filter_rule_modal"
+            />
             }
           </TableWrapper>
         </div>
