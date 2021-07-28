@@ -7,7 +7,7 @@ module Katello
         if params['uuid']
           @host = Katello::Host::SubscriptionFacet.find_by(uuid: params['uuid'])&.host
           if @host.nil?
-            msg = N_("Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance") % params['uuid']
+            msg = _("Host was not found by the subscription UUID: '%s', this can happen if the host is registered already, but not to this instance") % params['uuid']
             fail ActiveRecord::RecordNotFound, msg
           end
           @host.assign_attributes(host_params('host'))
@@ -37,8 +37,8 @@ module Katello
         @smart_proxy ||= begin
           proxy = params[:url] ? SmartProxy.find_by(url: params[:url]) : SmartProxy.pulp_primary
 
-          fail Foreman::Exception, N_('Smart proxy content source not found!') unless proxy
-          fail Foreman::Exception, N_('Pulp 3 is not enabled on Smart proxy!') unless proxy.pulp3_enabled?
+          fail Foreman::Exception, _('Smart proxy content source not found!') unless proxy
+          fail Foreman::Exception, _('Pulp 3 is not enabled on Smart proxy!') unless proxy.pulp3_enabled?
 
           proxy
         end
