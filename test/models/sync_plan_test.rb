@@ -1,7 +1,7 @@
 require 'katello_test_helper'
 
 module Katello
-  class SyncPlanTest < ActiveSupport::TestCase  # rubocop:disable Metrics/ClassLength
+  class SyncPlanTest < ActiveSupport::TestCase # rubocop:disable Metrics/ClassLength
     def setup
       @organization = get_organization
       @plan = SyncPlan.new(:name => 'Norman Rockwell', :organization => @organization, :sync_date => Time.now, :interval => 'daily')
