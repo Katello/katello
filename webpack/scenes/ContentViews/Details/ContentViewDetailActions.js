@@ -23,7 +23,7 @@ import {
   cvAddComponentKey,
   cvRemoveComponentKey,
   addComponentSuccessMessage,
-  removeComponentSuccessMessage,
+  removeComponentSuccessMessage, CREATE_PACKAGE_FILTER_RULE_KEY,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
@@ -84,6 +84,16 @@ export const createContentViewFilter = (cvId, params) => post({
   successToast: () => __('Filter created'),
   errorToast: error => __(`Something went wrong while creating the filter! ${getResponseErrorMsgs(error.response)}`),
 });
+
+export const createPackageFilterRule = (filterId, params) => post({
+  type: API_OPERATIONS.POST,
+  key: CREATE_PACKAGE_FILTER_RULE_KEY,
+  url: api.getApiUrl(`/content_view_filters/${filterId}/rules`),
+  params,
+  successToast: () => __('Filter Rule created'),
+  errorToast: error => __(`Something went wrong while creating the filter rule! ${getResponseErrorMsgs(error.response)}`),
+});
+
 
 export const getContentViewRepositories = (cvId, params, status) => {
   const apiParams = { ...params };
