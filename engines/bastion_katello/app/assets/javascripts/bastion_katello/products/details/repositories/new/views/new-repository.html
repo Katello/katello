@@ -274,8 +274,8 @@
       </span>
     </div>
 
-    <div ng-show="repository.content_type === 'yum' || repository.content_type === 'deb' || repository.content_type === 'file'">
-      <h4 ng-show="repository.content_type !== undefined" translate> Published Repository Information </h4>
+    <div ng-show="repository.content_type !== undefined">
+      <h4 translate> Published Repository Information </h4>
 
       <div bst-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type === 'yum'">
         <select id="checksum_type"
@@ -288,7 +288,7 @@
         </p>
       </div>
 
-      <div class="checkbox">
+      <div class="checkbox" ng-hide="repository.content_type === 'ostree' || repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">
         <label>
           <input id="unprotected" name="unprotected" ng-model="repository.unprotected" type="checkbox"/>
           <span translate>Publish via HTTP</span>
