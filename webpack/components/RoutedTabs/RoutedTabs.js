@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { shape, string, number, element, arrayOf } from 'prop-types';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -17,30 +17,29 @@ const RoutedTabs = ({
   const { hash } = useLocation();
   const { hash: tabFromUrl, params: { subContentId } } = paramsFromHash(hash);
 
-  const buildLink = tabKey => `${baseUrl}#${tabKey}`;
-
-  const changeTab = (eventKey) => {
+  const changeTab = useCallback((eventKey) => {
+    const buildLink = tabKey => `${baseUrl}#${tabKey}`;
     const matchedTab = tabs.find(tab => tab.key === eventKey);
     if (matchedTab) {
       history.push(buildLink(matchedTab.key));
     } else {
       history.replace(buildLink(tabs[defaultTabIndex].key)); // go to first tab if no tab selected
     }
-  };
+  }, [tabs, defaultTabIndex, history, baseUrl]);
 
   const handleTabSelect = (_event, eventKey) => changeTab(eventKey);
 
-  const getActiveTab = () => {
+  const getActiveTab = useCallback(() => {
     const matchedTab = tabs.find(tab => tab.key === tabFromUrl);
     if (matchedTab) return matchedTab.key;
 
     return tabs[defaultTabIndex].key; // Default to first tab
-  };
+  }, [tabs, tabFromUrl, defaultTabIndex]);
 
   // Useful when first navigating to the page, switches to default tab in url
   useEffect(() => {
     if (tabFromUrl !== getActiveTab()) changeTab(tabFromUrl);
-  }, [tabFromUrl]);
+  }, [tabFromUrl, getActiveTab, changeTab]);
 
   // Handle subroutes to show item's detail content while staying on a tab
   const showContent = (tab) => {

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Pagination, Flex, FlexItem } from '@patternfly/react-core';
 
 import PropTypes from 'prop-types';
@@ -35,23 +36,30 @@ const TableWrapper = ({
     if (newPage !== undefined) setPage(parseInt(newPage, 10));
     if (newPerPage !== undefined) setPerPage(parseInt(newPerPage, 10));
   };
-  const paginationParams = () => ({ per_page: perPage, page });
-  const fetchWithParams = (allParams = {}) => {
-    dispatch(fetchItems({ ...paginationParams(), ...allParams }));
-  };
+  const paginationParams = useCallback(() => ({ per_page: perPage, page }), [perPage, page]);
 
   useEffect(() => updatePagination(metadata), [metadata]);
 
   // The search component will update the search query when a search is performed, listen for that
   // and perform the search so we can be sure the searchQuery is updated when search is performed.
-  useEffect(() => {
+  useDeepCompareEffect(() => {
+    const fetchWithParams = (allParams = {}) => {
+      dispatch(fetchItems({ ...paginationParams(), ...allParams }));
+    };
     if (searchQuery || activeFilters) {
       // Reset page back to 1 when filter or search changes
       fetchWithParams({ search: searchQuery, page: 1 });
     } else {
       fetchWithParams();
     }
-  }, [searchQuery, ...additionalListeners]);
+  }, [
+    activeFilters,
+    dispatch,
+    fetchItems,
+    paginationParams,
+    searchQuery,
+    additionalListeners,
+  ]);
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
@@ -63,7 +71,6 @@ const TableWrapper = ({
 
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
-    dispatch(fetchItems({ ...paginationParams(), ...updatedPagination, search: searchQuery }));
   };
 
   return (

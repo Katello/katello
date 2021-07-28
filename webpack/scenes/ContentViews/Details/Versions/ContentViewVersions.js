@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { TableVariant, TableText } from '@patternfly/react-table';
@@ -72,7 +72,7 @@ const ContentViewVersions = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response, setMetadata, loading, setRows]);
+  }, [response, setMetadata, loading, setRows, cvId]);
 
   const emptyContentTitle = __("You currently don't have any versions for this content view.");
   const emptyContentBody = __('Versions will appear here when the content view is published.'); // needs link
@@ -96,7 +96,7 @@ const ContentViewVersions = ({ cvId }) => {
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
-      fetchItems={params => getContentViewVersions(cvId, params)}
+      fetchItems={useCallback(params => getContentViewVersions(cvId, params), [cvId])}
     />);
 };
 

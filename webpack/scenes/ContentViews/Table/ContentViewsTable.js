@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -45,20 +45,20 @@ const ContentViewTable = () => {
     setIsPublishModalOpen(true);
   };
 
-  // Prevents flash of "No Content" before rows are loaded
-  const tableStatus = () => {
-    if (typeof cvResults === 'undefined' || status === STATUS.ERROR) return status; // will handle errored state
-    const resultsIds = Array.from(cvResults.map(result => result.id));
-    // All results are accounted for in row mapping, the page is ready to load
-    if (resultsIds.length === rowMappingIds.length &&
-      resultsIds.every(id => rowMappingIds.includes(id))) {
-      return status;
-    }
-    return STATUS.PENDING; // Fallback to pending
-  };
-
   useDeepCompareEffect(
     () => {
+      // Prevents flash of "No Content" before rows are loaded
+      const tableStatus = () => {
+        if (typeof cvResults === 'undefined' || status === STATUS.ERROR) return status; // will handle errored state
+        const resultsIds = Array.from(cvResults.map(result => result.id));
+        // All results are accounted for in row mapping, the page is ready to load
+        if (resultsIds.length === rowMappingIds.length &&
+          resultsIds.every(id => rowMappingIds.includes(id))) {
+          return status;
+        }
+        return STATUS.PENDING; // Fallback to pending
+      };
+
       const { results, ...meta } = response;
       if (status === STATUS.ERROR) {
         setCvTableStatus(tableStatus());
@@ -74,7 +74,7 @@ const ContentViewTable = () => {
       }
     },
     [response, status, loadingResponse, setTable, setRowMappingIds,
-      setCvResults, setCvTableStatus, setCurrentStep, setMetadata],
+      setCvResults, setCvTableStatus, setCurrentStep, setMetadata, cvResults, rowMappingIds],
   );
 
   const onSelect = (_event, isSelected, rowId) => {
@@ -161,7 +161,7 @@ const ContentViewTable = () => {
       }}
       variant={TableVariant.compact}
       status={cvTableStatus}
-      fetchItems={getContentViews}
+      fetchItems={useCallback(getContentViews, [])}
       onCollapse={onCollapse}
       canSelectAll={false}
       cells={columns}

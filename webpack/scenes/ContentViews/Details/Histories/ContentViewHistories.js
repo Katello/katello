@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { TableVariant, TableText } from '@patternfly/react-table';
@@ -27,14 +27,6 @@ const ContentViewHistories = ({ cvId }) => {
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
 
-  const taskTypes = {
-    publish: 'Actions::Katello::ContentView::Publish',
-    promotion: 'Actions::Katello::ContentView::Promote',
-    removal: 'Actions::Katello::ContentView::Remove',
-    incrementalUpdate: 'Actions::Katello::ContentView::IncrementalUpdates',
-    export: 'Actions::Katello::ContentViewVersion::Export',
-  };
-
   const columnHeaders = [
     __('Date'),
     __('Version'),
@@ -46,6 +38,14 @@ const ContentViewHistories = ({ cvId }) => {
 
 
   useDeepCompareEffect(() => {
+    const taskTypes = {
+      publish: 'Actions::Katello::ContentView::Publish',
+      promotion: 'Actions::Katello::ContentView::Promote',
+      removal: 'Actions::Katello::ContentView::Remove',
+      incrementalUpdate: 'Actions::Katello::ContentView::IncrementalUpdates',
+      export: 'Actions::Katello::ContentViewVersion::Export',
+    };
+
     const actionText = (history) => {
       const {
         action,
@@ -103,7 +103,7 @@ const ContentViewHistories = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response, setMetadata, loading, setRows]);
+  }, [response, setMetadata, loading, setRows, cvId]);
 
   const emptyContentTitle = __("You currently don't have any history for this content view.");
   const emptyContentBody = __('History will appear here when the content view is published or promoted.'); // needs link
@@ -127,7 +127,7 @@ const ContentViewHistories = ({ cvId }) => {
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint={`/content_views/${cvId}/history/auto_complete_search`}
-      fetchItems={params => getContentViewHistories(cvId, params)}
+      fetchItems={useCallback(params => getContentViewHistories(cvId, params), [cvId])}
     />);
 };
 

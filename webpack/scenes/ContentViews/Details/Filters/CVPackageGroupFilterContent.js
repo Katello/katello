@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -39,7 +39,7 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
     __('Status'),
   ];
 
-  const buildRows = (results) => {
+  const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((packageGroups) => {
       const {
@@ -63,7 +63,7 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
     });
 
     return newRows;
-  };
+  }, [filterId]);
 
   useDeepCompareEffect(() => {
     const { results, ...meta } = response;
@@ -73,7 +73,7 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response]);
+  }, [response, loading, buildRows]);
 
   const emptyContentTitle = __('No package groups have been added to this filter.');
   const emptyContentBody = __("Add to this filter using the 'Add package group' button.");
@@ -102,7 +102,8 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/package_groups/auto_complete_search?filterid=${filterId}`}
-            fetchItems={params => getCVFilterPackageGroups(cvId, filterId, params)}
+            fetchItems={useCallback(params =>
+              getCVFilterPackageGroups(cvId, filterId, params), [cvId, filterId])}
           />
         </div>
       </Tab>

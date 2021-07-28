@@ -26,7 +26,7 @@ const ContentViewFilterDetails = () => {
 
   useEffect(() => {
     dispatch(getCVFilterDetails(cvId, filterId));
-  }, []);
+  }, [dispatch, cvId, filterId]);
 
   useDeepCompareEffect(() => {
     if (loaded) setDetails(response);

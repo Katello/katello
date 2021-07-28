@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
 import { Bullseye, Split, SplitItem, Button } from '@patternfly/react-core';
@@ -66,7 +66,7 @@ const ContentViewComponents = ({ cvId, details }) => {
 
   const bulkRemoveEnabled = () => rows.some(row => row.selected && row.added);
 
-  const onAdd = ({
+  const onAdd = useCallback(({
     componentCvId, published, added, latest,
   }) => {
     if (published) {
@@ -82,7 +82,7 @@ const ContentViewComponents = ({ cvId, details }) => {
         components: [{ latest: true, content_view_id: componentCvId }],
       }));
     }
-  };
+  }, [cvId, dispatch]);
 
   const removeBulk = () => {
     const componentIds = [];
@@ -100,7 +100,7 @@ const ContentViewComponents = ({ cvId, details }) => {
     }));
   };
 
-  const buildRows = (results) => {
+  const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((componentCV) => {
       const {
@@ -151,7 +151,7 @@ const ContentViewComponents = ({ cvId, details }) => {
       });
     });
     return newRows;
-  };
+  }, [onAdd]);
 
   const actionResolver = (rowData, { _rowIndex }) => [
     {
@@ -189,7 +189,7 @@ const ContentViewComponents = ({ cvId, details }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response]);
+  }, [response, buildRows, loading]);
 
   return (
     <TableWrapper
@@ -211,7 +211,8 @@ const ContentViewComponents = ({ cvId, details }) => {
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint="/content_views/auto_complete_search"
-      fetchItems={params => getContentViewComponents(cvId, params, statusSelected)}
+      fetchItems={useCallback(params =>
+        getContentViewComponents(cvId, params, statusSelected), [cvId, statusSelected])}
       additionalListeners={[statusSelected, addComponentsResolved, removeComponentsResolved]}
     >
       <Split hasGutter>

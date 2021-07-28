@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -43,7 +43,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
     return 'All versions';
   };
 
-  const buildRows = (results) => {
+  const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((rule) => {
       const { name, architecture } = rule;
@@ -57,7 +57,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
     });
 
     return newRows;
-  };
+  }, []);
 
   useDeepCompareEffect(() => {
     const { results, ...meta } = response;
@@ -67,7 +67,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response]);
+  }, [response, loading, buildRows]);
 
   const emptyContentTitle = __('No rules have been added to this filter.');
   const emptyContentBody = __("Add to this filter using the 'Add RPM' button.");
@@ -96,7 +96,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/content_view_filters/${filterId}/rules/auto_complete_search`}
-            fetchItems={params => getCVFilterRules(filterId, params)}
+            fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
           />
         </div>
       </Tab>

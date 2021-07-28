@@ -14,13 +14,13 @@ const EditableTextInput = ({
   const [editing, setEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Setting didCancel to avoid actions from happening after component has been unmounted
+  // Setting didCancel to prevent actions from happening after component has been unmounted
   // see https://overreacted.io/a-complete-guide-to-useeffect/#speaking-of-race-conditions
   useEffect(() => {
     let didCancel = false;
 
     const onSubmit = async () => {
-      if (submitting) {
+      if (submitting) { // no dependency array because this check takes care of it
         await onEdit(inputValue, attribute);
         if (!didCancel) {
           setSubmitting(false);
@@ -33,7 +33,7 @@ const EditableTextInput = ({
     return () => {
       didCancel = true;
     };
-  }, [submitting]);
+  });
 
   // Listen for enter and trigger submit workflow on enter
   useEffect(() => {

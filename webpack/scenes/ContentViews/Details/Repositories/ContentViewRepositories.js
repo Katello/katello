@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import {
@@ -75,7 +75,7 @@ const ContentViewRepositories = ({ cvId }) => {
   ];
   const loading = status === STATUS.PENDING;
 
-  const buildRows = (results) => {
+  const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((repo) => {
       const {
@@ -102,7 +102,7 @@ const ContentViewRepositories = ({ cvId }) => {
       newRows.push({ repoId: id, cells });
     });
     return newRows;
-  };
+  }, [statusSelected]);
 
   useDeepCompareEffect(() => {
     const { results, ...meta } = response;
@@ -112,11 +112,11 @@ const ContentViewRepositories = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response]);
+  }, [response, loading, buildRows]);
 
   useEffect(() => {
     dispatch(getRepositoryTypes());
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useDeepCompareEffect(() => {
     const rowsAreSelected = rows.some(row => row.selected);
@@ -189,12 +189,12 @@ const ContentViewRepositories = ({ cvId }) => {
     ];
   };
 
-  const getCVReposWithOptions = (params = {}) => {
+  const getCVReposWithOptions = useCallback((params = {}) => {
     const allParams = { ...params };
     if (typeSelected !== 'All repositories') allParams.content_type = repoTypes[typeSelected];
 
     return getContentViewRepositories(cvId, allParams, statusSelected);
-  };
+  }, [cvId, repoTypes, statusSelected, typeSelected]);
 
   const emptyContentTitle = __("You currently don't have any repositories to add to this content view.");
   const emptyContentBody = __('Please add some repositories.'); // needs link
@@ -231,7 +231,7 @@ const ContentViewRepositories = ({ cvId }) => {
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint="/repositories/auto_complete_search"
-      fetchItems={params => getCVReposWithOptions(params)}
+      fetchItems={useCallback(params => getCVReposWithOptions(params), [getCVReposWithOptions])}
       additionalListeners={[typeSelected, statusSelected]}
     >
       <Split hasGutter>

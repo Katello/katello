@@ -1,5 +1,6 @@
 import { STATUS } from 'foremanReact/constants';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { Bullseye, Button, Grid, GridItem } from '@patternfly/react-core';
@@ -38,13 +39,9 @@ const CVPublishFinish = ({
   const pollResponseStatus = useSelector(state =>
     selectPublishTaskPollStatus(state, cvVersionPublishKey(cvId, versionCount)), shallowEqual);
 
-  const pollPublishTask = (cvPublishVersionKey, task) => {
-    if (!polling) dispatch(startPollingTask(cvPublishVersionKey, task));
-  };
-
   const progressCompleted = () => (pollResponse.progress ? pollResponse.progress * 100 : 0);
 
-  const handleEndTask = ({ taskComplete }) => {
+  const handleEndTask = useCallback(({ taskComplete }) => {
     if (currentStep !== 1) {
       dispatch(stopPollingTask(cvVersionPublishKey(cvId, versionCount)));
       setCurrentStep(1);
@@ -55,7 +52,7 @@ const CVPublishFinish = ({
         dispatch(toastTaskFinished(pollResponse));
       }
     }
-  };
+  }, [currentStep, cvId, dispatch, pollResponse, setCurrentStep, setIsOpen, versionCount]);
 
 
   useEffect(() => {
@@ -77,8 +74,12 @@ const CVPublishFinish = ({
     setDescription, setUserCheckedItems, currentStep, setCurrentStep,
     cvId, versionCount, description, forcePromote, userCheckedItems]);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (!response) return;
+    const pollPublishTask = (cvPublishVersionKey, task) => {
+      if (!polling) dispatch(startPollingTask(cvPublishVersionKey, task));
+    };
+
     setSaving(true);
     const { id } = response;
     if (id && status === STATUS.RESOLVED) {
@@ -88,11 +89,11 @@ const CVPublishFinish = ({
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }
-  }, [JSON.stringify(response), status, error, cvId, versionCount,
-    pollPublishTask, setPolling, setSaving]);
+  }, [response, status, error, cvId, versionCount,
+    dispatch, polling, setPolling, setSaving]);
 
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const { state, result } = pollResponse;
     if (state === 'paused' || result === 'error') {
       setTaskErrored(true);
@@ -105,7 +106,7 @@ const CVPublishFinish = ({
         handleEndTask({ taskComplete: true });
       }, 500);
     }
-  }, [JSON.stringify(pollResponse), dispatch, setTaskErrored,
+  }, [pollResponse, dispatch, setTaskErrored,
     setPolling, setIsOpen, pollResponseStatus, handleEndTask]);
 
   if (saving) {

@@ -18,7 +18,7 @@ const RegistrationCommands = ({
 }) => {
   useEffect(() => {
     onChange({ activationKeys: [], lifecycleEnvironmentId: '' });
-  }, [organizationId, hostGroupId]);
+  }, [organizationId, hostGroupId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -78,4 +78,3 @@ RegistrationCommands.defaultProps = {
 };
 
 export default RegistrationCommands;
-
