@@ -19,7 +19,9 @@ module Katello
 
       def host_setup_extension
         if params['host']['lifecycle_environment_id']
-          @host.update!(lifecycle_environment: KTEnvironment.readable.find(params['host']['lifecycle_environment_id']))
+          new_lce = KTEnvironment.readable.find(params['host']['lifecycle_environment_id'])
+          @host.content_facet.lifecycle_environment = new_lce
+          @host.update_candlepin_associations
         end
 
         super
