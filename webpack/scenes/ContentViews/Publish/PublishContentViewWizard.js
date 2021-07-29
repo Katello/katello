@@ -12,6 +12,10 @@ import {
   selectEnvironmentPaths,
   selectEnvironmentPathsStatus,
 } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
+import getContentViews from '../ContentViewsActions';
+import getContentViewDetails from '../Details/ContentViewDetailActions';
+import { stopPollingTask } from '../../Tasks/TaskActions';
+import { cvVersionPublishKey } from '../ContentViewsConstants';
 
 const PublishContentViewWizard = ({
   details, show, setIsOpen, currentStep, setCurrentStep,
@@ -110,7 +114,12 @@ const PublishContentViewWizard = ({
         setUserCheckedItems([]);
         setPromote(false);
         setForcePromote([]);
-        setCurrentStep(1);
+        if (currentStep === 3) {
+          setCurrentStep(1);
+          dispatch(getContentViewDetails(cvId));
+          dispatch(getContentViews);
+          dispatch(stopPollingTask(cvVersionPublishKey(cvId, versionCount)));
+        }
         setIsOpen(false);
       }}
       isOpen={show}

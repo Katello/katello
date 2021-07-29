@@ -3,9 +3,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { Bullseye, Button, Grid, GridItem } from '@patternfly/react-core';
-import { ChartDonut } from '@patternfly/react-charts';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons';
+import { Bullseye, Button, Grid, GridItem,
+  Progress, ProgressSize, ProgressMeasureLocation,
+  ProgressVariant, EmptyState, EmptyStateIcon, EmptyStateVariant,
+  Title } from '@patternfly/react-core';
+import { ExternalLinkAltIcon, InProgressIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   selectPublishContentViewsError, selectPublishContentViews,
@@ -18,7 +20,6 @@ import EmptyStateMessage from '../../../components/Table/EmptyStateMessage';
 import { cvVersionPublishKey } from '../ContentViewsConstants';
 import { startPollingTask, stopPollingTask, toastTaskFinished } from '../../Tasks/TaskActions';
 import getContentViewDetails from '../Details/ContentViewDetailActions';
-
 
 const CVPublishFinish = ({
   cvId,
@@ -46,9 +47,9 @@ const CVPublishFinish = ({
       dispatch(stopPollingTask(cvVersionPublishKey(cvId, versionCount)));
       setCurrentStep(1);
       setIsOpen(false);
+      dispatch(getContentViewDetails(cvId));
+      dispatch(getContentViews);
       if (taskComplete) {
-        dispatch(getContentViewDetails(cvId));
-        dispatch(getContentViews);
         dispatch(toastTaskFinished(pollResponse));
       }
     }
@@ -114,46 +115,48 @@ const CVPublishFinish = ({
   }
   if (polling && pollResponse) {
     return (
-      <Grid hasGutter>
-        <GridItem span={12} rowSpan={11}>
-          <Bullseye>
-            <div style={{ height: '500px', width: '500px' }}>
-              <ChartDonut
-                ariaDesc={__('Publishing Content View')}
-                ariaTitle={__('Publishing Content View')}
-                animate={{ duration: 100 }}
-                data={[{ x: 'Completed', y: progressCompleted() }, { x: 'Pending', y: 100 - progressCompleted() }]}
-                labels={({ datum }) => `${datum.x}: ${datum.y.toFixed(0)}%`}
-                title={pollResponse.progress ? `${progressCompleted().toFixed(0)} %` : 'Starting..'}
-                colorScale={taskErrored ? ['#FF0000', '#F08080'] : ['#008000', '#8FBC8F']}
-              />
-            </div>
-          </Bullseye>
-        </GridItem>
-        <GridItem span={12} rowSpan={1}>
-          <Bullseye>
-            <Button
-              onClick={() => {
+      <>
+        <EmptyState style={{ marginTop: '10px' }} variant={EmptyStateVariant.large}>
+          <EmptyStateIcon icon={InProgressIcon} />
+          <Title headingLevel="h2" size="lg">
+            {__('Publishing content view')}
+          </Title>
+        </EmptyState>
+        <Grid hasGutter>
+          <GridItem span={12} rowSpan={19}>
+            <Progress
+              value={progressCompleted()}
+              title={__('In progress')}
+              measureLocation={ProgressMeasureLocation.outside}
+              variant={taskErrored ? ProgressVariant.danger : ProgressVariant.default}
+              size={ProgressSize.lg}
+            />
+          </GridItem>
+          <GridItem style={{ marginTop: '10px' }} span={12} rowSpan={1}>
+            <Bullseye>
+              <Button
+                onClick={() => {
                 handleEndTask({ taskComplete: false });
               }}
-              variant="primary"
-              aria-label="publish_content_view"
-            >
-              Close
-            </Button>
-            <Button
-              component="a"
-              aria-label="view tasks button"
-              href={`/foreman_tasks/tasks/${pollResponse.id}`}
-              target="_blank"
-              variant="link"
-            >
-              {' View task details '}
-              <ExternalLinkAltIcon />
-            </Button>
-          </Bullseye>
-        </GridItem>
-      </Grid>
+                variant="primary"
+                aria-label="publish_content_view"
+              >
+                {__('Close')}
+              </Button>
+              <Button
+                component="a"
+                aria-label="view tasks button"
+                href={`/foreman_tasks/tasks/${pollResponse.id}`}
+                target="_blank"
+                variant="link"
+              >
+                {__(' View task details ')}
+                <ExternalLinkAltIcon />
+              </Button>
+            </Bullseye>
+          </GridItem>
+        </Grid>
+      </>
     );
   }
   if (status === STATUS.PENDING) return (<Loading />);
