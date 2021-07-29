@@ -29,6 +29,7 @@ namespace :katello do
           message = "#{Time.now.to_s}: #{task.humanized[:output]}"
           clear_count = message.length + 1
           $stdout.print(message)
+          $stdout.flush
 
           sleep(10)
           task = ForemanTasks::Task.find(task.id)
