@@ -726,6 +726,10 @@ msgid "An error occurred:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+msgid "Ansible Collection Authorization"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Ansible Collections"
 msgstr ""
 
@@ -1286,7 +1290,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-advanced-sync-modal.controller.js
 #: app/assets/javascripts/bastion_katello/products/bulk/products-bulk-http-proxy-modal.controller.js
-#: app/assets/javascripts/bastion_katello/products/details/product-repositories.controller.js
 #: app/assets/javascripts/bastion_katello/products/products.controller.js
 msgid "Click to view task"
 msgstr ""
@@ -1298,18 +1301,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-manage-ansible-collections.html
 msgid "Collection Name"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Comma separated list of components to sync from (leave clear to sync all). Example: main"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Comma separated list of processor architectures to filter the sync by. Example: amd64"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Comma separated list of releases (suite or codename) to sync from. Default: stable"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/versions/views/content-view-version-ostree-branches.html
@@ -2352,13 +2343,7 @@ msgstr ""
 msgid ""
 "For On Demand synchronization, only the metadata is downloaded during sync and packages are fetched and stored on the filesystem when clients request them.\n"
 "          On Demand is not recommended for custom repositories unless the upstream repository maintains older versions of packages within the repository.\n"
-"          For Background synchronization, a background task will download all packages after the initial sync (Deprecated).\n"
 "          The Immediate option will download all metadata and packages immediately during the sync."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "For remote actions via katello-agent:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-promotion.html
@@ -2396,11 +2381,16 @@ msgid "Group"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
-msgid "Group Install"
+msgid "Group Install (Deprecated)"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
+msgid "Group package actions are being deprecated, and will be removed in a future version."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
-msgid "Group Remove"
+msgid "Group Remove (Deprecated)"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
@@ -2529,12 +2519,6 @@ msgstr ""
 msgid "Id"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
-#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
-#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
-msgid "If you are not using Remote Execution to manage content on this host, ensure that it has the katello-agent package installed."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-views/deletion/views/version-deletion-activation-keys.html
 msgid "If you would prefer to move portions of these Activation Keys to different content views or Lifecycle Environments click"
 msgstr ""
@@ -2549,7 +2533,7 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Ignorable Content"
+msgid "Ignore SRPMs"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/docker-tags/details/docker-tag-details.controller.js
@@ -2618,21 +2602,12 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "Install client package:"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
 msgid "Install Selected"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
 msgid "Install the pre-built bootstrap RPM:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-oracle-client.html
-msgid "Install the Subscription Manager package:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/errata/views/errata.html
@@ -2721,12 +2696,7 @@ msgid "Katello Tracer"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/common/views/katello-agent-notice.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
 msgid "Katello-agent is deprecated and will be removed in a future release."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "Katello-agent is deprecated and will be removed in Katello 4.0.  Consider migrating to Remote Execution."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/views/content-view-info.html
@@ -2788,11 +2758,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/ostree-upstream-sync-policy.service.js
 msgid "Latest Only"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "Learn more about these packages in the <a href=\"https://theforeman.org/plugins/katello/\">Documentation</a>"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-filter-details.html
@@ -3611,9 +3576,12 @@ msgstr ""
 msgid "Package Filter:"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/new-filter.controller.js
 msgid "Package Group"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
+msgid "Package Group (Deprecated)"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-views/details/filters/views/package-group-filter.html
@@ -3706,10 +3674,6 @@ msgstr ""
 msgid "Packages are automatically Applicable if they are Upgradable"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
-msgid "Packages are corrupt, often leading to an error \"Package does not match intended download\" or \"Hash Sum mismatch\"."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/errata/details/views/erratum-packages.html
 msgid "Packages for Errata:"
 msgstr ""
@@ -3754,8 +3718,13 @@ msgstr ""
 msgid "Perform"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
-msgid "Performs a complete sync, verifying the checksum of all packages afterwards. Any missing or corrupt package will be re-downloaded. This option will take the longest amount of time. Choose this option if:"
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-errata-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/bulk/views/content-hosts-bulk-packages-modal.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-errata.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-actions.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-applicable.html
+#: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-packages-installed.html
+msgid "Performing host package actions is disabled because Katello is not configured for Remote Execution or Katello Agent."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/subscriptions/views/subscription-type.html
@@ -4056,11 +4025,6 @@ msgstr ""
 msgid "Register Content Host"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "Register using subscription-manager:"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/views/content-hosts.html
 msgid "Registered"
@@ -4114,10 +4078,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 msgid "Remote execution plugin is required to be able to run any helpers."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/product-repositories.controller.js
-msgid "Removal of selected repositories initiated successfully."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-details.html
@@ -4533,6 +4493,11 @@ msgstr ""
 msgid "Result"
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Retain package versions"
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/activation-keys/details/views/activation-key-info.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Role"
@@ -4618,7 +4583,6 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-deb-client.html
 #: app/assets/javascripts/bastion_katello/content-hosts/views/register.html
 msgid "Select a Content Source:"
 msgstr ""
@@ -4629,10 +4593,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/organizations/views/organization-selector.html
 msgid "Select an Organization"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Select content units to ignore while synchronizing this repository."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/ostree-branches/details/views/ostree-branch-repositories.html
@@ -4649,7 +4609,11 @@ msgid "Select the Lifecycle Environments you would like to remove Version {{ ver
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/bulk/views/products-bulk-advanced-sync-modal.html
-msgid "Selecting \"Complete Sync\" will cause only Yum repositories of the selected product to be synced. Selecting \"Validate Content\" will cause only Yum repositories using the \"Immediate\" or \"Background\" download policies will be synced."
+msgid "Selecting \"Complete Sync\" will cause only Yum repositories of the selected product to be synced."
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Selecting this option will exclude SRPMs from repository synchronization."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
@@ -4763,10 +4727,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
 msgid "Source RPMs"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
-msgid "Specific packages are throwing a 404 from the package-manager."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -5176,6 +5136,10 @@ msgid ""
 "              See the <a href=\"/content_views\">content views page</a> to manage and promote a content view."
 msgstr ""
 
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "The maximum number of versions of each package to keep."
+msgstr ""
+
 #: app/assets/javascripts/bastion_katello/organizations/views/organization-selector.html
 msgid "The page you are attempting to access requires selecting a specific organization."
 msgstr ""
@@ -5409,11 +5373,6 @@ msgstr ""
 msgid "To register a content host to this server, follow these steps."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "To report package & errata information:"
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/common/views/select-action-dropdown.html
 msgid "Toggle Dropdown"
 msgstr ""
@@ -5425,11 +5384,6 @@ msgstr ""
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-info.html
 msgid "Tracer helps administrators identify applications that need to be restarted after a system is patched."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "Tracer helps administrators identify applications that need to be restarted after a system is patched. To optionally report tracer information:"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/content/views/content-host-traces.html
@@ -5654,11 +5608,6 @@ msgstr ""
 msgid "Usage Type:"
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
-#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
-msgid "Use Ctrl-click to multi-select/deselect items."
-msgstr ""
-
 #: app/assets/javascripts/bastion_katello/products/details/repositories/http-proxy-service.js
 msgid "Use specific HTTP Proxy"
 msgstr ""
@@ -5685,20 +5634,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "Username of the upstream repository user for authentication. Leave empty if repository does not require authentication."
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "Using a username and password:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-client.html
-#: app/assets/javascripts/bastion_katello/content-hosts/views/register-sles-client.html
-msgid "Using an Activation Key:"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
-msgid "Validate Content Sync"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-info.html
@@ -5841,8 +5776,16 @@ msgstr ""
 msgid "When Auto Attach is disabled, registering systems will be attached to all associated subscriptions."
 msgstr ""
 
-#: app/assets/javascripts/bastion_katello/products/details/repositories/details/views/repository-advanced-sync-options.html
-msgid "When validating content, repositories using the \"On Demand\" download policy will download all packages within the repository."
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Whitespace-separated list of components to sync from (leave clear to sync all). Example: main"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Whitespace-separated list of processor architectures to filter the sync by. Example: amd64"
+msgstr ""
+
+#: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
+msgid "Whitespace-separated list of releases (suite or codename) to sync from. Default: stable"
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/content-hosts/details/views/content-host-subscriptions.html
@@ -5875,10 +5818,6 @@ msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/new/views/new-repository.html
 msgid "You can upload a requirements.yml file below to auto-fill contents or paste contents of requirement.yml here"
-msgstr ""
-
-#: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
-msgid "You cannot remove these repositories because they belong to a Red Hat product."
 msgstr ""
 
 #: app/assets/javascripts/bastion_katello/products/details/repositories/views/product-repositories.html
