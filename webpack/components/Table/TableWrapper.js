@@ -15,6 +15,7 @@ import { orgId } from '../../services/api';
 const TableWrapper = ({
   children,
   metadata,
+  composable,
   fetchItems,
   autocompleteEndpoint,
   searchQuery,
@@ -98,7 +99,7 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} {...allTableProps} />
+      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} {...allTableProps} composable={composable} />
     </React.Fragment>
   );
 };
@@ -128,6 +129,7 @@ TableWrapper.propTypes = {
     PropTypes.bool,
   ])),
   activeFilters: PropTypes.bool,
+  composable: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
@@ -135,6 +137,7 @@ TableWrapper.defaultProps = {
   children: null,
   additionalListeners: [],
   activeFilters: false,
+  composable: false,
 };
 
 export default TableWrapper;

@@ -4,6 +4,7 @@ import {
   TableHeader,
   TableBody,
 } from '@patternfly/react-table';
+import TableComposable from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 
@@ -13,7 +14,7 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
-  ...extraTableProps
+  children, ...extraTableProps
 }) => {
   const isFiltering = activeFilters || searchIsActive;
   if (status === STATUS.PENDING) return (<Loading />);
@@ -31,6 +32,17 @@ const MainTable = ({
   }
 
   const tableProps = { cells, rows, ...extraTableProps };
+  if (composable) {
+    return (
+    <TableComposable
+        aria-label="Content View Table"
+        className="katello-pf4-table"
+        {...extraTableProps}
+      >
+        {children}
+      </TableComposable>
+    );
+  };
   return (
     <Table
       aria-label="Content View Table"
