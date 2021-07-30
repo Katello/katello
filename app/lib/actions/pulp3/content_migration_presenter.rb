@@ -38,7 +38,9 @@ module Actions
         end
 
         def humanized_output
-          report = task_progress_reports.find { |current| current['state'] == 'running' && current['total'] != 0 }
+          #prefer running reports where the done and total do not match
+          report = task_progress_reports.find { |current| current['state'] == 'running' && current['total'] != 0 && current['done'] != current['total'] }
+          report ||= task_progress_reports.find { |current| current['state'] == 'running' && current['total'] != 0 }
           report ||= task_group_progress_reports.find { |current| current['total'] != 0 && current['done'] != current['total'] }
 
           if !report.blank? && report['total'] != 0
