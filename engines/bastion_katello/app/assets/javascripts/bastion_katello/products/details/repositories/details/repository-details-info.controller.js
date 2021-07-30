@@ -27,7 +27,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.repository.$promise.then(function () {
                 $scope.uploadURL = 'katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
-                $scope.repository['ignore_srpms'] = $scope.repository['ignorable_content'].includes("srpm");
+                $scope.repository['ignore_srpms'] = $scope.repository['ignorable_content'] && $scope.repository['ignorable_content'].includes("srpm");
+                $scope.repository['ansible_collection_auth_exists'] = $scope.repository['ansible_collection_auth_url'] && $scope.repository['ansible_collection_auth_token'];
             });
 
             $scope.gpgKeys = function () {
@@ -113,7 +114,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 repository.os_versions = $scope.osVersionsParam();
                 repository.$update(function (response) {
                     deferred.resolve(response);
-                    $scope.repository.ignore_srpms = $scope.repository.ignorable_content.includes("srpm");
+                    $scope.repository.ignore_srpms = $scope.repository.ignorable_content && $scope.repository.ignorable_content.includes("srpm");
                     if (!_.isEmpty(response["docker_tags_whitelist"])) {
                         repository.commaTagsWhitelist = repository["docker_tags_whitelist"].join(", ");
                     } else {
@@ -192,6 +193,13 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.repository['upstream_password'] = null;
                 $scope.repository['upstream_auth_exists'] = false;
                 $scope.repository['upstream_username'] = null;
+                $scope.save($scope.repository);
+            };
+
+            $scope.clearAnsibleCollectionAuth = function () {
+                $scope.repository['ansible_collection_auth_url'] = null;
+                $scope.repository['ansible_collection_auth_token'] = null;
+                $scope.repository['ansible_collection_auth_exists'] = false;
                 $scope.save($scope.repository);
             };
 

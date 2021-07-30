@@ -563,6 +563,28 @@ module Katello
       @root.docker_tags_whitelist = ["boo"]
       refute @root.valid?
     end
+
+    def test_valid_ansible_collection_auth_params
+      ansible_repo_root = katello_root_repositories(:pulp3_ansible_collection_root_1)
+      assert ansible_repo_root.valid?
+
+      ansible_repo_root.ansible_collection_auth_token = nil
+      refute ansible_repo_root.valid?
+      ansible_repo_root.ansible_collection_auth_url = nil
+      assert ansible_repo_root.valid?
+
+      ansible_repo_root.ansible_collection_auth_url = 'http://random_auth_url.com'
+      refute ansible_repo_root.valid?
+      ansible_repo_root.ansible_collection_auth_token = '12345'
+      assert ansible_repo_root.valid?
+
+      ansible_repo_root.ansible_collection_auth_url = ''
+      ansible_repo_root.ansible_collection_auth_token = ''
+      assert ansible_repo_root.valid?
+      assert_nil ansible_repo_root.ansible_collection_auth_url
+      assert_nil ansible_repo_root.ansible_collection_auth_token
+      assert ansible_repo_root.valid?
+    end
   end
 
   class RootRepositoryInstanceTest < RepositoryTestBase

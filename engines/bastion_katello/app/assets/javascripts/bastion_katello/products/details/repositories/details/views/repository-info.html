@@ -110,16 +110,26 @@
             edit-trigger="uploadedFile">
         </dd>
 
-        <dt translate>Auth URL</dt>
-        <dd bst-edit-text="repository.ansible_collection_auth_url"
-            on-save="save(repository)"
-            readonly="product.redhat || denied('edit_products', product)">
-        </dd>
-
-        <dt translate>Auth Token</dt>
-        <dd bst-edit-text="repository.ansible_collection_auth_token"
-            on-save="save(repository)"
-            readonly="product.redhat || denied('edit_products', product)">
+        <dt translate>Ansible Collection Authorization</dt>
+        <dd bst-edit-custom="repository.ansible_collection_auth_exists"
+            readonly="denied('edit_products', product)"
+            on-save="save(repository, true)"
+            formatter="ansibleAuthFilter"
+            formatter-options="repository"
+            deletable="repository.ansible_collection_auth_exists"
+            on-delete="clearAnsibleCollectionAuth()">
+          <div translate>Auth URL</div>
+          <input id="ansible_collection_auth_url"
+                 name="ansible_collection_auth_url"
+                 type="url"
+                 autocomplete="off"
+                 ng-model="repository.ansible_collection_auth_url"/>
+          <div translate>Auth Token</div>
+          <input id="ansible_collection_auth_token"
+                 name="ansible_collection_auth_token"
+                 type="password"
+                 autocomplete="off"
+                 ng-model="repository.ansible_collection_auth_token"/>
         </dd>
       </span>
 

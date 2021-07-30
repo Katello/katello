@@ -29,6 +29,15 @@ angular.module('Bastion.components.formatters').filter('upstreamPasswordFilter',
     };
 }]);
 
+angular.module('Bastion.components.formatters').filter('ansibleAuthFilter', [function () {
+    return function (displayValue, repository) {
+        if (repository["ansible_collection_auth_url"] && repository["ansible_collection_auth_token"]) {
+            return '%(auth_url) / ********'.replace('%(auth_url)', repository["ansible_collection_auth_url"]);
+        }
+        return null;
+    };
+}]);
+
 angular.module('Bastion.components.formatters').filter('httpProxyDetailsFilter', ['HttpProxyPolicy', function (HttpProxyPolicy) {
     return function (displayValue, repository) {
         var message = '%(proxyPolicy)'.replace('%(proxyPolicy)', HttpProxyPolicy.displayHttpProxyPolicyName(repository["http_proxy_policy"]));
