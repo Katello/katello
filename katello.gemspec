@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.files += Dir["engines/bastion_katello/{app,vendor,lib,config}/**/*"]
   gem.files += Dir["engines/bastion_katello/{README.md}"]
   gem.files -= ["lib/katello/tasks/annotate_scenarios.rake"]
+  gem.files -= Dir["locale/**/*.edit.po"]
 
   gem.require_paths = ["lib"]
 
