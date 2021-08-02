@@ -19,6 +19,10 @@ let searchDelayScope;
 let autoSearchScope;
 
 beforeEach(() => {
+  // This is a workaround to avoid intermittent failures
+  // on this test in katello-master-source-release pipeline
+  jest.resetModules();
+
   const { results } = repoData;
   [firstRepo] = results;
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
