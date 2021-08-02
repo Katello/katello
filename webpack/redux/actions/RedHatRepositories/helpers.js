@@ -19,7 +19,7 @@ const recommendedRepositoriesRHEL = [
   'rhel-7-server-extras-rpms',
   'rhel-7-server-eus-rpms',
   'rhel-7-server-kickstart',
-  'rhel-6-server-rpms',
+  'rhel-6-server-els-rpms',
   'rhel-6-server-kickstart',
   'rhel-5-server-els-rpms',
 ];
@@ -27,7 +27,7 @@ const recommendedRepositoriesRHEL = [
 const recommendedRepositoriesSatTools = [
   'satellite-tools-6.9-for-rhel-8-x86_64-rpms',
   'rhel-7-server-satellite-tools-6.9-rpms',
-  'rhel-6-server-satellite-tools-6.9-rpms',
+  'rhel-6-server-els-satellite-tools-6.9-rpms',
   'rhel-5-server-els-satellite-tools-6.9-rpms',
   'rhel-7-server-satellite-maintenance-6-rpms',
 ];
