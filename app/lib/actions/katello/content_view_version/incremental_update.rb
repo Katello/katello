@@ -78,10 +78,7 @@ module Actions
                                                        dependency_solving: dep_solve).output
                     repos_to_clone.each do |source_repos|
                       if separated_repo_map[:pulp3_yum].keys.include?(source_repos)
-                        copy_repos(repository_mapping[source_repos],
-                          new_content_view_version,
-                          content,
-                          dep_solve)
+                        copy_repos(repository_mapping[source_repos])
                       end
                     end
                   end
@@ -161,15 +158,9 @@ module Actions
           end
         end
 
-        def copy_repos(new_repo, new_version, content, dep_solve)
+        def copy_repos(new_repo, _new_version = nil, _content = nil, _dep_solve = nil)
           copy_output = []
           sequence do
-            solve_dependencies = new_version.content_view.solve_dependencies || dep_solve
-            copy_output += copy_deb_content(new_repo, solve_dependencies, content[:deb_ids])
-            copy_output += copy_yum_content(new_repo, solve_dependencies,
-                                            content[:package_ids],
-                                            content[:errata_ids])
-
             plan_action(Katello::Repository::MetadataGenerate, new_repo)
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
           end
