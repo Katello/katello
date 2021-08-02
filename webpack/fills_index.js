@@ -6,6 +6,7 @@ import SystemStatuses from './components/extensions/about';
 import RegistrationCommands from './components/extensions/RegistrationCommands';
 import ContentTab from './components/extensions/HostDetails/Tabs/ContentTab';
 import SubscriptionTab from './components/extensions/HostDetails/Tabs/SubscriptionTab';
+import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab';
 import extendReducer from './components/extensions/reducers';
 
 registerReducer('katelloExtends', extendReducer);
@@ -14,3 +15,4 @@ addGlobalFill('aboutFooterSlot', '[katello]AboutSystemStatuses', <SystemStatuses
 addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <RegistrationCommands key="katello-reg" />, 100);
 addGlobalFill('host-details-page-tabs', 'Content', <ContentTab key="content" />, 100);
 addGlobalFill('host-details-page-tabs', 'Subscription', <SubscriptionTab key="subscription" />, 100);
+addGlobalFill('host-details-page-tabs', 'Traces', <TracesTab key="traces" />, 100);
