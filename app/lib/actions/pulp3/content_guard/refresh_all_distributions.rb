@@ -6,7 +6,8 @@ module Actions
           sequence do
             plan_action(Actions::Pulp3::ContentGuard::Refresh, smart_proxy)
 
-            roots = ::Katello::RootRepository.where.not(:content_type => ::Katello::Repository::DOCKER_TYPE).where(:unprotected => false)
+            protected_types = [::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE, ::Katello::Repository::DEB_TYPE]
+            roots = ::Katello::RootRepository.where(:content_type => protected_types).where(:unprotected => false)
             repositories = ::Katello::Repository.where(:root => roots)
             if repositories.any?
               plan_action(::Actions::BulkAction, Actions::Pulp3::Repository::RefreshDistribution, repositories, smart_proxy.id, assume_content_guard_exists: true)
