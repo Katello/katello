@@ -283,9 +283,7 @@ module Katello
         return
       end
 
-      if self.ansible_collection_auth_url.blank?
-        errors.add(:base, N_("Auth token requires Auth URL be set."))
-      elsif !self.ansible_collection_auth_token
+      if !self.ansible_collection_auth_url.blank? && self.ansible_collection_auth_token.blank?
         errors.add(:base, N_("Auth URL requires Auth token be set."))
       end
     end
@@ -351,7 +349,7 @@ module Katello
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id download_concurrency)
       changeable_attributes += %w(name container_repository_name docker_tags_whitelist) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
-      changeable_attributes += %w(ansible_collection_requirements) if ansible_collection?
+      changeable_attributes += %w(ansible_collection_requirements ansible_collection_auth_url ansible_collection_auth_token) if ansible_collection?
       changeable_attributes.any? { |key| previous_changes.key?(key) }
     end
 

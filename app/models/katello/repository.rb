@@ -413,7 +413,7 @@ module Katello
       elsif ostree?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/web/#{relative_path}"
       elsif ansible_collection?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api/"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/#{relative_path}/"
       end
