@@ -69,6 +69,22 @@ module Katello
         filter.generate_clauses(@repo).to_sql
     end
 
+    def test_content_unit_pulp_ids_with_empty_errata_list_returns_empty_result
+      rpm1 = @repo.rpms.first
+      rpm2 = @repo.rpms.last
+      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1")
+      erratum1.packages << Katello::ErratumPackage.new(:filename => rpm1.filename, :name => "e1", :nvrea => "e1")
+      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2")
+      erratum2.packages << Katello::ErratumPackage.new(:filename => rpm2.filename, :name => "e2", :nvrea => "e2")
+
+      @repo.errata = [erratum1, erratum2]
+      @repo.save!
+
+      filter = ContentViewErratumFilter.new
+
+      assert_equal [], filter.content_unit_pulp_ids(@repo)
+    end
+
     def test_content_unit_pulp_ids_by_errata_id_returns_errata_package_pulp_hrefs
       rpm1 = @repo.rpms.first
       rpm2 = @repo.rpms.last

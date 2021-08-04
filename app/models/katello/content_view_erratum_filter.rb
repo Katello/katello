@@ -27,6 +27,8 @@ module Katello
     end
 
     def content_unit_pulp_ids(repo)
+      return [] if erratum_rules.blank?
+
       if filter_by_id?
         errata_ids = erratum_rules.map(&:errata_id)
         errata_pulp_ids = errata_package_pulp_ids_from_errata_ids(repo, errata_ids)
