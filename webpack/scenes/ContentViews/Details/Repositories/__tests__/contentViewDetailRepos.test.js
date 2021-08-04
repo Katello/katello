@@ -19,10 +19,9 @@ let searchDelayScope;
 let autoSearchScope;
 
 beforeEach(() => {
-  // This is a workaround to avoid intermittent failures
-  // on this test in katello-master-source-release pipeline
-  jest.resetModules();
-
+  if (!nock.isActive()) {
+    nock.activate();
+  }
   const { results } = repoData;
   [firstRepo] = results;
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
@@ -38,6 +37,7 @@ afterEach(() => {
   nock.cleanAll();
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
+  nock.restore();
 });
 
 test('Can call API and show repositories on page load', async (done) => {
