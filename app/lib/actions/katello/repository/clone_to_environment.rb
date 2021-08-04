@@ -9,7 +9,7 @@ module Actions
 
           sequence do
             if clone.new_record?
-              plan_action(Repository::Create, clone, true)
+              plan_action(Repository::Create, clone, clone: true)
             end
 
             plan_action(::Actions::Katello::Repository::CloneContents, [repository], clone, :copy_contents => !clone.yum?)

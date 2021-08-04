@@ -65,7 +65,7 @@ module ::Actions::Katello::Repository
 
     it 'clone flag disables metadata generation' do
       repository.root.update_attribute(:unprotected, true)
-      plan = plan_action action, repository, true
+      plan = plan_action action, repository, clone: true
       run_action plan
       assert_nil plan.run
       refute_action_planed action, candlepin_action_class

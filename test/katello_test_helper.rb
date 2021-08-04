@@ -266,7 +266,7 @@ class ActiveSupport::TestCase
   end
 
   def self.stubbed_ping_response
-    status = {:services => {}}
+    status = {:services => {}, :status => Katello::Ping::OK_RETURN_CODE}
     (::Katello::Ping.services + [:pulp3]).each do |service|
       status[:services][service] = {:status => Katello::Ping::OK_RETURN_CODE}
     end
