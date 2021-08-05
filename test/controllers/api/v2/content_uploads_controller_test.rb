@@ -32,6 +32,13 @@ module Katello
       assert_response :success
     end
 
+    def test_create_collection_upload_request
+      ansible_collection_repo = katello_repositories(:pulp3_ansible_collection_1)
+      post :create, params: { :repository_id => ansible_collection_repo.id, :size => 100, :checksum => 'test_checksum' }
+      assert_response :error
+      assert_match "Cannot upload Ansible collections", @response.body
+    end
+
     def test_create_upload_request_protected
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
