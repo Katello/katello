@@ -204,7 +204,7 @@ module Katello
 
           if to_find
             found = migrated_repo_items.find { |migrated_repo| migrated_repo.pulp2_repo_id == to_find.pulp_id }
-            import_repo(yum_repo, found)
+            import_repo(yum_repo, found) if found
           end
         end
       end
