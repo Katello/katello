@@ -64,6 +64,8 @@ module Katello
       def library_migration_for(root)
         repo = root.library_instance
 
+        return nil unless library_repo_safe_to_migrate?(repo)
+
         migration = {
           name: repo.pulp_id,
           repository_versions: [
@@ -77,10 +79,49 @@ module Katello
         migration
       end
 
+      def library_repo_safe_to_migrate?(repo)
+        publish_tasks = ForemanTasks::Task.where(label: 'Actions::Katello::ContentView::Publish')
+        publishing_repo_ids = publish_tasks.where(state: ['scheduled', 'running']).collect do |task|
+          ::Katello::ContentViewVersion.find(task.input[:content_view_version_id]).library_repos.pluck(:id)
+        end
+        publishing_repo_ids = publishing_repo_ids.flatten
+
+        if publishing_repo_ids.include?(repo.id)
+          warn_string = "Library repository with ID #{repo.id} and name #{repo.name} unmigrated due to being "\
+            "associated with an actively-publishing content view.  The migration will need to be run again."
+          Rails.logger.warn(warn_string)
+          return false
+        end
+
+        create_root_tasks = ForemanTasks::Task.where(label: 'Actions::Katello::Repository::CreateRoot')
+        active_creation_task = create_root_tasks.where(state: ['scheduled', 'running']).detect do |task|
+          task.input[:repository][:id] == repo.id
+        end
+
+        if active_creation_task.present?
+          warn_string = "Repository with ID #{repo.id} and name #{repo.name} unmigrated due to being "\
+            "created during the Pulp 3 migration.  The migration will need to be run again."
+          Rails.logger.warn(warn_string)
+          return false
+        end
+        true
+      end
+
       def content_view_migrations_for(root)
+        publish_tasks = ForemanTasks::Task.where(label: 'Actions::Katello::ContentView::Publish')
+        publishing_cv_ids = publish_tasks.where(state: ['scheduled', 'running']).collect do |task|
+          task.input[:content_view_id]
+        end
+
         plans = []
         ContentView.non_default.published_with_repositories(root).sort_by(&:label).each do |cv|
-          plans << content_view_migration(cv, root)
+          if publishing_cv_ids.include?(cv.id)
+            warn_string = "Repositories belonging to Content View with ID #{cv.id} and name #{cv.name} unmigrated "\
+              "due to being created during the Pulp 3 migration.  The migration will need to be run again."
+            Rails.logger.warn(warn_string)
+          else
+            plans << content_view_migration(cv, root)
+          end
         end
         plans
       end
