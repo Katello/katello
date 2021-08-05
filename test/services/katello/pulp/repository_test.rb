@@ -73,6 +73,22 @@ module Katello
         }
         assert_equal expected_options, @pulp_repo.proxy_options
       end
+
+      def test_special_chars_escaped_in_proxy_auth_credentials
+        another_proxy = FactoryBot.create(:http_proxy)
+        another_proxy.update(username: '# $ @ & { } [ ] + %')
+        another_proxy.update(password: '% $ @ & { } [ ] + #')
+        @repo.root.update(http_proxy_policy: RootRepository::USE_SELECTED_HTTP_PROXY,
+                          http_proxy: another_proxy)
+        uri = URI(another_proxy.url)
+        expected_options = {
+          proxy_host: uri.scheme + '://' + uri.host,
+          proxy_port: uri.port,
+          proxy_username: CGI.escape(another_proxy.username),
+          proxy_password: CGI.escape(another_proxy.password)
+        }
+        assert_equal expected_options, @pulp_repo.proxy_options
+      end
     end
   end
 end

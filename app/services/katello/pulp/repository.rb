@@ -296,11 +296,13 @@ module Katello
 
         if proxy
           uri = URI(proxy.url)
+          username = CGI.escape(proxy.username) if proxy.username
+          password = CGI.escape(proxy.password) if proxy.password
           proxy_options = {
             proxy_host: uri.scheme + '://' + uri.host,
             proxy_port: uri.port,
-            proxy_username: proxy.username,
-            proxy_password: proxy.password
+            proxy_username: username,
+            proxy_password: password
           }
           return proxy_options
         end
