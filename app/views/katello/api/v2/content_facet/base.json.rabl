@@ -9,7 +9,7 @@ attributes :upgradable_rpm_count => :upgradable_package_count
 attributes :applicable_module_stream_count, :upgradable_module_stream_count
 
 child :content_view => :content_view do
-  attributes :id, :name
+  attributes :id, :name, :composite
 end
 
 child :lifecycle_environment => :lifecycle_environment do

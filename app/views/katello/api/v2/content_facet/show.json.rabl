@@ -5,7 +5,8 @@ child :content_facet => :content_facet_attributes do
     version = content_facet.content_view_version
     {
       :content_view_version => version.version,
-      :content_view_version_id => version.id
+      :content_view_version_id => version.id,
+      :content_view_version_latest => version.latest?
     }
   end
 
