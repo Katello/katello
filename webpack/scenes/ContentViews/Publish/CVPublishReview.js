@@ -8,6 +8,7 @@ import ContentViewIcon from '../components/ContentViewIcon';
 import InactiveText from '../components/InactiveText';
 import ComponentEnvironments from '../Details/ComponentContentViews/ComponentEnvironments';
 import { selectEnvironmentPaths, selectEnvironmentPathsStatus } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
+import TableWrapper from '../../../components/Table/TableWrapper';
 
 const CVPublishReview = ({
   details,
@@ -31,28 +32,34 @@ const CVPublishReview = ({
   } = details;
 
   return (
-    <TableComposable aria-label="Review Table">
-      <Thead>
-        <Tr>
-          <Th>{__('Content view')}</Th>
-          <Th>{__('Version')}</Th>
-          <Th>{__('Environments')}</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        <Tr>
-          <Td>
-            <><ContentViewIcon composite={composite} description={name} /><InactiveText text={__('Newly published')} /></>
-          </Td>
-          <Td>
-            {__('Version')} {nextVersion}
-          </Td>
-          <Td>
-            <ComponentEnvironments environments={promotedToEnvironments} />
-          </Td>
-        </Tr>
-      </Tbody>
-    </TableComposable>
+    <TableWrapper
+    composable
+    composableChildren = {
+      <>
+    <Thead>
+      <Tr>
+        <Th>{__('Content view')}</Th>
+        <Th>{__('Version')}</Th>
+        <Th>{__('Environments')}</Th>
+      </Tr>
+    </Thead>
+    <Tbody>
+      <Tr>
+        <Td>
+          <><ContentViewIcon composite={composite} description={name} /><InactiveText text={__('Newly published')} /></>
+        </Td>
+        <Td>
+          {__('Version')} {nextVersion}
+        </Td>
+        <Td>
+          <ComponentEnvironments environments={promotedToEnvironments} />
+        </Td>
+      </Tr>
+    </Tbody>
+    </>
+    }
+    aria-label="Review Table">  
+    </TableWrapper>
   );
 };
 

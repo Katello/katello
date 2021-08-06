@@ -3,8 +3,8 @@ import {
   Table,
   TableHeader,
   TableBody,
+  TableComposable,
 } from '@patternfly/react-table';
-import TableComposable from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 
@@ -14,7 +14,7 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
-  children, ...extraTableProps
+  composableChildren, composable, ...extraTableProps
 }) => {
   const isFiltering = activeFilters || searchIsActive;
   if (status === STATUS.PENDING) return (<Loading />);
@@ -33,13 +33,13 @@ const MainTable = ({
 
   const tableProps = { cells, rows, ...extraTableProps };
   if (composable) {
+    console.log(composable, composableChildren);
     return (
     <TableComposable
         aria-label="Content View Table"
         className="katello-pf4-table"
-        {...extraTableProps}
       >
-        {children}
+        {composableChildren}
       </TableComposable>
     );
   };
@@ -56,19 +56,19 @@ const MainTable = ({
 };
 
 MainTable.propTypes = {
-  status: PropTypes.string.isRequired,
+  status: PropTypes.string,
   cells: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.shape({}),
-    PropTypes.string])).isRequired,
-  rows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    PropTypes.string])),
+  rows: PropTypes.arrayOf(PropTypes.shape({})),
   error: PropTypes.oneOfType([
     PropTypes.shape({}),
     PropTypes.string,
   ]),
-  emptyContentTitle: PropTypes.string.isRequired,
-  emptyContentBody: PropTypes.string.isRequired,
-  emptySearchTitle: PropTypes.string.isRequired,
-  emptySearchBody: PropTypes.string.isRequired,
+  emptyContentTitle: PropTypes.string,
+  emptyContentBody: PropTypes.string,
+  emptySearchTitle: PropTypes.string,
+  emptySearchBody: PropTypes.string,
   searchIsActive: PropTypes.bool,
   activeFilters: PropTypes.bool,
 };

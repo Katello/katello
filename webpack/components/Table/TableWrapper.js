@@ -13,6 +13,7 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
+  composableChildren,
   children,
   metadata,
   composable,
@@ -44,6 +45,7 @@ const TableWrapper = ({
   // The search component will update the search query when a search is performed, listen for that
   // and perform the search so we can be sure the searchQuery is updated when search is performed.
   useDeepCompareEffect(() => {
+    if (composable) return;
     const fetchWithParams = (allParams = {}) => {
       dispatch(fetchItems({ ...paginationParams(), ...allParams }));
     };
@@ -99,15 +101,15 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} {...allTableProps} composable={composable} />
+      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} composable={composable} composableChildren={composableChildren} {...allTableProps} />
     </React.Fragment>
   );
 };
 
 TableWrapper.propTypes = {
-  searchQuery: PropTypes.string.isRequired,
-  updateSearchQuery: PropTypes.func.isRequired,
-  fetchItems: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string,
+  updateSearchQuery: PropTypes.func,
+  fetchItems: PropTypes.func,
   metadata: PropTypes.shape({
     total: PropTypes.number,
     page: PropTypes.oneOfType([
@@ -120,7 +122,7 @@ TableWrapper.propTypes = {
     ]),
     search: PropTypes.string,
   }),
-  autocompleteEndpoint: PropTypes.string.isRequired,
+  autocompleteEndpoint: PropTypes.string,
   children: PropTypes.node,
   // additionalListeners are anything that can trigger another API call, e.g. a filter
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
@@ -138,6 +140,7 @@ TableWrapper.defaultProps = {
   additionalListeners: [],
   activeFilters: false,
   composable: false,
+  fetchItems: ()=>{},
 };
 
 export default TableWrapper;
