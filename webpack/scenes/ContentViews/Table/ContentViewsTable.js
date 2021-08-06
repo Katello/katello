@@ -138,7 +138,7 @@ const ContentViewTable = () => {
 
   const additionalListeners = new Array(isPublishModalOpen);
   const emptyContentTitle = __("You currently don't have any Content Views.");
-  const emptyContentBody = __('A content view can be added by using the "New content view" button below.');
+  const emptyContentBody = __('A content view can be added by using the "Create content view" button above.');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
 
