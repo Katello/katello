@@ -583,7 +583,9 @@ module Katello
       assert ansible_repo_root.valid?
       assert_nil ansible_repo_root.ansible_collection_auth_url
       assert_nil ansible_repo_root.ansible_collection_auth_token
-      assert ansible_repo_root.valid?
+
+      ansible_repo_root.ansible_collection_auth_token = '12345'
+      assert ansible_repo_root.valid? # Should be able to specify token only
     end
   end
 
