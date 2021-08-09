@@ -53,7 +53,7 @@ module Katello::Host
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        ::Host.expects(:find_by).returns(@host).at_least_once
+        ::Host.expects(:find_by).twice.returns(@host).at_least_once
         @host.expects(:content_facet).returns(nil)
 
         plan_action action, @host, profile.to_json
