@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, Notification, repository, DownloadPolicy, OstreeUpstreamSyncPolicy, YumContentUnits, HttpProxy, HttpProxyPolicy;
+    var $scope, $state, translate, Notification, repository, DownloadPolicy, OstreeUpstreamSyncPolicy, YumContentUnits, HttpProxy, HttpProxyPolicy, RepositoryTypesService;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -28,6 +28,11 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         $scope.repository = repository;
         $scope.repository['ignorable_content'] = [];
 
+        RepositoryTypesService = {};
+        RepositoryTypesService.getAttribute = function () {
+            return null;
+        };
+
         translate = function(message) {
             return message;
         };
@@ -50,7 +55,8 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             Repository: Repository,
             ContentCredential: ContentCredential,
             HttpProxyPolicy: HttpProxyPolicy,
-            HttpProxy: HttpProxy
+            HttpProxy: HttpProxy,
+            RepositoryTypesService: RepositoryTypesService
         });
     }));
 

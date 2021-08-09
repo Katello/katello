@@ -60,6 +60,21 @@
           on-save="save(repository)"
           readonly="product.redhat || denied('edit_products', product)">
       </dd>
+
+      <span ng-show="repository.generic_remote_options !== []">
+        <span ng-repeat="option in genericRemoteOptions"> 
+          <dt>{{option.title}}</dt>
+            <dd bst-edit-text="genericRemoteOptions[$index].value"
+                on-save="save(repository)"
+                ng-if='option.input_type=="text"'>
+            </dd>
+            <dd bst-edit-textarea="genericRemoteOptions[$index].value"
+                on-save="save(repository)"
+                ng-if='option.input_type=="textarea"'>
+            </dd>
+        </span>
+      </span>
+
       <span ng-if="repository.content_type == 'deb'">
         <dt translate>Releases</dt>
         <dd bst-edit-text="repository.deb_releases"

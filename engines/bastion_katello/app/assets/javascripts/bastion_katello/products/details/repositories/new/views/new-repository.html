@@ -69,6 +69,9 @@
                name="url"
                ng-model="repository.url"
                type="text"/>
+        <p class="help-block" ng-show="urlDescription" translate>
+          {{urlDescription}}
+        </p>
         <p class="help-block" ng-show="repository.content_type === 'docker'" translate>
           URL of the registry you want to sync. Example: https://registry-1.docker.io/ or https://quay.io/
         </p>
@@ -216,6 +219,28 @@
         <p class="help-block" translate>
           Password of the upstream repository user for authentication. Leave empty if repository does not require authentication.
         </p>
+      </div>
+
+      <div ng-repeat="option in genericRemoteOptions" ng-if="repository.generic_remote_options !== []">
+        <div ng-if='option.input_type=="text"' bst-form-group label="{{ option.title | translate }}">
+          <input
+                  type="option.input_type"
+                  name="option_name"
+                  ng-model="genericRemoteOptions[$index].value"/>
+          <p class="help-block" translate>
+            {{option.description}}
+          </p>
+        </div>
+        <div ng-if='option.input_type=="textarea"' bst-form-group label="{{ option.title | translate }}">
+	  <textarea
+              id="option-{{$index}}"
+              name="option-{{$index}}"
+              ng-model="genericRemoteOptions[$index].value"
+              type="text"/>
+          <p class="help-block" translate>
+            {{option.description}}
+          </p>
+        </div>
       </div>
 
       <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'yum'">

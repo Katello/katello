@@ -87,6 +87,16 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 }
             });
 
+            $scope.$watch('repository.content_type', function () {
+                $scope.genericRemoteOptions = RepositoryTypesService.getAttribute($scope.repository, "generic_remote_options");
+                $scope.urlDescription = RepositoryTypesService.getAttribute($scope.repository, "url_description");
+                if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
+                    $scope.genericRemoteOptions.forEach(function(option) {
+                        option.value = "";
+                    });
+                }
+            });
+
             $scope.handleFiles = function (element) {
                 var reader = new FileReader();
                 reader.addEventListener("loadend", function() {
@@ -136,11 +146,22 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 if (repository.arch === 'No restriction') {
                     repository.arch = null;
                 }
+
                 angular.forEach(fields, function(field) {
                     if (repository[field] === '') {
                         repository[field] = null;
                     }
                 });
+
+                if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
+                    $scope.genericRemoteOptions.forEach(function(option) {
+                        if (option.type === "Array" && option.value !== "") {
+                            repository[option.name] = option.value.split(option.delimiter);
+                        } else {
+                            repository[option.name] = option.value;
+                        }
+                    });
+                }
                 repository.$save(success, error);
             };
 
