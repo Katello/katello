@@ -13,7 +13,6 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
-  composableChildren,
   children,
   metadata,
   composable,
@@ -62,6 +61,7 @@ const TableWrapper = ({
     paginationParams,
     searchQuery,
     additionalListeners,
+    composable,
   ]);
 
   const getAutoCompleteParams = search => ({
@@ -101,7 +101,14 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} composable={composable} composableChildren={composableChildren} {...allTableProps} />
+      <MainTable
+        searchIsActive={!!searchQuery}
+        activeFilters={activeFilters}
+        composable={composable}
+        {...allTableProps}
+      >
+        {children}
+      </MainTable>
     </React.Fragment>
   );
 };
