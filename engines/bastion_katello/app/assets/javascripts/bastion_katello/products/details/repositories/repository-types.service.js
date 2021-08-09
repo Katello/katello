@@ -35,6 +35,15 @@
 
             return found.pulp3_support;
         };
+
+        this.getAttribute = function(repository, key) {
+            var typeIndex = repositoryTypes.map(function(type) {
+                return type.name;
+            }).indexOf(repository.content_type);
+            if (angular.isDefined(repositoryTypes[typeIndex])) {
+                return repositoryTypes[typeIndex][key];
+            }
+        };
     }
 
     angular

@@ -14,13 +14,14 @@
  * @requires Architecture
  * @requires HttpProxyPolicy
  * @requires OSVersions
+ * @requires RepositoryTypesService
  *
  * @description
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
-        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions', 'RepositoryTypesService',
+        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions, RepositoryTypesService) {
             $scope.organization = CurrentOrganization;
 
             $scope.progress = {uploading: false};
@@ -102,6 +103,16 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 if (!saveUpstreamAuth) {
                     repository['upstream_username'] = null;
                     repository['upstream_password'] = null;
+                }
+
+                if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
+                    $scope.genericRemoteOptions.forEach(function(option) {
+                       if (option.type === "Array" && option.value) {
+                           repository[option.name] = option.value.split(option.delimiter);
+                       } else {
+                           repository[option.name] = option.value;
+                       }
+                   });
                 }
 
                 if (!_.isEmpty(repository.commaTagsWhitelist)) {
@@ -209,6 +220,22 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.repository['ansible_collection_auth_exists'] = false;
                 $scope.save($scope.repository);
             };
+
+            $scope.$watch('repository.content_type', function () {
+                var remOptions, optionIndex;
+                $scope.genericRemoteOptions = RepositoryTypesService.getAttribute($scope.repository, "generic_remote_options");
+                if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
+                    remOptions = angular.fromJson($scope.repository.generic_remote_options);
+                    Object.keys(remOptions).forEach(function(key) {
+                        if (remOptions[key]) {
+                            optionIndex = $scope.genericRemoteOptions.map(function(option) {
+                                return option.name;
+                            }).indexOf(key);
+                            $scope.genericRemoteOptions[optionIndex].value = remOptions[key].join($scope.genericRemoteOptions[optionIndex].delimiter);
+                        }
+                    });
+                }
+            });
 
             $scope.policies = HttpProxyPolicy.policies;
             $scope.proxies = [];

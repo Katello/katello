@@ -16,10 +16,12 @@ module Katello
               :pulp3_skip_publication, :configuration_class, :partial_repo_path, :pulp3_api_class,
               :repositories_api_class, :api_class, :remotes_api_class, :repository_versions_api_class,
               :distributions_api_class, :remote_class, :repo_sync_url_class, :client_module_class,
-              :distribution_class, :publication_class, :publications_api_class, :model_name, :model_version
+              :distribution_class, :publication_class, :publications_api_class, :model_name, :model_version,
+              :url_description
 
     attr_accessor :metadata_publish_matching_check, :index_additional_data_proc
     attr_reader :id, :unique_content_per_repo
+    attr_writer :url_description
 
     def initialize(id)
       @id = id.to_sym
@@ -39,6 +41,15 @@ module Katello
 
     def generic_remote_options
       @generic_remote_options.sort_by(&:name)
+    end
+
+    def translated_generic_remote_options
+      translated = generic_remote_options.deep_dup
+      translated.map do |option|
+        option.title = _(option.title)
+        option.description = _(option.description)
+      end
+      translated
     end
 
     def content_types_to_index
@@ -90,7 +101,9 @@ module Katello
         :name => self.id.to_s,
         :id => self.id,
         :creatable => @allow_creation_by_user,
-        :pulp3_support => SmartProxy.pulp_primary.pulp3_repository_type_support?(self)
+        :pulp3_support => SmartProxy.pulp_primary.pulp3_repository_type_support?(self),
+        :generic_remote_options => translated_generic_remote_options,
+        :url_description => _(@url_description)
       }
     end
 
@@ -145,12 +158,15 @@ module Katello
     end
 
     class GenericRemoteOption
-      attr_accessor :name, :type, :description
+      attr_accessor :name, :title, :type, :description, :input_type, :delimiter
 
       def initialize(options)
         self.name = options[:name]
+        self.title = options[:title]
         self.type = options[:type]
         self.description = options[:description]
+        self.input_type = options[:input_type]
+        self.delimiter = options[:delimiter]
       end
     end
   end

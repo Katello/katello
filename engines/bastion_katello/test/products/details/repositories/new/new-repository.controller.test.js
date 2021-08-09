@@ -8,7 +8,7 @@ describe('Controller: NewRepositoryController', function() {
         $httpBackend,
         HttpProxyPolicy,
         HttpProxy,
-        RepositoryTypesService;
+        RepositoryTypesService
 
     beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
 
@@ -37,7 +37,10 @@ describe('Controller: NewRepositoryController', function() {
 
         RepositoryTypesService = {};
         RepositoryTypesService.creatable = function () {
-            return [{name: 'yum'}]
+            return [{name: 'yum'}];
+        };
+        RepositoryTypesService.getAttribute = function () {
+            return [{name: 'test'}];
         };
 
         Setting.get = function (data, succ, err) {
@@ -55,7 +58,7 @@ describe('Controller: NewRepositoryController', function() {
             Setting: Setting,
             RepositoryTypesService: RepositoryTypesService,
             HttpProxyPolicy: HttpProxyPolicy,
-            HttpProxy: HttpProxy
+            HttpProxy: HttpProxy,
         });
     }));
 

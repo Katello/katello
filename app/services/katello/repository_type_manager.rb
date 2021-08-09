@@ -175,15 +175,18 @@ module Katello
 
       def generic_remote_options(opts = {})
         options = []
+        sorted_options = {}
         repo_types = opts[:defined_only] ? defined_repository_types : enabled_repository_types
         repo_types.each do |_, type|
           if opts[:content_type]
             (options << type.generic_remote_options).flatten! if type.pulp3_service_class == Katello::Pulp3::Repository::Generic && type.id.to_s == opts[:content_type]
+          elsif opts[:sort_by_repo_type]
+            sorted_options[type.id] = type.generic_remote_options if type.pulp3_service_class == Katello::Pulp3::Repository::Generic
           else
             (options << type.generic_remote_options).flatten! if type.pulp3_service_class == Katello::Pulp3::Repository::Generic
           end
         end
-        options
+        opts[:sort_by_repo_type] ? sorted_options : options
       end
 
       private

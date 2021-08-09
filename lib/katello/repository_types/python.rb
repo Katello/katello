@@ -20,9 +20,16 @@ Katello::RepositoryTypeManager.register('python') do
   publication_class PulpPythonClient::PythonPythonPublication
   publications_api_class PulpPythonClient::PublicationsPypiApi
 
-  generic_remote_option :includes, type: Array, description: "A list containing project specifiers for Python packages to include."
-  generic_remote_option :excludes, type: Array, description: "A list containing project specifiers for Python packages to exclude."
-  generic_remote_option :package_types, type: Array, description: "A list of package types to sync for Python content. Leave blank to get every package type."
+  generic_remote_option :includes, title: N_("Includes"), type: Array, input_type: "textarea", delimiter: "\\n",
+                        description: N_("Python packages to include from the upstream URL, names separated by newline. You may also specify versions, for example: django~=2.0. Leave empty to include every package.")
+
+  generic_remote_option :excludes, title: N_("Excludes"), type: Array, input_type: "textarea", delimiter: "\\n",
+                        description: N_("Python packages to exclude from the upstream URL, names separated by newline. You may also specify versions, for example: django~=2.0.")
+
+  generic_remote_option :package_types, title: N_("Package Types"), type: Array, input_type: "text", delimiter: ",",
+                        description: N_("Package types to sync for Python content, separated by comma. Leave empty to get every package type. Package types are: bdist_dmg, bdist_dumb, bdist_egg, bdist_msi, bdist_rpm, bdist_wheel, bdist_wininst, sdist.")
+
+  url_description N_("URL of a PyPI content source such as https://pypi.org.")
 
   model_name lambda { |pulp_unit| pulp_unit["name"] }
   model_version lambda { |pulp_unit| pulp_unit["version"] }
