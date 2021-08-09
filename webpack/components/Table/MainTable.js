@@ -13,7 +13,7 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
-  ...extraTableProps
+  composable, ...extraTableProps
 }) => {
   const isFiltering = activeFilters || searchIsActive;
   if (status === STATUS.PENDING) return (<Loading />);
@@ -31,6 +31,16 @@ const MainTable = ({
   }
 
   const tableProps = { cells, rows, ...extraTableProps };
+  if (composable) {
+    return (
+      <TableComposable
+        aria-label="Content View Table"
+        className="katello-pf4-table"
+      >
+        {children}
+      </TableComposable>
+    );
+  }
   return (
     <Table
       aria-label="Content View Table"
@@ -59,12 +69,14 @@ MainTable.propTypes = {
   emptySearchBody: PropTypes.string.isRequired,
   searchIsActive: PropTypes.bool,
   activeFilters: PropTypes.bool,
+  composable: PropTypes.bool,
 };
 
 MainTable.defaultProps = {
   error: null,
   searchIsActive: false,
   activeFilters: false,
+  composable: false,
 };
 
 export default MainTable;

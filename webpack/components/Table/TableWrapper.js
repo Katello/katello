@@ -21,6 +21,7 @@ const TableWrapper = ({
   updateSearchQuery,
   additionalListeners,
   activeFilters,
+  composable,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -59,6 +60,7 @@ const TableWrapper = ({
     paginationParams,
     searchQuery,
     additionalListeners,
+    composable,
   ]);
 
   const getAutoCompleteParams = search => ({
@@ -98,7 +100,14 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} {...allTableProps} />
+      <MainTable
+        searchIsActive={!!searchQuery}
+        activeFilters={activeFilters}
+        composable={composable}
+        {...allTableProps}
+      >
+        {children}
+      </MainTable>
     </React.Fragment>
   );
 };
@@ -128,6 +137,7 @@ TableWrapper.propTypes = {
     PropTypes.bool,
   ])),
   activeFilters: PropTypes.bool,
+  composable: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
@@ -135,6 +145,7 @@ TableWrapper.defaultProps = {
   children: null,
   additionalListeners: [],
   activeFilters: false,
+  composable: false,
 };
 
 export default TableWrapper;
