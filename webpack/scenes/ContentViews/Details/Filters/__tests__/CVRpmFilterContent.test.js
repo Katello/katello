@@ -14,7 +14,9 @@ import api from '../../../../../services/api';
 
 const cvFilterDetails = require('./cvPackageFilterDetail.fixtures.json');
 const cvPackageFilterRules = require('./cvPackageFilterRules.fixtures.json');
+const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
 
+const cvFiltersPath = api.getApiUrl('/content_view_filters');
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/2');
 const cvPackageFilterRulesPath = api.getApiUrl('/content_view_filters/2/rules');
 const autocompleteUrl = '/content_view_filters/2/rules/auto_complete_search';
@@ -48,6 +50,10 @@ test('Can show filter details and package groups on page load', async (done) => 
     .get(cvFilterDetailsPath)
     .query(true)
     .reply(200, cvFilterDetails);
+  const cvFiltersScope = nockInstance
+    .get(cvFiltersPath)
+    .query(true)
+    .reply(200, cvFilterFixtures);
   const cvPackageFilterRulesScope = nockInstance
     .get(cvPackageFilterRulesPath)
     .query(true)
@@ -65,6 +71,7 @@ test('Can show filter details and package groups on page load', async (done) => 
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
+  assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope, done);
 });
 
@@ -80,6 +87,10 @@ test('Can search for package groups in package group filter', async (done) => {
     .get(cvFilterDetailsPath)
     .query(true)
     .reply(200, cvFilterDetails);
+  const cvFiltersScope = nockInstance
+    .get(cvFiltersPath)
+    .query(true)
+    .reply(200, cvFilterFixtures);
   const cvPackageFilterRulesScope = nockInstance
     .get(cvPackageFilterRulesPath)
     .query(true)
@@ -110,6 +121,7 @@ test('Can search for package groups in package group filter', async (done) => {
 
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
+  assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope);
   assertNockRequest(withSearchScope);
   assertNockRequest(packageRuleSearchScope, done);

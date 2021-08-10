@@ -9,7 +9,7 @@ import {
   selectCVFilterDetails,
   selectCVFilterDetailStatus,
 } from '../ContentViewDetailSelectors';
-import { getCVFilterDetails } from '../ContentViewDetailActions';
+import { getCVFilterDetails, getContentViewFilters } from '../ContentViewDetailActions';
 import useUrlParamsWithHash from '../../../../utils/useUrlParams';
 import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
 import CVFilterDetailType from './CVFilterDetailType';
@@ -26,6 +26,7 @@ const ContentViewFilterDetails = () => {
 
   useEffect(() => {
     dispatch(getCVFilterDetails(cvId, filterId));
+    dispatch(getContentViewFilters(cvId));
   }, [dispatch, cvId, filterId]);
 
   useDeepCompareEffect(() => {
@@ -36,7 +37,7 @@ const ContentViewFilterDetails = () => {
 
   return (
     <Grid hasGutter>
-      { loaded && (Object.keys(details).length > 0) ?
+      {loaded && (Object.keys(details).length > 0) ?
         <ContentViewFilterDetailsHeader details={details} /> :
         <div>Loading...</div>
       }

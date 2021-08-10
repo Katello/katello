@@ -139,7 +139,7 @@ test('Can remove multiple filters', async (done) => {
   const removeFilterScope = nockInstance
     .put(
       api.getApiUrl('/content_views/1/remove_filters'),
-      { filter_ids: [4, 5, 6, 7, 8, 9] },
+      { filter_ids: [1, 4, 6, 7, 8, 9] },
     )
     .reply(200, {});
 

@@ -56,6 +56,7 @@ const ContentViewRepositories = ({ cvId }) => {
   const details = useSelector(state => selectCVDetails(state, cvId), shallowEqual);
 
   const [rows, setRows] = useState([]);
+  const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [typeSelected, setTypeSelected] = useState(allRepositories);
@@ -63,7 +64,8 @@ const ContentViewRepositories = ({ cvId }) => {
   // repoTypes object format: [displayed_value]: API_value
   const [repoTypes, setRepoTypes] = useState({});
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
-  const [bulkActionEnabled, setBulkActionEnabled] = useState(false);
+  const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
+  const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
@@ -99,7 +101,11 @@ const ContentViewRepositories = ({ cvId }) => {
           title: <AddedStatusLabel added={addedToCV || statusSelected === ADDED} />,
         },
       ];
-      newRows.push({ repoId: id, cells });
+      newRows.push({
+        repoId: id,
+        cells,
+        added: addedToCV || statusSelected === ADDED,
+      });
     });
     return newRows;
   }, [statusSelected]);
@@ -118,10 +124,6 @@ const ContentViewRepositories = ({ cvId }) => {
     dispatch(getRepositoryTypes());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useDeepCompareEffect(() => {
-    const rowsAreSelected = rows.some(row => row.selected);
-    setBulkActionEnabled(rowsAreSelected);
-  }, [rows]);
 
   // Get repo type filter selections dynamically from the API
   useDeepCompareEffect(() => {
@@ -156,33 +158,39 @@ const ContentViewRepositories = ({ cvId }) => {
 
   const addBulk = () => {
     setBulkActionOpen(false);
-    const reposToAdd = [];
-    rows.forEach(row => row.selected && reposToAdd.push(row.repoId));
+    const reposToAdd = rows.filter(({ selected, added }) =>
+      selected && !added).map(({ repoId }) => repoId);
+    deselectAll();
     onAdd(reposToAdd);
   };
 
   const removeBulk = () => {
     setBulkActionOpen(false);
-    const reposToDelete = [];
-    rows.forEach(row => row.selected && reposToDelete.push(row.repoId));
+    const reposToDelete = rows.filter(({ selected, added }) =>
+      selected && added).map(({ repoId }) => repoId);
+    deselectAll();
     onRemove(reposToDelete);
   };
 
-  const actionResolver = (rowData, { _rowIndex }) => {
-    if (rowData.parent || rowData.compoundParent || rowData.noactions) return null;
-    const { repository_ids: repositoryIds } = details;
+  const actionResolver = ({
+    parent,
+    compoundParent,
+    noactions,
+    added,
+  }) => {
+    if (parent || compoundParent || noactions) return null;
     return [
       {
         title: 'Add',
-        isDisabled: repositoryIds && repositoryIds.includes(rowData.repoId),
-        onClick: (_event, rowId, rowInfo) => {
+        isDisabled: added,
+        onClick: (_event, _rowId, rowInfo) => {
           onAdd(rowInfo.repoId);
         },
       },
       {
         title: 'Remove',
-        isDisabled: repositoryIds && !repositoryIds.includes(rowData.repoId),
-        onClick: (_event, rowId, rowInfo) => {
+        isDisabled: !added,
+        onClick: (_event, _rowId, rowInfo) => {
           onRemove(rowInfo.repoId);
         },
       },
@@ -202,11 +210,12 @@ const ContentViewRepositories = ({ cvId }) => {
   const emptySearchBody = __('Try changing your search settings.');
   const activeFilters = (typeSelected && typeSelected !== allRepositories) ||
     (statusSelected && statusSelected !== ALL_STATUSES);
+
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!bulkActionEnabled} component="button" onClick={addBulk}>
+    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={addBulk}>
       {__('Add')}
     </DropdownItem>,
-    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={removeBulk}>
+    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={removeBulk}>
       {__('Remove')}
     </DropdownItem>,
   ];
@@ -258,7 +267,7 @@ const ContentViewRepositories = ({ cvId }) => {
         <SplitItem>
           <ActionList>
             <ActionListItem>
-              <Button onClick={addBulk} isDisabled={!bulkActionEnabled} variant="secondary" aria-label="add_repositories">
+              <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
                 Add repositories
               </Button>
             </ActionListItem>
