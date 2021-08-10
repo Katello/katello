@@ -20,18 +20,20 @@ const MainTable = ({
   if (!composable && (!cells || !rows)) {
     console.error(__('The <MainTable> component requires either a composable prop, or cells & rows props.')); // eslint-disable-line no-console
   }
+
+  const rowsCount = composable ? React.Children.count(children) : rows.length
   const isFiltering = activeFilters || searchIsActive;
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
-  if (status === STATUS.RESOLVED && isFiltering && rows.length === 0) {
+  if (status === STATUS.RESOLVED && isFiltering && rowsCount === 0) {
     return (<EmptyStateMessage
       title={emptySearchTitle}
       body={emptySearchBody}
       search
     />);
   }
-  if (status === STATUS.RESOLVED && rows.length === 0) {
+  if (status === STATUS.RESOLVED && rowsCount === 0) {
     return (<EmptyStateMessage title={emptyContentTitle} body={emptyContentBody} />);
   }
 
