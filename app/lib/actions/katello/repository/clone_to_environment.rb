@@ -10,7 +10,7 @@ module Actions
 
           sequence do
             if clone.new_record?
-              plan_action(Repository::Create, clone, true, false)
+              plan_action(Repository::Create, clone, clone: true)
             else
               #only clear if it should be empty, but its not
               plan_optional_pulp_action([Actions::Pulp::Repository::Clear], clone, SmartProxy.pulp_primary)

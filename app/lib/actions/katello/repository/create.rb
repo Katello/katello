@@ -2,9 +2,9 @@ module Actions
   module Katello
     module Repository
       class Create < Actions::EntryAction
-        include Actions::Katello::PulpSelector
-
-        def plan(repository, clone = false, plan_create = false)
+        def plan(repository, args = {})
+          clone = args[:clone] || false
+          force_repo_create = args[:force_repo_create] || false
           repository.save!
           root = repository.root
 
@@ -13,8 +13,8 @@ module Actions
           org = repository.organization
           pulp2_create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do
-            create_action = plan_pulp_action([pulp2_create_action, Pulp3::Orchestration::Repository::Create],
-                                        repository, SmartProxy.pulp_primary)
+            create_action = plan_action(Pulp3::Orchestration::Repository::Create,
+                                        repository, SmartProxy.pulp_primary, force_repo_create)
 
             return if create_action.error
 
@@ -25,8 +25,10 @@ module Actions
               if repository.product.redhat?
                 plan_action(Actions::Candlepin::Environment::AddContentToEnvironment, :view_env_cp_id => view_env.cp_id, :content_id => repository.content_id)
               else
-                content_create = plan_action(Katello::Product::ContentCreate, root)
-                plan_action(Actions::Candlepin::Environment::AddContentToEnvironment, :view_env_cp_id => view_env.cp_id, :content_id => content_create.input[:content_id])
+                unless root.content
+                  content_create = plan_action(Katello::Product::ContentCreate, root)
+                  plan_action(Actions::Candlepin::Environment::AddContentToEnvironment, :view_env_cp_id => view_env.cp_id, :content_id => content_create.input[:content_id])
+                end
               end
             end
 

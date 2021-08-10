@@ -114,20 +114,21 @@ namespace :katello do
   def repo_exists?(repo)
     if SmartProxy.pulp_primary!.pulp3_support?(repo)
       backend_service = repo.backend_service(SmartProxy.pulp_primary!)
+      return false unless backend_service&.repository_reference&.repository_href
       backend_service.api.repositories_api.read(backend_service.repository_reference.repository_href)
     else
       Katello.pulp_server.extensions.repository.retrieve(repo.pulp_id)
     end
     true
-  rescue RestClient::ResourceNotFound, PulpRpmClient::ApiError
-    false
+  rescue StandardError => e
+    return false if e.code == 404
   end
 
   def handle_missing_repo(repo)
     puts "Repository #{repo.id} Missing"
     if repo.content_view.default?
       puts "Recreating #{repo.id}"
-      ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo) if commit?
+      ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo, force_repo_create: true) if commit?
     else
       puts "Deleting #{repo.id}"
       ForemanTasks.sync_task(::Actions::Katello::Repository::Destroy, repo) if commit?
