@@ -21,8 +21,9 @@ module.exports = {
     'react',
     'react-hooks',
     'promise',
+    '@babel',
   ],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   rules: {
     'react/jsx-filename-extension': 'off',
     'react-hooks/rules-of-hooks': 'error',
