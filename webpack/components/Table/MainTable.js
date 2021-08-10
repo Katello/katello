@@ -3,7 +3,9 @@ import {
   Table,
   TableHeader,
   TableBody,
+  TableComposable,
 } from '@patternfly/react-table';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 
@@ -13,8 +15,11 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
-  composable, ...extraTableProps
+  composable, children, ...extraTableProps
 }) => {
+  if (!composable && (!cells || !rows)) {
+    console.error(__('The <MainTable> component requires either a composable prop, or cells & rows props.')); // eslint-disable-line no-console
+  }
   const isFiltering = activeFilters || searchIsActive;
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
@@ -57,8 +62,8 @@ MainTable.propTypes = {
   status: PropTypes.string.isRequired,
   cells: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.shape({}),
-    PropTypes.string])).isRequired,
-  rows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    PropTypes.string])),
+  rows: PropTypes.arrayOf(PropTypes.shape({})),
   error: PropTypes.oneOfType([
     PropTypes.shape({}),
     PropTypes.string,
@@ -70,6 +75,10 @@ MainTable.propTypes = {
   searchIsActive: PropTypes.bool,
   activeFilters: PropTypes.bool,
   composable: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
 };
 
 MainTable.defaultProps = {
@@ -77,6 +86,9 @@ MainTable.defaultProps = {
   searchIsActive: false,
   activeFilters: false,
   composable: false,
+  children: null,
+  cells: undefined,
+  rows: undefined,
 };
 
 export default MainTable;
