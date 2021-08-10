@@ -8,8 +8,11 @@ import ContentTab from './components/extensions/HostDetails/Tabs/ContentTab';
 import SubscriptionTab from './components/extensions/HostDetails/Tabs/SubscriptionTab';
 import TracesTab from './components/extensions/HostDetails/Tabs/TracesTab';
 import extendReducer from './components/extensions/reducers';
+import rootReducer from './redux/reducers';
 
 registerReducer('katelloExtends', extendReducer);
+registerReducer('katello', rootReducer);
+
 
 addGlobalFill('aboutFooterSlot', '[katello]AboutSystemStatuses', <SystemStatuses key="katello-system-statuses" />, 100);
 addGlobalFill('registrationAdvanced', '[katello]RegistrationCommands', <RegistrationCommands key="katello-reg" />, 100);
