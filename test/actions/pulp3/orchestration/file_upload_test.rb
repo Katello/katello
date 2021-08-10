@@ -10,6 +10,7 @@ module ::Actions::Pulp3
       @repo.root.update(:url => 'http://test/test/')
       tmp_file = File.join(Katello::Engine.root, "test/fixtures/files/test_erratum.json")
       @file = {path: tmp_file, filename: "test_erratum.json"}
+      @file1 = {path: tmp_file, filename: "test_erratum1.json"}
       create_repo(@repo, @primary)
     end
 
@@ -50,14 +51,19 @@ module ::Actions::Pulp3
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
       assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
+
       VCR.use_cassette(cassette_name + '_binary_duplicate', :match_requests_on => [:method, :path, :params]) do
-        action_result = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::UploadContent, @repo, @primary, @file, "file")
+        action_result = ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::UploadContent, @repo, @primary, @file1, "file")
       end
       assert_equal "success", action_result.result
+      @repo.reload
       repository_reference = Katello::Pulp3::RepositoryReference.find_by(
           :root_repository_id => @repo.root.id,
           :content_view_id => @repo.content_view.id)
-      assert_equal repository_reference.repository_href + "versions/1/", @repo.version_href
+      repo_backend_service = @repo.backend_service(@primary)
+      version_details = repo_backend_service.lookup_version @repo.version_href
+      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
+      assert_equal 2, version_details.content_summary.present["file.file"].count
     end
   end
 end

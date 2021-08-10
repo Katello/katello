@@ -100,6 +100,10 @@ module Katello
           PulpcoreClient::OrphansApi.new(core_api_client)
         end
 
+        def artifacts_api
+          PulpcoreClient::ArtifactsApi.new(core_api_client)
+        end
+
         def core_api_client
           client = PulpcoreClient::ApiClient.new(smart_proxy.pulp3_configuration(PulpcoreClient::Configuration))
           api_client_class(client)

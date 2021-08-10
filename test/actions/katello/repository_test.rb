@@ -258,6 +258,7 @@ module ::Actions::Katello::Repository
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
     it 'plans for Pulp3 without duplicate' do
       proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => nil))))
+      ::Katello::Pulp3::Api::Core.any_instance.stubs(:artifacts_api).returns(stub(:list => stub(:results => nil)))
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
       action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::UploadFile) do |content_create|
