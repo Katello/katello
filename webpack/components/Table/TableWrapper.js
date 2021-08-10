@@ -85,9 +85,11 @@ const TableWrapper = ({
             getAutoCompleteParams={getAutoCompleteParams}
           />
         </FlexItem>
-        <FlexItem>
-          {children}
-        </FlexItem>
+        {!composable &&
+          <FlexItem>
+            {children}
+          </FlexItem>
+        }
         <FlexItem align={{ default: 'alignRight' }}>
           <Pagination
             itemCount={total}
