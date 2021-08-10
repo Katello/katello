@@ -115,7 +115,7 @@ const TableWrapper = ({
 
 TableWrapper.propTypes = {
   searchQuery: PropTypes.string,
-  updateSearchQuery: PropTypes.func,
+  updateSearchQuery: PropTypes.func.isRequired,
   fetchItems: PropTypes.func,
   metadata: PropTypes.shape({
     total: PropTypes.number,
@@ -129,7 +129,7 @@ TableWrapper.propTypes = {
     ]),
     search: PropTypes.string,
   }),
-  autocompleteEndpoint: PropTypes.string,
+  autocompleteEndpoint: PropTypes.string.isRequired,
   children: PropTypes.node,
   // additionalListeners are anything that can trigger another API call, e.g. a filter
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
@@ -147,7 +147,8 @@ TableWrapper.defaultProps = {
   additionalListeners: [],
   activeFilters: false,
   composable: false,
-  fetchItems: ()=>{},
+  fetchItems: () => {},
+  searchQuery: '',
 };
 
 export default TableWrapper;

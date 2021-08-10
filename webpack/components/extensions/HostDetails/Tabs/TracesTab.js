@@ -1,9 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TableWrapper from '../../../../components/Table/TableWrapper';
-import { TableVariant } from '@patternfly/react-table';
-import { TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
-import PropTypes from 'prop-types';
 
 const getHostTraces = () => get({
   type: API_OPERATIONS.GET,
@@ -13,37 +12,37 @@ const getHostTraces = () => get({
 
 const TracesTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
-  const composable = true;
-  const emptyContentTitle = __("You currently don't have any filters for this content view.");
-  const emptyContentBody = __("Add filters using the 'Add filter' button above."); // needs link
-  const emptySearchTitle = __('No matching filters found');
+  const emptyContentTitle = __('No Traces to show');
+  const emptyContentBody = __('Click Install Tracer to start monitoring which services need restarting on this host.'); // needs link
+  const emptySearchTitle = __('No matching traces found');
   const emptySearchBody = __('Try changing your search settings.');
   return (
     <TableWrapper
-    composable
-    composableChildren = {
-      <>
-    <Thead>
-      <Tr>
-        <Th>{__('Content view')}</Th>
-        <Th>{__('Version')}</Th>
-        <Th>{__('Environments')}</Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-      <Tr>
-        <Td>
-        </Td>
-        <Td>
-          {__('Version')} {emptyContentTitle}
-        </Td>
-        <Td>
-        </Td>
-      </Tr>
-    </Tbody>
-    </>
-    }
-    aria-label="Review Table">  
+      composable
+      searchQuery={searchQuery}
+      updateSearchQuery={updateSearchQuery}
+      emptyContentTitle={emptyContentTitle}
+      emptyContentBody={emptyContentBody}
+      emptySearchTitle={emptySearchTitle}
+      emptySearchBody={emptySearchBody}
+      aria-label="Review Table"
+    >
+      <Thead>
+        <Tr>
+          <Th>{__('Content view')}</Th>
+          <Th>{__('Version')}</Th>
+          <Th>{__('Environments')}</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        <Tr>
+          <Td />
+          <Td>
+            {__('Version')} {emptyContentTitle}
+          </Td>
+          <Td />
+        </Tr>
+      </Tbody>
     </TableWrapper>
   );
 };
