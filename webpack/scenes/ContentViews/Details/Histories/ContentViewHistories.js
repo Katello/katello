@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
-import { TableVariant, TableText } from '@patternfly/react-table';
+import { TableVariant, TableText, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { Label } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
@@ -24,7 +24,6 @@ const ContentViewHistories = ({ cvId }) => {
   const loading = status === STATUS.PENDING;
 
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
 
   const columnHeaders = [
@@ -36,84 +35,46 @@ const ContentViewHistories = ({ cvId }) => {
     __('User'),
   ];
 
+  const taskTypes = {
+    publish: 'Actions::Katello::ContentView::Publish',
+    promotion: 'Actions::Katello::ContentView::Promote',
+    removal: 'Actions::Katello::ContentView::Remove',
+    incrementalUpdate: 'Actions::Katello::ContentView::IncrementalUpdates',
+    export: 'Actions::Katello::ContentViewVersion::Export',
+  };
 
-  useDeepCompareEffect(() => {
-    const taskTypes = {
-      publish: 'Actions::Katello::ContentView::Publish',
-      promotion: 'Actions::Katello::ContentView::Promote',
-      removal: 'Actions::Katello::ContentView::Remove',
-      incrementalUpdate: 'Actions::Katello::ContentView::IncrementalUpdates',
-      export: 'Actions::Katello::ContentViewVersion::Export',
-    };
+  const actionText = (history) => {
+    const {
+      action,
+      task,
+      environment,
+    } = history;
 
-    const actionText = (history) => {
-      const {
-        action,
-        task,
-        environment,
-      } = history;
+    const taskType = task ? task.label : taskTypes[action];
 
-      const taskType = task ? task.label : taskTypes[action];
-
-      if (taskType === taskTypes.removal) {
-        return <React.Fragment> Deleted from <Label key="1" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
-      } else if (taskType === taskTypes.promotion) {
-        return <React.Fragment> Promoted to <Label key="2" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
-      } else if (taskType === taskTypes.publish) {
-        return ('Published new version');
-      } else if (taskType === taskTypes.export) {
-        return ('Exported content view');
-      } else if (taskType === taskTypes.incrementalUpdate) {
-        return ('Incremental update');
-      }
-      return '';
-    };
-
-    const buildRows = (results) => {
-      const newRows = [];
-      results.forEach((history) => {
-        const {
-          version,
-          version_id: versionId,
-          created_at: createdAt,
-          status: taskStatus,
-          description,
-          user,
-        } = history;
-
-        const actionMessage = actionText(history);
-
-        const cells = [
-          { title: <LongDateTime date={createdAt} showRelativeTimeTooltip /> },
-          { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{`Version ${version}`}</a> },
-          taskStatus,
-          actionMessage,
-          { title: <TableText wrapModifier="truncate">{description}</TableText> },
-          user,
-        ];
-
-        newRows.push({ cells });
-      });
-      return newRows;
-    };
-
-    const { results, ...meta } = response;
-    setMetadata(meta);
-    if (!loading && results) {
-      const newRows = buildRows(results);
-      setRows(newRows);
+    if (taskType === taskTypes.removal) {
+      return <React.Fragment> Deleted from <Label key="1" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
+    } else if (taskType === taskTypes.promotion) {
+      return <React.Fragment> Promoted to <Label key="2" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
+    } else if (taskType === taskTypes.publish) {
+      return ('Published new version');
+    } else if (taskType === taskTypes.export) {
+      return ('Exported content view');
+    } else if (taskType === taskTypes.incrementalUpdate) {
+      return ('Incremental update');
     }
-  }, [response, setMetadata, loading, setRows, cvId]);
+    return '';
+  };
 
   const emptyContentTitle = __("You currently don't have any history for this content view.");
   const emptyContentBody = __('History will appear here when the content view is published or promoted.'); // needs link
   const emptySearchTitle = __('No matching history record found');
   const emptySearchBody = __('Try changing your search settings.');
+  const { results, ...metadata } = response;
 
   return (
     <TableWrapper
       {...{
-        rows,
         metadata,
         emptyContentTitle,
         emptyContentBody,
@@ -124,11 +85,43 @@ const ContentViewHistories = ({ cvId }) => {
         error,
         status,
       }}
-      cells={columnHeaders}
+      composable
       variant={TableVariant.compact}
       autocompleteEndpoint={`/content_views/${cvId}/history/auto_complete_search`}
       fetchItems={useCallback(params => getContentViewHistories(cvId, params), [cvId])}
-    />);
+    >
+      <Thead>
+        <Tr>
+          {columnHeaders.map((col, idx) =>
+            <Th key={idx}>{col}</Th>
+          )}
+        </Tr>
+      </Thead>
+      <Tbody>
+      {results?.map((history, idx) => {
+        const {
+          version,
+          version_id: versionId,
+          created_at: createdAt,
+          status: taskStatus,
+          description,
+          user,
+        } = history;
+        return (
+          <Tr key={idx}>
+            <Td key={`${versionId}_${createdAt}`}><LongDateTime date={createdAt} showRelativeTimeTooltip /></Td>
+            <Td><a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{`Version ${version}`}</a></Td>
+            <Td>{taskStatus}</Td>
+            <Td>{actionText(history)}</Td>
+            <Td><TableText wrapModifier="truncate">{description}</TableText></Td>
+            <Td>{user}</Td>
+          </Tr>
+        )
+      })
+      }
+      </Tbody>
+    </TableWrapper>
+  );
 };
 
 ContentViewHistories.propTypes = {
