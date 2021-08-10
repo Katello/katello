@@ -15,25 +15,28 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
-  composable, children, ...extraTableProps
+  composable, rowsCount, children, ...extraTableProps
 }) => {
   if (!composable && (!cells || !rows)) {
     console.error(__('The <MainTable> component requires either a composable prop, or cells & rows props.')); // eslint-disable-line no-console
   }
 
-  const rowsCount = composable ? React.Children.count(children) : rows.length
+  const tableHasNoRows = () => {
+    if (composable) return rowsCount === 0;
+    return rows.length === 0;
+  };
   const isFiltering = activeFilters || searchIsActive;
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
-  if (status === STATUS.RESOLVED && isFiltering && rowsCount === 0) {
+  if (status === STATUS.RESOLVED && isFiltering && tableHasNoRows()) {
     return (<EmptyStateMessage
       title={emptySearchTitle}
       body={emptySearchBody}
       search
     />);
   }
-  if (status === STATUS.RESOLVED && rowsCount === 0) {
+  if (status === STATUS.RESOLVED && tableHasNoRows()) {
     return (<EmptyStateMessage title={emptyContentTitle} body={emptyContentBody} />);
   }
 
@@ -78,6 +81,7 @@ MainTable.propTypes = {
   searchIsActive: PropTypes.bool,
   activeFilters: PropTypes.bool,
   composable: PropTypes.bool,
+  rowsCount: PropTypes.number,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
@@ -92,6 +96,7 @@ MainTable.defaultProps = {
   children: null,
   cells: undefined,
   rows: undefined,
+  rowsCount: undefined,
 };
 
 export default MainTable;

@@ -75,6 +75,8 @@ const TableWrapper = ({
     updatePagination(updatedPagination);
   };
 
+  const rowsCount = metadata?.subtotal ?? 0;
+
   return (
     <React.Fragment>
       <Flex>
@@ -106,6 +108,7 @@ const TableWrapper = ({
         searchIsActive={!!searchQuery}
         activeFilters={activeFilters}
         composable={composable}
+        rowsCount={rowsCount}
         {...allTableProps}
       >
         {children}
@@ -120,6 +123,7 @@ TableWrapper.propTypes = {
   fetchItems: PropTypes.func.isRequired,
   metadata: PropTypes.shape({
     total: PropTypes.number,
+    subtotal: PropTypes.number,
     page: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string, // The API can sometimes return strings
@@ -143,7 +147,7 @@ TableWrapper.propTypes = {
 };
 
 TableWrapper.defaultProps = {
-  metadata: {},
+  metadata: { subtotal: 0 },
   children: null,
   additionalListeners: [],
   activeFilters: false,
