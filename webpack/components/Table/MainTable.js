@@ -43,6 +43,7 @@ const MainTable = ({
       <TableComposable
         aria-label="Content View Table"
         className="katello-pf4-table"
+        {...extraTableProps}
       >
         {children}
       </TableComposable>
