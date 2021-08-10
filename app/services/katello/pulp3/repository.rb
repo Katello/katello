@@ -166,13 +166,16 @@ module Katello
         computed_options.except(:name, :client_key)
       end
 
-      def create
-        unless repository_reference
+      def create(force = false)
+        if force || !repository_reference
           response = api.repositories_api.create(create_options)
-          RepositoryReference.create!(
-           root_repository_id: repo.root_id,
-           content_view_id: repo.content_view.id,
-           repository_href: response.pulp_href)
+          RepositoryReference.where(
+            root_repository_id: repo.root_id,
+            content_view_id: repo.content_view.id).destroy_all
+          RepositoryReference.where(
+            root_repository_id: repo.root_id,
+            content_view_id: repo.content_view.id,
+            repository_href: response.pulp_href).create!
           response
         end
       end
