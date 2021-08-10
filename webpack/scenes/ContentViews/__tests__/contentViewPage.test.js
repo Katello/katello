@@ -240,7 +240,7 @@ test('Can handle pagination', async (done) => {
     // Using a custom query params matcher because parameters can be strings
     .query(actualQueryObject => (parseInt(actualQueryObject.page, 10) === 2))
     .reply(200, cvIndexSecondPage);
-  const { queryByText, getByLabelText } = renderWithRedux(<ContentViewsPage />, renderOptions);
+  const { queryByText, getAllByLabelText } = renderWithRedux(<ContentViewsPage />, renderOptions);
   // Wait for first paginated page to load and assert only the first page of results are present
   await patientlyWaitFor(() => {
     expect(queryByText(results[0].name)).toBeInTheDocument();
@@ -249,8 +249,10 @@ test('Can handle pagination', async (done) => {
   });
 
   // Label comes from patternfly, if this test fails, check if patternfly updated the label.
-  expect(getByLabelText('Go to next page')).toBeTruthy();
-  getByLabelText('Go to next page').click();
+  const [top, bottom] = getAllByLabelText('Go to next page');
+  expect(top).toBeInTheDocument();
+  expect(bottom).toBeInTheDocument();
+  bottom.click();
   // Wait for second paginated page to load and assert only the second page of results are present
   await patientlyWaitFor(() => {
     expect(queryByText(results[20].name)).toBeInTheDocument();
