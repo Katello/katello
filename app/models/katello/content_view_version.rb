@@ -128,6 +128,10 @@ module Katello
       default?
     end
 
+    def latest?
+      content_view.latest_version_id == self.id
+    end
+
     def in_composite?
       composite_content_views.any?
     end
