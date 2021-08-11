@@ -24,7 +24,11 @@ module Katello
       def refresh_entities
         href = remote_href
         if href
-          [api.remotes_api.partial_update(href, remote_options)]
+          if remote_options[:url].start_with?('uln')
+            [api.remotes_uln_api.partial_update(href, remote_options)]
+          else
+            [api.remotes_api.partial_update(href, remote_options)]
+          end
         else
           create_remote
           []
@@ -99,8 +103,13 @@ module Katello
       end
 
       def create_remote
-        remote_file_data = @repo_service.api.class.remote_class.new(remote_options)
-        api.remotes_api.create(remote_file_data)
+        if remote_options[:url].start_with?('uln')
+          remote_file_data = @repo_service.api.class.remote_uln_class.new(remote_options)
+          api.remotes_uln_api.create(remote_file_data)
+        else
+          remote_file_data = @repo_service.api.class.remote_class.new(remote_options)
+          api.remotes_api.create(remote_file_data)
+        end
       end
 
       def compute_remote_options
