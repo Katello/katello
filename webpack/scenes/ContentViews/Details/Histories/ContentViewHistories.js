@@ -1,12 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector } from 'react-redux';
 import { TableVariant, TableText, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { Label } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
-import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -21,9 +19,7 @@ const ContentViewHistories = ({ cvId }) => {
   const response = useSelector(state => selectCVHistories(state, cvId));
   const status = useSelector(state => selectCVHistoriesStatus(state, cvId));
   const error = useSelector(state => selectCVHistoriesError(state, cvId));
-  const loading = status === STATUS.PENDING;
 
-  const [rows, setRows] = useState([]);
   const [searchQuery, updateSearchQuery] = useState('');
 
   const columnHeaders = [
@@ -92,33 +88,34 @@ const ContentViewHistories = ({ cvId }) => {
     >
       <Thead>
         <Tr>
-          {columnHeaders.map((col, idx) =>
-            <Th key={idx}>{col}</Th>
-          )}
+          {columnHeaders.map(col =>
+            <Th key={col}>{col}</Th>)}
         </Tr>
       </Thead>
       <Tbody>
-      {results?.map((history, idx) => {
-        const {
-          version,
-          version_id: versionId,
-          created_at: createdAt,
-          status: taskStatus,
-          description,
-          user,
-        } = history;
-        return (
-          <Tr key={idx}>
-            <Td key={`${versionId}_${createdAt}`}><LongDateTime date={createdAt} showRelativeTimeTooltip /></Td>
-            <Td><a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{`Version ${version}`}</a></Td>
-            <Td>{taskStatus}</Td>
-            <Td>{actionText(history)}</Td>
-            <Td><TableText wrapModifier="truncate">{description}</TableText></Td>
-            <Td>{user}</Td>
-          </Tr>
-        )
-      })
-      }
+        {results?.map((history) => {
+          const {
+            version,
+            version_id: versionId,
+            created_at: createdAt,
+            status: taskStatus,
+            description,
+            user,
+          } = history;
+          return (
+            <Tr key={`${versionId}_${createdAt}`}>
+              <Td key={createdAt}><LongDateTime date={createdAt} showRelativeTimeTooltip /></Td>
+              <Td>
+                <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{`Version ${version}`}</a>
+              </Td>
+              <Td>{taskStatus}</Td>
+              <Td>{actionText(history)}</Td>
+              <Td><TableText wrapModifier="truncate">{description}</TableText></Td>
+              <Td>{user}</Td>
+            </Tr>
+          );
+        })
+        }
       </Tbody>
     </TableWrapper>
   );
