@@ -75,6 +75,7 @@ module Katello
     validate :ensure_valid_os_versions
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
+    validate :ensure_valid_uln_authorization, :if => :yum?
     validate :ensure_no_checksum_on_demand
     validates :url, presence: true, if: :ostree?
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
@@ -291,6 +292,16 @@ module Katello
 
       if !self.ansible_collection_auth_url.blank? && self.ansible_collection_auth_token.blank?
         errors.add(:base, N_("Auth URL requires Auth token be set."))
+      end
+    end
+
+    def ensure_valid_uln_authorization
+      if !self.url.blank? && self.url.start_with?('uln')
+        if self.upstream_username.nil? || self.upstream_password.nil?
+          errors.add(:base, N_("Upstream username and upstream password cannot be blank for ULN repositories"))
+        end
+      else
+        return
       end
     end
 

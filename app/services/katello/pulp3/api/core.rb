@@ -22,6 +22,10 @@ module Katello
           fail NotImplementedError
         end
 
+        def self.remote_uln_class
+          fail NotImplementedError
+        end
+
         def self.distribution_class
           fail NotImplementedError
         end
@@ -39,6 +43,10 @@ module Katello
         end
 
         def remotes_api
+          fail NotImplementedError
+        end
+
+        def remotes_uln_api
           fail NotImplementedError
         end
 

@@ -16,6 +16,10 @@ module Katello
           PulpRpmClient::RpmRpmRemote
         end
 
+        def self.remote_uln_class
+          PulpRpmClient::RpmUlnRemote
+        end
+
         def self.distribution_class
           PulpRpmClient::RpmRpmDistribution
         end
@@ -54,6 +58,10 @@ module Katello
 
         def remotes_api
           PulpRpmClient::RemotesRpmApi.new(api_client)
+        end
+
+        def remotes_uln_api
+          PulpRpmClient::RemotesUlnApi.new(api_client)
         end
 
         def publications_api

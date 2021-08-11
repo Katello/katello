@@ -74,9 +74,17 @@ module Katello
       end
 
       def create_remote
-        remote_file_data = api.class.remote_class.new(remote_options)
+        if remote_options[:url].start_with?('uln')
+          remote_file_data = api.class.remote_uln_class.new(remote_options)
+        else
+          remote_file_data = api.class.remote_class.new(remote_options)
+        end
         reformat_api_exception do
-          response = api.remotes_api.create(remote_file_data)
+          if remote_options[:url].start_with?('uln')
+            response = api.remotes_uln_api.create(remote_file_data)
+          else
+            response = api.remotes_api.create(remote_file_data)
+          end
           repo.update!(:remote_href => response.pulp_href)
         end
       end
@@ -89,10 +97,18 @@ module Katello
       def create_test_remote
         test_remote_options = remote_options
         test_remote_options[:name] = test_remote_name
-        remote_file_data = api.class.remote_class.new(test_remote_options)
+        if remote_options[:url].start_with?('uln')
+          remote_file_data = api.class.remote_uln_class.new(test_remote_options)
+        else
+          remote_file_data = api.class.remote_class.new(test_remote_options)
+        end
 
         reformat_api_exception do
-          response = api.remotes_api.create(remote_file_data)
+          if remote_options[:url].start_with?('uln')
+            response = api.remotes_uln_api.create(remote_file_data)
+          else
+            response = api.remotes_api.create(remote_file_data)
+          end
           #delete is async, but if its not properly deleted, orphan cleanup will take care of it later
           delete_remote(response.pulp_href)
         end
@@ -127,11 +143,15 @@ module Katello
       end
 
       def remote_partial_update
-        api.remotes_api.partial_update(repo.remote_href, remote_options)
+        if remote_options[:url].start_with?('uln')
+          api.remotes_uln_api.partial_update(repo.remote_href, remote_options)
+        else
+          api.remotes_api.partial_update(repo.remote_href, remote_options)
+        end
       end
 
       def delete_remote(href = repo.remote_href)
-        ignore_404_exception { api.remotes_api.delete(href) } if href
+        ignore_404_exception { remote_options[:url].start_with?('uln') ? api.remotes_uln_api.delete(href) : api.remotes_api.delete(href) } if href
       end
 
       def self.instance_for_type(repo, smart_proxy)
@@ -174,7 +194,7 @@ module Katello
       end
 
       def get_remote(href = repo.remote_href)
-        api.remotes_api.read(href)
+        repo.url.start_with?('uln') ? api.remotes_uln_api.read(href) : api.remotes_api.read(href)
       end
 
       def get_distribution(href = distribution_reference.href)

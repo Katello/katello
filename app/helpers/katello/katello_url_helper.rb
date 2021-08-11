@@ -2,7 +2,7 @@ module Katello
   module KatelloUrlHelper
     unless defined? CONSTANTS_DEFINED
       FILEPREFIX = ['file'].freeze
-      PROTOCOLS = ['http', 'https', 'ftp'].freeze
+      PROTOCOLS = ['http', 'https', 'ftp', 'uln'].freeze
 
       CONSTANTS_DEFINED = true
     end
