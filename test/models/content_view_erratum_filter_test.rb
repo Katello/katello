@@ -106,9 +106,11 @@ module Katello
     def test_content_unit_pulp_ids_by_updated_start_date_returns_pulp_hrefs
       rpm1 = @repo.rpms.first
       rpm2 = @repo.rpms.last
-      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :updated => "2018-01-01")
+      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :updated => "2018-01-01",
+                                      :errata_type => 'bugfix')
       erratum1.packages << Katello::ErratumPackage.new(:filename => rpm1.filename, :name => "e1", :nvrea => "e1")
-      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :updated => "2019-06-01")
+      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :updated => "2019-06-01",
+                                      :errata_type => 'security')
       erratum2.packages << Katello::ErratumPackage.new(:filename => rpm2.filename, :name => "e2", :nvrea => "e2")
 
       @repo.errata = [erratum1, erratum2]
@@ -124,9 +126,11 @@ module Katello
     def test_content_unit_pulp_ids_by_issued_start_date_returns_pulp_hrefs
       rpm1 = @repo.rpms.first
       rpm2 = @repo.rpms.last
-      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :issued => "2018-01-01")
+      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :issued => "2018-01-01",
+                                      :errata_type => 'security')
       erratum1.packages << Katello::ErratumPackage.new(:filename => rpm1.filename, :name => "e1", :nvrea => "e1")
-      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :issued => "2019-06-01")
+      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :issued => "2019-06-01",
+                                      :errata_type => 'enhancement')
       erratum2.packages << Katello::ErratumPackage.new(:filename => rpm2.filename, :name => "e2", :nvrea => "e2")
 
       @repo.errata = [erratum1, erratum2]
@@ -143,9 +147,11 @@ module Katello
     def test_content_unit_pulp_ids_by_updated_end_date_returns_pulp_hrefs
       rpm1 = @repo.rpms.first
       rpm2 = @repo.rpms.last
-      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :updated => "2018-01-01")
+      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :updated => "2018-01-01",
+                                      :errata_type => 'bugfix')
       erratum1.packages << Katello::ErratumPackage.new(:filename => rpm1.filename, :name => "e1", :nvrea => "e1")
-      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :updated => "2019-06-01")
+      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :updated => "2019-06-01",
+                                      :errata_type => 'enhancement')
       erratum2.packages << Katello::ErratumPackage.new(:filename => rpm2.filename, :name => "e2", :nvrea => "e2")
 
       @repo.errata = [erratum1, erratum2]
@@ -160,9 +166,11 @@ module Katello
     def test_content_unit_pulp_ids_by_issued_end_date_returns_pulp_hrefs
       rpm1 = @repo.rpms.first
       rpm2 = @repo.rpms.last
-      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :issued => "2018-01-01")
+      erratum1 = Katello::Erratum.new(:pulp_id => "one", :errata_id => "ERRATA1", :issued => "2018-01-01",
+                                      :errata_type => 'enhancement')
       erratum1.packages << Katello::ErratumPackage.new(:filename => rpm1.filename, :name => "e1", :nvrea => "e1")
-      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :issued => "2019-06-01")
+      erratum2 = Katello::Erratum.new(:pulp_id => "two", :errata_id => "ERRATA2", :issued => "2019-06-01",
+                                      :errata_type => 'enhancement')
       erratum2.packages << Katello::ErratumPackage.new(:filename => rpm2.filename, :name => "e2", :nvrea => "e2")
 
       @repo.errata = [erratum1, erratum2]
