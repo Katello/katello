@@ -304,7 +304,7 @@ module Katello
   end
 
   class HostAvailableModulesTest < HostManagedExtensionsTestBase
-    def make_module_json(name = "foo", status = "unknown", context = nil, installed_profiles = [])
+    def make_module_json(name = "foo", status = "unknown", context = nil, installed_profiles = [], active = nil)
       {
         "name" => name,
         "stream" => "8",
@@ -317,7 +317,8 @@ module Katello
           "default"
         ],
         "installed_profiles" => installed_profiles,
-        "status" => status
+        "status" => status,
+        "active" => active
       }
     end
 
@@ -344,6 +345,22 @@ module Katello
       refute_empty installed.installed_profiles
 
       assert_equal 'abacadaba', @foreman_host.host_available_module_streams.disabled.first.available_module_stream.context
+    end
+
+    def test_import_modules_with_active_field
+      modules_json = [
+        make_module_json("enabled-varying-activity", "enabled", "12347", [], true),
+        make_module_json("enabled-varying-activity", "enabled", "12345", [], false),
+        make_module_json("enabled-varying-activity", "enabled", "12346", [], false)
+      ]
+
+      @foreman_host.import_module_streams(modules_json)
+
+      assert_equal "12347", @foreman_host.host_available_module_streams.enabled.first.available_module_stream.context
+      assert_equal 1, @foreman_host.host_available_module_streams.enabled.count
+      assert_equal "12345", @foreman_host.host_available_module_streams.unknown.min_by(&:id).available_module_stream.context
+      assert_equal "12346", @foreman_host.host_available_module_streams.unknown.max_by(&:id).available_module_stream.context
+      assert_equal 2, @foreman_host.host_available_module_streams.unknown.count
     end
 
     def test_import_modules_with_update
