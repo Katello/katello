@@ -92,7 +92,8 @@ module Katello
         ::Katello::ModuleStream.
           joins("inner join katello_available_module_streams on
             katello_module_streams.name = katello_available_module_streams.name and
-            katello_module_streams.stream = katello_available_module_streams.stream").
+            katello_module_streams.stream = katello_available_module_streams.stream and
+            katello_module_streams.context = katello_available_module_streams.context").
           joins("inner join katello_host_available_module_streams on
             katello_available_module_streams.id = katello_host_available_module_streams.available_module_stream_id").
           where("katello_host_available_module_streams.host_id = :content_facet_id and
