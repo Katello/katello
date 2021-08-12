@@ -360,6 +360,7 @@ module Katello
     param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Container Image content.") if @repository.docker?
+      fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Ansible collections.") if @repository.ansible_collection?
 
       filepaths = Array.wrap(params[:content]).compact.collect do |content|
         {path: content.path, filename: content.original_filename}
