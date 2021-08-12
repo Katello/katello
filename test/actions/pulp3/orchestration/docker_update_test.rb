@@ -54,8 +54,8 @@ module ::Actions::Pulp3
     end
 
     def test_update_whitelist_tags
-      @repo.root.update(
-        docker_tags_whitelist: 'test_tag')
+      @repo.root.update!(
+        docker_tags_whitelist: ['test_tag'])
 
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,

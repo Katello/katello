@@ -717,5 +717,25 @@ module Katello
       assert_equal 'Katello::RootRepository', recent_audit.auditable_type
       assert_equal 'destroy', recent_audit.action
     end
+
+    def test_ansible_collection_requirements
+      root_repo = katello_root_repositories(:pulp3_ansible_collection_root_1)
+      root_repo.ansible_collection_requirements = "
+---
+collections:
+  - name: geerlingguy.php_roles
+    version: 0.9.3
+"
+      assert root_repo.valid?
+      root_repo.ansible_collection_requirements = "asdfasdf"
+      refute root_repo.valid?
+      root_repo.ansible_collection_requirements = "
+---
+collectionz:
+  - name: geerlingguy.php_roles
+    version: 0.9.3
+"
+      refute root_repo.valid?
+    end
   end
 end

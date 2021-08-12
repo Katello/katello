@@ -105,6 +105,11 @@ module FixtureTestCase
 
     Setting::Content.load_defaults
     Setting::ForemanTasks.load_defaults
+
+    before do
+      #provide consistent remote name for test
+      ::Katello::Pulp3::Repository.any_instance.stubs(:test_remote_name).returns(:test_remote_name)
+    end
   end
 end
 
