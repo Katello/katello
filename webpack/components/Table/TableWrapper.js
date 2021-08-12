@@ -17,6 +17,7 @@ const TableWrapper = ({
   metadata,
   fetchItems,
   autocompleteEndpoint,
+  foremanApiAutoComplete,
   searchQuery,
   updateSearchQuery,
   additionalListeners,
@@ -85,6 +86,7 @@ const TableWrapper = ({
             patternfly4
             onSearch={search => updateSearchQuery(search)}
             getAutoCompleteParams={getAutoCompleteParams}
+            foremanApiAutoComplete={foremanApiAutoComplete}
           />
         </FlexItem>
         {!composable &&
@@ -135,6 +137,7 @@ TableWrapper.propTypes = {
     search: PropTypes.string,
   }),
   autocompleteEndpoint: PropTypes.string.isRequired,
+  foremanApiAutoComplete: PropTypes.bool,
   children: PropTypes.node,
   // additionalListeners are anything that can trigger another API call, e.g. a filter
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
@@ -152,6 +155,7 @@ TableWrapper.defaultProps = {
   additionalListeners: [],
   activeFilters: false,
   composable: false,
+  foremanApiAutoComplete: false,
 };
 
 export default TableWrapper;

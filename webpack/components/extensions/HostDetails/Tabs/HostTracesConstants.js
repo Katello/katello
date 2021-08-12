@@ -1,0 +1,1 @@
+export const HOST_TRACES_KEY = 'HOST_TRACES';

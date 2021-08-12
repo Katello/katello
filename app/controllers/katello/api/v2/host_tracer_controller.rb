@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::HostTracerController < Api::V2::ApiController
-    before_action :find_host
+    include Katello::Concerns::FilteredAutoCompleteSearch
+    before_action :find_host, :only => [:index, :auto_complete_search]
 
     resource_description do
       api_version 'v2'
