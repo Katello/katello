@@ -16,16 +16,19 @@ const TracesTab = () => {
   const emptyContentBody = __("Add filters using the 'Add filter' button above."); // needs link
   const emptySearchTitle = __('No matching filters found');
   const emptySearchBody = __('Try changing your search settings.');
+  const actionButtons = <Button variant="danger" isDisabled> Restart app </Button>
   const fetchItems = useCallback(() => {
     if (!hostId) return;
     return getHostTraces(hostId);
   }, [hostId])
   const hostTraces = useSelector(state => selectAPIResponse(state, 'HOST_TRACES')).results
   const status = useSelector(state => selectHostTracesStatus(state));
+  console.log(hostTraces);
   if (!hostId) return <Skeleton />;
   return (
     <TableWrapper
     composable
+    actionButtons={actionButtons}
     searchQuery={searchQuery}
     emptyContentBody={emptyContentBody}
     emptyContentTitle={emptyContentTitle}
@@ -33,21 +36,12 @@ const TracesTab = () => {
     emptySearchTitle={emptySearchTitle}
     updateSearchQuery={updateSearchQuery}
     fetchItems={fetchItems}
-    autocompleteEndpoint={`/hosts/${hostId}/traces`}
+    autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
     foremanApiAutoComplete
     rowsCount={hostTraces?.results?.length}
     variant={TableVariant.compact}
     status={status}
     >
-    <Flex>
-    <FlexItem>
-    <Button 
-      variant="danger"
-      isDisabled>
-      Restart app
-      </Button>
-      </FlexItem>
-      </Flex>
       <Thead>
         <Tr>
           <Th>{__('Application')}</Th>

@@ -13,6 +13,7 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
+  actionButtons,
   children,
   metadata,
   fetchItems,
@@ -94,6 +95,11 @@ const TableWrapper = ({
             {children}
           </FlexItem>
         }
+        {composable &&
+          <FlexItem>
+            {actionButtons}
+          </FlexItem>    
+        }
         <FlexItem align={{ default: 'alignRight' }}>
           <Pagination
             itemCount={total}
@@ -138,6 +144,7 @@ TableWrapper.propTypes = {
   }),
   autocompleteEndpoint: PropTypes.string.isRequired,
   foremanApiAutoComplete: PropTypes.bool,
+  actionButtons: PropTypes.node,
   children: PropTypes.node,
   // additionalListeners are anything that can trigger another API call, e.g. a filter
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
