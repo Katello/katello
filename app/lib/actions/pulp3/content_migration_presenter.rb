@@ -48,7 +48,8 @@ module Actions
           elsif report
             report['message']
           elsif task_progress_reports.empty?
-            "Content migration starting. "
+            "Content migration starting. These steps may take a while to complete. " \
+            "Refer to `foreman-maintain content migration-stats` for an estimate."
           else
             "Initial Migration steps complete."
           end
