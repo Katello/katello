@@ -19,6 +19,7 @@ module Katello
       @docker_repo = katello_repositories(:busybox)
       @smart_proxy = SmartProxy.pulp_primary
       @srpm_repo = katello_repositories(:srpm_repo)
+      @ansible_collection_repo = katello_repositories(:pulp3_ansible_collection_1)
     end
 
     def permissions
@@ -818,6 +819,11 @@ module Katello
       # single file
       post :upload_content, params: { :id => @repository.id, :content => puppet_module }
       assert_response :success
+
+      #fail for collections
+      post :upload_content, params: { :id => @ansible_collection_repo.id, :content => puppet_module }
+      assert_response 422
+      assert_match "Cannot upload Ansible collections", @response.body
     end
 
     def test_upload_content_protected
