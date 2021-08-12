@@ -187,10 +187,16 @@ module Katello
 
     def ensure_valid_collection_attributes
       errors.add(:base, _("URL needs to have a trailing /")) if !url.blank? && url[-1] != '/'
+      return unless ansible_collection_requirements
       begin
-        YAML.safe_load(ansible_collection_requirements) if ansible_collection_requirements
+        requirements = YAML.safe_load(ansible_collection_requirements)
+        if requirements.is_a?(Hash)
+          errors.add(:base,  _("Requirements yaml should have a 'collections' key")) unless requirements.key?('collections')
+        else
+          errors.add(:base,  _('Requirements yaml should be a key-value pair structure.'))
+        end
       rescue
-        errors.add(:base, _('Requirements yaml is invalid!'))
+        errors.add(:base, _('Requirements is not valid yaml.'))
       end
     end
 
