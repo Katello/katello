@@ -215,10 +215,15 @@ module Katello
         new_ids = new_available_module_streams.keys - old_associated_ids
         new_ids.each do |new_id|
           module_stream = new_available_module_streams[new_id]
+          status = module_stream["status"]
+          # Set status to "unknown" only if the active field is in use and set to false and the module is enabled
+          if enabled_module_stream_inactive?(module_stream)
+            status = "unknown"
+          end
           self.host_available_module_streams.create!(host_id: self.id,
                                                      available_module_stream_id: new_id,
                                                      installed_profiles: module_stream["installed_profiles"],
-                                                     status: module_stream["status"])
+                                                     status: status)
         end
 
         upgradable_streams.each do |hams|
@@ -227,6 +232,10 @@ module Katello
           module_stream_data = module_stream.slice(*shared_keys)
           if hams.attributes.slice(*shared_keys) != module_stream_data
             hams.update!(module_stream_data)
+          end
+          # Set status to "unknown" only if the active field is in use and set to false and the module is enabled
+          if enabled_module_stream_inactive?(module_stream)
+            hams.update!(status: "unknown")
           end
         end
       end
@@ -346,6 +355,10 @@ module Katello
       def update_trace_status
         self.get_status(::Katello::TraceStatus).refresh!
         self.refresh_global_status!
+      end
+
+      def enabled_module_stream_inactive?(module_stream)
+        !module_stream["active"].nil? && module_stream["active"] == false && module_stream["status"] == "enabled"
       end
     end
   end
