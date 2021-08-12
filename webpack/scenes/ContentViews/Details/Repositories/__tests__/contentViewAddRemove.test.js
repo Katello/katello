@@ -65,7 +65,7 @@ test('Can enable and disable add repositories button', async (done) => {
 
 test('Can add repositories', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const cvAddparams = { repository_ids: [107, 106] };
+  const cvAddparams = { repository_ids: [106] };
 
   const repoAddscope = nockInstance
     .put(cvDetailsPath, cvAddparams)

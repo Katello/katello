@@ -8,6 +8,8 @@ import {
   CREATE_CONTENT_VIEW_FILTER_KEY,
   DELETE_CONTENT_VIEW_FILTER_KEY,
   DELETE_CONTENT_VIEW_FILTERS_KEY,
+  ADD_CONTENT_VIEW_FILTER_RULE,
+  REMOVE_CONTENT_VIEW_FILTER_RULE,
   NOT_ADDED,
   ALL_STATUSES,
   REPOSITORY_TYPES,
@@ -151,6 +153,26 @@ export const getCVFilterPackageGroups = (cvId, filterId, params) => get({
   errorToast: error => __(`Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/package_groups'),
 });
+
+export const addCVFilterRule = (filterId, params, handleSuccess) => post({
+  type: API_OPERATIONS.POST,
+  key: ADD_CONTENT_VIEW_FILTER_RULE,
+  url: api.getApiUrl(`/content_view_filters/${filterId}/rules`),
+  params,
+  handleSuccess,
+  successToast: () => __('Filter rule added successfully'),
+  errorToast: error => __(`Something went wrong while adding a filter rule! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const removeCVFilterRule = (filterId, packageGroupFilterId, handleSuccess) =>
+  APIActions.delete({
+    type: API_OPERATIONS.DELETE,
+    key: REMOVE_CONTENT_VIEW_FILTER_RULE,
+    url: api.getApiUrl(`/content_view_filters/${filterId}/rules/${packageGroupFilterId}`),
+    handleSuccess,
+    successToast: () => __('Filter rule removed successfully'),
+    errorToast: error => __(`Something went wrong while removing a filter rule! ${getResponseErrorMsgs(error.response)}`),
+  });
 
 export const getContentViewHistories = (cvId, params) => {
   const apiParams = { ...params };
