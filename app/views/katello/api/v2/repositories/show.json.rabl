@@ -57,6 +57,7 @@ attributes :ostree_branch_names => :ostree_branches
 attributes :relative_path
 attributes :promoted? => :promoted
 attributes :content_view_version_id, :library_instance_id
+attributes :last_contents_changed
 
 if @resource.is_a?(Katello::Repository)
   if @resource.distribution_version || @resource.distribution_arch || @resource.distribution_family || @resource.distribution_variant
