@@ -98,7 +98,7 @@ const TableWrapper = ({
         {composable &&
           <FlexItem>
             {actionButtons}
-          </FlexItem>    
+          </FlexItem>
         }
         <FlexItem align={{ default: 'alignRight' }}>
           <Pagination
@@ -163,6 +163,7 @@ TableWrapper.defaultProps = {
   activeFilters: false,
   composable: false,
   foremanApiAutoComplete: false,
+  actionButtons: false,
 };
 
 export default TableWrapper;

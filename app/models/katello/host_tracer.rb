@@ -10,8 +10,8 @@ module Katello
     validates :app_type, :length => {:maximum => 255}, :presence => true
 
     scoped_search :on => :application, :complete_value => true
-    scoped_search :on => :app_type
-    scoped_search :on => :helper
+    scoped_search :on => :app_type, :complete_value => true
+    scoped_search :on => :helper, :complete_value => true
 
     def reboot_required?
       self.app_type == 'static'

@@ -39,24 +39,17 @@ class Search extends Component {
     ];
 
     if (autoCompleteParams[0] !== '') {
-      let data
+      let data;
       if (this.props.foremanApiAutoComplete) {
-      data = await foremanApi.get(...autoCompleteParams)
-      console.log(data)
+        data = await foremanApi.get(...autoCompleteParams);
+      } else {
+        data = await api.get(...autoCompleteParams);
+      }
       this.setState({
         items: data.data.filter(({ error }) => !error).map(({ label }) => ({
           text: label.trim(),
         })),
       });
-      } else {
-        data = await api.get(...autoCompleteParams)
-        console.log(data)
-        this.setState({
-          items: data.data.filter(({ error }) => !error).map(({ label }) => ({
-            text: label.trim(),
-          })),
-        });
-      };
     }
 
     if (autoSearchEnabled && patternfly4 && searchTerm.length > 0) {

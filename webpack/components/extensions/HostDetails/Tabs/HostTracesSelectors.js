@@ -10,7 +10,7 @@ export const selectHostTraces = state =>
   selectAPIResponse(state, HOST_TRACES_KEY) || {};
 
 export const selectHostId = state =>
-selectAPIResponse(state, HOST_TRACES_KEY) || {};
+  selectAPIResponse(state, HOST_TRACES_KEY) || {};
 
 export const selectHostTracesStatus = state =>
   selectAPIStatus(state, HOST_TRACES_KEY) || STATUS.PENDING;
