@@ -26,7 +26,7 @@ const cvSuccessToast = (response) => {
   return __(`Content view ${name} created`);
 };
 
-const cvErrorToast = (error) => {
+export const cvErrorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);
   return message;
 };

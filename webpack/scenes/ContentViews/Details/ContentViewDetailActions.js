@@ -26,9 +26,12 @@ import {
   cvRemoveComponentKey,
   addComponentSuccessMessage,
   removeComponentSuccessMessage,
+  cvVersionPromoteKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
+import { renderTaskStartedToast } from '../../Tasks/helpers';
+import { cvErrorToast } from '../ContentViewsActions';
 
 const getContentViewDetails = cvId => get({
   type: API_OPERATIONS.GET,
@@ -213,5 +216,14 @@ export const getContentViewVersions = (cvId, params) => {
     url: api.getApiUrl(apiUrl),
   });
 };
+
+export const promoteContentViewVersion = params => post({
+  type: API_OPERATIONS.POST,
+  key: cvVersionPromoteKey(params.id, params.versionEnvironments),
+  url: api.getApiUrl(`/content_view_versions/${params.id}/promote`),
+  params,
+  handleSuccess: response => renderTaskStartedToast(response.data),
+  errorToast: error => cvErrorToast(error),
+});
 
 export default getContentViewDetails;

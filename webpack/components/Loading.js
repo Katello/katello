@@ -7,14 +7,15 @@ import {
   EmptyStateIcon,
   Spinner,
 } from '@patternfly/react-core';
+import { translate as __ } from 'foremanReact/common/I18n';
 
-const Loading = ({ size, showText }) => (
+const Loading = ({ size, showText, loadingText }) => (
   <Bullseye>
     <EmptyState>
       <EmptyStateIcon size={size} variant="container" component={Spinner} />
       {showText && (
         <Title size={size} headingLevel="h4">
-          Loading
+          {loadingText || __('Loading')}
         </Title>)}
     </EmptyState>
   </Bullseye>
@@ -23,11 +24,13 @@ const Loading = ({ size, showText }) => (
 Loading.propTypes = {
   size: PropTypes.string,
   showText: PropTypes.bool,
+  loadingText: PropTypes.string,
 };
 
 Loading.defaultProps = {
   size: 'lg',
   showText: true,
+  loadingText: null,
 };
 
 
