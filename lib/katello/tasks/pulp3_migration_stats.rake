@@ -28,10 +28,14 @@ namespace :katello do
     puts "Migrated/Total RPMs: #{migrated_rpm_count}/#{::Katello::Rpm.count}"
     puts "Migrated/Total errata: #{migrated_erratum_count}/#{::Katello::RepositoryErratum.count}"
     puts "Migrated/Total repositories: #{migrated_repo_count}/#{migratable_repo_count}"
-    puts
+
     # The timing formulas go negative if the amount of content is negligibly small
     if migration_minutes >= 5
       puts "Estimated migration time based on yum content: #{hours} hours, #{minutes} minutes"
+    elsif migrated_rpm_count == ::Katello::Rpm.count &&
+      migrated_erratum_count == ::Katello::RepositoryErratum.count &&
+      migrated_repo_count == migratable_repo_count
+      puts "All content has been migrated."
     else
       puts "Estimated migration time based on yum content: fewer than 5 minutes"
     end
