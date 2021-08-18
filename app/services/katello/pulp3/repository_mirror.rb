@@ -47,7 +47,7 @@ module Katello
         create_remote unless fetch_remote
       end
 
-      def create
+      def create(_force = false)
         api.repositories_api.create(name: backend_object_name)
       end
 
