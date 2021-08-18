@@ -27,6 +27,8 @@ module Actions
           models.each do |model|
             model.joins("left join katello_#{model.repository_association} on #{model.table_name}.id = katello_#{model.repository_association}.#{model.unit_id_field}").where("katello_#{model.repository_association}.#{model.unit_id_field} IS NULL").destroy_all
           end
+
+          ::Katello::RootRepository.orphaned.destroy_all
         end
       end
     end
