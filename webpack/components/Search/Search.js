@@ -74,6 +74,7 @@ class Search extends Component {
       <div>
         <ControlLabel srOnly>{__('Search')}</ControlLabel>
         <TypeAhead
+          isDisabled={this.props.isDisabled}
           items={this.state.items}
           onInputUpdate={this.onInputUpdate}
           onSearch={this.onSearch}
@@ -106,6 +107,7 @@ Search.propTypes = {
   updateSearchQuery: PropTypes.func,
   initialInputValue: PropTypes.string,
   patternfly4: PropTypes.bool,
+  isDisabled: PropTypes.bool,
   settings: PropTypes.shape({
     autoSearchEnabled: PropTypes.bool,
     autoSearchDelay: PropTypes.number,
@@ -119,6 +121,7 @@ Search.defaultProps = {
   settings: {
     autoSearchEnabled: true,
   },
+  isDisabled: undefined,
 };
 
 export default Search;

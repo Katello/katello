@@ -9,7 +9,7 @@ import { commonInputPropTypes } from '../helpers/commonPropTypes';
 import './TypeAheadInput.scss';
 
 const TypeAheadInput = ({
-  onKeyPress, onInputFocus, passedProps, autoSearchEnabled,
+  onKeyPress, onInputFocus, passedProps, autoSearchEnabled, isDisabled,
 }) => {
   const inputRef = useRef(null);
   const { onChange, ...downshiftProps } = passedProps;
@@ -23,6 +23,7 @@ const TypeAheadInput = ({
   return (
     <React.Fragment>
       <TextInput
+        isDisabled={isDisabled}
         {...downshiftProps}
         ref={inputRef}
         onFocus={onInputFocus}
@@ -37,8 +38,13 @@ const TypeAheadInput = ({
 };
 
 TypeAheadInput.propTypes = {
+  isDisabled: PropTypes.bool,
   autoSearchEnabled: PropTypes.bool.isRequired,
   ...commonInputPropTypes,
+};
+
+TypeAheadInput.defaultProps = {
+  isDisabled: undefined,
 };
 
 export default TypeAheadInput;

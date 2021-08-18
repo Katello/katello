@@ -14,16 +14,21 @@ import {
   selectCVFilterRulesStatus,
 } from '../ContentViewDetailSelectors';
 import { getCVFilterRules } from '../ContentViewDetailActions';
+import CVRpmMatchContentModal from './MatchContentModal/CVRpmMatchContentModal';
 
 const CVRpmFilterContent = ({ filterId, inclusion }) => {
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
   const status = useSelector(state => selectCVFilterRulesStatus(state, filterId), shallowEqual);
+  const loading = status === STATUS.PENDING;
 
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
-  const loading = status === STATUS.PENDING;
+  const [filterRuleId, setFilterRuleId] = useState(undefined);
+
+  const [showMatchContent, setShowMatchContent] = useState(false);
+  const onClose = () => setShowMatchContent(false);
 
   const columnHeaders = [
     __('RPM name'),
@@ -46,14 +51,14 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
   const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((rule) => {
-      const { name, architecture } = rule;
+      const { name, architecture, id } = rule;
       const cells = [
         { title: name },
         { title: architecture || 'All architectures' },
         { title: versionText(rule) },
       ];
 
-      newRows.push({ cells });
+      newRows.push({ cells, id });
     });
 
     return newRows;
@@ -75,6 +80,17 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
   const emptySearchBody = __('Try changing your search settings.');
   const tabTitle = (inclusion ? __('Included') : __('Excluded')) + __(' RPMs');
 
+
+  const actionResolver = () => [
+    {
+      title: __('View matching content'),
+      onClick: (_event, _rowId, { id }) => {
+        setFilterRuleId(id);
+        setShowMatchContent(true);
+      },
+    },
+  ];
+
   return (
     <Tabs activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
       <Tab eventKey={0} title={<TabTitleText>{tabTitle}</TabTitleText>}>
@@ -90,6 +106,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
               searchQuery,
               updateSearchQuery,
               status,
+              actionResolver,
             }}
             status={status}
             onSelect={onSelect(rows, setRows)}
@@ -97,7 +114,16 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
             variant={TableVariant.compact}
             autocompleteEndpoint={`/content_view_filters/${filterId}/rules/auto_complete_search`}
             fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
-          />
+          >
+            {showMatchContent &&
+              <CVRpmMatchContentModal
+                key={`${filterId}-${filterRuleId}`}
+                filterRuleId={filterRuleId}
+                filterId={filterId}
+                onClose={onClose}
+              />
+            }
+          </TableWrapper>
         </div>
       </Tab>
     </Tabs>
