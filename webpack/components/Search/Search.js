@@ -72,7 +72,6 @@ class Search extends Component {
       typingTimeout: setTimeout(() => this.onSearch(searchTerm), autoSearchDelay),
     });
   }
-
   render() {
     const { initialInputValue, patternfly4, settings: { autoSearchEnabled } } = this.props;
     return (

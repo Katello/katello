@@ -27,12 +27,11 @@ const TableWrapper = ({
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
-  const { foremanPerPage = 20 } = useForemanSettings();
+  const foremanPerPage = useForemanSettings().perPage || 20;
   // setting pagination to local state so it doesn't disappear when page reloads
   const [perPage, setPerPage] = useState(foremanPerPage);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-
   const updatePagination = (data) => {
     const { subtotal: newTotal, page: newPage, per_page: newPerPage } = data;
     if (newTotal !== undefined) setTotal(parseInt(newTotal, 10));
@@ -72,7 +71,6 @@ const TableWrapper = ({
       search,
     },
   });
-
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
   };

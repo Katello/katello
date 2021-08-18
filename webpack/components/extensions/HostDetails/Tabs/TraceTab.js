@@ -10,18 +10,20 @@ import { selectHostTracesStatus } from './HostTracesSelectors';
 
 const TracesTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
-  const response = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
-  const hostId = response.id;
+  const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
+  const hostId = hostDetails.id;
   const emptyContentTitle = __('NO TRACES');
   const emptyContentBody = __("Add filters using the 'Add filter' button above."); // needs link
   const emptySearchTitle = __('No matching filters found');
   const emptySearchBody = __('Try changing your search settings.');
   const actionButtons = <Button variant="danger" isDisabled> Restart app </Button>;
-  const fetchItems = useCallback(() => {
-    if (!hostId) return null;
-    return getHostTraces(hostId);
-  }, [hostId]);
-  const hostTraces = useSelector(state => selectAPIResponse(state, 'HOST_TRACES')).results;
+  const fetchItems = useCallback(
+    params =>
+      (hostId ? getHostTraces(hostId, params) : null),
+    [hostId],
+  );
+  const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
+  const { results, ...meta } = response;
   const status = useSelector(state => selectHostTracesStatus(state));
   if (!hostId) return <Skeleton />;
   return (
@@ -37,9 +39,10 @@ const TracesTab = () => {
       fetchItems={fetchItems}
       autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
       foremanApiAutoComplete
-      rowsCount={hostTraces?.results?.length}
+      rowsCount={results?.length}
       variant={TableVariant.compact}
       status={status}
+      metadata={meta}
     >
       <Thead>
         <Tr>
@@ -49,12 +52,12 @@ const TracesTab = () => {
         </Tr>
       </Thead>
       <Tbody>
-        {hostTraces?.map((result) => {
+        {results?.map((result) => {
           const {
          id,
          application,
          helper,
-         appType,
+         app_type: appType,
         } = result;
         return (
           <Tr key={id} >
