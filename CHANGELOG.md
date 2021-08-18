@@ -1,3 +1,23 @@
+# 4.1.3 (2021-08-18)
+
+## Bug Fixes
+
+### Repositories
+ * foreman-rake katello:correct_repositories is failing to create the repositories. ([#33212](https://projects.theforeman.org/issues/33212), [bb6a8422](https://github.com/Katello/katello.git/commit/bb6a8422af84122adb77f0ef482a43de8a5e2bea), [a70d45f8](https://github.com/Katello/katello.git/commit/a70d45f8a2bd51cd1797a0ecb275c22cf955ad5a))
+
+### Inter Server Sync
+ * Can"t import "paid" content in disconnected mode ([#33102](https://projects.theforeman.org/issues/33102), [b1590d31](https://github.com/Katello/katello.git/commit/b1590d310f9544ea31a39f777f0d95ee1a480d35))
+ * hammer repository --help still shows export subcommand ([#32955](https://projects.theforeman.org/issues/32955), [6a9143bd](https://github.com/Katello/hammer-cli-katello.git/commit/6a9143bd96d339d56350c82d668f6bc52e5db394), [46f181af](https://github.com/Katello/katello.git/commit/46f181afc53e35abeaf361fe9b4c44074653c810))
+
+### Client/Agent
+ * No option via Katello-agent in errata installation of host-collections in UI only ([#33086](https://projects.theforeman.org/issues/33086), [9edd31ee](https://github.com/Katello/katello.git/commit/9edd31ee3163af33a6d98a90339211886c422cfa))
+
+### Hosts
+ * hammer host package upgrade-all doesn't update all packages ([#33040](https://projects.theforeman.org/issues/33040), [5deb1ecf](https://github.com/Katello/katello.git/commit/5deb1ecf363b724807b1d69bd913988e1355edfe), [0580278a](https://github.com/Katello/katello.git/commit/0580278a2d40ee9aef57debd31ea846de045826b))
+ * Unable to interact with appstream actions in content host > host > appstream, leads to an oops ([#32943](https://projects.theforeman.org/issues/32943), [57d16184](https://github.com/Katello/katello.git/commit/57d1618436417c2e00389b888dd6934ac2afe26a))
+
+### Other
+ * [global registration] - Global Registration is not working w.r.t. Life Cycle Environment ([#33005](https://projects.theforeman.org/issues/33005), [0ab2fa2b](https://github.com/Katello/katello.git/commit/0ab2fa2bbd7f03bbc9b19446b087f510e3a0c6fc))
 # 4.1.2 (2021-07-26)
 
 ## Bug Fixes
