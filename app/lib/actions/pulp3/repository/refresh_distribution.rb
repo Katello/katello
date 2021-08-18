@@ -6,13 +6,16 @@ module Actions
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
         def plan(repository, smart_proxy, options = {})
-          smart_proxy = SmartProxy.find_by(id: smart_proxy) #support bulk actions
+          smart_proxy = SmartProxy.unscoped.find_by(id: smart_proxy) #support bulk actions
           sequence do
             if !repository.unprotected && !options[:assume_content_guard_exists]
               plan_action(::Actions::Pulp3::ContentGuard::Refresh, smart_proxy)
             end
 
-            refresh_options = {:repository_id => repository.id, :smart_proxy_id => smart_proxy.id}
+            refresh_options = {
+              :repository_id => repository.id,
+              :smart_proxy_id => smart_proxy.id
+            }
             refresh_options[:contents_changed] if options.key?(:contents_changed)
             action = plan_self(refresh_options)
 
