@@ -19,6 +19,7 @@ let autoSearchScope;
 beforeEach(() => {
   const { results } = cvFilterFixtures;
   [firstFilter] = results;
+  // lastFilter = results.pop();
   [lastFilter] = results.slice(-1);
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
   // Autosearch can cause some asynchronous issues with the typing timeout, using basic search

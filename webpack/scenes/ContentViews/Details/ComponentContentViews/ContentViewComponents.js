@@ -214,35 +214,37 @@ const ContentViewComponents = ({ cvId, details }) => {
       fetchItems={useCallback(params =>
         getContentViewComponents(cvId, params, statusSelected), [cvId, statusSelected])}
       additionalListeners={[statusSelected, addComponentsResolved, removeComponentsResolved]}
-    >
-      <Split hasGutter>
-        <SplitItem>
-          <SelectableDropdown
-            items={[ADDED, NOT_ADDED, ALL_STATUSES]}
-            title={__('Status')}
-            selected={statusSelected}
-            setSelected={setStatusSelected}
-            placeholderText={__('Status')}
-          />
-        </SplitItem>
-        <SplitItem>
-          <Button onClick={removeBulk} isDisabled={!(bulkRemoveEnabled())} variant="secondary" aria-label="remove_components">
-            {__('Remove content views')}
-          </Button>
-        </SplitItem>
-      </Split>
-      {versionEditing &&
-        <ComponentContentViewAddModal
-          cvId={compositeCvEditing}
-          componentCvId={componentCvEditing}
-          componentId={componentId}
-          latest={componentLatest}
-          show={versionEditing}
-          setIsOpen={setVersionEditing}
-          aria-label="copy_content_view_modal"
-        />
+      actionButtons={
+        <>
+          <Split hasGutter>
+            <SplitItem>
+              <SelectableDropdown
+                items={[ADDED, NOT_ADDED, ALL_STATUSES]}
+                title={__('Status')}
+                selected={statusSelected}
+                setSelected={setStatusSelected}
+                placeholderText={__('Status')}
+              />
+            </SplitItem>
+            <SplitItem>
+              <Button onClick={removeBulk} isDisabled={!(bulkRemoveEnabled())} variant="secondary" aria-label="remove_components">
+                {__('Remove content views')}
+              </Button>
+            </SplitItem>
+          </Split>
+          {versionEditing &&
+          <ComponentContentViewAddModal
+            cvId={compositeCvEditing}
+            componentCvId={componentCvEditing}
+            componentId={componentId}
+            latest={componentLatest}
+            show={versionEditing}
+            setIsOpen={setVersionEditing}
+            aria-label="copy_content_view_modal"
+          />}
+        </>
       }
-    </TableWrapper>
+    />
   );
 };
 

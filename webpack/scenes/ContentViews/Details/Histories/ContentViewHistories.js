@@ -81,7 +81,6 @@ const ContentViewHistories = ({ cvId }) => {
         error,
         status,
       }}
-      composable
       variant={TableVariant.compact}
       autocompleteEndpoint={`/content_views/${cvId}/history/auto_complete_search`}
       fetchItems={useCallback(params => getContentViewHistories(cvId, params), [cvId])}
@@ -120,7 +119,6 @@ const ContentViewHistories = ({ cvId }) => {
     </TableWrapper>
   );
 };
-
 ContentViewHistories.propTypes = {
   cvId: PropTypes.number.isRequired,
 };

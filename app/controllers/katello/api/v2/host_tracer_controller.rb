@@ -1,5 +1,6 @@
 module Katello
   class Api::V2::HostTracerController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     before_action :find_host
 
     resource_description do

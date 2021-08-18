@@ -115,6 +115,8 @@ Foreman::Application.routes.draw do
           end
 
           resources :traces, :only => [:index], :controller => :host_tracer do
+            get :auto_complete_search, :on => :collection
+
             collection do
               put :resolve
             end

@@ -53,7 +53,6 @@ const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
           fetchItems,
           status,
         }}
-        composable
         autocompleteEndpoint="/packages/auto_complete_search"
         variant={TableVariant.compact}
       >
