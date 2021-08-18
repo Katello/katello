@@ -33,7 +33,7 @@ const Table = ({
     <div>
       <PfTable.PfProvider
         columns={columns}
-        className="table-fixed"
+        className="table-fixed neat-table-cells"
         striped
         bordered
         hover

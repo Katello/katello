@@ -14,9 +14,12 @@ html .pagination-pf-pagesize.btn-group {
   margin-top: -6px !important;
 }
 
-td, th {
-  overflow: auto;
-  word-wrap: break-word;
+// don't use this class if you need a dropdown menu to extend outside the table cell
+.neat-table-cells {
+  td, th {
+    overflow: auto;
+    word-wrap: break-word;
+  }
 }
 
 // needed because we have overflow set to auto for all td's and it affected the pf4 table

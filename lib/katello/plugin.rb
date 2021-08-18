@@ -206,7 +206,7 @@ Foreman::Plugin.register :katello do
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 
-  register_global_js_file 'fills'
+  register_global_js_file 'global'
 
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"

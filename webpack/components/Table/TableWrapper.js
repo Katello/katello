@@ -21,6 +21,7 @@ const TableWrapper = ({
   updateSearchQuery,
   additionalListeners,
   activeFilters,
+  composable,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -59,6 +60,7 @@ const TableWrapper = ({
     paginationParams,
     searchQuery,
     additionalListeners,
+    composable,
   ]);
 
   const getAutoCompleteParams = search => ({
@@ -73,6 +75,8 @@ const TableWrapper = ({
     updatePagination(updatedPagination);
   };
 
+  const rowsCount = metadata?.subtotal ?? 0;
+
   return (
     <React.Fragment>
       <Flex>
@@ -83,9 +87,11 @@ const TableWrapper = ({
             getAutoCompleteParams={getAutoCompleteParams}
           />
         </FlexItem>
-        <FlexItem>
-          {children}
-        </FlexItem>
+        {!composable &&
+          <FlexItem>
+            {children}
+          </FlexItem>
+        }
         <FlexItem align={{ default: 'alignRight' }}>
           <Pagination
             itemCount={total}
@@ -98,7 +104,15 @@ const TableWrapper = ({
           />
         </FlexItem>
       </Flex>
-      <MainTable searchIsActive={!!searchQuery} activeFilters={activeFilters} {...allTableProps} />
+      <MainTable
+        searchIsActive={!!searchQuery}
+        activeFilters={activeFilters}
+        composable={composable}
+        rowsCount={rowsCount}
+        {...allTableProps}
+      >
+        {children}
+      </MainTable>
     </React.Fragment>
   );
 };
@@ -109,6 +123,7 @@ TableWrapper.propTypes = {
   fetchItems: PropTypes.func.isRequired,
   metadata: PropTypes.shape({
     total: PropTypes.number,
+    subtotal: PropTypes.number,
     page: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string, // The API can sometimes return strings
@@ -128,13 +143,15 @@ TableWrapper.propTypes = {
     PropTypes.bool,
   ])),
   activeFilters: PropTypes.bool,
+  composable: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
-  metadata: {},
+  metadata: { subtotal: 0 },
   children: null,
   additionalListeners: [],
   activeFilters: false,
+  composable: false,
 };
 
 export default TableWrapper;
