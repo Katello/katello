@@ -38,6 +38,7 @@ module Katello
         roots = Katello::RootRepository.where(:content_type => repo_type).order(:label)
         plans = []
         roots.each do |root|
+          next unless root.library_instance
           plans << library_migration_for(root)
           plans += content_view_migrations_for(root)
         end
