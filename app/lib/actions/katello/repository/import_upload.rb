@@ -63,7 +63,7 @@ module Actions
         def results_to_json(results)
           json_results = []
           results.each do |result|
-            result[:pulp_tasks].each do |task|
+            result[:pulp_tasks]&.each do |task|
               details = task ? task.dig(:result, :details, :unit) : nil
               if details && details.dig('type_id') == 'docker_manifest'
                 manifest = ::Katello::DockerManifest.find_by(:pulp_id => details.dig(:metadata, :id))
@@ -76,6 +76,11 @@ module Actions
                 json_result[:type] = 'docker_tag'
                 json_results << json_result
               else
+                json_results << {:type => 'file'}
+              end
+            end
+            unless json_results.size
+              if result[:content_unit_href]
                 json_results << {:type => 'file'}
               end
             end

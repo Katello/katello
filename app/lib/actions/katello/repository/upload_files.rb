@@ -21,14 +21,12 @@ module Actions
           generate_applicability = options.fetch(:generate_applicability, repository.yum?)
 
           sequence do
-            concurrence do
-              tmp_files.each do |file|
-                sequence do
-                  upload_action = plan_action(Pulp3::Orchestration::Repository::UploadContent,
-                                                   repository, SmartProxy.pulp_primary!, file, unit_type_id)
+            tmp_files.each do |file|
+              sequence do
+                upload_action = plan_action(Pulp3::Orchestration::Repository::UploadContent,
+                                                 repository, SmartProxy.pulp_primary!, file, unit_type_id)
 
-                  upload_actions << upload_action.output
-                end
+                upload_actions << upload_action.output
               end
             end
 
