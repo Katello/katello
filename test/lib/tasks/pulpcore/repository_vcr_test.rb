@@ -19,7 +19,7 @@ module Katello
 
         Rake::Task.define_task(:environment)
 
-        @primary = SmartProxy.pulp_primary
+        @primary = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
         @library_repo = katello_repositories(:fedora_17_x86_64_duplicate)
         @library_repo.root.update(:url => 'https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/')
         @backend_service = ::Katello::Pulp3::Repository::Yum.new(@library_repo, @primary)
