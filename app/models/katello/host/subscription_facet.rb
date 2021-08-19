@@ -57,7 +57,7 @@ module Katello
           self.dmi_uuid = consumer_params['facts']['dmi.system.uuid']
         end
 
-        self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].blank?
+        self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].nil?
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].nil?
         self.registered_at = consumer_params['created'] unless consumer_params['created'].blank?
         self.last_checkin = consumer_params['lastCheckin'] unless consumer_params['lastCheckin'].blank?
