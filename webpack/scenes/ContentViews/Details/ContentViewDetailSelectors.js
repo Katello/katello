@@ -19,6 +19,7 @@ import {
   cvRemoveComponentKey,
   CREATE_CONTENT_VIEW_FILTER_KEY,
   RPM_MATCHING_CONTENT,
+  ADD_CONTENT_VIEW_FILTER_RULE,
 } from '../ContentViewsConstants';
 import { pollTaskKey } from '../../Tasks/helpers';
 
@@ -150,5 +151,14 @@ export const selectCreateContentViewFilterStatus = state =>
 
 export const selectCreateContentViewFilterError = state =>
   selectAPIError(state, CREATE_CONTENT_VIEW_FILTER_KEY);
+
+export const selectCreatePackageFilterRule = state =>
+  selectAPIResponse(state, ADD_CONTENT_VIEW_FILTER_RULE) || {};
+
+export const selectCreatePackageFilterRuleStatus = state =>
+  selectAPIStatus(state, ADD_CONTENT_VIEW_FILTER_RULE) || STATUS.PENDING;
+
+export const selectCreatePackageFilterRuleError = state =>
+  selectAPIError(state, ADD_CONTENT_VIEW_FILTER_RULE);
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;
