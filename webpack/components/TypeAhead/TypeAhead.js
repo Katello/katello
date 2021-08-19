@@ -54,31 +54,32 @@ class TypeAhead extends Component {
           selectItem,
           openMenu,
         }) => {
-            const typeAheadProps = {
-              userInputValue: this.state.inputValue,
-              clearSearch: this.clearSearch,
-              getInputProps,
-              getItemProps,
-              isOpen,
-              inputValue,
-              highlightedIndex,
-              selectedItem,
-              selectItem,
-              openMenu,
-              onSearch,
-              items,
-              activeItems,
-              shouldShowItems: isOpen && items.length > 0,
-           };
+          const typeAheadProps = {
+            isDisabled: this.props.isDisabled,
+            userInputValue: this.state.inputValue,
+            clearSearch: this.clearSearch,
+            getInputProps,
+            getItemProps,
+            isOpen,
+            inputValue,
+            highlightedIndex,
+            selectedItem,
+            selectItem,
+            openMenu,
+            onSearch,
+            items,
+            activeItems,
+            shouldShowItems: isOpen && items.length > 0,
+          };
 
-            return (
-              <div>
-                {patternfly4 ?
-                  <TypeAheadSearchPf4 autoSearchEnabled={autoSearchEnabled} {...typeAheadProps} /> :
-                  <TypeAheadSearch actionText={actionText} {...typeAheadProps} />}
-              </div>
+          return (
+            <div>
+              {patternfly4 ?
+                <TypeAheadSearchPf4 autoSearchEnabled={autoSearchEnabled} {...typeAheadProps} /> :
+                <TypeAheadSearch actionText={actionText} {...typeAheadProps} />}
+            </div>
           );
-}}
+        }}
       </Downshift>
     );
   }
@@ -93,6 +94,7 @@ TypeAhead.propTypes = {
     /* optionally disable a regular item */
     disabled: PropTypes.bool,
   })).isRequired,
+  isDisabled: PropTypes.bool,
   onInputUpdate: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   actionText: PropTypes.string,
@@ -105,6 +107,7 @@ TypeAhead.defaultProps = {
   actionText: __('Search'),
   initialInputValue: '',
   patternfly4: false,
+  isDisabled: undefined,
 };
 
 export default TypeAhead;

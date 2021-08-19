@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Pagination, Flex, FlexItem } from '@patternfly/react-core';
 
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { STATUS } from 'foremanReact/constants';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
 import { usePaginationOptions } from 'foremanReact/components/Pagination/PaginationHooks';
 
@@ -25,21 +26,22 @@ const TableWrapper = ({
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
-  const { foremanPerPage = 20 } = useForemanSettings();
+  const foremanPerPage = useForemanSettings().perPage || 20;
   // setting pagination to local state so it doesn't disappear when page reloads
-  const [perPage, setPerPage] = useState(foremanPerPage);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [perPage, setPerPage] = useState(Number(metadata?.per_page ?? foremanPerPage));
+  const [page, setPage] = useState(Number(metadata?.page ?? 1));
+  const [total, setTotal] = useState(Number(metadata?.subtotal ?? 0));
+
 
   const updatePagination = (data) => {
     const { subtotal: newTotal, page: newPage, per_page: newPerPage } = data;
-    if (newTotal !== undefined) setTotal(parseInt(newTotal, 10));
-    if (newPage !== undefined) setPage(parseInt(newPage, 10));
-    if (newPerPage !== undefined) setPerPage(parseInt(newPerPage, 10));
+    if (newTotal !== undefined) setTotal(Number(newTotal));
+    if (newPage !== undefined) setPage(Number(newPage));
+    if (newPerPage !== undefined) setPerPage(Number(newPerPage));
   };
   const paginationParams = useCallback(() => ({ per_page: perPage, page }), [perPage, page]);
 
-  useEffect(() => updatePagination(metadata), [metadata]);
+  useDeepCompareEffect(() => updatePagination(metadata), [metadata]);
 
   // The search component will update the search query when a search is performed, listen for that
   // and perform the search so we can be sure the searchQuery is updated when search is performed.
@@ -76,12 +78,16 @@ const TableWrapper = ({
   };
 
   const rowsCount = metadata?.subtotal ?? 0;
+  const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
+  const unresolvedStatusOrNoRows = unresolvedStatus || rowsCount === 0;
+  const searchNotUnderway = !(searchQuery || activeFilters);
 
   return (
-    <React.Fragment>
+    <>
       <Flex>
         <FlexItem>
           <Search
+            isDisabled={unresolvedStatusOrNoRows && searchNotUnderway}
             patternfly4
             onSearch={search => updateSearchQuery(search)}
             getAutoCompleteParams={getAutoCompleteParams}
@@ -113,7 +119,7 @@ const TableWrapper = ({
       >
         {children}
       </MainTable>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -123,8 +129,11 @@ TableWrapper.propTypes = {
   fetchItems: PropTypes.func.isRequired,
   metadata: PropTypes.shape({
     total: PropTypes.number,
-    subtotal: PropTypes.number,
     page: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string, // The API can sometimes return strings
+    ]),
+    subtotal: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string, // The API can sometimes return strings
     ]),

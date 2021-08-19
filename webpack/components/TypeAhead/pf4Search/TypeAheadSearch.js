@@ -11,11 +11,12 @@ import commonSearchPropTypes from '../helpers/commonPropTypes';
 const TypeAheadSearch = ({
   userInputValue, clearSearch, getInputProps, getItemProps, isOpen, inputValue, highlightedIndex,
   selectedItem, selectItem, openMenu, onSearch, items, activeItems, shouldShowItems,
-  autoSearchEnabled,
+  autoSearchEnabled, isDisabled,
 }) => (
   <React.Fragment>
     <InputGroup>
       <TypeAheadInput
+        isDisabled={isDisabled}
         onKeyPress={
           (e) => {
             keyPressHandler(
@@ -51,15 +52,20 @@ const TypeAheadSearch = ({
     <TypeAheadItems
       isOpen={shouldShowItems}
       {...{
-      items, highlightedIndex, selectedItem, getItemProps, activeItems,
-    }}
+        items, highlightedIndex, selectedItem, getItemProps, activeItems,
+      }}
     />
   </React.Fragment>
 );
 
 TypeAheadSearch.propTypes = {
+  isDisabled: PropTypes.bool,
   autoSearchEnabled: PropTypes.bool.isRequired,
   ...commonSearchPropTypes,
+};
+
+TypeAheadSearch.defaultProps = {
+  isDisabled: undefined,
 };
 
 export default TypeAheadSearch;

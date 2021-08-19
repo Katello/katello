@@ -18,6 +18,7 @@ import {
   cvAddComponentKey,
   cvRemoveComponentKey,
   CREATE_CONTENT_VIEW_FILTER_KEY,
+  RPM_MATCHING_CONTENT,
 } from '../ContentViewsConstants';
 import { pollTaskKey } from '../../Tasks/helpers';
 
@@ -86,6 +87,12 @@ export const selectCVFilterRules = (state, filterId) =>
 
 export const selectCVFilterRulesStatus = (state, filterId) =>
   selectAPIStatus(state, cvFilterRulesKey(filterId)) || STATUS.PENDING;
+
+export const selectRPMMatchContent = state =>
+  selectAPIResponse(state, RPM_MATCHING_CONTENT);
+
+export const selectRPMMatchContentStatus = state =>
+  selectAPIStatus(state, RPM_MATCHING_CONTENT) || STATUS.PENDING;
 
 export const selectCVComponents = (state, cvId) =>
   selectAPIResponse(state, cvDetailsComponentKey(cvId)) || {};

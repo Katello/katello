@@ -2,6 +2,7 @@ import { API_OPERATIONS, APIActions, get, put, post } from 'foremanReact/redux/A
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
+  RPM_MATCHING_CONTENT,
   UPDATE_CONTENT_VIEW,
   UPDATE_CONTENT_VIEW_FAILURE,
   UPDATE_CONTENT_VIEW_SUCCESS,
@@ -48,6 +49,15 @@ const cvUpdateSuccess = (response, dispatch) => {
     message: __(' Content view updated'),
   }));
 };
+
+export const getRPMMatchingContent = params => get({
+  type: API_OPERATIONS.GET,
+  key: RPM_MATCHING_CONTENT,
+  url: api.getApiUrl('/packages'),
+  params,
+  errorToast: error => __(`Something went wrong while fetching matching content! ${getResponseErrorMsgs(error.response)}`),
+});
+
 
 export const updateContentView = (cvId, params) => dispatch => dispatch(put({
   type: API_OPERATIONS.PUT,
