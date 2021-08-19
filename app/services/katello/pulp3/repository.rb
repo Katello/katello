@@ -163,7 +163,7 @@ module Katello
 
       def create(force = false)
         if force || !repository_reference
-          response = api.repositories_api.create(create_options)
+          response = api.repositories_api.create(name: generate_backend_object_name)
           RepositoryReference.where(
             root_repository_id: repo.root_id,
             content_view_id: repo.content_view.id).destroy_all
