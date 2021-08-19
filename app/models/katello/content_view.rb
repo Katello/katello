@@ -270,7 +270,7 @@ module Katello
 
     def last_task
       last_task_id = history.order(:created_at)&.last&.task_id
-      last_task_id ? ForemanTasks::Task.find(last_task_id) : nil
+      last_task_id ? ForemanTasks::Task.find_by(id: last_task_id) : nil
     end
 
     def history
