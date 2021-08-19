@@ -7,6 +7,7 @@ module Katello
     def models
       @content_view = katello_content_views(:library_view)
       @filter = katello_content_view_filters(:simple_filter)
+      @package_group_filter = katello_content_view_filters(:populated_package_group_filter)
     end
 
     def permissions
@@ -168,6 +169,19 @@ module Katello
       assert_response :success
       assert_template 'api/v2/common/update'
       assert @filter.reload.original_module_streams
+    end
+
+    def test_add_rules_bulk
+      mammals_pg = katello_package_groups(:mammals_pg)
+      put :add_filter_rules, params: { :id => @package_group_filter, :rules_params => [{uuid: mammals_pg.pulp_id}]}
+      assert_response :success
+    end
+
+    def test_remove_rules_bulk
+      rules = @package_group_filter.package_group_rules.pluck(:id)
+      put :remove_filter_rules, params: { :id => @package_group_filter, :rule_ids => rules}
+      assert_response :success
+      assert_equal @package_group_filter.package_group_rules, []
     end
 
     def test_destroy

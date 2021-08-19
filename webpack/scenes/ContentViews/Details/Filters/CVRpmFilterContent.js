@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
-import { Tabs, Tab, TabTitleText, Split, SplitItem, Button } from '@patternfly/react-core';
+import { Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import onSelect from '../../../../components/Table/helpers';
@@ -12,11 +12,12 @@ import {
   selectCVFilterRules,
   selectCVFilterRulesStatus,
 } from '../ContentViewDetailSelectors';
-import { getCVFilterRules } from '../ContentViewDetailActions';
+import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
 import CVRpmMatchContentModal from './MatchContentModal/CVRpmMatchContentModal';
 import AddPackageRuleModal from './Rules/Package/AddPackageRuleModal';
 
 const CVRpmFilterContent = ({ filterId, inclusion }) => {
+  const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
   const status = useSelector(state => selectCVFilterRulesStatus(state, filterId), shallowEqual);
   const loading = status === STATUS.PENDING;
@@ -26,6 +27,10 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const [filterRuleId, setFilterRuleId] = useState(undefined);
+  const [bulkActionOpen, setBulkActionOpen] = useState(false);
+  const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
+  const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
+  const hasSelected = rows.some(({ selected }) => selected);
 
   const [showMatchContent, setShowMatchContent] = useState(false);
   const onClose = () => setShowMatchContent(false);
@@ -85,6 +90,13 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
 
   const actionResolver = () => [
     {
+      title: __('Remove'),
+      onClick: (_event, _rowId, { id }) => {
+        dispatch(removeCVFilterRule(filterId, id, () =>
+          dispatch(getCVFilterRules(filterId))));
+      },
+    },
+    {
       title: __('View matching content'),
       onClick: (_event, _rowId, { id }) => {
         setFilterRuleId(id);
@@ -92,6 +104,15 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
       },
     },
   ];
+
+  const bulkRemove = () => {
+    setBulkActionOpen(false);
+    const rpmFilterIds =
+      rows.filter(row => row.selected).map(selected => selected.id);
+    dispatch(deleteContentViewFilterRules(filterId, rpmFilterIds, () =>
+      dispatch(getCVFilterRules(filterId))));
+    deselectAll();
+  };
 
   return (
     <Tabs activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
@@ -131,6 +152,18 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
                       {__('Add RPM rule')}
                     </Button>
                   </SplitItem>
+                  <SplitItem>
+                    <Dropdown
+                      toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                      isOpen={bulkActionOpen}
+                      isPlain
+                      dropdownItems={[
+                        <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
+                          {__('Remove')}
+                        </DropdownItem>]
+                      }
+                    />
+                  </SplitItem>
                 </Split>
                 {addRpmRuleModalOpen &&
                   <AddPackageRuleModal
@@ -138,8 +171,7 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
                     setIsOpen={setAddRpmRuleModalOpen}
                     aria-label="add_package_filter_rule_modal"
                   />}
-              </>
-            }
+              </>}
           />
         </div>
       </Tab>

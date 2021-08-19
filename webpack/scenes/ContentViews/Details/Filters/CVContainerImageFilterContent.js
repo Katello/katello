@@ -23,7 +23,7 @@ import {
   selectCVFilterRules,
   selectCVFilterRulesStatus,
 } from '../ContentViewDetailSelectors';
-import { getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
+import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
 import AddEditContainerTagRuleModal from './Rules/ContainerTag/AddEditContainerTagRuleModal';
 
 const emptyContentTitle = __('No rules have been added to this filter.');
@@ -58,7 +58,10 @@ const CVContainerImageFilterContent = ({ filterId }) => {
 
   const bulkRemove = () => {
     setBulkActionOpen(false);
-    // Enter API here
+    const tagFilterIds =
+      rows.filter(row => row.selected).map(selected => selected.id);
+    dispatch(deleteContentViewFilterRules(filterId, tagFilterIds, () =>
+      dispatch(getCVFilterRules(filterId))));
     deselectAll();
   };
 
