@@ -138,6 +138,38 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect(repo.upstream_password).toBe('autofilled');
     });
 
+    it('should clear out auth fields on save if blank', function() {
+      var repo = new Repository({
+        upstream_username: '',
+        upstream_password: '',
+        ansible_collection_auth_url: '',
+        ansible_collection_auth_token: '',
+      })
+
+      $scope.save(repo, true);
+
+      expect(repo.upstream_username).toBe(null);
+      expect(repo.upstream_password).toBe(null);
+      expect(repo.ansible_collection_auth_token).toBe(null);
+      expect(repo.ansible_collection_auth_url).toBe(null);
+    });
+
+  it('should not clear out auth fields on save if not blank', function() {
+    var repo = new Repository({
+      upstream_username: 'upstream',
+      upstream_password: 'passwd',
+      ansible_collection_auth_url: 'https://url.com',
+      ansible_collection_auth_token: 'some_token',
+    })
+
+    $scope.save(repo, true);
+
+    expect(repo.upstream_username).not.toBe(null);
+    expect(repo.upstream_password).not.toBe(null);
+    expect(repo.ansible_collection_auth_token).not.toBe(null);
+    expect(repo.ansible_collection_auth_url).not.toBe(null);
+  });
+
     it('should fail to save the repository', function() {
         spyOn(Notification, 'setErrorMessage');
 
