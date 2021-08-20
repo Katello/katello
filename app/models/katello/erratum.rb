@@ -106,7 +106,7 @@ module Katello
       query_clauses = clauses.map do |clause|
         "(#{clause.to_sql})"
       end
-      statement = query_clauses.join(" OR ")
+      statement = query_clauses.join(" AND ")
 
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
           where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
@@ -117,7 +117,7 @@ module Katello
       query_clauses = clauses.map do |clause|
         "(#{clause.to_sql})"
       end
-      statement = query_clauses.join(" OR ")
+      statement = query_clauses.join(" AND ")
       ModuleStream.where(:id => ModuleStreamErratumPackage.joins(:erratum_package => {:erratum => :repository_errata}).
           where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
           where(statement).select("#{ModuleStreamErratumPackage.table_name}.module_stream_id"))
