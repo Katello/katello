@@ -15,6 +15,7 @@ module Katello
       delegate :dig, :to => :task_group_data
 
       attr_accessor :href
+      attr_reader :pulp_data
 
       # A call report Looks like:  {"task":"/pulp/api/v3/tasks/5/"}
       #{
