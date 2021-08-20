@@ -37,7 +37,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             $scope.errataActionFormValues = {
                 authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
                 errata: IncrementalUpdate.getErrataIds().join(','),
-                hostIds: IncrementalUpdate.getBulkContentHosts().included.ids.join(','),
+                bulkHostIds: angular.toJson({ included: { ids: IncrementalUpdate.getBulkContentHosts().included.ids }}),
                 customize: false
             };
 
