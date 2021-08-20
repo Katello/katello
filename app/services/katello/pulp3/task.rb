@@ -38,6 +38,7 @@ module Katello
 
       #needed for serialization in dynflow
 
+      attr_reader :pulp_data
       delegate :[], :key?, :dig, :to_hash, :to => :task_data
 
       def initialize(smart_proxy, data)
@@ -83,7 +84,7 @@ module Katello
       end
 
       def done?
-        task_data[:finish_time] || FINISHED_STATES.include?(task_data[:state])
+        task_data[:finished_at] || FINISHED_STATES.include?(task_data[:state])
       end
 
       def progress_reports
@@ -100,7 +101,7 @@ module Katello
       end
 
       def started?
-        task_data[:start_time]
+        task_data[:started_at]
       end
 
       def error
