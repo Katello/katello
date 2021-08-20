@@ -20,10 +20,16 @@ module Actions
             _("checking Pulp task status")
           end
         when :suspended
-          if combined_tasks.any?(&:started?)
-            _("waiting for Pulp to finish the task")
+          started_task = combined_tasks.find { |task| task&.started? && !task&.done? }&.pulp_data
+          if started_task
+            name = started_task[:name] || started_task[:description]
+            label = get_task_label(name, started_task[:pulp_href])
+            _("waiting for Pulp to finish the task %s" % label)
           else
-            _("waiting for Pulp to start the task")
+            pending_task = combined_tasks.find { |task| !task&.started? }&.pulp_data
+            name = pending_task[:name] || pending_task[:description]
+            label = get_task_label(name, pending_task[:pulp_href])
+            _("waiting for Pulp to start the task %s" % label) if pending_task
           end
         else
           super
@@ -132,6 +138,13 @@ module Actions
         add_task_groups
         check_for_errors
         pulp_tasks
+      end
+
+      def get_task_label(name, href)
+        name = name.split('.').last if name
+        href = href.split('-').last[0...-1] if href
+        label = "%s (ID: %s)" % [name, href]
+        label
       end
     end
   end
