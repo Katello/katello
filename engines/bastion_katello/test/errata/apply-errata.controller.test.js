@@ -96,7 +96,7 @@ describe('Controller: ApplyErrataController', function() {
         expect($scope.errataActionFormValues).toEqual({
             authenticityToken: 'secret_token',
             errata: '2',
-            hostIds: '1,2,3',
+            bulkHostIds: angular.toJson({ included: { ids: [1, 2, 3] }}),
             customize: false
         });
     });
@@ -128,7 +128,7 @@ describe('Controller: ApplyErrataController', function() {
             spyOn(HostBulkAction, 'availableIncrementalUpdates').and.callFake(function (params, success) {
                 success(updates);
             });
-            
+
             $controller('ApplyErrataController', dependencies);
 
             expect(HostBulkAction.availableIncrementalUpdates).toHaveBeenCalledWith($scope.selectedContentHosts,
