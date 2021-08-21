@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { Pagination, Flex, FlexItem } from '@patternfly/react-core';
+import { Pagination, PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
 
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
@@ -77,6 +77,26 @@ const TableWrapper = ({
     updatePagination(updatedPagination);
   };
 
+  const PageControls = ({ variant }) => (
+    <FlexItem align={{ default: 'alignRight' }}>
+      <Pagination
+        key={variant}
+        itemCount={total}
+        page={page}
+        perPage={perPage}
+        isCompact={variant === PaginationVariant.top}
+        onSetPage={(_evt, updated) => onPaginationUpdate({ page: updated })}
+        onPerPageSelect={(_evt, updated) => onPaginationUpdate({ per_page: updated })}
+        perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
+        variant={variant}
+      />
+    </FlexItem>
+  );
+
+  PageControls.propTypes = {
+    variant: PropTypes.string.isRequired,
+  };
+
   const rowsCount = metadata?.subtotal ?? 0;
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
   const unresolvedStatusOrNoRows = unresolvedStatus || rowsCount === 0;
@@ -98,17 +118,7 @@ const TableWrapper = ({
             {children}
           </FlexItem>
         }
-        <FlexItem align={{ default: 'alignRight' }}>
-          <Pagination
-            itemCount={total}
-            page={page}
-            perPage={perPage}
-            onSetPage={(_evt, updated) => onPaginationUpdate({ page: updated })}
-            onPerPageSelect={(_evt, updated) => onPaginationUpdate({ per_page: updated })}
-            perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
-            variant="top"
-          />
-        </FlexItem>
+        <PageControls variant={PaginationVariant.top} />
       </Flex>
       <MainTable
         searchIsActive={!!searchQuery}
@@ -119,6 +129,9 @@ const TableWrapper = ({
       >
         {children}
       </MainTable>
+      <Flex>
+        <PageControls variant={PaginationVariant.bottom} />
+      </Flex>
     </>
   );
 };
