@@ -97,6 +97,48 @@ describe('Controller: NewRepositoryController', function() {
         expect($scope.repositoryForm['name'].$error.messages).toBeDefined();
     });
 
+    it('should clear out auth fields on save if blank', function() {
+        var repo = $scope.repository;
+        repo.upstream_username = '';
+        repo.upstream_password = '';
+        repo.ansible_collection_auth_url = '';
+        repo.ansible_collection_auth_token = '';
+        expect(repo.upstream_username).not.toBe(null);
+        expect(repo.upstream_password).not.toBe(null);
+        expect(repo.ansible_collection_auth_token).not.toBe(null);
+        expect(repo.ansible_collection_auth_url).not.toBe(null);
+        spyOn($scope, 'transitionTo');
+        spyOn(repo, '$save').and.callThrough();
+        spyOn(Notification, "setSuccessMessage");
+        $scope.save(repo);
+        expect(repo.$save).toHaveBeenCalled();
+        expect(repo.upstream_username).toBe(null);
+        expect(repo.upstream_password).toBe(null);
+        expect(repo.ansible_collection_auth_token).toBe(null);
+        expect(repo.ansible_collection_auth_url).toBe(null);
+    });
+
+    it('should not clear out auth fields on save if not blank', function() {
+        var repo = $scope.repository;
+        repo.upstream_username = 'upstream';
+        repo.upstream_password = 'passwd';
+        repo.ansible_collection_auth_url = 'https://url.com';
+        repo.ansible_collection_auth_token = 'some_token';
+        expect(repo.upstream_username).not.toBe(null);
+        expect(repo.upstream_password).not.toBe(null);
+        expect(repo.ansible_collection_auth_token).not.toBe(null);
+        expect(repo.ansible_collection_auth_url).not.toBe(null);
+        spyOn($scope, 'transitionTo');
+        spyOn(repo, '$save').and.callThrough();
+        spyOn(Notification, "setSuccessMessage");
+        $scope.save(repo);
+        expect(repo.$save).toHaveBeenCalled();
+        expect(repo.upstream_username).not.toBe(null);
+        expect(repo.upstream_password).not.toBe(null);
+        expect(repo.ansible_collection_auth_token).not.toBe(null);
+        expect(repo.ansible_collection_auth_url).not.toBe(null);
+    });
+
     it('should fetch a label whenever the name changes', function() {
         spyOn(FormUtils, 'labelize');
 
