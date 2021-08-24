@@ -168,9 +168,11 @@ module Katello
 
     def self.get_tag_table_values(repo)
       # queries DockerTags for a repo and retuns a [schema1, schema2 , name] tuple combination
-      tags = ::Katello::DockerTag.where(:id => RepositoryDockerTag.
-                                        where(:repository_id => repo.id).
-                                        select(:docker_tag_id))
+      tags = ::Katello::DockerTag.uncached do
+        ::Katello::DockerTag.where(:id => RepositoryDockerTag.
+            where(:repository_id => repo.id).
+            select(:docker_tag_id))
+      end
       dups = tags.group_by(&:name)
 
       dups.map do |name, values|
