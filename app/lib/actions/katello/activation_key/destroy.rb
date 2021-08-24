@@ -6,7 +6,7 @@ module Actions
           skip_candlepin = options.fetch(:skip_candlepin, false)
           action_subject(activation_key)
 
-          plan_action(Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id) unless skip_candlepin
+          plan_action(Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id) if !skip_candlepin && activation_key.cp_id.present?
           plan_self
         end
 
