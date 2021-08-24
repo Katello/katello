@@ -70,12 +70,22 @@ module ::Actions::Katello::ActivationKey
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::ActivationKey::Destroy }
 
-    it 'plans' do
+    it 'does not plan with missing cp_id' do
       action = create_action(action_class)
       action.expects(:plan_self)
       action.expects(:action_subject).with(activation_key)
       plan_action(action, activation_key)
-      assert_action_planed(action, ::Actions::Candlepin::ActivationKey::Destroy)
+      refute_action_planed(action, ::Actions::Candlepin::ActivationKey::Destroy)
+      assert_nil(activation_key.cp_id)
+    end
+
+    it 'plans' do
+      action = create_action(action_class)
+      activation_key.update!(cp_id: 'something')
+      action.expects(:plan_self)
+      action.expects(:action_subject).with(activation_key)
+      plan_action(action, activation_key)
+      assert_action_planed_with(action, ::Actions::Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id)
     end
   end
 end
