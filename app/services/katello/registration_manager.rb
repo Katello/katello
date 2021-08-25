@@ -249,6 +249,8 @@ module Katello
       end
 
       def delete_agent_queue(host)
+        return unless ::Katello.with_katello_agent?
+
         queue_name = Katello::Agent::Dispatcher.host_queue_name(host)
         Katello::EventQueue.push_event(::Katello::Events::DeleteHostAgentQueue::EVENT_TYPE, host.id) do |attrs|
           attrs[:metadata] = { queue_name: queue_name }
