@@ -239,7 +239,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         };
 
         $scope.installTracerPackage = function(host) {
-            $location.url("/content_hosts/" + host.id + "/packages/actions?package_name=katello-host-tools-tracer");
+            if (host.isDebEnabled()) {
+                $location.url("/content_hosts/" + host.id + "/debs/actions?package_name=katello-host-tools-tracer");
+            } else {
+                $location.url("/content_hosts/" + host.id + "/packages/actions?package_name=katello-host-tools-tracer");
+            }
         };
     }]
 );
