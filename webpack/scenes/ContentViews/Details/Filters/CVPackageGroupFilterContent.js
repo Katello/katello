@@ -17,9 +17,11 @@ import {
 } from '../ContentViewDetailSelectors';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import getContentViewDetails, { addCVFilterRule, removeCVFilterRule, getCVFilterPackageGroups } from '../ContentViewDetailActions';
+import ContentViewRepositories from "../Repositories/ContentViewRepositories";
+import AffectedRepositoryTable from "./AffectedRepositories/AffectedRepositoryTable";
 
 
-const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
+const CVPackageGroupFilterContent = ({ cvId, filterId, repositories }) => {
   const dispatch = useDispatch();
   const { results: filterResults } =
     useSelector(state => selectCVFilters(state, cvId), shallowEqual);
@@ -190,6 +192,11 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
           </TableWrapper>
         </div>
       </Tab>
+      {repositories.length && <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <div className="tab-body-with-spacing">
+          <AffectedRepositoryTable cvId={cvId}/>
+        </div>
+      </Tab>}
     </Tabs>
   );
 };

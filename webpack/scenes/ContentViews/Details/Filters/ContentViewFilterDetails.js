@@ -13,6 +13,7 @@ import { getCVFilterDetails, getContentViewFilters } from '../ContentViewDetailA
 import useUrlParamsWithHash from '../../../../utils/useUrlParams';
 import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
 import CVFilterDetailType from './CVFilterDetailType';
+import Loading from "../../../../components/Loading";
 
 const ContentViewFilterDetails = () => {
   const { id: cvId } = useParams();
@@ -33,16 +34,16 @@ const ContentViewFilterDetails = () => {
     if (loaded) setDetails(response);
   }, [response, loaded]);
 
-  const { type, inclusion } = details;
+  const { type, repositories, inclusion } = details;
 
   return (
     <Grid hasGutter>
       {loaded && (Object.keys(details).length > 0) ?
-        <ContentViewFilterDetailsHeader details={details} /> :
-        <div>Loading...</div>
+        <ContentViewFilterDetailsHeader cvId={cvId} filterId={filterId} details={details} /> :
+        <Loading/>
       }
       <GridItem span={12}>
-        <CVFilterDetailType cvId={cvId} filterId={filterId} inclusion={inclusion} type={type} />
+        <CVFilterDetailType cvId={cvId} filterId={filterId} inclusion={inclusion} type={type} repositories={repositories}/>
       </GridItem>
     </Grid>
   );

@@ -74,7 +74,7 @@ const ContentViewDetails = ({ match }) => {
               {name || <Skeleton />}
             </BreadcrumbItem>
           </Breadcrumb>
-          <GridItem span={8}>
+          <GridItem span={9}>
             <Flex>
               <FlexItem>
                 <TextContent>
@@ -86,7 +86,7 @@ const ContentViewDetails = ({ match }) => {
               </FlexItem>
             </Flex>
           </GridItem>
-          <GridItem span={4}>
+          <GridItem span={3}>
             <Flex>
               <FlexItem>
                 <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
