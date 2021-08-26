@@ -13,30 +13,30 @@ module Katello
       end
 
       # Package type is now an integer:
-      # 1. default
-      # 2. optional
-      # 3. conditional
-      # 4. mandatory
-      # 5. unknown
+      # 0. default
+      # 1. optional
+      # 2. conditional
+      # 3. mandatory
+      # 4. unknown
       # https://github.com/rpm-software-management/libcomps/blob/01a4759894cccff64d2561614a58281adf5ce859/libcomps/src/comps_docpackage.h#L36
       def default_package_names
-        package_names_of_type(1)
+        package_names_of_type(0)
       end
 
       def optional_package_names
-        package_names_of_type(2)
+        package_names_of_type(1)
       end
 
       def conditional_package_names
-        package_names_of_type(3)
+        package_names_of_type(2)
       end
 
       def mandatory_package_names
-        package_names_of_type(4)
+        package_names_of_type(3)
       end
 
       def unknown_package_names
-        package_names_of_type(5)
+        package_names_of_type(4)
       end
 
       def package_names_of_type(type)
