@@ -9,7 +9,7 @@ module Actions
         def invoke_external_task
           repo = ::Katello::Repository.find(input[:repo_id])
           ::Katello::RepositoryTypeManager.find(repo.content_type).content_types.map do |type|
-            ::SmartProxy.find(input[:smart_proxy_id]).content_service(type).remove(repo)
+            ::SmartProxy.unscoped.find(input[:smart_proxy_id]).content_service(type).remove(repo)
           end
         end
       end
