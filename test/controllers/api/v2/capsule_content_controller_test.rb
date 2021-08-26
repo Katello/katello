@@ -9,6 +9,8 @@ module Katello
 
     def setup
       setup_controller_defaults_api
+      @repository = katello_repositories(:fedora_17_unpublished)
+      @library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
     end
 
     def allowed_perms
@@ -80,6 +82,26 @@ module Katello
       end
 
       post :sync, params: { :id => proxy_with_pulp.id, :environment_id => environment.id }
+      assert_response :success
+    end
+
+    def test_sync_with_repo
+      assert_async_task ::Actions::Katello::CapsuleContent::Sync do |capsule, options|
+        assert_equal proxy_with_pulp.id, capsule.id
+        options[:repository_id].must_equal @repository.id
+      end
+
+      post :sync, params: { :id => proxy_with_pulp.id, :repository_id => @repository.id }
+      assert_response :success
+    end
+
+    def test_sync_with_cv
+      assert_async_task ::Actions::Katello::CapsuleContent::Sync do |capsule, options|
+        assert_equal proxy_with_pulp.id, capsule.id
+        options[:content_view_id].must_equal @library_dev_view.id
+      end
+
+      post :sync, params: { :id => proxy_with_pulp.id, :content_view_id => @library_dev_view.id }
       assert_response :success
     end
 
