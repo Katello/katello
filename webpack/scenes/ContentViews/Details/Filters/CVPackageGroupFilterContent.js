@@ -164,30 +164,31 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
             autocompleteEndpoint={`/package_groups/auto_complete_search?filterid=${filterId}`}
             fetchItems={useCallback(params =>
               getCVFilterPackageGroups(cvId, filterId, params), [cvId, filterId])}
-          >
-            <Split hasGutter>
-              <SplitItem>
-                <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
-                  {__('Add filter rule')}
-                </Button>
-              </SplitItem>
-              <SplitItem>
-                <Dropdown
-                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                  isOpen={bulkActionOpen}
-                  isPlain
-                  dropdownItems={[
-                    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={bulkAdd}>
-                      {__('Add')}
-                    </DropdownItem>,
-                    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
-                      {__('Remove')}
-                    </DropdownItem>]
+            actionButtons={
+              <Split hasGutter>
+                <SplitItem>
+                  <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
+                    {__('Add filter rule')}
+                  </Button>
+                </SplitItem>
+                <SplitItem>
+                  <Dropdown
+                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                    isOpen={bulkActionOpen}
+                    isPlain
+                    dropdownItems={[
+                      <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={bulkAdd}>
+                        {__('Add')}
+                      </DropdownItem>,
+                      <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
+                        {__('Remove')}
+                      </DropdownItem>]
                   }
-                />
-              </SplitItem>
-            </Split>
-          </TableWrapper>
+                  />
+                </SplitItem>
+              </Split>
+            }
+          />
         </div>
       </Tab>
     </Tabs>

@@ -166,28 +166,26 @@ const ContentViewTable = () => {
       canSelectAll={false}
       cells={columns}
       autocompleteEndpoint="/content_views/auto_complete_search"
-    >
-      <>
-        <Button onClick={openForm} variant="primary" aria-label="create_content_view">
-          Create content view
-        </Button>
-        <CreateContentViewModal show={isModalOpen} setIsOpen={setIsModalOpen} aria-label="create_content_view_modal" />
-      </>
-      <>
-        <CopyContentViewModal cvId={actionableCvId} cvName={actionableCvName} show={copy} setIsOpen={setCopy} aria-label="copy_content_view_modal" />
-      </>
-      {isPublishModalOpen &&
+      actionButtons={
         <>
-          <PublishContentViewWizard
-            details={actionableCvDetails}
-            show={isPublishModalOpen}
-            setIsOpen={setIsPublishModalOpen}
-            currentStep={currentStep}
-            setCurrentStep={setCurrentStep}
-            aria-label="publish_content_view_modal"
-          />
-        </>}
-    </TableWrapper>
+          <Button onClick={openForm} variant="primary" aria-label="create_content_view">
+            {__('Create content view')}
+          </Button>
+          <CreateContentViewModal show={isModalOpen} setIsOpen={setIsModalOpen} aria-label="create_content_view_modal" />
+          <CopyContentViewModal cvId={actionableCvId} cvName={actionableCvName} show={copy} setIsOpen={setCopy} aria-label="copy_content_view_modal" />
+          {isPublishModalOpen &&
+            <PublishContentViewWizard
+              details={actionableCvDetails}
+              show={isPublishModalOpen}
+              setIsOpen={setIsPublishModalOpen}
+              currentStep={currentStep}
+              setCurrentStep={setCurrentStep}
+              aria-label="publish_content_view_modal"
+            />
+          }
+        </>
+      }
+    />
   );
 };
 

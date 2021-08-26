@@ -4,7 +4,7 @@ import { ControlLabel } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TypeAhead from '../TypeAhead';
-import api from '../../services/api';
+import api, { foremanApi } from '../../services/api';
 import { stringIncludes } from './helpers';
 import {
   AUTOSEARCH_DELAY,
@@ -39,9 +39,14 @@ class Search extends Component {
     ];
 
     if (autoCompleteParams[0] !== '') {
-      const { data } = await api.get(...autoCompleteParams);
+      let data;
+      if (this.props.foremanApiAutoComplete) {
+        data = await foremanApi.get(...autoCompleteParams);
+      } else {
+        data = await api.get(...autoCompleteParams);
+      }
       this.setState({
-        items: data.filter(({ error }) => !error).map(({ label }) => ({
+        items: data?.data?.filter(({ error }) => !error).map(({ label }) => ({
           text: label.trim(),
         })),
       });
@@ -67,7 +72,6 @@ class Search extends Component {
       typingTimeout: setTimeout(() => this.onSearch(searchTerm), autoSearchDelay),
     });
   }
-
   render() {
     const { initialInputValue, patternfly4, settings: { autoSearchEnabled } } = this.props;
     return (
@@ -103,6 +107,7 @@ Search.propTypes = {
       }
   */
   getAutoCompleteParams: PropTypes.func.isRequired,
+  foremanApiAutoComplete: PropTypes.bool,
   loadSetting: PropTypes.func.isRequired,
   updateSearchQuery: PropTypes.func,
   initialInputValue: PropTypes.string,
@@ -116,6 +121,7 @@ Search.propTypes = {
 
 Search.defaultProps = {
   updateSearchQuery: undefined,
+  foremanApiAutoComplete: false,
   initialInputValue: '',
   patternfly4: false,
   settings: {

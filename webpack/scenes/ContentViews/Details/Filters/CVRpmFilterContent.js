@@ -116,29 +116,31 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
             variant={TableVariant.compact}
             autocompleteEndpoint={`/content_view_filters/${filterId}/rules/auto_complete_search`}
             fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
-          >
-            {showMatchContent &&
-              <CVRpmMatchContentModal
-                key={`${filterId}-${filterRuleId}`}
-                filterRuleId={filterRuleId}
-                filterId={filterId}
-                onClose={onClose}
-              />}
-            <Split hasGutter>
-              <SplitItem>
-                <Button onClick={openAddRpmRuleModal} variant="secondary" aria-label="create_rpm_rule">
-                  {__('Add RPM rule')}
-                </Button>
-              </SplitItem>
-            </Split>
-            {addRpmRuleModalOpen &&
-            <AddPackageRuleModal
-              filterId={filterId}
-              setIsOpen={setAddRpmRuleModalOpen}
-              aria-label="add_package_filter_rule_modal"
-            />
+            actionButtons={
+              <>
+                {showMatchContent &&
+                  <CVRpmMatchContentModal
+                    key={`${filterId}-${filterRuleId}`}
+                    filterRuleId={filterRuleId}
+                    filterId={filterId}
+                    onClose={onClose}
+                  />}
+                <Split hasGutter>
+                  <SplitItem>
+                    <Button onClick={openAddRpmRuleModal} variant="secondary" aria-label="create_rpm_rule">
+                      {__('Add RPM rule')}
+                    </Button>
+                  </SplitItem>
+                </Split>
+                {addRpmRuleModalOpen &&
+                  <AddPackageRuleModal
+                    filterId={filterId}
+                    setIsOpen={setAddRpmRuleModalOpen}
+                    aria-label="add_package_filter_rule_modal"
+                  />}
+              </>
             }
-          </TableWrapper>
+          />
         </div>
       </Tab>
     </Tabs>

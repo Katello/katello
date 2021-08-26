@@ -312,7 +312,7 @@ test('No results message is shown for empty search', async (done) => {
   const query = `name = \"${cvname}\"`;
   const matchQuery = actualParams => actualParams?.search?.includes(cvname);
   const emptyResults = {
-    total: 1, subtotal: 1, page: 1, per_page: 20, search: query, results: [],
+    total: 0, subtotal: 0, page: 1, per_page: 20, search: query, results: [],
   };
 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);

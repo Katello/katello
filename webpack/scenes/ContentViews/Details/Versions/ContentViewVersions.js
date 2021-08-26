@@ -185,16 +185,16 @@ const ContentViewVersions = ({ cvId }) => {
       autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
       fetchItems={useCallback(params => getContentViewVersions(cvId, params), [cvId])}
       additionalListeners={[pollingFinished]}
-    >
-      {promoting && <ContentViewVersionPromote
+      actionButtons={promoting && <ContentViewVersionPromote
         cvId={cvId}
         versionIdToPromote={versionIdToPromote}
         versionNameToPromote={versionNameToPromote}
         versionEnvironments={versionEnvironments}
         setIsOpen={setPromoting}
         aria-label="promote_content_view_modal"
-      />}
-    </TableWrapper>);
+      />
+      }
+    />);
 };
 
 ContentViewVersions.propTypes = {

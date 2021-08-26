@@ -130,35 +130,37 @@ const ContentViewFilters = ({ cvId }) => {
       variant={TableVariant.compact}
       autocompleteEndpoint="/content_view_filters/auto_complete_search"
       fetchItems={useCallback(params => getContentViewFilters(cvId, params), [cvId])}
-    >
-      <Split hasGutter>
-        <SplitItem>
-          <Button onClick={openAddModal} variant="secondary" aria-label="create_filter">
-            {__('Create filter')}
-          </Button>
-        </SplitItem>
-        <SplitItem>
-          <Dropdown
-            toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-            isOpen={bulkActionOpen}
-            isPlain
-            dropdownItems={[
-              <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={bulkRemove}>
-                {__('Remove')}
-              </DropdownItem>]
+      actionButtons={
+        <>
+          <Split hasGutter>
+            <SplitItem>
+              <Button onClick={openAddModal} variant="secondary" aria-label="create_filter">
+                {__('Create filter')}
+              </Button>
+            </SplitItem>
+            <SplitItem>
+              <Dropdown
+                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                isOpen={bulkActionOpen}
+                isPlain
+                dropdownItems={[
+                  <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={bulkRemove}>
+                    {__('Remove')}
+                  </DropdownItem>]
             }
-          />
-        </SplitItem>
-      </Split>
-      {addModalOpen &&
-        <CVFilterAddModal
-          cvId={cvId}
-          show={addModalOpen}
-          setIsOpen={setAddModalOpen}
-          aria-label="add_filter_modal"
-        />
+              />
+            </SplitItem>
+          </Split>
+          {addModalOpen &&
+          <CVFilterAddModal
+            cvId={cvId}
+            show={addModalOpen}
+            setIsOpen={setAddModalOpen}
+            aria-label="add_filter_modal"
+          />}
+        </>
       }
-    </TableWrapper>);
+    />);
 };
 
 

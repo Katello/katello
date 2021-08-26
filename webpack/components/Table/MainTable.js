@@ -5,7 +5,6 @@ import {
   TableBody,
   TableComposable,
 } from '@patternfly/react-table';
-import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 
@@ -15,14 +14,10 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
-  composable, rowsCount, children, ...extraTableProps
+  actionButtons, rowsCount, children, ...extraTableProps
 }) => {
-  if (!composable && (!cells || !rows)) {
-    console.error(__('The <MainTable> component requires either a composable prop, or cells & rows props.')); // eslint-disable-line no-console
-  }
-
   const tableHasNoRows = () => {
-    if (composable) return rowsCount === 0;
+    if (children) return rowsCount === 0;
     return rows.length === 0;
   };
   const isFiltering = activeFilters || searchIsActive;
@@ -41,7 +36,7 @@ const MainTable = ({
   }
 
   const tableProps = { cells, rows, ...extraTableProps };
-  if (composable) {
+  if (children) {
     return (
       <TableComposable
         aria-label="Content View Table"
@@ -80,7 +75,7 @@ MainTable.propTypes = {
   emptySearchBody: PropTypes.string.isRequired,
   searchIsActive: PropTypes.bool,
   activeFilters: PropTypes.bool,
-  composable: PropTypes.bool,
+  actionButtons: PropTypes.bool,
   rowsCount: PropTypes.number,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -92,7 +87,7 @@ MainTable.defaultProps = {
   error: null,
   searchIsActive: false,
   activeFilters: false,
-  composable: false,
+  actionButtons: false,
   children: null,
   cells: undefined,
   rows: undefined,

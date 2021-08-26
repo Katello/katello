@@ -14,15 +14,16 @@ import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
+  actionButtons,
   children,
   metadata,
   fetchItems,
   autocompleteEndpoint,
+  foremanApiAutoComplete,
   searchQuery,
   updateSearchQuery,
   additionalListeners,
   activeFilters,
-  composable,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -62,7 +63,6 @@ const TableWrapper = ({
     paginationParams,
     searchQuery,
     additionalListeners,
-    composable,
   ]);
 
   const getAutoCompleteParams = search => ({
@@ -72,7 +72,6 @@ const TableWrapper = ({
       search,
     },
   });
-
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
   };
@@ -111,19 +110,17 @@ const TableWrapper = ({
             patternfly4
             onSearch={search => updateSearchQuery(search)}
             getAutoCompleteParams={getAutoCompleteParams}
+            foremanApiAutoComplete={foremanApiAutoComplete}
           />
         </FlexItem>
-        {!composable &&
-          <FlexItem>
-            {children}
-          </FlexItem>
-        }
+        <FlexItem>
+          {actionButtons}
+        </FlexItem>
         <PageControls variant={PaginationVariant.top} />
       </Flex>
       <MainTable
         searchIsActive={!!searchQuery}
         activeFilters={activeFilters}
-        composable={composable}
         rowsCount={rowsCount}
         {...allTableProps}
       >
@@ -157,6 +154,8 @@ TableWrapper.propTypes = {
     search: PropTypes.string,
   }),
   autocompleteEndpoint: PropTypes.string.isRequired,
+  foremanApiAutoComplete: PropTypes.bool,
+  actionButtons: PropTypes.node,
   children: PropTypes.node,
   // additionalListeners are anything that can trigger another API call, e.g. a filter
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
@@ -165,7 +164,6 @@ TableWrapper.propTypes = {
     PropTypes.bool,
   ])),
   activeFilters: PropTypes.bool,
-  composable: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
@@ -173,7 +171,8 @@ TableWrapper.defaultProps = {
   children: null,
   additionalListeners: [],
   activeFilters: false,
-  composable: false,
+  foremanApiAutoComplete: false,
+  actionButtons: null,
 };
 
 export default TableWrapper;

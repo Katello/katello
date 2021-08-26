@@ -242,47 +242,48 @@ const ContentViewRepositories = ({ cvId }) => {
       autocompleteEndpoint="/repositories/auto_complete_search"
       fetchItems={useCallback(params => getCVReposWithOptions(params), [getCVReposWithOptions])}
       additionalListeners={[typeSelected, statusSelected]}
-    >
-      <Split hasGutter>
-        <SplitItem>
-          <SelectableDropdown
-            items={Object.keys(repoTypes)}
-            title="Type"
-            selected={typeSelected}
-            setSelected={setTypeSelected}
-            placeholderText="Type"
-            loading={repoTypesStatus === STATUS.PENDING}
-            error={repoTypesStatus === STATUS.ERROR}
-          />
-        </SplitItem>
-        <SplitItem>
-          <SelectableDropdown
-            items={[ADDED, NOT_ADDED, ALL_STATUSES]}
-            title="Status"
-            selected={statusSelected}
-            setSelected={setStatusSelected}
-            placeholderText="Status"
-          />
-        </SplitItem>
-        <SplitItem>
-          <ActionList>
-            <ActionListItem>
-              <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
-                Add repositories
-              </Button>
-            </ActionListItem>
-            <ActionListItem>
-              <Dropdown
-                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                isOpen={bulkActionOpen}
-                isPlain
-                dropdownItems={dropdownItems}
-              />
-            </ActionListItem>
-          </ActionList>
-        </SplitItem>
-      </Split>
-    </TableWrapper>
+      actionButtons={
+        <Split hasGutter>
+          <SplitItem>
+            <SelectableDropdown
+              items={Object.keys(repoTypes)}
+              title={__('Type')}
+              selected={typeSelected}
+              setSelected={setTypeSelected}
+              placeholderText={__('Type')}
+              loading={repoTypesStatus === STATUS.PENDING}
+              error={repoTypesStatus === STATUS.ERROR}
+            />
+          </SplitItem>
+          <SplitItem>
+            <SelectableDropdown
+              items={[ADDED, NOT_ADDED, ALL_STATUSES]}
+              title={__('Status')}
+              selected={statusSelected}
+              setSelected={setStatusSelected}
+              placeholderText={__('Status')}
+            />
+          </SplitItem>
+          <SplitItem>
+            <ActionList>
+              <ActionListItem>
+                <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
+                  __(Add repositories)
+                </Button>
+              </ActionListItem>
+              <ActionListItem>
+                <Dropdown
+                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                  isOpen={bulkActionOpen}
+                  isPlain
+                  dropdownItems={dropdownItems}
+                />
+              </ActionListItem>
+            </ActionList>
+          </SplitItem>
+        </Split>
+      }
+    />
   );
 };
 

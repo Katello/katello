@@ -1,5 +1,5 @@
 import nock from 'nock';
-import api from '../services/api';
+import api, { foremanApi } from '../services/api';
 
 // Using the library 'nock' as it matches actual network requests rather than mock another
 // library. This is helpful when the request is not coming from Katello. For example, axios
@@ -39,6 +39,18 @@ export const mockAutocomplete = (
   times = 1,
 ) => instance
   .get(api.getApiUrl(autoCompUrl))
+  .times(times)
+  .query(query) // can pass in function, see nock docs
+  .reply(200, response);
+
+export const mockForemanAutocomplete = (
+  instance,
+  autoCompUrl,
+  query = true,
+  response = [],
+  times = 1,
+) => instance
+  .get(foremanApi.getApiUrl(autoCompUrl))
   .times(times)
   .query(query) // can pass in function, see nock docs
   .reply(200, response);
