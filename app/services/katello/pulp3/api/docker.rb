@@ -8,14 +8,6 @@ module Katello
           PulpContainerClient::ApiError
         end
 
-        def self.client_module
-          PulpContainerClient
-        end
-
-        def self.remote_class
-          PulpContainerClient::ContainerContainerRemote
-        end
-
         def self.distribution_class
           PulpContainerClient::ContainerContainerDistribution
         end

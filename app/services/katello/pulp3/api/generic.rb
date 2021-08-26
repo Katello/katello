@@ -4,23 +4,8 @@ module Katello
   module Pulp3
     module Api
       class Generic < Core
-        attr_accessor :repository_type
-
-        def initialize(smart_proxy, repository_type)
-          @repository_type = repository_type
-          super(smart_proxy)
-        end
-
         def self.api_exception_class
           fail NotImplementedError
-        end
-
-        def self.client_module(repository_type)
-          repository_type.client_module_class
-        end
-
-        def self.remote_class(repository_type)
-          repository_type.remote_class
         end
 
         def self.distribution_class(repository_type)
