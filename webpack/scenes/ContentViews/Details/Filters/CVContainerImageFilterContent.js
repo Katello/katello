@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
@@ -16,25 +16,31 @@ import {
 } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
-
 import onSelect from '../../../../components/Table/helpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import {
+  selectCVFilterDetails,
   selectCVFilterRules,
   selectCVFilterRulesStatus,
 } from '../ContentViewDetailSelectors';
 import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
 import AddEditContainerTagRuleModal from './Rules/ContainerTag/AddEditContainerTagRuleModal';
+import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 
 const emptyContentTitle = __('No rules have been added to this filter.');
 const emptyContentBody = __("Add to this filter using the 'Add filter rule' button.");
 const emptySearchTitle = __('No matching filter rules found.');
 const emptySearchBody = __('Try changing your search settings.');
 
-const CVContainerImageFilterContent = ({ filterId }) => {
+const CVContainerImageFilterContent = ({
+  cvId, filterId, showAffectedRepos, setShowAffectedRepos,
+}) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
   const status = useSelector(state => selectCVFilterRulesStatus(state, filterId), shallowEqual);
+  const filterDetails = useSelector(state =>
+    selectCVFilterDetails(state, cvId, filterId), shallowEqual);
+  const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({ });
   const [searchQuery, updateSearchQuery] = useState('');
@@ -64,6 +70,14 @@ const CVContainerImageFilterContent = ({ filterId }) => {
       dispatch(getCVFilterRules(filterId))));
     deselectAll();
   };
+
+  useEffect(() => {
+    if (!repositories.length && showAffectedRepos) {
+      setActiveTabKey(1);
+    } else {
+      setActiveTabKey(0);
+    }
+  }, [showAffectedRepos, repositories.length]);
 
   useDeepCompareEffect(() => {
     const { results, ...meta } = response;
@@ -156,12 +170,28 @@ const CVContainerImageFilterContent = ({ filterId }) => {
           />
         </div>
       </Tab>
+      {(repositories.length || showAffectedRepos) &&
+      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <div className="tab-body-with-spacing">
+          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="docker" setShowAffectedRepos={setShowAffectedRepos} />
+        </div>
+      </Tab>
+      }
     </Tabs>
   );
 };
 
 CVContainerImageFilterContent.propTypes = {
-  filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  showAffectedRepos: PropTypes.bool,
+  setShowAffectedRepos: PropTypes.func,
 };
 
+CVContainerImageFilterContent.defaultProps = {
+  cvId: '',
+  filterId: '',
+  showAffectedRepos: false,
+  setShowAffectedRepos: () => {},
+};
 export default CVContainerImageFilterContent;

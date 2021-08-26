@@ -5,15 +5,31 @@ import CVRpmFilterContent from './CVRpmFilterContent';
 import CVContainerImageFilterContent from './CVContainerImageFilterContent';
 
 const CVFilterDetailType = ({
-  cvId, filterId, inclusion, type,
+  cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos,
 }) => {
   switch (type) {
     case 'docker':
-      return <CVContainerImageFilterContent filterId={filterId} />;
+      return (<CVContainerImageFilterContent
+        cvId={cvId}
+        filterId={filterId}
+        showAffectedRepos={showAffectedRepos}
+        setShowAffectedRepos={setShowAffectedRepos}
+      />);
     case 'package_group':
-      return <CVPackageGroupFilterContent cvId={cvId} filterId={filterId} />;
+      return (<CVPackageGroupFilterContent
+        cvId={cvId}
+        filterId={filterId}
+        showAffectedRepos={showAffectedRepos}
+        setShowAffectedRepos={setShowAffectedRepos}
+      />);
     case 'rpm':
-      return <CVRpmFilterContent filterId={filterId} inclusion={inclusion} />;
+      return (<CVRpmFilterContent
+        cvId={cvId}
+        filterId={filterId}
+        inclusion={inclusion}
+        showAffectedRepos={showAffectedRepos}
+        setShowAffectedRepos={setShowAffectedRepos}
+      />);
     default:
       return null;
   }
@@ -24,6 +40,8 @@ CVFilterDetailType.propTypes = {
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   inclusion: PropTypes.bool,
   type: PropTypes.string,
+  showAffectedRepos: PropTypes.bool.isRequired,
+  setShowAffectedRepos: PropTypes.func.isRequired,
 };
 
 CVFilterDetailType.defaultProps = {

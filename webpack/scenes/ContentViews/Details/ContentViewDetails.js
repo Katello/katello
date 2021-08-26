@@ -74,7 +74,7 @@ const ContentViewDetails = ({ match }) => {
               {name || <Skeleton />}
             </BreadcrumbItem>
           </Breadcrumb>
-          <GridItem span={8}>
+          <GridItem xl={8} lg={7} sm={12} >
             <Flex>
               <FlexItem>
                 <TextContent>
@@ -86,8 +86,8 @@ const ContentViewDetails = ({ match }) => {
               </FlexItem>
             </Flex>
           </GridItem>
-          <GridItem span={4}>
-            <Flex>
+          <GridItem xl={4} lg={5} sm={12} >
+            <Flex justifyContent={{ lg: 'justifyContentFlexEnd', sm: 'justifyContentFlexStart' }}>
               <FlexItem>
                 <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
                   Publish new version

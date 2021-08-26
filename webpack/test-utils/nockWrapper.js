@@ -55,8 +55,9 @@ export const mockForemanAutocomplete = (
   .query(query) // can pass in function, see nock docs
   .reply(200, response);
 
-export const mockSetting = (instance, name, value) => instance
+export const mockSetting = (instance, name, value, times = 1) => instance
   .get(`/api/v2/settings/${name}`)
+  .times(times)
   .query(true) // can pass in function, see nock docs
   .reply(200, { name, value });
 

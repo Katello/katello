@@ -1,8 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Label } from '@patternfly/react-core';
 import { CheckCircleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
-import PropTypes from 'prop-types';
 
 const AddedStatusLabel = ({ added }) => {
   if (added) {

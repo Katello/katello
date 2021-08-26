@@ -16,8 +16,10 @@ export const UPDATE_CONTENT_VIEW_FAILURE = 'UPDATE_CONTENT_VIEW_FAILURE';
 export const ADD_CONTENT_VIEW_FILTER_RULE = 'ADD_CONTENT_VIEW_FILTER_RULE';
 export const EDIT_CONTENT_VIEW_FILTER_RULE = 'EDIT_CONTENT_VIEW_FILTER_RULE';
 export const REMOVE_CONTENT_VIEW_FILTER_RULE = 'REMOVE_CONTENT_VIEW_FILTER_RULE';
+export const EDIT_CONTENT_VIEW_FILTER = 'EDIT_CONTENT_VIEW_FILTER';
 export const cvDetailsKey = cvId => `${CONTENT_VIEWS_KEY}_${cvId}`;
 export const cvDetailsRepoKey = cvId => `${CONTENT_VIEWS_KEY}_REPOSITORIES_${cvId}`;
+export const cvFilterRepoKey = filterId => `CV_FILTER_REPOSITORIES_${filterId}`;
 export const cvDetailsFiltersKey = cvId => `${CONTENT_VIEWS_KEY}_FILTERS_${cvId}`;
 export const cvFilterDetailsKey = (cvId, filterId) => `${CONTENT_VIEWS_KEY}_${cvId}_FILTER_${filterId}`;
 export const cvFilterPackageGroupsKey =

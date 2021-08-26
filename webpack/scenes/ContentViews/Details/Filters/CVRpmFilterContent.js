@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
@@ -9,18 +9,25 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import onSelect from '../../../../components/Table/helpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import {
+  selectCVFilterDetails,
   selectCVFilterRules,
   selectCVFilterRulesStatus,
 } from '../ContentViewDetailSelectors';
 import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
 import CVRpmMatchContentModal from './MatchContentModal/CVRpmMatchContentModal';
 import AddPackageRuleModal from './Rules/Package/AddPackageRuleModal';
+import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 
-const CVRpmFilterContent = ({ filterId, inclusion }) => {
-  const dispatch = useDispatch();
+const CVRpmFilterContent = ({
+  cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos,
+}) => {
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
   const status = useSelector(state => selectCVFilterRulesStatus(state, filterId), shallowEqual);
   const loading = status === STATUS.PENDING;
+  const filterDetails = useSelector(state =>
+    selectCVFilterDetails(state, cvId, filterId), shallowEqual);
+  const { repositories = [] } = filterDetails;
+  const dispatch = useDispatch();
 
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
@@ -80,6 +87,14 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
       setRows(newRows);
     }
   }, [response, loading, buildRows]);
+
+  useEffect(() => {
+    if (!repositories.length && showAffectedRepos) {
+      setActiveTabKey(1);
+    } else {
+      setActiveTabKey(0);
+    }
+  }, [showAffectedRepos, repositories.length]);
 
   const emptyContentTitle = __('No rules have been added to this filter.');
   const emptyContentBody = __("Add to this filter using the 'Add RPM rule' button.");
@@ -175,16 +190,26 @@ const CVRpmFilterContent = ({ filterId, inclusion }) => {
           />
         </div>
       </Tab>
+      {(repositories.length || showAffectedRepos) &&
+      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <div className="tab-body-with-spacing">
+          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
+        </div>
+      </Tab>}
     </Tabs>
   );
 };
 
 CVRpmFilterContent.propTypes = {
+  cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   inclusion: PropTypes.bool,
+  showAffectedRepos: PropTypes.bool.isRequired,
+  setShowAffectedRepos: PropTypes.func.isRequired,
 };
 
 CVRpmFilterContent.defaultProps = {
+  cvId: '',
   filterId: '',
   inclusion: false,
 };

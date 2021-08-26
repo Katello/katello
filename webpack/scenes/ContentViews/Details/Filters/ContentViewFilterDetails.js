@@ -13,16 +13,19 @@ import { getCVFilterDetails, getContentViewFilters } from '../ContentViewDetailA
 import useUrlParamsWithHash from '../../../../utils/useUrlParams';
 import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
 import CVFilterDetailType from './CVFilterDetailType';
+import Loading from '../../../../components/Loading';
 
 const ContentViewFilterDetails = () => {
   const { id: cvId } = useParams();
   const { params: { subContentId: filterId } } = useUrlParamsWithHash();
   const dispatch = useDispatch();
   const [details, setDetails] = useState({});
+  const [showAffectedRepos, setShowAffectedRepos] = useState(false);
   const response = useSelector(state => selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const status = useSelector(state =>
     selectCVFilterDetailStatus(state, cvId, filterId), shallowEqual);
   const loaded = status === STATUS.RESOLVED;
+  const loading = status === STATUS.PENDING;
 
   useEffect(() => {
     dispatch(getCVFilterDetails(cvId, filterId));
@@ -30,19 +33,39 @@ const ContentViewFilterDetails = () => {
   }, [dispatch, cvId, filterId]);
 
   useDeepCompareEffect(() => {
-    if (loaded) setDetails(response);
+    if (loaded) {
+      setDetails(response);
+      const { repositories } = response;
+      if (repositories.length) {
+        setShowAffectedRepos(true);
+      }
+    }
   }, [response, loaded]);
 
   const { type, inclusion } = details;
-
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <Grid hasGutter>
       {loaded && (Object.keys(details).length > 0) ?
-        <ContentViewFilterDetailsHeader details={details} /> :
-        <div>Loading...</div>
+        <ContentViewFilterDetailsHeader
+          cvId={cvId}
+          filterId={filterId}
+          details={details}
+          setShowAffectedRepos={setShowAffectedRepos}
+        /> :
+        <Loading />
       }
       <GridItem span={12}>
-        <CVFilterDetailType cvId={cvId} filterId={filterId} inclusion={inclusion} type={type} />
+        <CVFilterDetailType
+          cvId={cvId}
+          filterId={filterId}
+          inclusion={inclusion}
+          type={type}
+          showAffectedRepos={showAffectedRepos}
+          setShowAffectedRepos={setShowAffectedRepos}
+        />
       </GridItem>
     </Grid>
   );
