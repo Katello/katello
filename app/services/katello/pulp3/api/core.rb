@@ -4,23 +4,22 @@ module Katello
   module Pulp3
     module Api
       class Core
-        attr_accessor :smart_proxy
+        attr_accessor :smart_proxy, :repository_type
 
-        def initialize(smart_proxy)
+        def initialize(smart_proxy, repository_type = Katello::RepositoryTypeManager.find_by(:pulp3_api_class, self.class))
           @smart_proxy = smart_proxy
+          @repository_type = repository_type
         end
 
         def self.api_exception_class
           fail NotImplementedError
         end
 
-        def self.client_module
-          fail NotImplementedError
+        def client_module
+          repository_type.client_module_class
         end
 
-        def self.remote_class
-          fail NotImplementedError
-        end
+        delegate :remote_class, to: :repository_type
 
         def self.remote_uln_class
           fail NotImplementedError
@@ -73,7 +72,7 @@ module Katello
           nil
         end
 
-        def self.repository_version_class
+        def repository_version_class
           client_module::RepositoryVersion
         end
 

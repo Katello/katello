@@ -61,7 +61,7 @@ module Katello
       end
 
       def repair(repository_version_href)
-        data = api.class.repository_version_class.new
+        data = api.repository_version_class.new
         api.repository_versions_api.repair(repository_version_href, data)
       end
 
@@ -77,7 +77,7 @@ module Katello
         if remote_options[:url].start_with?('uln')
           remote_file_data = api.class.remote_uln_class.new(remote_options)
         else
-          remote_file_data = api.class.remote_class.new(remote_options)
+          remote_file_data = api.remote_class.new(remote_options)
         end
         reformat_api_exception do
           if remote_options[:url].start_with?('uln')
@@ -100,7 +100,7 @@ module Katello
         if remote_options[:url].start_with?('uln')
           remote_file_data = api.class.remote_uln_class.new(test_remote_options)
         else
-          remote_file_data = api.class.remote_class.new(test_remote_options)
+          remote_file_data = api.remote_class.new(test_remote_options)
         end
 
         reformat_api_exception do
@@ -120,7 +120,7 @@ module Katello
 
       def reformat_api_exception
         yield
-      rescue api.class.client_module::ApiError => exception
+      rescue api.client_module::ApiError => exception
         body = JSON.parse(exception.response_body) rescue body
         body = body.values.join(',') if body.respond_to?(:values)
         raise ::Katello::Errors::Pulp3Error, body
@@ -298,7 +298,7 @@ module Katello
         # So far, it looks like there is no distribution. Try to create one.
         begin
           create_distribution(relative_path)
-        rescue api.class.client_module::ApiError => e
+        rescue api.client_module::ApiError => e
           # Now it seems there is a distribution. Fetch it and save the reference.
           if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
               e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")

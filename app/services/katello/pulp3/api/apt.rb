@@ -8,14 +8,6 @@ module Katello
           PulpDebClient::ApiError
         end
 
-        def self.client_module
-          PulpDebClient
-        end
-
-        def self.remote_class
-          PulpDebClient::DebAptRemote
-        end
-
         def self.distribution_class
           PulpDebClient::DebAptDistribution
         end

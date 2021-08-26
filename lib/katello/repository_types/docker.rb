@@ -8,6 +8,9 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
 
   set_unique_content_per_repo
 
+  client_module_class PulpContainerClient
+  remote_class PulpContainerClient::ContainerContainerRemote
+
   content_type Katello::DockerManifest,
                :priority => 1,
                :pulp2_service_class => ::Katello::Pulp::DockerManifest,

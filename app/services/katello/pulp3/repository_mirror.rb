@@ -107,7 +107,7 @@ module Katello
           remote_file_data = @repo_service.api.class.remote_uln_class.new(remote_options)
           api.remotes_uln_api.create(remote_file_data)
         else
-          remote_file_data = @repo_service.api.class.remote_class.new(remote_options)
+          remote_file_data = @repo_service.api.remote_class.new(remote_options)
           api.remotes_api.create(remote_file_data)
         end
       end

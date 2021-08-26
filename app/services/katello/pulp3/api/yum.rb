@@ -8,14 +8,6 @@ module Katello
           PulpRpmClient::ApiError
         end
 
-        def self.client_module
-          PulpRpmClient
-        end
-
-        def self.remote_class
-          PulpRpmClient::RpmRpmRemote
-        end
-
         def self.remote_uln_class
           PulpRpmClient::RpmUlnRemote
         end

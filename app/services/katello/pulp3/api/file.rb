@@ -8,14 +8,6 @@ module Katello
           PulpFileClient::ApiError
         end
 
-        def self.client_module
-          PulpFileClient
-        end
-
-        def self.remote_class
-          PulpFileClient::FileFileRemote
-        end
-
         def self.distribution_class
           PulpFileClient::FileFileDistribution
         end

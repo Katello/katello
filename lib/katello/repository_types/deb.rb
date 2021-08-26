@@ -5,6 +5,9 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DEB_TYPE) do
   pulp3_plugin 'deb'
   prevent_unneeded_metadata_publish
 
+  client_module_class PulpDebClient
+  remote_class PulpDebClient::DebAptRemote
+
   default_managed_content_type Katello::Deb::CONTENT_TYPE
   content_type Katello::Deb,
     :pulp2_service_class => ::Katello::Pulp::Deb,

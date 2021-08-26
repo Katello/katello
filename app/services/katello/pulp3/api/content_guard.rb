@@ -8,7 +8,7 @@ module Katello
           'RHSMCertGuard'
         end
 
-        def self.client_module
+        def client_module
           PulpCertguardClient
         end
 

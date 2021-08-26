@@ -8,14 +8,6 @@ module Katello
           PulpAnsibleClient::ApiError
         end
 
-        def self.client_module
-          PulpAnsibleClient
-        end
-
-        def self.remote_class
-          PulpAnsibleClient::AnsibleCollectionRemote
-        end
-
         def self.distribution_class
           PulpAnsibleClient::AnsibleAnsibleDistribution
         end

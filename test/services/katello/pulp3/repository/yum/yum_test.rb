@@ -67,7 +67,7 @@ module Katello
             @repo.root.update(http_proxy_policy: ::Katello::RootRepository::USE_SELECTED_HTTP_PROXY)
             @repo.root.update(http_proxy: HttpProxy.find_by(name: "myhttpproxy"))
 
-            remote_file_data = @service.api.class.remote_class.new(@service.remote_options)
+            remote_file_data = @service.api.remote_class.new(@service.remote_options)
             remote_response = @service.api.remotes_api.create(remote_file_data)
             @service.delete_remote(remote_response.pulp_href)
           end

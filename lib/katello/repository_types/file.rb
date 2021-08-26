@@ -5,6 +5,8 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::FILE_TYPE) do
   pulp3_api_class Katello::Pulp3::Api::File
   pulp3_plugin 'file'
 
+  client_module_class PulpFileClient
+  remote_class PulpFileClient::FileFileRemote
   content_type Katello::FileUnit,
                :pulp2_service_class => ::Katello::Pulp::FileUnit,
                :pulp3_service_class => ::Katello::Pulp3::FileUnit,

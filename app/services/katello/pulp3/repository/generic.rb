@@ -41,12 +41,6 @@ module Katello
           api.distributions_api.create(distribution_data)
         end
 
-        def create_remote
-          remote_file_data = api.class.remote_class(repo.repository_type).new(remote_options)
-          response = api.remotes_api.create(remote_file_data)
-          repo.update!(:remote_href => response.pulp_href)
-        end
-
         def refresh_distributions
           dist = lookup_distributions(base_path: repo.relative_path).first
 
@@ -66,7 +60,7 @@ module Katello
           # So far, it looks like there is no distribution. Try to create one.
           begin
             create_distribution(relative_path)
-          rescue api.class.client_module(repo.repository_type)::ApiError => e
+          rescue api.client_module::ApiError => e
             # Now it seems there is a distribution. Fetch it and save the reference.
             if e.message.include?("\"base_path\":[\"This field must be unique.\"]") ||
               e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
