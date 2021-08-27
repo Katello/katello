@@ -10,6 +10,7 @@ import {
   DELETE_CONTENT_VIEW_FILTER_KEY,
   DELETE_CONTENT_VIEW_FILTERS_KEY,
   ADD_CONTENT_VIEW_FILTER_RULE,
+  EDIT_CONTENT_VIEW_FILTER_RULE,
   REMOVE_CONTENT_VIEW_FILTER_RULE,
   NOT_ADDED,
   ALL_STATUSES,
@@ -165,6 +166,16 @@ export const getCVFilterPackageGroups = (cvId, filterId, params) => get({
   },
   errorToast: error => __(`Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/package_groups'),
+});
+
+export const editCVFilterRule = (filterId, params, handleSuccess) => put({
+  type: API_OPERATIONS.PUT,
+  key: EDIT_CONTENT_VIEW_FILTER_RULE,
+  url: api.getApiUrl(`/content_view_filters/${filterId}/rules/${params.id}`),
+  params,
+  handleSuccess,
+  successToast: () => __('Filter rule edited successfully'),
+  errorToast: error => __(`Something went wrong while editing a filter rule! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const addCVFilterRule = (filterId, params, handleSuccess) => post({

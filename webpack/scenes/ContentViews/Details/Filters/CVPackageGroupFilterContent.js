@@ -133,9 +133,9 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
     },
   ];
 
-  const emptyContentTitle = __('No package groups have been added to this filter.');
-  const emptyContentBody = __("Add to this filter using the 'Add package group' button.");
-  const emptySearchTitle = __('No matching package groups found.');
+  const emptyContentTitle = __('No rules have been added to this filter.');
+  const emptyContentBody = __("Add to this filter using the 'Add filter rule' button.");
+  const emptySearchTitle = __('No matching filter rules found.');
   const emptySearchBody = __('Try changing your search settings.');
 
 

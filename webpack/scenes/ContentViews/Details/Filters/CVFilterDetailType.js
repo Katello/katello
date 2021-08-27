@@ -2,11 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CVPackageGroupFilterContent from './CVPackageGroupFilterContent';
 import CVRpmFilterContent from './CVRpmFilterContent';
+import CVContainerImageFilterContent from './CVContainerImageFilterContent';
 
 const CVFilterDetailType = ({
   cvId, filterId, inclusion, type,
 }) => {
   switch (type) {
+    case 'docker':
+      return <CVContainerImageFilterContent filterId={filterId} />;
     case 'package_group':
       return <CVPackageGroupFilterContent cvId={cvId} filterId={filterId} />;
     case 'rpm':
