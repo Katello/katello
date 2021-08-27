@@ -81,5 +81,10 @@ module Katello
     def test_filter_by_pulp_id_returns_nothing_if_no_package_group_matches
       assert_equal [], filter_package_groups_by_pulp_href([@package_group], [@packagegroup3_href])
     end
+
+    def test_filter_by_pulp_id_ignores_empty_package_group_names
+      @package_group.stubs(:package_names).returns([])
+      assert_equal [], filter_package_groups_by_pulp_href([@package_group], [@packagegroup3_href])
+    end
   end
 end
