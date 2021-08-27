@@ -6,7 +6,15 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::ANSIBLE_COLLECTIO
   pulp3_plugin 'ansible'
 
   client_module_class PulpAnsibleClient
+  api_class PulpAnsibleClient::ApiClient
+  configuration_class PulpAnsibleClient::Configuration
   remote_class PulpAnsibleClient::AnsibleCollectionRemote
+  remotes_api_class PulpAnsibleClient::RemotesCollectionApi
+  repository_versions_api_class PulpAnsibleClient::RepositoriesAnsibleVersionsApi
+  repositories_api_class PulpAnsibleClient::RepositoriesAnsibleApi
+  distributions_api_class PulpAnsibleClient::DistributionsAnsibleApi
+  distribution_class PulpAnsibleClient::AnsibleAnsibleDistribution
+  repo_sync_url_class PulpAnsibleClient::AnsibleRepositorySyncURL
 
   content_type Katello::AnsibleCollection, :pulp3_service_class => ::Katello::Pulp3::AnsibleCollection, :user_removable => true
 end

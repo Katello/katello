@@ -9,7 +9,15 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
   set_unique_content_per_repo
 
   client_module_class PulpContainerClient
+  api_class PulpContainerClient::ApiClient
+  configuration_class PulpContainerClient::Configuration
   remote_class PulpContainerClient::ContainerContainerRemote
+  remotes_api_class PulpContainerClient::RemotesContainerApi
+  repository_versions_api_class PulpContainerClient::RepositoriesContainerVersionsApi
+  repositories_api_class PulpContainerClient::RepositoriesContainerApi
+  distributions_api_class PulpContainerClient::DistributionsContainerApi
+  distribution_class PulpContainerClient::ContainerContainerDistribution
+  repo_sync_url_class PulpContainerClient::RepositorySyncURL
 
   content_type Katello::DockerManifest,
                :priority => 1,

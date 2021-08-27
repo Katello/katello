@@ -61,7 +61,7 @@ module Katello
 
       def delete(href = repository_href)
         api.repositories_api.delete(href) if href
-      rescue api.class.api_exception_class => e
+      rescue api.api_exception_class => e
         raise e if e.code != 404
         nil
       end
@@ -124,7 +124,7 @@ module Katello
         sync_params = repo_service.sync_url_params(options)
         sync_params[:remote] = remote_href
         sync_params[:mirror] = true
-        repository_sync_url_data = api.class.repository_sync_url_class.new(sync_params)
+        repository_sync_url_data = api.repository_sync_url_class.new(sync_params)
         [api.repositories_api.sync(repository_href, repository_sync_url_data)]
       end
 
@@ -154,7 +154,7 @@ module Katello
 
       def create_publication
         if (href = version_href)
-          publication_data = api.class.publication_class.new(repository_version: href)
+          publication_data = api.publication_class.new(repository_version: href)
           api.publications_api.create(publication_data)
         end
       end
@@ -173,7 +173,7 @@ module Katello
           api.distributions_api.partial_update(distro.pulp_href, dist_options)
         else
           # create dist
-          distribution_data = api.class.distribution_class.new(dist_options)
+          distribution_data = api.distribution_class.new(dist_options)
           api.distributions_api.create(distribution_data)
         end
       end
@@ -185,7 +185,7 @@ module Katello
       end
 
       def create_distribution(path)
-        distribution_data = api.class.distribution_class.new(distribution_options(path))
+        distribution_data = api.distribution_class.new(distribution_options(path))
         repo_service.distributions_api.create(distribution_data)
       end
     end

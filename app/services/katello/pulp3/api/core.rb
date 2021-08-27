@@ -11,10 +11,6 @@ module Katello
           @repository_type = repository_type
         end
 
-        def self.api_exception_class
-          fail NotImplementedError
-        end
-
         def client_module
           repository_type.client_module_class
         end
@@ -25,24 +21,26 @@ module Katello
           fail NotImplementedError
         end
 
-        def self.distribution_class
-          fail NotImplementedError
-        end
+        delegate :distribution_class, to: :repository_type
 
-        def self.publication_class
-          fail NotImplementedError
-        end
+        delegate :publication_class, to: :repository_type
 
-        def self.repository_sync_url_class
-          fail NotImplementedError
+        def repository_sync_url_class
+          repository_type.repo_sync_url_class
         end
 
         def api_client
-          fail NotImplementedError
+          config = smart_proxy.pulp3_configuration(repository_type.configuration_class)
+          config.params_encoder = Faraday::FlatParamsEncoder
+          api_client_class(repository_type.api_class.new(config))
+        end
+
+        def api_exception_class
+          client_module::ApiError
         end
 
         def remotes_api
-          fail NotImplementedError
+          repository_type.remotes_api_class.new(api_client)
         end
 
         def remotes_uln_api
@@ -50,19 +48,19 @@ module Katello
         end
 
         def publications_api
-          fail NotImplementedError #Optional
+          repository_type.publications_api_class.new(api_client) #Optional
         end
 
         def distributions_api
-          fail NotImplementedError
+          repository_type.distributions_api_class.new(api_client)
         end
 
         def repositories_api
-          fail NotImplementedError
+          repository_type.repositories_api_class.new(api_client)
         end
 
         def repository_versions_api
-          fail NotImplementedError
+          repository_type.repository_versions_api_class.new(api_client)
         end
 
         def self.ignore_409_exception(*)
@@ -148,7 +146,7 @@ module Katello
 
         def ignore_404_exception(*)
           yield
-        rescue self.class.api_exception_class => e
+        rescue self.api_exception_class => e
           raise e unless e.code == 404
           nil
         end
