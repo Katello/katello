@@ -51,7 +51,7 @@ module Katello
 
       def ignore_404_exception(*)
         yield
-      rescue api.class.api_exception_class => e
+      rescue api.api_exception_class => e
         raise e unless e.code == 404
         nil
       end
@@ -251,7 +251,7 @@ module Katello
       end
 
       def sync(options = {})
-        repository_sync_url_data = api.class.repository_sync_url_class.new(sync_url_params(options))
+        repository_sync_url_data = api.repository_sync_url_class.new(sync_url_params(options))
         [api.repositories_api.sync(repository_reference.repository_href, repository_sync_url_data)]
       end
 
@@ -262,7 +262,7 @@ module Katello
       end
 
       def create_publication
-        publication_data = api.class.publication_class.new(publication_options(repo.version_href))
+        publication_data = api.publication_class.new(publication_options(repo.version_href))
         api.publications_api.create(publication_data)
       end
 
@@ -313,7 +313,7 @@ module Katello
       end
 
       def create_distribution(path)
-        distribution_data = api.class.distribution_class.new(secure_distribution_options(path))
+        distribution_data = api.distribution_class.new(secure_distribution_options(path))
         api.distributions_api.create(distribution_data)
       end
 
@@ -455,14 +455,14 @@ module Katello
 
       def lookup_version(href)
         api.repository_versions_api.read(href) if href
-      rescue api.class.api_exception_class => e
+      rescue api.api_exception_class => e
         Rails.logger.error "Exception when calling repository_versions_api->read: #{e}"
         nil
       end
 
       def lookup_publication(href)
         api.publications_api.read(href) if href
-      rescue api.class.api_exception_class => e
+      rescue api.api_exception_class => e
         Rails.logger.error "Exception when calling publications_api->read: #{e}"
         nil
       end

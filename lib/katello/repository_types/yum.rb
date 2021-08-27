@@ -6,7 +6,17 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
   prevent_unneeded_metadata_publish
 
   client_module_class PulpRpmClient
+  api_class PulpRpmClient::ApiClient
   remote_class PulpRpmClient::RpmRpmRemote
+  remotes_api_class PulpRpmClient::RemotesRpmApi
+  repository_versions_api_class PulpRpmClient::RepositoriesRpmVersionsApi
+  repositories_api_class PulpRpmClient::RepositoriesRpmApi
+  configuration_class PulpRpmClient::Configuration
+  distributions_api_class PulpRpmClient::DistributionsRpmApi
+  distribution_class PulpRpmClient::RpmRpmDistribution
+  publication_class PulpRpmClient::RpmRpmPublication
+  publications_api_class PulpRpmClient::PublicationsRpmApi
+  repo_sync_url_class PulpRpmClient::RpmRepositorySyncURL
 
   default_managed_content_type Katello::Rpm::CONTENT_TYPE
   content_type Katello::Rpm,

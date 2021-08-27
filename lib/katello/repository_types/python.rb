@@ -7,18 +7,18 @@ Katello::RepositoryTypeManager.register('python') do
   pulp3_plugin 'python'
   partial_repo_path '' #TODO: add partial repo path
 
-  repositories_api_class PulpPythonClient::RepositoriesPythonApi
+  client_module_class PulpPythonClient
   api_class PulpPythonClient::ApiClient
   configuration_class PulpPythonClient::Configuration
-  remotes_api_class PulpPythonClient::RemotesPythonApi
-  distributions_api_class PulpPythonClient::DistributionsPypiApi
-  repository_versions_api_class PulpPythonClient::RepositoriesPythonVersionsApi
   remote_class PulpPythonClient::PythonPythonRemote
-  repo_sync_url_class PulpPythonClient::RepositorySyncURL
-  client_module_class PulpPythonClient
+  remotes_api_class PulpPythonClient::RemotesPythonApi
+  repositories_api_class PulpPythonClient::RepositoriesPythonApi
+  repository_versions_api_class PulpPythonClient::RepositoriesPythonVersionsApi
+  distributions_api_class PulpPythonClient::DistributionsPypiApi
   distribution_class PulpPythonClient::PythonPythonDistribution
   publication_class PulpPythonClient::PythonPythonPublication
   publications_api_class PulpPythonClient::PublicationsPypiApi
+  repo_sync_url_class PulpPythonClient::RepositorySyncURL
 
   generic_remote_option :includes, title: N_("Includes"), type: Array, input_type: "textarea", delimiter: "\\n",
                         description: N_("Python packages to include from the upstream URL, names separated by newline. You may also specify versions, for example: django~=2.0. Leave empty to include every package.")

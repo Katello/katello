@@ -107,6 +107,10 @@ module Katello
       }
     end
 
+    def inspect
+      "RepositoryType[#{self.id}]"
+    end
+
     def pulp3_api(smart_proxy)
       if pulp3_api_class == Katello::Pulp3::Api::Generic
         pulp3_api_class.new(smart_proxy, self)
