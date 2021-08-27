@@ -7,6 +7,7 @@ import {
 } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
+import './MainTable.scss';
 
 import EmptyStateMessage from './EmptyStateMessage';
 import Loading from '../../components/Loading';
@@ -62,11 +63,11 @@ const MainTable = ({
 MainTable.propTypes = {
   status: PropTypes.string.isRequired,
   cells: PropTypes.arrayOf(PropTypes.oneOfType([
-    PropTypes.shape({}),
+    PropTypes.shape({ }),
     PropTypes.string])),
-  rows: PropTypes.arrayOf(PropTypes.shape({})),
+  rows: PropTypes.arrayOf(PropTypes.shape({ })),
   error: PropTypes.oneOfType([
-    PropTypes.shape({}),
+    PropTypes.shape({ }),
     PropTypes.string,
   ]),
   emptyContentTitle: PropTypes.string.isRequired,
