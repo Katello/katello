@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Skeleton, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
@@ -11,6 +11,7 @@ import './TracesTab.scss';
 
 const TracesTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
+  const [selectedTraces, setSelectedTraces] = useState([]);
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const { id: hostId } = hostDetails;
   const emptyContentTitle = __('This host currently does not have traces.');
@@ -27,8 +28,25 @@ const TracesTab = () => {
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
   const status = useSelector(state => selectHostTracesStatus(state));
+  useEffect(() => console.log(selectedTraces))
+  const onRowSelect = ({ event, isSelected, traceId }) => {
+    console.log({ event, isSelected, traceId })
+    if (isSelected) {
+      // set to true
+      setSelectedTraces((traces) => {
+        const newTraces = new Set(traces);
+        newTraces.add(traceId);
+        return [...newTraces];
+      });
+    } else {
+      // set to false
+      setSelectedTraces(traces => traces.filter(id => traceId !== id));
+    }
+  };
   if (!hostId) return <Skeleton />;
+
   /* eslint-disable max-len */
+
   return (
     <div id="traces-tab">
       <h3>{__('Tracer helps administrators identify applications that need to be restarted after a system is patched.')}</h3>
@@ -50,13 +68,24 @@ const TracesTab = () => {
       >
         <Thead>
           <Tr>
+            <Th select={{
+              isSelected: selectedTraces?.length === results?.length,
+              onSelect: (event, isSelected) => {
+                if (isSelected) {
+                  setSelectedTraces([...results.map(result => result.id)]);
+                } else {
+                  setSelectedTraces([]);
+                }
+              },
+            }}
+            />
             <Th>{__('Application')}</Th>
             <Th>{__('Type')}</Th>
             <Th>{__('Helper')}</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {results?.map((result) => {
+          {results?.map((result, rowIndex) => {
           const {
             id,
             application,
@@ -65,6 +94,14 @@ const TracesTab = () => {
           } = result;
           return (
             <Tr key={id} >
+              <Td select={{
+                disable: false,
+                isSelected: selectedTraces.includes(id),
+                onSelect: (event, isSelected) => onRowSelect({ event, isSelected, traceId: id }),
+                rowIndex,
+                variant: 'checkbox',
+              }}
+              />
               <Td>{application}</Td>
               <Td>{helper}</Td>
               <Td>{appType}</Td>
