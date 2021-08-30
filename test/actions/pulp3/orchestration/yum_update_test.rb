@@ -105,4 +105,26 @@ module ::Actions::Pulp3
       assert_equal 1, dist_refs.count, "Expected a distribution reference."
     end
   end
+
+  class YumUpdateNoUrlTest < ActiveSupport::TestCase
+    include Katello::Pulp3Support
+
+    def setup
+      @primary = SmartProxy.pulp_primary
+      @repo = katello_repositories(:fedora_17_x86_64_duplicate)
+      ensure_creatable(@repo, @primary)
+
+      @repo.root.update(url: nil)
+      create_repo(@repo, @primary)
+    end
+
+    def test_addurl
+      @repo.root.update(url: "http://someotherurl")
+      task = ForemanTasks.sync_task(
+              ::Actions::Pulp3::Orchestration::Repository::Update,
+              @repo,
+              @primary)
+      assert 'success', task.result
+    end
+  end
 end
