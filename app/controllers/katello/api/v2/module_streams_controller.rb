@@ -35,6 +35,10 @@ module Katello
       %w(name asc)
     end
 
+    def all_for_content_view_filter(filter, _collection)
+      ModuleStream.joins(:repositories).merge(filter.applicable_repos)
+    end
+
     def available_for_content_view_filter(filter, _collection)
       collection_ids = []
       current_ids = filter.module_stream_rules.map(&:module_stream_id)

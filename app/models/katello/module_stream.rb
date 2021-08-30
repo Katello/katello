@@ -71,6 +71,10 @@ module Katello
       {:name => name, :stream => stream, :version => version, :context => context, :arch => arch}.compact
     end
 
+    def content_view_filters
+      Katello::ContentViewModuleStreamFilterRule.where(module_stream_id: self.id).eager_load(:filter).map(&:filter)
+    end
+
     def self.find_by_host_name(_key, operator, value)
       conditions = sanitize_sql_for_conditions(["#{::Host::Managed.table_name}.name #{operator} ?", value_to_sql(operator, value)])
       hosts = ::Host::Managed.authorized("view_hosts").where(conditions).select(:id)

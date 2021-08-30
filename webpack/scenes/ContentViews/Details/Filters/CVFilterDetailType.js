@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import CVPackageGroupFilterContent from './CVPackageGroupFilterContent';
 import CVRpmFilterContent from './CVRpmFilterContent';
 import CVContainerImageFilterContent from './CVContainerImageFilterContent';
+import CVModuleStreamFilterContent from './CVModuleStreamFilterContent';
 
 const CVFilterDetailType = ({
   cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos,
@@ -27,6 +28,13 @@ const CVFilterDetailType = ({
         cvId={cvId}
         filterId={filterId}
         inclusion={inclusion}
+        showAffectedRepos={showAffectedRepos}
+        setShowAffectedRepos={setShowAffectedRepos}
+      />);
+    case 'modulemd':
+      return (<CVModuleStreamFilterContent
+        cvId={cvId}
+        filterId={filterId}
         showAffectedRepos={showAffectedRepos}
         setShowAffectedRepos={setShowAffectedRepos}
       />);
