@@ -151,7 +151,7 @@ module Katello
       end
 
       def delete_remote(href = repo.remote_href)
-        ignore_404_exception { remote_options[:url].start_with?('uln') ? api.remotes_uln_api.delete(href) : api.remotes_api.delete(href) } if href
+        ignore_404_exception { remote_options[:url]&.start_with?('uln') ? api.remotes_uln_api.delete(href) : api.remotes_api.delete(href) } if href
       end
 
       def self.instance_for_type(repo, smart_proxy)
