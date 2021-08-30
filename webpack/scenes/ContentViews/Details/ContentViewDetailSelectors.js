@@ -10,6 +10,7 @@ import {
   cvDetailsFiltersKey,
   cvFilterDetailsKey,
   cvFilterPackageGroupsKey,
+  cvFilterModuleStreamKey,
   cvDetailsHistoryKey,
   cvFilterRulesKey,
   cvDetailsVersionKey,
@@ -84,6 +85,15 @@ export const selectCVFilterPackageGroupStatus = (state, cvId, filterId) =>
 
 export const selectCVFilterPackageGroupError = (state, cvId, filterId) =>
   selectAPIError(state, cvFilterPackageGroupsKey(cvId, filterId));
+
+export const selectCVFilterModuleStream = (state, cvId, filterId) =>
+  selectAPIResponse(state, cvFilterModuleStreamKey(cvId, filterId));
+
+export const selectCVFilterModuleStreamStatus = (state, cvId, filterId) =>
+  selectAPIStatus(state, cvFilterModuleStreamKey(cvId, filterId)) || STATUS.PENDING;
+
+export const selectCVFilterModuleStreamError = (state, cvId, filterId) =>
+  selectAPIError(state, cvFilterModuleStreamKey(cvId, filterId));
 
 export const selectCVHistories = (state, cvId) =>
   selectAPIResponse(state, cvDetailsHistoryKey(cvId)) || {};

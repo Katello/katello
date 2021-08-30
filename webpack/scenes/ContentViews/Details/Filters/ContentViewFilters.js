@@ -58,7 +58,7 @@ const ContentViewFilters = ({ cvId }) => {
 
       const cells = [
         {
-          title: (type === 'package_group' || type === 'rpm' || type === 'docker') ?
+          title: (type === 'package_group' || type === 'rpm' || type === 'docker' || type === 'modulemd') ?
             <Link to={cvFilterUrl(cvId, id)}>{name}</Link> : name,
         },
         truncate(description || ''),

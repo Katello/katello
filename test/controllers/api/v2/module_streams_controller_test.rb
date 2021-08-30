@@ -6,6 +6,7 @@ module Katello
     def models
       @repo = katello_repositories(:fedora_17_x86_64)
       @module_stream_river = katello_module_streams(:river)
+      @module_stream_filter = katello_content_view_filters(:populated_module_stream_filter)
     end
 
     def setup
@@ -69,6 +70,24 @@ module Katello
 
       assert_response :success
       assert_template "katello/api/v2/module_streams/show"
+    end
+
+    def test_index_available_for_content_view_filter
+      filtered_id = @module_stream_filter.module_stream_rules.first["module_stream_id"]
+
+      get :index, params: { :filterId => @module_stream_filter, :available_for => "content_view_filter" }
+      body = JSON.parse(response.body)
+      response_ids = body["results"].map { |item| item["module_stream_id"] }
+
+      assert_response :success
+      refute_includes response_ids, filtered_id
+      assert response_ids.length > 0
+    end
+
+    def test_index_mutual_exclusive_params_error
+      get :index, params: { filterId: @module_stream_filter.id, show_all_for: 'content_view_filter', available_for: 'content_view_filter' }
+
+      assert_response :bad_request
     end
 
     def test_show_bad_id
