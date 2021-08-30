@@ -142,7 +142,7 @@ const ContentViewComponents = ({ cvId, details }) => {
         { title: environments ? <ComponentEnvironments {...{ environments }} /> : __('Not yet published') },
         { title: <Link to={urlBuilder(`labs/content_views/${id}#repositories`, '')}>{ repositories ? repositories.length : 0 }</Link> },
         {
-          title: <AddedStatusLabel added={componentCvId} />,
+          title: <AddedStatusLabel added={!!componentCvId} />,
         },
         { title: <TableText wrapModifier="truncate">{description || __('No description')}</TableText> },
       ];
