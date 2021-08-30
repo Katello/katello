@@ -138,6 +138,7 @@ module Katello
             remote_partial_update
           else
             create_remote
+            return nil #return nil, as create isn't async
           end
         end
       end
