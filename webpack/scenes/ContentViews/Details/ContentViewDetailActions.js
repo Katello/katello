@@ -23,6 +23,7 @@ import {
   cvDetailsFiltersKey,
   cvFilterDetailsKey,
   cvFilterPackageGroupsKey,
+  cvFilterModuleStreamKey,
   cvDetailsHistoryKey,
   cvFilterRulesKey,
   cvDetailsComponentKey,
@@ -214,6 +215,15 @@ export const getCVFilterPackageGroups = (cvId, filterId, params) => get({
   },
   errorToast: error => __(`Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/package_groups'),
+});
+
+export const getCVFilterModuleStreams = (cvId, filterId, params) => get({
+  key: cvFilterModuleStreamKey(cvId, filterId),
+  params: {
+    filter_id: filterId, show_all_for: 'content_view_filter', include_filter_ids: true, ...params,
+  },
+  errorToast: error => __(`Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}`),
+  url: api.getApiUrl('/module_streams'),
 });
 
 export const editCVFilterRule = (filterId, params, handleSuccess) => put({
