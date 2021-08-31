@@ -9,7 +9,7 @@ module Katello
     include Ext::LabelFromName
     include Encryptable
 
-    encrypts :upstream_password
+    encrypts :upstream_password, :upstream_authentication_token
 
     IGNORABLE_CONTENT_UNIT_TYPES = %w(srpm).freeze
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
@@ -75,6 +75,7 @@ module Katello
     validate :ensure_valid_os_versions
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
+    validate :ensure_valid_authentication_token, :if => :yum?
     validate :ensure_no_checksum_on_demand
     validates :url, presence: true, if: :ostree?
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
@@ -291,6 +292,12 @@ module Katello
 
       if !self.ansible_collection_auth_url.blank? && self.ansible_collection_auth_token.blank?
         errors.add(:base, N_("Auth URL requires Auth token be set."))
+      end
+    end
+
+    def ensure_valid_authentication_token
+      if self.upstream_authentication_token.blank?
+        self.upstream_authentication_token = nil
       end
     end
 
