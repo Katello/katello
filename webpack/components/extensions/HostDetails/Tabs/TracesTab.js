@@ -30,6 +30,10 @@ const TracesTab = () => {
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
   const status = useSelector(state => selectHostTracesStatus(state));
+  const resultIds = results?.map(result => result.id) ?? [];
+  const areAllRowsOnPageSelected = () => resultIds.every(result => selectedTraces.has(result));
+  const areAllRowsSelected = () => selectedTraces.size === Number(meta.total);
+
   const onRowSelect = ({ isSelected, traceId }) => {
     if (isSelected) {
       selectedTraces.add(traceId);
@@ -64,7 +68,7 @@ const TracesTab = () => {
         <Thead>
           <Tr>
             <Th select={{
-              isSelected: selectedTraces?.size === results?.length,
+              isSelected: areAllRowsOnPageSelected(),
               onSelect: (event, isSelected) => {
                 if (isSelected) {
                   [...results.map(result => result.id)].forEach(id => selectedTraces.add(id));
