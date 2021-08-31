@@ -12,6 +12,8 @@ import {
   ADD_CONTENT_VIEW_FILTER_RULE,
   EDIT_CONTENT_VIEW_FILTER_RULE,
   REMOVE_CONTENT_VIEW_FILTER_RULE,
+  DELETE_CONTENT_VIEW_FILTER_RULES_KEY,
+  ADD_CONTENT_VIEW_FILTER_RULES_KEY,
   NOT_ADDED,
   ALL_STATUSES,
   REPOSITORY_TYPES,
@@ -141,6 +143,26 @@ export const deleteContentViewFilters = (cvId, ids, handleSuccess) => put({
   handleSuccess,
   successToast: () => __('Filters successfully deleted'),
   errorToast: error => __(`Something went wrong while deleting filters! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const deleteContentViewFilterRules = (filterId, ids, handleSuccess) => put({
+  type: API_OPERATIONS.PUT,
+  key: DELETE_CONTENT_VIEW_FILTER_RULES_KEY,
+  url: api.getApiUrl(`/content_view_filters/${filterId}/remove_filter_rules`),
+  params: { rule_ids: ids },
+  handleSuccess,
+  successToast: () => __('Filter rules successfully deleted'),
+  errorToast: error => __(`Something went wrong while deleting filter rules! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const addContentViewFilterRules = (filterId, rulesParams, handleSuccess) => put({
+  type: API_OPERATIONS.PUT,
+  key: ADD_CONTENT_VIEW_FILTER_RULES_KEY,
+  url: api.getApiUrl(`/content_view_filters/${filterId}/add_filter_rules`),
+  params: { rules_params: rulesParams },
+  handleSuccess,
+  successToast: () => __('Filter rules successfully added'),
+  errorToast: error => __(`Something went wrong while adding filter rules! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const deleteContentViewFilter = (filterId, handleSuccess) => APIActions.delete({

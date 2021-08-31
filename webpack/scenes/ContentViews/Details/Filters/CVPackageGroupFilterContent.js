@@ -16,7 +16,10 @@ import {
   selectCVFilters,
 } from '../ContentViewDetailSelectors';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
-import getContentViewDetails, { addCVFilterRule, removeCVFilterRule, getCVFilterPackageGroups } from '../ContentViewDetailActions';
+import getContentViewDetails, {
+  addCVFilterRule, removeCVFilterRule, getCVFilterPackageGroups,
+  deleteContentViewFilterRules, addContentViewFilterRules,
+} from '../ContentViewDetailActions';
 
 
 const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
@@ -89,18 +92,20 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
 
   const bulkAdd = () => {
     setBulkActionOpen(false);
-    // const addData = rows.filter(({ selected, added }) =>
-    //   selected && !added).map(({ uuid, name }) => ({ uuid, name }));
-    // console.log(addData);
+    const addData = rows.filter(({ selected, added }) =>
+      selected && !added).map(({ uuid }) => ({ uuid }));
+    dispatch(addContentViewFilterRules(filterId, addData, () =>
+      dispatch(getContentViewDetails(cvId))));
     deselectAll();
   };
 
   const bulkRemove = () => {
     setBulkActionOpen(false);
-    // const packageFilterIds =
-    //   rows.filter(({ selected, added }) =>
-    //     selected && added).map(({ packagefilterId }) => packagefilterId);
-    // console.log(packageFilterIds);
+    const packageFilterIds =
+      rows.filter(({ selected, added }) =>
+        selected && added).map(({ packagefilterId }) => packagefilterId);
+    dispatch(deleteContentViewFilterRules(filterId, packageFilterIds, () =>
+      dispatch(getContentViewDetails(cvId))));
     deselectAll();
   };
 
@@ -118,8 +123,8 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
     {
       title: __('Add'),
       isDisabled: added,
-      onClick: (_event, _rowId, { uuid, name }) => {
-        dispatch(addCVFilterRule(filterId, { uuid, name }, () =>
+      onClick: (_event, _rowId, { uuid }) => {
+        dispatch(addCVFilterRule(filterId, { uuid }, () =>
           dispatch(getContentViewDetails(cvId))));
       },
     },

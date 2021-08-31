@@ -82,6 +82,63 @@ module Katello
       respond_for_show :resource => @filter
     end
 
+    api :put, "/content_views/:content_view_id/filters/:id/remove_filter_rules", N_("bulk delete filter rules")
+    api :put, "/content_view_filters/:id/remove_filter_rules", N_("bulk delete filter rules")
+    param :content_view_id, :number, :desc => N_("content view identifier")
+    param :id, :number, :desc => N_("filter identifier"), :required => true
+    param :rule_ids, Array, of: :number, :desc => N_("filter identifiers"), :required => true
+    def remove_filter_rules
+      rule_clazz = ContentViewFilter.rule_class_for(@filter)
+      rule_clazz.where(id: params[:rule_ids]).try(:destroy_all)
+      respond_for_show(resource: @filter)
+    end
+
+    api :put, "/content_views/:content_view_id/filters/:id/add_filter_rules", N_("bulk add filter rules")
+    api :put, "/content_view_filters/:id/add_filter_rules", N_("bulk add filter rules")
+    param :content_view_id, :number, :desc => N_("content view identifier")
+    param :id, :number, :desc => N_("filter identifier"), :required => true
+    param :rules_params, Array, :desc => N_("Rules to be added"), :required => false do
+      param :name, Array, of: [String], :desc => N_("package, package group, or docker tag names")
+      param :uuid, String, :desc => N_("package group: uuid")
+      param :version, String, :desc => N_("package: version")
+      param :architecture, String, :desc => N_("package: architecture")
+      param :min_version, String, :desc => N_("package: minimum version")
+      param :max_version, String, :desc => N_("package: maximum version")
+      param :errata_id, String, :desc => N_("erratum: id")
+      param :errata_ids, Array, :desc => N_("erratum: IDs or a select all object")
+      param :start_date, String, :desc => N_("erratum: start date (YYYY-MM-DD)")
+      param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
+      param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
+      param :date_type, String, :desc => N_("erratum: search using the 'Issued On' or 'Updated On' column of the errata. Values are 'issued'/'updated'")
+      param :module_stream_ids, Array, :desc => N_("module stream ids")
+    end
+    def add_filter_rules
+      rule_clazz = ContentViewFilter.rule_class_for(@filter)
+      rules = []
+      rules_params[:rules_params].each do |rule_params|
+        rules = (rule_params[:name] || []).map do |name|
+          rule_clazz.create!(rule_params.except(:name).merge(:filter => @filter, name: name))
+        end
+
+        rules += (rule_params[:errata_ids] || []).map do |errata_id|
+          rule_clazz.create!(rule_params.except(:errata_ids)
+                                 .merge(filter: @filter, errata_id: errata_id))
+        end
+        if rule_params[:module_stream_ids]
+          rules += (rule_params[:module_stream_ids] || []).map do |module_stream_id|
+            rule_clazz.create!(rule_params.except(:module_stream_ids)
+                                   .merge(filter: @filter, module_stream_id: module_stream_id))
+          end
+        end
+
+        if rules.empty?
+          rules = [rule_clazz.create!(rule_params.merge(:filter => @filter))]
+        end
+      end
+
+      respond_for_show(resource: @filter)
+    end
+
     private
 
     def find_readable_content_view
@@ -109,6 +166,12 @@ module Katello
 
     def filter_params
       params.require(:content_view_filter).permit(:name, :inclusion, :original_packages, :original_module_streams, :description, :repository_ids => [])
+    end
+
+    def rules_params
+      params.permit(:id, :content_view_id, :rules_params => [:uuid, :version, :min_version, :max_version, :architecture,
+                                                             :errata_id, :start_date, :end_date, :date_type,
+                                                             :types => [], :module_stream_ids => [], :errata_ids => [], name: []])
     end
   end
 end

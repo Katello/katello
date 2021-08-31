@@ -268,7 +268,7 @@ const ContentViewRepositories = ({ cvId }) => {
             <ActionList>
               <ActionListItem>
                 <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
-                  __(Add repositories)
+                  {__('Add repositories')}
                 </Button>
               </ActionListItem>
               <ActionListItem>

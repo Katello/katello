@@ -79,6 +79,10 @@ Katello::Engine.routes.draw do
             match '/environments/:environment_id' => "content_views#remove_from_environment", :via => :delete
           end
           api_resources :filters, :controller => :content_view_filters do
+            member do
+              put :remove_filter_rules
+              put :add_filter_rules
+            end
             collection do
               get :auto_complete_search
             end
@@ -99,6 +103,10 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :content_view_filters do
+          member do
+            put :remove_filter_rules
+            put :add_filter_rules
+          end
           api_resources :errata, :only => [:index]
           api_resources :package_groups, :only => [:index]
           api_resources :rules, :controller => :content_view_filter_rules do

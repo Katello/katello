@@ -115,7 +115,7 @@ module Katello
                          {
                            'katello/api/v2/content_views' => [:update, :remove_filters],
                            'katello/api/v2/content_view_versions' => [:update],
-                           'katello/api/v2/content_view_filters' => [:create, :update, :destroy],
+                           'katello/api/v2/content_view_filters' => [:create, :update, :destroy, :remove_filter_rules, :add_filter_rules],
                            'katello/api/v2/content_view_filter_rules' => [:create, :update, :destroy],
                            'katello/api/v2/content_view_components' => [:add_components, :remove_components, :update]
                          },
