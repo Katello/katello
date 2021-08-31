@@ -90,7 +90,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.save = function (repository, saveUpstreamAuth) {
                 var deferred = $q.defer();
-                var fields = ['upstream_password', 'upstream_username', 'ansible_collection_auth_token', 'ansible_collection_auth_url', 'ansible_collection_requirements'];
+                var fields = ['upstream_password', 'upstream_username', 'upstream_authentication_token', 'ansible_collection_auth_token', 'ansible_collection_auth_url', 'ansible_collection_requirements'];
                 if (repository.content_type === 'yum' && typeof repository.ignore_srpms !== 'undefined') {
                     if (repository['ignore_srpms']) {
                         repository['ignorable_content'] = ["srpm"];
@@ -102,6 +102,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 if (!saveUpstreamAuth) {
                     repository['upstream_username'] = null;
                     repository['upstream_password'] = null;
+                    repository['upstream_authentication_token'] = null;
                 }
 
                 if (!_.isEmpty(repository.commaTagsWhitelist)) {
@@ -200,6 +201,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.repository['upstream_password'] = null;
                 $scope.repository['upstream_auth_exists'] = false;
                 $scope.repository['upstream_username'] = null;
+                $scope.repository['upstream_authentication_token'] = null;
                 $scope.save($scope.repository);
             };
 

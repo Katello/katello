@@ -327,6 +327,22 @@ module Katello
       refute rhel_6.save
     end
 
+    def test_valid_upstream_authentication_token
+      @root.stubs(:encryption_key).returns("25d224dd383e92a7e0c82b8bf7c985e9")
+      @root.upstream_authentication_token = "foo"
+      assert @root.save
+      assert_equal "foo", @root.upstream_authentication_token
+      assert_equal "[redacted]", @root.audits.last.audited_changes["upstream_authentication_token"]
+    end
+
+    def test_empty_upstream_authentication_token
+      @root.stubs(:encryption_key).returns("25d224dd383e92a7e0c82b8bf7c985ef")
+      @root.upstream_authentication_token = ""
+      assert @root.save
+      assert_nil @root.upstream_authentication_token
+      assert_nil @root.audits.last.audited_changes["upstream_authentication_token"]
+    end
+
     test_attributes :pid => '1b428129-7cf9-449b-9e3b-74360c5f9eca'
     def test_update_with_valid_name
       valid_name_list.each do |new_name|
