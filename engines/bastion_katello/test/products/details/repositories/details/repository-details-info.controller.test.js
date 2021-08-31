@@ -98,6 +98,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect($scope.save).toHaveBeenCalledWith($scope.repository);
         expect($scope.repository["upstream_password"]).toBe(null);
         expect($scope.repository["upstream_username"]).toBe(null);
+        expect($scope.repository["upstream_authentication_token"]).toBe(null);
         expect($scope.repository["upstream_auth_exists"]).toBe(false);
     });
 
@@ -123,31 +124,36 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     it('should ignore upstream auth on save unless specified', function() {
         var repo = new Repository({
             upstream_username: 'autofilled',
-            upstream_password: 'autofilled'
+            upstream_password: 'autofilled',
+            upstream_authentication_token: 'autofilled'
         })
 
         $scope.save(repo);
 
         expect(repo.upstream_username).toBe(null);
         expect(repo.upstream_password).toBe(null);
+        expect(repo.upstream_authentication_token).toBe(null);
     });
 
     it('should not ignore upstream auth on save unless specified', function() {
         var repo = new Repository({
             upstream_username: 'autofilled',
-            upstream_password: 'autofilled'
+            upstream_password: 'autofilled',
+            upstream_authentication_token: 'autofilled'
         })
 
         $scope.save(repo, true);
 
         expect(repo.upstream_username).toBe('autofilled');
         expect(repo.upstream_password).toBe('autofilled');
+        expect(repo.upstream_authentication_token).toBe('autofilled');
     });
 
     it('should clear out auth fields on save if blank', function() {
       var repo = new Repository({
         upstream_username: '',
         upstream_password: '',
+        upstream_authentication_token: '',
         ansible_collection_auth_url: '',
         ansible_collection_auth_token: '',
       })
@@ -156,6 +162,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
       expect(repo.upstream_username).toBe(null);
       expect(repo.upstream_password).toBe(null);
+      expect(repo.upstream_authentication_token).toBe(null);
       expect(repo.ansible_collection_auth_token).toBe(null);
       expect(repo.ansible_collection_auth_url).toBe(null);
     });
@@ -164,6 +171,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     var repo = new Repository({
       upstream_username: 'upstream',
       upstream_password: 'passwd',
+      upstream_authentication_token: 'token',
       ansible_collection_auth_url: 'https://url.com',
       ansible_collection_auth_token: 'some_token',
     })
@@ -172,6 +180,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
     expect(repo.upstream_username).not.toBe(null);
     expect(repo.upstream_password).not.toBe(null);
+    expect(repo.upstream_authentication_token).not.toBe(null);
     expect(repo.ansible_collection_auth_token).not.toBe(null);
     expect(repo.ansible_collection_auth_url).not.toBe(null);
   });

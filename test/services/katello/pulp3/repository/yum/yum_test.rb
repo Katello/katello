@@ -22,15 +22,11 @@ module Katello
             assert_equal 'sha1', publication_options[:package_checksum_type]
           end
 
-          def test_remote_options
+          def test_sles_auth_token_not_included_if_blank
             @repo.root.url = "http://foo.com/bar/"
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
             assert_equal "http://foo.com/bar/", service.remote_options[:url]
             refute service.remote_options.key?(:sles_auth_token)
-
-            @repo.root.url = "http://foo.com/bar/?mytoken"
-            assert_equal "http://foo.com/bar/", service.remote_options[:url]
-            assert_equal 'mytoken', service.remote_options[:sles_auth_token]
           end
 
           def test_delete_version_zero
@@ -59,6 +55,26 @@ module Katello
 
             refute service.common_remote_options[:username]
             refute service.common_remote_options[:password]
+          end
+
+          def test_sles_authentication_token_when_set
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            @repo.root.upstream_authentication_token = 'foo'
+            @repo.root.url = "http://myrepo.com?sauce=awesome"
+
+            assert_equal "http://myrepo.com?sauce=awesome", service.remote_options[:url]
+            assert_equal "foo", service.remote_options[:sles_auth_token]
+          end
+
+          def test_non_auth_token_query_parameters_are_preserved
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            @repo.root.upstream_authentication_token = ''
+
+            refute service.remote_options[:sles_auth_token]
+
+            @repo.root.upstream_authentication_token = ''
+            puts service.remote_options
+            refute service.remote_options[:sles_auth_token]
           end
         end
 
