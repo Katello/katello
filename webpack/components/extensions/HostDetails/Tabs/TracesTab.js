@@ -2,11 +2,11 @@ import React, { useState, useCallback } from 'react';
 import { Skeleton, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import TableWrapper from '../../../Table/TableWrapper';
 import useSet from '../../../Table/TableHooks';
-import getHostTraces from './HostTracesActions';
+import { getHostTraces, resolveHostTraces } from './HostTracesActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
 import './TracesTab.scss';
 
@@ -15,13 +15,12 @@ const TracesTab = () => {
   // const [selectedTraces, setSelectedTraces] = useState([]);
   const [selectedTraces, forceRender] = useSet([]);
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
+  const dispatch = useDispatch();
   const { id: hostId } = hostDetails;
   const emptyContentTitle = __('This host currently does not have traces.');
   const emptyContentBody = __('Add traces by installing katello-host-tools-tracer, and applying updates.');
   const emptySearchTitle = __('No matching traces found');
   const emptySearchBody = __('Try changing your search settings.');
-  // eslint-disable-next-line react/no-unescaped-entities
-  const actionButtons = <Button variant="danger" isDisabled> {__('Restart app')} </Button>;
   const fetchItems = useCallback(
     params =>
       (hostId ? getHostTraces(hostId, params) : null),
@@ -29,6 +28,20 @@ const TracesTab = () => {
   );
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
+  const onRestartApp = () => {
+    dispatch(resolveHostTraces(hostId, { trace_ids: [...selectedTraces] }));
+    selectedTraces.clear();
+    dispatch(getHostTraces(hostId, meta));
+  };
+  const actionButtons = (
+    <Button
+      variant="danger"
+      isDisabled={!selectedTraces.size}
+      onClick={onRestartApp}
+    >
+      {__('Restart app')}
+    </Button>
+  );
   const status = useSelector(state => selectHostTracesStatus(state));
   const resultIds = results?.map(result => result.id) ?? [];
   const areAllRowsOnPageSelected = () => resultIds.every(result => selectedTraces.has(result));
@@ -103,8 +116,8 @@ const TracesTab = () => {
               }}
               />
               <Td>{application}</Td>
-              <Td>{helper}</Td>
               <Td>{appType}</Td>
+              <Td>{helper}</Td>
             </Tr>
           );
          })
