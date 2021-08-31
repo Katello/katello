@@ -1,17 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Skeleton, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { useSelector } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import TableWrapper from '../../../Table/TableWrapper';
+import useSet from '../../../Table/TableHooks';
 import getHostTraces from './HostTracesActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
 import './TracesTab.scss';
 
 const TracesTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
-  const [selectedTraces, setSelectedTraces] = useState([]);
+  // const [selectedTraces, setSelectedTraces] = useState([]);
+  const [selectedTraces, forceRender] = useSet([]);
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const { id: hostId } = hostDetails;
   const emptyContentTitle = __('This host currently does not have traces.');
@@ -28,20 +30,13 @@ const TracesTab = () => {
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
   const status = useSelector(state => selectHostTracesStatus(state));
-  useEffect(() => console.log(selectedTraces))
-  const onRowSelect = ({ event, isSelected, traceId }) => {
-    console.log({ event, isSelected, traceId })
+  const onRowSelect = ({ isSelected, traceId }) => {
     if (isSelected) {
-      // set to true
-      setSelectedTraces((traces) => {
-        const newTraces = new Set(traces);
-        newTraces.add(traceId);
-        return [...newTraces];
-      });
+      selectedTraces.add(traceId);
     } else {
-      // set to false
-      setSelectedTraces(traces => traces.filter(id => traceId !== id));
+      selectedTraces.delete(traceId);
     }
+    forceRender(); // since changing the ref won't cause a rerender
   };
   if (!hostId) return <Skeleton />;
 
@@ -69,13 +64,14 @@ const TracesTab = () => {
         <Thead>
           <Tr>
             <Th select={{
-              isSelected: selectedTraces?.length === results?.length,
+              isSelected: selectedTraces?.size === results?.length,
               onSelect: (event, isSelected) => {
                 if (isSelected) {
-                  setSelectedTraces([...results.map(result => result.id)]);
+                  [...results.map(result => result.id)].forEach(id => selectedTraces.add(id));
                 } else {
-                  setSelectedTraces([]);
+                  selectedTraces.clear();
                 }
+                forceRender();
               },
             }}
             />
@@ -96,8 +92,8 @@ const TracesTab = () => {
             <Tr key={id} >
               <Td select={{
                 disable: false,
-                isSelected: selectedTraces.includes(id),
-                onSelect: (event, isSelected) => onRowSelect({ event, isSelected, traceId: id }),
+                isSelected: selectedTraces.has(id),
+                onSelect: (event, isSelected) => onRowSelect({ isSelected, traceId: id }),
                 rowIndex,
                 variant: 'checkbox',
               }}
