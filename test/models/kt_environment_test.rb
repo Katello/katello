@@ -110,9 +110,7 @@ module Katello
       env = KTEnvironment.create(:organization => @acme_corporation,
         :name => "AuditEnv", :prior => @library)
       env.destroy
-      recent_audit = Audit.all[-2]
-      assert_equal 'Katello::KTEnvironment', recent_audit.auditable_type
-      assert_equal 'destroy', recent_audit.action
+      assert Audit.find_by(auditable_type: 'Katello::KTEnvironment', action: 'destroy', auditable_id: env.id)
     end
 
     def test_insert_successor_after_library
