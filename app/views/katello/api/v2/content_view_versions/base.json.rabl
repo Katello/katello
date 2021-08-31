@@ -13,6 +13,9 @@ node do |version|
   version.content_counts_map
 end
 
+node do |version|
+  version.repository_type_counts_map
+end
 node :errata_counts do |version|
   partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(version.errata))
 end

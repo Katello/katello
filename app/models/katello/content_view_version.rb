@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class ContentViewVersion < Katello::Model
     include Authorization::ContentViewVersion
     include ForemanTasks::Concerns::ActionSubject
@@ -325,6 +326,14 @@ module Katello
         end
       end
       save!
+    end
+
+    def repository_type_counts_map
+      counts = {}
+      Katello::RepositoryTypeManager.enabled_repository_types.keys.each do |repo_type|
+        counts["#{repo_type}_repository_count"] = archived_repos.with_type(repo_type).count
+      end
+      counts
     end
 
     def content_counts_map

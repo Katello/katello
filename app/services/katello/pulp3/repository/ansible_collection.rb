@@ -4,6 +4,10 @@ module Katello
   module Pulp3
     class Repository
       class AnsibleCollection < ::Katello::Pulp3::Repository
+        def copy_content_for_source(source_repository, _options = {})
+          copy_units_by_href(source_repository.ansible_collections.pluck(:pulp_id))
+        end
+
         def remote_options
           common_remote_options.merge(url: root.url.chomp('/').concat('/'),
                                       requirements_file: root.ansible_collection_requirements.blank? ? nil : root.ansible_collection_requirements,
