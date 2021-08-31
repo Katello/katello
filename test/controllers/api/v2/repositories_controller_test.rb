@@ -446,6 +446,13 @@ module Katello
       end
     end
 
+    def test_create_with_authentication_token
+      upstream_authentication_token = "foo"
+      run_test_individual_attribute(:upstream_authentication_token => upstream_authentication_token) do |_, repo|
+        repo.root.expects(:upstream_authentication_token=).with(upstream_authentication_token)
+      end
+    end
+
     def test_create_with_http_proxy_policy
       run_test_individual_attribute(:http_proxy_policy => RootRepository::GLOBAL_DEFAULT_HTTP_PROXY) do |_, repo|
         repo.root.expects(:http_proxy_policy=).with(RootRepository::GLOBAL_DEFAULT_HTTP_PROXY)
@@ -546,6 +553,13 @@ module Katello
         attributes[:description].must_equal "katello rules"
       end
       put :update, params: { :id => repo.id, :description => "katello rules" }
+    end
+
+    def test_update_with_auth_token
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:upstream_authentication_token].must_equal "foo"
+      end
+      put :update, params: { :id => @repository.id, :upstream_authentication_token => "foo" }
     end
 
     def test_update_protected

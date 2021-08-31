@@ -56,6 +56,7 @@ module Katello
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
+      param :upstream_authentication_token, String, :desc => N_("Password of the upstream authentication token.")
       param :ostree_upstream_sync_policy, ::Katello::RootRepository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories")
       param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided")
       param :deb_releases, String, :desc => N_("whitespace-separated list of releases to be synced from deb-archive")
@@ -462,10 +463,11 @@ module Katello
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def repository_params
-      keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username, :download_concurrency,
+      keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password,
+              :upstream_username, :download_concurrency, :upstream_authentication_token,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, {:os_versions => []},
-              :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id, :retain_package_versions_count,
-              {:ignorable_content => []}
+              :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy,
+              :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
              ]
 
       keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
@@ -512,6 +514,7 @@ module Katello
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       root.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
+      root.upstream_authentication_token = repo_params[:upstream_authentication_token] if repo_params.key?(:upstream_authentication_token)
       root.ignorable_content = repo_params[:ignorable_content] if root.yum? && repo_params.key?(:ignorable_content)
       root.http_proxy_policy = repo_params[:http_proxy_policy] if repo_params.key?(:http_proxy_policy)
       root.http_proxy_id = repo_params[:http_proxy_id] if repo_params.key?(:http_proxy_id)

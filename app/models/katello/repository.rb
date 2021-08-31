@@ -177,10 +177,11 @@ module Katello
     delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :arch, :label, :url, :unprotected,
              :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
-             :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases, :deb_components, :deb_architectures,
-             :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id, :os_versions,
-             :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :ansible_collection_requirements,
-             :ansible_collection_auth_url, :ansible_collection_auth_token, :http_proxy_policy, :http_proxy_id, :to => :root
+             :upstream_authentication_token, :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases,
+             :deb_components, :deb_architectures, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id,
+             :ssl_client_key_id, :os_versions, :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist,
+             :ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token,
+             :http_proxy_policy, :http_proxy_id, :to => :root
 
     delegate :content_id, to: :root, allow_nil: true
     delegate :repository_type, to: :root

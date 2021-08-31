@@ -11,10 +11,12 @@ module Katello
         UNIT_LIMIT = 10_000
 
         def remote_options
-          url, sles_token = extract_sles_token
           options = common_remote_options
-          options.merge!(sles_auth_token: sles_token) if sles_token
-          options.merge!(url: url, policy: root.download_policy)
+          uri = URI(root.url)
+          unless root.upstream_authentication_token.blank?
+            options.merge!(sles_auth_token: root.upstream_authentication_token)
+          end
+          options.merge!(url: uri.to_s, policy: root.download_policy)
         end
 
         def publication_options(repository_version)
@@ -29,14 +31,6 @@ module Katello
 
         def specific_create_options
           { retain_package_versions: retain_package_versions_count }
-        end
-
-        def extract_sles_token
-          return [nil, nil] if root.url.blank?
-          uri = URI(root.url)
-          query = uri.query
-          uri.query = nil
-          [uri.to_s, query]
         end
 
         def skip_types

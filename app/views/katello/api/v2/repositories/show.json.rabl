@@ -80,7 +80,8 @@ node :upstream_password_exists do |repo|
 end
 
 node :upstream_auth_exists do |repo|
-  repo.upstream_username.present? && repo.upstream_password.present?
+  (repo.upstream_username.present? && repo.upstream_password.present?) ||
+  repo.upstream_authentication_token.present?
 end
 
 if @object && @object.library_instance_id.nil?
