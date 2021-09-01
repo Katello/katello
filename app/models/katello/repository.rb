@@ -420,7 +420,7 @@ module Katello
     end
 
     def to_hash(content_source = nil, force_http = false)
-      {id: id, name: label, url: full_path(content_source, force_http)}
+      {id: id, name: "#{product.name}: #{label}", url: full_path(content_source, force_http)}
     end
 
     #is the repo cloned in the specified environment
