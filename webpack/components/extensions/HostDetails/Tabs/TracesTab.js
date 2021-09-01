@@ -46,6 +46,17 @@ const TracesTab = () => {
   const resultIds = results?.map(result => result.id) ?? [];
   const areAllRowsOnPageSelected = () => resultIds.every(result => selectedTraces.has(result));
   const areAllRowsSelected = () => selectedTraces.size === Number(meta.total);
+  const selectPage = () => {
+    [...results.map(result => result.id)].forEach(id => selectedTraces.add(id));
+    forceRender();
+  };
+  const selectNone = () => {
+    selectedTraces.clear();
+    forceRender();
+  };
+  const selectAll = () => {
+    // leaving blank until we can implement selectAll Katello-wide
+  };
 
   const onRowSelect = ({ isSelected, traceId }) => {
     if (isSelected) {
@@ -74,7 +85,12 @@ const TracesTab = () => {
         autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
         foremanApiAutoComplete
         displaySelectAllCheckbox
+        selectPage={selectPage}
+        selectNone={selectNone}
+        selectAll={selectAll}
         rowsCount={results?.length}
+        areAllRowsOnPageSelected={areAllRowsOnPageSelected}
+        areAllRowsSelected={areAllRowsSelected}
         variant={TableVariant.compact}
         status={status}
         metadata={meta}
@@ -83,18 +99,7 @@ const TracesTab = () => {
       >
         <Thead>
           <Tr>
-            <Th select={{
-              isSelected: areAllRowsOnPageSelected(),
-              onSelect: (event, isSelected) => {
-                if (isSelected) {
-                  [...results.map(result => result.id)].forEach(id => selectedTraces.add(id));
-                } else {
-                  selectedTraces.clear();
-                }
-                forceRender();
-              },
-            }}
-            />
+            <Th />
             <Th>{__('Application')}</Th>
             <Th>{__('Type')}</Th>
             <Th>{__('Helper')}</Th>

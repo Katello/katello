@@ -3,6 +3,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Pagination, PaginationVariant, Flex, FlexItem, Dropdown, DropdownToggle,
   DropdownToggleCheckbox, DropdownItem, DropdownSeparator } from '@patternfly/react-core';
 
+import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
@@ -27,6 +28,11 @@ const TableWrapper = ({
   additionalListeners,
   activeFilters,
   displaySelectAllCheckbox,
+  selectAll,
+  selectNone,
+  selectPage,
+  areAllRowsSelected,
+  areAllRowsOnPageSelected,
   selectedCount,
   modelName,
   modelNamePlural,
@@ -99,8 +105,12 @@ const TableWrapper = ({
         return false;
     }
   };
-  const onSelectAllCheckboxChange = () =>
-    setSelectAllChecked(checked => handleThirdStateCheckbox(checked));
+  const onSelectAllCheckboxChange = () => {
+    if (isSelectAllChecked === false) {
+      return selectPage();
+    }
+    return selectNone();
+  };
   const onSelectAllDropdownToggle = () => setSelectAllDropdownOpen(isOpen => !isOpen);
   const pluralizedModel = pluralize(
     selectedCount,
@@ -108,11 +118,24 @@ const TableWrapper = ({
     modelNamePlural,
   );
 
+  const handleSelectAll = () => {
+    selectAll();
+    setSelectAllDropdownOpen(false);
+  };
+  const handleSelectPage = () => {
+    selectPage();
+    setSelectAllDropdownOpen(false);
+  };
+  const handleSelectNone = () => {
+    selectNone();
+    setSelectAllDropdownOpen(false);
+  };
+
   useEffect(() => {
     let newCheckedState;
     if (selectedCount === 0) newCheckedState = false;
     if (selectedCount > 0) newCheckedState = null;
-    if (selectedCount === rowsCount) newCheckedState = true;
+    if (selectedCount >= rowsCount) newCheckedState = true;
     setSelectAllChecked(newCheckedState);
   }, [rowsCount, selectedCount]);
 
@@ -137,20 +160,14 @@ const TableWrapper = ({
   };
 
   const selectAllDropdownItems = [
-    <DropdownItem key="link">Link</DropdownItem>,
-    <DropdownItem key="action" component="button">
-      Action
+    <DropdownItem key="select-all" component="button" isDisabled onClick={handleSelectAll}>
+      {__('Select all')}
     </DropdownItem>,
-    <DropdownItem key="disabled link" isDisabled>
-      Disabled link
+    <DropdownItem key="select-page" component="button" isDisabled={areAllRowsOnPageSelected()} onClick={handleSelectPage}>
+      {__('Select page')}
     </DropdownItem>,
-    <DropdownItem key="disabled action" isDisabled component="button">
-      Disabled action
-    </DropdownItem>,
-    <DropdownSeparator key="separator" />,
-    <DropdownItem key="separated link">Separated link</DropdownItem>,
-    <DropdownItem key="separated action" component="button">
-      Separated action
+    <DropdownItem key="select-none" component="button" onClick={handleSelectNone}>
+      {__('Select none')}
     </DropdownItem>,
   ];
 
