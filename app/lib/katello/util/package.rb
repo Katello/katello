@@ -170,6 +170,28 @@ module Katello
         end
         pieces.join(".")
       end
+
+      def self.parse_dependencies(dependencies)
+        # dependencies is either 'requires' or 'provides' metadata attribute of rpm package in pulp
+        results = []
+        flags = {'GT' => '>', 'LT' => '<', 'EQ' => '=', 'GE' => '>=', 'LE' => '<='}
+
+        dependencies&.each do |dependency|
+          dependencies_str = ""
+          if dependency.count < 3
+            dependencies_str = dependency.first
+            results << dependencies_str
+          else
+            dependency[1] = flags[dependency[1]]
+            dependency[0...2].each { |dependency_piece| dependencies_str += "#{dependency_piece} " }
+            dependencies_str += "#{dependency[2]}:" unless dependency[2] == "0" # epoch
+            dependencies_str += "#{dependency[3]}-" # version
+            dependency[4...-1].each { |dependency_piece| dependencies_str += "#{dependency_piece}." }
+            results << dependencies_str[0...-1]
+          end
+        end
+        results.uniq
+      end
     end
   end
 end
