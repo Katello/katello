@@ -6,6 +6,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { noop } from 'foremanReact/common/helpers';
 
 import { pluralize } from '../../utils/helpers';
+import './SelectAllCheckbox.scss';
 
 const SelectAllCheckbox = ({
   selectAll,
@@ -74,7 +75,7 @@ const SelectAllCheckbox = ({
           id="toggle-id-8"
           splitButtonItems={[
             <DropdownToggleCheckbox
-              id="tablewrapper-select-all-checkbox"
+              className="tablewrapper-select-all-checkbox"
               key="tablewrapper-select-all-checkbox"
               aria-label="Select all"
               onChange={checked => onSelectAllCheckboxChange(checked)}

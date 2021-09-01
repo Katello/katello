@@ -115,7 +115,7 @@ const TableWrapper = ({
     <>
       <Flex>
         {displaySelectAllCheckbox &&
-          <FlexItem>
+          <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
             <SelectAllCheckbox
               selectAll={selectAll}
               selectNone={selectNone}
