@@ -26,8 +26,6 @@ export const resolveHostTraces = (hostId, params, dispatch) => {
     handleSuccess: (response) => {
       const { data: { id } } = response;
       const traceCount = Number(traceIds.length);
-      console.log(traceCount);
-      console.log(pluralize(traceCount, 'trace'))
       dispatch({
         type: 'TOASTS_ADD',
         payload: {

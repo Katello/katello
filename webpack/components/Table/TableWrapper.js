@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { Pagination, PaginationVariant, Flex, FlexItem, Dropdown, DropdownToggle,
-  DropdownToggleCheckbox, DropdownItem, DropdownSeparator } from '@patternfly/react-core';
+import { Pagination, PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
 
-import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
+import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
 import { usePaginationOptions } from 'foremanReact/components/Pagination/PaginationHooks';
-import { pluralize } from '../../utils/helpers';
 
 import MainTable from './MainTable';
 import Search from '../../components/Search';
+import SelectAllCheckbox from '../SelectAllCheckbox';
 import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
@@ -44,8 +43,6 @@ const TableWrapper = ({
   const [perPage, setPerPage] = useState(Number(metadata?.per_page ?? foremanPerPage));
   const [page, setPage] = useState(Number(metadata?.page ?? 1));
   const [total, setTotal] = useState(Number(metadata?.subtotal ?? 0));
-  const [isSelectAllChecked, setSelectAllChecked] = useState(null);
-  const [isSelectAllDropdownOpen, setSelectAllDropdownOpen] = useState(false);
 
   const rowsCount = metadata?.subtotal ?? 0;
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
@@ -93,51 +90,6 @@ const TableWrapper = ({
   const onPaginationUpdate = (updatedPagination) => {
     updatePagination(updatedPagination);
   };
-  const handleThirdStateCheckbox = (checked) => {
-    switch (checked) {
-      case true:
-        return false;
-      case false:
-        return true;
-      case null: // null is the partially checked state
-        return false;
-      default:
-        return false;
-    }
-  };
-  const onSelectAllCheckboxChange = () => {
-    if (isSelectAllChecked === false) {
-      return selectPage();
-    }
-    return selectNone();
-  };
-  const onSelectAllDropdownToggle = () => setSelectAllDropdownOpen(isOpen => !isOpen);
-  const pluralizedModel = pluralize(
-    selectedCount,
-    modelName,
-    modelNamePlural,
-  );
-
-  const handleSelectAll = () => {
-    selectAll();
-    setSelectAllDropdownOpen(false);
-  };
-  const handleSelectPage = () => {
-    selectPage();
-    setSelectAllDropdownOpen(false);
-  };
-  const handleSelectNone = () => {
-    selectNone();
-    setSelectAllDropdownOpen(false);
-  };
-
-  useEffect(() => {
-    let newCheckedState;
-    if (selectedCount === 0) newCheckedState = false;
-    if (selectedCount > 0) newCheckedState = null;
-    if (selectedCount >= rowsCount) newCheckedState = true;
-    setSelectAllChecked(newCheckedState);
-  }, [rowsCount, selectedCount]);
 
   const PageControls = ({ variant }) => (
     <FlexItem align={{ default: 'alignRight' }}>
@@ -159,43 +111,21 @@ const TableWrapper = ({
     variant: PropTypes.string.isRequired,
   };
 
-  const selectAllDropdownItems = [
-    <DropdownItem key="select-all" component="button" isDisabled onClick={handleSelectAll}>
-      {__('Select all')}
-    </DropdownItem>,
-    <DropdownItem key="select-page" component="button" isDisabled={areAllRowsOnPageSelected()} onClick={handleSelectPage}>
-      {__('Select page')}
-    </DropdownItem>,
-    <DropdownItem key="select-none" component="button" onClick={handleSelectNone}>
-      {__('Select none')}
-    </DropdownItem>,
-  ];
-
   return (
     <>
       <Flex>
         {displaySelectAllCheckbox &&
           <FlexItem>
-            <Dropdown
-              toggle={
-                <DropdownToggle
-                  onToggle={onSelectAllDropdownToggle}
-                  id="toggle-id-8"
-                  splitButtonItems={[
-                    <DropdownToggleCheckbox
-                      id="tablewrapper-select-all-checkbox"
-                      key="tablewrapper-select-all-checkbox"
-                      aria-label="Select all"
-                      onChange={checked => onSelectAllCheckboxChange(checked)}
-                      isChecked={isSelectAllChecked}
-                    >
-                      {`${pluralizedModel} selected`}
-                    </DropdownToggleCheckbox>,
-                  ]}
-                />
-            }
-              isOpen={isSelectAllDropdownOpen}
-              dropdownItems={selectAllDropdownItems}
+            <SelectAllCheckbox
+              selectAll={selectAll}
+              selectNone={selectNone}
+              selectPage={selectPage}
+              selectedCount={selectedCount}
+              modelName={modelName}
+              modelNamePlural={modelNamePlural}
+              rowsCount={rowsCount}
+              areAllRowsSelected={areAllRowsSelected()}
+              areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
             />
           </FlexItem>
         }
@@ -263,6 +193,11 @@ TableWrapper.propTypes = {
   selectedCount: PropTypes.number,
   modelName: PropTypes.string,
   modelNamePlural: PropTypes.string,
+  selectAll: PropTypes.func,
+  selectNone: PropTypes.func,
+  selectPage: PropTypes.func,
+  areAllRowsSelected: PropTypes.func,
+  areAllRowsOnPageSelected: PropTypes.func,
 };
 
 TableWrapper.defaultProps = {
@@ -276,6 +211,11 @@ TableWrapper.defaultProps = {
   selectedCount: 0,
   modelName: 'item',
   modelNamePlural: undefined,
+  selectAll: noop,
+  selectNone: noop,
+  selectPage: noop,
+  areAllRowsSelected: noop,
+  areAllRowsOnPageSelected: noop,
 };
 
 export default TableWrapper;
