@@ -73,10 +73,13 @@ const TracesTab = () => {
         fetchItems={fetchItems}
         autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
         foremanApiAutoComplete
+        displaySelectAllCheckbox
         rowsCount={results?.length}
         variant={TableVariant.compact}
         status={status}
         metadata={meta}
+        selectedCount={selectedTraces.size}
+        modelName="trace"
       >
         <Thead>
           <Tr>
