@@ -29,7 +29,7 @@ const TracesTab = () => {
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
   const onRestartApp = () => {
-    dispatch(resolveHostTraces(hostId, { trace_ids: [...selectedTraces] }));
+    dispatch(resolveHostTraces(hostId, { trace_ids: [...selectedTraces] }, dispatch));
     selectedTraces.clear();
     dispatch(getHostTraces(hostId, meta));
   };

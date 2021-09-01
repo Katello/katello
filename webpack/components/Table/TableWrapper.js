@@ -189,7 +189,7 @@ const TableWrapper = ({
                       onChange={checked => onSelectAllCheckboxChange(checked)}
                       isChecked={isSelectAllChecked}
                     >
-                      {`${selectedCount} ${pluralizedModel} selected`}
+                      {`${pluralizedModel} selected`}
                     </DropdownToggleCheckbox>,
                   ]}
                 />

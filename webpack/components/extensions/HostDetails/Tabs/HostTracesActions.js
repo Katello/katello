@@ -1,8 +1,9 @@
 import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
-import { HOST_TRACES_KEY } from './HostTracesConstants';
+import { addToast } from 'foremanReact/redux/actions/toasts';
+import { HOST_TRACES_KEY, RESOLVE_HOST_TRACES_TASK_KEY } from './HostTracesConstants';
 import { foremanApi } from '../../../../services/api';
-import { getResponseErrorMsgs } from '../../../../utils/helpers';
+import { getResponseErrorMsgs, pluralize } from '../../../../utils/helpers';
 
 const errorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);
@@ -16,31 +17,33 @@ export const getHostTraces = (hostId, params) => get({
   params,
 });
 
-const filteredTraces = (prevResponse, traceIds) => {
-  const newResults = [...prevResponse.results].filter(result => !traceIds.includes(result?.id));
-  return {
-    ...prevResponse,
-    results: newResults,
-  };
-};
-
-export const resolveHostTraces = (hostId, params) => {
+export const resolveHostTraces = (hostId, params, dispatch) => {
   const { traceIds } = propsToCamelCase(params);
   return put({
     type: API_OPERATIONS.PUT,
-    key: HOST_TRACES_KEY,
+    key: RESOLVE_HOST_TRACES_TASK_KEY,
     url: foremanApi.getApiUrl(`/hosts/${hostId}/traces/resolve`),
-    successToast: () => `Restarting ${traceIds.length} traces.`,
-    errorToast: error => errorToast(error),
-    updateData: (prevResponse, newResponse) => {
-      console.log({prevResponse, newResponse})
-      console.log(filteredTraces(prevResponse, traceIds))
-      if (newResponse.label && newResponse.start_at) {
-        // then it's a task and not a result list
-        return filteredTraces(prevResponse, traceIds);
-      }
-      return newResponse;
+    handleSuccess: (response) => {
+      const { data: { id } } = response;
+      const traceCount = Number(traceIds.length);
+      console.log(traceCount);
+      console.log(pluralize(traceCount, 'trace'))
+      dispatch({
+        type: 'TOASTS_ADD',
+        payload: {
+          key: id,
+          message: {
+            type: 'success',
+            message: `Restarting ${pluralize(traceCount, 'trace')}.`,
+            link: {
+              children: 'View task',
+              href: `/foreman_tasks/tasks/${id}`,
+            },
+          },
+        },
+      });
     },
+    // errorToast: error => errorToast(error),
     params,
   });
 };
