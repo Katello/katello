@@ -100,30 +100,6 @@ if(!Object.keys) {
   };
 }
 
-
-//override the jQuery UJS $.rails.allowAction
-$.rails.allowAction = function(element) {
-    var message = element.data('confirm'),
-    answer = false, callback;
-    if (!message) { return true; }
-
-    if ($.rails.fire(element, 'confirm')) {
-        KT.common.customConfirm({
-            message: message,
-            yes_callback: function() {
-                callback = $.rails.fire(element, 'confirm:complete', [answer]);
-                if(callback) {
-                    var oldAllowAction = $.rails.allowAction;
-                    $.rails.allowAction = function() { return true; };
-                    element.trigger('click');
-                    $.rails.allowAction = oldAllowAction;
-                }
-            }
-        });
-    }
-    return false;
-};
-
 //make jQuery Contains case insensitive
 $.expr[':'].Contains = function(a, i, m) {
   return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
@@ -267,7 +243,4 @@ $(window).ready(function(){
     });
 
     window.alert = function(message){KT.common.customAlert(message);return false;};
-    $.rails.confirm = function(message) {
-        KT.common.customConfirm({message: message}); return false;
-    };
 });
