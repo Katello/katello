@@ -140,5 +140,12 @@ module Katello
       assert_equal parsed, Util::Package.parse_nvre(unparsed)
       assert_equal unparsed, Util::Package.build_nvrea(parsed)
     end
+
+    def test_parse_dependencies
+      unparsed = [["package", "EQ", "0", "7.1.4", "14.el7_7", false], ["package", "LT", "2", "7.1.4", "14.el7_7", false], ["package", false]]
+      parsed = ["package = 7.1.4-14.el7_7", "package < 2:7.1.4-14.el7_7", "package"]
+
+      assert_equal parsed, Util::Package.parse_dependencies(unparsed)
+    end
   end
 end
