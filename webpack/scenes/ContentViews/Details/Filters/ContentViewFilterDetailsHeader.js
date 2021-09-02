@@ -2,11 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Split, SplitItem, GridItem, TextContent, Text, TextVariants, Label } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
+import AffectedRepositorySelection from './AffectedRepositories/AffectedRepositorySelection';
 
 import RepoIcon from '../Repositories/RepoIcon';
 import { repoType, capitalize } from '../../../../utils/helpers';
 
-const ContentViewFilterDetailsHeader = ({ details }) => {
+const ContentViewFilterDetailsHeader = ({
+  cvId, filterId, details, setShowAffectedRepos,
+}) => {
   const {
     type, name, inclusion, description,
   } = details;
@@ -15,10 +18,17 @@ const ContentViewFilterDetailsHeader = ({ details }) => {
 
   return (
     <>
-      <GridItem span={12}>
+      <GridItem span={9}>
         <TextContent>
           <Text component={TextVariants.h2}>{name}</Text>
         </TextContent>
+      </GridItem>
+      <GridItem span={3} style={{ float: 'right' }}>
+        <AffectedRepositorySelection
+          cvId={cvId}
+          filterId={filterId}
+          setShowAffectedRepos={setShowAffectedRepos}
+        />
       </GridItem>
       <GridItem span={10}>
         <Split hasGutter>
@@ -45,12 +55,20 @@ const ContentViewFilterDetailsHeader = ({ details }) => {
 };
 
 ContentViewFilterDetailsHeader.propTypes = {
+  cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   details: PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string,
     inclusion: PropTypes.bool,
     description: PropTypes.string,
   }).isRequired,
+  setShowAffectedRepos: PropTypes.func.isRequired,
+};
+
+ContentViewFilterDetailsHeader.defaultProps = {
+  cvId: '',
+  filterId: '',
 };
 
 export default ContentViewFilterDetailsHeader;

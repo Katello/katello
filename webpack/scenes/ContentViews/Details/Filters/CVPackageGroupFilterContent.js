@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
@@ -13,16 +13,18 @@ import {
   selectCVFilterPackageGroups,
   selectCVFilterPackageGroupStatus,
   selectCVFilterPackageGroupError,
-  selectCVFilters,
+  selectCVFilters, selectCVFilterDetails,
 } from '../ContentViewDetailSelectors';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import getContentViewDetails, {
   addCVFilterRule, removeCVFilterRule, getCVFilterPackageGroups,
   deleteContentViewFilterRules, addContentViewFilterRules,
 } from '../ContentViewDetailActions';
+import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 
-
-const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
+const CVPackageGroupFilterContent = ({
+  cvId, filterId, showAffectedRepos, setShowAffectedRepos,
+}) => {
   const dispatch = useDispatch();
   const { results: filterResults } =
     useSelector(state => selectCVFilters(state, cvId), shallowEqual);
@@ -32,6 +34,9 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
     selectCVFilterPackageGroupStatus(state, cvId, filterId), shallowEqual);
   const error = useSelector(state =>
     selectCVFilterPackageGroupError(state, cvId, filterId), shallowEqual);
+  const filterDetails = useSelector(state =>
+    selectCVFilterDetails(state, cvId, filterId), shallowEqual);
+  const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
@@ -108,6 +113,14 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
       dispatch(getContentViewDetails(cvId))));
     deselectAll();
   };
+
+  useEffect(() => {
+    if (!repositories.length && showAffectedRepos) {
+      setActiveTabKey(1);
+    } else {
+      setActiveTabKey(0);
+    }
+  }, [showAffectedRepos, repositories.length]);
 
   useDeepCompareEffect(() => {
     const { results, ...meta } = response;
@@ -196,6 +209,13 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
           />
         </div>
       </Tab>
+      {(repositories.length || showAffectedRepos) &&
+      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <div className="tab-body-with-spacing">
+          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
+        </div>
+      </Tab>
+      }
     </Tabs>
   );
 };
@@ -203,6 +223,8 @@ const CVPackageGroupFilterContent = ({ cvId, filterId }) => {
 CVPackageGroupFilterContent.propTypes = {
   cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  showAffectedRepos: PropTypes.bool.isRequired,
+  setShowAffectedRepos: PropTypes.func.isRequired,
 };
 
 export default CVPackageGroupFilterContent;

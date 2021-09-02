@@ -9,6 +9,7 @@ import {
   CREATE_CONTENT_VIEW_FILTER_KEY,
   DELETE_CONTENT_VIEW_FILTER_KEY,
   DELETE_CONTENT_VIEW_FILTERS_KEY,
+  EDIT_CONTENT_VIEW_FILTER,
   ADD_CONTENT_VIEW_FILTER_RULE,
   EDIT_CONTENT_VIEW_FILTER_RULE,
   REMOVE_CONTENT_VIEW_FILTER_RULE,
@@ -31,6 +32,7 @@ import {
   addComponentSuccessMessage,
   removeComponentSuccessMessage,
   cvVersionPromoteKey,
+  cvFilterRepoKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
@@ -120,6 +122,29 @@ export const getContentViewRepositories = (cvId, params, status) => {
     params: apiParams,
   });
 };
+
+export const getFilterRepositories = (cvId, filterId, params) => {
+  const apiParams = { ...params };
+  const apiUrl = `/content_views/${cvId}/repositories`;
+
+  return get({
+    type: API_OPERATIONS.GET,
+    key: cvFilterRepoKey(filterId),
+    url: api.getApiUrl(apiUrl),
+    params: apiParams,
+  });
+};
+
+export const editCVFilter = (filterId, params, handleSuccess) => put({
+  type: API_OPERATIONS.PUT,
+  key: EDIT_CONTENT_VIEW_FILTER,
+  url: api.getApiUrl(`/content_view_filters/${filterId}`),
+  params,
+  handleSuccess,
+  successToast: () => __('Filter edited successfully'),
+  errorToast: error => __(`Something went wrong while editing the filter! ${getResponseErrorMsgs(error.response)}`),
+});
+
 
 export const getRepositoryTypes = () => get({
   type: API_OPERATIONS.GET,
