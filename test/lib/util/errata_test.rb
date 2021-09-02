@@ -37,23 +37,36 @@ module Katello
     end
 
     def test_filter_by_pulp_id_returns_nothing_with_empty_list_of_pulp_ids
-      assert_empty filter_errata_by_pulp_href([@erratum, @erratum2], [])
+      assert_empty filter_errata_by_pulp_href([@erratum, @erratum2], [], [@fedora_one.filename, @fedora_two.filename])
     end
 
     def test_filter_by_pulp_id_returns_nothing_with_empty_list_of_errata
-      assert_empty filter_errata_by_pulp_href([], [@fedora_one.pulp_id])
+      assert_empty filter_errata_by_pulp_href([], [@fedora_one.pulp_id], [@fedora_one.filename, @fedora_two.filename])
     end
 
     def test_filter_by_pulp_id_return_nothing_if_no_matching_packages
-      assert_empty filter_errata_by_pulp_href([@erratum, @erratum2], ["floop"])
+      assert_empty filter_errata_by_pulp_href([@erratum, @erratum2], ["floop"], [@fedora_one.filename, @fedora_two.filename])
     end
 
     def test_filter_by_pulp_id_returns_nothing_errata_with_some_matching_packages
-      assert_equal [], filter_errata_by_pulp_href([@erratum, @erratum2], [@fedora_one.pulp_id])
+      assert_equal [], filter_errata_by_pulp_href([@erratum, @erratum2], [@fedora_one.pulp_id],
+                                                  [@fedora_one.filename, @fedora_two.filename])
     end
 
-    def test_filter_by_pulp_id_idenfifies_errata_with_all_matching_packages
-      assert_equal [@erratum], filter_errata_by_pulp_href([@erratum, @erratum2], [@fedora_one.pulp_id, @fedora_two.pulp_id])
+    def test_filter_by_pulp_id_identifies_errata_with_all_matching_packages
+      assert_equal [@erratum], filter_errata_by_pulp_href([@erratum, @erratum2],
+                                                          [@fedora_one.pulp_id, @fedora_two.pulp_id],
+                                                          [@fedora_one.filename, @fedora_two.filename])
+    end
+
+    def test_filter_by_pulp_id_includes_errata_with_missing_packages_not_in_source_repo
+      ::Katello::ErratumPackage.create(erratum_id: @erratum.id,
+                                       nvrea: '999:missing-package-1.0.el27.noarch',
+                                       name: 'missing-package',
+                                       filename: 'missing-package-1.0.el27.noarch.rpm')
+      assert_equal [@erratum], filter_errata_by_pulp_href([@erratum, @erratum2],
+                                                          [@fedora_one.pulp_id, @fedora_two.pulp_id],
+                                                          [@fedora_one.filename, @fedora_two.filename])
     end
   end
 end

@@ -220,25 +220,6 @@ module ::Actions::Pulp3
       assert_equal 32, @repo_clone.rpms.pluck(:name).sort.count
     end
 
-    def test_yum_copy_all_no_filter_rules_with_dependency_solving
-      filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
-      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "trout")
-
-      @repo_clone_original_version_href = @repo_clone.version_href
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
-                             @repo_clone, @primary, [@repo], solve_dependencies: true, filters: [filter])
-      @repo_clone.reload
-
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
-      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
-      @repo_clone.reload
-
-      refute_empty @repo.rpms
-      assert_equal ["bear", "cat", "crow", "dolphin", "elephant", "gorilla", "horse",
-                    "kangaroo", "lion", "mouse", "penguin", "pike", "tiger", "trout",
-                    "wolf", "zebra"], @repo_clone.rpms.pluck(:name).sort
-    end
-
     def test_yum_copy_with_whitelist_name_filter
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "kangaroo")
@@ -340,36 +321,6 @@ module ::Actions::Pulp3
       @repo_clone.reload
 
       assert_equal ['walrus-0.71-1.noarch.rpm'], @repo_clone.rpms.pluck(:filename)
-    end
-
-    def test_yum_copy_with_all_duplicate_content_with_dep_solving
-      filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
-      FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "walrus", :max_version => "4")
-
-      @repo_clone_original_version_href = @repo_clone.version_href
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
-                             @repo_clone, @primary, [@repo], solve_dependencies: true, filters: [filter])
-
-      @repo_clone.reload
-      refute_equal @repo_clone.version_href, @repo_clone_original_version_href
-
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
-      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
-
-      @repo_clone.reload
-
-      @repo_clone_original_version_href = @repo_clone.version_href
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
-                             @repo_clone, @primary, [@repo], solve_dependencies: true, filters: [filter])
-      @repo_clone.reload
-      assert_equal @repo_clone.version_href, @repo_clone_original_version_href
-
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
-      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
-      @repo_clone.reload
-
-      assert_equal ["whale-0.2-1.noarch.rpm", "walrus-0.71-1.noarch.rpm", "stork-0.12-2.noarch.rpm", "shark-0.1-1.noarch.rpm"].sort,
-        @repo_clone.rpms.pluck(:filename).sort
     end
   end
 

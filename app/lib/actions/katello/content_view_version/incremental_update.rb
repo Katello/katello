@@ -55,7 +55,7 @@ module Actions
 
           sequence do
             repository_mapping = plan_action(ContentViewVersion::CreateRepos, new_content_view_version, repos_to_clone).repository_mapping
-            separated_repo_map = separated_repo_mapping(repository_mapping)
+            separated_repo_map = separated_repo_mapping(repository_mapping, true)
 
             repos_to_clone.each do |source_repos|
               plan_action(Repository::CloneToVersion,
@@ -66,8 +66,8 @@ module Actions
             end
 
             concurrence do
-              if separated_repo_map[:pulp3_yum].keys.flatten.present?
-                extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[:pulp3_yum], old_version)
+              if separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
+                extended_repo_mapping = pulp3_repo_mapping(separated_repo_map[:pulp3_yum_multicopy], old_version)
                 unit_map = pulp3_content_mapping(content)
 
                 unless extended_repo_mapping.empty? || unit_map.values.flatten.empty?
@@ -75,7 +75,7 @@ module Actions
                     copy_action_outputs << plan_action(Pulp3::Repository::MultiCopyUnits, extended_repo_mapping, unit_map,
                                                        dependency_solving: dep_solve).output
                     repos_to_clone.each do |source_repos|
-                      if separated_repo_map[:pulp3_yum].keys.include?(source_repos)
+                      if separated_repo_map[:pulp3_yum_multicopy].keys.include?(source_repos)
                         copy_repos(repository_mapping[source_repos])
                       end
                     end
