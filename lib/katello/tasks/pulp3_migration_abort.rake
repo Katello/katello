@@ -18,9 +18,11 @@ namespace :katello do
     end
 
     api = Katello::Pulp3::Api::Core.new(SmartProxy.pulp_primary)
-    api.tasks_api.list(:state__in => 'running,waiting', :name => 'pulp_2to3_migration.app.migration.complex_repo_migration').results.each do |task|
-      api.cancel_task(task.pulp_href)
-      cancelled_tasks_count += 1
+    %w(pulp_2to3_migration.app.tasks.migrate.migrate_from_pulp2 pulp_2to3_migration.app.migration.complex_repo_migration).each do |task_label|
+      api.tasks_api.list(:state__in => 'running,waiting', :name => task_label).results.each do |task|
+        api.cancel_task(task.pulp_href)
+        cancelled_tasks_count += 1
+      end
     end
 
     puts _("\e[33mCancelled #{cancelled_tasks_count} tasks.\e[0m")
