@@ -475,9 +475,14 @@ module Katello
         end
       end
 
-      def add_content(content_unit_href)
+      def add_content(content_unit_href, remove_all_units = false)
         content_unit_href = [content_unit_href] unless content_unit_href.is_a?(Array)
-        api.repositories_api.modify(repository_reference.repository_href, add_content_units: content_unit_href)
+        if remove_all_units
+          api.repositories_api.modify(repository_reference.repository_href, remove_content_units: ['*'])
+          api.repositories_api.modify(repository_reference.repository_href, add_content_units: content_unit_href)
+        else
+          api.repositories_api.modify(repository_reference.repository_href, add_content_units: content_unit_href)
+        end
       end
 
       def add_content_for_repo(repository_href, content_unit_href)
