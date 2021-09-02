@@ -49,13 +49,12 @@ module Actions
             plan_action(ContentView::AddToEnvironment, version, library) unless options[:skip_promotion]
             repository_mapping = plan_action(ContentViewVersion::CreateRepos, version, source_repositories).repository_mapping
             # Split Pulp 3 Yum repos out of the repository_mapping.  Only Pulp 3 RPM plugin has multi repo copy support.
-            separated_repo_map = separated_repo_mapping(repository_mapping)
+            separated_repo_map = separated_repo_mapping(repository_mapping, content_view.solve_dependencies)
 
             if options[:importing]
               handle_import(version, options.slice(:path, :metadata))
-            elsif separated_repo_map[:pulp3_yum].keys.flatten.present? &&
-              SmartProxy.pulp_primary.pulp3_support?(separated_repo_map[:pulp3_yum].keys.flatten.first)
-              plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum], version)
+            elsif separated_repo_map[:pulp3_yum_multicopy].keys.flatten.present?
+              plan_action(Repository::MultiCloneToVersion, separated_repo_map[:pulp3_yum_multicopy], version)
             end
 
             concurrence do
