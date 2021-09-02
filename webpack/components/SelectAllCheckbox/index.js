@@ -15,8 +15,8 @@ const SelectAllCheckbox = ({
   selectedCount,
   modelName,
   modelNamePlural,
-  rowsCount,
   areAllRowsOnPageSelected,
+  areAllRowsSelected,
 }) => {
   const [isSelectAllChecked, setSelectAllChecked] = useState(null);
   const [isSelectAllDropdownOpen, setSelectAllDropdownOpen] = useState(false);
@@ -51,9 +51,9 @@ const SelectAllCheckbox = ({
     let newCheckedState;
     if (selectedCount === 0) newCheckedState = false;
     if (selectedCount > 0) newCheckedState = null; // null is partially-checked state
-    if (selectedCount >= rowsCount) newCheckedState = true;
+    if (areAllRowsSelected) newCheckedState = true;
     setSelectAllChecked(newCheckedState);
-  }, [rowsCount, selectedCount]);
+  }, [selectedCount, areAllRowsSelected]);
 
   const selectAllDropdownItems = [
     <DropdownItem key="select-all" component="button" isDisabled onClick={handleSelectAll}>
@@ -99,8 +99,7 @@ SelectAllCheckbox.propTypes = {
   selectAll: PropTypes.func,
   selectNone: PropTypes.func,
   selectPage: PropTypes.func,
-  rowsCount: PropTypes.number,
-  // areAllRowsSelected: PropTypes.bool,
+  areAllRowsSelected: PropTypes.bool,
   areAllRowsOnPageSelected: PropTypes.bool,
 };
 
@@ -111,8 +110,7 @@ SelectAllCheckbox.defaultProps = {
   selectAll: noop,
   selectNone: noop,
   selectPage: noop,
-  rowsCount: 0,
-  // areAllRowsSelected: false,
+  areAllRowsSelected: false,
   areAllRowsOnPageSelected: false,
 };
 

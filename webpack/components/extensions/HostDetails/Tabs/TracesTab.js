@@ -44,8 +44,10 @@ const TracesTab = () => {
   );
   const status = useSelector(state => selectHostTracesStatus(state));
   const resultIds = results?.map(result => result.id) ?? [];
-  const areAllRowsOnPageSelected = () => resultIds.every(result => selectedTraces.has(result));
-  const areAllRowsSelected = () => selectedTraces.size === Number(meta.total);
+  const areAllRowsOnPageSelected = () =>
+    Number(resultIds?.length) > 0 && resultIds.every(result => selectedTraces.has(result));
+  const areAllRowsSelected = () =>
+    Number(selectedTraces.size) > 0 && selectedTraces.size === Number(meta.total);
   const selectPage = () => {
     [...results.map(result => result.id)].forEach(id => selectedTraces.add(id));
     forceRender();
@@ -117,6 +119,9 @@ const TracesTab = () => {
             <Tr key={id} >
               <Td select={{
                 disable: false,
+                props: {
+                  'aria-label': `check-${application}`,
+                },
                 isSelected: selectedTraces.has(id),
                 onSelect: (event, isSelected) => onRowSelect({ isSelected, traceId: id }),
                 rowIndex,
