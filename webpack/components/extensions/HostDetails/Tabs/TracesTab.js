@@ -12,7 +12,6 @@ import './TracesTab.scss';
 
 const TracesTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
-  // const [selectedTraces, setSelectedTraces] = useState([]);
   const [selectedTraces, forceRender] = useSet([]);
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const dispatch = useDispatch();

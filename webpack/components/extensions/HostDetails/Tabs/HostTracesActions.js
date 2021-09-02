@@ -41,7 +41,7 @@ export const resolveHostTraces = (hostId, params, dispatch) => {
         },
       });
     },
-    // errorToast: error => errorToast(error),
+    errorToast: error => errorToast(error),
     params,
   });
 };
