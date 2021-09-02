@@ -36,6 +36,10 @@ angular.module('Bastion.packages').controller('PackageController',
                             $scope.package.arch;
         };
 
+        $scope.encodedUrl = function(field) {
+            return '/content_hosts?search=' + encodeURIComponent($scope.createSearchString(field));
+        };
+
         $scope.package = Package.get({id: $scope.$stateParams.packageId}, function () {
             $scope.panel.loading = false;
             $scope.fetchHostCount();
