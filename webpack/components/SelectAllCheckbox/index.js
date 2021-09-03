@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Dropdown, DropdownToggle, DropdownToggleCheckbox,
   DropdownItem } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { noop } from 'foremanReact/common/helpers';
 
 import './SelectAllCheckbox.scss';
 
@@ -12,6 +11,8 @@ const SelectAllCheckbox = ({
   selectNone,
   selectPage,
   selectedCount,
+  pageRowCount,
+  totalCount,
   areAllRowsOnPageSelected,
   areAllRowsSelected,
 }) => {
@@ -48,14 +49,14 @@ const SelectAllCheckbox = ({
   }, [selectedCount, areAllRowsSelected]);
 
   const selectAllDropdownItems = [
-    <DropdownItem key="select-all" component="button" isDisabled onClick={handleSelectAll}>
-      {__('Select all')}
+    <DropdownItem key="select-none" component="button" onClick={handleSelectNone}>
+      {`${__('Select none')} (0)`}
     </DropdownItem>,
     <DropdownItem key="select-page" component="button" isDisabled={areAllRowsOnPageSelected} onClick={handleSelectPage}>
-      {__('Select page')}
+      {`${__('Select page')} (${pageRowCount})`}
     </DropdownItem>,
-    <DropdownItem key="select-none" component="button" onClick={handleSelectNone}>
-      {__('Select none')}
+    <DropdownItem key="select-all" component="button" isDisabled onClick={handleSelectAll}>
+      {`${__('Select all')} (${totalCount})`}
     </DropdownItem>,
   ];
 
@@ -85,25 +86,14 @@ const SelectAllCheckbox = ({
 };
 
 SelectAllCheckbox.propTypes = {
-  selectedCount: PropTypes.number,
-  modelName: PropTypes.string,
-  modelNamePlural: PropTypes.string,
-  selectAll: PropTypes.func,
-  selectNone: PropTypes.func,
-  selectPage: PropTypes.func,
-  areAllRowsSelected: PropTypes.bool,
-  areAllRowsOnPageSelected: PropTypes.bool,
-};
-
-SelectAllCheckbox.defaultProps = {
-  selectedCount: 0,
-  modelName: 'item',
-  modelNamePlural: undefined,
-  selectAll: noop,
-  selectNone: noop,
-  selectPage: noop,
-  areAllRowsSelected: false,
-  areAllRowsOnPageSelected: false,
+  selectedCount: PropTypes.number.isRequired,
+  selectAll: PropTypes.func.isRequired,
+  selectNone: PropTypes.func.isRequired,
+  selectPage: PropTypes.func.isRequired,
+  pageRowCount: PropTypes.number.isRequired,
+  totalCount: PropTypes.number.isRequired,
+  areAllRowsSelected: PropTypes.bool.isRequired,
+  areAllRowsOnPageSelected: PropTypes.bool.isRequired,
 };
 
 export default SelectAllCheckbox;

@@ -1,15 +1,15 @@
 import React, { useState, useCallback } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
-import { Pagination, PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
-
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
-import { usePaginationOptions } from 'foremanReact/components/Pagination/PaginationHooks';
+import useDeepCompareEffect from 'use-deep-compare-effect';
+import { PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
 
+import PageControls from './PageControls';
 import MainTable from './MainTable';
+import { getPageStats } from './helpers';
 import Search from '../../components/Search';
 import SelectAllCheckbox from '../SelectAllCheckbox';
 import { orgId } from '../../services/api';
@@ -41,21 +41,27 @@ const TableWrapper = ({
   const [perPage, setPerPage] = useState(Number(metadata?.per_page ?? foremanPerPage));
   const [page, setPage] = useState(Number(metadata?.page ?? 1));
   const [total, setTotal] = useState(Number(metadata?.subtotal ?? 0));
-
+  const { pageRowCount, lastPage } = getPageStats({ total, page, perPage });
   const rowsCount = metadata?.subtotal ?? 0;
+  const totalCount = metadata?.total ?? 0;
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
   const unresolvedStatusOrNoRows = unresolvedStatus || rowsCount === 0;
   const searchNotUnderway = !(searchQuery || activeFilters);
 
-  const updatePagination = (data) => {
-    const { subtotal: newTotal, page: newPage, per_page: newPerPage } = data;
+  const updatePagination = (data, finalPage) => {
+    const { subtotal: newTotal, page: requestedPage, per_page: newPerPage } = data;
     if (newTotal !== undefined) setTotal(Number(newTotal));
-    if (newPage !== undefined) setPage(Number(newPage));
+    if (requestedPage !== undefined) {
+      const newPage = (requestedPage > finalPage) ? finalPage : requestedPage;
+      setPage(Number(newPage));
+    }
     if (newPerPage !== undefined) setPerPage(Number(newPerPage));
   };
   const paginationParams = useCallback(() => ({ per_page: perPage, page }), [perPage, page]);
 
-  useDeepCompareEffect(() => updatePagination(metadata), [metadata]);
+  useDeepCompareEffect(() => {
+    updatePagination(metadata, lastPage);
+  }, [metadata, lastPage]);
 
   // The search component will update the search query when a search is performed, listen for that
   // and perform the search so we can be sure the searchQuery is updated when search is performed.
@@ -86,27 +92,7 @@ const TableWrapper = ({
     },
   });
   const onPaginationUpdate = (updatedPagination) => {
-    updatePagination(updatedPagination);
-  };
-
-  const PageControls = ({ variant }) => (
-    <FlexItem align={{ default: 'alignRight' }}>
-      <Pagination
-        key={variant}
-        itemCount={total}
-        page={page}
-        perPage={perPage}
-        isCompact={variant === PaginationVariant.top}
-        onSetPage={(_evt, updated) => onPaginationUpdate({ page: updated })}
-        onPerPageSelect={(_evt, updated) => onPaginationUpdate({ per_page: updated })}
-        perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
-        variant={variant}
-      />
-    </FlexItem>
-  );
-
-  PageControls.propTypes = {
-    variant: PropTypes.string.isRequired,
+    updatePagination(updatedPagination, lastPage);
   };
 
   return (
@@ -119,7 +105,8 @@ const TableWrapper = ({
               selectNone={selectNone}
               selectPage={selectPage}
               selectedCount={selectedCount}
-              rowsCount={rowsCount}
+              pageRowCount={pageRowCount}
+              totalCount={totalCount}
               areAllRowsSelected={areAllRowsSelected()}
               areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
             />
@@ -137,7 +124,13 @@ const TableWrapper = ({
         <FlexItem>
           {actionButtons}
         </FlexItem>
-        <PageControls variant={PaginationVariant.top} />
+        <PageControls
+          variant={PaginationVariant.top}
+          total={total}
+          page={page}
+          perPage={perPage}
+          onPaginationUpdate={onPaginationUpdate}
+        />
       </Flex>
       <MainTable
         searchIsActive={!!searchQuery}
@@ -148,7 +141,13 @@ const TableWrapper = ({
         {children}
       </MainTable>
       <Flex>
-        <PageControls variant={PaginationVariant.bottom} />
+        <PageControls
+          variant={PaginationVariant.bottom}
+          total={total}
+          page={page}
+          perPage={perPage}
+          onPaginationUpdate={onPaginationUpdate}
+        />
       </Flex>
     </>
   );
