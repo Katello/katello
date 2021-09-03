@@ -5,7 +5,6 @@ import { Dropdown, DropdownToggle, DropdownToggleCheckbox,
 import { translate as __ } from 'foremanReact/common/I18n';
 import { noop } from 'foremanReact/common/helpers';
 
-import { pluralize } from '../../utils/helpers';
 import './SelectAllCheckbox.scss';
 
 const SelectAllCheckbox = ({
@@ -13,8 +12,6 @@ const SelectAllCheckbox = ({
   selectNone,
   selectPage,
   selectedCount,
-  modelName,
-  modelNamePlural,
   areAllRowsOnPageSelected,
   areAllRowsSelected,
 }) => {
@@ -28,11 +25,6 @@ const SelectAllCheckbox = ({
     return selectNone();
   };
   const onSelectAllDropdownToggle = () => setSelectAllDropdownOpen(isOpen => !isOpen);
-  const pluralizedModel = pluralize(
-    selectedCount,
-    modelName,
-    modelNamePlural,
-  );
 
   const handleSelectAll = () => {
     selectAll();
@@ -81,7 +73,7 @@ const SelectAllCheckbox = ({
               onChange={checked => onSelectAllCheckboxChange(checked)}
               isChecked={isSelectAllChecked}
             >
-              {`${pluralizedModel} selected`}
+              {selectedCount > 0 && `${selectedCount} selected`}
             </DropdownToggleCheckbox>,
           ]}
         />

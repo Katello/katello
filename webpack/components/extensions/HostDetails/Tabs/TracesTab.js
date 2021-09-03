@@ -96,7 +96,6 @@ const TracesTab = () => {
         status={status}
         metadata={meta}
         selectedCount={selectedTraces.size}
-        modelName="trace"
       >
         <Thead>
           <Tr>

@@ -33,8 +33,6 @@ const TableWrapper = ({
   areAllRowsSelected,
   areAllRowsOnPageSelected,
   selectedCount,
-  modelName,
-  modelNamePlural,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -121,8 +119,6 @@ const TableWrapper = ({
               selectNone={selectNone}
               selectPage={selectPage}
               selectedCount={selectedCount}
-              modelName={modelName}
-              modelNamePlural={modelNamePlural}
               rowsCount={rowsCount}
               areAllRowsSelected={areAllRowsSelected()}
               areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
@@ -191,8 +187,6 @@ TableWrapper.propTypes = {
   activeFilters: PropTypes.bool,
   displaySelectAllCheckbox: PropTypes.bool,
   selectedCount: PropTypes.number,
-  modelName: PropTypes.string,
-  modelNamePlural: PropTypes.string,
   selectAll: PropTypes.func,
   selectNone: PropTypes.func,
   selectPage: PropTypes.func,
@@ -209,8 +203,6 @@ TableWrapper.defaultProps = {
   actionButtons: null,
   displaySelectAllCheckbox: false,
   selectedCount: 0,
-  modelName: 'item',
-  modelNamePlural: undefined,
   selectAll: noop,
   selectNone: noop,
   selectPage: noop,
