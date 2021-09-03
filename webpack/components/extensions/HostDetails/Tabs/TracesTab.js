@@ -34,7 +34,7 @@ const TracesTab = () => {
   };
   const actionButtons = (
     <Button
-      variant="danger"
+      variant="secondary"
       isDisabled={!selectedTraces.size}
       onClick={onRestartApp}
     >
