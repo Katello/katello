@@ -41,10 +41,9 @@ const TableWrapper = ({
   const page = Number(metadata?.page ?? 1);
   const total = Number(metadata?.subtotal ?? 0);
   const { pageRowCount } = getPageStats({ total, page, perPage });
-  const rowsCount = metadata?.subtotal ?? 0;
   const totalCount = metadata?.total ?? 0;
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
-  const unresolvedStatusOrNoRows = unresolvedStatus || rowsCount === 0;
+  const unresolvedStatusOrNoRows = unresolvedStatus || pageRowCount === 0;
   const searchNotUnderway = !(searchQuery || activeFilters);
   const paginationParams = useCallback(() =>
     ({ per_page: perPage, page, subtotal: total }), [perPage, page, total]);
@@ -144,7 +143,7 @@ const TableWrapper = ({
       <MainTable
         searchIsActive={!!searchQuery}
         activeFilters={activeFilters}
-        rowsCount={rowsCount}
+        rowsCount={pageRowCount}
         {...allTableProps}
       >
         {children}
