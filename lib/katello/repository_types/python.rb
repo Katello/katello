@@ -42,6 +42,7 @@ Katello::RepositoryTypeManager.register('python') do
                        removable: true,
                        uploadable: true,
                        duplicates_allowed: false,
-                       filename_key: :filename
+                       filename_key: :filename,
+                       generic_browser: true
   default_managed_content_type :python_package
 end

@@ -127,7 +127,7 @@ module Katello
 
     class ContentType
       attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable,
-                    :primary_content, :index_on_pulp3
+                    :primary_content, :index_on_pulp3, :generic_browser
 
       def initialize(options)
         self.model_class = options[:model_class]
@@ -139,10 +139,18 @@ module Katello
         self.uploadable = options[:uploadable] || false
         self.removable = options[:removable] || false
         self.primary_content = options[:primary_content] || false
+        self.generic_browser = options[:generic_browser]
       end
 
       def label
         self.model_class::CONTENT_TYPE
+      end
+
+      def as_json(_options)
+        {
+          label: label,
+          generic_browser: generic_browser
+        }
       end
     end
 
@@ -150,13 +158,7 @@ module Katello
       attr_accessor :pulp3_api, :pulp3_model, :content_type, :filename_key, :duplicates_allowed
 
       def initialize(options)
-        self.model_class = options[:model_class]
-        self.priority = options[:priority] || 99
-        self.pulp3_service_class = options[:pulp3_service_class]
-        self.index = options[:index].nil? ? true : options[:index]
-        self.index_on_pulp3 = options[:index_on_pulp3].nil? ? true : options[:index_on_pulp3]
-        self.uploadable = options[:uploadable] || false
-        self.removable = options[:removable] || false
+        super
         self.pulp3_api = options[:pulp3_api]
         self.pulp3_model = options[:pulp3_model]
         self.content_type = options[:content_type]
