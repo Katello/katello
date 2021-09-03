@@ -607,5 +607,17 @@ module Katello
       cv.import_only = false
       refute cv.valid?
     end
+
+    def test_update_host_statuses
+      other_location = taxonomies(:location2)
+      facet = katello_content_facets(:content_facet_two)
+
+      refute_equal facet.host.location, other_location
+      assert_nothing_raised do
+        Location.as_taxonomy(facet.host.organization, other_location) do
+          facet.content_view.update_host_statuses(facet.lifecycle_environment)
+        end
+      end
+    end
   end
 end

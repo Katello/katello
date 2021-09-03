@@ -370,6 +370,19 @@ module Katello
       end
     end
 
+    def update_host_statuses(environment)
+      # update errata applicability counts for all hosts in the CV & LE
+      Location.no_taxonomy_scope do
+        User.as_anonymous_admin do
+          ::Katello::Host::ContentFacet.where(:content_view_id => self,
+                                              :lifecycle_environment_id => environment).each do |facet|
+            facet.update_applicability_counts
+            facet.update_errata_status
+          end
+        end
+      end
+    end
+
     def component_repositories
       components.map(&:archived_repos).flatten
     end
