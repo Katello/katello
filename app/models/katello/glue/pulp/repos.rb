@@ -42,7 +42,7 @@ module Katello
       def sync_status
         all_repos = repos(self.library, nil, false)
         task = last_repo_sync_task
-        last_synced_repo = task ? all_repos.find { |repo| task.locks.where(:resource_type => ::Katello::Repository.name).pluck(:resource_id).map(&:to_s).include?(repo.id.to_s) } : nil
+        last_synced_repo = task ? all_repos.find { |repo| task.links.where(:resource_type => ::Katello::Repository.name).pluck(:resource_id).map(&:to_s).include?(repo.id.to_s) } : nil
         ::Katello::SyncStatusPresenter.new(last_synced_repo, task).sync_progress
       end
 
