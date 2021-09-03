@@ -316,6 +316,8 @@ Foreman::Plugin.register :katello do
                                     :description => N_("Perform a module stream action via Katello interface"),
                                     :provided_inputs => ['action', 'module_spec', 'options'])
     allowed_template_helpers :errata
+
+    RemoteExecutionProvider.prepend(Katello::Concerns::RemoteExecutionProviderExtensions)
   end
 
   tests_to_skip("AccessPermissionsTest" => [
