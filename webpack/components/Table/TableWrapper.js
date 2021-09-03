@@ -37,13 +37,9 @@ const TableWrapper = ({
 }) => {
   const dispatch = useDispatch();
   const foremanPerPage = useForemanSettings().perPage || 20;
-  // setting pagination to local state so it doesn't disappear when page reloads
-  // const [perPage, setPerPage] = useState(Number(metadata?.per_page ?? foremanPerPage));
   const perPage = Number(metadata?.per_page ?? foremanPerPage);
   const page = Number(metadata?.page ?? 1);
   const total = Number(metadata?.subtotal ?? 0);
-  // const [page, setPage] = useState(Number(metadata?.page ?? 1));
-  // const [total, setTotal] = useState(Number(metadata?.subtotal ?? 0));
   const { pageRowCount } = getPageStats({ total, page, perPage });
   const rowsCount = metadata?.subtotal ?? 0;
   const totalCount = metadata?.total ?? 0;

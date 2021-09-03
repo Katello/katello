@@ -28,16 +28,16 @@ const SelectAllCheckbox = ({
   const onSelectAllDropdownToggle = () => setSelectAllDropdownOpen(isOpen => !isOpen);
 
   const handleSelectAll = () => {
-    selectAll();
     setSelectAllDropdownOpen(false);
+    selectAll();
   };
   const handleSelectPage = () => {
-    selectPage();
     setSelectAllDropdownOpen(false);
+    selectPage();
   };
   const handleSelectNone = () => {
-    selectNone();
     setSelectAllDropdownOpen(false);
+    selectNone();
   };
 
   useEffect(() => {
