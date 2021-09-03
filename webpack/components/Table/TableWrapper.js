@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
@@ -38,36 +38,25 @@ const TableWrapper = ({
   const dispatch = useDispatch();
   const foremanPerPage = useForemanSettings().perPage || 20;
   // setting pagination to local state so it doesn't disappear when page reloads
-  const [perPage, setPerPage] = useState(Number(metadata?.per_page ?? foremanPerPage));
-  const [page, setPage] = useState(Number(metadata?.page ?? 1));
-  const [total, setTotal] = useState(Number(metadata?.subtotal ?? 0));
-  const { pageRowCount, lastPage } = getPageStats({ total, page, perPage });
+  // const [perPage, setPerPage] = useState(Number(metadata?.per_page ?? foremanPerPage));
+  const perPage = Number(metadata?.per_page ?? foremanPerPage);
+  const page = Number(metadata?.page ?? 1);
+  const total = Number(metadata?.subtotal ?? 0);
+  // const [page, setPage] = useState(Number(metadata?.page ?? 1));
+  // const [total, setTotal] = useState(Number(metadata?.subtotal ?? 0));
+  const { pageRowCount } = getPageStats({ total, page, perPage });
   const rowsCount = metadata?.subtotal ?? 0;
   const totalCount = metadata?.total ?? 0;
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
   const unresolvedStatusOrNoRows = unresolvedStatus || rowsCount === 0;
   const searchNotUnderway = !(searchQuery || activeFilters);
-
-  const updatePagination = (data, finalPage) => {
-    const { subtotal: newTotal, page: requestedPage, per_page: newPerPage } = data;
-    if (newTotal !== undefined) setTotal(Number(newTotal));
-    if (requestedPage !== undefined) {
-      const newPage = (requestedPage > finalPage) ? finalPage : requestedPage;
-      setPage(Number(newPage));
-    }
-    if (newPerPage !== undefined) setPerPage(Number(newPerPage));
-  };
-  const paginationParams = useCallback(() => ({ per_page: perPage, page }), [perPage, page]);
-
-  useDeepCompareEffect(() => {
-    updatePagination(metadata, lastPage);
-  }, [metadata, lastPage]);
-
-  // The search component will update the search query when a search is performed, listen for that
-  // and perform the search so we can be sure the searchQuery is updated when search is performed.
-  useDeepCompareEffect(() => {
+  const paginationParams = useCallback(() =>
+    ({ per_page: perPage, page, subtotal: total }), [perPage, page, total]);
+  const spawnFetch = useCallback((paginationData) => {
+    // The search component will update the search query when a search is performed, listen for that
+    // and perform the search so we can be sure the searchQuery is updated when search is performed.
     const fetchWithParams = (allParams = {}) => {
-      dispatch(fetchItems({ ...paginationParams(), ...allParams }));
+      dispatch(fetchItems({ ...(paginationData ?? paginationParams()), ...allParams }));
     };
     if (searchQuery || activeFilters) {
       // Reset page back to 1 when filter or search changes
@@ -81,8 +70,11 @@ const TableWrapper = ({
     fetchItems,
     paginationParams,
     searchQuery,
-    additionalListeners,
   ]);
+
+  useDeepCompareEffect(() => {
+    spawnFetch();
+  }, [spawnFetch, page, perPage, paginationParams]);
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
@@ -91,8 +83,29 @@ const TableWrapper = ({
       search,
     },
   });
+
+  // If the new page wouldn't exist because of a perPage change,
+  // we should set the current page to the last page.
+  const validatePagination = (data) => {
+    const mergedData = { ...paginationParams(), ...data };
+    const { subtotal: newTotal, page: requestedPage, per_page: newPerPage } = mergedData;
+    const { lastPage } = getPageStats({
+      total: newTotal,
+      page: requestedPage,
+      perPage: newPerPage,
+    });
+    const result = {};
+    if (newTotal) result.total = Number(newTotal);
+    if (requestedPage) {
+      const newPage = (requestedPage > lastPage) ? lastPage : requestedPage;
+      result.page = Number(newPage);
+    }
+    if (newPerPage) result.per_page = Number(newPerPage);
+    return result;
+  };
+
   const onPaginationUpdate = (updatedPagination) => {
-    updatePagination(updatedPagination, lastPage);
+    spawnFetch(validatePagination(updatedPagination));
   };
 
   return (
