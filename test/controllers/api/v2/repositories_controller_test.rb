@@ -65,6 +65,17 @@ module Katello
       end
     end
 
+    def test_content_types
+      get :content_types
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      assert_equal RepositoryTypeManager.enabled_content_types.map { |type| RepositoryTypeManager.find_content_type(type) }.size, body.size
+      body.each do |content|
+        assert RepositoryTypeManager.find_content_type(content["label"]).present?
+      end
+    end
+
     def test_repository_types_with_view_products_permission
       User.current = setup_user_with_permissions(:view_products, User.find(users(:restricted).id))
       get :repository_types

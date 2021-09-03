@@ -170,6 +170,16 @@ Foreman::Plugin.register :katello do
          :engine => Katello::Engine,
          :turbolinks => false,
          :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::ANSIBLE_COLLECTION_TYPE) }
+
+    menu :top_menu,
+         :other_content_types,
+         :caption => N_('Other Content Types'),
+         :url => '/content',
+         :url_hash => {:controller => '/',
+                       :action => ''},
+         :engine => Katello::Engine,
+         :turbolinks => false,
+         :if => lambda { true }
   end
 
   menu :top_menu,

@@ -428,6 +428,11 @@ module Katello
       end
     end
 
+    api :GET, "/content_types", N_("Return the enabled content types")
+    def content_types
+      render :json => Katello::RepositoryTypeManager.enabled_content_types.map { |type| Katello::RepositoryTypeManager.find_content_type(type) }
+    end
+
     protected
 
     def find_product
