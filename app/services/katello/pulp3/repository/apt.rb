@@ -47,9 +47,8 @@ module Katello
           "/pulp/deb/#{repo.relative_path}/".sub('//', '/')
         end
 
-        def copy_content_for_source
-          # TODO
-          fail NotImplementedError
+        def copy_content_for_source(source_repository, _options = {})
+          copy_units_by_href(source_repository.debs.pluck(:pulp_id))
         end
 
         def regenerate_applicability
