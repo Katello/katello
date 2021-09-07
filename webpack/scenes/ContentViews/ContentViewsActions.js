@@ -8,11 +8,15 @@ import CONTENT_VIEWS_KEY, {
 import { getResponseErrorMsgs } from '../../utils/helpers';
 import { renderTaskStartedToast } from '../Tasks/helpers';
 
-export const createContentViewsParams = extraParams => ({
-  organization_id: orgId(),
-  nondefault: true,
-  ...extraParams,
-});
+export const createContentViewsParams = (extraParams) => {
+  const getParams = {
+    organization_id: orgId(),
+    nondefault: true,
+    ...extraParams,
+  };
+  if (extraParams?.include_default) delete getParams.nondefault;
+  return getParams;
+};
 
 const getContentViews = extraParams => get({
   type: API_OPERATIONS.GET,

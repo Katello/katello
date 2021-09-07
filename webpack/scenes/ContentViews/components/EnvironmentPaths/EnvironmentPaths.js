@@ -10,7 +10,7 @@ import './EnvironmentPaths.scss';
 import Loading from '../../../../components/Loading';
 
 const EnvironmentPaths = ({
-  userCheckedItems, setUserCheckedItems, promotedEnvironments, publishing,
+  userCheckedItems, setUserCheckedItems, promotedEnvironments, publishing, headerText, multiSelect,
 }) => {
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
@@ -18,7 +18,11 @@ const EnvironmentPaths = ({
 
   const oncheckedChange = (checked, env) => {
     if (checked) {
-      setUserCheckedItems([...userCheckedItems, env]);
+      if (multiSelect) {
+        setUserCheckedItems([...userCheckedItems, env]);
+      } else {
+        setUserCheckedItems([env]);
+      }
     } else {
       setUserCheckedItems(userCheckedItems.filter(item => item.id !== env.id));
     }
@@ -32,11 +36,11 @@ const EnvironmentPaths = ({
   /* eslint-disable react/no-array-index-key */
   return (
     <>
-      <p
-        style={{ marginBottom: '2px' }}
-      >{__('Select a lifecycle environment from the available promotion paths to promote new version.')}
-      </p>
-      <Form>{results.map((path, count) => {
+      <b
+        style={{ marginBottom: '1em' }}
+      >{headerText}
+      </b>
+      <Form style={{ marginTop: '1em' }}>{results.map((path, count) => {
         const {
           environments,
         } = path || {};
@@ -74,10 +78,14 @@ EnvironmentPaths.propTypes = {
   setUserCheckedItems: PropTypes.func.isRequired,
   promotedEnvironments: PropTypes.arrayOf(PropTypes.shape({})),
   publishing: PropTypes.bool,
+  headerText: PropTypes.string,
+  multiSelect: PropTypes.bool,
 };
 
 EnvironmentPaths.defaultProps = {
   promotedEnvironments: [],
   publishing: true,
+  headerText: __('Select a lifecycle environment from the available promotion paths to promote new version.'),
+  multiSelect: true,
 };
 export default EnvironmentPaths;

@@ -22,6 +22,7 @@ import getEnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPa
 import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
 import TaskPresenter from '../../components/TaskPresenter/TaskPresenter';
 import { startPollingTask } from '../../../Tasks/TaskActions';
+import RemoveCVVersionWizard from './Delete/RemoveCVVersionWizard';
 
 const ContentViewVersions = ({ cvId }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
@@ -35,8 +36,13 @@ const ContentViewVersions = ({ cvId }) => {
   const [searchQuery, updateSearchQuery] = useState('');
   const [versionIdToPromote, setVersionIdToPromote] = useState('');
   const [versionNameToPromote, setVersionNameToPromote] = useState('');
+  const [versionIdToRemove, setVersionIdToRemove] = useState('');
+  const [versionNameToRemove, setVersionNameToRemove] = useState('');
   const [versionEnvironments, setVersionEnvironments] = useState([]);
   const [promoting, setPromoting] = useState(false);
+  const [removingFromEnv, setRemovingFromEnv] = useState(false);
+  const [deleteVersion, setDeleteVersion] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const columnHeaders = [
     __('Version'),
@@ -142,6 +148,17 @@ const ContentViewVersions = ({ cvId }) => {
     setPollingFinished(false);
   };
 
+  const onRemoveFromEnv = ({
+    cvVersionId, cvVersionName, cvVersionEnvironments, deleting,
+  }) => {
+    setVersionIdToRemove(cvVersionId);
+    setVersionNameToRemove(cvVersionName);
+    setVersionEnvironments(cvVersionEnvironments);
+    setRemovingFromEnv(true);
+    setDeleteVersion(deleting);
+    setPollingFinished(false);
+  };
+
   const actionResolver = (rowData, { _rowIndex }) => [
     {
       title: __('Promote'),
@@ -156,7 +173,27 @@ const ContentViewVersions = ({ cvId }) => {
     },
     {
       title: __('Remove'),
-      isDisabled: true,
+      isDisabled: rowData.activeHistory.length,
+      onClick: (_event, rowId, rowInfo) => {
+        onRemoveFromEnv({
+          cvVersionId: rowInfo.cvVersionId,
+          cvVersionName: rowInfo.cvVersionName,
+          cvVersionEnvironments: rowInfo.cvVersionEnvironments,
+          deleting: false,
+        });
+      },
+    },
+    {
+      title: __('Delete'),
+      isDisabled: rowData.activeHistory.length,
+      onClick: (_event, rowId, rowInfo) => {
+        onRemoveFromEnv({
+          cvVersionId: rowInfo.cvVersionId,
+          cvVersionName: rowInfo.cvVersionName,
+          cvVersionEnvironments: rowInfo.cvVersionEnvironments,
+          deleting: true,
+        });
+      },
     },
   ];
 
@@ -185,14 +222,33 @@ const ContentViewVersions = ({ cvId }) => {
       autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
       fetchItems={useCallback(params => getContentViewVersions(cvId, params), [cvId])}
       additionalListeners={[pollingFinished]}
-      actionButtons={promoting && <ContentViewVersionPromote
-        cvId={cvId}
-        versionIdToPromote={versionIdToPromote}
-        versionNameToPromote={versionNameToPromote}
-        versionEnvironments={versionEnvironments}
-        setIsOpen={setPromoting}
-        aria-label="promote_content_view_modal"
-      />
+      actionButtons={
+        <>
+          {promoting &&
+            <ContentViewVersionPromote
+              cvId={cvId}
+              versionIdToPromote={versionIdToPromote}
+              versionNameToPromote={versionNameToPromote}
+              versionEnvironments={versionEnvironments}
+              setIsOpen={setPromoting}
+              aria-label="promote_content_view_modal"
+            />
+          }
+          {removingFromEnv &&
+            <RemoveCVVersionWizard
+              cvId={cvId}
+              versionIdToRemove={versionIdToRemove}
+              versionNameToRemove={versionNameToRemove}
+              versionEnvironments={versionEnvironments}
+              show={removingFromEnv}
+              setIsOpen={setRemovingFromEnv}
+              currentStep={currentStep}
+              setCurrentStep={setCurrentStep}
+              deleteWizard={deleteVersion}
+              aria-label="remove_content_view_version_modal"
+            />
+          }
+        </>
       }
     />);
 };

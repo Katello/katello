@@ -35,8 +35,11 @@ import {
   cvVersionPromoteKey,
   cvFilterRepoKey,
   cvVersionDetailsKey,
+  cvActivationKeysKey,
+  cvHostsKey,
+  cvRemoveVersionKey,
 } from '../ContentViewsConstants';
-import api from '../../../services/api';
+import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
 import { renderTaskStartedToast } from '../../Tasks/helpers';
 import { cvErrorToast } from '../ContentViewsActions';
@@ -160,6 +163,20 @@ export const getContentViewFilters = (cvId, params) => get({
   params: { content_view_id: cvId, ...params },
   errorToast: error => __(`Something went wrong while retrieving the content view filters! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/content_view_filters'),
+});
+
+export const getContentViewAffectedActivationKeys = (cvId, params) => get({
+  key: cvActivationKeysKey(cvId),
+  params: { organization_id: orgId(), ...params },
+  errorToast: error => __(`Something went wrong while retrieving the activation keys! ${getResponseErrorMsgs(error.response)}`),
+  url: api.getApiUrl('/activation_keys'),
+});
+
+export const getContentViewAffectedHosts = (cvId, params) => get({
+  key: cvHostsKey(cvId),
+  params: { organization_id: orgId(), ...params },
+  errorToast: error => __(`Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}`),
+  url: foremanApi.getApiUrl('/hosts'),
 });
 
 export const deleteContentViewFilters = (cvId, ids, handleSuccess) => put({
@@ -314,6 +331,15 @@ export const editContentViewVersionDetails = (versionId, cvId, params, handleSuc
     handleSuccess,
     errorToast: error => __(`Something went wrong while editing version details. ${getResponseErrorMsgs(error.response)}`),
   });
+
+export const removeContentViewVersion = (cvId, versionId, versionEnvironments, params) => put({
+  type: API_OPERATIONS.PUT,
+  key: cvRemoveVersionKey(versionId, versionEnvironments),
+  url: api.getApiUrl(`/content_views/${cvId}/remove`),
+  params,
+  handleSuccess: response => renderTaskStartedToast(response.data),
+  errorToast: error => cvErrorToast(error),
+});
 
 export const promoteContentViewVersion = params => post({
   type: API_OPERATIONS.POST,

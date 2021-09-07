@@ -23,6 +23,9 @@ import {
   ADD_CONTENT_VIEW_FILTER_RULE,
   cvFilterRepoKey,
   cvVersionDetailsKey,
+  cvActivationKeysKey,
+  cvHostsKey,
+  cvRemoveVersionKey,
 } from '../ContentViewsConstants';
 import { pollTaskKey } from '../../Tasks/helpers';
 
@@ -190,5 +193,30 @@ export const selectCreatePackageFilterRuleStatus = state =>
 
 export const selectCreatePackageFilterRuleError = state =>
   selectAPIError(state, ADD_CONTENT_VIEW_FILTER_RULE);
+
+export const selectCVActivationKeys = (state, cvId) =>
+  selectAPIResponse(state, cvActivationKeysKey(cvId)) || {};
+
+export const selectCVActivationKeysStatus = (state, cvId) =>
+  selectAPIStatus(state, cvActivationKeysKey(cvId)) || STATUS.PENDING;
+
+export const selectCVActivationKeysError = (state, cvId) =>
+  selectAPIError(state, cvActivationKeysKey(cvId));
+
+export const selectCVHosts = (state, cvId) =>
+  selectAPIResponse(state, cvHostsKey(cvId)) || {};
+
+export const selectCVHostsStatus = (state, cvId) =>
+  selectAPIStatus(state, cvHostsKey(cvId)) || STATUS.PENDING;
+
+export const selectRemoveCVVersionResponse = (state, versionId, versionEnvironments) =>
+  selectAPIResponse(state, cvRemoveVersionKey(versionId, versionEnvironments)) || {};
+
+export const selectRemoveCVVersionStatus = (state, versionId, versionEnvironments) =>
+  selectAPIStatus(state, cvRemoveVersionKey(versionId, versionEnvironments)) || STATUS.PENDING;
+
+export const selectRemoveCVVersionError = (state, versionId, versionEnvironments) =>
+  selectAPIError(state, cvRemoveVersionKey(versionId, versionEnvironments));
+
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;

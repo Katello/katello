@@ -49,9 +49,9 @@ const ContentViewHistories = ({ cvId }) => {
     const taskType = task ? task.label : taskTypes[action];
 
     if (taskType === taskTypes.removal) {
-      return <React.Fragment> Deleted from <Label key="1" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
+      return <React.Fragment> Deleted from <Label key="1" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{`${environment?.name || __('all environments')}`}</Label>{}</React.Fragment>;
     } else if (taskType === taskTypes.promotion) {
-      return <React.Fragment> Promoted to <Label key="2" color="blue" href={`/lifecycle_environments/${environment.id}`}>{`${environment.name}`}</Label>{}</React.Fragment>;
+      return <React.Fragment> Promoted to <Label key="2" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{`${environment?.name}`}</Label>{}</React.Fragment>;
     } else if (taskType === taskTypes.publish) {
       return ('Published new version');
     } else if (taskType === taskTypes.export) {
@@ -66,8 +66,8 @@ const ContentViewHistories = ({ cvId }) => {
   const emptyContentBody = __('History will appear here when the content view is published or promoted.'); // needs link
   const emptySearchTitle = __('No matching history record found');
   const emptySearchBody = __('Try changing your search settings.');
-  const { results, ...metadata } = response;
-
+  const { results, ...metadata } = response; // {results: [..], per_page: 10, page: 2}
+  /* eslint-disable react/no-array-index-key */
   return (
     <TableWrapper
       {...{
@@ -92,7 +92,7 @@ const ContentViewHistories = ({ cvId }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {results?.map((history) => {
+        {results?.map((history, index) => {
           const {
             version,
             version_id: versionId,
@@ -102,8 +102,8 @@ const ContentViewHistories = ({ cvId }) => {
             user,
           } = history;
           return (
-            <Tr key={`${versionId}_${createdAt}`}>
-              <Td key={createdAt}><LongDateTime date={createdAt} showRelativeTimeTooltip /></Td>
+            <Tr key={`${versionId}_${createdAt}_${index}`}>
+              <Td key={`${index}`}><LongDateTime date={createdAt} showRelativeTimeTooltip /></Td>
               <Td>
                 <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{`Version ${version}`}</a>
               </Td>
@@ -118,6 +118,7 @@ const ContentViewHistories = ({ cvId }) => {
       </Tbody>
     </TableWrapper>
   );
+  /* eslint-enable react/no-array-index-key */
 };
 ContentViewHistories.propTypes = {
   cvId: PropTypes.number.isRequired,
