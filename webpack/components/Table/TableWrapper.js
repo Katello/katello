@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import {dequal as deepEqual} from 'dequal';
 import { STATUS } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import { PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
 
 import PageControls from './PageControls';
@@ -47,18 +47,28 @@ const TableWrapper = ({
   const searchNotUnderway = !(searchQuery || activeFilters);
   const paginationParams = useCallback(() =>
     ({ per_page: perPage, page, subtotal: total }), [perPage, page, total]);
+  const prevRequest = useRef({});
+  const prevSearch = useRef('');
+
   const spawnFetch = useCallback((paginationData) => {
     // The search component will update the search query when a search is performed, listen for that
     // and perform the search so we can be sure the searchQuery is updated when search is performed.
     const fetchWithParams = (allParams = {}) => {
-      dispatch(fetchItems({ ...(paginationData ?? paginationParams()), ...allParams }));
+      const newRequest = { ...(paginationData ?? paginationParams()), ...allParams };
+      if (!deepEqual(newRequest, prevRequest.current)) {
+        // don't fire the same request twice in a row
+        prevRequest.current = newRequest;
+        dispatch(fetchItems(newRequest));
+      }
     };
-    if (searchQuery || activeFilters) {
+    let pageOverride;
+    if (searchQuery) pageOverride = { search: searchQuery };
+    if (!deepEqual(searchQuery, prevSearch.current) || activeFilters) {
       // Reset page back to 1 when filter or search changes
-      fetchWithParams({ search: searchQuery, page: 1 });
-    } else {
-      fetchWithParams();
+      prevSearch.current = searchQuery;
+      pageOverride = { search: searchQuery, page: 1 };
     }
+    fetchWithParams(pageOverride);
   }, [
     activeFilters,
     dispatch,
@@ -67,9 +77,9 @@ const TableWrapper = ({
     searchQuery,
   ]);
 
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     spawnFetch();
-  }, [spawnFetch, page, perPage, paginationParams]);
+  }, [searchQuery, spawnFetch]);
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
@@ -90,7 +100,7 @@ const TableWrapper = ({
       perPage: newPerPage,
     });
     const result = {};
-    if (newTotal) result.total = Number(newTotal);
+    if (newTotal) result.subtotal = Number(newTotal);
     if (requestedPage) {
       const newPage = (requestedPage > lastPage) ? lastPage : requestedPage;
       result.page = Number(newPage);
