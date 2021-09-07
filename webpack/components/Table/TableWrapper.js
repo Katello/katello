@@ -46,7 +46,7 @@ const TableWrapper = ({
   const unresolvedStatusOrNoRows = unresolvedStatus || pageRowCount === 0;
   const searchNotUnderway = !(searchQuery || activeFilters);
   const paginationParams = useCallback(() =>
-    ({ per_page: perPage, page, subtotal: total }), [perPage, page, total]);
+    ({ per_page: perPage, page }), [perPage, page]);
   const prevRequest = useRef({});
   const prevSearch = useRef('');
 
@@ -93,14 +93,13 @@ const TableWrapper = ({
   // we should set the current page to the last page.
   const validatePagination = (data) => {
     const mergedData = { ...paginationParams(), ...data };
-    const { subtotal: newTotal, page: requestedPage, per_page: newPerPage } = mergedData;
+    const { page: requestedPage, per_page: newPerPage } = mergedData;
     const { lastPage } = getPageStats({
-      total: newTotal,
       page: requestedPage,
       perPage: newPerPage,
+      total,
     });
     const result = {};
-    if (newTotal) result.subtotal = Number(newTotal);
     if (requestedPage) {
       const newPage = (requestedPage > lastPage) ? lastPage : requestedPage;
       result.page = Number(newPage);
