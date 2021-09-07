@@ -148,7 +148,9 @@ class Setting::Content < Setting
                N_('Pulp bulk load size')),
       self.set('upload_profiles_without_dynflow', N_('Allow Katello to update host installed packages, enabled repos, and module inventory directly instead of wrapped in Dynflow tasks (try turning off if Puma processes are using too much memory)'), true,
                N_('Upload profiles without Dynflow')),
-      self.set('orphan_protection_time', N_('Time in minutes to consider orphan content as orphaned.'), 1440, N_('Orphaned Content Protection Time'))
+      self.set('orphan_protection_time', N_('Time in minutes to consider orphan content as orphaned.'), 1440, N_('Orphaned Content Protection Time')),
+      self.set('remote_execution_prefer_registered_through_proxy', N_('Prefer using a proxy to which a host is registered when using remote execution'), false,
+               N_('Prefer registered through proxy for remote execution'))
     ]
   end
 
