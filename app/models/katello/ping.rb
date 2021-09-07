@@ -195,10 +195,7 @@ module Katello
         end
 
         workers = json["online_workers"] || []
-
-        unless workers.count > 1
-          fail _("Not all necessary pulp workers running at %s.") % url
-        end
+        fail _("No pulpcore workers are running at %s.") % url if workers.empty?
 
         json
       end

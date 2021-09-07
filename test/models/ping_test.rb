@@ -220,28 +220,21 @@ module Katello
     def test_failure_on_all_workers
       run_exception_test({ "database_connection" => {"connected" => true},
                            "redis_connection" => {"connected" => true}
-                          }, /Not all necessary pulp workers running/)
+                          }, /No pulpcore workers are running at/)
     end
 
     def test_failure_on_all_workers_empty
       run_exception_test({ "database_connection" => {"connected" => true},
                            "redis_connection" => {"connected" => true},
                            "online_workers" => []
-                          }, /Not all necessary pulp workers running/)
-    end
-
-    def test_failure_on_no_resource_manager
-      run_exception_test({ "database_connection" => {"connected" => true},
-                           "redis_connection" => {"connected" => true},
-                           "online_workers" => [{"name" => "reserved_resource_worker-1"}]
-                          }, /Not all necessary pulp workers running/)
+                          }, /No pulpcore workers are running at/)
     end
 
     def test_failure_on_no_reserved_resource_worker
       run_exception_test({ "database_connection" => {"connected" => true},
                            "redis_connection" => {"connected" => true},
-                           "online_workers" => [{"name" => "resource_manager"}]
-                          }, /Not all necessary pulp workers running/)
+                           "online_workers" => []
+                          }, /No pulpcore workers are running at/)
     end
 
     def test_all_workers_present_ok_status
