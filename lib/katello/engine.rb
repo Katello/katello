@@ -226,6 +226,10 @@ module Katello
       ::AuditSearch::ClassMethods.prepend Katello::Concerns::AuditSearch
       ::Widget.singleton_class.prepend Katello::Concerns::WidgetExtensions::ClassMethods
 
+      if ::Katello.with_remote_execution?
+        ::RemoteExecutionProxySelector.prepend Katello::Concerns::RemoteExecutionProxySelectorExtensions
+      end
+
       load 'katello/repository_types.rb'
       load 'katello/scheduled_jobs.rb'
 

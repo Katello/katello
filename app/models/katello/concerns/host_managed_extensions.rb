@@ -28,9 +28,21 @@ module Katello
             content_facet.kickstart_repository_id = valid_repos.first
           end
         end
+
+        def remote_execution_proxies(provider, *_rest)
+          proxies = super
+          if (name = subscription_facet&.registered_through)
+            registered_through = SmartProxy.with_features(provider)
+                                           .authorized
+                                           .where(name: name)
+          end
+          proxies[:registered_through] = registered_through || []
+          proxies
+        end
       end
 
       included do
+        prepend ::ForemanRemoteExecution::HostExtensions if ::Katello.with_remote_execution?
         prepend Overrides
 
         delegate :content_source_id, :content_view_id, :lifecycle_environment_id, :kickstart_repository_id, to: :content_facet, allow_nil: true
