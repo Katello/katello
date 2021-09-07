@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import {dequal as deepEqual} from 'dequal';
+import { dequal as deepEqual } from 'dequal';
 import { STATUS } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
