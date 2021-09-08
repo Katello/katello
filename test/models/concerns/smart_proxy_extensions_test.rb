@@ -4,6 +4,8 @@ require 'katello_test_helper'
 
 module Katello
   class SmartProxyExtensionsTest < ActiveSupport::TestCase
+    include Support::CapsuleSupport
+
     def setup
       @library = katello_environments(:library)
       @view = katello_content_views(:library_dev_view)
@@ -68,6 +70,27 @@ module Katello
 
     def test_rhsm_url_pulp_mirror
       assert_includes @proxy_mirror.rhsm_url, ":8443/rhsm"
+    end
+
+    def test_sync_container_gateway
+      environment = katello_environments(:library)
+      with_pulp3_features(capsule_content.smart_proxy)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+
+      repo_list_update_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:repository_list).with(
+        :repositories => [{:repository => "empty_organization-puppet_product-busybox", :auth_required => true}, {:repository => "busybox", :auth_required => true}]
+      )
+      repo_list_update_expectation.once.returns(true)
+
+      repo_mapping_update_expectation = ProxyAPI::ContainerGateway.any_instance.expects(:user_repository_mapping).with do |arg|
+        arg[:users].first["secret_admin"].include?({:repository => "empty_organization-puppet_product-busybox",
+                                                    :auth_required => true}) &&
+        arg[:users].first["secret_admin"].include?({:repository => "busybox",
+                                                    :auth_required => true})
+      end
+      repo_mapping_update_expectation.once.returns(true)
+      capsule_content.smart_proxy.expects(:container_gateway_users).returns(::User.where(login: 'secret_admin'))
+      capsule_content.smart_proxy.sync_container_gateway
     end
   end
 
