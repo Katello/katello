@@ -5,7 +5,7 @@ import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table'
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import TableWrapper from '../../../Table/TableWrapper';
-import useSet from '../../../Table/TableHooks';
+import { useSet } from '../../../Table/TableHooks';
 import { getHostTraces, resolveHostTraces } from './HostTracesActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
 import './TracesTab.scss';

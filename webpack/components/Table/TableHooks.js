@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-const useSet = (initialArry) => {
+export const useSet = (initialArry) => {
   const set = useRef(new Set(initialArry));
   const [, setToggle] = useState(false);
   // needed because mutating a Ref won't cause React to rerender
@@ -8,4 +8,10 @@ const useSet = (initialArry) => {
   return [set.current, forceRender];
 };
 
-export default useSet;
+export const usePrevious = (value) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};

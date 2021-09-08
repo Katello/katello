@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { dequal as deepEqual } from 'dequal';
@@ -7,6 +8,7 @@ import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
 import { PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
 
+import { usePrevious } from './TableHooks';
 import PageControls from './PageControls';
 import MainTable from './MainTable';
 import { getPageStats } from './helpers';
@@ -49,13 +51,21 @@ const TableWrapper = ({
     ({ per_page: perPage, page }), [perPage, page]);
   const prevRequest = useRef({});
   const prevSearch = useRef('');
+  const prevAdditionalListeners = usePrevious(additionalListeners);
+
+  const hasChanged = (oldValue, newValue) => !deepEqual(oldValue, newValue);
 
   const spawnFetch = useCallback((paginationData) => {
     // The search component will update the search query when a search is performed, listen for that
     // and perform the search so we can be sure the searchQuery is updated when search is performed.
     const fetchWithParams = (allParams = {}) => {
-      const newRequest = { ...(paginationData ?? paginationParams()), ...allParams };
-      if (!deepEqual(newRequest, prevRequest.current)) {
+      const newRequest = {
+        ...(paginationData ?? paginationParams()),
+        ...allParams,
+      };
+      if (hasChanged(newRequest, prevRequest.current) ||
+          hasChanged(additionalListeners, prevAdditionalListeners)
+      ) {
         // don't fire the same request twice in a row
         prevRequest.current = newRequest;
         dispatch(fetchItems(newRequest));
@@ -75,11 +85,12 @@ const TableWrapper = ({
     fetchItems,
     paginationParams,
     searchQuery,
+    additionalListeners,
   ]);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     spawnFetch();
-  }, [searchQuery, spawnFetch]);
+  }, [searchQuery, spawnFetch, additionalListeners]);
 
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
