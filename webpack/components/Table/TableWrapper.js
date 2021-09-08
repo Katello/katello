@@ -8,7 +8,6 @@ import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
 import { PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
 
-import { usePrevious } from './TableHooks';
 import PageControls from './PageControls';
 import MainTable from './MainTable';
 import { getPageStats } from './helpers';
@@ -51,7 +50,8 @@ const TableWrapper = ({
     ({ per_page: perPage, page }), [perPage, page]);
   const prevRequest = useRef({});
   const prevSearch = useRef('');
-  const prevAdditionalListeners = usePrevious(additionalListeners);
+  const prevAdditionalListeners = useRef([]);
+  const paginationChangePending = useRef(null);
 
   const hasChanged = (oldValue, newValue) => !deepEqual(oldValue, newValue);
 
@@ -63,11 +63,17 @@ const TableWrapper = ({
         ...(paginationData ?? paginationParams()),
         ...allParams,
       };
+      // If a pagination change is in-flight,
+      // don't send another request with stale data
+      if (paginationChangePending.current &&
+        hasChanged(newRequest, paginationChangePending.current)) return;
+      paginationChangePending.current = null;
       if (hasChanged(newRequest, prevRequest.current) ||
-          hasChanged(additionalListeners, prevAdditionalListeners)
+          hasChanged(additionalListeners, prevAdditionalListeners.current)
       ) {
         // don't fire the same request twice in a row
         prevRequest.current = newRequest;
+        prevAdditionalListeners.current = additionalListeners;
         dispatch(fetchItems(newRequest));
       }
     };
@@ -86,6 +92,7 @@ const TableWrapper = ({
     paginationParams,
     searchQuery,
     additionalListeners,
+    // prevAdditionalListeners,
   ]);
 
   useDeepCompareEffect(() => {
@@ -120,7 +127,9 @@ const TableWrapper = ({
   };
 
   const onPaginationUpdate = (updatedPagination) => {
-    spawnFetch(validatePagination(updatedPagination));
+    const pagData = validatePagination(updatedPagination);
+    spawnFetch(pagData);
+    paginationChangePending.current = pagData;
   };
 
   return (
