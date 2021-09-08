@@ -4,6 +4,7 @@ require 'proxy_api/pulp_node'
 
 module Katello
   module Concerns
+    # rubocop:disable Metrics/ModuleLength
     module SmartProxyExtensions
       extend ActiveSupport::Concern
 
@@ -110,16 +111,50 @@ module Katello
         end
       end
 
-      def update_unauthenticated_repo_list(repo_names)
-        ProxyAPI::ContainerGateway.new(url: self.url).unauthenticated_repository_list("repositories": repo_names)
+      def sync_container_gateway
+        if has_feature?(::SmartProxy::CONTAINER_GATEWAY_FEATURE)
+          update_container_repo_list
+          users = container_gateway_users
+          update_user_container_repo_mapping(users) if users.any?
+        end
       end
 
-      def update_container_repo_list(repo_list)
+      def update_container_repo_list
+        # [{ repository: "repoA", auth_required: false }]
+        repo_list = []
+        ::Katello::SmartProxyHelper.new(self).combined_repos_available_to_capsule.each do |repo|
+          if repo.docker? && !repo.container_repository_name.nil?
+            repo_list << { repository: repo.container_repository_name,
+                           auth_required: !unauthenticated_container_repositories.include?(repo.id) }
+          end
+        end
         ProxyAPI::ContainerGateway.new(url: self.url).repository_list({ repositories: repo_list })
       end
 
-      def update_user_container_repo_mapping(user_repo_map)
+      def update_user_container_repo_mapping(users)
+        # Example user-repo mapping:
+        # { users:
+        #   [
+        #     'user a' => [{ repository: 'repo 1', auth_required: true }]
+        #   ]
+        # }
+
+        user_repo_map = { users: [] }
+        users.each do |user|
+          inner_repo_list = []
+          repositories = ::Katello::Repository.readable_docker_catalog_as(user)
+          repositories.each do |repo|
+            next if repo.container_repository_name.nil?
+            inner_repo_list << { repository: repo.container_repository_name,
+                                 auth_required: !unauthenticated_container_repositories.include?(repo.id) }
+          end
+          user_repo_map[:users] << { user.login => inner_repo_list }
+        end
         ProxyAPI::ContainerGateway.new(url: self.url).user_repository_mapping(user_repo_map)
+      end
+
+      def unauthenticated_container_repositories
+        ::Katello::Repository.joins(:environment).where("#{::Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true).select(:id).pluck(:id)
       end
 
       def container_gateway_users

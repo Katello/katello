@@ -4,6 +4,7 @@ module Actions
       class SyncCapsule < ::Actions::EntryAction
         include Actions::Katello::PulpSelector
         def plan(smart_proxy, options = {})
+          plan_self(:smart_proxy_id => smart_proxy.id, :options => options)
           action_subject(smart_proxy)
           environment = options[:environment]
           content_view = options[:content_view]
@@ -37,53 +38,6 @@ module Actions
               end
             end
           end
-          sync_container_gateway(smart_proxy)
-        end
-
-        def sync_container_gateway(smart_proxy)
-          if smart_proxy.has_feature?(::SmartProxy::CONTAINER_GATEWAY_FEATURE)
-            update_container_repo_list(smart_proxy)
-            users = smart_proxy.container_gateway_users
-            update_user_container_repo_mapping(smart_proxy, users) if users.any?
-          end
-        end
-
-        def unauthenticated_container_repositories
-          ::Katello::Repository.joins(:environment).where("#{::Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true).select(:id).pluck(:id)
-        end
-
-        def update_container_repo_list(smart_proxy)
-          # [{ repository: "repoA", auth_required: false }]
-          repo_list = []
-          ::Katello::SmartProxyHelper.new(smart_proxy).combined_repos_available_to_capsule.each do |repo|
-            if repo.docker? && !repo.container_repository_name.nil?
-              repo_list << { repository: repo.container_repository_name,
-                             auth_required: !unauthenticated_container_repositories.include?(repo.id) }
-            end
-          end
-          smart_proxy.update_container_repo_list(repo_list)
-        end
-
-        def update_user_container_repo_mapping(smart_proxy, users)
-          # Example user-repo mapping:
-          # { users:
-          #   [
-          #     'user a' => [{ repository: 'repo 1', auth_required: true }]
-          #   ]
-          # }
-
-          user_repo_map = { users: [] }
-          users.each do |user|
-            inner_repo_list = []
-            repositories = ::Katello::Repository.readable_docker_catalog_as(user)
-            repositories.each do |repo|
-              next if repo.container_repository_name.nil?
-              inner_repo_list << { repository: repo.container_repository_name,
-                                   auth_required: !unauthenticated_container_repositories.include?(repo.id) }
-            end
-            user_repo_map[:users] << { user.login => inner_repo_list }
-          end
-          smart_proxy.update_user_container_repo_mapping(user_repo_map)
         end
 
         def repos_to_sync(smart_proxy, environment, content_view, repository, skip_metatadata_check = false)
@@ -107,6 +61,11 @@ module Actions
 
         def resource_locks
           :link
+        end
+
+        def run
+          smart_proxy = ::SmartProxy.find(input[:smart_proxy_id])
+          smart_proxy.sync_container_gateway
         end
 
         def rescue_strategy
