@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: get
-    uri: https://devel2.balmora.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://centos7-katello-devel.cannolo.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.14.1/ruby
+      - OpenAPI-Generator/3.14.6/ruby
       Accept:
       - application/json
       Content-Type:
@@ -21,7 +21,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 21 Jul 2021 13:41:30 GMT
+      - Thu, 23 Sep 2021 14:21:43 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -33,36 +33,33 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '898'
+      - '751'
       Correlation-Id:
-      - 2247683fd6d545909a4bc93a3800431c
+      - c9c789c2527e4882932cf1996aeb84ec
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 devel2.balmora.example.com
+      - 1.1 centos7-katello-devel.cannolo.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MjM5OCwibmV4dCI6Imh0dHBzOi8vZGV2ZWwyLmJhbG1vcmEu
-        ZXhhbXBsZS5jb206NDQzL3B1bHAvYXBpL3YzL3Rhc2tzLz9saW1pdD0xJm9m
-        ZnNldD0xIiwicHJldmlvdXMiOm51bGwsInJlc3VsdHMiOlt7InB1bHBfaHJl
-        ZiI6Ii9wdWxwL2FwaS92My90YXNrcy8zYzk0ODlhZS1jMzVkLTRkNjItODA0
-        Yi0yNzBiMTE5YTY5OTEvIiwicHVscF9jcmVhdGVkIjoiMjAyMS0wNy0yMVQx
-        Mzo0MToyMi4zNzk5MDZaIiwic3RhdGUiOiJjb21wbGV0ZWQiLCJuYW1lIjoi
-        cHVscGNvcmUuYXBwLnRhc2tzLm9ycGhhbi5vcnBoYW5fY2xlYW51cCIsImxv
-        Z2dpbmdfY2lkIjoiNzg5NjhkNWVhNGNiNGQ2ZmJjMDMxNjRjYTM5MWNkZmMi
-        LCJzdGFydGVkX2F0IjoiMjAyMS0wNy0yMVQxMzo0MToyMi40NDI1MzJaIiwi
-        ZmluaXNoZWRfYXQiOiIyMDIxLTA3LTIxVDEzOjQxOjIyLjc0NDg1MloiLCJl
-        cnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvYjhk
-        NTk3YTQtN2RhOS00ZmFhLWFmODgtNWJkYWQyYzFhOWUwLyIsInBhcmVudF90
-        YXNrIjpudWxsLCJjaGlsZF90YXNrcyI6W10sInRhc2tfZ3JvdXAiOm51bGws
-        InByb2dyZXNzX3JlcG9ydHMiOlt7Im1lc3NhZ2UiOiJDbGVhbiB1cCBvcnBo
-        YW4gQXJ0aWZhY3RzIiwiY29kZSI6ImNsZWFuLXVwLmNvbnRlbnQiLCJzdGF0
-        ZSI6ImNvbXBsZXRlZCIsInRvdGFsIjoxLCJkb25lIjoxLCJzdWZmaXgiOm51
-        bGx9LHsibWVzc2FnZSI6IkNsZWFuIHVwIG9ycGhhbiBDb250ZW50IiwiY29k
-        ZSI6ImNsZWFuLXVwLmNvbnRlbnQiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsInRv
-        dGFsIjoxLCJkb25lIjoxLCJzdWZmaXgiOm51bGx9XSwiY3JlYXRlZF9yZXNv
-        dXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbXX1dfQ==
+        eyJjb3VudCI6MzU3NCwibmV4dCI6Imh0dHBzOi8vY2VudG9zNy1rYXRlbGxv
+        LWRldmVsLmNhbm5vbG8uZXhhbXBsZS5jb206NDQzL3B1bHAvYXBpL3YzL3Rh
+        c2tzLz9saW1pdD0xJm9mZnNldD0xIiwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8yZmMxMDU1
+        MC0xNzhhLTRiNWQtYjQwZi0yODA5MTNiY2E5OTAvIiwicHVscF9jcmVhdGVk
+        IjoiMjAyMS0wOS0yM1QxNDoyMTo0MS40MDU1MDVaIiwic3RhdGUiOiJjb21w
+        bGV0ZWQiLCJuYW1lIjoicHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJh
+        bF9kZWxldGUiLCJsb2dnaW5nX2NpZCI6ImEwOTdkYTBjZGU5NzQwZGI4OGE1
+        ZWI3Y2NmOGQyYzMyIiwic3RhcnRlZF9hdCI6IjIwMjEtMDktMjNUMTQ6MjE6
+        NDEuNDYzMDQzWiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wOS0yM1QxNDoyMTo0
+        MS41MjQ4OTJaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92
+        My93b3JrZXJzL2NlNGQ5NjE2LTYzZTgtNDQ5My1iMWE1LWU2ZTY5OTYyOTRm
+        Ni8iLCJwYXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNr
+        X2dyb3VwIjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9y
+        ZXNvdXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9w
+        dWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZmlsZS9maWxlLzU5NDkwZGFjLTVh
+        MzMtNDE1NS05YmE3LWE2ODM4MDEzYTY5Mi8iXX1dfQ==
     http_version: 
-  recorded_at: Wed, 21 Jul 2021 13:41:30 GMT
+  recorded_at: Thu, 23 Sep 2021 14:21:43 GMT
 recorded_with: VCR 3.0.3

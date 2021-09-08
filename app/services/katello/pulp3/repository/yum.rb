@@ -307,13 +307,14 @@ module Katello
             blacklist_ids = filter_list_map[:blacklist_ids].flatten&.uniq
             content_unit_hrefs = whitelist_ids - blacklist_ids
 
+            source_repo_ids.each do |source_repo_id|
+              content_unit_hrefs += ::Katello::Repository.find(source_repo_id).srpms.pluck(:pulp_id)
+            end
+
             if content_unit_hrefs.any?
               source_repo_ids.each do |source_repo_id|
                 content_unit_hrefs += additional_content_hrefs(::Katello::Repository.find(source_repo_id), content_unit_hrefs)
               end
-            end
-            source_repo_ids.each do |source_repo_id|
-              content_unit_hrefs += ::Katello::Repository.find(source_repo_id).srpms.pluck(:pulp_id)
             end
 
             dest_repo_map[:content_unit_hrefs] = content_unit_hrefs.uniq.sort
@@ -352,10 +353,10 @@ module Katello
           whitelist_ids += modular_packages(source_repository, inclusion_modular_filters) unless inclusion_modular_filters.empty?
           blacklist_ids += modular_packages(source_repository, exclusion_modular_filters) unless exclusion_modular_filters.empty?
           content_unit_hrefs = whitelist_ids - blacklist_ids
+          content_unit_hrefs += source_repository.srpms.pluck(:pulp_id)
           if content_unit_hrefs.any?
             content_unit_hrefs += additional_content_hrefs(source_repository, content_unit_hrefs)
           end
-          content_unit_hrefs += source_repository.srpms.pluck(:pulp_id)
           copy_units(source_repository, content_unit_hrefs.uniq, options[:remove_all])
         end
 
@@ -372,7 +373,8 @@ module Katello
           options = { :repository_version => source_repository.version_href }
 
           errata_to_include = filter_errata_by_pulp_href(source_repository.errata, content_unit_hrefs,
-                                                         source_repository.rpms.pluck(:filename))
+                                                         source_repository.rpms.pluck(:filename) +
+                                                         source_repository.srpms.pluck(:filename))
           content_unit_hrefs += errata_to_include.collect { |erratum| erratum.repository_errata.pluck(:erratum_pulp3_href) }.flatten
 
           package_groups_to_include = filter_package_groups_by_pulp_href(source_repository.package_groups, content_unit_hrefs)
