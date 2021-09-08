@@ -23,7 +23,8 @@ export const getPageStats = ({ total, page, perPage }) => {
   } else {
     lastIndex = page === lastPage ? total : page * perPage;
   }
-  const pageRowCount = (lastIndex - firstIndex) + 1;
+  let pageRowCount = (lastIndex - firstIndex) + 1;
+  if (total <= 0) pageRowCount = 0;
   return {
     firstIndex, lastIndex, pageRowCount, lastPage,
   };
