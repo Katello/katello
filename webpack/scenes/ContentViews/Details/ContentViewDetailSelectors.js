@@ -19,7 +19,9 @@ import {
   cvRemoveComponentKey,
   CREATE_CONTENT_VIEW_FILTER_KEY,
   RPM_MATCHING_CONTENT,
-  ADD_CONTENT_VIEW_FILTER_RULE, cvFilterRepoKey,
+  ADD_CONTENT_VIEW_FILTER_RULE,
+  cvFilterRepoKey,
+  cvVersionDetailsKey,
 } from '../ContentViewsConstants';
 import { pollTaskKey } from '../../Tasks/helpers';
 
@@ -121,6 +123,15 @@ export const selectCVVersionsStatus = (state, cvId) =>
 
 export const selectCVVersionsError = (state, cvId) =>
   selectAPIError(state, cvDetailsVersionKey(cvId));
+
+export const selectCVVersionDetails = (state, versionId, cvId) =>
+  selectAPIResponse(state, cvVersionDetailsKey(versionId, cvId)) || {};
+
+export const selectCVVersionDetailsStatus = (state, versionId, cvId) =>
+  selectAPIStatus(state, cvVersionDetailsKey(versionId, cvId)) || STATUS.PENDING;
+
+export const selectCVVersionDetailsError = (state, versionId, cvId) =>
+  selectAPIError(state, cvVersionDetailsKey(versionId, cvId));
 
 export const selectPublishTaskPoll = (state, cvVersionPublishKey) =>
   selectAPIResponse(state, pollTaskKey(cvVersionPublishKey)) || {};

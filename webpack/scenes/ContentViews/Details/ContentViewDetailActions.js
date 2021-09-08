@@ -33,6 +33,7 @@ import {
   removeComponentSuccessMessage,
   cvVersionPromoteKey,
   cvFilterRepoKey,
+  cvVersionDetailsKey,
 } from '../ContentViewsConstants';
 import api from '../../../services/api';
 import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
@@ -284,6 +285,25 @@ export const getContentViewVersions = (cvId, params) => {
     url: api.getApiUrl(apiUrl),
   });
 };
+
+export const getContentViewVersionDetails = (versionId, cvId, handleSuccess) =>
+  APIActions.get({
+    type: API_OPERATIONS.GET,
+    key: cvVersionDetailsKey(versionId, cvId),
+    url: api.getApiUrl(`/content_view_versions/${versionId}`),
+    handleSuccess,
+    errorToast: error => __(`Something went wrong while getting version details. ${getResponseErrorMsgs(error.response)}`),
+  });
+
+export const editContentViewVersionDetails = (versionId, cvId, params, handleSuccess) =>
+  APIActions.put({
+    type: API_OPERATIONS.PUT,
+    key: cvVersionDetailsKey(versionId, cvId),
+    url: api.getApiUrl(`/content_view_versions/${versionId}`),
+    params,
+    handleSuccess,
+    errorToast: error => __(`Something went wrong while editing version details. ${getResponseErrorMsgs(error.response)}`),
+  });
 
 export const promoteContentViewVersion = params => post({
   type: API_OPERATIONS.POST,
