@@ -255,3 +255,12 @@ pulp3_python_root_1:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
   url:                  ""
+
+uln_ovm2_2_1_1_i386_patch_root:
+  name:                 ovm2 i386 patch
+  content_id:           1
+  content_type:         yum
+  label:                ovm2_i386_patch
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:oracle) %>
+  url:                  "uln://ovm2_2.1.1_i386_patch"
+  download_policy:      on_demand
