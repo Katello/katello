@@ -161,7 +161,7 @@ module Katello
       end
 
       # rubocop:disable Metrics/MethodLength
-      def import_for_repository(repository, generic_content_type = nil, full_index: false)
+      def import_for_repository(repository, generic_content_type: nil, full_index: false)
         pulp_id_href_map = {}
         if generic_content_type
           service_class = SmartProxy.pulp_primary!.content_service(generic_content_type)
