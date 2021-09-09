@@ -10,12 +10,13 @@ module Actions
           param :contents_changed
           param :matching_content
           param :source_repository_id
+          param :full_index
         end
 
         def run
           source_repository = ::Katello::Repository.find(input[:source_repository_id]) if input[:source_repository_id]
           repo = ::Katello::Repository.find(input[:id])
-          repo.index_content(source_repository: source_repository)
+          repo.index_content(source_repository: source_repository, full_index: input[:full_index].present?)
         end
       end
     end

@@ -58,8 +58,8 @@ module Katello
       docker_taggable_id
     end
 
-    def self.import_for_repository(repository)
-      super(repository)
+    def self.import_for_repository(repository, options = {})
+      super(repository, options)
       ::Katello::DockerMetaTag.import_meta_tags([repository])
     end
 
