@@ -7,7 +7,7 @@ import Loading from '../Loading';
 import './editableTextInput.scss';
 
 const EditableTextInput = ({
-  onEdit, value, textArea, attribute,
+  onEdit, value, textArea, attribute, placeholder,
 }) => {
   // Tracks input box state
   const [inputValue, setInputValue] = useState(value);
@@ -88,7 +88,7 @@ const EditableTextInput = ({
     <Split>
       <SplitItem>
         <Text aria-label={`${attribute} text value`} component={TextVariants.p}>
-          {value || (<i>{__('None provided')}</i>)}
+          {value || (<i>{placeholder}</i>)}
         </Text>
       </SplitItem>
       <SplitItem>
@@ -110,10 +110,12 @@ EditableTextInput.propTypes = {
   value: PropTypes.string,
   attribute: PropTypes.string.isRequired,
   textArea: PropTypes.bool, // Is a text area instead of input when editing
+  placeholder: PropTypes.string,
 };
 
 EditableTextInput.defaultProps = {
   textArea: false,
+  placeholder: __('None provided'),
   value: '', // API can return null, so default to empty string
 };
 

@@ -31,7 +31,7 @@ const ContentViewVersions = ({ cvId }) => {
   const loading = status === STATUS.PENDING;
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
+  const [metadata, setMetadata] = useState({ });
   const [searchQuery, updateSearchQuery] = useState('');
   const [versionIdToPromote, setVersionIdToPromote] = useState('');
   const [versionNameToPromote, setVersionNameToPromote] = useState('');
@@ -64,7 +64,7 @@ const ContentViewVersions = ({ cvId }) => {
       errata_counts: errataCounts,
     } = cvVersion;
     return [
-      { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{__('Version ')}{version}</a> },
+      { title: <a href={urlBuilder(`labs/content_views/${cvId}#versions?subContentId=${versionId}`, '')}>{__('Version ')}{version}</a> },
       { title: <ContentViewVersionEnvironments {...{ environments }} /> },
       { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/packages`, '')}>{`${packageCount}`}</a> },
       { title: <ContentViewVersionErrata {...{ cvId, versionId, errataCounts }} /> },
@@ -81,7 +81,7 @@ const ContentViewVersions = ({ cvId }) => {
       active_history: activeHistory,
     } = cvVersion;
     const { task } = activeHistory[0];
-    const { result } = task || {};
+    const { result } = task || { };
     if (result !== 'error') {
       dispatch(startPollingTask(task.id, task));
     }

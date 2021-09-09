@@ -1,0 +1,196 @@
+{
+    "version": "3.0",
+    "major": 3,
+    "minor": 0,
+    "composite_content_view_ids": [],
+    "published_in_composite_content_view_ids": [],
+    "content_view_id": 19,
+    "default": false,
+    "description": "Killing it with a version!",
+    "id": 41,
+    "name": "Andromeda III 3.0",
+    "created_at": "2021-08-31 11:35:01 -0600",
+    "updated_at": "2021-08-31 11:35:16 -0600",
+    "content_view": {
+        "id": 19,
+        "name": "Andromeda III",
+        "label": "asdf_jjjjj"
+    },
+    "composite_content_views": [],
+    "composite_content_view_versions": [],
+    "published_in_composite_content_views": [],
+    "environments": [
+        {
+            "id": 1,
+            "name": "Library",
+            "label": "Library",
+            "publish_date": "1 day",
+            "permissions": {
+                "readable": true,
+                "promotable_or_removable": true,
+                "all_hosts_editable": true,
+                "all_keys_editable": true
+            },
+            "host_count": 0,
+            "activation_key_count": 0
+        },
+        {
+            "id": 2,
+            "name": "Samir's cool Env",
+            "label": "Samir_s_cool_Env",
+            "publish_date": "1 day",
+            "permissions": {
+                "readable": true,
+                "promotable_or_removable": true,
+                "all_hosts_editable": true,
+                "all_keys_editable": true
+            },
+            "host_count": 0,
+            "activation_key_count": 0
+        },
+        {
+            "id": 3,
+            "name": "Bob",
+            "label": "Bob",
+            "publish_date": "1 day",
+            "permissions": {
+                "readable": true,
+                "promotable_or_removable": true,
+                "all_hosts_editable": true,
+                "all_keys_editable": true
+            },
+            "host_count": 0,
+            "activation_key_count": 0
+        }
+    ],
+    "repositories": [
+        {
+            "id": 97,
+            "name": "asdf",
+            "label": "asdf",
+            "content_type": "yum",
+            "library_instance_id": 1
+        },
+        {
+            "id": 98,
+            "name": "asdfafd",
+            "label": "asdfafd",
+            "content_type": "ansible_collection",
+            "library_instance_id": 83
+        }
+    ],
+    "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": "",
+        "action": "promotion",
+        "created_at": "2021-09-02 08:57:15 -0600",
+        "updated_at": "2021-09-02 08:57:28 -0600",
+        "environment": {
+            "id": 3,
+            "name": "Bob"
+        },
+        "task": {
+            "id": "624c5b62-4430-4271-97c5-47102d2cce00",
+            "label": "Actions::Katello::ContentView::Promote",
+            "pending": false,
+            "action": "Promote content view 'Andromeda III'; organization 'Default Organization'",
+            "username": "admin",
+            "started_at": "2021-09-02 08:57:11 -0600",
+            "ended_at": "2021-09-02 08:57:28 -0600",
+            "state": "stopped",
+            "result": "success",
+            "progress": 1,
+            "input": {
+                "content_view": {
+                    "id": 19,
+                    "name": "Andromeda III",
+                    "label": "asdf_jjjjj"
+                },
+                "organization": {
+                    "id": 1,
+                    "name": "Default Organization",
+                    "label": "Default_Organization"
+                },
+                "environments": [
+                    "Library",
+                    "Samir's cool Env",
+                    "Bob"
+                ],
+                "services_checked": [
+                    "pulp3",
+                    "candlepin",
+                    "candlepin_auth"
+                ],
+                "locale": "en",
+                "current_request_id": "83c0f19a-f957-46ae-9f38-37a27e816c1a",
+                "current_timezone": "America/Edmonton",
+                "current_organization_id": 1,
+                "current_location_id": 2,
+                "current_user_id": 4
+            },
+            "output": {},
+            "humanized": {
+                "action": "Promote",
+                "input": [
+                    [
+                        "content_view",
+                        {
+                            "text": "content view 'Andromeda III'",
+                            "link": "/content_views/19/versions"
+                        }
+                    ],
+                    [
+                        "organization",
+                        {
+                            "text": "organization 'Default Organization'",
+                            "link": "/organizations/1/edit"
+                        }
+                    ]
+                ],
+                "output": "",
+                "errors": []
+            },
+            "cli_example": null,
+            "start_at": "2021-09-02 08:57:11 -0600",
+            "available_actions": {
+                "cancellable": false,
+                "resumable": false
+            }
+        },
+        "version": "3.0",
+        "publish": false,
+        "version_id": 41,
+        "triggered_by": null,
+        "triggered_by_id": null
+    },
+    "active_history": [],
+    "ansible collection_count": 0,
+    "deb_count": 0,
+    "docker_manifest_count": 0,
+    "docker_manifest_list_count": 0,
+    "docker_tag_count": 0,
+    "file_count": 0,
+    "rpm_count": 8,
+    "modulemd_count": 0,
+    "erratum_count": 2,
+    "package_group_count": 2,
+    "srpm_count": 0,
+    "module_stream_count": 0,
+    "package_count": 8,
+    "ostree_branch_count": null,
+    "ansible_collection_repository_count": 1,
+    "deb_repository_count": 0,
+    "docker_repository_count": 0,
+    "file_repository_count": 0,
+    "yum_repository_count": 1,
+    "errata_counts": {
+        "security": 2,
+        "bugfix": 0,
+        "enhancement": 0,
+        "total": 2
+    },
+    "permissions": {
+        "deletable": true
+    }
+}

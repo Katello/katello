@@ -43,9 +43,10 @@ const RoutedTabs = ({
 
   // Handle subroutes to show item's detail content while staying on a tab
   const showContent = (tab) => {
-    const { content, detailContent } = tab;
-    if (subContentId && detailContent) return detailContent;
-
+    const { content, detailContent, key } = tab;
+    // We check the key against the tabFromUrl to prevent
+    // multiple detailContent views from being displayed
+    if (subContentId && detailContent && key === tabFromUrl) return detailContent;
     return content; // show main content if no subroute
   };
 
@@ -53,7 +54,6 @@ const RoutedTabs = ({
     <Tabs activeKey={getActiveTab()} onSelect={handleTabSelect}>
       {tabs.map((tab) => {
         const { key, title } = tab;
-
         return (
           <Tab
             aria-label={title}
@@ -66,7 +66,7 @@ const RoutedTabs = ({
             </div>
           </Tab>
         );
-})}
+      })}
     </Tabs>
   );
 };
