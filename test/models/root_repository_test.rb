@@ -817,5 +817,13 @@ module Katello
       debian9.url = ''
       refute debian9.update(:deb_releases => "stretch")
     end
+
+    def test_uln_upstream_auth_constraint
+      uln_ovm2 = katello_root_repositories(:uln_ovm2_2_1_1_i386_patch)
+      uln_ovm2.upstream_username = 'username'
+      refute uln_ovm2.save
+      uln_ovm2.upstream_password = 'password'
+      assert uln_ovm2.save
+    end
   end
 end

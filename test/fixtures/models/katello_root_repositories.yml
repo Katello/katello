@@ -231,3 +231,12 @@ pulp3_deb_root_1:
   deb_releases:         buster
   deb_components:       main
   deb_architectures:    amd64
+
+uln_ovm2_2_1_1_i386_patch:
+  name:                 ovm2 i386 patch
+  content_id:           1
+  content_type:         yum
+  label:                ovm2_i386_patch
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+  url:                  "uln://ovm2_2.1.1_i386_patch"
+  download_policy:      on_demand

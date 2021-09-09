@@ -57,7 +57,7 @@
       <dt ng-show="repository.content_type !== 'docker'" translate>Upstream URL</dt>
       <dt ng-show="repository.content_type === 'docker'" translate>Registry URL</dt>
       <dd bst-edit-text="repository.url"
-          on-save="save(repository)"
+          on-save="save(repository, true)"
           readonly="product.redhat || denied('edit_products', product)">
       </dd>
       <span ng-if="repository.content_type == 'deb'">

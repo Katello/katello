@@ -74,13 +74,13 @@ module Katello
       end
 
       def create_remote
-        if remote_options[:url].start_with?('uln')
+        if remote_options[:url]&.start_with?('uln')
           remote_file_data = api.class.remote_uln_class.new(remote_options)
         else
           remote_file_data = api.class.remote_class.new(remote_options)
         end
         reformat_api_exception do
-          if remote_options[:url].start_with?('uln')
+          if remote_options[:url]&.start_with?('uln')
             response = api.remotes_uln_api.create(remote_file_data)
           else
             response = api.remotes_api.create(remote_file_data)
@@ -97,14 +97,14 @@ module Katello
       def create_test_remote
         test_remote_options = remote_options
         test_remote_options[:name] = test_remote_name
-        if remote_options[:url].start_with?('uln')
+        if remote_options[:url]&.start_with?('uln')
           remote_file_data = api.class.remote_uln_class.new(test_remote_options)
         else
           remote_file_data = api.class.remote_class.new(test_remote_options)
         end
 
         reformat_api_exception do
-          if remote_options[:url].start_with?('uln')
+          if remote_options[:url]&.start_with?('uln')
             response = api.remotes_uln_api.create(remote_file_data)
           else
             response = api.remotes_api.create(remote_file_data)
@@ -143,7 +143,7 @@ module Katello
       end
 
       def remote_partial_update
-        if remote_options[:url].start_with?('uln')
+        if remote_options[:url]&.start_with?('uln')
           api.remotes_uln_api.partial_update(repo.remote_href, remote_options)
         else
           api.remotes_api.partial_update(repo.remote_href, remote_options)
@@ -194,7 +194,7 @@ module Katello
       end
 
       def get_remote(href = repo.remote_href)
-        repo.url.start_with?('uln') ? api.remotes_uln_api.read(href) : api.remotes_api.read(href)
+        repo.url&.start_with?('uln') ? api.remotes_uln_api.read(href) : api.remotes_api.read(href)
       end
 
       def get_distribution(href = distribution_reference.href)
