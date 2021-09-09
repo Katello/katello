@@ -64,17 +64,17 @@ module Katello
         backend_data['rpm_license']
       end
 
-      def update_model(model)
+      def self.generate_model_row(unit)
         custom_json = {}
-        custom_json['pulp_id'] = backend_data['pulp_href']
+        custom_json['pulp_id'] = unit['pulp_href']
         (PULP_INDEXED_FIELDS - ['pulp_href', 'pkgId', 'location_href']).
-          each { |field| custom_json[field] = backend_data[field] }
-        custom_json['release_sortable'] = Util::Package.sortable_version(backend_data['release'])
-        custom_json['version_sortable'] = Util::Package.sortable_version(backend_data['version'])
-        custom_json['nvra'] = model.build_nvra
-        custom_json['filename'] = backend_data['location_href']
-        custom_json['checksum'] = backend_data['pkgId']
-        model.update!(custom_json)
+          each { |field| custom_json[field] = unit[field] }
+        custom_json['release_sortable'] = Util::Package.sortable_version(unit['release'])
+        custom_json['version_sortable'] = Util::Package.sortable_version(unit['version'])
+        custom_json['nvra'] = Katello::Util::Package.build_nvra(custom_json)
+        custom_json['filename'] = unit['location_href']
+        custom_json['checksum'] = unit['pkgId']
+        custom_json
       end
     end
   end

@@ -93,15 +93,14 @@ module Katello
     end
 
     def self.update_repo_association_records(new_ids, erratum_updated_ids, id_href_map_for_repository, repository)
-      if new_ids.any?
-        self.repository_association_class.import(db_columns_sync, db_values(new_ids, id_href_map_for_repository, repository), validate: false)
-      end
+      # if new_ids.any?
+      #   self.repository_association_class.import(db_columns_sync, db_values(new_ids, id_href_map_for_repository, repository), validate: false)
+      # end
+      erratum_updated_ids += new_ids
+      erratum_updated_ids.uniq!
       if erratum_updated_ids.present?
-        upserts = db_values(erratum_updated_ids, id_href_map_for_repository, repository).map do |upsert|
-          { erratum_id: upsert[0], erratum_pulp3_href: upsert[1], repository_id: upsert[2], created_at: upsert[3], updated_at: upsert[4] }
-        end
         # PostgreSQL refuses to insert and update in the same command: https://github.com/rails/rails/issues/35519
-        self.repository_association_class.upsert_all(upserts, unique_by: [:erratum_id, :repository_id])
+        self.repository_association_class.upsert_all(db_values(erratum_updated_ids, id_href_map_for_repository, repository), unique_by: [:erratum_id, :repository_id])
       end
     end
 

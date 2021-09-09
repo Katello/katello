@@ -13,44 +13,90 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
-      def create_stream_rpms(model, packages)
-        packages_found = Katello::Rpm.where(:pulp_id => packages)
-        existing_rpms = model.rpms
-        new_packages = packages_found - existing_rpms
-        packages_to_delete = existing_rpms - packages_found
-        model.rpms.delete(packages_to_delete)
-        model.rpms << new_packages
+      def self.build_stream_rpms(katello_id, package_hrefs)
+        package_ids = Katello::Rpm.where(:pulp_id => package_hrefs).pluck(:id)
+        rpms = package_ids.map do |package_id|
+          {
+            module_stream_id: katello_id,
+            rpm_id: package_id
+          }
+        end
+        add_timestamps(rpms)
       end
 
-      def create_stream_artifacts(model, artifacts_json)
-        artifacts_json.each do |name|
-          Katello::Util::Support.active_record_retry do
-            model.artifacts.where(name: name).first_or_create!
+      def self.build_artifacts(katello_id, artifacts_json)
+        return [] if artifacts_json.nil?
+        artifacts = artifacts_json.map do |name|
+          {name: name,
+           module_stream_id: katello_id}
+        end
+        add_timestamps(artifacts)
+      end
+
+      def self.build_profiles(katello_id, profiles_json)
+        return [] if profiles_json.nil?
+        profiles = profiles_json.map do |profile, _rpms|
+          {
+            module_stream_id: katello_id,
+            name: profile
+          }
+        end
+        add_timestamps(profiles)
+      end
+
+      def self.build_profile_rpms(katello_id, profiles_json)
+        return [] if profiles_json.nil?
+        profile_rpms = profiles_json.map do |profile, rpms|
+          profile_id = Katello::ModuleProfile.find_by(module_stream_id: katello_id, name: profile).id
+          rpms.map do |rpm|
+            {
+              module_profile_id: profile_id,
+              name: rpm
+            }
           end
         end
+        add_timestamps(profile_rpms.flatten)
       end
 
-      def create_profiles(model, profiles_json)
-        profiles_json.each do |profile, rpms|
-          Katello::Util::Support.active_record_retry do
-            profile = model.profiles.where(name: profile).first_or_create!
-          end
-          rpms.each do |rpm|
-            Katello::Util::Support.active_record_retry do
-              profile.rpms.where(name: rpm).first_or_create!
-            end
-          end
+      def self.generate_model_row(unit)
+        shared_attributes = unit.keys & Katello::ModuleStream.column_names
+        to_return = unit.select { |key, _v| shared_attributes.include?(key) }
+        to_return['pulp_id'] = unit['pulp_href']
+        to_return[:created_at] = DateTime.now
+        to_return[:updated_at] = DateTime.now
+        to_return
+      end
+
+      def self.add_timestamps(rows)
+        rows.each do |row|
+          row[:created_at] = DateTime.now
+          row[:updated_at] = DateTime.now
         end
+        rows
       end
 
-      def update_model(model)
-        shared_attributes = backend_data.keys & model.class.column_names
-        shared_json = backend_data.select { |key, _v| shared_attributes.include?(key) }
-        model.update!(shared_json)
+      def self.insert_child_associations(units, pulp_id_to_id)
+        artifacts = []
+        profiles = []
+        stream_rpms = []
+        units.each do |unit|
+          katello_id = pulp_id_to_id[unit[unit_identifier]]
+          artifacts += build_artifacts(katello_id, unit['artifacts'])
+          profiles += build_profiles(katello_id, unit['profiles'])
+          stream_rpms += build_stream_rpms(katello_id, unit['packages'])
+        end
 
-        create_stream_artifacts(model, backend_data['artifacts']) if backend_data.key?('artifacts')
-        create_profiles(model, backend_data['profiles']) if backend_data.key?('profiles')
-        create_stream_rpms(model, backend_data['packages']) if backend_data.key?('packages')
+        Katello::ModuleStreamArtifact.insert_all(artifacts, unique_by: [:module_stream_id, :name]) if artifacts.any?
+        Katello::ModuleProfile.insert_all(profiles, unique_by: [:module_stream_id, :name]) if profiles.any?
+        Katello::ModuleStreamRpm.insert_all(stream_rpms, unique_by: [:module_stream_id, :rpm_id]) if stream_rpms.any?
+
+        #have to import profile_rpms after profiles
+        profile_rpms = []
+        units.each do |unit|
+          katello_id = pulp_id_to_id[unit[unit_identifier]]
+          profile_rpms += build_profile_rpms(katello_id, unit['profiles'])
+        end
+        Katello::ModuleProfileRpm.insert_all(profile_rpms, unique_by: [:module_profile_id, :name]) if profile_rpms.any?
       end
     end
   end

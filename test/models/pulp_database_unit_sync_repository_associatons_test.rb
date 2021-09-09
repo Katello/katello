@@ -6,9 +6,13 @@ module Katello
   class PulpDatabaseUnitSyncRepositoryAssociationsTest < ActiveSupport::TestCase
     extend ActiveRecord::TestFixtures
 
+    def setup
+    end
+
     def test_non_generic_content_type_associates_new_ids_and_removes_missing_ids_in_map
       @repo = FactoryBot.create(:katello_repository, :with_product)
-
+      @content_type = Katello::RepositoryTypeManager.find_content_type('rpm')
+      @service_class = @content_type.pulp3_service_class
       @rpm = katello_rpms(:one)
       @rpm2 = katello_rpms(:two)
       @rpm3 = katello_rpms(:three)
@@ -19,12 +23,11 @@ module Katello
 
       @repo.rpms = [@rpm, @rpm2, @rpm3, @rpm4, @rpm5]
 
-      pulp_id_ref_map = {
-        @rpm.pulp_id => nil,
-        @rpm2.pulp_id => nil
-      }
+      indexer = Katello::ContentUnitIndexer.new(content_type: @content_type, repository: @repo)
+      tracker = Katello::ContentUnitIndexer::RepoAssociationTracker.new(@content_type, @service_class, @repo)
 
-      Katello::Rpm.sync_repository_associations(@repo, pulp_id_href_map: pulp_id_ref_map)
+      [@rpm, @rpm2].each { |rpm| tracker.push({pulp_href: rpm.pulp_id}.with_indifferent_access) }
+      indexer.sync_repository_associations(tracker)
 
       rpm_ids = Katello::Rpm.repository_association_class.where(repository_id: @repo).pluck(:rpm_id)
       assert_includes rpm_ids, @rpm.id
@@ -36,6 +39,8 @@ module Katello
     end
 
     def test_generic_different_content_types_associates_new_ids_and_removes_missing_ids_in_map
+      @content_type = Katello::RepositoryTypeManager.find_content_type('python_package')
+      @service_class = @content_type.pulp3_service_class
       @repo = katello_repositories(:pulp3_python_1)
 
       @gcu = Katello::GenericContentUnit.create(name: "one", pulp_id: "one-uuid", content_type: "first")
@@ -44,21 +49,21 @@ module Katello
 
       @repo.generic_content_units = [@gcu, @gcu2]
 
-      pulp_id_ref_map = {
-        @gcu2.pulp_id => nil
-      }
+      indexer = Katello::ContentUnitIndexer.new(content_type: @content_type, repository: @repo)
+      tracker = Katello::ContentUnitIndexer::RepoAssociationTracker.new(@content_type, @service_class, @repo)
+      tracker.push({pulp_href: @gcu.pulp_id}.with_indifferent_access)
+      tracker.push({pulp_href: @gcu2.pulp_id}.with_indifferent_access)
 
-      Katello::GenericContentUnit.sync_repository_associations(
-        @repo, pulp_id_href_map: pulp_id_ref_map, generic_content_type: @gcu2.content_type)
+      indexer.sync_repository_associations(tracker)
 
       gcu_ids = Katello::GenericContentUnit.repository_association_class.where(repository_id: @repo).pluck(:generic_content_unit_id)
       assert_includes gcu_ids, @gcu.id
       assert_includes gcu_ids, @gcu2.id
 
-      pulp_id_ref_map = {}
+      tracker = Katello::ContentUnitIndexer::RepoAssociationTracker.new(@content_type, @service_class, @repo)
+      tracker.push({pulp_href: @gcu2.pulp_id}.with_indifferent_access)
 
-      Katello::GenericContentUnit.sync_repository_associations(
-        @repo, pulp_id_href_map: pulp_id_ref_map, generic_content_type: @gcu.content_type)
+      indexer.sync_repository_associations(tracker)
 
       gcu_ids = Katello::GenericContentUnit.repository_association_class.where(repository_id: @repo).pluck(:generic_content_unit_id)
       refute_includes gcu_ids, @gcu.id

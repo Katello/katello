@@ -51,35 +51,6 @@ module Katello
           assert_equal post_unit_repository_count, 7
         end
 
-        def test_update_model
-          Katello::Erratum.destroy_all
-          sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-          ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
-          uuid = Katello::Pulp3::Erratum.content_unit_list({}).results.find { |result| result.id == ERRATA_ID }.pulp_href.as_json
-          service = Katello::Pulp3::Erratum.new(uuid)
-          erratum = Katello::Erratum.create!(:pulp_id => uuid)
-
-          service.update_model(erratum)
-          assert_includes Katello::Erratum::SECURITY, erratum.errata_type
-
-          erratum.reload
-          refute_empty erratum.packages
-          refute erratum.packages.first.filename.blank?
-          refute erratum.packages.first.nvrea.blank?
-          refute erratum.packages.first.name.blank?
-
-          refute_empty erratum.bugzillas
-          refute_empty erratum.bugzillas.first.bug_id
-          refute_empty erratum.bugzillas.first.href
-
-          refute_empty erratum.cves
-          refute_empty erratum.cves.first.cve_id
-          refute_empty erratum.cves.first.href
-
-          assert_equal '2010-11-10', erratum.issued.to_s
-          assert_equal '2010-11-10', erratum.updated.to_s
-        end
-
         def test_dup_errata
           Katello::Erratum.destroy_all
           ::Katello::Pulp3::Repository.any_instance.stubs(:ssl_remote_options).returns({})

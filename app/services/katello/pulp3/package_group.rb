@@ -54,12 +54,12 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
-      def update_model(model)
+      def self.generate_model_row(unit)
         custom_json = {}
-        custom_json['pulp_id'] = backend_data['pulp_href']
-        custom_json['name'] = backend_data['name']
-        custom_json['description'] = backend_data['description']
-        model.update!(custom_json)
+        custom_json['pulp_id'] = unit['pulp_href']
+        custom_json['name'] = unit['name']
+        custom_json['description'] = unit['description']
+        custom_json
       end
     end
   end

@@ -20,11 +20,12 @@ module Katello
         self.content_api.list(page_opts)
       end
 
-      def update_model(model)
-        custom_json = {}
-        custom_json['schema_version'], = backend_data['schema_version']
-        custom_json['digest'], = backend_data['digest']
-        model.update!(custom_json)
+      def self.generate_model_row(unit)
+        {
+          schema_version: unit['schema_version'],
+          digest: unit['digest'],
+          pulp_id: unit[unit_identifier]
+        }
       end
     end
   end

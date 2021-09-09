@@ -105,7 +105,17 @@ module Katello
         i += 1
       end
       Katello::Erratum.import([:pulp_id], ids, validate: false)
-      Katello::Erratum.sync_repository_associations(@repo, :pulp_id_href_map => ids_href_map)
+
+      content_type = Katello::RepositoryTypeManager.find_content_type('erratum')
+      service_class = content_type.pulp3_service_class
+
+      indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: @repo)
+      tracker = Katello::ContentUnitIndexer::RepoAssociationTracker.new(content_type, service_class, @repo)
+      ids.each do |errata_id|
+        tracker.push({pulp_href: ids_href_map[errata_id.first], id: errata_id.first}.with_indifferent_access)
+      end
+      indexer.sync_repository_associations(tracker)
+
       post_repo_erratum_size = @repo.errata.size
       assert_equal post_repo_erratum_size, 70_000
     end

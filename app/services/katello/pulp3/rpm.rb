@@ -81,24 +81,24 @@ module Katello
         backend_data['rpm_license']
       end
 
-      def parse_filename(path)
+      def self.parse_filename(path)
         File.split(path).last unless path.blank?
       end
 
-      def update_model(model)
+      def self.generate_model_row(unit)
         custom_json = {}
-        custom_json['modular'] = backend_data['is_modular']
-        custom_json['pulp_id'] = backend_data['pulp_href']
+        custom_json['modular'] = unit['is_modular']
+        custom_json['pulp_id'] = unit['pulp_href']
         (PULP_INDEXED_FIELDS - ['is_modular', 'pulp_href', 'rpm_sourcerpm', 'pkgId', 'location_href']).
-          each { |field| custom_json[field] = backend_data[field] }
-        custom_json['release_sortable'] = Util::Package.sortable_version(backend_data['release'])
-        custom_json['version_sortable'] = Util::Package.sortable_version(backend_data['version'])
-        custom_json['filename'] = parse_filename(backend_data['location_href']) #location_href is the relative path of the rpm in the upstream repo
-        custom_json['checksum'] = backend_data['pkgId']
-        custom_json['sourcerpm'] = backend_data['rpm_sourcerpm']
-        model.assign_attributes(custom_json)
-        model.nvra = model.build_nvra
-        model.save!
+          each { |field| custom_json[field] = unit[field] }
+        custom_json['release_sortable'] = Util::Package.sortable_version(unit['release'])
+        custom_json['version_sortable'] = Util::Package.sortable_version(unit['version'])
+        custom_json['filename'] = parse_filename(unit['location_href']) #location_href is the relative path of the rpm in the upstream repo
+        custom_json['checksum'] = unit['pkgId']
+        custom_json['sourcerpm'] = unit['rpm_sourcerpm']
+        custom_json['nvra'] = Util::Package.build_nvra(custom_json.with_indifferent_access)
+        custom_json['summary'] = custom_json['summary']&.truncate(255)
+        custom_json
       end
     end
   end

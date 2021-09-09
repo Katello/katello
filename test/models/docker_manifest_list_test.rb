@@ -5,7 +5,7 @@ module Katello
     MANIFESTS = File.join(Katello::Engine.root, "test", "fixtures", "pulp3", "docker_manifest_lists.yml")
 
     def setup
-      @manifest_lists = YAML.load_file(MANIFESTS).values.map(&:deep_symbolize_keys)
+      @manifest_lists = YAML.load_file(MANIFESTS).values.map(&:deep_symbolize_keys).map(&:with_indifferent_access)
       @repo = Repository.find(katello_repositories(:redis).id)
 
       Katello::Pulp3::DockerManifestList.stubs(:pulp_units_batch_for_repo).returns([@manifest_lists])

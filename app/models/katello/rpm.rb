@@ -20,8 +20,6 @@ module Katello
     scoped_search :on => :modular, :complete_value => true, :only_explicit => true
     scoped_search :on => :checksum
 
-    before_save lambda { |rpm| rpm.summary = rpm.summary.truncate(255) unless rpm.summary.blank? }
-
     scope :modular, -> { where(modular: true) }
     scope :non_modular, -> { where(modular: false) }
 

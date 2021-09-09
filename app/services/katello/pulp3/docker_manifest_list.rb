@@ -18,12 +18,29 @@ module Katello
         self.content_api.list(page_opts)
       end
 
-      def update_model(model)
-        custom_json = {}
-        custom_json['schema_version'], = backend_data['schema_version']
-        custom_json['digest'], = backend_data['digest']
-        custom_json['docker_manifests'] = ::Katello::DockerManifest.where(:pulp_id => backend_data[:listed_manifests])
-        model.update!(custom_json)
+      def self.generate_model_row(unit)
+        {
+          schema_version: unit['schema_version'],
+          digest: unit['digest'],
+          pulp_id: unit[unit_identifier]
+        }
+      end
+
+      def self.insert_child_associations(units, pulp_id_to_id)
+        manifest_list_manifests = []
+        units.each do |unit|
+          katello_id = pulp_id_to_id[unit[unit_identifier]]
+          manifest_ids = ::Katello::DockerManifest.where(:pulp_id => unit[:listed_manifests]).pluck(:id)
+          manifest_list_manifests += manifest_ids.map do |manifest_id|
+            {
+              docker_manifest_list_id: katello_id,
+              docker_manifest_id: manifest_id
+            }
+          end
+        end
+
+        manifest_list_manifests.flatten!
+        Katello::DockerManifestListManifest.insert_all(manifest_list_manifests, unique_by: [:docker_manifest_list_id, :docker_manifest_id]) if manifest_list_manifests.any?
       end
     end
   end

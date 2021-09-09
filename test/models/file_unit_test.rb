@@ -52,7 +52,17 @@ module Katello
         i += 1
       end
       Katello::FileUnit.import([:pulp_id], ids, validate: false)
-      Katello::FileUnit.sync_repository_associations(@repo, :pulp_id_href_map => ids_href_map)
+
+      content_type = Katello::RepositoryTypeManager.find_content_type('file')
+      service_class = content_type.pulp3_service_class
+
+      indexer = Katello::ContentUnitIndexer.new(content_type: content_type, repository: @repo)
+      tracker = Katello::ContentUnitIndexer::RepoAssociationTracker.new(content_type, service_class, @repo)
+      ids_href_map.keys.each do |href|
+        tracker.push({pulp_href: href}.with_indifferent_access)
+      end
+      indexer.sync_repository_associations(tracker)
+
       file_unit_size_post = @repo.file_units.size
       assert_equal file_unit_size_post, 70_000
     end

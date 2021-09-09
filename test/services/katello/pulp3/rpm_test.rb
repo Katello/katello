@@ -45,23 +45,6 @@ module Katello
           assert_equal post_unit_count, 32
           assert_equal post_unit_repository_count, 32
         end
-
-        def test_update_model
-          pulp_id = 'foo'
-          model = Rpm.create!(:pulp_id => pulp_id)
-          json = model.attributes.merge('pulp_href' => 'my_href', 'summary' => 'an update', 'version' => '3', 'release' => '4', 'is_modular' => 'false')
-
-          service = Katello::Pulp3::Rpm.new(pulp_id)
-          service.backend_data = json
-          service.update_model(model)
-
-          model = model.reload
-
-          assert_equal model.summary, json['summary']
-          refute model.release_sortable.blank?
-          refute model.version_sortable.blank?
-          refute model.nvra.blank?
-        end
       end
     end
   end
