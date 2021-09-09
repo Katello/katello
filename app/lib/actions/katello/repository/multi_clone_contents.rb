@@ -27,7 +27,7 @@ module Actions
               end
 
               extended_repo_mapping.values.each do |dest_repo_map|
-                plan_action(Katello::Repository::IndexContent, id: dest_repo_map[:dest_repo].id, matching_content: dest_repo_map[:matching_content])
+                plan_action(Katello::Repository::IndexContent, id: dest_repo_map[:dest_repo].id)
               end
             end
           end

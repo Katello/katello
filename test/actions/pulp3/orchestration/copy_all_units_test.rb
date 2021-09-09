@@ -37,7 +37,7 @@ module ::Actions::Pulp3
     def test_inclusion_docker_filters
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @docker_repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @docker_repo, @primary, sync_args)
-      index_args = {:id => @docker_repo.id, :contents_changed => true}
+      index_args = {:id => @docker_repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @docker_repo.reload
 
@@ -68,7 +68,7 @@ module ::Actions::Pulp3
     def test_exclusion_docker_filters
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @docker_repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @docker_repo, @primary, sync_args)
-      index_args = {:id => @docker_repo.id, :contents_changed => true}
+      index_args = {:id => @docker_repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @docker_repo.reload
 
@@ -109,7 +109,7 @@ module ::Actions::Pulp3
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
-      index_args = {:id => @repo.id, :contents_changed => true}
+      index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
     end
@@ -121,7 +121,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -142,7 +142,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], solve_dependencies: false, filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -161,7 +161,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], solve_dependencies: false, filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -178,7 +178,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], solve_dependencies: false, filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -195,7 +195,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], solve_dependencies: true, filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -212,7 +212,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], solve_dependencies: true, filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -229,7 +229,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], solve_dependencies: true, filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -248,7 +248,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -265,7 +265,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -284,7 +284,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -301,7 +301,7 @@ module ::Actions::Pulp3
                              @repo_clone, @primary, [@repo], filters: [filter])
       @repo_clone.reload
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -322,7 +322,7 @@ module ::Actions::Pulp3
       @repo_clone.reload
       refute_equal @repo_clone.version_href, @repo_clone_original_version_href
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
 
       @repo_clone.reload
@@ -335,7 +335,7 @@ module ::Actions::Pulp3
 
       refute_equal @repo_clone.version_href, @repo_clone_original_version_href
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -353,7 +353,7 @@ module ::Actions::Pulp3
       @repo_clone.reload
       refute_equal @repo_clone.version_href, @repo_clone_original_version_href
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
 
       @repo_clone.reload
@@ -364,7 +364,7 @@ module ::Actions::Pulp3
       @repo_clone.reload
       assert_equal @repo_clone.version_href, @repo_clone_original_version_href
 
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -392,7 +392,7 @@ module ::Actions::Pulp3
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
-      index_args = {:id => @repo.id, :contents_changed => true}
+      index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
     end
@@ -405,7 +405,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
                              @repo_clone, @primary, [@repo], filters: [filter])
       @repo_clone.reload
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -433,7 +433,7 @@ module ::Actions::Pulp3
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
-      index_args = {:id => @repo.id, :contents_changed => true}
+      index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
     end
@@ -458,7 +458,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
                              @repo_clone, @primary, [@repo], filters: [filter, module_stream_filter])
       @repo_clone.reload
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -476,7 +476,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
                              @repo_clone, @primary, [@repo], filters: [filter, module_stream_filter])
       @repo_clone.reload
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -493,7 +493,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
                              @repo_clone, @primary, [@repo], filters: [filter])
       @repo_clone.reload
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -521,7 +521,7 @@ module ::Actions::Pulp3
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
-      index_args = {:id => @repo.id, :contents_changed => true}
+      index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
     end
@@ -607,7 +607,7 @@ module ::Actions::Pulp3
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
-      index_args = {:id => @repo.id, :contents_changed => true}
+      index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
     end
@@ -636,7 +636,7 @@ module ::Actions::Pulp3
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
                              @repo_clone, @primary, [@repo], filters: [filter, module_stream_filter])
       @repo_clone.reload
-      index_args = {:id => @repo_clone.id, :contents_changed => true}
+      index_args = {:id => @repo_clone.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo_clone.reload
 
@@ -665,7 +665,7 @@ module ::Actions::Pulp3
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
-      index_args = {:id => @repo.id, :contents_changed => true}
+      index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
     end
@@ -729,7 +729,7 @@ module ::Actions::Pulp3
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
 
-      index_args = {:id => @repo.id, :contents_changed => true}
+      index_args = {:id => @repo.id}
       ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
       @repo.reload
     end
