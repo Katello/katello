@@ -894,8 +894,15 @@ module Katello
     end
 
     def index_content(options = {})
-      source_repository = options.fetch(:source_repository, nil)
+      # set full_index to true if you want to force fetch all data from pulp
+      # This is automatically done for library instance repos
+      # However for non-library instance as in those belonging to a version
+      # by default we fetch only ids and match them with the library instance
+      # some times we want to force fetch all data even for non-library repos.
+      # Use the full_index for those times
 
+      full_index = options.fetch(:full_index, false)
+      source_repository = options.fetch(:source_repository, nil)
       if self.yum? && !self.primary?
         index_linked_repo
       elsif source_repository && !repository_type.unique_content_per_repo
@@ -904,9 +911,9 @@ module Katello
         repository_type.content_types_to_index.each do |type|
           Katello::Logging.time("CONTENT_INDEX", data: {type: type.model_class}) do
             if self.generic?
-              type.model_class.import_for_repository(self, type.content_type)
+              type.model_class.import_for_repository(self, generic_content_type: type.content_type, full_index: full_index)
             else
-              type.model_class.import_for_repository(self)
+              type.model_class.import_for_repository(self, full_index: full_index)
             end
           end
         end

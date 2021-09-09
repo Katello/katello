@@ -194,12 +194,14 @@ module Actions
         def handle_import(version, path:, metadata:)
           sequence do
             plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::Import, version, path: path, metadata: metadata)
-            plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary, version)
             concurrence do
               version.importable_repositories.pluck(:id).each do |id|
-                plan_action(Katello::Repository::IndexContent, id: id)
+                # need to force full_indexing for these version repositories
+                # on import. This will then help us correctly copy version units to the library
+                plan_action(Katello::Repository::IndexContent, id: id, full_index: true)
               end
             end
+            plan_action(::Actions::Pulp3::Orchestration::ContentViewVersion::CopyVersionUnitsToLibrary, version)
           end
         end
 
