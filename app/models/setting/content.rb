@@ -85,7 +85,7 @@ class Setting::Content < Setting
                false, N_('Disconnected mode')),
       self.set('errata_status_installable', N_("Calculate errata host status based only on errata in a Host's Content View and Lifecycle Environment"),
                false, N_('Installable errata from Content View')),
-      self.set('restrict_composite_view', N_("If set to true, a composite content view may not be published or "\
+      self.set('restrict_composite_view', N_("If this is enabled, a composite content view may not be published or "\
                "promoted, unless the component content view versions that it includes exist in the target environment."),
                false, N_('Restrict Composite Content View promotion')),
       self.set('check_services_before_actions', N_("Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions."),
@@ -112,14 +112,14 @@ class Setting::Content < Setting
                "/etc/pki/katello/certs/pulp-client.crt", N_('Pulp client cert')),
       self.set('sync_connect_timeout', N_("Total timeout in seconds for connections when syncing"),
                300, N_('Sync Connection Timeout')),
-      self.set('remote_execution_by_default', N_("If set to true, use remote execution instead of katello-agent for remote actions"),
+      self.set('remote_execution_by_default', N_("If this is enabled, remote execution is used instead of katello-agent for remote actions"),
                false, N_('Use remote execution by default')),
       self.set('unregister_delete_host', N_("When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host " \
                                             "such as virtual machines and DNS records may also be deleted."),
                false, N_('Delete Host upon unregister')),
       self.set('register_hostname_fact', N_("When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"),
                '', N_('Subscription manager name registration fact'), nil),
-      self.set('register_hostname_fact_strict_match', N_('If true, and register_hostname_fact is set and provided, registration will look for a new host by name only '\
+      self.set('register_hostname_fact_strict_match', N_('If this is enabled, and register_hostname_fact is set and provided, registration will look for a new host by name only '\
                 'using that fact, and will skip all hostname matching'), false, N_('Subscription manager name registration fact strict matching'), nil),
       self.set('default_location_subscribed_hosts',
                N_('Default Location where new subscribed hosts will put upon registration'),
