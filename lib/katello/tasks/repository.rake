@@ -92,15 +92,6 @@ namespace :katello do
     end
   end
 
-  desc "Refresh pulp sync schedules"
-  task :refresh_sync_schedule => ["environment", "check_ping"] do
-    User.current = User.anonymous_api_admin
-    Katello::Product.all.each do |product|
-      puts "Updating #{product}"
-      ForemanTasks.sync_task(::Actions::Pulp::Repos::Update, product)
-    end
-  end
-
   def lookup_repositories
     lifecycle_envs = Katello::KTEnvironment.where(:name => ENV['LIFECYCLE_ENVIRONMENT']) if ENV['LIFECYCLE_ENVIRONMENT']
     content_views = Katello::ContentView.where(:name => ENV['CONTENT_VIEW']) if ENV['CONTENT_VIEW']
