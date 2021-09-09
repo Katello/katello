@@ -25,7 +25,6 @@ module Actions
 
             index_options = {id: new_repository.id}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
-            index_options[:matching_content] = matching_content
             plan_action(Katello::Repository::IndexContent, index_options)
           end
         end
