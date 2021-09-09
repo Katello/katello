@@ -1,3 +1,23 @@
+# 3.18.5 (2021-09-13)
+
+## Bug Fixes
+
+### Repositories
+ * Pulp migration failed with "NoMethodError: undefined method 'pulp_id' for nil:NilClass" ([#33278](https://projects.theforeman.org/issues/33278))
+ * Pulp 2 doesn't escape proxy usernames or passwords ([#33220](https://projects.theforeman.org/issues/33220))
+ * The Pulp 3 migration rake task should warn the user that "Migrating content to Pulp 3 ..." may take a long time to complete ([#33207](https://projects.theforeman.org/issues/33207))
+ * foreman-maintain failed to cancel or resume the task before the upgrade. ([#33206](https://projects.theforeman.org/issues/33206))
+ * [pulp3] 2to3 migration progress reporting will be stuck at  "Migrating content to Pulp 3" for a long time ([#33192](https://projects.theforeman.org/issues/33192))
+ * '[pulp3] foreman-rake katello:approve_corrupted_migration_content command failed with rake aborted!' ([#33173](https://projects.theforeman.org/issues/33173))
+ * undefined method 'pulp3_remote_href' for nil:NilClass (NoMethodError) when migrating during content view publish ([#33150](https://projects.theforeman.org/issues/33150))
+ * [pulp3] run orphan katello unit deletion as part of 'content prepare' ([#33131](https://projects.theforeman.org/issues/33131))
+ * abort-migration rake task cancel all tasks ([#33045](https://projects.theforeman.org/issues/33045))
+
+### Other
+ * b'satellite-maintain content migration-stats shows migration time when everything is migrated' ([#33304](https://projects.theforeman.org/issues/33304))
+ * pulp3: satellite-maintain content prepare failed when run as nohup job ([#33187](https://projects.theforeman.org/issues/33187))
+ * Warn about postgresql space requirements within pulp3 migration-stats ([#33028](https://projects.theforeman.org/issues/33028))
+
 # 3.18.4 (2021-07-13)
 
 ## Bug Fixes
