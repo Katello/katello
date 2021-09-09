@@ -10,14 +10,13 @@
  * @requires ContentViewVersion
  * @requires CurrentOrganization
  * @requires Notification
- * @requires BastionConfig
  *
  * @description
  *   Display confirmation screen and apply Errata.
  */
 angular.module('Bastion.errata').controller('ApplyErrataController',
-    ['$scope', '$window', 'translate', 'IncrementalUpdate', 'HostBulkAction', 'ContentViewVersion', 'CurrentOrganization', 'Notification', 'BastionConfig',
-        function ($scope, $window, translate, IncrementalUpdate, HostBulkAction, ContentViewVersion, CurrentOrganization, Notification, BastionConfig) {
+    ['$scope', '$window', 'translate', 'IncrementalUpdate', 'HostBulkAction', 'ContentViewVersion', 'CurrentOrganization', 'Notification',
+        function ($scope, $window, translate, IncrementalUpdate, HostBulkAction, ContentViewVersion, CurrentOrganization, Notification) {
             var applyErrata, incrementalUpdate;
 
             function transitionToTask(task) {
@@ -32,8 +31,6 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
 
             $scope.applyingErrata = false;
 
-            $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
-            $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
             $scope.errataActionFormValues = {
                 authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
                 errata: IncrementalUpdate.getErrataIds().join(','),
@@ -137,15 +134,11 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             });
 
             $scope.confirmApply = function() {
-                if ($scope.remoteExecutionPresent && $scope.remoteExecutionByDefault) {
-                    angular.element('#errataActionForm').submit();
+                $scope.applyingErrata = true;
+                if ($scope.updates.length === 0) {
+                    applyErrata();
                 } else {
-                    $scope.applyingErrata = true;
-                    if ($scope.updates.length === 0) {
-                        applyErrata();
-                    } else {
-                        incrementalUpdate();
-                    }
+                    incrementalUpdate();
                 }
             };
 

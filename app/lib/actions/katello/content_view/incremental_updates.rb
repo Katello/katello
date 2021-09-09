@@ -4,7 +4,8 @@ module Actions
       class IncrementalUpdates < Actions::EntryAction
         include Helpers::Presenter
 
-        def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description)
+        def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description,
+                use_remote_execution = false)
           old_new_version_map = {}
           output_for_version_ids = []
 
@@ -28,12 +29,13 @@ module Actions
               handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description)
             end
 
-            if hosts.any? && !content[:errata_ids].blank?
+            if hosts.any? && !content[:errata_ids].blank? && !use_remote_execution
               errata = ::Katello::Erratum.with_identifiers(content[:errata_ids])
               hosts = hosts.where(:id => ::Katello::Host::ContentFacet.with_applicable_errata(errata).pluck(:host_id))
               plan_action(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, hosts, :errata_ids => content[:errata_ids])
             end
-            plan_self(:version_outputs => output_for_version_ids)
+            plan_self(:version_outputs => output_for_version_ids, :host_ids => hosts.pluck(:id),
+                      :errata_ids => content[:errata_ids], :use_remote_execution => use_remote_execution)
           end
         end
 
@@ -59,6 +61,14 @@ module Actions
         end
 
         def run
+          if input[:errata_ids].present? && input[:host_ids].present? && input[:use_remote_execution]
+            errata_ids = input[:errata_ids].join(',')
+            errata = ::Katello::Erratum.with_identifiers(input[:errata_ids])
+            hosts = ::Host.where(:id => input[:host_ids] &
+                                          ::Katello::Host::ContentFacet.with_applicable_errata(errata).pluck(:host_id))
+            JobInvocationComposer.for_feature('katello_errata_install', hosts, { :errata => errata_ids }).trigger
+          end
+
           output[:changed_content] = input[:version_outputs].map do |version_output|
             {
               :content_view_version => {:id => version_output[:version_id]},
