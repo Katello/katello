@@ -12,6 +12,8 @@ Foreman::Application.routes.draw do
     end
   end
 
+  get '/content_hosts/register', to: redirect('/hosts/register')
+
   scope :module => :bastion do
     get '/:bastion_page/(*path)', :to => "bastion#index", constraints: BastionPagesConstraint.new
     get '/bastion/(*path)', :to => "bastion#index_ie"
