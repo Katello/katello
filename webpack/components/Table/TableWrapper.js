@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { dequal as deepEqual } from 'dequal';
+import { isEqual } from 'lodash';
 import { STATUS } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
@@ -53,7 +53,7 @@ const TableWrapper = ({
   const prevAdditionalListeners = useRef([]);
   const paginationChangePending = useRef(null);
 
-  const hasChanged = (oldValue, newValue) => !deepEqual(oldValue, newValue);
+  const hasChanged = (oldValue, newValue) => !isEqual(oldValue, newValue);
 
   const spawnFetch = useCallback((paginationData) => {
     // The search component will update the search query when a search is performed, listen for that
@@ -79,7 +79,7 @@ const TableWrapper = ({
     };
     let pageOverride;
     if (searchQuery) pageOverride = { search: searchQuery };
-    if (!deepEqual(searchQuery, prevSearch.current) || activeFilters) {
+    if (!isEqual(searchQuery, prevSearch.current) || activeFilters) {
       // Reset page back to 1 when filter or search changes
       prevSearch.current = searchQuery;
       pageOverride = { search: searchQuery, page: 1 };
