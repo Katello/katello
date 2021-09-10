@@ -19,6 +19,10 @@ const SelectAllCheckbox = ({
   const [isSelectAllChecked, setSelectAllChecked] = useState(null);
   const [isSelectAllDropdownOpen, setSelectAllDropdownOpen] = useState(false);
 
+  // Checkbox states: false = unchecked, null = partially-checked, true = checked
+  // Flow: All are selected -> click -> none are selected
+  // Some are selected -> click -> none are selected
+  // None are selected -> click -> page is selected
   const onSelectAllCheckboxChange = () => {
     if (isSelectAllChecked === false) {
       return selectPage();
