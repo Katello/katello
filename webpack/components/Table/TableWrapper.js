@@ -1,15 +1,18 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { Pagination, PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
-
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { isEqual } from 'lodash';
 import { STATUS } from 'foremanReact/constants';
+import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
-import { usePaginationOptions } from 'foremanReact/components/Pagination/PaginationHooks';
+import { PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
 
+import PageControls from './PageControls';
 import MainTable from './MainTable';
+import { getPageStats } from './helpers';
 import Search from '../../components/Search';
+import SelectAllCheckbox from '../SelectAllCheckbox';
 import { orgId } from '../../services/api';
 
 /* Patternfly 4 table wrapper */
@@ -24,38 +27,64 @@ const TableWrapper = ({
   updateSearchQuery,
   additionalListeners,
   activeFilters,
+  displaySelectAllCheckbox,
+  selectAll,
+  selectNone,
+  selectPage,
+  areAllRowsSelected,
+  areAllRowsOnPageSelected,
+  selectedCount,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
   const foremanPerPage = useForemanSettings().perPage || 20;
-  // setting pagination to local state so it doesn't disappear when page reloads
-  const [perPage, setPerPage] = useState(Number(metadata?.per_page ?? foremanPerPage));
-  const [page, setPage] = useState(Number(metadata?.page ?? 1));
-  const [total, setTotal] = useState(Number(metadata?.subtotal ?? 0));
+  const perPage = Number(metadata?.per_page ?? foremanPerPage);
+  const page = Number(metadata?.page ?? 1);
+  const total = Number(metadata?.subtotal ?? 0);
+  const { pageRowCount } = getPageStats({ total, page, perPage });
+  const totalCount = metadata?.total ?? 0;
+  const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
+  const unresolvedStatusOrNoRows = unresolvedStatus || pageRowCount === 0;
+  const searchNotUnderway = !(searchQuery || activeFilters);
+  const paginationParams = useCallback(() =>
+    ({ per_page: perPage, page }), [perPage, page]);
+  const prevRequest = useRef({});
+  const prevSearch = useRef('');
+  const prevAdditionalListeners = useRef([]);
+  const paginationChangePending = useRef(null);
 
+  const hasChanged = (oldValue, newValue) => !isEqual(oldValue, newValue);
 
-  const updatePagination = (data) => {
-    const { subtotal: newTotal, page: newPage, per_page: newPerPage } = data;
-    if (newTotal !== undefined) setTotal(Number(newTotal));
-    if (newPage !== undefined) setPage(Number(newPage));
-    if (newPerPage !== undefined) setPerPage(Number(newPerPage));
-  };
-  const paginationParams = useCallback(() => ({ per_page: perPage, page }), [perPage, page]);
-
-  useDeepCompareEffect(() => updatePagination(metadata), [metadata]);
-
-  // The search component will update the search query when a search is performed, listen for that
-  // and perform the search so we can be sure the searchQuery is updated when search is performed.
-  useDeepCompareEffect(() => {
+  const spawnFetch = useCallback((paginationData) => {
+    // The search component will update the search query when a search is performed, listen for that
+    // and perform the search so we can be sure the searchQuery is updated when search is performed.
     const fetchWithParams = (allParams = {}) => {
-      dispatch(fetchItems({ ...paginationParams(), ...allParams }));
+      const newRequest = {
+        ...(paginationData ?? paginationParams()),
+        ...allParams,
+      };
+      // If a pagination change is in-flight,
+      // don't send another request with stale data
+      if (paginationChangePending.current &&
+        hasChanged(newRequest, paginationChangePending.current)) return;
+      paginationChangePending.current = null;
+      if (hasChanged(newRequest, prevRequest.current) ||
+          hasChanged(additionalListeners, prevAdditionalListeners.current)
+      ) {
+        // don't fire the same request twice in a row
+        prevRequest.current = newRequest;
+        prevAdditionalListeners.current = additionalListeners;
+        dispatch(fetchItems(newRequest));
+      }
     };
-    if (searchQuery || activeFilters) {
+    let pageOverride;
+    if (searchQuery) pageOverride = { search: searchQuery };
+    if (!isEqual(searchQuery, prevSearch.current) || activeFilters) {
       // Reset page back to 1 when filter or search changes
-      fetchWithParams({ search: searchQuery, page: 1 });
-    } else {
-      fetchWithParams();
+      prevSearch.current = searchQuery;
+      pageOverride = { search: searchQuery, page: 1 };
     }
+    fetchWithParams(pageOverride);
   }, [
     activeFilters,
     dispatch,
@@ -65,6 +94,10 @@ const TableWrapper = ({
     additionalListeners,
   ]);
 
+  useDeepCompareEffect(() => {
+    spawnFetch();
+  }, [searchQuery, spawnFetch, additionalListeners]);
+
   const getAutoCompleteParams = search => ({
     endpoint: autocompleteEndpoint,
     params: {
@@ -72,38 +105,49 @@ const TableWrapper = ({
       search,
     },
   });
+
+  // If the new page wouldn't exist because of a perPage change,
+  // we should set the current page to the last page.
+  const validatePagination = (data) => {
+    const mergedData = { ...paginationParams(), ...data };
+    const { page: requestedPage, per_page: newPerPage } = mergedData;
+    const { lastPage } = getPageStats({
+      page: requestedPage,
+      perPage: newPerPage,
+      total,
+    });
+    const result = {};
+    if (requestedPage) {
+      const newPage = (requestedPage > lastPage) ? lastPage : requestedPage;
+      result.page = Number(newPage);
+    }
+    if (newPerPage) result.per_page = Number(newPerPage);
+    return result;
+  };
+
   const onPaginationUpdate = (updatedPagination) => {
-    updatePagination(updatedPagination);
+    const pagData = validatePagination(updatedPagination);
+    spawnFetch(pagData);
+    paginationChangePending.current = pagData;
   };
-
-  const PageControls = ({ variant }) => (
-    <FlexItem align={{ default: 'alignRight' }}>
-      <Pagination
-        key={variant}
-        itemCount={total}
-        page={page}
-        perPage={perPage}
-        isCompact={variant === PaginationVariant.top}
-        onSetPage={(_evt, updated) => onPaginationUpdate({ page: updated })}
-        onPerPageSelect={(_evt, updated) => onPaginationUpdate({ per_page: updated })}
-        perPageOptions={usePaginationOptions().map(p => ({ title: p.toString(), value: p }))}
-        variant={variant}
-      />
-    </FlexItem>
-  );
-
-  PageControls.propTypes = {
-    variant: PropTypes.string.isRequired,
-  };
-
-  const rowsCount = metadata?.subtotal ?? 0;
-  const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
-  const unresolvedStatusOrNoRows = unresolvedStatus || rowsCount === 0;
-  const searchNotUnderway = !(searchQuery || activeFilters);
 
   return (
     <>
       <Flex>
+        {displaySelectAllCheckbox &&
+          <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
+            <SelectAllCheckbox
+              selectAll={selectAll}
+              selectNone={selectNone}
+              selectPage={selectPage}
+              selectedCount={selectedCount}
+              pageRowCount={pageRowCount}
+              totalCount={totalCount}
+              areAllRowsSelected={areAllRowsSelected()}
+              areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
+            />
+          </FlexItem>
+        }
         <FlexItem>
           <Search
             isDisabled={unresolvedStatusOrNoRows && searchNotUnderway}
@@ -116,18 +160,30 @@ const TableWrapper = ({
         <FlexItem>
           {actionButtons}
         </FlexItem>
-        <PageControls variant={PaginationVariant.top} />
+        <PageControls
+          variant={PaginationVariant.top}
+          total={total}
+          page={page}
+          perPage={perPage}
+          onPaginationUpdate={onPaginationUpdate}
+        />
       </Flex>
       <MainTable
         searchIsActive={!!searchQuery}
         activeFilters={activeFilters}
-        rowsCount={rowsCount}
+        rowsCount={pageRowCount}
         {...allTableProps}
       >
         {children}
       </MainTable>
       <Flex>
-        <PageControls variant={PaginationVariant.bottom} />
+        <PageControls
+          variant={PaginationVariant.bottom}
+          total={total}
+          page={page}
+          perPage={perPage}
+          onPaginationUpdate={onPaginationUpdate}
+        />
       </Flex>
     </>
   );
@@ -164,6 +220,13 @@ TableWrapper.propTypes = {
     PropTypes.bool,
   ])),
   activeFilters: PropTypes.bool,
+  displaySelectAllCheckbox: PropTypes.bool,
+  selectedCount: PropTypes.number,
+  selectAll: PropTypes.func,
+  selectNone: PropTypes.func,
+  selectPage: PropTypes.func,
+  areAllRowsSelected: PropTypes.func,
+  areAllRowsOnPageSelected: PropTypes.func,
 };
 
 TableWrapper.defaultProps = {
@@ -173,6 +236,13 @@ TableWrapper.defaultProps = {
   activeFilters: false,
   foremanApiAutoComplete: false,
   actionButtons: null,
+  displaySelectAllCheckbox: false,
+  selectedCount: 0,
+  selectAll: noop,
+  selectNone: noop,
+  selectPage: noop,
+  areAllRowsSelected: noop,
+  areAllRowsOnPageSelected: noop,
 };
 
 export default TableWrapper;

@@ -340,7 +340,7 @@ test('Can show affected repository tab on dropdown selection and add repos', asy
 
   const cvAllReposScope = nockInstance
     .get(cvGetAllReposPath)
-    .times(4)
+    .times(2)
     .query(true)
     .reply(200, cvAllRepos);
 
@@ -423,7 +423,7 @@ test('Can show affected repository tab and remove affected repos', async (done) 
 
   const cvAllReposScope = nockInstance
     .get(cvGetAllReposPath)
-    .times(4)
+    .times(2)
     .query(true)
     .reply(200, cvAllRepos);
 
