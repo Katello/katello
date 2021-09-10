@@ -151,7 +151,7 @@ module Katello
       def model_class(pulp_service_class)
         enabled_repository_types.values.each do |repo_type|
           repo_type.content_types.each do |content_type|
-            return content_type.model_class if (content_type.pulp2_service_class == pulp_service_class || content_type.pulp3_service_class == pulp_service_class)
+            return content_type.model_class if (content_type.pulp3_service_class == pulp_service_class)
           end
         end
       end

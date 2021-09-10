@@ -144,14 +144,13 @@ module Katello
     end
 
     class ContentType
-      attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable,
+      attr_accessor :model_class, :priority, :pulp3_service_class, :index, :uploadable, :removable,
                     :primary_content, :index_on_pulp3, :generic_browser, :content_type, :repository_import_on_upload
 
       def initialize(options)
         self.model_class = options[:model_class]
         self.content_type = options[:content_type]
         self.priority = options[:priority] || 99
-        self.pulp2_service_class = options[:pulp2_service_class]
         self.pulp3_service_class = options[:pulp3_service_class]
         self.index = options[:index].nil? ? true : options[:index]
         self.index_on_pulp3 = options[:index_on_pulp3].nil? ? true : options[:index_on_pulp3]

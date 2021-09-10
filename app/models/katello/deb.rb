@@ -2,7 +2,7 @@ module Katello
   class Deb < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    CONTENT_TYPE = Pulp::Deb::CONTENT_TYPE
+    CONTENT_TYPE = 'deb'.freeze
 
     has_many :repository_debs, :class_name => "Katello::RepositoryDeb", :dependent => :destroy, :inverse_of => :deb
     has_many :repositories, :through => :repository_debs, :class_name => "Katello::Repository"
