@@ -42,9 +42,13 @@ const SelectAllCheckbox = ({
 
   useEffect(() => {
     let newCheckedState;
-    if (selectedCount === 0) newCheckedState = false;
-    if (selectedCount > 0) newCheckedState = null; // null is partially-checked state
-    if (areAllRowsSelected) newCheckedState = true;
+    if (selectedCount === 0) {
+      newCheckedState = false;
+    } else if (selectedCount > 0) {
+      newCheckedState = null; // null is partially-checked state
+    } else if (areAllRowsSelected) {
+      newCheckedState = true;
+    }
     setSelectAllChecked(newCheckedState);
   }, [selectedCount, areAllRowsSelected]);
 
