@@ -13,6 +13,10 @@ node do |version|
   version.content_counts_map
 end
 
+node :component_view_count do |version|
+  version&.components&.count
+end
+
 node do |version|
   version.repository_type_counts_map
 end
