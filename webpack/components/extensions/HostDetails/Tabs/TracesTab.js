@@ -30,7 +30,8 @@ const TracesTab = () => {
   const onRestartApp = () => {
     dispatch(resolveHostTraces(hostId, { trace_ids: [...selectedTraces] }, dispatch));
     selectedTraces.clear();
-    dispatch(getHostTraces(hostId, meta));
+    const params = { page: meta.page, per_page: meta.per_page, search: meta.search };
+    dispatch(getHostTraces(hostId, params));
   };
   const actionButtons = (
     <Button
@@ -58,7 +59,6 @@ const TracesTab = () => {
   const selectAll = () => {
     // leaving blank until we can implement selectAll Katello-wide
   };
-
   const onRowSelect = ({ isSelected, traceId }) => {
     if (isSelected) {
       selectedTraces.add(traceId);
@@ -70,7 +70,6 @@ const TracesTab = () => {
   if (!hostId) return <Skeleton />;
 
   /* eslint-disable max-len */
-
   return (
     <div id="traces-tab">
       <h3>{__('Tracer helps administrators identify applications that need to be restarted after a system is patched.')}</h3>
