@@ -7,12 +7,12 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import './SelectAllCheckbox.scss';
 
 const SelectAllCheckbox = ({
-  selectAll,
+  // selectAll,
   selectNone,
   selectPage,
   selectedCount,
   pageRowCount,
-  totalCount,
+  // totalCount,
   areAllRowsOnPageSelected,
   areAllRowsSelected,
 }) => {
@@ -31,10 +31,11 @@ const SelectAllCheckbox = ({
   };
   const onSelectAllDropdownToggle = () => setSelectAllDropdownOpen(isOpen => !isOpen);
 
-  const handleSelectAll = () => {
-    setSelectAllDropdownOpen(false);
-    selectAll();
-  };
+  // TODO: uncomment when Select All is implemented in Katello API
+  // const handleSelectAll = () => {
+  //   setSelectAllDropdownOpen(false);
+  //   selectAll();
+  // };
   const handleSelectPage = () => {
     setSelectAllDropdownOpen(false);
     selectPage();
@@ -56,15 +57,17 @@ const SelectAllCheckbox = ({
     setSelectAllChecked(newCheckedState);
   }, [selectedCount, areAllRowsSelected]);
 
+  // TODO: add the following to selectAllDropdownItems when Select All is implemented
+  // <DropdownItem key="select-all" component="button" isDisabled onClick={handleSelectAll}>
+  //   {`${__('Select all')} (${totalCount})`}
+  // </DropdownItem>,
+
   const selectAllDropdownItems = [
     <DropdownItem key="select-none" component="button" onClick={handleSelectNone}>
       {`${__('Select none')} (0)`}
     </DropdownItem>,
     <DropdownItem key="select-page" component="button" isDisabled={areAllRowsOnPageSelected} onClick={handleSelectPage}>
       {`${__('Select page')} (${pageRowCount})`}
-    </DropdownItem>,
-    <DropdownItem key="select-all" component="button" isDisabled onClick={handleSelectAll}>
-      {`${__('Select all')} (${totalCount})`}
     </DropdownItem>,
   ];
 
@@ -93,13 +96,14 @@ const SelectAllCheckbox = ({
   );
 };
 
+// TODO: uncomment selectAll and totalCount when Select All is implemented
 SelectAllCheckbox.propTypes = {
   selectedCount: PropTypes.number.isRequired,
-  selectAll: PropTypes.func.isRequired,
+  // selectAll: PropTypes.func.isRequired,
   selectNone: PropTypes.func.isRequired,
   selectPage: PropTypes.func.isRequired,
   pageRowCount: PropTypes.number.isRequired,
-  totalCount: PropTypes.number.isRequired,
+  // totalCount: PropTypes.number.isRequired,
   areAllRowsSelected: PropTypes.bool.isRequired,
   areAllRowsOnPageSelected: PropTypes.bool.isRequired,
 };

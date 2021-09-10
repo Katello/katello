@@ -56,9 +56,9 @@ const TracesTab = () => {
     selectedTraces.clear();
     forceRender();
   };
-  const selectAll = () => {
-    // leaving blank until we can implement selectAll Katello-wide
-  };
+  // const selectAll = () => {
+  //   // leaving blank until we can implement selectAll Katello-wide
+  // };
   const onRowSelect = ({ isSelected, traceId }) => {
     if (isSelected) {
       selectedTraces.add(traceId);
@@ -87,7 +87,6 @@ const TracesTab = () => {
         displaySelectAllCheckbox
         selectPage={selectPage}
         selectNone={selectNone}
-        selectAll={selectAll}
         rowsCount={results?.length}
         areAllRowsOnPageSelected={areAllRowsOnPageSelected}
         areAllRowsSelected={areAllRowsSelected}
