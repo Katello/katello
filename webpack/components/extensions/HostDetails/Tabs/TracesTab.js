@@ -28,7 +28,7 @@ const TracesTab = () => {
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
   const onRestartApp = () => {
-    dispatch(resolveHostTraces(hostId, { trace_ids: [...selectedTraces] }, dispatch));
+    dispatch(resolveHostTraces(hostId, { trace_ids: [...selectedTraces] }));
     selectedTraces.clear();
     const params = { page: meta.page, per_page: meta.per_page, search: meta.search };
     dispatch(getHostTraces(hostId, params));
