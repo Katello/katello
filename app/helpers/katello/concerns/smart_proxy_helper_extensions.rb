@@ -29,15 +29,11 @@ module Katello
         policies = [
           {
             :name => _("On Demand"),
-            :label => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
-          },
-          {
-            :name => _("Background"),
-            :label => ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
+            :label => ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
           },
           {
             :name => _("Immediate"),
-            :label => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE
+            :label => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
           },
           {
             :name => _("Inherit from Repository"),

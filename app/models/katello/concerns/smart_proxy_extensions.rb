@@ -21,7 +21,7 @@ module Katello
       CONTAINER_GATEWAY_FEATURE = "Container_Gateway".freeze
 
       DOWNLOAD_INHERIT = 'inherit'.freeze
-      DOWNLOAD_POLICIES = ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES + [DOWNLOAD_INHERIT]
+      DOWNLOAD_POLICIES = [::Katello::RootRepository::DOWNLOAD_ON_DEMAND, ::Katello::RootRepository::DOWNLOAD_IMMEDIATE, DOWNLOAD_INHERIT].freeze
 
       included do
         include ForemanTasks::Concerns::ActionSubject
@@ -348,7 +348,7 @@ module Katello
       end
 
       def set_default_download_policy
-        self.download_policy ||= ::Setting[:default_proxy_download_policy] || ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+        self.download_policy ||= ::Setting[:default_proxy_download_policy] || ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
       end
 
       def associate_lifecycle_environments

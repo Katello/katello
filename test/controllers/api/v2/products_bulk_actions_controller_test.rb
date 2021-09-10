@@ -88,7 +88,7 @@ module Katello
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
         refute_empty repos
-        assert repos.all? { |repo| repo.yum? } && repos.all? { |repo| repo.download_policy != ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND }
+        assert repos.all? { |repo| repo.yum? } && repos.all? { |repo| repo.download_policy != ::Katello::RootRepository::DOWNLOAD_ON_DEMAND }
       end
 
       put :sync_products, params: { :ids => @products.collect(&:id), :organization_id => @organization.id, :validate_contents => true }

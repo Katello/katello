@@ -123,9 +123,9 @@ module Katello
     before_validation :set_container_repository_name, :if => :docker?
 
     scope :has_url, -> { joins(:root).where.not("#{RootRepository.table_name}.url" => nil) }
-    scope :on_demand, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND) }
-    scope :immediate, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE) }
-    scope :non_immediate, -> { joins(:root).where.not("#{RootRepository.table_name}.download_policy" => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE) }
+    scope :on_demand, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Katello::RootRepository::DOWNLOAD_ON_DEMAND) }
+    scope :immediate, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE) }
+    scope :non_immediate, -> { joins(:root).where.not("#{RootRepository.table_name}.download_policy" => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE) }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
     scope :in_non_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => false) }
     scope :deb_type, -> { with_type(DEB_TYPE) }
@@ -298,11 +298,11 @@ module Katello
     end
 
     def on_demand?
-      root.download_policy == Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+      root.download_policy == ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
     end
 
     def immediate?
-      root.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE
+      root.download_policy == ::Katello::RootRepository::DOWNLOAD_ON_IMMEDIATE
     end
 
     def yum_gpg_key_url

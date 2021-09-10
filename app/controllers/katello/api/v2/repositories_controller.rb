@@ -108,7 +108,7 @@ module Katello
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."),
           :required => false
     param :with_content, RepositoryTypeManager.enabled_content_types(false), :desc => N_("only repositories having at least one of the specified content type ex: rpm , erratum")
-    param :download_policy, ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES, :desc => N_("limit to only repositories with this download policy")
+    param :download_policy, ::Katello::RootRepository::DOWNLOAD_POLICIES, :desc => N_("limit to only repositories with this download policy")
     param :username, String, :desc => N_("only show the repositories readable by this user with this username")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Repository)

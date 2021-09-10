@@ -9,15 +9,10 @@ class Setting::Content < Setting
     Hash[parameters.map { |p| [p, p] }]
   end
 
-  def self.deprecate_background(policies_hash)
-    policies_hash['background'] = 'background (deprecated)'
-    policies_hash
-  end
-
   def self.default_settings
-    download_policies = proc { deprecate_background(hashify_parameters(::Runcible::Models::YumImporter::DOWNLOAD_POLICIES)) }
+    download_policies = proc { hashify_parameters(::Katello::RootRepository::DOWNLOAD_POLICIES) }
 
-    proxy_download_policies = proc { deprecate_background(hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES)) }
+    proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }
     dependency_solving_options = proc { hashify_parameters(['conservative', 'greedy']) }
     cdn_ssl_versions = proc { hashify_parameters(Katello::Resources::CDN::SUPPORTED_SSL_VERSIONS) }
     http_proxy_select = [{
@@ -94,11 +89,11 @@ class Setting::Content < Setting
                100, N_('Batch size to sync repositories in.')),
       self.set('foreman_proxy_content_auto_sync', N_("Whether or not to auto sync the Smart Proxies after a Content View promotion."),
                true, N_('Sync Smart Proxies after Content View promotion')),
-      self.set('default_download_policy', N_("Default download policy for custom repositories (either 'immediate', 'on_demand', or 'background')"), "immediate",
+      self.set('default_download_policy', N_("Default download policy for custom repositories (either 'immediate' or 'on_demand')"), "immediate",
                N_('Default Custom Repository download policy'), nil, :collection => download_policies),
-      self.set('default_redhat_download_policy', N_("Default download policy for enabled Red Hat repositories (either 'immediate', 'on_demand', or 'background')"), "on_demand",
+      self.set('default_redhat_download_policy', N_("Default download policy for enabled Red Hat repositories (either 'immediate' or 'on_demand')"), "on_demand",
                        N_('Default Red Hat Repository download policy'), nil, :collection => download_policies),
-      self.set('default_proxy_download_policy', N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', 'on_demand', or 'background')"), "on_demand",
+      self.set('default_proxy_download_policy', N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', or 'on_demand')"), "on_demand",
                N_('Default Smart Proxy download policy'), nil, :collection => proxy_download_policies),
       self.set('pulp_docker_registry_port', N_("The port used by Pulp Crane to provide Docker Registries"),
                5000, N_('Pulp Docker registry port')),

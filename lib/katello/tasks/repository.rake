@@ -69,12 +69,12 @@ namespace :katello do
     end
   end
 
-  desc "Change the download policy of all repos. Specify DOWNLOAD_POLICY=policy. Options are #{::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')}."
+  desc "Change the download policy of all repos. Specify DOWNLOAD_POLICY=policy. Options are immediate or on_demand."
   task :change_download_policy => ["environment", "check_ping"] do
     policy = ENV['DOWNLOAD_POLICY']
-    unless ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.include?(policy)
+    unless ::Katello::RootRepository::DOWNLOAD_POLICIES.include?(policy)
       puts "Invalid download policy specified: '#{policy}'. "
-      puts "Options are #{::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.to_sentence}."
+      puts "Options are immediate or on_demand."
       next
     end
 

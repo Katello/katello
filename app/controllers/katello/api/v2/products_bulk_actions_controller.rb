@@ -35,7 +35,7 @@ module Katello
       syncable_roots = RootRepository.where(:product_id => syncable_products).has_url
 
       syncable_roots = syncable_roots.yum_type if skip_metadata_check || validate_contents
-      syncable_roots = syncable_roots.where.not(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND) if validate_contents
+      syncable_roots = syncable_roots.where.not(:download_policy => ::Katello::RootRepository::DOWNLOAD_ON_DEMAND) if validate_contents
 
       syncable_repositories = Katello::Repository.where(:root_id => syncable_roots).in_default_view
       fail _("No syncable repositories found for selected products and options.") if syncable_roots.empty?

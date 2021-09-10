@@ -264,13 +264,13 @@ module Katello
 
     def test_on_demand_repositories
       repo1 = katello_repositories(:rhel_6_x86_64)
-      repo1.root.update(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND)
+      repo1.root.update(:download_policy => ::Katello::RootRepository::DOWNLOAD_ON_DEMAND)
       view1 = create(:katello_content_view, organization: @organization)
       view1.repositories << repo1
       assert_includes view1.on_demand_repositories, repo1
 
       repo2 = katello_repositories(:fedora_17_x86_64)
-      repo2.root.update(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE)
+      repo2.root.update(:download_policy => ::Katello::RootRepository::DOWNLOAD_IMMEDIATE)
       view2 = create(:katello_content_view, organization: @organization)
       view2.repositories << repo2
       refute_includes view2.on_demand_repositories, repo2
