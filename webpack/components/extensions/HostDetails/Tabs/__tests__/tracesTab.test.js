@@ -1,14 +1,11 @@
 import React from 'react';
-import * as reactRedux from 'react-redux';
 import { renderWithRedux, waitFor, patientlyWaitFor } from 'react-testing-lib-wrapper';
-import { STATUS } from 'foremanReact/constants';
 import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_TRACES_KEY } from '../HostTracesConstants';
 import TracesTab from '../TracesTab';
 
 const mockTraceData = require('./traces.fixtures.json');
-const mockHostDetails = require('./hostid.fixtures.json');
 const mockResolveTraceTask = require('./resolveTraces.fixtures.json');
 
 const renderOptions = {
