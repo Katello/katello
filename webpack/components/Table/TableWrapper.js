@@ -92,7 +92,6 @@ const TableWrapper = ({
     paginationParams,
     searchQuery,
     additionalListeners,
-    // prevAdditionalListeners,
   ]);
 
   useDeepCompareEffect(() => {
