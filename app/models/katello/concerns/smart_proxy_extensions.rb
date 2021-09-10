@@ -345,7 +345,7 @@ module Katello
           fail _("Content type %{content_type_string} does not belong to an enabled repo type.") %
                 { content_type_string: content_type_string }
         end
-        pulp3_content_support?(content_type_obj) ? content_type_obj.pulp3_service_class : content_type_obj.pulp2_service_class
+        content_type_obj.pulp3_service_class
       end
 
       def set_default_download_policy

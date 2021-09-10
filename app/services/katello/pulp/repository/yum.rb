@@ -105,37 +105,6 @@ module Katello
           config
         end
 
-        def copy_contents(destination_repo, filters: nil,
-                                            solve_dependencies: false,
-                                            rpm_filenames: [])
-          rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(filters&.yum(false), rpm_filenames)
-          tasks = []
-          if rpm_copy_clauses
-            override_config = build_override_config(destination_repo,
-                                                    filters: filters,
-                                                    solve_dependencies: solve_dependencies)
-
-            tasks << smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id,
-                      rpm_copy_clauses.merge(:override_config => override_config))
-          end
-
-          if rpm_remove_clauses
-            tasks << smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
-                                                                         type_ids: [::Katello::Pulp::Rpm::CONTENT_TYPE],
-                                                                          filters: {unit: rpm_remove_clauses})
-          end
-
-          tasks.concat(copy_module_contents(destination_repo,
-                                              filters: filters,
-                                              solve_dependencies: solve_dependencies))
-
-          [:srpm, :errata, :package_group, :package_environment,
-           :yum_repo_metadata_file, :distribution, :module_default, :drpm].each do |type|
-            tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
-          end
-          tasks
-        end
-
         def import_distribution_data
           distribution = smart_proxy.pulp_api.extensions.repository.distributions(repo.pulp_id).first
           if distribution
@@ -228,29 +197,6 @@ module Katello
             copy_clauses = {}
             remove_clauses = nil
           end
-          [copy_clauses, remove_clauses]
-        end
-
-        def generate_copy_clauses(filters, rpm_filenames)
-          if rpm_filenames&.any?
-            copy_clauses = {filters: {unit: { 'filename' => { '$in' => rpm_filenames } }}}
-            remove_clauses = nil
-          elsif filters&.any?
-            clause_gen = ::Katello::Util::PackageClauseGenerator.new(repo, filters.yum(false))
-            clause_gen.generate
-
-            copy = clause_gen.copy_clause
-            copy_clauses = {filters: {unit: copy }} if copy
-
-            remove = clause_gen.remove_clause
-            remove_clauses = {filters: {unit: remove}} if remove
-          else
-            non_modular_rpms = ::Katello::Rpm.in_repositories(repo).non_modular.pluck(:filename)
-            copy_clauses = non_modular_rpms.blank? ? nil : {filters: {unit: ContentViewPackageFilter.generate_rpm_clauses(non_modular_rpms)}}
-            remove_clauses = nil
-          end
-
-          copy_clauses&.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS)
           [copy_clauses, remove_clauses]
         end
       end

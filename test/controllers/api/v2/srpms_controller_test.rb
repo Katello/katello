@@ -7,7 +7,6 @@ module Katello
       @srpm = katello_srpms(:one)
       @version = katello_content_view_versions(:library_view_version_1)
       @organization = get_organization
-      Pulp::Srpm.any_instance.stubs(:backend_data).returns({})
     end
 
     def setup

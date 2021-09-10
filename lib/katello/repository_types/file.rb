@@ -19,7 +19,6 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::FILE_TYPE) do
   repo_sync_url_class PulpFileClient::RepositorySyncURL
 
   content_type Katello::FileUnit,
-               :pulp2_service_class => ::Katello::Pulp::FileUnit,
                :pulp3_service_class => ::Katello::Pulp3::FileUnit,
                :removable => true,
                :uploadable => true

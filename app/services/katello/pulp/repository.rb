@@ -278,12 +278,6 @@ module Katello
         Katello::RepositoryTypeManager.find(repo.content_type)
       end
 
-      def index_content_units
-        content_unit_types.each do |content_type|
-          content_type.pulp2_service_class
-        end
-      end
-
       def proxy_options
         if repo.root.http_proxy_policy == RootRepository::NO_DEFAULT_HTTP_PROXY
           return { proxy_host: '' }

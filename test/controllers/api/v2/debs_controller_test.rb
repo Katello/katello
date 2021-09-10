@@ -7,7 +7,6 @@ module Katello
       @version = ContentViewVersion.first
       @deb = katello_debs(:one)
       @host = hosts(:one)
-      Pulp::Deb.any_instance.stubs(:backend_data).returns({})
     end
 
     def setup
