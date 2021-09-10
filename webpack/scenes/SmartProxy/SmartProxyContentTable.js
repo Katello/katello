@@ -78,7 +78,7 @@ const SmartProxyContentTable = ({ smartProxyId }) => {
                 },
               },
               {
-                title: <a href={urlBuilder('content_views', '', id)}>{cvName}</a>,
+                title: <a href={cv.default ? urlBuilder('products', '') : urlBuilder('content_views', '', id)}>{cvName}</a>,
                 props: {
                   colSpan: 1,
                 },
