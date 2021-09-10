@@ -67,7 +67,7 @@ module Katello
       def enabled_content_types(enabled_only = true)
         repo_types = enabled_only ? enabled_repository_types : defined_repository_types
         list = repo_types.values.map do |type|
-          type.content_types.map(&:model_class).flatten.map { |ct| ct::CONTENT_TYPE }
+          type.content_types.map(&:label).flatten
         end
         list.flatten
       end
