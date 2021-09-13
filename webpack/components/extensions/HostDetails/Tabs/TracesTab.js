@@ -12,7 +12,7 @@ import './TracesTab.scss';
 
 const TracesTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
-  const [selectedTraces, forceRender] = useSet([]);
+  const selectedTraces = useSet([]);
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const dispatch = useDispatch();
   const { id: hostId } = hostDetails;
@@ -50,11 +50,9 @@ const TracesTab = () => {
     Number(selectedTraces.size) > 0 && selectedTraces.size === Number(meta.total);
   const selectPage = () => {
     [...results.map(result => result.id)].forEach(id => selectedTraces.add(id));
-    forceRender();
   };
   const selectNone = () => {
     selectedTraces.clear();
-    forceRender();
   };
   // const selectAll = () => {
   //   // leaving blank until we can implement selectAll Katello-wide
@@ -65,7 +63,6 @@ const TracesTab = () => {
     } else {
       selectedTraces.delete(traceId);
     }
-    forceRender(); // since changing the ref won't cause a rerender
   };
   if (!hostId) return <Skeleton />;
 
