@@ -12,7 +12,12 @@ module Actions
           def humanized_details
             ret = []
             ret << _("Cancelled.") if cancelled?
-            ret << _("Total steps: ") + "#{finished_units}/#{total_units}"
+            if total_units == 0
+              ret << _("Waiting to start.")
+            else
+              ret << _("Total steps: ") + "#{finished_units}/#{total_units}"
+            end
+
             ret << "--------------------------------"
             progress_reports = sync_task.try(:[], 'progress_reports') || []
             progress_reports = progress_reports.sort_by { |pr| pr.try(:[], 'message') }
