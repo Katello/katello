@@ -1,5 +1,4 @@
 //= require "jquery-ui/widgets/dialog"
-//= require "jquery-ui/widgets/sortable"
 //= require "jquery-ui/widgets/progressbar"
 //= require "jquery-ui/effect"
 //= require "jquery-ui/effect.all"
