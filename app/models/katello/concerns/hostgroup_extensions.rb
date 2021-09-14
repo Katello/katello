@@ -39,7 +39,7 @@ module Katello
           self.medium = nil
         end
 
-        unless matching_kickstart_repository?(content_facet)
+        if content_facet&.kickstart_repository_id && !matching_kickstart_repository?(content_facet)
           if (equivalent = equivalent_kickstart_repository)
             self.content_facet.kickstart_repository_id = equivalent[:id]
           end
@@ -92,10 +92,10 @@ module Katello
 
       def equivalent_kickstart_repository
         return unless operatingsystem &&
-                      kickstart_repository &&
+                      content_facet.kickstart_repository &&
                       operatingsystem.respond_to?(:kickstart_repos)
-        ks_repos = operatingsystem.kickstart_repos(self)
-        ks_repos.find { |repo| repo[:name] == kickstart_repository.label }
+        ks_repos = operatingsystem.kickstart_repos(self, content_facet: content_facet)
+        ks_repos.find { |repo| repo[:name] == content_facet.kickstart_repository.label }
       end
 
       def matching_kickstart_repository?(content_facet)
