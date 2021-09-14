@@ -4,7 +4,7 @@ KT.hosts = {};
 $(document).on('ContentLoad', function(){
     KT.hosts.onKatelloHostEditLoad();
     window.tfm.hosts.registerPluginAttributes("os",
-         ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id']);
+         ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id', 'parent_id']);
 
     $("#hostgroup_lifecycle_environment_id").change(KT.hosts.environmentChanged);
     $("#host_lifecycle_environment_id").change(KT.hosts.environmentChanged);
@@ -27,13 +27,15 @@ KT.hosts.fetchContentViews = function () {
     var envId = KT.hosts.getSelectedEnvironment();
     var option;
     var previous_view = KT.hosts.getSelectedContentView();
-
+    var previousInheritViewText = select.find('option:first-child').text();
     select.find('option').remove();
     if (envId) {
         KT.hosts.signalContentViewFetch(true);
         var url = tfm.tools.foremanUrl('/katello/api/v2/content_views/');
         $.get(url, {environment_id: envId, full_result: true}, function (data) {
-            select.append($("<option />"));
+            if ($('#hostgroup_parent_id').length > 0) {
+                select.append($("<option />").text(previousInheritViewText).val(''));
+            }
             $.each(data.results, function(index, view) {
                 option = $("<option />").val(view.id).text(view.name);
                 if (view.id === parseInt(previous_view)) {
@@ -41,6 +43,7 @@ KT.hosts.fetchContentViews = function () {
                 }
                 select.append(option);
             });
+            select.trigger('change');
             KT.hosts.signalContentViewFetch(false);
         });
     }

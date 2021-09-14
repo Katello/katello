@@ -58,19 +58,19 @@ module Katello
     end
 
     def fetch_lifecycle_environment(host, options = {})
-      return host.lifecycle_environment if host.lifecycle_environment.present?
+      return host.lifecycle_environment if host.try(:lifecycle_environment_id)
       selected_host_group = options.fetch(:selected_host_group, nil)
       return selected_host_group.lifecycle_environment if selected_host_group.present?
     end
 
     def fetch_content_view(host, options = {})
-      return host.content_view if host.content_view.present?
+      return host.content_view if host.try(:content_view_id)
       selected_host_group = options.fetch(:selected_host_group, nil)
       return selected_host_group.content_view if selected_host_group.present?
     end
 
     def fetch_content_source(host, options = {})
-      return host.content_source if host.content_source.present?
+      return host.content_source if host.try(:content_source_id)
       selected_host_group = options.fetch(:selected_host_group, nil)
       return selected_host_group.content_source if selected_host_group.present?
     end
@@ -216,11 +216,15 @@ module Katello
         new_host.operatingsystem.kickstart_repos(new_host).map { |repo| OpenStruct.new(repo) }
       else
         # case 2
-        os_updated_kickstart_options(host)
+        os_updated_kickstart_options
       end
     end
 
-    def os_updated_kickstart_options(host)
+    def fetch_inherited_param(id, entity, parent_value)
+      id.blank? ? parent_value : entity.find(id)
+    end
+
+    def os_updated_kickstart_options(host = nil)
       # this method gets called in 1 place Once you chose a diff os/content source/arch/lifecycle env/cv
       # via the os_selected method.
       # In this case we want it play by the rules of "one of these params" and
@@ -228,19 +232,22 @@ module Katello
       os_selection_params = ["operatingsystem_id", 'content_view_id', 'lifecycle_environment_id',
                              'content_source_id', 'architecture_id']
       view_options = []
+
       host_params = params[:hostgroup] || params[:host]
-      if host_params && os_selection_params.all? { |key| host_params[key].present? }
+      parent = ::Hostgroup.find(host_params[:parent_id]) unless host_params.blank? || host_params[:parent_id].blank?
+      if host_params && (parent || os_selection_params.all? { |key| host_params[key].present? })
         if host.nil?
           host = ::Host.new
         end
-        host.operatingsystem = Operatingsystem.find(host_params[:operatingsystem_id])
-        host.architecture = Architecture.find(host_params[:architecture_id])
+        host.operatingsystem = fetch_inherited_param(host_params[:operatingsystem_id], ::Operatingsystem, parent&.os)
+        host.architecture = fetch_inherited_param(host_params[:architecture_id], ::Architecture, parent&.architecture)
+        lifecycle_env = fetch_inherited_param(host_params[:lifecycle_environment_id], ::Katello::KTEnvironment, parent&.lifecycle_environment)
+        content_view = fetch_inherited_param(host_params[:content_view_id], ::Katello::ContentView, parent&.content_view)
+        content_source = fetch_inherited_param(host_params[:content_source_id], ::SmartProxy, parent&.content_source)
 
-        lifecycle_env = Katello::KTEnvironment.find(host_params[:lifecycle_environment_id])
-        content_view = Katello::ContentView.find(host_params[:content_view_id])
         host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => lifecycle_env.id,
                                                     :content_view_id => content_view.id,
-                                                    :content_source => SmartProxy.find(host_params[:content_source_id]))
+                                                    :content_source => content_source)
         if host.operatingsystem.is_a?(Redhat)
           view_options = host.operatingsystem.kickstart_repos(host).map { |repo| OpenStruct.new(repo) }
         end
