@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Hint, HintBody, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle } from '@patternfly/react-core';
-import { TableVariant, TableText, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { TableVariant, TableText, Thead, Tbody, Tr, Th, Td, ExpandableRowContent } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
@@ -21,6 +21,7 @@ export const ErrataTab = () => {
   const dispatch = useDispatch();
 
   const [searchQuery, updateSearchQuery] = useState('');
+  const [rowIsExpanded, setRowIsExpanded] = useState(false);
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
 
@@ -94,7 +95,7 @@ export const ErrataTab = () => {
           <HintBody>
             {__('Errata management functionality on this page is incomplete')}.
             <br />
-            <Button component="a" variant="link" isInline href={urlBuilder(`content_hosts/${hostId}/errata`, '')}>
+            <Button variant="link" isInline href={urlBuilder(`content_hosts/${hostId}/errata`, '')}>
               {__('Visit the previous Errata page')}.
             </Button>
           </HintBody>
@@ -126,8 +127,8 @@ export const ErrataTab = () => {
               <Th />
             </Tr>
           </Thead>
-          <Tbody>
-            {results?.map((erratum) => {
+          <React.Fragment>
+            {results?.map((erratum, rowIndex) => {
                 const {
                   id,
                   errata_id: errataId,
@@ -136,25 +137,44 @@ export const ErrataTab = () => {
                   title,
                 } = erratum;
                 return (
-                  <Tr key={`${id}_${createdAt}`}>
-                    <Td>
-                      <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
-                    </Td>
-                    <Td><ErrataType {...erratum} /></Td>
-                    <Td><ErrataSeverity {...erratum} /></Td>
-                    <Td><TableText wrapModifier="truncate">{title}</TableText></Td>
-                    <Td key={publishedAt}><IsoDate date={publishedAt} /></Td>
-                    <Td
-                      key={`rowActions-${id}`}
-                      actions={{
-                          items: rowActions,
-                        }}
-                    />
-                  </Tr>
+                  <Tbody isExpanded={rowIsExpanded} key={`${id}_${createdAt}`}>
+                    <Tr>
+                      <Td
+                        expand={{
+                          rowIndex: rowIndex + 1,
+                          isExpanded: rowIsExpanded,
+                          onToggle: (_event, rInx, isOpen, rowData, extraData) => {
+                            console.log({
+                              rInx, isOpen, rowData, extraData,
+                            });
+                            setRowIsExpanded(isOpen);
+                          },
+                      }}
+                      />
+                      <Td>
+                        <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
+                      </Td>
+                      <Td><ErrataType {...erratum} /></Td>
+                      <Td><ErrataSeverity {...erratum} /></Td>
+                      <Td><TableText wrapModifier="truncate">{title}</TableText></Td>
+                      <Td key={publishedAt}><IsoDate date={publishedAt} /></Td>
+                      <Td
+                        key={`rowActions-${id}`}
+                        actions={{
+                            items: rowActions,
+                          }}
+                      />
+                    </Tr>
+                    <Tr key="child_row" isExpanded={rowIsExpanded}>
+                      <Td>
+                        <ExpandableRowContent>{__('hi im expandable!')}</ExpandableRowContent>
+                      </Td>
+                    </Tr>
+                  </Tbody>
                 );
               })
               }
-          </Tbody>
+          </React.Fragment>
         </TableWrapper>
       </div>
     </div>
