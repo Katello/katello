@@ -37,9 +37,9 @@ end %>
 
 <%= field(f, cs_select_attr, {:label => _("Content Source")}) do
   if using_hostgroups_page?
-    select_tag cs_select_id, content_source_options(@hostgroup, :selected_host_group => @hostgroup.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path},
-               :class => 'form-control',  :name => cs_select_name, include_blank: true
+    select_tag cs_select_id, content_source_options(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path},
+               :class => 'form-control',  :name => cs_select_name
   else
-    select_tag cs_select_id, content_source_options(@host, :selected_host_group => @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, include_blank: true
+    select_tag cs_select_id, content_source_options(@host, :selected_host_group => @hostgroup || @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name
   end
 end %>
