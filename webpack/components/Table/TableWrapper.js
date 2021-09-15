@@ -7,7 +7,7 @@ import { STATUS } from 'foremanReact/constants';
 import { noop } from 'foremanReact/common/helpers';
 import { useForemanSettings } from 'foremanReact/Root/Context/ForemanContext';
 import { PaginationVariant, Flex, FlexItem } from '@patternfly/react-core';
-
+import { translate as __ } from 'foremanReact/common/I18n';
 import PageControls from './PageControls';
 import MainTable from './MainTable';
 import { getPageStats } from './helpers';
@@ -34,6 +34,7 @@ const TableWrapper = ({
   areAllRowsSelected,
   areAllRowsOnPageSelected,
   selectedCount,
+  emptySearchBody,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -172,6 +173,7 @@ const TableWrapper = ({
         searchIsActive={!!searchQuery}
         activeFilters={activeFilters}
         rowsCount={pageRowCount}
+        emptySearchBody={emptySearchBody}
         {...allTableProps}
       >
         {children}
@@ -227,6 +229,7 @@ TableWrapper.propTypes = {
   selectPage: PropTypes.func,
   areAllRowsSelected: PropTypes.func,
   areAllRowsOnPageSelected: PropTypes.func,
+  emptySearchBody: PropTypes.string,
 };
 
 TableWrapper.defaultProps = {
@@ -243,6 +246,7 @@ TableWrapper.defaultProps = {
   selectPage: noop,
   areAllRowsSelected: noop,
   areAllRowsOnPageSelected: noop,
+  emptySearchBody: __('Try changing your search settings.'),
 };
 
 export default TableWrapper;
