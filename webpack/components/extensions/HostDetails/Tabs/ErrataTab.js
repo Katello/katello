@@ -2,15 +2,27 @@ import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Hint, HintBody, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle } from '@patternfly/react-core';
-import { TableVariant, TableText, Thead, Tbody, Tr, Th, Td, ExpandableRowContent } from '@patternfly/react-table';
+import {
+  TableVariant,
+  TableText,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  ExpandableRowContent,
+} from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
+import useSet from '../../../../components/Table/TableHooks';
 import { ErrataType, ErrataSeverity } from '../../../../components/Errata';
 import { getInstallableErrata, regenerateApplicability } from '../HostErrata/HostErrataActions';
+import ErratumExpansionDetail from './ErratumExpansionDetail';
+import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
 import { HOST_ERRATA_KEY } from '../HostErrata/HostErrataConstants';
 import './ErrataTab.scss';
@@ -21,9 +33,10 @@ export const ErrataTab = () => {
   const dispatch = useDispatch();
 
   const [searchQuery, updateSearchQuery] = useState('');
-  const [rowIsExpanded, setRowIsExpanded] = useState(false);
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
+  const expandedErrata = useSet([]);
+  const erratumIsExpanded = id => expandedErrata.has(id);
 
   const emptyContentTitle = __('This host does not have any installable errata.');
   const emptyContentBody = __('Installable errata will appear here when available.');
@@ -95,7 +108,7 @@ export const ErrataTab = () => {
           <HintBody>
             {__('Errata management functionality on this page is incomplete')}.
             <br />
-            <Button variant="link" isInline href={urlBuilder(`content_hosts/${hostId}/errata`, '')}>
+            <Button component="a" variant="link" isInline href={urlBuilder(`content_hosts/${hostId}/errata`, '')}>
               {__('Visit the previous Errata page')}.
             </Button>
           </HintBody>
@@ -122,6 +135,7 @@ export const ErrataTab = () => {
         >
           <Thead>
             <Tr>
+              <Th key="expand-thingy" />
               {columnHeaders.map(col =>
                 <Th key={col}>{col}</Th>)}
               <Th />
@@ -136,18 +150,20 @@ export const ErrataTab = () => {
                   updated: publishedAt,
                   title,
                 } = erratum;
+                const isExpanded = erratumIsExpanded(id);
                 return (
-                  <Tbody isExpanded={rowIsExpanded} key={`${id}_${createdAt}`}>
+                  <Tbody isExpanded={isExpanded} key={`${id}_${createdAt}`}>
                     <Tr>
                       <Td
                         expand={{
-                          rowIndex: rowIndex + 1,
-                          isExpanded: rowIsExpanded,
-                          onToggle: (_event, rInx, isOpen, rowData, extraData) => {
-                            console.log({
-                              rInx, isOpen, rowData, extraData,
-                            });
-                            setRowIsExpanded(isOpen);
+                          rowIndex,
+                          isExpanded,
+                          onToggle: (_event, rInx, isOpen) => {
+                            if (isOpen) {
+                              expandedErrata.add(id);
+                            } else {
+                              expandedErrata.delete(id);
+                            }
                           },
                       }}
                       />
@@ -165,9 +181,16 @@ export const ErrataTab = () => {
                           }}
                       />
                     </Tr>
-                    <Tr key="child_row" isExpanded={rowIsExpanded}>
-                      <Td>
-                        <ExpandableRowContent>{__('hi im expandable!')}</ExpandableRowContent>
+                    <Tr key="child_row" isExpanded={isExpanded}>
+                      <Td colSpan={3}>
+                        <ExpandableRowContent>
+                          <ErratumExpansionContents erratum={erratum} />
+                        </ExpandableRowContent>
+                      </Td>
+                      <Td colSpan={4}>
+                        <ExpandableRowContent>
+                          <ErratumExpansionDetail erratum={erratum} />
+                        </ExpandableRowContent>
                       </Td>
                     </Tr>
                   </Tbody>
