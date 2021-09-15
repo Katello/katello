@@ -17,6 +17,16 @@ module Katello
           options.merge!(url: url, policy: root.download_policy)
         end
 
+        def publication_options(repository_version)
+          options = super(repository_version)
+          options.merge(
+            {
+              metadata_checksum_type: root.checksum_type,
+              package_checksum_type: root.checksum_type
+            }
+          )
+        end
+
         def specific_create_options
           { retain_package_versions: retain_package_versions_count }
         end
