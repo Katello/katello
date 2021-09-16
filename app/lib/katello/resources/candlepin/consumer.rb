@@ -4,8 +4,6 @@ module Katello
       class Consumer < CandlepinResource
         extend ConsumerResource
 
-        GET_PARAM_BATCH_SIZE = 75
-
         class << self
           def all_uuids
             cp_consumers = Organization.all.map do |org|
@@ -25,14 +23,6 @@ module Katello
                 JSON.parse(response).map(&:with_indifferent_access)
               end
             end
-          end
-
-          def get_all(uuids)
-            consumers = []
-            uuids.each_slice(GET_PARAM_BATCH_SIZE) do |slice|
-              consumers += get(:uuid => slice)
-            end
-            consumers
           end
 
           # workaround for https://bugzilla.redhat.com/1647724
@@ -136,16 +126,6 @@ module Katello
 
           def remove_entitlement(uuid, ent_id)
             uri = join_path(path(uuid), 'entitlements') + "/#{ent_id}"
-            self.delete(uri, self.default_headers).code.to_i
-          end
-
-          def remove_entitlements(uuid)
-            uri = join_path(path(uuid), 'entitlements')
-            self.delete(uri, self.default_headers).code.to_i
-          end
-
-          def remove_certificate(uuid, serial_id)
-            uri = join_path(path(uuid), 'certificates') + "/#{serial_id}"
             self.delete(uri, self.default_headers).code.to_i
           end
 
