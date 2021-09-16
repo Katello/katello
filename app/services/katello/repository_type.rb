@@ -43,6 +43,12 @@ module Katello
       @generic_remote_options.sort_by(&:name)
     end
 
+    def primary_content_types
+      found = self.content_types.select { |type| type.primary_content }
+      found = self.content_types if found.empty?
+      found
+    end
+
     def translated_generic_remote_options
       translated = generic_remote_options.deep_dup
       translated.map do |option|
@@ -120,7 +126,8 @@ module Katello
     end
 
     class ContentType
-      attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable, :index_on_pulp3
+      attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable,
+                    :primary_content, :index_on_pulp3
 
       def initialize(options)
         self.model_class = options[:model_class]
@@ -131,6 +138,7 @@ module Katello
         self.index_on_pulp3 = options[:index_on_pulp3].nil? ? true : options[:index_on_pulp3]
         self.uploadable = options[:uploadable] || false
         self.removable = options[:removable] || false
+        self.primary_content = options[:primary_content] || false
       end
 
       def label

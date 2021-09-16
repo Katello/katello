@@ -23,6 +23,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
     :priority => 1,
     :pulp2_service_class => ::Katello::Pulp::Rpm,
     :pulp3_service_class => ::Katello::Pulp3::Rpm,
+    :primary_content => true,
     :removable => true,
     :uploadable => true
   content_type Katello::ModuleStream,
@@ -31,7 +32,8 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::YUM_TYPE) do
     :pulp3_service_class => ::Katello::Pulp3::ModuleStream
   content_type Katello::Erratum, :priority => 3,
     :pulp2_service_class => ::Katello::Pulp::Erratum,
-    :pulp3_service_class => ::Katello::Pulp3::Erratum
+    :pulp3_service_class => ::Katello::Pulp3::Erratum,
+    :primary_content => true
   content_type Katello::PackageGroup,
     :pulp2_service_class => ::Katello::Pulp::PackageGroup,
     :pulp3_service_class => ::Katello::Pulp3::PackageGroup
