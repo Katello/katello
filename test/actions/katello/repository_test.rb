@@ -4,6 +4,14 @@ class Dynflow::Testing::DummyPlannedAction
   attr_accessor :error
 end
 
+class Dynflow::Testing::DummyExecutionPlan
+  attr_accessor :error
+
+  def run_steps
+    []
+  end
+end
+
 module ::Actions::Katello::Repository
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing

@@ -72,11 +72,13 @@ module ::Actions::Pulp3
       @repo.index_content #should clear out the repo
       assert_empty @repo.rpms
 
-      ForemanTasks.sync_task(::Actions::Katello::Repository::Sync, @repo, skip_metadata_check: true)
+      task = ForemanTasks.sync_task(::Actions::Katello::Repository::Sync, @repo, skip_metadata_check: true)
 
       @repo.reload
       assert_equal old_url, @repo.version_href
       refute_empty @repo.rpms
+
+      assert_equal "Added Rpms: 32, Errata: 4", task.get_humanized(:humanized_output).split("\n").first
     ensure
       SETTINGS[:katello][:katello_applicability] = false
     end

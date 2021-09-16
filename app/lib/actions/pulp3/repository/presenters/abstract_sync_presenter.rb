@@ -15,6 +15,24 @@ module Actions
             fail NotImplementedError
           end
 
+          def index_action
+            plan = action.execution_plan
+            index_step = plan.run_steps.find { |s| s.action_class == Actions::Katello::Repository::IndexContent }
+            index_step&.action(plan)
+          end
+
+          def added_content_message
+            if (content_added = index_action&.output&.[](:new_content))
+              content_added = content_added.select { |_type, number| number > 0 }
+              if content_added&.any?
+                count_messages = content_added.map { |type, number| "#{type.to_s.humanize.pluralize}: #{number}" }
+                _("Added %s") % count_messages.join(', ')
+              else
+                _("No content added.")
+              end
+            end
+          end
+
           def sync_task
             tasks = action.external_task.select do |task|
               if task.key? 'name'
