@@ -74,7 +74,7 @@ module Katello
       def initialize(url:, ssl_cert_file:, ssl_key_file:, ssl_ca_file:)
         @url = url
         ssl_domain = ::Qpid::Proton::SSLDomain.new(::Qpid::Proton::SSLDomain::MODE_CLIENT)
-        ssl_domain.peer_authentication(::Qpid::Proton::SSLDomain::ANONYMOUS_PEER)
+        ssl_domain.peer_authentication(::Qpid::Proton::SSLDomain::VERIFY_PEER)
         ssl_domain.credentials(ssl_cert_file, ssl_key_file, nil) if ssl_cert_file && ssl_key_file
         ssl_domain.trusted_ca_db(ssl_ca_file) if ssl_ca_file
         @connection_options = {
