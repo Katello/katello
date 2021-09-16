@@ -22,7 +22,6 @@ const filterOptions = [
   { value: 'sourceRpm', label: __('Source RPM') },
   { value: 'debugRpm', label: __('Debug RPM') },
   { value: 'kickstart', label: __('Kickstart') },
-  { value: 'ostree', label: __('OSTree') },
   { value: 'beta', label: __('Beta') },
   { value: 'other', label: __('Other') },
 ];
