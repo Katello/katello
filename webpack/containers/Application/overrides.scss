@@ -75,3 +75,22 @@ html .pagination-pf-pagesize.btn-group {
     margin-left: 200px;
   }
 }
+
+@keyframes hideme {
+  0%, 70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.tooltip {
+  margin:auto;
+  animation-direction: normal;
+  animation-name: hideme;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
