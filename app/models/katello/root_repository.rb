@@ -70,7 +70,6 @@ module Katello
 
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
-    validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
     validate :ensure_valid_collection_attributes, :if => :ansible_collection?
     validate :ensure_valid_auth_url_token, :if => :ansible_collection?
@@ -182,12 +181,6 @@ module Katello
     def ensure_no_checksum_on_demand
       if checksum_type.present? && download_policy == DOWNLOAD_ON_DEMAND
         errors.add(:checksum_type, _("Checksum type cannot be set for yum repositories with on demand download policy."))
-      end
-    end
-
-    def ensure_ostree_repo_protected
-      if unprotected
-        errors.add(:base, _("OSTree Repositories cannot be unprotected."))
       end
     end
 
