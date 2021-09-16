@@ -61,6 +61,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "pulp_rpm_client", ">=3.13.0", "< 3.15.0"
   gem.add_dependency "pulp_certguard_client", "< 2.0"
   gem.add_dependency "pulp_python_client", ">= 3.4.0", "< 3.5.0"
+  gem.add_dependency "pulp_ostree_client"
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'

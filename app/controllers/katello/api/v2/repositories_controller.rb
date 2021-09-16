@@ -57,8 +57,6 @@ module Katello
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
       param :upstream_authentication_token, String, :desc => N_("Password of the upstream authentication token.")
-      param :ostree_upstream_sync_policy, ::Katello::RootRepository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories")
-      param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided")
       param :deb_releases, String, :desc => N_("whitespace-separated list of releases to be synced from deb-archive")
       param :deb_components, String, :desc => N_("whitespace-separated list of repo components to be synced from deb-archive")
       param :deb_architectures, String, :desc => N_("whitespace-separated list of architectures to be synced from deb-archive")
@@ -98,7 +96,6 @@ module Katello
     param :rpm_id, String, :desc => N_("Id of a rpm package to find repositories that contain the rpm")
     param :file_id, String, :desc => N_("Id of a file to find repositories that contain the file")
     param :ansible_collection_id, String, :desc => N_("Id of an ansible collection to find repositories that contain the ansible collection")
-    param :ostree_branch_id, String, :desc => N_("Id of an ostree branch to find repositories that contain that branch")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :archived, :bool, :desc => N_("show archived repositories")
     param :content_type, RepositoryTypeManager.defined_repository_types.keys, :desc => N_("limit to only repositories of this type")
@@ -212,11 +209,6 @@ module Katello
       if params[:ansible_collection_id]
         query = query.joins(:ansible_collections)
                     .where("#{AnsibleCollection.table_name}.id" => AnsibleCollection.with_identifiers(params[:ansible_collection_id]))
-      end
-
-      if params[:ostree_branch_id]
-        query = query.joins(:ostree_branches)
-          .where("#{OstreeBranch.table_name}.id" => OstreeBranch.with_identifiers(params[:ostree_branch_id]))
       end
 
       query
@@ -469,11 +461,9 @@ module Katello
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password,
               :upstream_username, :download_concurrency, :upstream_authentication_token,
-              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, {:os_versions => []},
-              :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy,
-              :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
+              {:os_versions => []}, :deb_releases, :deb_components, :deb_architectures, :description,
+              :http_proxy_policy, :http_proxy_id, :retain_package_versions_count, {:ignorable_content => []}
              ]
-
       keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
       keys += [:ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token] if params[:action] == 'create' || @repository&.ansible_collection?
       keys += [:label, :content_type] if params[:action] == "create"
@@ -507,7 +497,6 @@ module Katello
     end
 
     # rubocop:disable Metrics/PerceivedComplexity
-    # rubocop:disable Metrics/MethodLength
     def construct_repo_from_params(repo_params) # rubocop:disable Metrics/AbcSize
       root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
@@ -530,10 +519,6 @@ module Katello
         root.generic_remote_options = generic_remote_options.to_json
       end
 
-      if root.ostree?
-        root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
-        root.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
-      end
       if root.deb?
         root.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
         root.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
