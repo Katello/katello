@@ -122,7 +122,7 @@ module Actions
                                :source_repository_id => file_repo2.id,
                                :target_repository_id => cloned_repo.id,
                                :smart_proxy_id => primary.id,
-                               :filter_ids => [], :solve_dependencies => false, :rpm_filenames => nil)
+                               :filter_ids => [], :solve_dependencies => false, :rpm_filenames => nil, :remove_all => false)
     end
   end
 end
