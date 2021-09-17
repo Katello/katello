@@ -12,6 +12,16 @@ module Katello
             @proxy = SmartProxy.pulp_primary
           end
 
+          def test_publication_options
+            @repo.version_href = 'a_version_href'
+            @repo.root.checksum_type = 'sha1'
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            publication_options = service.publication_options(@repo.version_href)
+            assert_equal 'a_version_href', publication_options[:repository_version]
+            assert_equal 'sha1', publication_options[:metadata_checksum_type]
+            assert_equal 'sha1', publication_options[:package_checksum_type]
+          end
+
           def test_remote_options
             @repo.root.url = "http://foo.com/bar/"
             service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
