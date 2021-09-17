@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Button, Hint, HintBody } from '@patternfly/react-core';
+import { useSelector, useDispatch } from 'react-redux';
+import { Button, Hint, HintBody, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { TableVariant, TableText, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
@@ -9,7 +10,7 @@ import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity } from '../../../../components/Errata';
-import { getInstallableErrata } from '../HostErrata/HostErrataActions';
+import { getInstallableErrata, regenerateApplicability } from '../HostErrata/HostErrataActions';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
 import { HOST_ERRATA_KEY } from '../HostErrata/HostErrataConstants';
 import './ErrataTab.scss';
@@ -17,9 +18,11 @@ import './ErrataTab.scss';
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const { id: hostId } = hostDetails;
-  const actionButtons = <Button isDisabled> {__('Apply')} </Button>;
+  const dispatch = useDispatch();
 
   const [searchQuery, updateSearchQuery] = useState('');
+  const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
+  const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
 
   const emptyContentTitle = __('This host does not have any installable errata.');
   const emptyContentBody = __('Installable errata will appear here when available.');
@@ -52,6 +55,38 @@ export const ErrataTab = () => {
       title: __('Apply via customized remote execution'), disabled: true,
     },
   ];
+
+  const recalculateErrata = () => {
+    setIsBulkActionOpen(false);
+    dispatch(regenerateApplicability(hostId));
+  };
+
+  const dropdownItems = [
+    <DropdownItem aria-label="bulk_add" key="bulk_add" component="button" onClick={recalculateErrata}>
+      {__('Recalculate')}
+    </DropdownItem>,
+  ];
+
+  const actionButtons = (
+    <Split hasGutter>
+      <SplitItem>
+        <ActionList isIconList>
+          <ActionListItem>
+            <Button isDisabled> {__('Apply')} </Button>
+          </ActionListItem>
+          <ActionListItem>
+            <Dropdown
+              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+              isOpen={isBulkActionOpen}
+              isPlain
+              dropdownItems={dropdownItems}
+            />
+          </ActionListItem>
+        </ActionList>
+      </SplitItem>
+    </Split>
+  );
+
   return (
     <div>
       <div id="errata-hint">
