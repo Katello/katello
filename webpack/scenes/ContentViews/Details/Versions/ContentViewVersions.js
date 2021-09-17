@@ -6,6 +6,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import InactiveText from '../../components/InactiveText';
@@ -23,7 +24,8 @@ import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
 import TaskPresenter from '../../components/TaskPresenter/TaskPresenter';
 import { startPollingTask } from '../../../Tasks/TaskActions';
 
-const ContentViewVersions = ({ cvId }) => {
+export default () => {
+  const { id: cvId } = useParams();
   const response = useSelector(state => selectCVVersions(state, cvId));
   const status = useSelector(state => selectCVVersionsStatus(state, cvId));
   const error = useSelector(state => selectCVVersionsError(state, cvId));
@@ -31,7 +33,7 @@ const ContentViewVersions = ({ cvId }) => {
   const loading = status === STATUS.PENDING;
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({ });
+  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [versionIdToPromote, setVersionIdToPromote] = useState('');
   const [versionNameToPromote, setVersionNameToPromote] = useState('');
@@ -64,7 +66,7 @@ const ContentViewVersions = ({ cvId }) => {
       errata_counts: errataCounts,
     } = cvVersion;
     return [
-      { title: <a href={urlBuilder(`labs/content_views/${cvId}#versions?subContentId=${versionId}`, '')}>{__('Version ')}{version}</a> },
+      { title: <a href={urlBuilder(`labs/content_views/${cvId}/versions/${versionId}`, '')}>{__('Version ')}{version}</a> },
       { title: <ContentViewVersionEnvironments {...{ environments }} /> },
       { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/packages`, '')}>{`${packageCount}`}</a> },
       { title: <ContentViewVersionErrata {...{ cvId, versionId, errataCounts }} /> },
@@ -81,7 +83,7 @@ const ContentViewVersions = ({ cvId }) => {
       active_history: activeHistory,
     } = cvVersion;
     const { task } = activeHistory[0];
-    const { result } = task || { };
+    const { result } = task || {};
     if (result !== 'error') {
       dispatch(startPollingTask(task.id, task));
     }
@@ -197,7 +199,3 @@ const ContentViewVersions = ({ cvId }) => {
     />);
 };
 
-ContentViewVersions.propTypes = {
-  cvId: PropTypes.number.isRequired,
-};
-export default ContentViewVersions;

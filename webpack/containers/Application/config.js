@@ -59,5 +59,6 @@ export const links = [
   {
     path: 'labs/content_views/:id([0-9]+)',
     component: withHeader(ContentViewDetails, { title: __('Content View Details') }),
+    exact: false,
   },
 ];
