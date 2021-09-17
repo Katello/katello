@@ -6,16 +6,14 @@ import { STATUS } from 'foremanReact/constants';
 import { Grid } from '@patternfly/react-core';
 import './ContentViewVersionDetails.scss';
 import { editContentViewVersionDetails, getContentViewVersionDetails } from '../ContentViewDetailActions';
-import useUrlParamsWithHash from '../../../../utils/useUrlParams';
 import ContentViewVersionDetailsHeader from './ContentViewVersionDetailsHeader';
 import { selectCVVersionDetails, selectCVVersionDetailsStatus } from '../ContentViewDetailSelectors';
 import Loading from '../../../../components/Loading';
 
 const ContentViewVersionDetails = () => {
-  const { id: cvId } = useParams();
-  const { params: { subContentId: versionId } } = useUrlParamsWithHash();
+  const { id: cvId, versionId } = useParams();
   const dispatch = useDispatch();
-  const [details, setDetails] = useState({ });
+  const [details, setDetails] = useState({});
   const response = useSelector(state =>
     selectCVVersionDetails(state, versionId, cvId), shallowEqual);
   const status = useSelector(state =>

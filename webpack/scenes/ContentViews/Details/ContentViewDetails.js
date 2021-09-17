@@ -9,8 +9,7 @@ import PropTypes from 'prop-types';
 
 import DetailsContainer from './DetailsContainer';
 import ContentViewInfo from './ContentViewInfo';
-import ContentViewVersions from './Versions/ContentViewVersions';
-import ContentViewVersionDetails from './Versions/ContentViewVersionDetails';
+import ContentViewVersionsRoutes from './Versions';
 import ContentViewRepositories from './Repositories/ContentViewRepositories';
 import ContentViewComponents from './ComponentContentViews/ContentViewComponents';
 import ContentViewHistories from './Histories/ContentViewHistories';
@@ -37,8 +36,7 @@ const ContentViewDetails = ({ match }) => {
     {
       key: 'versions',
       title: __('Versions'),
-      content: <ContentViewVersions cvId={cvId} />,
-      detailContent: <ContentViewVersionDetails />,
+      content: <ContentViewVersionsRoutes />,
     },
     (composite ? {
       key: 'contentviews',
