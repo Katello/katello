@@ -191,12 +191,13 @@ module Katello
           tasks
         end
 
-        def copy_units(source_repository, content_unit_hrefs)
+        def copy_units(source_repository, content_unit_hrefs, remove_all)
+          remove_all = true if remove_all.nil?
           tasks = []
 
           if content_unit_hrefs.sort!.any?
             content_unit_hrefs += packageenvironments({ :repository_version => source_repository.version_href }).map(&:pulp_href).sort
-            first_slice = true
+            first_slice = remove_all
             content_unit_hrefs.each_slice(UNIT_LIMIT) do |slice|
               tasks << add_content(slice, first_slice)
               first_slice = false
@@ -351,7 +352,7 @@ module Katello
             content_unit_hrefs += additional_content_hrefs(source_repository, content_unit_hrefs)
           end
           content_unit_hrefs += source_repository.srpms.pluck(:pulp_id)
-          copy_units(source_repository, content_unit_hrefs.uniq)
+          copy_units(source_repository, content_unit_hrefs.uniq, options[:remove_all])
         end
 
         def modular_packages(source_repository, filters)
