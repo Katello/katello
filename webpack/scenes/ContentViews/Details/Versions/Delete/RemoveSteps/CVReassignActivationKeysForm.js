@@ -40,7 +40,7 @@ const CVReassignActivationKeysForm = () => {
 
   useDeepCompareEffect(() => {
     const { results } = contentViewsInEnvResponse;
-    const contentViewElligible = (cv) => {
+    const contentViewEligible = (cv) => {
       if (cv.id === cvId) {
         const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
         return (selectedEnv.filter(env => env.id === selectedEnvForAK[0]?.id).length === 0);
@@ -48,7 +48,7 @@ const CVReassignActivationKeysForm = () => {
       return true;
     };
     if (!cvInEnvLoading && results && selectedEnvForAK.length) {
-      setCvSelectionOptions(results.map(cv => ((contentViewElligible(cv)) ?
+      setCvSelectionOptions(results.map(cv => ((contentViewEligible(cv)) ?
         (
           <SelectOption
             key={cv.id}
@@ -59,7 +59,7 @@ const CVReassignActivationKeysForm = () => {
         ) : null)).filter(n => n));
     }
     if (!cvInEnvLoading && results && selectedCVForAK &&
-      results.filter(cv => cv.id === selectedCVForAK && contentViewElligible(cv)).length === 0) {
+      results.filter(cv => cv.id === selectedCVForAK && contentViewEligible(cv)).length === 0) {
       setSelectedCVForAK(null);
       setSelectedCVNameForAK(null);
     }
@@ -68,7 +68,7 @@ const CVReassignActivationKeysForm = () => {
     cvInEnvLoading, selectedCVForAK, cvId, versionEnvironments, selected]);
 
   const fetchSelectedCVName = (id) => {
-    const { results } = contentViewsInEnvResponse || { };
+    const { results } = contentViewsInEnvResponse ?? { };
     return results.filter(cv => cv.id === id)[0]?.name;
   };
 
@@ -94,11 +94,12 @@ const CVReassignActivationKeysForm = () => {
             selections={selectedCVForAK}
             onSelect={onSelect}
             isOpen={cvSelectOpen}
+            isDisabled={cvSelectOptions.length === 0}
             onToggle={isExpanded => setCVSelectOpen(isExpanded)}
             id="selectCV"
             name="selectCV"
             aria-label="selectCV"
-            placeholderText={__('Select a content view')}
+            placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
           >
             {cvSelectOptions}
           </Select>

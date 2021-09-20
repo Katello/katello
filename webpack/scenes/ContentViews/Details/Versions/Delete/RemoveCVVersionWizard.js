@@ -31,6 +31,7 @@ const RemoveCVVersionWizard = ({
   const [affectedActivationKeys, setAffectedActivationKeys] = useState(false);
   const [affectedHosts, setAffectedHosts] = useState(false);
   const [deleteFlow, setDeleteFlow] = useState(deleteWizard || false);
+  const [removeDeletionFlow, setRemoveDeletionFlow] = useState(false);
 
   const canReview = () => {
     const hostsStepComplete = affectedHosts ?
@@ -52,6 +53,7 @@ const RemoveCVVersionWizard = ({
     id: 2,
     name: 'Reassign affected hosts',
     component: <CVReassignHostsForm />,
+    enableNext: (affectedHosts ? selectedEnvForHost && selectedCVForHosts : true),
     canJumpTo: affectedHosts,
   };
 
@@ -59,6 +61,7 @@ const RemoveCVVersionWizard = ({
     id: 3,
     name: 'Reassign affected activation keys',
     component: <CVReassignActivationKeysForm />,
+    enableNext: canReview(),
     canJumpTo: affectedActivationKeys &&
     (affectedHosts ? selectedEnvForHost && selectedCVForHosts : true),
   };
@@ -68,7 +71,7 @@ const RemoveCVVersionWizard = ({
     name: 'Review',
     component: <CVVersionRemoveReview />,
     canJumpTo: canReview(),
-    nextButtonText: __('Remove'),
+    nextButtonText: deleteFlow ? __('Delete') : __('Remove'),
   };
 
   const finishStep = {
@@ -108,6 +111,8 @@ const RemoveCVVersionWizard = ({
       setAffectedHosts,
       deleteFlow,
       setDeleteFlow,
+      removeDeletionFlow,
+      setRemoveDeletionFlow,
       currentStep,
       selectedCVForHosts,
       setSelectedCVNameForHosts,
@@ -124,8 +129,8 @@ const RemoveCVVersionWizard = ({
     }}
     >
       <Wizard
-        title={__('Remove Version')}
-        description={__(`Removing version ${versionNameToRemove}`)}
+        title={deleteFlow ? __('Delete Version') : __('Remove Version')}
+        description={__(`${deleteFlow ? 'Deleting' : 'Removing'} version ${versionNameToRemove}`)}
         steps={steps}
         startAtStep={currentStep}
         onClose={() => {

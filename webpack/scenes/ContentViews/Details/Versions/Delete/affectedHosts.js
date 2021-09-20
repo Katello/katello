@@ -6,14 +6,14 @@ import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table'
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { selectCVHosts, selectCVHostsStatus } from '../../ContentViewDetailSelectors';
 import EnvironmentLabels from '../../../components/EnvironmentLabels';
-import { getContentViewAffectedHosts } from '../../ContentViewDetailActions';
+import { getHosts } from '../../ContentViewDetailActions';
 import DeleteContext from './DeleteContext';
 
 const AffectedHosts = () => {
   const { versionEnvironments, selected, cvId } = useContext(DeleteContext);
   const [searchQuery, updateSearchQuery] = useState('');
-  const response = useSelector(state => selectCVHosts(state, cvId), shallowEqual);
-  const status = useSelector(state => selectCVHostsStatus(state, cvId), shallowEqual);
+  const response = useSelector(state => selectCVHosts(state), shallowEqual);
+  const status = useSelector(state => selectCVHostsStatus(state), shallowEqual);
   const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
 
 
@@ -29,7 +29,7 @@ const AffectedHosts = () => {
       cvQuery += `${searchQuery} )`;
     }
 
-    return getContentViewAffectedHosts(cvId, { search: cvQuery });
+    return getHosts({ search: cvQuery });
   }, [cvId, searchQuery, selectedEnv]);
   const columnHeaders = [
     __('Name'),

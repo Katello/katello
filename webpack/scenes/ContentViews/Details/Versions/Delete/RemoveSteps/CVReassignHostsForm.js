@@ -40,7 +40,7 @@ const CVReassignHostsForm = () => {
 
   useDeepCompareEffect(() => {
     const { results = {} } = contentViewsInEnvResponse;
-    const contentViewElligible = (cv) => {
+    const contentViewEligible = (cv) => {
       if (cv.id === cvId) {
         const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
         return (selectedEnv.filter(env => env.id === selectedEnvForHost[0]?.id).length === 0);
@@ -48,12 +48,12 @@ const CVReassignHostsForm = () => {
       return true;
     };
     if (!cvInEnvLoading && results && selectedCVForHosts &&
-      results.filter(cv => cv.id === selectedCVForHosts && contentViewElligible(cv)).length === 0) {
+      results.filter(cv => cv.id === selectedCVForHosts && contentViewEligible(cv)).length === 0) {
       setSelectedCVForHosts(null);
       setSelectedCVNameForHosts(null);
     }
     if (!cvInEnvLoading && results && selectedEnvForHost.length) {
-      setCvSelectionOptions(results.map(cv => ((contentViewElligible(cv)) ?
+      setCvSelectionOptions(results.map(cv => ((contentViewEligible(cv)) ?
         (
           <SelectOption
             key={cv.id}
@@ -68,7 +68,7 @@ const CVReassignHostsForm = () => {
     cvInEnvLoading, selectedCVForHosts, cvId, versionEnvironments, selected]);
 
   const fetchSelectedCVName = (id) => {
-    const { results } = contentViewsInEnvResponse || { };
+    const { results } = contentViewsInEnvResponse ?? { };
     return results.filter(cv => cv.id === id)[0]?.name;
   };
 
@@ -94,11 +94,12 @@ const CVReassignHostsForm = () => {
           selections={selectedCVForHosts}
           onSelect={onSelect}
           isOpen={cvSelectOpen}
+          isDisabled={cvSelectOptions.length === 0}
           onToggle={isExpanded => setCVSelectOpen(isExpanded)}
           id="selectCV"
           name="selectCV"
           aria-label="selectCV"
-          placeholderText={__('Select a content view')}
+          placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
         >
           {cvSelectOptions}
         </Select>

@@ -18,6 +18,8 @@ import {
   NOT_ADDED,
   ALL_STATUSES,
   REPOSITORY_TYPES,
+  ACTIVATION_KEY_KEY,
+  HOSTS_KEY,
   cvDetailsKey,
   cvDetailsRepoKey,
   cvDetailsFiltersKey,
@@ -35,8 +37,6 @@ import {
   cvVersionPromoteKey,
   cvFilterRepoKey,
   cvVersionDetailsKey,
-  cvActivationKeysKey,
-  cvHostsKey,
   cvRemoveVersionKey,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
@@ -165,15 +165,15 @@ export const getContentViewFilters = (cvId, params) => get({
   url: api.getApiUrl('/content_view_filters'),
 });
 
-export const getContentViewAffectedActivationKeys = (cvId, params) => get({
-  key: cvActivationKeysKey(cvId),
+export const getActivationKeys = params => get({
+  key: ACTIVATION_KEY_KEY,
   params: { organization_id: orgId(), ...params },
   errorToast: error => __(`Something went wrong while retrieving the activation keys! ${getResponseErrorMsgs(error.response)}`),
   url: api.getApiUrl('/activation_keys'),
 });
 
-export const getContentViewAffectedHosts = (cvId, params) => get({
-  key: cvHostsKey(cvId),
+export const getHosts = params => get({
+  key: HOSTS_KEY,
   params: { organization_id: orgId(), ...params },
   errorToast: error => __(`Something went wrong while retrieving the hosts! ${getResponseErrorMsgs(error.response)}`),
   url: foremanApi.getApiUrl('/hosts'),

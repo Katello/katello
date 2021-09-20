@@ -4,7 +4,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { getContentViewAffectedActivationKeys } from '../../ContentViewDetailActions';
+import { getActivationKeys } from '../../ContentViewDetailActions';
 import {
   selectCVActivationKeys, selectCVActivationKeysStatus,
 } from '../../ContentViewDetailSelectors';
@@ -14,8 +14,8 @@ import DeleteContext from './DeleteContext';
 const AffectedActivationKeys = () => {
   const { versionEnvironments, selected, cvId } = useContext(DeleteContext);
   const [searchQuery, updateSearchQuery] = useState('');
-  const response = useSelector(state => selectCVActivationKeys(state, cvId), shallowEqual);
-  const status = useSelector(state => selectCVActivationKeysStatus(state, cvId), shallowEqual);
+  const response = useSelector(state => selectCVActivationKeys(state), shallowEqual);
+  const status = useSelector(state => selectCVActivationKeysStatus(state), shallowEqual);
   const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
 
   const fetchItems = useCallback(() => {
@@ -32,7 +32,7 @@ const AffectedActivationKeys = () => {
       }
       return cvQuery;
     };
-    return getContentViewAffectedActivationKeys(cvId, { search: formSearch() });
+    return getActivationKeys({ search: formSearch() });
   }, [cvId, searchQuery, selectedEnv]);
 
   const columnHeaders = [

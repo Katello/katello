@@ -21,10 +21,10 @@ import {
   CREATE_CONTENT_VIEW_FILTER_KEY,
   RPM_MATCHING_CONTENT,
   ADD_CONTENT_VIEW_FILTER_RULE,
+  ACTIVATION_KEY_KEY,
+  HOSTS_KEY,
   cvFilterRepoKey,
   cvVersionDetailsKey,
-  cvActivationKeysKey,
-  cvHostsKey,
   cvRemoveVersionKey,
 } from '../ContentViewsConstants';
 import { pollTaskKey } from '../../Tasks/helpers';
@@ -194,20 +194,20 @@ export const selectCreatePackageFilterRuleStatus = state =>
 export const selectCreatePackageFilterRuleError = state =>
   selectAPIError(state, ADD_CONTENT_VIEW_FILTER_RULE);
 
-export const selectCVActivationKeys = (state, cvId) =>
-  selectAPIResponse(state, cvActivationKeysKey(cvId)) || {};
+export const selectCVActivationKeys = state =>
+  selectAPIResponse(state, ACTIVATION_KEY_KEY) || {};
 
-export const selectCVActivationKeysStatus = (state, cvId) =>
-  selectAPIStatus(state, cvActivationKeysKey(cvId)) || STATUS.PENDING;
+export const selectCVActivationKeysStatus = state =>
+  selectAPIStatus(state, ACTIVATION_KEY_KEY) || STATUS.PENDING;
 
-export const selectCVActivationKeysError = (state, cvId) =>
-  selectAPIError(state, cvActivationKeysKey(cvId));
+export const selectCVActivationKeysError = state =>
+  selectAPIError(state, ACTIVATION_KEY_KEY);
 
-export const selectCVHosts = (state, cvId) =>
-  selectAPIResponse(state, cvHostsKey(cvId)) || {};
+export const selectCVHosts = state =>
+  selectAPIResponse(state, HOSTS_KEY) || {};
 
-export const selectCVHostsStatus = (state, cvId) =>
-  selectAPIStatus(state, cvHostsKey(cvId)) || STATUS.PENDING;
+export const selectCVHostsStatus = state =>
+  selectAPIStatus(state, HOSTS_KEY) || STATUS.PENDING;
 
 export const selectRemoveCVVersionResponse = (state, versionId, versionEnvironments) =>
   selectAPIResponse(state, cvRemoveVersionKey(versionId, versionEnvironments)) || {};

@@ -17,6 +17,8 @@ export const ADD_CONTENT_VIEW_FILTER_RULE = 'ADD_CONTENT_VIEW_FILTER_RULE';
 export const EDIT_CONTENT_VIEW_FILTER_RULE = 'EDIT_CONTENT_VIEW_FILTER_RULE';
 export const REMOVE_CONTENT_VIEW_FILTER_RULE = 'REMOVE_CONTENT_VIEW_FILTER_RULE';
 export const EDIT_CONTENT_VIEW_FILTER = 'EDIT_CONTENT_VIEW_FILTER';
+export const ACTIVATION_KEY_KEY = 'ACTIVATION_KEY_KEY';
+export const HOSTS_KEY = 'HOSTS_KEY';
 export const cvDetailsKey = cvId => `${CONTENT_VIEWS_KEY}_${cvId}`;
 export const cvDetailsRepoKey = cvId => `${CONTENT_VIEWS_KEY}_REPOSITORIES_${cvId}`;
 export const cvFilterRepoKey = filterId => `CV_FILTER_REPOSITORIES_${filterId}`;
@@ -36,8 +38,6 @@ export const cvVersionDetailsKey = (cvId, versionId) => `CONTENT_VIEW_VERSION_DE
 export const cvVersionPublishKey = (cvId, versionCount) => `${PUBLISH_CONTENT_VIEW_KEY}_${cvId}_VERSION_${versionCount}`;
 export const cvAddComponentKey = cvId => `${CONTENT_VIEWS_KEY}_ADD_COMPONENT_${cvId}`;
 export const cvRemoveComponentKey = cvId => `${CONTENT_VIEWS_KEY}_REMOVE_COMPONENT_${cvId}`;
-export const cvActivationKeysKey = cvId => `${CONTENT_VIEWS_KEY}_ACTIVATION_KEYS_${cvId}`;
-export const cvHostsKey = cvId => `${CONTENT_VIEWS_KEY}_HOSTS_${cvId}`;
 
 export const removeComponentSuccessMessage = size => (size === 1 ? __('Removed component from content view') : __('Removed components from content view'));
 

@@ -13,7 +13,7 @@ const CVVersionDeleteFinish = () => {
     cvId, versionIdToRemove, versionEnvironments,
     setIsOpen, selected,
     selectedCVForAK, selectedEnvForAK, selectedCVForHosts,
-    selectedEnvForHost, affectedActivationKeys, affectedHosts, deleteFlow,
+    selectedEnvForHost, affectedActivationKeys, affectedHosts, deleteFlow, removeDeletionFlow,
   } = useContext(DeleteContext);
   const removeCVVersionResponse = useSelector(state =>
     selectRemoveCVVersionResponse(state, versionIdToRemove, versionEnvironments));
@@ -33,7 +33,7 @@ const CVVersionDeleteFinish = () => {
 
   useDeepCompareEffect(() => {
     if (!removeDispatched) {
-      const environmentIdParams = deleteFlow ?
+      const environmentIdParams = (deleteFlow || removeDeletionFlow) ?
         versionEnvironments.map(env => env.id) :
         selectedEnv.map(env => env.id);
 
@@ -58,7 +58,7 @@ const CVVersionDeleteFinish = () => {
         params = { ...hostParams, ...params };
       }
 
-      if (deleteFlow) {
+      if (deleteFlow || removeDeletionFlow) {
         const deletionParams = { content_view_version_ids: [versionIdToRemove] };
         params = { ...deletionParams, ...params };
       }
@@ -66,7 +66,7 @@ const CVVersionDeleteFinish = () => {
       setRemoveDispatched(true);
     }
   }, [cvId, versionIdToRemove, versionEnvironments, dispatch, affectedActivationKeys,
-    affectedHosts, deleteFlow, selectedCVForAK, selectedCVForHosts,
+    affectedHosts, deleteFlow, removeDeletionFlow, selectedCVForAK, selectedCVForHosts,
     selectedEnvForAK, selectedEnvForHost, selectedEnv,
     removeCVVersionResponse, removeCVVersionStatus, removeDispatched]);
 

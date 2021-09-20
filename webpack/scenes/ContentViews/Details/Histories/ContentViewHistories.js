@@ -49,7 +49,7 @@ const ContentViewHistories = ({ cvId }) => {
     const taskType = task ? task.label : taskTypes[action];
 
     if (taskType === taskTypes.removal) {
-      return <React.Fragment> Deleted from <Label key="1" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{`${environment?.name || __('all environments')}`}</Label>{}</React.Fragment>;
+      return <React.Fragment> Deleted from <Label key="1" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{`${environment?.name ?? __('all environments')}`}</Label>{}</React.Fragment>;
     } else if (taskType === taskTypes.promotion) {
       return <React.Fragment> Promoted to <Label key="2" color="blue" href={`/lifecycle_environments/${environment?.id}`}>{`${environment?.name}`}</Label>{}</React.Fragment>;
     } else if (taskType === taskTypes.publish) {
@@ -66,7 +66,7 @@ const ContentViewHistories = ({ cvId }) => {
   const emptyContentBody = __('History will appear here when the content view is published or promoted.'); // needs link
   const emptySearchTitle = __('No matching history record found');
   const emptySearchBody = __('Try changing your search settings.');
-  const { results, ...metadata } = response; // {results: [..], per_page: 10, page: 2}
+  const { results, ...metadata } = response;
   /* eslint-disable react/no-array-index-key */
   return (
     <TableWrapper
@@ -103,7 +103,9 @@ const ContentViewHistories = ({ cvId }) => {
           } = history;
           return (
             <Tr key={`${versionId}_${createdAt}_${index}`}>
-              <Td key={`${index}`}><LongDateTime date={createdAt} showRelativeTimeTooltip /></Td>
+              <Td>
+                <LongDateTime date={createdAt} showRelativeTimeTooltip />
+              </Td>
               <Td>
                 <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{`Version ${version}`}</a>
               </Td>

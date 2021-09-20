@@ -7,18 +7,18 @@ import DeleteContext from '../DeleteContext';
 const CVEnvironmentSelectionForm = () => {
   const {
     versionNameToRemove, versionEnvironments, selected, setSelected,
-    setAffectedActivationKeys, setAffectedHosts, deleteFlow, setDeleteFlow,
+    setAffectedActivationKeys, setAffectedHosts, deleteFlow,
+    removeDeletionFlow, setRemoveDeletionFlow,
   } = useContext(DeleteContext);
 
-  const [allRowsSelected, setAllRowsSelected] = useState(false);
-
+  const [allRowsSelected, setAllRowsSelected] = useState(deleteFlow);
   const onSelect = (event, isSelected, rowId) => {
     const newSelected = selected.map((sel, index) => (index === rowId ? isSelected : sel));
     setSelected(newSelected);
 
     if (!isSelected && allRowsSelected) {
       setAllRowsSelected(false);
-      setDeleteFlow(false);
+      setRemoveDeletionFlow(false);
     } else if (isSelected && !allRowsSelected) {
       let allSelected = true;
       for (let i = 0; i < selected.length; i += 1) {
@@ -42,7 +42,7 @@ const CVEnvironmentSelectionForm = () => {
 
   const onSelectAll = (event, isSelected) => {
     setAllRowsSelected(isSelected);
-    if (!isSelected) setDeleteFlow(false);
+    if (!isSelected) setRemoveDeletionFlow(false);
     setSelected(selected.map(_sel => isSelected));
   };
 
@@ -53,19 +53,21 @@ const CVEnvironmentSelectionForm = () => {
   ];
 
   const versionDeleteInfo = __(`Version ${versionNameToRemove} will be deleted from the listed environments. It will no longer be available for promotion.`);
-  const versionRemovalInfo = __('Removing version from all the environments will not delete the version. Version will still be available for a later promotion.');
+  const versionRemovalInfo = __('Removing this version from all environments will not delete the version. Version will still be available for later promotion.');
   const versionEnvironmentsEmptyInfo = __(`Version ${versionNameToRemove} has not been promoted to any environments. ` +
     'You can delete this version completely and it will no longer be available for promotion.');
   return (
     <>
-      {(allRowsSelected || versionEnvironments.length === 0) && (
+      {(!deleteFlow &&
+        (removeDeletionFlow || allRowsSelected || versionEnvironments.length === 0))
+      && (
       <Alert variant="warning" isInline title={__('Warning')}>
-        {deleteFlow ? versionDeleteInfo : versionRemovalInfo}
+        <p style={{ marginBottom: '0.5em' }}>{removeDeletionFlow ? versionDeleteInfo : versionRemovalInfo}</p>
         <Checkbox
           id="delete_version"
-          label={__('Delete Version')}
-          isChecked={deleteFlow}
-          onChange={checked => setDeleteFlow(checked)}
+          label={__('Delete version')}
+          isChecked={removeDeletionFlow}
+          onChange={checked => setRemoveDeletionFlow(checked)}
           style={{ margin: 0 }}
         />
       </Alert>)}
@@ -73,12 +75,13 @@ const CVEnvironmentSelectionForm = () => {
       <TableComposable variant={TableVariant.compact}>
         <Thead>
           <Tr>
-            {!deleteFlow && <Th
+            <Td
               select={{
-                onSelect: onSelectAll,
-                isSelected: allRowsSelected || deleteFlow,
+              onSelect: onSelectAll,
+              isSelected: allRowsSelected || deleteFlow || removeDeletionFlow,
+              disable: deleteFlow || removeDeletionFlow,
               }}
-            />}
+            />
             {columnHeaders.map(col =>
               <Th key={col}>{col}</Th>)}
           </Tr>
@@ -90,14 +93,15 @@ const CVEnvironmentSelectionForm = () => {
             } = env;
             return (
               <Tr key={`${name}_${id}`}>
-                {!deleteFlow && <Td
-                  key={`${name}__${id}`}
+                <Td
+                  key={`${name}__${id}_select`}
                   select={{
                     rowIndex,
                     onSelect,
-                    isSelected: selected[rowIndex] || deleteFlow,
+                    isSelected: selected[rowIndex] || deleteFlow || removeDeletionFlow,
+                    disable: deleteFlow || removeDeletionFlow,
                   }}
-                />}
+                />
                 <Td>
                   {name}
                 </Td>
