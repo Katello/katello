@@ -135,13 +135,13 @@ export const ErrataTab = () => {
         >
           <Thead>
             <Tr>
-              <Th key="expand-thingy" />
+              <Th key="expand-carat" />
               {columnHeaders.map(col =>
                 <Th key={col}>{col}</Th>)}
               <Th />
             </Tr>
           </Thead>
-          <React.Fragment>
+          <>
             {results?.map((erratum, rowIndex) => {
                 const {
                   id,
@@ -197,7 +197,7 @@ export const ErrataTab = () => {
                 );
               })
               }
-          </React.Fragment>
+          </>
         </TableWrapper>
       </div>
     </div>
