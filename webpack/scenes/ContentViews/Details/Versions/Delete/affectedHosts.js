@@ -10,11 +10,11 @@ import { getHosts } from '../../ContentViewDetailActions';
 import DeleteContext from './DeleteContext';
 
 const AffectedHosts = () => {
-  const { versionEnvironments, selected, cvId } = useContext(DeleteContext);
+  const { versionEnvironments, selectedEnvSet, cvId } = useContext(DeleteContext);
   const [searchQuery, updateSearchQuery] = useState('');
   const response = useSelector(state => selectCVHosts(state), shallowEqual);
   const status = useSelector(state => selectCVHostsStatus(state), shallowEqual);
-  const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
+  const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
 
 
   const fetchItems = useCallback(() => {
@@ -64,20 +64,18 @@ const AffectedHosts = () => {
         </Tr>
       </Thead>
       <Tbody>
-        {results?.map((result) => {
-        const {
-          name, id, content_facet_attributes: contentFacet,
-        } = result || {};
-        const { lifecycle_environment: environment } = contentFacet || {};
-        return (
+        {results?.map(({
+          name,
+          id,
+          content_facet_attributes: { lifecycle_environment: environment },
+        }) => (
           <Tr key={`${id}`}>
             <Td>
               <a rel="noreferrer" target="_blank" href={urlBuilder(`hosts/${id}`, '')}>{name}</a>
             </Td>
             <Td><EnvironmentLabels environments={environment} /></Td>
           </Tr>
-        );
-      })
+        ))
       }
       </Tbody>
     </TableWrapper>

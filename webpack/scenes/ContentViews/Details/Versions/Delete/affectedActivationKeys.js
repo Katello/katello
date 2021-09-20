@@ -12,11 +12,11 @@ import EnvironmentLabels from '../../../components/EnvironmentLabels';
 import DeleteContext from './DeleteContext';
 
 const AffectedActivationKeys = () => {
-  const { versionEnvironments, selected, cvId } = useContext(DeleteContext);
+  const { versionEnvironments, selectedEnvSet, cvId } = useContext(DeleteContext);
   const [searchQuery, updateSearchQuery] = useState('');
   const response = useSelector(state => selectCVActivationKeys(state), shallowEqual);
   const status = useSelector(state => selectCVActivationKeysStatus(state), shallowEqual);
-  const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
+  const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
 
   const fetchItems = useCallback(() => {
     const formSearch = () => {
@@ -67,20 +67,15 @@ const AffectedActivationKeys = () => {
         </Tr>
       </Thead>
       <Tbody>
-        {results?.map((result) => {
-        const {
-          name, id, environment,
-        } = result;
-        return (
+        {results?.map(({ name, id, environment }) => (
           <Tr key={`${id}`}>
             <Td>
               <a rel="noreferrer" target="_blank" href={urlBuilder(`activation_keys/${id}`, '')}>{name}</a>
             </Td>
             <Td><EnvironmentLabels environments={environment} /></Td>
           </Tr>
-        );
-      })
-      }
+            ))
+        }
       </Tbody>
     </TableWrapper>
   );

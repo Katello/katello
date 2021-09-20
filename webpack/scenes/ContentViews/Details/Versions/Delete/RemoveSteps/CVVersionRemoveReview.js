@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { Flex, FlexItem, Label } from '@patternfly/react-core';
+import { Alert, Flex, FlexItem, Label } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectCVActivationKeys, selectCVHosts } from '../../../ContentViewDetailSelectors';
@@ -9,15 +9,15 @@ import { pluralize } from '../../../../../../utils/helpers';
 
 const CVVersionRemoveReview = () => {
   const {
-    cvId, versionNameToRemove, versionEnvironments,
-    selected, selectedEnvForAK, selectedCVNameForAK, selectedCVNameForHosts,
+    cvId, versionNameToRemove, versionEnvironments, selectedEnvSet,
+    selectedEnvForAK, selectedCVNameForAK, selectedCVNameForHosts,
     selectedEnvForHost, affectedActivationKeys, affectedHosts, deleteFlow, removeDeletionFlow,
   } = useContext(DeleteContext);
   const activationKeysResponse = useSelector(state => selectCVActivationKeys(state, cvId));
   const hostsResponse = useSelector(state => selectCVHosts(state, cvId));
   const { results: hostResponse } = hostsResponse;
   const { results: akResponse } = activationKeysResponse;
-  const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
+  const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
   const versionDeleteInfo = __(`Version ${versionNameToRemove} will be deleted from all environments. It will no longer be available for promotion.`);
   const removalNotice = __(`Version ${versionNameToRemove} will be removed from the environments listed below, and will remain available for later promotion. ` +
       'Changes listed below will be effective after clicking Remove.');
@@ -25,7 +25,10 @@ const CVVersionRemoveReview = () => {
   return (
     <>
       <h2>{__('Review Details')}</h2>
-      {(deleteFlow || removeDeletionFlow) && versionDeleteInfo}
+      {(deleteFlow || removeDeletionFlow) &&
+      <Alert variant="warning" isInline title={__('Warning')}>
+        <p style={{ marginBottom: '0.5em' }}>{versionDeleteInfo}</p>
+      </Alert>}
       {!(deleteFlow || removeDeletionFlow) && removalNotice}
       {(selectedEnv.length !== 0) &&
         <>

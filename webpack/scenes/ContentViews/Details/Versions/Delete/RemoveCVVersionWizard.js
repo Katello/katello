@@ -12,6 +12,7 @@ import CVVersionDeleteFinish from './RemoveSteps/CVVersionDeleteFinish';
 import getContentViewDetails from '../../ContentViewDetailActions';
 import getContentViews from '../../../ContentViewsActions';
 import DeleteContext from './DeleteContext';
+import useSet from '../../../../../components/Table/TableHooks';
 
 const RemoveCVVersionWizard = ({
   cvId, versionIdToRemove, versionNameToRemove,
@@ -21,9 +22,7 @@ const RemoveCVVersionWizard = ({
   const [selectedEnvForAK, setSelectedEnvForAK] = useState([]);
   const [selectedEnvForHost, setSelectedEnvForHost] = useState([]);
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState(deleteWizard ?
-    versionEnvironments.map(_row => true) :
-    versionEnvironments.map(_row => false));
+  const selectedEnvSet = useSet([]);
   const [selectedCVForAK, setSelectedCVForAK] = useState(null);
   const [selectedCVNameForAK, setSelectedCVNameForAK] = useState(null);
   const [selectedCVForHosts, setSelectedCVForHosts] = useState(null);
@@ -32,21 +31,34 @@ const RemoveCVVersionWizard = ({
   const [affectedHosts, setAffectedHosts] = useState(false);
   const [deleteFlow, setDeleteFlow] = useState(deleteWizard || false);
   const [removeDeletionFlow, setRemoveDeletionFlow] = useState(false);
+  const [canReview, setCanReview] = useState(false);
 
-  const canReview = () => {
+  useEffect(
+    () => {
+      dispatch(getEnvironmentPaths());
+      if (deleteFlow) {
+        versionEnvironments.forEach(env => selectedEnvSet.add(env.id));
+      }
+    },
+    [dispatch, deleteFlow, versionEnvironments, selectedEnvSet],
+  );
+
+  useEffect(() => {
     const hostsStepComplete = affectedHosts ?
       selectedEnvForHost && selectedCVForHosts :
       true;
     const activationStepComplete = affectedActivationKeys ?
       selectedEnvForAK && selectedCVForAK :
       true;
-    return hostsStepComplete && activationStepComplete && selected.filter(val => val).length;
-  };
+    setCanReview(hostsStepComplete && activationStepComplete && selectedEnvSet.size);
+  }, [affectedHosts, selectedEnvForHost, selectedCVForHosts,
+    affectedActivationKeys, selectedEnvForAK, selectedCVForAK, selectedEnvSet]);
 
   const environmentSelectionStep = {
     id: 1,
     name: __('Remove from environments'),
     component: <CVEnvironmentSelectionForm />,
+    enableNext: selectedEnvSet.size,
   };
 
   const hostStep = {
@@ -61,7 +73,7 @@ const RemoveCVVersionWizard = ({
     id: 3,
     name: 'Reassign affected activation keys',
     component: <CVReassignActivationKeysForm />,
-    enableNext: canReview(),
+    enableNext: canReview,
     canJumpTo: affectedActivationKeys &&
     (affectedHosts ? selectedEnvForHost && selectedCVForHosts : true),
   };
@@ -70,7 +82,7 @@ const RemoveCVVersionWizard = ({
     id: 4,
     name: 'Review',
     component: <CVVersionRemoveReview />,
-    canJumpTo: canReview(),
+    canJumpTo: canReview,
     nextButtonText: deleteFlow ? __('Delete') : __('Remove'),
   };
 
@@ -89,13 +101,6 @@ const RemoveCVVersionWizard = ({
     finishStep,
   ];
 
-  useEffect(
-    () => {
-      dispatch(getEnvironmentPaths());
-    },
-    [dispatch],
-  );
-
   return (
     <DeleteContext.Provider value={{
       cvId,
@@ -103,8 +108,6 @@ const RemoveCVVersionWizard = ({
       versionNameToRemove,
       versionEnvironments,
       setIsOpen,
-      selected,
-      setSelected,
       affectedActivationKeys,
       affectedHosts,
       setAffectedActivationKeys,
@@ -126,6 +129,7 @@ const RemoveCVVersionWizard = ({
       setSelectedEnvForAK,
       selectedEnvForHost,
       setSelectedEnvForHost,
+      selectedEnvSet,
     }}
     >
       <Wizard
@@ -134,7 +138,7 @@ const RemoveCVVersionWizard = ({
         steps={steps}
         startAtStep={currentStep}
         onClose={() => {
-          setSelected([]);
+          selectedEnvSet.clear();
           if (currentStep === 3) {
             setCurrentStep(1);
             dispatch(getContentViewDetails(cvId));

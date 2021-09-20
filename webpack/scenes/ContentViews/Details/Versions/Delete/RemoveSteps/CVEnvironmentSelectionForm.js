@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Alert, Checkbox, EmptyState, EmptyStateVariant, Title, EmptyStateBody } from '@patternfly/react-core';
 import { TableVariant, TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -6,44 +7,36 @@ import DeleteContext from '../DeleteContext';
 
 const CVEnvironmentSelectionForm = () => {
   const {
-    versionNameToRemove, versionEnvironments, selected, setSelected,
+    versionNameToRemove, versionEnvironments, selectedEnvSet,
     setAffectedActivationKeys, setAffectedHosts, deleteFlow,
     removeDeletionFlow, setRemoveDeletionFlow,
   } = useContext(DeleteContext);
 
-  const [allRowsSelected, setAllRowsSelected] = useState(deleteFlow);
-  const onSelect = (event, isSelected, rowId) => {
-    const newSelected = selected.map((sel, index) => (index === rowId ? isSelected : sel));
-    setSelected(newSelected);
+  const areAllSelected = () => versionEnvironments.every(env => selectedEnvSet.has(env.id));
 
-    if (!isSelected && allRowsSelected) {
-      setAllRowsSelected(false);
-      setRemoveDeletionFlow(false);
-    } else if (isSelected && !allRowsSelected) {
-      let allSelected = true;
-      for (let i = 0; i < selected.length; i += 1) {
-        if (i !== rowId) {
-          if (!selected[i]) {
-            allSelected = false;
-          }
-        }
-      }
-      if (allSelected) {
-        setAllRowsSelected(true);
-      }
+  const onSelect = (_event, isSelected, rowId) => {
+    if (isSelected) {
+      selectedEnvSet.add(rowId);
+    } else {
+      selectedEnvSet.delete(rowId);
     }
   };
 
-  useEffect(() => {
-    const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
+  // Based on env selected for removal, decide if we need to reassign hosts and activation keys.
+  useDeepCompareEffect(() => {
+    const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
     setAffectedActivationKeys(!!(selectedEnv.filter(env => env.activation_key_count > 0).length));
     setAffectedHosts(!!(selectedEnv.filter(env => env.host_count > 0).length));
-  }, [setSelected, selected, setAffectedActivationKeys, setAffectedHosts, versionEnvironments]);
+  }, [setAffectedActivationKeys, setAffectedHosts,
+    versionEnvironments, selectedEnvSet, selectedEnvSet.size]);
 
   const onSelectAll = (event, isSelected) => {
-    setAllRowsSelected(isSelected);
-    if (!isSelected) setRemoveDeletionFlow(false);
-    setSelected(selected.map(_sel => isSelected));
+    if (!isSelected) {
+      setRemoveDeletionFlow(false);
+      selectedEnvSet.clear();
+    } else {
+      versionEnvironments.forEach(env => selectedEnvSet.add(env.id));
+    }
   };
 
   const columnHeaders = [
@@ -58,8 +51,13 @@ const CVEnvironmentSelectionForm = () => {
     'You can delete this version completely and it will no longer be available for promotion.');
   return (
     <>
+      {deleteFlow &&
+      <Alert variant="warning" isInline title={__('Warning')}>
+        <p style={{ marginBottom: '0.5em' }}>{versionDeleteInfo}</p>
+      </Alert>
+      }
       {(!deleteFlow &&
-        (removeDeletionFlow || allRowsSelected || versionEnvironments.length === 0))
+        (removeDeletionFlow || areAllSelected() || versionEnvironments.length === 0))
       && (
       <Alert variant="warning" isInline title={__('Warning')}>
         <p style={{ marginBottom: '0.5em' }}>{removeDeletionFlow ? versionDeleteInfo : versionRemovalInfo}</p>
@@ -77,8 +75,9 @@ const CVEnvironmentSelectionForm = () => {
           <Tr>
             <Td
               select={{
+              rowIndex: 0,
               onSelect: onSelectAll,
-              isSelected: allRowsSelected || deleteFlow || removeDeletionFlow,
+              isSelected: areAllSelected() || deleteFlow || removeDeletionFlow,
               disable: deleteFlow || removeDeletionFlow,
               }}
             />
@@ -87,20 +86,20 @@ const CVEnvironmentSelectionForm = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {versionEnvironments?.map((env, rowIndex) => {
-            const {
-              id, name, activation_key_count: akCount, host_count: hostCount,
-            } = env;
-            return (
+          {versionEnvironments?.map(({
+                                       id, name, activation_key_count: akCount,
+                                       host_count: hostCount,
+                                     }, rowIndex) =>
+            (
               <Tr key={`${name}_${id}`}>
                 <Td
                   key={`${name}__${id}_select`}
                   select={{
-                    rowIndex,
-                    onSelect,
-                    isSelected: selected[rowIndex] || deleteFlow || removeDeletionFlow,
-                    disable: deleteFlow || removeDeletionFlow,
-                  }}
+                          rowIndex,
+                          onSelect: (event, isSelected) => onSelect(event, isSelected, id),
+                          isSelected: selectedEnvSet.has(id) || deleteFlow || removeDeletionFlow,
+                          disable: deleteFlow || removeDeletionFlow,
+                        }}
                 />
                 <Td>
                   {name}
@@ -108,8 +107,7 @@ const CVEnvironmentSelectionForm = () => {
                 <Td>{hostCount}</Td>
                 <Td>{akCount}</Td>
               </Tr>
-            );
-          })
+            ))
           }
         </Tbody>
       </TableComposable>}

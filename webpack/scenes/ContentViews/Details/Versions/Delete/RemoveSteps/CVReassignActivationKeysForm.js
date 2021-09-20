@@ -20,10 +20,11 @@ const CVReassignActivationKeysForm = () => {
   const [cvSelectOptions, setCvSelectionOptions] = useState([]);
   const [showActivationKeys, setShowActivationKeys] = useState(false);
   const {
-    currentStep, selectedEnvForAK, versionEnvironments, cvId, selected,
+    currentStep, selectedEnvForAK, versionEnvironments, cvId, selectedEnvSet,
     setSelectedEnvForAK, selectedCVForAK, setSelectedCVNameForAK, setSelectedCVForAK,
   } = useContext(DeleteContext);
 
+  // Fetch content views for selected environment to reassign activation keys to.
   useDeepCompareEffect(
     () => {
       if (selectedEnvForAK.length) {
@@ -38,11 +39,13 @@ const CVReassignActivationKeysForm = () => {
     [selectedEnvForAK, dispatch, setCVSelectOpen],
   );
 
+  // Upon receiving CVs in selected env, form select options for the content view drop down
   useDeepCompareEffect(() => {
     const { results } = contentViewsInEnvResponse;
+    // Filter out the cv in the environments that are currently being removed
     const contentViewEligible = (cv) => {
       if (cv.id === cvId) {
-        const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
+        const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
         return (selectedEnv.filter(env => env.id === selectedEnvForAK[0]?.id).length === 0);
       }
       return true;
@@ -65,7 +68,7 @@ const CVReassignActivationKeysForm = () => {
     }
   }, [contentViewsInEnvResponse, contentViewsInEnvStatus, currentStep,
     contentViewsInEnvError, selectedEnvForAK, setSelectedCVForAK, setSelectedCVNameForAK,
-    cvInEnvLoading, selectedCVForAK, cvId, versionEnvironments, selected]);
+    cvInEnvLoading, selectedCVForAK, cvId, versionEnvironments, selectedEnvSet]);
 
   const fetchSelectedCVName = (id) => {
     const { results } = contentViewsInEnvResponse ?? { };

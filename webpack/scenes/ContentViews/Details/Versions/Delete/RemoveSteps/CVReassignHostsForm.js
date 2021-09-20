@@ -20,10 +20,11 @@ const CVReassignHostsForm = () => {
   const [cvSelectOptions, setCvSelectionOptions] = useState([]);
   const [showHosts, setShowHosts] = useState(false);
   const {
-    cvId, versionEnvironments, selected, selectedEnvForHost, setSelectedEnvForHost,
+    cvId, versionEnvironments, selectedEnvSet, selectedEnvForHost, setSelectedEnvForHost,
     currentStep, selectedCVForHosts, setSelectedCVNameForHosts, setSelectedCVForHosts,
   } = useContext(DeleteContext);
 
+  // Fetch content views for selected environment to reassign hosts to.
   useDeepCompareEffect(
     () => {
       if (selectedEnvForHost.length) {
@@ -38,11 +39,12 @@ const CVReassignHostsForm = () => {
     [selectedEnvForHost, dispatch, setCVSelectOpen],
   );
 
+  // Upon receiving CVs in selected env, form select options for the content view drop down
   useDeepCompareEffect(() => {
     const { results = {} } = contentViewsInEnvResponse;
     const contentViewEligible = (cv) => {
       if (cv.id === cvId) {
-        const selectedEnv = versionEnvironments.filter((_env, index) => selected[index]);
+        const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
         return (selectedEnv.filter(env => env.id === selectedEnvForHost[0]?.id).length === 0);
       }
       return true;
@@ -65,7 +67,7 @@ const CVReassignHostsForm = () => {
     }
   }, [contentViewsInEnvResponse, contentViewsInEnvStatus, currentStep,
     contentViewsInEnvError, selectedEnvForHost, setSelectedCVForHosts, setSelectedCVNameForHosts,
-    cvInEnvLoading, selectedCVForHosts, cvId, versionEnvironments, selected]);
+    cvInEnvLoading, selectedCVForHosts, cvId, versionEnvironments, selectedEnvSet]);
 
   const fetchSelectedCVName = (id) => {
     const { results } = contentViewsInEnvResponse ?? { };
