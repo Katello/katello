@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route } from 'react-router-dom';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
@@ -8,7 +9,15 @@ import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
 
 const cvDetailData = require('./contentViewDetails.fixtures.json');
 
-const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
+const withCVRoute = component => <Route path="/labs/content_views/:id([0-9]+)/details">{component}</Route>;
+
+const renderOptions = {
+  apiNamespace: `${CONTENT_VIEWS_KEY}_1`,
+  routerParams: {
+    initialEntries: [{ pathname: '/labs/content_views/1/details' }],
+    initialIndex: 1,
+  },
+};
 const cvDetailsPath = api.getApiUrl('/content_views/1');
 
 // The tabs will load in the background, prevent this by mocking
@@ -26,7 +35,7 @@ test('Can call API and show details on page load', async (done) => {
     .reply(200, cvDetailData);
 
   const { getByLabelText } = renderWithRedux(
-    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
@@ -57,7 +66,7 @@ test('Can edit text details such as name', async (done) => {
     .reply(200, updatedCVDetails);
 
   const { getByLabelText } = renderWithRedux(
-    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
@@ -94,7 +103,7 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
     .reply(200, updatedCVDetails);
 
   const { getByLabelText } = renderWithRedux(
-    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
@@ -120,7 +129,7 @@ test('Can link to view tasks', async () => {
     .reply(200, cvDetailData);
 
   const { getByText } = renderWithRedux(
-    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 

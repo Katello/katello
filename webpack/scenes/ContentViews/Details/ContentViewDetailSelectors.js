@@ -19,10 +19,17 @@ import {
   cvAddComponentKey,
   cvRemoveComponentKey,
   CREATE_CONTENT_VIEW_FILTER_KEY,
-  RPM_MATCHING_CONTENT,
   ADD_CONTENT_VIEW_FILTER_RULE,
   cvFilterRepoKey,
   cvVersionDetailsKey,
+  RPM_PACKAGES_CONTENT,
+  RPM_PACKAGE_GROUPS_CONTENT,
+  REPOSITORY_CONTENT,
+  ERRATA_CONTENT,
+  MODULE_STREAMS_CONTENT,
+  DEB_PACKAGES_CONTENT,
+  ANSIBLE_COLLECTIONS_CONTENT,
+  DOCKER_TAGS_CONTENT,
 } from '../ContentViewsConstants';
 import { pollTaskKey } from '../../Tasks/helpers';
 
@@ -110,11 +117,53 @@ export const selectCVFilterRules = (state, filterId) =>
 export const selectCVFilterRulesStatus = (state, filterId) =>
   selectAPIStatus(state, cvFilterRulesKey(filterId)) || STATUS.PENDING;
 
-export const selectRPMMatchContent = state =>
-  selectAPIResponse(state, RPM_MATCHING_CONTENT);
+export const selectAnsibleCollections = state =>
+  selectAPIResponse(state, ANSIBLE_COLLECTIONS_CONTENT);
 
-export const selectRPMMatchContentStatus = state =>
-  selectAPIStatus(state, RPM_MATCHING_CONTENT) || STATUS.PENDING;
+export const selectAnsibleCollectionsStatus = state =>
+  selectAPIStatus(state, ANSIBLE_COLLECTIONS_CONTENT) || STATUS.PENDING;
+
+export const selectDockerTags = state =>
+  selectAPIResponse(state, DOCKER_TAGS_CONTENT);
+
+export const selectDockerTagsStatus = state =>
+  selectAPIStatus(state, DOCKER_TAGS_CONTENT) || STATUS.PENDING;
+
+export const selectRepositories = state =>
+  selectAPIResponse(state, REPOSITORY_CONTENT);
+
+export const selectRepositoriesStatus = state =>
+  selectAPIStatus(state, REPOSITORY_CONTENT) || STATUS.PENDING;
+
+export const selectDebPackages = state =>
+  selectAPIResponse(state, DEB_PACKAGES_CONTENT);
+
+export const selectDebPackagesStatus = state =>
+  selectAPIStatus(state, DEB_PACKAGES_CONTENT) || STATUS.PENDING;
+
+export const selectModuleStreams = state =>
+  selectAPIResponse(state, MODULE_STREAMS_CONTENT);
+
+export const selectModuleStreamsStatus = state =>
+  selectAPIStatus(state, MODULE_STREAMS_CONTENT) || STATUS.PENDING;
+
+export const selectRPMPackageGroups = state =>
+  selectAPIResponse(state, RPM_PACKAGE_GROUPS_CONTENT);
+
+export const selectRPMPackageGroupsStatus = state =>
+  selectAPIStatus(state, RPM_PACKAGE_GROUPS_CONTENT) || STATUS.PENDING;
+
+export const selectRPMPackages = state =>
+  selectAPIResponse(state, RPM_PACKAGES_CONTENT);
+
+export const selectRPMPackagesStatus = state =>
+  selectAPIStatus(state, RPM_PACKAGES_CONTENT) || STATUS.PENDING;
+
+export const selectErrata = state =>
+  selectAPIResponse(state, ERRATA_CONTENT);
+
+export const selectErrataStatus = state =>
+  selectAPIStatus(state, ERRATA_CONTENT) || STATUS.PENDING;
 
 export const selectCVComponents = (state, cvId) =>
   selectAPIResponse(state, cvDetailsComponentKey(cvId)) || {};

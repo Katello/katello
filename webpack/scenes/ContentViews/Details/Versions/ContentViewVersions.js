@@ -5,8 +5,7 @@ import { TableVariant, TableText } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
-import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import InactiveText from '../../components/InactiveText';
@@ -25,7 +24,8 @@ import TaskPresenter from '../../components/TaskPresenter/TaskPresenter';
 import { startPollingTask } from '../../../Tasks/TaskActions';
 
 export default () => {
-  const { id: cvId } = useParams();
+  const { id } = useParams();
+  const cvId = Number(id);
   const response = useSelector(state => selectCVVersions(state, cvId));
   const status = useSelector(state => selectCVVersionsStatus(state, cvId));
   const error = useSelector(state => selectCVVersionsError(state, cvId));
@@ -66,7 +66,7 @@ export default () => {
       errata_counts: errataCounts,
     } = cvVersion;
     return [
-      { title: <a href={urlBuilder(`labs/content_views/${cvId}/versions/${versionId}`, '')}>{__('Version ')}{version}</a> },
+      { title: <Link to={`/labs/content_views/${cvId}/versions/${versionId}/`}>{__('Version ')}{version}</Link> },
       { title: <ContentViewVersionEnvironments {...{ environments }} /> },
       { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/packages`, '')}>{`${packageCount}`}</a> },
       { title: <ContentViewVersionErrata {...{ cvId, versionId, errataCounts }} /> },

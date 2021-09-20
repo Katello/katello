@@ -6,8 +6,7 @@ import { TableVariant } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, useParams } from 'react-router-dom';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import onSelect from '../../../../components/Table/helpers';
@@ -21,9 +20,10 @@ import { truncate } from '../../../../utils/helpers';
 import ContentType from './ContentType';
 import CVFilterAddModal from './Add/CVFilterAddModal';
 
-const cvFilterUrl = (cvId, filterId) => `/labs/content_views/${cvId}#filters?subContentId=${filterId}`;
+const cvFilterUrl = (cvId, filterId) => `/labs/content_views/${cvId}/filters/${filterId}`;
 
-const ContentViewFilters = ({ cvId }) => {
+export default () => {
+  const { id: cvId } = useParams();
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilters(state, cvId), shallowEqual);
   const status = useSelector(state => selectCVFiltersStatus(state, cvId), shallowEqual);
@@ -150,25 +150,18 @@ const ContentViewFilters = ({ cvId }) => {
                   <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={bulkRemove}>
                     {__('Remove')}
                   </DropdownItem>]
-            }
+                }
               />
             </SplitItem>
           </Split>
           {addModalOpen &&
-          <CVFilterAddModal
-            cvId={cvId}
-            show={addModalOpen}
-            setIsOpen={setAddModalOpen}
-            aria-label="add_filter_modal"
-          />}
+            <CVFilterAddModal
+              cvId={cvId}
+              show={addModalOpen}
+              setIsOpen={setAddModalOpen}
+              aria-label="add_filter_modal"
+            />}
         </>
       }
     />);
 };
-
-
-ContentViewFilters.propTypes = {
-  cvId: PropTypes.number.isRequired,
-};
-
-export default ContentViewFilters;

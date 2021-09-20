@@ -8,8 +8,8 @@ import {
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
-import { getRPMMatchingContent } from '../../ContentViewDetailActions';
-import { selectRPMMatchContent, selectRPMMatchContentStatus } from '../../ContentViewDetailSelectors';
+import { getRPMPackages } from '../../ContentViewDetailActions';
+import { selectRPMPackages, selectRPMPackagesStatus } from '../../ContentViewDetailSelectors';
 
 
 const columnHeaders = [
@@ -24,10 +24,10 @@ const emptySearchBody = __('Try changing your search criteria.');
 
 const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
   const [searchQuery, updateSearchQuery] = useState('');
-  const response = useSelector(state => selectRPMMatchContent(state), shallowEqual);
-  const status = useSelector(state => selectRPMMatchContentStatus(state), shallowEqual);
+  const response = useSelector(state => selectRPMPackages(state), shallowEqual);
+  const status = useSelector(state => selectRPMPackagesStatus(state), shallowEqual);
 
-  const fetchItems = useCallback(params => getRPMMatchingContent({
+  const fetchItems = useCallback(params => getRPMPackages({
     content_view_filter_rule_id: filterRuleId, filterId, ...params,
   }), [filterRuleId, filterId]);
 
@@ -56,7 +56,6 @@ const CVRpmMatchContentModal = ({ filterId, onClose, filterRuleId }) => {
         autocompleteEndpoint="/packages/auto_complete_search"
         variant={TableVariant.compact}
       >
-
         <Thead>
           <Tr>
             {columnHeaders.map(col =>

@@ -28,7 +28,7 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
       {(dockerManifestCount > 0 && dockerTagCount > 0 &&
       <>
         <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/docker`, '')}>{`${dockerTagCount} Docker tags`}</a><br />
-        <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/docker`, '')}>{`${dockerManifestCount} Docker manifests`}</a><br />
+        <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/docker`, '')}>{`${dockerManifestCount} Container manifests`}</a><br />
       </>)
       }
       {(fileCount > 0 &&
