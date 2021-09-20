@@ -39,10 +39,6 @@
         </li>
 
         <li role="menuitem" ng-hide="syncInProgress(repository.last_sync) || denied('edit_products', product)">
-          <a ng-click="republishRepository(repository)" translate>
-            Republish Repository Metadata
-          </a>
-
           <span class="disabled" ng-show="syncInProgress(repository.last_sync)" translate>
             Cannot republish Repository, a sync is already in progress.
           </span>

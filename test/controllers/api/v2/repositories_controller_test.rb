@@ -698,12 +698,18 @@ module Katello
       end
     end
 
+    def test_republish_without_force
+      put :republish, params: { :id => @repository.id }
+      assert_response 400
+      assert_match "Metadata republishing must be forced because it is a dangerous operation.", @response.body
+    end
+
     def test_republish
-      assert_async_task ::Actions::Katello::Repository::MetadataGenerate do |repo, options|
-        repo.id == @repository.id && options == {:force => true}
+      assert_async_task ::Actions::Katello::Repository::MetadataGenerate do |repo|
+        repo.id == @repository.id
       end
 
-      put :republish, params: { :id => @repository.id }
+      put :republish, params: { :id => @repository.id, :force => true}
       assert_response :success
     end
 

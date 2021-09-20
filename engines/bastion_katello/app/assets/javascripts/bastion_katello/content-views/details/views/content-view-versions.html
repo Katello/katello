@@ -110,15 +110,6 @@
                 </li>
                 <li>
                   <a href="#"
-                     ng-click="regenerateRepositories(version)"
-                     ng-hide="denied('promote_or_remove_content_views', contentView)"
-                     ng-disabled="taskInProgress(version) || taskFailed(version) || pendingVersionTask"
-                     translate>
-                     Regenerate Repository Metadata
-                  </a>
-                </li>
-                <li>
-                  <a href="#"
                      ng-click="$state.go('content-view.version-deletion.environments', {contentViewId: contentView.id, versionId: version.id})"
                      ng-hide="denied('promote_or_remove_content_views', contentView)"
                      ng-disabled="taskInProgress(version) || taskFailed(version) || pendingVersionTask"

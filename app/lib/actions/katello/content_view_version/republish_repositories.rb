@@ -5,7 +5,7 @@ module Actions
         def plan(content_view_version)
           action_subject(content_view_version.content_view)
           plan_self(:version_id => content_view_version.id)
-          plan_action(::Actions::Katello::Repository::BulkMetadataGenerate, content_view_version.repositories, :force => true)
+          plan_action(::Actions::Katello::Repository::BulkMetadataGenerate, content_view_version.repositories)
         end
 
         def run

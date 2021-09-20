@@ -131,10 +131,18 @@ module Katello
       end
     end
 
+    def test_republish_repositories_without_force
+      version = @library_dev_staging_view.versions.first
+      put :republish_repositories, params: { :id => version.id }
+
+      assert_response 400
+      assert_match "Metadata republishing must be forced because it is a dangerous operation.", @response.body
+    end
+
     def test_republish_repositories
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::RepublishRepositories, version).returns({})
-      put :republish_repositories, params: { :id => version.id }
+      put :republish_repositories, params: { :id => version.id, :force => true }
 
       assert_response :success
       assert_template 'katello/api/v2/common/async'
