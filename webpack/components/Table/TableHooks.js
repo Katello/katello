@@ -33,6 +33,14 @@ class ReactConnectedSet extends Set {
     this.forceRender();
     return result;
   }
+
+  onToggle(isOpen, id) {
+    if (isOpen) {
+      this.add(id);
+    } else {
+      this.delete(id);
+    }
+  }
 }
 
 const useSet = (initialArry) => {

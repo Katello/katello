@@ -158,13 +158,7 @@ export const ErrataTab = () => {
                         expand={{
                           rowIndex,
                           isExpanded,
-                          onToggle: (_event, rInx, isOpen) => {
-                            if (isOpen) {
-                              expandedErrata.add(id);
-                            } else {
-                              expandedErrata.delete(id);
-                            }
-                          },
+                          onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
                       }}
                       />
                       <Td>
