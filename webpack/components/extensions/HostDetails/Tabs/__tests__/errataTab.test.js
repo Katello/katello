@@ -7,7 +7,7 @@ import { foremanApi } from '../../../../../services/api';
 import { HOST_ERRATA_KEY } from '../../HostErrata/HostErrataConstants';
 import { ErrataTab } from '../ErrataTab';
 
-const mockTraceData = require('./errata.fixtures.json');
+const mockErrataData = require('./errata.fixtures.json');
 
 const mockHostDetails = { id: 1 };
 const renderOptions = {
@@ -32,7 +32,7 @@ let searchDelayScope;
 let autoSearchScope;
 
 beforeEach(() => {
-  const { results } = mockTraceData;
+  const { results } = mockErrataData;
   [firstErrata] = results;
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
@@ -51,7 +51,7 @@ test('Can call API for errata and show on screen on page load', async (done) => 
   // return tracedata results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
-    .reply(200, mockTraceData);
+    .reply(200, mockErrataData);
 
   const { getAllByText } = renderWithRedux(<ErrataTab />, renderOptions);
 
