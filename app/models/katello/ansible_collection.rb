@@ -3,7 +3,7 @@ module Katello
     include Concerns::PulpDatabaseUnit
 
     self.table_name = 'katello_ansible_collections'
-    CONTENT_TYPE = 'ansible collection'.freeze
+    CONTENT_TYPE = 'ansible_collection'.freeze
 
     has_many :ansible_collection_tags, :class_name => "Katello::AnsibleCollectionTag", :dependent => :delete_all
     has_many :tags, :through => :ansible_collection_tags

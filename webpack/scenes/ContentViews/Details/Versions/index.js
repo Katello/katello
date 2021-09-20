@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import ContentViewVersions from './ContentViewVersions';
-import ContentViewVersionDetails from './ContentViewVersionDetails';
+import ContentViewVersionDetails from './VersionDetails/ContentViewVersionDetails';
 
 export default () => (
   <>

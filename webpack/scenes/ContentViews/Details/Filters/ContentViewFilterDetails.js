@@ -10,14 +10,12 @@ import {
   selectCVFilterDetailStatus,
 } from '../ContentViewDetailSelectors';
 import { getCVFilterDetails, getContentViewFilters } from '../ContentViewDetailActions';
-import useUrlParamsWithHash from '../../../../utils/useUrlParams';
 import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
 import CVFilterDetailType from './CVFilterDetailType';
 import Loading from '../../../../components/Loading';
 
 const ContentViewFilterDetails = () => {
-  const { id: cvId } = useParams();
-  const { params: { subContentId: filterId } } = useUrlParamsWithHash();
+  const { id: cvId, filterId } = useParams();
   const dispatch = useDispatch();
   const [details, setDetails] = useState({});
   const [showAffectedRepos, setShowAffectedRepos] = useState(false);
