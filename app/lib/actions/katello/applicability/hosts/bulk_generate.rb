@@ -26,8 +26,17 @@ module Actions
             :link
           end
 
+          def hostname(host_id)
+            content_facet = ::Katello::Host::ContentFacet.find_by_host_id(host_id)
+            content_facet&.host&.name
+          end
+
           def humanized_name
-            _("Bulk generate applicability for hosts")
+            if input[:host_ids]&.length == 1
+              _("Bulk generate applicability for host %s" % hostname(input[:host_ids].first))
+            else
+              _("Bulk generate applicability for hosts")
+            end
           end
         end
       end
