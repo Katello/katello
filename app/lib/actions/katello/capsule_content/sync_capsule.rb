@@ -4,7 +4,7 @@ module Actions
       class SyncCapsule < ::Actions::EntryAction
         include Actions::Katello::PulpSelector
         def plan(smart_proxy, options = {})
-          plan_self(:smart_proxy_id => smart_proxy.id, :options => options)
+          plan_self(:smart_proxy_id => smart_proxy.id)
           action_subject(smart_proxy)
           environment = options[:environment]
           content_view = options[:content_view]
@@ -12,6 +12,7 @@ module Actions
           skip_metadata_check = options.fetch(:skip_metadata_check, false)
           sequence do
             repos = repos_to_sync(smart_proxy, environment, content_view, repository, skip_metadata_check)
+            return nil if repos.empty?
 
             repos.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|
               concurrence do

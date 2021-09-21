@@ -205,7 +205,7 @@ module Katello
       def distribution_needs_update?
         if distribution_reference
           expected = secure_distribution_options(relative_path).except(:name).compact
-          actual = get_distribution.to_hash
+          actual = get_distribution&.to_hash || {}
           expected != actual.slice(*expected.keys)
         elsif repo.environment
           true
@@ -282,21 +282,18 @@ module Katello
         else
           dist = lookup_distributions(base_path: repo.relative_path).first
         end
+        dist_ref = distribution_reference
 
-        # First check if the distribution exists
-        if dist
-          dist_ref = distribution_reference
-          # If we have a DistributionReference, update the distribution
-          if dist_ref
-            return update_distribution
-          # If no DistributionReference, create a DistributionReference and return
-          else
-            save_distribution_references([dist.pulp_href])
-            return []
-          end
+        if dist && !dist_ref
+          save_distribution_references([dist.pulp_href])
+          return update_distribution
         end
 
-        # So far, it looks like there is no distribution. Try to create one.
+        if dist_ref
+          return update_distribution
+        end
+
+        # Since we got this far, we need to create a new distribution
         begin
           create_distribution(relative_path)
         rescue api.client_module::ApiError => e
@@ -305,7 +302,7 @@ module Katello
               e.message.include?("\"base_path\":[\"Overlaps with existing distribution\"")
             dist = lookup_distributions(base_path: repo.relative_path).first
             save_distribution_references([dist.pulp_href])
-            return []
+            return update_distribution
           else
             raise e
           end

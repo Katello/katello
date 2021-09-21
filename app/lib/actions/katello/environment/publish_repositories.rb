@@ -16,6 +16,7 @@ module Actions
             repositories.each do |repository|
               sequence do
                 repository.set_container_repository_name
+                repository.clear_smart_proxy_sync_histories
                 plan_action(::Actions::Katello::Repository::InstanceUpdate, repository)
                 plan_action(::Actions::Katello::Repository::CapsuleSync, repository)
               end

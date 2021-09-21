@@ -50,5 +50,15 @@ module Katello
       smart_proxy_helper.clear_smart_proxy_sync_histories
       assert_equal @repo.smart_proxy_sync_histories.count, 0
     end
+
+    def test_clear_history_on_publish_repositories
+      User.current = users(:admin)
+      @repo.create_smart_proxy_sync_history(proxy_with_pulp)
+      library = katello_environments(:library)
+      library.expects(:repositories).returns([@repo])
+      ::Actions::Katello::Environment::PublishRepositories.any_instance.expects(:plan_action).twice
+      ::ForemanTasks.sync_task(::Actions::Katello::Environment::PublishRepositories, library)
+      assert_equal @repo.smart_proxy_sync_histories.count, 0
+    end
   end
 end
