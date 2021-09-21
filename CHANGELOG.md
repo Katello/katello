@@ -1,3 +1,19 @@
+# 4.0.3 (2021-09-21)
+
+## Bug Fixes
+
+### Client/Agent
+ * Update to support qpid_proton 0.35 ([#33496](https://projects.theforeman.org/issues/33496), [4e80f885](https://github.com/Katello/katello.git/commit/4e80f885481415961494563cf2b097855817f617), [28a8287b](https://github.com/Katello/katello.git/commit/28a8287b0659f0117b53f1fb611ea950c2b1d644))
+
+### Tests
+ * mailer test failures ([#33412](https://projects.theforeman.org/issues/33412), [7b79026c](https://github.com/Katello/katello.git/commit/7b79026cd1613ff51b4f0b90a5263e25682639c7))
+
+### Repositories
+ * Capsule sync failed after upgrade with missing repository type error. ([#33058](https://projects.theforeman.org/issues/33058), [7c83eca0](https://github.com/Katello/katello.git/commit/7c83eca021005a78136599712133d1d12c80466d))
+
+### Errata Management
+ * Incorrect applicablity in katello 4 ([#32739](https://projects.theforeman.org/issues/32739), [fef8bcf7](https://github.com/Katello/katello.git/commit/fef8bcf72b9d3da89390a39d50db6b5f016e0db1))
+
 # 4.0.2 (2021-07-26)
 
 ## Bug Fixes
