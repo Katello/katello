@@ -31,8 +31,7 @@ const ErratumExpansionContents = ({ erratum }) => {
     {
       name: __('Module streams'),
       id: 'module_streams',
-      // module streams should already have name and id fields, so no need to map
-      children: moduleStreams,
+      children: moduleStreams.map(({ name, stream, id }) => ({ name: `${name}:${stream}`, id })),
     },
   ];
   return (
