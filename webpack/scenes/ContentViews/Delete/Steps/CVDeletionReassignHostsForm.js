@@ -2,15 +2,16 @@ import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { ExpandableSection, Select, SelectOption } from '@patternfly/react-core';
-import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
-import EnvironmentPaths from '../../../../components/EnvironmentPaths/EnvironmentPaths';
-import getContentViews from '../../../../ContentViewsActions';
-import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../ContentViewSelectors';
-import AffectedHosts from '../affectedHosts';
-import DeleteContext from '../DeleteContext';
+import { STATUS } from 'foremanReact/constants';
+import getContentViews from '../../ContentViewsActions';
+import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../ContentViewSelectors';
+import CVDeleteContext from '../CVDeleteContext';
+import EnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPaths';
+import AffectedHosts from '../../Details/Versions/Delete/affectedHosts';
 
-const CVReassignHostsForm = () => {
+
+const CVDeletionReassignHostsForm = () => {
   const dispatch = useDispatch();
   const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, 'host'));
   const contentViewsInEnvStatus = useSelector(state => selectContentViewStatus(state, 'host'));
@@ -20,11 +21,10 @@ const CVReassignHostsForm = () => {
   const [cvSelectOptions, setCvSelectionOptions] = useState([]);
   const [showHosts, setShowHosts] = useState(false);
   const {
-    cvId, versionEnvironments, selectedEnvSet, selectedEnvForHost, setSelectedEnvForHost,
+    cvId, cvEnvironments, selectedEnvSet, selectedEnvForHost, setSelectedEnvForHost,
     currentStep, selectedCVForHosts, setSelectedCVNameForHosts, setSelectedCVForHosts,
-  } = useContext(DeleteContext);
+  } = useContext(CVDeleteContext);
 
-  // Fetch content views for selected environment to reassign hosts to.
   useDeepCompareEffect(
     () => {
       if (selectedEnvForHost.length) {
@@ -39,16 +39,9 @@ const CVReassignHostsForm = () => {
     [selectedEnvForHost, dispatch, setCVSelectOpen],
   );
 
-  // Upon receiving CVs in selected env, form select options for the content view drop down
   useDeepCompareEffect(() => {
-    const { results = {} } = contentViewsInEnvResponse;
-    const contentViewEligible = (cv) => {
-      if (cv.id === cvId) {
-        const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
-        return (selectedEnv.filter(env => env.id === selectedEnvForHost[0]?.id).length === 0);
-      }
-      return true;
-    };
+    const { results = [] } = contentViewsInEnvResponse;
+    const contentViewEligible = cv => Number(cv.id) !== Number(cvId);
     if (!cvInEnvLoading && results && selectedCVForHosts &&
       results.filter(cv => cv.id === selectedCVForHosts && contentViewEligible(cv)).length === 0) {
       setSelectedCVForHosts(null);
@@ -67,14 +60,14 @@ const CVReassignHostsForm = () => {
     }
   }, [contentViewsInEnvResponse, contentViewsInEnvStatus, currentStep,
     contentViewsInEnvError, selectedEnvForHost, setSelectedCVForHosts, setSelectedCVNameForHosts,
-    cvInEnvLoading, selectedCVForHosts, cvId, versionEnvironments, selectedEnvSet]);
+    cvInEnvLoading, selectedCVForHosts, cvId, cvEnvironments, selectedEnvSet]);
 
   const fetchSelectedCVName = (id) => {
     const { results } = contentViewsInEnvResponse ?? { };
-    return results.filter(cv => cv.id === id)[0]?.name;
+    return results?.filter(cv => cv.id === id)[0]?.name;
   };
 
-  const onSelect = (event, selection) => {
+  const onSelect = (_event, selection) => {
     setSelectedCVForHosts(selection);
     setSelectedCVNameForHosts(fetchSelectedCVName(selection));
     setCVSelectOpen(false);
@@ -115,14 +108,13 @@ const CVReassignHostsForm = () => {
         <AffectedHosts
           {...{
           cvId,
-          versionEnvironments,
-          selectedEnvSet,
-          }}
-          deleteCV={false}
+        }}
+          versionEnvironments={cvEnvironments}
+          deleteCV
         />
       </ExpandableSection>
     </>
   );
 };
 
-export default CVReassignHostsForm;
+export default CVDeletionReassignHostsForm;

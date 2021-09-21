@@ -304,7 +304,7 @@ export const getContentViewComponents = (cvId, params, statusSelected) => {
 
 export const getContentViewVersions = (cvId, params) => {
   const apiParams = { content_view_id: cvId, ...params };
-  const apiUrl = '/content_view_versions/';
+  const apiUrl = '/content_view_versions';
   return get({
     key: cvDetailsVersionKey(cvId),
     params: apiParams,

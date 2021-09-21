@@ -21,8 +21,8 @@ module Actions
         end
 
         def finalize
-          version = ::Katello::ContentViewVersion.find(input[:id])
-          version.destroy!
+          version = ::Katello::ContentViewVersion.find_by(id: input[:id])
+          version&.destroy!
         end
       end
     end

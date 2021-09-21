@@ -224,6 +224,7 @@ module ::Actions::Katello::ContentView
   end
 
   class RemoveTest < TestBase
+    include Support::CapsuleSupport
     before(:all) do
       action.stubs(:task).returns(success_task)
       User.current = User.first
@@ -290,6 +291,28 @@ module ::Actions::Katello::ContentView
       plan_action(action, content_view, options)
       assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true, :skip_destroy_env_content => true)
+    end
+
+    it 'plans deleting all CV env and versions and removing repository references with destroy_content_view param' do
+      smart_proxy_service_1 = new_capsule_content(:three)
+      ::SmartProxy.stubs(:pulp_primary).returns(smart_proxy_service_1.smart_proxy)
+      cve = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
+                                                  environment_id: environment.id).first
+      cve.hosts.each { |h| h.content_facet.destroy }
+      options = {content_view_environments: content_view.content_view_environments,
+                 content_view_versions: content_view.versions,
+                 destroy_content_view: true
+      }
+      action.expects(:action_subject).with(content_view)
+
+      plan_action(action, content_view, options)
+      content_view.content_view_environments.each do |cvenv|
+        assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cvenv, :skip_repo_destroy => false, :organization_destroy => false)
+      end
+      content_view.versions.each do |cv_version|
+        assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, cv_version, :skip_environment_check => true, :skip_destroy_env_content => true)
+      end
+      assert_action_planed_with(action, ::Actions::Pulp3::ContentView::DeleteRepositoryReferences, content_view, smart_proxy_service_1.smart_proxy)
     end
 
     context 'organization destroy' do

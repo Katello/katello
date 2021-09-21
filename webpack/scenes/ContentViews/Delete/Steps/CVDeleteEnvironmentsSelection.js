@@ -1,0 +1,108 @@
+import React, { useContext, useState, useEffect } from 'react';
+import { ExpandableSection, Flex, FlexItem } from '@patternfly/react-core';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { TableVariant, TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import { translate as __ } from 'foremanReact/common/I18n';
+import { STATUS } from 'foremanReact/constants';
+import CVDeleteContext from '../CVDeleteContext';
+import { pluralize } from '../../../../utils/helpers';
+import Loading from '../../../../components/Loading';
+import './CVEnvironmentSelectionForm.scss';
+import InactiveText from '../../components/InactiveText';
+
+const CVDeleteEnvironmentSelection = () => {
+  const {
+    cvVersionResponse, cvDetailsResponse, cvVersionStatus, cvDetailsStatus,
+  } = useContext(CVDeleteContext);
+  const [versionExpanded, setVersionExpanded] = useState([]);
+  const { results } = cvVersionResponse ?? {};
+  const { version_count: versionCount } = cvDetailsResponse ?? {};
+  const resolved = (cvVersionStatus === STATUS.RESOLVED && cvDetailsStatus === STATUS.RESOLVED);
+  useEffect(() => {
+    if (cvVersionResponse && results) {
+      setVersionExpanded(new Array(results?.length).fill(false));
+    }
+  }, [cvVersionResponse, results]);
+  const columnHeaders = [
+    __('Environment'),
+    __('Hosts'),
+    __('Activation keys'),
+  ];
+
+  const setExpanded = (index, expanded) => {
+    setVersionExpanded(versionExpanded.map((val, i) => (i === index ? expanded : val)));
+  };
+
+  return (
+    <>
+      <h2>{__('Remove versions from environments')}</h2>
+      {!resolved && <Loading loadingText={__('Loading versions')} />}
+      {resolved &&
+        <>
+          <Flex>
+            <FlexItem><ExclamationTriangleIcon /></FlexItem>
+            {versionCount ?
+              (
+                <FlexItem style={{ marginBottom: '0.5em' }}>
+                  {__(`${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted`)}
+                </FlexItem>
+              ) :
+              (
+                <FlexItem style={{ marginBottom: '0.5em' }}>
+                  {__('This content view does not have any versions associated.')}
+                </FlexItem>
+              )
+            }
+          </Flex>
+          {results?.map((version, index) => (
+            <ExpandableSection
+              key={version.id}
+              toggleText={__(`Version ${version.version}`)}
+              onToggle={expanded => setExpanded(index, expanded)}
+              isExpanded={versionExpanded[index]}
+            >
+              {(version?.environments.length !== 0) ?
+                <TableComposable variant={TableVariant.compact}>
+                  <Thead>
+                    <Tr>
+                      <Th />
+                      {columnHeaders.map(col =>
+                        <Th key={col}>{col}</Th>)}
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {version?.environments?.map((env, rowIndex) => {
+                  const {
+                    id, name, activation_key_count: akCount, host_count: hostCount,
+                  } = env;
+                  return (
+                    <Tr key={`${name}_${id}`}>
+                      <Td
+                        key={`${name}__${id}_select`}
+                        select={{
+                          rowIndex,
+                          isSelected: true,
+                          disable: true,
+                        }}
+                      />
+                      <Td>
+                        {name}
+                      </Td>
+                      <Td>{hostCount}</Td>
+                      <Td>{akCount}</Td>
+                    </Tr>
+                  );
+                })}
+                  </Tbody>
+                </TableComposable> :
+                <InactiveText text={__('This version is not promoted to any environments.')} />
+              }
+            </ExpandableSection>
+          ))}
+        </>
+      }
+    </>
+  );
+};
+
+export default CVDeleteEnvironmentSelection;

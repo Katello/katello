@@ -18,9 +18,9 @@ export const createContentViewsParams = (extraParams) => {
   return getParams;
 };
 
-const getContentViews = extraParams => get({
+const getContentViews = (extraParams, id = '') => get({
   type: API_OPERATIONS.GET,
-  key: CONTENT_VIEWS_KEY,
+  key: CONTENT_VIEWS_KEY + id,
   url: api.getApiUrl('/content_views'),
   params: createContentViewsParams(extraParams),
 });

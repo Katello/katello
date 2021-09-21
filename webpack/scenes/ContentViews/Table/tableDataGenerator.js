@@ -52,6 +52,11 @@ const buildExpandableRows = (contentViews) => {
       description,
       activation_keys: activationKeys,
       hosts,
+      latest_version_environments: latestVersionEnvironments,
+      latest_version_id: latestVersionId,
+      latest_version: latestVersionName,
+      environments,
+      versions,
     } = contentView;
     const cells = buildRow(contentView);
     const cellParent = {
@@ -60,6 +65,11 @@ const buildExpandableRows = (contentViews) => {
       cvVersionCount: versionCount,
       cvComposite: composite,
       cvNextVersion: nextVersion,
+      latestVersionEnvironments,
+      latestVersionId,
+      latestVersionName,
+      environments,
+      versions,
       isOpen: false,
       cells,
     };

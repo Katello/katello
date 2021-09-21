@@ -11,8 +11,10 @@ module Actions
         # system_environment_id - environment to reassociate systems with
         # key_content_view_id - content view to reassociate actvation keys with
         # key_environment_id - environment to reassociate activation keys with'
+        # destroy_content_view - delete the CV completely along with all cv versions and environments
         # organization_destroy
         # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/CyclomaticComplexity
         def plan(content_view, options)
           cv_envs = options.fetch(:content_view_environments, [])
           versions = options.fetch(:content_view_versions, [])
@@ -58,8 +60,11 @@ module Actions
                           :skip_environment_check => true,
                           :skip_destroy_env_content => true)
             end
-
+            if options[:destroy_content_view] && SmartProxy.pulp_primary&.pulp3_enabled?
+              plan_action(Actions::Pulp3::ContentView::DeleteRepositoryReferences, content_view, SmartProxy.pulp_primary)
+            end
             plan_self(content_view_id: content_view.id,
+                      destroy_content_view: options[:destroy_content_view],
                       environment_ids: cv_envs.map(&:environment_id),
                       environment_names: cv_envs.map { |cve| cve.environment.name },
                       version_ids: versions.map(&:id),
@@ -87,17 +92,23 @@ module Actions
         end
 
         def finalize
-          input[:content_view_history_ids].each do |history_id|
-            history = ::Katello::ContentViewHistory.find_by(:id => history_id)
-            if history
-              history.status = ::Katello::ContentViewHistory::SUCCESSFUL
-              history.save!
+          if input[:destroy_content_view]
+            content_view = ::Katello::ContentView.find(input[:content_view_id])
+            content_view.content_view_repositories.each(&:destroy)
+            content_view.destroy!
+          else
+            input[:content_view_history_ids].each do |history_id|
+              history = ::Katello::ContentViewHistory.find_by(:id => history_id)
+              if history
+                history.status = ::Katello::ContentViewHistory::SUCCESSFUL
+                history.save!
+              end
             end
           end
         end
 
         def validate_options(_content_view, cv_envs, versions, options)
-          if cv_envs.empty? && versions.empty?
+          if !options[:destroy_content_view] && cv_envs.empty? && versions.empty?
             fail _("Either environments or versions must be specified.")
           end
           all_cv_envs = combined_cv_envs(cv_envs, versions)
