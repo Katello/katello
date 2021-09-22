@@ -8,17 +8,19 @@ module ::Actions::Pulp3
       @primary = SmartProxy.pulp_primary
       @repo = katello_repositories(:fedora_17_x86_64_duplicate)
       create_repo(@repo, @primary)
-      ForemanTasks.sync_task(
-        ::Actions::Katello::Repository::MetadataGenerate, @repo)
 
-      assert_equal 1,
-        Katello::Pulp3::DistributionReference.where(repository_id: @repo.id).count,
-        "Expected a distribution reference."
       @repo.root.update(
         verify_ssl_on_sync: false,
+        mirror_on_sync: false,
         ssl_ca_cert: katello_gpg_keys(:unassigned_gpg_key),
         ssl_client_cert: katello_gpg_keys(:unassigned_gpg_key),
         ssl_client_key: katello_gpg_keys(:unassigned_gpg_key))
+
+      ForemanTasks.sync_task(
+          ::Actions::Katello::Repository::MetadataGenerate, @repo)
+      assert_equal 1,
+           Katello::Pulp3::DistributionReference.where(repository_id: @repo.id).count,
+           "Expected a distribution reference."
     end
 
     def test_update_http_proxy_with_no_url
