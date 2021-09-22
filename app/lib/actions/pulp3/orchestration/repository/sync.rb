@@ -11,7 +11,14 @@ module Actions
 
               force_fetch_version = true if options[:optimize] == false
               version_output = plan_action(Pulp3::Repository::SaveVersion, repository, tasks: action_output[:pulp_tasks], :force_fetch_version => force_fetch_version).output
-              plan_action(Pulp3::Orchestration::Repository::GenerateMetadata, repository, smart_proxy, :contents_changed => version_output[:contents_changed], :skip_publication_creation => version_output[:publication_provided])
+
+              #force contents_changed to true if we're doing a 'force' sync
+              if options[:optimize] == false
+                contents_changed = true
+              else
+                contents_changed = version_output[:contents_changed]
+              end
+              plan_action(Pulp3::Orchestration::Repository::GenerateMetadata, repository, smart_proxy, :contents_changed => contents_changed, :skip_publication_creation => version_output[:publication_provided])
               plan_self(:subaction_output => version_output)
             end
           end

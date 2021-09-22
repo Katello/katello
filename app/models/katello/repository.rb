@@ -289,6 +289,10 @@ module Katello
       ::Katello::Resources::CDN::CdnResource.ca_file if ::Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
     end
 
+    def using_mirrored_metadata?
+      self.yum? && self.library_instance? && self.mirror_on_sync
+    end
+
     def archive?
       self.environment.nil?
     end
