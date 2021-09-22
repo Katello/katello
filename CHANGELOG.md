@@ -1,3 +1,30 @@
+# 4.1.4 (2021-09-22)
+
+## Bug Fixes
+
+### Inter Server Sync
+ * Import/Export Permission Upgrade task not getting run  ([#33527](https://projects.theforeman.org/issues/33527), [6c7accee](https://github.com/Katello/katello.git/commit/6c7accee3e49561ea630c8d68333eb63b81345e2))
+
+### Repositories
+ * 'Sync overview' Widget  in 'Dashboard' is not showing any data ([#33413](https://projects.theforeman.org/issues/33413), [b0c4f366](https://github.com/Katello/katello.git/commit/b0c4f366539669876c8677661769c17175d54290))
+
+### Hammer
+ * hammer `host create --puppet-classes` generates incorrect API query ([#33381](https://projects.theforeman.org/issues/33381))
+
+### Hosts
+ * Noticed "event_queue_error: type=delete_host_agent_queue, object_id=XX" error logging during concurrent host build/rebuild/re-registration/deletion in Satellite 6.10 ([#33348](https://projects.theforeman.org/issues/33348), [90dba5cb](https://github.com/Katello/katello.git/commit/90dba5cb87207d082e4d80649208e33bf677bba0))
+# 4.1.4 (2021-09-22)
+
+## Bug Fixes
+
+### Repositories
+ * 'Sync overview' Widget  in 'Dashboard' is not showing any data ([#33413](https://projects.theforeman.org/issues/33413), [b0c4f366](https://github.com/Katello/katello.git/commit/b0c4f366539669876c8677661769c17175d54290))
+
+### Hammer
+ * hammer `host create --puppet-classes` generates incorrect API query ([#33381](https://projects.theforeman.org/issues/33381))
+
+### Hosts
+ * Noticed "event_queue_error: type=delete_host_agent_queue, object_id=XX" error logging during concurrent host build/rebuild/re-registration/deletion in Satellite 6.10 ([#33348](https://projects.theforeman.org/issues/33348), [90dba5cb](https://github.com/Katello/katello.git/commit/90dba5cb87207d082e4d80649208e33bf677bba0))
 # 4.1.3 (2021-08-18)
 
 ## Bug Fixes
