@@ -79,11 +79,11 @@ module Katello
     def test_search_bulk_errata_ids_excluded
       bulk_params = {
         :included => {
-          :ids => [@bugfix.errata_id, @errata.errata_id]
         },
         :excluded => {
           :ids => [@bugfix.errata_id]
-        }
+        },
+        all: true
       }
       result = @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
 
@@ -93,14 +93,12 @@ module Katello
 
     def test_excludes_only_case
       bulk_params = {
-        :excluded => {
-          :ids => [@bugfix.errata_id]
-        }
+        :excluded => {}
       }
       exception = assert_raises(HttpErrors::BadRequest) do
         @controller.find_bulk_errata_ids([@host], bulk_params.to_json)
       end
-      assert_match(/No errata has been specified/, exception.message)
+      assert_match(/No items have been specified/, exception.message)
     end
   end
 

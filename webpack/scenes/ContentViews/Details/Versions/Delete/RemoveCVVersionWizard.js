@@ -12,7 +12,7 @@ import CVVersionDeleteFinish from './RemoveSteps/CVVersionDeleteFinish';
 import getContentViewDetails from '../../ContentViewDetailActions';
 import getContentViews from '../../../ContentViewsActions';
 import DeleteContext from './DeleteContext';
-import useSet from '../../../../../components/Table/TableHooks';
+import { useSet } from '../../../../../components/Table/TableHooks';
 
 const RemoveCVVersionWizard = ({
   cvId, versionIdToRemove, versionNameToRemove,
