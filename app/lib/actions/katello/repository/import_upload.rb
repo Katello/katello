@@ -41,7 +41,7 @@ module Actions
                 import_upload.output
               end
             end
-            plan_action(Katello::Repository::MetadataGenerate, repository) if generate_metadata
+            plan_action(Katello::Repository::MetadataGenerate, repository, force_publication: true) if generate_metadata
             plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
             plan_self(repository_id: repository.id, sync_capsule: sync_capsule, upload_results: upload_results)
           end

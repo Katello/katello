@@ -42,7 +42,7 @@ module Actions
 
         def create_sub_plans
           trigger(Actions::Katello::Repository::MetadataGenerate,
-                  ::Katello::Repository.find(input[:repository][:id]))
+                  ::Katello::Repository.find(input[:repository][:id]), :force_publication => true)
         end
 
         def resource_locks

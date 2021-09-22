@@ -13,18 +13,8 @@ module Actions
 
         def invoke_external_task
           smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
-          options = input[:options]
-          tasks = options[:tasks]
           repo = ::Katello::Repository.find(input[:repository_id])
-          if options[:use_repository_version]
-            repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:use_repository_version => true)
-          elsif tasks && tasks[:pulp_tasks] && tasks[:pulp_tasks].first
-            if (publication_href = ::Katello::Pulp3::Task.publication_href(tasks[:pulp_tasks]))
-              repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions(:publication => publication_href)
-            else
-              fail "Unable to refresh distribution for repo #{repository.id}, could not find a publication_href"
-            end
-          end
+          repo.backend_service(smart_proxy).with_mirror_adapter.refresh_distributions
         end
       end
     end

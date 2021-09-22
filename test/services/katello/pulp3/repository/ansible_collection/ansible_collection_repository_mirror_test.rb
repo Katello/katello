@@ -27,22 +27,25 @@ module Katello
           mock_distribution = "distro"
           mock_distribution.expects(:pulp_href).once.returns("pulp_href")
           @repo_service.expects(:lookup_distributions).returns([mock_distribution])
+          @repo_mirror.stubs(:version_href).returns("repo_href")
           @repo_service.expects(:relative_path).returns("relative_path")
-          PulpAnsibleClient::DistributionsAnsibleApi.any_instance.expects(:partial_update).with("pulp_href",
-                                                                                                { :content_guard => nil,
-                                                                                                  :base_path => "relative_path" })
+          PulpAnsibleClient::DistributionsAnsibleApi.any_instance.expects(:partial_update).with("pulp_href", {:content_guard => nil,
+                                                                                                              :base_path => "relative_path",
+                                                                                                              :repository_version => "repo_href"})
           @repo_mirror.refresh_distributions(name: "test name", base_path: "test base_path", content_guard: "test content_guard")
         end
 
         def test_refresh_distributions_create_dist
           @repo_service.stubs(:lookup_distributions).returns([])
           @repo_service.stubs(:relative_path).returns("mock relative_path")
+          @repo_mirror.stubs(:version_href).returns("repo_href")
           distribution_data = "mock distribution_data"
           PulpAnsibleClient::AnsibleAnsibleDistribution.expects(:new).with(
           {
             :base_path => "mock relative_path",
             :name => "Default_Organization-Cabinet-pulp3_Ansible_collection_1",
-            :content_guard => nil
+            :content_guard => nil,
+            :repository_version => "repo_href"
           }).returns(distribution_data)
 
           PulpAnsibleClient::DistributionsAnsibleApi.any_instance.expects(:create).with(distribution_data)

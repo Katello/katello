@@ -74,6 +74,10 @@ module Katello
         fetch_repository.latest_version_href
       end
 
+      def publication_href
+        api.publications_api.list(:repository_version => version_href).results.first.pulp_href
+      end
+
       def create_version(options = {})
         api.repository_versions_api.create(repository_href, options)
       end
@@ -158,11 +162,17 @@ module Katello
         end
       end
 
-      def refresh_distributions(options = {})
+      def refresh_distributions(_options = {})
         path = repo_service.relative_path
         dist_params = {}
-        dist_params[:publication] = options[:publication] if options[:publication]
-        dist_params[:repository_version] = version_href if options[:use_repository_version]
+        if repo_service.repo.repository_type.pulp3_skip_publication
+          dist_params[:repository_version] = version_href
+          fail "could not lookup a version_href for repo #{repo_service.repo.id}" if version_href.nil?
+        else
+          dist_params[:publication] = publication_href
+          fail "Could not lookup a publication_href for repo #{repo_service.repo.id}" if publication_href.nil?
+        end
+
         dist_options = distribution_options(path, dist_params)
         dist_options.delete(:content_guard) if repo_service.repo.content_type == "docker"
         if (distro = repo_service.lookup_distributions(base_path: path).first) ||

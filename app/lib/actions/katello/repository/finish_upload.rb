@@ -13,7 +13,7 @@ module Actions
             unit_type_id = SmartProxy.pulp_primary.content_service(content_type)::CONTENT_TYPE
           end
           generate_metadata = options.fetch(:generate_metadata, true)
-          plan_action(Katello::Repository::MetadataGenerate, repository, :dependency => import_upload_task) if generate_metadata
+          plan_action(Katello::Repository::MetadataGenerate, repository, :dependency => import_upload_task, :force_publication => true) if generate_metadata
 
           recent_range = 5.minutes.ago.utc.iso8601
           plan_action(Katello::Repository::FilteredIndexContent,

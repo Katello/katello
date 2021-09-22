@@ -4,13 +4,15 @@ module Actions
       module Repository
         class GenerateMetadata < Pulp3::Abstract
           def plan(repository, smart_proxy, options = {})
+            force_publication = options.fetch(:force_publication, repository.publication_href.nil?)
+
             options[:contents_changed] = (options && options.key?(:contents_changed)) ? options[:contents_changed] : true
             publication_content_type = !::Katello::RepositoryTypeManager.find(repository.content_type).pulp3_skip_publication
 
             sequence do
               if options[:source_repository] && publication_content_type
                 plan_self(source_repository_id: options[:source_repository].id, target_repository_id: repository.id, smart_proxy_id: smart_proxy.id)
-              elsif publication_content_type
+              elsif publication_content_type && (force_publication || repository.publication_href.nil? || !repository.using_mirrored_metadata?)
                 plan_action(Actions::Pulp3::Repository::CreatePublication, repository, smart_proxy, options)
               end
               plan_action(Actions::Pulp3::ContentGuard::Refresh, smart_proxy) unless repository.unprotected
