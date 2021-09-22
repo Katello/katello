@@ -66,8 +66,6 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
-        refute input[:options][:use_repository_version]
-        assert input[:options][:tasks].present?
       end
     end
 
@@ -98,8 +96,6 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
-        refute input[:options][:use_repository_version]
-        assert input[:options][:tasks].present?
       end
     end
 
@@ -117,8 +113,6 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
-        assert input[:options][:use_repository_version]
-        refute input[:options][:tasks].present?
       end
     end
 
@@ -132,8 +126,6 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
-        assert input[:options][:use_repository_version]
-        refute input[:options][:tasks].present?
       end
     end
 
@@ -164,8 +156,6 @@ module ::Actions::Katello::CapsuleContent
       assert_tree_planned_with(tree, Actions::Pulp3::CapsuleContent::RefreshDistribution) do |input|
         assert_equal capsule_content.smart_proxy.id, input[:smart_proxy_id]
         assert_equal repo.id, input[:repository_id]
-        refute input[:options][:use_repository_version]
-        assert input[:options][:tasks].present?
       end
     end
 

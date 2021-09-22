@@ -26,10 +26,11 @@ module Katello
         def test_refresh_distributions_update_dist
           mock_distribution = "distro"
           mock_distribution.expects(:pulp_href).once.returns("pulp_href")
+          @repo_mirror.stubs(:version_href).returns("repo_href")
           @repo_service.expects(:lookup_distributions).returns([mock_distribution])
           @repo_service.expects(:relative_path).returns("base_path")
-          PulpContainerClient::DistributionsContainerApi.any_instance.expects(:partial_update).with("pulp_href",
-                                                                                                    { base_path: "base_path" })
+          PulpContainerClient::DistributionsContainerApi.any_instance.expects(:partial_update).with("pulp_href", {repository_version: 'repo_href',
+                                                                                                                  base_path: "base_path"})
 
           @repo_mirror.refresh_distributions(name: "test name", base_path: "test base_path", content_guard: "test content_guard")
         end
@@ -37,11 +38,13 @@ module Katello
         def test_refresh_distributions_create_dist
           @repo_service.stubs(:lookup_distributions).returns([])
           @repo_service.stubs(:relative_path).returns("mock relative_path")
+          @repo_mirror.stubs(:version_href).returns("repo_href")
           distribution_data = "mock distribution_data"
           PulpContainerClient::ContainerContainerDistribution.expects(:new).with(
           {
             :base_path => "mock relative_path",
-            :name => "Default_Organization-Cabinet-pulp3_Docker_1"
+            :name => "Default_Organization-Cabinet-pulp3_Docker_1",
+            :repository_version => "repo_href"
           }).returns(distribution_data)
           PulpContainerClient::DistributionsContainerApi.any_instance.expects(:create).with(distribution_data)
           @repo_mirror.refresh_distributions(name: "test name", base_path: "test base_path", content_guard: "test content_guard")

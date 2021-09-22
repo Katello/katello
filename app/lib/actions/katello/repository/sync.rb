@@ -18,7 +18,6 @@ module Actions
         #   of Katello and we just need to finish the rest of the orchestration
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/CyclomaticComplexity
-        # rubocop:disable Metrics/PerceivedComplexity
         def plan(repo, options = {})
           action_subject(repo)
 
@@ -54,7 +53,6 @@ module Actions
               plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
               plan_action(Katello::Repository::CorrectChecksum, repo)
               concurrence do
-                plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check && repo.yum?
                 plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
                 plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repo.id]) if generate_applicability
               end

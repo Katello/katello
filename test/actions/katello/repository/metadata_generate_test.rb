@@ -13,7 +13,8 @@ module Actions
     let(:action_options) do
       {
         :source_repository => nil,
-        :matching_content => false
+        :matching_content => false,
+        :force_publication => false
       }
     end
 
