@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Skeleton, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
@@ -6,14 +7,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import TableWrapper from '../../../Table/TableWrapper';
 import useSet from '../../../Table/TableHooks';
-import { getHostTraces, resolveHostTraces } from './HostTracesActions';
-import { selectHostTracesStatus } from './HostTracesSelectors';
+import { getHostTraces, resolveHostTraces, getTracerStatus } from './HostTracesActions';
+import { selectHostTracesStatus, selectKatelloHostToolsTracer, selectIsTracerInstalled } from './HostTracesSelectors';
 import './TracesTab.scss';
 
 const TracesTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
   const selectedTraces = useSet([]);
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
+  const tracerResults = useSelector(state => selectKatelloHostToolsTracer(state))?.results;
+  const isTracerInstalled = useSelector(state => selectIsTracerInstalled(state));
   const dispatch = useDispatch();
   const { id: hostId } = hostDetails;
   const emptyContentTitle = __('This host currently does not have traces.');
@@ -64,7 +67,18 @@ const TracesTab = () => {
       selectedTraces.delete(traceId);
     }
   };
+
+  useDeepCompareEffect(() => {
+    if (!tracerResults) dispatch(getTracerStatus(hostId));
+  }, [dispatch, hostId, tracerResults]);
+
+  if (tracerResults && !isTracerInstalled) {
+    // show enable tracer empty state
+  }
+
   if (!hostId) return <Skeleton />;
+
+  console.log({ tracerResults, isTracerInstalled })
 
   /* eslint-disable max-len */
   return (
