@@ -167,9 +167,10 @@ module Katello
 
       def insert(applicable_ids)
         unless applicable_ids.empty?
-          inserts = applicable_ids.map { |applicable_id| "(#{applicable_id.to_i}, #{content_facet.id.to_i})" }
-          sql = "INSERT INTO #{content_facet_association_class.table_name} (#{content_unit_association_id}, content_facet_id) VALUES #{inserts.join(', ')}"
-          ActiveRecord::Base.connection.exec_insert(sql)
+          upserts = applicable_ids.collect do |applicable_id|
+            { content_unit_association_id => applicable_id, :content_facet_id => content_facet.id }
+          end
+          content_facet_association_class.upsert_all(upserts, unique_by: [content_unit_association_id, :content_facet_id])
         end
       end
 
