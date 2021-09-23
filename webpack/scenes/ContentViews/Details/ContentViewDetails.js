@@ -70,7 +70,7 @@ const ContentViewDetails = ({ match }) => {
           <Breadcrumb style={{ marginTop: '15px' }}>
             <BreadcrumbItem
               aria-label="cv_breadcrumb"
-              render={() => (<Link to="/labs/content_views" >{__('Content Views')}</Link>)}
+              render={() => (<Link to="/content_views" >{__('Content Views')}</Link>)}
             />
             <BreadcrumbItem aria-label="cv_breadcrumb_cv" isActive>
               {name || <Skeleton />}
@@ -118,7 +118,7 @@ const ContentViewDetails = ({ match }) => {
             </Flex>
           </GridItem>
           <GridItem span={12}>
-            <RoutedTabs tabs={tabs} baseUrl={`/labs/content_views/${cvId}`} defaultTabIndex={1} />
+            <RoutedTabs tabs={tabs} baseUrl={`/content_views/${cvId}`} defaultTabIndex={1} />
           </GridItem>
         </React.Fragment>
       </DetailsContainer>

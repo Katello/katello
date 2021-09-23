@@ -23,12 +23,12 @@ const autocompleteUrl = '/package_groups/auto_complete_search';
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 1),
   routerParams: {
-    initialEntries: [{ hash: '#filters?subContentId=1', pathname: '/labs/content_views/2' }],
+    initialEntries: [{ hash: '#filters?subContentId=1', pathname: '/content_views/2' }],
     initialIndex: 1,
   },
 };
 
-const withCVRoute = component => <Route path="/labs/content_views/:id">{component}</Route>;
+const withCVRoute = component => <Route path="/content_views/:id">{component}</Route>;
 
 let searchDelayScope;
 let autoSearchScope;

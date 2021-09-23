@@ -115,7 +115,7 @@ const ContentViewComponents = ({ cvId, details }) => {
 
       const cells = [
         { title: <Bullseye><ContentViewIcon composite={false} /></Bullseye> },
-        { title: <Link to={urlBuilder('labs/content_views', '', id)}>{name}</Link> },
+        { title: <Link to={urlBuilder('content_views', '', id)}>{name}</Link> },
         {
           title:
   <Split>
@@ -140,7 +140,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   </Split>,
         },
         { title: environments ? <ComponentEnvironments {...{ environments }} /> : __('Not yet published') },
-        { title: <Link to={urlBuilder(`labs/content_views/${id}#repositories`, '')}>{ repositories ? repositories.length : 0 }</Link> },
+        { title: <Link to={urlBuilder(`content_views/${id}#repositories`, '')}>{ repositories ? repositories.length : 0 }</Link> },
         {
           title: <AddedStatusLabel added={!!componentCvId} />,
         },

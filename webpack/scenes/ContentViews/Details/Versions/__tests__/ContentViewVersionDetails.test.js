@@ -12,7 +12,7 @@ const cvVersions = api.getApiUrl('/content_view_versions/41');
 const renderOptions = {
   apiNamespace: cvVersionDetailsKey(19, 41),
   routerParams: {
-    initialEntries: [{ hash: '#versions?subContentId=41', pathname: '/labs/content_views/19' }],
+    initialEntries: [{ hash: '#versions?subContentId=41', pathname: '/content_views/19' }],
     initialIndex: 1,
   },
 };

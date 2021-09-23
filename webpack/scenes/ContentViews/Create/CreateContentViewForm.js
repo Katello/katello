@@ -60,7 +60,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
 
   if (redirect) {
     const { id } = response;
-    return (<Redirect to={`/labs/content_views/${id}`} />);
+    return (<Redirect to={`/content_views/${id}`} />);
   }
 
   return (

@@ -21,7 +21,7 @@ import { truncate } from '../../../../utils/helpers';
 import ContentType from './ContentType';
 import CVFilterAddModal from './Add/CVFilterAddModal';
 
-const cvFilterUrl = (cvId, filterId) => `/labs/content_views/${cvId}#filters?subContentId=${filterId}`;
+const cvFilterUrl = (cvId, filterId) => `/content_views/${cvId}#filters?subContentId=${filterId}`;
 
 const ContentViewFilters = ({ cvId }) => {
   const dispatch = useDispatch();

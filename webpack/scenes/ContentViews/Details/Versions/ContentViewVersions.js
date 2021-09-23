@@ -64,7 +64,7 @@ const ContentViewVersions = ({ cvId }) => {
       errata_counts: errataCounts,
     } = cvVersion;
     return [
-      { title: <a href={urlBuilder(`labs/content_views/${cvId}#versions?subContentId=${versionId}`, '')}>{__('Version ')}{version}</a> },
+      { title: <a href={urlBuilder(`content_views/${cvId}#versions?subContentId=${versionId}`, '')}>{__('Version ')}{version}</a> },
       { title: <ContentViewVersionEnvironments {...{ environments }} /> },
       { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/packages`, '')}>{`${packageCount}`}</a> },
       { title: <ContentViewVersionErrata {...{ cvId, versionId, errataCounts }} /> },
