@@ -7,8 +7,8 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { Modal, ModalVariant, Form, FormGroup, TextInput, ActionGroup, Button, Select, SelectOption } from '@patternfly/react-core';
 import { addCVFilterRule, getCVFilterRules } from '../../../ContentViewDetailActions';
 import {
-  selectCreatePackageFilterRule, selectCreatePackageFilterRuleError,
-  selectCreatePackageFilterRuleStatus,
+  selectCreateFilterRule, selectCreateFilterRuleError,
+  selectCreateFilterRuleStatus,
 } from '../../../ContentViewDetailSelectors';
 
 const AddPackageRuleModal = ({ filterId, setIsOpen }) => {
@@ -32,9 +32,9 @@ const AddPackageRuleModal = ({ filterId, setIsOpen }) => {
   const [saving, setSaving] = useState(false);
   const [versionComparatorSelectOpen, setVersionComparatorSelectOpen] = useState(false);
   const dispatch = useDispatch();
-  const response = useSelector(state => selectCreatePackageFilterRule(state));
-  const status = useSelector(state => selectCreatePackageFilterRuleStatus(state));
-  const error = useSelector(state => selectCreatePackageFilterRuleError(state));
+  const response = useSelector(state => selectCreateFilterRule(state));
+  const status = useSelector(state => selectCreateFilterRuleStatus(state));
+  const error = useSelector(state => selectCreateFilterRuleError(state));
 
   const showVersion = versionComparator === 'Equal to';
   const showMinVersion = versionComparator === 'Greater than' || versionComparator === 'Range';

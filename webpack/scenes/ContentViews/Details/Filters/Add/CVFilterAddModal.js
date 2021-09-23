@@ -7,10 +7,11 @@ import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { Modal, ModalVariant, Form, FormGroup, TextInput, ActionGroup, Button, Radio, TextArea,
   Split, SplitItem, Select, SelectOption } from '@patternfly/react-core';
-import { createContentViewFilter } from '../../ContentViewDetailActions';
+import { addCVFilterRule, createContentViewFilter } from '../../ContentViewDetailActions';
 import {
   selectCreateContentViewFilter, selectCreateContentViewFilterStatus,
-  selectCreateContentViewFilterError,
+  selectCreateContentViewFilterError, selectCreateFilterRule,
+  selectCreateFilterRuleError, selectCreateFilterRuleStatus,
 } from '../../../Details/ContentViewDetailSelectors';
 import { FILTER_TYPES } from '../../../ContentViewsConstants';
 import ContentType from '../ContentType';
@@ -26,6 +27,9 @@ const CVFilterAddModal = ({ cvId, show, setIsOpen }) => {
   const response = useSelector(state => selectCreateContentViewFilter(state));
   const status = useSelector(state => selectCreateContentViewFilterStatus(state));
   const error = useSelector(state => selectCreateContentViewFilterError(state));
+  const ruleResponse = useSelector(state => selectCreateFilterRule(state));
+  const ruleStatus = useSelector(state => selectCreateFilterRuleStatus(state));
+  const ruleError = useSelector(state => selectCreateFilterRuleError(state));
   const [redirect, setRedirect] = useState(false);
 
   const onSave = () => {
@@ -46,12 +50,28 @@ const CVFilterAddModal = ({ cvId, show, setIsOpen }) => {
   useDeepCompareEffect(() => {
     const { id } = response || {};
     if (id && status === STATUS.RESOLVED && saving) {
-      setSaving(false);
-      setRedirect(true);
+      // We need to create an empty rule for Errata by Date type once the Filter is created.
+      if (type === 'erratum_date') {
+        dispatch(addCVFilterRule(id, { types: ['security', 'enhancement', 'bugfix'] }));
+      } else {
+        setSaving(false);
+        setRedirect(true);
+      }
     } else if (status === STATUS.ERROR) {
       setSaving(false);
     }
-  }, [response, status, error, saving]);
+  }, [response, status, error, saving, dispatch, type]);
+
+  useDeepCompareEffect(() => {
+    const { id: filterId } = response || {};
+    const { id: filterRuleId } = ruleResponse || {};
+    if (filterId && filterRuleId &&
+      status === STATUS.RESOLVED && ruleStatus === STATUS.RESOLVED &&
+      saving) {
+      setSaving(false);
+      setRedirect(true);
+    }
+  }, [response, status, ruleResponse, ruleStatus, ruleError, saving]);
 
   if (redirect) {
     const { id } = response;
@@ -61,7 +81,7 @@ const CVFilterAddModal = ({ cvId, show, setIsOpen }) => {
   return (
     <Modal
       title={__('Create filter')}
-      variant={ModalVariant.small}
+      variant={ModalVariant.large}
       isOpen={show}
       onClose={() => {
         setIsOpen(false);

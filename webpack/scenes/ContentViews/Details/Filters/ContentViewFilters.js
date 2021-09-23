@@ -57,10 +57,7 @@ const ContentViewFilters = ({ cvId }) => {
       if (type === 'erratum' && rules[0]?.types) errataByDate = true;
 
       const cells = [
-        {
-          title: (type === 'package_group' || type === 'rpm' || type === 'docker' || type === 'modulemd') ?
-            <Link to={cvFilterUrl(cvId, id)}>{name}</Link> : name,
-        },
+        { title: <Link to={cvFilterUrl(cvId, id)}>{name}</Link> },
         truncate(description || ''),
         { title: <LongDateTime date={updatedAt} showRelativeTimeTooltip /> },
         { title: <ContentType type={type} errataByDate={errataByDate} /> },

@@ -182,13 +182,13 @@ export const selectCreateContentViewFilterStatus = state =>
 export const selectCreateContentViewFilterError = state =>
   selectAPIError(state, CREATE_CONTENT_VIEW_FILTER_KEY);
 
-export const selectCreatePackageFilterRule = state =>
+export const selectCreateFilterRule = state =>
   selectAPIResponse(state, ADD_CONTENT_VIEW_FILTER_RULE) || {};
 
-export const selectCreatePackageFilterRuleStatus = state =>
+export const selectCreateFilterRuleStatus = state =>
   selectAPIStatus(state, ADD_CONTENT_VIEW_FILTER_RULE) || STATUS.PENDING;
 
-export const selectCreatePackageFilterRuleError = state =>
+export const selectCreateFilterRuleError = state =>
   selectAPIError(state, ADD_CONTENT_VIEW_FILTER_RULE);
 
 export const selectIsCVUpdating = state => state.katello?.contentViewDetails?.updating;

@@ -105,7 +105,7 @@ export const pluralize = (quantity, singular, plural = `${singular}s`) => {
   return `${quantity} ${plural}`;
 };
 
-export const repoType = type => (['rpm', 'modulemd', 'erratum', 'package_group'].includes(type) ? 'yum' : type);
+export const repoType = type => (['rpm', 'modulemd', 'erratum', 'erratum_date', 'erratum_id', 'package_group'].includes(type) ? 'yum' : type);
 
 export default {
   getResponseErrorMsgs,
