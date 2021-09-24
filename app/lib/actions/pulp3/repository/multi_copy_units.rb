@@ -25,7 +25,7 @@ module Actions
           repo_map = {}
 
           input[:repo_map].each do |source_repo_ids, dest_repo_map|
-            repo_map[JSON.parse(source_repo_ids)] = dest_repo_map
+            repo_map[source_repo_ids] = dest_repo_map
           end
 
           if input[:unit_map][:errata].any?

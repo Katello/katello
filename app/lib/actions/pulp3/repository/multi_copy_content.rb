@@ -17,7 +17,7 @@ module Actions
           repo_id_map = {}
 
           input[:repo_id_map].each do |source_repo_ids, dest_repo_map|
-            repo_id_map[JSON.parse(source_repo_ids)] = dest_repo_map.deep_dup
+            repo_id_map[source_repo_ids] = dest_repo_map.deep_dup
           end
 
           output[:pulp_tasks] = ::Katello::Repository.find(repo_id_map.values.first[:dest_repo]).backend_service(smart_proxy).copy_content_from_mapping(repo_id_map, input)
