@@ -78,8 +78,6 @@ const TracesTab = () => {
   if (showEnableTracer) return <EnableTracerEmptyState />;
   if (!hostId || !tracerResults) return <Skeleton />;
 
-  console.log({ tracerResults, isTracerInstalled })
-
   /* eslint-disable max-len */
   return (
     <div id="traces-tab">
