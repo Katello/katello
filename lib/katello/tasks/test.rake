@@ -155,8 +155,7 @@ namespace :test do
         test_task = Rake::TestTask.new('katello_services_test_task') do |t|
           t.libs << ["test", "#{Katello::Engine.root}/test"]
           t.test_files = [
-            "#{Katello::Engine.root}/test/services/katello/pulp3/**/*_test.rb",
-            "#{Katello::Engine.root}/test/actions/pulp3/**/*_test.rb"
+            "#{Katello::Engine.root}/test/**/pulp3/**/*_test.rb"
           ]
           t.verbose = true
           t.warning = false
