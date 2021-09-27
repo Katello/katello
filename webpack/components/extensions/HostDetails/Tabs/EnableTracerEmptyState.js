@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import React, { useState } from 'react';
 import {
   EmptyState,
   EmptyStateIcon,
@@ -12,8 +11,6 @@ import {
 } from '@patternfly/react-core';
 import { WrenchIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import EnableTracerModal from './EnableTracerModal';
 
 const EnableTracerEmptyState = () => {

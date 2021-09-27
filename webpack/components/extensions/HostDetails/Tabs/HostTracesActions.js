@@ -1,4 +1,4 @@
-import { API_OPERATIONS, get, put, post } from 'foremanReact/redux/API';
+import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
 import { HOST_TRACES_KEY, RESOLVE_HOST_TRACES_TASK_KEY, KATELLO_HOST_TOOLS_TRACER_KEY } from './HostTracesConstants';
 import installPackage from './RemoteExecutionActions';
 import { foremanApi } from '../../../../services/api';

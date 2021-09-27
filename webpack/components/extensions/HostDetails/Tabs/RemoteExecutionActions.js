@@ -1,5 +1,5 @@
 import { API_OPERATIONS, post } from 'foremanReact/redux/API';
-import { REX_JOB_INVOCATIONS_KEY } from './RemoteExecutionConstants';
+import REX_JOB_INVOCATIONS_KEY from './RemoteExecutionConstants';
 import { foremanApi } from '../../../../services/api';
 import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';

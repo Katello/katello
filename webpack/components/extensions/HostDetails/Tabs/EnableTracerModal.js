@@ -1,12 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
-  EmptyState,
-  EmptyStateIcon,
-  EmptyStateBody,
-  Title,
-  EmptyStateVariant,
   Button,
   Flex,
   FlexItem,
@@ -23,7 +17,7 @@ import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { installTracerPackage } from './HostTracesActions';
 
 const EnableTracerModal = ({ isOpen, setIsOpen }) => {
-  const title = __('Enable Traces');
+  const title = __('Enable Tracer');
   const body = __('Enabling will install the katello-host-tools-tracer package on the host.');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleDropdownOpen = () => setIsDropdownOpen(prev => !prev);

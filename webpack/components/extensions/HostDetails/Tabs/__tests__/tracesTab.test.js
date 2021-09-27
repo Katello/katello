@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, waitFor, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, waitFor, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_TRACES_KEY } from '../HostTracesConstants';
@@ -9,6 +9,7 @@ const mockTraceData = require('./traces.fixtures.json');
 const mockResolveTraceTask = require('./resolveTraces.fixtures.json');
 const mockTracerResults = require('./tracerResults.fixtures.json');
 const mockTracerNotInstalled = require('./tracerNotInstalled.fixtures.json');
+const mockJobInvocationStatus = require('./tracerEnableJobInvocation.fixtures.json');
 
 const renderOptions = { // sets initial Redux state
   apiNamespace: HOST_TRACES_KEY,
@@ -28,6 +29,7 @@ const hostTraces = foremanApi.getApiUrl('/hosts/1/traces?per_page=20&page=1');
 const resolveHostTraces = foremanApi.getApiUrl('/hosts/1/traces/resolve');
 const autocompleteUrl = '/hosts/1/traces/auto_complete_search';
 const tracerStatus = foremanApi.getApiUrl('/hosts/1/packages?search=name=katello-host-tools-tracer');
+const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 
 let firstTraces;
 let searchDelayScope;
@@ -176,5 +178,28 @@ describe('Without tracer installed', () => {
     expect(queryByText('via remote execution')).not.toBeInTheDocument();
 
     assertNockRequest(tracerNotInstalledScope, done);
+  });
+
+  test('Can enable tracer via remote execution', async (done) => {
+    const tracerNotInstalledScope = nockInstance
+      .get(tracerStatus)
+      .reply(200, mockTracerNotInstalled);
+    const jobInvocationScope = nockInstance
+      .post(jobInvocations)
+      .reply(201, mockJobInvocationStatus);
+
+    const { getByText, getByRole, queryByText } = renderWithRedux(<TracesTab />, renderOptions);
+
+    await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
+    const enableTracesButton = getByText('Enable Traces');
+    enableTracesButton.click();
+    expect(queryByText('via remote execution')).toBeVisible();
+
+    const enableTracesModalButton = getByRole('button', { name: 'Enable Tracer' });
+    fireEvent.click(enableTracesModalButton);
+    expect(queryByText('via remote execution')).not.toBeInTheDocument();
+
+    assertNockRequest(tracerNotInstalledScope);
+    assertNockRequest(jobInvocationScope, done);
   });
 });
