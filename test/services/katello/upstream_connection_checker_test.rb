@@ -62,5 +62,14 @@ module Katello
         @checker.assert_connection
       end
     end
+
+    def test_assert_upstream_ping_with_not_found
+      @organization.expects(:manifest_expired?).returns(false)
+      Katello::Resources::Candlepin::UpstreamConsumer.expects(:ping).raises(Katello::Errors::UpstreamConsumerNotFound)
+
+      assert_raises Katello::Errors::UpstreamConsumerNotFound do
+        @checker.assert_connection
+      end
+    end
   end
 end

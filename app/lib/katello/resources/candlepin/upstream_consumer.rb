@@ -13,6 +13,8 @@ module Katello
             resource.head
           rescue RestClient::Unauthorized, RestClient::Gone
             raise ::Katello::Errors::UpstreamConsumerGone
+          rescue RestClient::NotFound
+            raise ::Katello::Errors::UpstreamConsumerNotFound
           end
 
           # Overrides the HttpResource get method to check if the upstream
