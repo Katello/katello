@@ -135,6 +135,8 @@ module Katello
       end
     end
 
+    class UpstreamConsumerNotFound < StandardError; end
+
     class UpstreamEntitlementGone < StandardError; end
 
     class ContainerRegistryNotConfigured < StandardError

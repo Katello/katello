@@ -4,6 +4,7 @@ module Katello
       Katello::Errors::DisconnectedMode,
       Katello::Errors::ManifestExpired,
       Katello::Errors::UpstreamConsumerGone,
+      Katello::Errors::UpstreamConsumerNotFound,
       Katello::Errors::NoManifestImported
     ].freeze
 
