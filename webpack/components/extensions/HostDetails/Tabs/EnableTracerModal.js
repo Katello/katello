@@ -20,6 +20,7 @@ import { CaretDownIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
+import { installTracerPackage } from './HostTracesActions';
 
 const EnableTracerModal = ({ isOpen, setIsOpen }) => {
   const title = __('Enable Traces');
@@ -31,13 +32,16 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
     __('via customized remote execution'),
   ];
   const [selectedOption, setSelectedOption] = useState(dropdownOptions[0]);
+  const dispatch = useDispatch();
+  const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
+  const { name: hostname } = hostDetails;
   const handleSelect = () => {
     setIsDropdownOpen(false);
   };
   const enableTracer = () => {
-    console.log(selectedOption);
     setIsOpen(false);
-  }
+    dispatch(installTracerPackage({ hostname }));
+  };
 
   const dropdownItems = dropdownOptions.map(text => (
     <DropdownItem key={`option_${text}`} onClick={() => setSelectedOption(text)}>{text}</DropdownItem>
