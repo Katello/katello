@@ -22,6 +22,16 @@ debian_10_amd64:
   distribution_version: '10.1'
   distribution_family:  'Debian'
 
+debian_10_amd64_duplicate:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_duplicate_root) %>
+  pulp_id:              Debian_10_duplicate
+  relative_path:        'ACME_Corporation/library/debian_10_duplicate_label'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+  distribution_arch:    'amd64'
+  distribution_version: '10.1'
+  distribution_family:  'Debian'
+
 debian_10_dev_library_view:
   library_instance:     debian_10_amd64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64_root) %>
