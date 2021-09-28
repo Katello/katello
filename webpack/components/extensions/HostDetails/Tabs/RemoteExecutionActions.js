@@ -1,5 +1,5 @@
 import { API_OPERATIONS, post } from 'foremanReact/redux/API';
-import REX_JOB_INVOCATIONS_KEY from './RemoteExecutionConstants';
+import { REX_JOB_INVOCATIONS_KEY, KATELLO_PACKAGE_INSTALL_FEATURE } from './RemoteExecutionConstants';
 import { foremanApi } from '../../../../services/api';
 import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
@@ -11,7 +11,7 @@ const errorToast = (error) => {
 
 const jobInvocationParams = ({ hostname, packageName }) => ({
   job_invocation: {
-    feature: 'katello_package_install',
+    feature: KATELLO_PACKAGE_INSTALL_FEATURE,
     targeting_type: 'Static Query',
     inputs: {
       package: packageName,

@@ -15,11 +15,14 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { installTracerPackage } from './HostTracesActions';
+import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
+import { KATELLO_PACKAGE_INSTALL_FEATURE } from './RemoteExecutionConstants';
 
 const EnableTracerModal = ({ isOpen, setIsOpen }) => {
   const title = __('Enable Tracer');
   const body = __('Enabling will install the katello-host-tools-tracer package on the host.');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [redirect, setRedirect] = useState(false);
   const toggleDropdownOpen = () => setIsDropdownOpen(prev => !prev);
   const dropdownOptions = [
     __('via remote execution'),
@@ -33,13 +36,50 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
     setIsDropdownOpen(false);
   };
   const enableTracer = () => {
-    setIsOpen(false);
     dispatch(installTracerPackage({ hostname }));
+    setIsOpen(false);
   };
 
   const dropdownItems = dropdownOptions.map(text => (
     <DropdownItem key={`option_${text}`} onClick={() => setSelectedOption(text)}>{text}</DropdownItem>
   ));
+
+  const customizedRexUrl = () => {
+    const urlQuery = encodeURI([
+      `feature=${KATELLO_PACKAGE_INSTALL_FEATURE}`,
+      `inputs[package]=${KATELLO_TRACER_PACKAGE}`,
+      `host_ids=name ^ (${hostname})`,
+    ].join('&'));
+    return `/job_invocations/new?${urlQuery}`;
+  };
+
+  const getEnableTracerButton = () => {
+    const [viaRex] = dropdownOptions;
+    if (selectedOption === viaRex) {
+      return (
+        <Button
+          key="enable_button"
+          type="submit"
+          variant="primary"
+          onClick={enableTracer}
+        >
+          {title}
+        </Button>
+      );
+    }
+    return (
+      <Button
+        key="enable_button"
+        component="a"
+        isLoading={redirect}
+        onClick={() => setRedirect(true)}
+        variant="primary"
+        href={customizedRexUrl()}
+      >
+        {title}
+      </Button>
+    );
+  };
 
   return (
     <Modal
@@ -49,7 +89,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       actions={[
-        <Button key="enable_button" type="submit" variant="primary" onClick={enableTracer}>{title}</Button>,
+        getEnableTracerButton(),
         <Button key="cancel_button" variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>,
       ]}
     >
