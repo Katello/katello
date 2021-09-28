@@ -3,9 +3,10 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
-import { Checkbox, Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
 import onSelect from '../../../../components/Table/helpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import {
@@ -13,7 +14,7 @@ import {
   selectCVFilterRules,
   selectCVFilterRulesStatus,
 } from '../ContentViewDetailSelectors';
-import { editCVFilter, deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
+import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
 import CVRpmMatchContentModal from './MatchContentModal/CVRpmMatchContentModal';
 import AddPackageRuleModal from './Rules/Package/AddPackageRuleModal';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
@@ -32,9 +33,6 @@ const CVRpmFilterContent = ({
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
-  const [originalPackages, setOriginalPackages] =
-      useState(filterDetails.original_module_streams === true);
-
   const [activeTabKey, setActiveTabKey] = useState(0);
   const [filterRuleId, setFilterRuleId] = useState(undefined);
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
@@ -105,8 +103,6 @@ const CVRpmFilterContent = ({
   const emptySearchBody = __('Try changing your search settings.');
   const tabTitle = (inclusion ? __('Included') : __('Excluded')) + __(' RPMs');
 
-  const originalPackagesLabel = filterDetails.inclusion ? __('Include all RPMs with no errata.') :
-    __('Exclude all RPMs with no errata.');
 
   const actionResolver = () => [
     {
@@ -124,11 +120,6 @@ const CVRpmFilterContent = ({
       },
     },
   ];
-
-  const enableOriginalPackages = (checked) => {
-    setOriginalPackages(checked);
-    dispatch(editCVFilter(filterId, { original_packages: checked }));
-  };
 
   const bulkRemove = () => {
     setBulkActionOpen(false);
@@ -190,12 +181,8 @@ const CVRpmFilterContent = ({
                     />
                   </SplitItem>
                   <SplitItem>
-                    <Checkbox
-                      id="packagesNoErrata"
-                      name="packagesNoErrata"
-                      label={originalPackagesLabel}
-                      isChecked={originalPackages}
-                      onChange={enableOriginalPackages}
+                    <ArtifactsWithNoErrataRenderer
+                      filterDetails={filterDetails}
                     />
                   </SplitItem>
                 </Split>

@@ -3,9 +3,10 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
-import { Checkbox, Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
+
 import onSelect from '../../../../components/Table/helpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import {
@@ -15,11 +16,12 @@ import {
   selectCVFilters, selectCVFilterDetails, selectCVFiltersStatus,
 } from '../ContentViewDetailSelectors';
 import getContentViewDetails, {
-  editCVFilter, addCVFilterRule, removeCVFilterRule, getCVFilterModuleStreams,
+  addCVFilterRule, removeCVFilterRule, getCVFilterModuleStreams,
   deleteContentViewFilterRules, addContentViewFilterRules,
 } from '../ContentViewDetailActions';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
+import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
 
 const CVModuleStreamFilterContent = ({
   cvId, filterId, showAffectedRepos, setShowAffectedRepos,
@@ -41,8 +43,6 @@ const CVModuleStreamFilterContent = ({
   const [rows, setRows] = useState([]);
   const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
-  const [originalModueStreams, setOriginalModuleStreams] =
-      useState(filterDetails.original_module_streams === true);
   const [activeTabKey, setActiveTabKey] = useState(0);
   const filterLoaded = filterLoad === 'RESOLVED';
   const loading = status === STATUS.PENDING;
@@ -100,11 +100,6 @@ const CVModuleStreamFilterContent = ({
       return addedA ? -1 : 1;
     });
   }, [filterResults, filterId]);
-
-  const enableOriginalModuleStreams = (checked) => {
-    setOriginalModuleStreams(checked);
-    dispatch(editCVFilter(filterId, { original_module_streams: checked }));
-  };
 
   const bulkAdd = () => {
     setBulkActionOpen(false);
@@ -166,8 +161,7 @@ const CVModuleStreamFilterContent = ({
   const emptyContentBody = __("Add to this filter using the 'Add filter rule' button.");
   const emptySearchTitle = __('No matching filter rules found.');
   const emptySearchBody = __('Try changing your search settings.');
-  const originalStreamsLabel = filterDetails.inclusion ? __('Include all Module Streams with no errata.') :
-    __('Exclude all Module Streams with no errata.');
+
 
   return (
     <Tabs activeKey={activeTabKey} onSelect={(_event, eventKey) => setActiveTabKey(eventKey)}>
@@ -217,12 +211,8 @@ const CVModuleStreamFilterContent = ({
                   />
                 </SplitItem>
                 <SplitItem>
-                  <Checkbox
-                    id="moduleStreamNoErrata"
-                    name="moduleStreamNoErrata"
-                    label={originalStreamsLabel}
-                    isChecked={originalModueStreams}
-                    onChange={enableOriginalModuleStreams}
+                  <ArtifactsWithNoErrataRenderer
+                    filterDetails={filterDetails}
                   />
                 </SplitItem>
               </Split>
