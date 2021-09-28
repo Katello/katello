@@ -78,7 +78,7 @@ module Katello
     def test_create_with_download_policy
       @root.content_type = 'yum'
       @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
-      %w[on_demand background immediate].each do |download_policy|
+      ::Katello::RootRepository::DOWNLOAD_POLICIES.each do |download_policy|
         @root.download_policy = download_policy
         assert @root.valid?, "Validation failed for create with valid download_policy: '#{download_policy}'"
         assert_equal download_policy, @root.download_policy
@@ -87,18 +87,8 @@ module Katello
 
     test_attributes :pid => '8a70de9b-4663-4251-b91e-d3618ee7ef84'
     def test_create_immediate_update_to_on_demand
-      new_download_policy = 'on_demand'
-      @root.download_policy = 'immediate'
-      assert @root.save
-      @root.download_policy = new_download_policy
-      assert_valid @root
-      assert_equal new_download_policy, @root.download_policy
-    end
-
-    test_attributes :pid => '9aaf53be-1127-4559-9faf-899888a52846'
-    def test_create_immediate_update_to_background
-      new_download_policy = 'background'
-      @root.download_policy = 'immediate'
+      new_download_policy = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
       assert @root.save
       @root.download_policy = new_download_policy
       assert_valid @root
@@ -107,38 +97,8 @@ module Katello
 
     test_attributes :pid => '589ff7bb-4251-4218-bb90-4e63c9baf702'
     def test_create_on_demand_update_to_immediate
-      new_download_policy = 'immediate'
-      @root.download_policy = 'on_demand'
-      assert @root.save
-      @root.download_policy = new_download_policy
-      assert_valid @root
-      assert_equal new_download_policy, @root.download_policy
-    end
-
-    test_attributes :pid => '1d9888a0-c5b5-41a7-815d-47e936022a60'
-    def test_create_on_demand_update_to_background
-      new_download_policy = 'background'
-      @root.download_policy = 'on_demand'
-      assert @root.save
-      @root.download_policy = new_download_policy
-      assert_valid @root
-      assert_equal new_download_policy, @root.download_policy
-    end
-
-    test_attributes :pid => '169530a7-c5ce-4ca5-8cdd-15398e13e2af'
-    def test_create_background_update_to_immediate
-      new_download_policy = 'immediate'
-      @root.download_policy = 'background'
-      assert @root.save
-      @root.download_policy = new_download_policy
-      assert_valid @root
-      assert_equal new_download_policy, @root.download_policy
-    end
-
-    test_attributes :pid => '40a3e963-61ff-41c4-aa6c-d9a4a638af4a'
-    def test_create_background_update_to_on_demand
-      new_download_policy = 'on_demand'
-      @root.download_policy = 'background'
+      new_download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
       assert @root.save
       @root.download_policy = new_download_policy
       assert_valid @root
@@ -149,7 +109,7 @@ module Katello
     def test_create_with_checksum_type
       %w[sha1 sha256].each do |checksum_type|
         @root.checksum_type = checksum_type
-        @root.download_policy = 'immediate'
+        @root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
         assert @root.valid?, "Validation failed for create with valid checksum_type: '#{checksum_type}'"
         assert_equal checksum_type, @root.checksum_type
       end
@@ -256,17 +216,17 @@ module Katello
 
     test_attributes :pid => '24d36e79-855e-4832-a136-30cbd144de44'
     def test_update_to_invalid_download_policy
-      @root.download_policy = 'background'
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
       assert @root.save
       @root.download_policy = 'invalid_download_policy'
       refute_valid @root
       assert @root.errors.key?(:download_policy)
-      assert_match 'must be one of the following: immediate, on_demand, background', @root.errors[:download_policy][0]
+      assert_match 'must be one of the following: immediate, on_demand', @root.errors[:download_policy][0]
     end
 
     test_attributes :pid => '8a59cb31-164d-49df-b3c6-9b90634919ce'
     def test_create_non_yum_with_download_policy
-      @root.download_policy = 'on_demand'
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
       @root.content_type = 'docker'
       refute @root.valid?, "Validation succeed for create with download_policy and non-yum repository: docker"
       assert @root.errors.key?(:download_policy)
@@ -276,7 +236,7 @@ module Katello
     test_attributes :pid => 'c49a3c49-110d-4b74-ae14-5c9494a4541c'
     def test_create_with_invalid_checksum_type
       @root.checksum_type = 'invalid checksum_type'
-      @root.download_policy = 'immediate'
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
       refute_valid @root
       assert @root.errors.key?(:checksum_type)
       assert_match 'is not included in the list', @root.errors[:checksum_type][0]
@@ -353,7 +313,7 @@ module Katello
 
     test_attributes :pid => '205e6e59-33c6-4a58-9245-1cac3a4f550a'
     def test_update_checksum
-      @root.download_policy = 'immediate'
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
       @root.checksum_type = 'sha1'
       assert @root.save
       @root.checksum_type = 'sha256'
@@ -490,12 +450,12 @@ module Katello
       @root.download_policy = 'invalid'
       refute @root.valid?
       assert_includes @root.errors, :download_policy
-      assert_match 'must be one of the following: immediate, on_demand, background', @root.errors[:download_policy][0]
+      assert_match 'must be one of the following: immediate, on_demand', @root.errors[:download_policy][0]
     end
 
     def test_compatible_download_policy
       @root.content_type = 'yum'
-      @root.download_policy = 'on_demand'
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
       @root.url = 'http://some.website/'
       assert @root.valid?
 
@@ -505,7 +465,7 @@ module Katello
       @root.download_policy = 'background'
       refute @root.valid?
 
-      @root.download_policy = 'immediate'
+      @root.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
       assert @root.valid?
     end
 

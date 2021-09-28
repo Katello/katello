@@ -11,6 +11,10 @@ module Katello
 
     encrypts :upstream_password, :upstream_authentication_token
 
+    DOWNLOAD_IMMEDIATE = 'immediate'.freeze
+    DOWNLOAD_ON_DEMAND = 'on_demand'.freeze
+    DOWNLOAD_POLICIES = [DOWNLOAD_IMMEDIATE, DOWNLOAD_ON_DEMAND].freeze
+
     IGNORABLE_CONTENT_UNIT_TYPES = %w(srpm).freeze
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
 
@@ -90,8 +94,8 @@ module Katello
       :message => ->(_, _) { _("is not enabled. must be one of the following: %s") % Katello::RepositoryTypeManager.enabled_repository_types.keys.join(', ') }
     }
     validates :download_policy, inclusion: {
-      :in => ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES,
-      :message => _("must be one of the following: %s") % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
+      :in => DOWNLOAD_POLICIES,
+      :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', ')
     }, if: :yum?
     validates :http_proxy_policy, inclusion: {
       :in => HTTP_PROXY_POLICIES,
@@ -146,7 +150,7 @@ module Katello
 
     def ensure_compatible_download_policy
       if !url.blank? && URI(url).scheme == 'file' &&
-          [::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND, ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND].include?(download_policy)
+          download_policy == ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
         errors.add(:download_policy, _("Cannot sync file:// repositories with the On Demand Download Policy"))
       end
     end
@@ -176,7 +180,7 @@ module Katello
     end
 
     def ensure_no_checksum_on_demand
-      if checksum_type.present? && ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND == download_policy
+      if checksum_type.present? && download_policy == DOWNLOAD_ON_DEMAND
         errors.add(:checksum_type, _("Checksum type cannot be set for yum repositories with on demand download policy."))
       end
     end
@@ -364,7 +368,7 @@ module Katello
     end
 
     def on_demand?
-      self.download_policy == Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+      self.download_policy == DOWNLOAD_ON_DEMAND
     end
 
     def pulp_update_needed?

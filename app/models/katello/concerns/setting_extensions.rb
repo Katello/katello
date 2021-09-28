@@ -4,7 +4,7 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        validates :value, inclusion: { in: ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES },
+        validates :value, inclusion: { in: ::Katello::RootRepository::DOWNLOAD_POLICIES },
           if: ->(setting) { setting.name == 'default_download_policy' }
 
         after_save :recalculate_errata_status

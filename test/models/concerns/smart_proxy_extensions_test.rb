@@ -15,17 +15,17 @@ module Katello
     end
 
     def test_sets_default_download_policy
-      Setting[:default_proxy_download_policy] = 'background'
+      Setting[:default_proxy_download_policy] = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
       @proxy.save!
 
       assert_equal Setting[:default_proxy_download_policy], @proxy.download_policy
     end
 
     def test_save_with_download_policy
-      @proxy.download_policy = 'background'
+      @proxy.download_policy = ::Katello::RootRepository::DOWNLOAD_IMMEDIATE
       @proxy.save!
 
-      assert_equal 'background', @proxy.reload.download_policy
+      assert_equal ::Katello::RootRepository::DOWNLOAD_IMMEDIATE, @proxy.reload.download_policy
     end
 
     def test_destroy_with_content_facet

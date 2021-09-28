@@ -32,7 +32,7 @@ module Actions
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
 
           pulp_sync_options = {}
-          pulp_sync_options[:download_policy] = ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
+          pulp_sync_options[:download_policy] = ::Katello::RootRepository::DOWNLOAD_ON_DEMAND if validate_contents && repo.yum?
 
           #pulp3 options
           pulp_sync_options[:optimize] = false if skip_metadata_check && repo.yum?

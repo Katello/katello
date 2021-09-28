@@ -25,7 +25,7 @@ module Actions
 
         def needs_download?(repository)
           repository.distribution_bootable? &&
-             repository.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+             repository.download_policy == ::Katello::RootRepository::DOWNLOAD_ON_DEMAND
         end
       end
     end

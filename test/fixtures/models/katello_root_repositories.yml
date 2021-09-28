@@ -74,7 +74,7 @@ rhel_7_x86_64_root:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   url:                 'https://cdn.example.com/rhel/7/os'
-  download_policy: background
+  download_policy: on_demand
 
 rhel_6_x86_64_root:
   name:                 RHEL 6 x86_64
