@@ -49,7 +49,9 @@ module Katello
       def filter_errata_by_pulp_href(errata, package_pulp_hrefs, source_repo_rpm_filenames)
         return [] if package_pulp_hrefs.empty?
         rpms = Katello::Rpm.where(:pulp_id => package_pulp_hrefs)
+        srpms = Katello::Srpm.where(:pulp_id => package_pulp_hrefs)
         rpm_filenames = rpms.map { |rpm| File.basename(rpm.filename) }
+        srpm_filenames = srpms.map { |srpm| File.basename(srpm.filename) }
         source_repo_rpm_filenames = source_repo_rpm_filenames.map { |rpm| File.basename(rpm) }
         matching_errata = []
         errata.each do |erratum|
@@ -57,7 +59,7 @@ module Katello
           next if erratum.packages.empty?
           rpms_in_erratum_and_source_repo = erratum.packages.pluck(:filename) & source_repo_rpm_filenames
           next if rpms_in_erratum_and_source_repo.empty?
-          if (rpms_in_erratum_and_source_repo - rpm_filenames).empty?
+          if (rpms_in_erratum_and_source_repo - rpm_filenames - srpm_filenames).empty?
             matching_errata << erratum
           end
         end
