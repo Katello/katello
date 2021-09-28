@@ -8,6 +8,7 @@ module Katello
 
         def remote_options
           deb_remote_options = {
+            policy: root.download_policy,
             distributions: root.deb_releases
           }
           deb_remote_options[:components] = root.deb_components.present? ? root.deb_components : nil
