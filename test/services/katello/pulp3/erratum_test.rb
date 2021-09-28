@@ -33,8 +33,8 @@ module Katello
           post_unit_count = Katello::Erratum.all.count
           post_unit_repository_count = Katello::RepositoryErratum.where(:repository_id => @repo.id).count
 
-          assert_equal post_unit_count, 6
-          assert_equal post_unit_repository_count, 6
+          assert_equal post_unit_count, 7
+          assert_equal post_unit_repository_count, 7
         end
 
         def test_index_on_sync
@@ -47,8 +47,8 @@ module Katello
           post_unit_count = Katello::Erratum.all.count
           post_unit_repository_count = Katello::RepositoryErratum.where(:repository_id => @repo.id).count
 
-          assert_equal post_unit_count, 6
-          assert_equal post_unit_repository_count, 6
+          assert_equal post_unit_count, 7
+          assert_equal post_unit_repository_count, 7
         end
 
         def test_update_model
