@@ -17,6 +17,8 @@ export const ADD_CONTENT_VIEW_FILTER_RULE = 'ADD_CONTENT_VIEW_FILTER_RULE';
 export const EDIT_CONTENT_VIEW_FILTER_RULE = 'EDIT_CONTENT_VIEW_FILTER_RULE';
 export const REMOVE_CONTENT_VIEW_FILTER_RULE = 'REMOVE_CONTENT_VIEW_FILTER_RULE';
 export const EDIT_CONTENT_VIEW_FILTER = 'EDIT_CONTENT_VIEW_FILTER';
+export const ACTIVATION_KEY_KEY = 'ACTIVATION_KEY_KEY';
+export const HOSTS_KEY = 'HOSTS_KEY';
 export const cvDetailsKey = cvId => `${CONTENT_VIEWS_KEY}_${cvId}`;
 export const cvDetailsRepoKey = cvId => `${CONTENT_VIEWS_KEY}_REPOSITORIES_${cvId}`;
 export const cvFilterRepoKey = filterId => `CV_FILTER_REPOSITORIES_${filterId}`;
@@ -30,6 +32,7 @@ export const cvDetailsHistoryKey = cvId => `${CONTENT_VIEWS_KEY}_HISTORIES_${cvI
 export const cvFilterRulesKey = filterId => `CONTENT_VIEW_FILTER_${filterId}_RULES`;
 export const cvDetailsComponentKey = cvId => `${CONTENT_VIEWS_KEY}_COMPONENTS_${cvId}`;
 export const cvDetailsVersionKey = cvId => `${CONTENT_VIEWS_KEY}_VERSIONS_${cvId}`;
+export const cvRemoveVersionKey = (versionId, versionEnvironments) => `REMOVE_CV_VERSION_${versionId}_${versionEnvironments.length}`;
 export const cvVersionPromoteKey = (versionId, environmentIds) => `PROMOTE_CONTENT_VIEW_VERSION_${versionId}_${environmentIds.length}`;
 export const cvVersionDetailsKey = (cvId, versionId) => `CONTENT_VIEW_VERSION_DETAILS_${cvId}_${versionId}`;
 export const cvVersionPublishKey = (cvId, versionCount) => `${PUBLISH_CONTENT_VIEW_KEY}_${cvId}_VERSION_${versionCount}`;

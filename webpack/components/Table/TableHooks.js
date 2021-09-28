@@ -36,9 +36,9 @@ class ReactConnectedSet extends Set {
 }
 
 const useSet = (initialArry) => {
-  const [, setToggle] = useState(false);
+  const [, setToggle] = useState(0);
   // needed because mutating a Ref won't cause React to rerender
-  const forceRender = () => setToggle(prev => !prev);
+  const forceRender = () => setToggle(prev => prev + 1);
   const set = useRef(new ReactConnectedSet(initialArry, forceRender));
   return set.current;
 };
