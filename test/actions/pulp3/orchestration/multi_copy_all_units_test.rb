@@ -344,10 +344,11 @@ module ::Actions::Pulp3
       @repo_clone.reload
 
       refute_empty @repo.errata
-      assert_equal ["KATELLO-RHEA-2010:0002", "KATELLO-RHEA-2010:0111", "KATELLO-RHEA-2010:99143", "KATELLO-RHEA-2012:0059"].sort, @repo_clone.errata.pluck(:errata_id).sort
+      assert_equal ["KATELLO-RHEA-2010:0002", "KATELLO-RHEA-2010:0111", "KATELLO-RHEA-2010:99143", "KATELLO-RHEA-2012:0059", "RHEA-2021:9999"].sort,
+        @repo_clone.errata.pluck(:errata_id).sort
     end
 
-    def test_no_errata_copied_if_no_errata_packages_matches_filter_rules
+    def test_only_srpm_errata_copied_if_no_errata_packages_matches_filter_rules
       filter = FactoryBot.build(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "cheetah")
       module_stream_filter = FactoryBot.create(:katello_content_view_module_stream_filter, :inclusion => true)
@@ -359,7 +360,7 @@ module ::Actions::Pulp3
       @repo_clone.reload
 
       refute_empty @repo.errata
-      assert_empty @repo_clone.errata
+      assert_equal [::Katello::Erratum.find_by(errata_id: "RHEA-2021:9999")], @repo_clone.errata
     end
 
     def test_errata_copied_if_all_errata_packages_matches_included_packages
@@ -377,7 +378,7 @@ module ::Actions::Pulp3
       @repo_clone.reload
 
       refute_empty @repo.errata
-      assert_equal ["KATELLO-RHEA-2010:0002", "KATELLO-RHEA-2010:0111"].sort, @repo_clone.errata.pluck(:errata_id).sort
+      assert_equal ["KATELLO-RHEA-2010:0002", "KATELLO-RHEA-2010:0111", "RHEA-2021:9999"].sort, @repo_clone.errata.pluck(:errata_id).sort
     end
 
     def test_errata_is_not_copied_if_errata_packages_are_not_all_found_in_included_packages
