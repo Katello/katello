@@ -28,7 +28,7 @@ module Katello
     CONTENT_ATTRIBUTE_RESTRICTIONS = {
       :ostree_upstream_sync_depth => [Repository::OSTREE_TYPE],
       :ostree_upstream_sync_policy => [Repository::OSTREE_TYPE],
-      :download_policy => [Repository::YUM_TYPE]
+      :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE]
 
     }.freeze
 

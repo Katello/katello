@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://centos7-katello-devel.cannolo.example.com/pulp/api/v3/remotes/deb/apt/
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/deb/apt/
     body:
       encoding: UTF-8
       base64_string: |
@@ -11,10 +11,10 @@ http_interactions:
         LCJjbGllbnRfY2VydCI6bnVsbCwiY2xpZW50X2tleSI6bnVsbCwidGxzX3Zh
         bGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6Imh0dHBzOi8vbXl0ZXN0LmNv
         bSIsInByb3h5X3VzZXJuYW1lIjoidXNlcm5hbWUiLCJwcm94eV9wYXNzd29y
-        ZCI6InBhc3N3b3JkIiwidG90YWxfdGltZW91dCI6MzAwLCJkaXN0cmlidXRp
-        b25zIjoic3RyZXRjaCIsImNvbXBvbmVudHMiOiJtYWluIiwiYXJjaGl0ZWN0
-        dXJlcyI6ImFtZDY0IiwiZ3Bna2V5IjoiQURGI0ZDU0ZBU0RGJEAkQFpGRERT
-        RyQjJSMlQURTIn0=
+        ZCI6InBhc3N3b3JkIiwicG9saWN5Ijoib25fZGVtYW5kIiwidG90YWxfdGlt
+        ZW91dCI6MzAwLCJkaXN0cmlidXRpb25zIjoic3RyZXRjaCIsImNvbXBvbmVu
+        dHMiOiJtYWluIiwiYXJjaGl0ZWN0dXJlcyI6ImFtZDY0IiwiZ3Bna2V5Ijoi
+        QURGI0ZDU0ZBU0RGJEAkQFpGRERTRyQjJSMlQURTIn0=
     headers:
       Content-Type:
       - application/json
@@ -32,13 +32,13 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Mon, 27 Sep 2021 14:06:05 GMT
+      - Mon, 04 Oct 2021 14:43:45 GMT
       Server:
       - gunicorn
       Content-Type:
       - application/json
       Location:
-      - "/pulp/api/v3/remotes/deb/apt/e64d22eb-007d-47b1-939a-c952f3feaa60/"
+      - "/pulp/api/v3/remotes/deb/apt/22cf0011-c9b2-422d-acdc-100ef2137217/"
       Vary:
       - Accept,Cookie
       Allow:
@@ -48,24 +48,24 @@ http_interactions:
       Content-Length:
       - '771'
       Correlation-Id:
-      - de89c5f2a9034d498bd8b8f8dd2a1190
+      - 49949495b3654396a20053934a5f661a
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.cannolo.example.com
+      - 1.1 centos7-katello-devel-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0L2U2
-        NGQyMmViLTAwN2QtNDdiMS05MzlhLWM5NTJmM2ZlYWE2MC8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTA5LTI3VDE0OjA2OjA1Ljc1MTM0NVoiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9kZWIvYXB0LzIy
+        Y2YwMDExLWM5YjItNDIyZC1hY2RjLTEwMGVmMjEzNzIxNy8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIxLTEwLTA0VDE0OjQzOjQ1LjA0NTUzNFoiLCJuYW1lIjoi
         RGViaWFuIDkgYW1kNjQtdGVzdCIsInVybCI6Imh0dHA6Ly9mdHAuZGViaWFu
         Lm15bWlycm9yLm9yZy9kZWJpYW4iLCJjYV9jZXJ0IjpudWxsLCJjbGllbnRf
         Y2VydCI6bnVsbCwidGxzX3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6
         Imh0dHBzOi8vbXl0ZXN0LmNvbSIsInB1bHBfbGFiZWxzIjp7fSwicHVscF9s
-        YXN0X3VwZGF0ZWQiOiIyMDIxLTA5LTI3VDE0OjA2OjA1Ljc1MTM4NloiLCJk
+        YXN0X3VwZGF0ZWQiOiIyMDIxLTEwLTA0VDE0OjQzOjQ1LjA0NTU0OVoiLCJk
         b3dubG9hZF9jb25jdXJyZW5jeSI6bnVsbCwibWF4X3JldHJpZXMiOm51bGws
-        InBvbGljeSI6ImltbWVkaWF0ZSIsInRvdGFsX3RpbWVvdXQiOjMwMC4wLCJj
+        InBvbGljeSI6Im9uX2RlbWFuZCIsInRvdGFsX3RpbWVvdXQiOjMwMC4wLCJj
         b25uZWN0X3RpbWVvdXQiOm51bGwsInNvY2tfY29ubmVjdF90aW1lb3V0Ijpu
         dWxsLCJzb2NrX3JlYWRfdGltZW91dCI6bnVsbCwiaGVhZGVycyI6bnVsbCwi
         cmF0ZV9saW1pdCI6bnVsbCwiZGlzdHJpYnV0aW9ucyI6InN0cmV0Y2giLCJj
@@ -75,10 +75,10 @@ http_interactions:
         U0ckIyUjJUFEUyIsImlnbm9yZV9taXNzaW5nX3BhY2thZ2VfaW5kaWNlcyI6
         ZmFsc2V9
     http_version: 
-  recorded_at: Mon, 27 Sep 2021 14:06:05 GMT
+  recorded_at: Mon, 04 Oct 2021 14:43:45 GMT
 - request:
     method: delete
-    uri: https://centos7-katello-devel.cannolo.example.com/pulp/api/v3/remotes/deb/apt/e64d22eb-007d-47b1-939a-c952f3feaa60/
+    uri: https://centos7-katello-devel-stable.example.com/pulp/api/v3/remotes/deb/apt/22cf0011-c9b2-422d-acdc-100ef2137217/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -99,7 +99,7 @@ http_interactions:
       message: Accepted
     headers:
       Date:
-      - Mon, 27 Sep 2021 14:06:05 GMT
+      - Mon, 04 Oct 2021 14:43:45 GMT
       Server:
       - gunicorn
       Content-Type:
@@ -113,16 +113,16 @@ http_interactions:
       Content-Length:
       - '67'
       Correlation-Id:
-      - 3e6287e4039e47dfa9baaf44ae60d7f6
+      - 7bf43fce546b44b189ebfbca419cbb70
       Access-Control-Expose-Headers:
       - Correlation-ID
       Via:
-      - 1.1 centos7-katello-devel.cannolo.example.com
+      - 1.1 centos7-katello-devel-stable.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzJiYWIwMzA3LTZlMDktNGZm
-        MS1iNjJmLTM5MmY3NTcyNDlmZi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzc0MDUyZGJlLWI2ZDItNDQ3
+        Yi1iY2I3LTMyMTA2N2E3NzE0YS8ifQ==
     http_version: 
-  recorded_at: Mon, 27 Sep 2021 14:06:05 GMT
+  recorded_at: Mon, 04 Oct 2021 14:43:45 GMT
 recorded_with: VCR 3.0.3
