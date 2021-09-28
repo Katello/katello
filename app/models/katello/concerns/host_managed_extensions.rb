@@ -56,6 +56,9 @@ module Katello
         after_validation :queue_reset_content_host_status
         register_rebuild(:queue_reset_content_host_status, N_("Content_Host_Status"))
 
+        after_validation :queue_refresh_content_host_status
+        register_rebuild(:queue_refresh_content_host_status, N_("Refresh_Content_Host_Status"))
+
         scope :with_pools_expiring_in_days, ->(days) { joins(:pools).merge(Katello::Pool.expiring_in_days(days)).distinct }
 
         scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
@@ -96,6 +99,20 @@ module Katello
       def check_host_registration
         if subscription_facet
           fail ::Katello::Errors::HostRegisteredException
+        end
+      end
+
+      def refresh_content_host_status
+        self.host_statuses.where(type: ::Katello::HostStatusManager::STATUSES.map(&:name)).each do |status|
+          status.refresh!
+        end
+        refresh_global_status!
+      end
+
+      def queue_refresh_content_host_status
+        if !new_record? && !build && self.changes.key?('build')
+          queue.create(id: "refresh_content_host_status_#{id}", name: _("Refresh Content Host Statuses for %s") % self,
+            priority: 300, action: [self, :refresh_content_host_status])
         end
       end
 
