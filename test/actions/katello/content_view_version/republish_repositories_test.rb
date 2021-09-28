@@ -20,7 +20,7 @@ module Katello::Host
 
         plan_action(action, @version)
 
-        assert_action_planed_with(action, ::Actions::Katello::Repository::BulkMetadataGenerate, @version.repositories, :force => true)
+        assert_action_planed_with(action, ::Actions::Katello::Repository::BulkMetadataGenerate, @version.repositories)
       end
     end
   end

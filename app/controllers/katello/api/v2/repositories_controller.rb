@@ -265,8 +265,12 @@ module Katello
 
     api :PUT, "/repositories/:id/republish", N_("Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem.")
     param :id, :number, :desc => N_("Repository identifier"), :required => true
+    param :force, :bool, :desc => N_("Force metadata regeneration to proceed.  Dangerous when repositories use mirror on sync."), :required => true
     def republish
-      task = async_task(::Actions::Katello::Repository::MetadataGenerate, @repository, :force => true)
+      unless ::Foreman::Cast.to_bool(params[:force])
+        fail HttpErrors::BadRequest, _('Metadata republishing must be forced because it is a dangerous operation.')
+      end
+      task = async_task(::Actions::Katello::Repository::MetadataGenerate, @repository)
       respond_for_async :resource => task
     end
 
