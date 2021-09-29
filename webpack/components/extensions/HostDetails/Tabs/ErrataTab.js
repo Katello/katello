@@ -2,15 +2,27 @@ import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Hint, HintBody, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle } from '@patternfly/react-core';
-import { TableVariant, TableText, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import {
+  TableVariant,
+  TableText,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  ExpandableRowContent,
+} from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
+import useSet from '../../../../components/Table/TableHooks';
 import { ErrataType, ErrataSeverity } from '../../../../components/Errata';
 import { getInstallableErrata, regenerateApplicability } from '../HostErrata/HostErrataActions';
+import ErratumExpansionDetail from './ErratumExpansionDetail';
+import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
 import { HOST_ERRATA_KEY } from '../HostErrata/HostErrataConstants';
 import './ErrataTab.scss';
@@ -23,6 +35,8 @@ export const ErrataTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
+  const expandedErrata = useSet([]);
+  const erratumIsExpanded = id => expandedErrata.has(id);
 
   const emptyContentTitle = __('This host does not have any installable errata.');
   const emptyContentBody = __('Installable errata will appear here when available.');
@@ -121,13 +135,14 @@ export const ErrataTab = () => {
         >
           <Thead>
             <Tr>
+              <Th key="expand-carat" />
               {columnHeaders.map(col =>
                 <Th key={col}>{col}</Th>)}
               <Th />
             </Tr>
           </Thead>
-          <Tbody>
-            {results?.map((erratum) => {
+          <>
+            {results?.map((erratum, rowIndex) => {
                 const {
                   id,
                   errata_id: errataId,
@@ -135,26 +150,48 @@ export const ErrataTab = () => {
                   updated: publishedAt,
                   title,
                 } = erratum;
+                const isExpanded = erratumIsExpanded(id);
                 return (
-                  <Tr key={`${id}_${createdAt}`}>
-                    <Td>
-                      <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
-                    </Td>
-                    <Td><ErrataType {...erratum} /></Td>
-                    <Td><ErrataSeverity {...erratum} /></Td>
-                    <Td><TableText wrapModifier="truncate">{title}</TableText></Td>
-                    <Td key={publishedAt}><IsoDate date={publishedAt} /></Td>
-                    <Td
-                      key={`rowActions-${id}`}
-                      actions={{
-                          items: rowActions,
-                        }}
-                    />
-                  </Tr>
+                  <Tbody isExpanded={isExpanded} key={`${id}_${createdAt}`}>
+                    <Tr>
+                      <Td
+                        expand={{
+                          rowIndex,
+                          isExpanded,
+                          onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
+                      }}
+                      />
+                      <Td>
+                        <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
+                      </Td>
+                      <Td><ErrataType {...erratum} /></Td>
+                      <Td><ErrataSeverity {...erratum} /></Td>
+                      <Td><TableText wrapModifier="truncate">{title}</TableText></Td>
+                      <Td key={publishedAt}><IsoDate date={publishedAt} /></Td>
+                      <Td
+                        key={`rowActions-${id}`}
+                        actions={{
+                            items: rowActions,
+                          }}
+                      />
+                    </Tr>
+                    <Tr key="child_row" isExpanded={isExpanded}>
+                      <Td colSpan={3}>
+                        <ExpandableRowContent>
+                          <ErratumExpansionContents erratum={erratum} />
+                        </ExpandableRowContent>
+                      </Td>
+                      <Td colSpan={4}>
+                        <ExpandableRowContent>
+                          <ErratumExpansionDetail erratum={erratum} />
+                        </ExpandableRowContent>
+                      </Td>
+                    </Tr>
+                  </Tbody>
                 );
               })
               }
-          </Tbody>
+          </>
         </TableWrapper>
       </div>
     </div>

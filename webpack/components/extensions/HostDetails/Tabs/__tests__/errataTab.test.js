@@ -1,15 +1,12 @@
 import React from 'react';
-import * as reactRedux from 'react-redux';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
-import { STATUS } from 'foremanReact/constants';
 import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_ERRATA_KEY } from '../../HostErrata/HostErrataConstants';
 import { ErrataTab } from '../ErrataTab';
 
-const mockTraceData = require('./errata.fixtures.json');
+const mockErrataData = require('./errata.fixtures.json');
 
-const mockHostDetails = { id: 1 };
 const renderOptions = {
   apiNamespace: HOST_ERRATA_KEY,
   initialState: {
@@ -32,7 +29,7 @@ let searchDelayScope;
 let autoSearchScope;
 
 beforeEach(() => {
-  const { results } = mockTraceData;
+  const { results } = mockErrataData;
   [firstErrata] = results;
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
@@ -51,7 +48,7 @@ test('Can call API for errata and show on screen on page load', async (done) => 
   // return tracedata results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
-    .reply(200, mockTraceData);
+    .reply(200, mockErrataData);
 
   const { getAllByText } = renderWithRedux(<ErrataTab />, renderOptions);
 
@@ -74,11 +71,6 @@ test('Can handle no errata being present', async (done) => {
     results: [],
   };
 
-  // Mocking our host ID, results, and status in the test redux store
-  const useSelector = jest.spyOn(reactRedux, 'useSelector');
-  useSelector.mockReturnValueOnce(mockHostDetails).mockReturnValueOnce(noResults)
-    .mockReturnValueOnce(STATUS.RESOLVED);
-
   const scope = nockInstance
     .get(hostErrata)
     .reply(200, noResults);
@@ -89,6 +81,47 @@ test('Can handle no errata being present', async (done) => {
   await patientlyWaitFor(() => expect(queryByText('This host does not have any installable errata.')).toBeInTheDocument());
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
-  useSelector.mockClear(); // Clear the mock values out
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can display expanded errata details', async (done) => {
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+
+  // return tracedata results when we look for errata
+  const scope = nockInstance
+    .get(hostErrata)
+    .reply(200, mockErrataData);
+
+  const {
+    getByText,
+    queryByText,
+    getAllByText,
+    getAllByLabelText,
+  } = renderWithRedux(<ErrataTab />, renderOptions);
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText(firstErrata.severity)[0]).toBeInTheDocument());
+  const firstExpansion = getAllByLabelText('Details')[0];
+
+  firstExpansion.click();
+  expect(getAllByText('CVEs').length).toBeGreaterThan(0);
+  // the errata details should now be visible
+  expect(getByText(firstErrata.summary)).toBeVisible();
+
+  const cveTreeItem = getAllByText('CVEs')[0];
+  expect(cveTreeItem).toBeVisible();
+  cveTreeItem.click();
+  // the CVE should now be visible
+  expect(getByText(firstErrata.cves[0].cve_id)).toBeInTheDocument();
+  cveTreeItem.click();
+  // the CVE should now have disappeared
+  expect(queryByText(firstErrata.cves[0].cve_id)).not.toBeInTheDocument();
+
+  firstExpansion.click();
+  // the errata details should now be hidden
+  expect(getByText(firstErrata.summary)).not.toBeVisible();
+  // Assert request was made and completed, see helper function
+  assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
