@@ -1,20 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { capitalize, head } from 'lodash';
 import { Split, SplitItem, GridItem, TextContent, Text, TextVariants, Label } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import AffectedRepositorySelection from './AffectedRepositories/AffectedRepositorySelection';
-
 import RepoIcon from '../Repositories/RepoIcon';
-import { repoType, capitalize } from '../../../../utils/helpers';
+import { repoType } from '../../../../utils/helpers';
 
 const ContentViewFilterDetailsHeader = ({
   cvId, filterId, details, setShowAffectedRepos,
 }) => {
   const {
-    type, name, inclusion, description,
+    type, name, inclusion, description, rules,
   } = details;
+  const errataByDate = !!(type === 'erratum' && head(rules)?.types);
   const repositoryType = repoType(type);
-  const displayedType = type ? capitalize(type.replace(/_/g, ' ')) : '';
+  const displayedType = () => {
+    if (errataByDate) return __('Errata - by date range');
+    if (type) return capitalize(type.replace(/_/g, ' '));
+    return '';
+  };
 
   return (
     <>
@@ -40,7 +45,7 @@ const ContentViewFilterDetailsHeader = ({
           </SplitItem>
           <SplitItem>
             <Text component={TextVariants.p}>
-              {displayedType}
+              {displayedType()}
             </Text>
           </SplitItem>
         </Split>
@@ -62,6 +67,7 @@ ContentViewFilterDetailsHeader.propTypes = {
     type: PropTypes.string,
     inclusion: PropTypes.bool,
     description: PropTypes.string,
+    rules: PropTypes.arrayOf(PropTypes.shape({ types: PropTypes.arrayOf(PropTypes.string) })),
   }).isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
 };

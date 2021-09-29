@@ -12,6 +12,8 @@ const typeName = (type, errataByDate) => {
     docker: __('Container image tag'),
     modulemd: __('Module stream'),
     erratum: __('Errata'),
+    erratum_date: __('Errata - Date and Type'),
+    erratum_id: __('Errata - Id'),
   };
 
   if (Object.prototype.hasOwnProperty.call(nameMap, type)) return nameMap[type];

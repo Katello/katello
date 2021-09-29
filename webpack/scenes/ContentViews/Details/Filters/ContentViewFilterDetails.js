@@ -42,7 +42,7 @@ const ContentViewFilterDetails = () => {
     }
   }, [response, loaded]);
 
-  const { type, inclusion } = details;
+  const { type, inclusion, rules } = details;
   if (loading) {
     return <Loading />;
   }
@@ -65,6 +65,7 @@ const ContentViewFilterDetails = () => {
           type={type}
           showAffectedRepos={showAffectedRepos}
           setShowAffectedRepos={setShowAffectedRepos}
+          rules={rules}
         />
       </GridItem>
     </Grid>

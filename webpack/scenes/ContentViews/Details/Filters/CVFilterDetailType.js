@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { head } from 'lodash';
 import CVPackageGroupFilterContent from './CVPackageGroupFilterContent';
 import CVRpmFilterContent from './CVRpmFilterContent';
 import CVContainerImageFilterContent from './CVContainerImageFilterContent';
 import CVModuleStreamFilterContent from './CVModuleStreamFilterContent';
 
 const CVFilterDetailType = ({
-  cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos,
+  cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos, rules,
 }) => {
   switch (type) {
     case 'docker':
@@ -38,6 +39,12 @@ const CVFilterDetailType = ({
         showAffectedRepos={showAffectedRepos}
         setShowAffectedRepos={setShowAffectedRepos}
       />);
+    case 'erratum':
+      if (head(rules)?.types) {
+        return (<p>WIP Errata by date</p>);
+      }
+      return (<p>WIP Errata by ID</p>);
+
     default:
       return null;
   }
@@ -50,6 +57,7 @@ CVFilterDetailType.propTypes = {
   type: PropTypes.string,
   showAffectedRepos: PropTypes.bool.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  rules: PropTypes.arrayOf(PropTypes.shape({ types: PropTypes.arrayOf(PropTypes.string) })),
 };
 
 CVFilterDetailType.defaultProps = {
@@ -57,6 +65,7 @@ CVFilterDetailType.defaultProps = {
   filterId: '',
   type: '',
   inclusion: false,
+  rules: [{}],
 };
 
 export default CVFilterDetailType;
