@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { installTracerPackage } from './HostTracesActions';
 import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
-import { KATELLO_PACKAGE_INSTALL_FEATURE } from './RemoteExecutionConstants';
+import { REX_FEATURES } from './RemoteExecutionConstants';
 
 const EnableTracerModal = ({ isOpen, setIsOpen }) => {
   const title = __('Enable Tracer');
@@ -46,7 +46,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
 
   const customizedRexUrl = () => {
     const urlQuery = encodeURI([
-      `feature=${KATELLO_PACKAGE_INSTALL_FEATURE}`,
+      `feature=${REX_FEATURES.KATELLO_PACKAGE_INSTALL}`,
       `inputs[package]=${KATELLO_TRACER_PACKAGE}`,
       `host_ids=name ^ (${hostname})`,
     ].join('&'));
