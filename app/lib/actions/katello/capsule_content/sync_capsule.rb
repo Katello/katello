@@ -11,6 +11,7 @@ module Actions
           skip_metadata_check = options.fetch(:skip_metadata_check, false)
           sequence do
             repos = repos_to_sync(smart_proxy, environment, content_view, repository, skip_metadata_check)
+            return nil if repos.empty?
 
             repos.in_groups_of(Setting[:foreman_proxy_content_batch_size], false) do |repo_batch|
               concurrence do

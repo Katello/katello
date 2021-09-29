@@ -160,7 +160,7 @@ module Katello
         if (distro = repo_service.lookup_distributions(base_path: path).first) ||
           (distro = repo_service.lookup_distributions(name: "#{backend_object_name}").first)
           # update dist
-          dist_options = dist_options.except(:name, :base_path)
+          dist_options = dist_options.except(:name)
           api.distributions_api.partial_update(distro.pulp_href, dist_options)
         else
           # create dist
