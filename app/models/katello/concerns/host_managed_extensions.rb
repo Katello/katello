@@ -33,6 +33,8 @@ module Katello
       included do
         prepend Overrides
 
+        delegate :content_source_id, :content_view_id, :lifecycle_environment_id, :kickstart_repository_id, to: :content_facet, allow_nil: true
+
         has_many :dispatch_histories, :class_name => "::Katello::Agent::DispatchHistory", :foreign_key => :host_id, :dependent => :delete_all
 
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :delete_all
