@@ -21,6 +21,7 @@ import getContentViewDetails, {
 } from '../ContentViewDetailActions';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
+import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
 
 const CVModuleStreamFilterContent = ({
   cvId, filterId, showAffectedRepos, setShowAffectedRepos,
@@ -207,6 +208,11 @@ const CVModuleStreamFilterContent = ({
                         {__('Remove')}
                       </DropdownItem>]
                   }
+                  />
+                </SplitItem>
+                <SplitItem>
+                  <ArtifactsWithNoErrataRenderer
+                    filterDetails={filterDetails}
                   />
                 </SplitItem>
               </Split>

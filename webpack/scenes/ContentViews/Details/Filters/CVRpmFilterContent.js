@@ -6,6 +6,7 @@ import { TableVariant } from '@patternfly/react-table';
 import { Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
 import onSelect from '../../../../components/Table/helpers';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import {
@@ -177,6 +178,11 @@ const CVRpmFilterContent = ({
                           {__('Remove')}
                         </DropdownItem>]
                       }
+                    />
+                  </SplitItem>
+                  <SplitItem>
+                    <ArtifactsWithNoErrataRenderer
+                      filterDetails={filterDetails}
                     />
                   </SplitItem>
                 </Split>
