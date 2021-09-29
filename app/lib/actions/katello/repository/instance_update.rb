@@ -7,7 +7,7 @@ module Actions
         def plan(repository)
           action_subject repository
           repository.save!
-          plan_action(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, repository)
+          plan_action(::Actions::Pulp3::Orchestration::Repository::RefreshIfNeeded, repository, SmartProxy.pulp_primary)
           plan_self(:repository_id => repository.id)
         end
 

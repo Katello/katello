@@ -26,9 +26,13 @@ module Katello
         def test_refresh_distributions_update_dist
           mock_distribution = "distro"
           mock_distribution.expects(:pulp_href).once.returns("pulp_href")
-          @repo_service.stubs(:lookup_distributions).returns([mock_distribution])
           @repo_mirror.stubs(:version_href).returns("repo_href")
-          PulpAnsibleClient::DistributionsAnsibleApi.any_instance.expects(:partial_update).with("pulp_href", {:content_guard => nil, :repository_version => "repo_href"})
+          @repo_service.expects(:lookup_distributions).returns([mock_distribution])
+          @repo_service.expects(:relative_path).returns("relative_path")
+          PulpAnsibleClient::DistributionsAnsibleApi.any_instance.expects(:partial_update).with("pulp_href",
+                                                                                                { :content_guard => nil,
+                                                                                                  :repository_version => "repo_href",
+                                                                                                  :base_path => "relative_path" })
           @repo_mirror.refresh_distributions(name: "test name", base_path: "test base_path", content_guard: "test content_guard")
         end
 
