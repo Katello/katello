@@ -185,6 +185,7 @@ module Katello
               service = service_class.new(model.pulp_id)
               service.backend_data = unit
               model.repository_id = repository.id unless many_repository_associations
+
               if repository.generic?
                 service.update_model(model, repository.repository_type, generic_content_type)
               else
@@ -194,12 +195,13 @@ module Katello
             pulp_id_href_map[pulp_id] = backend_identifier
           end
         end
-        sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map) if self.many_repository_associations
+        sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map, generic_content_type: generic_content_type) if self.many_repository_associations
       end
       # rubocop:enable Metrics/MethodLength
 
       def sync_repository_associations(repository, options = {})
         additive = options.fetch(:additive, false)
+        generic_content_type = options.fetch(:generic_content_type, nil)
         pulp_id_href_map = options.dig(:pulp_id_href_map) || {}
         pulp_ids = options.dig(:pulp_ids) || pulp_id_href_map.try(:keys)
         ids_for_repository = with_pulp_id(pulp_ids).pluck(:id, :pulp_id)
@@ -209,7 +211,16 @@ module Katello
         id_href_map_for_repository.each_pair { |k, v| id_href_map_for_repository[k] = pulp_id_href_map[v] }
 
         existing_ids = self.repository_association_class.uncached do
-          self.repository_association_class.where(:repository_id => repository).pluck(unit_id_field)
+          repo_assoc_units = self.repository_association_class.where(:repository_id => repository)
+
+          if generic_content_type
+            generic_unit_ids = Katello::GenericContentUnit
+              .where(id: repo_assoc_units.pluck(unit_id_field))
+              .where(content_type: generic_content_type).pluck(:id)
+            repo_assoc_units = repo_assoc_units.where(generic_content_unit_id: generic_unit_ids)
+          end
+
+          repo_assoc_units.pluck(unit_id_field)
         end
 
         ActiveRecord::Base.transaction do

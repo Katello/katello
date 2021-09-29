@@ -5,6 +5,7 @@ Katello::RepositoryTypeManager.register('ostree') do
   pulp3_service_class Katello::Pulp3::Repository::Generic
   pulp3_api_class Katello::Pulp3::Api::Generic
   pulp3_plugin 'ostree'
+  pulp3_skip_publication true
   partial_repo_path '' #TODO: add partial repo path
 
   client_module_class PulpOstreeClient
@@ -18,8 +19,15 @@ Katello::RepositoryTypeManager.register('ostree') do
   distribution_class PulpOstreeClient::OstreeOstreeDistribution
   repo_sync_url_class PulpOstreeClient::RepositorySyncURL
 
-  url_description N_("URL of an OSTree respository.")
+  url_description N_("URL of an OSTree repository.")
 
   model_name lambda { |pulp_unit| pulp_unit["name"] }
   model_version lambda { |pulp_unit| pulp_unit["version"] }
+
+  generic_content_type 'ostree_ref',
+                       model_class: Katello::GenericContentUnit,
+                       pulp3_api: PulpOstreeClient::ContentRefsApi,
+                       pulp3_service_class: Katello::Pulp3::GenericContentUnit
+
+  default_managed_content_type :ostree_ref
 end

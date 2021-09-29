@@ -7,11 +7,16 @@ module Katello
         end
 
         def distribution_options(path)
-          {
+          options = {
             base_path: path,
-            publication: repo.publication_href,
             name: "#{generate_backend_object_name}"
           }
+
+          unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
+            options.merge!(publication: repo.publication_href)
+          end
+
+          options
         end
 
         def remote_options
