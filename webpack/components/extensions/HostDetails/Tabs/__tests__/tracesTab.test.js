@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, waitFor, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, waitFor, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_TRACES_KEY } from '../HostTracesConstants';
@@ -18,6 +18,7 @@ const renderOptions = { // sets initial Redux state
       HOST_DETAILS: {
         response: {
           id: 1,
+          name: 'client.example.com',
         },
         status: 'RESOLVED',
       },
@@ -149,6 +150,10 @@ describe('With tracer installed', () => {
 });
 
 describe('Without tracer installed', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   test('Shows Enable Tracer empty state', async (done) => {
     const tracerNotInstalledScope = nockInstance
       .get(tracerStatus)
@@ -201,5 +206,36 @@ describe('Without tracer installed', () => {
 
     assertNockRequest(tracerNotInstalledScope);
     assertNockRequest(jobInvocationScope, done);
+  });
+
+  test('Can enable tracer via customized remote execution', async (done) => {
+    const tracerNotInstalledScope = nockInstance
+      .get(tracerStatus)
+      .reply(200, mockTracerNotInstalled);
+
+    const { getByText, getByRole, queryByText } = renderWithRedux(<TracesTab />, renderOptions);
+
+    await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
+    const enableTracesButton = getByText('Enable Traces');
+    enableTracesButton.click();
+
+    const dropdown = queryByText('via remote execution');
+    await act(async () => fireEvent.click(dropdown));
+
+    const viaCustomizedRex = queryByText('via customized remote execution');
+    expect(viaCustomizedRex).toBeVisible();
+    viaCustomizedRex.click();
+    expect(queryByText('via remote execution')).not.toBeInTheDocument();
+
+    const enableTracesModalLink = getByRole('link', { name: 'Enable Tracer' });
+    expect(enableTracesModalLink)
+      .toHaveAttribute(
+        'href',
+        '/job_invocations/new?feature=katello_package_install&inputs%5Bpackage%5D=katello-host-tools-tracer&host_ids=name%20%5E%20(client.example.com)',
+      );
+    enableTracesModalLink.click();
+    expect(enableTracesModalLink).toHaveClass('pf-m-in-progress');
+
+    assertNockRequest(tracerNotInstalledScope, done);
   });
 });
