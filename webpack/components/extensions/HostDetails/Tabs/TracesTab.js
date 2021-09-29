@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Skeleton, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
@@ -8,19 +7,17 @@ import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import EnableTracerEmptyState from './EnableTracerEmptyState';
 import TableWrapper from '../../../Table/TableWrapper';
 import useSet from '../../../Table/TableHooks';
-import { getHostTraces, resolveHostTraces, getTracerStatus } from './HostTracesActions';
-import { selectHostTracesStatus, selectKatelloHostToolsTracer, selectIsTracerInstalled } from './HostTracesSelectors';
+import { getHostTraces, resolveHostTraces } from './HostTracesActions';
+import { selectHostTracesStatus } from './HostTracesSelectors';
 import './TracesTab.scss';
 
 const TracesTab = () => {
   const [searchQuery, updateSearchQuery] = useState('');
   const selectedTraces = useSet([]);
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
-  const tracerResults = useSelector(state => selectKatelloHostToolsTracer(state))?.results;
-  const isTracerInstalled = useSelector(state => selectIsTracerInstalled(state));
-  const showEnableTracer = (tracerResults && !isTracerInstalled);
   const dispatch = useDispatch();
-  const { id: hostId } = hostDetails;
+  const { id: hostId, content_facet_attributes: contentFacetAttributes } = hostDetails;
+  const showEnableTracer = (contentFacetAttributes?.katello_tracer_installed === false);
   const emptyContentTitle = __('This host currently does not have traces.');
   const emptyContentBody = __('Add traces by applying updates on this host.');
   const emptySearchTitle = __('No matching traces found');
@@ -70,13 +67,8 @@ const TracesTab = () => {
     }
   };
 
-  useDeepCompareEffect(() => {
-    if (!tracerResults) dispatch(getTracerStatus(hostId));
-  }, [dispatch, hostId, tracerResults, isTracerInstalled]);
-
-
   if (showEnableTracer) return <EnableTracerEmptyState />;
-  if (!hostId || !tracerResults) return <Skeleton />;
+  if (!hostId) return <Skeleton />;
 
   /* eslint-disable max-len */
   return (

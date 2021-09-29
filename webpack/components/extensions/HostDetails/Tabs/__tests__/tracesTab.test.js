@@ -7,29 +7,38 @@ import TracesTab from '../TracesTab';
 
 const mockTraceData = require('./traces.fixtures.json');
 const mockResolveTraceTask = require('./resolveTraces.fixtures.json');
-const mockTracerResults = require('./tracerResults.fixtures.json');
-const mockTracerNotInstalled = require('./tracerNotInstalled.fixtures.json');
 const mockJobInvocationStatus = require('./tracerEnableJobInvocation.fixtures.json');
 
-const renderOptions = { // sets initial Redux state
+const tracerInstalledResponse = {
+  id: 1,
+  name: 'client.example.com',
+  content_facet_attributes: {
+    katello_tracer_installed: true,
+  },
+};
+
+const tracerNotInstalledResponse = {
+  ...tracerInstalledResponse,
+  content_facet_attributes: {
+    katello_tracer_installed: false,
+  },
+};
+
+const renderOptions = isTracerInstalled => ({ // sets initial Redux state
   apiNamespace: HOST_TRACES_KEY,
   initialState: {
     API: {
       HOST_DETAILS: {
-        response: {
-          id: 1,
-          name: 'client.example.com',
-        },
+        response: isTracerInstalled ? tracerInstalledResponse : tracerNotInstalledResponse,
         status: 'RESOLVED',
       },
     },
   },
-};
+});
 
 const hostTraces = foremanApi.getApiUrl('/hosts/1/traces?per_page=20&page=1');
 const resolveHostTraces = foremanApi.getApiUrl('/hosts/1/traces/resolve');
 const autocompleteUrl = '/hosts/1/traces/auto_complete_search';
-const tracerStatus = foremanApi.getApiUrl('/hosts/1/packages?search=name=katello-host-tools-tracer');
 const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 
 let firstTraces;
@@ -59,16 +68,12 @@ describe('With tracer installed', () => {
       .get(hostTraces)
       .reply(200, mockTraceData);
 
-    const tracerResultsScope = nockInstance
-      .get(tracerStatus)
-      .reply(200, mockTracerResults);
 
-    const { queryByText } = renderWithRedux(<TracesTab />, renderOptions);
+    const { queryByText } = renderWithRedux(<TracesTab />, renderOptions(true));
 
     // Assert that the traces are now showing on the screen, but wait for them to appear.
     await patientlyWaitFor(() => expect(queryByText(firstTraces.application)).toBeInTheDocument());
     // Assert request was made and completed, see helper function
-    assertNockRequest(tracerResultsScope);
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope, done); // Pass jest callback to confirm test is done
   });
@@ -89,16 +94,12 @@ describe('With tracer installed', () => {
       .get(hostTraces)
       .reply(200, noResults);
 
-    const tracerResultsScope = nockInstance
-      .get(tracerStatus)
-      .reply(200, mockTracerResults);
 
-    const { queryByText } = renderWithRedux(<TracesTab />, renderOptions);
+    const { queryByText } = renderWithRedux(<TracesTab />, renderOptions(true));
 
     // Assert that there are not any traces showing on the screen.
     await patientlyWaitFor(() => expect(queryByText('This host currently does not have traces.')).toBeInTheDocument());
     // Assert request was made and completed, see helper function
-    assertNockRequest(tracerResultsScope);
     assertNockRequest(autocompleteScope);
     assertNockRequest(scope, done); // Pass jest callback to confirm test is done
   });
@@ -114,14 +115,11 @@ describe('With tracer installed', () => {
     const resolveTracesScope = nockInstance
       .put(resolveHostTraces)
       .reply(202, mockResolveTraceTask);
-    const tracerResultsScope = nockInstance
-      .get(tracerStatus)
-      .reply(200, mockTracerResults);
 
 
     const { getByText } = renderWithRedux(
       <TracesTab />,
-      renderOptions,
+      renderOptions(true),
     );
     let traceCheckbox;
     // Find the trace.
@@ -142,7 +140,6 @@ describe('With tracer installed', () => {
       restartAppButton.click();
     });
 
-    assertNockRequest(tracerResultsScope);
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
     assertNockRequest(scope, done); // Pass jest callback to confirm test is done
@@ -154,24 +151,15 @@ describe('Without tracer installed', () => {
     nock.cleanAll();
   });
 
-  test('Shows Enable Tracer empty state', async (done) => {
-    const tracerNotInstalledScope = nockInstance
-      .get(tracerStatus)
-      .reply(200, mockTracerNotInstalled);
-
-    const { queryByText } = renderWithRedux(<TracesTab />, renderOptions);
+  test('Shows Enable Tracer empty state', async () => {
+    const { queryByText } = renderWithRedux(<TracesTab />, renderOptions(false));
 
     await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
     // Assert request was made and completed, see helper function
-    assertNockRequest(tracerNotInstalledScope, done);
   });
 
-  test('Shows Enable Tracer modal', async (done) => {
-    const tracerNotInstalledScope = nockInstance
-      .get(tracerStatus)
-      .reply(200, mockTracerNotInstalled);
-
-    const { getByText, queryByText } = renderWithRedux(<TracesTab />, renderOptions);
+  test('Shows Enable Tracer modal', async () => {
+    const { getByText, queryByText } = renderWithRedux(<TracesTab />, renderOptions(false));
 
     await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
     const enableTracesButton = getByText('Enable Traces');
@@ -181,19 +169,15 @@ describe('Without tracer installed', () => {
     const cancelLink = queryByText('Cancel');
     cancelLink.click();
     expect(queryByText('via remote execution')).not.toBeInTheDocument();
-
-    assertNockRequest(tracerNotInstalledScope, done);
   });
 
   test('Can enable tracer via remote execution', async (done) => {
-    const tracerNotInstalledScope = nockInstance
-      .get(tracerStatus)
-      .reply(200, mockTracerNotInstalled);
     const jobInvocationScope = nockInstance
       .post(jobInvocations)
       .reply(201, mockJobInvocationStatus);
 
-    const { getByText, getByRole, queryByText } = renderWithRedux(<TracesTab />, renderOptions);
+    const { getByText, getByRole, queryByText }
+      = renderWithRedux(<TracesTab />, renderOptions(false));
 
     await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
     const enableTracesButton = getByText('Enable Traces');
@@ -204,16 +188,12 @@ describe('Without tracer installed', () => {
     fireEvent.click(enableTracesModalButton);
     expect(queryByText('via remote execution')).not.toBeInTheDocument();
 
-    assertNockRequest(tracerNotInstalledScope);
     assertNockRequest(jobInvocationScope, done);
   });
 
-  test('Can enable tracer via customized remote execution', async (done) => {
-    const tracerNotInstalledScope = nockInstance
-      .get(tracerStatus)
-      .reply(200, mockTracerNotInstalled);
-
-    const { getByText, getByRole, queryByText } = renderWithRedux(<TracesTab />, renderOptions);
+  test('Can enable tracer via customized remote execution', async () => {
+    const { getByText, getByRole, queryByText }
+      = renderWithRedux(<TracesTab />, renderOptions(false));
 
     await patientlyWaitFor(() => expect(queryByText('Traces are not enabled')).toBeInTheDocument());
     const enableTracesButton = getByText('Enable Traces');
@@ -235,7 +215,5 @@ describe('Without tracer installed', () => {
       );
     enableTracesModalLink.click();
     expect(enableTracesModalLink).toHaveClass('pf-m-in-progress');
-
-    assertNockRequest(tracerNotInstalledScope, done);
   });
 });
