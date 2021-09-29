@@ -35,6 +35,7 @@ const TableWrapper = ({
   areAllRowsOnPageSelected,
   selectedCount,
   emptySearchBody,
+  disableSearch,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -47,6 +48,8 @@ const TableWrapper = ({
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
   const unresolvedStatusOrNoRows = unresolvedStatus || pageRowCount === 0;
   const searchNotUnderway = !(searchQuery || activeFilters);
+  const showPagination = !unresolvedStatusOrNoRows;
+  const showActionButtons = actionButtons && !unresolvedStatus;
   const paginationParams = useCallback(() =>
     ({ per_page: perPage, page }), [perPage, page]);
   const prevRequest = useRef({});
@@ -70,7 +73,7 @@ const TableWrapper = ({
         hasChanged(newRequest, paginationChangePending.current)) return;
       paginationChangePending.current = null;
       if (hasChanged(newRequest, prevRequest.current) ||
-          hasChanged(additionalListeners, prevAdditionalListeners.current)
+        hasChanged(additionalListeners, prevAdditionalListeners.current)
       ) {
         // don't fire the same request twice in a row
         prevRequest.current = newRequest;
@@ -79,14 +82,15 @@ const TableWrapper = ({
       }
     };
     let pageOverride;
-    if (searchQuery) pageOverride = { search: searchQuery };
-    if (!isEqual(searchQuery, prevSearch.current) || activeFilters) {
+    if (searchQuery && !disableSearch) pageOverride = { search: searchQuery };
+    if (!disableSearch && (!isEqual(searchQuery, prevSearch.current) || activeFilters)) {
       // Reset page back to 1 when filter or search changes
       prevSearch.current = searchQuery;
       pageOverride = { search: searchQuery, page: 1 };
     }
     fetchWithParams(pageOverride);
   }, [
+    disableSearch,
     activeFilters,
     dispatch,
     fetchItems,
@@ -132,6 +136,7 @@ const TableWrapper = ({
     paginationChangePending.current = pagData;
   };
 
+
   return (
     <>
       <Flex>
@@ -149,25 +154,30 @@ const TableWrapper = ({
             />
           </FlexItem>
         }
-        <FlexItem>
-          <Search
-            isDisabled={unresolvedStatusOrNoRows && searchNotUnderway}
-            patternfly4
-            onSearch={search => updateSearchQuery(search)}
-            getAutoCompleteParams={getAutoCompleteParams}
-            foremanApiAutoComplete={foremanApiAutoComplete}
+        {!disableSearch &&
+          <FlexItem>
+            <Search
+              isDisabled={unresolvedStatusOrNoRows && searchNotUnderway}
+              patternfly4
+              onSearch={search => updateSearchQuery(search)}
+              getAutoCompleteParams={getAutoCompleteParams}
+              foremanApiAutoComplete={foremanApiAutoComplete}
+            />
+          </FlexItem>
+        }
+        {showActionButtons &&
+          <FlexItem>
+            {actionButtons}
+          </FlexItem>}
+        {showPagination &&
+          <PageControls
+            variant={PaginationVariant.top}
+            total={total}
+            page={page}
+            perPage={perPage}
+            onPaginationUpdate={onPaginationUpdate}
           />
-        </FlexItem>
-        <FlexItem>
-          {actionButtons}
-        </FlexItem>
-        <PageControls
-          variant={PaginationVariant.top}
-          total={total}
-          page={page}
-          perPage={perPage}
-          onPaginationUpdate={onPaginationUpdate}
-        />
+        }
       </Flex>
       <MainTable
         searchIsActive={!!searchQuery}
@@ -178,15 +188,17 @@ const TableWrapper = ({
       >
         {children}
       </MainTable>
-      <Flex>
-        <PageControls
-          variant={PaginationVariant.bottom}
-          total={total}
-          page={page}
-          perPage={perPage}
-          onPaginationUpdate={onPaginationUpdate}
-        />
-      </Flex>
+      {showPagination &&
+        <Flex>
+          <PageControls
+            variant={PaginationVariant.bottom}
+            total={total}
+            page={page}
+            perPage={perPage}
+            onPaginationUpdate={onPaginationUpdate}
+          />
+        </Flex>
+      }
     </>
   );
 };
@@ -230,6 +242,7 @@ TableWrapper.propTypes = {
   areAllRowsSelected: PropTypes.func,
   areAllRowsOnPageSelected: PropTypes.func,
   emptySearchBody: PropTypes.string,
+  disableSearch: PropTypes.bool,
 };
 
 TableWrapper.defaultProps = {
@@ -247,6 +260,7 @@ TableWrapper.defaultProps = {
   areAllRowsSelected: noop,
   areAllRowsOnPageSelected: noop,
   emptySearchBody: __('Try changing your search settings.'),
+  disableSearch: false,
 };
 
 export default TableWrapper;

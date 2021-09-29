@@ -11,7 +11,7 @@ const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths'
 const environmentPathsData = require('./versionRemoveEnvPaths.fixtures');
 
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_2` };
-const cvVersions = api.getApiUrl('/content_view_versions/');
+const cvVersions = api.getApiUrl('/content_view_versions');
 const autocompleteUrl = '/content_view_versions/auto_complete_search';
 const cvVersionRemoveUrl = api.getApiUrl('/content_views/2/remove');
 const cvVersionRemoveResponse = require('./cvVersionRemoveResponse.fixture');

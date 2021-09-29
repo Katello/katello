@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { Route } from 'react-router-dom';
 import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
@@ -18,8 +19,17 @@ const promoteResponseData = contentViewTaskInProgressResponseData;
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
 const environmentPathsData = require('../../../Publish/__tests__/environmentPaths.fixtures.json');
 
-const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
-const cvVersions = api.getApiUrl('/content_view_versions/');
+const withCVRoute = component => <Route path="/labs/content_views/:id">{component}</Route>;
+
+const renderOptions = {
+  apiNamespace: `${CONTENT_VIEWS_KEY}_VERSIONS_5`,
+  routerParams: {
+    initialEntries: [{ pathname: '/labs/content_views/5' }],
+    initialIndex: 1,
+  },
+};
+
+const cvVersions = api.getApiUrl('/content_view_versions');
 const autocompleteUrl = '/content_view_versions/auto_complete_search';
 const taskPollingUrl = '/foreman_tasks/api/tasks/6b900ff8-62bb-42ac-8c45-da86b7258520';
 
@@ -54,7 +64,7 @@ test('Can call API and show versions on page load', async (done) => {
     .reply(200, cvVersionsData);
 
   const { getByText, queryByText } = renderWithRedux(
-    <ContentViewVersions cvId={5} />,
+    withCVRoute(<ContentViewVersions cvId={5} />),
     renderOptions,
   );
 
@@ -76,7 +86,7 @@ test('Can link to view environment and see publish time', async () => {
     .reply(200, cvVersionsData);
 
   const { getByText, getAllByText } = renderWithRedux(
-    <ContentViewVersions cvId={5} />,
+    withCVRoute(<ContentViewVersions cvId={5} />),
     renderOptions,
   );
 
@@ -105,7 +115,7 @@ test('Can show package and erratas and link to list page', async () => {
     .reply(200, cvVersionsData);
 
   const { getByText, getAllByText } = renderWithRedux(
-    <ContentViewVersions cvId={5} />,
+    withCVRoute(<ContentViewVersions cvId={5} />),
     renderOptions,
   );
 
@@ -135,7 +145,7 @@ test('Can show additional content and link to list page', async () => {
     .reply(200, cvVersionsData);
 
   const { getByText } = renderWithRedux(
-    <ContentViewVersions cvId={5} />,
+    withCVRoute(<ContentViewVersions cvId={5} />),
     renderOptions,
   );
 
@@ -144,7 +154,7 @@ test('Can show additional content and link to list page', async () => {
     expect(getByText('3 Files').closest('a'))
       .toHaveAttribute('href', '/content_views/5/versions/11/file/');
     expect(getByText('1 Deb Packages').closest('a'))
-      .toHaveAttribute('href', '/content_views/5/versions/11/deb/');
+      .toHaveAttribute('href', '/versions/11/debPackages');
   });
 
   assertNockRequest(autocompleteScope);
@@ -159,7 +169,7 @@ test('Can load for empty versions', async () => {
     .reply(200, emptyCVVersionData);
 
   const { queryByText } = renderWithRedux(
-    <ContentViewVersions cvId={5} />,
+    withCVRoute(<ContentViewVersions cvId={5} />),
     renderOptions,
   );
 
@@ -186,7 +196,7 @@ test('Can call API and show versions with tasks on page load', async (done) => {
   const {
     getByLabelText, queryByText,
   } = renderWithRedux(
-    <ContentViewVersions cvId={5} />,
+    withCVRoute(<ContentViewVersions cvId={5} />),
     renderOptions,
   );
 
@@ -225,7 +235,7 @@ test('Can reload versions upon task completion', async (done) => {
   const {
     getByText, queryByLabelText, getByLabelText, queryByText,
   } = renderWithRedux(
-    <ContentViewVersions cvId={5} />,
+    withCVRoute(<ContentViewVersions cvId={5} />),
     renderOptions,
   );
 
@@ -269,7 +279,7 @@ test('Can open Promote Modal', async (done) => {
   const {
     getByText, queryByText, getByLabelText, getAllByLabelText,
   } = renderWithRedux(
-    <ContentViewVersions cvId={5} />,
+    withCVRoute(<ContentViewVersions cvId={5} />),
     renderOptions,
   );
 

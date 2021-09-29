@@ -103,6 +103,10 @@ module Katello
       name
     end
 
+    def ansible_collections
+      AnsibleCollection.in_repositories(archived_repos)
+    end
+
     delegate :organization, to: :content_view
 
     def active_history

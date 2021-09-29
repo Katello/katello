@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route } from 'react-router-dom';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
@@ -8,25 +9,29 @@ import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
 
 const cvDetailData = require('./contentViewDetails.fixtures.json');
 
-const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
-const cvDetailsPath = api.getApiUrl('/content_views/1');
 
-// The tabs will load in the background, prevent this by mocking
-jest.mock('../Repositories/ContentViewRepositories.js', () => () => 'mocked!');
-jest.mock('../Filters/ContentViewFilters.js', () => () => 'mocked!');
-jest.mock('../Histories/ContentViewHistories.js', () => () => 'mocked!');
-jest.mock('../Versions/ContentViewVersions.js', () => () => 'mocked!');
-jest.mock('../../Publish/PublishContentViewWizard.js', () => () => 'mocked!');
+const withCVRoute = component => <Route path="/labs/content_views/:id([0-9]+)">{component}</Route>;
+
+const renderOptions = {
+  apiNamespace: `${CONTENT_VIEWS_KEY}_1`,
+  routerParams: {
+    initialEntries: [{ pathname: '/labs/content_views/1', hash: '#/details' }],
+    initialIndex: 1,
+  },
+};
+
+const cvDetailsPath = api.getApiUrl('/content_views/1');
 
 test('Can call API and show details on page load', async (done) => {
   const { label, name, description } = cvDetailData;
+
   const scope = nockInstance
     .get(cvDetailsPath)
     .query(true)
     .reply(200, cvDetailData);
 
   const { getByLabelText } = renderWithRedux(
-    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
@@ -57,7 +62,7 @@ test('Can edit text details such as name', async (done) => {
     .reply(200, updatedCVDetails);
 
   const { getByLabelText } = renderWithRedux(
-    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
@@ -94,7 +99,7 @@ test('Can edit boolean details such as solve dependencies', async (done) => {
     .reply(200, updatedCVDetails);
 
   const { getByLabelText } = renderWithRedux(
-    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
@@ -120,7 +125,7 @@ test('Can link to view tasks', async () => {
     .reply(200, cvDetailData);
 
   const { getByText } = renderWithRedux(
-    <ContentViewDetails match={{ params: { id: 1 } }} />,
+    withCVRoute(<ContentViewDetails />),
     renderOptions,
   );
 
