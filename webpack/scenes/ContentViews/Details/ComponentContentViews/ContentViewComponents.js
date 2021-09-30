@@ -115,7 +115,7 @@ const ContentViewComponents = ({ cvId, details }) => {
 
       const cells = [
         { title: <Bullseye><ContentViewIcon composite={false} /></Bullseye> },
-        { title: <Link to={urlBuilder('labs/content_views', '', id)}>{name}</Link> },
+        { title: <a href={urlBuilder('labs/content_views', '') + id}>{name}</a> },
         {
           title:
   <Split>
@@ -129,10 +129,10 @@ const ContentViewComponents = ({ cvId, details }) => {
         aria-label="edit_version"
         variant="plain"
         onClick={() => {
-                            onAdd({
-                              componentCvId: id, published: cvVersion, added: componentCvId, latest,
-                            });
-                          }}
+                      onAdd({
+                        componentCvId: id, published: cvVersion, added: componentCvId, latest,
+                      });
+                    }}
       >
         <PencilAltIcon />
       </Button>
@@ -140,7 +140,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   </Split>,
         },
         { title: environments ? <ComponentEnvironments {...{ environments }} /> : __('Not yet published') },
-        { title: <Link to={urlBuilder(`labs/content_views/${id}#repositories`, '')}>{ repositories ? repositories.length : 0 }</Link> },
+        { title: <Link to={urlBuilder(`labs/content_views/${id}#repositories`, '')}>{repositories ? repositories.length : 0}</Link> },
         {
           title: <AddedStatusLabel added={!!componentCvId} />,
         },
@@ -233,15 +233,15 @@ const ContentViewComponents = ({ cvId, details }) => {
             </SplitItem>
           </Split>
           {versionEditing &&
-          <ComponentContentViewAddModal
-            cvId={compositeCvEditing}
-            componentCvId={componentCvEditing}
-            componentId={componentId}
-            latest={componentLatest}
-            show={versionEditing}
-            setIsOpen={setVersionEditing}
-            aria-label="copy_content_view_modal"
-          />}
+            <ComponentContentViewAddModal
+              cvId={compositeCvEditing}
+              componentCvId={componentCvEditing}
+              componentId={componentId}
+              latest={componentLatest}
+              show={versionEditing}
+              setIsOpen={setVersionEditing}
+              aria-label="copy_content_view_modal"
+            />}
         </>
       }
     />

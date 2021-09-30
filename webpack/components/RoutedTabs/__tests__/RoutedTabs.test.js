@@ -8,17 +8,18 @@ const tabs = [
     key: 'apples',
     title: 'Apples',
     content: <>good for pies!</>,
+    path: '/fruits',
   },
   {
     key: 'pears',
     title: 'Pears',
     content: <>good for a snack!</>,
+    path: '/fruits',
   },
 ];
 
 test('can render tabs and show default tab', async () => {
   const { getByText } = renderWithRouter(<RoutedTabs tabs={tabs} baseUrl="/fruits" defaultTabIndex={1} />);
-
   expect(getByText('Pears')).toBeInTheDocument();
   expect(getByText('good for a snack!')).toBeInTheDocument();
 });

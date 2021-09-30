@@ -5,6 +5,7 @@ import { TableVariant, TableText } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -32,7 +33,7 @@ const ContentViewVersions = ({ cvId }) => {
   const loading = status === STATUS.PENDING;
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({ });
+  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [versionIdToPromote, setVersionIdToPromote] = useState('');
   const [versionNameToPromote, setVersionNameToPromote] = useState('');
@@ -70,9 +71,9 @@ const ContentViewVersions = ({ cvId }) => {
       errata_counts: errataCounts,
     } = cvVersion;
     return [
-      { title: <a href={urlBuilder(`labs/content_views/${cvId}#versions?subContentId=${versionId}`, '')}>{__('Version ')}{version}</a> },
+      { title: <Link to={`/versions/${versionId}`}>{__('Version ')}{version}</Link> },
       { title: <ContentViewVersionEnvironments {...{ environments }} /> },
-      { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/packages`, '')}>{`${packageCount}`}</a> },
+      { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/packages`, '')}>{packageCount}</a> },
       { title: <ContentViewVersionErrata {...{ cvId, versionId, errataCounts }} /> },
       { title: <ContentViewVersionContent {...{ cvId, versionId, cvVersion }} /> },
       { title: description ? <TableText wrapModifier="truncate">{description}</TableText> : <InactiveText text={__('No description')} /> },
@@ -87,13 +88,13 @@ const ContentViewVersions = ({ cvId }) => {
       active_history: activeHistory,
     } = cvVersion;
     const { task } = activeHistory[0];
-    const { result } = task || { };
+    const { result } = task || {};
     if (result !== 'error') {
       dispatch(startPollingTask(task.id, task));
     }
 
     return [
-      { title: <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{__('Version ')}{version}</a> },
+      { title: <Link disabled to={`/versions/${versionId}`}>{__('Version ')}{version}</Link> },
       {
         title: <TaskPresenter
           activeHistory={activeHistory[0]}
@@ -105,7 +106,7 @@ const ContentViewVersions = ({ cvId }) => {
       { title: '' },
       { title: description ? <TableText wrapModifier="truncate">{description}</TableText> : <InactiveText text={__('No description')} /> },
     ];
-  }, [cvId, dispatch]);
+  }, [dispatch]);
 
   useDeepCompareEffect(() => {
     const buildRows = (results) => {
@@ -256,4 +257,5 @@ const ContentViewVersions = ({ cvId }) => {
 ContentViewVersions.propTypes = {
   cvId: PropTypes.number.isRequired,
 };
+
 export default ContentViewVersions;

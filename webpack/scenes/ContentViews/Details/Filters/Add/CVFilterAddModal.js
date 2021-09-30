@@ -75,7 +75,7 @@ const CVFilterAddModal = ({ cvId, show, setIsOpen }) => {
 
   if (redirect) {
     const { id } = response;
-    return (<Redirect to={`/labs/content_views/${cvId}#filters?subContentId=${id}`} />);
+    return (<Redirect to={`/filters/${id}`} />);
   }
 
   return (

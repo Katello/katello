@@ -21,8 +21,6 @@ import { truncate } from '../../../../utils/helpers';
 import ContentType from './ContentType';
 import CVFilterAddModal from './Add/CVFilterAddModal';
 
-const cvFilterUrl = (cvId, filterId) => `/labs/content_views/${cvId}#filters?subContentId=${filterId}`;
-
 const ContentViewFilters = ({ cvId }) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilters(state, cvId), shallowEqual);
@@ -47,7 +45,7 @@ const ContentViewFilters = ({ cvId }) => {
     __('Inclusion type'),
   ];
 
-  const buildRows = useCallback((results) => {
+  const buildRows = (results) => {
     const newRows = [];
     results.forEach((filter) => {
       let errataByDate = false;
@@ -57,7 +55,7 @@ const ContentViewFilters = ({ cvId }) => {
       if (type === 'erratum' && rules[0]?.types) errataByDate = true;
 
       const cells = [
-        { title: <Link to={cvFilterUrl(cvId, id)}>{name}</Link> },
+        { title: <Link to={`/filters/${id}`}>{name}</Link> },
         truncate(description || ''),
         { title: <LongDateTime date={updatedAt} showRelativeTimeTooltip /> },
         { title: <ContentType type={type} errataByDate={errataByDate} /> },
@@ -72,7 +70,7 @@ const ContentViewFilters = ({ cvId }) => {
       newRows.push({ cells, id });
     });
     return newRows;
-  }, [cvId]);
+  };
 
   const bulkRemove = () => {
     setBulkActionOpen(false);
@@ -94,7 +92,7 @@ const ContentViewFilters = ({ cvId }) => {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response, loading, buildRows]);
+  }, [response, loading]);
 
   const actionResolver = () => [
     {
@@ -147,22 +145,21 @@ const ContentViewFilters = ({ cvId }) => {
                   <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!bulkActionEnabled} component="button" onClick={bulkRemove}>
                     {__('Remove')}
                   </DropdownItem>]
-            }
+                }
               />
             </SplitItem>
           </Split>
           {addModalOpen &&
-          <CVFilterAddModal
-            cvId={cvId}
-            show={addModalOpen}
-            setIsOpen={setAddModalOpen}
-            aria-label="add_filter_modal"
-          />}
+            <CVFilterAddModal
+              cvId={cvId}
+              show={addModalOpen}
+              setIsOpen={setAddModalOpen}
+              aria-label="add_filter_modal"
+            />}
         </>
       }
     />);
 };
-
 
 ContentViewFilters.propTypes = {
   cvId: PropTypes.number.isRequired,

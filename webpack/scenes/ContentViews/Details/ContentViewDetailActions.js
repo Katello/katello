@@ -2,7 +2,8 @@ import { API_OPERATIONS, APIActions, get, put, post } from 'foremanReact/redux/A
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
-  RPM_MATCHING_CONTENT,
+  RPM_PACKAGES_CONTENT,
+  RPM_PACKAGE_GROUPS_CONTENT,
   UPDATE_CONTENT_VIEW,
   UPDATE_CONTENT_VIEW_FAILURE,
   UPDATE_CONTENT_VIEW_SUCCESS,
@@ -38,6 +39,12 @@ import {
   cvFilterRepoKey,
   cvVersionDetailsKey,
   cvRemoveVersionKey,
+  REPOSITORY_CONTENT,
+  ERRATA_CONTENT,
+  MODULE_STREAMS_CONTENT,
+  DEB_PACKAGES_CONTENT,
+  ANSIBLE_COLLECTIONS_CONTENT,
+  DOCKER_TAGS_CONTENT,
 } from '../ContentViewsConstants';
 import api, { foremanApi, orgId } from '../../../services/api';
 import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
@@ -60,12 +67,12 @@ const cvUpdateSuccess = (response, dispatch) => {
   }));
 };
 
-export const getRPMMatchingContent = params => get({
+export const getRPMPackages = params => get({
   type: API_OPERATIONS.GET,
-  key: RPM_MATCHING_CONTENT,
+  key: RPM_PACKAGES_CONTENT,
   url: api.getApiUrl('/packages'),
   params,
-  errorToast: error => __(`Something went wrong while fetching matching content! ${getResponseErrorMsgs(error.response)}`),
+  errorToast: error => __(`Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}`),
 });
 
 
@@ -108,6 +115,56 @@ export const createContentViewFilter = (cvId, params) => post({
   params,
   successToast: () => __('Filter created'),
   errorToast: error => __(`Something went wrong while creating the filter! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const getDockerTags = params => get({
+  type: API_OPERATIONS.GET,
+  key: DOCKER_TAGS_CONTENT,
+  url: api.getApiUrl('/docker_tags'),
+  params,
+  errorToast: error => __(`Something went wrong while getting docker tags! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const getAnsibleCollections = params => get({
+  type: API_OPERATIONS.GET,
+  key: ANSIBLE_COLLECTIONS_CONTENT,
+  url: api.getApiUrl('/ansible_collections'),
+  params,
+  errorToast: error => __(`Something went wrong while getting ansible collections! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const getErrata = params => get({
+  type: API_OPERATIONS.GET,
+  key: ERRATA_CONTENT,
+  url: api.getApiUrl('/errata'),
+  params,
+  errorToast: error => __(`Something went wrong while getting errata! ${getResponseErrorMsgs(error.response)}`),
+});
+
+export const getDebPackages = params => get({
+  type: API_OPERATIONS.GET,
+  key: DEB_PACKAGES_CONTENT,
+  url: api.getApiUrl('/debs'),
+  params,
+  errorToast: error => __(`Something went wrong while getting deb packages! ${getResponseErrorMsgs(error.response)}`),
+});
+
+
+export const getModuleStreams = params => get({
+  type: API_OPERATIONS.GET,
+  key: MODULE_STREAMS_CONTENT,
+  url: api.getApiUrl('/module_streams'),
+  params,
+  errorToast: error => __(`Something went wrong while getting module streams! ${getResponseErrorMsgs(error.response)}`),
+});
+
+
+export const getRepositories = params => get({
+  type: API_OPERATIONS.GET,
+  key: REPOSITORY_CONTENT,
+  url: api.getApiUrl('/repositories'),
+  params,
+  errorToast: error => __(`Something went wrong while getting repositories! ${getResponseErrorMsgs(error.response)}`),
 });
 
 export const getContentViewRepositories = (cvId, params, status) => {
@@ -225,6 +282,14 @@ export const getCVFilterDetails = (cvId, filterId, params) => get({
   url: api.getApiUrl(`/content_view_filters/${filterId}`),
 });
 
+export const getPackageGroups = params => get({
+  key: RPM_PACKAGE_GROUPS_CONTENT,
+  url: api.getApiUrl('/package_groups'),
+  params,
+  errorToast: error => __(`Something went wrong while retrieving package groups! ${getResponseErrorMsgs(error.response)}`),
+});
+
+
 export const getCVFilterPackageGroups = (cvId, filterId, params) => get({
   key: cvFilterPackageGroupsKey(cvId, filterId),
   params: {
@@ -304,7 +369,7 @@ export const getContentViewComponents = (cvId, params, statusSelected) => {
 
 export const getContentViewVersions = (cvId, params) => {
   const apiParams = { content_view_id: cvId, ...params };
-  const apiUrl = '/content_view_versions/';
+  const apiUrl = '/content_view_versions';
   return get({
     key: cvDetailsVersionKey(cvId),
     params: apiParams,

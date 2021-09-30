@@ -1,28 +1,26 @@
 import React, { useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Grid, GridItem, TextContent, Text, TextVariants, Button, Flex, FlexItem, Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
 import Skeleton from 'react-loading-skeleton';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
-import PropTypes from 'prop-types';
 
 import DetailsContainer from './DetailsContainer';
 import ContentViewInfo from './ContentViewInfo';
-import ContentViewVersions from './Versions/ContentViewVersions';
-import ContentViewVersionDetails from './Versions/ContentViewVersionDetails';
+import ContentViewVersionsRoutes from './Versions';
+import ContentViewFilterRoutes from './Filters';
 import ContentViewRepositories from './Repositories/ContentViewRepositories';
 import ContentViewComponents from './ComponentContentViews/ContentViewComponents';
 import ContentViewHistories from './Histories/ContentViewHistories';
-import ContentViewFilters from './Filters/ContentViewFilters';
-import ContentViewFilterDetails from './Filters/ContentViewFilterDetails';
 import { selectCVDetails } from './ContentViewDetailSelectors';
 import RoutedTabs from '../../../components/RoutedTabs';
 import ContentViewIcon from '../components/ContentViewIcon';
 import PublishContentViewWizard from '../Publish/PublishContentViewWizard';
 
-const ContentViewDetails = ({ match }) => {
-  const cvId = parseInt(match.params.id, 10);
+export default () => {
+  const { id } = useParams();
+  const cvId = Number(id);
   const details = useSelector(state => selectCVDetails(state, cvId), shallowEqual);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -37,25 +35,22 @@ const ContentViewDetails = ({ match }) => {
     {
       key: 'versions',
       title: __('Versions'),
-      content: <ContentViewVersions cvId={cvId} />,
-      detailContent: <ContentViewVersionDetails />,
+      content: <ContentViewVersionsRoutes cvId={cvId} />,
     },
-    (composite ? {
+    ...composite ? [{
       key: 'contentviews',
       title: __('Content Views'),
       content: <ContentViewComponents {...{ cvId, details }} />,
-    } : {
+    }] : [{
       key: 'repositories',
       title: __('Repositories'),
       content: <ContentViewRepositories {...{ cvId, details }} />,
-    }
-    ),
+    },
     {
       key: 'filters',
       title: __('Filters'),
-      content: <ContentViewFilters cvId={cvId} />,
-      detailContent: <ContentViewFilterDetails />,
-    },
+      content: <ContentViewFilterRoutes cvId={cvId} />,
+    }],
     {
       key: 'history',
       title: __('History'),
@@ -92,7 +87,7 @@ const ContentViewDetails = ({ match }) => {
             <Flex justifyContent={{ lg: 'justifyContentFlexEnd', sm: 'justifyContentFlexStart' }}>
               <FlexItem>
                 <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
-                  Publish new version
+                  {__('Publish new version')}
                 </Button>
                 {isPublishModalOpen && <PublishContentViewWizard
                   details={details}
@@ -118,20 +113,10 @@ const ContentViewDetails = ({ match }) => {
             </Flex>
           </GridItem>
           <GridItem span={12}>
-            <RoutedTabs tabs={tabs} baseUrl={`/labs/content_views/${cvId}`} defaultTabIndex={1} />
+            <RoutedTabs tabs={tabs} defaultTabIndex={1} />
           </GridItem>
         </React.Fragment>
       </DetailsContainer>
     </Grid>
   );
 };
-
-ContentViewDetails.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }),
-  }).isRequired,
-};
-
-export default ContentViewDetails;

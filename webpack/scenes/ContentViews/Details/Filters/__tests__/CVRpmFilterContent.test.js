@@ -24,12 +24,12 @@ const autocompleteUrl = '/content_view_filters/2/rules/auto_complete_search';
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 2),
   routerParams: {
-    initialEntries: [{ hash: '#filters?subContentId=2', pathname: '/labs/content_views/1' }],
+    initialEntries: [{ pathname: '/labs/content_views/1#/filters/2', hash: '#/filters' }],
     initialIndex: 1,
   },
 };
 
-const withCVRoute = component => <Route path="/labs/content_views/:id">{component}</Route>;
+const withCVRoute = component => <Route path="/labs/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
 let searchDelayScope;
 let autoSearchScope;
@@ -174,8 +174,8 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
   });
   getByLabelText('create_rpm_rule').click();
   await patientlyWaitFor(() => {
-    expect(getByText('RPM name')).toBeInTheDocument();
-    expect(getByText('Architecture')).toBeInTheDocument();
+    expect(getByLabelText('input_name')).toBeInTheDocument();
+    expect(getByLabelText('input_architecture')).toBeInTheDocument();
     expect(getByLabelText('create_package_filter_rule')).toBeInTheDocument();
   });
 

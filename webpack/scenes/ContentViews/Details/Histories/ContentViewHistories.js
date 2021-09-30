@@ -4,7 +4,7 @@ import { TableVariant, TableText, Thead, Tbody, Tr, Th, Td } from '@patternfly/r
 import { Label } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import LongDateTime from 'foremanReact/components/common/dates/LongDateTime';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -105,7 +105,7 @@ const ContentViewHistories = ({ cvId }) => {
             <Tr key={index}>
               <Td><LongDateTime date={createdAt} showRelativeTimeTooltip /></Td>
               <Td>
-                <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}`, '')}>{`Version ${version}`}</a>
+                <Link to={`/versions/${versionId}`}>{`Version ${version}`}</Link>
               </Td>
               <Td>{taskStatus}</Td>
               <Td>{actionText(history)}</Td>

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import {
   Text,
   TextContent,
@@ -20,19 +21,31 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
   return (
     <React.Fragment>
       {(moduleStreamCount > 0 &&
-      <><a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/module_streams`, '')}>{`${moduleStreamCount} Module Streams`}</a><br /></>)
+        <>
+          <Link to={`/versions/${versionId}/moduleStreams`}>
+            {`${moduleStreamCount} Module Streams`}
+          </Link><br />
+        </>)
       }
       {(debCount > 0 &&
-      <><a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/deb`, '')}>{`${debCount} Deb Packages`}</a><br /></>)
+        <>
+          <Link to={`/versions/${versionId}/debPackages`}>
+            {`${debCount} Deb Packages`}
+          </Link><br />
+        </>)
       }
       {(dockerManifestCount > 0 && dockerTagCount > 0 &&
-      <>
-        <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/docker`, '')}>{`${dockerTagCount} Docker tags`}</a><br />
-        <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/docker`, '')}>{`${dockerManifestCount} Docker manifests`}</a><br />
-      </>)
+        <>
+          <Link to={`/versions/${versionId}/dockerTags`}>
+            {`${dockerTagCount} Docker tags`}
+          </Link><br />
+          <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/docker`, '')}>{`${dockerManifestCount} Container manifests`}</a><br />
+        </>)
       }
-      {(fileCount > 0 &&
-      <><a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/file`, '')}>{`${fileCount} Files`}</a><br /></>)
+      {fileCount > 0 &&
+        <>
+          <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/file`, '')}>{`${fileCount} Files`}</a><br />
+        </>
       }
       {(moduleStreamCount === 0 && debCount === 0 &&
         dockerManifestCount === 0 && dockerTagCount === 0 &&

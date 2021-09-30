@@ -18,7 +18,7 @@ const cvFilterDetailsAffectedRepos = require('./cvFilterDetailWithAffectedRepos.
 const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
 const cvAllRepos = require('./cvAllRepos.fixtures.json');
 
-const cvRefreshCallbackPath = api.getApiUrl('/content_views/2');
+const cvRefreshCallbackPath = api.getApiUrl('/content_views/1');
 const cvFiltersPath = api.getApiUrl('/content_view_filters');
 
 const cvAddFilterRulePath = api.getApiUrl('/content_view_filters/1/rules');
@@ -26,7 +26,7 @@ const cvRemoveFilterRulePath = api.getApiUrl('/content_view_filters/1/rules/1');
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/1');
 const cvBulkRemoveFilterRulesPath = api.getApiUrl('/content_view_filters/1/remove_filter_rules');
 const cvBulkAddFilterRulesPath = api.getApiUrl('/content_view_filters/1/add_filter_rules');
-const cvGetAllReposPath = api.getApiUrl('/content_views/2/repositories');
+const cvGetAllReposPath = api.getApiUrl('/content_views/1/repositories');
 
 const packageGroupsPath = api.getApiUrl('/package_groups');
 const autocompleteUrl = '/package_groups/auto_complete_search';
@@ -34,12 +34,12 @@ const autoCompleteRepoURL = '/repositories/auto_complete_search';
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 1),
   routerParams: {
-    initialEntries: [{ hash: '#filters?subContentId=1', pathname: '/labs/content_views/2' }],
+    initialEntries: [{ pathname: '/labs/content_views/1#/filters/1' }],
     initialIndex: 1,
   },
 };
 
-const withCVRoute = component => <Route path="/labs/content_views/:id">{component}</Route>;
+const withCVRoute = component => <Route path="/labs/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
 let searchDelayScope;
 let autoSearchScope;

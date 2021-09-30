@@ -1,31 +1,35 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
-import { nockInstance, assertNockRequest } from '../../../../../test-utils/nockWrapper';
-import api from '../../../../../services/api';
-import { cvVersionDetailsKey } from '../../../ContentViewsConstants';
+import { Route } from 'react-router-dom';
+
+import { nockInstance, assertNockRequest } from '../../../../../../test-utils/nockWrapper';
+import api from '../../../../../../services/api';
+import { cvVersionDetailsKey } from '../../../../ContentViewsConstants';
 import ContentViewVersionDetails from '../ContentViewVersionDetails';
 
-const ContentViewVersionDetailsData = require('./ContentViewVersionDetails.fixtures.json');
+const ContentViewVersionDetailsEmptyData = require('./ContentViewVersionDetails.fixtures.json');
 
-const cvVersions = api.getApiUrl('/content_view_versions/41');
+const withCVRoute = component =>
+  <Route path="/versions/:versionId([0-9]+)">{component}</Route>;
+const cvVersions = api.getApiUrl('/content_view_versions/73');
 
 const renderOptions = {
-  apiNamespace: cvVersionDetailsKey(19, 41),
+  apiNamespace: cvVersionDetailsKey(3, 73),
   routerParams: {
-    initialEntries: [{ hash: '#versions?subContentId=41', pathname: '/labs/content_views/19' }],
+    initialEntries: [{ pathname: '/versions/73' }],
     initialIndex: 1,
   },
 };
 
 test('Can show versions detail header', async (done) => {
-  const { version } = ContentViewVersionDetailsData;
+  const { version } = ContentViewVersionDetailsEmptyData;
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
-    .reply(200, ContentViewVersionDetailsData);
+    .reply(200, ContentViewVersionDetailsEmptyData);
 
   const { getByText, queryByText } = renderWithRedux(
-    <ContentViewVersionDetails />,
+    withCVRoute(<ContentViewVersionDetails cvId={3} />),
     renderOptions,
   );
 

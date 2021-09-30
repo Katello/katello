@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -14,17 +13,19 @@ const ComponentVersion = ({ componentCV }) => {
     id: componentId, latest, content_view_version: cvVersion, content_view: cv,
   } = componentCV;
   const {
-    id,
+    id: cvId,
     latest_version: latestVersion,
   } = cv;
-  const { version } = cvVersion || {};
+  const { version, id: versionId } = cvVersion || {};
   const noVersionText = __('Not yet published');
   const latestDescription = __('Latest (automatically updates)');
   const manualVersionText = (latestVersion === version) ? __('Latest version') : __(`New version is available: Version ${latestVersion}`);
   if (componentId) {
     return (
       <>
-        <Link to={urlBuilder('labs/content_views', '', id)}>{version ? `Version ${version}` : noVersionText}</Link>
+        <a href={`${urlBuilder('labs/content_views', '')}${cvId}#/versions/${versionId}`}>
+          {version ? `Version ${version}` : noVersionText}
+        </a>
         <TextContent>
           <Text component={TextVariants.small}>
             {latest ? latestDescription : manualVersionText}
@@ -34,7 +35,9 @@ const ComponentVersion = ({ componentCV }) => {
     );
   }
   return (
-    <Link to={urlBuilder('labs/content_views', '', id)}>{latestVersion ? `Version ${latestVersion}` : noVersionText}</Link>
+    <a href={`${urlBuilder('labs/content_views', '')}${cvId}${latestVersion ? `#/versions/${versionId}` : ''}`}>
+      {latestVersion ? `Version ${latestVersion}` : noVersionText}
+    </a>
   );
 };
 

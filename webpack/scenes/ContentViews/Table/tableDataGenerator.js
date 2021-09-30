@@ -25,13 +25,13 @@ const buildRow = (contentView) => {
   const { last_sync_words: lastSyncWords } = lastTask || {};
   const row = [
     { title: <ContentViewIcon composite={composite ? true : undefined} /> },
-    { title: <Link to={urlBuilder('labs/content_views', '', id)}>{name}</Link> },
+    { title: <Link to={`${urlBuilder('labs/content_views', '')}${id}`}>{name}</Link> },
     { title: lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} /> },
     { title: <LastSync lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /> },
     {
       title: latestVersion ? <ContentViewVersionCell {...{
- id, latestVersion, latestVersionId, latestVersionEnvironments,
-}}
+        id, latestVersion, latestVersionId, latestVersionEnvironments,
+      }}
       /> : <InactiveText style={{ marginTop: '0.5em', marginBottom: '0.5em' }} text={__('Not yet published')} />,
     },
   ];

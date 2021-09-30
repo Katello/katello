@@ -12,7 +12,7 @@ import {
   FlexItem,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
-import EditableTextInput from '../../../../components/EditableTextInput';
+import EditableTextInput from '../../../../../components/EditableTextInput';
 
 const ContentViewVersionDetailsHeader = ({
   details: {

@@ -17,7 +17,7 @@ const cvFilterDetails = require('./cvModuleStreamFilterDetails.fixtures.json');
 const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
 
 const cvFiltersPath = api.getApiUrl('/content_view_filters');
-const cvRefreshCallbackPath = api.getApiUrl('/content_views/2');
+const cvRefreshCallbackPath = api.getApiUrl('/content_views/1');
 
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/8');
 const cvAddFilterRulePath = api.getApiUrl('/content_view_filters/8/rules');
@@ -30,12 +30,12 @@ const autocompleteUrl = '/module_streams/auto_complete_search';
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 8),
   routerParams: {
-    initialEntries: [{ hash: '#filters?subContentId=8', pathname: '/labs/content_views/2' }],
+    initialEntries: [{ pathname: '/labs/content_views/1#/filters/8' }],
     initialIndex: 1,
   },
 };
 
-const withCVRoute = component => <Route path="/labs/content_views/:id">{component}</Route>;
+const withCVRoute = component => <Route path="/labs/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
 let searchDelayScope;
 let autoSearchScope;

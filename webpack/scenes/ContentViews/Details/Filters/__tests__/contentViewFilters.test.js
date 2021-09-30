@@ -1,16 +1,27 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { Route } from 'react-router-dom';
 
 import api from '../../../../../services/api';
 import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import ContentViewFilters from '../ContentViewFilters';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 
+const withCVRoute = component =>
+  <Route path="/labs/content_views/:id([0-9]+)#/filters">{component}</Route>;
+
+const renderOptions = {
+  apiNamespace: `${CONTENT_VIEWS_KEY}_1`,
+  routerParams: {
+    initialEntries: [{ pathname: '/labs/content_views/1#/filters' }],
+    initialIndex: 1,
+  },
+};
+
 const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
 
 const cvFilters = api.getApiUrl('/content_view_filters');
 const autocompleteUrl = '/content_view_filters/auto_complete_search';
-const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 
 let firstFilter;
 let lastFilter;
@@ -42,7 +53,7 @@ test('Can call API and show filters on page load', async (done) => {
     .reply(200, cvFilterFixtures);
 
   const { getByText, queryByText } =
-    renderWithRedux(<ContentViewFilters cvId={1} />, renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilters cvId={1} />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
@@ -71,7 +82,7 @@ test('Can search for filter', async (done) => {
     .reply(200, { results: [firstFilter] });
 
   const { queryByText, getByLabelText, getByText } = renderWithRedux(
-    <ContentViewFilters cvId={1} />,
+    withCVRoute(<ContentViewFilters cvId={1} />),
     renderOptions,
   );
 
@@ -112,7 +123,7 @@ test('Can remove a filter', async (done) => {
     .reply(200, {});
 
   const { getAllByLabelText, getByText } = renderWithRedux(
-    <ContentViewFilters cvId={1} />,
+    withCVRoute(<ContentViewFilters cvId={1} />),
     renderOptions,
   );
 
@@ -150,7 +161,7 @@ test('Can remove multiple filters', async (done) => {
     .reply(200, {});
 
   const { getAllByLabelText, getByLabelText, getByText } = renderWithRedux(
-    <ContentViewFilters cvId={1} />,
+    withCVRoute(<ContentViewFilters cvId={1} />),
     renderOptions,
   );
 

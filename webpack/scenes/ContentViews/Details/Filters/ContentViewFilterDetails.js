@@ -4,20 +4,19 @@ import { useParams } from 'react-router-dom';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import { Grid, GridItem } from '@patternfly/react-core';
+import PropTypes from 'prop-types';
 
 import {
   selectCVFilterDetails,
   selectCVFilterDetailStatus,
 } from '../ContentViewDetailSelectors';
 import { getCVFilterDetails, getContentViewFilters } from '../ContentViewDetailActions';
-import useUrlParamsWithHash from '../../../../utils/useUrlParams';
 import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
 import CVFilterDetailType from './CVFilterDetailType';
 import Loading from '../../../../components/Loading';
 
-const ContentViewFilterDetails = () => {
-  const { id: cvId } = useParams();
-  const { params: { subContentId: filterId } } = useUrlParamsWithHash();
+const ContentViewFilterDetails = ({ cvId }) => {
+  const { filterId } = useParams();
   const dispatch = useDispatch();
   const [details, setDetails] = useState({});
   const [showAffectedRepos, setShowAffectedRepos] = useState(false);
@@ -70,6 +69,10 @@ const ContentViewFilterDetails = () => {
       </GridItem>
     </Grid>
   );
+};
+
+ContentViewFilterDetails.propTypes = {
+  cvId: PropTypes.number.isRequired,
 };
 
 export default ContentViewFilterDetails;
