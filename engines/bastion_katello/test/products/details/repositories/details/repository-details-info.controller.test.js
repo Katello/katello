@@ -220,10 +220,6 @@ describe('Controller: RepositoryDetailsInfoController', function() {
        expect($scope.downloadPolicies).toBe(DownloadPolicy.downloadPolicies);
     });
 
-    it ('should set ostree upstream sync policies', function() {
-       expect($scope.ostreeUpstreamSyncPolicies).toBe(OstreeUpstreamSyncPolicy.syncPolicies);
-    });
-
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {
         spyOn(Notification, 'setSuccessMessage');
         spyOn($scope.repository, '$get');

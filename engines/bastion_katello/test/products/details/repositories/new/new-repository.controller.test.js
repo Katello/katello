@@ -155,8 +155,4 @@ describe('Controller: NewRepositoryController', function() {
        expect($scope.downloadPolicies).toBe(DownloadPolicy.downloadPolicies);
     });
 
-    it ('should set ostree upstream sync policies', function() {
-       expect($scope.ostreeUpstreamSyncPolicies).toBe(OstreeUpstreamSyncPolicy.syncPolicies);
-    });
-
 });
