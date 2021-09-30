@@ -31,8 +31,12 @@ module Actions
 
       private
 
+      def job_poll_params
+        {}
+      end
+
       def poll_external_task
-        task = ::Katello::Resources::Candlepin::Job.get(external_task[:id])
+        task = ::Katello::Resources::Candlepin::Job.get(external_task[:id], job_poll_params)
         check_for_errors!(task)
         task
       end
