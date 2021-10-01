@@ -35,6 +35,7 @@ Katello::RepositoryTypeManager.register('python') do
   model_version lambda { |pulp_unit| pulp_unit["version"] }
 
   generic_content_type 'python_package',
+                       pluralized_name: "Python Packages",
                        model_class: Katello::GenericContentUnit,
                        pulp3_api: PulpPythonClient::ContentPackagesApi,
                        pulp3_model: PulpPythonClient::PythonPythonPackageContent,

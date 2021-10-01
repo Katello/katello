@@ -5,6 +5,7 @@ extends 'katello/api/v2/common/identifier'
 attributes :pulp_id => :backend_identifier
 attributes :relative_path, :container_repository_name, :full_path, :library_instance_id
 attributes :version_href, :remote_href, :publication_href
+attributes :content_counts
 
 glue(@object.root) do
   attributes :content_type, :url, :arch, :os_versions, :content_id, :generic_remote_options
@@ -22,24 +23,6 @@ end
 
 node :content_label do |repo|
   repo.content.try(:label)
-end
-
-node :content_counts do |repo|
-  {
-    :ostree_branch => repo.ostree_branches.count,
-    :docker_manifest => repo.docker_manifests.count,
-    :docker_manifest_list => repo.docker_manifest_lists.count,
-    :docker_tag => repo.docker_meta_tag_count,
-    :rpm => repo.rpms.count,
-    :srpm => repo.srpms.count,
-    :package => repo.rpms.count,
-    :package_group => repo.package_groups.count,
-    :erratum => repo.errata.count,
-    :file => repo.files.count,
-    :deb => repo.debs.count,
-    :module_stream => repo.module_streams.count,
-    :ansible_collection => repo.ansible_collections.count
-  }
 end
 
 child :latest_dynflow_sync => :last_sync do |_object|

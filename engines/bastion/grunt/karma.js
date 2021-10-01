@@ -70,7 +70,8 @@ module.exports = {
         }
     },
     server: {
-        autoWatch: true
+        autoWatch: true,
+        singleRun: false
     },
     unit: {
         singleRun: true

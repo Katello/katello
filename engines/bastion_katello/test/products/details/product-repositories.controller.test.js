@@ -53,7 +53,8 @@ describe('Controller: ProductRepositoriesController', function() {
             RepositoryBulkAction: RepositoryBulkAction,
             CurrentOrganization: 'ACME',
             Nutupane: Nutupane,
-            DownloadPolicy: DownloadPolicy
+            DownloadPolicy: DownloadPolicy,
+            RepositoryTypesService: {}
         });
     }));
 

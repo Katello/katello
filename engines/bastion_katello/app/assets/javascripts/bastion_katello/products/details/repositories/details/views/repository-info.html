@@ -378,6 +378,16 @@
         </thead>
 
         <tbody>
+
+        <tr ng-repeat="content_type in genericContentTypes">
+          <td>{{ content_type['pluralized_name'] }}</td>
+          <td class="align-center">
+            <a ui-sref="product.repository.manage-content.generic-content({contentTypeLabel: '{{content_type['pluralized_label']}}', productId: product.id, repositoryId: repository.id})">
+              {{ repository.content_counts[content_type.label] || 0 }}
+            </a>
+          </td>
+        </tr>
+
         <tr ng-show="repository.content_type === 'yum'">
           <td translate>Packages</td>
           <td class="align-center">
@@ -440,14 +450,6 @@
           <td class="align-center">
             <a ui-sref="product.repository.manage-content.docker-tags({productId: product.id, repositoryId: repository.id})">
               {{ repository.content_counts.docker_tag || 0 }}
-            </a>
-          </td>
-        </tr>
-        <tr ng-show="repository.content_type === 'ostree'">
-          <td translate>OSTree Branches</td>
-          <td class="align-center">
-            <a ui-sref="product.repository.manage-content.ostree-branches({productId: product.id, repositoryId: repository.id})">
-               {{ repository.content_counts.ostree_branch || 0 }}
             </a>
           </td>
         </tr>

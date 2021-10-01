@@ -109,7 +109,8 @@ module Katello
         :creatable => @allow_creation_by_user,
         :pulp3_support => SmartProxy.pulp_primary.pulp3_repository_type_support?(self),
         :generic_remote_options => translated_generic_remote_options,
-        :url_description => _(@url_description)
+        :url_description => _(@url_description),
+        :content_types => content_types.as_json
       }
     end
 
@@ -146,16 +147,18 @@ module Katello
         self.model_class::CONTENT_TYPE
       end
 
-      def as_json(_options)
+      def as_json(_options = {})
         {
           label: label,
-          generic_browser: generic_browser
+          generic_browser: generic_browser,
+          generic: false,
+          removable: removable
         }
       end
     end
 
     class GenericContentType < ContentType
-      attr_accessor :pulp3_api, :pulp3_model, :content_type, :filename_key, :duplicates_allowed
+      attr_accessor :pulp3_api, :pulp3_model, :content_type, :filename_key, :duplicates_allowed, :pluralized_name
 
       def initialize(options)
         super
@@ -164,10 +167,21 @@ module Katello
         self.content_type = options[:content_type]
         self.filename_key = options[:filename_key]
         self.duplicates_allowed = options[:duplicates_allowed]
+        self.pluralized_name = options[:pluralized_name]
       end
 
       def label
         self.content_type
+      end
+
+      def as_json(_options = {})
+        {
+          :generic => true,
+          :removable => removable,
+          :pluralized_label => content_type.pluralize,
+          :pluralized_name => pluralized_name,
+          :label => label
+        }
       end
     end
 

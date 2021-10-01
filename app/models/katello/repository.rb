@@ -320,6 +320,22 @@ module Katello
       redhat? ? "redhat" : "custom"
     end
 
+    def content_counts
+      content_counts = {}
+      RepositoryTypeManager.defined_repository_types[content_type].content_types_to_index.each do |content_type|
+        if content_type&.model_class::CONTENT_TYPE == DockerTag::CONTENT_TYPE
+          content_counts[DockerTag::CONTENT_TYPE] = docker_tags.count
+        elsif content_type&.model_class::CONTENT_TYPE == GenericContentUnit::CONTENT_TYPE
+          content_counts[content_type.content_type] = content_type&.model_class&.in_repositories(self)&.where(:content_type => content_type.content_type)&.count
+        else
+          content_counts[content_type.label] = content_type&.model_class&.in_repositories(self)&.count
+        end
+      end
+
+      content_counts['module_stream'] = content_counts.delete('modulemd') if content_counts.key?('modulemd')
+      content_counts
+    end
+
     def self.errata_with_package_counts(repo)
       repository_rpm = Katello::RepositoryRpm.table_name
       repository_errata = Katello::RepositoryErratum.table_name

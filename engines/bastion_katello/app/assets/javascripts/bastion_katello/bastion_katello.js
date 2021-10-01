@@ -34,6 +34,9 @@
 //= require "bastion_katello/files/files.module"
 //= require_tree "./files"
 
+//= require "bastion_katello/generic-content/generic-content.module"
+//= require_tree "./generic-content"
+
 //= require "bastion_katello/ansible-collections/ansible-collections.module.js"
 //= require_tree "./ansible-collections"
 

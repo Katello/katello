@@ -46,6 +46,21 @@ To run your plugin's tests and lint them:
 grunt ci
 ```
 
+### To run a server to run tests in a browser in order to use the debugger
+
+edit bastion/grunt/karma.js.  To the options hash, add:
+```
+        hostname: 'myhost.example.com',
+```
+
+Then run:
+
+```
+grunt test:server
+```
+
+And then point your browser at myhost.example.com:9876
+
 ### Basics of Adding a New Entity ###
 
 Sometimes adding new functionality requires creating a new entity which maps to an external resource. There are a few common steps that a developer will need to take.

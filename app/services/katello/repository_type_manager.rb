@@ -132,12 +132,7 @@ module Katello
       end
 
       def find_repository_type(katello_label)
-        enabled_repository_types.values.each do |repo_type|
-          repo_type.content_types.each do |content_type|
-            return repo_type if content_type.label == katello_label.to_s
-          end
-        end
-        nil
+        enabled_repository_types[katello_label]
       end
 
       def find_content_type(katello_label)
