@@ -29,6 +29,13 @@ Katello::Engine.routes.draw do
 
   match '/content' => 'react#index', :via => [:get]
 
+  Katello::RepositoryTypeManager.generic_content_types.each do |type|
+    get "/#{type.pluralize}", to: redirect("/content/#{type.pluralize}")
+    get "/#{type.pluralize}/:page", to: redirect("/content/#{type.pluralize}/%{page}")
+    match "/content/#{type.pluralize}" => 'react#index', :via => [:get]
+    match "/content/#{type.pluralize}/*page" => 'react#index', :via => [:get]
+  end
+
   match '/labs' => 'react#index', :via => [:get]
   match '/labs/*page' => 'react#index', :via => [:get]
   match '/organization_select' => 'react#index', :via => [:get]

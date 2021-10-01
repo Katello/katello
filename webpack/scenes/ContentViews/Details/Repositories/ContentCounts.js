@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import ContentConfig from '../../../Content/ContentConfig';
 
 // type: [plural_name, singular_name, link]
 const repoLabels = {
@@ -38,7 +39,14 @@ const ContentCounts = ({ productId, repoId, counts }) => {
 
   Object.keys(counts).forEach((type) => {
     const count = counts[type];
-    const info = repoLabels[type];
+    let info = repoLabels[type];
+    const config = ContentConfig().find(typeConfig =>
+      typeConfig.names.singularLabel === type);
+
+    if (config) {
+      const { pluralLowercase, singularLowercase, pluralLabel } = config.names;
+      info = [pluralLowercase, singularLowercase, pluralLabel];
+    }
     // package and rpm are the same
     if (type !== 'package' && count > 0) allCounts.push(appendCount(type, count, info, productId, repoId));
   });

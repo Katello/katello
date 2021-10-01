@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Grid, GridItem, TextContent, Text, TextVariants } from '@patternfly/react-core';
 import { isEmpty } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -17,6 +18,7 @@ const ContentPage = () => {
   const contentTypesStatus = useSelector(selectContentTypesStatus);
   const [selectedContentType, setSelectedContentType] = useState(null);
   const [contentTypes, setContentTypes] = useState(null);
+  const { content_type: contentType } = useParams();
 
   useEffect(() => {
     // Set list of enabled content types and initial content type
@@ -24,10 +26,11 @@ const ContentPage = () => {
       const types = {};
       contentTypesResponse.forEach((type) => {
         if (type.generic_browser) {
-          const typeConfig = ContentConfig().find(config => config.names.singular === type.label);
+          const typeConfig = ContentConfig().find(config =>
+            config.names.singularLabel === type.label);
           if (typeConfig) {
             const { names } = typeConfig;
-            types[names.title] = [names.singular, names.plural];
+            types[names.pluralTitle] = [names.singularLabel, names.pluralLabel];
           }
         }
       });
@@ -36,10 +39,18 @@ const ContentPage = () => {
 
     if (contentTypesStatus === STATUS.RESOLVED) {
       const enabledContentTypes = buildContentTypes();
-      setSelectedContentType(Object.keys(enabledContentTypes)[0]);
+      if (!contentType) {
+        setSelectedContentType(Object.keys(enabledContentTypes)[0]);
+      } else {
+        Object.entries(enabledContentTypes).forEach(([key, value]) => {
+          if (value.includes(contentType)) {
+            setSelectedContentType(key);
+          }
+        });
+      }
       setContentTypes(enabledContentTypes);
     }
-  }, [contentTypesStatus, contentTypesResponse]);
+  }, [contentTypesStatus, contentTypesResponse, contentType]);
 
   useEffect(() => {
     dispatch(getContentTypes());
