@@ -15,8 +15,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import { installTracerPackage } from './HostTracesActions';
-import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
-import { REX_FEATURES } from './RemoteExecutionConstants';
+import { katelloPackageInstallUrl } from './customizedRexUrlHelpers';
 
 const EnableTracerModal = ({ isOpen, setIsOpen }) => {
   const title = __('Enable Tracer');
@@ -44,14 +43,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
     <DropdownItem key={`option_${text}`} onClick={() => setSelectedOption(text)}>{text}</DropdownItem>
   ));
 
-  const customizedRexUrl = () => {
-    const urlQuery = encodeURI([
-      `feature=${REX_FEATURES.KATELLO_PACKAGE_INSTALL}`,
-      `inputs[package]=${KATELLO_TRACER_PACKAGE}`,
-      `host_ids=name ^ (${hostname})`,
-    ].join('&'));
-    return `/job_invocations/new?${urlQuery}`;
-  };
+  const customizedRexUrl = katelloPackageInstallUrl({ hostname });
 
   const getEnableTracerButton = () => {
     const [viaRex] = dropdownOptions;
@@ -74,7 +66,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
         isLoading={buttonLoading}
         onClick={() => setButtonLoading(true)}
         variant="primary"
-        href={customizedRexUrl()}
+        href={customizedRexUrl}
       >
         {title}
       </Button>
