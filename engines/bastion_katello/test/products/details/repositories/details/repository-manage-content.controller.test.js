@@ -1,5 +1,6 @@
 describe('Controller: RepositoryManageContentController', function() {
-    var $scope, translate, Repository, Nutupane, Package, PackageGroup, DockerManifestList,  DockerManifest, OstreeBranch, DockerTag, ModuleStream, AnsibleCollection;
+    var $scope, $state, translate, Repository, Nutupane, Package, PackageGroup, DockerManifestList,  DockerManifest,
+        OstreeBranch, DockerTag, ModuleStream, AnsibleCollection, RepositoryTypesService, pythonContentType, rerunController;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -9,18 +10,30 @@ describe('Controller: RepositoryManageContentController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
-            $state = $injector.get('$state'),
+            GenericContent = $injector.get('MockResource').$new(),
             Package = $injector.get('MockResource').$new();
 
         Repository = $injector.get('MockResource').$new();
         Repository.removeContent = function() {};
 
+        pythonContentType = {
+            pluralized_label: 'python_packages',
+            pluralized_name: 'Python Packs',
+            removable: true
+        };
+        RepositoryTypesService  = {
+            genericContentTypes: function() {
+                return [pythonContentType]
+            }
+        };
+
+        $state = $injector.get('$state');
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {
             productId: '1',
             repositoryId: '1'
         };
-        $state = { current: { name: 'manage-content.packages' } };
+        $state = { current: { name: 'manage-content.packages' }, params: {} };
 
         Nutupane = function() {
             this.table = {
@@ -45,13 +58,19 @@ describe('Controller: RepositoryManageContentController', function() {
             DockerManifestList: DockerManifestList,
             OstreeBranch: OstreeBranch,
             ModuleStream: ModuleStream,
-            AnsibleCollection: AnsibleCollection
+            AnsibleCollection: AnsibleCollection,
+            GenericContent: GenericContent,
+            RepositoryTypesService: RepositoryTypesService
         });
     }));
 
     it('sets up a nutupane', function() {
         expect($scope.contentNutupane).not.toBe(undefined);
         expect($scope.table).toBeDefined();
+    });
+
+    it('properly detects state for non generic content', function () {
+        expect($scope.contentType.controllerName).toBe('katello_rpms');
     });
 
     it('can remove content', function() {
@@ -90,5 +109,13 @@ describe('Controller: RepositoryManageContentController', function() {
         manifest = {manifest_lists: [1]};
         $scope.updateSelectable(manifest);
         expect(manifest.unselectable).not.toBe(true);
+    });
+
+    it('properly pulls in generic content types', function () {
+        $state.params.contentTypeLabel = 'python_packages';
+
+        $scope.updateContentType();
+
+        expect($scope.contentType.pluralized_name).toBe('Python Packs');
     });
 });

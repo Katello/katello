@@ -9,6 +9,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
+            RepositoryTypesService = {},
             ContentCredential = $injector.get('MockResource').$new(),
             Repository = $injector.get('MockResource').$new(),
             HttpProxy = $injector.get('MockResource').$new();
@@ -18,6 +19,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         OstreeUpstreamSyncPolicy = $injector.get("OstreeUpstreamSyncPolicy");
         YumContentUnits = $injector.get("YumContentUnits");
         HttpProxyPolicy = $injector.get("HttpProxyPolicy");
+        RepositoryTypesService.genericContentTypes = function() {};
         $scope = $injector.get('$rootScope').$new();
         $state = $injector.get('$state');
 
@@ -29,6 +31,9 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         $scope.repository['ignorable_content'] = [];
 
         RepositoryTypesService = {};
+        RepositoryTypesService.genericContentTypes = function () {
+            return []
+        };
         RepositoryTypesService.getAttribute = function () {
             return null;
         };

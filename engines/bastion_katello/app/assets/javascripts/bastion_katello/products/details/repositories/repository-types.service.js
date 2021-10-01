@@ -21,11 +21,28 @@
             });
         };
 
-        this.repositoryTypeEnabled = function (desiredType) {
-            var found = _.find(repositoryTypes, function(type) {
-                return type.id === desiredType;
+        this.genericContentTypes = function (repoTypeLabel) {
+            var types;
+            var typesToSearch = repositoryTypes;
+            if (angular.isDefined(repoTypeLabel)) {
+                typesToSearch = [this.repositoryType(repoTypeLabel)];
+            }
+            types = _.map(typesToSearch, function(repoType) {
+                return _.filter(repoType['content_types'], function(contentType) {
+                    return contentType.generic;
+                });
             });
-            return angular.isDefined(found);
+            return [].concat.apply([], types);
+        };
+
+        this.repositoryType = function (typeLabel) {
+            return _.find(repositoryTypes, function(type) {
+                return type.id === typeLabel;
+            });
+        };
+
+        this.repositoryTypeEnabled = function (desiredType) {
+            return angular.isDefined(this.repositoryType(desiredType));
         };
 
         this.pulp3Supported = function(desiredType) {

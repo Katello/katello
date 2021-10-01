@@ -99,6 +99,14 @@
             <span ng-hide="repository.url" translate>N/A</span>
           </td>
           <td bst-table-cell>
+            <span ng-repeat="content_type in genericContentTypesFor(repository.content_type)">
+              <div>
+                <a ui-sref="product.repository.manage-content.generic-content({contentTypeLabel: '{{content_type['pluralized_label']}}', productId: product.id, repositoryId: repository.id})">
+                  {{ repository.content_counts[content_type.label] }} {{ content_type.pluralized_name }}
+                </a>
+              </div>
+            </span>
+
             <span ng-show="repository.content_type == 'yum'">
               <div>
                 <a translate ui-sref="product.repository.manage-content.packages({productId: product.id, repositoryId: repository.id})">

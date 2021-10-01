@@ -18,14 +18,16 @@
  * @requires Deb
  * @requires ModuleStream
  * @requires AnsibleCollection
+ * @requires GenericContent
+ * @requires RepositoryTypesService
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb', 'ModuleStream', 'AnsibleCollection',
-    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb, ModuleStream, AnsibleCollection) {
-        var contentTypes;
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb', 'ModuleStream', 'AnsibleCollection', 'GenericContent', 'RepositoryTypesService',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb, ModuleStream, AnsibleCollection, GenericContent, RepositoryTypesService) {
+        var contentTypes, nutupaneParams;
 
         function success(response, selected) {
             var message;
@@ -51,7 +53,15 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             $scope.product = repository.product;
         });
 
-        $scope.currentState = $state.current.name.split('.').pop();
+        $scope.updateContentType = function () {
+            if ($state.params.contentTypeLabel) {
+                $scope.contentType = contentTypes[$state.params.contentTypeLabel];
+                nutupaneParams['content_type_name'] = $state.params.contentTypeLabel;
+            } else {
+                $scope.currentState = $state.current.name.split('.').pop();
+                $scope.contentType = contentTypes[$scope.currentState];
+            }
+        };
 
         contentTypes = {
             'packages': { type: Package, controllerName: 'katello_rpms' },
@@ -59,20 +69,32 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             'docker-manifests': { type: DockerManifest, controllerName: 'katello_docker_manifests' },
             'docker-manifest-lists': { type: DockerManifestList, controllerName: 'katello_docker_manifest_lists' },
             'docker-tags': {type: DockerTag, controllerName: 'katello_docker_tags'},
-            'ostree-branches': { type: OstreeBranch, controllerName: 'katello_ostree_branches' },
             'files': { type: File, controllerName: 'katello_files' },
             'debs': { type: Deb, controllerName: 'katello_debs' },
             'module-streams': { type: ModuleStream, controllerName: 'katello_module_streams' },
             'ansible-collections': { type: AnsibleCollection, controllerName: 'katello_ansible_collections'}
         };
 
-        $scope.contentNutupane = new Nutupane(contentTypes[$scope.currentState].type, {
-            'repository_id': $scope.$stateParams.repositoryId
+        //Add in generic content types
+        _.each(RepositoryTypesService.genericContentTypes(), function (contentType) {
+            contentTypes[contentType['pluralized_label']] = {
+                type: GenericContent,
+                controllerName: 'katello_generic_content_units',
+                'pluralized_name': contentType['pluralized_name'],
+                removable: contentType.removable
+            };
         });
+
+        nutupaneParams = {
+            'repository_id': $scope.$stateParams.repositoryId
+        };
+
+
+        $scope.updateContentType();
+        $scope.contentNutupane = new Nutupane($scope.contentType.type, nutupaneParams);
         $scope.table = $scope.contentNutupane.table;
         $scope.contentNutupane.primaryOnly = true;
-
-        $scope.controllerName = contentTypes[$scope.currentState].controllerName;
+        $scope.controllerName = $scope.contentType.controllerName;
 
         $scope.removeContent = function () {
             var selected = $scope.table.getSelected();

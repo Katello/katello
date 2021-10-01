@@ -18,8 +18,8 @@
  *   Provides the functionality for manipulating repositories attached to a product.
  */
 angular.module('Bastion.products').controller('ProductRepositoriesController',
-    ['$scope', '$state', '$location', 'Notification', 'translate', 'ApiErrorHandler', 'Product', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane',
-    function ($scope, $state, $location, Notification, translate, ApiErrorHandler, Product, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane) {
+    ['$scope', '$state', '$location', 'Notification', 'translate', 'ApiErrorHandler', 'Product', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane', 'RepositoryTypesService',
+    function ($scope, $state, $location, Notification, translate, ApiErrorHandler, Product, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane, RepositoryTypesService) {
         var repositoriesNutupane = new Nutupane(Repository, {
             'product_id': $scope.$stateParams.productId,
             'search': $location.search().search || "",
@@ -80,6 +80,10 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             removalPromise.finally(function () {
                 $scope.removingRepositories = false;
             });
+        };
+
+        $scope.genericContentTypesFor = function(contentTypeLabel) {
+            return RepositoryTypesService.genericContentTypes(contentTypeLabel);
         };
 
         $scope.removeRepository = function (repository) {

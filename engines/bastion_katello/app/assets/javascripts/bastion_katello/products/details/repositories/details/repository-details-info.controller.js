@@ -30,6 +30,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.uploadURL = 'katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
                 $scope.repository['ignore_srpms'] = $scope.repository['ignorable_content'] && $scope.repository['ignorable_content'].includes("srpm");
                 $scope.repository['ansible_collection_auth_exists'] = $scope.repository['ansible_collection_auth_url'] && $scope.repository['ansible_collection_auth_token'];
+                $scope.genericContentTypes = RepositoryTypesService.genericContentTypes($scope.repository['content_type']);
             });
 
             $scope.gpgKeys = function () {

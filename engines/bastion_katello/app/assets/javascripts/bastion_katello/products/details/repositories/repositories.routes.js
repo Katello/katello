@@ -161,6 +161,15 @@
               label: "{{'Ansible Collections' | translate }}",
               parent: 'product.repository.info'
             }
+        })
+        .state('product.repository.manage-content.generic-content', {
+            url: '/:contentTypeLabel',
+            permission: 'view_products',
+            templateUrl: 'products/details/repositories/details/views/repository-manage-generic-content.html',
+            ncyBreadcrumb: {
+                label: "{{ content_type.pluralized_name }}",
+                parent: 'product.repository.info'
+            }
         });
 
         $stateProvider.state('product.repository.tasks', {

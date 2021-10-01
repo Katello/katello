@@ -20,6 +20,7 @@ angular.module('Bastion.repositories', [
     'Bastion.docker-manifests',
     'Bastion.docker-manifest-lists',
     'Bastion.files',
+    'Bastion.generic-content',
     'Bastion.debs'
 ]);
 
