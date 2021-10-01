@@ -22,7 +22,7 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
   const title = __('Enable Tracer');
   const body = __('Enabling will install the katello-host-tools-tracer package on the host.');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
   const toggleDropdownOpen = () => setIsDropdownOpen(prev => !prev);
   const dropdownOptions = [
     __('via remote execution'),
@@ -71,8 +71,8 @@ const EnableTracerModal = ({ isOpen, setIsOpen }) => {
       <Button
         key="enable_button"
         component="a"
-        isLoading={redirect}
-        onClick={() => setRedirect(true)}
+        isLoading={buttonLoading}
+        onClick={() => setButtonLoading(true)}
         variant="primary"
         href={customizedRexUrl()}
       >
