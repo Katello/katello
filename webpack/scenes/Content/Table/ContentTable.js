@@ -8,7 +8,7 @@ import { getContent } from '../ContentActions';
 import { selectContent, selectContentStatus, selectContentError } from '../ContentSelectors';
 import SelectableDropdown from '../../../components/SelectableDropdown';
 import contentConfig from '../ContentConfig';
-
+/* eslint-disable react/no-array-index-key */
 const ContentTable = ({ selectedContentType, setSelectedContentType, contentTypes }) => {
   const status = useSelector(selectContentStatus);
   const error = useSelector(selectContentError);
@@ -17,17 +17,7 @@ const ContentTable = ({ selectedContentType, setSelectedContentType, contentType
   const { results, ...metadata } = response;
 
   const { columnHeaders } = contentConfig().find(type =>
-    type.names.singular === contentTypes[selectedContentType][0]);
-
-  /* eslint-disable react/no-array-index-key */
-  function buildRows(details) {
-    const rows = [];
-    if (details) {
-      columnHeaders.forEach((header, index) =>
-        rows.push(<Td key={index}>{header.getProperty(details)}</Td>));
-    }
-    return rows;
-  }
+    type.names.singularLabel === contentTypes[selectedContentType][0]);
 
   return (
     <TableWrapper
@@ -71,7 +61,9 @@ const ContentTable = ({ selectedContentType, setSelectedContentType, contentType
       <Tbody>
         {results?.map(details => (
           <Tr key={`${details.id}`}>
-            {buildRows(details)}
+            {columnHeaders.map((col, index) =>
+              <Td key={index}>{col.getProperty(details)}</Td>)
+            }
           </Tr>
         ))
         }

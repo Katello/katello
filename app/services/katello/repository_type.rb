@@ -175,13 +175,13 @@ module Katello
       end
 
       def as_json(_options = {})
-        {
-          :generic => true,
-          :removable => removable,
-          :pluralized_label => content_type.pluralize,
-          :pluralized_name => pluralized_name,
-          :label => label
-        }
+        super.merge(
+          {
+            :generic => true,
+            :pluralized_label => content_type.pluralize,
+            :pluralized_name => pluralized_name
+          }
+        )
       end
     end
 

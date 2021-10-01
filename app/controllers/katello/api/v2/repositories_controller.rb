@@ -211,6 +211,12 @@ module Katello
                     .where("#{AnsibleCollection.table_name}.id" => AnsibleCollection.with_identifiers(params[:ansible_collection_id]))
       end
 
+      generic_type_param = RepositoryTypeManager.generic_content_types.find { |type| params["#{type}_id".to_sym] }
+      if generic_type_param
+        query = query.joins(:generic_content_units)
+                     .where("#{GenericContentUnit.table_name}.id" => GenericContentUnit.with_identifiers(params["#{generic_type_param}_id".to_sym]))
+      end
+
       query
     end
 

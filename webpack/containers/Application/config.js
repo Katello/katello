@@ -12,6 +12,7 @@ import AnsibleCollectionDetails from '../../scenes/AnsibleCollections/Details';
 import ContentViews from '../../scenes/ContentViews';
 import ContentViewDetails from '../../scenes/ContentViews/Details';
 import Content from '../../scenes/Content';
+import ContentDetails from '../../scenes/Content/Details';
 import withHeader from './withHeaders';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -65,5 +66,13 @@ export const links = [
   {
     path: 'content',
     component: WithOrganization(withHeader(Content, { title: __('Other Content Types') })),
+  },
+  {
+    path: 'content/:content_type([a-z_]+)',
+    component: WithOrganization(withHeader(Content, { title: __('Other Content Types') })),
+  },
+  {
+    path: 'content/:content_type([a-z_]+)/:id([0-9]+)',
+    component: WithOrganization(withHeader(ContentDetails, { title: __('Other Content Type Details') })),
   },
 ];
