@@ -2,6 +2,7 @@ require 'katello/plugin.rb'
 
 Foreman::AccessControl.permission(:edit_hosts).actions.concat [
   'api/v2/hosts/host_collections',
+  'katello/api/v2/hosts/change_proxy',
   'katello/api/v2/host_errata/apply',
   'katello/api/v2/host_errata/applicability',
   'katello/api/v2/host_debs/auto_complete_search',

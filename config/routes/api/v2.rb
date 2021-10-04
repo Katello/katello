@@ -469,6 +469,8 @@ Katello::Engine.routes.draw do
           get :auto_complete_search, :on => :collection
           put :sync
         end
+
+        get '/hosts/change_proxy', to: 'hosts#change_proxy'
       end # module v2
     end # '/api' namespace
   end # '/katello' namespace

@@ -110,3 +110,74 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_response :success
   end
 end
+
+module Katello
+  class Api::V2::HostsControllerTest < ActionController::TestCase
+    include Support::CapsuleSupport
+
+    def setup
+      setup_controller_defaults_api
+      set_ca_file
+      models
+    end
+
+    def models
+      @proxy = proxy_with_pulp
+      @proxy_no_pulp = smart_proxies(:one)
+    end
+
+    def test_change_proxy
+      get :change_proxy, params: { smart_proxy_id: @proxy.id }
+      assert_equal 200, response.status
+    end
+
+    def test_cp_proxy_not_found
+      get :change_proxy, params: { smart_proxy_id: 0 }
+      assert_equal 404, response.status
+      assert_includes response.body, "Couldn't find SmartProxy with 'id'=0"
+    end
+
+    def test_cp_not_pulp_primary
+      get :change_proxy, params: { smart_proxy_id: @proxy_no_pulp.id }
+      assert_equal 422, response.status
+      assert_includes response.body, "Pulp 3 is not enabled on Smart proxy!"
+    end
+
+    def test_cp_organization_not_found
+      get :change_proxy, params: { organization_id: 0, smart_proxy_id: @proxy.id }
+      assert_equal 404, response.status
+      assert_includes response.body, "Organization with id 0 not found"
+    end
+
+    def test_cp_location_not_found
+      get :change_proxy, params: { location_id: 0, smart_proxy_id: @proxy.id }
+      assert_equal 404, response.status
+      assert_includes response.body, "Location with id 0 not found"
+    end
+
+    def test_cp_hostgroup_not_found
+      get :change_proxy, params: { hostgroup_id: 0, smart_proxy_id: @proxy.id }
+      assert_equal 404, response.status
+      assert_includes response.body, "Couldn't find Hostgroup with 'id'=0"
+    end
+
+    def test_cp_without_openscap
+      get :change_proxy, params: { smart_proxy_id: @proxy.id }
+      assert_equal 200, response.status
+      refute_includes response.body, "openscap_proxy_id"
+    end
+
+    def test_cp_with_openscap
+      proxy = FactoryBot.create(:smart_proxy, features: [FactoryBot.create(:feature, name: 'Openscap')])
+      with_pulp3_features(proxy)
+
+      get :change_proxy, params: { smart_proxy_id: proxy.id }
+      assert_equal 200, response.status
+      assert_includes response.body, "\"openscap_proxy_id\":#{proxy.id}"
+    end
+
+    def test_cp_permissions
+      refute_authorized(permission: [:view_hosts], action: :change_proxy, request: -> { get :change_proxy }, organizations: [])
+    end
+  end
+end

@@ -1,0 +1,46 @@
+#!/bin/sh
+<%
+  headers = ["-H 'Authorization: Bearer #{@auth_token}'", "-H 'Content-Type: application/json'"]
+-%>
+
+if ! [ $(id -u) = 0 ]; then
+    echo "Please run as root"
+    exit 1
+fi
+
+SSL_CA_CERT=$(mktemp)
+cat << EOF > $SSL_CA_CERT
+<%= @ca_cert %>
+EOF
+
+cleanup_and_exit() {
+  rm -f $SSL_CA_CERT
+  exit $1
+}
+
+KATELLO_SERVER_CA_CERT=/etc/rhsm/ca/katello-server-ca.pem
+RHSM_CFG=/etc/rhsm/rhsm.conf
+
+# Prepare SSL certificate
+mkdir -p /etc/rhsm/ca
+cp -f $SSL_CA_CERT $KATELLO_SERVER_CA_CERT
+chmod 644 $KATELLO_SERVER_CA_CERT
+
+# Configure subscription-manager
+test -f $RHSM_CFG.bak || cp $RHSM_CFG $RHSM_CFG.bak
+
+subscription-manager config \
+  --server.hostname="<%= @rhsm_url.host %>" \
+  --server.port="<%= @rhsm_url.port %>" \
+  --server.prefix="<%= @rhsm_url.path %>" \
+  --rhsm.repo_ca_cert="$KATELLO_SERVER_CA_CERT" \
+  --rhsm.baseurl="<%= @pulp_content_url %>"
+
+# Update host object
+HOSTNAME=$(hostname -f);
+curl --request PUT --silent --show-error --cacert $SSL_CA_CERT --output /dev/null \
+  "<%= @host_api_url %>/$HOSTNAME" \
+  <%= headers.join(' ').html_safe %> \
+  --data '<%= @host_params.to_json.html_safe %>'
+
+cleanup_and_exit 0
