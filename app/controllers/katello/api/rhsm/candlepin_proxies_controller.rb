@@ -3,6 +3,8 @@ module Katello
   class Api::Rhsm::CandlepinProxiesController < Api::V2::ApiController
     include Katello::Authentication::ClientAuthentication
 
+    IF_MODIFIED_SINCE_HEADER = 'If-Modified-Since'.freeze
+
     before_action :disable_strong_params
 
     wrap_parameters false
@@ -71,9 +73,15 @@ module Katello
     end
 
     def get
-      r = Resources::Candlepin::Proxy.get(@request_path)
+      extra_headers = {}
+      modified_since = request.headers[IF_MODIFIED_SINCE_HEADER]
+      if modified_since.present?
+        extra_headers[IF_MODIFIED_SINCE_HEADER] = modified_since
+      end
+
+      r = Resources::Candlepin::Proxy.get(@request_path, extra_headers)
       logger.debug filter_sensitive_data(r)
-      render :json => r
+      render :json => r, :status => r.code
     end
 
     def delete
