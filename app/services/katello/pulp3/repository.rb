@@ -36,9 +36,9 @@ module Katello
         end
       end
 
-      def self.api(smart_proxy)
-        api_class = RepositoryTypeManager.find_by(:pulp3_service_class, self).pulp3_api_class
-        api_class ? api_class.new(smart_proxy) : Katello::Pulp3::Api::Core.new(smart_proxy)
+      def self.api(smart_proxy, repository_type_label)
+        repo_type = RepositoryTypeManager.enabled_repository_types[repository_type_label]
+        repo_type.pulp3_api(smart_proxy)
       end
 
       def core_api
@@ -46,7 +46,7 @@ module Katello
       end
 
       def api
-        @api ||= self.class.api(smart_proxy)
+        @api ||= self.class.api(smart_proxy, repo.content_type)
       end
 
       def ignore_404_exception(*)
