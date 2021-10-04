@@ -2,7 +2,7 @@ class FixRedHatRootRepositoryArch < ActiveRecord::Migration[6.0]
   def up
     ::Katello::RootRepository.
       joins("INNER JOIN katello_contents ON katello_contents.cp_content_id = katello_root_repositories.content_id").
-      where.not(arch: 'noarch').where.not("katello_contents.content_url ILIKE '%$basearch%'").update(arch: 'noarch')
+      where.not(arch: 'noarch').where.not("katello_contents.content_url ILIKE '%$basearch%'").update_all(arch: 'noarch')
   end
 
   def down
