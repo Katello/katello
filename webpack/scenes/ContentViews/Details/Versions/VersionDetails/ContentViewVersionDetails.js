@@ -31,8 +31,10 @@ const ContentViewVersionDetails = ({ cvId }) => {
   const tableConfigs = getCVVersionTableConfigs({ cvId, versionId });
 
   useEffect(() => {
-    dispatch(getContentViewVersionDetails(versionId, cvId));
-  }, [dispatch, versionId, cvId]);
+    if (isEmpty(response) && status === STATUS.PENDING) {
+      dispatch(getContentViewVersionDetails(versionId, cvId));
+    }
+  }, [dispatch, versionId, cvId, response, status]);
 
   useDeepCompareEffect(() => {
     if (loaded) {

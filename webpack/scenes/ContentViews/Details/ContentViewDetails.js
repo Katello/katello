@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { Grid, GridItem, TextContent, Text, TextVariants, Button, Flex, FlexItem, Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
-import Skeleton from 'react-loading-skeleton';
+import { useParams } from 'react-router-dom';
+import { Grid, GridItem, TextContent, Text, TextVariants, Button, Flex, FlexItem } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -16,6 +15,7 @@ import ContentViewHistories from './Histories/ContentViewHistories';
 import { selectCVDetails } from './ContentViewDetailSelectors';
 import RoutedTabs from '../../../components/RoutedTabs';
 import ContentViewIcon from '../components/ContentViewIcon';
+import CVBreadCrumb from '../components/CVBreadCrumb';
 import PublishContentViewWizard from '../Publish/PublishContentViewWizard';
 
 export default () => {
@@ -62,15 +62,7 @@ export default () => {
     <Grid className="grid-with-margin">
       <DetailsContainer cvId={cvId}>
         <React.Fragment>
-          <Breadcrumb style={{ marginTop: '15px' }}>
-            <BreadcrumbItem
-              aria-label="cv_breadcrumb"
-              render={() => (<Link to="/labs/content_views" >{__('Content Views')}</Link>)}
-            />
-            <BreadcrumbItem aria-label="cv_breadcrumb_cv" isActive>
-              {name || <Skeleton />}
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <CVBreadCrumb />
           <GridItem xl={8} lg={7} sm={12} >
             <Flex>
               <FlexItem>
