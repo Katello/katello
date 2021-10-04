@@ -153,7 +153,7 @@ const ContentViewFilters = ({ cvId }) => {
             <CVFilterAddModal
               cvId={cvId}
               show={addModalOpen}
-              setIsOpen={setAddModalOpen}
+              onClose={() => setAddModalOpen(false)}
               aria-label="add_filter_modal"
             />}
         </>

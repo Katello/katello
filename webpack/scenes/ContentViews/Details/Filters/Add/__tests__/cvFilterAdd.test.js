@@ -33,7 +33,7 @@ test('Can save content view filter from form', (done) => {
   fireEvent.change(getByLabelText('input_name'), { target: { value: 'test' } });
   fireEvent.change(getByLabelText('input_description'), { target: { value: 'Creating filter' } });
 
-  getByLabelText('create_filter').click();
+  fireEvent.submit(getByLabelText('create_filter'));
   assertNockRequest(createFilterscope, done);
 });
 
@@ -45,7 +45,7 @@ test('Closes content view filter form upon save', async (done) => {
   fireEvent.change(getByLabelText('input_name'), { target: { value: 'test' } });
   fireEvent.change(getByLabelText('input_description'), { target: { value: 'Creating filter' } });
 
-  getByLabelText('create_filter').click();
+  fireEvent.submit(getByLabelText('create_filter'));
   await patientlyWaitFor(() => {
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
