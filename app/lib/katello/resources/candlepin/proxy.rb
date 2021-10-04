@@ -2,6 +2,8 @@ module Katello
   module Resources
     module Candlepin
       class Proxy
+        DEFAULT_REQUEST_HEADERS = User.cp_oauth_header.merge(accept: :json).freeze
+
         def self.logger
           ::Foreman::Logging.logger('katello/cp_proxy')
         end
@@ -20,10 +22,12 @@ module Katello
           client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
         end
 
-        def self.get(path)
+        def self.get(path, extra_headers = {})
           logger.debug "Sending GET request to Candlepin: #{path}"
           client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
-          client.get({:accept => :json}.merge(User.cp_oauth_header))
+          client.get(extra_headers.merge!(DEFAULT_REQUEST_HEADERS))
+        rescue RestClient::NotModified => e
+          e.response
         end
 
         def self.put(path, body)
