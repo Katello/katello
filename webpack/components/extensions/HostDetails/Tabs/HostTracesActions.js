@@ -1,5 +1,10 @@
 import { API_OPERATIONS, get, put } from 'foremanReact/redux/API';
-import { HOST_TRACES_KEY, RESOLVE_HOST_TRACES_TASK_KEY } from './HostTracesConstants';
+import {
+  HOST_TRACES_KEY,
+  RESOLVE_HOST_TRACES_TASK_KEY,
+  KATELLO_TRACER_PACKAGE,
+} from './HostTracesConstants';
+import installPackage from './RemoteExecutionActions';
 import { foremanApi } from '../../../../services/api';
 import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
@@ -23,4 +28,9 @@ export const resolveHostTraces = (hostId, params) => put({
   handleSuccess: response => renderTaskStartedToast(response.data),
   errorToast: error => errorToast(error),
   params,
+});
+
+export const installTracerPackage = ({ hostname }) => installPackage({
+  hostname,
+  packageName: KATELLO_TRACER_PACKAGE,
 });
