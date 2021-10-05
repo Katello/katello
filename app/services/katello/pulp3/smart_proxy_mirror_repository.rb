@@ -12,7 +12,7 @@ module Katello
         smart_proxy_helper = ::Katello::SmartProxyHelper.new(smart_proxy)
         katello_pulp_ids = smart_proxy_helper.combined_repos_available_to_capsule.map(&:pulp_id)
         pulp3_enabled_repo_types.each do |repo_type|
-          api = repo_type.pulp3_service_class.api(smart_proxy)
+          api = repo_type.pulp3_api(smart_proxy)
           repo_map[api] = api.list_all.reject { |capsule_repo| katello_pulp_ids.include? capsule_repo.name }
         end
 
@@ -23,7 +23,7 @@ module Katello
         repo_version_map = {}
 
         pulp3_enabled_repo_types.each do |repo_type|
-          api = repo_type.pulp3_service_class.api(smart_proxy)
+          api = repo_type.pulp3_api(smart_proxy)
           version_hrefs = api.repository_versions
           orphan_version_hrefs = api.list_all.collect do |pulp_repo|
             mirror_repo_versions = api.versions_list_for_repository(pulp_repo.pulp_href, ordering: :_created)
@@ -52,16 +52,15 @@ module Katello
       def delete_orphan_distributions
         tasks = []
         pulp3_enabled_repo_types.each do |repo_type|
-          pulp3_class = repo_type.pulp3_service_class
-          orphan_distributions(pulp3_class).each do |distribution|
-            tasks << pulp3_class.api(smart_proxy).delete_distribution(distribution.pulp_href)
+          orphan_distributions(repo_type).each do |distribution|
+            tasks << repo_type.pulp3_api(smart_proxy).delete_distribution(distribution.pulp_href)
           end
         end
         tasks
       end
 
-      def orphan_distributions(pulp3_service_class)
-        api = pulp3_service_class.api(smart_proxy)
+      def orphan_distributions(repo_type)
+        api = repo_type.pulp3_api(smart_proxy)
         api.distributions_list_all.select do |distribution|
           dist = api.get_distribution(distribution.pulp_href)
           self.class.orphan_distribution?(dist)
@@ -78,7 +77,7 @@ module Katello
         tasks = []
         repo_names = Katello::Repository.pluck(:pulp_id)
         pulp3_enabled_repo_types.each do |repo_type|
-          api = repo_type.pulp3_service_class.api(smart_proxy)
+          api = repo_type.pulp3_api(smart_proxy)
           remotes = api.remotes_list
 
           remotes.each do |remote|

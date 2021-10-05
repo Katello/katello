@@ -26,7 +26,7 @@ module Katello
         katello_repos = katello_repos.in_content_views([content_view_id]) if content_view_id
         katello_repos = katello_repos.select { |repo| smart_proxy.pulp3_support?(repo) }
         repos_on_capsule = pulp3_enabled_repo_types.collect do |repo_type|
-          repo_type.pulp3_service_class.api(smart_proxy).list_all(name_in: katello_repos.map(&:pulp_id))
+          repo_type.pulp3_api(smart_proxy).list_all(name_in: katello_repos.map(&:pulp_id))
         end
         repos_on_capsule.flatten!
         repo_ids = repos_on_capsule.map(&:name)
