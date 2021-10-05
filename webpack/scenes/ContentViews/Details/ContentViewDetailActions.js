@@ -41,6 +41,7 @@ import {
   cvVersionDetailsKey,
   cvRemoveVersionKey,
   REPOSITORY_CONTENT,
+  FILE_CONTENT,
   ERRATA_CONTENT,
   MODULE_STREAMS_CONTENT,
   DEB_PACKAGES_CONTENT,
@@ -76,6 +77,13 @@ export const getRPMPackages = params => get({
   errorToast: error => __(`Something went wrong while fetching rpm packages! ${getResponseErrorMsgs(error.response)}`),
 });
 
+export const getFiles = params => get({
+  type: API_OPERATIONS.GET,
+  key: FILE_CONTENT,
+  url: api.getApiUrl('/files'),
+  params,
+  errorToast: error => __(`Something went wrong while fetching files! ${getResponseErrorMsgs(error.response)}`),
+});
 
 export const updateContentView = (cvId, params) => dispatch => dispatch(put({
   type: API_OPERATIONS.PUT,
@@ -289,7 +297,6 @@ export const getPackageGroups = params => get({
   params,
   errorToast: error => __(`Something went wrong while retrieving package groups! ${getResponseErrorMsgs(error.response)}`),
 });
-
 
 export const getCVFilterPackageGroups = (cvId, filterId, params) => get({
   key: cvFilterPackageGroupsKey(cvId, filterId),
