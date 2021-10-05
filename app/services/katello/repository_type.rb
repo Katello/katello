@@ -121,7 +121,7 @@ module Katello
       if pulp3_api_class == Katello::Pulp3::Api::Generic
         pulp3_api_class.new(smart_proxy, self)
       else
-        pulp3_api_class ? pulp3_api_class.new(smart_proxy) : Katello::Pulp3::Api::Core.new(smart_proxy)
+        pulp3_api_class ? pulp3_api_class.new(smart_proxy, self) : Katello::Pulp3::Api::Core.new(smart_proxy)
       end
     end
 
