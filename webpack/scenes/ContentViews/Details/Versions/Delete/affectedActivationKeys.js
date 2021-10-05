@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
+import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
@@ -9,27 +10,23 @@ import {
   selectCVActivationKeys, selectCVActivationKeysStatus,
 } from '../../ContentViewDetailSelectors';
 import EnvironmentLabels from '../../../components/EnvironmentLabels';
-import DeleteContext from './DeleteContext';
 
-const AffectedActivationKeys = () => {
-  const { versionEnvironments, selectedEnvSet, cvId } = useContext(DeleteContext);
+const AffectedActivationKeys = ({
+  versionEnvironments, selectedEnvSet, cvId, deleteCV,
+}) => {
   const [searchQuery, updateSearchQuery] = useState('');
   const response = useSelector(state => selectCVActivationKeys(state), shallowEqual);
   const status = useSelector(state => selectCVActivationKeysStatus(state), shallowEqual);
-  const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
+  const selectedEnv = deleteCV ?
+    versionEnvironments :
+    versionEnvironments.filter(env => selectedEnvSet?.has(env.id));
 
   const fetchItems = useCallback(() => {
     const formSearch = () => {
       let cvQuery = `content_view_id = ${cvId}`;
       const selectedEnvStrings = selectedEnv.map(env => `environment=${env.name}`).join(' OR ');
-      if (selectedEnvStrings.length) {
-        cvQuery += ' AND (';
-        cvQuery += `${selectedEnvStrings} )`;
-      }
-      if (searchQuery.length) {
-        cvQuery += ' AND (';
-        cvQuery += `${searchQuery} )`;
-      }
+      if (selectedEnvStrings.length) cvQuery += ` AND ( ${selectedEnvStrings} )`;
+      if (searchQuery.length) cvQuery += ` AND ( ${searchQuery} )`;
       return cvQuery;
     };
     return getActivationKeys({ search: formSearch() });
@@ -79,5 +76,21 @@ const AffectedActivationKeys = () => {
       </Tbody>
     </TableWrapper>
   );
+};
+
+AffectedActivationKeys.propTypes = {
+  cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  selectedEnvSet: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({}),
+  ]),
+  versionEnvironments: PropTypes.arrayOf(PropTypes.shape({})),
+  deleteCV: PropTypes.bool,
+};
+
+AffectedActivationKeys.defaultProps = {
+  selectedEnvSet: null,
+  versionEnvironments: null,
+  deleteCV: false,
 };
 export default AffectedActivationKeys;

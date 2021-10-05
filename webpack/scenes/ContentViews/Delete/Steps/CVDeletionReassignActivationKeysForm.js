@@ -1,30 +1,29 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { ExpandableSection, Select, SelectOption } from '@patternfly/react-core';
-import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
-import EnvironmentPaths from '../../../../components/EnvironmentPaths/EnvironmentPaths';
-import getContentViews from '../../../../ContentViewsActions';
-import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../../../ContentViewSelectors';
-import AffectedActivationKeys from '../affectedActivationKeys';
-import DeleteContext from '../DeleteContext';
+import { STATUS } from 'foremanReact/constants';
+import getContentViews from '../../ContentViewsActions';
+import { selectContentViewError, selectContentViews, selectContentViewStatus } from '../../ContentViewSelectors';
+import CVDeleteContext from '../CVDeleteContext';
+import EnvironmentPaths from '../../components/EnvironmentPaths/EnvironmentPaths';
+import AffectedActivationKeys from '../../Details/Versions/Delete/affectedActivationKeys';
 
-const CVReassignActivationKeysForm = () => {
+const CVDeletionReassignActivationKeysForm = () => {
   const dispatch = useDispatch();
-  const contentViewsInEnvResponse = useSelector(selectContentViews);
-  const contentViewsInEnvStatus = useSelector(selectContentViewStatus);
-  const contentViewsInEnvError = useSelector(selectContentViewError);
+  const contentViewsInEnvResponse = useSelector(state => selectContentViews(state, 'keys'));
+  const contentViewsInEnvStatus = useSelector(state => selectContentViewStatus(state, 'keys'));
+  const contentViewsInEnvError = useSelector(state => selectContentViewError(state, 'keys'));
   const cvInEnvLoading = contentViewsInEnvStatus === STATUS.PENDING;
   const [cvSelectOpen, setCVSelectOpen] = useState(false);
   const [cvSelectOptions, setCvSelectionOptions] = useState([]);
   const [showActivationKeys, setShowActivationKeys] = useState(false);
   const {
-    currentStep, selectedEnvForAK, versionEnvironments, cvId, selectedEnvSet,
+    currentStep, selectedEnvForAK, cvEnvironments, cvId,
     setSelectedEnvForAK, selectedCVForAK, setSelectedCVNameForAK, setSelectedCVForAK,
-  } = useContext(DeleteContext);
+  } = useContext(CVDeleteContext);
 
-  // Fetch content views for selected environment to reassign activation keys to.
   useDeepCompareEffect(
     () => {
       if (selectedEnvForAK.length) {
@@ -32,24 +31,16 @@ const CVReassignActivationKeysForm = () => {
           environment_id: selectedEnvForAK[0].id,
           include_default: true,
           full_result: true,
-        }));
+        }, 'keys'));
       }
       setCVSelectOpen(false);
     },
     [selectedEnvForAK, dispatch, setCVSelectOpen],
   );
 
-  // Upon receiving CVs in selected env, form select options for the content view drop down
   useDeepCompareEffect(() => {
-    const { results } = contentViewsInEnvResponse;
-    // Filter out the cv in the environments that are currently being removed
-    const contentViewEligible = (cv) => {
-      if (cv.id === cvId) {
-        const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
-        return (selectedEnv.filter(env => env.id === selectedEnvForAK[0]?.id).length === 0);
-      }
-      return true;
-    };
+    const { results = [] } = contentViewsInEnvResponse;
+    const contentViewEligible = cv => Number(cv.id) !== Number(cvId);
     if (!cvInEnvLoading && results && selectedEnvForAK.length) {
       setCvSelectionOptions(results.map(cv => ((contentViewEligible(cv)) ?
         (
@@ -68,14 +59,14 @@ const CVReassignActivationKeysForm = () => {
     }
   }, [contentViewsInEnvResponse, contentViewsInEnvStatus, currentStep,
     contentViewsInEnvError, selectedEnvForAK, setSelectedCVForAK, setSelectedCVNameForAK,
-    cvInEnvLoading, selectedCVForAK, cvId, versionEnvironments, selectedEnvSet]);
+    cvInEnvLoading, selectedCVForAK, cvId]);
 
   const fetchSelectedCVName = (id) => {
     const { results } = contentViewsInEnvResponse ?? { };
-    return results.filter(cv => cv.id === id)[0]?.name;
+    return results?.filter(cv => cv.id === id)[0]?.name;
   };
 
-  const onSelect = (event, selection) => {
+  const onSelect = (_event, selection) => {
     setSelectedCVForAK(selection);
     setSelectedCVNameForAK(fetchSelectedCVName(selection));
     setCVSelectOpen(false);
@@ -91,22 +82,22 @@ const CVReassignActivationKeysForm = () => {
         multiSelect={false}
       />
       {!cvInEnvLoading && selectedEnvForAK.length > 0 &&
-        <div style={{ marginTop: '1em' }}>
-          <h3>{__('Select content view')}</h3>
-          <Select
-            selections={selectedCVForAK}
-            onSelect={onSelect}
-            isOpen={cvSelectOpen}
-            isDisabled={cvSelectOptions.length === 0}
-            onToggle={isExpanded => setCVSelectOpen(isExpanded)}
-            id="selectCV"
-            name="selectCV"
-            aria-label="selectCV"
-            placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
-          >
-            {cvSelectOptions}
-          </Select>
-        </div>
+      <div style={{ marginTop: '1em' }}>
+        <h3>{__('Select content view')}</h3>
+        <Select
+          selections={selectedCVForAK}
+          onSelect={onSelect}
+          isOpen={cvSelectOpen}
+          isDisabled={cvSelectOptions.length === 0}
+          onToggle={isExpanded => setCVSelectOpen(isExpanded)}
+          id="selectCV"
+          name="selectCV"
+          aria-label="selectCV"
+          placeholderText={(cvSelectOptions.length === 0) ? __('No content views available') : __('Select a content view')}
+        >
+          {cvSelectOptions}
+        </Select>
+      </div>
       }
       <ExpandableSection
         toggleText={showActivationKeys ?
@@ -117,15 +108,14 @@ const CVReassignActivationKeysForm = () => {
       >
         <AffectedActivationKeys
           {...{
-          cvId,
-          versionEnvironments,
-          selectedEnvSet,
+            cvId,
           }}
-          deleteCV={false}
+          versionEnvironments={cvEnvironments}
+          deleteCV
         />
       </ExpandableSection>
     </>
   );
 };
 
-export default CVReassignActivationKeysForm;
+export default CVDeletionReassignActivationKeysForm;

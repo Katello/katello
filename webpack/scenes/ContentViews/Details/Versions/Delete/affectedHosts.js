@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
+import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
@@ -7,28 +8,23 @@ import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { selectCVHosts, selectCVHostsStatus } from '../../ContentViewDetailSelectors';
 import EnvironmentLabels from '../../../components/EnvironmentLabels';
 import { getHosts } from '../../ContentViewDetailActions';
-import DeleteContext from './DeleteContext';
 
-const AffectedHosts = () => {
-  const { versionEnvironments, selectedEnvSet, cvId } = useContext(DeleteContext);
+const AffectedHosts = ({
+  versionEnvironments, selectedEnvSet, cvId, deleteCV,
+}) => {
   const [searchQuery, updateSearchQuery] = useState('');
   const response = useSelector(state => selectCVHosts(state), shallowEqual);
   const status = useSelector(state => selectCVHostsStatus(state), shallowEqual);
-  const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
+  const selectedEnv = deleteCV ?
+    versionEnvironments :
+    versionEnvironments.filter(env => selectedEnvSet?.has(env.id));
 
 
   const fetchItems = useCallback(() => {
     let cvQuery = `content_view_id=${cvId}`;
     const selectedEnvStrings = selectedEnv.map(env => `lifecycle_environment_id=${env.id}`).join(' OR ');
-    if (selectedEnvStrings.length) {
-      cvQuery += ' AND (';
-      cvQuery += `${selectedEnvStrings} )`;
-    }
-    if (searchQuery.length) {
-      cvQuery += ' AND (';
-      cvQuery += `${searchQuery} )`;
-    }
-
+    if (selectedEnvStrings.length) cvQuery += ` AND (${selectedEnvStrings})`;
+    if (searchQuery.length) cvQuery += ` AND (${searchQuery} )`;
     return getHosts({ search: cvQuery });
   }, [cvId, searchQuery, selectedEnv]);
   const columnHeaders = [
@@ -80,6 +76,22 @@ const AffectedHosts = () => {
       </Tbody>
     </TableWrapper>
   );
+};
+
+AffectedHosts.propTypes = {
+  cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  selectedEnvSet: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({}),
+  ]),
+  versionEnvironments: PropTypes.arrayOf(PropTypes.shape({})),
+  deleteCV: PropTypes.bool,
+};
+
+AffectedHosts.defaultProps = {
+  selectedEnvSet: null,
+  versionEnvironments: null,
+  deleteCV: false,
 };
 
 export default AffectedHosts;

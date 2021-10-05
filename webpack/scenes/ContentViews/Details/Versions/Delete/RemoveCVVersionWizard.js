@@ -39,8 +39,9 @@ const RemoveCVVersionWizard = ({
       if (deleteFlow) {
         versionEnvironments.forEach(env => selectedEnvSet.add(env.id));
       }
+      if (versionEnvironments.length === 0) setDeleteFlow(true);
     },
-    [dispatch, deleteFlow, versionEnvironments, selectedEnvSet],
+    [dispatch, deleteFlow, setDeleteFlow, versionEnvironments, selectedEnvSet],
   );
 
   useEffect(() => {
@@ -50,15 +51,17 @@ const RemoveCVVersionWizard = ({
     const activationStepComplete = affectedActivationKeys ?
       selectedEnvForAK && selectedCVForAK :
       true;
-    setCanReview(hostsStepComplete && activationStepComplete && selectedEnvSet.size);
-  }, [affectedHosts, selectedEnvForHost, selectedCVForHosts,
-    affectedActivationKeys, selectedEnvForAK, selectedCVForAK, selectedEnvSet]);
+    setCanReview(hostsStepComplete &&
+      activationStepComplete &&
+      (selectedEnvSet.size || versionEnvironments.length === 0));
+  }, [affectedHosts, selectedEnvForHost, selectedCVForHosts, versionEnvironments,
+    affectedActivationKeys, selectedEnvForAK, selectedCVForAK, selectedEnvSet.size]);
 
   const environmentSelectionStep = {
     id: 1,
     name: __('Remove from environments'),
     component: <CVEnvironmentSelectionForm />,
-    enableNext: selectedEnvSet.size,
+    enableNext: (selectedEnvSet.size || versionEnvironments.length === 0),
   };
 
   const hostStep = {

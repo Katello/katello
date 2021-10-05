@@ -145,13 +145,19 @@ module Katello
     param :system_environment_id, :number, :desc => N_("environment to reassign orphaned systems to")
     param :key_content_view_id, :number, :desc => N_("content view to reassign orphaned activation keys to")
     param :key_environment_id, :number, :desc => N_("environment to reassign orphaned activation keys to")
+    param :destroy_content_view, :boolean, :desc => N_("delete the content view with all the versions and environments")
     def remove
-      cv_envs = ContentViewEnvironment.where(:environment_id => params[:environment_ids],
-                                             :content_view_id => params[:id]
-                                            )
-      versions = @content_view.versions.where(:id => params[:content_view_version_ids])
+      if params[:destroy_content_view]
+        cv_envs = @content_view.content_view_environments
+        versions = @content_view.versions
+      else
+        cv_envs = ContentViewEnvironment.where(:environment_id => params[:environment_ids],
+                                               :content_view_id => params[:id]
+        )
+        versions = @content_view.versions.where(:id => params[:content_view_version_ids])
+      end
 
-      if cv_envs.empty? && versions.empty?
+      if !params[:destroy_content_view] && cv_envs.empty? && versions.empty?
         fail _("There either were no environments nor versions specified or there were invalid environments/versions specified. "\
                "Please check environment_ids and content_view_version_ids parameters.")
       end
@@ -159,7 +165,8 @@ module Katello
       options = params.slice(:system_content_view_id,
                              :system_environment_id,
                              :key_content_view_id,
-                             :key_environment_id
+                             :key_environment_id,
+                             :destroy_content_view
                             ).reject { |_k, v| v.nil? }.to_unsafe_h
       options[:content_view_versions] = versions
       options[:content_view_environments] = cv_envs

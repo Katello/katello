@@ -1,0 +1,865 @@
+{
+  "total": 4,
+  "subtotal": 4,
+  "page": 1,
+  "per_page": 20,
+  "error": null,
+  "search": null,
+  "sort": {
+    "by": "version",
+    "order": "desc"
+  },
+  "results": [
+    {
+      "version": "4.0",
+      "major": 4,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 20,
+      "default": false,
+      "description": null,
+      "id": 41,
+      "name": "cv3 4.0",
+      "created_at": "2021-09-28 19:35:46 -0400",
+      "updated_at": "2021-09-29 12:01:18 -0400",
+      "content_view": {
+        "id": 20,
+        "name": "cv3",
+        "label": "cv3"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [
+        {
+          "id": 2,
+          "name": "dev1",
+          "label": "dev1",
+          "publish_date": "3 days",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 1,
+          "activation_key_count": 3
+        },
+        {
+          "id": 3,
+          "name": "dev2",
+          "label": "dev2",
+          "publish_date": "3 days",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        },
+        {
+          "id": 4,
+          "name": "dev3",
+          "label": "dev3",
+          "publish_date": "3 days",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        },
+        {
+          "id": 5,
+          "name": "dev4",
+          "label": "dev4",
+          "publish_date": "3 days",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        }
+      ],
+      "repositories": [
+        {
+          "id": 618,
+          "name": "file",
+          "label": "file",
+          "content_type": "file",
+          "library_instance_id": 5
+        },
+        {
+          "id": 616,
+          "name": "modular",
+          "label": "modular",
+          "content_type": "yum",
+          "library_instance_id": 3
+        },
+        {
+          "id": 617,
+          "name": "docker",
+          "label": "docker",
+          "content_type": "docker",
+          "library_instance_id": 4
+        },
+        {
+          "id": 614,
+          "name": "zoo1",
+          "label": "zoo1",
+          "content_type": "yum",
+          "library_instance_id": 1
+        },
+        {
+          "id": 619,
+          "name": "ansible_collection_repo",
+          "label": "ansible_collection_repo",
+          "content_type": "ansible_collection",
+          "library_instance_id": 7
+        },
+        {
+          "id": 615,
+          "name": "zoo2",
+          "label": "zoo2",
+          "content_type": "yum",
+          "library_instance_id": 2
+        },
+        {
+          "id": 620,
+          "name": "python_test",
+          "label": "python_test",
+          "content_type": "python",
+          "library_instance_id": 466
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": null,
+        "action": "removal",
+        "created_at": "2021-09-30 09:37:01 -0400",
+        "updated_at": "2021-09-30 09:37:07 -0400",
+        "environment": {
+          "id": 1,
+          "name": "Library"
+        },
+        "task": {
+          "id": "5c95fc4c-1d71-4ba4-82f9-5a8afdc79a32",
+          "label": "Actions::Katello::ContentView::Remove",
+          "pending": false,
+          "action": "Remove Versions and Associations content view 'cv3'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2021-09-30 09:36:59 -0400",
+          "ended_at": "2021-09-30 09:37:07 -0400",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 20,
+              "name": "cv3",
+              "label": "cv3"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "content_view_id": 20,
+            "environment_ids": [
+              1
+            ],
+            "environment_names": [
+              "Library"
+            ],
+            "version_ids": [],
+            "content_view_history_ids": [
+              363
+            ],
+            "locale": "en",
+            "current_request_id": "1af0fe07-1d8f-4b6c-bf30-7477331201ad",
+            "current_timezone": "America/New_York",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {},
+          "humanized": {
+            "action": "Remove Versions and Associations",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'cv3'",
+                  "link": "/content_views/20/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2021-09-30 09:36:59 -0400",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "4.0",
+        "publish": false,
+        "version_id": 41,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "deb_count": 0,
+      "file_count": 3,
+      "ansible_collection_count": 34,
+      "docker_manifest_count": 1,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 1,
+      "python_package_count": 106,
+      "rpm_count": 22,
+      "modulemd_count": 14,
+      "erratum_count": 9,
+      "package_group_count": 2,
+      "srpm_count": 0,
+      "module_stream_count": 14,
+      "package_count": 22,
+      "ostree_branch_count": null,
+      "component_view_count": 0,
+      "python_repository_count": 1,
+      "deb_repository_count": 0,
+      "file_repository_count": 1,
+      "docker_repository_count": 1,
+      "yum_repository_count": 3,
+      "ansible_collection_repository_count": 1,
+      "errata_counts": {
+        "security": 2,
+        "bugfix": 0,
+        "enhancement": 5,
+        "total": 9
+      },
+      "permissions": {
+        "deletable": true
+      }
+    },
+    {
+      "version": "3.0",
+      "major": 3,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 20,
+      "default": false,
+      "description": null,
+      "id": 40,
+      "name": "cv3 3.0",
+      "created_at": "2021-09-28 19:31:28 -0400",
+      "updated_at": "2021-09-29 12:01:19 -0400",
+      "content_view": {
+        "id": 20,
+        "name": "cv3",
+        "label": "cv3"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [
+        {
+          "id": 9,
+          "name": "test1",
+          "label": "test1",
+          "publish_date": "1 day",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        },
+        {
+          "id": 10,
+          "name": "test2",
+          "label": "test2",
+          "publish_date": "1 day",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        },
+        {
+          "id": 11,
+          "name": "test3",
+          "label": "test3",
+          "publish_date": "1 day",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        },
+        {
+          "id": 12,
+          "name": "test4",
+          "label": "test4",
+          "publish_date": "1 day",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        },
+        {
+          "id": 13,
+          "name": "test5",
+          "label": "test5",
+          "publish_date": "1 day",
+          "permissions": {
+            "readable": true,
+            "promotable_or_removable": true,
+            "all_hosts_editable": true,
+            "all_keys_editable": true
+          },
+          "host_count": 0,
+          "activation_key_count": 0
+        }
+      ],
+      "repositories": [
+        {
+          "id": 556,
+          "name": "zoo1",
+          "label": "zoo1",
+          "content_type": "yum",
+          "library_instance_id": 1
+        },
+        {
+          "id": 559,
+          "name": "docker",
+          "label": "docker",
+          "content_type": "docker",
+          "library_instance_id": 4
+        },
+        {
+          "id": 562,
+          "name": "ansible_collection_repo",
+          "label": "ansible_collection_repo",
+          "content_type": "ansible_collection",
+          "library_instance_id": 7
+        },
+        {
+          "id": 560,
+          "name": "file",
+          "label": "file",
+          "content_type": "file",
+          "library_instance_id": 5
+        },
+        {
+          "id": 557,
+          "name": "zoo2",
+          "label": "zoo2",
+          "content_type": "yum",
+          "library_instance_id": 2
+        },
+        {
+          "id": 561,
+          "name": "deb_test",
+          "label": "deb_test",
+          "content_type": "deb",
+          "library_instance_id": 6
+        },
+        {
+          "id": 558,
+          "name": "modular",
+          "label": "modular",
+          "content_type": "yum",
+          "library_instance_id": 3
+        },
+        {
+          "id": 563,
+          "name": "python_test",
+          "label": "python_test",
+          "content_type": "python",
+          "library_instance_id": 466
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": "",
+        "action": "promotion",
+        "created_at": "2021-09-30 09:49:48 -0400",
+        "updated_at": "2021-09-30 09:51:14 -0400",
+        "environment": {
+          "id": 13,
+          "name": "test5"
+        },
+        "task": {
+          "id": "6d30f3b0-d7a7-4a1f-b7ae-7d9b868c9f68",
+          "label": "Actions::Katello::ContentView::Promote",
+          "pending": false,
+          "action": "Promote content view 'cv3'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2021-09-30 09:49:19 -0400",
+          "ended_at": "2021-09-30 09:51:14 -0400",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 20,
+              "name": "cv3",
+              "label": "cv3"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "environments": [
+              "test1",
+              "test2",
+              "test3",
+              "test4",
+              "test5"
+            ],
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "locale": "en",
+            "current_request_id": "724528c6-adb0-44e1-8017-1759cdfa42c1",
+            "current_timezone": "America/New_York",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {},
+          "humanized": {
+            "action": "Promote",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'cv3'",
+                  "link": "/content_views/20/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2021-09-30 09:49:19 -0400",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "3.0",
+        "publish": false,
+        "version_id": 40,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "deb_count": 4,
+      "file_count": 3,
+      "ansible_collection_count": 34,
+      "docker_manifest_count": 1,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 1,
+      "python_package_count": 106,
+      "rpm_count": 22,
+      "modulemd_count": 14,
+      "erratum_count": 9,
+      "package_group_count": 2,
+      "srpm_count": 0,
+      "module_stream_count": 14,
+      "package_count": 22,
+      "ostree_branch_count": null,
+      "component_view_count": 0,
+      "python_repository_count": 1,
+      "deb_repository_count": 1,
+      "file_repository_count": 1,
+      "docker_repository_count": 1,
+      "yum_repository_count": 3,
+      "ansible_collection_repository_count": 1,
+      "errata_counts": {
+        "security": 2,
+        "bugfix": 0,
+        "enhancement": 5,
+        "total": 9
+      },
+      "permissions": {
+        "deletable": true
+      }
+    },
+    {
+      "version": "2.0",
+      "major": 2,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 20,
+      "default": false,
+      "description": "",
+      "id": 33,
+      "name": "cv3 2.0",
+      "created_at": "2021-09-28 10:23:47 -0400",
+      "updated_at": "2021-09-28 10:24:19 -0400",
+      "content_view": {
+        "id": 20,
+        "name": "cv3",
+        "label": "cv3"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [],
+      "repositories": [
+        {
+          "id": 516,
+          "name": "docker",
+          "label": "docker",
+          "content_type": "docker",
+          "library_instance_id": 4
+        },
+        {
+          "id": 517,
+          "name": "ansible_collection_repo",
+          "label": "ansible_collection_repo",
+          "content_type": "ansible_collection",
+          "library_instance_id": 7
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": null,
+        "action": "promotion",
+        "created_at": "2021-09-28 10:23:50 -0400",
+        "updated_at": "2021-09-28 10:24:17 -0400",
+        "environment": {
+          "id": 5,
+          "name": "dev4"
+        },
+        "task": {
+          "id": "7d3bef76-8aa5-4634-bd39-913d5f5a0192",
+          "label": "Actions::Katello::ContentView::Publish",
+          "pending": false,
+          "action": "Publish content view 'cv3'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2021-09-28 10:23:46 -0400",
+          "ended_at": "2021-09-28 10:24:19 -0400",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 20,
+              "name": "cv3",
+              "label": "cv3"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "history_id": 304,
+            "content_view_id": 20,
+            "auto_publish_composite_ids": [],
+            "content_view_version_name": "cv3 2.0",
+            "content_view_version_id": 33,
+            "environment_id": 1,
+            "user_id": 4,
+            "skip_promotion": null,
+            "locale": "en",
+            "current_request_id": "5ff846f7-bb99-4b3b-9246-33ba442ecf5d",
+            "current_timezone": "America/New_York",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {
+            "content_view_id": 20,
+            "content_view_version_id": 33,
+            "skip_promotion": null
+          },
+          "humanized": {
+            "action": "Publish",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'cv3'",
+                  "link": "/content_views/20/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2021-09-28 10:23:46 -0400",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "2.0",
+        "publish": false,
+        "version_id": 33,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "ansible collection_count": 34,
+      "deb_count": 0,
+      "file_count": 0,
+      "python_package_count": 0,
+      "docker_manifest_count": 1,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 1,
+      "rpm_count": 0,
+      "modulemd_count": 0,
+      "erratum_count": 0,
+      "package_group_count": 0,
+      "srpm_count": 0,
+      "module_stream_count": 0,
+      "package_count": 0,
+      "ostree_branch_count": null,
+      "component_view_count": 0,
+      "python_repository_count": 0,
+      "deb_repository_count": 0,
+      "file_repository_count": 0,
+      "docker_repository_count": 1,
+      "yum_repository_count": 0,
+      "ansible_collection_repository_count": 1,
+      "errata_counts": {
+        "security": null,
+        "bugfix": 0,
+        "enhancement": 0,
+        "total": null
+      },
+      "permissions": {
+        "deletable": true
+      }
+    },
+    {
+      "version": "1.0",
+      "major": 1,
+      "minor": 0,
+      "composite_content_view_ids": [],
+      "published_in_composite_content_view_ids": [],
+      "content_view_id": 20,
+      "default": false,
+      "description": "",
+      "id": 32,
+      "name": "cv3 1.0",
+      "created_at": "2021-09-28 10:23:03 -0400",
+      "updated_at": "2021-09-28 10:23:26 -0400",
+      "content_view": {
+        "id": 20,
+        "name": "cv3",
+        "label": "cv3"
+      },
+      "composite_content_views": [],
+      "composite_content_view_versions": [],
+      "published_in_composite_content_views": [],
+      "environments": [],
+      "repositories": [
+        {
+          "id": 508,
+          "name": "docker",
+          "label": "docker",
+          "content_type": "docker",
+          "library_instance_id": 4
+        },
+        {
+          "id": 509,
+          "name": "ansible_collection_repo",
+          "label": "ansible_collection_repo",
+          "content_type": "ansible_collection",
+          "library_instance_id": 7
+        }
+      ],
+      "last_event": {
+        "user": "admin",
+        "status": "successful",
+        "description": null,
+        "action": "promotion",
+        "created_at": "2021-09-28 10:23:11 -0400",
+        "updated_at": "2021-09-28 10:23:26 -0400",
+        "environment": {
+          "id": 3,
+          "name": "dev2"
+        },
+        "task": {
+          "id": "754dce43-262d-4468-9fe0-964c1183d593",
+          "label": "Actions::Katello::ContentView::Publish",
+          "pending": false,
+          "action": "Publish content view 'cv3'; organization 'Default Organization'",
+          "username": "admin",
+          "started_at": "2021-09-28 10:23:03 -0400",
+          "ended_at": "2021-09-28 10:23:26 -0400",
+          "state": "stopped",
+          "result": "success",
+          "progress": 1,
+          "input": {
+            "content_view": {
+              "id": 20,
+              "name": "cv3",
+              "label": "cv3"
+            },
+            "organization": {
+              "id": 1,
+              "name": "Default Organization",
+              "label": "Default_Organization"
+            },
+            "services_checked": [
+              "pulp3",
+              "candlepin",
+              "candlepin_auth"
+            ],
+            "history_id": 301,
+            "content_view_id": 20,
+            "auto_publish_composite_ids": [],
+            "content_view_version_name": "cv3 1.0",
+            "content_view_version_id": 32,
+            "environment_id": 1,
+            "user_id": 4,
+            "skip_promotion": null,
+            "locale": "en",
+            "current_request_id": "2d492602-9304-45cc-9284-dfd4ae2dd6ea",
+            "current_timezone": "America/New_York",
+            "current_organization_id": 1,
+            "current_location_id": 2,
+            "current_user_id": 4
+          },
+          "output": {
+            "content_view_id": 20,
+            "content_view_version_id": 32,
+            "skip_promotion": null
+          },
+          "humanized": {
+            "action": "Publish",
+            "input": [
+              [
+                "content_view",
+                {
+                  "text": "content view 'cv3'",
+                  "link": "/content_views/20/versions"
+                }
+              ],
+              [
+                "organization",
+                {
+                  "text": "organization 'Default Organization'",
+                  "link": "/organizations/1/edit"
+                }
+              ]
+            ],
+            "output": "",
+            "errors": []
+          },
+          "cli_example": null,
+          "start_at": "2021-09-28 10:23:03 -0400",
+          "available_actions": {
+            "cancellable": false,
+            "resumable": false
+          }
+        },
+        "version": "1.0",
+        "publish": false,
+        "version_id": 32,
+        "triggered_by": null,
+        "triggered_by_id": null
+      },
+      "active_history": [],
+      "ansible collection_count": 34,
+      "deb_count": 0,
+      "file_count": 0,
+      "python_package_count": 0,
+      "docker_manifest_count": 1,
+      "docker_manifest_list_count": 0,
+      "docker_tag_count": 1,
+      "rpm_count": 0,
+      "modulemd_count": 0,
+      "erratum_count": 0,
+      "package_group_count": 0,
+      "srpm_count": 0,
+      "module_stream_count": 0,
+      "package_count": 0,
+      "ostree_branch_count": null,
+      "component_view_count": 0,
+      "python_repository_count": 0,
+      "deb_repository_count": 0,
+      "file_repository_count": 0,
+      "docker_repository_count": 1,
+      "yum_repository_count": 0,
+      "ansible_collection_repository_count": 1,
+      "errata_counts": {
+        "security": null,
+        "bugfix": 0,
+        "enhancement": 0,
+        "total": null
+      },
+      "permissions": {
+        "deletable": true
+      }
+    }
+  ]
+}

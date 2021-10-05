@@ -36,9 +36,11 @@ module Actions
         end
 
         def finalize
-          repository = ::Katello::Repository.find(input[:repository][:id])
-          docker_cleanup = repository.content_type == ::Katello::Repository::DOCKER_TYPE
-          delete_record(repository, {docker_cleanup: docker_cleanup})
+          repository = ::Katello::Repository.find_by(id: input[:repository][:id])
+          if repository
+            docker_cleanup = repository.content_type == ::Katello::Repository::DOCKER_TYPE
+            delete_record(repository, {docker_cleanup: docker_cleanup})
+          end
         end
 
         def handle_custom_content(repository)

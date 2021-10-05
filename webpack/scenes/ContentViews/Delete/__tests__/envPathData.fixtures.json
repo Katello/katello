@@ -1,0 +1,424 @@
+{
+  "total": 2,
+  "subtotal": 2,
+  "page": null,
+  "per_page": null,
+  "error": null,
+  "search": null,
+  "sort": {
+    "by": null,
+    "order": null
+  },
+  "results": [
+    {
+      "environments": [
+        {
+          "library": true,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 1,
+          "name": "Library",
+          "label": "Library",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 17:11:39 -0400",
+          "updated_at": "2021-09-20 17:11:39 -0400",
+          "prior": null,
+          "successor": null,
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 2,
+            "packages": 22,
+            "module_streams": 14,
+            "errata": {
+              "security": 2,
+              "bugfix": 0,
+              "enhancement": 5,
+              "total": 9
+            },
+            "yum_repositories": 3,
+            "docker_repositories": 1,
+            "ostree_repositories": 0,
+            "products": 1
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": false,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 2,
+          "name": "dev1",
+          "label": "dev1",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:54:37 -0400",
+          "updated_at": "2021-09-20 19:54:37 -0400",
+          "prior": {
+            "name": "Library",
+            "id": 1
+          },
+          "successor": {
+            "name": "dev2",
+            "id": 3
+          },
+          "counts": {
+            "content_hosts": 1,
+            "content_views": 2
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": false,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 3,
+          "name": "dev2",
+          "label": "dev2",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:54:44 -0400",
+          "updated_at": "2021-09-20 19:54:44 -0400",
+          "prior": {
+            "name": "dev1",
+            "id": 2
+          },
+          "successor": {
+            "name": "dev3",
+            "id": 4
+          },
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 2
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": true,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 4,
+          "name": "dev3",
+          "label": "dev3",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:54:50 -0400",
+          "updated_at": "2021-09-20 19:54:50 -0400",
+          "prior": {
+            "name": "dev2",
+            "id": 3
+          },
+          "successor": {
+            "name": "dev4",
+            "id": 5
+          },
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 2
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": true,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 5,
+          "name": "dev4",
+          "label": "dev4",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:54:58 -0400",
+          "updated_at": "2021-09-20 19:54:58 -0400",
+          "prior": {
+            "name": "dev3",
+            "id": 4
+          },
+          "successor": null,
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 1
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": true,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        }
+      ]
+    },
+    {
+      "environments": [
+        {
+          "library": true,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 1,
+          "name": "Library",
+          "label": "Library",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 17:11:39 -0400",
+          "updated_at": "2021-09-20 17:11:39 -0400",
+          "prior": null,
+          "successor": null,
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 2,
+            "packages": 22,
+            "module_streams": 14,
+            "errata": {
+              "security": 2,
+              "bugfix": 0,
+              "enhancement": 5,
+              "total": 9
+            },
+            "yum_repositories": 3,
+            "docker_repositories": 1,
+            "ostree_repositories": 0,
+            "products": 1
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": false,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 9,
+          "name": "test1",
+          "label": "test1",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:55:25 -0400",
+          "updated_at": "2021-09-20 19:55:25 -0400",
+          "prior": {
+            "name": "Library",
+            "id": 1
+          },
+          "successor": {
+            "name": "test2",
+            "id": 10
+          },
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 1
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": true,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 10,
+          "name": "test2",
+          "label": "test2",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:55:31 -0400",
+          "updated_at": "2021-09-20 19:55:31 -0400",
+          "prior": {
+            "name": "test1",
+            "id": 9
+          },
+          "successor": {
+            "name": "test3",
+            "id": 11
+          },
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 1
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": true,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 11,
+          "name": "test3",
+          "label": "test3",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:55:37 -0400",
+          "updated_at": "2021-09-20 19:55:37 -0400",
+          "prior": {
+            "name": "test2",
+            "id": 10
+          },
+          "successor": {
+            "name": "test4",
+            "id": 12
+          },
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 1
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": true,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 12,
+          "name": "test4",
+          "label": "test4",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:55:44 -0400",
+          "updated_at": "2021-09-20 19:55:44 -0400",
+          "prior": {
+            "name": "test3",
+            "id": 11
+          },
+          "successor": {
+            "name": "test5",
+            "id": 13
+          },
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 2
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": true,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        },
+        {
+          "library": false,
+          "registry_name_pattern": null,
+          "registry_unauthenticated_pull": false,
+          "id": 13,
+          "name": "test5",
+          "label": "test5",
+          "description": null,
+          "organization_id": 1,
+          "organization": {
+            "name": "Default Organization",
+            "label": "Default_Organization",
+            "id": 1
+          },
+          "created_at": "2021-09-20 19:55:52 -0400",
+          "updated_at": "2021-09-20 19:55:52 -0400",
+          "prior": {
+            "name": "test4",
+            "id": 12
+          },
+          "successor": null,
+          "counts": {
+            "content_hosts": 0,
+            "content_views": 2
+          },
+          "permissions": {
+            "create_lifecycle_environments": true,
+            "view_lifecycle_environments": true,
+            "edit_lifecycle_environments": true,
+            "destroy_lifecycle_environments": true,
+            "promote_or_remove_content_views_to_environments": true
+          }
+        }
+      ]
+    }
+  ]
+}

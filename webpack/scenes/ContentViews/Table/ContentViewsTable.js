@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { Button } from '@patternfly/react-core';
@@ -12,6 +12,10 @@ import CreateContentViewModal from '../Create/CreateContentViewModal';
 import CopyContentViewModal from '../Copy/CopyContentViewModal';
 import PublishContentViewWizard from '../Publish/PublishContentViewWizard';
 import { selectContentViews, selectContentViewStatus, selectContentViewError } from '../ContentViewSelectors';
+import ContentViewVersionPromote from '../Details/Promote/ContentViewVersionPromote';
+import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathActions';
+import ContentViewDeleteWizard from '../Delete/ContentViewDeleteWizard';
+import getContentViewDetails, { getContentViewVersions } from '../Details/ContentViewDetailActions';
 
 const ContentViewTable = () => {
   const response = useSelector(selectContentViews);
@@ -27,10 +31,13 @@ const ContentViewTable = () => {
   const [metadata, setMetadata] = useState({});
   const [cvTableStatus, setCvTableStatus] = useState(STATUS.PENDING);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [actionableCvDetails, setActionableCvDetails] = useState({});
   const [actionableCvId, setActionableCvId] = useState('');
   const [actionableCvName, setActionableCvName] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
+  const dispatch = useDispatch();
 
   const openForm = () => setIsModalOpen(true);
 
@@ -43,6 +50,29 @@ const ContentViewTable = () => {
       next_version: rowInfo.cvNextVersion,
     });
     setIsPublishModalOpen(true);
+  };
+
+  const openPromoteModal = (rowInfo) => {
+    dispatch(getEnvironmentPaths());
+    setActionableCvDetails({
+      id: rowInfo.cvId.toString(),
+      latestVersionId: rowInfo.latestVersionId,
+      latestVersionEnvironments: rowInfo.latestVersionEnvironments,
+      latestVersionName: rowInfo.latestVersionName,
+    });
+    setIsPromoteModalOpen(true);
+  };
+
+  const openDeleteModal = (rowInfo) => {
+    dispatch(getContentViewDetails(rowInfo.cvId));
+    dispatch(getContentViewVersions(rowInfo.cvId));
+    setActionableCvDetails({
+      id: rowInfo.cvId.toString(),
+      name: rowInfo.cvName,
+      environments: rowInfo.environments,
+      versions: rowInfo.versions,
+    });
+    setIsDeleteModalOpen(true);
   };
 
   useDeepCompareEffect(
@@ -77,18 +107,6 @@ const ContentViewTable = () => {
       setCvResults, setCvTableStatus, setCurrentStep, setMetadata, cvResults, rowMappingIds],
   );
 
-  const onSelect = (_event, isSelected, rowId) => {
-    let rows;
-    if (rowId === -1) {
-      rows = table.rows.map(row => ({ ...row, selected: isSelected }));
-    } else {
-      rows = [...table.rows];
-      rows[rowId].selected = isSelected;
-    }
-
-    setTable(prevTable => ({ ...prevTable, rows }));
-  };
-
   const onCollapse = (event, rowId, isOpen) => {
     let rows;
     if (rowId === -1) {
@@ -110,18 +128,18 @@ const ContentViewTable = () => {
     return [
       {
         title: __('Publish'),
-        onClick: (_event, rowId, rowInfo) => {
+        onClick: (_event, _rowId, rowInfo) => {
           openPublishModal(rowInfo);
         },
       },
       {
         title: __('Promote'),
-        isDisabled: true,
-        onClick: (_event, rowId, rowInfo) => console.log(`clicked on row ${rowInfo.cvName}`),
+        isDisabled: !rowData.cvVersionCount,
+        onClick: (_event, _rowId, rowInfo) => openPromoteModal(rowInfo),
       },
       {
         title: __('Copy'),
-        onClick: (_event, rowId, rowInfo) => {
+        onClick: (_event, _rowId, rowInfo) => {
           setCopy(true);
           setActionableCvId(rowInfo.cvId.toString());
           setActionableCvName(rowInfo.cvName);
@@ -129,8 +147,7 @@ const ContentViewTable = () => {
       },
       {
         title: __('Delete'),
-        isDisabled: true,
-        onClick: (_event, rowId, _rowInfo) => console.log(`clicked on row ${rowId}`),
+        onClick: (_event, _rowId, rowInfo) => openDeleteModal(rowInfo),
       },
     ];
     /* eslint-enable no-console */
@@ -153,7 +170,6 @@ const ContentViewTable = () => {
         emptyContentBody,
         emptySearchTitle,
         emptySearchBody,
-        onSelect,
         actionResolver,
         searchQuery,
         updateSearchQuery,
@@ -183,6 +199,25 @@ const ContentViewTable = () => {
               aria-label="publish_content_view_modal"
             />
           }
+          {isPromoteModalOpen &&
+            <ContentViewVersionPromote
+              cvId={actionableCvDetails.id}
+              versionIdToPromote={actionableCvDetails.latestVersionId}
+              versionNameToPromote={actionableCvDetails.latestVersionName}
+              versionEnvironments={actionableCvDetails.latestVersionEnvironments}
+              setIsOpen={setIsPromoteModalOpen}
+            />
+          }
+          {isDeleteModalOpen && <ContentViewDeleteWizard
+            cvId={actionableCvDetails.id}
+            cvEnvironments={actionableCvDetails.environments}
+            cvVersions={actionableCvDetails.versions}
+            show={isDeleteModalOpen}
+            setIsOpen={setIsDeleteModalOpen}
+            currentStep={currentStep}
+            setCurrentStep={setCurrentStep}
+            aria-label="delete_content_view_modal"
+          />}
         </>
       }
     />
