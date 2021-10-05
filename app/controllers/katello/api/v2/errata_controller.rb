@@ -44,6 +44,10 @@ module Katello
       collection
     end
 
+    def all_for_content_view_filter(filter, _collection)
+      Erratum.joins(:repositories).merge(filter.applicable_repos)
+    end
+
     def custom_index_relation(collection)
       collection = filter_by_cve(params[:cve], collection) if params[:cve]
       applicable = ::Foreman::Cast.to_bool(params[:errata_restrict_applicable]) || @host

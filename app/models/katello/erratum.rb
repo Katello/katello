@@ -157,6 +157,10 @@ module Katello
       { :conditions => conditions }
     end
 
+    def content_view_filters
+      Katello::ContentViewErratumFilterRule.where(errata_id: self.errata_id).eager_load(:filter).map(&:filter)
+    end
+
     apipie :class, desc: "A class representing #{model_name.human} object" do
       name 'Erratum'
       refs 'Erratum'
