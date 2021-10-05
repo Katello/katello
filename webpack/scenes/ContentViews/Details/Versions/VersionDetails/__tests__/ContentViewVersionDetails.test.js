@@ -23,6 +23,7 @@ const ContentViewVersionsComponentData = require('./ContentViewVersionComponent.
 const ContentViewVersionsRepositoriesData = require('./ContentViewVersionRepositories.fixtures.json');
 const ContentViewVersionRpmPackagesData = require('./ContentViewVersionRpmPackages.fixtures.json');
 const ContentViewVersionRpmPackageGroupsData = require('./ContentViewVersionRpmPackageGroups.fixtures.json');
+const ContentViewVersionFilesData = require('./ContentViewVersionFiles.fixtures.json');
 const ContentViewVersionErrataData = require('./ContentViewVersionErrata.fixtures.json');
 const ContentViewVersionModuleStreamsData = require('./ContentViewVersionModuleStreams.fixtures.json');
 const ContentViewVersionDebPackagesData = require('./ContentViewVersionDebPackages.fixtures.json');
@@ -109,6 +110,16 @@ const testConfig = [
     textQuery: [
       head(ContentViewVersionRpmPackageGroupsData.results).name,
       last(ContentViewVersionRpmPackageGroupsData.results).name],
+  },
+  {
+    name: 'Files',
+    countKey: 'file_count',
+    autoCompleteUrl: '/files/auto_complete_search',
+    dataUrl: api.getApiUrl('/files'),
+    data: ContentViewVersionFilesData,
+    textQuery: [
+      head(ContentViewVersionFilesData.results).name,
+      last(ContentViewVersionFilesData.results).name],
   },
   {
     name: 'Errata',

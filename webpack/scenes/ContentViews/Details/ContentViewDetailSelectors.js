@@ -29,6 +29,7 @@ import {
   RPM_PACKAGES_CONTENT,
   RPM_PACKAGE_GROUPS_CONTENT,
   REPOSITORY_CONTENT,
+  FILE_CONTENT,
   ERRATA_CONTENT,
   MODULE_STREAMS_CONTENT,
   DEB_PACKAGES_CONTENT,
@@ -171,6 +172,12 @@ export const selectRPMPackages = state =>
 
 export const selectRPMPackagesStatus = state =>
   selectAPIStatus(state, RPM_PACKAGES_CONTENT) || STATUS.PENDING;
+
+export const selectFiles = state =>
+  selectAPIResponse(state, FILE_CONTENT);
+
+export const selectFilesStatus = state =>
+  selectAPIStatus(state, FILE_CONTENT) || STATUS.PENDING;
 
 export const selectErrata = state =>
   selectAPIResponse(state, ERRATA_CONTENT);

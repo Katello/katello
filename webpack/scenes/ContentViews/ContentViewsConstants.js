@@ -26,6 +26,7 @@ export const ANSIBLE_COLLECTIONS_CONTENT = 'ANSIBLE_COLLECTIONS_CONTENT';
 export const MODULE_STREAMS_CONTENT = 'MODULE_STREAMS_CONTENT';
 export const DEB_PACKAGES_CONTENT = 'DEB_PACKAGES_CONTENT';
 export const RPM_PACKAGES_CONTENT = 'RPM_PACKAGES_CONTENT';
+export const FILE_CONTENT = 'FILE_CONTENT';
 export const cvDetailsKey = cvId => `${CONTENT_VIEWS_KEY}_${cvId}`;
 export const cvDetailsRepoKey = cvId => `${CONTENT_VIEWS_KEY}_REPOSITORIES_${cvId}`;
 export const cvFilterRepoKey = filterId => `CV_FILTER_REPOSITORIES_${filterId}`;

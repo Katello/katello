@@ -1,5 +1,6 @@
 module Katello
   class Api::V2::FileUnitsController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     resource_description do
       name 'Files'
     end
