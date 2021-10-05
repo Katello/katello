@@ -28,9 +28,13 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
             $scope.editedInterval = false;
 
             function updateSyncPlan(syncPlan) {
-                var syncDate;
+                var syncDate, splitDates;
                 if (syncPlan['sync_date']) {
-                    syncDate = new Date(syncPlan['sync_date']);
+                    // Firefox doesn't work with new Date(2021-10-04 18:57:00 -0400)
+                    //Needs to be in format YYYY-MM-DDTHH:mm:ss.sssZ
+                    // see: https://262.ecma-international.org/5.1/#sec-15.9.1.15
+                    splitDates = syncPlan['sync_date'].split(' ');
+                    syncDate = new Date(splitDates[0] + 'T' + splitDates[1] + splitDates[2]);
                 } else {
                     syncDate = new Date();
                 }
