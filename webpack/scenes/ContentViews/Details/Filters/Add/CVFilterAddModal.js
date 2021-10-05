@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Modal, ModalVariant, Form, FormGroup, TextInput, ActionGroup, Button, Radio, TextArea,
-  Split, SplitItem, Select, SelectOption } from '@patternfly/react-core';
+import {
+  Modal, ModalVariant, Form, FormGroup, TextInput, ActionGroup, Button, Radio, TextArea,
+  Split, SplitItem, Select, SelectOption,
+} from '@patternfly/react-core';
 import { addCVFilterRule, createContentViewFilter } from '../../ContentViewDetailActions';
 import {
   selectCreateContentViewFilter, selectCreateContentViewFilterStatus,
@@ -16,7 +18,7 @@ import {
 import { FILTER_TYPES } from '../../../ContentViewsConstants';
 import ContentType from '../ContentType';
 
-const CVFilterAddModal = ({ cvId, show, setIsOpen }) => {
+const CVFilterAddModal = ({ cvId, show, onClose }) => {
   const [inclusion, setInclusion] = useState(true);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -83,12 +85,10 @@ const CVFilterAddModal = ({ cvId, show, setIsOpen }) => {
       title={__('Create filter')}
       variant={ModalVariant.large}
       isOpen={show}
-      onClose={() => {
-        setIsOpen(false);
-      }}
+      onClose={onClose}
       appendTo={document.body}
     >
-      <Form>
+      <Form onSubmit={onSave}>
         <FormGroup label={__('Name')} isRequired fieldId="name">
           <TextInput
             isRequired
@@ -154,12 +154,12 @@ const CVFilterAddModal = ({ cvId, show, setIsOpen }) => {
           <Button
             aria-label="create_filter"
             variant="primary"
-            isDisabled={saving}
-            onClick={() => onSave()}
+            isDisabled={saving || name.length === 0}
+            type="submit"
           >
             {__('Create filter')}
           </Button>
-          <Button variant="link" onClick={() => setIsOpen(false)}>
+          <Button variant="link" onClick={onClose}>
             {__('Cancel')}
           </Button>
         </ActionGroup>
@@ -171,11 +171,11 @@ const CVFilterAddModal = ({ cvId, show, setIsOpen }) => {
 CVFilterAddModal.propTypes = {
   cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   show: PropTypes.bool.isRequired,
-  setIsOpen: PropTypes.func,
+  onClose: PropTypes.func,
 };
 
 CVFilterAddModal.defaultProps = {
-  setIsOpen: null,
+  onClose: null,
 };
 
 export default CVFilterAddModal;
