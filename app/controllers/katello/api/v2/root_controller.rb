@@ -8,6 +8,19 @@ module Katello
     end
 
     def resource_list
+      respond_for_index :collection => RESOURCE_LIST
+    end
+
+    def rhsm_resource_list
+      # The RHSM resource list is required to interact with RHSM on the client.
+      # When requested, it will return a list of the resources (href & rel) defined by katello
+      # for the /rhsm namespace.  The rel values are used by RHSM to determine if the server
+      # supports a particular resource (e.g. environments, guestids, organizations..etc)
+
+      respond_for_index :collection => RHSM_RESOURCE_LIST, :template => 'resource_list'
+    end
+
+    def self.generate_resource_list
       all_routes = Engine.routes.routes
       all_routes = all_routes.collect { |r| r.path.spec.to_s }
 
@@ -20,16 +33,10 @@ module Katello
       end
 
       api_root_routes.collect! { |r| { :rel => r["/katello/api/".size..-2], :href => r } }
-
-      respond_for_index :collection => api_root_routes
     end
+    RESOURCE_LIST = generate_resource_list
 
-    def rhsm_resource_list
-      # The RHSM resource list is required to interact with RHSM on the client.
-      # When requested, it will return a list of the resources (href & rel) defined by katello
-      # for the /rhsm namespace.  The rel values are used by RHSM to determine if the server
-      # supports a particular resource (e.g. environments, guestids, organizations..etc)
-
+    def self.generate_rhsm_resource_list
       all_routes = Engine.routes.routes.collect { |r| r.path.spec.to_s }
 
       api_routes = all_routes.select do |path|
@@ -53,8 +60,7 @@ module Katello
 
       api_routes.uniq!
       api_routes.collect! { |r| { :rel => r.split('/').last, :href => r } }
-
-      respond_for_index :collection => api_routes, :template => 'resource_list'
     end
+    RHSM_RESOURCE_LIST = generate_rhsm_resource_list
   end
 end
