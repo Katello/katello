@@ -152,9 +152,17 @@ module Katello
         uri.to_s
       end
 
+      def publication_options(repository_version)
+        popts = {repository_version: repository_version}
+        if (type_specific_options = repo_service.try(:mirror_publication_options))
+          popts.merge!(type_specific_options)
+        end
+        popts
+      end
+
       def create_publication
         if (href = version_href)
-          publication_data = api.class.publication_class.new(repository_version: href)
+          publication_data = api.class.publication_class.new(publication_options(href))
           api.publications_api.create(publication_data)
         end
       end

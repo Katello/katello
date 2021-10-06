@@ -23,6 +23,12 @@ module Katello
           common_remote_options.merge(deb_remote_options)
         end
 
+        def mirror_remote_options
+          {
+            distributions: repo.deb_releases + "#{' default' unless repo.deb_releases.include? 'default'}"
+          }
+        end
+
         def publication_options(repository_version)
           ss = api.signing_services_api.list(name: SIGNING_SERVICE_NAME).results
           popts = super(repository_version)
@@ -34,6 +40,16 @@ module Katello
           )
           popts[:signing_service] = ss[0].pulp_href if ss && ss.length == 1
           popts
+        end
+
+        def mirror_publication_options
+          {
+            # Since we are synchronizing the "default" distribution from the simple publisher on the server,
+            # it will be included in the structured publish. Therefore, we MUST NOT use the simple publisher
+            # on the proxy, since this would collide!
+            #simple: true,
+            structured: true # publish real suites (e.g. 'stable')
+          }
         end
 
         def distribution_options(path)
