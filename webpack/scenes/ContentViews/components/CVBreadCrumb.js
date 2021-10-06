@@ -30,80 +30,70 @@ const CVBreadcrumb = () => {
     selectCVVersionDetails(state, recordId, cvId), shallowEqual);
   const versionDetailsStatus = useSelector(state =>
     selectCVVersionDetailsStatus(state, recordId, cvId));
-  const [breadcrumbItems, setBreadcrumbItems] = useState([]);
+  const [breadcrumbItems, setBreadcrumbItems] = useState({});
 
-  // Adds the parent Content views breadcrumb item
-  // Also, based on url sets version/filter id and model to version/filter
   useDeepCompareEffect(() => {
-    setBreadcrumbItems([
-      <BreadcrumbItem
-        key="cv_index"
-        aria-label="cv_breadcrumb"
-        render={() => (<Link to="/labs/content_views">{__('Content views')}</Link>)}
-      />,
-    ]);
+    setBreadcrumbItems({
+      cv_index: { render: () => (<Link to="/labs/content_views">{__('Content views')}</Link>) },
+    });
     setRecordId(splitHash.length >= 3 ? splitHash[2] : null);
     setRecordModel(splitHash.length >= 3 ? splitHash[1] : null);
-  }, [splitHash]);
+  }, [splitHash, setBreadcrumbItems, setRecordModel, setRecordId]);
 
   // Adds the 2nd level of breadcrumbs after content view details is available.
   // Adds a breadcrumb for CV name and the tab (version/repositories/details)
   useDeepCompareEffect(() => {
-    if (cvDetails && cvDetailsStatus === STATUS.RESOLVED && breadcrumbItems.length === 1) {
-      const cvRecordCrumb = (
-        <BreadcrumbItem
-          key="cv"
-          aria-label="cv_breadcrumb_cv"
-          render={() => (<Link to={`/labs/content_views/${cvId}`}>{cvDetails?.name}</Link>)}
-        />
-      );
+    if (cvDetails && cvDetailsStatus === STATUS.RESOLVED &&
+      Object.keys(breadcrumbItems).length === 1) {
+      const cvRecordCrumb = {
+        [cvDetails?.name]: {
+          render: () => (<Link to={`/labs/content_views/${cvId}`}>{cvDetails?.name}</Link>),
+        },
+      };
       const tabName = splitHash[1];
-      const tabBreadCrumb = (
-        <BreadcrumbItem
-          key={tabName}
-          aria-label="cv_tab_item"
-          isActive
-          render={() => (<Link to={`/labs/content_views/${cvId}/#/${tabName}`}>{capitalize(tabName)}</Link>)}
-        />
-      );
-      setBreadcrumbItems([...breadcrumbItems, cvRecordCrumb, tabBreadCrumb]);
+      const tabRecordCrumb = {
+        [tabName]: {
+          render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}`}>{capitalize(tabName)}</Link>),
+        },
+      };
+      setBreadcrumbItems({ ...breadcrumbItems, ...cvRecordCrumb, ...tabRecordCrumb });
     }
   }, [splitHash, cvId, cvDetails, cvDetailsStatus, breadcrumbItems, setBreadcrumbItems]);
 
   // Adds the 3rd level of breadcrumbs when on Versions Details or Filter Details tabs.
   // Needs filter/version details to be available for forming this.
   useDeepCompareEffect(() => {
-    if (breadcrumbItems.length === 3 && splitHash.length >= 3) {
+    if (Object.keys(breadcrumbItems).length === 3 && splitHash.length >= 3) {
       const tabName = splitHash[1];
       if (recordModel === 'filters') {
         if (filterDetails && filterDetailsStatus === STATUS.RESOLVED) {
           const { name } = filterDetails;
-          const filterDetailCrumb = (<BreadcrumbItem
-            key={name}
-            aria-label="cv_tab_item_filter"
-            isActive
-            render={() => (<Link to={`/labs/content_views/${cvId}/#/${tabName}/${recordId}`}>{name}</Link>)}
-          />);
-          setBreadcrumbItems([...breadcrumbItems, filterDetailCrumb]);
+          const filterDetailCrumb = {
+            [name]: {
+              render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}`}>{name}</Link>),
+            },
+          };
+          setBreadcrumbItems({ ...breadcrumbItems, ...filterDetailCrumb });
         }
       } else if (recordModel === 'versions') {
         if (versionDetails && versionDetailsStatus === STATUS.RESOLVED) {
           const versionTabName = startCase(splitHash[3]);
           const { version } = versionDetails;
-          const versionDetailCrumb = (<BreadcrumbItem
-            key={version}
-            aria-label="cv_tab_item_version"
-            isActive
-            render={() => (<Link to={`/labs/content_views/${cvId}/#/${tabName}/${recordId}`}>{version}</Link>)}
-          />);
-          const versionSecondaryTab = (<BreadcrumbItem
-            key={version + versionTabName}
-            aria-label="cv_tab_item_version_tab"
-            isActive
-            render={() => (<Link to={`/labs/content_views/${cvId}/#/${tabName}/${recordId}/${versionTabName}`}>{capitalize(versionTabName)}</Link>)}
-          />);
-
-          setBreadcrumbItems([...breadcrumbItems, versionDetailCrumb, versionSecondaryTab]);
+          const versionDetailCrumb = {
+            [version]: {
+              render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}`}>{version}</Link>),
+            },
+          };
+          const versionSecondaryTab = {
+            [versionTabName]: {
+              render: () => (
+                <Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}/${versionTabName}`}>
+                  {capitalize(versionTabName)}
+                </Link>
+              ),
+            },
+          };
+          setBreadcrumbItems({ ...breadcrumbItems, ...versionDetailCrumb, ...versionSecondaryTab });
         }
       }
     }
@@ -112,7 +102,14 @@ const CVBreadcrumb = () => {
 
   return (
     <Breadcrumb style={{ marginTop: '15px' }}>
-      {breadcrumbItems}
+      {
+        Object.keys(breadcrumbItems).map(key => (
+          <BreadcrumbItem
+            key={key}
+            aria-label={key}
+            render={breadcrumbItems[key].render}
+          />))
+      }
     </Breadcrumb>
   );
 };
