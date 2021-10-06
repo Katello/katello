@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Flex,
@@ -24,6 +24,7 @@ import { LabelImportOnly } from '../Create/ContentViewFormComponents';
 
 const ContentViewInfo = ({ cvId, details }) => {
   const dispatch = useDispatch();
+  const [currentAttribute, setCurrentAttribute] = useState();
   const updating = useSelector(state => selectIsCVUpdating(state));
   const {
     name,
@@ -36,7 +37,12 @@ const ContentViewInfo = ({ cvId, details }) => {
   } = details;
 
   if (updating) return <Loading size="sm" showText={false} />;
-  const onEdit = (val, attribute) => dispatch(updateContentView(cvId, { [attribute]: val }));
+
+  const onEdit = (val, attribute) => {
+    if (val === details[attribute]) return;
+    dispatch(updateContentView(cvId, { [attribute]: val }));
+  };
+
   return (
     <TextContent>
       <TextList component={TextListVariants.dl}>
@@ -45,6 +51,7 @@ const ContentViewInfo = ({ cvId, details }) => {
           attribute="name"
           onEdit={onEdit}
           value={name}
+          {...{ currentAttribute, setCurrentAttribute }}
         />
         <TextListItem component={TextListItemVariants.dt}>
           {__('Label')}
@@ -71,6 +78,7 @@ const ContentViewInfo = ({ cvId, details }) => {
           attribute="description"
           onEdit={onEdit}
           value={description}
+          {...{ currentAttribute, setCurrentAttribute }}
         />
         {composite ?
           (<ActionableDetail
@@ -80,6 +88,7 @@ const ContentViewInfo = ({ cvId, details }) => {
             onEdit={onEdit}
             tooltip={autoPublishHelpText}
             boolean
+            {...{ currentAttribute, setCurrentAttribute }}
           />) :
           (<ActionableDetail
             label={__('Solve dependencies')}
@@ -88,6 +97,7 @@ const ContentViewInfo = ({ cvId, details }) => {
             onEdit={onEdit}
             tooltip={dependenciesHelpText}
             boolean
+            {...{ currentAttribute, setCurrentAttribute }}
           />)}
         <TextListItem component={TextListItemVariants.dt}>
           {LabelImportOnly()}

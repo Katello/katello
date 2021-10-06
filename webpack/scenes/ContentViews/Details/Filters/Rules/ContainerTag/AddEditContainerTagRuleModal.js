@@ -40,7 +40,11 @@ const AddEditContainerTagRuleModal = ({
       onClose={onClose}
       appendTo={document.body}
     >
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+      >
         <FormGroup label={__('Tag name')} isRequired fieldId="tag_name">
           <TextInput
             autoFocus

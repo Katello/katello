@@ -16,7 +16,7 @@ import {
 } from '../ContentViewDetailSelectors';
 import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
 import CVRpmMatchContentModal from './MatchContentModal/CVRpmMatchContentModal';
-import AddPackageRuleModal from './Rules/Package/AddPackageRuleModal';
+import AddEditPackageRuleModal from './Rules/Package/AddEditPackageRuleModal';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 
 const CVRpmFilterContent = ({
@@ -39,11 +39,15 @@ const CVRpmFilterContent = ({
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasSelected = rows.some(({ selected }) => selected);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedFilterRuleData, setSelectedFilterRuleData] = useState(undefined);
 
   const [showMatchContent, setShowMatchContent] = useState(false);
-  const onClose = () => setShowMatchContent(false);
-  const [addRpmRuleModalOpen, setAddRpmRuleModalOpen] = useState(false);
-  const openAddRpmRuleModal = () => setAddRpmRuleModalOpen(true);
+
+  const onClose = () => {
+    setModalOpen(false);
+    setSelectedFilterRuleData(undefined);
+  };
 
   const columnHeaders = [
     __('RPM name'),
@@ -66,14 +70,19 @@ const CVRpmFilterContent = ({
   const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((rule) => {
-      const { name, architecture, id } = rule;
+      const {
+        name, architecture, id, ...rest
+      } = rule;
+
       const cells = [
         { title: name },
         { title: architecture || 'All architectures' },
         { title: versionText(rule) },
       ];
 
-      newRows.push({ cells, id });
+      newRows.push({
+        cells, id, name, arch: architecture, ...rest,
+      });
     });
 
     return newRows;
@@ -110,6 +119,13 @@ const CVRpmFilterContent = ({
       onClick: (_event, _rowId, { id }) => {
         dispatch(removeCVFilterRule(filterId, id, () =>
           dispatch(getCVFilterRules(filterId))));
+      },
+    },
+    {
+      title: __('Edit'),
+      onClick: (_event, _rowId, details) => {
+        setSelectedFilterRuleData(details);
+        setModalOpen(true);
       },
     },
     {
@@ -164,7 +180,7 @@ const CVRpmFilterContent = ({
                   />}
                 <Split hasGutter>
                   <SplitItem>
-                    <Button onClick={openAddRpmRuleModal} variant="secondary" aria-label="create_rpm_rule">
+                    <Button onClick={() => setModalOpen(true)} variant="secondary" aria-label="create_rpm_rule">
                       {__('Add RPM rule')}
                     </Button>
                   </SplitItem>
@@ -186,22 +202,22 @@ const CVRpmFilterContent = ({
                     />
                   </SplitItem>
                 </Split>
-                {addRpmRuleModalOpen &&
-                  <AddPackageRuleModal
+                {modalOpen &&
+                  <AddEditPackageRuleModal
                     filterId={filterId}
-                    setIsOpen={setAddRpmRuleModalOpen}
-                    aria-label="add_package_filter_rule_modal"
+                    onClose={onClose}
+                    selectedFilterRuleData={selectedFilterRuleData}
                   />}
               </>}
           />
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-        <div className="tab-body-with-spacing">
-          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
-        </div>
-      </Tab>}
+        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+          <div className="tab-body-with-spacing">
+            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
+          </div>
+        </Tab>}
     </Tabs>
   );
 };
