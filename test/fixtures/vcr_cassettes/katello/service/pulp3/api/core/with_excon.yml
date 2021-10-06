@@ -2,64 +2,74 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos7-katello-devel.cannolo.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.14.6/ruby
+      - OpenAPI-Generator/3.15.2/ruby
       Accept:
       - application/json
       Content-Type:
       - application/json
       Authorization:
-      - Basic Og==
+      - Basic YWRtaW46cGFzc3dvcmQ=
   response:
     status:
       code: 200
       message: OK
     headers:
-      Date:
-      - Thu, 23 Sep 2021 14:21:43 GMT
       Server:
-      - gunicorn
+      - nginx/1.20.1
+      Date:
+      - Wed, 06 Oct 2021 17:29:30 GMT
       Content-Type:
       - application/json
+      Content-Length:
+      - '912'
+      Connection:
+      - keep-alive
       Vary:
-      - Accept,Cookie,Accept-Encoding
+      - Accept, Cookie
       Allow:
       - GET, HEAD, OPTIONS
       X-Frame-Options:
-      - SAMEORIGIN
-      Content-Length:
-      - '751'
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
       Correlation-Id:
-      - c9c789c2527e4882932cf1996aeb84ec
+      - dab9280532cc4600a11f3674373c743a
       Access-Control-Expose-Headers:
       - Correlation-ID
-      Via:
-      - 1.1 centos7-katello-devel.cannolo.example.com
+      Strict-Transport-Security:
+      - max-age=15768000
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MzU3NCwibmV4dCI6Imh0dHBzOi8vY2VudG9zNy1rYXRlbGxv
-        LWRldmVsLmNhbm5vbG8uZXhhbXBsZS5jb206NDQzL3B1bHAvYXBpL3YzL3Rh
+        eyJjb3VudCI6MTExMiwibmV4dCI6Imh0dHBzOi8vcHVscDMtc2FuZGJveC1j
+        ZW50b3M3LmJhbG1vcmEuZXhhbXBsZS5jb206NDQzL3B1bHAvYXBpL3YzL3Rh
         c2tzLz9saW1pdD0xJm9mZnNldD0xIiwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8yZmMxMDU1
-        MC0xNzhhLTRiNWQtYjQwZi0yODA5MTNiY2E5OTAvIiwicHVscF9jcmVhdGVk
-        IjoiMjAyMS0wOS0yM1QxNDoyMTo0MS40MDU1MDVaIiwic3RhdGUiOiJjb21w
-        bGV0ZWQiLCJuYW1lIjoicHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJh
-        bF9kZWxldGUiLCJsb2dnaW5nX2NpZCI6ImEwOTdkYTBjZGU5NzQwZGI4OGE1
-        ZWI3Y2NmOGQyYzMyIiwic3RhcnRlZF9hdCI6IjIwMjEtMDktMjNUMTQ6MjE6
-        NDEuNDYzMDQzWiIsImZpbmlzaGVkX2F0IjoiMjAyMS0wOS0yM1QxNDoyMTo0
-        MS41MjQ4OTJaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92
-        My93b3JrZXJzL2NlNGQ5NjE2LTYzZTgtNDQ5My1iMWE1LWU2ZTY5OTYyOTRm
-        Ni8iLCJwYXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNr
-        X2dyb3VwIjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9y
-        ZXNvdXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9w
-        dWxwL2FwaS92My9yZXBvc2l0b3JpZXMvZmlsZS9maWxlLzU5NDkwZGFjLTVh
-        MzMtNDE1NS05YmE3LWE2ODM4MDEzYTY5Mi8iXX1dfQ==
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9lYjE2NDlh
+        Zi1jYTBkLTQzMTEtYmY0ZS00OTY2MjQ2ODRiYjYvIiwicHVscF9jcmVhdGVk
+        IjoiMjAyMS0xMC0wNlQxNzoyOTowOC44NTI2NjFaIiwic3RhdGUiOiJjb21w
+        bGV0ZWQiLCJuYW1lIjoicHVscF9ycG0uYXBwLnRhc2tzLmNvcHkuY29weV9j
+        b250ZW50IiwibG9nZ2luZ19jaWQiOiJhOWRhZjIyNWZlZDA0MzNkYWM2MWM2
+        NjVlMzMxN2Y5MiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEwLTA2VDE3OjI5OjA4
+        Ljk1NjM4OFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTAtMDZUMTc6Mjk6MDku
+        MzczMjMxWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMv
+        d29ya2Vycy82YjcxM2NhNS1lMWZiLTQ3OWEtODZhMy04NWVkMTFiMzkzZmIv
+        IiwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19n
+        cm91cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVz
+        b3VyY2VzIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS84
+        MWY0MTAwNi0yZWI1LTRlMjYtYWVhZi02NzgzMTY2YzgzNzcvdmVyc2lvbnMv
+        MS8iXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9hcGkv
+        djMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vODFmNDEwMDYtMmViNS00ZTI2LWFl
+        YWYtNjc4MzE2NmM4Mzc3LyIsInNoYXJlZDovcHVscC9hcGkvdjMvcmVwb3Np
+        dG9yaWVzL3JwbS9ycG0vOTVkY2EzMjAtYmVhMy00ZTU4LWEzMzgtYTJmNWRk
+        NDZkNGM5LyJdfV19
     http_version: 
-  recorded_at: Thu, 23 Sep 2021 14:21:43 GMT
+  recorded_at: Wed, 06 Oct 2021 17:29:30 GMT
 recorded_with: VCR 3.0.3
