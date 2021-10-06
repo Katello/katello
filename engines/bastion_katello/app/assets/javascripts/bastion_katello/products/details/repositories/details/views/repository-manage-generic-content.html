@@ -31,18 +31,22 @@
 
       <thead>
         <tr bst-table-head row-select>
-          <th bst-table-column><span translate>Name</span></th>
-          <th bst-table-column><span translate>Version</span></th>
+            <th bst-table-column ng-repeat="header in contentType.detailsColumns">
+              <span translate>{{header}}</span>
+            </th>
         </tr>
       </thead>
 
       <tbody>
         <tr bst-table-row ng-repeat="package in table.rows" row-select="package">
-          <td bst-table-cell>
+          <td bst-table-cell ng-if="package.name">
             {{ package.name }}
           </td>
-          <td bst-table-cell>
+          <td bst-table-cell ng-if="package.version">
             {{ package.version }}
+          </td>
+          <td bst-table-cell ng-if="package.filename">
+            {{ package.filename }}
           </td>
         </tr>
       </tbody>

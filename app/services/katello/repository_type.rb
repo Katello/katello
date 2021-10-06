@@ -16,8 +16,7 @@ module Katello
               :pulp3_skip_publication, :configuration_class, :partial_repo_path, :pulp3_api_class,
               :repositories_api_class, :api_class, :remotes_api_class, :repository_versions_api_class,
               :distributions_api_class, :remote_class, :repo_sync_url_class, :client_module_class,
-              :distribution_class, :publication_class, :publications_api_class, :model_name, :model_version,
-              :url_description
+              :distribution_class, :publication_class, :publications_api_class, :url_description
 
     attr_accessor :metadata_publish_matching_check, :index_additional_data_proc
     attr_reader :id, :unique_content_per_repo
@@ -158,7 +157,8 @@ module Katello
     end
 
     class GenericContentType < ContentType
-      attr_accessor :pulp3_api, :pulp3_model, :content_type, :filename_key, :duplicates_allowed, :pluralized_name
+      attr_accessor :pulp3_api, :pulp3_model, :content_type, :filename_key, :duplicates_allowed, :pluralized_name,
+                    :model_name, :model_version, :model_filename
 
       def initialize(options)
         super
@@ -168,10 +168,21 @@ module Katello
         self.filename_key = options[:filename_key]
         self.duplicates_allowed = options[:duplicates_allowed]
         self.pluralized_name = options[:pluralized_name]
+        self.model_name = options[:model_name]
+        self.model_version = options[:model_version]
+        self.model_filename = options[:model_filename]
       end
 
       def label
         self.content_type
+      end
+
+      def details_columns
+        columns = []
+        columns << "Name" if self.model_name
+        columns << "Version" if self.model_version
+        columns << "Filename" if self.model_filename
+        columns
       end
 
       def as_json(_options = {})
@@ -179,7 +190,8 @@ module Katello
           {
             :generic => true,
             :pluralized_label => content_type.pluralize,
-            :pluralized_name => pluralized_name
+            :pluralized_name => pluralized_name,
+            :details_columns => details_columns
           }
         )
       end

@@ -47,6 +47,7 @@ test('Can call API for Python Packages and show table on page load', async (done
   await patientlyWaitFor(() => {
     expect(getAllByText(firstPackage.name)[0]).toBeInTheDocument();
     expect(getAllByText(firstPackage.version)[0]).toBeInTheDocument();
+    expect(getAllByText(firstPackage.filename)[0]).toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
