@@ -25,7 +25,7 @@ module Katello
           end
 
           def test_delete_version
-            PulpDebClient::RepositoriesDebVersionsApi.any_instance.expects(:delete).returns({})
+            PulpDebClient::RepositoriesAptVersionsApi.any_instance.expects(:delete).returns({})
             service = Katello::Pulp3::Repository::Apt.new(@repo, @proxy)
             @repo.version_href = '/pulp/api/v3/repositories/deb/apt/22c9e84b-f49c-4c70-9b4c-49e8c041220f/versions/1/'
             assert service.delete_version

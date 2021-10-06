@@ -10,7 +10,7 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DEB_TYPE) do
   configuration_class PulpDebClient::Configuration
   remote_class PulpDebClient::DebAptRemote
   remotes_api_class PulpDebClient::RemotesAptApi
-  repository_versions_api_class PulpDebClient::RepositoriesDebVersionsApi
+  repository_versions_api_class PulpDebClient::RepositoriesAptVersionsApi
   repositories_api_class PulpDebClient::RepositoriesAptApi
   distributions_api_class PulpDebClient::DistributionsAptApi
   distribution_class PulpDebClient::DebAptDistribution
