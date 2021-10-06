@@ -173,6 +173,7 @@ module Katello
                          !repository.repository_type.unique_content_per_repo &&
                          service_class.supports_id_fetch?
 
+        erratum_updated_ids = []
         service_class.pulp_units_batch_for_repo(repository, fetch_identifiers: fetch_only_ids, content_type: generic_content_type).each do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
@@ -188,6 +189,9 @@ module Katello
 
               if repository.generic?
                 service.update_model(model, repository.repository_type, generic_content_type)
+              elsif self == ::Katello::Erratum
+                # Errata will change pulp_hrefs if the upstream repo updates them
+                erratum_updated_ids << service.update_model(model)
               else
                 service.update_model(model)
               end
@@ -195,9 +199,8 @@ module Katello
             pulp_id_href_map[pulp_id] = backend_identifier
           end
         end
-        sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map, generic_content_type: generic_content_type) if self.many_repository_associations
+        sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map, generic_content_type: generic_content_type, erratum_updated_ids: erratum_updated_ids) if self.many_repository_associations
       end
-      # rubocop:enable Metrics/MethodLength
 
       def sync_repository_associations(repository, options = {})
         additive = options.fetch(:additive, false)
@@ -209,6 +212,7 @@ module Katello
         id_href_map_for_repository = {}
         ids_for_repository.each { |id_href| id_href_map_for_repository[id_href[0]] = id_href[1] }
         id_href_map_for_repository.each_pair { |k, v| id_href_map_for_repository[k] = pulp_id_href_map[v] }
+        erratum_updated_ids = options.fetch(:erratum_updated_ids, []).flatten.compact
 
         existing_ids = self.repository_association_class.uncached do
           repo_assoc_units = self.repository_association_class.where(:repository_id => repository)
@@ -223,16 +227,22 @@ module Katello
           repo_assoc_units.pluck(unit_id_field)
         end
 
+        new_ids = associated_ids - existing_ids
         ActiveRecord::Base.transaction do
           if !additive && (delete_ids = existing_ids - associated_ids).any?
             query = "DELETE FROM #{self.repository_association_class.table_name} WHERE repository_id=#{repository.id} AND #{unit_id_field} IN (#{delete_ids.join(', ')})"
             ActiveRecord::Base.connection.execute(query)
           end
-          unless (new_ids = associated_ids - existing_ids).empty?
-            self.repository_association_class.import(db_columns_sync, db_values(new_ids, id_href_map_for_repository, repository), validate: false)
+          if self == ::Katello::Erratum
+            self.update_repo_association_records(new_ids, erratum_updated_ids, id_href_map_for_repository, repository)
+          else
+            unless new_ids.empty?
+              self.repository_association_class.import(db_columns_sync, db_values(new_ids, id_href_map_for_repository, repository), validate: false)
+            end
           end
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def copy_repository_associations(source_repo, dest_repo)
         if many_repository_associations
