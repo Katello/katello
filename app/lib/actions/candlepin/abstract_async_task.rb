@@ -26,6 +26,7 @@ module Actions
       end
 
       def done?
+        check_for_errors!(external_task)
         !::Katello::Resources::Candlepin::Job.not_finished?(external_task)
       end
 
@@ -36,9 +37,7 @@ module Actions
       end
 
       def poll_external_task
-        task = ::Katello::Resources::Candlepin::Job.get(external_task[:id], job_poll_params)
-        check_for_errors!(task)
-        task
+        ::Katello::Resources::Candlepin::Job.get(external_task[:id], job_poll_params)
       end
 
       def check_for_errors!(task)
