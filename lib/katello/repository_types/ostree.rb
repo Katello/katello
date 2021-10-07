@@ -27,5 +27,7 @@ Katello::RepositoryTypeManager.register('ostree') do
                        pulp3_service_class: Katello::Pulp3::GenericContentUnit,
                        model_name: lambda { |pulp_unit| pulp_unit["name"] },
                        model_version: lambda { |pulp_unit| pulp_unit["version"] }
+                       uploadable: true
+
   default_managed_content_type :ostree_ref
 end
