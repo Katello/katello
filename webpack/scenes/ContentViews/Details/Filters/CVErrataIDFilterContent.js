@@ -23,7 +23,7 @@ import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import ErratumTypeLabel from '../../../../components/ErratumTypeLabel';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 
-const CVErratumIDFilterContent = ({
+const CVErrataIDFilterContent = ({
   cvId, filterId, showAffectedRepos, setShowAffectedRepos,
 }) => {
   const dispatch = useDispatch();
@@ -232,11 +232,11 @@ const CVErratumIDFilterContent = ({
   );
 };
 
-CVErratumIDFilterContent.propTypes = {
+CVErrataIDFilterContent.propTypes = {
   cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   showAffectedRepos: PropTypes.bool.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
 };
 
-export default CVErratumIDFilterContent;
+export default CVErrataIDFilterContent;

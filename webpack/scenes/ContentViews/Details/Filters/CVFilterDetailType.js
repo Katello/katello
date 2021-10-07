@@ -5,7 +5,8 @@ import CVPackageGroupFilterContent from './CVPackageGroupFilterContent';
 import CVRpmFilterContent from './CVRpmFilterContent';
 import CVContainerImageFilterContent from './CVContainerImageFilterContent';
 import CVModuleStreamFilterContent from './CVModuleStreamFilterContent';
-import CVErratumIDFilterContent from './CVErratumIDFilterContent';
+import CVErrataIDFilterContent from './CVErrataIDFilterContent';
+import CVErrataDateFilterContent from './CVErrataDateFilterContent';
 
 const CVFilterDetailType = ({
   cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos, rules,
@@ -42,9 +43,15 @@ const CVFilterDetailType = ({
       />);
     case 'erratum':
       if (head(rules)?.types) {
-        return (<p>WIP Errata by date</p>);
+        return (<CVErrataDateFilterContent
+          cvId={cvId}
+          filterId={filterId}
+          inclusion={inclusion}
+          showAffectedRepos={showAffectedRepos}
+          setShowAffectedRepos={setShowAffectedRepos}
+        />);
       }
-      return (<CVErratumIDFilterContent
+      return (<CVErrataIDFilterContent
         cvId={cvId}
         filterId={filterId}
         showAffectedRepos={showAffectedRepos}
