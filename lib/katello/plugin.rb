@@ -199,6 +199,9 @@ Foreman::Plugin.register :katello do
 
   register_global_js_file 'global'
 
+  register_graphql_query_field :host_collection, '::Types::HostCollection', :record_field
+  register_graphql_query_field :host_collections, '::Types::HostCollection', :collection_field
+
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"
   end
