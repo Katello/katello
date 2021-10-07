@@ -173,7 +173,7 @@ const ContentViewVersions = ({ cvId }) => {
       },
     },
     {
-      title: __('Remove'),
+      title: __('Remove from environment'),
       isDisabled: rowData.activeHistory.length,
       onClick: (_event, rowId, rowInfo) => {
         onRemoveFromEnv({

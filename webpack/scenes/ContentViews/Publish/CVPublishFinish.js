@@ -111,7 +111,7 @@ const CVPublishFinish = ({
     setPolling, setIsOpen, pollResponseStatus, handleEndTask]);
 
   if (saving) {
-    return <Loading />;
+    return <Loading loadingText={__('Please wait while the task starts..')} />
   }
   if (polling && pollResponse) {
     return (
