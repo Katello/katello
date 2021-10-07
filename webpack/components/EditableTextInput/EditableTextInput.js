@@ -7,12 +7,26 @@ import Loading from '../Loading';
 import './editableTextInput.scss';
 
 const EditableTextInput = ({
-  onEdit, value, textArea, attribute, placeholder,
+  onEdit, value, textArea, attribute, placeholder, component, currentAttribute, setCurrentAttribute,
 }) => {
   // Tracks input box state
   const [inputValue, setInputValue] = useState(value);
   const [editing, setEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+
+  useEffect(() => {
+    if (setCurrentAttribute && currentAttribute) {
+      if (attribute !== currentAttribute) {
+        setEditing(false);
+      }
+    }
+  }, [attribute, currentAttribute, setCurrentAttribute]);
+
+  const onEditClick = () => {
+    setEditing(true);
+    if (setCurrentAttribute) setCurrentAttribute(attribute);
+  };
 
   // Setting didCancel to prevent actions from happening after component has been unmounted
   // see https://overreacted.io/a-complete-guide-to-useeffect/#speaking-of-race-conditions
@@ -54,6 +68,7 @@ const EditableTextInput = ({
   };
 
   const inputProps = {
+    component,
     value: inputValue || '',
     onChange: v => setInputValue(v),
   };
@@ -87,7 +102,7 @@ const EditableTextInput = ({
   return (
     <Split>
       <SplitItem>
-        <Text aria-label={`${attribute} text value`} component={TextVariants.p}>
+        <Text aria-label={`${attribute} text value`} component={component || TextVariants.p}>
           {value || (<i>{placeholder}</i>)}
         </Text>
       </SplitItem>
@@ -96,7 +111,7 @@ const EditableTextInput = ({
           className="foreman-edit-icon"
           aria-label={`edit ${attribute}`}
           variant="plain"
-          onClick={() => setEditing(true)}
+          onClick={onEditClick}
         >
           <PencilAltIcon />
         </Button>
@@ -111,12 +126,18 @@ EditableTextInput.propTypes = {
   attribute: PropTypes.string.isRequired,
   textArea: PropTypes.bool, // Is a text area instead of input when editing
   placeholder: PropTypes.string,
+  component: PropTypes.string,
+  currentAttribute: PropTypes.string,
+  setCurrentAttribute: PropTypes.func,
 };
 
 EditableTextInput.defaultProps = {
   textArea: false,
   placeholder: __('None provided'),
   value: '', // API can return null, so default to empty string
+  component: undefined,
+  currentAttribute: undefined,
+  setCurrentAttribute: undefined,
 };
 
 export default EditableTextInput;

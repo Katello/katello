@@ -2,7 +2,7 @@ import React from 'react';
 import { shape, string, number, element, arrayOf } from 'prop-types';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { Switch, Route, Redirect, useHistory, useLocation, withRouter, HashRouter } from 'react-router-dom';
-import { last } from 'lodash';
+import { head, last } from 'lodash';
 
 const RoutedTabs = ({
   tabs, defaultTabIndex, titleComponent,
@@ -12,7 +12,8 @@ const RoutedTabs = ({
     hash,
   } = useLocation();
 
-  const currentTabFromUrl = last(hash.split('#/'));
+  // The below transforms #/filters/6 to filters
+  const currentTabFromUrl = head(last(hash.split('#/')).split('/'));
 
   const onSelect = (_e, eventKey) => {
     // This prevents needless pushing on repeated clicks of a tab

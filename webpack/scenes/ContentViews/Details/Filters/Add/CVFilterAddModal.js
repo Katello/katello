@@ -18,7 +18,7 @@ import {
 import { FILTER_TYPES } from '../../../ContentViewsConstants';
 import ContentType from '../ContentType';
 
-const CVFilterAddModal = ({ cvId, show, onClose }) => {
+const CVFilterAddModal = ({ cvId, onClose }) => {
   const [inclusion, setInclusion] = useState(true);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -34,7 +34,7 @@ const CVFilterAddModal = ({ cvId, show, onClose }) => {
   const ruleError = useSelector(state => selectCreateFilterRuleError(state));
   const [redirect, setRedirect] = useState(false);
 
-  const onSave = () => {
+  const onSubmit = () => {
     setSaving(true);
     dispatch(createContentViewFilter(
       cvId,
@@ -84,11 +84,15 @@ const CVFilterAddModal = ({ cvId, show, onClose }) => {
     <Modal
       title={__('Create filter')}
       variant={ModalVariant.large}
-      isOpen={show}
+      isOpen
       onClose={onClose}
       appendTo={document.body}
     >
-      <Form onSubmit={onSave}>
+      <Form onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+      >
         <FormGroup label={__('Name')} isRequired fieldId="name">
           <TextInput
             isRequired
@@ -170,7 +174,6 @@ const CVFilterAddModal = ({ cvId, show, onClose }) => {
 
 CVFilterAddModal.propTypes = {
   cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  show: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
 };
 

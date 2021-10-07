@@ -13,7 +13,15 @@ import EditableSwitch from './EditableSwitch';
 
 // To be used within a TextList
 const ActionableDetail = ({
-  attribute, label, value, textArea, boolean, tooltip, onEdit,
+  attribute,
+  label,
+  value,
+  textArea,
+  boolean,
+  tooltip,
+  onEdit,
+  currentAttribute,
+  setCurrentAttribute,
 }) => {
   const displayProps = { attribute, value, onEdit };
 
@@ -35,7 +43,10 @@ const ActionableDetail = ({
       <TextListItem component={TextListItemVariants.dd} className="foreman-spaced-list">
         {boolean ?
           <EditableSwitch {...displayProps} /> :
-          <EditableTextInput {...{ ...displayProps, textArea, onEdit }} />}
+          <EditableTextInput {...{
+            ...displayProps, textArea, onEdit, currentAttribute, setCurrentAttribute,
+          }}
+          />}
       </TextListItem>
     </React.Fragment>
   );
@@ -52,6 +63,8 @@ ActionableDetail.propTypes = {
   textArea: PropTypes.bool,
   boolean: PropTypes.bool,
   tooltip: PropTypes.string,
+  currentAttribute: PropTypes.string,
+  setCurrentAttribute: PropTypes.func,
 };
 
 ActionableDetail.defaultProps = {
@@ -59,6 +72,8 @@ ActionableDetail.defaultProps = {
   boolean: false,
   tooltip: null,
   value: null,
+  currentAttribute: undefined,
+  setCurrentAttribute: undefined,
 };
 
 export default ActionableDetail;
