@@ -1,6 +1,8 @@
 module Katello
   class Api::V2::RootController < Api::V2::ApiController
     skip_before_action :authorize # ok - only shows URLs available
+    skip_before_action :load_settings # no Settings used here, avoid DB calls
+    after_action :skip_session
 
     resource_description do
       api_version 'v2'
@@ -8,7 +10,7 @@ module Katello
     end
 
     def resource_list
-      respond_for_index :collection => RESOURCE_LIST
+      render json: self.class.rhsm_resource_list
     end
 
     def rhsm_resource_list
@@ -17,7 +19,15 @@ module Katello
       # for the /rhsm namespace.  The rel values are used by RHSM to determine if the server
       # supports a particular resource (e.g. environments, guestids, organizations..etc)
 
-      respond_for_index :collection => RHSM_RESOURCE_LIST, :template => 'resource_list'
+      render json: self.class.rhsm_resource_list
+    end
+
+    def self.resource_list
+      @resource_list ||= generate_resource_list
+    end
+
+    def self.rhsm_resource_list
+      @rhsm_resource_list ||= generate_rhsm_resource_list
     end
 
     def self.generate_resource_list
@@ -34,7 +44,6 @@ module Katello
 
       api_root_routes.collect! { |r| { :rel => r["/katello/api/".size..-2], :href => r } }
     end
-    RESOURCE_LIST = generate_resource_list
 
     def self.generate_rhsm_resource_list
       all_routes = Engine.routes.routes.collect { |r| r.path.spec.to_s }
@@ -61,6 +70,5 @@ module Katello
       api_routes.uniq!
       api_routes.collect! { |r| { :rel => r.split('/').last, :href => r } }
     end
-    RHSM_RESOURCE_LIST = generate_rhsm_resource_list
   end
 end
