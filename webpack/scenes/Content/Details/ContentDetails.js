@@ -58,7 +58,7 @@ const ContentDetails = () => {
         </Flex>
       </GridItem>
       <GridItem span={12}>
-        <RoutedTabs tabs={tabs} baseUrl={`/${contentType}/${contentId}`} defaultTabIndex={1} />
+        <RoutedTabs tabs={tabs} baseUrl={`/${contentType}/${contentId}`} defaultTabIndex={0} />
       </GridItem>
     </Grid>
   );

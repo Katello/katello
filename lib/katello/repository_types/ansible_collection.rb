@@ -16,5 +16,6 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::ANSIBLE_COLLECTIO
   distribution_class PulpAnsibleClient::AnsibleAnsibleDistribution
   repo_sync_url_class PulpAnsibleClient::AnsibleRepositorySyncURL
 
-  content_type Katello::AnsibleCollection, :pulp3_service_class => ::Katello::Pulp3::AnsibleCollection, :user_removable => true
+  content_type Katello::AnsibleCollection, :pulp3_service_class => ::Katello::Pulp3::AnsibleCollection, :user_removable => true, generic_browser: true
+  default_managed_content_type :ansible_collections
 end
