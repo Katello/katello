@@ -9,7 +9,7 @@ import { selectContent, selectContentStatus, selectContentError } from '../Conte
 import SelectableDropdown from '../../../components/SelectableDropdown';
 import contentConfig from '../ContentConfig';
 /* eslint-disable react/no-array-index-key */
-const ContentTable = ({ selectedContentType, setSelectedContentType, contentTypes }) => {
+const ContentTable = ({ selectedContentType, setSelectedContentType, contentTypes, showContentTypeSelector }) => {
   const status = useSelector(selectContentStatus);
   const error = useSelector(selectContentError);
   const response = useSelector(selectContent);
@@ -41,6 +41,7 @@ const ContentTable = ({ selectedContentType, setSelectedContentType, contentType
         [contentTypes, selectedContentType],
       )}
       actionButtons={
+        showContentTypeSelector &&
         <SelectableDropdown
           items={Object.keys(contentTypes)}
           title={__('Type')}

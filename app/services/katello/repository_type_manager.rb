@@ -1,3 +1,4 @@
+require 'pry'
 module Katello
   class RepositoryTypeManager
     PULP3_FEATURE = "Pulpcore".freeze
@@ -83,6 +84,14 @@ module Katello
         repo_types = enabled_only ? enabled_repository_types : defined_repository_types
         list = repo_types.values.map do |type|
           type.content_types.select { |ct| ct.model_class::CONTENT_TYPE == Katello::GenericContentUnit::CONTENT_TYPE }
+        end
+        list.flatten.map(&:content_type)
+      end
+
+      def generic_ui_content_types(enabled_only = true)
+        repo_types = enabled_only ? enabled_repository_types : defined_repository_types
+        list = repo_types.values.map do |type|
+          type.content_types.select { |ct| ct.generic_browser }
         end
         list.flatten.map(&:content_type)
       end

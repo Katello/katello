@@ -15,6 +15,7 @@ import { getContentDetails } from '../ContentActions';
 import Loading from '../../../components/Loading';
 /* eslint-disable react/no-array-index-key */
 const ContentInfo = ({ contentType, id, tabKey }) => {
+  console.log("content_type", contentType);
   const dispatch = useDispatch();
   const detailsResponse = useSelector(selectContentDetails);
   const detailsStatus = useSelector(selectContentDetailsStatus);

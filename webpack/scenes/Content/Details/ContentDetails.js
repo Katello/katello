@@ -15,13 +15,14 @@ const ContentDetails = () => {
   const contentDetailsResponseStatus = useSelector(selectContentDetailsStatus);
 
   const { id, content_type: contentType } = useParams();
+  console.log(useParams());
   const contentId = Number(id);
   const config = ContentConfig().find(type =>
     type.names.pluralLabel === contentType);
   const { pluralTitle, pluralLabel } = config.names;
 
   const tabs = [];
-  config.tabs.forEach((tab) => {
+  config?.tabs.forEach((tab) => {
     tabs.push({
       title: tab.title,
       key: tab.tabKey,
@@ -34,7 +35,7 @@ const ContentDetails = () => {
   }, [dispatch, contentType, contentId]);
 
   if (contentDetailsResponseStatus === STATUS.PENDING) {
-    return <Loading />;
+    return <Loading loadingText={"From Content Details"}/>
   }
 
   return (
@@ -58,7 +59,7 @@ const ContentDetails = () => {
         </Flex>
       </GridItem>
       <GridItem span={12}>
-        <RoutedTabs tabs={tabs} baseUrl={`/${contentType}/${contentId}`} defaultTabIndex={1} />
+        <RoutedTabs tabs={tabs} baseUrl={`/${contentType}/${contentId}`} defaultTabIndex={0} />
       </GridItem>
     </Grid>
   );

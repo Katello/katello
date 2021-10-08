@@ -91,7 +91,7 @@
             }
         })
         .state('product.repository.manage-content.docker-manifests', {
-            url: '/content/docker_manifests',
+            url: '/docker_manifests',
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-docker-manifests.html',
             ncyBreadcrumb: {
@@ -100,7 +100,7 @@
             }
         })
         .state('product.repository.manage-content.docker-tags', {
-            url: '/content/docker_tags',
+            url: '/docker_tags',
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-docker-tags.html',
             ncyBreadcrumb: {
@@ -109,7 +109,7 @@
             }
         })
         .state('product.repository.manage-content.docker-manifest-lists', {
-            url: '/content/docker_manifest_lists',
+            url: '/docker_manifest_lists',
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-docker-manifest-lists.html',
             ncyBreadcrumb: {
@@ -118,7 +118,7 @@
             }
         })
         .state('product.repository.manage-content.files', {
-            url: '/content/files',
+            url: '/files',
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-files.html',
             ncyBreadcrumb: {
@@ -127,7 +127,7 @@
             }
         })
         .state('product.repository.manage-content.ostree-branches', {
-            url: '/content/ostree_branches',
+            url: '/ostree_branches',
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-ostree-branches.html',
             ncyBreadcrumb: {
@@ -145,7 +145,7 @@
             }
         })
         .state('product.repository.manage-content.debs', {
-            url: '/content/debs',
+            url: '/debs',
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-debs.html',
             ncyBreadcrumb: {
@@ -154,7 +154,7 @@
             }
         })
         .state('product.repository.manage-content.ansible-collections', {
-            url: '/content/ansible_collections',
+            url: '/ansible_collections',
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-ansible-collections.html',
             ncyBreadcrumb: {

@@ -48,11 +48,7 @@ export const links = [
   },
   {
     path: 'ansible_collections',
-    component: WithOrganization(withHeader(AnsibleCollections, { title: __('Ansible Collections') })),
-  },
-  {
-    path: 'ansible_collections/:id([0-9]+)',
-    component: WithOrganization(withHeader(AnsibleCollectionDetails, { title: __('Ansible Collection Details') })),
+    component: WithOrganization(withHeader(Content, { title: __('Ansible Collections') })),
   },
   {
     path: 'content_views',

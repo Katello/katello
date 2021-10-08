@@ -76,7 +76,7 @@ module Katello
 
     def content_type(model_class, options = {})
       @content_types ||= []
-      @content_types << ContentType.new(options.merge(:model_class => model_class))
+      @content_types << ContentType.new(options.merge(:model_class => model_class, :content_type => model_class::CONTENT_TYPE))
     end
 
     def generic_content_type(content_type, options = {})
@@ -127,10 +127,11 @@ module Katello
 
     class ContentType
       attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable,
-                    :primary_content, :index_on_pulp3, :generic_browser
+                    :primary_content, :index_on_pulp3, :generic_browser, :content_type
 
       def initialize(options)
         self.model_class = options[:model_class]
+        self.content_type = options[:content_type]
         self.priority = options[:priority] || 99
         self.pulp2_service_class = options[:pulp2_service_class]
         self.pulp3_service_class = options[:pulp3_service_class]
