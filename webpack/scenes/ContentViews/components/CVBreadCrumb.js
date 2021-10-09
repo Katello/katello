@@ -34,7 +34,7 @@ const CVBreadcrumb = () => {
 
   useDeepCompareEffect(() => {
     setBreadcrumbItems({
-      cv_index: { render: () => (<Link to="/labs/content_views">{__('Content views')}</Link>) },
+      a_cv_index: { render: () => (<Link to="/labs/content_views">{__('Content views')}</Link>) },
     });
     setRecordId(splitHash.length >= 3 ? splitHash[2] : null);
     setRecordModel(splitHash.length >= 3 ? splitHash[1] : null);
@@ -46,13 +46,13 @@ const CVBreadcrumb = () => {
     if (cvDetails && cvDetailsStatus === STATUS.RESOLVED &&
       Object.keys(breadcrumbItems).length === 1) {
       const cvRecordCrumb = {
-        [cvDetails?.name]: {
+        [`b_${cvDetails?.name}`]: {
           render: () => (<Link to={`/labs/content_views/${cvId}`}>{cvDetails?.name}</Link>),
         },
       };
       const tabName = splitHash[1];
       const tabRecordCrumb = {
-        [tabName]: {
+        [`c_${tabName}`]: {
           render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}`}>{capitalize(tabName)}</Link>),
         },
       };
@@ -69,7 +69,7 @@ const CVBreadcrumb = () => {
         if (filterDetails && filterDetailsStatus === STATUS.RESOLVED) {
           const { name } = filterDetails;
           const filterDetailCrumb = {
-            [name]: {
+            [`d_${name}`]: {
               render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}`}>{name}</Link>),
             },
           };
@@ -80,12 +80,12 @@ const CVBreadcrumb = () => {
           const versionTabName = startCase(splitHash[3]);
           const { version } = versionDetails;
           const versionDetailCrumb = {
-            [version]: {
+            [`e_${version}`]: {
               render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}`}>{version}</Link>),
             },
           };
           const versionSecondaryTab = {
-            [versionTabName]: {
+            [`f_${versionTabName}`]: {
               render: () => (
                 <Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}/${versionTabName}`}>
                   {capitalize(versionTabName)}
@@ -103,7 +103,7 @@ const CVBreadcrumb = () => {
   return (
     <Breadcrumb style={{ marginTop: '15px' }}>
       {
-        Object.keys(breadcrumbItems).map(key => (
+        Object.keys(breadcrumbItems)?.sort()?.map(key => (
           <BreadcrumbItem
             key={key}
             aria-label={key}

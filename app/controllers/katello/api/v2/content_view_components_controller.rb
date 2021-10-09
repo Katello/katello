@@ -46,13 +46,15 @@ module Katello
       order_query = <<-SQL
          CAST (#{kcc}.composite_content_view_id as BOOLEAN) ASC, #{kc}.name
       SQL
-
       query = Katello::ContentView.readable.in_organization(@organization)
       query = query&.non_composite&.non_default
       custom_sort = ->(sort_query) { sort_query.joins(join_query).order(order_query) }
       options = { resource_class: Katello::ContentView, custom_sort: custom_sort }
       collection = scoped_search(query, nil, nil, options)
       collection[:results] = ComponentViewPresenter.component_presenter(@view, params[:status], views: collection[:results])
+      collection[:total] = get_total params[:status]
+      collection[:subtotal] = collection[:total]
+
       respond_for_index(:collection => collection, :template => "index")
     end
 
@@ -133,6 +135,19 @@ module Katello
     end
 
     private
+
+    def get_total(status)
+      case status
+      when 'All'
+        return Katello::ContentView.non_default.non_composite.in_organization(@organization).count
+      when 'Added'
+        return Katello::ContentViewComponent.where(composite_content_view_id: @view.id).count
+      when 'Not added'
+        return Katello::ContentView.non_default.non_composite.in_organization(@organization).count - Katello::ContentViewComponent.where(composite_content_view_id: @view.id).count
+      else
+        return Katello::ContentView.non_default.non_composite.in_organization(@organization).count
+      end
+    end
 
     def find_composite_content_view
       @view = ContentView.composite.non_default.readable.find_by(id: params[:composite_content_view_id])

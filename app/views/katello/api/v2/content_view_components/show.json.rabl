@@ -27,3 +27,7 @@ child :latest_version => :content_view_version do
     attributes :id, :name, :label, :description
   end
 end
+
+child :component_content_view_versions => :component_content_view_versions do
+  attributes :id, :version
+end
