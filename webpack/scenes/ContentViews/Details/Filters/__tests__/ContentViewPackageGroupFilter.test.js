@@ -34,12 +34,12 @@ const autoCompleteRepoURL = '/repositories/auto_complete_search';
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 1),
   routerParams: {
-    initialEntries: [{ pathname: '/labs/content_views/1#/filters/1' }],
+    initialEntries: [{ pathname: '/content_views/1#/filters/1' }],
     initialIndex: 1,
   },
 };
 
-const withCVRoute = component => <Route path="/labs/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
+const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
 let searchDelayScope;
 let autoSearchScope;

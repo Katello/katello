@@ -9,7 +9,7 @@
  */
 angular.module('Bastion.content-views').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('content-views', {
-        url: '/content_views',
+        url: '/legacy/content_views',
         permission: 'view_content_views',
         views: {
             '@': {
@@ -38,7 +38,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
 
     $stateProvider.state('content-view', {
         abstract: true,
-        url: '/content_views/:contentViewId',
+        url: '/legacy/content_views/:contentViewId',
         permission: 'view_content_views',
         controller: 'ContentViewDetailsController',
         templateUrl: 'content-views/details/views/content-view-details.html'

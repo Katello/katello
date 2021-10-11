@@ -25,7 +25,7 @@ module BastionKatello
           activation_keys
           content_credentials
           content_hosts
-          content_views
+          legacy
           debs
           docker_tags
           files

@@ -54,11 +54,11 @@ export const links = [
     component: WithOrganization(withHeader(AnsibleCollectionDetails, { title: __('Ansible Collection Details') })),
   },
   {
-    path: 'labs/content_views',
+    path: 'content_views',
     component: withHeader(ContentViews, { title: __('Content Views') }),
   },
   {
-    path: 'labs/content_views/:id([0-9]+)',
+    path: 'content_views/:id([0-9]+)',
     component: withHeader(ContentViewDetails, { title: __('Content View Details') }),
     exact: false,
   },

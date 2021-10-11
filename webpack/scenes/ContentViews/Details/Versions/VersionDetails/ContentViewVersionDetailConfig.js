@@ -76,7 +76,7 @@ export default ({ cvId, versionId }) => [
       {
         title: __('Content View Name'),
         getProperty: item => (
-          <a href={`${urlBuilder('labs/content_views', '')}${item?.content_view_id}`}>
+          <a href={`${urlBuilder('content_views', '')}${item?.content_view_id}`}>
             {item?.content_view?.name}
           </a>),
       },

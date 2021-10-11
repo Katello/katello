@@ -204,15 +204,6 @@ Foreman::Plugin.register :katello do
        :after => :content_hosts,
        :turbolinks => false
 
-  menu :labs_menu,
-       :content_publication,
-       :url => '/labs/content_views',
-       :url_hash => {:controller => 'katello/api/v2/content_views',
-                     :action => 'index'},
-       :caption => N_('Content Views'),
-       :parent => :lab_features_menu,
-       :turbolinks => false
-
   extend_template_helpers Katello::KatelloUrlsHelper
   extend_template_helpers Katello::Concerns::BaseTemplateScopeExtensions
 

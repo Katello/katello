@@ -233,7 +233,7 @@ const CVErrataDateFilterContent = ({
               >
                 {__('Edit rule')}
               </Button>
-              <Link to={`/labs/content_views/${cvId}#/filters`}>
+              <Link to={`/content_views/${cvId}#/filters`}>
                 <Button variant="link">
                   {__('Cancel')}
                 </Button>

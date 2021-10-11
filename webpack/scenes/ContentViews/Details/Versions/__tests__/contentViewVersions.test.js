@@ -19,12 +19,12 @@ const promoteResponseData = contentViewTaskInProgressResponseData;
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
 const environmentPathsData = require('../../../Publish/__tests__/environmentPaths.fixtures.json');
 
-const withCVRoute = component => <Route path="/labs/content_views/:id">{component}</Route>;
+const withCVRoute = component => <Route path="/content_views/:id">{component}</Route>;
 
 const renderOptions = {
   apiNamespace: `${CONTENT_VIEWS_KEY}_VERSIONS_5`,
   routerParams: {
-    initialEntries: [{ pathname: '/labs/content_views/5' }],
+    initialEntries: [{ pathname: '/content_views/5' }],
     initialIndex: 1,
   },
 };

@@ -10,12 +10,12 @@ import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
 const cvDetailData = require('./contentViewDetails.fixtures.json');
 
 
-const withCVRoute = component => <Route path="/labs/content_views/:id([0-9]+)">{component}</Route>;
+const withCVRoute = component => <Route path="/content_views/:id([0-9]+)">{component}</Route>;
 
 const renderOptions = {
   apiNamespace: `${CONTENT_VIEWS_KEY}_1`,
   routerParams: {
-    initialEntries: [{ pathname: '/labs/content_views/1', hash: '#/details' }],
+    initialEntries: [{ pathname: '/content_views/1', hash: '#/details' }],
     initialIndex: 1,
   },
 };
