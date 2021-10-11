@@ -39,10 +39,14 @@ const TracesTab = () => {
   const { results, ...meta } = response;
   const {
     selectOne,
-    isSelected,
+    isSelected, isSelectable,
     selectionSet: selectedTraces,
     ...selectAll
-  } = useSelectionSet(results, meta);
+  } = useSelectionSet({
+    results,
+    metadata: meta,
+    isSelectable: result => !!result.restart_command,
+  });
 
   const onBulkRestartApp = (ids) => {
     dispatch(resolveTraces({ hostname, ids: [...ids].join(',') }));
@@ -55,11 +59,6 @@ const TracesTab = () => {
   const bulkCustomizedRexUrl = ids => resolveTraceUrl({ hostname, ids: [...ids] });
 
   const onRestartApp = id => onBulkRestartApp([id]);
-
-  const selectPage = () => { // overriding selectPage so that you can't select session-type traces
-    const ids = results.filter(result => !!result.restart_command).map(res => res.id);
-    selectedTraces.addAll(ids);
-  };
 
   const dropdownItems = [
     <DropdownItem isDisabled={!selectedTraces.size} aria-label="bulk_rex" key="bulk_rex" component="button" onClick={() => onBulkRestartApp(selectedTraces)}>
@@ -125,7 +124,6 @@ const TracesTab = () => {
         status={status}
         metadata={meta}
         {...selectAll}
-        selectPage={selectPage}
       >
         <Thead>
           <Tr>
@@ -144,7 +142,7 @@ const TracesTab = () => {
             helper,
             app_type: appType,
           } = result;
-          const resolveDisabled = (appType === 'session');
+          const resolveDisabled = !isSelectable(id);
           let rowDropdownItems = [
             { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
             {

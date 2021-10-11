@@ -18,6 +18,7 @@ import { orgId } from '../../services/api';
 /* Patternfly 4 table wrapper */
 const TableWrapper = ({
   actionButtons,
+  toggleGroup,
   children,
   metadata,
   fetchItems,
@@ -50,6 +51,7 @@ const TableWrapper = ({
   const searchNotUnderway = !(searchQuery || activeFilters);
   const showPagination = !unresolvedStatusOrNoRows;
   const showActionButtons = actionButtons && !unresolvedStatus;
+  const showToggleGroup = toggleGroup && !unresolvedStatus;
   const paginationParams = useCallback(() =>
     ({ per_page: perPage, page }), [perPage, page]);
   const prevRequest = useRef({});
@@ -169,7 +171,7 @@ const TableWrapper = ({
                       pageRowCount,
                     }
                 }
-              totalCount={total}
+              totalCount={Number(metadata?.selectable ?? total)}
               areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
               areAllRowsSelected={areAllRowsSelected()}
             />
@@ -190,6 +192,11 @@ const TableWrapper = ({
           <FlexItem style={{ marginLeft: '16px' }}>
             {actionButtons}
           </FlexItem>}
+        {showToggleGroup &&
+          <FlexItem style={{ marginLeft: '16px' }}>
+            {toggleGroup}
+          </FlexItem>}
+
         {showPagination &&
           <PageControls
             variant={PaginationVariant.top}
@@ -230,6 +237,7 @@ TableWrapper.propTypes = {
   updateSearchQuery: PropTypes.func.isRequired,
   fetchItems: PropTypes.func.isRequired,
   metadata: PropTypes.shape({
+    selectable: PropTypes.number,
     total: PropTypes.number,
     page: PropTypes.oneOfType([
       PropTypes.number,
@@ -248,6 +256,7 @@ TableWrapper.propTypes = {
   autocompleteEndpoint: PropTypes.string.isRequired,
   foremanApiAutoComplete: PropTypes.bool,
   actionButtons: PropTypes.node,
+  toggleGroup: PropTypes.node,
   children: PropTypes.node,
   // additionalListeners are anything that can trigger another API call, e.g. a filter
   additionalListeners: PropTypes.arrayOf(PropTypes.oneOfType([
@@ -276,13 +285,14 @@ TableWrapper.propTypes = {
 };
 
 TableWrapper.defaultProps = {
-  metadata: { subtotal: 0 },
+  metadata: { subtotal: 0, selectable: 0 },
   children: null,
   additionalListeners: [],
   activeFilters: [],
   defaultFilters: [],
   foremanApiAutoComplete: false,
   actionButtons: null,
+  toggleGroup: null,
   displaySelectAllCheckbox: false,
   selectedCount: 0,
   selectAll: noop,

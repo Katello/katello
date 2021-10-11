@@ -6,19 +6,27 @@ import { HOST_ERRATA_KEY } from '../../HostErrata/HostErrataConstants';
 import { ErrataTab } from '../ErrataTab';
 import mockErrataData from './errata.fixtures.json';
 
-const renderOptions = {
+const contentFacetAttributes = {
+  id: 11,
+  uuid: 'e5761ea3-4117-4ecf-83d0-b694f99b389e',
+  content_view_default: false,
+  lifecycle_environment_library: false,
+};
+
+const renderOptions = (facetAttributes = contentFacetAttributes) => ({
   apiNamespace: HOST_ERRATA_KEY,
   initialState: {
     API: {
       HOST_DETAILS: {
         response: {
           id: 1,
+          content_facet_attributes: { ...facetAttributes },
         },
         status: 'RESOLVED',
       },
     },
   },
-};
+});
 
 const makeMockErrata = ({ pageSize = 20, total = 100, page = 1 }) => {
   const mockErrataResults = [];
@@ -34,12 +42,14 @@ const makeMockErrata = ({ pageSize = 20, total = 100, page = 1 }) => {
       cves: [],
       packages: [],
       module_streams: [],
+      installable: true,
     });
   }
 
   return {
     total,
     subtotal: total,
+    selectable: total,
     page,
     per_page: pageSize,
     error: null,
@@ -48,7 +58,7 @@ const makeMockErrata = ({ pageSize = 20, total = 100, page = 1 }) => {
   };
 };
 
-const hostErrata = foremanApi.getApiUrl('/hosts/1/errata?per_page=20&page=1');
+const hostErrata = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
 const autocompleteUrl = '/hosts/1/errata/auto_complete_search';
 
 let firstErrata;
@@ -77,7 +87,7 @@ test('Can call API for errata and show on screen on page load', async (done) => 
     .get(hostErrata)
     .reply(200, mockErrataData);
 
-  const { getAllByText } = renderWithRedux(<ErrataTab />, renderOptions);
+  const { getAllByText } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText(firstErrata.severity)[0]).toBeInTheDocument());
@@ -102,7 +112,7 @@ test('Can handle no errata being present', async (done) => {
     .get(hostErrata)
     .reply(200, noResults);
 
-  const { queryByText } = renderWithRedux(<ErrataTab />, renderOptions);
+  const { queryByText } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that there are not any errata showing on the screen.
   await patientlyWaitFor(() => expect(queryByText('This host does not have any installable errata.')).toBeInTheDocument());
@@ -125,7 +135,7 @@ test('Can display expanded errata details', async (done) => {
     queryByText,
     getAllByText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText(firstErrata.severity)[0]).toBeInTheDocument());
@@ -166,7 +176,7 @@ test('Can select one errata', async (done) => {
     queryByText,
     getAllByText,
     getByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText(firstErrata.severity)[0]).toBeInTheDocument());
@@ -190,8 +200,8 @@ test('Can select all errata across pages through checkbox', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({ page: 1 });
   // return errata data results when we look for errata
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?page=2&per_page=20');
+  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
+  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
@@ -207,7 +217,7 @@ test('Can select all errata across pages through checkbox', async (done) => {
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -231,8 +241,8 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({ page: 1 });
   // return errata data results when we look for errata
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?page=2&per_page=20');
+  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
+  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
@@ -248,7 +258,7 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -275,8 +285,8 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
 test('Can select & deselect errata across pages', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?page=2&per_page=20');
+  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
+  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
@@ -292,7 +302,7 @@ test('Can select & deselect errata across pages', async (done) => {
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -327,7 +337,7 @@ test('Can select & de-select all errata through selectDropDown', async (done) =>
     queryByText,
     getAllByText,
     getByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -358,9 +368,9 @@ test('Can de-select items in select all mode across pages', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({ page: 1 });
   // return errata data results when we look for errata
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?page=2&per_page=20');
-  const page3 = foremanApi.getApiUrl('/hosts/1/errata?page=1&per_page=20');
+  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
+  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
+  const page3 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=1&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
@@ -380,7 +390,7 @@ test('Can de-select items in select all mode across pages', async (done) => {
     getAllByText,
     getByLabelText,
     getAllByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -436,7 +446,7 @@ test('Can select page and select only items on the page', async (done) => {
     queryByText,
     getAllByText,
     getByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -469,7 +479,7 @@ test('Select  disabled if all rows are selected', async (done) => {
     queryByText,
     getAllByText,
     getByLabelText,
-  } = renderWithRedux(<ErrataTab />, renderOptions);
+  } = renderWithRedux(<ErrataTab />, renderOptions());
 
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
@@ -508,3 +518,163 @@ test('Select  disabled if all rows are selected', async (done) => {
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
+test('Toggle Group shows if its not the default contentview or library enviroment', async (done) => {
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const mockErrata = makeMockErrata({});
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(hostErrata)
+    .reply(200, mockErrata);
+
+  const {
+    queryByLabelText,
+    getAllByText,
+  } = renderWithRedux(<ErrataTab />, renderOptions());
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Toggle Group does not show if its the default contentview ', async (done) => {
+  const options = renderOptions({
+    ...contentFacetAttributes,
+    content_view_default: true,
+  });
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const mockErrata = makeMockErrata({});
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(hostErrata)
+    .reply(200, mockErrata);
+
+  const {
+    queryByLabelText,
+    getAllByText,
+  } = renderWithRedux(<ErrataTab />, options);
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  expect(queryByLabelText('Installable Errata')).not.toBeInTheDocument();
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Toggle Group does not show if its the  library env ', async (done) => {
+  const options = renderOptions({
+    ...contentFacetAttributes,
+    lifecycle_environment_library: true,
+  });
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const mockErrata = makeMockErrata({});
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(hostErrata)
+    .reply(200, mockErrata);
+
+  const {
+    queryByLabelText,
+    getAllByText,
+  } = renderWithRedux(<ErrataTab />, options);
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  expect(queryByLabelText('Installable Errata')).not.toBeInTheDocument();
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can disable applicable errata', async (done) => {
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  firstErrata.installable = false;
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(hostErrata)
+    .reply(200, mockErrataData);
+
+  const {
+    getAllByText,
+    getByLabelText,
+  } = renderWithRedux(<ErrataTab />, renderOptions());
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText(firstErrata.severity)[0]).toBeInTheDocument());
+  expect(getByLabelText('Select row 0')).toBeDisabled();
+  expect(getByLabelText('Select row 1')).not.toBeDisabled();
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can select only installable errata across pages through checkbox', async (done) => {
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const mockErrata = makeMockErrata({ page: 1 });
+  const first = mockErrata.results[0];
+  first.installable = false;
+  mockErrata.selectable = mockErrata.total - 1;
+  // return errata data results when we look for errata
+  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
+  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
+
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(page1)
+    .reply(200, mockErrata);
+
+  const scope2 = nockInstance
+    .get(page2)
+    .reply(200, makeMockErrata({ page: 2 }));
+
+  const {
+    queryByText,
+    getAllByText,
+    getByLabelText,
+    getAllByLabelText,
+  } = renderWithRedux(<ErrataTab />, renderOptions());
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+
+  const selectAllCheckbox = getByLabelText('Select all');
+  selectAllCheckbox.click();
+  expect(queryByText(`${mockErrata.selectable} selected`)).toBeInTheDocument();
+  expect(queryByText(`${mockErrata.total} selected`)).not.toBeInTheDocument();
+  expect(getByLabelText('Select row 0')).toBeDisabled();
+  getAllByLabelText('Go to next page')[0].click();
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  expect(getByLabelText('Select row 0').checked).toEqual(true);
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done);
+  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
+});
+
+test('Can toggle with the Toggle Group ', async (done) => {
+  // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const mockErrata = makeMockErrata({});
+  // return errata data results when we look for errata
+  const scope = nockInstance
+    .get(hostErrata)
+    .reply(200, mockErrata);
+
+  const {
+    queryByLabelText,
+    getAllByText,
+  } = renderWithRedux(<ErrataTab />, renderOptions());
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  expect(queryByLabelText('Installable Errata')).toBeInTheDocument();
+  expect(queryByLabelText('Show Installable')).toHaveAttribute('aria-pressed', 'true');
+  expect(queryByLabelText('Show All')).toHaveAttribute('aria-pressed', 'false');
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});

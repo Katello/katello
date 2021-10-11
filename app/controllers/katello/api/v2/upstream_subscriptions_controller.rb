@@ -27,7 +27,11 @@ module Katello
       page = index_params[:page] || 1
 
       collection = scoped_search_results(
-        pools[:pools], pools[:subtotal], pools[:total], page, index_params[:per_page], nil)
+        query: pools[:pools],
+        subtotal: pools[:subtotal],
+        total: pools[:total],
+        page: page,
+        per_page: index_params[:per_page])
       respond(collection: collection)
     end
 

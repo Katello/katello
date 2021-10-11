@@ -127,6 +127,16 @@ module Katello
       assert_template 'api/v2/host_errata/index'
     end
 
+    def test_index_with_include_applicable
+      get :index, params: { host_id: @host_dev.id, include_applicable: true }
+      assert_response :success
+      assert_template 'api/v2/host_errata/index'
+      cv = @controller.instance_eval { @content_view }
+      env = @controller.instance_eval { @environment }
+      assert cv.default?
+      assert env.library?
+    end
+
     def test_apply
       ::Katello.stubs(:with_katello_agent?).returns(true)
       assert_async_task ::Actions::Katello::Host::Erratum::Install do |host, options|

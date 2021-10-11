@@ -58,28 +58,39 @@ export const useSet = (initialArry) => {
   return set.current;
 };
 
-export const useSelectionSet = (results, metadata, initialArry = [], idColumn = 'id') => {
+export const useSelectionSet = ({
+  results, metadata,
+  initialArry = [],
+  idColumn = 'id',
+  isSelectable = () => true,
+}) => {
   const selectionSet = useSet(initialArry);
   const pageIds = results?.map(result => result[idColumn]) ?? [];
-  const areAllRowsOnPageSelected = () => Number(pageIds?.length) > 0 &&
-                                         pageIds.every(result => selectionSet.has(result));
+  const selectableResults = results?.filter(result => isSelectable(result)) ?? [];
+  const selectableIds = new Set(selectableResults.map(result => result[idColumn]));
+  const canSelect = id => selectableIds.has(id);
+  const areAllRowsOnPageSelected = () =>
+    Number(pageIds?.length) > 0 &&
+        pageIds.every(result => selectionSet.has(result) || !canSelect(result));
 
   const areAllRowsSelected = () =>
-    Number(selectionSet.size) > 0 && selectionSet.size === Number(metadata.total);
+    Number(selectionSet.size) > 0 && selectionSet.size === Number(metadata.selectable);
 
-  const selectPage = () => selectionSet.addAll(pageIds);
+  const selectPage = () => selectionSet.addAll(pageIds.filter(canSelect));
   const selectNone = () => selectionSet.clear();
   const selectOne = (isSelected, id) => {
-    if (isSelected) {
-      selectionSet.add(id);
-    } else {
-      selectionSet.delete(id);
+    if (canSelect(id)) {
+      if (isSelected) {
+        selectionSet.add(id);
+      } else {
+        selectionSet.delete(id);
+      }
     }
   };
 
   const selectedCount = selectionSet.size;
 
-  const isSelected = id => selectionSet.has(id);
+  const isSelected = id => canSelect(id) && selectionSet.has(id);
 
   return {
     selectOne,
@@ -89,6 +100,7 @@ export const useSelectionSet = (results, metadata, initialArry = [], idColumn = 
     selectPage,
     selectNone,
     isSelected,
+    isSelectable: canSelect,
     selectionSet,
   };
 };
@@ -101,14 +113,22 @@ const usePrevious = (value) => {
   return ref.current;
 };
 
-export const useBulkSelect = (results, metadata, initialArry = [], idColumn = 'id') => {
+export const useBulkSelect = ({
+  results,
+  metadata,
+  initialArry = [],
+  idColumn = 'id',
+  isSelectable,
+}) => {
   const { selectionSet: inclusionSet, ...selectOptions } =
-                useSelectionSet(results, metadata, initialArry, idColumn);
+                useSelectionSet({
+                  results, metadata, initialArry, idColumn, isSelectable,
+                });
   const exclusionSet = useSet([]);
   const [searchQuery, updateSearchQuery] = useState('');
   const [selectAllMode, setSelectAllMode] = useState(false);
   const selectedCount = selectAllMode ?
-    Number(metadata.subtotal) - exclusionSet.size : selectOptions.selectedCount;
+    Number(metadata.selectable) - exclusionSet.size : selectOptions.selectedCount;
 
   const areAllRowsOnPageSelected = () => selectAllMode ||
                                          selectOptions.areAllRowsOnPageSelected();
@@ -117,6 +137,9 @@ export const useBulkSelect = (results, metadata, initialArry = [], idColumn = 'i
                                    selectOptions.areAllRowsSelected();
 
   const isSelected = (id) => {
+    if (!selectOptions.isSelectable(id)) {
+      return false;
+    }
     if (selectAllMode) {
       return !exclusionSet.has(id);
     }

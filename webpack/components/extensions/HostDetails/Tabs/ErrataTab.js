@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Alert, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle, Skeleton } from '@patternfly/react-core';
+import { Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
+import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
   TableVariant,
   TableText,
@@ -16,6 +17,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { isEmpty } from 'lodash';
 import { useSet, useBulkSelect } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -29,8 +31,15 @@ import './ErrataTab.scss';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
-  const { id: hostId } = hostDetails;
+  const {
+    id: hostId,
+    content_facet_attributes: contentFacetAttributes,
+  } = hostDetails;
+  const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const dispatch = useDispatch();
+  const toggleGroupStates = ['all', 'installable'];
+  const [all, installable] = toggleGroupStates;
+  const [toggleGroupState, setToggleGroupState] = useState(installable);
 
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
@@ -45,22 +54,34 @@ export const ErrataTab = () => {
     __('Errata'),
     __('Type'),
     __('Severity'),
+    __('Installable'),
     __('Synopsis'),
     __('Published date'),
   ];
-
   const fetchItems = useCallback(
-    params => getInstallableErrata(hostId, params),
-    [hostId],
+    params => (hostId ?
+      getInstallableErrata(
+        hostId,
+        {
+          include_applicable: toggleGroupState === all,
+          ...params,
+        },
+      ) : null),
+    [hostId, toggleGroupState, all],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostErrataStatus(state));
   const {
-    selectOne, isSelected, searchQuery, selectedCount,
+    selectOne, isSelected, searchQuery, selectedCount, isSelectable,
     updateSearchQuery, selectNone, fetchBulkParams, ...selectAll
-  } = useBulkSelect(results, metadata, [], 'errata_id');
+  } = useBulkSelect({
+    results,
+    metadata,
+    idColumn: 'errata_id',
+    isSelectable: result => result.installable,
+  });
 
   if (!hostId) return <Skeleton />;
 
@@ -117,14 +138,31 @@ export const ErrataTab = () => {
     </Split>
   );
 
+  let toggleGroup;
+  if (!contentFacet.contentViewDefault && !contentFacet.lifecycleEnvironmentLibrary) {
+    toggleGroup = (
+      <ToggleGroup aria-label="Installable Errata">
+        <ToggleGroupItem
+          text={__('All')}
+          buttonId="allToggle"
+          aria-label="Show All"
+          isSelected={toggleGroupState === all}
+          onChange={() => setToggleGroupState(all)}
+        />
+
+        <ToggleGroupItem
+          text={__('Installable')}
+          buttonId="installableToggle"
+          aria-label="Show Installable"
+          isSelected={toggleGroupState === installable}
+          onChange={() => setToggleGroupState(installable)}
+        />
+      </ToggleGroup>
+    );
+  }
+
   return (
     <div>
-      <div id="errata-alert">
-        <Alert variant="info" isInline title={__('Note')}>
-          {__('Errata management functionality on this page is incomplete.')} {' '}
-          <a href={urlBuilder(`content_hosts/${hostId}/errata`, '')}>{__('Visit the previous Errata page') }.</a>
-        </Alert>
-      </div>
       <div id="errata-tab">
         <TableWrapper
           {...{
@@ -139,9 +177,10 @@ export const ErrataTab = () => {
                 updateSearchQuery,
                 selectedCount,
                 selectNone,
+                toggleGroup,
                 }
           }
-          additionalListeners={[hostId]}
+          additionalListeners={[hostId, toggleGroupState]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
           foremanApiAutoComplete
@@ -167,6 +206,7 @@ export const ErrataTab = () => {
                 created_at: createdAt,
                 updated: publishedAt,
                 title,
+                installable: isInstallable,
               } = erratum;
               const isExpanded = erratumIsExpanded(id);
               return (
@@ -180,7 +220,7 @@ export const ErrataTab = () => {
                     }}
                     />
                     <Td select={{
-                        disable: false,
+                        disable: !isSelectable(errataId),
                         isSelected: isSelected(errataId),
                         onSelect: (event, selected) => selectOne(selected, errataId),
                         rowIndex,
@@ -192,6 +232,22 @@ export const ErrataTab = () => {
                     </Td>
                     <Td><ErrataType {...erratum} /></Td>
                     <Td><ErrataSeverity {...erratum} /></Td>
+                    <Td>
+                      { isInstallable ?
+                        <span><CheckIcon /> {__('Yes')}</span> :
+                        <span>
+                          <Tooltip
+                            content={
+                                         __("This erratum is not installable because it is not in this host's content view and lifecycle environment.")
+                                      }
+                          >
+
+                            <TimesIcon />
+                          </Tooltip>
+                          {__('No')}
+                        </span>
+                      }
+                    </Td>
                     <Td><TableText wrapModifier="truncate">{title}</TableText></Td>
                     <Td key={publishedAt}><IsoDate date={publishedAt} /></Td>
                     <Td
