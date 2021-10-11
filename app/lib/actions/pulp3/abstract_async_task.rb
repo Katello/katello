@@ -105,8 +105,17 @@ module Actions
       def check_for_errors
         combined_tasks.each do |task|
           if (message = task.error)
-            fail ::Katello::Errors::Pulp3Error, message
+            fail ::Katello::Errors::Pulp3Error, overwrite_pulp_error(message)
           end
+        end
+      end
+
+      def overwrite_pulp_error(message)
+        case message
+        when 'This repository uses features which are incompatible with \'mirror\' sync. Please sync without mirroring enabled.'
+          'Please disable \'mirror on sync\' because the upstream repository refers to external resources.'
+        else
+          message
         end
       end
 
