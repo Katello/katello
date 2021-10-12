@@ -327,7 +327,7 @@ Foreman::Plugin.register :katello do
                                     :provided_inputs => ['action', 'module_spec', 'options'])
     allowed_template_helpers :errata
 
-    RemoteExecutionProvider.prepend(Katello::Concerns::RemoteExecutionProviderExtensions)
+    RemoteExecutionProvider.singleton_class.prepend(Katello::Concerns::RemoteExecutionProviderExtensions)
   end
 
   tests_to_skip("AccessPermissionsTest" => [
