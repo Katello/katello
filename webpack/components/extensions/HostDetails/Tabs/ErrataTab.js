@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Hint, HintBody, Split, SplitItem, ActionList, ActionListItem, Dropdown,
-  DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Alert, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+  DropdownItem, KebabToggle, Skeleton } from '@patternfly/react-core';
 import {
   TableVariant,
   TableText,
@@ -14,13 +14,13 @@ import {
 } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
-
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { isEmpty } from 'lodash';
+import { useSet, useBulkSelect } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
-import useSet from '../../../../components/Table/TableHooks';
 import { ErrataType, ErrataSeverity } from '../../../../components/Errata';
-import { getInstallableErrata, regenerateApplicability } from '../HostErrata/HostErrataActions';
+import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } from '../HostErrata/HostErrataActions';
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
@@ -32,7 +32,6 @@ export const ErrataTab = () => {
   const { id: hostId } = hostDetails;
   const dispatch = useDispatch();
 
-  const [searchQuery, updateSearchQuery] = useState('');
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const expandedErrata = useSet([]);
@@ -47,7 +46,7 @@ export const ErrataTab = () => {
     __('Type'),
     __('Severity'),
     __('Synopsis'),
-    __('Published Date'),
+    __('Published date'),
   ];
 
   const fetchItems = useCallback(
@@ -58,6 +57,13 @@ export const ErrataTab = () => {
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostErrataStatus(state));
+  const {
+    selectOne, isSelected, searchQuery, selectedCount,
+    updateSearchQuery, selectNone, fetchBulkParams, ...selectAll
+  } = useBulkSelect(results, metadata, [], 'errata_id');
+
+  if (!hostId) return <Skeleton />;
+
   const rowActions = [
     {
       title: __('Apply via Katello agent'), disabled: true,
@@ -81,12 +87,22 @@ export const ErrataTab = () => {
     </DropdownItem>,
   ];
 
+  const applyByKatelloAgent = () => {
+    const selected = fetchBulkParams();
+    if (!isEmpty(selected)) {
+      const parameters = { bulk_errata_ids: JSON.stringify(selected) };
+      setIsBulkActionOpen(false);
+      selectNone();
+      dispatch(applyViaKatelloAgent(hostId, parameters));
+    }
+  };
+
   const actionButtons = (
     <Split hasGutter>
       <SplitItem>
         <ActionList isIconList>
           <ActionListItem>
-            <Button isDisabled> {__('Apply')} </Button>
+            <Button isDisabled={selectedCount === 0} onClick={applyByKatelloAgent}> {__('Apply')} </Button>
           </ActionListItem>
           <ActionListItem>
             <Dropdown
@@ -103,16 +119,11 @@ export const ErrataTab = () => {
 
   return (
     <div>
-      <div id="errata-hint">
-        <Hint>
-          <HintBody>
-            {__('Errata management functionality on this page is incomplete')}.
-            <br />
-            <Button component="a" variant="link" isInline href={urlBuilder(`content_hosts/${hostId}/errata`, '')}>
-              {__('Visit the previous Errata page')}.
-            </Button>
-          </HintBody>
-        </Hint>
+      <div id="errata-alert">
+        <Alert variant="info" isInline title={__('Note')}>
+          {__('Errata management functionality on this page is incomplete.')} {' '}
+          <a href={urlBuilder(`content_hosts/${hostId}/errata`, '')}>{__('Visit the previous Errata page') }.</a>
+        </Alert>
       </div>
       <div id="errata-tab">
         <TableWrapper
@@ -126,16 +137,23 @@ export const ErrataTab = () => {
                 actionButtons,
                 searchQuery,
                 updateSearchQuery,
-                }}
+                selectedCount,
+                selectNone,
+                }
+          }
           additionalListeners={[hostId]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
           foremanApiAutoComplete
+          rowsCount={results?.length}
           variant={TableVariant.compact}
+          {...selectAll}
+          displaySelectAllCheckbox
         >
           <Thead>
             <Tr>
               <Th key="expand-carat" />
+              <Th key="select-all" />
               {columnHeaders.map(col =>
                 <Th key={col}>{col}</Th>)}
               <Th />
@@ -143,51 +161,59 @@ export const ErrataTab = () => {
           </Thead>
           <>
             {results?.map((erratum, rowIndex) => {
-                const {
-                  id,
-                  errata_id: errataId,
-                  created_at: createdAt,
-                  updated: publishedAt,
-                  title,
-                } = erratum;
-                const isExpanded = erratumIsExpanded(id);
-                return (
-                  <Tbody isExpanded={isExpanded} key={`${id}_${createdAt}`}>
-                    <Tr>
-                      <Td
-                        expand={{
-                          rowIndex,
-                          isExpanded,
-                          onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
-                      }}
-                      />
-                      <Td>
-                        <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
-                      </Td>
-                      <Td><ErrataType {...erratum} /></Td>
-                      <Td><ErrataSeverity {...erratum} /></Td>
-                      <Td><TableText wrapModifier="truncate">{title}</TableText></Td>
-                      <Td key={publishedAt}><IsoDate date={publishedAt} /></Td>
-                      <Td
-                        key={`rowActions-${id}`}
-                        actions={{
-                            items: rowActions,
-                          }}
-                      />
-                    </Tr>
-                    <Tr key="child_row" isExpanded={isExpanded}>
-                      <Td colSpan={3}>
-                        <ExpandableRowContent>
-                          <ErratumExpansionContents erratum={erratum} />
-                        </ExpandableRowContent>
-                      </Td>
-                      <Td colSpan={4}>
-                        <ExpandableRowContent>
-                          <ErratumExpansionDetail erratum={erratum} />
-                        </ExpandableRowContent>
-                      </Td>
-                    </Tr>
-                  </Tbody>
+              const {
+                id,
+                errata_id: errataId,
+                created_at: createdAt,
+                updated: publishedAt,
+                title,
+              } = erratum;
+              const isExpanded = erratumIsExpanded(id);
+              return (
+                <Tbody isExpanded={isExpanded} key={`${id}_${createdAt}`}>
+                  <Tr>
+                    <Td
+                      expand={{
+                        rowIndex,
+                        isExpanded,
+                        onToggle: (_event, _rInx, isOpen) => expandedErrata.onToggle(isOpen, id),
+                    }}
+                    />
+                    <Td select={{
+                        disable: false,
+                        isSelected: isSelected(errataId),
+                        onSelect: (event, selected) => selectOne(selected, errataId),
+                        rowIndex,
+                        variant: 'checkbox',
+                        }}
+                    />
+                    <Td>
+                      <a href={urlBuilder(`errata/${id}`, '')}>{errataId}</a>
+                    </Td>
+                    <Td><ErrataType {...erratum} /></Td>
+                    <Td><ErrataSeverity {...erratum} /></Td>
+                    <Td><TableText wrapModifier="truncate">{title}</TableText></Td>
+                    <Td key={publishedAt}><IsoDate date={publishedAt} /></Td>
+                    <Td
+                      key={`rowActions-${id}`}
+                      actions={{
+                          items: rowActions,
+                        }}
+                    />
+                  </Tr>
+                  <Tr key="child_row" isExpanded={isExpanded}>
+                    <Td colSpan={3}>
+                      <ExpandableRowContent>
+                        <ErratumExpansionContents erratum={erratum} />
+                      </ExpandableRowContent>
+                    </Td>
+                    <Td colSpan={4}>
+                      <ExpandableRowContent>
+                        <ErratumExpansionDetail erratum={erratum} />
+                      </ExpandableRowContent>
+                    </Td>
+                  </Tr>
+                </Tbody>
                 );
               })
               }
