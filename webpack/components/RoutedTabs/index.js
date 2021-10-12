@@ -9,7 +9,7 @@ const RoutedTabs = ({
 }) => {
   const { push } = useHistory();
   const {
-    hash,
+    hash, key: locationKey,
   } = useLocation();
 
   // The below transforms #/filters/6 to filters
@@ -39,7 +39,7 @@ const RoutedTabs = ({
         ))}
       </Tabs>
       <div className="tab-body-with-spacing">
-        <HashRouter key={currentTabFromUrl}>
+        <HashRouter key={locationKey}>
           <Switch>
             {tabs.map(({ key, content }) => (
               <Route key={`${key}-route`} path={`/${key}`}>

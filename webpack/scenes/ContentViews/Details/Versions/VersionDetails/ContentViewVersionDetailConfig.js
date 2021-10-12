@@ -48,6 +48,7 @@ import ContentViewVersionRepositoryCell from './ContentViewVersionRepositoryCell
 export const TableType = PropTypes.shape({
   name: PropTypes.string,
   getCountKey: PropTypes.func,
+  repoType: PropTypes.string,
   responseSelector: PropTypes.func,
   statusSelector: PropTypes.func,
   autocompleteEndpoint: PropTypes.string,
@@ -59,7 +60,6 @@ export const TableType = PropTypes.shape({
       getProperty: PropTypes.func,
     })),
 });
-
 
 export default ({ cvId, versionId }) => [
   {
@@ -127,6 +127,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('RPM Packages'),
+    repoType: 'yum',
     getCountKey: item => item?.rpm_count,
     responseSelector: state => selectRPMPackages(state),
     statusSelector: state => selectRPMPackagesStatus(state),
@@ -147,6 +148,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('RPM Package Groups'),
+    repoType: 'yum',
     getCountKey: item => item?.package_group_count,
     responseSelector: state => selectRPMPackageGroups(state),
     statusSelector: state => selectRPMPackageGroupsStatus(state),
@@ -159,6 +161,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Files'),
+    repoType: 'file',
     getCountKey: item => item?.file_count,
     responseSelector: state => selectFiles(state),
     statusSelector: state => selectFilesStatus(state),
@@ -177,6 +180,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Errata'),
+    repoType: 'yum',
     getCountKey: item => item?.erratum_count,
     responseSelector: state => selectErrata(state),
     statusSelector: state => selectErrataStatus(state),
@@ -229,6 +233,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Module Streams'),
+    repoType: 'yum',
     getCountKey: item => item?.module_stream_count,
     responseSelector: state => selectModuleStreams(state),
     statusSelector: state => selectModuleStreamsStatus(state),
@@ -250,6 +255,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Deb Packages'),
+    repoType: 'deb',
     getCountKey: item => item?.deb_count,
     responseSelector: state => selectDebPackages(state),
     statusSelector: state => selectDebPackagesStatus(state),
@@ -269,6 +275,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Ansible Collections'),
+    repoType: 'ansible_collection',
     getCountKey: item => item?.ansible_collection_count,
     responseSelector: state => selectAnsibleCollections(state),
     statusSelector: state => selectAnsibleCollectionsStatus(state),
@@ -298,6 +305,7 @@ export default ({ cvId, versionId }) => [
   },
   {
     name: __('Docker Tags'),
+    repoType: 'docker',
     getCountKey: item => item?.docker_tag_count,
     responseSelector: state => selectDockerTags(state),
     statusSelector: state => selectDockerTagsStatus(state),

@@ -225,3 +225,68 @@ testConfig.forEach(({
     assertNockRequest(tabScope);
     assertNockRequest(scope, done);
   }));
+
+test('Can change repository selector', async (done) => {
+  const {
+    countKey,
+    autoCompleteUrl,
+    dataUrl,
+    data,
+  } = testConfig[1]; // RPM Packages
+
+  const { version } = ContentViewVersionDetailsData;
+  const autocompleteScope = mockAutocomplete(nockInstance, autoCompleteUrl);
+  const searchDelayScope = mockSetting(nockInstance, AUTOSEARCH_DELAY, 500);
+  const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING, true);
+
+  const scope = nockInstance
+    .get(cvVersions)
+    .query(true)
+    .reply(200, {
+      ...getTabSpecificData(countKey),
+      repositories: ContentViewVersionDetailsCounts.repositories,
+    });
+
+  const tabScope = nockInstance
+    .get(dataUrl)
+    .query(true)
+    .times(2) // Expect two calls, the initial one, and the one made on selection
+    .reply(200, data);
+
+  const { getByText, queryByText } = renderWithRedux(
+    withCVRoute(<ContentViewVersionDetails cvId={3} />),
+    {
+      ...renderOptions,
+      routerParams: {
+        initialEntries: [{ pathname: '/versions/73/rpmPackages' }],
+        initialIndex: 1,
+      },
+    },
+  );
+
+  // Nothing will show at first, page is loading
+  expect(queryByText(`Version ${version}`)).toBeNull();
+
+  // Assert that the CV version is now showing on the screen, but wait for it to appear.
+  await patientlyWaitFor(() => {
+    expect(getByText(`Version ${version}`)).toBeTruthy();
+  });
+
+  // Click the All Repositories Drop Down
+  await patientlyWaitFor(() => {
+    expect(getByText('All Repositories')).toBeTruthy();
+    getByText('All Repositories').click();
+  });
+
+  // Select a repo to filter by
+  await patientlyWaitFor(() => {
+    getByText('Zoo Repo Uno');
+    getByText('Zoo Repo Uno').click();
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  assertNockRequest(tabScope);
+  assertNockRequest(scope, done);
+});

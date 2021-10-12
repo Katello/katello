@@ -62,7 +62,8 @@ const ContentViewVersionDetails = ({ cvId }) => {
   // Checking details is done to prevent two renders of the table.
   if (!loaded && isEmpty(details)) return <Loading />;
   const filteredTableConfigs = tableConfigs.filter(({ getCountKey }) => !!getCountKey(response));
-  const showTabs = filteredTableConfigs.length > 0;
+  const { repositories } = details;
+  const showTabs = filteredTableConfigs.length > 0 && repositories;
   const getCurrentActiveKey = tab ?? camelCase(first(filteredTableConfigs)?.name);
 
   return (
@@ -97,6 +98,7 @@ const ContentViewVersionDetails = ({ cvId }) => {
               >
                 <ContentViewVersionDetailsTable
                   tableConfig={config}
+                  repositories={repositories}
                 />
               </Route>))
             }
