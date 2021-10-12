@@ -8,7 +8,6 @@ import { noop } from 'foremanReact/common/helpers';
 import './SelectAllCheckbox.scss';
 
 const SelectAllCheckbox = ({
-  // selectAll,
   selectNone,
   selectPage,
   selectedCount,

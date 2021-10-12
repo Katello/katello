@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Skeleton, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -9,7 +9,8 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import EnableTracerEmptyState from './EnableTracerEmptyState';
 import TableWrapper from '../../../Table/TableWrapper';
 import { useSelectionSet } from '../../../Table/TableHooks';
-import { getHostTraces, resolveHostTraces } from './HostTracesActions';
+import { getHostTraces } from './HostTracesActions';
+import { restartService } from './RemoteExecutionActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
 import { resolveTraceUrl } from './customizedRexUrlHelpers';
 import './TracesTab.scss';
@@ -38,31 +39,53 @@ const TracesTab = () => {
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
   const {
-    selectOne, isSelected, selectionSet: selectedTraces, ...selectAll
+    selectOne,
+    isSelected,
+    selectionSet: selectedTraces,
+    ...selectAll
   } = useSelectionSet(results, meta);
+  const seenResults = useRef({});
+  if (results?.length) {
+    results.forEach((result) => {
+      seenResults.current[result.id] = result;
+    });
+  }
+
+  const traceData = (ids) => {
+    const idList = new Set([...ids]);
+    return Object.values(seenResults.current).filter(trace => idList.has(trace.id));
+  };
+
+  const assembleHelpers = (traces) => {
+    const helpers = new Set(traces.map(tr => tr.effective_helper));
+    if (helpers.has('reboot')) return 'reboot';
+    helpers.delete(null);
+    return [...helpers].join(',');
+  };
 
   const onBulkRestartApp = (ids) => {
-    dispatch(resolveHostTraces(hostId, { trace_ids: [...ids] }));
+    const traces = traceData(ids);
+    const helpers = assembleHelpers(traces);
+    dispatch(restartService({ hostname, helper: helpers }));
     selectedTraces.clear();
+
     const params = { page: meta.page, per_page: meta.per_page, search: meta.search };
     dispatch(getHostTraces(hostId, params));
   };
 
-  const assembleHelpers = (traceData) => {
-    const traces = new Set(traceData.map(tr => tr.effective_helper));
-    if (traces.has('reboot')) return 'reboot';
-    traces.delete(null);
-    return [...traces].join(',');
-  };
-
   const bulkCustomizedRexUrl = (traceIds) => {
     if (!results) return '';
-    const traces = results.filter(trace => traceIds.has(trace.id));
+    const traces = traceData(traceIds);
     const helpers = assembleHelpers(traces);
     return resolveTraceUrl({ hostname, helper: helpers });
   };
 
   const onRestartApp = id => onBulkRestartApp([id]);
+
+  const selectPage = () => { // overriding selectPage so that you can't select session-type traces
+    const ids = results.filter(result => !!result.effective_helper).map(res => res.id);
+    selectedTraces.addAll(ids);
+  };
 
   const dropdownItems = [
     <DropdownItem isDisabled={!selectedTraces.size} aria-label="bulk_rex" key="bulk_rex" component="button" onClick={() => onBulkRestartApp(selectedTraces)}>
@@ -128,6 +151,7 @@ const TracesTab = () => {
         status={status}
         metadata={meta}
         {...selectAll}
+        selectPage={selectPage}
       >
         <Thead>
           <Tr>
