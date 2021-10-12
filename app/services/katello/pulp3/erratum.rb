@@ -26,6 +26,7 @@ module Katello
       end
 
       def update_model(model)
+        updated = false
         keys = %w(title id severity issued_date type description reboot_suggested solution updated_date summary)
         custom_json = backend_data.slice(*keys)
         custom_json["issued"] = custom_json.delete("issued_date")
@@ -35,12 +36,15 @@ module Katello
         custom_json["issued"] = convert_date_if_epoch(custom_json["issued"])
         custom_json["updated"] = convert_date_if_epoch(custom_json["updated"]) unless custom_json["updated"].blank?
 
+        custom_json['errata_id'] = custom_json.delete('id')
+        custom_json['errata_type'] = custom_json.delete('type')
+        custom_json['issued'] = custom_json['issued'].to_datetime
+        custom_json['updated'] = custom_json['updated'].blank? ? custom_json['issued'] : custom_json['updated'].to_datetime
+
         if model.updated.blank? ||
-            (custom_json['updated'] && (custom_json['updated'].to_datetime != model.updated.to_datetime))
-          custom_json['errata_id'] = custom_json.delete('id')
-          custom_json['errata_type'] = custom_json.delete('type')
-          custom_json['updated'] = custom_json['updated'].blank? ? custom_json['issued'] : custom_json['updated']
+          model.attributes.excluding(model.attributes.keys - custom_json.keys) != custom_json
           model.update!(custom_json)
+          updated = true
 
           unless backend_data['references'].blank?
             update_bugzillas(model, backend_data['references'])
@@ -49,6 +53,8 @@ module Katello
         end
         update_packages(model, backend_data['pkglist']) unless backend_data['pkglist'].blank?
         update_modules(model, backend_data['pkglist']) unless backend_data['pkglist'].blank?
+
+        return model.id if updated
       end
 
       def update_bugzillas(model, ref_list)
