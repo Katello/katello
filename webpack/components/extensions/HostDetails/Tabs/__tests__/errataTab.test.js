@@ -273,7 +273,7 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
 });
 
 
-test('Can select & deselect select errata across pages', async (done) => {
+test('Can select & deselect errata across pages', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const page1 = foremanApi.getApiUrl('/hosts/1/errata?per_page=20&page=1');
