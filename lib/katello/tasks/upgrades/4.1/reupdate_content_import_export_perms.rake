@@ -2,7 +2,7 @@ namespace :katello do
   namespace :upgrades do
     namespace '4.1' do
       desc "Update for content import/export permissions."
-      task :update_content_import_export_perms => ['environment'] do
+      task :reupdate_content_import_export_perms => ['environment'] do
         User.current = User.anonymous_api_admin
 
         def deduplicate_filters(perm)
@@ -31,16 +31,7 @@ namespace :katello do
         }
 
         permission_map.each do |old_perm, new_perm|
-          if old_perm
-            # if there was already an export_content/import_content permission
-            if Filtering.where(permission_id: new_perm.id).exists?
-              # then just remove export_library_content, import_library_content
-              Filtering.where(permission_id: old_perm).delete_all
-            else
-              # then just remove export_library_content, import_library_content
-              Filtering.where(permission_id: old_perm.id).update_all(:permission_id => new_perm.id)
-            end
-          end
+          Filtering.where(permission_id: old_perm.id).update_all(:permission_id => new_perm.id) if old_perm
         end
 
         names = permission_map.keys.compact.map(&:name)
