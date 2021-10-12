@@ -31,6 +31,22 @@ module Katello
 
             refute_includes publication_options.keys, :publication
           end
+
+          def test_remote_options_if_no_generic_remote_options
+            @repo.root.stubs(:generic_remote_options).returns([].to_json)
+            refute_empty @service.remote_options
+          end
+
+          def test_generic_remote_options_in_remote_options
+            generic_remote_options = {
+              generic_remote_option: "value",
+              generic_remote_option2: "value 2",
+              generic_remote_option3: "value 3"
+            }
+            @repo.root.stubs(:generic_remote_options).returns(generic_remote_options.to_json)
+            assert_empty generic_remote_options.to_a - @service.remote_options.to_a, 
+              "Remote options didn't include generic remote options"
+          end
         end
       end
     end
