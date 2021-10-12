@@ -360,42 +360,23 @@ describe('With tracer installed', () => {
       assertNockRequest(autocompleteScope);
       assertNockRequest(scope, done);
     });
-    test('Eliminates session type traces from helper list', async (done) => {
+    test('Does not allow selection of session type traces', async (done) => {
       const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
 
       const scope = nockInstance
         .get(hostTraces)
         .reply(200, mockTraceData);
 
-      const { getByText, getByLabelText, queryByText } = renderWithRedux(
+      const { getByText } = renderWithRedux(
         <TracesTab />,
         renderOptions(true),
       );
       let traceCheckbox;
       await patientlyWaitFor(() => {
-        const traceNameNode = getByText(firstTrace.application);
+        const traceNameNode = getByText(secondTrace.application);
         traceCheckbox = checkboxToTheLeftOf(traceNameNode);
       });
-      traceCheckbox.click();
-      expect(traceCheckbox.checked).toEqual(true);
-
-      const secondTraceName = getByText(secondTrace.application);
-      const secondTraceCheckbox = checkboxToTheLeftOf(secondTraceName);
-      secondTraceCheckbox.click();
-      expect(secondTraceCheckbox.checked).toEqual(true);
-      expect(getByText('2 selected')).toBeInTheDocument();
-
-      const actionMenu = getByLabelText('bulk_actions');
-      actionMenu.click();
-      const viaCustomizedRexAction = queryByText('Restart via customized remote execution');
-
-      expect(viaCustomizedRexAction).toBeInTheDocument();
-      // The second trace's helper, 'You will have to log out & log in again',
-      // should be filtered out
-      expect(viaCustomizedRexAction).toHaveAttribute(
-        'href',
-        traceUrlForHelpers(['systemctl restart chronyd']),
-      );
+      expect(traceCheckbox.disabled).toEqual(true);
 
       assertNockRequest(autocompleteScope);
       assertNockRequest(scope, done);

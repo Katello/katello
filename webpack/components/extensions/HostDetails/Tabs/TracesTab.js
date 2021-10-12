@@ -49,9 +49,10 @@ const TracesTab = () => {
   };
 
   const assembleHelpers = (traceData) => {
-    if (traceData.find(tr => tr.reboot_required)) return 'reboot';
-    const initialHelpers = traceData.filter(tr => tr.app_type !== 'session');
-    return initialHelpers.map(tr => tr.helper).join(',');
+    const traces = new Set(traceData.map(tr => tr.effective_helper));
+    if (traces.has('reboot')) return 'reboot';
+    traces.delete(null);
+    return [...traces].join(',');
   };
 
   const bulkCustomizedRexUrl = (traceIds) => {
@@ -160,7 +161,7 @@ const TracesTab = () => {
           return (
             <Tr key={id} >
               <Td select={{
-                disable: false,
+                disable: appType === 'session',
                 props: {
                   'aria-label': `check-${application}`,
                 },
