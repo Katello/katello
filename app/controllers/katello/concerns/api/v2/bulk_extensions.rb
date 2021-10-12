@@ -19,7 +19,7 @@ module Katello
         end
 
         if bulk_params[:all] && !bulk_params[:included][:ids].blank?
-          fail HttpErrors::BadRequest, _("Invalid included ids when all items are being selected.")
+          fail HttpErrors::BadRequest, _("Sending a list of included IDs is not allowed when all items are being selected.")
         end
 
         items = model_scope
