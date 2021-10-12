@@ -244,7 +244,7 @@ module Katello
 
           batch.each do |task|
             next if skip_task?(task)
-            next if !only_host_ids.nil? && only_host_ids.include?(task.input['host']['id'].to_i)
+            next unless only_host_ids.nil? || only_host_ids.include?(task.input['host']['id'].to_i)
             parse_errata(task).each do |erratum_id|
               current_erratum_errata_type = preloaded_errata.find { |k, _| k == erratum_id }.last
 
