@@ -24,11 +24,11 @@ const katelloPackageInstallParams = ({ hostname, packageName }) =>
     feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL,
   });
 
-const katelloServiceRestartParams = ({ hostname, helper }) =>
+const katelloTracerResolveParams = ({ hostname, ids }) =>
   baseParams({
     hostname,
-    inputs: { helper },
-    feature: REX_FEATURES.KATELLO_SERVICE_RESTART,
+    inputs: { ids },
+    feature: REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE,
   });
 
 export const installPackage = ({ hostname, packageName }) => post({
@@ -43,13 +43,13 @@ export const installPackage = ({ hostname, packageName }) => post({
   errorToast: error => errorToast(error),
 });
 
-export const restartService = ({ hostname, helper }) => post({
+export const resolveTraces = ({ hostname, ids }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
-  params: katelloServiceRestartParams({ hostname, helper }),
+  params: katelloTracerResolveParams({ hostname, ids }),
   handleSuccess: response => renderTaskStartedToast({
-    humanized: { action: `Restart traces on ${hostname}` },
+    humanized: { action: `Resolve traces on ${hostname}` },
     id: response?.data?.dynflow_task?.id,
   }),
   errorToast: error => errorToast(error),

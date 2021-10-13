@@ -10,7 +10,7 @@ import EnableTracerEmptyState from './EnableTracerEmptyState';
 import TableWrapper from '../../../Table/TableWrapper';
 import { useSelectionSet } from '../../../Table/TableHooks';
 import { getHostTraces } from './HostTracesActions';
-import { restartService } from './RemoteExecutionActions';
+import { resolveTraces } from './RemoteExecutionActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
 import { resolveTraceUrl } from './customizedRexUrlHelpers';
 import './TracesTab.scss';
@@ -51,34 +51,15 @@ const TracesTab = () => {
     });
   }
 
-  const traceData = (ids) => {
-    const idList = new Set([...ids]);
-    return Object.values(seenResults.current).filter(trace => idList.has(trace.id));
-  };
-
-  const assembleHelpers = (traces) => {
-    const helpers = new Set(traces.map(tr => tr.effective_helper));
-    if (helpers.has('reboot')) return 'reboot';
-    helpers.delete(null);
-    return [...helpers].join(',');
-  };
-
   const onBulkRestartApp = (ids) => {
-    const traces = traceData(ids);
-    const helpers = assembleHelpers(traces);
-    dispatch(restartService({ hostname, helper: helpers }));
+    dispatch(resolveTraces({ hostname, ids: [...ids] }));
     selectedTraces.clear();
 
     const params = { page: meta.page, per_page: meta.per_page, search: meta.search };
     dispatch(getHostTraces(hostId, params));
   };
 
-  const bulkCustomizedRexUrl = (traceIds) => {
-    if (!results) return '';
-    const traces = traceData(traceIds);
-    const helpers = assembleHelpers(traces);
-    return resolveTraceUrl({ hostname, helper: helpers });
-  };
+  const bulkCustomizedRexUrl = ids => resolveTraceUrl({ hostname, ids: [...ids] });
 
   const onRestartApp = id => onBulkRestartApp([id]);
 
@@ -169,12 +150,11 @@ const TracesTab = () => {
             application,
             helper,
             app_type: appType,
-            reboot_required: rebootRequired,
           } = result;
           let rowDropdownItems = [
             { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
             {
-              component: 'a', href: resolveTraceUrl({ hostname, helper, rebootRequired }), title: 'Restart via customized remote execution',
+              component: 'a', href: resolveTraceUrl({ hostname, ids: [id] }), title: 'Restart via customized remote execution',
             },
           ];
           if (appType === 'session') {

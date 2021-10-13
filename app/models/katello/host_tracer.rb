@@ -29,9 +29,11 @@ module Katello
     end
 
     def self.helpers_for(traces)
-      helpers = traces.map(&:effective_helper).compact.uniq
-      return ['reboot'] if helpers.include?('reboot')
-      helpers
+      if traces.any?(&:reboot_required?)
+        ['reboot']
+      else
+        traces.map(&:effective_helper).compact.uniq
+      end
     end
   end
 end

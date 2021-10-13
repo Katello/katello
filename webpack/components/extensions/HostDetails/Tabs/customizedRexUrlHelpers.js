@@ -10,10 +10,10 @@ export const katelloPackageInstallUrl = ({ hostname }) => {
   return `/job_invocations/new?${urlQuery}`;
 };
 
-export const resolveTraceUrl = ({ hostname, helper, rebootRequired }) => {
+export const resolveTraceUrl = ({ hostname, ids }) => {
   const urlQuery = encodeURI([
-    `feature=${REX_FEATURES.KATELLO_SERVICE_RESTART}`,
-    `inputs[helper]=${rebootRequired ? 'reboot' : helper}`,
+    `feature=${REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE}`,
+    `inputs[ids]=${ids.join(',')}`,
     `host_ids=name ^ (${hostname})`,
   ].join('&'));
   return `/job_invocations/new?${urlQuery}`;
