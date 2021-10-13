@@ -4,7 +4,6 @@ import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSet
 import { foremanApi } from '../../../../../services/api';
 import { HOST_TRACES_KEY } from '../HostTracesConstants';
 import TracesTab from '../TracesTab';
-import { resolveTraceUrl } from '../customizedRexUrlHelpers';
 
 const mockTraceData = require('./traces.fixtures.json');
 const mockResolveTraceTask = require('./resolveTraces.fixtures.json');
@@ -50,14 +49,13 @@ const jobInvocations = foremanApi.getApiUrl('/job_invocations');
 
 let firstTrace;
 let secondTrace;
-let thirdTrace;
 let searchDelayScope;
 let autoSearchScope;
 
 describe('With tracer installed', () => {
   beforeEach(() => {
     const { results } = mockTraceData;
-    [firstTrace, secondTrace, thirdTrace] = results;
+    [firstTrace, secondTrace] = results;
     searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
     autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
   });
@@ -260,7 +258,7 @@ describe('With tracer installed', () => {
     });
     expect(viaCustomizedRexAction).toHaveAttribute(
       'href',
-      '/job_invocations/new?feature=katello_service_restart&inputs%5Bhelper%5D=systemctl%20restart%20chronyd&host_ids=name%20%5E%20(client.example.com)',
+      '/job_invocations/new?feature=katello_host_tracer_resolve&inputs%5Bids%5D=10&host_ids=name%20%5E%20(client.example.com)',
     );
 
     assertNockRequest(autocompleteScope);
@@ -293,7 +291,7 @@ describe('With tracer installed', () => {
     expect(viaCustomizedRexAction).toBeInTheDocument();
     expect(viaCustomizedRexAction).toHaveAttribute(
       'href',
-      '/job_invocations/new?feature=katello_service_restart&inputs%5Bhelper%5D=systemctl%20restart%20chronyd&host_ids=name%20%5E%20(client.example.com)',
+      '/job_invocations/new?feature=katello_host_tracer_resolve&inputs%5Bids%5D=10&host_ids=name%20%5E%20(client.example.com)',
     );
 
     assertNockRequest(autocompleteScope);
@@ -303,62 +301,13 @@ describe('With tracer installed', () => {
   describe('Remote execution URL helper logic', () => {
     beforeEach(() => {
       const { results } = mockTraceData;
-      [firstTrace, secondTrace, thirdTrace] = results;
+      [firstTrace, secondTrace] = results;
     });
 
     afterEach(() => {
       nock.cleanAll();
     });
 
-    const traceUrlForHelpers = helpers =>
-      encodeURI(`/job_invocations/new?feature=katello_service_restart&inputs[helper]=${helpers.join(',')}&host_ids=name ^ (client.example.com)`);
-
-    test('Overrides helper when a trace is reboot_required', () => {
-      const helper = 'You will have to log out and login again';
-      const result = resolveTraceUrl({
-        hostname: 'client.example.com',
-        helper,
-        rebootRequired: true,
-      });
-      expect(result).toEqual(traceUrlForHelpers(['reboot']));
-    });
-    test('Concatenates helpers into a comma-separated list', async (done) => {
-      const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-
-      const scope = nockInstance
-        .get(hostTraces)
-        .reply(200, mockTraceData);
-
-      const { getByText, getByLabelText, queryByText } = renderWithRedux(
-        <TracesTab />,
-        renderOptions(true),
-      );
-      let traceCheckbox;
-      await patientlyWaitFor(() => {
-        const traceNameNode = getByText(firstTrace.application);
-        traceCheckbox = checkboxToTheLeftOf(traceNameNode);
-      });
-      traceCheckbox.click();
-      expect(traceCheckbox.checked).toEqual(true);
-
-      const thirdTraceName = getByText(thirdTrace.application);
-      const thirdTraceCheckbox = thirdTraceName.previousElementSibling.firstElementChild;
-      thirdTraceCheckbox.click();
-      expect(thirdTraceCheckbox.checked).toEqual(true);
-      expect(getByText('2 selected')).toBeInTheDocument();
-      const actionMenu = getByLabelText('bulk_actions');
-      actionMenu.click();
-      const viaCustomizedRexAction = queryByText('Restart via customized remote execution');
-
-      expect(viaCustomizedRexAction).toBeInTheDocument();
-      // &inputs[helper]=systemctl restart chronyd,systemctl restart firewalld
-      expect(viaCustomizedRexAction).toHaveAttribute(
-        'href',
-        traceUrlForHelpers(['systemctl restart chronyd', 'systemctl restart firewalld']),
-      );
-      assertNockRequest(autocompleteScope);
-      assertNockRequest(scope, done);
-    });
     test('Does not allow selection of session type traces', async (done) => {
       const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
 
