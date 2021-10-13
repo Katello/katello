@@ -1,0 +1,28 @@
+<%#
+name: Resolve Traces - Katello Ansible Default
+snippet: false
+model: JobTemplate
+job_category: Katello via Ansible
+description_format: Resolve Traces
+template_inputs:
+- name: ids
+  description: A comma-separated list of trace IDs to resolve
+  input_type: user
+  required: true
+  advanced: false
+provider_type: Ansible
+kind: job_template
+%>
+
+<%
+ids = input(:ids).split(',').map { |split| split.strip.to_i }
+commands = @host.traces_helpers(ids)
+reboot = commands.delete('reboot')
+-%>
+<%= render_template(
+    'Run Command - Ansible Default',
+    :command => (commands.push('katello-tracer-upload')).join("\n")
+) %>
+<% if reboot %>
+    - reboot:
+<% end %>
