@@ -383,6 +383,15 @@ module Katello
         @traces_status_label ||= get_status(::Katello::TraceStatus).to_label(options)
       end
 
+      def traces_helpers(ids)
+        if ids.present?
+          traces = host_traces.where(id: ids)
+        else
+          traces = host_traces
+        end
+        ::Katello::HostTracer.helpers_for(traces)
+      end
+
       def valid_content_override_label?(content_label)
         available_content = subscription_facet.candlepin_consumer.available_product_content
         available_content.map(&:content).any? { |content| content.label == content_label }
@@ -405,7 +414,7 @@ end
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
-        :installed_packages
+        :installed_packages, :traces_helpers
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

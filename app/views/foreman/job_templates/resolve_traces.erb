@@ -1,0 +1,20 @@
+<%#
+kind: job_template
+name: Resolve Traces - Katello SSH Default
+job_category: Katello
+description_format: 'Resolve Traces'
+feature: katello_host_tracer_resolve
+provider_type: SSH
+template_inputs:
+- name: ids
+  description: A comma-separated list of trace IDs to resolve
+  input_type: user
+  required: true
+%>
+
+<%
+ids = input(:ids).split(',').map { |split| split.strip.to_i }
+commands = @host.traces_helpers(ids)
+-%>
+<%= commands.join("\n") %>
+katello-tracer-upload

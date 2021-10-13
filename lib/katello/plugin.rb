@@ -322,6 +322,7 @@ Foreman::Plugin.register :katello do
     RemoteExecutionFeature.register(:katello_group_remove, N_("Katello: Remove Package Group"), :description => N_("Remove package group via Katello interface"), :provided_inputs => ['package'])
     RemoteExecutionFeature.register(:katello_errata_install, N_("Katello: Install Errata"), :description => N_("Install errata via Katello interface"), :provided_inputs => ['errata'])
     RemoteExecutionFeature.register(:katello_service_restart, N_("Katello: Service Restart"), :description => N_("Restart Services via Katello interface"), :provided_inputs => ['helpers'])
+    RemoteExecutionFeature.register(:katello_host_tracer_resolve, N_("Katello: Resolve Traces"), :description => N_("Resolve traces via Katello interface"), :provided_inputs => ['ids'])
     RemoteExecutionFeature.register(:katello_module_stream_action, N_("Katello: Module Stream Actions"),
                                     :description => N_("Perform a module stream action via Katello interface"),
                                     :provided_inputs => ['action', 'module_spec', 'options'])
