@@ -150,15 +150,15 @@ const TracesTab = () => {
             application,
             helper,
             app_type: appType,
-            reboot_required: rebootRequired,
           } = result;
+          const resolveDisabled = (appType === 'session');
           let rowDropdownItems = [
             { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
             {
               component: 'a', href: resolveTraceUrl({ hostname, ids: [id] }), title: 'Restart via customized remote execution',
             },
           ];
-          if (appType === 'session') {
+          if (resolveDisabled) {
             rowDropdownItems = [
               { isDisabled: true, title: __('Traces that require logout cannot be restarted remotely') },
             ];
@@ -166,7 +166,7 @@ const TracesTab = () => {
           return (
             <Tr key={id} >
               <Td select={{
-                disable: rebootRequired,
+                disable: resolveDisabled,
                 props: {
                   'aria-label': `check-${application}`,
                 },
