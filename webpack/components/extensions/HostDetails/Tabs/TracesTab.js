@@ -64,7 +64,7 @@ const TracesTab = () => {
   const onRestartApp = id => onBulkRestartApp([id]);
 
   const selectPage = () => { // overriding selectPage so that you can't select session-type traces
-    const ids = results.filter(result => !!result.effective_helper).map(res => res.id);
+    const ids = results.filter(result => !!result.restart_command).map(res => res.id);
     selectedTraces.addAll(ids);
   };
 
@@ -150,6 +150,7 @@ const TracesTab = () => {
             application,
             helper,
             app_type: appType,
+            reboot_required: rebootRequired,
           } = result;
           let rowDropdownItems = [
             { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
@@ -165,7 +166,7 @@ const TracesTab = () => {
           return (
             <Tr key={id} >
               <Td select={{
-                disable: appType === 'session',
+                disable: rebootRequired,
                 props: {
                   'aria-label': `check-${application}`,
                 },

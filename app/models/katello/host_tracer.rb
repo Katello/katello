@@ -17,7 +17,7 @@ module Katello
       self.app_type == 'static'
     end
 
-    def effective_helper
+    def restart_command
       case self.app_type
       when 'static'
         'reboot'
@@ -32,7 +32,7 @@ module Katello
       if traces.any?(&:reboot_required?)
         ['reboot']
       else
-        traces.map(&:effective_helper).compact.uniq
+        traces.map(&:restart_command).compact.uniq
       end
     end
   end

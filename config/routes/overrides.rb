@@ -119,7 +119,6 @@ Foreman::Application.routes.draw do
 
             collection do
               put :resolve
-              get :helpers
             end
           end
         end
