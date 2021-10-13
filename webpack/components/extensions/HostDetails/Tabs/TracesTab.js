@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { Skeleton, Button } from '@patternfly/react-core';
+import { Skeleton, Button, Alert } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import EnableTracerEmptyState from './EnableTracerEmptyState';
 import TableWrapper from '../../../Table/TableWrapper';
 import { useSelectionSet } from '../../../Table/TableHooks';
@@ -57,36 +58,43 @@ const TracesTab = () => {
 
   /* eslint-disable max-len */
   return (
-    <div id="traces-tab">
-      <h3>{__('Tracer helps administrators identify applications that need to be restarted after a system is patched.')}</h3>
-      <TableWrapper
-        actionButtons={actionButtons}
-        searchQuery={searchQuery}
-        emptyContentBody={emptyContentBody}
-        emptyContentTitle={emptyContentTitle}
-        emptySearchBody={emptySearchBody}
-        emptySearchTitle={emptySearchTitle}
-        updateSearchQuery={updateSearchQuery}
-        fetchItems={fetchItems}
-        autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
-        foremanApiAutoComplete
-        displaySelectAllCheckbox
-        rowsCount={results?.length}
-        variant={TableVariant.compact}
-        status={status}
-        metadata={meta}
-        {...selectAll}
-      >
-        <Thead>
-          <Tr>
-            <Th />
-            <Th>{__('Application')}</Th>
-            <Th>{__('Type')}</Th>
-            <Th>{__('Helper')}</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {results?.map((result, rowIndex) => {
+    <div>
+      <div id="traces-alert">
+        <Alert variant="info" isInline title={__('Note')}>
+          {__('Traces functionality on this page is incomplete.')} {' '}
+          <a href={urlBuilder(`content_hosts/${hostId}/traces`, '')}>{__('Visit the previous Traces page') }.</a>
+        </Alert>
+      </div>
+      <div id="traces-tab">
+        <h3>{__('Tracer helps administrators identify applications that need to be restarted after a system is patched.')}</h3>
+        <TableWrapper
+          actionButtons={actionButtons}
+          searchQuery={searchQuery}
+          emptyContentBody={emptyContentBody}
+          emptyContentTitle={emptyContentTitle}
+          emptySearchBody={emptySearchBody}
+          emptySearchTitle={emptySearchTitle}
+          updateSearchQuery={updateSearchQuery}
+          fetchItems={fetchItems}
+          autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
+          foremanApiAutoComplete
+          displaySelectAllCheckbox
+          rowsCount={results?.length}
+          variant={TableVariant.compact}
+          status={status}
+          metadata={meta}
+          {...selectAll}
+        >
+          <Thead>
+            <Tr>
+              <Th />
+              <Th>{__('Application')}</Th>
+              <Th>{__('Type')}</Th>
+              <Th>{__('Helper')}</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {results?.map((result, rowIndex) => {
           const {
             id,
             application,
@@ -113,8 +121,9 @@ const TracesTab = () => {
           );
          })
          }
-        </Tbody>
-      </TableWrapper>
+          </Tbody>
+        </TableWrapper>
+      </div>
     </div>
   );
 };
