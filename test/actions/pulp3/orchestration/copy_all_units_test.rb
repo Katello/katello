@@ -169,6 +169,65 @@ module ::Actions::Pulp3
       assert_equal ["RHEA-2012:0056"], @repo_clone.errata.pluck(:pulp_id)
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
+    def test_copy_duplicated_errata
+      # https://bugzilla.redhat.com/show_bug.cgi?id=2013320
+
+      repo2 = katello_repositories(:rhel_7_x86_64)
+      repo3 = katello_repositories(:rhel_6_x86_64)
+      repo2.update!(:environment_id => nil)
+      repo3.update!(:environment_id => nil)
+      @repo.root.update!(download_policy: 'immediate')
+      repo2.root.update!(download_policy: 'immediate')
+      repo3.root.update!(download_policy: 'immediate')
+      @repo.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo')
+      repo2.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo_dup')
+      repo3.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo_dup_dup')
+
+      create_repo(repo2, @primary)
+      create_repo(repo3, @primary)
+
+      ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:generate_backend_object_name).returns(@repo.pulp_id)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:generate_backend_object_name).returns(repo2.pulp_id)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => repo2.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo2, @primary, sync_args)
+      ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:generate_backend_object_name).returns(repo3.pulp_id)
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => repo3.id}
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, repo3, @primary, sync_args)
+
+      index_args = {:id => @repo.id}
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+      index_args = {:id => repo2.id}
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+      index_args = {:id => repo3.id}
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+      @repo.reload
+      repo2.reload
+      repo3.reload
+
+      stub_constant(::Katello::Pulp3::Repository::Yum, :UNIT_LIMIT, 2) do
+        filter = FactoryBot.create(:katello_content_view_erratum_filter, :inclusion => true)
+        FactoryBot.create(:katello_content_view_erratum_filter_rule, :filter => filter, :errata_id => "KATELLO-RHEA-2010:99143")
+
+        @repo_clone_original_version_href = @repo_clone.version_href
+        ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::CopyAllUnits,
+                              @repo_clone, @primary, [@repo], solve_dependencies: false, filters: [filter])
+      end
+      @repo_clone.reload
+
+      index_args = {:id => @repo_clone.id}
+      ForemanTasks.sync_task(::Actions::Katello::Repository::IndexContent, index_args)
+      @repo_clone.reload
+
+      assert_equal ['armadillo'], @repo_clone.rpms.pluck(:name)
+      assert_equal ["KATELLO-RHEA-2010:99143", "RHEA-2021:9999"].sort, @repo_clone.errata.pluck(:pulp_id).sort
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
     def test_yum_copy_all_no_filter_rules_without_dependency_solving
       filter = FactoryBot.create(:katello_content_view_package_filter, :inclusion => true)
       FactoryBot.create(:katello_content_view_package_filter_rule, :filter => filter, :name => "trout")

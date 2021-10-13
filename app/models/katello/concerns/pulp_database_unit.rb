@@ -199,7 +199,7 @@ module Katello
             pulp_id_href_map[pulp_id] = backend_identifier
           end
         end
-        sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map, generic_content_type: generic_content_type, erratum_updated_ids: erratum_updated_ids) if self.many_repository_associations
+        sync_repository_associations(repository, :pulp_id_href_map => pulp_id_href_map, generic_content_type: generic_content_type, erratum_updated_ids: erratum_updated_ids.uniq) if self.many_repository_associations
       end
 
       def sync_repository_associations(repository, options = {})

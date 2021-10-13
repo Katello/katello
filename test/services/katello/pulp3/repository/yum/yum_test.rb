@@ -12,6 +12,19 @@ module Katello
             @proxy = SmartProxy.pulp_primary
           end
 
+          def test_additional_content_hrefs_properly_includes_errata
+            service = Katello::Pulp3::Repository::Yum.new(@repo, @proxy)
+            rpm = ::Katello::Rpm.create(name: "foobar", filename: "foobar-1.3.4.rpm", nvra: "foobar-1.2.3", pulp_id: "test")
+            ::Katello::RepositoryRpm.create(rpm_id: rpm.id, repository_id: @repo.id)
+            ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:filter_package_groups_by_pulp_href).returns([])
+            ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:filter_metadatafiles_by_pulp_hrefs).returns([])
+            ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:filter_distribution_trees_by_pulp_hrefs).returns([])
+            ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:metadatafiles).returns(nil)
+            ::Katello::Pulp3::Repository::Yum.any_instance.stubs(:distributiontrees).returns(nil)
+            assert_includes(service.additional_content_hrefs(@repo, [rpm.pulp_id]), 'fedora_17_x86_64_security_href')
+            refute_includes(service.additional_content_hrefs(@repo, [rpm.pulp_id]), 'rhel6_security_href')
+          end
+
           def test_publication_options
             @repo.version_href = 'a_version_href'
             @repo.root.checksum_type = 'sha1'
