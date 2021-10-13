@@ -31,6 +31,10 @@ module Katello
       end
     end
 
+    def component_content_view_versions
+      self.content_view&.versions
+    end
+
     private
 
     def ensure_valid_content_view

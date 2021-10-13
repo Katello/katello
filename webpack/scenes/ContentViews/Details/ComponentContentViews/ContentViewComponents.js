@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
-import { Bullseye, Split, SplitItem, Button } from '@patternfly/react-core';
+import { Bullseye, Split, SplitItem, Button, ActionList,
+  ActionListItem, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 import { TableVariant, fitContent, TableText } from '@patternfly/react-table';
 import { PencilAltIcon } from '@patternfly/react-icons';
@@ -31,6 +32,7 @@ import { ADDED, ALL_STATUSES, NOT_ADDED } from '../../ContentViewsConstants';
 import SelectableDropdown from '../../../../components/SelectableDropdown/SelectableDropdown';
 import '../../../../components/EditableTextInput/editableTextInput.scss';
 import ComponentContentViewAddModal from './ComponentContentViewAddModal';
+import ComponentContentViewBulkAddModal from './ComponentContentViewBulkAddModal';
 
 const ContentViewComponents = ({ cvId, details }) => {
   const response = useSelector(state => selectCVComponents(state, cvId));
@@ -47,6 +49,9 @@ const ContentViewComponents = ({ cvId, details }) => {
   const [componentCvEditing, setComponentCvEditing] = useState(null);
   const [componentLatest, setComponentLatest] = useState(false);
   const [componentId, setComponentId] = useState(null);
+  const [selectedComponentsToAdd, setSelectedComponentsToAdd] = useState(null);
+  const [bulkAdding, setBulkAdding] = useState(false);
+  const [bulkActionOpen, setBulkActionOpen] = useState(false);
   const dispatch = useDispatch();
 
   const columnHeaders = [
@@ -65,18 +70,19 @@ const ContentViewComponents = ({ cvId, details }) => {
   const { label } = details || {};
 
   const bulkRemoveEnabled = () => rows.some(row => row.selected && row.added);
+  const bulkAddEnabled = () => rows.some(row => row.selected && !row.added);
 
   const onAdd = useCallback(({
     componentCvId, published, added, latest,
   }) => {
-    if (published) {
-      dispatch(getContentViewDetails(componentCvId));
+    if (published) { // If 1 or more versions present, open a modal to let user select version
+      dispatch(getContentViewDetails(componentCvId, 'bulk_add'));
       setVersionEditing(true);
       setCompositeCvEditing(cvId);
       setComponentCvEditing(componentCvId);
       setComponentLatest(latest);
       setComponentId(added);
-    } else {
+    } else { // if no versions are present, default to always latest and add cv without modal
       dispatch(addComponent({
         compositeContentViewId: cvId,
         components: [{ latest: true, content_view_id: componentCvId }],
@@ -93,6 +99,13 @@ const ContentViewComponents = ({ cvId, details }) => {
     }));
   };
 
+  const addBulk = () => {
+    const rowsToAdd = rows.filter(row => row.selected && !row.added);
+    setSelectedComponentsToAdd(rowsToAdd);
+    setCompositeCvEditing(cvId);
+    setBulkAdding(true);
+  };
+
   const onRemove = (componentIdToRemove) => {
     dispatch(removeComponent({
       compositeContentViewId: cvId,
@@ -100,11 +113,16 @@ const ContentViewComponents = ({ cvId, details }) => {
     }));
   };
 
+  const toggleBulkAction = () => {
+    setBulkActionOpen(!bulkActionOpen);
+  };
+
   const buildRows = useCallback((results) => {
     const newRows = [];
     results.forEach((componentCV) => {
       const {
-        id: componentCvId, content_view: cv, content_view_version: cvVersion, latest,
+        id: componentCvId, content_view: cv, content_view_version: cvVersion,
+        latest, component_content_view_versions: componentCvVersions,
       } = componentCV;
       const { environments, repositories } = cvVersion || {};
       const {
@@ -147,7 +165,13 @@ const ContentViewComponents = ({ cvId, details }) => {
         { title: <TableText wrapModifier="truncate">{description || __('No description')}</TableText> },
       ];
       newRows.push({
-        componentCvId: id, added: componentCvId, published: cvVersion, latest, cells,
+        componentCvId: id,
+        componentCvName: name,
+        added: componentCvId,
+        componentCvVersions,
+        published: cvVersion,
+        latest,
+        cells,
       });
     });
     return newRows;
@@ -173,6 +197,15 @@ const ContentViewComponents = ({ cvId, details }) => {
         onRemove(rowInfo.added);
       },
     },
+  ];
+
+  const dropdownItems = [
+    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!(bulkAddEnabled())} component="button" onClick={addBulk}>
+      {__('Add')}
+    </DropdownItem>,
+    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!(bulkRemoveEnabled())} component="button" onClick={removeBulk}>
+      {__('Remove')}
+    </DropdownItem>,
   ];
 
   const emptyContentTitle = __(`No content views belong to ${label}`);
@@ -227,9 +260,21 @@ const ContentViewComponents = ({ cvId, details }) => {
               />
             </SplitItem>
             <SplitItem>
-              <Button onClick={removeBulk} isDisabled={!(bulkRemoveEnabled())} variant="secondary" aria-label="remove_components">
-                {__('Remove content views')}
-              </Button>
+              <ActionList>
+                <ActionListItem>
+                  <Button onClick={addBulk} isDisabled={!(bulkAddEnabled())} variant="secondary" aria-label="bulk_add_components">
+                    {__('Add content views')}
+                  </Button>
+                </ActionListItem>
+                <ActionListItem>
+                  <Dropdown
+                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                    isOpen={bulkActionOpen}
+                    isPlain
+                    dropdownItems={dropdownItems}
+                  />
+                </ActionListItem>
+              </ActionList>
             </SplitItem>
           </Split>
           {versionEditing &&
@@ -240,8 +285,15 @@ const ContentViewComponents = ({ cvId, details }) => {
               latest={componentLatest}
               show={versionEditing}
               setIsOpen={setVersionEditing}
-              aria-label="copy_content_view_modal"
+              aria-label="edit_component_modal"
             />}
+          {bulkAdding &&
+          <ComponentContentViewBulkAddModal
+            cvId={compositeCvEditing}
+            rowsToAdd={selectedComponentsToAdd}
+            onClose={() => setBulkAdding(false)}
+            aria-label="bulk_add_components_modal"
+          />}
         </>
       }
     />

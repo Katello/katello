@@ -285,3 +285,56 @@ test('Can remove component views from content view', async (done) => {
   assertNockRequest(removeComponentScope);
   assertNockRequest(returnScope, done);
 });
+
+test('Can bulk add component views to content view with modal', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(cvComponents)
+    .reply(200, cvComponentData);
+
+  const returnScope = nockInstance
+    .get(cvComponents)
+    .reply(200, cvComponentData);
+
+  const addComponentParams = {
+    compositeContentViewId: 4,
+    components: [{ content_view_version_id: 44 }, { latest: true, content_view_id: 9 }],
+  };
+
+  const addComponentScope = nockInstance
+    .put(addComponentURL, addComponentParams)
+    .reply(200, {});
+
+  const {
+    getByText, getByLabelText, queryByText,
+  } = renderWithRedux(
+    <ContentViewComponents cvId={4} />,
+    renderOptions,
+  );
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('Select row 2')).toBeInTheDocument();
+    expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'true');
+  });
+  fireEvent.click(getByLabelText('Select row 2'));
+  fireEvent.click(getByLabelText('Select row 3'));
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'false');
+  });
+  fireEvent.click(getByLabelText('bulk_add_components'));
+  await patientlyWaitFor(() => {
+    expect(getByText('Add component content views')).toBeInTheDocument();
+  });
+  fireEvent.click(getByLabelText('version-select-cv-10'));
+  fireEvent.click(getByLabelText('cv-10-3.0'));
+
+  fireEvent.click(getByLabelText('add_components'));
+  await patientlyWaitFor(() => {
+    expect(queryByText('Add component content views')).not.toBeInTheDocument();
+    expect(getByLabelText('bulk_add_components')).toHaveAttribute('aria-disabled', 'false');
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(addComponentScope);
+  assertNockRequest(returnScope, done);
+});

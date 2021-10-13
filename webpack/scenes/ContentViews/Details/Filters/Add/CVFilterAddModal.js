@@ -104,6 +104,22 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
             onChange={value => setName(value)}
           />
         </FormGroup>
+        <FormGroup label={__('Content type')} isRequired fieldId="content_type">
+          <Select
+            selections={type}
+            onSelect={onSelect}
+            isOpen={typeSelectOpen}
+            onToggle={setTypeSelectOpen}
+            id="content_type"
+            name="content_type"
+            aria-label="ContentType"
+          >
+            {
+              FILTER_TYPES.map(item =>
+                <SelectOption key={item} value={item}><ContentType type={item} /></SelectOption>)
+            }
+          </Select>
+        </FormGroup>
         <FormGroup>
           <Split hasGutter>
             <SplitItem>
@@ -114,6 +130,7 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
                 label="Include Filter"
                 id="include_filter"
                 value="includeFilter"
+                style={{ margin: '1px' }}
               />
             </SplitItem>
             <SplitItem>
@@ -124,25 +141,10 @@ const CVFilterAddModal = ({ cvId, onClose }) => {
                 label="Exclude Filter"
                 id="exclude_filter"
                 value="excludeFilter"
+                style={{ margin: '1px' }}
               />
             </SplitItem>
           </Split>
-        </FormGroup>
-        <FormGroup label={__('Content type')} isRequired fieldId="content_type">
-          <Select
-            selections={type}
-            onSelect={onSelect}
-            isOpen={typeSelectOpen}
-            onToggle={isExpanded => setTypeSelectOpen(isExpanded)}
-            id="content_type"
-            name="content_type"
-            aria-label="ContentType"
-          >
-            {
-              FILTER_TYPES.map(item =>
-                <SelectOption key={item} value={item}><ContentType type={item} /></SelectOption>)
-            }
-          </Select>
         </FormGroup>
         <FormGroup label={__('Description')} fieldId="description">
           <TextArea
