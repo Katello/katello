@@ -15,6 +15,11 @@ template_inputs:
 <%
 ids = input(:ids).split(',').map { |split| split.strip.to_i }
 commands = @host.traces_helpers(ids)
+reboot = commands.delete('reboot')
 -%>
+<% if reboot -%>
+shutdown -r +1
+<% else -%>
 <%= commands.join("\n") %>
 katello-tracer-upload
+<% end %>
