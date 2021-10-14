@@ -315,3 +315,71 @@ test('Can bulk add filter rules', async (done) => {
 
   assertNockRequest(errataScope, done);
 });
+
+test('Can show filters and chips', async (done) => {
+  const { rules, name: cvFilterName } = cvFilterDetails;
+  const errataId = rules[0].errata_id;
+  const cvFilterScope = nockInstance
+    .get(cvFilterDetailsPath)
+    .query(true)
+    .reply(200, cvFilterDetails);
+  const cvFiltersScope = nockInstance
+    .get(cvFiltersPath)
+    .query(true)
+    .reply(200, cvFilterFixtures);
+  const errataScope = nockInstance
+    .get(errataPath)
+    .times(5)
+    .query(true)
+    .reply(200, allErrata);
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+
+  const {
+    getByText, getAllByText, queryByText, getByLabelText,
+  } =
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+
+  // Nothing will show at first, page is loading
+  expect(queryByText(cvFilterName)).toBeNull();
+
+  // Selected status filter
+  await patientlyWaitFor(() => {
+    expect(getByText(cvFilterName)).toBeInTheDocument();
+    expect(getAllByText('All')[0]).toBeInTheDocument();
+  });
+  expect(getAllByText('All')).toHaveLength(2);
+  getAllByText('All')[0].click();
+  // expect(getByText('blah')).toBeInTheDocument();
+  await patientlyWaitFor(() => {
+    expect(getByLabelText('select Added')).toBeInTheDocument();
+  });
+  getByLabelText('select Added').click();
+  await patientlyWaitFor(() => {
+    expect(getByText(errataId)).toBeInTheDocument();
+    expect(queryByText('All')).not.toBeInTheDocument();
+  });
+
+  expect(getByText('Errata type')).toBeInTheDocument();
+  getByText('Errata type').click();
+  expect(getByLabelText('security_selection')).toBeInTheDocument();
+  getByLabelText('security_selection').click();
+
+  await patientlyWaitFor(() => {
+    expect(getAllByText('ANY')).toHaveLength(2);
+  });
+  fireEvent.change(getByLabelText('start_date_input'), { target: { value: '08/15/1990' } });
+  await patientlyWaitFor(() => {
+    expect(getAllByText('ANY')).toHaveLength(1);
+  });
+  fireEvent.change(getByLabelText('end_date_input'), { target: { value: '08/15/2020' } });
+
+  // expect(getByLabelText('blah')).toBeInTheDocument();
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(cvFilterScope);
+  assertNockRequest(cvFiltersScope);
+  assertNockRequest(errataScope); // 1st call on component load
+  assertNockRequest(errataScope); // 2nd call on status selection
+  assertNockRequest(errataScope); // 3rd call on errata type selection
+  assertNockRequest(errataScope); // 4th call on start date change
+  assertNockRequest(errataScope, done); // Last call on end date change
+});

@@ -316,14 +316,21 @@ export const getCVFilterModuleStreams = (cvId, filterId, params) => get({
   url: api.getApiUrl('/module_streams'),
 });
 
-export const getCVFilterErrata = (cvId, filterId, params) => get({
-  key: cvFilterErratumIDKey(cvId, filterId),
-  params: {
-    filter_id: filterId, show_all_for: 'content_view_filter', include_filter_ids: true, ...params,
-  },
-  errorToast: error => __(`Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}`),
-  url: api.getApiUrl('/errata'),
-});
+export const getCVFilterErrata = (cvId, filterId, params = {}, statusSelected = ALL_STATUSES) => {
+  let apiParams = { filter_id: filterId, include_filter_ids: true, ...params };
+  if (statusSelected === ALL_STATUSES) {
+    apiParams = { show_all_for: 'content_view_filter', ...apiParams };
+  } else if (statusSelected === NOT_ADDED) {
+    apiParams = { available_for: 'content_view_filter', ...apiParams };
+  }
+
+  return get({
+    key: cvFilterErratumIDKey(cvId, filterId),
+    params: apiParams,
+    errorToast: error => __(`Something went wrong while retrieving the content view filter! ${getResponseErrorMsgs(error.response)}`),
+    url: api.getApiUrl('/errata'),
+  });
+};
 
 export const editCVFilterRule = (filterId, params, handleSuccess) => put({
   type: API_OPERATIONS.PUT,

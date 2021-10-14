@@ -25,12 +25,13 @@ const SelectableDropdown = ({
     <Level>
       <LevelItem>
         <label htmlFor={`select ${title}`} style={{ margin: '0px 5px' }}>
-          {`${title}:`}
+          {title}
         </label>
       </LevelItem>
       <LevelItem aria-label={`select ${title} container`}>
         <Select
           id={`select ${title}`}
+          aria-label={`select ${title}`}
           key="type-dropdown"
           variant={SelectVariant.single}
           onToggle={onToggle}

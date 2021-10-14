@@ -2,8 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import { capitalize } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
-import { Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Tabs, Tab, TabTitleText, Split, SplitItem, Select, SelectVariant,
+  SelectOption, Button, Dropdown, DropdownItem, KebabToggle, Flex, FlexItem,
+  Bullseye, DatePicker, ChipGroup, Chip } from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -22,6 +25,9 @@ import getContentViewDetails, {
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import ErratumTypeLabel from '../../../../components/ErratumTypeLabel';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
+import { ADDED, ALL_STATUSES, NOT_ADDED, ERRATA_TYPES } from '../../ContentViewsConstants';
+import SelectableDropdown from '../../../../components/SelectableDropdown/SelectableDropdown';
+import { dateFormat, dateParse } from './CVErrataDateFilterContent';
 
 const CVErrataIDFilterContent = ({
   cvId, filterId, showAffectedRepos, setShowAffectedRepos,
@@ -51,6 +57,15 @@ const CVErrataIDFilterContent = ({
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
+  const [statusSelected, setStatusSelected] = useState(ALL_STATUSES);
+  const [typeSelectOpen, setTypeSelectOpen] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState(ERRATA_TYPES);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [apiStartDate, setApiStartDate] = useState('');
+  const [apiEndDate, setApiEndDate] = useState('');
+  const [dateType, setDateType] = useState('issued');
+  const [dateTypeSelectOpen, setDateTypeSelectOpen] = useState(false);
   const columnHeaders = [
     __('Errata ID'),
     __('Type'),
@@ -163,6 +178,52 @@ const CVErrataIDFilterContent = ({
     },
   ];
 
+  const validAPIDate = (date) => {
+    if (!date || date === '') return true;
+    const split = date.split('/');
+    if (split.length !== 3) {
+      return false;
+    }
+    const [month, day, year] = split;
+    return month && month.length === 2 && day && day.length === 2 && year && year.length === 4;
+  };
+
+  const singleSelection = selection => (selectedTypes.length === 1
+    && selectedTypes.includes(selection));
+
+  const onTypeSelect = (selection) => {
+    if (selectedTypes.includes(selection)) {
+      if (selectedTypes.length === 1) return;
+      setSelectedTypes(selectedTypes.filter(e => e !== selection));
+    } else setSelectedTypes([...selectedTypes, selection]);
+  };
+
+  const setValidStartDate = (value) => {
+    setStartDate(value);
+    if (validAPIDate(value)) setApiStartDate(value);
+  };
+
+  const setValidEndDate = (value) => {
+    setEndDate(value);
+    if (validAPIDate(value)) setApiEndDate(value);
+  };
+
+  const getCVFilterErrataWithOptions = useCallback((params = {}) => {
+    let apiParams = { ...params, types: selectedTypes };
+    if (dateType) apiParams = { ...apiParams, date_type: dateType };
+    if (apiStartDate) apiParams = { ...apiParams, start_date: apiStartDate };
+    if (apiEndDate) apiParams = { ...apiParams, end_date: apiEndDate };
+    return getCVFilterErrata(cvId, filterId, apiParams, statusSelected);
+  }, [cvId, filterId, statusSelected, selectedTypes, dateType, apiStartDate, apiEndDate]);
+
+  const resetFilters = () => {
+    setValidStartDate('');
+    setValidEndDate('');
+    setSelectedTypes(ERRATA_TYPES);
+    setDateType('issued');
+    setStatusSelected(ALL_STATUSES);
+  };
+
   const emptyContentTitle = __('No errata available to add to this filter.');
   const emptyContentBody = __('No errata available for this content view.');
   const emptySearchTitle = __('No matching filter rules found.');
@@ -192,10 +253,50 @@ const CVErrataIDFilterContent = ({
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/errata/auto_complete_search?filterid=${filterId}`}
+            additionalListeners={[statusSelected, selectedTypes.length,
+              dateType, apiStartDate, apiEndDate]}
             fetchItems={useCallback(params =>
-              getCVFilterErrata(cvId, filterId, params), [cvId, filterId])}
+              getCVFilterErrataWithOptions(params), [getCVFilterErrataWithOptions])}
             actionButtons={
               <Split hasGutter>
+                <SplitItem>
+                  <SelectableDropdown
+                    items={[ADDED, NOT_ADDED, ALL_STATUSES]}
+                    title=""
+                    selected={statusSelected}
+                    setSelected={setStatusSelected}
+                    placeholderText={__('Status')}
+                    aria-label="status_selector"
+                  />
+                </SplitItem>
+                <SplitItem>
+                  <Select
+                    aria-label="errata_type_selector"
+                    variant={SelectVariant.checkbox}
+                    onToggle={setTypeSelectOpen}
+                    onSelect={(_event, selection) => onTypeSelect(selection)}
+                    selections={selectedTypes}
+                    isOpen={typeSelectOpen}
+                    placeholderText={__('Errata type')}
+                    isCheckboxSelectionBadgeHidden
+                  >
+                    <SelectOption aria-label="security_selection" isDisabled={singleSelection('security')} key="security" value="security">
+                      <p style={{ marginTop: '4px' }}>
+                        {__('Security')}
+                      </p>
+                    </SelectOption>
+                    <SelectOption isDisabled={singleSelection('enhancement')} key="enhancement" value="enhancement">
+                      <p style={{ marginTop: '4px' }}>
+                        {__('Enhancement')}
+                      </p>
+                    </SelectOption>
+                    <SelectOption isDisabled={singleSelection('bugfix')} key="bugfix" value="bugfix">
+                      <p style={{ marginTop: '4px' }}>
+                        {__('Bugfix')}
+                      </p>
+                    </SelectOption>
+                  </Select>
+                </SplitItem>
                 <SplitItem>
                   <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
                     {__('Add errata')}
@@ -217,6 +318,91 @@ const CVErrataIDFilterContent = ({
                   />
                 </SplitItem>
               </Split>
+            }
+            nodesBelowSearch={
+              <>
+                <Flex style={{ marginTop: '2em' }}>
+                  <FlexItem span={2} spacer={{ default: 'spacerMd' }}>
+                    <Select
+                      selections={dateType}
+                      onSelect={(_event, selection) => {
+                      setDateType(selection);
+                      setDateTypeSelectOpen(false);
+                    }}
+                      isOpen={dateTypeSelectOpen}
+                      onToggle={setDateTypeSelectOpen}
+                      id="date_type_selector"
+                      name="date_type_selector"
+                      aria-label="date_type_selector"
+                    >
+                      <SelectOption key="issued" value="issued">{__('Issued')}</SelectOption>
+                      <SelectOption key="updated" value="updated">{__('Updated')}</SelectOption>
+                    </Select>
+                  </FlexItem>
+                  <FlexItem span={2} spacer={{ default: 'spacerXs' }}>
+                    <Bullseye>
+                      <DatePicker
+                        aria-label="start_date_input"
+                        value={startDate}
+                        dateFormat={dateFormat}
+                        onChange={setValidStartDate}
+                        dateParse={dateParse}
+                        placeholder="MM/DD/YYYY"
+                      />
+                    </Bullseye>
+                  </FlexItem>
+                  <FlexItem span={2}>
+                    <Bullseye>
+                      <DatePicker
+                        aria-label="end_date_input"
+                        value={endDate}
+                        dateFormat={dateFormat}
+                        onChange={setValidEndDate}
+                        dateParse={dateParse}
+                        placeholder="MM/DD/YYYY"
+                      />
+                    </Bullseye>
+                  </FlexItem>
+                </Flex>
+                <Flex style={{ marginTop: '2em', marginBottom: '1em' }}>
+                  <FlexItem>
+                    <ChipGroup categoryName={dateType === 'issued' ? __('Issued') : __('Updated')}>
+                      <Chip key="startDate" onClick={() => setValidStartDate('')} isReadOnly={startDate === ''}>
+                        {startDate || __('ANY')}
+                      </Chip>
+                      -
+                      <Chip key="endDate" onClick={() => setValidEndDate('')} isReadOnly={endDate === ''}>
+                        {endDate || __('ANY')}
+                      </Chip>
+                    </ChipGroup>
+                  </FlexItem>
+                  <FlexItem>
+                    <ChipGroup categoryName={__('Status')}>
+                      <Chip key="status" onClick={() => setStatusSelected(ALL_STATUSES)} isReadOnly={statusSelected === ALL_STATUSES}>
+                        {statusSelected}
+                      </Chip>
+                    </ChipGroup>
+                  </FlexItem>
+                  <FlexItem>
+                    <ChipGroup categoryName={__('Type')}>
+                      {selectedTypes.map(type => (
+                        <Chip
+                          key={type}
+                          onClick={() => onTypeSelect(type)}
+                          isReadOnly={singleSelection(type)}
+                        >
+                          {capitalize(type)}
+                        </Chip>
+                      ))}
+                    </ChipGroup>
+                  </FlexItem>
+                  <FlexItem>
+                    <Button variant="link" onClick={resetFilters} isInline>
+                      {__('Reset filters')}
+                    </Button>
+                  </FlexItem>
+                </Flex>
+              </>
             }
           />
         </div>

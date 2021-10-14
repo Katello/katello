@@ -36,6 +36,7 @@ const TableWrapper = ({
   selectedCount,
   emptySearchBody,
   disableSearch,
+  nodesBelowSearch,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -181,6 +182,7 @@ const TableWrapper = ({
           />
         }
       </Flex>
+      {nodesBelowSearch}
       <MainTable
         searchIsActive={!!searchQuery}
         activeFilters={activeFilters}
@@ -245,6 +247,7 @@ TableWrapper.propTypes = {
   areAllRowsSelected: PropTypes.func,
   emptySearchBody: PropTypes.string,
   disableSearch: PropTypes.bool,
+  nodesBelowSearch: PropTypes.node,
 };
 
 TableWrapper.defaultProps = {
@@ -263,6 +266,7 @@ TableWrapper.defaultProps = {
   areAllRowsSelected: noop,
   emptySearchBody: __('Try changing your search settings.'),
   disableSearch: false,
+  nodesBelowSearch: null,
 };
 
 export default TableWrapper;

@@ -14,14 +14,14 @@ import { selectCVFilterDetails } from '../ContentViewDetailSelectors';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { editCVFilterRule, getCVFilterDetails } from '../ContentViewDetailActions';
 
-const dateFormat = date => `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
+export const dateFormat = date => `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
 
-const convertAPIDateToUIFormat = (dateString) => {
+export const convertAPIDateToUIFormat = (dateString) => {
   if (!dateString || dateString === '') return '';
   return dateFormat(new Date(dateString));
 };
 
-const dateParse = (date) => {
+export const dateParse = (date) => {
   if (!date || date === '') return new Date();
   const split = date.split('/');
   if (split.length !== 3) {
@@ -31,7 +31,7 @@ const dateParse = (date) => {
   return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T12:00:00Z`);
 };
 
-const isValidDate = date => date instanceof Date && !Number.isNaN(date.getTime());
+export const isValidDate = date => date instanceof Date && !Number.isNaN(date.getTime());
 
 const CVErrataDateFilterContent = ({
   cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos,

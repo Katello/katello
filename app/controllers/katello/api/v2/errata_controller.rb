@@ -31,16 +31,6 @@ module Katello
       collection = filter_by_content_view(filter, collection)
       ids = Katello::ContentViewErratumFilterRule.where(:content_view_filter_id => filter.id).pluck("errata_id")
       collection = collection.where("errata_id not in (?)", ids) unless ids.empty?
-
-      date_type = params[:date_type].present? ? params[:date_type] : ContentViewErratumFilterRule::UPDATED
-      unless ContentViewErratumFilterRule::DATE_TYPES.include?(date_type)
-        msg = _("Invalid params provided - date_type must be one of %s" % ContentViewErratumFilterRule::DATE_TYPES.join(","))
-        fail HttpErrors::UnprocessableEntity, msg
-      end
-
-      collection = collection.where("#{date_type} >= ?", params[:start_date]) if params[:start_date]
-      collection = collection.where("#{date_type} <= ?", params[:end_date]) if params[:end_date]
-      collection = collection.of_type(params[:types]) if params[:types]
       collection
     end
 
@@ -61,6 +51,15 @@ module Katello
           collection = collection.applicable_to_hosts(hosts)
         end
       end
+      date_type = params[:date_type].present? ? params[:date_type] : ContentViewErratumFilterRule::UPDATED
+      unless ContentViewErratumFilterRule::DATE_TYPES.include?(date_type)
+        msg = _("Invalid params provided - date_type must be one of %s" % ContentViewErratumFilterRule::DATE_TYPES.join(","))
+        fail HttpErrors::UnprocessableEntity, msg
+      end
+
+      collection = collection.where("#{date_type} >= ?", params[:start_date]) if params[:start_date]
+      collection = collection.where("#{date_type} <= ?", params[:end_date]) if params[:end_date]
+      collection = collection.of_type(params[:types]) if params[:types]
       collection
     end
 
