@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { capitalize } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
-import { Tabs, Tab, TabTitleText, Split, SplitItem, Select, SelectVariant,
+import {
+  Tabs, Tab, TabTitleText, Split, SplitItem, Select, SelectVariant,
   SelectOption, Button, Dropdown, DropdownItem, KebabToggle, Flex, FlexItem,
-  Bullseye, DatePicker, ChipGroup, Chip } from '@patternfly/react-core';
+  Bullseye, DatePicker, ChipGroup, Chip,
+} from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -259,9 +261,9 @@ const CVErrataIDFilterContent = ({
               getCVFilterErrataWithOptions(params), [getCVFilterErrataWithOptions])}
             actionButtons={
               <Split hasGutter>
-                <SplitItem>
+                <SplitItem data-testid="allAddedNotAdded">
                   <SelectableDropdown
-                    items={[ADDED, NOT_ADDED, ALL_STATUSES]}
+                    items={[ALL_STATUSES, ADDED, NOT_ADDED]}
                     title=""
                     selected={statusSelected}
                     setSelected={setStatusSelected}
@@ -314,7 +316,7 @@ const CVErrataIDFilterContent = ({
                       <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
                         {__('Remove')}
                       </DropdownItem>]
-                  }
+                    }
                   />
                 </SplitItem>
               </Split>
@@ -326,9 +328,9 @@ const CVErrataIDFilterContent = ({
                     <Select
                       selections={dateType}
                       onSelect={(_event, selection) => {
-                      setDateType(selection);
-                      setDateTypeSelectOpen(false);
-                    }}
+                        setDateType(selection);
+                        setDateTypeSelectOpen(false);
+                      }}
                       isOpen={dateTypeSelectOpen}
                       onToggle={setDateTypeSelectOpen}
                       id="date_type_selector"
@@ -408,11 +410,11 @@ const CVErrataIDFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-        <div className="tab-body-with-spacing">
-          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
-        </div>
-      </Tab>
+        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+          <div className="tab-body-with-spacing">
+            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
+          </div>
+        </Tab>
       }
     </Tabs>
   );
