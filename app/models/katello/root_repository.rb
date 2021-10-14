@@ -74,6 +74,7 @@ module Katello
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
     validate :ensure_valid_uln_authorization, :if => :yum?
+    validate :ensure_valid_deb_constraints, :if => :deb?
     validate :ensure_no_checksum_on_demand
     validates :url, presence: true, if: :ostree?
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
@@ -290,6 +291,15 @@ module Katello
         end
       else
         return
+      end
+    end
+
+    def ensure_valid_deb_constraints
+      return if self.deb_releases.blank? && self.url.blank?
+      if self.deb_releases.blank?
+        errors.add(:base, N_("When \"Upstream URL\" is set, \"Releases/Distributions\" must also be set!"))
+      elsif self.url.blank? && !self.content
+        errors.add(:base, N_("When \"Releases/Distributions\" is set, \"Upstream URL\" must also be set!"))
       end
     end
 

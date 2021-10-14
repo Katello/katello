@@ -77,6 +77,11 @@
                                                                       uib-popover-html="collectionURLPopover" popover-class="popover-large" popover-trigger="'outsideClick'" popover-append-to-body="true" popover-title="Upstream URL">
         </a>
         </p>
+	<p class="help-block" ng-show="repository.content_type === 'deb'" translate>
+         URL to the repository base. Example: http://ftp.de.debian.org/debian/ <a class="fa fa-question-circle" ng-show="repository.content_type === 'deb'"
+                                                                        uib-popover-html="debURLPopover" popover-class="popover-large" popover-trigger="'outsideClick'" popover-append-to-body="true" popover-title="Upstream URL">
+        </a>
+       </p>
 
       </div>
 
@@ -116,23 +121,37 @@
         </p>
       </div>
 
-      <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Releases' | translate }}">
+      <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Releases/Distributions' | translate }}">
         <input id="deb_releases"
                name="deb_releases"
                ng-model="repository.deb_releases"
                type="text"/>
         <p class="help-block" translate>
-          Whitespace-separated list of releases (suite or codename) to sync from. Default: stable
+          Whitespace-separated list of releases/distributions to sync (required for syncing). Example: buster <a class="fa fa-question-circle" ng-show="repository.content_type === 'deb'"
+                                                                        uib-popover-html="distPopover" popover-class="popover-large" popover-trigger="'outsideClick'" popover-append-to-body="true" popover-title="Releases/Distributions">
+        </a>
         </p>
+        <div ng-hide="validateDebAttrList('deb_releases')">
+                <br />
+                <div class="alert alert-danger" ><strong>Warning. </strong>Are you sure you want to add a comma in this whitespace separated list of distributions?</div>
+       </div>
+     
       </div>
+
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Components' | translate }}">
-        <input id="deb_comonents"
+        <input id="deb_components"
                name="deb_components"
                ng-model="repository.deb_components"
                type="text"/>
         <p class="help-block" translate>
-          Whitespace-separated list of components to sync from (leave clear to sync all). Example: main
+          Whitespace-separated list of components to sync (leave clear to sync all). Example: main <a class="fa fa-question-circle" ng-show="repository.content_type === 'deb'"
+                                                                        uib-popover-html="componentPopover" popover-class="popover-large" popover-trigger="'outsideClick'" popover-append-to-body="true" popover-title="Components">
+        </a>
         </p>
+        <div ng-hide="validateDebAttrList('deb_components')">
+                <br />
+                <div class="alert alert-danger" ><strong>Warning. </strong>Are you sure you want to add a comma in this whitespace separated list of components?</div>
+       </div>
       </div>
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Architectures' | translate }}">
         <input id="deb_architectures"
@@ -140,8 +159,14 @@
                ng-model="repository.deb_architectures"
                type="text"/>
         <p class="help-block" translate>
-          Whitespace-separated list of processor architectures to filter the sync by. Example: amd64
+          Whitespace-separated list of processor architectures to sync (leave clear to sync all). Example: amd64 <a class="fa fa-question-circle" ng-show="repository.content_type === 'deb'"
+                                                                        uib-popover-html="archPopover" popover-class="popover-large" popover-trigger="'outsideClick'" popover-append-to-body="true" popover-title="Architectures">
+        </a>
         </p>
+        <div ng-hide="validateDebAttrList('deb_architectures')">
+                <br />
+                <div class="alert alert-danger" ><strong>Warning. </strong>Are you sure you want to add a comma in this whitespace separated list of architectures?</div>
+       </div>
       </div>
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Errata URL' | translate }}">
         <input id="deb_errata_url"
