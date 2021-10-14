@@ -20,8 +20,9 @@ import {
 import { truncate } from '../../../../utils/helpers';
 import ContentType from './ContentType';
 import CVFilterAddModal from './Add/CVFilterAddModal';
+import { hasPermission } from '../../helpers';
 
-const ContentViewFilters = ({ cvId }) => {
+const ContentViewFilters = ({ cvId, details }) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilters(state, cvId), shallowEqual);
   const { results, ...metadata } = response;
@@ -34,6 +35,7 @@ const ContentViewFilters = ({ cvId }) => {
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
   const [bulkActionEnabled, setBulkActionEnabled] = useState(false);
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
+  const { permissions } = details;
 
   const openAddModal = () => setAddModalOpen(true);
 
@@ -118,14 +120,14 @@ const ContentViewFilters = ({ cvId }) => {
         updateSearchQuery,
         error,
         status,
-        actionResolver,
       }}
-      onSelect={onSelect(rows, setRows)}
+      actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
+      onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint="/content_view_filters/auto_complete_search"
       fetchItems={useCallback(params => getContentViewFilters(cvId, params), [cvId])}
-      actionButtons={
+      actionButtons={hasPermission(permissions, 'edit_content_views') &&
         <>
           <Split hasGutter>
             <SplitItem>
@@ -159,6 +161,9 @@ const ContentViewFilters = ({ cvId }) => {
 
 ContentViewFilters.propTypes = {
   cvId: PropTypes.number.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default ContentViewFilters;

@@ -11,6 +11,7 @@ const emptyCVVersionData = require('./emptyCVVersion.fixtures.json');
 const cvVersionsTasksData = require('./contentViewVersionsWithTask.fixtures.json');
 const contentViewTaskInProgressResponseData = require('./contentViewTaskInProgressResponse.fixtures.json');
 const contentViewTaskResponseData = require('./contentViewTaskResponse.fixtures.json');
+const cvDetailData = require('../../../../ContentViews/__tests__/mockDetails.fixtures.json');
 
 const cvPromotePath = api.getApiUrl('/content_view_versions/10/promote');
 const promoteResponseData = contentViewTaskInProgressResponseData;
@@ -64,7 +65,7 @@ test('Can call API and show versions on page load', async (done) => {
     .reply(200, cvVersionsData);
 
   const { getByText, queryByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} />),
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
 
@@ -86,7 +87,7 @@ test('Can link to view environment and see publish time', async () => {
     .reply(200, cvVersionsData);
 
   const { getByText, getAllByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} />),
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
 
@@ -115,7 +116,7 @@ test('Can show package and erratas and link to list page', async () => {
     .reply(200, cvVersionsData);
 
   const { getByText, getAllByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} />),
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
 
@@ -145,7 +146,7 @@ test('Can show additional content and link to list page', async () => {
     .reply(200, cvVersionsData);
 
   const { getByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} />),
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
 
@@ -169,7 +170,7 @@ test('Can load for empty versions', async () => {
     .reply(200, emptyCVVersionData);
 
   const { queryByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} />),
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
 
@@ -196,7 +197,7 @@ test('Can call API and show versions with tasks on page load', async (done) => {
   const {
     getByLabelText, queryByText,
   } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} />),
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
 
@@ -235,7 +236,7 @@ test('Can reload versions upon task completion', async (done) => {
   const {
     getByText, queryByLabelText, getByLabelText, queryByText,
   } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} />),
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
 
@@ -279,7 +280,7 @@ test('Can open Promote Modal', async (done) => {
   const {
     getByText, queryByText, getByLabelText, getAllByLabelText,
   } = renderWithRedux(
-    withCVRoute(<ContentViewVersions cvId={5} />),
+    withCVRoute(<ContentViewVersions cvId={5} details={cvDetailData} />),
     renderOptions,
   );
 

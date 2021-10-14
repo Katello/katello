@@ -24,8 +24,9 @@ import ContentViewVersionPromote from '../Promote/ContentViewVersionPromote';
 import TaskPresenter from '../../components/TaskPresenter/TaskPresenter';
 import { startPollingTask } from '../../../Tasks/TaskActions';
 import RemoveCVVersionWizard from './Delete/RemoveCVVersionWizard';
+import { hasPermission } from '../../helpers';
 
-const ContentViewVersions = ({ cvId }) => {
+const ContentViewVersions = ({ cvId, details }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectCVVersionsStatus(state, cvId));
@@ -44,6 +45,7 @@ const ContentViewVersions = ({ cvId }) => {
   const [removingFromEnv, setRemovingFromEnv] = useState(false);
   const [deleteVersion, setDeleteVersion] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const { permissions } = details;
 
   const columnHeaders = [
     __('Version'),
@@ -212,10 +214,10 @@ const ContentViewVersions = ({ cvId }) => {
         emptySearchBody,
         searchQuery,
         updateSearchQuery,
-        actionResolver,
         error,
         status,
       }}
+      actionResolver={hasPermission(permissions, 'promote_or_remove_content_views') ? actionResolver : null}
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint={`/content_view_versions/auto_complete_search?content_view_id=${cvId}`}
@@ -254,6 +256,9 @@ const ContentViewVersions = ({ cvId }) => {
 
 ContentViewVersions.propTypes = {
   cvId: PropTypes.number.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default ContentViewVersions;

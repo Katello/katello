@@ -12,6 +12,7 @@ export const createContentViewsParams = (extraParams) => {
   const getParams = {
     organization_id: orgId(),
     nondefault: true,
+    include_permissions: true,
     ...extraParams,
   };
   if (extraParams?.include_default) delete getParams.nondefault;

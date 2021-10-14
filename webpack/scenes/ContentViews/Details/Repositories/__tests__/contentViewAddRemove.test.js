@@ -48,7 +48,7 @@ test('Can enable and disable add repositories button', async (done) => {
     .reply(200, repoData);
 
   const { getByText, getByLabelText } = renderWithRedux(
-    <ContentViewRepositories cvId={1} />,
+    <ContentViewRepositories cvId={1} details={cvDetailData} />,
     renderOptions,
   );
 
@@ -65,7 +65,7 @@ test('Can enable and disable add repositories button', async (done) => {
 
 test('Can add repositories', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const cvAddparams = { repository_ids: [106] };
+  const cvAddparams = { repository_ids: [58, 62, 64, 106] };
 
   const repoAddscope = nockInstance
     .put(cvDetailsPath, cvAddparams)
@@ -82,7 +82,7 @@ test('Can add repositories', async (done) => {
     .reply(200, repoData);
 
   const { getByText, getByLabelText } = renderWithRedux(
-    <ContentViewRepositories cvId={1} />,
+    <ContentViewRepositories cvId={1} details={cvDetailData} />,
     renderOptions,
   );
 
@@ -100,7 +100,7 @@ test('Can add repositories', async (done) => {
 
 test('Can remove repositories', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const cvRemoveParams = { repository_ids: [] };
+  const cvRemoveParams = { repository_ids: [58, 62, 64] };
   const scope = nockInstance
     .get(cvAllRepos)
     .query(true)
@@ -114,7 +114,7 @@ test('Can remove repositories', async (done) => {
     .reply(200, cvRepoAddData);
 
   const { getByText, getByLabelText } = renderWithRedux(
-    <ContentViewRepositories cvId={1} />,
+    <ContentViewRepositories cvId={1} details={cvDetailData} />,
     renderOptions,
   );
 

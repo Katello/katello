@@ -9,7 +9,7 @@ import CVErrataIDFilterContent from './CVErrataIDFilterContent';
 import CVErrataDateFilterContent from './CVErrataDateFilterContent';
 
 const CVFilterDetailType = ({
-  cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos, rules,
+  cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos, rules, details,
 }) => {
   switch (type) {
     case 'docker':
@@ -18,6 +18,7 @@ const CVFilterDetailType = ({
         filterId={filterId}
         showAffectedRepos={showAffectedRepos}
         setShowAffectedRepos={setShowAffectedRepos}
+        details={details}
       />);
     case 'package_group':
       return (<CVPackageGroupFilterContent
@@ -25,6 +26,7 @@ const CVFilterDetailType = ({
         filterId={filterId}
         showAffectedRepos={showAffectedRepos}
         setShowAffectedRepos={setShowAffectedRepos}
+        details={details}
       />);
     case 'rpm':
       return (<CVRpmFilterContent
@@ -33,6 +35,7 @@ const CVFilterDetailType = ({
         inclusion={inclusion}
         showAffectedRepos={showAffectedRepos}
         setShowAffectedRepos={setShowAffectedRepos}
+        details={details}
       />);
     case 'modulemd':
       return (<CVModuleStreamFilterContent
@@ -40,6 +43,7 @@ const CVFilterDetailType = ({
         filterId={filterId}
         showAffectedRepos={showAffectedRepos}
         setShowAffectedRepos={setShowAffectedRepos}
+        details={details}
       />);
     case 'erratum':
       if (head(rules)?.types) {
@@ -49,6 +53,7 @@ const CVFilterDetailType = ({
           inclusion={inclusion}
           showAffectedRepos={showAffectedRepos}
           setShowAffectedRepos={setShowAffectedRepos}
+          details={details}
         />);
       }
       return (<CVErrataIDFilterContent
@@ -56,6 +61,7 @@ const CVFilterDetailType = ({
         filterId={filterId}
         showAffectedRepos={showAffectedRepos}
         setShowAffectedRepos={setShowAffectedRepos}
+        details={details}
       />);
     default:
       return null;
@@ -70,6 +76,9 @@ CVFilterDetailType.propTypes = {
   showAffectedRepos: PropTypes.bool.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
   rules: PropTypes.arrayOf(PropTypes.shape({ types: PropTypes.arrayOf(PropTypes.string) })),
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 CVFilterDetailType.defaultProps = {

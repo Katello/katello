@@ -8,6 +8,7 @@ import ContentViewComponents from '../ContentViewComponents';
 const cvComponentData = require('./contentViewComponents.fixtures.json');
 const cvUnpublishedComponentData = require('./unpublishedCVComponents.fixtures.json');
 const cvPublishedComponentData = require('./publishedContentViewDetails.fixtures.json');
+const cvDetails = require('../../__tests__/contentViewDetails.fixtures.json');
 
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvComponentsWithoutSearch = api.getApiUrl('/content_views/4/content_view_components/show_all?per_page=20&page=1&status=All');
@@ -42,7 +43,7 @@ test('Can call API and show components on page load', async (done) => {
     .reply(200, cvComponentData);
 
   const { getByText, queryByText } = renderWithRedux(
-    <ContentViewComponents cvId={4} />,
+    <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
   );
 
@@ -64,7 +65,7 @@ test('Can call API and show unpublished components', async (done) => {
   const unpublishedComponent = cvUnpublishedComponentData.results[1];
 
   const { getByText, queryByText, getAllByText } = renderWithRedux(
-    <ContentViewComponents cvId={4} />,
+    <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
   );
 
@@ -86,7 +87,7 @@ test('Can link to view environment', async () => {
     .reply(200, cvComponentData);
 
   const { getAllByText } = renderWithRedux(
-    <ContentViewComponents cvId={4} />,
+    <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
   );
 
@@ -115,7 +116,7 @@ test('Can search for component content views in composite view', async (done) =>
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(<ContentViewComponents cvId={4} />, renderOptions);
+    renderWithRedux(<ContentViewComponents cvId={4} details={cvDetails} />, renderOptions);
 
   // Basic results showing
   await patientlyWaitFor(() => {
@@ -153,7 +154,16 @@ test('Can handle no components being present', async (done) => {
     .get(cvComponents)
     .reply(200, noResults);
 
-  const mockDetails = { label: 'test_empty' };
+  const mockDetails = {
+    label: 'test_empty',
+    permissions: {
+      view_content_views: true,
+      edit_content_views: true,
+      destroy_content_views: true,
+      publish_content_views: true,
+      promote_or_remove_content_views: true,
+    },
+  };
   const { queryByText } =
     renderWithRedux(<ContentViewComponents cvId={4} details={mockDetails} />, renderOptions);
 
@@ -175,6 +185,7 @@ test('Can add published component views to content view with modal', async (done
 
   const publishedComponentVersionsScope = nockInstance
     .get(publishedComponentDetailsURL)
+    .query(true)
     .reply(200, cvPublishedComponentData);
 
   const addComponentParams = {
@@ -189,7 +200,7 @@ test('Can add published component views to content view with modal', async (done
   const {
     getByText, getByLabelText, queryByLabelText, getAllByLabelText,
   } = renderWithRedux(
-    <ContentViewComponents cvId={4} />,
+    <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
   );
   await patientlyWaitFor(() => {
@@ -235,7 +246,7 @@ test('Can add unpublished component views to content view', async (done) => {
     .reply(200, {});
 
   const { getByText, getAllByLabelText } = renderWithRedux(
-    <ContentViewComponents cvId={4} />,
+    <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
   );
   await patientlyWaitFor(() => {
@@ -271,7 +282,7 @@ test('Can remove component views from content view', async (done) => {
     .reply(200, {});
 
   const { getByText, getAllByLabelText } = renderWithRedux(
-    <ContentViewComponents cvId={4} />,
+    <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
   );
   await patientlyWaitFor(() => {
@@ -309,7 +320,7 @@ test('Can bulk add component views to content view with modal', async (done) => 
   const {
     getByText, getByLabelText, queryByText,
   } = renderWithRedux(
-    <ContentViewComponents cvId={4} />,
+    <ContentViewComponents cvId={4} details={cvDetails} />,
     renderOptions,
   );
   await patientlyWaitFor(() => {

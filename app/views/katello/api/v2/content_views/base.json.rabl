@@ -61,14 +61,16 @@ child :versions => :versions do
   attributes :environment_ids
 end
 
-node :permissions do |cv|
-  {
-    :view_content_views => cv.readable?,
-    :edit_content_views => cv.editable?,
-    :destroy_content_views => cv.deletable?,
-    :publish_content_views => cv.publishable?,
-    :promote_or_remove_content_views => cv.promotable_or_removable?
-  }
+if params.key?(:include_permissions)
+  node :permissions do |cv|
+    {
+      :view_content_views => cv.readable?,
+      :edit_content_views => cv.editable?,
+      :destroy_content_views => cv.deletable?,
+      :publish_content_views => cv.publishable?,
+      :promote_or_remove_content_views => cv.promotable_or_removable?
+    }
+  end
 end
 
 child :components => :components do

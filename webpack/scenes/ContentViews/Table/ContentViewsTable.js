@@ -17,6 +17,7 @@ import ContentViewVersionPromote from '../Details/Promote/ContentViewVersionProm
 import getEnvironmentPaths from '../components/EnvironmentPaths/EnvironmentPathActions';
 import ContentViewDeleteWizard from '../Delete/ContentViewDeleteWizard';
 import getContentViewDetails, { getContentViewVersions } from '../Details/ContentViewDetailActions';
+import { hasPermission } from '../helpers';
 
 const ContentViewTable = () => {
   const response = useSelector(selectContentViews);
@@ -39,6 +40,7 @@ const ContentViewTable = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
   const metadata = omit(response, ['results']);
+  const { can_create: canCreate = false } = response;
 
   const openForm = () => setIsModalOpen(true);
 
@@ -122,35 +124,39 @@ const ContentViewTable = () => {
   const actionResolver = (rowData, { _rowIndex }) => {
     // don't show actions for the expanded parts
     if (rowData.parent !== undefined || rowData.compoundParent || rowData.noactions) return null;
+    const publishAction = {
+      title: __('Publish'),
+      onClick: (_event, _rowId, rowInfo) => {
+        openPublishModal(rowInfo);
+      },
+    };
 
-    // printing to the console for now until these are hooked up
-    /* eslint-disable no-console */
+    const promoteAction = {
+      title: __('Promote'),
+      isDisabled: !rowData.cvVersionCount,
+      onClick: (_event, _rowId, rowInfo) => openPromoteModal(rowInfo),
+    };
+
+    const copyAction = {
+      title: __('Copy'),
+      onClick: (_event, _rowId, rowInfo) => {
+        setCopy(true);
+        setActionableCvId(rowInfo.cvId.toString());
+        setActionableCvName(rowInfo.cvName);
+      },
+    };
+
+    const deleteAction = {
+      title: __('Delete'),
+      onClick: (_event, _rowId, rowInfo) => openDeleteModal(rowInfo),
+    };
+
     return [
-      {
-        title: __('Publish'),
-        onClick: (_event, _rowId, rowInfo) => {
-          openPublishModal(rowInfo);
-        },
-      },
-      {
-        title: __('Promote'),
-        isDisabled: !rowData.cvVersionCount,
-        onClick: (_event, _rowId, rowInfo) => openPromoteModal(rowInfo),
-      },
-      {
-        title: __('Copy'),
-        onClick: (_event, _rowId, rowInfo) => {
-          setCopy(true);
-          setActionableCvId(rowInfo.cvId.toString());
-          setActionableCvName(rowInfo.cvName);
-        },
-      },
-      {
-        title: __('Delete'),
-        onClick: (_event, _rowId, rowInfo) => openDeleteModal(rowInfo),
-      },
+      ...(hasPermission(rowData.permissions, 'publish_content_views') ? [publishAction] : []),
+      ...(hasPermission(rowData.permissions, 'promote_or_remove_content_views') ? [promoteAction] : []),
+      ...(canCreate ? [copyAction] : []),
+      ...(hasPermission(rowData.permissions, 'destroy_content_views') ? [deleteAction] : []),
     ];
-    /* eslint-enable no-console */
   };
 
   const additionalListeners = new Array(isPublishModalOpen);
@@ -184,9 +190,11 @@ const ContentViewTable = () => {
       autocompleteEndpoint="/content_views/auto_complete_search"
       actionButtons={
         <>
-          <Button onClick={openForm} variant="primary" aria-label="create_content_view">
-            {__('Create content view')}
-          </Button>
+          {canCreate &&
+            <Button onClick={openForm} variant="primary" aria-label="create_content_view">
+              {__('Create content view')}
+            </Button>
+          }
           <CreateContentViewModal show={isModalOpen} setIsOpen={setIsModalOpen} aria-label="create_content_view_modal" />
           <CopyContentViewModal cvId={actionableCvId} cvName={actionableCvName} show={copy} setIsOpen={setCopy} aria-label="copy_content_view_modal" />
           {isPublishModalOpen &&

@@ -11,6 +11,7 @@ import { AUTOSEARCH_DELAY, AUTOSEARCH_WHILE_TYPING } from '../../../../../Settin
 
 const ContentViewVersionDetailsData = require('./ContentViewVersionDetails.fixtures.json');
 const ContentViewVersionDetailsCounts = require('./ContentViewVersionDetailsCounts.fixtures.json');
+const cvDetailData = require('../../../../__tests__/mockDetails.fixtures.json');
 
 // This changes the api count value so that only the specified tab will show.
 const getTabSpecificData = key => ({
@@ -56,7 +57,7 @@ test('Can show versions details - Components Tab', async (done) => {
     .reply(200, ContentViewVersionsComponentData);
 
   const { getByText, queryByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersionDetails cvId={3} />),
+    withCVRoute(<ContentViewVersionDetails cvId={3} details={cvDetailData} />),
     renderOptions,
   );
 
@@ -200,7 +201,7 @@ testConfig.forEach(({
       .reply(200, data);
 
     const { getByText, queryByText } = renderWithRedux(
-      withCVRoute(<ContentViewVersionDetails cvId={3} />),
+      withCVRoute(<ContentViewVersionDetails cvId={3} details={cvDetailData} />),
       renderOptions,
     );
 
@@ -254,7 +255,7 @@ test('Can change repository selector', async (done) => {
     .reply(200, data);
 
   const { getByText, queryByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersionDetails cvId={3} />),
+    withCVRoute(<ContentViewVersionDetails cvId={3} details={cvDetailData} />),
     {
       ...renderOptions,
       routerParams: {

@@ -15,10 +15,10 @@ import ContentViewFilterDetailsHeader from './ContentViewFilterDetailsHeader';
 import CVFilterDetailType from './CVFilterDetailType';
 import Loading from '../../../../components/Loading';
 
-const ContentViewFilterDetails = ({ cvId }) => {
+const ContentViewFilterDetails = ({ cvId, details }) => {
   const { filterId } = useParams();
   const dispatch = useDispatch();
-  const [details, setDetails] = useState({});
+  const [filterDetails, setFilterDetails] = useState({});
   const [showAffectedRepos, setShowAffectedRepos] = useState(false);
   const response = useSelector(state => selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const status = useSelector(state =>
@@ -33,7 +33,7 @@ const ContentViewFilterDetails = ({ cvId }) => {
 
   useDeepCompareEffect(() => {
     if (loaded) {
-      setDetails(response);
+      setFilterDetails(response);
       const { repositories } = response;
       if (repositories.length) {
         setShowAffectedRepos(true);
@@ -41,18 +41,17 @@ const ContentViewFilterDetails = ({ cvId }) => {
     }
   }, [response, loaded]);
 
-  const { type, inclusion, rules } = details;
+  const { type, inclusion, rules } = filterDetails;
   if (loading) {
     return <Loading />;
   }
   return (
     <Grid hasGutter>
-      {loaded && (Object.keys(details).length > 0) ?
+      {loaded && (Object.keys(filterDetails).length > 0) ?
         <ContentViewFilterDetailsHeader
-          cvId={cvId}
-          filterId={filterId}
-          details={details}
-          setShowAffectedRepos={setShowAffectedRepos}
+          {...{
+ cvId, filterId, filterDetails, setShowAffectedRepos, details,
+}}
         /> :
         <Loading />
       }
@@ -65,6 +64,7 @@ const ContentViewFilterDetails = ({ cvId }) => {
           showAffectedRepos={showAffectedRepos}
           setShowAffectedRepos={setShowAffectedRepos}
           rules={rules}
+          details={details}
         />
       </GridItem>
     </Grid>
@@ -73,6 +73,9 @@ const ContentViewFilterDetails = ({ cvId }) => {
 
 ContentViewFilterDetails.propTypes = {
   cvId: PropTypes.number.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default ContentViewFilterDetails;

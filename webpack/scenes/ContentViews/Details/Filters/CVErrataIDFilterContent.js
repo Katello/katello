@@ -30,9 +30,10 @@ import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTa
 import { ADDED, ALL_STATUSES, NOT_ADDED, ERRATA_TYPES } from '../../ContentViewsConstants';
 import SelectableDropdown from '../../../../components/SelectableDropdown/SelectableDropdown';
 import { dateFormat, dateParse } from './CVErrataDateFilterContent';
+import { hasPermission } from '../../helpers';
 
 const CVErrataIDFilterContent = ({
-  cvId, filterId, showAffectedRepos, setShowAffectedRepos,
+  cvId, filterId, showAffectedRepos, setShowAffectedRepos, details,
 }) => {
   const dispatch = useDispatch();
   const { results: filterResults } =
@@ -70,6 +71,7 @@ const CVErrataIDFilterContent = ({
   const [dateType, setDateType] = useState('issued');
   const [dateTypeSelectOpen, setDateTypeSelectOpen] = useState(false);
   const metadata = omit(response, ['results']);
+  const { permissions } = details;
   const columnHeaders = [
     __('Errata ID'),
     __('Type'),
@@ -249,12 +251,11 @@ const CVErrataIDFilterContent = ({
               updateSearchQuery,
               error,
               status,
-              actionResolver,
               activeFilters,
               defaultFilters,
             }}
-            status={status}
-            onSelect={onSelect(rows, setRows)}
+            actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
+            onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/errata/auto_complete_search?filterid=${filterId}`}
@@ -302,26 +303,30 @@ const CVErrataIDFilterContent = ({
                     </SelectOption>
                   </Select>
                 </SplitItem>
-                <SplitItem>
-                  <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
-                    {__('Add errata')}
-                  </Button>
-                </SplitItem>
-                <SplitItem>
-                  <Dropdown
-                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                    isOpen={bulkActionOpen}
-                    isPlain
-                    dropdownItems={[
-                      <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={bulkAdd}>
-                        {__('Add')}
-                      </DropdownItem>,
-                      <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
-                        {__('Remove')}
-                      </DropdownItem>]
+                {hasPermission(permissions, 'edit_content_views') &&
+                  <SplitItem>
+                    <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
+                      {__('Add errata')}
+                    </Button>
+                  </SplitItem>
+                }
+                {hasPermission(permissions, 'edit_content_views') &&
+                  <SplitItem>
+                    <Dropdown
+                      toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                      isOpen={bulkActionOpen}
+                      isPlain
+                      dropdownItems={[
+                        <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={bulkAdd}>
+                          {__('Add')}
+                        </DropdownItem>,
+                        <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
+                          {__('Remove')}
+                        </DropdownItem>]
                     }
-                  />
-                </SplitItem>
+                    />
+                  </SplitItem>
+                }
               </Split>
             }
             nodesBelowSearch={
@@ -413,11 +418,11 @@ const CVErrataIDFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-          <div className="tab-body-with-spacing">
-            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
-          </div>
-        </Tab>
+      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <div className="tab-body-with-spacing">
+          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
+        </div>
+      </Tab>
       }
     </Tabs>
   );
@@ -428,6 +433,9 @@ CVErrataIDFilterContent.propTypes = {
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   showAffectedRepos: PropTypes.bool.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default CVErrataIDFilterContent;

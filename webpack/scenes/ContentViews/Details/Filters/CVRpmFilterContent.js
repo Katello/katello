@@ -18,9 +18,10 @@ import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } fr
 import CVRpmMatchContentModal from './MatchContentModal/CVRpmMatchContentModal';
 import AddEditPackageRuleModal from './Rules/Package/AddEditPackageRuleModal';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
+import { hasPermission } from '../../helpers';
 
 const CVRpmFilterContent = ({
-  cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos,
+  cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos, details,
 }) => {
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
   const { results, ...metadata } = response;
@@ -42,9 +43,11 @@ const CVRpmFilterContent = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedFilterRuleData, setSelectedFilterRuleData] = useState(undefined);
   const [showMatchContent, setShowMatchContent] = useState(false);
+  const { permissions } = details;
 
   const onClose = () => {
     setModalOpen(false);
+    setShowMatchContent(false);
     setSelectedFilterRuleData(undefined);
   };
 
@@ -119,8 +122,8 @@ const CVRpmFilterContent = ({
     },
     {
       title: __('Edit'),
-      onClick: (_event, _rowId, details) => {
-        setSelectedFilterRuleData(details);
+      onClick: (_event, _rowId, ruleDetails) => {
+        setSelectedFilterRuleData(ruleDetails);
         setModalOpen(true);
       },
     },
@@ -157,10 +160,9 @@ const CVRpmFilterContent = ({
               searchQuery,
               updateSearchQuery,
               status,
-              actionResolver,
             }}
-            status={status}
-            onSelect={onSelect(rows, setRows)}
+            actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
+            onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/content_view_filters/${filterId}/rules/auto_complete_search`}
@@ -174,30 +176,32 @@ const CVRpmFilterContent = ({
                     filterId={filterId}
                     onClose={onClose}
                   />}
-                <Split hasGutter>
-                  <SplitItem>
-                    <Button onClick={() => setModalOpen(true)} variant="secondary" aria-label="create_rpm_rule">
-                      {__('Add RPM rule')}
-                    </Button>
-                  </SplitItem>
-                  <SplitItem>
-                    <Dropdown
-                      toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                      isOpen={bulkActionOpen}
-                      isPlain
-                      dropdownItems={[
-                        <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
-                          {__('Remove')}
-                        </DropdownItem>]
-                      }
-                    />
-                  </SplitItem>
-                  <SplitItem>
-                    <ArtifactsWithNoErrataRenderer
-                      filterDetails={filterDetails}
-                    />
-                  </SplitItem>
-                </Split>
+                {hasPermission(permissions, 'edit_content_views') &&
+                  <Split hasGutter>
+                    <SplitItem>
+                      <Button onClick={() => setModalOpen(true)} variant="secondary" aria-label="create_rpm_rule">
+                        {__('Add RPM rule')}
+                      </Button>
+                    </SplitItem>
+                    <SplitItem>
+                      <Dropdown
+                        toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                        isOpen={bulkActionOpen}
+                        isPlain
+                        dropdownItems={[
+                          <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasSelected} component="button" onClick={bulkRemove}>
+                            {__('Remove')}
+                          </DropdownItem>]
+                        }
+                      />
+                    </SplitItem>
+                    <SplitItem>
+                      <ArtifactsWithNoErrataRenderer
+                        filterDetails={filterDetails}
+                      />
+                    </SplitItem>
+                  </Split>
+                }
                 {modalOpen &&
                   <AddEditPackageRuleModal
                     filterId={filterId}
@@ -211,7 +215,7 @@ const CVRpmFilterContent = ({
       {(repositories.length || showAffectedRepos) &&
         <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
           <div className="tab-body-with-spacing">
-            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
+            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>
         </Tab>}
     </Tabs>
@@ -224,6 +228,9 @@ CVRpmFilterContent.propTypes = {
   inclusion: PropTypes.bool,
   showAffectedRepos: PropTypes.bool.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 CVRpmFilterContent.defaultProps = {

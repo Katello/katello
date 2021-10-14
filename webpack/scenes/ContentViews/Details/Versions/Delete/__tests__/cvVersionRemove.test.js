@@ -14,7 +14,8 @@ const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_2` };
 const cvVersions = api.getApiUrl('/content_view_versions');
 const autocompleteUrl = '/content_view_versions/auto_complete_search';
 const cvVersionRemoveUrl = api.getApiUrl('/content_views/2/remove');
-const cvVersionRemoveResponse = require('./cvVersionRemoveResponse.fixture');
+const cvVersionRemoveResponse = require('./cvVersionRemoveResponse.fixture.json');
+const cvDetailData = require('../../../../__tests__/mockDetails.fixtures.json');
 
 const hostURL = foremanApi.getApiUrl('/hosts');
 const affectedHostData = require('./cvAffectedHosts.fixture');
@@ -22,7 +23,7 @@ const affectedHostData = require('./cvAffectedHosts.fixture');
 const activationKeyURL = api.getApiUrl('/activation_keys');
 const affectedActivationKeysData = require('./cvAffectedActivationKeys.fixture.json');
 
-const cVDropDownOptionsPath = api.getApiUrl('/content_views?organization_id=1&environment_id=3&include_default=true&full_result=true');
+const cVDropDownOptionsPath = api.getApiUrl('/content_views?organization_id=1&include_permissions=true&environment_id=3&include_default=true&full_result=true');
 const cVDropDownOptionsData = require('./cvDropDownOptionsResponse.fixture');
 // const taskPollingUrl = '/foreman_tasks/api/tasks/6b900ff8-62bb-42ac-8c45-da86b7258520';
 
@@ -57,7 +58,7 @@ test('Can call API and show versions on page load', async (done) => {
     .reply(200, cvVersionsData);
 
   const { getByText, queryByText } = renderWithRedux(
-    <ContentViewVersions cvId={2} />,
+    <ContentViewVersions cvId={2} details={cvDetailData} />,
     renderOptions,
   );
 
@@ -94,7 +95,7 @@ test('Can open Remove wizard and remove version from simple environment', async 
   const {
     getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText,
   } = renderWithRedux(
-    <ContentViewVersions cvId={2} />,
+    <ContentViewVersions cvId={2} details={cvDetailData} />,
     renderOptions,
   );
 
@@ -166,7 +167,7 @@ test('Can open Remove wizard and remove version from environment with hosts', as
   const {
     getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText,
   } = renderWithRedux(
-    <ContentViewVersions cvId={2} />,
+    <ContentViewVersions cvId={2} details={cvDetailData} />,
     renderOptions,
   );
 
@@ -258,7 +259,7 @@ test('Can open Remove wizard and remove version from environment with activation
   const {
     getByText, getAllByText, getByLabelText, getAllByLabelText, queryByText,
   } = renderWithRedux(
-    <ContentViewVersions cvId={2} />,
+    <ContentViewVersions cvId={2} details={cvDetailData} />,
     renderOptions,
   );
 

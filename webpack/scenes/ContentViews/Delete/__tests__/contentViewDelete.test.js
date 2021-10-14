@@ -10,7 +10,7 @@ import ContentViewsPage from '../../ContentViewsPage.js';
 
 const cvIndexData = require('./CvData.fixtures');
 
-const cvIndexPath = api.getApiUrl('/content_views?organization_id=1&nondefault=true&per_page=20&page=1');
+const cvIndexPath = api.getApiUrl('/content_views?organization_id=1&nondefault=true&include_permissions=true&per_page=20&page=1');
 const autocompleteUrl = '/content_views/auto_complete_search';
 const renderOptions = { apiNamespace: CONTENT_VIEWS_KEY };
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
@@ -28,7 +28,7 @@ const affectedActivationKeysData = require('../../Details/Versions/Delete/__test
 const hostURL = foremanApi.getApiUrl('/hosts');
 const affectedHostData = require('./affectedHosts.fixtures.json');
 
-const cVDropDownOptionsPath = api.getApiUrl('/content_views?organization_id=1&environment_id=9&include_default=true&full_result=true');
+const cVDropDownOptionsPath = api.getApiUrl('/content_views?organization_id=1&environment_id=9&include_default=true&include_permissions=true&full_result=true');
 const cVDropDownOptionsData = require('../../Details/Versions/Delete/__tests__/cvDropDownOptionsResponse.fixture.json');
 
 const cvDeleteUrl = api.getApiUrl('/content_views/20/remove');

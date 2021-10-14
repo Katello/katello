@@ -9,15 +9,17 @@ import AffectedRepositorySelection from './AffectedRepositories/AffectedReposito
 import RepoIcon from '../Repositories/RepoIcon';
 import { repoType } from '../../../../utils/helpers';
 import EditableTextInput from '../../../../components/EditableTextInput';
+import { hasPermission } from '../../helpers';
 
 const ContentViewFilterDetailsHeader = ({
-  cvId, filterId, details, setShowAffectedRepos,
+  cvId, filterId, filterDetails, setShowAffectedRepos, details,
 }) => {
   const dispatch = useDispatch();
   const [currentAttribute, setCurrentAttribute] = useState('');
   const {
     type, name, inclusion, description, rules,
-  } = details;
+  } = filterDetails;
+  const { permissions } = details;
   const errataByDate = !!(type === 'erratum' && head(rules)?.types);
   const repositoryType = repoType(type);
   const displayedType = () => {
@@ -27,7 +29,7 @@ const ContentViewFilterDetailsHeader = ({
   };
 
   const onEdit = (val, attribute) => {
-    if (val === details[attribute]) return;
+    if (val === filterDetails[attribute]) return;
     dispatch(editCVFilter(
       filterId,
       { [attribute]: val },
@@ -45,6 +47,7 @@ const ContentViewFilterDetailsHeader = ({
             attribute="name"
             placeholder={__('Enter a name')}
             onEdit={onEdit}
+            disabled={!hasPermission(permissions, 'edit_content_views')}
             value={name}
             component={TextVariants.h2}
             currentAttribute={currentAttribute}
@@ -59,6 +62,7 @@ const ContentViewFilterDetailsHeader = ({
             attribute="description"
             placeholder={__('No description provided')}
             onEdit={onEdit}
+            disabled={!hasPermission(permissions, 'edit_content_views')}
             value={description}
             currentAttribute={currentAttribute}
             setCurrentAttribute={setCurrentAttribute}
@@ -70,6 +74,7 @@ const ContentViewFilterDetailsHeader = ({
           cvId={cvId}
           filterId={filterId}
           setShowAffectedRepos={setShowAffectedRepos}
+          disabled={!hasPermission(permissions, 'edit_content_views')}
         />
       </GridItem>
       <GridItem span={10}>
@@ -94,7 +99,7 @@ const ContentViewFilterDetailsHeader = ({
 ContentViewFilterDetailsHeader.propTypes = {
   cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  details: PropTypes.shape({
+  filterDetails: PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string,
     inclusion: PropTypes.bool,
@@ -102,6 +107,9 @@ ContentViewFilterDetailsHeader.propTypes = {
     rules: PropTypes.arrayOf(PropTypes.shape({ types: PropTypes.arrayOf(PropTypes.string) })),
   }).isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 ContentViewFilterDetailsHeader.defaultProps = {

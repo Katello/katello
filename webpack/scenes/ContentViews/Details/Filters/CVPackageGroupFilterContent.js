@@ -25,9 +25,10 @@ import getContentViewDetails, {
 } from '../ContentViewDetailActions';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { ADDED, ALL_STATUSES, NOT_ADDED } from '../../ContentViewsConstants';
+import { hasPermission } from '../../helpers';
 
 const CVPackageGroupFilterContent = ({
-  cvId, filterId, showAffectedRepos, setShowAffectedRepos,
+  cvId, filterId, showAffectedRepos, setShowAffectedRepos, details,
 }) => {
   const dispatch = useDispatch();
   const { results: filterResults } =
@@ -53,6 +54,7 @@ const CVPackageGroupFilterContent = ({
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
   const { results, ...metadata } = response;
+  const { permissions } = details;
 
   const columnHeaders = [
     __('Name'),
@@ -203,66 +205,65 @@ const CVPackageGroupFilterContent = ({
               updateSearchQuery,
               error,
               status,
-              actionResolver,
             }}
             additionalListeners={[selectedIndex]}
             activeFilters={[selectedAdded]}
             defaultFilters={[allAddedNotAdded[0]]}
-            status={status}
-            onSelect={onSelect(rows, setRows)}
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/package_groups/auto_complete_search?filterid=${filterId}`}
             fetchItems={fetchItems}
-            actionButtons={
-              <Split hasGutter>
-                <SplitItem data-testid="allAddedNotAdded">
-                  <Select
-                    variant={SelectVariant.single}
-                    onToggle={setSelectOpen}
-                    onSelect={(_event, selection) => {
-                      setSelectedIndex(allAddedNotAdded.indexOf(selection));
-                      setSelectOpen(false);
-                    }}
-                    selections={selectedAdded}
-                    isOpen={selectOpen}
-                    isCheckboxSelectionBadgeHidden
-                  >
-                    {allAddedNotAdded.map(item =>
-                      <SelectOption aria-label={item} key={item} value={item} />)}
-                  </Select>
-                </SplitItem>
-                <SplitItem>
-                  <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
-                    {__('Add filter rule')}
-                  </Button>
-                </SplitItem>
-                <SplitItem>
-                  <Dropdown
-                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                    isOpen={bulkActionOpen}
-                    isPlain
-                    dropdownItems={[
-                      <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={bulkAdd}>
-                        {__('Add')}
-                      </DropdownItem>,
-                      <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
-                        {__('Remove')}
-                      </DropdownItem>]
-                    }
-                  />
-                </SplitItem>
-              </Split>
+            actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
+            onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
+            actionButtons={hasPermission(permissions, 'edit_content_views') &&
+            <Split hasGutter>
+              <SplitItem data-testid="allAddedNotAdded">
+                <Select
+                  variant={SelectVariant.single}
+                  onToggle={setSelectOpen}
+                  onSelect={(_event, selection) => {
+                    setSelectedIndex(allAddedNotAdded.indexOf(selection));
+                    setSelectOpen(false);
+                  }}
+                  selections={allAddedNotAdded[selectedIndex]}
+                  isOpen={selectOpen}
+                  isCheckboxSelectionBadgeHidden
+                >
+                  {allAddedNotAdded.map(item =>
+                    <SelectOption aria-label={item} key={item} value={item} />)}
+                </Select>
+              </SplitItem>
+              <SplitItem>
+                <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
+                  {__('Add filter rule')}
+                </Button>
+              </SplitItem>
+              <SplitItem>
+                <Dropdown
+                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                  isOpen={bulkActionOpen}
+                  isPlain
+                  dropdownItems={[
+                    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={bulkAdd}>
+                      {__('Add')}
+                    </DropdownItem>,
+                    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
+                      {__('Remove')}
+                    </DropdownItem>]
+                  }
+                />
+              </SplitItem>
+            </Split>
             }
           />
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-          <div className="tab-body-with-spacing">
-            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
-          </div>
-        </Tab>
+      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <div className="tab-body-with-spacing">
+          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
+        </div>
+      </Tab>
       }
     </Tabs>
   );
@@ -273,6 +274,9 @@ CVPackageGroupFilterContent.propTypes = {
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   showAffectedRepos: PropTypes.bool.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default CVPackageGroupFilterContent;

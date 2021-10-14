@@ -27,9 +27,10 @@ import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
 import { ADDED, ALL_STATUSES, NOT_ADDED } from '../../ContentViewsConstants';
+import { hasPermission } from '../../helpers';
 
 const CVModuleStreamFilterContent = ({
-  cvId, filterId, showAffectedRepos, setShowAffectedRepos,
+  cvId, filterId, showAffectedRepos, setShowAffectedRepos, details,
 }) => {
   const dispatch = useDispatch();
   const { results: filterResults } =
@@ -58,6 +59,7 @@ const CVModuleStreamFilterContent = ({
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
   const metadata = omit(response, ['results']);
+  const { permissions } = details;
   const columnHeaders = [
     __('Name'),
     __('Stream'),
@@ -213,18 +215,17 @@ const CVModuleStreamFilterContent = ({
               updateSearchQuery,
               error,
               status,
-              actionResolver,
             }}
             additionalListeners={[selectedIndex]}
             activeFilters={[selectedAdded]}
             defaultFilters={[allAddedNotAdded[0]]}
-            status={status}
-            onSelect={onSelect(rows, setRows)}
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/module_streams/auto_complete_search?filterid=${filterId}`}
             fetchItems={fetchItems}
-            actionButtons={
+            actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
+            onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
+            actionButtons={hasPermission(permissions, 'edit_content_views') &&
               <Split hasGutter>
                 <SplitItem data-testid="allAddedNotAdded">
                   <Select
@@ -277,13 +278,12 @@ const CVModuleStreamFilterContent = ({
           />
         </div>
       </Tab>
-      {
-        (repositories.length || showAffectedRepos) &&
-        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-          <div className="tab-body-with-spacing">
-            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
-          </div>
-        </Tab>
+      {(repositories.length || showAffectedRepos) &&
+      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+        <div className="tab-body-with-spacing">
+          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
+        </div>
+      </Tab>
       }
     </Tabs >
   );
@@ -294,6 +294,9 @@ CVModuleStreamFilterContent.propTypes = {
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   showAffectedRepos: PropTypes.bool.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default CVModuleStreamFilterContent;

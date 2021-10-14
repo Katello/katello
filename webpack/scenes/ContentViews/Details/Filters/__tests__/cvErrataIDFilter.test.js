@@ -15,6 +15,7 @@ import api from '../../../../../services/api';
 const allErrata = require('./allFilterErrata.fixtures.json');
 const cvFilterDetails = require('./cvErratumFilterDetails.fixtures.json');
 const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
+const details = require('../../../__tests__/mockDetails.fixtures.json');
 
 const cvFiltersPath = api.getApiUrl('/content_view_filters');
 const cvRefreshCallbackPath = api.getApiUrl('/content_views/1');
@@ -68,7 +69,10 @@ test('Can enable and disable add filter button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
@@ -121,7 +125,10 @@ test('Can add a filter rule', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getAllByLabelText, getByText, queryByText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(errataId)).toBeNull();
@@ -176,7 +183,10 @@ test('Can remove a filter rule', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getAllByLabelText, getByText, queryByText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(errataId)).toBeNull();
@@ -233,7 +243,10 @@ test('Can bulk remove filter rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(errataId)).toBeNull();
@@ -291,7 +304,10 @@ test('Can bulk add filter rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(errataId)).toBeNull();
@@ -337,7 +353,10 @@ test('Can show filters and chips', async (done) => {
   const {
     getByText, getAllByText, queryByText, getByLabelText, getByTestId,
   } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
