@@ -16,5 +16,24 @@ module Katello
     def reboot_required?
       self.app_type == 'static'
     end
+
+    def restart_command
+      case self.app_type
+      when 'static'
+        'reboot'
+      when 'session'
+        nil
+      else
+        self.helper
+      end
+    end
+
+    def self.helpers_for(traces)
+      if traces.any?(&:reboot_required?)
+        ['reboot']
+      else
+        traces.map(&:restart_command).compact.uniq
+      end
+    end
   end
 end

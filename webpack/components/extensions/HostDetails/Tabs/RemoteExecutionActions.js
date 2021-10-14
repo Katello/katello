@@ -9,17 +9,29 @@ const errorToast = (error) => {
   return message;
 };
 
-const katelloPackageInstallParams = ({ hostname, packageName }) => ({
+const baseParams = ({ feature, hostname, inputs = {} }) => ({
   job_invocation: {
-    feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL,
-    inputs: {
-      package: packageName,
-    },
+    feature,
+    inputs,
     search_query: `name ^ (${hostname})`,
   },
 });
 
-const installPackage = ({ hostname, packageName }) => post({
+const katelloPackageInstallParams = ({ hostname, packageName }) =>
+  baseParams({
+    hostname,
+    inputs: { package: packageName },
+    feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL,
+  });
+
+const katelloTracerResolveParams = ({ hostname, ids }) =>
+  baseParams({
+    hostname,
+    inputs: { ids },
+    feature: REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE,
+  });
+
+export const installPackage = ({ hostname, packageName }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
@@ -31,4 +43,14 @@ const installPackage = ({ hostname, packageName }) => post({
   errorToast: error => errorToast(error),
 });
 
-export default installPackage;
+export const resolveTraces = ({ hostname, ids }) => post({
+  type: API_OPERATIONS.POST,
+  key: REX_JOB_INVOCATIONS_KEY,
+  url: foremanApi.getApiUrl('/job_invocations'),
+  params: katelloTracerResolveParams({ hostname, ids }),
+  handleSuccess: response => renderTaskStartedToast({
+    humanized: { action: `Resolve traces on ${hostname}` },
+    id: response?.data?.dynflow_task?.id,
+  }),
+  errorToast: error => errorToast(error),
+});

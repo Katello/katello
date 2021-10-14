@@ -15,7 +15,7 @@ module Katello
       respond_for_index(:collection => collection)
     end
 
-    api :PUT, "/hosts/:host_id/traces/resolve", N_("Resolve Traces")
+    api :PUT, "/hosts/:host_id/traces/resolve", N_("Resolve traces")
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param :trace_ids, Array, :required => true, :desc => N_("Array of Trace IDs")
     def resolve
