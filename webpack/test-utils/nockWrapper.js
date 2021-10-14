@@ -14,7 +14,11 @@ export const nockInstance = nock('http://localhost');
 // polls until the nock scope is met. If the `done` callback from jest is passed in, it will
 // call it once the request is made, telling jest the test is done. This is to make sure all
 // nock expectations are met and cleared before moving on to the next test.
-export const assertNockRequest = (nockScope, jestDone, tries = 10) => {
+// Test checks every `interval` milliseconds if the nock scope was met.
+// The number of tries dictates the number of attempts assert will make before failing.
+// `tries * interval` is the maximum time that every nock scope will wait before failing if not met.
+export const assertNockRequest = (nockScope, jestDone, tries = 600) => {
+  // 500ms interval * 600 tries = 5 min timeout
   const interval = 500;
   let i = 0;
   const poll = setInterval(() => {
