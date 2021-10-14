@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Skeleton, Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
-import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import EnableTracerEmptyState from './EnableTracerEmptyState';
 import TableWrapper from '../../../Table/TableWrapper';
 import { useSelectionSet } from '../../../Table/TableHooks';
@@ -44,12 +43,6 @@ const TracesTab = () => {
     selectionSet: selectedTraces,
     ...selectAll
   } = useSelectionSet(results, meta);
-  const seenResults = useRef({});
-  if (results?.length) {
-    results.forEach((result) => {
-      seenResults.current[result.id] = result;
-    });
-  }
 
   const onBulkRestartApp = (ids) => {
     dispatch(resolveTraces({ hostname, ids: [...ids] }));
@@ -188,9 +181,8 @@ const TracesTab = () => {
           );
          })
          }
-          </Tbody>
-        </TableWrapper>
-      </div>
+        </Tbody>
+      </TableWrapper>
     </div>
   );
 };

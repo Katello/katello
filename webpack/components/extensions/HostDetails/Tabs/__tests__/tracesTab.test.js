@@ -66,24 +66,6 @@ describe('With tracer installed', () => {
     nock.cleanAll();
   });
 
-  test('verify banner is present for old host page', async (done) => {
-    // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
-    const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-
-    const scope = nockInstance
-      .get(hostTraces)
-      .reply(200, emptyTraceResults);
-
-    const { queryByText } = renderWithRedux(<TracesTab />, renderOptions(true));
-
-    // Assert that there are not any traces showing on the screen.
-    await patientlyWaitFor(() => expect(queryByText('Traces functionality on this page is incomplete.')).toBeInTheDocument());
-    expect(queryByText('Visit the previous Traces page.')).toBeInTheDocument();
-    // Assert request was made and completed, see helper function
-    assertNockRequest(autocompleteScope);
-    assertNockRequest(scope, done); // Pass jest callback to confirm test is done
-  });
-
   test('Can call API for traces and show on screen on page load', async (done) => {
     // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
     const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
