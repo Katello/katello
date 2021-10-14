@@ -713,5 +713,25 @@ collectionz:
 "
       refute root_repo.valid?
     end
+
+    def test_invalid_deb_constraint_create
+      debian9 = katello_root_repositories(:debian_9_amd64_root)
+      debian9.deb_releases = ''
+      refute debian9.save
+    end
+
+    def test_invalid_deb_constraint_update
+      debian9 = katello_root_repositories(:debian_9_amd64_root)
+      debian9.deb_releases = ''
+      debian9.url = ''
+      refute debian9.update(:url => "http://ftp.debian.mymirror.org/debian")
+    end
+
+    def test_valid_deb_constraint_update
+      debian9 = katello_root_repositories(:debian_9_amd64_root)
+      debian9.deb_releases = ''
+      debian9.url = ''
+      refute debian9.update(:deb_releases => "stretch")
+    end
   end
 end

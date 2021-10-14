@@ -177,6 +177,30 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
             $scope.requirementPopover = $sce.trustAsHtml("To learn more about requirement.yml specification, visit <a href='https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#install-multiple-collections-with-a-requirements-file' target=\"_blank\">documentation </a>");
 
+            $scope.debURLPopover = $sce.trustAsHtml("For standard Debian repos, this is the folder that contains the \"dists/\" and the \"pool/\" subfolders.");
+
+            $scope.distPopover = $sce.trustAsHtml("A \"distribution\" provides the path from the repository root to the \"Release\" file <br/>" +
+             "you want to access. Each distribution in the list should use /etc/apt/sources.list<br/>" +
+             "syntax. For most official Debian and Ubuntu repositories, the distribution is equal<br/>" +
+             "to either the codename or the suite. When syncing a repo using flat repository format<br/>" +
+             "specify exactly one distribution, which must end with a \"/\".");
+
+            $scope.componentPopover = $sce.trustAsHtml("Requesting a component that does not exist in the upstream repo, will result in <br/>" +
+             "a Pulp warning, but no error. A typo can therefore result in missing content.");
+
+            $scope.archPopover = $sce.trustAsHtml("A list of valid Debian machine architecture strings can be obtained by running <br/>" +
+             "\"dpkg-architecture -L\". If present in the upstream repo, the \"all\"<br/>" +
+             " architecture is always synced, and does not need to be provided here.<br/>" +
+             " Requesting an architecture that does not exist in the upstream repo, <br/>" +
+             "will result in a Pulp warning, but no error. A typo can therefore result <br/>" +
+             "in missing content.");
+
+            $scope.validateDebAttrList = function(deb_attribute) {
+                var value = document.getElementById(deb_attribute).value;
+                var pattern = new RegExp(/^((?!,).)*$/);
+                return pattern.test(value);
+            };
+
             $scope.displayHttpProxyPolicyName = function (policy) {
                 return HttpProxyPolicy.displayHttpProxyPolicyName(policy);
             };
