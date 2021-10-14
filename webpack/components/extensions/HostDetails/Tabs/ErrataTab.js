@@ -28,12 +28,15 @@ import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
 import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVERITIES_TO_PARAM } from '../HostErrata/HostErrataConstants';
+import { installErrata } from './RemoteExecutionActions';
+import { errataInstallUrl } from './customizedRexUrlHelpers';
 import './ErrataTab.scss';
 
 export const ErrataTab = () => {
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const {
     id: hostId,
+    name: hostname,
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
@@ -104,28 +107,51 @@ export const ErrataTab = () => {
 
   if (!hostId) return <Skeleton />;
 
-  const rowActions = [
-    {
-      title: __('Apply via Katello agent'), disabled: true,
-    },
-    {
-      title: __('Apply via remote execution'), disabled: true,
-    },
-    {
-      title: __('Apply via customized remote execution'), disabled: true,
-    },
-  ];
+  const applyErratumViaRemoteExecution = id => dispatch(installErrata({
+    hostname,
+    errata: id,
+    all: false,
+  }));
+
+  const applyViaRemoteExecution = () => {
+    const selected = fetchBulkParams();
+    if (!isEmpty(selected)) {
+      let ids = selected.included.ids || [];
+      let search = null;
+      if (selected.all) {
+        ids = selected.excluded.ids || [];
+        ({ included: { search } } = selected);
+      }
+
+      dispatch(installErrata({
+        hostname, search, errata: [...ids].join(','), all: selected.all,
+      }));
+
+      const params = { page: metadata.page, per_page: metadata.per_page, search: metadata.search };
+      dispatch(getInstallableErrata(
+        hostId,
+        { ...params, include_applicable: toggleGroupState === ALL },
+      ));
+    }
+  };
+
+  const bulkCustomizedRexUrl = () => {
+    const selected = fetchBulkParams();
+    let ids = selected?.included?.ids || [];
+    let search = null;
+    if (selected?.all) {
+      ids = selected?.excluded?.ids || [];
+      search = selected?.included?.search;
+    }
+    return errataInstallUrl({
+      hostname, ids, all: selected?.all, search,
+    });
+  };
 
   const recalculateErrata = () => {
     setIsBulkActionOpen(false);
     dispatch(regenerateApplicability(hostId));
   };
-
-  const dropdownItems = [
-    <DropdownItem aria-label="bulk_add" key="bulk_add" component="button" onClick={recalculateErrata}>
-      {__('Recalculate')}
-    </DropdownItem>,
-  ];
 
   const applyByKatelloAgent = () => {
     const selected = fetchBulkParams();
@@ -136,6 +162,59 @@ export const ErrataTab = () => {
       dispatch(applyViaKatelloAgent(hostId, parameters));
     }
   };
+  const applyErratumViaKatelloAgent = id => dispatch(applyViaKatelloAgent(
+    hostId,
+    { errata_ids: [id] },
+  ));
+
+  const apply = () => (contentFacet.remoteExecutionByDefault ? applyViaRemoteExecution() :
+    applyByKatelloAgent());
+
+  const dropdownItems = [
+    <DropdownItem
+      aria-label="bulk_add"
+      key="bulk_add"
+      component="button"
+      onClick={recalculateErrata}
+    >
+      {__('Recalculate')}
+    </DropdownItem>,
+  ];
+
+  if (contentFacet.katelloAgentInstalled && contentFacet.katelloAgentEnabled) {
+    dropdownItems.push((
+      <DropdownItem
+        aria-label="apply_via_katello_agent"
+        key="apply_via_katello_agent"
+        component="button"
+        onClick={applyByKatelloAgent}
+        isDisabled={selectedCount === 0}
+      >
+        {__('Apply via Katello agent')}
+      </DropdownItem>));
+  }
+
+  dropdownItems.push((
+    <DropdownItem
+      aria-label="apply_via_remote_execution"
+      key="apply_via_remote_execution"
+      component="button"
+      onClick={applyViaRemoteExecution}
+      isDisabled={selectedCount === 0}
+    >
+      {__('Apply via remote execution')}
+    </DropdownItem>));
+
+  dropdownItems.push((
+    <DropdownItem
+      aria-label="apply_via_customized_remote_execution"
+      key="apply_via_customized_remote_execution"
+      component="a"
+      href={bulkCustomizedRexUrl()}
+      isDisabled={selectedCount === 0}
+    >
+      {__('Apply via customized remote execution')}
+    </DropdownItem>));
 
   const handleErrataTypeSelected = newType => setErrataTypeSelected((prevType) => {
     if (prevType === newType) {
@@ -157,7 +236,7 @@ export const ErrataTab = () => {
         <SplitItem>
           <ActionList isIconList>
             <ActionListItem>
-              <Button isDisabled={selectedCount === 0} onClick={applyByKatelloAgent}> {__('Apply')} </Button>
+              <Button isDisabled={selectedCount === 0} onClick={apply}> {__('Apply')} </Button>
             </ActionListItem>
             <ActionListItem>
               <Dropdown
@@ -273,6 +352,36 @@ export const ErrataTab = () => {
                 installable: isInstallable,
               } = erratum;
               const isExpanded = erratumIsExpanded(id);
+              let rowActions;
+              if (isInstallable) {
+                rowActions = [
+                  {
+                    title: __('Apply via remote execution'),
+                    onClick: () => applyErratumViaRemoteExecution(errataId),
+                  },
+                  {
+                    title: __('Apply via customized remote execution'),
+                    component: 'a',
+                    href: errataInstallUrl({ hostname, ids: [errataId] }),
+                  },
+                ];
+
+                if (contentFacet.katelloAgentInstalled && contentFacet.katelloAgentEnabled) {
+                  rowActions.unshift({
+                      title: __('Apply via Katello agent'),
+                      onClick: () => applyErratumViaKatelloAgent(errataId),
+                    });
+                }
+              } else {
+                rowActions = [
+                  {
+                    title: __('Apply Erratum'),
+                    component: 'a',
+                    href: urlBuilder(`errata/${id}/content-hosts`, ''),
+                  },
+                ];
+              }
+
               return (
                 <Tbody isExpanded={isExpanded} key={`${id}_${createdAt}`}>
                   <Tr>
@@ -319,6 +428,7 @@ export const ErrataTab = () => {
                       actions={{
                           items: rowActions,
                         }}
+
                     />
                   </Tr>
                   <Tr key="child_row" isExpanded={isExpanded}>

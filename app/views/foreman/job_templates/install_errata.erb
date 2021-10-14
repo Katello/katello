@@ -6,10 +6,20 @@ description_format: 'Install errata %{errata}'
 feature: katello_errata_install
 provider_type: SSH
 template_inputs:
+- name: Filter Errata
+  description: Filter criteria for Errata to be installed.
+  input_type: user
+  required: false
+- name: Inclusion Type
+  description: Include/Exclude the errata ids specified below.
+  input_type: user
+  required: true
+  options: "Include the errata below\r\nInclude all errata EXCEPT the below"
+  default: 'Include the errata below'
 - name: errata
   description: A comma separated list of errata to install
   input_type: user
-  required: true
+  required: false
 foreign_input_sets:
 - template: Package Action - SSH Default
   exclude: action,package
@@ -19,6 +29,10 @@ foreign_input_sets:
     <% advisories = input(:errata).split(',').join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'install -n -t patch', :package => advisories) %>
 <% else %>
-    <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
+    <% advisory_ids = @host.advisory_helpers(errata: input(:errata).split(','),
+                                          all: "Include all errata EXCEPT the below" == input("Inclusion Type"),
+                                          search: input("Filter Errata")) %>
+
+    <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>
 <% end %>

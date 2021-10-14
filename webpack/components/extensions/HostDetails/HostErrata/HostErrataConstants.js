@@ -30,3 +30,5 @@ export const SEVERITIES_TO_PARAM = {
 };
 
 export default HOST_ERRATA_KEY;
+
+export const errataInclusionType = (all = false) => (all ? 'Include all errata EXCEPT the below' : 'Include the errata below');
