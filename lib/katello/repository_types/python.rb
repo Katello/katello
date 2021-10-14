@@ -31,15 +31,15 @@ Katello::RepositoryTypeManager.register('python') do
 
   url_description N_("URL of a PyPI content source such as https://pypi.org.")
 
-  model_name lambda { |pulp_unit| pulp_unit["name"] }
-  model_version lambda { |pulp_unit| pulp_unit["version"] }
-
   generic_content_type 'python_package',
                        pluralized_name: "Python Packages",
                        model_class: Katello::GenericContentUnit,
                        pulp3_api: PulpPythonClient::ContentPackagesApi,
                        pulp3_model: PulpPythonClient::PythonPythonPackageContent,
                        pulp3_service_class: Katello::Pulp3::GenericContentUnit,
+                       model_name: lambda { |pulp_unit| pulp_unit["name"] },
+                       model_version: lambda { |pulp_unit| pulp_unit["version"] },
+                       model_filename: lambda { |pulp_unit| pulp_unit["filename"] },
                        removable: true,
                        uploadable: true,
                        duplicates_allowed: false,

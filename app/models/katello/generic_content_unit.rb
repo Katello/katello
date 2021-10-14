@@ -5,9 +5,10 @@ module Katello
 
     CONTENT_TYPE = 'generic'.freeze
 
-    scoped_search :on => :name, :complete_value => true
     scoped_search :on => :id, :complete_value => true
+    scoped_search :on => :name, :complete_value => true
     scoped_search :on => :version, :complete_value => true
+    scoped_search :on => :filename, :complete_value => true
 
     def self.default_sort
       order(:name)

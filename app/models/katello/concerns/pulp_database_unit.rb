@@ -150,10 +150,9 @@ module Katello
             service = service_class.new(model.pulp_id)
             service.backend_data = unit
             if repository&.generic?
-              service.update_model(model, repository.repository_type, generic_content_type)
-            else
-              service.update_model(model)
+              service.update_model(model, generic_content_type)
             end
+            service.update_model(model)
             ids_to_associate << model.pulp_id
           end
         end
@@ -188,7 +187,7 @@ module Katello
               model.repository_id = repository.id unless many_repository_associations
 
               if repository.generic?
-                service.update_model(model, repository.repository_type, generic_content_type)
+                service.update_model(model, generic_content_type)
               elsif self == ::Katello::Erratum
                 # Errata will change pulp_hrefs if the upstream repo updates them
                 erratum_updated_ids << service.update_model(model)

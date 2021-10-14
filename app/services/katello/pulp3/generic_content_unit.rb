@@ -16,12 +16,15 @@ module Katello
         repository_type.content_types.find { |type| type.content_type == content_type }.pulp3_api.new(repository_type.pulp3_api_class.new(SmartProxy.pulp_primary!, repository_type).api_client)
       end
 
-      def update_model(model, repository_type, content_type)
+      def update_model(model, content_type)
+        content_type = ::Katello::RepositoryTypeManager.find_content_type(content_type)
+
         custom_json = {}
         custom_json['pulp_id'] = backend_data['pulp_href']
-        custom_json['name'] = repository_type.model_name.call(backend_data)
-        custom_json['version'] = repository_type.model_version.call(backend_data)
-        custom_json['content_type'] = content_type
+        custom_json['name'] = content_type&.model_name&.call(backend_data)
+        custom_json['version'] = content_type&.model_version&.call(backend_data)
+        custom_json['filename'] = content_type&.model_filename&.call(backend_data)
+        custom_json['content_type'] = content_type&.label
         model.update!(custom_json)
       end
     end

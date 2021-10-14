@@ -20,6 +20,7 @@ export default () => [
     columnHeaders: [
       { title: __('Name'), getProperty: unit => (<Link to={urlBuilder(`content/python_packages/${unit?.id}`, '')}>{unit?.name}</Link>) },
       { title: __('Version'), getProperty: unit => unit?.version },
+      { title: __('Filename'), getProperty: unit => unit?.filename },
     ],
     tabs: [
       {
@@ -29,6 +30,7 @@ export default () => [
         columnHeaders: [
           { title: __('Name'), getProperty: unit => unit?.name },
           { title: __('Version'), getProperty: unit => unit?.version },
+          { title: __('Filename'), getProperty: unit => unit?.filename },
         ],
       },
       {

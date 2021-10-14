@@ -81,7 +81,8 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
                 type: GenericContent,
                 controllerName: 'katello_generic_content_units',
                 'pluralized_name': contentType['pluralized_name'],
-                removable: contentType.removable
+                removable: contentType.removable,
+                detailsColumns: contentType['details_columns']
             };
         });
 
