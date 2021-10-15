@@ -25,6 +25,7 @@ module Katello
         repo_content_list.map { |content| content.try(:pulp_href) }
       end
 
+      # rubocop:disable Metrics/AbcSize
       def update_model(model)
         updated = false
         keys = %w(title id severity issued_date type description reboot_suggested solution updated_date summary)
@@ -38,8 +39,8 @@ module Katello
 
         custom_json['errata_id'] = custom_json.delete('id')
         custom_json['errata_type'] = custom_json.delete('type')
-        custom_json['issued'] = custom_json['issued'].to_datetime
-        custom_json['updated'] = custom_json['updated'].blank? ? custom_json['issued'] : custom_json['updated'].to_datetime
+        custom_json['issued'] = custom_json['issued'].to_datetime.strftime('%Y-%m-%d').to_datetime
+        custom_json['updated'] = custom_json['updated'].blank? ? custom_json['issued'] : custom_json['updated'].to_datetime.strftime('%Y-%m-%d').to_datetime
 
         if model.updated.blank? ||
           model.attributes.excluding(model.attributes.keys - custom_json.keys) != custom_json
@@ -56,6 +57,7 @@ module Katello
 
         return model.id if updated
       end
+      # rubocop:enable Metrics/AbcSize
 
       def update_bugzillas(model, ref_list)
         ref_list.select { |r| r[:type] == "bugzilla" }.each do |bugzilla|
