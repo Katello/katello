@@ -55,40 +55,72 @@ const TableWrapper = ({
   const prevRequest = useRef({});
   const prevSearch = useRef('');
   const prevAdditionalListeners = useRef([]);
+  const prevActiveFilters = useRef([]);
   const paginationChangePending = useRef(null);
 
   const hasChanged = (oldValue, newValue) => !isEqual(oldValue, newValue);
 
   const spawnFetch = useCallback((paginationData) => {
+    console.log('--------')
+    console.log('spawnFetch')
     // The search component will update the search query when a search is performed, listen for that
     // and perform the search so we can be sure the searchQuery is updated when search is performed.
     const fetchWithParams = (allParams = {}) => {
+      // console.log('fetchWithParams')
       const newRequest = {
         ...(paginationData ?? paginationParams()),
         ...allParams,
       };
+      const newRequestHasStalePagination = !!(paginationChangePending.current &&
+        hasChanged(newRequest, paginationChangePending.current));
+      const newRequestHasChanged = hasChanged(newRequest, prevRequest.current);
+      const additionalListenersHaveChanged =
+        hasChanged(additionalListeners, prevAdditionalListeners.current);
+      // console.log({ newRequest, prevRequest: prevRequest.current, additionalListeners })
       // If a pagination change is in-flight,
       // don't send another request with stale data
-      if (paginationChangePending.current &&
-        hasChanged(newRequest, paginationChangePending.current)) return;
+      console.log('checking conditions')
+      if (newRequestHasChanged) console.log('new request has changed')
+      if (newRequestHasStalePagination) console.log('new request has stale pagination')
+      if (paginationChangePending.current) console.log('pagination change pending')
+      if (additionalListenersHaveChanged) console.log('additional listeners have changed')
+      if (newRequestHasStalePagination && !additionalListenersHaveChanged) console.log('REQUEST PREVENTED')
+      if (newRequestHasStalePagination && !additionalListenersHaveChanged) return;
       paginationChangePending.current = null;
-      if (hasChanged(newRequest, prevRequest.current) ||
-        hasChanged(additionalListeners, prevAdditionalListeners.current)
-      ) {
+      if (newRequestHasChanged || additionalListenersHaveChanged) {
         // don't fire the same request twice in a row
         prevRequest.current = newRequest;
         prevAdditionalListeners.current = additionalListeners;
+        console.log('FIRING REQUEST')
         dispatch(fetchItems(newRequest));
+      } else {
+        console.log('REQUEST PREVENTED')
       }
+      console.log('end of fetchWithParams')
     };
     let pageOverride;
+    const activeFiltersHaveChanged = hasChanged(activeFilters, prevActiveFilters.current);
+    const searchQueryHasChanged = hasChanged(searchQuery, prevSearch.current);
+    // console.log({ activeFilters })
+    if (searchQueryHasChanged) console.log('search query has changed')
+    if (activeFiltersHaveChanged) console.log('active filters have changed')
     if (searchQuery && !disableSearch) pageOverride = { search: searchQuery };
-    if (!disableSearch && (!isEqual(searchQuery, prevSearch.current) || activeFilters)) {
+    if (!disableSearch && (searchQueryHasChanged || activeFiltersHaveChanged)) {
       // Reset page back to 1 when filter or search changes
+      console.log('resetting to page 1')
       prevSearch.current = searchQuery;
+      prevActiveFilters.current = activeFilters;
       pageOverride = { search: searchQuery, page: 1 };
     }
-    fetchWithParams(pageOverride);
+    if (pageOverride) {
+      paginationChangePending.current = null;
+      fetchWithParams(pageOverride);
+      paginationChangePending.current = pageOverride;
+    } else {
+      fetchWithParams();
+    }
+    console.log('end of spawnFetch')
+    console.log('--------')
   }, [
     disableSearch,
     activeFilters,
@@ -132,6 +164,7 @@ const TableWrapper = ({
 
   const onPaginationUpdate = (updatedPagination) => {
     const pagData = validatePagination(updatedPagination);
+    paginationChangePending.current = null;
     spawnFetch(pagData);
     paginationChangePending.current = pagData;
   };
@@ -237,7 +270,7 @@ TableWrapper.propTypes = {
     PropTypes.string,
     PropTypes.bool,
   ])),
-  activeFilters: PropTypes.bool,
+  activeFilters: PropTypes.arrayOf(PropTypes.string),
   displaySelectAllCheckbox: PropTypes.bool,
   selectedCount: PropTypes.number,
   selectAll: PropTypes.func,
@@ -254,7 +287,7 @@ TableWrapper.defaultProps = {
   metadata: { subtotal: 0 },
   children: null,
   additionalListeners: [],
-  activeFilters: false,
+  activeFilters: [],
   foremanApiAutoComplete: false,
   actionButtons: null,
   displaySelectAllCheckbox: false,

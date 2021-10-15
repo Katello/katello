@@ -212,7 +212,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   const emptyContentBody = __('Please add some content views.');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
-  const activeFilters = statusSelected && statusSelected !== ALL_STATUSES;
+  const activeFilters = [statusSelected];
 
   useDeepCompareEffect(() => {
     const { results, ...meta } = response;

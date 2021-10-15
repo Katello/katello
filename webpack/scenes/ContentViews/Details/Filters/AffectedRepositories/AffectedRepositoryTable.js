@@ -174,7 +174,7 @@ const AffectedRepositoryTable = ({
   const emptyContentBody = __('Please add some repositories.');
   const emptySearchTitle = __('No matching repositories found');
   const emptySearchBody = __('Try changing your search settings.');
-  const activeFilters = (productSelected && productSelected !== allProducts);
+  const activeFilters = [productSelected];
   const dropdownItems = [
     <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={addBulk}>
       {__('Add')}

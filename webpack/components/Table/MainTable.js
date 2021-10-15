@@ -21,7 +21,8 @@ const MainTable = ({
     if (children) return rowsCount === 0;
     return rows.length === 0;
   };
-  const isFiltering = activeFilters || searchIsActive;
+  const filtersAreActive = !!activeFilters?.length && !activeFilters.includes('All');
+  const isFiltering = searchIsActive || filtersAreActive;
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
@@ -75,7 +76,7 @@ MainTable.propTypes = {
   emptySearchTitle: PropTypes.string.isRequired,
   emptySearchBody: PropTypes.string.isRequired,
   searchIsActive: PropTypes.bool,
-  activeFilters: PropTypes.bool,
+  activeFilters: PropTypes.arrayOf(PropTypes.string),
   actionButtons: PropTypes.bool,
   rowsCount: PropTypes.number,
   children: PropTypes.oneOfType([
@@ -87,7 +88,7 @@ MainTable.propTypes = {
 MainTable.defaultProps = {
   error: null,
   searchIsActive: false,
-  activeFilters: false,
+  activeFilters: [],
   actionButtons: false,
   children: null,
   cells: undefined,

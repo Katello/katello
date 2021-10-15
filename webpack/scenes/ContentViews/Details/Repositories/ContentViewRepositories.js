@@ -208,8 +208,7 @@ const ContentViewRepositories = ({ cvId }) => {
   const emptyContentBody = __('Please add some repositories.'); // needs link
   const emptySearchTitle = __('No matching repositories found');
   const emptySearchBody = __('Try changing your search settings.');
-  const activeFilters = (typeSelected && typeSelected !== allRepositories) ||
-    (statusSelected && statusSelected !== ALL_STATUSES);
+  const activeFilters = [typeSelected, statusSelected];
 
   const dropdownItems = [
     <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={addBulk}>
