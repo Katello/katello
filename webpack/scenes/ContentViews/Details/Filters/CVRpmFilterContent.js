@@ -23,6 +23,7 @@ const CVRpmFilterContent = ({
   cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos,
 }) => {
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
+  const { results, metadata } = response;
   const status = useSelector(state => selectCVFilterRulesStatus(state, filterId), shallowEqual);
   const loading = status === STATUS.PENDING;
   const filterDetails = useSelector(state =>
@@ -31,7 +32,6 @@ const CVRpmFilterContent = ({
   const dispatch = useDispatch();
 
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const [filterRuleId, setFilterRuleId] = useState(undefined);
@@ -41,7 +41,6 @@ const CVRpmFilterContent = ({
   const hasSelected = rows.some(({ selected }) => selected);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedFilterRuleData, setSelectedFilterRuleData] = useState(undefined);
-
   const [showMatchContent, setShowMatchContent] = useState(false);
 
   const onClose = () => {
@@ -67,7 +66,7 @@ const CVRpmFilterContent = ({
     return 'All versions';
   };
 
-  const buildRows = useCallback((results) => {
+  const buildRows = useCallback(() => {
     const newRows = [];
     results.forEach((rule) => {
       const {
@@ -86,17 +85,14 @@ const CVRpmFilterContent = ({
     });
 
     return newRows;
-  }, []);
+  }, [results]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
-
     if (!loading && results) {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response, loading, buildRows]);
+  }, [response, results, loading, buildRows]);
 
   useEffect(() => {
     if (!repositories.length && showAffectedRepos) {

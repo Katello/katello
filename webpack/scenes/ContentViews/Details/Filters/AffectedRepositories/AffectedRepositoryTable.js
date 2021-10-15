@@ -41,7 +41,6 @@ const AffectedRepositoryTable = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [productSelected, setProductSelected] = useState(allProducts);
   const [repoProducts, setRepoProducts] = useState({});
@@ -49,6 +48,7 @@ const AffectedRepositoryTable = ({
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
+  const { _results, ...metadata } = response;
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
@@ -99,8 +99,7 @@ const AffectedRepositoryTable = ({
   }, [repositories]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
+    const { results } = response;
     if (!loading && results) {
       if (Object.keys(initialResponse).length === 0 || !Object.keys(repoProducts).length) {
         setInitialResponse(response);

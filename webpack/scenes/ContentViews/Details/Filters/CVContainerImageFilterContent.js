@@ -42,7 +42,6 @@ const CVContainerImageFilterContent = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({ });
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const [selectedFilterRuleData, setSelectedFilterRuleData] = useState(undefined);
@@ -52,6 +51,7 @@ const CVContainerImageFilterContent = ({
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasSelected = rows.some(({ selected }) => selected);
+  const { _results, ...metadata } = response;
 
   const onClose = () => {
     setModalOpen(false);
@@ -80,8 +80,7 @@ const CVContainerImageFilterContent = ({
   }, [showAffectedRepos, repositories.length]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
+    const { results } = response;
     if (!loading && results) {
       setRows([...results.map((containerRule) => {
         const { name, id } = containerRule;
