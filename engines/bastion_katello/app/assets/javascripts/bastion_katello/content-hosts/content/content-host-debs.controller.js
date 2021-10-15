@@ -52,7 +52,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDebsController',
         $scope.performViaRemoteExecution = function (actionType, term, customize) {
             $scope.packageActionFormValues.package = term;
             $scope.packageActionFormValues.remoteAction = actionType;
-            $scope.packageActionFormValues.hostIds = $scope.host.id;
+            $scope.packageActionFormValues.bulkHostIds = angular.toJson({ included: { ids: [$scope.host.id] }});
             $scope.packageActionFormValues.customize = customize;
 
             $timeout(function () {
