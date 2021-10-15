@@ -107,5 +107,15 @@ module ::Actions::Pulp3
       @repo.index_content
       assert_empty erratum.repository_errata.where(erratum_pulp3_href: 'bad_href')
     end
+
+    def test_incompatible_mirror_repo_error
+      @repo.root.update!(url: 'https://dl.fedoraproject.org/pub/epel/7/x86_64/')
+      @repo.root.update!(mirror_on_sync: true)
+      @repo.reload
+      sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
+      assert_raises ForemanTasks::TaskError do
+        ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
+      end
+    end
   end
 end
