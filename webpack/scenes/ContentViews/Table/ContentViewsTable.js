@@ -28,7 +28,6 @@ const ContentViewTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copy, setCopy] = useState(false);
   const [cvResults, setCvResults] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [cvTableStatus, setCvTableStatus] = useState(STATUS.PENDING);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
@@ -38,6 +37,7 @@ const ContentViewTable = () => {
   const [actionableCvName, setActionableCvName] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
+  const { _results, ...metadata } = response;
 
   const openForm = () => setIsModalOpen(true);
 
@@ -89,13 +89,12 @@ const ContentViewTable = () => {
         return STATUS.PENDING; // Fallback to pending
       };
 
-      const { results, ...meta } = response;
+      const { results } = response;
       if (status === STATUS.ERROR) {
         setCvTableStatus(tableStatus());
       }
       if (!loadingResponse && results) {
         setCvResults(results);
-        setMetadata(meta);
         setCurrentStep(1);
         const { newRowMappingIds, ...tableData } = tableDataGenerator(results);
         setTable(tableData);
@@ -104,7 +103,7 @@ const ContentViewTable = () => {
       }
     },
     [response, status, loadingResponse, setTable, setRowMappingIds,
-      setCvResults, setCvTableStatus, setCurrentStep, setMetadata, cvResults, rowMappingIds],
+      setCvResults, setCvTableStatus, setCurrentStep, cvResults, rowMappingIds],
   );
 
   const onCollapse = (event, rowId, isOpen) => {

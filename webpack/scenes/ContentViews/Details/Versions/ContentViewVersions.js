@@ -27,13 +27,13 @@ import RemoveCVVersionWizard from './Delete/RemoveCVVersionWizard';
 
 const ContentViewVersions = ({ cvId }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
+  const { results, ...metadata } = response;
   const status = useSelector(state => selectCVVersionsStatus(state, cvId));
   const error = useSelector(state => selectCVVersionsError(state, cvId));
   const [pollingFinished, setPollingFinished] = useState(false);
   const loading = status === STATUS.PENDING;
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [versionIdToPromote, setVersionIdToPromote] = useState('');
   const [versionNameToPromote, setVersionNameToPromote] = useState('');
@@ -109,7 +109,7 @@ const ContentViewVersions = ({ cvId }) => {
   }, [dispatch]);
 
   useDeepCompareEffect(() => {
-    const buildRows = (results) => {
+    const buildRows = () => {
       const newRows = [];
       results.forEach((cvVersion) => {
         const {
@@ -133,13 +133,11 @@ const ContentViewVersions = ({ cvId }) => {
       return newRows;
     };
 
-    const { results, ...meta } = response;
-    setMetadata(meta);
     if (!loading && results) {
-      const newRows = buildRows(results);
+      const newRows = buildRows();
       setRows(newRows);
     }
-  }, [response, setMetadata, buildActiveTaskCells, buildCells, dispatch, loading, setRows]);
+  }, [response, results, buildActiveTaskCells, buildCells, dispatch, loading, setRows]);
 
   const onPromote = ({ cvVersionId, cvVersionName, cvVersionEnvironments }) => {
     setVersionIdToPromote(cvVersionId);

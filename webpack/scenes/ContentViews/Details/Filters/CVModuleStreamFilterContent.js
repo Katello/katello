@@ -45,7 +45,6 @@ const CVModuleStreamFilterContent = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const filterLoaded = filterLoad === 'RESOLVED';
@@ -57,6 +56,7 @@ const CVModuleStreamFilterContent = ({
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
+  const { _results, ...metadata } = response;
   const columnHeaders = [
     __('Name'),
     __('Stream'),
@@ -162,8 +162,7 @@ const CVModuleStreamFilterContent = ({
   }, [showAffectedRepos, repositories.length]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
+    const { results } = response;
 
     if (!loading && results && filterLoaded) {
       const newRows = buildRows(results);

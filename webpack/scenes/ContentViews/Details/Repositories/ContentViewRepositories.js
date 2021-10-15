@@ -49,6 +49,7 @@ const repoTypeNames = {
 const ContentViewRepositories = ({ cvId }) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVRepos(state, cvId), shallowEqual);
+  const { results, ...metadata } = response;
   const status = useSelector(state => selectCVReposStatus(state, cvId), shallowEqual);
   const error = useSelector(state => selectCVReposError(state, cvId), shallowEqual);
   const repoTypesResponse = useSelector(state => selectRepoTypes(state), shallowEqual);
@@ -57,7 +58,6 @@ const ContentViewRepositories = ({ cvId }) => {
 
   const [rows, setRows] = useState([]);
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [typeSelected, setTypeSelected] = useState(allRepositories);
   const [statusSelected, setStatusSelected] = useState(ALL_STATUSES);
@@ -77,7 +77,7 @@ const ContentViewRepositories = ({ cvId }) => {
   ];
   const loading = status === STATUS.PENDING;
 
-  const buildRows = useCallback((results) => {
+  const buildRows = useCallback(() => {
     const newRows = [];
     results.forEach((repo) => {
       const {
@@ -108,17 +108,14 @@ const ContentViewRepositories = ({ cvId }) => {
       });
     });
     return newRows;
-  }, [statusSelected]);
+  }, [statusSelected, results]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
-
     if (!loading && results) {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response, loading, buildRows]);
+  }, [response, loading, buildRows, results]);
 
   useEffect(() => {
     dispatch(getRepositoryTypes());

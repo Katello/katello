@@ -49,7 +49,6 @@ const CVErrataIDFilterContent = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const filterLoaded = filterLoad === 'RESOLVED';
@@ -68,6 +67,7 @@ const CVErrataIDFilterContent = ({
   const [apiEndDate, setApiEndDate] = useState('');
   const [dateType, setDateType] = useState('issued');
   const [dateTypeSelectOpen, setDateTypeSelectOpen] = useState(false);
+  const { _results, ...metadata } = response;
   const columnHeaders = [
     __('Errata ID'),
     __('Type'),
@@ -152,8 +152,7 @@ const CVErrataIDFilterContent = ({
   }, [showAffectedRepos, repositories.length]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
+    const { results } = response;
 
     if (!loading && results && filterLoaded) {
       const newRows = buildRows(results);

@@ -24,10 +24,10 @@ import CVFilterAddModal from './Add/CVFilterAddModal';
 const ContentViewFilters = ({ cvId }) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilters(state, cvId), shallowEqual);
+  const { results, ...metadata } = response;
   const status = useSelector(state => selectCVFiltersStatus(state, cvId), shallowEqual);
   const error = useSelector(state => selectCVFiltersError(state, cvId), shallowEqual);
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const loading = status === STATUS.PENDING;
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -45,7 +45,7 @@ const ContentViewFilters = ({ cvId }) => {
     __('Inclusion type'),
   ];
 
-  const buildRows = (results) => {
+  const buildRows = useCallback(() => {
     const newRows = [];
     results.forEach((filter) => {
       let errataByDate = false;
@@ -70,7 +70,7 @@ const ContentViewFilters = ({ cvId }) => {
       newRows.push({ cells, id });
     });
     return newRows;
-  };
+  }, [results]);
 
   const bulkRemove = () => {
     setBulkActionOpen(false);
@@ -85,14 +85,11 @@ const ContentViewFilters = ({ cvId }) => {
   }, [rows]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
-
     if (!loading && results) {
-      const newRows = buildRows(results);
+      const newRows = buildRows();
       setRows(newRows);
     }
-  }, [response, loading]);
+  }, [response, loading, results, buildRows]);
 
   const actionResolver = () => [
     {
