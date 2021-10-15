@@ -3,7 +3,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-
 import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
-import { cvFilterDetailsKey } from '../../../ContentViewsConstants';
+import { ADDED, cvFilterDetailsKey, NOT_ADDED } from '../../../ContentViewsConstants';
 import nock, {
   nockInstance,
   assertNockRequest,
@@ -479,5 +479,61 @@ test('Can show affected repository tab and remove affected repos', async (done) 
   assertNockRequest(bulkRemoveReposScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvAllReposScope);
+  assertNockRequest(packageGroupsScope, done);
+});
+
+test('Can filter by added/not added rules', async (done) => {
+  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
+  const { rules } = cvFilterDetails;
+  const { name } = rules[0];
+
+  const cvFilterScope = nockInstance
+    .get(cvFilterDetailsPath)
+    .query(true)
+    .reply(200, cvFilterDetails);
+
+  const cvFiltersScope = nockInstance
+    .get(cvFiltersPath)
+    .query(true)
+    .reply(200, cvFilterFixtures);
+
+  const packageGroupsScope = nockInstance
+    .get(packageGroupsPath)
+    .query(true)
+    .times(3) // For first call (All), Added, and Not Added
+    .reply(200, allPackageGroups);
+
+  const {
+    getByText, queryByText, getByTestId, getByLabelText,
+  } = renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+
+  // Nothing will show at first, page is loading
+  expect(queryByText(name)).toBeNull();
+
+  await patientlyWaitFor(() => {
+    expect(getByText(name)).toBeInTheDocument();
+    expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
+    fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByLabelText(ADDED)).toBeInTheDocument();
+    getByLabelText(ADDED).click();
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByText(name)).toBeInTheDocument();
+    expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
+    fireEvent.click(getByTestId('allAddedNotAdded')?.childNodes[0]?.childNodes[0]);
+  });
+
+  await patientlyWaitFor(() => {
+    expect(getByLabelText(NOT_ADDED)).toBeInTheDocument();
+    getByLabelText(NOT_ADDED).click();
+  });
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(cvFilterScope);
+  assertNockRequest(cvFiltersScope);
   assertNockRequest(packageGroupsScope, done);
 });

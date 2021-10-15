@@ -335,7 +335,7 @@ test('Can show filters and chips', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const {
-    getByText, getAllByText, queryByText, getByLabelText,
+    getByText, getAllByText, queryByText, getByLabelText, getByTestId,
   } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
 
@@ -345,15 +345,16 @@ test('Can show filters and chips', async (done) => {
   // Selected status filter
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getAllByText('All')[0]).toBeInTheDocument();
+    expect(getByTestId('allAddedNotAdded')).toBeInTheDocument();
+    fireEvent.click(getByTestId('allAddedNotAdded')
+      ?.childNodes[0]?.childNodes[1]?.childNodes[0]?.childNodes[0]);
   });
-  expect(getAllByText('All')).toHaveLength(2);
-  getAllByText('All')[0].click();
-  // expect(getByText('blah')).toBeInTheDocument();
+
   await patientlyWaitFor(() => {
     expect(getByLabelText('select Added')).toBeInTheDocument();
+    getByLabelText('select Added').click();
   });
-  getByLabelText('select Added').click();
+
   await patientlyWaitFor(() => {
     expect(getByText(errataId)).toBeInTheDocument();
     expect(queryByText('All')).not.toBeInTheDocument();

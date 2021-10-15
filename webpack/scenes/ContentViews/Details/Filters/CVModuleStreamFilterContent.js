@@ -3,7 +3,10 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { TableVariant } from '@patternfly/react-table';
-import { Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import {
+  Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem,
+  KebabToggle, Select, SelectOption, SelectVariant,
+} from '@patternfly/react-core';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 
@@ -22,6 +25,7 @@ import getContentViewDetails, {
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { ArtifactsWithNoErrataRenderer } from './ArtifactsWithNoErrata';
+import { ADDED, ALL_STATUSES, NOT_ADDED } from '../../ContentViewsConstants';
 
 const CVModuleStreamFilterContent = ({
   cvId, filterId, showAffectedRepos, setShowAffectedRepos,
@@ -47,6 +51,8 @@ const CVModuleStreamFilterContent = ({
   const filterLoaded = filterLoad === 'RESOLVED';
   const loading = status === STATUS.PENDING;
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
@@ -58,6 +64,33 @@ const CVModuleStreamFilterContent = ({
     __('Context'),
     __('Status'),
   ];
+
+  const allAddedNotAdded = [
+    ALL_STATUSES,
+    ADDED,
+    NOT_ADDED,
+  ];
+
+  const fetchItems = useCallback((params) => {
+    const adjustedParams = { ...params };
+    switch (selectedIndex) {
+      case 0:
+        adjustedParams.show_all_for = 'content_view_filter';
+        adjustedParams.available_for = undefined;
+        break;
+      case 1:
+        adjustedParams.show_all_for = undefined;
+        adjustedParams.available_for = undefined;
+        break;
+      case 2:
+        adjustedParams.show_all_for = undefined;
+        adjustedParams.available_for = 'content_view_filter';
+        break;
+      default:
+    }
+
+    return getCVFilterModuleStreams(cvId, filterId, adjustedParams);
+  }, [cvId, filterId, selectedIndex]);
 
   const buildRows = useCallback((results) => {
     const newRows = [];
@@ -181,17 +214,38 @@ const CVModuleStreamFilterContent = ({
               status,
               actionResolver,
             }}
+            additionalListeners={[selectedIndex]}
             status={status}
             onSelect={onSelect(rows, setRows)}
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/module_streams/auto_complete_search?filterid=${filterId}`}
-            fetchItems={useCallback(params =>
-              getCVFilterModuleStreams(cvId, filterId, params), [cvId, filterId])}
+            fetchItems={fetchItems}
             actionButtons={
               <Split hasGutter>
+                <SplitItem data-testid="allAddedNotAdded">
+                  <Select
+                    variant={SelectVariant.single}
+                    onToggle={setSelectOpen}
+                    onSelect={(_event, selection) => {
+                      setSelectedIndex(allAddedNotAdded.indexOf(selection));
+                      setSelectOpen(false);
+                    }}
+                    selections={allAddedNotAdded[selectedIndex]}
+                    isOpen={selectOpen}
+                    isCheckboxSelectionBadgeHidden
+                  >
+                    {allAddedNotAdded.map(item =>
+                      <SelectOption aria-label={item} key={item} value={item} />)}
+                  </Select>
+                </SplitItem>
                 <SplitItem>
-                  <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
+                  <Button
+                    isDisabled={!hasNotAddedSelected}
+                    onClick={bulkAdd}
+                    variant="secondary"
+                    aria-label="add_filter_rule"
+                  >
                     {__('Add filter rule')}
                   </Button>
                 </SplitItem>
@@ -207,7 +261,7 @@ const CVModuleStreamFilterContent = ({
                       <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
                         {__('Remove')}
                       </DropdownItem>]
-                  }
+                    }
                   />
                 </SplitItem>
                 <SplitItem>
@@ -220,14 +274,15 @@ const CVModuleStreamFilterContent = ({
           />
         </div>
       </Tab>
-      {(repositories.length || showAffectedRepos) &&
-      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-        <div className="tab-body-with-spacing">
-          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
-        </div>
-      </Tab>
+      {
+        (repositories.length || showAffectedRepos) &&
+        <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
+          <div className="tab-body-with-spacing">
+            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
+          </div>
+        </Tab>
       }
-    </Tabs>
+    </Tabs >
   );
 };
 
