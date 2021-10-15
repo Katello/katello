@@ -365,17 +365,20 @@ module Katello
           errata_to_include = filter_errata_by_pulp_href(source_repository.errata, content_unit_hrefs,
                                                          source_repository.rpms.pluck(:filename) +
                                                          source_repository.srpms.pluck(:filename))
-          content_unit_hrefs += errata_to_include.collect { |erratum| erratum.repository_errata.pluck(:erratum_pulp3_href) }.flatten
+          content_unit_hrefs += errata_to_include.collect do |erratum|
+            erratum.repository_errata.where(repository_id: source_repository.id).pluck(:erratum_pulp3_href)
+          end
+          content_unit_hrefs.flatten!
 
           package_groups_to_include = filter_package_groups_by_pulp_href(source_repository.package_groups, content_unit_hrefs)
           content_unit_hrefs += package_groups_to_include.pluck(:pulp_id)
 
           metadata_file_hrefs_to_include = filter_metadatafiles_by_pulp_hrefs(
-            repo_service.metadatafiles(options).results, content_unit_hrefs)
+            repo_service.metadatafiles(options)&.results, content_unit_hrefs)
           content_unit_hrefs += metadata_file_hrefs_to_include
 
           distribution_tree_hrefs_to_include = filter_distribution_trees_by_pulp_hrefs(
-            repo_service.distributiontrees(options).results, content_unit_hrefs)
+            repo_service.distributiontrees(options)&.results, content_unit_hrefs)
           content_unit_hrefs + distribution_tree_hrefs_to_include
         end
       end

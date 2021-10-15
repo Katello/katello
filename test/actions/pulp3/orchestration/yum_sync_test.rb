@@ -101,6 +101,7 @@ module ::Actions::Pulp3
       @repo.reload
       erratum = @repo.errata.find_by(errata_id: 'RHEA-2012:0055')
       erratum.repository_errata.first.update(erratum_pulp3_href: 'bad_href')
+      erratum.update(title: "bad old title!")
       @repo.index_content
       @repo.index_content
       assert_empty erratum.repository_errata.where(erratum_pulp3_href: 'bad_href')
