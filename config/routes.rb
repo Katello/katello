@@ -27,6 +27,9 @@ Katello::Engine.routes.draw do
   match '/ansible_collections' => 'react#index', :via => [:get]
   match '/ansible_collections/*page' => 'react#index', :via => [:get]
 
+  match '/content_views' => 'react#index', :via => [:get]
+  match '/content_views/*page' => 'react#index', :via => [:get]
+
   match '/content' => 'react#index', :via => [:get]
 
   Katello::RepositoryTypeManager.generic_content_types.each do |type|

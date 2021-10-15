@@ -34,7 +34,7 @@ const CVBreadcrumb = () => {
 
   useDeepCompareEffect(() => {
     setBreadcrumbItems({
-      a_cv_index: { render: () => (<Link to="/labs/content_views">{__('Content views')}</Link>) },
+      a_cv_index: { render: () => (<Link to="/content_views">{__('Content views')}</Link>) },
     });
     setRecordId(splitHash.length >= 3 ? splitHash[2] : null);
     setRecordModel(splitHash.length >= 3 ? splitHash[1] : null);
@@ -47,13 +47,13 @@ const CVBreadcrumb = () => {
       Object.keys(breadcrumbItems).length === 1) {
       const cvRecordCrumb = {
         [`b_${cvDetails?.name}`]: {
-          render: () => (<Link to={`/labs/content_views/${cvId}`}>{cvDetails?.name}</Link>),
+          render: () => (<Link to={`/content_views/${cvId}`}>{cvDetails?.name}</Link>),
         },
       };
       const tabName = splitHash[1];
       const tabRecordCrumb = {
         [`c_${tabName}`]: {
-          render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}`}>{capitalize(tabName)}</Link>),
+          render: () => (<Link to={`/content_views/${cvId}#/${tabName}`}>{capitalize(tabName)}</Link>),
         },
       };
       setBreadcrumbItems({ ...breadcrumbItems, ...cvRecordCrumb, ...tabRecordCrumb });
@@ -70,7 +70,7 @@ const CVBreadcrumb = () => {
           const { name } = filterDetails;
           const filterDetailCrumb = {
             [`d_${name}`]: {
-              render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}`}>{name}</Link>),
+              render: () => (<Link to={`/content_views/${cvId}#/${tabName}/${recordId}`}>{name}</Link>),
             },
           };
           setBreadcrumbItems({ ...breadcrumbItems, ...filterDetailCrumb });
@@ -81,13 +81,13 @@ const CVBreadcrumb = () => {
           const { version } = versionDetails;
           const versionDetailCrumb = {
             [`e_${version}`]: {
-              render: () => (<Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}`}>{version}</Link>),
+              render: () => (<Link to={`/content_views/${cvId}#/${tabName}/${recordId}`}>{version}</Link>),
             },
           };
           const versionSecondaryTab = {
             [`f_${versionTabName}`]: {
               render: () => (
-                <Link to={`/labs/content_views/${cvId}#/${tabName}/${recordId}/${versionTabName}`}>
+                <Link to={`/content_views/${cvId}#/${tabName}/${recordId}/${versionTabName}`}>
                   {capitalize(versionTabName)}
                 </Link>
               ),

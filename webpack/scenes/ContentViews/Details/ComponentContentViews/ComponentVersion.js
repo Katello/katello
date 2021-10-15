@@ -23,7 +23,7 @@ const ComponentVersion = ({ componentCV }) => {
   if (componentId) {
     return (
       <>
-        <a href={`${urlBuilder('labs/content_views', '')}${cvId}#/versions/${versionId}`}>
+        <a href={`${urlBuilder('content_views', '')}${cvId}#/versions/${versionId}`}>
           {version ? `Version ${version}` : noVersionText}
         </a>
         <TextContent>
@@ -35,7 +35,7 @@ const ComponentVersion = ({ componentCV }) => {
     );
   }
   return (
-    <a href={`${urlBuilder('labs/content_views', '')}${cvId}${latestVersion ? `#/versions/${versionId}` : ''}`}>
+    <a href={`${urlBuilder('content_views', '')}${cvId}${latestVersion ? `#/versions/${versionId}` : ''}`}>
       {latestVersion ? `Version ${latestVersion}` : noVersionText}
     </a>
   );

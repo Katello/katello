@@ -8,12 +8,12 @@ import ContentViewFilters from '../ContentViewFilters';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 
 const withCVRoute = component =>
-  <Route path="/labs/content_views/:id([0-9]+)#/filters">{component}</Route>;
+  <Route path="/content_views/:id([0-9]+)#/filters">{component}</Route>;
 
 const renderOptions = {
   apiNamespace: `${CONTENT_VIEWS_KEY}_1`,
   routerParams: {
-    initialEntries: [{ pathname: '/labs/content_views/1#/filters' }],
+    initialEntries: [{ pathname: '/content_views/1#/filters' }],
     initialIndex: 1,
   },
 };
