@@ -51,7 +51,7 @@ describe('Controller: ContentHostDebsController', function() {
         $scope.performPackageAction('packageUpdate', 'foo');
         expect($scope.packageActionFormValues.package).toBe('foo');
         expect($scope.packageActionFormValues.remoteAction).toBe('packageUpdate');
-        expect($scope.packageActionFormValues.hostIds).toBe(23434);
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [23434] }}));
         expect($scope.packageActionFormValues.customize).toBe(false);
         // expect($timeout).toHaveBeenCalledWith(jasmine.any(Function), 0);
         // expect(angular.element).toHaveBeenCalledWith('#packageActionForm');
@@ -62,7 +62,7 @@ describe('Controller: ContentHostDebsController', function() {
         $scope.performPackageAction('packageUpdate', 'foo bar');
         expect($scope.packageActionFormValues.package).toBe('foo bar');
         expect($scope.packageActionFormValues.remoteAction).toBe('packageUpdate');
-        expect($scope.packageActionFormValues.hostIds).toBe(23434);
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [23434] }}));
         expect($scope.packageActionFormValues.customize).toBe(false);
     });
 
@@ -70,7 +70,7 @@ describe('Controller: ContentHostDebsController', function() {
         $scope.performPackageAction('groupInstall', 'bigGroup');
         expect($scope.packageActionFormValues.package).toBe('bigGroup');
         expect($scope.packageActionFormValues.remoteAction).toBe('groupInstall');
-        expect($scope.packageActionFormValues.hostIds).toBe(23434);
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [23434] }}));
         expect($scope.packageActionFormValues.customize).toBe(false);
     });
 
@@ -79,7 +79,7 @@ describe('Controller: ContentHostDebsController', function() {
         expect($scope.working).toBe(true);
         expect($scope.packageActionFormValues.package).toBe('');
         expect($scope.packageActionFormValues.remoteAction).toBe('packageUpdate');
-        expect($scope.packageActionFormValues.hostIds).toBe(23434);
+        expect($scope.packageActionFormValues.bulkHostIds).toBe(angular.toJson({ included: { ids: [23434] }}));
         expect($scope.packageActionFormValues.customize).toBe(false);
     });
 });
