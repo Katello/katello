@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import { omit } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
 import {
   Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem,
@@ -56,7 +57,7 @@ const CVModuleStreamFilterContent = ({
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
-  const { _results, ...metadata } = response;
+  const metadata = omit(response, ['results']);
   const columnHeaders = [
     __('Name'),
     __('Stream'),

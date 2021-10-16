@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import { omit } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
 import {
   Tabs,
@@ -51,7 +52,7 @@ const CVContainerImageFilterContent = ({
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasSelected = rows.some(({ selected }) => selected);
-  const { _results, ...metadata } = response;
+  const metadata = omit(response, ['results']);
 
   const onClose = () => {
     setModalOpen(false);

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
-import { capitalize } from 'lodash';
+import { capitalize, omit } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
 import {
   Tabs, Tab, TabTitleText, Split, SplitItem, Select, SelectVariant,
@@ -67,7 +67,7 @@ const CVErrataIDFilterContent = ({
   const [apiEndDate, setApiEndDate] = useState('');
   const [dateType, setDateType] = useState('issued');
   const [dateTypeSelectOpen, setDateTypeSelectOpen] = useState(false);
-  const { _results, ...metadata } = response;
+  const metadata = omit(response, ['results']);
   const columnHeaders = [
     __('Errata ID'),
     __('Type'),

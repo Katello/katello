@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
+import { omit } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { Button } from '@patternfly/react-core';
@@ -37,7 +38,7 @@ const ContentViewTable = () => {
   const [actionableCvName, setActionableCvName] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
-  const { _results, ...metadata } = response;
+  const metadata = omit(response, ['results']);
 
   const openForm = () => setIsModalOpen(true);
 

@@ -13,6 +13,7 @@ import {
   KebabToggle,
 } from '@patternfly/react-core';
 import { TableVariant, fitContent } from '@patternfly/react-table';
+import { omit } from 'lodash';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -48,7 +49,7 @@ const AffectedRepositoryTable = ({
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
-  const { _results, ...metadata } = response;
+  const metadata = omit(response, ['results']);
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
