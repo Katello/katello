@@ -213,6 +213,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
   const activeFilters = [statusSelected];
+  const defaultFilters = [ALL_STATUSES];
 
   useDeepCompareEffect(() => {
     if (!loading && results) {
@@ -235,6 +236,7 @@ const ContentViewComponents = ({ cvId, details }) => {
         error,
         status,
         activeFilters,
+        defaultFilters,
         actionResolver,
       }}
       onSelect={onSelect(rows, setRows)}

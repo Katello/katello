@@ -174,6 +174,7 @@ const AffectedRepositoryTable = ({
   const emptySearchTitle = __('No matching repositories found');
   const emptySearchBody = __('Try changing your search settings.');
   const activeFilters = [productSelected];
+  const defaultFilters = [allProducts];
   const dropdownItems = [
     <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={addBulk}>
       {__('Add')}
@@ -195,6 +196,7 @@ const AffectedRepositoryTable = ({
         searchQuery,
         updateSearchQuery,
         activeFilters,
+        defaultFilters,
         error,
         status,
       }}
