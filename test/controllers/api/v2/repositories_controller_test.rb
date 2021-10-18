@@ -714,6 +714,16 @@ module Katello
       assert_response :success
     end
 
+    def test_destroy_remove_from_content_view_versions
+      assert_sync_task(::Actions::Katello::Repository::Destroy) do |repo|
+        repo.id == @repository.id
+      end
+
+      delete :destroy, params: { :id => @repository.id, :remove_from_content_view_versions => true }
+
+      assert_response :success
+    end
+
     def test_destroy_protected
       allowed_perms = [@destroy_permission]
       denied_perms = [@read_permission, @create_permission, @update_permission]

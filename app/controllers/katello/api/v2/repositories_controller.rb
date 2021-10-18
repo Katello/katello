@@ -338,8 +338,10 @@ module Katello
 
     api :DELETE, "/repositories/:id", N_("Destroy a custom repository")
     param :id, :number, :required => true
+    param :remove_from_content_view_versions, :bool, :required => false, :desc => N_("Force delete the repository by removing it from all content view versions")
     def destroy
-      sync_task(::Actions::Katello::Repository::Destroy, @repository)
+      sync_task(::Actions::Katello::Repository::Destroy, @repository,
+        remove_from_content_view_versions: ::Foreman::Cast.to_bool(params.fetch(:remove_from_content_view_versions, false)))
       respond_for_destroy
     end
 

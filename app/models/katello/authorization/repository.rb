@@ -4,12 +4,12 @@ module Katello
 
     delegate :editable?, to: :product
 
-    def deletable?
-      product.editable? && !promoted?
+    def deletable?(remove_from_content_view_versions = false)
+      product.editable? && (remove_from_content_view_versions || !promoted?)
     end
 
-    def redhat_deletable?
-      !self.promoted? && self.product.editable?
+    def redhat_deletable?(remove_from_content_view_versions = false)
+      (remove_from_content_view_versions || !self.promoted?) && self.product.editable?
     end
 
     def readable?
