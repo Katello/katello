@@ -206,7 +206,7 @@ const ContentViewRepositories = ({ cvId }) => {
   const emptySearchTitle = __('No matching repositories found');
   const emptySearchBody = __('Try changing your search settings.');
   const activeFilters = [typeSelected, statusSelected];
-  const defaultFilters = [allRepositories, ALL_STATUSES]; // when not filtering, activeFilters will equal this
+  const defaultFilters = [allRepositories, ALL_STATUSES];
 
   const dropdownItems = [
     <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={addBulk}>
