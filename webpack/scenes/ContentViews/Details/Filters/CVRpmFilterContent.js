@@ -23,7 +23,7 @@ const CVRpmFilterContent = ({
   cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos,
 }) => {
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
-  const { results, metadata } = response;
+  const { results, ...metadata } = response;
   const status = useSelector(state => selectCVFilterRulesStatus(state, filterId), shallowEqual);
   const loading = status === STATUS.PENDING;
   const filterDetails = useSelector(state =>
