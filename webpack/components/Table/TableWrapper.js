@@ -255,7 +255,14 @@ TableWrapper.propTypes = {
     PropTypes.string,
     PropTypes.bool,
   ])),
-  activeFilters: PropTypes.arrayOf(PropTypes.string),
+  activeFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
+  defaultFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
   displaySelectAllCheckbox: PropTypes.bool,
   selectedCount: PropTypes.number,
   selectAll: PropTypes.func,
@@ -273,6 +280,7 @@ TableWrapper.defaultProps = {
   children: null,
   additionalListeners: [],
   activeFilters: [],
+  defaultFilters: [],
   foremanApiAutoComplete: false,
   actionButtons: null,
   displaySelectAllCheckbox: false,

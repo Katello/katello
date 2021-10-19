@@ -63,6 +63,8 @@ const CVErrataIDFilterContent = ({
   const [selectedTypes, setSelectedTypes] = useState(ERRATA_TYPES);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const activeFilters = [statusSelected, selectedTypes, startDate, endDate];
+  const defaultFilters = [ALL_STATUSES, ERRATA_TYPES, '', ''];
   const [apiStartDate, setApiStartDate] = useState('');
   const [apiEndDate, setApiEndDate] = useState('');
   const [dateType, setDateType] = useState('issued');
@@ -248,6 +250,8 @@ const CVErrataIDFilterContent = ({
               error,
               status,
               actionResolver,
+              activeFilters,
+              defaultFilters,
             }}
             status={status}
             onSelect={onSelect(rows, setRows)}

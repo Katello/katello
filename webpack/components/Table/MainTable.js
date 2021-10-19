@@ -78,8 +78,14 @@ MainTable.propTypes = {
   emptySearchTitle: PropTypes.string.isRequired,
   emptySearchBody: PropTypes.string.isRequired,
   searchIsActive: PropTypes.bool,
-  activeFilters: PropTypes.arrayOf(PropTypes.string),
-  defaultFilters: PropTypes.arrayOf(PropTypes.string),
+  activeFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
+  defaultFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
   actionButtons: PropTypes.bool,
   rowsCount: PropTypes.number,
   children: PropTypes.oneOfType([
