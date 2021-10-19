@@ -68,8 +68,11 @@ const TableWrapper = ({
         ...(paginationData ?? paginationParams()),
         ...allParams,
       };
+      const pagParamsHaveChanged = (newPagParams, oldPagParams) =>
+        (newPagParams.page && hasChanged(newPagParams.page, oldPagParams.page)) ||
+        (newPagParams.per_page && hasChanged(newPagParams.per_page, oldPagParams.per_page));
       const newRequestHasStalePagination = !!(paginationChangePending.current &&
-        hasChanged(newRequest, paginationChangePending.current));
+        pagParamsHaveChanged(newRequest, paginationChangePending.current));
       const newRequestHasChanged = hasChanged(newRequest, prevRequest.current);
       const additionalListenersHaveChanged =
         hasChanged(additionalListeners, prevAdditionalListeners.current);
@@ -84,20 +87,22 @@ const TableWrapper = ({
         dispatch(fetchItems(newRequest));
       }
     };
-    let pageOverride;
+    let paramsOverride;
     const activeFiltersHaveChanged = hasChanged(activeFilters, prevActiveFilters.current);
     const searchQueryHasChanged = hasChanged(searchQuery, prevSearch.current);
-    if (searchQuery && !disableSearch) pageOverride = { search: searchQuery };
+    if (searchQuery && !disableSearch) paramsOverride = { search: searchQuery };
     if (!disableSearch && (searchQueryHasChanged || activeFiltersHaveChanged)) {
       // Reset page back to 1 when filter or search changes
       prevSearch.current = searchQuery;
       prevActiveFilters.current = activeFilters;
-      pageOverride = { search: searchQuery, page: 1 };
+      paramsOverride = { search: searchQuery, page: 1 };
     }
-    if (pageOverride) {
-      paginationChangePending.current = null;
-      fetchWithParams(pageOverride);
-      paginationChangePending.current = pageOverride;
+    if (paramsOverride) {
+      // paramsOverride may have both page and search, or just search
+      const pageOverride = !!paramsOverride.page;
+      if (pageOverride) paginationChangePending.current = null;
+      fetchWithParams(paramsOverride);
+      if (pageOverride) paginationChangePending.current = paramsOverride;
     } else {
       fetchWithParams();
     }
