@@ -71,6 +71,7 @@ const CVModuleStreamFilterContent = ({
     ADDED,
     NOT_ADDED,
   ];
+  const selectedAdded = allAddedNotAdded[selectedIndex];
 
   const fetchItems = useCallback((params) => {
     const adjustedParams = { ...params };
@@ -215,6 +216,8 @@ const CVModuleStreamFilterContent = ({
               actionResolver,
             }}
             additionalListeners={[selectedIndex]}
+            activeFilters={[selectedAdded]}
+            defaultFilters={[allAddedNotAdded[0]]}
             status={status}
             onSelect={onSelect(rows, setRows)}
             cells={columnHeaders}
@@ -231,7 +234,7 @@ const CVModuleStreamFilterContent = ({
                       setSelectedIndex(allAddedNotAdded.indexOf(selection));
                       setSelectOpen(false);
                     }}
-                    selections={allAddedNotAdded[selectedIndex]}
+                    selections={selectedAdded}
                     isOpen={selectOpen}
                     isCheckboxSelectionBadgeHidden
                   >
