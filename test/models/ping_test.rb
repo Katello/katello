@@ -195,6 +195,10 @@ module Katello
                            "online" => true,
                            "missing" => false}
                          ],
+                         "online_content_apps" =>
+                         [{"last_heartbeat": "2021-10-20T13:32:36.817752Z",
+                           "name": "3835@katello.example.com"}
+                         ],
                          "missing_workers" => [],
                          "database_connection" => {"connected" => true},
                          "redis_connection" => {"connected" => true}}
@@ -235,6 +239,14 @@ module Katello
                            "redis_connection" => {"connected" => true},
                            "online_workers" => []
                           }, /No pulpcore workers are running at/)
+    end
+
+    def test_failure_on_content_apps_empty
+      run_exception_test({ "database_connection" => {"connected" => true},
+                           "redis_connection" => {"connected" => true},
+                           "online_workers" => @ok_pulp_status['online_workers'],
+                           "online_content_apps" => []
+                          }, /No pulpcore content apps are running at/)
     end
 
     def test_all_workers_present_ok_status

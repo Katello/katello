@@ -197,6 +197,9 @@ module Katello
         workers = json["online_workers"] || []
         fail _("No pulpcore workers are running at %s.") % url if workers.empty?
 
+        content_apps = json["online_content_apps"] || []
+        fail _("No pulpcore content apps are running at %s.") % url if content_apps.empty?
+
         json
       end
 
