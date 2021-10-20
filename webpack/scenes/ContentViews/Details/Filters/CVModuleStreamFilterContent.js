@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import { omit } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
 import {
   Tabs, Tab, TabTitleText, Split, SplitItem, Button, Dropdown, DropdownItem,
@@ -45,7 +46,6 @@ const CVModuleStreamFilterContent = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const filterLoaded = filterLoad === 'RESOLVED';
@@ -57,6 +57,7 @@ const CVModuleStreamFilterContent = ({
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
+  const metadata = omit(response, ['results']);
   const columnHeaders = [
     __('Name'),
     __('Stream'),
@@ -70,6 +71,7 @@ const CVModuleStreamFilterContent = ({
     ADDED,
     NOT_ADDED,
   ];
+  const selectedAdded = allAddedNotAdded[selectedIndex];
 
   const fetchItems = useCallback((params) => {
     const adjustedParams = { ...params };
@@ -162,8 +164,7 @@ const CVModuleStreamFilterContent = ({
   }, [showAffectedRepos, repositories.length]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
+    const { results } = response;
 
     if (!loading && results && filterLoaded) {
       const newRows = buildRows(results);
@@ -215,6 +216,8 @@ const CVModuleStreamFilterContent = ({
               actionResolver,
             }}
             additionalListeners={[selectedIndex]}
+            activeFilters={[selectedAdded]}
+            defaultFilters={[allAddedNotAdded[0]]}
             status={status}
             onSelect={onSelect(rows, setRows)}
             cells={columnHeaders}
@@ -231,7 +234,7 @@ const CVModuleStreamFilterContent = ({
                       setSelectedIndex(allAddedNotAdded.indexOf(selection));
                       setSelectOpen(false);
                     }}
-                    selections={allAddedNotAdded[selectedIndex]}
+                    selections={selectedAdded}
                     isOpen={selectOpen}
                     isCheckboxSelectionBadgeHidden
                   >

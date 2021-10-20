@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
-import { capitalize } from 'lodash';
+import { capitalize, omit } from 'lodash';
 import { TableVariant } from '@patternfly/react-table';
 import {
   Tabs, Tab, TabTitleText, Split, SplitItem, Select, SelectVariant,
@@ -49,7 +49,6 @@ const CVErrataIDFilterContent = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const filterLoaded = filterLoad === 'RESOLVED';
@@ -64,10 +63,13 @@ const CVErrataIDFilterContent = ({
   const [selectedTypes, setSelectedTypes] = useState(ERRATA_TYPES);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const activeFilters = [statusSelected, selectedTypes, startDate, endDate];
+  const defaultFilters = [ALL_STATUSES, ERRATA_TYPES, '', ''];
   const [apiStartDate, setApiStartDate] = useState('');
   const [apiEndDate, setApiEndDate] = useState('');
   const [dateType, setDateType] = useState('issued');
   const [dateTypeSelectOpen, setDateTypeSelectOpen] = useState(false);
+  const metadata = omit(response, ['results']);
   const columnHeaders = [
     __('Errata ID'),
     __('Type'),
@@ -152,8 +154,7 @@ const CVErrataIDFilterContent = ({
   }, [showAffectedRepos, repositories.length]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
+    const { results } = response;
 
     if (!loading && results && filterLoaded) {
       const newRows = buildRows(results);
@@ -249,6 +250,8 @@ const CVErrataIDFilterContent = ({
               error,
               status,
               actionResolver,
+              activeFilters,
+              defaultFilters,
             }}
             status={status}
             onSelect={onSelect(rows, setRows)}

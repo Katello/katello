@@ -55,6 +55,7 @@ const TableWrapper = ({
   const prevRequest = useRef({});
   const prevSearch = useRef('');
   const prevAdditionalListeners = useRef([]);
+  const prevActiveFilters = useRef([]);
   const paginationChangePending = useRef(null);
 
   const hasChanged = (oldValue, newValue) => !isEqual(oldValue, newValue);
@@ -67,28 +68,44 @@ const TableWrapper = ({
         ...(paginationData ?? paginationParams()),
         ...allParams,
       };
+      const pagParamsHaveChanged = (newPagParams, oldPagParams) =>
+        (newPagParams.page && hasChanged(newPagParams.page, oldPagParams.page)) ||
+        (newPagParams.per_page && hasChanged(newPagParams.per_page, oldPagParams.per_page));
+      const newRequestHasStalePagination = !!(paginationChangePending.current &&
+        pagParamsHaveChanged(newRequest, paginationChangePending.current));
+      const newRequestHasChanged = hasChanged(newRequest, prevRequest.current);
+      const additionalListenersHaveChanged =
+        hasChanged(additionalListeners, prevAdditionalListeners.current);
       // If a pagination change is in-flight,
       // don't send another request with stale data
-      if (paginationChangePending.current &&
-        hasChanged(newRequest, paginationChangePending.current)) return;
+      if (newRequestHasStalePagination && !additionalListenersHaveChanged) return;
       paginationChangePending.current = null;
-      if (hasChanged(newRequest, prevRequest.current) ||
-        hasChanged(additionalListeners, prevAdditionalListeners.current)
-      ) {
+      if (newRequestHasChanged || additionalListenersHaveChanged) {
         // don't fire the same request twice in a row
         prevRequest.current = newRequest;
         prevAdditionalListeners.current = additionalListeners;
         dispatch(fetchItems(newRequest));
       }
     };
-    let pageOverride;
-    if (searchQuery && !disableSearch) pageOverride = { search: searchQuery };
-    if (!disableSearch && (!isEqual(searchQuery, prevSearch.current) || activeFilters)) {
+    let paramsOverride;
+    const activeFiltersHaveChanged = hasChanged(activeFilters, prevActiveFilters.current);
+    const searchQueryHasChanged = hasChanged(searchQuery, prevSearch.current);
+    if (searchQuery && !disableSearch) paramsOverride = { search: searchQuery };
+    if (!disableSearch && (searchQueryHasChanged || activeFiltersHaveChanged)) {
       // Reset page back to 1 when filter or search changes
       prevSearch.current = searchQuery;
-      pageOverride = { search: searchQuery, page: 1 };
+      prevActiveFilters.current = activeFilters;
+      paramsOverride = { search: searchQuery, page: 1 };
     }
-    fetchWithParams(pageOverride);
+    if (paramsOverride) {
+      // paramsOverride may have both page and search, or just search
+      const pageOverride = !!paramsOverride.page;
+      if (pageOverride) paginationChangePending.current = null;
+      fetchWithParams(paramsOverride);
+      if (pageOverride) paginationChangePending.current = paramsOverride;
+    } else {
+      fetchWithParams();
+    }
   }, [
     disableSearch,
     activeFilters,
@@ -132,6 +149,7 @@ const TableWrapper = ({
 
   const onPaginationUpdate = (updatedPagination) => {
     const pagData = validatePagination(updatedPagination);
+    paginationChangePending.current = null;
     spawnFetch(pagData);
     paginationChangePending.current = pagData;
   };
@@ -237,7 +255,14 @@ TableWrapper.propTypes = {
     PropTypes.string,
     PropTypes.bool,
   ])),
-  activeFilters: PropTypes.bool,
+  activeFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
+  defaultFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
   displaySelectAllCheckbox: PropTypes.bool,
   selectedCount: PropTypes.number,
   selectAll: PropTypes.func,
@@ -254,7 +279,8 @@ TableWrapper.defaultProps = {
   metadata: { subtotal: 0 },
   children: null,
   additionalListeners: [],
-  activeFilters: false,
+  activeFilters: [],
+  defaultFilters: [],
   foremanApiAutoComplete: false,
   actionButtons: null,
   displaySelectAllCheckbox: false,

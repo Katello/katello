@@ -42,7 +42,6 @@ const CVPackageGroupFilterContent = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const loading = status === STATUS.PENDING;
@@ -53,6 +52,7 @@ const CVPackageGroupFilterContent = ({
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
+  const { results, ...metadata } = response;
 
   const columnHeaders = [
     __('Name'),
@@ -67,6 +67,7 @@ const CVPackageGroupFilterContent = ({
     ADDED,
     NOT_ADDED,
   ];
+  const selectedAdded = allAddedNotAdded[selectedIndex];
 
   const fetchItems = useCallback((params) => {
     const adjustedParams = { ...params };
@@ -89,7 +90,7 @@ const CVPackageGroupFilterContent = ({
     return getCVFilterPackageGroups(cvId, filterId, adjustedParams);
   }, [cvId, filterId, selectedIndex]);
 
-  const buildRows = useCallback((results) => {
+  const buildRows = useCallback(() => {
     const newRows = [];
     const filterRules = filterResults.find(({ id }) => id === Number(filterId))?.rules || [];
     results.forEach((packageGroups) => {
@@ -125,7 +126,7 @@ const CVPackageGroupFilterContent = ({
       if (addedA === addedB) return 0;
       return addedA ? -1 : 1;
     });
-  }, [filterResults, filterId]);
+  }, [filterResults, filterId, results]);
 
   const bulkAdd = () => {
     setBulkActionOpen(false);
@@ -155,14 +156,11 @@ const CVPackageGroupFilterContent = ({
   }, [showAffectedRepos, repositories.length]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
-
     if (!loading && results) {
-      const newRows = buildRows(results);
+      const newRows = buildRows();
       setRows(newRows);
     }
-  }, [response, loading, buildRows]);
+  }, [response, loading, buildRows, results]);
 
   const actionResolver = ({ added }) => [
     {
@@ -208,6 +206,8 @@ const CVPackageGroupFilterContent = ({
               actionResolver,
             }}
             additionalListeners={[selectedIndex]}
+            activeFilters={[selectedAdded]}
+            defaultFilters={[allAddedNotAdded[0]]}
             status={status}
             onSelect={onSelect(rows, setRows)}
             cells={columnHeaders}
@@ -224,7 +224,7 @@ const CVPackageGroupFilterContent = ({
                       setSelectedIndex(allAddedNotAdded.indexOf(selection));
                       setSelectOpen(false);
                     }}
-                    selections={allAddedNotAdded[selectedIndex]}
+                    selections={selectedAdded}
                     isOpen={selectOpen}
                     isCheckboxSelectionBadgeHidden
                   >

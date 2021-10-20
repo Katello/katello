@@ -10,7 +10,8 @@ const cvUnpublishedComponentData = require('./unpublishedCVComponents.fixtures.j
 const cvPublishedComponentData = require('./publishedContentViewDetails.fixtures.json');
 
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
-const cvComponents = api.getApiUrl('/content_views/4/content_view_components/show_all?per_page=20&page=1&status=All');
+const cvComponentsWithoutSearch = api.getApiUrl('/content_views/4/content_view_components/show_all?per_page=20&page=1&status=All');
+const cvComponents = api.getApiUrl('/content_views/4/content_view_components/show_all?per_page=20&page=1&search=&status=All');
 const addComponentURL = api.getApiUrl('/content_views/4/content_view_components/add');
 const publishedComponentDetailsURL = api.getApiUrl('/content_views/13');
 const removeComponentURL = api.getApiUrl('/content_views/4/content_view_components/remove');
@@ -165,7 +166,7 @@ test('Can handle no components being present', async (done) => {
 test('Can add published component views to content view with modal', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
-    .get(cvComponents)
+    .get(cvComponentsWithoutSearch)
     .reply(200, cvComponentData);
 
   const returnScope = nockInstance
@@ -217,7 +218,7 @@ test('Can add published component views to content view with modal', async (done
 test('Can add unpublished component views to content view', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
-    .get(cvComponents)
+    .get(cvComponentsWithoutSearch)
     .reply(200, cvComponentData);
 
   const returnScope = nockInstance
@@ -253,7 +254,7 @@ test('Can add unpublished component views to content view', async (done) => {
 test('Can remove component views from content view', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
-    .get(cvComponents)
+    .get(cvComponentsWithoutSearch)
     .reply(200, cvComponentData);
 
   const returnScope = nockInstance
@@ -289,7 +290,7 @@ test('Can remove component views from content view', async (done) => {
 test('Can bulk add component views to content view with modal', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const scope = nockInstance
-    .get(cvComponents)
+    .get(cvComponentsWithoutSearch)
     .reply(200, cvComponentData);
 
   const returnScope = nockInstance

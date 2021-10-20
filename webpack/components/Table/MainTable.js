@@ -6,6 +6,7 @@ import {
   TableComposable,
 } from '@patternfly/react-table';
 import { STATUS } from 'foremanReact/constants';
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import './MainTable.scss';
 
@@ -15,13 +16,15 @@ import Loading from '../../components/Loading';
 const MainTable = ({
   status, cells, rows, error, emptyContentTitle, emptyContentBody,
   emptySearchTitle, emptySearchBody, searchIsActive, activeFilters,
-  actionButtons, rowsCount, children, ...extraTableProps
+  defaultFilters, actionButtons, rowsCount, children, ...extraTableProps
 }) => {
   const tableHasNoRows = () => {
     if (children) return rowsCount === 0;
     return rows.length === 0;
   };
-  const isFiltering = activeFilters || searchIsActive;
+  const filtersAreActive = activeFilters?.length &&
+    !isEqual(new Set(activeFilters), new Set(defaultFilters));
+  const isFiltering = searchIsActive || filtersAreActive;
   if (status === STATUS.PENDING) return (<Loading />);
   // Can we display the error message?
   if (status === STATUS.ERROR) return (<EmptyStateMessage error={error} />);
@@ -75,7 +78,14 @@ MainTable.propTypes = {
   emptySearchTitle: PropTypes.string.isRequired,
   emptySearchBody: PropTypes.string.isRequired,
   searchIsActive: PropTypes.bool,
-  activeFilters: PropTypes.bool,
+  activeFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
+  defaultFilters: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ])),
   actionButtons: PropTypes.bool,
   rowsCount: PropTypes.number,
   children: PropTypes.oneOfType([
@@ -87,7 +97,8 @@ MainTable.propTypes = {
 MainTable.defaultProps = {
   error: null,
   searchIsActive: false,
-  activeFilters: false,
+  activeFilters: [],
+  defaultFilters: [],
   actionButtons: false,
   children: null,
   cells: undefined,

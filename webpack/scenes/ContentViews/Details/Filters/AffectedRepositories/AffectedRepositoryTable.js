@@ -13,6 +13,7 @@ import {
   KebabToggle,
 } from '@patternfly/react-core';
 import { TableVariant, fitContent } from '@patternfly/react-table';
+import { omit } from 'lodash';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
@@ -41,7 +42,6 @@ const AffectedRepositoryTable = ({
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = filterDetails;
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [productSelected, setProductSelected] = useState(allProducts);
   const [repoProducts, setRepoProducts] = useState({});
@@ -49,6 +49,7 @@ const AffectedRepositoryTable = ({
   const hasAddedSelected = rows.some(({ selected, added }) => selected && added);
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
+  const metadata = omit(response, ['results']);
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
@@ -99,8 +100,7 @@ const AffectedRepositoryTable = ({
   }, [repositories]);
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
+    const { results } = response;
     if (!loading && results) {
       if (Object.keys(initialResponse).length === 0 || !Object.keys(repoProducts).length) {
         setInitialResponse(response);
@@ -174,7 +174,8 @@ const AffectedRepositoryTable = ({
   const emptyContentBody = __('Please add some repositories.');
   const emptySearchTitle = __('No matching repositories found');
   const emptySearchBody = __('Try changing your search settings.');
-  const activeFilters = (productSelected && productSelected !== allProducts);
+  const activeFilters = [productSelected];
+  const defaultFilters = [allProducts];
   const dropdownItems = [
     <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={addBulk}>
       {__('Add')}
@@ -196,6 +197,7 @@ const AffectedRepositoryTable = ({
         searchQuery,
         updateSearchQuery,
         activeFilters,
+        defaultFilters,
         error,
         status,
       }}

@@ -38,10 +38,10 @@ const ContentViewComponents = ({ cvId, details }) => {
   const response = useSelector(state => selectCVComponents(state, cvId));
   const status = useSelector(state => selectCVComponentsStatus(state, cvId));
   const error = useSelector(state => selectCVComponentsError(state, cvId));
+  const { results, ...metadata } = response;
   const componentAddedStatus = useSelector(state => selectCVComponentAddStatus(state, cvId));
   const componentRemovedStatus = useSelector(state => selectCVComponentRemoveStatus(state, cvId));
   const [rows, setRows] = useState([]);
-  const [metadata, setMetadata] = useState({});
   const [searchQuery, updateSearchQuery] = useState('');
   const [statusSelected, setStatusSelected] = useState(ALL_STATUSES);
   const [versionEditing, setVersionEditing] = useState(false);
@@ -117,7 +117,7 @@ const ContentViewComponents = ({ cvId, details }) => {
     setBulkActionOpen(!bulkActionOpen);
   };
 
-  const buildRows = useCallback((results) => {
+  const buildRows = useCallback(() => {
     const newRows = [];
     results.forEach((componentCV) => {
       const {
@@ -175,7 +175,7 @@ const ContentViewComponents = ({ cvId, details }) => {
       });
     });
     return newRows;
-  }, [onAdd]);
+  }, [onAdd, results]);
 
   const actionResolver = (rowData, { _rowIndex }) => [
     {
@@ -212,17 +212,15 @@ const ContentViewComponents = ({ cvId, details }) => {
   const emptyContentBody = __('Please add some content views.');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
-  const activeFilters = statusSelected && statusSelected !== ALL_STATUSES;
+  const activeFilters = [statusSelected];
+  const defaultFilters = [ALL_STATUSES];
 
   useDeepCompareEffect(() => {
-    const { results, ...meta } = response;
-    setMetadata(meta);
-
     if (!loading && results) {
       const newRows = buildRows(results);
       setRows(newRows);
     }
-  }, [response, buildRows, loading]);
+  }, [results, response, buildRows, loading]);
 
   return (
     <TableWrapper
@@ -238,6 +236,7 @@ const ContentViewComponents = ({ cvId, details }) => {
         error,
         status,
         activeFilters,
+        defaultFilters,
         actionResolver,
       }}
       onSelect={onSelect(rows, setRows)}
