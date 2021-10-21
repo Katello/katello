@@ -242,11 +242,18 @@ module Katello
     end
 
     def test_failure_on_content_apps_empty
-      run_exception_test({ "database_connection" => {"connected" => true},
-                           "redis_connection" => {"connected" => true},
-                           "online_workers" => @ok_pulp_status['online_workers'],
-                           "online_content_apps" => []
-                          }, /No pulpcore content apps are running at/)
+      json = { "database_connection" => {"connected" => true},
+               "redis_connection" => {"connected" => true},
+               "online_workers" => @ok_pulp_status['online_workers'],
+               "online_content_apps" => []
+      }
+      message = /No pulpcore content apps are running at/
+
+      Katello::Ping.expects(:backend_status).returns(json)
+      exception = assert_raises Exception do
+        Katello::Ping.pulp3_content_without_auth(@url)
+      end
+      assert_match message, exception.message
     end
 
     def test_all_workers_present_ok_status
