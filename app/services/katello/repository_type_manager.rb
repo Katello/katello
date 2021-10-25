@@ -4,40 +4,37 @@ module Katello
 
     @defined_repository_types = {}
     @enabled_repository_types = {}
-    begin
-      @pulp_primary = ::SmartProxy.unscoped.detect { |proxy| !proxy.setting(PULP3_FEATURE, 'mirror') }
-    rescue ActiveRecord::StatementInvalid
-      @pulp_primary = nil
-    end
+
     class << self
       private :new
       attr_reader :defined_repository_types
 
+      def pulp_primary
+        ::SmartProxy.pulp_primary
+      end
+
       # Plugin constructor
       def register(id, &block)
-        if @pulp_primary&.has_feature?(PULP3_FEATURE) && @pulp_primary&.capabilities(PULP3_FEATURE)&.empty?
-          fix_pulp3_capabilities
-        end
         defined_repo_type = find_defined(id)
         if defined_repo_type.blank?
           defined_repo_type = ::Katello::RepositoryType.new(id)
           defined_repo_type.instance_eval(&block) if block_given?
           @defined_repository_types[id.to_s] = defined_repo_type
         end
-        if find(id).blank? && defined_repo_type.present?
-          enabled_repository_types[id.to_s] = defined_repo_type if pulp3_plugin_installed?(id)
-        end
       end
 
       def fix_pulp3_capabilities
-        save_pulp_primary if @pulp_primary.nil?
-        @pulp_primary&.refresh
-        if @pulp_primary&.capabilities(PULP3_FEATURE)&.empty?
+        pulp_primary&.refresh
+        if pulp_primary&.capabilities(PULP3_FEATURE)&.empty?
           fail Katello::Errors::PulpcoreMissingCapabilities
         end
       end
 
       def enabled_repository_types(update = true)
+        if update && pulp_primary&.has_feature?(PULP3_FEATURE) && pulp_primary&.capabilities(PULP3_FEATURE)&.empty?
+          fix_pulp3_capabilities
+        end
+
         disabled_types = @defined_repository_types.keys - @enabled_repository_types.keys
         if update && disabled_types.present?
           disabled_types.each { |repo_type| update_enabled_repository_type(repo_type.to_s) }
@@ -60,8 +57,7 @@ module Katello
       end
 
       def pulp3_plugin_installed?(repository_type)
-        save_pulp_primary
-        @pulp_primary&.capabilities(PULP3_FEATURE)&.include?(@defined_repository_types[repository_type].pulp3_plugin)
+        pulp_primary&.capabilities(PULP3_FEATURE)&.include?(@defined_repository_types[repository_type].pulp3_plugin)
       end
 
       def enabled_content_types(enabled_only = true)
@@ -199,12 +195,6 @@ module Katello
         if defined_repo_type.present? && pulp3_plugin_installed?(repository_type.to_s)
           @enabled_repository_types[repository_type.to_s] = defined_repo_type
         end
-      end
-
-      def save_pulp_primary
-        @pulp_primary = ::SmartProxy.unscoped.detect { |proxy| !proxy.setting(PULP3_FEATURE, 'mirror') }
-      rescue ActiveRecord::StatementInvalid
-        @pulp_primary = nil
       end
     end
   end

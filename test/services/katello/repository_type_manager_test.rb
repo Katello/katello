@@ -8,13 +8,6 @@ module Katello
       @feature.update(capabilities: [])
     end
 
-    def test_enabled_repository_types_follow_smart_proxy_capabilities
-      assert_empty ::Katello::RepositoryTypeManager.enabled_repository_types
-      @feature.update(capabilities: ['ansible', 'certguard', 'container', 'core', 'deb', 'file', 'rpm', 'python'])
-      assert_equal ['ansible_collection', 'deb', 'docker', 'file', 'yum', 'python'].sort,
-        ::Katello::RepositoryTypeManager.enabled_repository_types.keys.sort
-    end
-
     def test_enabled_repository_types_update_false
       assert_empty ::Katello::RepositoryTypeManager.enabled_repository_types(false)
     end

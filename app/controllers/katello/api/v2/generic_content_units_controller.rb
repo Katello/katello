@@ -1,6 +1,6 @@
 module Katello
   class Api::V2::GenericContentUnitsController < Api::V2::ApiController
-    Katello::RepositoryTypeManager.generic_content_types(enabled_only: false).each do |type|
+    Katello::RepositoryTypeManager.generic_content_types(false).each do |type|
       apipie_concern_subst(:a_resource => N_(type), :resource_id => type.pluralize)
       resource_description do
         name type.pluralize.titleize

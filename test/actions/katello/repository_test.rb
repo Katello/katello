@@ -27,14 +27,13 @@ module ::Actions::Katello::Repository
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:deb_repository) { katello_repositories(:debian_10_amd64) }
     let(:docker_repository) { katello_repositories(:redis) }
-    let(:proxy) { smart_proxies(:one) }
+    let(:proxy) { SmartProxy.pulp_primary }
     let(:capsule_content) { ::Katello::Pulp::SmartProxyRepository.new(proxy) }
 
     before(:all) do
       set_user
       ::Katello::Product.any_instance.stubs(:certificate).returns(nil)
       ::Katello::Product.any_instance.stubs(:key).returns(nil)
-      SmartProxy.stubs(:pulp_primary).returns(proxy)
     end
   end
 
@@ -286,8 +285,9 @@ module ::Actions::Katello::Repository
   class UploadFilesTest < TestBase
     let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::UploadContent }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
+
     it 'plans for Pulp3 without duplicate' do
-      proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => nil))))
+      SmartProxy.any_instance.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => nil))))
       ::Katello::Pulp3::Api::Core.any_instance.stubs(:artifacts_api).returns(stub(:list => stub(:results => nil)))
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
@@ -317,7 +317,7 @@ module ::Actions::Katello::Repository
     end
 
     it 'plans for Pulp3 with duplicate' do
-      proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => [stub(:pulp_href => "demo_content/href")]))))
+      SmartProxy.any_instance.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => [stub(:pulp_href => "demo_content/href")]))))
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
       action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
@@ -335,8 +335,9 @@ module ::Actions::Katello::Repository
 
   class UploadPythonTest < TestBase
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::UploadContent }
+
     it 'plans for Pulp3 without duplicate' do
-      proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => nil))))
+      SmartProxy.any_instance.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => nil))))
       ::Katello::Pulp3::Api::Core.any_instance.stubs(:artifacts_api).returns(stub(:list => stub(:results => nil)))
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "shelf_reader-0.1-py2-none-any.whl")
@@ -366,7 +367,7 @@ module ::Actions::Katello::Repository
     end
 
     it 'plans for Pulp3 with duplicate' do
-      proxy.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => [stub(:pulp_href => "demo_content/href")]))))
+      SmartProxy.any_instance.stubs(:content_service).returns(stub(:content_api => stub(:list => stub(:results => [stub(:pulp_href => "demo_content/href")]))))
       action = create_action pulp3_action_class
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "shelf_reader-0.1-py2-none-any.whl")
       action.execution_plan.stub_planned_action(::Actions::Pulp3::Repository::ImportUpload) do |import_upload|
