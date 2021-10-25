@@ -120,11 +120,11 @@ module Katello
       end
 
       def repo_url(content_url)
-        if self.provider.provider_type == Provider::CUSTOM
+        if provider.custom_provider?
           content_url.dup
         else
           path = content_url.sub(%r{^/}, '')
-          repo_url = self.provider.repository_url&.sub(%r{/$}, '')
+          repo_url = cdn_configuration.url.sub(%r{/$}, '')
           "#{repo_url}/#{path}"
         end
       end

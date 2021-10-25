@@ -31,6 +31,8 @@ module Katello
         has_many :subscriptions, :class_name => "Katello::Subscription", :dependent => :destroy, :inverse_of => :organization
         has_many :pools, :class_name => "Katello::Pool", :dependent => :destroy, :inverse_of => :organization
         has_many :product_contents, :through => :products
+        has_many :repositories, :through => :products
+        has_one :cdn_configuration, :class_name => "Katello::CdnConfiguration", :dependent => :destroy, :inverse_of => :organization
 
         #older association
         has_many :org_tasks, :dependent => :destroy, :class_name => "Katello::TaskStatus", :inverse_of => :organization
@@ -132,7 +134,7 @@ module Katello
         end
 
         def redhat_repository_url
-          redhat_provider.repository_url
+          cdn_configuration.url
         end
 
         def being_deleted?

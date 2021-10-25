@@ -2,6 +2,7 @@ module Katello
   module Resources
     module CDN
       SUPPORTED_SSL_VERSIONS = ['SSLv23', 'TLSv1'].freeze
+
       class Utils
         # takes releasever from contentUrl (e.g. 6Server, 6.0, 6.1)
         # returns hash e.g. {:major => 6, :minor => "6.1"}
@@ -18,11 +19,10 @@ module Katello
       class CdnResource
         CDN_DOCKER_CONTAINER_LISTING = "CONTAINER_REGISTRY_LISTING".freeze
 
-        attr_reader :url, :product, :options, :proxy
+        attr_reader :url, :options, :proxy
 
-        def substitutor(logger = nil)
-          @logger = logger
-          Util::CdnVarSubstitutor.new(self)
+        def substitutor
+          @substitutor ||= Util::CdnVarSubstitutor.new(self)
         end
 
         def initialize(url, options = {})
@@ -33,7 +33,7 @@ module Katello
           end
           options.reverse_merge!(:verify_ssl => 9)
           options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl,
-                                    :product)
+                                    :username, :password, :organization_label)
 
           ca = Katello::Repository.feed_ca_file(url)
           if ca && URI(url).scheme == 'https'
@@ -44,15 +44,31 @@ module Katello
             options.reverse_merge!(:cert_store => store)
           end
 
-          @product = options[:product]
-
           @url = url
           @uri = URI.parse(url)
           @options = options
         end
 
+        def self.create(product: nil, cdn_configuration:)
+          options = {}
+          if cdn_configuration.redhat?
+            options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
+            options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
+            self.new(cdn_configuration.url, options)
+          else
+            options[:username] = cdn_configuration.username
+            options[:password] = cdn_configuration.password
+            options[:organization_label] = cdn_configuration.organization_label
+            CDN::KatelloCdn.new(cdn_configuration.url, options)
+          end
+        end
+
+        def self.redhat_cdn_url
+          SETTINGS[:katello][:redhat_repository_url]
+        end
+
         def self.redhat_cdn?(url)
-          url.include?(SETTINGS[:katello][:redhat_repository_url])
+          url.include?(redhat_cdn_url)
         end
 
         def http_downloader
@@ -93,8 +109,13 @@ module Katello
           net = http_downloader
           path = File.join(@uri.request_uri, path)
           used_url = File.join("#{@uri.scheme}://#{@uri.host}:#{@uri.port}", path)
-          Rails.logger.debug "CDN: Requesting path #{used_url}"
+          Rails.logger.info "CDN: Requesting path #{used_url}"
           req = Net::HTTP::Get.new(path)
+
+          if @options[:username] && @options[:password]
+            req.basic_auth(@options[:username], @options[:password])
+          end
+
           begin
             net.start do |http|
               res = http.request(req, nil) { |http_response| http_response.read_body }
@@ -125,7 +146,15 @@ module Katello
           end
         end
 
-        def fetch_substitutions(base_path)
+        def valid_path?(path, postfix)
+          get(File.join(path, postfix)).present?
+        rescue RestClient::MovedPermanently
+          return true
+        rescue Errors::NotFound
+          return false
+        end
+
+        def fetch_substitutions(base_path:, content_path: nil) # rubocop:disable Lint/UnusedMethodArgument
           get(File.join(base_path, "listing")).split("\n")
         rescue Errors::NotFound => e # some of listing file points to not existing content
           log :error, e.message

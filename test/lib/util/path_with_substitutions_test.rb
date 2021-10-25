@@ -7,9 +7,6 @@ module Katello
         @el5_path = '/content/dist/rhel/server/5/$releasever/$basearch/os'
         @non_sub_path = '/content/dist/rhel/server/5/5Server/x86_64/os'
         @el8_path = '/content/dist/rhel8/8/x86_64/appstream/kickstart'
-        @releasever_list = ['5Server', '5.8']
-        @arch_list = ['x86_64', 'i386']
-        @cdn = Katello::Resources::CDN::CdnResource.new('http://someurl/')
       end
 
       def test_substitutions_needed
@@ -22,31 +19,14 @@ module Katello
         refute PathWithSubstitutions.new(@non_sub_path, {}).substitutable?
       end
 
-      def test_resolve_substitutions_releasever
-        path = PathWithSubstitutions.new(@el5_path, {})
-        @cdn.expects(:fetch_substitutions).with('/content/dist/rhel/server/5/').returns(@releasever_list)
+      def test_resolve_token
+        path = PathWithSubstitutions.new(@el5_path, 'basearch' => nil, 'releasever' => nil)
 
-        resolved = path.resolve_substitutions(@cdn)
+        resolved = path.resolve_token("5Server")
 
-        assert_equal 2, resolved.count
-        assert_equal '/content/dist/rhel/server/5/5Server/$basearch/os', resolved[0].path
-        assert_equal '/content/dist/rhel/server/5/5.8/$basearch/os', resolved[1].path
-        assert_equal resolved[0].substitutions, 'releasever' => '5Server'
-        assert_equal resolved[1].substitutions, 'releasever' => '5.8'
-      end
-
-      def test_resolve_substitutions_arch
-        release_resolved_path = '/content/dist/rhel/server/5/5Server/$basearch/os'
-        path = PathWithSubstitutions.new(release_resolved_path, 'releasever' => '5Server')
-        @cdn.expects(:fetch_substitutions).with('/content/dist/rhel/server/5/5Server/').returns(@arch_list)
-
-        resolved = path.resolve_substitutions(@cdn)
-
-        assert_equal 2, resolved.count
-        assert_equal '/content/dist/rhel/server/5/5Server/x86_64/os', resolved[0].path
-        assert_equal '/content/dist/rhel/server/5/5Server/i386/os', resolved[1].path
-        assert_equal resolved[0].substitutions, 'releasever' => '5Server', 'basearch' => 'x86_64'
-        assert_equal resolved[1].substitutions, 'releasever' => '5Server', 'basearch' => 'i386'
+        assert_equal "/content/dist/rhel/server/5/5Server/", resolved.base_path
+        expected = { 'releasever' => '5Server', 'basearch' => nil }
+        assert_equal expected, resolved.substitutions
       end
 
       def test_unused_substitutions

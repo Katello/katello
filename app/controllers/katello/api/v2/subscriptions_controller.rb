@@ -94,7 +94,7 @@ module Katello
     api :POST, "/organizations/:organization_id/subscriptions/upload", N_("Upload a subscription manifest")
     param :organization_id, :number, :desc => N_("Organization id"), :required => true
     param :content, File, :desc => N_("Subscription manifest file"), :required => true
-    param :repository_url, String, :desc => N_("repository url"), :required => false
+    param :repository_url, String, :desc => N_("repository url"), :required => false, deprecated: true
     def upload
       fail HttpErrors::BadRequest, _("No manifest file uploaded") if params[:content].blank?
 

@@ -74,7 +74,11 @@ module Katello
       end
 
       def feed_url
-        product.repo_url(path)
+        @feed_url ||= if product.cdn_configuration.redhat?
+                        product.repo_url(path)
+                      else
+                        product.cdn_resource.repository_url(content_label: content.label)
+                      end
       end
 
       def arch
