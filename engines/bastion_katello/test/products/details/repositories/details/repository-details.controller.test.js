@@ -88,8 +88,8 @@ describe('Controller: RepositoryDetailsController', function() {
             return false;
         };
         repository.promoted = true;
-        expect($scope.getRepoNonDeletableReason(repository, product)).toBe("published");
-        expect($scope.canRemove(repository, product)).toBe(false);
+        expect($scope.getRepoNonDeletableReason(repository, product)).toBe(null);
+        expect($scope.canRemove(repository, product)).toBe(true);
 
         repository.promoted = false;
         repository.product_type = "redhat";
@@ -121,4 +121,50 @@ describe('Controller: RepositoryDetailsController', function() {
 
         expect($scope.transitionTo).toHaveBeenCalledWith('product.repositories', {productId: 1});
     });
+
+    it('should provide a way to view versions on a repository', function() {
+        repository.id = 1;
+        repository.content_view_versions = [
+            {
+                "id": 28,
+                "version": "3.0",
+                "content_view_id": 15,
+                "content_view_name": "cv6"
+            },
+            {
+                "id": 36,
+                "version": "1.0",
+                "content_view_id": 23,
+                "content_view_name": "cv1"
+            },
+            {
+                "id": 42,
+                "version": "3.0",
+                "content_view_id": 23,
+                "content_view_name": "cv1"
+            }
+        ];
+        expect($scope.repositoryVersions()).toEqual(
+          {
+            15: [{
+                id: 28,
+                content_view_id: 15,
+                content_view_name: 'cv6',
+                version: '3.0'
+          }],
+            23: [
+              {
+                id: 36,
+                content_view_id: 23,
+                content_view_name: 'cv1',
+                version: '1.0'
+              },
+              {
+                id: 42,
+                content_view_id: 23,
+                content_view_name: 'cv1',
+                version: '3.0'
+              }]
+          });
+  });
 });

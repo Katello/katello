@@ -25,6 +25,16 @@ node :content_label do |repo|
   repo.content.try(:label)
 end
 
+child :published_in_versions => :content_view_versions do |_version|
+  attributes :id, :version
+  node :content_view_id do |object|
+    object.content_view.id
+  end
+  node :content_view_name do |object|
+    object.content_view.name
+  end
+end
+
 child :latest_dynflow_sync => :last_sync do |_object|
   attributes :id, :username, :started_at, :ended_at, :state, :result, :progress
 end

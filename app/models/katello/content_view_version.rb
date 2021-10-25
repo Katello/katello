@@ -62,6 +62,10 @@ module Katello
       where("#{Katello::ContentViewVersion.table_name}.id in (#{sql})")
     end
 
+    scope :with_repositories, ->(repositories) do
+      joins(:repositories).includes(:content_view).merge(repositories).distinct
+    end
+
     scoped_search :on => :content_view_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
     serialize :content_counts
