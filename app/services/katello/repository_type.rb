@@ -159,7 +159,7 @@ module Katello
 
     class GenericContentType < ContentType
       attr_accessor :pulp3_api, :pulp3_model, :filename_key, :duplicates_allowed, :pluralized_name,
-                    :model_name, :model_version, :model_filename
+                    :model_name, :model_version, :model_filename, :model_additional_metadata
 
       def initialize(options)
         super
@@ -172,6 +172,7 @@ module Katello
         self.model_name = options[:model_name]
         self.model_version = options[:model_version]
         self.model_filename = options[:model_filename]
+        self.model_additional_metadata = options[:model_additional_metadata]
       end
 
       def label

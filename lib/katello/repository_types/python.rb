@@ -40,6 +40,12 @@ Katello::RepositoryTypeManager.register('python') do
                        model_name: lambda { |pulp_unit| pulp_unit["name"] },
                        model_version: lambda { |pulp_unit| pulp_unit["version"] },
                        model_filename: lambda { |pulp_unit| pulp_unit["filename"] },
+                       model_additional_metadata: lambda { |pulp_unit|
+                         {
+                           "package_type": pulp_unit["packagetype"],
+                           "sha256": pulp_unit["sha256"]
+                         }
+                       },
                        removable: true,
                        uploadable: true,
                        duplicates_allowed: false,

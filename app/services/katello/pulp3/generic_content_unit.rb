@@ -24,6 +24,7 @@ module Katello
         custom_json['name'] = content_type&.model_name&.call(backend_data)
         custom_json['version'] = content_type&.model_version&.call(backend_data)
         custom_json['filename'] = content_type&.model_filename&.call(backend_data)
+        custom_json['additional_metadata'] = content_type&.model_additional_metadata&.call(backend_data)
         custom_json['content_type'] = content_type&.label
         model.update!(custom_json)
       end

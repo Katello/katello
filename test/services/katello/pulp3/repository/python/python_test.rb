@@ -52,6 +52,13 @@ module Katello
             post_unit_count = Katello::GenericContentUnit.all.count
             post_unit_repository_count = Katello::RepositoryGenericContentUnit.where(:repository_id => @repo.id).count
 
+            unit = @repo.generic_content_units.first
+
+            assert_equal unit.content_type, "python_package"
+            assert_includes unit.filename, "shelf-reader"
+            assert_not unit.pulp_id.nil? and unit.version.nil?
+            assert unit.additional_metadata['package_type'] and unit.additional_metadata['sha256']
+
             assert_equal post_unit_count, 2
             assert_equal post_unit_repository_count, 2
           end
