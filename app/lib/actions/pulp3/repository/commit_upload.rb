@@ -12,7 +12,10 @@ module Actions
           uploads_api = repo_backend_service.core_api.uploads_api
           duplicate_sha_artifact_list = ::Katello::Pulp3::Api::Core.new(smart_proxy).artifacts_api.list("sha256": input[:sha256])
           duplicate_sha_artifact_href = duplicate_sha_artifact_list&.results&.first&.pulp_href
+          Rails.logger.debug("Katello::Pulp3::Respotiroy::CommitUpload artifact list with sha256 #{input[:sha256]} returned with #{duplicate_sha_artifact_href}")
+
           if duplicate_sha_artifact_href
+            Rails.logger.debug("Katello::Pulp3::Respotiroy::CommitUpload arftifact sha256 #{input[:sha256]} was a duplicate!")
             uploads_api.delete(upload_href)
             output[:artifact_href] = duplicate_sha_artifact_href
             output[:pulp_tasks] = nil
