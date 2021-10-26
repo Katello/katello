@@ -45,7 +45,7 @@ const TracesTab = () => {
   } = useSelectionSet(results, meta);
 
   const onBulkRestartApp = (ids) => {
-    dispatch(resolveTraces({ hostname, ids: [...ids] }));
+    dispatch(resolveTraces({ hostname, ids: [...ids].join(',') }));
     selectedTraces.clear();
 
     const params = { page: meta.page, per_page: meta.per_page, search: meta.search };
