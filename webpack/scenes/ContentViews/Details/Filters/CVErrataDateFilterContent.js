@@ -13,6 +13,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { selectCVFilterDetails } from '../ContentViewDetailSelectors';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
 import { editCVFilterRule, getCVFilterDetails } from '../ContentViewDetailActions';
+import { hasPermission } from '../../helpers';
 
 export const dateFormat = date => `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
 
@@ -34,7 +35,7 @@ export const dateParse = (date) => {
 export const isValidDate = date => date instanceof Date && !Number.isNaN(date.getTime());
 
 const CVErrataDateFilterContent = ({
-  cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos,
+  cvId, filterId, inclusion, showAffectedRepos, setShowAffectedRepos, details,
 }) => {
   const filterDetails = useSelector(state =>
     selectCVFilterDetails(state, cvId, filterId), shallowEqual);
@@ -42,7 +43,7 @@ const CVErrataDateFilterContent = ({
   const [{
     id, types, start_date: ruleStartDate, end_date: ruleEndDate, date_type: ruleDateType,
   } = {}] = rules;
-
+  const { permissions } = details;
   const [startDate, setStartDate] = useState(convertAPIDateToUIFormat(ruleStartDate));
   const [endDate, setEndDate] = useState(convertAPIDateToUIFormat(ruleEndDate));
   const [dateType, setDateType] = useState(ruleDateType);
@@ -122,17 +123,29 @@ const CVErrataDateFilterContent = ({
                   placeholderText={__('Errata type')}
                   isCheckboxSelectionBadgeHidden
                 >
-                  <SelectOption isDisabled={singleSelection('security')} key="security" value="security">
+                  <SelectOption
+                    isDisabled={singleSelection('security') || !hasPermission(permissions, 'edit_content_views')}
+                    key="security"
+                    value="security"
+                  >
                     <p style={{ marginTop: '4px' }}>
                       {__('Security')}
                     </p>
                   </SelectOption>
-                  <SelectOption isDisabled={singleSelection('enhancement')} key="enhancement" value="enhancement">
+                  <SelectOption
+                    isDisabled={singleSelection('enhancement') || !hasPermission(permissions, 'edit_content_views')}
+                    key="enhancement"
+                    value="enhancement"
+                  >
                     <p style={{ marginTop: '4px' }}>
                       {__('Enhancement')}
                     </p>
                   </SelectOption>
-                  <SelectOption isDisabled={singleSelection('bugfix')} key="bugfix" value="bugfix">
+                  <SelectOption
+                    isDisabled={singleSelection('bugfix') || !hasPermission(permissions, 'edit_content_views')}
+                    key="bugfix"
+                    value="bugfix"
+                  >
                     <p style={{ marginTop: '4px' }}>
                       {__('Bugfix')}
                     </p>
@@ -163,6 +176,7 @@ const CVErrataDateFilterContent = ({
                   id="date_type_selector"
                   name="date_type_selector"
                   aria-label="date_type_selector"
+                  isDisabled={!hasPermission(permissions, 'edit_content_views')}
                 >
                   <SelectOption key="issued" value="issued">{__('Issued')}</SelectOption>
                   <SelectOption key="updated" value="updated">{__('Updated')}</SelectOption>
@@ -177,6 +191,7 @@ const CVErrataDateFilterContent = ({
                     onChange={setStartDate}
                     dateParse={dateParse}
                     placeholder="MM/DD/YYYY"
+                    isDisabled={!hasPermission(permissions, 'edit_content_views')}
                   />
                 </Bullseye>
               </FlexItem>
@@ -189,6 +204,7 @@ const CVErrataDateFilterContent = ({
                     onChange={setEndDate}
                     dateParse={dateParse}
                     placeholder="MM/DD/YYYY"
+                    isDisabled={!hasPermission(permissions, 'edit_content_views')}
                   />
                 </Bullseye>
               </FlexItem>
@@ -196,11 +212,11 @@ const CVErrataDateFilterContent = ({
             <Flex>
               <FlexItem>
                 <ChipGroup categoryName={dateType === 'issued' ? __('Issued') : __('Updated')}>
-                  <Chip key="startDate" onClick={() => setStartDate('')} isReadOnly={!startDate}>
+                  <Chip key="startDate" onClick={() => setStartDate('')} isReadOnly={!startDate || !hasPermission(permissions, 'edit_content_views')}>
                     {startDate || __('ANY')}
                   </Chip>
                   -
-                  <Chip key="endDate" onClick={() => setEndDate('')} isReadOnly={!endDate}>
+                  <Chip key="endDate" onClick={() => setEndDate('')} isReadOnly={!endDate || !hasPermission(permissions, 'edit_content_views')}>
                     {endDate || __('ANY')}
                   </Chip>
                 </ChipGroup>
@@ -211,41 +227,45 @@ const CVErrataDateFilterContent = ({
                     <Chip
                       key={type}
                       onClick={() => onTypeSelect(type)}
-                      isReadOnly={singleSelection(type)}
+                      isReadOnly={singleSelection(type) || !hasPermission(permissions, 'edit_content_views')}
                     >
                       {capitalize(type)}
                     </Chip>
                   ))}
                 </ChipGroup>
               </FlexItem>
-              <FlexItem>
-                <Button variant="link" onClick={resetFilters} isInline>
-                  {__('Reset filters')}
-                </Button>
-              </FlexItem>
+              {hasPermission(permissions, 'edit_content_views') &&
+                <FlexItem>
+                  <Button variant="link" onClick={resetFilters} isInline>
+                    {__('Reset filters')}
+                  </Button>
+                </FlexItem>
+              }
             </Flex>
-            <ActionGroup>
-              <Button
-                aria-label="save_filter_rule"
-                variant="secondary"
-                isDisabled={saveDisabled}
-                type="submit"
-              >
-                {__('Edit rule')}
-              </Button>
-              <Link to={`/content_views/${cvId}#/filters`}>
-                <Button variant="link">
-                  {__('Cancel')}
+            {hasPermission(permissions, 'edit_content_views') &&
+              <ActionGroup>
+                <Button
+                  aria-label="save_filter_rule"
+                  variant="secondary"
+                  isDisabled={saveDisabled}
+                  type="submit"
+                >
+                  {__('Edit rule')}
                 </Button>
-              </Link>
-            </ActionGroup>
+                <Link to={`/content_views/${cvId}#/filters`}>
+                  <Button variant="link">
+                    {__('Cancel')}
+                  </Button>
+                </Link>
+              </ActionGroup>
+            }
           </Form>
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
         <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
           <div className="tab-body-with-spacing">
-            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} />
+            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
           </div>
         </Tab>}
     </Tabs>
@@ -258,6 +278,9 @@ CVErrataDateFilterContent.propTypes = {
   inclusion: PropTypes.bool,
   showAffectedRepos: PropTypes.bool.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 CVErrataDateFilterContent.defaultProps = {

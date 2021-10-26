@@ -27,11 +27,12 @@ import AddedStatusLabel from '../../../../../components/AddedStatusLabel';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import RepoIcon from '../../Repositories/RepoIcon';
 import SelectableDropdown from '../../../../../components/SelectableDropdown/SelectableDropdown';
+import { hasPermission } from '../../../helpers';
 
 const allProducts = 'All products';
 
 const AffectedRepositoryTable = ({
-  cvId, filterId, repoType, setShowAffectedRepos,
+  cvId, filterId, repoType, setShowAffectedRepos, details,
 }) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilterRepos(state, filterId), shallowEqual);
@@ -50,6 +51,7 @@ const AffectedRepositoryTable = ({
   const hasNotAddedSelected = rows.some(({ selected, added }) => selected && !added);
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
   const metadata = omit(response, ['results']);
+  const { permissions } = details;
 
   const columnHeaders = [
     { title: __('Type'), transforms: [fitContent] },
@@ -201,7 +203,7 @@ const AffectedRepositoryTable = ({
         error,
         status,
       }}
-      onSelect={onSelect(rows, setRows)}
+      onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint="/repositories/auto_complete_search"
@@ -219,23 +221,25 @@ const AffectedRepositoryTable = ({
                 placeholderText={__('Product')}
               />
             </SplitItem>
-            <SplitItem>
-              <ActionList>
-                <ActionListItem>
-                  <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
-                    Add repositories
-                  </Button>
-                </ActionListItem>
-                <ActionListItem>
-                  <Dropdown
-                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                    isOpen={bulkActionOpen}
-                    isPlain
-                    dropdownItems={dropdownItems}
-                  />
-                </ActionListItem>
-              </ActionList>
-            </SplitItem>
+            {hasPermission(permissions, 'edit_content_views') &&
+              <SplitItem>
+                <ActionList>
+                  <ActionListItem>
+                    <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
+                      Add repositories
+                    </Button>
+                  </ActionListItem>
+                  <ActionListItem>
+                    <Dropdown
+                      toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                      isOpen={bulkActionOpen}
+                      isPlain
+                      dropdownItems={dropdownItems}
+                    />
+                  </ActionListItem>
+                </ActionList>
+              </SplitItem>
+            }
           </Split>
         </>
       }
@@ -248,6 +252,9 @@ AffectedRepositoryTable.propTypes = {
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   repoType: PropTypes.string.isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default AffectedRepositoryTable;

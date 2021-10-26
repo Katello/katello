@@ -53,9 +53,10 @@ import { getResponseErrorMsgs, apiError } from '../../../utils/helpers';
 import { renderTaskStartedToast } from '../../Tasks/helpers';
 import { cvErrorToast } from '../ContentViewsActions';
 
-const getContentViewDetails = cvId => get({
+const getContentViewDetails = (cvId, extraParams = {}) => get({
   type: API_OPERATIONS.GET,
   key: cvDetailsKey(cvId),
+  params: { organization_id: orgId(), include_permissions: true, ...extraParams },
   url: api.getApiUrl(`/content_views/${cvId}`),
 });
 
@@ -158,7 +159,6 @@ export const getDebPackages = params => get({
   errorToast: error => __(`Something went wrong while getting deb packages! ${getResponseErrorMsgs(error.response)}`),
 });
 
-
 export const getModuleStreams = params => get({
   type: API_OPERATIONS.GET,
   key: MODULE_STREAMS_CONTENT,
@@ -166,7 +166,6 @@ export const getModuleStreams = params => get({
   params,
   errorToast: error => __(`Something went wrong while getting module streams! ${getResponseErrorMsgs(error.response)}`),
 });
-
 
 export const getRepositories = params => get({
   type: API_OPERATIONS.GET,
@@ -215,7 +214,6 @@ export const editCVFilter = (filterId, params, handleSuccess) => put({
   successToast: () => __('Filter edited successfully'),
   errorToast: error => __(`Something went wrong while editing the filter! ${getResponseErrorMsgs(error.response)}`),
 });
-
 
 export const getRepositoryTypes = () => get({
   type: API_OPERATIONS.GET,

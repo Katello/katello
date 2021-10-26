@@ -15,6 +15,7 @@ import api from '../../../../../services/api';
 const cvFilterDetails = require('./cvPackageFilterDetail.fixtures.json');
 const cvPackageFilterRules = require('./cvPackageFilterRules.fixtures.json');
 const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
+const details = require('../../../__tests__/mockDetails.fixtures.json');
 
 const cvFiltersPath = api.getApiUrl('/content_view_filters');
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/2');
@@ -63,7 +64,10 @@ test('Can show filter details and package groups on page load', async (done) => 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
@@ -105,8 +109,10 @@ test('Can search for package rules in package filter details', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
-
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
   // Basic results showing
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
@@ -165,7 +171,10 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
@@ -218,7 +227,10 @@ test('Remove rpm filter rule in a self-closing modal', async (done) => {
 
 
   const { getByText, queryByText, getAllByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
@@ -268,7 +280,10 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
   const {
     getByText, queryByText, getAllByLabelText, getByLabelText,
   } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();

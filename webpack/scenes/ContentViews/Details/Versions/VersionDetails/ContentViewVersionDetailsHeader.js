@@ -13,12 +13,14 @@ import {
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import EditableTextInput from '../../../../../components/EditableTextInput';
+import { hasPermission } from '../../../helpers';
 
 const ContentViewVersionDetailsHeader = ({
-  details: {
+  versionDetails: {
     version, description, environments,
   },
   onEdit,
+  details: { permissions },
 }) => (
   <>
     <GridItem span={12}>
@@ -36,6 +38,7 @@ const ContentViewVersionDetailsHeader = ({
             attribute="description"
             placeholder={__('No description provided')}
             onEdit={onEdit}
+            disabled={!hasPermission(permissions, 'edit_content_views')}
             value={description}
           />
         </TextList>
@@ -49,12 +52,15 @@ const ContentViewVersionDetailsHeader = ({
 );
 
 ContentViewVersionDetailsHeader.propTypes = {
-  details: PropTypes.shape({
+  versionDetails: PropTypes.shape({
     version: PropTypes.string,
     environments: PropTypes.arrayOf(PropTypes.shape({ })),
     description: PropTypes.string,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default ContentViewVersionDetailsHeader;

@@ -27,6 +27,7 @@ import {
 import { deleteContentViewFilterRules, getCVFilterRules, removeCVFilterRule } from '../ContentViewDetailActions';
 import AddEditContainerTagRuleModal from './Rules/ContainerTag/AddEditContainerTagRuleModal';
 import AffectedRepositoryTable from './AffectedRepositories/AffectedRepositoryTable';
+import { hasPermission } from '../../helpers';
 
 const emptyContentTitle = __('No rules have been added to this filter.');
 const emptyContentBody = __("Add to this filter using the 'Add filter rule' button.");
@@ -34,7 +35,7 @@ const emptySearchTitle = __('No matching filter rules found.');
 const emptySearchBody = __('Try changing your search settings.');
 
 const CVContainerImageFilterContent = ({
-  cvId, filterId, showAffectedRepos, setShowAffectedRepos,
+  cvId, filterId, showAffectedRepos, setShowAffectedRepos, details,
 }) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilterRules(state, filterId), shallowEqual);
@@ -53,6 +54,7 @@ const CVContainerImageFilterContent = ({
   const toggleBulkAction = () => setBulkActionOpen(prevState => !prevState);
   const hasSelected = rows.some(({ selected }) => selected);
   const metadata = omit(response, ['results']);
+  const { permissions } = details;
 
   const onClose = () => {
     setModalOpen(false);
@@ -125,15 +127,15 @@ const CVContainerImageFilterContent = ({
               emptySearchBody,
               searchQuery,
               updateSearchQuery,
-              actionResolver,
               status,
             }}
-            onSelect={onSelect(rows, setRows)}
+            actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
+            onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             cells={columnHeaders}
             variant={TableVariant.compact}
             autocompleteEndpoint={`/content_view_filters/${filterId}/rules/auto_complete_search`}
             fetchItems={useCallback(params => getCVFilterRules(filterId, params), [filterId])}
-            actionButtons={
+            actionButtons={hasPermission(permissions, 'edit_content_views') &&
               <>
                 <Split hasGutter>
                   <SplitItem>
@@ -173,7 +175,7 @@ const CVContainerImageFilterContent = ({
       {(repositories.length || showAffectedRepos) &&
       <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
         <div className="tab-body-with-spacing">
-          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="docker" setShowAffectedRepos={setShowAffectedRepos} />
+          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="docker" setShowAffectedRepos={setShowAffectedRepos} details={details} />
         </div>
       </Tab>
       }
@@ -186,6 +188,9 @@ CVContainerImageFilterContent.propTypes = {
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   showAffectedRepos: PropTypes.bool,
   setShowAffectedRepos: PropTypes.func,
+  details: PropTypes.shape({
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 CVContainerImageFilterContent.defaultProps = {

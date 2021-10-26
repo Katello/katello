@@ -57,6 +57,7 @@ const buildExpandableRows = (contentViews) => {
       latest_version: latestVersionName,
       environments,
       versions,
+      permissions,
     } = contentView;
     const cells = buildRow(contentView);
     const cellParent = {
@@ -70,6 +71,7 @@ const buildExpandableRows = (contentViews) => {
       latestVersionName,
       environments,
       versions,
+      permissions,
       isOpen: false,
       cells,
     };

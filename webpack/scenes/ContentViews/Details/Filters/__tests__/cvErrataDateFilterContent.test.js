@@ -9,6 +9,7 @@ import api from '../../../../../services/api';
 import CVErrataDateFilterContent from '../CVErrataDateFilterContent';
 
 const cvFilterDetails = require('./contentViewErrataByDateDetails.fixtures.json');
+const details = require('../../../__tests__/mockDetails.fixtures.json');
 
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/36');
 
@@ -43,6 +44,7 @@ test('Can display errata-date filter rule and edit', async (done) => {
     filterId="36"
     showAffectedRepos={false}
     setShowAffectedRepos={() => {}}
+    details={details}
   />);
 
   await patientlyWaitFor(() => {

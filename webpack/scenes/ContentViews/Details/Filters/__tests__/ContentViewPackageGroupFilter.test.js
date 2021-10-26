@@ -17,6 +17,7 @@ const cvFilterDetails = require('./contentViewFilterDetail.fixtures.json');
 const cvFilterDetailsAffectedRepos = require('./cvFilterDetailWithAffectedRepos.fixtures.json');
 const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
 const cvAllRepos = require('./cvAllRepos.fixtures.json');
+const details = require('../../../__tests__/mockDetails.fixtures.json');
 
 const cvRefreshCallbackPath = api.getApiUrl('/content_views/1');
 const cvFiltersPath = api.getApiUrl('/content_view_filters');
@@ -72,7 +73,10 @@ test('Can enable and disable add filter button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
@@ -124,7 +128,10 @@ test('Can remove a filter rule', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getAllByLabelText, getByText, queryByText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
@@ -180,7 +187,10 @@ test('Can add a filter rule', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getAllByLabelText, getByText, queryByText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
@@ -237,7 +247,10 @@ test('Can bulk remove filter rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
@@ -296,7 +309,10 @@ test('Can bulk add filter rules', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
@@ -366,7 +382,10 @@ test('Can show affected repository tab on dropdown selection and add repos', asy
   const {
     getAllByLabelText, getByLabelText, getAllByText, getByText, queryByText,
   } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
@@ -449,7 +468,10 @@ test('Can show affected repository tab and remove affected repos', async (done) 
   const {
     getAllByLabelText, getByLabelText, getByText, queryByText,
   } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
@@ -505,7 +527,10 @@ test('Can filter by added/not added rules', async (done) => {
 
   const {
     getByText, queryByText, getByTestId, getByLabelText,
-  } = renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+  } = renderWithRedux(withCVRoute(<ContentViewFilterDetails
+    cvId={1}
+    details={details}
+  />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();

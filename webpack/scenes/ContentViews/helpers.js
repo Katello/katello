@@ -11,3 +11,4 @@ export const autoPublishHelpText = __('Automatically publish a new version of th
 export const importOnlyHelpText = __('Designate whether this content view is for importing from an upstream server. ' +
   'Import-only content views cannot be published directly.');
 
+export const hasPermission = (permissions, perm) => permissions && permissions[perm];

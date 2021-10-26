@@ -1,16 +1,16 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { number } from 'prop-types';
+import { number, shape } from 'prop-types';
 import ContentViewFilters from './ContentViewFilters';
 import ContentViewFilterDetails from './ContentViewFilterDetails';
 
-const ContentViewFiltersRoutes = ({ cvId }) => (
+const ContentViewFiltersRoutes = ({ cvId, details }) => (
   <>
     <Route exact path="/filters">
-      <ContentViewFilters cvId={cvId} />
+      <ContentViewFilters cvId={cvId} details={details} />
     </Route>
     <Route path="/filters/:filterId([0-9]+)">
-      <ContentViewFilterDetails cvId={cvId} />
+      <ContentViewFilterDetails cvId={cvId} details={details} />
     </Route>
   </>
 );
@@ -18,6 +18,9 @@ const ContentViewFiltersRoutes = ({ cvId }) => (
 
 ContentViewFiltersRoutes.propTypes = {
   cvId: number.isRequired,
+  details: shape({
+    permissions: shape({}),
+  }).isRequired,
 };
 
 export default ContentViewFiltersRoutes;

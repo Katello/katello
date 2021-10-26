@@ -22,8 +22,11 @@ const ActionableDetail = ({
   onEdit,
   currentAttribute,
   setCurrentAttribute,
+  disabled,
 }) => {
-  const displayProps = { attribute, value, onEdit };
+  const displayProps = {
+    attribute, value, onEdit, disabled,
+  };
 
   return (
     <React.Fragment key={label}>
@@ -65,6 +68,7 @@ ActionableDetail.propTypes = {
   tooltip: PropTypes.string,
   currentAttribute: PropTypes.string,
   setCurrentAttribute: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 ActionableDetail.defaultProps = {
@@ -74,6 +78,7 @@ ActionableDetail.defaultProps = {
   value: null,
   currentAttribute: undefined,
   setCurrentAttribute: undefined,
+  disabled: false,
 };
 
 export default ActionableDetail;

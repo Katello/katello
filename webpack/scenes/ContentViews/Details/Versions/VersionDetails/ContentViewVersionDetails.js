@@ -5,7 +5,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import { isEmpty, camelCase, first } from 'lodash';
 import { Grid, Tabs, Tab, TabTitleText, Label } from '@patternfly/react-core';
-import { number } from 'prop-types';
+import { number, shape } from 'prop-types';
 import './ContentViewVersionDetails.scss';
 
 import { editContentViewVersionDetails, getContentViewVersionDetails } from '../../ContentViewDetailActions';
@@ -15,12 +15,12 @@ import getCVVersionTableConfigs from './ContentViewVersionDetailConfig.js';
 import ContentViewVersionDetailsTable from './ContentViewVersionDetailsTable';
 import Loading from '../../../../../components/Loading';
 
-const ContentViewVersionDetails = ({ cvId }) => {
+const ContentViewVersionDetails = ({ cvId, details }) => {
   const { versionId } = useParams();
   const { pathname } = useLocation();
   const { push } = useHistory();
   const dispatch = useDispatch();
-  const [details, setDetails] = useState({});
+  const [versionDetails, setVersionDetails] = useState({});
   // Example urls expected:/versions/:id or /versions/:id/repositories.
   const tab = pathname.split('/')[3];
   const response = useSelector(state =>
@@ -38,12 +38,12 @@ const ContentViewVersionDetails = ({ cvId }) => {
 
   useDeepCompareEffect(() => {
     if (loaded) {
-      setDetails(response);
+      setVersionDetails(response);
     }
   }, [response, loaded, tableConfigs]);
 
   const editDiscription = (val, attribute) => {
-    const { description } = details;
+    const { description } = versionDetails;
     if (val !== description) {
       dispatch(editContentViewVersionDetails(
         versionId,
@@ -61,16 +61,20 @@ const ContentViewVersionDetails = ({ cvId }) => {
     }
   };
 
-  // Checking details is done to prevent two renders of the table.
-  if (!loaded && isEmpty(details)) return <Loading />;
+  // Checking versionDetails is done to prevent two renders of the table.
+  if (!loaded && isEmpty(versionDetails)) return <Loading />;
   const filteredTableConfigs = tableConfigs.filter(({ getCountKey }) => !!getCountKey(response));
-  const { repositories } = details;
+  const { repositories } = versionDetails;
   const showTabs = filteredTableConfigs.length > 0 && repositories;
   const getCurrentActiveKey = tab ?? camelCase(first(filteredTableConfigs)?.name);
 
   return (
     <Grid>
-      <ContentViewVersionDetailsHeader details={details} onEdit={editDiscription} />
+      <ContentViewVersionDetailsHeader
+        versionDetails={versionDetails}
+        onEdit={editDiscription}
+        details={details}
+      />
       {showTabs &&
         <div className="grid-with-top-border">
           <Tabs
@@ -116,6 +120,9 @@ const ContentViewVersionDetails = ({ cvId }) => {
 
 ContentViewVersionDetails.propTypes = {
   cvId: number.isRequired,
+  details: shape({
+    permissions: shape({}),
+  }).isRequired,
 };
 
 export default ContentViewVersionDetails;

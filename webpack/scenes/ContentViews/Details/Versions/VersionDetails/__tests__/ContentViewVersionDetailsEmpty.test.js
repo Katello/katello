@@ -8,6 +8,7 @@ import { cvVersionDetailsKey } from '../../../../ContentViewsConstants';
 import ContentViewVersionDetails from '../ContentViewVersionDetails';
 
 const ContentViewVersionDetailsEmptyData = require('./ContentViewVersionDetails.fixtures.json');
+const cvDetailData = require('../../../../__tests__/mockDetails.fixtures.json');
 
 const withCVRoute = component =>
   <Route path="/versions/:versionId([0-9]+)">{component}</Route>;
@@ -29,7 +30,7 @@ test('Can show versions detail header', async (done) => {
     .reply(200, ContentViewVersionDetailsEmptyData);
 
   const { getByText, queryByText } = renderWithRedux(
-    withCVRoute(<ContentViewVersionDetails cvId={3} />),
+    withCVRoute(<ContentViewVersionDetails cvId={3} details={cvDetailData} />),
     renderOptions,
   );
 

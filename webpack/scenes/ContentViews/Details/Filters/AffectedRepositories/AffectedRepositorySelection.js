@@ -6,7 +6,9 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { selectCVFilterDetails } from '../../ContentViewDetailSelectors';
 import { editCVFilter, getCVFilterDetails } from '../../ContentViewDetailActions';
 
-const AffectedRepositorySelection = ({ cvId, filterId, setShowAffectedRepos }) => {
+const AffectedRepositorySelection = ({
+  cvId, filterId, setShowAffectedRepos, disabled,
+}) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVFilterDetails(state, cvId, filterId), shallowEqual);
   const { repositories = [] } = response;
@@ -42,6 +44,7 @@ const AffectedRepositorySelection = ({ cvId, filterId, setShowAffectedRepos }) =
       id="affected_repos"
       name="affected_repos"
       aria-label="affected_repos"
+      isDisabled={disabled}
     >
       <SelectOption key="all_repos" value="all_repos">{__('Apply to all repositories in the CV')}</SelectOption>
       <SelectOption key="affect_repos" value="affect_repos">{__('Apply to subset of repositories')}</SelectOption>
@@ -53,6 +56,10 @@ AffectedRepositorySelection.propTypes = {
   cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   filterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   setShowAffectedRepos: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
 };
 
+AffectedRepositorySelection.defaultProps = {
+  disabled: false,
+};
 export default AffectedRepositorySelection;

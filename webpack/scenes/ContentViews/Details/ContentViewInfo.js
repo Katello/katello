@@ -19,7 +19,7 @@ import Loading from '../../../components/Loading';
 import ContentViewIcon from '../components/ContentViewIcon';
 import ActionableDetail from '../../../components/ActionableDetail';
 import './contentViewInfo.scss';
-import { dependenciesHelpText, autoPublishHelpText } from '../helpers';
+import { dependenciesHelpText, autoPublishHelpText, hasPermission } from '../helpers';
 import { LabelImportOnly } from '../Create/ContentViewFormComponents';
 
 const ContentViewInfo = ({ cvId, details }) => {
@@ -34,6 +34,7 @@ const ContentViewInfo = ({ cvId, details }) => {
     solve_dependencies: solveDependencies,
     auto_publish: autoPublish,
     import_only: importOnly,
+    permissions,
   } = details;
 
   if (updating) return <Loading size="sm" showText={false} />;
@@ -50,6 +51,7 @@ const ContentViewInfo = ({ cvId, details }) => {
           label={__('Name')}
           attribute="name"
           onEdit={onEdit}
+          disabled={!hasPermission(permissions, 'edit_content_views')}
           value={name}
           {...{ currentAttribute, setCurrentAttribute }}
         />
@@ -77,6 +79,7 @@ const ContentViewInfo = ({ cvId, details }) => {
           label={__('Description')}
           attribute="description"
           onEdit={onEdit}
+          disabled={!hasPermission(permissions, 'edit_content_views')}
           value={description}
           {...{ currentAttribute, setCurrentAttribute }}
         />
@@ -86,6 +89,7 @@ const ContentViewInfo = ({ cvId, details }) => {
             attribute="auto_publish"
             value={autoPublish}
             onEdit={onEdit}
+            disabled={!hasPermission(permissions, 'edit_content_views')}
             tooltip={autoPublishHelpText}
             boolean
             {...{ currentAttribute, setCurrentAttribute }}
@@ -95,6 +99,7 @@ const ContentViewInfo = ({ cvId, details }) => {
             attribute="solve_dependencies"
             value={solveDependencies}
             onEdit={onEdit}
+            disabled={!hasPermission(permissions, 'edit_content_views')}
             tooltip={dependenciesHelpText}
             boolean
             {...{ currentAttribute, setCurrentAttribute }}
@@ -126,6 +131,7 @@ ContentViewInfo.propTypes = {
     solve_dependencies: PropTypes.bool,
     auto_publish: PropTypes.bool,
     import_only: PropTypes.bool,
+    permissions: PropTypes.shape({}),
   }).isRequired,
 };
 

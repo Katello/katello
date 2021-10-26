@@ -6,6 +6,7 @@ import { EmptyState,
   Bullseye,
   Title } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { CubeIcon, ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
 import { global_danger_color_200 as dangerColor } from '@patternfly/react-tokens';
 
@@ -18,19 +19,34 @@ const KatelloEmptyStateIcon = ({ error, search, customIcon }) => {
 
 const EmptyStateMessage = ({
   title, body, error, search, customIcon,
-}) => (
-  <Bullseye>
-    <EmptyState variant={EmptyStateVariant.small}>
-      <KatelloEmptyStateIcon error={!!error} search={search} customIcon={customIcon} />
-      <Title headingLevel="h2" size="lg">
-        {title}
-      </Title>
-      <EmptyStateBody>
-        {body}
-      </EmptyStateBody>
-    </EmptyState>
-  </Bullseye>
-);
+}) => {
+  let emptyStateTitle = title;
+  let emptyStateBody = body;
+  if (error) {
+    if (error?.response?.data?.error) {
+      const { response: { data: { error: { message, details } } } } = error;
+      emptyStateTitle = message;
+      emptyStateBody = details;
+    } else if (error?.response?.status) {
+      const { response: { status } } = error;
+      emptyStateTitle = status;
+      emptyStateBody = error?.response?.data?.displayMessage || __('Something went wrong! Please check server logs!');
+    }
+  }
+  return (
+    <Bullseye>
+      <EmptyState variant={EmptyStateVariant.small}>
+        <KatelloEmptyStateIcon error={!!error} search={search} customIcon={customIcon} />
+        <Title headingLevel="h2" size="lg">
+          {emptyStateTitle}
+        </Title>
+        <EmptyStateBody>
+          {emptyStateBody}
+        </EmptyStateBody>
+      </EmptyState>
+    </Bullseye>
+  );
+};
 
 KatelloEmptyStateIcon.propTypes = {
   error: PropTypes.bool,
@@ -56,8 +72,8 @@ EmptyStateMessage.propTypes = {
 };
 
 EmptyStateMessage.defaultProps = {
-  title: 'Unable to connect',
-  body: 'There was an error retrieving data from the server. Check your connection and try again.',
+  title: __('Unable to connect'),
+  body: __('There was an error retrieving data from the server. Check your connection and try again.'),
   error: undefined,
   search: false,
   customIcon: undefined,

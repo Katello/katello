@@ -33,6 +33,7 @@ import SelectableDropdown from '../../../../components/SelectableDropdown/Select
 import '../../../../components/EditableTextInput/editableTextInput.scss';
 import ComponentContentViewAddModal from './ComponentContentViewAddModal';
 import ComponentContentViewBulkAddModal from './ComponentContentViewBulkAddModal';
+import { hasPermission } from '../../helpers';
 
 const ContentViewComponents = ({ cvId, details }) => {
   const response = useSelector(state => selectCVComponents(state, cvId));
@@ -67,7 +68,7 @@ const ContentViewComponents = ({ cvId, details }) => {
   const addComponentsResolved = componentAddedStatus === STATUS.RESOLVED;
   const removeComponentsResolved = componentRemovedStatus === STATUS.RESOLVED;
 
-  const { label } = details || {};
+  const { label, permissions } = details || {};
 
   const bulkRemoveEnabled = () => rows.some(row => row.selected && row.added);
   const bulkAddEnabled = () => rows.some(row => row.selected && !row.added);
@@ -140,7 +141,7 @@ const ContentViewComponents = ({ cvId, details }) => {
     <SplitItem>
       <ComponentVersion {...{ componentCV }} />
     </SplitItem>
-    {componentCvId && cvVersion &&
+    {hasPermission(permissions, 'edit_content_views') && componentCvId && cvVersion &&
     <SplitItem>
       <Button
         className="foreman-edit-icon"
@@ -175,7 +176,7 @@ const ContentViewComponents = ({ cvId, details }) => {
       });
     });
     return newRows;
-  }, [onAdd, results]);
+  }, [onAdd, results, permissions]);
 
   const actionResolver = (rowData, { _rowIndex }) => [
     {
@@ -237,8 +238,8 @@ const ContentViewComponents = ({ cvId, details }) => {
         status,
         activeFilters,
         defaultFilters,
-        actionResolver,
       }}
+      actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
       onSelect={onSelect(rows, setRows)}
       cells={columnHeaders}
       variant={TableVariant.compact}
@@ -258,23 +259,25 @@ const ContentViewComponents = ({ cvId, details }) => {
                 placeholderText={__('Status')}
               />
             </SplitItem>
-            <SplitItem>
-              <ActionList>
-                <ActionListItem>
-                  <Button onClick={addBulk} isDisabled={!(bulkAddEnabled())} variant="secondary" aria-label="bulk_add_components">
-                    {__('Add content views')}
-                  </Button>
-                </ActionListItem>
-                <ActionListItem>
-                  <Dropdown
-                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                    isOpen={bulkActionOpen}
-                    isPlain
-                    dropdownItems={dropdownItems}
-                  />
-                </ActionListItem>
-              </ActionList>
-            </SplitItem>
+            {hasPermission(permissions, 'edit_content_views') &&
+              <SplitItem>
+                <ActionList>
+                  <ActionListItem>
+                    <Button onClick={addBulk} isDisabled={!(bulkAddEnabled())} variant="secondary" aria-label="bulk_add_components">
+                      {__('Add content views')}
+                    </Button>
+                  </ActionListItem>
+                  <ActionListItem>
+                    <Dropdown
+                      toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                      isOpen={bulkActionOpen}
+                      isPlain
+                      dropdownItems={dropdownItems}
+                    />
+                  </ActionListItem>
+                </ActionList>
+              </SplitItem>
+            }
           </Split>
           {versionEditing &&
             <ComponentContentViewAddModal
@@ -303,12 +306,14 @@ ContentViewComponents.propTypes = {
   cvId: PropTypes.number.isRequired,
   details: PropTypes.shape({
     label: PropTypes.string,
+    permissions: PropTypes.shape({}),
   }),
 };
 
 ContentViewComponents.defaultProps = {
   details: {
     label: '',
+    permissions: {},
   },
 };
 

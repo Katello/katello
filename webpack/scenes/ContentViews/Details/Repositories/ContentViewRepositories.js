@@ -27,7 +27,6 @@ import {
   selectCVReposError,
   selectRepoTypes,
   selectRepoTypesStatus,
-  selectCVDetails,
 } from '../ContentViewDetailSelectors';
 import { ADDED, NOT_ADDED, ALL_STATUSES } from '../../ContentViewsConstants';
 import ContentCounts from './ContentCounts';
@@ -36,6 +35,7 @@ import RepoIcon from './RepoIcon';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import SelectableDropdown from '../../../../components/SelectableDropdown';
 import { capitalize } from '../../../../utils/helpers';
+import { hasPermission } from '../../helpers';
 
 const allRepositories = 'All repositories';
 
@@ -46,7 +46,7 @@ const repoTypeNames = {
   ostree: 'OSTree',
 };
 
-const ContentViewRepositories = ({ cvId }) => {
+const ContentViewRepositories = ({ cvId, details }) => {
   const dispatch = useDispatch();
   const response = useSelector(state => selectCVRepos(state, cvId), shallowEqual);
   const { results, ...metadata } = response;
@@ -54,7 +54,7 @@ const ContentViewRepositories = ({ cvId }) => {
   const error = useSelector(state => selectCVReposError(state, cvId), shallowEqual);
   const repoTypesResponse = useSelector(state => selectRepoTypes(state), shallowEqual);
   const repoTypesStatus = useSelector(state => selectRepoTypesStatus(state), shallowEqual);
-  const details = useSelector(state => selectCVDetails(state, cvId), shallowEqual);
+  const { permissions } = details;
 
   const [rows, setRows] = useState([]);
   const deselectAll = () => setRows(rows.map(row => ({ ...row, selected: false })));
@@ -228,13 +228,13 @@ const ContentViewRepositories = ({ cvId }) => {
         emptySearchBody,
         searchQuery,
         updateSearchQuery,
-        actionResolver,
         error,
         status,
         activeFilters,
         defaultFilters,
       }}
-      onSelect={onSelect(rows, setRows)}
+      actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
+      onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
       cells={columnHeaders}
       variant={TableVariant.compact}
       autocompleteEndpoint="/repositories/auto_complete_search"
@@ -262,23 +262,25 @@ const ContentViewRepositories = ({ cvId }) => {
               placeholderText={__('Status')}
             />
           </SplitItem>
-          <SplitItem>
-            <ActionList>
-              <ActionListItem>
-                <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
-                  {__('Add repositories')}
-                </Button>
-              </ActionListItem>
-              <ActionListItem>
-                <Dropdown
-                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                  isOpen={bulkActionOpen}
-                  isPlain
-                  dropdownItems={dropdownItems}
-                />
-              </ActionListItem>
-            </ActionList>
-          </SplitItem>
+          {hasPermission(permissions, 'edit_content_views') &&
+            <SplitItem>
+              <ActionList>
+                <ActionListItem>
+                  <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
+                    {__('Add repositories')}
+                  </Button>
+                </ActionListItem>
+                <ActionListItem>
+                  <Dropdown
+                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                    isOpen={bulkActionOpen}
+                    isPlain
+                    dropdownItems={dropdownItems}
+                  />
+                </ActionListItem>
+              </ActionList>
+            </SplitItem>
+          }
         </Split>
       }
     />
@@ -287,6 +289,10 @@ const ContentViewRepositories = ({ cvId }) => {
 
 ContentViewRepositories.propTypes = {
   cvId: PropTypes.number.isRequired,
+  details: PropTypes.shape({
+    repository_ids: PropTypes.arrayOf(PropTypes.number),
+    permissions: PropTypes.shape({}),
+  }).isRequired,
 };
 
 export default ContentViewRepositories;

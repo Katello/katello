@@ -15,6 +15,7 @@ import api from '../../../../../services/api';
 const allPackageGroups = require('./allFilterPackageGroups.fixtures.json');
 const cvFilterDetails = require('./contentViewFilterDetail.fixtures.json');
 const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
+const details = require('../../../__tests__/mockDetails.fixtures.json');
 
 const cvFiltersPath = api.getApiUrl('/content_view_filters');
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/1');
@@ -61,7 +62,10 @@ test('Can show filter details and package groups on page load', async (done) => 
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
@@ -103,7 +107,10 @@ test('Can search for package groups in package group filter', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const withSearchScope = mockAutocomplete(nockInstance, autocompleteUrl, searchQueryMatcher);
   const { getByText, queryByText, getByLabelText } =
-    renderWithRedux(withCVRoute(<ContentViewFilterDetails cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilterDetails
+      cvId={1}
+      details={details}
+    />), renderOptions);
 
   // Basic results showing
   await patientlyWaitFor(() => {

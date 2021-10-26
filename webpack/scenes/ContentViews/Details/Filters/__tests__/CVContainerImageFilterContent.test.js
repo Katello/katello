@@ -13,6 +13,7 @@ import api from '../../../../../services/api';
 import CVContainerImageFilterContent from '../CVContainerImageFilterContent';
 
 const cvFilterFixtures = require('./CVContainerImageFilterContent.fixtures.json');
+const details = require('../../../../ContentViews/__tests__/mockDetails.fixtures.json');
 
 const afterDeleteFilterResultsArray = [...cvFilterFixtures.results];
 afterDeleteFilterResultsArray.shift();
@@ -64,7 +65,7 @@ test('Can view container image filter rules', async (done) => {
 
   const { queryByText, getByLabelText } =
     renderWithRedux(
-      withCVRoute(<CVContainerImageFilterContent filterId={195} />),
+      withCVRoute(<CVContainerImageFilterContent filterId={195} details={details} />),
       renderOptions,
     );
 
@@ -107,7 +108,7 @@ test('Can remove filter rules', async (done) => {
 
   const { queryByText, getAllByLabelText } =
     renderWithRedux(
-      withCVRoute(<CVContainerImageFilterContent filterId={195} />),
+      withCVRoute(<CVContainerImageFilterContent filterId={195} details={details} />),
       renderOptions,
     );
 
@@ -159,7 +160,7 @@ test('Can add filter rules', async (done) => {
 
   const { queryByText, getByLabelText } =
     renderWithRedux(
-      withCVRoute(<CVContainerImageFilterContent filterId={195} />),
+      withCVRoute(<CVContainerImageFilterContent filterId={195} details={details} />),
       renderOptions,
     );
 
@@ -224,7 +225,7 @@ test('Can edit filter rules', async (done) => {
 
   const { queryByText, getAllByLabelText, getByLabelText } =
     renderWithRedux(
-      withCVRoute(<CVContainerImageFilterContent filterId={195} />),
+      withCVRoute(<CVContainerImageFilterContent filterId={195} details={details} />),
       renderOptions,
     );
 

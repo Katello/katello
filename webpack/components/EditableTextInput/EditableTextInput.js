@@ -7,7 +7,8 @@ import Loading from '../Loading';
 import './editableTextInput.scss';
 
 const EditableTextInput = ({
-  onEdit, value, textArea, attribute, placeholder, component, currentAttribute, setCurrentAttribute,
+  onEdit, value, textArea, attribute, placeholder,
+  component, currentAttribute, setCurrentAttribute, disabled,
 }) => {
   // Tracks input box state
   const [inputValue, setInputValue] = useState(value);
@@ -106,16 +107,18 @@ const EditableTextInput = ({
           {value || (<i>{placeholder}</i>)}
         </Text>
       </SplitItem>
-      <SplitItem>
-        <Button
-          className="foreman-edit-icon"
-          aria-label={`edit ${attribute}`}
-          variant="plain"
-          onClick={onEditClick}
-        >
-          <PencilAltIcon />
-        </Button>
-      </SplitItem>
+      {!disabled &&
+        <SplitItem>
+          <Button
+            className="foreman-edit-icon"
+            aria-label={`edit ${attribute}`}
+            variant="plain"
+            onClick={onEditClick}
+          >
+            <PencilAltIcon />
+          </Button>
+        </SplitItem>
+      }
     </Split>
   );
 };
@@ -129,6 +132,7 @@ EditableTextInput.propTypes = {
   component: PropTypes.string,
   currentAttribute: PropTypes.string,
   setCurrentAttribute: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 EditableTextInput.defaultProps = {
@@ -138,6 +142,7 @@ EditableTextInput.defaultProps = {
   component: undefined,
   currentAttribute: undefined,
   setCurrentAttribute: undefined,
+  disabled: false,
 };
 
 export default EditableTextInput;

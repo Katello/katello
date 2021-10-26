@@ -19,6 +19,7 @@ const renderOptions = {
 };
 
 const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
+const details = require('../../../__tests__/mockDetails.fixtures.json');
 
 const cvFilters = api.getApiUrl('/content_view_filters');
 const autocompleteUrl = '/content_view_filters/auto_complete_search';
@@ -53,7 +54,7 @@ test('Can call API and show filters on page load', async (done) => {
     .reply(200, cvFilterFixtures);
 
   const { getByText, queryByText } =
-    renderWithRedux(withCVRoute(<ContentViewFilters cvId={1} />), renderOptions);
+    renderWithRedux(withCVRoute(<ContentViewFilters cvId={1} details={details} />), renderOptions);
 
   // Nothing will show at first, page is loading
   expect(queryByText(name)).toBeNull();
@@ -82,7 +83,7 @@ test('Can search for filter', async (done) => {
     .reply(200, { results: [firstFilter] });
 
   const { queryByText, getByLabelText, getByText } = renderWithRedux(
-    withCVRoute(<ContentViewFilters cvId={1} />),
+    withCVRoute(<ContentViewFilters cvId={1} details={details} />),
     renderOptions,
   );
 
@@ -123,7 +124,7 @@ test('Can remove a filter', async (done) => {
     .reply(200, {});
 
   const { getAllByLabelText, getByText } = renderWithRedux(
-    withCVRoute(<ContentViewFilters cvId={1} />),
+    withCVRoute(<ContentViewFilters cvId={1} details={details} />),
     renderOptions,
   );
 
@@ -161,7 +162,7 @@ test('Can remove multiple filters', async (done) => {
     .reply(200, {});
 
   const { getAllByLabelText, getByLabelText, getByText } = renderWithRedux(
-    withCVRoute(<ContentViewFilters cvId={1} />),
+    withCVRoute(<ContentViewFilters cvId={1} details={details} />),
     renderOptions,
   );
 

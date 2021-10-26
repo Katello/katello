@@ -17,6 +17,7 @@ import RoutedTabs from '../../../components/RoutedTabs';
 import ContentViewIcon from '../components/ContentViewIcon';
 import CVBreadCrumb from '../components/CVBreadCrumb';
 import PublishContentViewWizard from '../Publish/PublishContentViewWizard';
+import { hasPermission } from '../helpers';
 
 export default () => {
   const { id } = useParams();
@@ -25,7 +26,7 @@ export default () => {
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
-  const { name, composite } = details;
+  const { name, composite, permissions } = details;
   const tabs = [
     {
       key: 'details',
@@ -35,7 +36,7 @@ export default () => {
     {
       key: 'versions',
       title: __('Versions'),
-      content: <ContentViewVersionsRoutes cvId={cvId} />,
+      content: <ContentViewVersionsRoutes {...{ cvId, details }} />,
     },
     ...composite ? [{
       key: 'contentviews',
@@ -49,7 +50,7 @@ export default () => {
     {
       key: 'filters',
       title: __('Filters'),
-      content: <ContentViewFilterRoutes cvId={cvId} />,
+      content: <ContentViewFilterRoutes {...{ cvId, details }} />,
     }],
     {
       key: 'history',
@@ -77,19 +78,21 @@ export default () => {
           </GridItem>
           <GridItem xl={4} lg={5} sm={12} >
             <Flex justifyContent={{ lg: 'justifyContentFlexEnd', sm: 'justifyContentFlexStart' }}>
-              <FlexItem>
-                <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
-                  {__('Publish new version')}
-                </Button>
-                {isPublishModalOpen && <PublishContentViewWizard
-                  details={details}
-                  show={isPublishModalOpen}
-                  setIsOpen={setIsPublishModalOpen}
-                  currentStep={currentStep}
-                  setCurrentStep={setCurrentStep}
-                  aria-label="publish_content_view_modal"
-                />}
-              </FlexItem>
+              {hasPermission(permissions, 'publish_content_views') &&
+                <FlexItem>
+                  <Button onClick={() => { setIsPublishModalOpen(true); }} variant="primary" aria-label="publish_content_view">
+                    {__('Publish new version')}
+                  </Button>
+                  {isPublishModalOpen && <PublishContentViewWizard
+                    details={details}
+                    show={isPublishModalOpen}
+                    setIsOpen={setIsPublishModalOpen}
+                    currentStep={currentStep}
+                    setCurrentStep={setCurrentStep}
+                    aria-label="publish_content_view_modal"
+                  />}
+                </FlexItem>
+              }
               <FlexItem>
                 <Button
                   component="a"

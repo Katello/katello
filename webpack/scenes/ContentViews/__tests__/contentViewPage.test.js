@@ -183,7 +183,7 @@ test('Can handle errored response', async (done) => {
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
   expect(queryByText(firstCV.name)).toBeNull();
-  await patientlyWaitFor(() => expect(queryByText(/unable to connect/i)).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(queryByText(/Something went wrong! Please check server logs!/i)).toBeInTheDocument());
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });
@@ -348,6 +348,7 @@ test('Displays Create Content View and opens modal with Form', async () => {
     subtotal: 0,
     page: 1,
     per_page: 20,
+    can_create: true,
     results: [],
   };
   nockInstance
