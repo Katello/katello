@@ -17,8 +17,10 @@ module Actions
 
           if input[:options][:unit_type_id] == 'ostree_ref'
             artifact_href = input[:options][:artifact_href]
-            repository_name = input[:options][:repository_name]
-            output[:pulp_tasks] = [repo_backend_service.import_content(artifact_href, repository_name)]
+            repo_name = input[:options][:repository_name]
+            ref = input[:options][:ref]
+            parent_commit = input[:options][:parent_commit]
+            output[:pulp_tasks] = [repo_backend_service.import_content(artifact_href, repo_name, )]
           else
             content_unit = input[:content_unit]
             content_unit_href = content_unit.is_a?(String) ? content_unit : content_unit.last[:created_resources].first

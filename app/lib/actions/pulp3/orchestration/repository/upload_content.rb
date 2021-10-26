@@ -41,7 +41,7 @@ module Actions
               import_args = {}
 
               if unit_type_id == 'ostree_ref'
-                import_args = { unit_type_id: unit_type_id, artifact_href: artifact_href, repository_name: 'foo' }
+                import_args = { unit_type_id: unit_type_id, artifact_href: artifact_href, repository_name: "repo" }
               end
 
               Rails.logger.debug("Katello::Pulp3::Orchestration::UploadContent import args #{import_args}")
