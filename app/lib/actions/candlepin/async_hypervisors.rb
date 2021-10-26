@@ -6,16 +6,20 @@ module Actions
         param :task_id
       end
 
-      def poll_external_task(task_id = external_task[:id])
-        task = ::Katello::Resources::Candlepin::Job.get(task_id, :result_data => true)
-        unless ::Katello::Resources::Candlepin::Job.not_finished?(task)
-          output[:hypervisors] = ::Actions::Katello::Host::Hypervisors.parse_hypervisors(task.delete('resultData'))
-        end
-        task
+      def invoke_external_task
+        self.external_task = { :id => input[:task_id] }
+        poll_external_task
       end
 
-      def invoke_external_task
-        poll_external_task(input[:task_id])
+      def on_finish
+        super
+        output[:hypervisors] = ::Actions::Katello::Host::Hypervisors.parse_hypervisors(external_task.delete('resultData'))
+      end
+
+      private
+
+      def job_poll_params
+        {:result_data => true}
       end
     end
   end
