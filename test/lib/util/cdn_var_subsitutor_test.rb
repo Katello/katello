@@ -2,17 +2,24 @@ require 'katello_test_helper'
 
 FakeContent = Struct.new(:name, :content_url)
 
+class MockResourceWithSubstitutions
+  def find_substitutions(path)
+  end
+end
+
 module Katello
   module Util
     class CdnVarSubstitutorTest < ActiveSupport::TestCase
       def setup
         @el5_path = '/content/dist/rhel/server/5/$releasever/$basearch/os'
+        @el5_base_path = '/content/dist/rhel/server/5/'
         @releasever_list = ['5Server', '5.8']
         @arch_list = ['x86_64', 'i386']
+        @resource = MockResourceWithSubstitutions.new
       end
 
       def test_no_substitute_vars
-        cdn_var = CdnVarSubstitutor.new(mock)
+        cdn_var = CdnVarSubstitutor.new(@resource)
         path = '/no/substitutions/apply'
 
         list = cdn_var.substitute_vars(path)
@@ -21,20 +28,15 @@ module Katello
       end
 
       def test_empty_substitute_vars
-        resource = mock
-        cdn_var = CdnVarSubstitutor.new(resource)
+        cdn_var = CdnVarSubstitutor.new(@resource)
 
-        resource.expects(:fetch_substitutions).with(
-          base_path: "/content/dist/rhel/server/5/",
-          content_path: @el5_path
-        ).returns([])
+        @resource.expects(:fetch_substitutions).with(@el5_base_path).returns([])
 
         assert_empty cdn_var.substitute_vars(@el5_path)
       end
 
       def test_substitute_vars
-        resource = mock
-        cdn_var = CdnVarSubstitutor.new(resource)
+        cdn_var = CdnVarSubstitutor.new(@resource)
 
         five_server_x86_64 = PathWithSubstitutions.new('/content/dist/rhel/server/5/5Server/x86_64/os',
                                                        'releasever' => '5Server', 'basearch' => 'x86_64')
@@ -42,20 +44,9 @@ module Katello
         five_point_eight_i386 = PathWithSubstitutions.new('/content/dist/rhel/server/5/5.8/i386/os',
                                                           'releasever' => '5.8', 'basearch' => 'i386')
 
-        resource.expects(:fetch_substitutions).with(
-          base_path: "/content/dist/rhel/server/5/",
-          content_path: @el5_path
-        ).returns(['5Server', '5.8'])
-
-        resource.expects(:fetch_substitutions).with(
-          base_path: "/content/dist/rhel/server/5/5Server/",
-          content_path: "/content/dist/rhel/server/5/5Server/$basearch/os"
-        ).returns(['x86_64'])
-
-        resource.expects(:fetch_substitutions).with(
-          base_path: "/content/dist/rhel/server/5/5.8/",
-          content_path: "/content/dist/rhel/server/5/5.8/$basearch/os"
-        ).returns(['i386'])
+        @resource.expects(:fetch_substitutions).with(@el5_base_path).returns(['5Server', '5.8'])
+        @resource.expects(:fetch_substitutions).with(@el5_base_path + '5Server/').returns(['x86_64'])
+        @resource.expects(:fetch_substitutions).with(@el5_base_path + '5.8/').returns(['i386'])
 
         resolved_list = cdn_var.substitute_vars(@el5_path)
 

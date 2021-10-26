@@ -9,12 +9,12 @@ module Katello
           super
         end
 
-        def fetch_substitutions(base_path: nil, content_path:) # rubocop:disable Lint/UnusedMethodArgument
+        def fetch_paths(content_path)
           url = "/katello/api/v2/repository_sets?organization_id=#{organization['id']}&search=#{CGI.escape("path = #{content_path}")}"
           response = get(url)
           repo_set = JSON.parse(response)['results'].first
 
-          fail _("Upstream organization #{@organization_label}") if repo_set.nil?
+          fail _("Upstream organization #{@organization_label} does not provide this content path") if repo_set.nil?
 
           # now get available repositories when we know the upstream repo set ID
           url = "/katello/api/v2/repository_sets/#{repo_set['id']}/available_repositories?organization_id=#{organization['id']}"
@@ -22,8 +22,12 @@ module Katello
           json_body = JSON.parse(response)
           results = json_body['results']
 
-          # probably need to gether all substitutions, not just first...
-          results.first['substitutions'].values
+          results.map do |r|
+            {
+              path: r['path'],
+              substitutions: r['substitutions']
+            }
+          end
         end
 
         def valid_path?(_path, _postfix)

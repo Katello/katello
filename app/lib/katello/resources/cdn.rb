@@ -154,7 +154,7 @@ module Katello
           return false
         end
 
-        def fetch_substitutions(base_path:, content_path: nil) # rubocop:disable Lint/UnusedMethodArgument
+        def fetch_substitutions(base_path)
           get(File.join(base_path, "listing")).split("\n")
         rescue Errors::NotFound => e # some of listing file points to not existing content
           log :error, e.message

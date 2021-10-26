@@ -35,7 +35,8 @@ module Actions
         end
 
         def cdn_var_substitutor
-          product.cdn_resource&.substitutor
+          return unless (cdn_resource = product.cdn_resource)
+          cdn_resource.substitutor
         end
 
         def prepare_result(substitutions, _path)
@@ -70,6 +71,10 @@ module Actions
           ::Katello::Candlepin::RepositoryMapper.new(product,
                                                      content,
                                                      substitutions)
+        end
+
+        def cdn_url
+          product.provider[:repository_url]
         end
       end
     end

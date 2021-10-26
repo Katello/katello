@@ -76,8 +76,16 @@ module Katello
       end
 
       def resolve_path(path_with_substitutions)
-        @resource.fetch_substitutions(base_path: path_with_substitutions.base_path, content_path: path_with_substitutions.path).compact.map do |value|
-          path_with_substitutions.resolve_token(value)
+        if @resource.respond_to?(:fetch_paths)
+          @resource.fetch_paths(path_with_substitutions.path).compact.map do |element|
+            PathWithSubstitutions.new(element[:path], element[:substitutions])
+          end
+        elsif @resource.respond_to?(:fetch_substitutions)
+          @resource.fetch_substitutions(path_with_substitutions.base_path).compact.map do |value|
+            path_with_substitutions.resolve_token(value)
+          end
+        else
+          fail _("Unsupported CDN resource")
         end
       end
     end
