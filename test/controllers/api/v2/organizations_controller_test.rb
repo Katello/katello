@@ -5,7 +5,6 @@ require "katello_test_helper"
 module Katello
   class Api::V2::OrganizationsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
-    include Support::ForemanTasks::Task
 
     def permissions
       @read_permission = :view_organizations
@@ -118,8 +117,10 @@ module Katello
 
     def test_update_cdn_configuration
       url = "http://www.redhat.com"
-      assert_sync_task ::Actions::Katello::CdnConfiguration::Update do |_organization, params|
-        params[:url] == url
+
+      assert_sync_task(::Actions::Katello::CdnConfiguration::Update) do |organization, params|
+        organization.id.must_equal @organization.id
+        params[:url].must_equal url
       end
 
       put(:cdn_configuration, params: { :id => @organization.id, :url => url })

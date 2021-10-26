@@ -148,7 +148,7 @@ module Katello
         ssl_ca_credential_id: params[:ssl_ca_credential_id]
       }
 
-      task = async_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, config_params.reject! { |_k, v| v.nil? })
+      task = sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, config_params.reject! { |_k, v| v.nil? })
 
       respond_for_async :resource => task
     end

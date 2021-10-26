@@ -14,7 +14,7 @@ module Katello
           response = get(url)
           repo_set = JSON.parse(response)['results'].first
 
-          fail _("Upstream organization #{@organization_label} does not provide this content path") if repo_set.nil?
+          fail _("Upstream organization %s does not provide this content path") % @organization_label if repo_set.nil?
 
           # now get available repositories when we know the upstream repo set ID
           url = "/katello/api/v2/repository_sets/#{repo_set['id']}/available_repositories?organization_id=#{organization['id']}"
@@ -43,7 +43,7 @@ module Katello
           repository = JSON.parse(response)['results'].first
 
           if repository.nil?
-            fail _("No repository with content_label=#{content_label} was found in upstream organization=#{@organization_label}")
+            fail _("Repository with content label %s was not found in upstream organization %s") % [content_label, @organization_label]
           end
 
           repository['full_path']

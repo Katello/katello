@@ -74,10 +74,10 @@ module Katello
       end
 
       def feed_url
-        @feed_url ||= if product.cdn_configuration.redhat?
-                        product.repo_url(path)
-                      else
+        @feed_url ||= if product.cdn_resource&.respond_to?(:repository_url)
                         product.cdn_resource.repository_url(content_label: content.label)
+                      else
+                        product.repo_url(path)
                       end
       end
 
