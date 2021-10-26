@@ -8,7 +8,7 @@ module Katello
       def services(capsule_id = nil)
         proxy = fetch_proxy(capsule_id)
         services = [:candlepin, :candlepin_auth, :foreman_tasks, :katello_events, :candlepin_events]
-        services += [:pulp3] if proxy&.pulp3_enabled?
+        services += [:pulp3, :pulp3_content] if proxy&.pulp3_enabled?
         services += [:katello_agent] if ::Katello.with_katello_agent?
         if proxy.nil? || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) || proxy.has_feature?(SmartProxy::PULP_FEATURE)
           services += [:pulp, :pulp_auth]
@@ -74,6 +74,12 @@ module Katello
       def ping_pulp3_without_auth(service_result, capsule_id)
         exception_watch(service_result) do
           Katello::Ping.pulp3_without_auth(fetch_proxy(capsule_id).pulp3_url)
+        end
+      end
+
+      def ping_pulp3_content_without_auth(service_result, capsule_id)
+        exception_watch(service_result) do
+          Katello::Ping.pulp3_content_without_auth(fetch_proxy(capsule_id).pulp3_url)
         end
       end
 
@@ -200,6 +206,16 @@ module Katello
         json
       end
 
+      def pulp3_content_without_auth(url)
+        json = backend_status(url, :pulp)
+        fail _("Pulp does not appear to be running at %s.") % url if json.empty?
+
+        content_apps = json["online_content_apps"] || []
+        fail _("No pulpcore content apps are running at %s.") % url if content_apps.empty?
+
+        json
+      end
+
       def all_pulp_workers_present?(json)
         worker_ids = json["known_workers"].collect { |worker| worker["_id"] }
         return false unless worker_ids.any?
@@ -217,12 +233,14 @@ module Katello
         end
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def ping_services_for_capsule(services, capsule_id)
         services ||= self.services(capsule_id)
         result = {}
         services.each { |service| result[service] = {} }
 
         ping_pulp3_without_auth(result[:pulp3], capsule_id) if result.include?(:pulp3)
+        ping_pulp3_content_without_auth(result[:pulp3_content], capsule_id) if result.include?(:pulp3_content)
         ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
         ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
 
@@ -238,6 +256,7 @@ module Katello
         result[:status] = result[:services].each_value.any? { |v| v[:status] == FAIL_RETURN_CODE } ? FAIL_RETURN_CODE : OK_RETURN_CODE
         result
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def fetch_proxy(capsule_id)
         capsule_id ? SmartProxy.unscoped.find(capsule_id) : SmartProxy.pulp_primary
