@@ -338,7 +338,7 @@ module Katello
     end
 
     def generic?
-      Katello::RepositoryTypeManager.generic_repository_types(enabled_only: false).values.map(&:id).map(&:to_s).flatten.include? self.content_type
+      Katello::RepositoryTypeManager.generic_repository_types(false).values.map(&:id).map(&:to_s).flatten.include? self.content_type
     end
 
     def metadata_generate_needed?
