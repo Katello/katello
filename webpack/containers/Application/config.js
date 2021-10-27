@@ -56,11 +56,11 @@ export const links = [
   },
   {
     path: 'content_views',
-    component: withHeader(ContentViews, { title: __('Content Views') }),
+    component: WithOrganization(withHeader(ContentViews, { title: __('Content Views') })),
   },
   {
     path: 'content_views/:id([0-9]+)',
-    component: withHeader(ContentViewDetails, { title: __('Content View Details') }),
+    component: WithOrganization(withHeader(ContentViewDetails, { title: __('Content View Details') })),
     exact: false,
   },
   {
