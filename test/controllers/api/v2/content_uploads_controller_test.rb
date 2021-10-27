@@ -88,6 +88,8 @@ module Katello
       pulp_server = mock(:resources => resources)
       pulp_primary = mock(pulp_api: pulp_server, pulp3_support?: false)
       pulp_primary.stubs(:content_service).returns(stub(:content_type => "rpm"))
+      pulp_primary.stubs(:has_feature?).returns(true)
+      pulp_primary.stubs(:capabilities).returns(['rpm', 'file', 'deb', 'container', 'ansible'])
       SmartProxy.expects(:pulp_primary).at_least_once.returns(pulp_primary)
     end
   end
