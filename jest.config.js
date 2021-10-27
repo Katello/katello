@@ -5,6 +5,8 @@ const foremanReactFull = foremanRelativePath(foremanReactRelative);
 
 // Jest configuration
 module.exports = {
+  logHeapUsage: true,
+  maxWorkers: 2,
   testURL: 'http://localhost/',
   setupFiles: [
     './webpack/test_setup.js',

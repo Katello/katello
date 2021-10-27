@@ -5,17 +5,16 @@ import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } 
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewRepositories from '../ContentViewRepositories';
-
-const repoData = require('./contentViewDetailRepos.fixtures.json');
+import repoData from './contentViewDetailRepos.fixtures.json';
+import cvDetailData from '../../__tests__/contentViewDetails.fixtures.json';
+import cvRepoAddData from './contentViewRepoAdd.fixture.json';
 
 const autocompleteUrl = '/repositories/auto_complete_search';
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvAllRepos = api.getApiUrl('/content_views/1/repositories/show_all');
 const repoTypesResponse = [{ name: 'deb' }, { name: 'docker' }, { name: 'file' }, { name: 'ostree' }, { name: 'yum' }];
-const cvDetailData = require('../../__tests__/contentViewDetails.fixtures.json');
 
 const cvDetailsPath = api.getApiUrl('/content_views/1');
-const cvRepoAddData = require('./contentViewRepoAdd.fixture.json');
 
 let firstRepo;
 let searchDelayScope;

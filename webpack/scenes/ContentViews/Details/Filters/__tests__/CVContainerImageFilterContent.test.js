@@ -11,9 +11,8 @@ import nock, {
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CVContainerImageFilterContent from '../CVContainerImageFilterContent';
-
-const cvFilterFixtures = require('./CVContainerImageFilterContent.fixtures.json');
-const details = require('../../../../ContentViews/__tests__/mockDetails.fixtures.json');
+import cvFilterFixtures from './CVContainerImageFilterContent.fixtures.json';
+import details from '../../../../ContentViews/__tests__/mockDetails.fixtures.json';
 
 const afterDeleteFilterResultsArray = [...cvFilterFixtures.results];
 afterDeleteFilterResultsArray.shift();

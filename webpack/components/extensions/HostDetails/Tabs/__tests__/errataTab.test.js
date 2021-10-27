@@ -1,11 +1,10 @@
 import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
-import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
+import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_ERRATA_KEY } from '../../HostErrata/HostErrataConstants';
 import { ErrataTab } from '../ErrataTab';
-
-const mockErrataData = require('./errata.fixtures.json');
+import mockErrataData from './errata.fixtures.json';
 
 const renderOptions = {
   apiNamespace: HOST_ERRATA_KEY,
@@ -57,6 +56,7 @@ let searchDelayScope;
 let autoSearchScope;
 
 beforeEach(() => {
+  // jest.resetModules();
   const { results } = mockErrataData;
   [firstErrata] = results;
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
@@ -64,7 +64,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  nock.cleanAll();
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
 });

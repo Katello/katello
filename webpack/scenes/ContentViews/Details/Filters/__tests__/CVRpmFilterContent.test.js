@@ -11,11 +11,10 @@ import nock, {
   mockSetting,
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
-
-const cvFilterDetails = require('./cvPackageFilterDetail.fixtures.json');
-const cvPackageFilterRules = require('./cvPackageFilterRules.fixtures.json');
-const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
-const details = require('../../../__tests__/mockDetails.fixtures.json');
+import cvFilterDetails from './cvPackageFilterDetail.fixtures.json';
+import cvPackageFilterRules from './cvPackageFilterRules.fixtures.json';
+import cvFilterFixtures from './contentViewFilters.fixtures.json';
+import details from '../../../__tests__/mockDetails.fixtures.json';
 
 const cvFiltersPath = api.getApiUrl('/content_view_filters');
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/2');

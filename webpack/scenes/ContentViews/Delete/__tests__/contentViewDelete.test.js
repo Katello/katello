@@ -7,32 +7,31 @@ import nock, {
 } from '../../../../test-utils/nockWrapper';
 import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
 import ContentViewsPage from '../../ContentViewsPage.js';
-
-const cvIndexData = require('./CvData.fixtures');
+import cvIndexData from './CvData.fixtures.json';
+import environmentPathsData from './envPathData.fixtures.json';
+import cvVersionsData from './cvVersionsData.fixtures.json';
+import cvDetailsData from './cvDetails.fixtures.json';
+import affectedActivationKeysData from '../../Details/Versions/Delete/__tests__/cvAffectedActivationKeys.fixture.json';
+import affectedHostData from './affectedHosts.fixtures.json';
+import cVDropDownOptionsData from '../../Details/Versions/Delete/__tests__/cvDropDownOptionsResponse.fixture.json';
+import cvDeleteResponse from '../../Details/Versions/Delete/__tests__/cvVersionRemoveResponse.fixture.json';
 
 const cvIndexPath = api.getApiUrl('/content_views?organization_id=1&nondefault=true&include_permissions=true&per_page=20&page=1');
 const autocompleteUrl = '/content_views/auto_complete_search';
 const renderOptions = { apiNamespace: CONTENT_VIEWS_KEY };
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
-const environmentPathsData = require('./envPathData.fixtures.json');
 
 const cvVersionsPath = api.getApiUrl('/content_view_versions');
-const cvVersionsData = require('./cvVersionsData.fixtures.json');
 
 const cvDetailsPath = api.getApiUrl('/content_views/20');
-const cvDetailsData = require('./cvDetails.fixtures.json');
 
 const activationKeyURL = api.getApiUrl('/activation_keys');
-const affectedActivationKeysData = require('../../Details/Versions/Delete/__tests__/cvAffectedActivationKeys.fixture.json');
 
 const hostURL = foremanApi.getApiUrl('/hosts');
-const affectedHostData = require('./affectedHosts.fixtures.json');
 
 const cVDropDownOptionsPath = api.getApiUrl('/content_views?organization_id=1&environment_id=9&include_default=true&include_permissions=true&full_result=true');
-const cVDropDownOptionsData = require('../../Details/Versions/Delete/__tests__/cvDropDownOptionsResponse.fixture.json');
 
 const cvDeleteUrl = api.getApiUrl('/content_views/20/remove');
-const cvDeleteResponse = require('../../Details/Versions/Delete/__tests__/cvVersionRemoveResponse.fixture');
 
 
 let firstCV;

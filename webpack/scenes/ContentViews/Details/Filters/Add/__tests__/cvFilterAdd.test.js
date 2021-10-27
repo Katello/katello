@@ -5,8 +5,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-
 import api from '../../../../../../services/api';
 import CVFilterAddModal from '../CVFilterAddModal';
 import { nockInstance, assertNockRequest } from '../../../../../../test-utils/nockWrapper';
-
-const cvCreateData = require('./cvFilterCreateResult.fixtures.json');
+import cvCreateData from './cvFilterCreateResult.fixtures.json';
 
 const cvCreateFilterPath = api.getApiUrl('/content_view_filters?content_view_id=5');
 

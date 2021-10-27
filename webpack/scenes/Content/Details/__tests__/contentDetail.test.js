@@ -6,9 +6,8 @@ import api from '../../../../services/api';
 import { CONTENT_ID_KEY } from '../../ContentConstants';
 import ContentDetails from '../ContentDetails';
 import ContentRepositories from '../ContentRepositories';
-
-const pythonPackageDetailsResponse = require('./pythonPackageDetails.fixtures.json');
-const pythonPackageRepositoryDetailsResponse = require('./pythonPackageRepositoryDetails.fixtures.json');
+import pythonPackageDetailsResponse from './pythonPackageDetails.fixtures.json';
+import pythonPackageRepositoryDetailsResponse from './pythonPackageRepositoryDetails.fixtures.json';
 
 const pythonPackageDetailsPath = api.getApiUrl('/python_packages/1491');
 const pythonPackageRepositoryDetailsPath = api.getApiUrl('/repositories');

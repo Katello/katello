@@ -4,11 +4,10 @@ import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } 
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewComponents from '../ContentViewComponents';
-
-const cvComponentData = require('./contentViewComponents.fixtures.json');
-const cvUnpublishedComponentData = require('./unpublishedCVComponents.fixtures.json');
-const cvPublishedComponentData = require('./publishedContentViewDetails.fixtures.json');
-const cvDetails = require('../../__tests__/contentViewDetails.fixtures.json');
+import cvComponentData from './contentViewComponents.fixtures.json';
+import cvUnpublishedComponentData from './unpublishedCVComponents.fixtures.json';
+import cvPublishedComponentData from './publishedContentViewDetails.fixtures.json';
+import cvDetails from '../../__tests__/contentViewDetails.fixtures.json';
 
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvComponentsWithoutSearch = api.getApiUrl('/content_views/4/content_view_components/show_all?per_page=20&page=1&status=All');

@@ -4,11 +4,10 @@ import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSet
 import { foremanApi } from '../../../../../services/api';
 import { HOST_TRACES_KEY } from '../HostTracesConstants';
 import TracesTab from '../TracesTab';
-
-const mockTraceData = require('./traces.fixtures.json');
-const mockResolveTraceTask = require('./resolveTraces.fixtures.json');
-const emptyTraceResults = require('./tracerEmptyTraceResults.fixtures.json');
-const mockJobInvocationStatus = require('./tracerEnableJobInvocation.fixtures.json');
+import mockTraceData from './traces.fixtures.json';
+import mockResolveTraceTask from './resolveTraces.fixtures.json';
+import emptyTraceResults from './tracerEmptyTraceResults.fixtures.json';
+import mockJobInvocationStatus from './tracerEnableJobInvocation.fixtures.json';
 
 const tracerInstalledResponse = {
   id: 1,

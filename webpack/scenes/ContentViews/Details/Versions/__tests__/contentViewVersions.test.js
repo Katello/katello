@@ -5,20 +5,19 @@ import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } 
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewVersions from '../ContentViewVersions';
-
-const cvVersionsData = require('./contentViewVersions.fixtures.json');
-const emptyCVVersionData = require('./emptyCVVersion.fixtures.json');
-const cvVersionsTasksData = require('./contentViewVersionsWithTask.fixtures.json');
-const contentViewTaskInProgressResponseData = require('./contentViewTaskInProgressResponse.fixtures.json');
-const contentViewTaskResponseData = require('./contentViewTaskResponse.fixtures.json');
-const cvDetailData = require('../../../../ContentViews/__tests__/mockDetails.fixtures.json');
+import cvVersionsData from './contentViewVersions.fixtures.json';
+import emptyCVVersionData from './emptyCVVersion.fixtures.json';
+import cvVersionsTasksData from './contentViewVersionsWithTask.fixtures.json';
+import contentViewTaskInProgressResponseData from './contentViewTaskInProgressResponse.fixtures.json';
+import contentViewTaskResponseData from './contentViewTaskResponse.fixtures.json';
+import cvDetailData from '../../../../ContentViews/__tests__/mockDetails.fixtures.json';
+import environmentPathsData from '../../../Publish/__tests__/environmentPaths.fixtures.json';
 
 const cvPromotePath = api.getApiUrl('/content_view_versions/10/promote');
 const promoteResponseData = contentViewTaskInProgressResponseData;
 
 
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
-const environmentPathsData = require('../../../Publish/__tests__/environmentPaths.fixtures.json');
 
 const withCVRoute = component => <Route path="/content_views/:id">{component}</Route>;
 
