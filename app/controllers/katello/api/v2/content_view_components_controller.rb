@@ -48,13 +48,19 @@ module Katello
       SQL
       query = Katello::ContentView.readable.in_organization(@organization)
       query = query&.non_composite&.non_default
+      component_cv_ids = Katello::ContentViewComponent.where(composite_content_view_id: @view.id).select(:content_view_id)
+      query = case params[:status]
+              when "Not added"
+                query.where.not(id: component_cv_ids)
+              when "Added"
+                query.where(id: component_cv_ids)
+              else
+                query
+              end
       custom_sort = ->(sort_query) { sort_query.joins(join_query).order(order_query) }
       options = { resource_class: Katello::ContentView, custom_sort: custom_sort }
       collection = scoped_search(query, nil, nil, options)
       collection[:results] = ComponentViewPresenter.component_presenter(@view, params[:status], views: collection[:results])
-      collection[:total] = get_total params[:status]
-      collection[:subtotal] = collection[:total]
-
       respond_for_index(:collection => collection, :template => "index")
     end
 
