@@ -44,7 +44,7 @@ module Katello
               generic_remote_option3: "value 3"
             }
             @repo.root.stubs(:generic_remote_options).returns(generic_remote_options.to_json)
-            assert_empty generic_remote_options.to_a - @service.remote_options.to_a, 
+            assert_empty generic_remote_options.to_a - @service.remote_options.to_a,
               "Remote options didn't include generic remote options"
           end
         end

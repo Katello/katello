@@ -20,7 +20,7 @@ module Actions
             repo_name = input[:options][:repository_name]
             ref = input[:options][:ref]
             parent_commit = input[:options][:parent_commit]
-            output[:pulp_tasks] = [repo_backend_service.import_content(artifact_href, repo_name, )]
+            output[:pulp_tasks] = [repo_backend_service.import_content(artifact_href, repo_name, ref, parent_commit)]
           else
             content_unit = input[:content_unit]
             content_unit_href = content_unit.is_a?(String) ? content_unit : content_unit.last[:created_resources].first
