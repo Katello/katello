@@ -8,6 +8,7 @@ module Actions
       class UploadFiles < Actions::EntryAction
         include Actions::Katello::PulpSelector
         def plan(repository, files, content_type = nil, options = {})
+          Rails.logger.debug("Katello::Pulp3::Repository::UploadFiles options #{options}")
           action_subject(repository)
           repository.clear_smart_proxy_sync_histories
           tmp_files = prepare_tmp_files(files)
@@ -28,8 +29,9 @@ module Actions
           sequence do
             tmp_files.each do |file|
               sequence do
-                upload_action = plan_action(Pulp3::Orchestration::Repository::UploadContent,
-                                                 repository, SmartProxy.pulp_primary!, file, unit_type_id)
+                upload_action = plan_action(
+                  Pulp3::Orchestration::Repository::UploadContent,
+                  repository, SmartProxy.pulp_primary!, file, unit_type_id, options)
 
                 upload_actions << upload_action.output
               end

@@ -361,6 +361,9 @@ module Katello
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
     param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
+    param :ostree_repository_name, String, :desc => N_("Name of repository in OSTree archive")
+    param :ostree_ref, String, :desc => N_("OSTree ref branch that holds the reference to the last commit")
+    param :ostree_parent_commit, String, :desc => N_("Checksum of a parent commit with which the OSTreee content needs to be associated")
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Container Image content.") if @repository.docker?
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Ansible collections.") if @repository.ansible_collection?
@@ -370,7 +373,10 @@ module Katello
       end
 
       if !filepaths.blank?
-        sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths, params[:content_type])
+        sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths, params[:content_type],
+          ostree_repository_name: params[:ostree_repository_name],
+          ostree_ref: params[:ostree_ref],
+          ostree_parent_commit: params[:ostree_parent_commit])
         render :json => {:status => "success", :filenames => filepaths.map { |item| item[:filename] }}
       else
         fail HttpErrors::BadRequest, _("No file uploaded")

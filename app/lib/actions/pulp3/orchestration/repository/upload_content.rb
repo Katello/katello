@@ -4,7 +4,9 @@ module Actions
       module Repository
         class UploadContent < Pulp3::Abstract
           include Actions::Helpers::OutputPropagator
-          def plan(repository, smart_proxy, file, unit_type_id)
+          def plan(repository, smart_proxy, file, unit_type_id, options)
+            Rails.logger.debug("Katello::Pulp3::Orchestration::UploadContent options #{options}")
+            
             sequence do
               checksum = Digest::SHA256.hexdigest(File.read(file[:path]))
               duplicate_sha_path_content_list = ::Katello::Pulp3::PulpContentUnit.find_duplicate_unit(repository, unit_type_id, file, checksum)
@@ -41,7 +43,13 @@ module Actions
               import_args = {}
 
               if unit_type_id == 'ostree_ref'
-                import_args = { unit_type_id: unit_type_id, artifact_href: artifact_href, repository_name: "repo" }
+                import_args = {
+                  unit_type_id: unit_type_id,
+                  artifact_href: artifact_href,
+                  ref: options[:ostree_ref],
+                  parent_commit: options[:ostree_parent_commit],
+                  repository_name: options[:ostree_repository_name]
+                }
               end
 
               Rails.logger.debug("Katello::Pulp3::Orchestration::UploadContent import args #{import_args}")
