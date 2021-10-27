@@ -4,8 +4,7 @@ import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import CreateContentViewForm from '../CreateContentViewForm';
-
-const cvCreateData = require('./contentViewCreateResult.fixtures.json');
+import cvCreateData from './contentViewCreateResult.fixtures.json';
 
 const cvCreatePath = api.getApiUrl('/content_views');
 

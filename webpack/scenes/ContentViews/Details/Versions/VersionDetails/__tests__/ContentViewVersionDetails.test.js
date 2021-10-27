@@ -7,29 +7,25 @@ import api from '../../../../../../services/api';
 import { cvVersionDetailsKey } from '../../../../ContentViewsConstants';
 import ContentViewVersionDetails from '../ContentViewVersionDetails';
 import { AUTOSEARCH_DELAY, AUTOSEARCH_WHILE_TYPING } from '../../../../../Settings/SettingsConstants';
-
-
-const ContentViewVersionDetailsData = require('./ContentViewVersionDetails.fixtures.json');
-const ContentViewVersionDetailsCounts = require('./ContentViewVersionDetailsCounts.fixtures.json');
-const cvDetailData = require('../../../../__tests__/mockDetails.fixtures.json');
+import ContentViewVersionDetailsData from './ContentViewVersionDetails.fixtures.json';
+import ContentViewVersionDetailsCounts from './ContentViewVersionDetailsCounts.fixtures.json';
+import cvDetailData from '../../../../__tests__/mockDetails.fixtures.json';
+import ContentViewVersionsComponentData from './ContentViewVersionComponent.fixtures.json';
+import ContentViewVersionsRepositoriesData from './ContentViewVersionRepositories.fixtures.json';
+import ContentViewVersionRpmPackagesData from './ContentViewVersionRpmPackages.fixtures.json';
+import ContentViewVersionRpmPackageGroupsData from './ContentViewVersionRpmPackageGroups.fixtures.json';
+import ContentViewVersionFilesData from './ContentViewVersionFiles.fixtures.json';
+import ContentViewVersionErrataData from './ContentViewVersionErrata.fixtures.json';
+import ContentViewVersionModuleStreamsData from './ContentViewVersionModuleStreams.fixtures.json';
+import ContentViewVersionDebPackagesData from './ContentViewVersionDebPackages.fixtures.json';
+import ContentViewVersionAnsibleCollectionsData from './ContentViewVersionAnsibleCollections.fixtures.json';
+import ContentViewVersionDockerTagsData from './ContentViewVersionDockerTags.fixtures.json';
 
 // This changes the api count value so that only the specified tab will show.
 const getTabSpecificData = key => ({
   ...ContentViewVersionDetailsData,
   [key]: ContentViewVersionDetailsCounts[key],
 });
-
-// Tab Fixtures
-const ContentViewVersionsComponentData = require('./ContentViewVersionComponent.fixtures.json');
-const ContentViewVersionsRepositoriesData = require('./ContentViewVersionRepositories.fixtures.json');
-const ContentViewVersionRpmPackagesData = require('./ContentViewVersionRpmPackages.fixtures.json');
-const ContentViewVersionRpmPackageGroupsData = require('./ContentViewVersionRpmPackageGroups.fixtures.json');
-const ContentViewVersionFilesData = require('./ContentViewVersionFiles.fixtures.json');
-const ContentViewVersionErrataData = require('./ContentViewVersionErrata.fixtures.json');
-const ContentViewVersionModuleStreamsData = require('./ContentViewVersionModuleStreams.fixtures.json');
-const ContentViewVersionDebPackagesData = require('./ContentViewVersionDebPackages.fixtures.json');
-const ContentViewVersionAnsibleCollectionsData = require('./ContentViewVersionAnsibleCollections.fixtures.json');
-const ContentViewVersionDockerTagsData = require('./ContentViewVersionDockerTags.fixtures.json');
 
 const withCVRoute = component => <Route path="/versions/:versionId([0-9]+)">{component}</Route>;
 

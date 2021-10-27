@@ -6,8 +6,8 @@ import api from '../../../../../../services/api';
 import CVRpmMatchContentModal from '../CVRpmMatchContentModal';
 import nock, { nockInstance, assertNockRequest, mockSetting, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
 
-const CVMatchedContent = require('./CVRpmMatchContent.fixtures.json');
-const CVMatchContentSearch = require('./CVRpmMatchContentSearch.fixtures.json');
+import CVMatchedContent from './CVRpmMatchContent.fixtures.json';
+import CVMatchContentSearch from './CVRpmMatchContentSearch.fixtures.json';
 
 const firstMatchContent = CVMatchedContent.results[0];
 const { nvra: secondMatchContentName } = CVMatchedContent.results[1];

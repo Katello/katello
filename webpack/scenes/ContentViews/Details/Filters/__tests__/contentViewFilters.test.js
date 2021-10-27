@@ -6,6 +6,8 @@ import api from '../../../../../services/api';
 import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import ContentViewFilters from '../ContentViewFilters';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
+import cvFilterFixtures from './contentViewFilters.fixtures.json';
+import details from '../../../__tests__/mockDetails.fixtures.json';
 
 const withCVRoute = component =>
   <Route path="/content_views/:id([0-9]+)#/filters">{component}</Route>;
@@ -18,8 +20,6 @@ const renderOptions = {
   },
 };
 
-const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
-const details = require('../../../__tests__/mockDetails.fixtures.json');
 
 const cvFilters = api.getApiUrl('/content_view_filters');
 const autocompleteUrl = '/content_view_filters/auto_complete_search';

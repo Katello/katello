@@ -6,9 +6,8 @@ import { nockInstance, assertNockRequest } from '../../../../../../test-utils/no
 import api from '../../../../../../services/api';
 import { cvVersionDetailsKey } from '../../../../ContentViewsConstants';
 import ContentViewVersionDetails from '../ContentViewVersionDetails';
-
-const ContentViewVersionDetailsEmptyData = require('./ContentViewVersionDetails.fixtures.json');
-const cvDetailData = require('../../../../__tests__/mockDetails.fixtures.json');
+import ContentViewVersionDetailsEmptyData from './ContentViewVersionDetails.fixtures.json';
+import cvDetailData from '../../../../__tests__/mockDetails.fixtures.json';
 
 const withCVRoute = component =>
   <Route path="/versions/:versionId([0-9]+)">{component}</Route>;

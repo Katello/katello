@@ -12,12 +12,12 @@ import nock, {
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 
-const allPackageGroups = require('./allFilterPackageGroups.fixtures.json');
-const cvFilterDetails = require('./contentViewFilterDetail.fixtures.json');
-const cvFilterDetailsAffectedRepos = require('./cvFilterDetailWithAffectedRepos.fixtures.json');
-const cvFilterFixtures = require('./contentViewFilters.fixtures.json');
-const cvAllRepos = require('./cvAllRepos.fixtures.json');
-const details = require('../../../__tests__/mockDetails.fixtures.json');
+import allPackageGroups from './allFilterPackageGroups.fixtures.json';
+import cvFilterDetails from './contentViewFilterDetail.fixtures.json';
+import cvFilterDetailsAffectedRepos from './cvFilterDetailWithAffectedRepos.fixtures.json';
+import cvFilterFixtures from './contentViewFilters.fixtures.json';
+import cvAllRepos from './cvAllRepos.fixtures.json';
+import details from '../../../__tests__/mockDetails.fixtures.json';
 
 const cvRefreshCallbackPath = api.getApiUrl('/content_views/1');
 const cvFiltersPath = api.getApiUrl('/content_view_filters');

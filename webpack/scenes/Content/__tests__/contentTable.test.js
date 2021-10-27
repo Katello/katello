@@ -3,9 +3,8 @@ import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
 import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } from '../../../test-utils/nockWrapper';
 import api from '../../../services/api';
 import ContentPage from '../ContentPage';
-
-const contentTypesResponse = require('./contentTypes.fixtures.json');
-const pythonPackagesResponse = require('./pythonPackages.fixtures.json');
+import contentTypesResponse from './contentTypes.fixtures.json';
+import pythonPackagesResponse from './pythonPackages.fixtures.json';
 
 const contentTypesPath = api.getApiUrl('/repositories/content_types');
 const pythonPackagesPath = api.getApiUrl('/python_packages');

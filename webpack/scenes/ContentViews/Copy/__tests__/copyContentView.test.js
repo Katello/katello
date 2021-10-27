@@ -5,7 +5,7 @@ import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrap
 import api from '../../../../services/api';
 import CopyContentViewForm from '../CopyContentViewForm';
 
-const cvCopyData = require('./contentViewCopyResult.fixtures.json');
+import cvCopyData from './contentViewCopyResult.fixtures.json';
 
 const cvId = '1';
 const cvCopyPath = api.getApiUrl(`/content_views/${cvId}/copy`);

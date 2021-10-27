@@ -5,8 +5,7 @@ import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockSetting } 
 import api from '../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../ContentViewsConstants';
 import ContentViewHistories from '../ContentViewHistories';
-
-const historyData = require('./contentViewHistory.fixtures.json');
+import historyData from './contentViewHistory.fixtures.json';
 
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_1` };
 const cvHistories = api.getApiUrl('/content_views/1/history');

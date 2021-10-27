@@ -7,9 +7,8 @@ import {
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 import CVErrataDateFilterContent from '../CVErrataDateFilterContent';
-
-const cvFilterDetails = require('./contentViewErrataByDateDetails.fixtures.json');
-const details = require('../../../__tests__/mockDetails.fixtures.json');
+import cvFilterDetails from './contentViewErrataByDateDetails.fixtures.json';
+import details from '../../../__tests__/mockDetails.fixtures.json';
 
 const cvFilterDetailsPath = api.getApiUrl('/content_view_filters/36');
 

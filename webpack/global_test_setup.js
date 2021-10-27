@@ -9,3 +9,8 @@ global.console.error = (error, stack) => {
 
 // Increase jest timeout as some tests using multiple http mocks can time out on CI systems.
 jest.setTimeout(300000);
+
+afterAll(() => {
+  jest.resetModules();
+  if (global.gc) global.gc();
+});

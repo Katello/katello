@@ -9,8 +9,7 @@ import nock, {
   nockInstance, assertNockRequest, mockAutocomplete, mockSetting,
 } from '../../../test-utils/nockWrapper';
 import createBasicCVs from './basicContentViews.fixtures';
-
-const cvIndexData = require('./contentViewList.fixtures.json');
+import cvIndexData from './contentViewList.fixtures.json';
 
 const cvIndexPath = api.getApiUrl('/content_views');
 const autocompleteUrl = '/content_views/auto_complete_search';

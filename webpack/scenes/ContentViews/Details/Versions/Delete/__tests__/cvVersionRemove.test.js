@@ -4,27 +4,26 @@ import nock, { nockInstance, assertNockRequest, mockAutocomplete, mockForemanAut
 import api, { foremanApi } from '../../../../../../services/api';
 import CONTENT_VIEWS_KEY from '../../../../ContentViewsConstants';
 import ContentViewVersions from '../../ContentViewVersions';
-
-const cvVersionsData = require('./versionsResponseData.fixtures.json');
+import cvVersionsData from './versionsResponseData.fixtures.json';
+import environmentPathsData from './versionRemoveEnvPaths.fixtures';
+import cvVersionRemoveResponse from './cvVersionRemoveResponse.fixture.json';
+import cvDetailData from '../../../../__tests__/mockDetails.fixtures.json';
+import affectedHostData from './cvAffectedHosts.fixture';
+import affectedActivationKeysData from './cvAffectedActivationKeys.fixture.json';
+import cVDropDownOptionsData from './cvDropDownOptionsResponse.fixture';
 
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
-const environmentPathsData = require('./versionRemoveEnvPaths.fixtures');
 
 const renderOptions = { apiNamespace: `${CONTENT_VIEWS_KEY}_2` };
 const cvVersions = api.getApiUrl('/content_view_versions');
 const autocompleteUrl = '/content_view_versions/auto_complete_search';
 const cvVersionRemoveUrl = api.getApiUrl('/content_views/2/remove');
-const cvVersionRemoveResponse = require('./cvVersionRemoveResponse.fixture.json');
-const cvDetailData = require('../../../../__tests__/mockDetails.fixtures.json');
 
 const hostURL = foremanApi.getApiUrl('/hosts');
-const affectedHostData = require('./cvAffectedHosts.fixture');
 
 const activationKeyURL = api.getApiUrl('/activation_keys');
-const affectedActivationKeysData = require('./cvAffectedActivationKeys.fixture.json');
 
 const cVDropDownOptionsPath = api.getApiUrl('/content_views?organization_id=1&include_permissions=true&environment_id=3&include_default=true&full_result=true');
-const cVDropDownOptionsData = require('./cvDropDownOptionsResponse.fixture');
 // const taskPollingUrl = '/foreman_tasks/api/tasks/6b900ff8-62bb-42ac-8c45-da86b7258520';
 
 let firstVersion;

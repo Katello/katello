@@ -1,18 +1,16 @@
 import React from 'react';
 import * as reactRedux from 'react-redux';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
-
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import PublishContentViewWizard from '../PublishContentViewWizard';
-
-const cvDetailData = require('../../Details/__tests__/contentViewDetails.fixtures.json');
+import cvDetailData from '../../Details/__tests__/contentViewDetails.fixtures.json';
+import publishResponseData from './publishResponse.fixture.json';
+import environmentPathsData from './environmentPaths.fixtures.json';
 
 const cvPublishPath = api.getApiUrl('/content_views/1/publish');
-const publishResponseData = require('./publishResponse.fixture.json');
 
 const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
-const environmentPathsData = require('./environmentPaths.fixtures.json');
 
 test('Can call API and show Wizard', async (done) => {
   const scope = nockInstance

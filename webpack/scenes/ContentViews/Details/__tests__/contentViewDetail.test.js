@@ -1,13 +1,11 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
-
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 import ContentViewDetails from '../ContentViewDetails';
 import CONTENT_VIEWS_KEY from '../../ContentViewsConstants';
-
-const cvDetailData = require('./contentViewDetails.fixtures.json');
+import cvDetailData from './contentViewDetails.fixtures.json';
 
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)">{component}</Route>;
