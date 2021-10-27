@@ -22,11 +22,12 @@ Katello::RepositoryTypeManager.register('ostree') do
   url_description N_("URL of an OSTree repository.")
 
   generic_content_type 'ostree_ref',
+                       pluralized_name: "Commit Refs",
                        model_class: Katello::GenericContentUnit,
                        pulp3_api: PulpOstreeClient::ContentRefsApi,
                        pulp3_service_class: Katello::Pulp3::GenericContentUnit,
                        model_name: lambda { |pulp_unit| pulp_unit["name"] },
-                       model_version: lambda { |pulp_unit| pulp_unit["version"] }
+                       model_version: lambda { |pulp_unit| pulp_unit["version"] },
                        uploadable: true
 
   default_managed_content_type :ostree_ref
