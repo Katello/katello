@@ -263,8 +263,6 @@ module Katello
     end
 
     def test_create
-      # Ensure that the content_type params don't rely on the enabled_repository_types
-      SmartProxy.pulp_primary.features.detect { |f| f.name == "Pulpcore" }.smart_proxy_features.first.update(capabilities: [])
       ::Katello::RepositoryTypeManager.instance_variable_set(:@enabled_repository_types, {})
       product = mock
       product.expects(:add_repo).with({
