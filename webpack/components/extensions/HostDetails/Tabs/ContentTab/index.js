@@ -1,25 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { Tabs, Tab, TabTitleText } from '@patternfly/react-core';
 import SecondaryTabRoutes from './SecondaryTabsRoutes';
-import { hashRoute, activeTab } from './helpers';
+import { activeTab } from './helpers';
 import SECONDARY_TABS from './constants';
 
-const ContentTab = ({ location: { pathname } }) => (
-  <>
-    <Tabs isSecondary activeKey={activeTab(pathname)}>
-      {SECONDARY_TABS.map(({ key, title }) => (
-        <Tab
-          key={key}
-          eventKey={key}
-          title={<TabTitleText>{title}</TabTitleText>}
-          href={hashRoute(key)}
-        />
-      ))}
-    </Tabs>
-    <SecondaryTabRoutes />
-  </>
-);
+const ContentTab = ({ location: { pathname } }) => {
+  const hashHistory = useHistory();
+  return (
+    <>
+      <Tabs
+        onSelect={(evt, subTab) => hashHistory.push(subTab)}
+        isSecondary
+        activeKey={activeTab(pathname)}
+      >
+        {SECONDARY_TABS.map(({ key, title }) => (
+          <Tab
+            key={key}
+            eventKey={key}
+            title={<TabTitleText>{title}</TabTitleText>}
+          />
+        ))}
+      </Tabs>
+      <SecondaryTabRoutes />
+    </>
+  );
+};
 
 ContentTab.propTypes = {
   location: PropTypes.shape({
