@@ -59,8 +59,8 @@ module Katello
 
         return resolved if to_resolve.empty?
 
-        to_resolve.in_groups_of([to_resolve.size, 8].min) do |group|
-          futures = group.map do |path_with_substitution|
+        to_resolve.in_groups_of(8) do |group|
+          futures = group.reject(&:nil?).map do |path_with_substitution|
             Concurrent::Promises.future do
               resolve_path(path_with_substitution)
             end

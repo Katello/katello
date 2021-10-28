@@ -4,10 +4,12 @@ module Katello
 
     belongs_to :organization, :inverse_of => :cdn_configuration
 
-    # test deleting the CA Cred...
     belongs_to :ssl_ca_credential, :class_name => "Katello::ContentCredential", :inverse_of => :ssl_ca_cdn_configurations
 
     encrypts :password
+
+    validates_with Validators::KatelloLabelFormatValidator, :attributes => :organization_label, :if => proc { organization_label.present? }
+    validates :url, presence: true
 
     def ssl_ca
       ssl_ca_credential&.content

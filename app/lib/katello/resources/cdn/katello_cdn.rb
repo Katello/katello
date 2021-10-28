@@ -43,7 +43,7 @@ module Katello
           repository = JSON.parse(response)['results'].first
 
           if repository.nil?
-            fail _("Repository with content label %s was not found in upstream organization %s") % [content_label, @organization_label]
+            fail _("Repository with content label %{content_label} was not found in upstream organization %{org_label}") % { content_label: content_label, org_label: @organization_label }
           end
 
           repository['full_path']
