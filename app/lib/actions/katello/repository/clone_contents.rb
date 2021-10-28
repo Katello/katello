@@ -23,7 +23,7 @@ module Actions
             matching_content = check_matching_content(new_repository, source_repositories)
             metadata_generate(source_repositories, new_repository, filters, rpm_filenames, matching_content) if generate_metadata
 
-            index_options = {id: new_repository.id}
+            index_options = {id: new_repository.id, force_index: true}
             index_options[:source_repository_id] = source_repositories.first.id if source_repositories.count == 1 && filters.empty? && rpm_filenames.nil?
             plan_action(Katello::Repository::IndexContent, index_options)
           end
