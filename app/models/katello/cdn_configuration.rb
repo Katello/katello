@@ -8,8 +8,12 @@ module Katello
 
     encrypts :password
 
-    validates_with Validators::KatelloLabelFormatValidator, :attributes => :organization_label, :if => proc { organization_label.present? }
     validates :url, presence: true
+    validates :username, presence: true, unless: :redhat?
+    validates :password, presence: true, unless: :redhat?
+    validates :organization_label, presence: true, unless: :redhat?
+    validates :ssl_ca_credential_id, presence: true, unless: :redhat?
+    validates_with Validators::KatelloLabelFormatValidator, attributes: :organization_label, if: proc { organization_label.present? }
 
     def ssl_ca
       ssl_ca_credential&.content

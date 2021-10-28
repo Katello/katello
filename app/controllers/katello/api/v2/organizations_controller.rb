@@ -140,15 +140,10 @@ module Katello
     param :organization_label, String, :desc => N_("Upstream organization to sync CDN content from")
     param :url, String, :desc => N_("Upstream server to sync CDN content from")
     def cdn_configuration
-      config_params = {
-        url: params[:url],
-        username: params[:username],
-        password: params[:password],
-        organization_label: params[:organization_label],
-        ssl_ca_credential_id: params[:ssl_ca_credential_id]
-      }
+      config_keys = [:url, :username, :password, :organization_label, :ssl_ca_credential_id]
+      config_params = params.slice(*config_keys).permit!
 
-      task = sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, config_params.reject! { |_k, v| v.nil? })
+      task = sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, config_params)
 
       respond_for_async :resource => task
     end
