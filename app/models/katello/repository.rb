@@ -748,13 +748,13 @@ module Katello
     end
 
     # deleteable? is already taken by the authorization mixin
-    def destroyable?
+    def destroyable?(remove_from_content_view_versions = false)
       if self.environment.try(:library?) && self.content_view.default?
         if self.environment.organization.being_deleted?
           return true
-        elsif self.custom? && self.deletable?
+        elsif self.custom? && self.deletable?(remove_from_content_view_versions)
           return true
-        elsif !self.custom? && self.redhat_deletable?
+        elsif !self.custom? && self.redhat_deletable?(remove_from_content_view_versions)
           return true
         else
           errors.add(:base, _("Repository cannot be deleted since it has already been included in a published Content View. " \

@@ -135,7 +135,27 @@ module ::Actions::Katello::Repository
       assert_action_planed_with action, pulp3_action_class,
         in_use_repository, proxy
 
+      refute_action_planned action, ::Actions::BulkAction
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
+    end
+
+    it 'plans when passed in remove_from_content_view_versions: true' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(in_use_repository)
+      in_use_repository.stubs(:assert_deletable).returns(true)
+      in_use_repository.stubs(:destroyable?).returns(true)
+      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
+      clone = in_use_repository.build_clone(:environment => katello_environments(:dev), :content_view => katello_content_views(:library_dev_view))
+      clone.save!
+
+      action.expects(:plan_self)
+      plan_action action, in_use_repository, remove_from_content_view_versions: true
+      assert_action_planned_with action, pulp3_action_class,
+        in_use_repository, proxy
+
+      assert_action_planned_with action, ::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, in_use_repository.library_instances_inverse
+
+      refute_action_planned action, ::Actions::Katello::Product::ContentDestroy
     end
 
     it 'plans when custom and no clones' do
