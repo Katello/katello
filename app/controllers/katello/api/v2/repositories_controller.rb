@@ -372,6 +372,10 @@ module Katello
         {path: content.path, filename: content.original_filename}
       end
 
+      if @repository.content_type == 'ostree' && params[:ostree_repository_name].blank?
+        fail HttpErrors::BadRequest, _('OSTree commit ref uploads require a repository name.')
+      end
+
       if !filepaths.blank?
         sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths, params[:content_type],
           ostree_repository_name: params[:ostree_repository_name],
@@ -405,6 +409,10 @@ module Katello
       param 'name', String, :desc => N_("Needs to only be set for file repositories or docker tags")
       param 'digest', String, :desc => N_("Needs to only be set for docker tags")
     end
+    param :ostree_repository_name, String, :desc => N_("Name of repository in OSTree archive")
+    param :ostree_ref, String, :desc => N_("OSTree ref branch that holds the reference to the last commit")
+    param :ostree_parent_commit, String, :desc => N_("Checksum of a parent commit with which the OSTreee content needs to be associated")
+
     def import_uploads
       generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
@@ -417,11 +425,18 @@ module Katello
         upload.permit(:id, :content_unit_id, :size, :checksum, :name, :digest).to_h
       end
 
+      if @repository.content_type == 'ostree' && params[:ostree_repository_name].blank?
+        fail HttpErrors::BadRequest, _('OSTree commit ref uploads require a repository name.')
+      end
+
       begin
         respond_for_async(resource: send(
           async ? :async_task : :sync_task,
           ::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-          generate_metadata: generate_metadata, sync_capsule: sync_capsule, content_type: params[:content_type]))
+          generate_metadata: generate_metadata, sync_capsule: sync_capsule, content_type: params[:content_type],
+          ostree_repository_name: params[:ostree_repository_name],
+          ostree_ref: params[:ostree_ref],
+          ostree_parent_commit: params[:ostree_parent_commit]))
       rescue => e
         raise HttpErrors::BadRequest, e.message
       end

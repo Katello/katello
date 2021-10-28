@@ -11,12 +11,18 @@ module Katello
     param :size, :number, :required => true, :desc => N_("Size of file to upload")
     param :checksum, String, :required => false, :desc => N_("Checksum of file to upload")
     param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
+    param :ostree_repository_name, String, :desc => N_("Name of repository in OSTree archive")
+    param :ostree_ref, String, :desc => N_("OSTree ref branch that holds the reference to the last commit")
+    param :ostree_parent_commit, String, :desc => N_("Checksum of a parent commit with which the OSTreee content needs to be associated")
     def create
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Ansible collections.") if @repository.ansible_collection?
       content_type = params[:content_type] || ::Katello::RepositoryTypeManager.find(@repository.content_type)&.default_managed_content_type&.label
       RepositoryTypeManager.check_content_matches_repo_type!(@repository, content_type)
       if ::Katello::RepositoryTypeManager.generic_content_type?(content_type)
         unit_type_id = content_type
+        if @repository.content_type == 'ostree' && params[:ostree_repository_name].blank?
+          fail HttpErrors::BadRequest, _('OSTree commit ref uploads require a repository name.')
+        end
       else
         unit_type_id = SmartProxy.pulp_primary.content_service(content_type).content_type
       end
