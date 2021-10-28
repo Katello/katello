@@ -87,6 +87,14 @@ module Katello
         list.flatten.map(&:content_type)
       end
 
+      def generic_ui_content_types(enabled_only = true)
+        repo_types = enabled_only ? enabled_repository_types : defined_repository_types
+        list = repo_types.values.map do |type|
+          type.content_types.select { |ct| ct.generic_browser }
+        end
+        list.flatten.map(&:content_type)
+      end
+
       def generic_content_type?(content_type, enabled_only = true)
         types = generic_content_types(enabled_only)
         types.include?(content_type)

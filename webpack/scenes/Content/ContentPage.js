@@ -17,6 +17,7 @@ const ContentPage = () => {
   const contentTypesResponse = useSelector(selectContentTypes);
   const contentTypesStatus = useSelector(selectContentTypesStatus);
   const [selectedContentType, setSelectedContentType] = useState(null);
+  const [showContentTypeSelector, setShowContentTypeSelector] = useState(true);
   const [contentTypes, setContentTypes] = useState(null);
   const { content_type: contentType } = useParams();
 
@@ -45,6 +46,7 @@ const ContentPage = () => {
         Object.entries(enabledContentTypes).forEach(([key, value]) => {
           if (value.includes(contentType)) {
             setSelectedContentType(key);
+            setShowContentTypeSelector(false);
           }
         });
       }
@@ -75,7 +77,10 @@ const ContentPage = () => {
         </TextContent>
       </GridItem>
       <GridItem span={12}>
-        <ContentTable {...{ selectedContentType, setSelectedContentType, contentTypes }} />
+        <ContentTable {...{
+ selectedContentType, setSelectedContentType, contentTypes, showContentTypeSelector,
+}}
+        />
       </GridItem>
     </Grid>
   );

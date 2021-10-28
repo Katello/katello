@@ -47,7 +47,72 @@ export default () => [
           {
             title: __('Product'),
             getProperty: unit =>
-              <a href={urlBuilder(`products/${unit?.product.id}/repositories`, '')}>{unit?.product.name}</a>,
+              <a href={urlBuilder(`products/${unit?.product.id}/`, '')}>{unit?.product.name}</a>,
+          },
+          {
+            title: __('Sync Status'),
+            getProperty: unit =>
+              <LastSync lastSyncWords={unit?.last_sync_words} lastSync={unit?.last_sync} />,
+          },
+          {
+            title: __('Content Count'),
+            getProperty: (unit, singularLabel) =>
+              (<ContentCounts
+                typeSingularLabel={singularLabel}
+                productId={unit.product.id}
+                repoId={unit.id}
+                counts={unit.content_counts}
+              />),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    names: {
+      pluralTitle: __('Ansible Collections'),
+      singularTitle: __('Ansible Collection'),
+      pluralLowercase: __('Ansible collections'),
+      singularLowercase: __('Ansible collection'),
+      pluralLabel: 'ansible_collections',
+      singularLabel: 'ansible_collection',
+    },
+    columnHeaders: [
+      { title: __('Name'), getProperty: unit => (<Link to={urlBuilder(`content/ansible_collections/${unit?.id}`, '')}>{unit?.name}</Link>) },
+      { title: __('Author'), getProperty: unit => unit?.namespace },
+      { title: __('Version'), getProperty: unit => unit?.version },
+      { title: __('Checksum'), getProperty: unit => unit?.checksum },
+
+    ],
+    tabs: [
+      {
+        tabKey: 'details',
+        title: __('Details'),
+        getContent: (contentType, id, tabKey) => <ContentInfo {...{ contentType, id, tabKey }} />,
+        columnHeaders: [
+          { title: __('Name'), getProperty: unit => unit?.name },
+          { title: __('Description'), getProperty: unit => unit?.description },
+          { title: __('Author'), getProperty: unit => unit?.namespace },
+          { title: __('Version'), getProperty: unit => unit?.version },
+          { title: __('Checksum'), getProperty: unit => unit?.checksum },
+          { title: __('Tags'), getProperty: unit => unit?.tags?.join() },
+        ],
+      },
+      {
+        tabKey: 'repositories',
+        title: __('Repositories'),
+        getContent: (contentType, id, tabKey) =>
+          <ContentRepositories {...{ contentType, id, tabKey }} />,
+        columnHeaders: [
+          {
+            title: __('Name'),
+            getProperty: unit =>
+              <a href={urlBuilder(`products/${unit?.product.id}/repositories/${unit?.id}`, '')}>{unit?.name}</a>,
+          },
+          {
+            title: __('Product'),
+            getProperty: unit =>
+              <a href={urlBuilder(`products/${unit?.product.id}`, '')}>{unit?.product.name}</a>,
           },
           {
             title: __('Sync Status'),

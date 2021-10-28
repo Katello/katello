@@ -47,11 +47,11 @@ export const links = [
     component: WithOrganization(withHeader(ModuleStreamDetails, { title: __('Module Stream Details') })),
   },
   {
-    path: 'ansible_collections',
+    path: 'legacy_ansible_collections',
     component: WithOrganization(withHeader(AnsibleCollections, { title: __('Ansible Collections') })),
   },
   {
-    path: 'ansible_collections/:id([0-9]+)',
+    path: 'legacy_ansible_collections/:id([0-9]+)',
     component: WithOrganization(withHeader(AnsibleCollectionDetails, { title: __('Ansible Collection Details') })),
   },
   {
@@ -65,14 +65,14 @@ export const links = [
   },
   {
     path: 'content',
-    component: WithOrganization(withHeader(Content, { title: __('Other Content Types') })),
+    component: WithOrganization(withHeader(Content, { title: __('Content') })),
   },
   {
     path: 'content/:content_type([a-z_]+)',
-    component: WithOrganization(withHeader(Content, { title: __('Other Content Types') })),
+    component: WithOrganization(withHeader(Content, { title: __('Content') })),
   },
   {
     path: 'content/:content_type([a-z_]+)/:id([0-9]+)',
-    component: WithOrganization(withHeader(ContentDetails, { title: __('Other Content Type Details') })),
+    component: WithOrganization(withHeader(ContentDetails, { title: __('Content Details') })),
   },
 ];

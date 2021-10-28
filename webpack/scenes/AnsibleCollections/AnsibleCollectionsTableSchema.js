@@ -18,7 +18,7 @@ const TableSchema = [
       formatters: [
         (value, { rowData }) => (
           <td>
-            <Link to={urlBuilder('ansible_collections', '', rowData.id)}>{rowData.name}</Link>
+            <Link to={urlBuilder('legacy_ansible_collections', '', rowData.id)}>{rowData.name}</Link>
           </td>
         ),
       ],
