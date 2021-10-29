@@ -17,7 +17,7 @@ module Actions
         end
 
         def run
-          smart_proxy = ::SmartProxy.find(input[:smart_proxy_id])
+          smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
           api = ::Katello::Pulp3::Api::Core.new(smart_proxy)
           export_data = api.export_api.list(input[:exporter_data][:pulp_href]).results.first
           output[:exported_file_checksum] = export_data.output_file_info
