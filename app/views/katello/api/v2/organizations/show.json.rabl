@@ -15,6 +15,10 @@ node :owner_details do |org|
   partial('katello/api/v2/organizations/owner_details', object: OpenStruct.new(org.owner_details))
 end
 
+node :cdn_configuration do |org|
+  partial('katello/api/v2/organizations/cdn_configuration', object: org.cdn_configuration)
+end
+
 node :default_content_view_id do |org|
   org.default_content_view.id
 end
