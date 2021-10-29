@@ -35,7 +35,7 @@ module Katello
 
       def smart_proxy
         @smart_proxy ||= begin
-          proxy = params[:url] ? SmartProxy.find_by(url: params[:url]) : SmartProxy.pulp_primary
+          proxy = params[:url] ? SmartProxy.unscoped.find_by(url: params[:url]) : SmartProxy.pulp_primary
 
           fail Foreman::Exception, _('Smart proxy content source not found!') unless proxy
           fail Foreman::Exception, _('Pulp 3 is not enabled on Smart proxy!') unless proxy.pulp3_enabled?

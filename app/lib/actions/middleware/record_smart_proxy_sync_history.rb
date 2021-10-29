@@ -6,7 +6,7 @@ module Actions
           repo_id = action.input[:repository_id]
           repo = ::Katello::Repository.find_by(id: repo_id)
           smart_proxy_id = action.input[:smart_proxy_id] || action.input[:capsule_id]
-          smart_proxy = ::SmartProxy.find_by(id: smart_proxy_id)
+          smart_proxy = ::SmartProxy.unscoped.find_by(id: smart_proxy_id)
 
           if repo && smart_proxy
             self.action.output[:smart_proxy_history_id] = repo.create_smart_proxy_sync_history(smart_proxy)

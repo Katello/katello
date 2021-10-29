@@ -64,7 +64,7 @@ module Actions
         end
 
         def run
-          smart_proxy = ::SmartProxy.find(input[:smart_proxy_id])
+          smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
           smart_proxy.sync_container_gateway
         end
 
