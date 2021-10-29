@@ -31,8 +31,16 @@ module Actions
                   unit_type_id: unit_type_id,
                   unit_key: unit_key.with_indifferent_access,
                   upload_id: upload_id,
-                  unit_metadata: unit_metadata
+                  unit_metadata: unit_metadata,
                 }
+
+                if unit_type_id == 'ostree_ref'
+                  import_upload_args.merge!(
+                    ostree_repository_name: options[:ostree_repository_name],
+                    ostree_ref: options[:ostree_ref],
+                    ostree_parent_commit: options[:ostree_parent_commit]
+                  )
+                end
 
                 import_upload = plan_action(Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                   repository, SmartProxy.pulp_primary, import_upload_args)

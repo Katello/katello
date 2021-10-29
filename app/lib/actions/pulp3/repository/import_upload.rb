@@ -15,6 +15,8 @@ module Actions
           repo = ::Katello::Repository.find(input[:repository_id])
           repo_backend_service = repo.backend_service(smart_proxy)
 
+          Rails.logger.debug("Pulp3::Repository::ImportUpload input  #{input}")
+
           if input[:options][:unit_type_id] == 'ostree_ref'
             artifact_href = input[:options][:artifact_href]
             repo_name = input[:options][:repository_name]

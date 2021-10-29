@@ -7,11 +7,15 @@ module Katello
         def create_upload(size = 0, checksum = nil, content_type = nil, repository = nil)
           content_unit_href = nil
           if checksum
+            filter_label = 'sha256'
             content_backend_service = SmartProxy.pulp_primary.content_service(content_type)
             if repository&.generic?
-              content_list = content_backend_service.content_api(repository.repository_type, content_type).list("sha256": checksum)
+              if content_type == 'ostree'
+                filter_label = 'checksum'
+              end
+              content_list = content_backend_service.content_api(repository.repository_type, content_type).list(filter_label: checksum)
             else
-              content_list = content_backend_service.content_api.list("sha256": checksum)
+              content_list = content_backend_service.content_api.list(filter_label: checksum)
             end
 
             duplicate_count = content_list&.results&.count

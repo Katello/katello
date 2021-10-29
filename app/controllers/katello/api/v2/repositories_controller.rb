@@ -432,7 +432,9 @@ module Katello
         respond_for_async(resource: send(
           async ? :async_task : :sync_task,
           ::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-          generate_metadata: generate_metadata, sync_capsule: sync_capsule, content_type: params[:content_type],
+          generate_metadata: generate_metadata,
+          sync_capsule: sync_capsule, 
+          content_type: params[:content_type],
           ostree_repository_name: params[:ostree_repository_name],
           ostree_ref: params[:ostree_ref],
           ostree_parent_commit: params[:ostree_parent_commit]))

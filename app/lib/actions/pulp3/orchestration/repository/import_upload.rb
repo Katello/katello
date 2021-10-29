@@ -11,8 +11,7 @@ module Actions
             docker_tag = (args.dig(:unit_type_id) == "docker_tag")
             unit_type_id = args.dig(:unit_type_id)
 
-            Rails.logger.debug("Pulp3::Orchestration::ImportUpload commit upload args #{args}")
-            Rails.logger.debug("Pulp3::Orchestration::ImportUpload commit upload unit type id #{unit_type_id}")
+            Rails.logger.debug("Pulp3::Orchestration::ImportUpload plan args #{args}")
 
             sequence do
               if content_unit_href
@@ -63,17 +62,18 @@ module Actions
 
                 plan_self(:commit_output => commit_output[:pulp_tasks], :artifact_output => artifact_output&.(:pulp_tasks))
                 import_args = {}
-                
+                artifact_href = commit_output[:artifact_href]
+
                 if unit_type_id == 'ostree_ref'
                   import_args = {
                     unit_type_id: unit_type_id,
                     artifact_href: artifact_href,
-                    ref: options[:ostree_ref],
-                    parent_commit: options[:ostree_parent_commit],
-                    repository_name: options[:ostree_repository_name]
+                    ref: args.dig(:ostree_ref),
+                    parent_commit: args.dig(:ostree_parent_commit),
+                    repository_name: args.dig(:ostree_repository_name)
                   }
                 end
-                Rails.logger.debug("Pulp3::Orchestration::ImportUpload commit upload import args #{import_args}") 
+                Rails.logger.debug("Pulp3::Orchestration::ImportUpload import args #{import_args}") 
                 
                 action_output = plan_action(Pulp3::Repository::ImportUpload, content_unit_href, repository, smart_proxy, import_args).output
                 plan_action(Pulp3::Repository::SaveVersion, repository, tasks: action_output[:pulp_tasks]).output
