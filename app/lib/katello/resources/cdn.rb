@@ -37,7 +37,7 @@ module Katello
                                     :verify_ssl,
                                     :username,
                                     :password,
-                                    :upstream_organization_label,
+                                    :organization_label,
                                     :ssl_ca_cert)
 
           if options[:ssl_ca_cert].present?
