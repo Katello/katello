@@ -9,6 +9,11 @@ module Actions
             file = {:filename => args.dig(:unit_key, :name), :sha256 => args.dig(:unit_key, :checksum) }
             content_unit_href = args.dig(:unit_key, :content_unit_id)
             docker_tag = (args.dig(:unit_type_id) == "docker_tag")
+            unit_type_id = args.dig(:unit_type_id)
+
+            Rails.logger.debug("Pulp3::Orchestration::ImportUpload commit upload args #{args}")
+            Rails.logger.debug("Pulp3::Orchestration::ImportUpload commit upload unit type id #{unit_type_id}")
+
             sequence do
               if content_unit_href
                 duplicate_sha_path_content_list = ::Katello::Pulp3::PulpContentUnit.find_duplicate_unit(repository, args.dig(:unit_type_id), file, file[:sha256])
@@ -45,16 +50,32 @@ module Actions
                                             smart_proxy,
                                             "/pulp/api/v3/uploads/" + args.dig(:upload_id) + "/",
                                             args.dig(:unit_key, :checksum)).output
+                           
+                if unit_type_id != 'ostree_ref' 
+                  artifact_output = plan_action(Pulp3::Repository::SaveArtifact,
+                                                file,
+                                                repository,
+                                                smart_proxy,
+                                                commit_output[:pulp_tasks],
+                                                args.dig(:unit_type_id)).output
+                  content_unit_href = artifact_output&.[](:pulp_tasks)
+                end
 
-                artifact_output = plan_action(Pulp3::Repository::SaveArtifact,
-                                              file,
-                                              repository,
-                                              smart_proxy,
-                                              commit_output[:pulp_tasks],
-                                              args.dig(:unit_type_id)).output
-                content_unit_href = artifact_output[:pulp_tasks]
-                plan_self(:commit_output => commit_output[:pulp_tasks], :artifact_output => artifact_output[:pulp_tasks])
-                action_output = plan_action(Pulp3::Repository::ImportUpload, content_unit_href, repository, smart_proxy).output
+                plan_self(:commit_output => commit_output[:pulp_tasks], :artifact_output => artifact_output&.(:pulp_tasks))
+                import_args = {}
+                
+                if unit_type_id == 'ostree_ref'
+                  import_args = {
+                    unit_type_id: unit_type_id,
+                    artifact_href: artifact_href,
+                    ref: options[:ostree_ref],
+                    parent_commit: options[:ostree_parent_commit],
+                    repository_name: options[:ostree_repository_name]
+                  }
+                end
+                Rails.logger.debug("Pulp3::Orchestration::ImportUpload commit upload import args #{import_args}") 
+                
+                action_output = plan_action(Pulp3::Repository::ImportUpload, content_unit_href, repository, smart_proxy, import_args).output
                 plan_action(Pulp3::Repository::SaveVersion, repository, tasks: action_output[:pulp_tasks]).output
               end
             end

@@ -13,7 +13,18 @@ module Katello
             else
               content_list = content_backend_service.content_api.list("sha256": checksum)
             end
-            content_unit_href = content_list.results.first.pulp_href unless content_list.results.empty?
+
+            duplicate_count = content_list&.results&.count
+            Rails.logger.debug("Pulp3::Content::create_upload duplicate count #{duplicate_count}")
+            Rails.logger.debug("Pulp3::Content::create_upload duplicate content_list #{content_list}")
+            Rails.logger.debug("Pulp3::Content::create_upload checksum to match  #{checksum}")
+            if duplicate_count > 1
+              content_unit_href = content_list&.results&.find { |content| content.checksum == checksum }
+              Rails.logger.debug("Pulp3::Content::create_upload content_unit_href #{content_unit_href}")
+            else
+              content_unit_href = content_list.results.first.pulp_href unless content_list.results.empty?
+            end
+
             return {"content_unit_href" => content_unit_href} if content_unit_href
           end
           upload_href = uploads_api.create(upload_class.new(size: size)).pulp_href

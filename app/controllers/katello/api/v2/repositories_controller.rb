@@ -412,7 +412,6 @@ module Katello
     param :ostree_repository_name, String, :desc => N_("Name of repository in OSTree archive")
     param :ostree_ref, String, :desc => N_("OSTree ref branch that holds the reference to the last commit")
     param :ostree_parent_commit, String, :desc => N_("Checksum of a parent commit with which the OSTreee content needs to be associated")
-
     def import_uploads
       generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
