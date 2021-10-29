@@ -37,7 +37,7 @@ module Katello
                                     :verify_ssl,
                                     :username,
                                     :password,
-                                    :organization_label,
+                                    :upstream_organization_label,
                                     :ssl_ca_cert)
 
           if options[:ssl_ca_cert].present?
@@ -61,7 +61,7 @@ module Katello
           else
             options[:username] = cdn_configuration.username
             options[:password] = cdn_configuration.password
-            options[:organization_label] = cdn_configuration.organization_label
+            options[:organization_label] = cdn_configuration.upstream_organization_label
             options[:ssl_ca_cert] = cdn_configuration.ssl_ca
             CDN::KatelloCdn.new(cdn_configuration.url, options)
           end

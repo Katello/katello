@@ -5,15 +5,13 @@ module ::Actions::Katello::CdnConfiguration
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
-    #include FactoryBot::Syntax::Methods
 
     def setup
       @action_class = ::Actions::Katello::CdnConfiguration::Update
       @action = create_action @action_class
       @organization = taxonomies(:empty_organization)
       @cdn_configuration = @organization.cdn_configuration
-      @credentials = ::Katello::ContentCredential.where(organization: @organization)
-      @credential = @credentials.first
+      @credential = FactoryBot.create(:katello_content_credential, organization: @organization)
     end
 
     def keypair
@@ -39,7 +37,7 @@ module ::Actions::Katello::CdnConfiguration
         ssl_ca_credential_id: @credential.id,
         username: 'test_username',
         password: 'test_password',
-        organization_label: 'upstream_org'
+        upstream_organization_label: 'upstream_org'
       }
 
       certs = keypair
@@ -57,7 +55,7 @@ module ::Actions::Katello::CdnConfiguration
       assert_equal attrs[:ssl_ca_credential_id], @cdn_configuration.ssl_ca_credential_id
       assert_equal attrs[:username], @cdn_configuration.username
       assert_equal attrs[:password], @cdn_configuration.password
-      assert_equal attrs[:organization_label], @cdn_configuration.organization_label
+      assert_equal attrs[:upstream_organization_label], @cdn_configuration.upstream_organization_label
     end
 
     def test_plans_redhat_cdn
@@ -66,7 +64,7 @@ module ::Actions::Katello::CdnConfiguration
         ssl_ca_credential_id: nil,
         username: '',
         password: '',
-        organization_label: ''
+        upstream_organization_label: ''
       }
 
       plan_action(@action, @cdn_configuration, attrs)
@@ -79,7 +77,7 @@ module ::Actions::Katello::CdnConfiguration
       assert_nil @cdn_configuration.ssl_ca_credential_id
       assert_equal attrs[:username], @cdn_configuration.username
       assert_equal attrs[:password], @cdn_configuration.password
-      assert_equal attrs[:organization_label], @cdn_configuration.organization_label
+      assert_equal attrs[:upstream_organization_label], @cdn_configuration.upstream_organization_label
     end
   end
 end

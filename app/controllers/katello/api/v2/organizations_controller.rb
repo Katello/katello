@@ -137,11 +137,11 @@ module Katello
     param :ssl_ca_credential_id, Integer, :desc => N_("Content Credential to use for SSL CA")
     param :username, String, :desc => N_("Username for authentication")
     param :password, String, :desc => N_("Password for authentication")
-    param :organization_label, String, :desc => N_("Upstream organization to sync CDN content from")
+    param :upstream_organization_label, String, :desc => N_("Upstream organization to sync CDN content from")
     param :url, String, :desc => N_("Upstream server to sync CDN content from")
     def cdn_configuration
-      config_keys = [:url, :username, :password, :organization_label, :ssl_ca_credential_id]
-      config_params = params.slice(*config_keys).permit!
+      config_keys = [:url, :username, :password, :upstream_organization_label, :ssl_ca_credential_id]
+      config_params = params.slice(*config_keys).permit!.to_h
 
       task = sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, config_params)
 

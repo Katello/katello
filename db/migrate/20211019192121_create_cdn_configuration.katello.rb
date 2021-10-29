@@ -7,7 +7,7 @@ class CreateCdnConfiguration < ActiveRecord::Migration[6.0]
       t.text :ssl_key
       t.string :username
       t.string :password
-      t.string :organization_label
+      t.string :upstream_organization_label
       t.string :url
     end
 
