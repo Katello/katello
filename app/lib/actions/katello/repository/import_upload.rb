@@ -31,7 +31,7 @@ module Actions
                   unit_type_id: unit_type_id,
                   unit_key: unit_key.with_indifferent_access,
                   upload_id: upload_id,
-                  unit_metadata: unit_metadata,
+                  unit_metadata: unit_metadata
                 }
 
                 if unit_type_id == 'ostree_ref'

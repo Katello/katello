@@ -7,27 +7,18 @@ module Katello
         def create_upload(size = 0, checksum = nil, content_type = nil, repository = nil)
           content_unit_href = nil
           if checksum
-            filter_label = 'sha256'
             content_backend_service = SmartProxy.pulp_primary.content_service(content_type)
             if repository&.generic?
               if content_type == 'ostree'
-                filter_label = 'checksum'
+                content_list = content_backend_service.content_api(repository.repository_type, content_type).list('checksum': checksum)
+              else
+                content_list = content_backend_service.content_api(repository.repository_type, content_type).list('sha256': checksum)
               end
-              content_list = content_backend_service.content_api(repository.repository_type, content_type).list(filter_label: checksum)
             else
-              content_list = content_backend_service.content_api.list(filter_label: checksum)
+              content_list = content_backend_service.content_api.list('sha256': checksum)
             end
 
-            duplicate_count = content_list&.results&.count
-            Rails.logger.debug("Pulp3::Content::create_upload duplicate count #{duplicate_count}")
-            Rails.logger.debug("Pulp3::Content::create_upload duplicate content_list #{content_list}")
-            Rails.logger.debug("Pulp3::Content::create_upload checksum to match  #{checksum}")
-            if duplicate_count > 1
-              content_unit_href = content_list&.results&.find { |content| content.checksum == checksum }
-              Rails.logger.debug("Pulp3::Content::create_upload content_unit_href #{content_unit_href}")
-            else
-              content_unit_href = content_list.results.first.pulp_href unless content_list.results.empty?
-            end
+            content_unit_href = content_list.results.first.pulp_href unless content_list.results.empty?
 
             return {"content_unit_href" => content_unit_href} if content_unit_href
           end

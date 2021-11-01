@@ -12,15 +12,16 @@ module Actions
             sequence do
               checksum = Digest::SHA256.hexdigest(File.read(file[:path]))
               duplicate_sha_path_content_list = ::Katello::Pulp3::PulpContentUnit.find_duplicate_unit(repository, unit_type_id, file, checksum)
-              duplicate_count = duplicate_sha_path_content_list&.results&.count
-              if duplicate_count > 1
-                duplicate_content_href = duplicate_sha_path_content_list&.results&.find { |content| content.checksum == checksum }
-              else
-                duplicate_content_href = duplicate_sha_path_content_list&.results&.first&.pulp_href
-              end
+              duplicate_content_href = duplicate_sha_path_content_list&.results&.first&.pulp_href
 
               unless duplicate_content_href
-                duplicate_sha_artifact_list = ::Katello::Pulp3::Api::Core.new(smart_proxy).artifacts_api.list("sha256": Digest::SHA256.hexdigest(File.read(file[:path])))
+                if unit_type_id == 'ostree_ref'
+                  duplicate_sha_artifact_list = ::Katello::Pulp3::Api::Core.new(smart_proxy).artifacts_api.list(
+                    'checksum': Digest::SHA256.hexdigest(File.read(file[:path])))
+                else
+                  duplicate_sha_artifact_list = ::Katello::Pulp3::Api::Core.new(smart_proxy).artifacts_api.list(
+                    'sha256': Digest::SHA256.hexdigest(File.read(file[:path])))
+                end
                 duplicate_sha_artifact_href = duplicate_sha_artifact_list&.results&.first&.pulp_href
                 if duplicate_sha_artifact_href
                   if unit_type_id != "ostree_ref"

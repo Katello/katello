@@ -50,7 +50,7 @@ module Actions
                                             "/pulp/api/v3/uploads/" + args.dig(:upload_id) + "/",
                                             args.dig(:unit_key, :checksum)).output
                            
-                if unit_type_id != 'ostree_ref' 
+                if unit_type_id != 'ostree_ref'
                   artifact_output = plan_action(Pulp3::Repository::SaveArtifact,
                                                 file,
                                                 repository,
@@ -73,8 +73,7 @@ module Actions
                     repository_name: args.dig(:ostree_repository_name)
                   }
                 end
-                Rails.logger.debug("Pulp3::Orchestration::ImportUpload import args #{import_args}") 
-                
+
                 action_output = plan_action(Pulp3::Repository::ImportUpload, content_unit_href, repository, smart_proxy, import_args).output
                 plan_action(Pulp3::Repository::SaveVersion, repository, tasks: action_output[:pulp_tasks]).output
               end
