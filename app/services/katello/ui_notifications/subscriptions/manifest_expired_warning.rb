@@ -67,7 +67,7 @@ module Katello
         end
 
         def self.redhat_connected?(org)
-          org.redhat_provider.repository_url.include?(CDN_HOSTNAME)
+          org.cdn_configuration.url.include?(CDN_HOSTNAME)
         end
       end
     end

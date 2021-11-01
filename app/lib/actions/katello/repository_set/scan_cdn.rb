@@ -72,10 +72,6 @@ module Actions
                                                      content,
                                                      substitutions)
         end
-
-        def cdn_url
-          product.provider[:repository_url]
-        end
       end
     end
   end

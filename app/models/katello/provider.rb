@@ -21,21 +21,12 @@ module Katello
     validate :constraint_redhat_update
     validate :only_one_rhn_provider
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-    validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
-                                                          :attributes => [:repository_url]
 
     before_destroy :prevent_redhat_deletion
-    before_validation :sanitize_repository_url
 
     scope :redhat, -> { where(:provider_type => REDHAT) }
     scope :custom, -> { where(:provider_type => CUSTOM) }
     scope :anonymous, -> { where(:provider_type => ANONYMOUS) }
-
-    def self.create_anonymous!(organization)
-      create!(:name => SecureRandom.uuid, :description => nil,
-              :organization => organization, :provider_type => ANONYMOUS,
-              :repository_url => nil)
-    end
 
     def only_one_rhn_provider
       # validate only when new record is added (skip explicit valid? calls)
@@ -56,7 +47,7 @@ module Katello
 
     def constraint_redhat_update
       if !new_record? && redhat_provider?
-        allowed_changes = %w(repository_url task_status_id)
+        allowed_changes = %w(task_status_id)
         not_allowed_changes = changes.keys - allowed_changes
         unless not_allowed_changes.empty?
           errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))
@@ -116,20 +107,6 @@ module Katello
 
     def related_resources
       self.organization
-    end
-
-    protected
-
-    def sanitize_repository_url
-      sanitize_url(:repository_url, SETTINGS[:katello][:redhat_repository_url])
-    end
-
-    def sanitize_url(attrib, default_value)
-      if redhat_provider? && self.send(attrib).blank?
-        self.send("#{attrib}=", default_value)
-      end
-
-      self.send(attrib)&.strip!
     end
   end
 end

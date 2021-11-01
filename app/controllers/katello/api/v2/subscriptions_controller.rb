@@ -108,8 +108,7 @@ module Katello
 
       # repository url
       if (repo_url = params[:repository_url])
-        @provider.repository_url = repo_url
-        @provider.save!
+        @organization.cdn_configuration.update!(url: repo_url)
       end
 
       task = async_task(::Actions::Katello::Organization::ManifestImport, @organization, File.expand_path(temp_file.path), params[:force])
@@ -159,7 +158,6 @@ module Katello
     def find_provider
       @organization = @activation_key.organization if @activation_key
       @organization = @subscription.organization if @subscription
-      @provider = @organization.redhat_provider if @organization
     end
 
     private

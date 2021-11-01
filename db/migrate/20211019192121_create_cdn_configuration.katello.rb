@@ -20,6 +20,8 @@ class CreateCdnConfiguration < ActiveRecord::Migration[6.0]
         url: org.redhat_provider.repository_url || ::Katello::Resources::CDN::CdnResource.redhat_cdn_url
       ).first_or_create!
     end
+
+    remove_column :katello_providers, :repository_url
   end
 
   def down
