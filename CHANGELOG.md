@@ -1,3 +1,36 @@
+# 4.2.1 Alfalfa (2021-11-01)
+
+## Bug Fixes
+
+### Errata Management
+ * Host filter on load_errata_applications macro is reverted ([#33684](https://projects.theforeman.org/issues/33684), [f2a6d539](https://github.com/Katello/katello.git/commit/f2a6d5396c9d7754944e11224e9edce7fccd6148))
+ * Bulk generate applicability for hosts task fails with Duplicate Key error  ([#33287](https://projects.theforeman.org/issues/33287), [0ab4aaa3](https://github.com/Katello/katello.git/commit/0ab4aaa37532488c9d7f4480ad645d3f850078e2))
+
+### Repositories
+ * Errata changing in the upstream repo is not being reflected in the Katello DB ([#33648](https://projects.theforeman.org/issues/33648), [8ab1814d](https://github.com/Katello/katello.git/commit/8ab1814d5a295187dc595c539b26e30dfc1eb777), [cc9ea06a](https://github.com/Katello/katello.git/commit/cc9ea06ab60ab5038a9a630c2cda1683d87fd5e2))
+ * In Katello 4.1 upgrade, installer failed with exit status 6 in the db:migrate stage. ([#33629](https://projects.theforeman.org/issues/33629), [c859fae6](https://github.com/Katello/katello.git/commit/c859fae6a89e542d37f78a64c8719d48f9091601))
+ * clear pulp3's checksum values on its yum repository objects ([#33567](https://projects.theforeman.org/issues/33567), [2e07c064](https://github.com/Katello/katello.git/commit/2e07c06405e9dab01512cd65fb5b2d74ff0381b9))
+ * katello assumes GET params in repo url are SLES auth tokens, but may not be ([#32660](https://projects.theforeman.org/issues/32660), [eb616046](https://github.com/Katello/katello.git/commit/eb616046ff5b5d77a3d682ad4d8d9b2ecae68b2a))
+
+### Hosts
+ * Edit hosts page not reflecting correct selections. ([#33581](https://projects.theforeman.org/issues/33581), [403b0cd1](https://github.com/Katello/katello.git/commit/403b0cd1051632d563f61ba72f329f028005adff))
+
+### Inter Server Sync
+ * File units not indexed correctly on import ([#33394](https://projects.theforeman.org/issues/33394), [4682c91a](https://github.com/Katello/katello.git/commit/4682c91a1e565b3da1411a7027ac460b86e46c30))
+
+### Foreman Proxy Content
+ * Smart Proxy Syncing debian repositories fails with `Response body: {"distributions":["This field is required."]} (PulpDebClient::ApiError)` ([#33377](https://projects.theforeman.org/issues/33377), [5876a016](https://github.com/Katello/katello.git/commit/5876a01660ff0c1696b7acf13969e625889931d4))
+ * container gateway updates that fail cause the entire smart proxy sync to fail ([#32816](https://projects.theforeman.org/issues/32816), [a73eb2ba](https://github.com/Katello/katello.git/commit/a73eb2baaf97ecbf727a9c22d1ff647349d5c879))
+
+### Content Views
+ * CV Promotion/Composite cv publish failed with NoMethodError: undefined method `get_status' for nil:NilClass ([#32556](https://projects.theforeman.org/issues/32556), [5310d78c](https://github.com/Katello/katello.git/commit/5310d78c58cc1e1c06294ab269d03e6b10ebc18b))
+
+### Other
+ * Incremental update requirement is not detected ([#33797](https://projects.theforeman.org/issues/33797), [e16db6c4](https://github.com/Katello/katello.git/commit/e16db6c462eb15610406e3e6f367451fc7b94fa4))
+ * After Katello upgrade 4.1 to 4.2 Repo Syncs/ Publish are no longer working ([#33705](https://projects.theforeman.org/issues/33705), [7f0380ce](https://github.com/Katello/katello.git/commit/7f0380ce1399086a9671750ddf777ccb91f2eac3))
+ * Import/Export Permission Upgrade task not deleting duplicate entries ([#33678](https://projects.theforeman.org/issues/33678), [b9b2a4f6](https://github.com/Katello/katello.git/commit/b9b2a4f6b874b75f5c1f536655e2ce1986421f51))
+ * Unknown subscription status on Katello webui after successful host registration.  ([#33572](https://projects.theforeman.org/issues/33572), [40b00527](https://github.com/Katello/katello.git/commit/40b00527ec913651fe1934eb2b1c23d3e1a4294d))
+
 # 4.2.0 Alfalfa (2021-10-06)
 
 ## Features
