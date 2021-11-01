@@ -30,6 +30,17 @@
             $scope.page.loading = false;
         }
 
+        $scope.repositoryVersions = function () {
+            return _.groupBy($scope.repository.content_view_versions, function(version) {
+                return version.content_view_id;
+            });
+        };
+
+        $scope.repositoryWrapper = {
+            repository: $scope.repository,
+            repositoryVersions: {}
+        };
+
         $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
             $scope.page.loading = false;
         }, function (response) {
@@ -47,6 +58,8 @@
                 $scope.repository.commaTagsWhitelist = "";
             }
             $scope.page.loading = false;
+            $scope.repositoryWrapper.repository = $scope.repository;
+            $scope.repositoryWrapper.repositoryVersions = $scope.repositoryVersions();
         }, function (response) {
             $scope.page.loading = false;
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
@@ -98,7 +111,7 @@
                 Notification.setSuccessMessage(translate('Repository "%s" successfully deleted').replace('%s', repositoryName));
             };
 
-            repository.$delete(success, errorHandler);
+            Repository.remove({id: repository.id}, success, errorHandler);
         };
 
         $scope.canRemove = function (repo, product) {
@@ -109,9 +122,7 @@
             var readOnlyReason = null;
 
             if (repo.$resolved && product.$resolved) {
-                if (repo.promoted) {
-                    readOnlyReason = 'published';
-                } else if ($scope.denied('deletable', repo)) {
+                if ($scope.denied('deletable', repo)) {
                     readOnlyReason = 'permissions';
                 }
             }

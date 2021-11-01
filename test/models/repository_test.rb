@@ -733,5 +733,15 @@ module Katello
       assert @fedora_17_x86_64.in_content_view?(view)
       refute rhel7.in_content_view?(view)
     end
+
+    def test_published_in_versions
+      view = katello_content_views(:library_view)
+      versions = @fedora_17_x86_64.published_in_versions
+      assert_equal versions.length, 3
+      version = @fedora_17_x86_64.published_in_versions.where(content_view_id: view.id).map(&:version)
+      cv_name = @fedora_17_x86_64.published_in_versions.where(content_view_id: view.id).first.content_view.name
+      assert_equal version.sort, view.versions.map(&:version)
+      assert_equal cv_name, view.name
+    end
   end
 end

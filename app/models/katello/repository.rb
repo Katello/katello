@@ -336,6 +336,10 @@ module Katello
       content_counts
     end
 
+    def published_in_versions
+      Katello::ContentViewVersion.with_repositories(self.library_instances_inverse).distinct
+    end
+
     def self.errata_with_package_counts(repo)
       repository_rpm = Katello::RepositoryRpm.table_name
       repository_errata = Katello::RepositoryErratum.table_name

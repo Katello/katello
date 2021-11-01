@@ -65,26 +65,43 @@
                  tooltip-placement="left"
                  tooltip-append-to-body="true">
               </i>
-              <i class="fa fa-question-circle" ng-switch-when="published"
-                 uib-tooltip="{{ 'You cannot remove this repository because it was published to a content view.' | translate }}"
-                 tooltip-animation="false"
-                 tooltip-placement="left"
-                 tooltip-append-to-body="true">
-              </i>
-              <i class="fa fa-question-circle" ng-switch-when="redhat"
-                 uib-tooltip="{{ 'You cannot remove this repository because it is a Red Hat repository.' | translate }}"
-                 tooltip-animation="false"
-                 tooltip-placement="left"
-                 tooltip-append-to-body="true">
-              </i>
             </span>
           </span>
         </li>
       </ul>
 
-      <div bst-modal="removeRepository(repository)" model="repository">
-        <div data-block="modal-header" translate>Remove Repository "{{ repository.name }}"?</div>
-        <div data-block="modal-body" translate>Are you sure you want to remove repository "{{ repository.name }}"?</div>
+      <div bst-modal="removeRepository(repository)" model="repositoryWrapper">
+        <div data-block="modal-header" translate>Remove Repository {{ repositoryWrapper.repository.name }}?</div>
+        <div data-block="modal-body">
+            <div ng-show="repositoryWrapper.repository.promoted" style="margin-bottom: 1em">
+                <span translate>Repository will also be removed from the following published content view versions!</span>
+                <table class="table table-striped table-bordered" style="margin-top: 1em">
+                    <thead>
+                        <tr>
+                            <th translate>Content View</th>
+                            <th translate>Versions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="cvs in repositoryWrapper.repositoryVersions">
+                        <td class="align-center">
+                            <a href="/content_views/{{cvs[0]['content_view_id']}}" target="_blank">
+                                {{cvs[0]['content_view_name']}}
+                            </a>
+                        </td>
+                        <td>
+                            <div ng-repeat="cvVersions in cvs">
+                                <a href="/content_views/{{cvs[0]['content_view_id']}}#/versions/{{cvVersions['id']}}" target="_blank">
+                                    <span translate>Version {{ cvVersions['version'] }} </span>
+                                </a>
+                            </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span translate>Are you sure you want to remove repository {{ repositoryWrapper.repository.name }}?</span>
+        </div>
       </div>
     </span>
   </div>
