@@ -29,7 +29,7 @@ module Katello
       assert_template 'api/v2/host_collections/index'
 
       results = JSON.parse(@response.body)
-      assert_equal results.keys.sort, ['error', 'page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
+      assert_equal results.keys.sort, ['error', 'page', 'per_page', 'results', 'search', 'selectable', 'sort', 'subtotal', 'total']
       assert_equal results['results'].size, 3
       assert_includes results['results'].map { |r| r['id'] }, @host_collection.id
     end
@@ -41,7 +41,7 @@ module Katello
       assert_template 'api/v2/host_collections/index'
 
       results = JSON.parse(@response.body)
-      assert_equal results.keys.sort, ['error', 'page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
+      assert_equal results.keys.sort, ['error', 'page', 'per_page', 'results', 'search', 'selectable', 'sort', 'subtotal', 'total']
       assert_equal results['results'].size, 3
       assert_includes results['results'].map { |r| r['id'] }, @host_collection.id
     end

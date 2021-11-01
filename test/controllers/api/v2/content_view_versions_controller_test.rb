@@ -63,7 +63,7 @@ module Katello
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
 
-      assert_equal ['error', 'page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total'], results.keys.sort
+      assert_equal ['error', 'page', 'per_page', 'results', 'search', 'selectable', 'sort', 'subtotal', 'total'], results.keys.sort
       assert_equal 1, results['results'].size
       assert_equal expected_version.id, results['results'][0]['id']
     end
@@ -88,7 +88,7 @@ module Katello
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
 
-      assert_equal ['error', 'page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total'], results.keys.sort
+      assert_equal ['error', 'page', 'per_page', 'results', 'search', 'selectable', 'sort', 'subtotal', 'total'], results.keys.sort
       assert_equal 1, results['results'].size
       assert_equal expected_version.id, results['results'][0]['id']
     end
@@ -102,7 +102,7 @@ module Katello
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
 
-      assert_equal ['error', 'page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total'], results.keys.sort
+      assert_equal ['error', 'page', 'per_page', 'results', 'search', 'selectable', 'sort', 'subtotal', 'total'], results.keys.sort
       assert_includes results['results'].map { |r| r['id'] }, cvv.id
       refute_includes results['results'].map { |r| r['id'] }, cvv_org2.id
     end

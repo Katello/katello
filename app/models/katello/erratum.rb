@@ -20,6 +20,7 @@ module Katello
     scoped_search :on => :errata_id, :only_explicit => true
     scoped_search :on => :errata_id, :rename => :id, :complete_value => true, :only_explicit => true
     scoped_search :on => :title
+    scoped_search :on => :title, :rename => :synopsis, :complete_value => true, :only_explicit => true
     scoped_search :on => :severity, :complete_value => true
     scoped_search :on => :errata_type, :only_explicit => true
     scoped_search :on => :errata_type, :rename => :type, :complete_value => true

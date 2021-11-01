@@ -35,6 +35,7 @@ module Katello
     param :host_id, :number, :desc => N_("UUID of the content host"), :required => true
     param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
     param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
+    param :include_applicable, :bool, :desc => N_("Return errata that are applicable to this host. Defaults to false)"), :required => false
     param_group :search, Api::V2::ApiController
     def index
       if (params[:content_view_id] && params[:environment_id].nil?) || (params[:environment_id] && params[:content_view_id].nil?)
@@ -79,6 +80,14 @@ module Katello
 
     protected
 
+    def total_selectable(query)
+      if ::Foreman::Cast.to_bool(params[:include_applicable])
+        query.where(:id => @host.content_facet.installable_errata).count
+      else
+        query.count
+      end
+    end
+
     def index_relation
       relation = Katello::Erratum.none
       if @host.content_facet
@@ -90,11 +99,19 @@ module Katello
     private
 
     def find_content_view
-      @content_view = ContentView.readable.find(params[:content_view_id]) if params[:content_view_id]
+      @content_view = if ::Foreman::Cast.to_bool(params[:include_applicable])
+                        @host.organization.default_content_view
+                      elsif params[:content_view_id]
+                        ContentView.readable.find(params[:content_view_id])
+                      end
     end
 
     def find_environment
-      @environment = KTEnvironment.readable.find(params[:environment_id]) if params[:environment_id]
+      @environment = if ::Foreman::Cast.to_bool(params[:include_applicable])
+                       @host.organization.library
+                     elsif params[:environment_id]
+                       KTEnvironment.readable.find(params[:environment_id])
+                     end
     end
 
     def find_host

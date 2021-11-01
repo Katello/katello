@@ -43,6 +43,7 @@ module Katello
       refute_empty response[:results], "results"
       assert_equal 5, response[:subtotal], "subtotal"
       assert_equal 5, response[:total], "total"
+      assert_equal 5, response[:selectable], "selectable"
       assert_equal 1, response[:page], "page"
       assert_equal Setting[:entries_per_page], response[:per_page], "per page"
       assert_nil response[:error], "error"
@@ -75,6 +76,7 @@ module Katello
       response = @controller.scoped_search(@query, @default_sort[0], @default_sort[1], @options)
       assert_empty response[:results], "results"
       assert_equal 0, response[:subtotal], "subtotal"
+      assert_equal 0, response[:selectable], "selectable"
       assert_nil response[:error], "error"
     end
 
@@ -158,6 +160,7 @@ module Katello
 
       assert_equal types.count, results[:subtotal]
       assert_equal types.count, results[:total]
+      assert_equal types.count, results[:selectable]
       assert_equal types.sort, results[:results].map { |i| i['errata_type'] }.sort
     end
 

@@ -94,7 +94,8 @@ module Katello
       query = self.final_custom_index_relation(query) if self.respond_to?(:final_custom_index_relation)
 
       query = query.select(group).group(group) if group
-      sub_total = total.zero? ? 0 : scoped_search_total(query, group)
+      subtotal = total.zero? ? 0 : scoped_search_total(query, group)
+      selectable = total.zero? ? 0 : scoped_search_total_selectable(query, group)
 
       if options[:custom_sort]
         query = options[:custom_sort].call(query)
@@ -109,9 +110,20 @@ module Katello
       end
       page = params[:page] || 1
       per_page = params[:per_page] || Setting[:entries_per_page]
-      query = (total.zero? || sub_total.zero?) ? blank_query : query
+      query = (total.zero? || subtotal.zero?) ? blank_query : query
 
-      options[:csv] ? query : scoped_search_results(query, sub_total, total, page, per_page)
+      if options[:csv]
+        query
+      else
+        scoped_search_results(
+          query: query,
+          subtotal: subtotal,
+          total: total,
+          page: page,
+          per_page: per_page,
+          selectable: selectable
+        )
+      end
     rescue ScopedSearch::QueryNotSupported, ActiveRecord::StatementInvalid => error
       message = error.message
       if error.class == ActiveRecord::StatementInvalid
@@ -119,24 +131,38 @@ module Katello
         message = _('Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.')
       end
 
-      scoped_search_results(blank_query, 0, 0, page, per_page, message)
+      scoped_search_results(query: blank_query, page: page, per_page: per_page, error: message)
     end
 
     protected
 
-    def scoped_search_total(query, group)
+    def scoped_search_query(query, group)
       if group
-        query.select(group).group(group).length
+        query.select(group).group(group)
       else
-        query.count
+        query
       end
     end
 
-    def scoped_search_results(query, sub_total, total, page, per_page, error = nil)
+    def scoped_search_total(query, group)
+      scoped_search_query(query, group).length
+    end
+
+    def scoped_search_total_selectable(query, group)
+      q = scoped_search_query(query, group)
+      if self.respond_to?(:total_selectable, true)
+        total_selectable(q)
+      else
+        q.length
+      end
+    end
+
+    def scoped_search_results(query:, subtotal: 0, total: 0, page: 0, per_page: 0, error: nil, selectable: nil)
       {
         :results => query,
-        :subtotal => sub_total,
+        :subtotal => subtotal,
         :total => total,
+        :selectable => selectable.blank? ? total : selectable,
         :page => page,
         :per_page => per_page,
         :error => error
