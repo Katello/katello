@@ -9,6 +9,8 @@ attributes :latest_version, :latest_version_id
 attributes :auto_publish
 attributes :solve_dependencies
 attributes :import_only
+attributes :related_cv_count
+attributes :related_composite_cvs
 
 node :next_version do |content_view|
   content_view.next_version.to_f.to_s

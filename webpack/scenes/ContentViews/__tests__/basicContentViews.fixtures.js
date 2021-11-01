@@ -1,6 +1,6 @@
 const buildContentView = id => ({
   id,
-  composite: 'false',
+  composite: false,
   name: `contentView${id}`,
   environments: [],
   repositories: [],

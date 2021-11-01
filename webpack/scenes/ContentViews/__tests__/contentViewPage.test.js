@@ -49,7 +49,12 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
   // Assert that the CV is not showing yet by searching by name and the query returning null
   expect(queryByText(firstCV.name)).toBeNull();
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
-  await patientlyWaitFor(() => expect(queryByText(firstCV.name)).toBeInTheDocument());
+  await patientlyWaitFor(() => {
+    expect(queryByText(firstCV.name)).toBeInTheDocument();
+    expect(queryByText('Component content views')).toBeInTheDocument();
+    expect(queryByText('Composite content views')).toBeInTheDocument();
+  });
+
   // Assert request was made and completed, see helper function
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done

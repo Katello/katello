@@ -108,7 +108,7 @@ module Katello
     end
 
     def self.in_organization(org)
-      where(organization_id: org.id)
+      where(organization_id: org.id) unless org.nil?
     end
 
     def to_s
@@ -639,6 +639,29 @@ module Katello
 
     def on_demand_repositories
       repositories.on_demand
+    end
+
+    def related_cv_count
+      if composite
+        content_view_components.length
+      else
+        component_composites.length
+      end
+    end
+
+    def related_composite_cvs
+      content_views = []
+      component_composites.each do |cv|
+        cv_id = cv.composite_content_view_id
+        cv_name = ContentView.find(cv_id).name
+        content_views.push(
+          {
+            id: cv_id,
+            name: cv_name
+          }
+        )
+      end
+      content_views
     end
 
     protected

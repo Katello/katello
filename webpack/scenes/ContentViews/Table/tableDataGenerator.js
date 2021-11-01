@@ -58,6 +58,8 @@ const buildExpandableRows = (contentViews) => {
       environments,
       versions,
       permissions,
+      related_cv_count: relatedCVCount,
+      related_composite_cvs: relatedCompositeCVs,
     } = contentView;
     const cells = buildRow(contentView);
     const cellParent = {
@@ -80,7 +82,14 @@ const buildExpandableRows = (contentViews) => {
       parent: cvCount,
       cells: [
         {
-          title: <DetailsExpansion cvId={id} {...{ activationKeys, hosts }} />,
+          title: <DetailsExpansion
+            cvId={id}
+            cvName={name}
+            cvComposite={composite}
+            {...{
+ activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
+}}
+          />,
           props: {
             colSpan: 2,
           },
