@@ -19,6 +19,13 @@
   </div>
 
   <br>
+  <div ng-hide="syncStatus.unsyncable_content_types.length == 0">
+    <span translate>
+      Pulp plugin missing for synchronizable content types: <b>{{ syncStatus.unsyncable_content_types.join(", ") }}.</b><br />
+      Repositories containing these content types will not be synced.
+    </span>
+  </div>
+
   <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)">
     <a ng-click="cancelSync()" class="btn btn-default" ng-disabled="!syncState.is(syncState.SYNCING)">
       <span translate>Cancel Sync</span>

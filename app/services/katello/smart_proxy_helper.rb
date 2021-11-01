@@ -39,11 +39,20 @@ module Katello
       end
     end
 
-    def repositories_available_to_capsule(environments, content_view)
+    def repositories_available_to_capsule(environments = nil, content_view = nil)
       environments = @smart_proxy.lifecycle_environments if environments.nil?
       yum_repos = Katello::Repository.in_environment(environments)
       yum_repos = yum_repos.in_content_views([content_view]) if content_view
       yum_repos.smart_proxy_syncable
+    end
+
+    def unsyncable_content_types
+      unsyncable_content_types = ::Katello::RepositoryTypeManager.defined_repository_types.keys.collect do |type_name|
+        unless @smart_proxy.capabilities(::SmartProxy::PULP3_FEATURE).include?(::Katello::RepositoryTypeManager.defined_repository_types[type_name].pulp3_plugin)
+          type_name
+        end
+      end
+      unsyncable_content_types.compact & repositories_available_to_capsule.map(&:content_type)
     end
   end
 end
