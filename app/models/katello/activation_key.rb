@@ -184,5 +184,15 @@ module Katello
         self.content_view = self.environment.try(:default_content_view)
       end
     end
+
+    apipie :class, desc: "A class representing #{model_name.human} object" do
+      name 'Activation Key'
+      refs 'ActivationKey'
+      sections only: %w[all additional]
+      property :name, String, desc: 'Returns the name of the Activation Key.'
+    end
+    class Jail < ::Safemode::Jail
+      allow :name
+    end
   end
 end
