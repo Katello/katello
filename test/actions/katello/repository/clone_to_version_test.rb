@@ -17,6 +17,19 @@ module Actions
       get_organization #ensure we have an org label
     end
 
+    it 'plans to index content properly' do
+      cloned_repo = katello_repositories(:fedora_17_x86_64)
+
+      cloned_repo.expects(:primary?).twice.returns(true)
+      cloned_repo.root = yum_repo.root
+      options = {}
+
+      tree = plan_action_tree(action_class, [yum_repo], version, cloned_repo, options)
+
+      assert_tree_planned_with(tree, ::Actions::Katello::Repository::IndexContent,
+                               id: cloned_repo.id, force_index: true, source_repository_id: yum_repo.id)
+    end
+
     it 'plans to clone yum units' do
       cloned_repo = katello_repositories(:fedora_17_x86_64)
 
