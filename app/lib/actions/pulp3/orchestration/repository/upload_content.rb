@@ -7,7 +7,6 @@ module Actions
 
           # rubocop:disable Metrics/MethodLength
           # rubocop:disable Metrics/CyclomaticComplexity
-          # rubocop:disable Metrics/PerceivedComplexity
           def plan(repository, smart_proxy, file, unit_type_id, options)
             sequence do
               checksum = Digest::SHA256.hexdigest(File.read(file[:path]))

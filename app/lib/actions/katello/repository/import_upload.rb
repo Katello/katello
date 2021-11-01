@@ -4,6 +4,7 @@ module Actions
     module Repository
       class ImportUpload < Actions::EntryAction
         include Actions::Katello::PulpSelector
+        # rubocop:disable Metrics/MethodLength
         def plan(repository, uploads, options = {})
           action_subject(repository)
           repository.clear_smart_proxy_sync_histories
@@ -14,7 +15,6 @@ module Actions
           generate_metadata = options.fetch(:generate_metadata, true)
           sync_capsule = options.fetch(:sync_capsule, true)
           generate_applicability = options.fetch(:generate_applicability, repository.yum?)
-
           options[:content_type] ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
           if ::Katello::RepositoryTypeManager.generic_content_type?(options[:content_type])
             unit_type_id = options[:content_type]
@@ -49,6 +49,7 @@ module Actions
                 import_upload.output
               end
             end
+
             plan_action(Katello::Repository::MetadataGenerate, repository, force_publication: true) if generate_metadata
             plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repository.id]) if generate_applicability
             plan_self(repository_id: repository.id, sync_capsule: sync_capsule, upload_results: upload_results)

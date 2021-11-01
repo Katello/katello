@@ -49,7 +49,7 @@ module Actions
                                             smart_proxy,
                                             "/pulp/api/v3/uploads/" + args.dig(:upload_id) + "/",
                                             args.dig(:unit_key, :checksum)).output
-                           
+
                 if unit_type_id != 'ostree_ref'
                   artifact_output = plan_action(Pulp3::Repository::SaveArtifact,
                                                 file,
