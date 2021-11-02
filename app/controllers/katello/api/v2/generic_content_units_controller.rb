@@ -1,10 +1,15 @@
 module Katello
   class Api::V2::GenericContentUnitsController < Api::V2::ApiController
+    resource_description do
+      name 'Content Units'
+      param :content_type, String, desc: N_("Possible values: #{Katello::RepositoryTypeManager.generic_content_types.join(", ")}"), required: true
+    end
+    apipie_concern_subst(:a_resource => N_("a content unit"), :resource_id => "content_units")
+
     Katello::RepositoryTypeManager.generic_content_types(false).each do |type|
-      apipie_concern_subst(:a_resource => N_(type), :resource_id => type.pluralize)
-      resource_description do
-        name type.pluralize.titleize
-      end
+      api :GET, "/#{type.pluralize}", N_("List %s" % type.pluralize)
+      api :GET, "/#{type.pluralize}/:id", N_("Show %s" % type.gsub(/_/, ' '))
+      api :GET, "/repositories/:repository_id/#{type.pluralize}/:id", N_("Show %s" % type.gsub(/_/, ' '))
     end
 
     include Katello::Concerns::Api::V2::RepositoryContentController
@@ -14,6 +19,7 @@ module Katello
     end
 
     def resource_class
+      fail "Required param content_type is missing" unless params[:content_type]
       ::Katello::GenericContentUnit.where(content_type: params[:content_type].singularize)
     end
 
