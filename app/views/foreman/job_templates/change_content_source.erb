@@ -1,0 +1,42 @@
+<%#
+kind: job_template
+name: Change content source
+job_category: Katello
+model: JobTemplate
+provider_type: SSH
+description_format: Configure subscription manager to new content source
+feature: katello_change_content_source
+%>
+#!/bin/sh
+<%
+    content_source = @host.content_source
+-%>
+
+<% if content_source -%>
+SSL_CA_CERT=$(mktemp)
+cat << EOF > $SSL_CA_CERT
+<%= foreman_server_ca_cert %>
+EOF
+
+KATELLO_SERVER_CA_CERT=/etc/rhsm/ca/katello-server-ca.pem
+RHSM_CFG=/etc/rhsm/rhsm.conf
+
+# Prepare SSL certificate
+mkdir -p /etc/rhsm/ca
+cp -f $SSL_CA_CERT $KATELLO_SERVER_CA_CERT
+chmod 644 $KATELLO_SERVER_CA_CERT
+
+# Configure subscription-manager
+test -f $RHSM_CFG.bak || cp $RHSM_CFG $RHSM_CFG.bak
+
+subscription-manager config \
+  --server.hostname="<%= content_source.rhsm_url.host %>" \
+  --server.port="<%= content_source.rhsm_url.port %>" \
+  --server.prefix="<%= content_source.rhsm_url.path %>" \
+  --rhsm.repo_ca_cert="$KATELLO_SERVER_CA_CERT" \
+  --rhsm.baseurl="<%= content_source.pulp_content_url %>"
+
+<% else -%>
+echo "Host [<%= @host.name %>] doesn't have assigned content source!"
+exit 1
+<% end -%>
