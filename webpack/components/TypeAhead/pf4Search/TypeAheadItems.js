@@ -14,13 +14,13 @@ const TypeAheadItems = ({
   const buildDropdownItems = () => items.map(({ text, type, disabled = false }, index) => {
     const key = `${text}${index}`;
     if (type === 'divider') return (<DropdownSeparator key={key} />);
-    const isHovered = activeItems[highlightedIndex] === text;
+    const isHighlighted = highlightedIndex === index;
     const itemProps = getItemProps({
       index: activeItems.indexOf(text),
       item: text,
       key,
-      isHovered,
       disabled,
+      className: isHighlighted ? 'highlighted' : '',
     });
     const { onClick, ...dropdownProps } = itemProps;
     return (
