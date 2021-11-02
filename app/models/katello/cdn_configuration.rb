@@ -9,11 +9,9 @@ module Katello
     encrypts :password
 
     validates :url, presence: true
-    validates :username, presence: true, unless: :redhat?
-    validates :password, presence: true, unless: :redhat?
-    validates :upstream_organization_label, presence: true, unless: :redhat?
-    validates :ssl_ca_credential_id, presence: true, unless: :redhat?
+    validates_with Validators::KatelloUrlFormatValidator, attributes: :url
     validates_with Validators::KatelloLabelFormatValidator, attributes: :upstream_organization_label, if: proc { upstream_organization_label.present? }
+    validate :non_redhat_configuration, unless: :redhat?
 
     def ssl_ca
       ssl_ca_credential&.content
@@ -21,6 +19,12 @@ module Katello
 
     def redhat?
       username.blank? && password.blank? && upstream_organization_label.blank? && ssl_ca_credential_id.blank?
+    end
+
+    private
+
+    def non_redhat_configuration
+      errors.add(:base, _("Username, Password, Upstream Organization Label, and SSL CA Credential are required when using a non-Red Hat CDN."))
     end
   end
 end
