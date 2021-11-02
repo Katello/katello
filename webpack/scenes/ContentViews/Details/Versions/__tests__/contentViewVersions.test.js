@@ -122,15 +122,12 @@ test('Can show package and erratas and link to list page', async () => {
 
   await patientlyWaitFor(() => {
     expect(getAllByText(8)[0].closest('a'))
-      .toHaveAttribute('href', '/content_views/5/versions/11/packages/');
+      .toHaveAttribute('href', '/content_views/5#/versions/11/packages/');
     expect(getAllByText(15)[0].closest('a'))
-      .toHaveAttribute('href', '/content_views/5/versions/11/errata/');
-    expect(getByText(5).closest('a'))
-      .toHaveAttribute('href', '/content_views/5/versions/11/errata?queryPagedSearch=%20type%20%3D%20security');
-    expect(getByText(3).closest('a'))
-      .toHaveAttribute('href', '/content_views/5/versions/11/errata?queryPagedSearch=%20type%20%3D%20bugfix');
-    expect(getByText(7).closest('a'))
-      .toHaveAttribute('href', '/content_views/5/versions/11/errata?queryPagedSearch=%20type%20%3D%20enhancement');
+      .toHaveAttribute('href', '/content_views/5#/versions/11/errata/');
+    expect(getByText(5)).toBeInTheDocument();
+    expect(getByText(3)).toBeInTheDocument();
+    expect(getByText(7)).toBeInTheDocument();
   });
 
   assertNockRequest(autocompleteScope);
@@ -152,8 +149,8 @@ test('Can show additional content and link to list page', async () => {
 
   await patientlyWaitFor(() => {
     expect(getByText('3 Files').closest('a'))
-      .toHaveAttribute('href', '/content_views/5/versions/11/file/');
-    expect(getByText('1 Deb Packages').closest('a'))
+      .toHaveAttribute('href', '/content_views/5#/versions/11/files/');
+    expect(getByText('1 Deb packages').closest('a'))
       .toHaveAttribute('href', '/versions/11/debPackages');
   });
 

@@ -16,6 +16,7 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
     docker_tag_count: dockerTagCount,
     file_count: fileCount,
     module_stream_count: moduleStreamCount,
+    ansible_collection_count: ansibleCollectionCount,
   } = cvVersion;
 
   return (
@@ -23,14 +24,14 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
       {(moduleStreamCount > 0 &&
         <>
           <Link to={`/versions/${versionId}/moduleStreams`}>
-            {`${moduleStreamCount} Module Streams`}
+            {`${moduleStreamCount} Module streams`}
           </Link><br />
         </>)
       }
       {(debCount > 0 &&
         <>
           <Link to={`/versions/${versionId}/debPackages`}>
-            {`${debCount} Deb Packages`}
+            {`${debCount} Deb packages`}
           </Link><br />
         </>)
       }
@@ -39,17 +40,22 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
           <Link to={`/versions/${versionId}/dockerTags`}>
             {`${dockerTagCount} Docker tags`}
           </Link><br />
-          <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/docker`, '')}>{`${dockerManifestCount} Container manifests`}</a><br />
+          <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/dockerTags`, '')}>{`${dockerManifestCount} Container manifests`}</a><br />
         </>)
       }
       {fileCount > 0 &&
         <>
-          <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/file`, '')}>{`${fileCount} Files`}</a><br />
+          <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/files`, '')}>{`${fileCount} Files`}</a><br />
         </>
+      }
+      {ansibleCollectionCount > 0 &&
+      <>
+        <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/ansibleCollections`, '')}>{`${ansibleCollectionCount} Collections`}</a><br />
+      </>
       }
       {(moduleStreamCount === 0 && debCount === 0 &&
         dockerManifestCount === 0 && dockerTagCount === 0 &&
-        fileCount === 0 &&
+        fileCount === 0 && ansibleCollectionCount === 0 &&
         <TextContent>
           <Text component={TextVariants.small}>{__('N/A')}</Text>
         </TextContent>
@@ -68,6 +74,7 @@ ContentViewVersionContent.propTypes = {
     docker_tag_count: PropTypes.number,
     file_count: PropTypes.number,
     module_stream_count: PropTypes.number,
+    ansible_collection_count: PropTypes.number,
   }),
 };
 
@@ -80,6 +87,7 @@ ContentViewVersionContent.defaultProps = {
     docker_tag_count: 0,
     file_count: 0,
     module_stream_count: 0,
+    ansible_collection_count: 0,
   },
 };
 
