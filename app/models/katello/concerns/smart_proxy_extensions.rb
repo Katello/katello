@@ -446,13 +446,21 @@ module Katello
       def rhsm_url
         # Since Foreman 3.1 this setting is set
         if (rhsm_url = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url'))
-          rhsm_url
+          URI(rhsm_url)
         # Compatibility fall back
         elsif pulp_primary?
-          "https://#{URI.parse(url).host}/rhsm"
+          URI("https://#{URI.parse(url).host}/rhsm")
         elsif pulp_mirror?
-          "https://#{URI.parse(url).host}:8443/rhsm"
+          URI("https://#{URI.parse(url).host}:8443/rhsm")
         end
+      end
+
+      def pulp_content_url
+        URI(setting(SmartProxy::PULP3_FEATURE, 'content_app_url'))
+      end
+
+      class ::SmartProxy::Jail < ::Safemode::Jail
+        allow :rhsm_url, :pulp_content_url
       end
     end
   end
