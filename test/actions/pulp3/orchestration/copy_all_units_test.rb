@@ -185,6 +185,7 @@ module ::Actions::Pulp3
       repo2.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo_dup')
       repo3.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo_dup_dup')
 
+      ::Katello::Pulp3::Repository.any_instance.stubs(:ssl_remote_options).returns({})
       create_repo(repo2, @primary)
       create_repo(repo3, @primary)
 
@@ -224,6 +225,10 @@ module ::Actions::Pulp3
 
       assert_equal ['armadillo'], @repo_clone.rpms.pluck(:name)
       assert_equal ["KATELLO-RHEA-2010:99143", "RHEA-2021:9999"].sort, @repo_clone.errata.pluck(:pulp_id).sort
+    ensure
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo2, @primary)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Delete, repo3, @primary)
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength

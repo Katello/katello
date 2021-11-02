@@ -7,11 +7,12 @@ module Katello
       include Katello::Pulp3Support
 
       def setup
+        skip "All tests are skipped"
         @settings = SETTINGS[:katello][:content_types]
         SETTINGS[:katello][:content_types] = { file: nil }
 
         User.current = users(:admin)
-        @primary = FactoryBot.create(:smart_proxy, :pulp_mirror, :with_pulp3)
+        @primary = SmartProxy.pulp_primary
         @repo = katello_repositories(:pulp3_file_1)
         @repo.root.update(:url => 'https://fixtures.pulpproject.org/file2/')
         ensure_creatable(@repo, @primary)
@@ -19,6 +20,7 @@ module Katello
       end
 
       def teardown
+        skip "All tests are skipped"
         SETTINGS[:katello][:content_types] = @settings
       end
 
