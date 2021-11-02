@@ -3,6 +3,12 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
     include Katello::Concerns::Api::V2::HostErrataExtensions
 
+    TYPES_FROM_PARAMS = {
+      bugfix: Katello::Erratum::BUGZILLA, # ['bugfix', 'recommended']
+      security: Katello::Erratum::SECURITY, # ['security']
+      enhancement: Katello::Erratum::ENHANCEMENT # ['enhancement', 'optional']
+    }
+
     before_action :find_host, only: :index
     before_action :find_host_editable, except: :index
     before_action :find_errata_ids, only: :apply
@@ -36,13 +42,24 @@ module Katello
     param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
     param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
     param :include_applicable, :bool, :desc => N_("Return errata that are applicable to this host. Defaults to false)"), :required => false
+    param :type, String, :desc => N_("Return only errata of a particular type (security, bugfix, enhancement)"), :required => false
+    param :severity, String, :desc => N_("Return only errata of a particular severity (None, Low, Moderate, Important, Critical)"), :required => false
     param_group :search, Api::V2::ApiController
     def index
       if (params[:content_view_id] && params[:environment_id].nil?) || (params[:environment_id] && params[:content_view_id].nil?)
         fail _("Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
       end
 
-      collection = scoped_search(index_relation, 'updated', 'desc', :resource_class => Erratum, :includes => [:cves])
+      filtered_relation = index_relation
+      if params[:type].present?
+        fail _("Type must be one of: %s" % TYPES_FROM_PARAMS.keys.join(', ')) unless TYPES_FROM_PARAMS.key?(params[:type].to_sym)
+        filtered_relation = filtered_relation.where(:errata_type => TYPES_FROM_PARAMS[params[:type].to_sym])
+      end
+      if params[:severity].present?
+        fail _("Severity must be one of: %s") % Katello::Erratum::SEVERITIES.join(', ') unless Katello::Erratum::SEVERITIES.include?(params[:severity])
+        filtered_relation = filtered_relation.where(:severity => params[:severity])
+      end
+      collection = scoped_search(filtered_relation, 'updated', 'desc', :resource_class => Erratum, :includes => [:cves])
 
       @installable_errata_ids = []
       if @host.content_facet

@@ -27,7 +27,7 @@ import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } f
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
-import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES } from '../HostErrata/HostErrataConstants';
+import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVERITIES_TO_PARAM } from '../HostErrata/HostErrataConstants';
 import './ErrataTab.scss';
 
 export const ErrataTab = () => {
@@ -40,10 +40,6 @@ export const ErrataTab = () => {
   const dispatch = useDispatch();
   const toggleGroupStates = ['all', 'installable'];
   const [ALL, INSTALLABLE] = toggleGroupStates;
-  const { SECURITY, BUGFIX, ENHANCEMENT } = ERRATA_TYPES;
-  const {
-    NOT_APPLICABLE, MODERATE, IMPORTANT, CRITICAL,
-  } = ERRATA_SEVERITIES;
   const ERRATA_TYPE = __('Type');
   const ERRATA_SEVERITY = __('Severity');
   const [toggleGroupState, setToggleGroupState] = useState(INSTALLABLE);
@@ -54,6 +50,8 @@ export const ErrataTab = () => {
   const erratumIsExpanded = id => expandedErrata.has(id);
   const [errataTypeSelected, setErrataTypeSelected] = useState(ERRATA_TYPE);
   const [errataSeveritySelected, setErrataSeveritySelected] = useState(ERRATA_SEVERITY);
+  const activeFilters = [errataTypeSelected, errataSeveritySelected];
+  const defaultFilters = [ERRATA_TYPE, ERRATA_SEVERITY];
 
   const emptyContentTitle = __('This host does not have any installable errata.');
   const emptyContentBody = __('Installable errata will appear here when available.');
@@ -67,16 +65,26 @@ export const ErrataTab = () => {
     __('Synopsis'),
     __('Published date'),
   ];
+
   const fetchItems = useCallback(
-    params => (hostId ?
-      getInstallableErrata(
+    (params) => {
+      if (!hostId) return null;
+      const modifiedParams = { ...params };
+      if (errataTypeSelected !== ERRATA_TYPE) modifiedParams.type = TYPES_TO_PARAM[errataTypeSelected];
+      if (errataSeveritySelected !== ERRATA_SEVERITY) {
+        modifiedParams.severity = SEVERITIES_TO_PARAM[errataSeveritySelected];
+      }
+      console.log(modifiedParams);
+      return getInstallableErrata(
         hostId,
         {
           include_applicable: toggleGroupState === ALL,
-          ...params,
+          ...modifiedParams,
         },
-      ) : null),
-    [hostId, toggleGroupState, ALL],
+      );
+    },
+    [hostId, toggleGroupState, ALL, ERRATA_SEVERITY, ERRATA_TYPE,
+      errataTypeSelected, errataSeveritySelected],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
@@ -148,7 +156,7 @@ export const ErrataTab = () => {
           id="errata-type-dropdown"
           title={ERRATA_TYPE}
           showTitle={false}
-          items={[SECURITY, BUGFIX, ENHANCEMENT]}
+          items={Object.values(ERRATA_TYPES)}
           selected={errataTypeSelected}
           setSelected={handleErrataTypeSelected}
         />
@@ -158,7 +166,7 @@ export const ErrataTab = () => {
           id="errata-severity-dropdown"
           title={ERRATA_SEVERITY}
           showTitle={false}
-          items={[NOT_APPLICABLE, MODERATE, IMPORTANT, CRITICAL]}
+          items={Object.values(ERRATA_SEVERITIES)}
           selected={errataSeveritySelected}
           setSelected={handleErrataSeveritySelected}
         />
@@ -215,6 +223,8 @@ export const ErrataTab = () => {
                 emptySearchTitle,
                 emptySearchBody,
                 status,
+                activeFilters,
+                defaultFilters,
                 actionButtons,
                 searchQuery,
                 updateSearchQuery,
@@ -223,7 +233,8 @@ export const ErrataTab = () => {
                 toggleGroup,
                 }
           }
-          additionalListeners={[hostId, toggleGroupState]}
+          additionalListeners={[
+            hostId, toggleGroupState, errataTypeSelected, errataSeveritySelected]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
           foremanApiAutoComplete
