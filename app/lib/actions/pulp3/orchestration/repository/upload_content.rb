@@ -19,10 +19,10 @@ module Actions
                   upload_action_output = plan_action(Pulp3::Repository::UploadFile, repository, smart_proxy, file[:path]).output
                   artifact_action_output = plan_action(Pulp3::Repository::SaveArtifact, file, repository, smart_proxy, upload_action_output[:pulp_tasks], unit_type_id).output
                 end
-                content_href = artifact_action_output[:pulp_tasks]
+
               end
-              content_href ||= duplicate_content_href
-              action_output = plan_action(Pulp3::Repository::ImportUpload, content_href, repository, smart_proxy).output
+              artifact_action_output ||= {:content_unit_href => duplicate_content_href}
+              action_output = plan_action(Pulp3::Repository::ImportUpload, artifact_action_output, repository, smart_proxy).output
               plan_action(Pulp3::Repository::SaveVersion, repository, tasks: action_output[:pulp_tasks]).output
               plan_self(:subaction_output => action_output)
             end
