@@ -19,6 +19,7 @@ import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { isEmpty } from 'lodash';
+import SelectableDropdown from '../../../SelectableDropdown';
 import { useSet, useBulkSelect } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity } from '../../../../components/Errata';
@@ -26,7 +27,7 @@ import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } f
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
-import { HOST_ERRATA_KEY } from '../HostErrata/HostErrataConstants';
+import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES } from '../HostErrata/HostErrataConstants';
 import './ErrataTab.scss';
 
 export const ErrataTab = () => {
@@ -38,13 +39,21 @@ export const ErrataTab = () => {
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const dispatch = useDispatch();
   const toggleGroupStates = ['all', 'installable'];
-  const [all, installable] = toggleGroupStates;
-  const [toggleGroupState, setToggleGroupState] = useState(installable);
+  const [ALL, INSTALLABLE] = toggleGroupStates;
+  const { SECURITY, BUGFIX, ENHANCEMENT } = ERRATA_TYPES;
+  const {
+    NOT_APPLICABLE, MODERATE, IMPORTANT, CRITICAL,
+  } = ERRATA_SEVERITIES;
+  const ERRATA_TYPE = __('Type');
+  const ERRATA_SEVERITY = __('Severity');
+  const [toggleGroupState, setToggleGroupState] = useState(INSTALLABLE);
 
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const expandedErrata = useSet([]);
   const erratumIsExpanded = id => expandedErrata.has(id);
+  const [errataTypeSelected, setErrataTypeSelected] = useState(ERRATA_TYPE);
+  const [errataSeveritySelected, setErrataSeveritySelected] = useState(ERRATA_SEVERITY);
 
   const emptyContentTitle = __('This host does not have any installable errata.');
   const emptyContentBody = __('Installable errata will appear here when available.');
@@ -63,11 +72,11 @@ export const ErrataTab = () => {
       getInstallableErrata(
         hostId,
         {
-          include_applicable: toggleGroupState === all,
+          include_applicable: toggleGroupState === ALL,
           ...params,
         },
       ) : null),
-    [hostId, toggleGroupState, all],
+    [hostId, toggleGroupState, ALL],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
@@ -118,8 +127,42 @@ export const ErrataTab = () => {
     }
   };
 
+  const handleErrataTypeSelected = newType => setErrataTypeSelected((prevType) => {
+    if (prevType === newType) {
+      return ERRATA_TYPE;
+    }
+    return newType;
+  });
+
+  const handleErrataSeveritySelected = newSeverity => setErrataSeveritySelected((prevSeverity) => {
+    if (prevSeverity === newSeverity) {
+      return ERRATA_SEVERITY;
+    }
+    return newSeverity;
+  });
+
   const actionButtons = (
     <Split hasGutter>
+      <SplitItem>
+        <SelectableDropdown
+          id="errata-type-dropdown"
+          title={ERRATA_TYPE}
+          showTitle={false}
+          items={[SECURITY, BUGFIX, ENHANCEMENT]}
+          selected={errataTypeSelected}
+          setSelected={handleErrataTypeSelected}
+        />
+      </SplitItem>
+      <SplitItem>
+        <SelectableDropdown
+          id="errata-severity-dropdown"
+          title={ERRATA_SEVERITY}
+          showTitle={false}
+          items={[NOT_APPLICABLE, MODERATE, IMPORTANT, CRITICAL]}
+          selected={errataSeveritySelected}
+          setSelected={handleErrataSeveritySelected}
+        />
+      </SplitItem>
       <SplitItem>
         <ActionList isIconList>
           <ActionListItem>
@@ -146,16 +189,16 @@ export const ErrataTab = () => {
           text={__('All')}
           buttonId="allToggle"
           aria-label="Show All"
-          isSelected={toggleGroupState === all}
-          onChange={() => setToggleGroupState(all)}
+          isSelected={toggleGroupState === ALL}
+          onChange={() => setToggleGroupState(ALL)}
         />
 
         <ToggleGroupItem
           text={__('Installable')}
           buttonId="installableToggle"
           aria-label="Show Installable"
-          isSelected={toggleGroupState === installable}
-          onChange={() => setToggleGroupState(installable)}
+          isSelected={toggleGroupState === INSTALLABLE}
+          onChange={() => setToggleGroupState(INSTALLABLE)}
         />
       </ToggleGroup>
     );
