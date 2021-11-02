@@ -24,7 +24,9 @@ module Katello
     private
 
     def non_redhat_configuration
-      errors.add(:base, _("Username, Password, Upstream Organization Label, and SSL CA Credential are required when using a non-Red Hat CDN."))
+      if username.blank? || password.blank? || upstream_organization_label.blank? || ssl_ca_credential_id.blank?
+        errors.add(:base, _("Username, Password, Upstream Organization Label, and SSL CA Credential are required when using a non-Red Hat CDN."))
+      end
     end
   end
 end

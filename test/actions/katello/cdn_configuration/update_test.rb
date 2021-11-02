@@ -30,8 +30,6 @@ module ::Actions::Katello::CdnConfiguration
     end
 
     def test_plans_katello_cdn
-      @cdn_configuration.stubs(:redhat?).returns(false)
-
       attrs = {
         url: 'http://newcdn.example.com',
         ssl_ca_credential_id: @credential.id,
