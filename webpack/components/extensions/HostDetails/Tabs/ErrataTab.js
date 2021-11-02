@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
+import { Button, Split, SplitItem, ActionList, ActionListItem, Dropdown, Divider,
   DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
@@ -55,7 +55,7 @@ export const ErrataTab = () => {
 
   const emptyContentTitle = __('This host does not have any installable errata.');
   const emptyContentBody = __('Installable errata will appear here when available.');
-  const emptySearchTitle = __('No matching installable errata found');
+  const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
   const columnHeaders = [
     __('Errata'),
@@ -150,6 +150,31 @@ export const ErrataTab = () => {
   });
 
   const actionButtons = (
+    <>
+      <Split hasGutter>
+        <SplitItem>
+          <ActionList isIconList>
+            <ActionListItem>
+              <Button isDisabled={selectedCount === 0} onClick={applyByKatelloAgent}> {__('Apply')} </Button>
+            </ActionListItem>
+            <ActionListItem>
+              <Dropdown
+                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                isOpen={isBulkActionOpen}
+                isPlain
+                dropdownItems={dropdownItems}
+              />
+            </ActionListItem>
+          </ActionList>
+        </SplitItem>
+      </Split>
+    </>
+  );
+
+  const hostIsNonLibrary = (
+    !contentFacet.contentViewDefault && !contentFacet.lifecycleEnvironmentLibrary
+  );
+  const toggleGroup = (
     <Split hasGutter>
       <SplitItem>
         <SelectableDropdown
@@ -171,46 +196,29 @@ export const ErrataTab = () => {
           setSelected={handleErrataSeveritySelected}
         />
       </SplitItem>
+      {hostIsNonLibrary &&
       <SplitItem>
-        <ActionList isIconList>
-          <ActionListItem>
-            <Button isDisabled={selectedCount === 0} onClick={applyByKatelloAgent}> {__('Apply')} </Button>
-          </ActionListItem>
-          <ActionListItem>
-            <Dropdown
-              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-              isOpen={isBulkActionOpen}
-              isPlain
-              dropdownItems={dropdownItems}
-            />
-          </ActionListItem>
-        </ActionList>
+        <ToggleGroup aria-label="Installable Errata">
+          <ToggleGroupItem
+            text={__('All')}
+            buttonId="allToggle"
+            aria-label="Show All"
+            isSelected={toggleGroupState === ALL}
+            onChange={() => setToggleGroupState(ALL)}
+          />
+
+          <ToggleGroupItem
+            text={__('Installable')}
+            buttonId="installableToggle"
+            aria-label="Show Installable"
+            isSelected={toggleGroupState === INSTALLABLE}
+            onChange={() => setToggleGroupState(INSTALLABLE)}
+          />
+        </ToggleGroup>
       </SplitItem>
+  }
     </Split>
   );
-
-  let toggleGroup;
-  if (!contentFacet.contentViewDefault && !contentFacet.lifecycleEnvironmentLibrary) {
-    toggleGroup = (
-      <ToggleGroup aria-label="Installable Errata">
-        <ToggleGroupItem
-          text={__('All')}
-          buttonId="allToggle"
-          aria-label="Show All"
-          isSelected={toggleGroupState === ALL}
-          onChange={() => setToggleGroupState(ALL)}
-        />
-
-        <ToggleGroupItem
-          text={__('Installable')}
-          buttonId="installableToggle"
-          aria-label="Show Installable"
-          isSelected={toggleGroupState === INSTALLABLE}
-          onChange={() => setToggleGroupState(INSTALLABLE)}
-        />
-      </ToggleGroup>
-    );
-  }
 
   return (
     <div>
