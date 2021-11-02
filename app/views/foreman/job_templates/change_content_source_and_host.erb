@@ -1,0 +1,46 @@
+<%#
+kind: job_template
+name: Change content source and update host
+job_category: Katello
+model: JobTemplate
+provider_type: SSH
+description_format: Configure subscription manager to new content source (smart proxy) and update host's content source.
+feature: katello_change_content_source
+template_inputs:
+- name: smart_proxy
+  required: true
+  input_type: user
+  value_type: resource
+  resource_type: SmartProxy
+  description: New content source (Smart Proxy)
+  advanced: false
+- name: api_user
+  required: true
+  input_type: user
+  value_type: plain
+  description: Username of user for API callback
+  advanced: false
+- name: api_user_password
+  required: true
+  input_type: user
+  value_type: plain
+  description: User password (or personal access token) for API callback
+  hidden_value: true
+  advanced: false
+%>
+#!/bin/sh
+<%
+    smart_proxy = input_resource('smart_proxy')
+-%>
+
+<%= render_template('Change content source', { smart_proxy: smart_proxy.id }) %>
+
+# Update host
+curl --silent --show-error --fail --output /dev/null \
+   --request PUT --cacert $SSL_CA_CERT \
+   --user <%= input('api_user') %>:<%= input('api_user_password') %> \
+   "https://<%= rhsm_url.host %>:8443/api/hosts/<%= @host.id %>" \
+   -H 'Content-Type: application/json' \
+   --data '{ "host": { "content_source_id": "<%= smart_proxy.id %>", "content_facet_attributes": { "content_source_id": "<%= smart_proxy.id %>" }}}' || exit 1
+
+echo "Content source for [<%= @host.name %>] host have been successfully updated."

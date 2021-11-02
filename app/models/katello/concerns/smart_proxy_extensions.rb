@@ -444,10 +444,18 @@ module Katello
 
       def rhsm_url
         if pulp_primary?
-          "https://#{URI.parse(url).host}/rhsm"
+          URI("https://#{URI.parse(url).host}/rhsm")
         elsif pulp_mirror?
-          "https://#{URI.parse(url).host}:8443/rhsm"
+          URI("https://#{URI.parse(url).host}:8443/rhsm")
         end
+      end
+
+      def pulp_content_url
+        URI(setting(SmartProxy::PULP3_FEATURE, 'content_app_url'))
+      end
+
+      class ::SmartProxy::Jail < ::Safemode::Jail
+        allow :rhsm_url, :pulp_content_url, :api_url
       end
     end
   end
