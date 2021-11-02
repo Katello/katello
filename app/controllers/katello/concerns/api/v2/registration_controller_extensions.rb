@@ -28,7 +28,7 @@ module Katello
       end
 
       def context_urls
-        super.merge(rhsm_url: rhsm_url, pulp_content_url: pulp_content_url)
+        super.merge(rhsm_url: smart_proxy.rhsm_url, pulp_content_url: smart_proxy.pulp_content_url)
       end
 
       private
@@ -42,14 +42,6 @@ module Katello
 
           proxy
         end
-      end
-
-      def rhsm_url
-        URI(smart_proxy.rhsm_url)
-      end
-
-      def pulp_content_url
-        smart_proxy.setting(SmartProxy::PULP3_FEATURE, 'content_app_url')
       end
     end
   end

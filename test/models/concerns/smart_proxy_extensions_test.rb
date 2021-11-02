@@ -64,12 +64,12 @@ module Katello
     end
 
     def test_rhsm_url_pulp_primary
-      assert_includes @proxy.rhsm_url, "/rhsm"
-      assert_not_includes @proxy.rhsm_url, ":8443"
+      assert_includes @proxy.rhsm_url.to_s, "/rhsm"
+      assert_not_includes @proxy.rhsm_url.to_s, ":8443"
     end
 
     def test_rhsm_url_pulp_mirror
-      assert_includes @proxy_mirror.rhsm_url, ":8443/rhsm"
+      assert_includes @proxy_mirror.rhsm_url.to_s, ":8443/rhsm"
     end
 
     def test_sync_container_gateway
