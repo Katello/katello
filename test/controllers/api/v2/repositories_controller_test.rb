@@ -19,6 +19,8 @@ module Katello
       @docker_repo = katello_repositories(:busybox)
       @smart_proxy = SmartProxy.pulp_primary
       @srpm_repo = katello_repositories(:srpm_repo)
+      # TODO: uncomment when ostree is packaged
+      # @ostree_repo = katello_repositories(:pulp3_ostree_1)
       @ansible_collection_repo = katello_repositories(:pulp3_ansible_collection_1)
     end
 
@@ -943,6 +945,16 @@ module Katello
       put :import_uploads, params: { id: @srpm_repo.id, uploads: uploads, content_type: 'srpm' }
 
       assert_response :success
+    end
+
+    def test_import_uploads_ostree_fails_without_required_params
+      skip "Until ostree is ready in packaging"
+      uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
+
+      put :import_uploads, params: { id: @ostree_repo.id, uploads: uploads, content_type: 'ostree_ref' }
+
+      assert_response 422
+      assert_match "ostree_repository_name is required", @response.body
     end
 
     def test_import_uploads_protected

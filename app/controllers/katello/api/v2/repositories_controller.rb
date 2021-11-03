@@ -27,6 +27,7 @@ module Katello
     before_action :find_content, :only => :remove_content
     before_action :find_organization_from_repo, :only => [:update]
     before_action :error_on_rh_product, :only => [:create]
+    before_action :check_import_parameters, :only => [:import_uploads]
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_GPG_KEY_TYPE }
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE }
     before_action(:only => [:create, :update]) { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE }
@@ -392,7 +393,7 @@ module Katello
     param :async, :bool, desc: N_("Do not wait for the ImportUpload action to finish. Default: false")
     param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
-    param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'rpm', 'srpm')")
+    param :content_type, RepositoryTypeManager.uploadable_content_types(false).map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree_ref', 'rpm', 'srpm')")
     param :uploads, Array, :desc => N_("Array of uploads to import") do
       param 'id', String, :required => true
       param 'content_unit_id', String
@@ -400,6 +401,12 @@ module Katello
       param 'checksum', String
       param 'name', String, :desc => N_("Needs to only be set for file repositories or docker tags")
       param 'digest', String, :desc => N_("Needs to only be set for docker tags")
+    end
+    Katello::RepositoryTypeManager.generic_repository_types.each_pair do |_, repo_type|
+      repo_type.import_attributes.each do |import_attribute|
+        param import_attribute.api_param, import_attribute.type,
+            :desc => N_(import_attribute.description)
+      end
     end
     def import_uploads
       generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
@@ -608,6 +615,14 @@ module Katello
         generic_remote_options[option.name] = repo_params[option.name]
       end
       generic_remote_options
+    end
+
+    def check_import_parameters
+      @repository.repository_type&.import_attributes&.each do |import_attribute|
+        if import_attribute.required && params[import_attribute.api_param].blank?
+          fail HttpErrors::UnprocessableEntity, _("%s is required", import_attributes.api_param)
+        end
+      end
     end
   end
 end

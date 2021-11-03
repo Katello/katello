@@ -28,6 +28,7 @@ module Katello
       @unique_content_per_repo = false
       @content_types = []
       @generic_remote_options = []
+      @import_attributes = []
     end
 
     def set_unique_content_per_repo
@@ -42,6 +43,10 @@ module Katello
       @generic_remote_options.sort_by(&:name)
     end
 
+    def import_attributes
+      @import_attributes.sort_by(&:name)
+    end
+
     def primary_content_types
       found = self.content_types.select { |type| type.primary_content }
       found = self.content_types if found.empty?
@@ -52,6 +57,14 @@ module Katello
       translated = generic_remote_options.deep_dup
       translated.map do |option|
         option.title = _(option.title)
+        option.description = _(option.description)
+      end
+      translated
+    end
+
+    def translated_import_attributes
+      translated = import_attributes.deep_dup
+      translated.map do |option|
         option.description = _(option.description)
       end
       translated
@@ -89,6 +102,10 @@ module Katello
       @generic_remote_options << GenericRemoteOption.new(options.merge(:name => name))
     end
 
+    def import_attribute(name, options = {})
+      @import_attributes << GenericImportAttribute.new(options.merge(:name => name))
+    end
+
     def prevent_unneeded_metadata_publish
       self.metadata_publish_matching_check = true
     end
@@ -108,6 +125,7 @@ module Katello
         :creatable => @allow_creation_by_user,
         :pulp3_support => SmartProxy.pulp_primary.pulp3_repository_type_support?(self),
         :generic_remote_options => translated_generic_remote_options,
+        :import_attributes => translated_import_attributes,
         :url_description => _(@url_description),
         :content_types => content_types.as_json
       }
@@ -209,6 +227,18 @@ module Katello
         self.description = options[:description]
         self.input_type = options[:input_type]
         self.delimiter = options[:delimiter]
+      end
+    end
+
+    class GenericImportAttribute
+      attr_accessor :name, :api_param, :type, :description, :required
+
+      def initialize(options)
+        self.name = options[:name]
+        self.api_param = options[:api_param]
+        self.type = options[:type]
+        self.description = options[:description]
+        self.required = options[:required]
       end
     end
   end
