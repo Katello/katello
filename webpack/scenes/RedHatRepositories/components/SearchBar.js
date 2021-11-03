@@ -6,10 +6,8 @@ import PropTypes from 'prop-types';
 import { Form, FormGroup } from 'react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
 
-import { selectOrganizationProducts }
-  from '../../../redux/OrganizationProducts/OrganizationProductsSelectors';
-import { loadOrganizationProducts }
-  from '../../../redux/OrganizationProducts/OrganizationProductsActions';
+import { selectOrganizationProducts } from '../../../redux/OrganizationProducts/OrganizationProductsSelectors';
+import { loadOrganizationProducts } from '../../../redux/OrganizationProducts/OrganizationProductsActions';
 
 import { loadEnabledRepos } from '../../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../../redux/actions/RedHatRepositories/sets';
