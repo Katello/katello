@@ -27,5 +27,24 @@ Katello::RepositoryTypeManager.register('ostree') do
                        pulp3_service_class: Katello::Pulp3::GenericContentUnit,
                        model_name: lambda { |pulp_unit| pulp_unit["name"] },
                        model_version: lambda { |pulp_unit| pulp_unit["version"] }
+
+  import_attribute :ref, :content_type => 'ostree_ref',
+                        :api_param => :ostree_ref,
+                        :description => "OSTree ref branch that holds the reference to the last commit",
+                        :type => String,
+                        :required => false
+
+  import_attribute :parent_commit, :content_type => 'ostree_ref',
+                        :api_param => :ostree_parent_commit,
+                        :description => "Checksum of a parent commit",
+                        :type => String,
+                        :required => false
+
+  import_attribute :repository_name, :content_type => 'ostree_ref',
+                        :api_param => :ostree_repository_name,
+                        :description => "Name of the repository in the ostree archive",
+                        :type => String,
+                        :required => true
+
   default_managed_content_type :ostree_ref
 end

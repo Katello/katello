@@ -182,7 +182,6 @@ module Katello
       #Controller extensions
       ::HostsController.include Katello::Concerns::HostsControllerExtensions
       ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
-      ::SmartProxiesController.include Katello::Concerns::SmartProxiesControllerExtensions
       ::RegistrationCommandsController.prepend Katello::Concerns::RegistrationCommandsControllerExtensions
 
       #Helper Extensions
