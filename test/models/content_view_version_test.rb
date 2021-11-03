@@ -16,12 +16,15 @@ module Katello
     end
 
     def test_description
-      ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => @cvv.id,
+      cvv_desc = ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => @cvv.id,
                                             :status => 'successful',
                                             :user => User.first,
                                             :action => Katello::ContentViewHistory.actions[:publish],
                                             :notes => "Success description"
                                            )
+
+      assert_equal 'Success description', @cvv.description
+      cvv_desc.destroy!
 
       ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => @cvv.id,
                                             :status => 'failed',
@@ -30,7 +33,7 @@ module Katello
                                             :notes => "Failed description"
                                            )
 
-      assert_equal 'Success description', @cvv.description
+      assert_equal 'Failed description', @cvv.description
     end
 
     def test_promotable_in_sequence
