@@ -124,7 +124,7 @@ module Katello
           content_url.dup
         else
           path = content_url.sub(%r{^/}, '')
-          repo_url = self.provider.repository_url&.sub(%r{/$}, '')
+          repo_url = cdn_configuration.url.sub(%r{/$}, '')
           "#{repo_url}/#{path}"
         end
       end

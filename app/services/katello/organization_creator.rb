@@ -36,6 +36,7 @@ module Katello
         create_content_view_environment
         create_anonymous_provider
         create_redhat_provider
+        create_cdn_configuration
       end
     end
 
@@ -114,6 +115,13 @@ module Katello
         :name => Katello::Provider::ANONYMOUS,
         :provider_type => Katello::Provider::ANONYMOUS,
         organization: @organization
+      ).first_or_create!
+    end
+
+    def create_cdn_configuration
+      @cdn_configuration = Katello::CdnConfiguration.where(
+        organization: @organization,
+        url: ::Katello::Resources::CDN::CdnResource.redhat_cdn_url
       ).first_or_create!
     end
   end

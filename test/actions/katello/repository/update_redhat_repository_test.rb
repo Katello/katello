@@ -14,7 +14,6 @@ module Actions
       action = create_action(action_class)
 
       repo.content.update!(content_url: "/foo/bar")
-      repo.product.provider.update!(repository_url: "http://cdn.com")
 
       expected_relative_path = repo.generate_repo_path(repo.generate_content_path)
       expected_upstream_url = repo.product.repo_url(repo.generate_content_path)

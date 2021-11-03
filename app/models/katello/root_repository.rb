@@ -46,6 +46,8 @@ module Katello
     ALLOWED_OS_VERSIONS = [RHEL6, RHEL7, RHEL8].freeze
 
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
+    has_one :provider, :through => :product
+
     belongs_to :gpg_key, :inverse_of => :root_repositories, :class_name => "Katello::ContentCredential"
     belongs_to :ssl_ca_cert, :class_name => "Katello::ContentCredential", :inverse_of => :ssl_ca_root_repos
     belongs_to :ssl_client_cert, :class_name => "Katello::ContentCredential", :inverse_of => :ssl_client_root_repos
@@ -118,7 +120,9 @@ module Katello
       where(:http_proxy_id => http_proxy_id)
     }
     scope :orphaned, -> { where.not(id: Katello::Repository.pluck(:root_id).uniq) }
+    scope :redhat, -> { joins(:provider).merge(Katello::Provider.redhat) }
     delegate :redhat?, :provider, :organization, to: :product
+    delegate :cdn_configuration, to: :organization
 
     def library_instance
       repositories.in_default_view.first
@@ -389,7 +393,7 @@ module Katello
     end
 
     def repo_mapper
-      Katello::Candlepin::RepositoryMapper.new(self.product, self.content, self.substitutions)
+      @repo_mapper ||= Katello::Candlepin::RepositoryMapper.new(self.product, self.content, self.substitutions)
     end
 
     def calculate_updated_name

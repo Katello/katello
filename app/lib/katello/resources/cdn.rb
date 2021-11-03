@@ -2,6 +2,7 @@ module Katello
   module Resources
     module CDN
       SUPPORTED_SSL_VERSIONS = ['SSLv23', 'TLSv1'].freeze
+
       class Utils
         # takes releasever from contentUrl (e.g. 6Server, 6.0, 6.1)
         # returns hash e.g. {:major => 6, :minor => "6.1"}
@@ -18,53 +19,75 @@ module Katello
       class CdnResource
         CDN_DOCKER_CONTAINER_LISTING = "CONTAINER_REGISTRY_LISTING".freeze
 
-        attr_reader :url, :product, :options, :proxy
-
-        def substitutor(logger = nil)
-          @logger = logger
-          Util::CdnVarSubstitutor.new(self)
+        def substitutor
+          @substitutor ||= Util::CdnVarSubstitutor.new(self)
         end
 
         def initialize(url, options = {})
-          @proxy = ::HttpProxy.default_global_content_proxy
           @ssl_version = Setting[:cdn_ssl_version]
           if @ssl_version && !SUPPORTED_SSL_VERSIONS.include?(@ssl_version)
             fail("Invalid SSL version specified. Check the 'CDN SSL Version' setting")
           end
+
           options.reverse_merge!(:verify_ssl => 9)
-          options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl,
-                                    :product)
+          options.assert_valid_keys(:ssl_client_key,
+                                    :ssl_client_cert,
+                                    :ssl_ca_file,
+                                    :ssl_ca_cert,
+                                    :verify_ssl,
+                                    :username,
+                                    :password,
+                                    :organization_label,
+                                    :ssl_ca_cert)
 
-          ca = Katello::Repository.feed_ca_file(url)
-          if ca && URI(url).scheme == 'https'
-            options.reverse_merge!(:ssl_ca_file => ca)
-          elsif URI(url).scheme == 'https'
-            store = OpenSSL::X509::Store.new
-            store.set_default_paths
-            options.reverse_merge!(:cert_store => store)
+          if options[:ssl_ca_cert].present?
+            ca_cert = OpenSSL::X509::Certificate.new(options[:ssl_ca_cert])
+            @cert_store = OpenSSL::X509::Store.new
+            @cert_store.add_cert(ca_cert)
           end
-
-          @product = options[:product]
 
           @url = url
           @uri = URI.parse(url)
           @options = options
         end
 
+        def self.create(product: nil, cdn_configuration:)
+          options = {}
+          if cdn_configuration.redhat?
+            options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
+            options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
+            options[:ssl_ca_file] = self.ca_file
+            self.new(cdn_configuration.url, options)
+          else
+            options[:username] = cdn_configuration.username
+            options[:password] = cdn_configuration.password
+            options[:organization_label] = cdn_configuration.upstream_organization_label
+            options[:ssl_ca_cert] = cdn_configuration.ssl_ca
+            CDN::KatelloCdn.new(cdn_configuration.url, options)
+          end
+        end
+
+        def self.redhat_cdn_url
+          SETTINGS[:katello][:redhat_repository_url]
+        end
+
         def self.redhat_cdn?(url)
-          url.include?(SETTINGS[:katello][:redhat_repository_url])
+          url.include?(redhat_cdn_url)
+        end
+
+        def proxy
+          ::HttpProxy.default_global_content_proxy
         end
 
         def http_downloader
           net = net_http_class.new(@uri.host, @uri.port)
           net.use_ssl = @uri.is_a?(URI::HTTPS)
 
-          if CdnResource.redhat_cdn?(@uri.to_s)
+          if @uri.is_a?(URI::HTTPS)
             net.cert = @options[:ssl_client_cert]
             net.key = @options[:ssl_client_key]
-            net.ca_file = @options[:ssl_ca_file] if @options[:ssl_ca_file]
-          else
-            net.cert_store = @options[:cert_store]
+            net.ca_file = @options[:ssl_ca_file]
+            net.cert_store = @cert_store
           end
 
           # NOTE: This was added because some proxies dont support SSLv23 and do not handle TLS 1.2
@@ -93,8 +116,13 @@ module Katello
           net = http_downloader
           path = File.join(@uri.request_uri, path)
           used_url = File.join("#{@uri.scheme}://#{@uri.host}:#{@uri.port}", path)
-          Rails.logger.debug "CDN: Requesting path #{used_url}"
+          Rails.logger.info "CDN: Requesting path #{used_url}"
           req = Net::HTTP::Get.new(path)
+
+          if @options[:username] && @options[:password]
+            req.basic_auth(@options[:username], @options[:password])
+          end
+
           begin
             net.start do |http|
               res = http.request(req, nil) { |http_response| http_response.read_body }
@@ -125,6 +153,14 @@ module Katello
           end
         end
 
+        def valid_path?(path, postfix)
+          get(File.join(path, postfix)).present?
+        rescue RestClient::MovedPermanently
+          return true
+        rescue Errors::NotFound
+          return false
+        end
+
         def fetch_substitutions(base_path)
           get(File.join(base_path, "listing")).split("\n")
         rescue Errors::NotFound => e # some of listing file points to not existing content
@@ -136,12 +172,8 @@ module Katello
           "#{Katello::Engine.root}/ca/redhat-uep.pem"
         end
 
-        def self.ca_file_contents
-          File.read(ca_file)
-        end
-
         def net_http_class
-          if self.proxy
+          if proxy
             uri = URI(proxy.url) #Net::HTTP::Proxy ignores port as part of the url
             Net::HTTP::Proxy("#{uri.host}#{uri.path}", uri.port, proxy.username, proxy.password)
           else

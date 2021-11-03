@@ -169,6 +169,7 @@ module Katello
       test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
       manifest = Rack::Test::UploadedFile.new(test_document, '')
       post :upload, params: { :organization_id => @organization.id, :content => manifest }
+
       assert_response :success
     end
 

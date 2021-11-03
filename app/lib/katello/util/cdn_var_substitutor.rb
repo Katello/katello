@@ -48,7 +48,7 @@ module Katello
       end
 
       def any_valid_metadata_file?(repo_path)
-        ['repodata/repomd.xml', 'PULP_MANIFEST', '.treeinfo', 'treeinfo'].any? { |filename| valid_path?(repo_path, filename) }
+        ['repodata/repomd.xml', 'PULP_MANIFEST', '.treeinfo', 'treeinfo'].any? { |filename| @resource.valid_path?(repo_path, filename) }
       end
 
       protected
@@ -60,9 +60,9 @@ module Katello
         return resolved if to_resolve.empty?
 
         to_resolve.in_groups_of(8) do |group|
-          futures = group.map do |path_with_substitution|
+          futures = group.reject(&:nil?).map do |path_with_substitution|
             Concurrent::Promises.future do
-              path_with_substitution.resolve_substitutions(@resource)
+              resolve_path(path_with_substitution)
             end
           end
 
@@ -75,12 +75,18 @@ module Katello
         find_substitutions(resolved.compact.flatten)
       end
 
-      def valid_path?(path, postfix)
-        @resource.get(File.join(path, postfix)).present?
-      rescue RestClient::MovedPermanently
-        return true
-      rescue Errors::NotFound
-        return false
+      def resolve_path(path_with_substitutions)
+        if @resource.respond_to?(:fetch_paths)
+          @resource.fetch_paths(path_with_substitutions.path).compact.map do |element|
+            PathWithSubstitutions.new(element[:path], element[:substitutions])
+          end
+        elsif @resource.respond_to?(:fetch_substitutions)
+          @resource.fetch_substitutions(path_with_substitutions.base_path).compact.map do |value|
+            path_with_substitutions.resolve_token(value)
+          end
+        else
+          fail _("Unsupported CDN resource")
+        end
       end
     end
   end

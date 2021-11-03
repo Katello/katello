@@ -94,7 +94,6 @@ module Katello
     api :POST, "/organizations/:organization_id/subscriptions/upload", N_("Upload a subscription manifest")
     param :organization_id, :number, :desc => N_("Organization id"), :required => true
     param :content, File, :desc => N_("Subscription manifest file"), :required => true
-    param :repository_url, String, :desc => N_("repository url"), :required => false
     def upload
       fail HttpErrors::BadRequest, _("No manifest file uploaded") if params[:content].blank?
 
@@ -104,12 +103,6 @@ module Katello
         temp_file.write params[:content].read
       ensure
         temp_file.close
-      end
-
-      # repository url
-      if (repo_url = params[:repository_url])
-        @provider.repository_url = repo_url
-        @provider.save!
       end
 
       task = async_task(::Actions::Katello::Organization::ManifestImport, @organization, File.expand_path(temp_file.path), params[:force])
@@ -159,7 +152,6 @@ module Katello
     def find_provider
       @organization = @activation_key.organization if @activation_key
       @organization = @subscription.organization if @subscription
-      @provider = @organization.redhat_provider if @organization
     end
 
     private

@@ -74,7 +74,11 @@ module Katello
       end
 
       def feed_url
-        product.repo_url(path)
+        @feed_url ||= if product.cdn_resource&.respond_to?(:repository_url)
+                        product.cdn_resource.repository_url(content_label: content.label)
+                      else
+                        product.repo_url(path)
+                      end
       end
 
       def arch

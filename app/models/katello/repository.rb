@@ -148,6 +148,7 @@ module Katello
     end
     scope :redhat, -> { joins(:product => :provider).where("#{Provider.table_name}.provider_type": Provider::REDHAT) }
     scope :custom, -> { joins(:product => :provider).where.not("#{Provider.table_name}.provider_type": Provider::REDHAT) }
+    scope :library, -> { where(library_instance_id: nil) }
 
     scoped_search :on => :name, :relation => :root, :complete_value => true
     scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true
@@ -188,6 +189,10 @@ module Katello
 
     def self.with_type(content_type)
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)
+    end
+
+    def self.for_products(products)
+      joins(:root).where("#{Katello::RootRepository.table_name}.product_id" => products)
     end
 
     def to_label

@@ -106,7 +106,7 @@ module Katello
       !self.provider.redhat_provider? || self.repositories.present?
     end
 
-    delegate :library, to: :organization
+    delegate :cdn_configuration, :library, to: :organization
 
     def plan_name
       return sync_plan.name if sync_plan
@@ -214,10 +214,12 @@ module Katello
     end
 
     def cdn_resource
-      return unless (product_certificate = certificate)
-      certs = { :ssl_client_cert => OpenSSL::X509::Certificate.new(product_certificate),
-                :ssl_client_key => OpenSSL::PKey::RSA.new(key) }
-      ::Katello::Resources::CDN::CdnResource.new(provider.repository_url, certs)
+      return if self.certificate.nil?
+
+      @cdn_resource ||= ::Katello::Resources::CDN::CdnResource.create(
+        product: self,
+        cdn_configuration: self.organization.cdn_configuration
+      )
     end
 
     def total_package_count(env, view)
