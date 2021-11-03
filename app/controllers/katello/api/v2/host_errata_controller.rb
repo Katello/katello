@@ -46,20 +46,9 @@ module Katello
     param :severity, String, :desc => N_("Return only errata of a particular severity (None, Low, Moderate, Important, Critical)"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      if (params[:content_view_id] && params[:environment_id].nil?) || (params[:environment_id] && params[:content_view_id].nil?)
-        fail _("Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
-      end
+      validate_index_params!
 
-      filtered_relation = index_relation
-      if params[:type].present?
-        fail _("Type must be one of: %s" % TYPES_FROM_PARAMS.keys.join(', ')) unless TYPES_FROM_PARAMS.key?(params[:type].to_sym)
-        filtered_relation = filtered_relation.where(:errata_type => TYPES_FROM_PARAMS[params[:type].to_sym])
-      end
-      if params[:severity].present?
-        fail _("Severity must be one of: %s") % Katello::Erratum::SEVERITIES.join(', ') unless Katello::Erratum::SEVERITIES.include?(params[:severity])
-        filtered_relation = filtered_relation.where(:severity => params[:severity])
-      end
-      collection = scoped_search(filtered_relation, 'updated', 'desc', :resource_class => Erratum, :includes => [:cves])
+      collection = scoped_search(index_relation, 'updated', 'desc', :resource_class => Erratum, :includes => [:cves])
 
       @installable_errata_ids = []
       if @host.content_facet
@@ -110,6 +99,12 @@ module Katello
       if @host.content_facet
         relation = @host.content_facet.installable_errata(@environment, @content_view)
       end
+      if params[:type].present?
+        relation = relation.where(:errata_type => TYPES_FROM_PARAMS[params[:type].to_sym])
+      end
+      if params[:severity].present?
+        relation = relation.where(:severity => params[:severity])
+      end
       relation
     end
 
@@ -150,6 +145,18 @@ module Katello
         @errata_ids = params[:errata_ids]
       else
         @errata_ids = find_bulk_errata_ids([@host], params[:bulk_errata_ids])
+      end
+    end
+
+    def validate_index_params!
+      if (params[:content_view_id] && params[:environment_id].nil?) || (params[:environment_id] && params[:content_view_id].nil?)
+        fail _("Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
+      end
+      if params[:type].present?
+        fail _("Type must be one of: %s" % TYPES_FROM_PARAMS.keys.join(', ')) unless TYPES_FROM_PARAMS.key?(params[:type].to_sym)
+      end
+      if params[:severity].present?
+        fail _("Severity must be one of: %s") % Katello::Erratum::SEVERITIES.join(', ') unless Katello::Erratum::SEVERITIES.include?(params[:severity])
       end
     end
   end

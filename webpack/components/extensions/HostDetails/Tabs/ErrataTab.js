@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Split, SplitItem, ActionList, ActionListItem, Dropdown, Divider,
+import { Button, Split, SplitItem, ActionList, ActionListItem, Dropdown,
   DropdownItem, KebabToggle, Skeleton, Tooltip, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
 import { TimesIcon, CheckIcon } from '@patternfly/react-icons';
 import {
@@ -70,11 +70,12 @@ export const ErrataTab = () => {
     (params) => {
       if (!hostId) return null;
       const modifiedParams = { ...params };
-      if (errataTypeSelected !== ERRATA_TYPE) modifiedParams.type = TYPES_TO_PARAM[errataTypeSelected];
+      if (errataTypeSelected !== ERRATA_TYPE) {
+        modifiedParams.type = TYPES_TO_PARAM[errataTypeSelected];
+      }
       if (errataSeveritySelected !== ERRATA_SEVERITY) {
         modifiedParams.severity = SEVERITIES_TO_PARAM[errataSeveritySelected];
       }
-      console.log(modifiedParams);
       return getInstallableErrata(
         hostId,
         {
@@ -90,6 +91,7 @@ export const ErrataTab = () => {
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostErrataStatus(state));
+
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
     updateSearchQuery, selectNone, fetchBulkParams, ...selectAll
