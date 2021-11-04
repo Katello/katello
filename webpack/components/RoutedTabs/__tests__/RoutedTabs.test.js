@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderWithRouter } from 'react-testing-lib-wrapper';
+import { head } from 'lodash';
 
 import RoutedTabs from '../';
 
@@ -19,15 +20,7 @@ const tabs = [
 ];
 
 test('can render tabs and show default tab', async () => {
-  const { getByText } = renderWithRouter(<RoutedTabs tabs={tabs} baseUrl="/fruits" defaultTabIndex={1} />);
-  expect(getByText('Pears')).toBeInTheDocument();
-  expect(getByText('good for a snack!')).toBeInTheDocument();
-});
-
-test('can switch tabs and render content', async () => {
-  const { getByText } = renderWithRouter(<RoutedTabs tabs={tabs} baseUrl="/fruits" />);
-
-  expect(getByText('good for pies!')).toBeInTheDocument();
-  getByText('Pears').click();
+  const { getAllByLabelText, getByText } = renderWithRouter(<RoutedTabs tabs={tabs} baseUrl="/fruits" defaultTabIndex={1} />);
+  expect(head(getAllByLabelText('Pears'))).toBeInTheDocument();
   expect(getByText('good for a snack!')).toBeInTheDocument();
 });

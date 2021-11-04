@@ -5,20 +5,25 @@ import { Switch, Route, Redirect, useHistory, useLocation, withRouter, HashRoute
 import { head, last } from 'lodash';
 
 const RoutedTabs = ({
-  tabs, defaultTabIndex, titleComponent,
+  tabs, defaultTabIndex,
 }) => {
   const { push } = useHistory();
   const {
     hash, key: locationKey,
   } = useLocation();
 
-  // The below transforms #/filters/6 to filters
+  // The below transforms #/history/6 to history
   const currentTabFromUrl = head(last(hash.split('#/')).split('/'));
 
-  const onSelect = (_e, eventKey) => {
-    // This prevents needless pushing on repeated clicks of a tab
-    if (hash.slice(2) !== eventKey) {
-      push(`#/${eventKey}`);
+  const onSelect = (e, key) => {
+    e.preventDefault();
+    // See the below links for understanding of this mouseEvent
+    // https://www.w3schools.com/jsref/event_which.asp
+    // https://www.w3schools.com/jsref/event_button.asp
+    const middleMouseButtonNotUsed = !(e.button === 1 || e.buttons === 4 || e.which === 2);
+    const notCurrentTab = currentTabFromUrl !== key;
+    if (middleMouseButtonNotUsed && notCurrentTab) {
+      push(`#/${key}`);
     }
   };
 
@@ -26,16 +31,20 @@ const RoutedTabs = ({
     <>
       <Tabs
         activeKey={currentTabFromUrl}
-        onSelect={onSelect}
       >
-        {tabs.map(({ key, title }) =>
-        (
-          <Tab
-            aria-label={title}
-            eventKey={key}
+        {tabs.map(({ key, title }) => (
+          <a
             key={key}
-            title={titleComponent || <TabTitleText>{title}</TabTitleText>}
-          />
+            href={`#/${key}`}
+            onMouseUp={e => onSelect(e, key)}
+            style={{ textDecoration: 'none' }}
+          >
+            <Tab
+              eventKey={key}
+              aria-label={title}
+              title={<TabTitleText>{title}</TabTitleText>}
+            />
+          </a>
         ))}
       </Tabs>
       <div className="tab-body-with-spacing">
@@ -60,12 +69,10 @@ RoutedTabs.propTypes = {
     content: element.isRequired,
   })).isRequired,
   defaultTabIndex: number,
-  titleComponent: element, // when you want to add a custom tab title
 };
 
 RoutedTabs.defaultProps = {
   defaultTabIndex: 0,
-  titleComponent: null,
 };
 
 export default withRouter(RoutedTabs);
