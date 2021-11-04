@@ -58,8 +58,14 @@ const makeMockErrata = ({ pageSize = 20, total = 100, page = 1 }) => {
   };
 };
 
-const hostErrata = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
+const hostErrata = foremanApi.getApiUrl('/hosts/1/errata');
 const autocompleteUrl = '/hosts/1/errata/auto_complete_search';
+const defaultQueryWithoutSearch = {
+  include_applicable: false,
+  per_page: 20,
+  page: 1,
+};
+const defaultQuery = { ...defaultQueryWithoutSearch, search: '' };
 
 let firstErrata;
 let searchDelayScope;
@@ -81,14 +87,13 @@ afterEach(() => {
 test('Can call API for errata and show on screen on page load', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-
   // return tracedata results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrataData);
 
   const { getAllByText } = renderWithRedux(<ErrataTab />, renderOptions());
-
   // Assert that the errata are now showing on the screen, but wait for them to appear.
   await patientlyWaitFor(() => expect(getAllByText(firstErrata.severity)[0]).toBeInTheDocument());
   // Assert request was made and completed, see helper function
@@ -110,6 +115,7 @@ test('Can handle no errata being present', async (done) => {
 
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, noResults);
 
   const { queryByText } = renderWithRedux(<ErrataTab />, renderOptions());
@@ -128,6 +134,7 @@ test('Can display expanded errata details', async (done) => {
   // return tracedata results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrataData);
 
   const {
@@ -170,6 +177,7 @@ test('Can select one errata', async (done) => {
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrataData);
 
   const {
@@ -200,16 +208,16 @@ test('Can select all errata across pages through checkbox', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({ page: 1 });
   // return errata data results when we look for errata
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
-    .get(page1)
+    .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const scope2 = nockInstance
-    .get(page2)
+    .get(hostErrata)
+    .query({ ...defaultQueryWithoutSearch, page: 2 })
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -241,16 +249,16 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({ page: 1 });
   // return errata data results when we look for errata
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
-    .get(page1)
+    .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const scope2 = nockInstance
-    .get(page2)
+    .get(hostErrata)
+    .query({ ...defaultQueryWithoutSearch, page: 2 })
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -285,16 +293,16 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
 test('Can select & deselect errata across pages', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
-    .get(page1)
+    .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, makeMockErrata({ page: 1 }));
 
   const scope2 = nockInstance
-    .get(page2)
+    .get(hostErrata)
+    .query({ ...defaultQueryWithoutSearch, page: 2 })
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -330,6 +338,7 @@ test('Can select & de-select all errata through selectDropDown', async (done) =>
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const {
@@ -367,22 +376,21 @@ test('Can de-select items in select all mode across pages', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({ page: 1 });
-  // return errata data results when we look for errata
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
-  const page3 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=1&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
-    .get(page1)
+    .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const scope2 = nockInstance
-    .get(page2)
+    .get(hostErrata)
+    .query({ ...defaultQueryWithoutSearch, page: 1 })
     .reply(200, makeMockErrata({ page: 2 }));
 
   const scope3 = nockInstance
-    .get(page3)
+    .get(hostErrata)
+    .query({ ...defaultQueryWithoutSearch, page: 2 })
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -439,6 +447,7 @@ test('Can select page and select only items on the page', async (done) => {
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const {
@@ -465,13 +474,14 @@ test('Can select page and select only items on the page', async (done) => {
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Select  disabled if all rows are selected', async (done) => {
+test('Select all is disabled if all rows are selected', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const {
@@ -525,6 +535,7 @@ test('Toggle Group shows if its not the default contentview or library enviromen
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const {
@@ -550,6 +561,7 @@ test('Toggle Group does not show if its the default contentview ', async (done) 
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const {
@@ -575,6 +587,7 @@ test('Toggle Group does not show if its the  library env ', async (done) => {
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const {
@@ -589,13 +602,14 @@ test('Toggle Group does not show if its the  library env ', async (done) => {
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Can disable applicable errata', async (done) => {
+test('Selection is disabled for errata which are applicable but not installable', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   firstErrata.installable = false;
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrataData);
 
   const {
@@ -620,16 +634,16 @@ test('Can select only installable errata across pages through checkbox', async (
   first.installable = false;
   mockErrata.selectable = mockErrata.total - 1;
   // return errata data results when we look for errata
-  const page1 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&per_page=20&page=1');
-  const page2 = foremanApi.getApiUrl('/hosts/1/errata?include_applicable=false&page=2&per_page=20');
 
   // return errata data results when we look for errata
   const scope = nockInstance
-    .get(page1)
+    .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const scope2 = nockInstance
-    .get(page2)
+    .get(hostErrata)
+    .query({ ...defaultQueryWithoutSearch, page: 2 })
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -663,6 +677,7 @@ test('Can toggle with the Toggle Group ', async (done) => {
   // return errata data results when we look for errata
   const scope = nockInstance
     .get(hostErrata)
+    .query(defaultQuery)
     .reply(200, mockErrata);
 
   const {
