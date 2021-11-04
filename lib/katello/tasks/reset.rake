@@ -15,9 +15,9 @@ namespace :katello do
       system("sudo runuser - postgres -c 'createdb pulpcore'")
 
       Dir.chdir("/tmp") do
-        fail "\e[31mCannot migrate Pulp3 database\e[0m\n\n" unless system("sudo -u pulp PULP_SETTINGS='/etc/pulp/settings.py' DJANGO_SETTINGS_MODULE='pulpcore.app.settings' python3-django-admin migrate --no-input")
+        fail "\e[31mCannot migrate Pulp3 database\e[0m\n\n" unless system("sudo -u pulp PULP_SETTINGS='/etc/pulp/settings.py' DJANGO_SETTINGS_MODULE='pulpcore.app.settings' pulpcore-manager migrate --no-input")
         puts "\e[33mRecreating Admin User\e[0m\n\n"
-        system("sudo -u pulp PULP_SETTINGS='/etc/pulp/settings.py' DJANGO_SETTINGS_MODULE='pulpcore.app.settings' python3-django-admin reset-admin-password --password password")
+        system("sudo -u pulp PULP_SETTINGS='/etc/pulp/settings.py' DJANGO_SETTINGS_MODULE='pulpcore.app.settings' pulpcore-manager reset-admin-password --password password")
       end
 
       SERVICES.each { |s| system(service_start.gsub("%s", s)) }
