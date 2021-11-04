@@ -29,7 +29,9 @@ test('Can call API for Python package details and show details tab on page load'
     },
   };
 
-  const { name, version } = pythonPackageDetailsResponse;
+  const {
+    name, version, filename, additional_metadata: additionalMetadata,
+  } = pythonPackageDetailsResponse;
   const pythonPackagesScope = nockInstance
     .get(pythonPackageDetailsPath)
     .query(true)
@@ -42,6 +44,9 @@ test('Can call API for Python package details and show details tab on page load'
   await patientlyWaitFor(() => {
     expect(getAllByText(name)[0]).toBeInTheDocument();
     expect(getAllByText(version)[0]).toBeInTheDocument();
+    expect(getAllByText(filename)[0]).toBeInTheDocument();
+    expect(getAllByText(additionalMetadata.sha256)[0]).toBeInTheDocument();
+    expect(getAllByText(additionalMetadata.package_type)[0]).toBeInTheDocument();
     expect(getByLabelText('content_breadcrumb')).toBeInTheDocument();
     expect(getByLabelText('content_breadcrumb_content')).toHaveTextContent(name);
   });

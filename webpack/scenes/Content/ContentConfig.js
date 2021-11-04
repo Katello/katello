@@ -31,6 +31,8 @@ export default () => [
           { title: __('Name'), getProperty: unit => unit?.name },
           { title: __('Version'), getProperty: unit => unit?.version },
           { title: __('Filename'), getProperty: unit => unit?.filename },
+          { title: __('Package Type'), getProperty: unit => unit?.additional_metadata.package_type },
+          { title: __('sha256'), getProperty: unit => unit?.additional_metadata.sha256 },
         ],
       },
       {
