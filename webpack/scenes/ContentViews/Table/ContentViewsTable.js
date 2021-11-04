@@ -181,6 +181,7 @@ const ContentViewTable = () => {
         updateSearchQuery,
         additionalListeners,
       }}
+      bookmarkController="katello_content_views"
       variant={TableVariant.compact}
       status={cvTableStatus}
       fetchItems={useCallback(getContentViews, [])}

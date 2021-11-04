@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
@@ -44,6 +44,11 @@ afterEach(() => {
   nock.cleanAll();
 });
 
+jest.mock('../../../../../utils/useDebounce', () => ({
+  __esModule: true,
+  default: value => value,
+}));
+
 test('Can show filter details and package groups on page load', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
   const cvFilterScope = nockInstance
@@ -68,10 +73,11 @@ test('Can show filter details and package groups on page load', async (done) => 
 
   // Nothing will show at first, page is loading
   expect(queryByText(cvFilterName)).toBeNull();
+
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
   });
-
+  await act(() => Promise.resolve());
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
@@ -131,4 +137,5 @@ test('Can search for package groups in package group filter', async (done) => {
   assertNockRequest(packageGroupsScope);
   assertNockRequest(withSearchScope);
   assertNockRequest(packageGroupSearchScope, done);
+  await act(() => Promise.resolve());
 });

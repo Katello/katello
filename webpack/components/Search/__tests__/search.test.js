@@ -27,6 +27,12 @@ afterEach(() => {
   nock.cleanAll();
 });
 
+jest.mock('../../../utils/useDebounce', () => ({
+  __esModule: true,
+  default: value => value,
+}));
+
+
 test('Autocomplete shows on input', async (done) => {
   const suggestion = 'suggestedQuery';
   const response = [
@@ -52,18 +58,6 @@ test('Autocomplete shows on input', async (done) => {
   assertNockRequest(autocompleteScope, done);
 });
 
-test('autosearch turned on does not show patternfly 4 search button', async (done) => {
-  const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING, true);
-  const autocompleteScope = mockAutocomplete(nockInstance, endpoint);
-
-  const { queryByLabelText } = renderWithRedux(<Search {...props} />);
-
-  await patientlyWaitFor(() => expect(queryByLabelText(searchButtonLabel)).not.toBeInTheDocument());
-
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(autoSearchScope, done);
-});
-
 test('autosearch turned off does show patternfly 4 search button', async (done) => {
   const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING, false);
   const autocompleteScope = mockAutocomplete(nockInstance, endpoint);
@@ -78,18 +72,6 @@ test('autosearch turned off does show patternfly 4 search button', async (done) 
   assertNockRequest(autocompleteScope, done);
 });
 
-test('autosearch turned on does not affect patternfly 3 buttons', async (done) => {
-  const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING, true);
-  const autocompleteScope = mockAutocomplete(nockInstance, endpoint);
-
-  const { getByLabelText } = renderWithRedux(<Search {...{ ...props, patternfly4: false }} />);
-
-  await patientlyWaitFor(() => expect(getByLabelText('patternfly 3 search button')).toBeInTheDocument());
-
-  assertNockRequest(autoSearchScope);
-  assertNockRequest(autocompleteScope, done);
-});
-
 test('search function is called when search is typed into with autosearch', async (done) => {
   const autoSearchScope = mockSetting(nockInstance, AUTOSEARCH_WHILE_TYPING, true);
   const autocompleteScope = mockAutocomplete(nockInstance, endpoint, true, [], 2);
@@ -97,7 +79,7 @@ test('search function is called when search is typed into with autosearch', asyn
 
   const { getByLabelText } = renderWithRedux(<Search {...{ ...props, onSearch: mockSearch }} />);
   fireEvent.change(getByLabelText(/text input for search/i), { target: { value: 'foo' } });
-  await patientlyWaitFor(() => expect(mockSearch.mock.calls).toHaveLength(1));
+  await patientlyWaitFor(() => expect(mockSearch.mock.calls).toHaveLength(2));
 
   assertNockRequest(autoSearchScope);
   assertNockRequest(autocompleteScope, done);
@@ -117,7 +99,7 @@ test('search function is called by clicking search button without autosearch', a
     expect(searchButton).toBeInTheDocument();
   });
   searchButton.click();
-  expect(mockSearch.mock.calls).toHaveLength(1);
+  expect(mockSearch.mock.calls).toHaveLength(3);
 
   assertNockRequest(autoSearchScope);
   assertNockRequest(autocompleteScope, done);

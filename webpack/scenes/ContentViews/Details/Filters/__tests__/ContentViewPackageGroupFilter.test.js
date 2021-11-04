@@ -7,8 +7,6 @@ import { ADDED, cvFilterDetailsKey, NOT_ADDED } from '../../../ContentViewsConst
 import nock, {
   nockInstance,
   assertNockRequest,
-  mockAutocomplete,
-  mockSetting,
 } from '../../../../../test-utils/nockWrapper';
 import api from '../../../../../services/api';
 
@@ -30,8 +28,6 @@ const cvBulkAddFilterRulesPath = api.getApiUrl('/content_view_filters/1/add_filt
 const cvGetAllReposPath = api.getApiUrl('/content_views/1/repositories');
 
 const packageGroupsPath = api.getApiUrl('/package_groups');
-const autocompleteUrl = '/package_groups/auto_complete_search';
-const autoCompleteRepoURL = '/repositories/auto_complete_search';
 const renderOptions = {
   apiNamespace: cvFilterDetailsKey(1, 1),
   routerParams: {
@@ -42,19 +38,11 @@ const renderOptions = {
 
 const withCVRoute = component => <Route path="/content_views/:id([0-9]+)#/filters/:filterId([0-9]+)">{component}</Route>;
 
-let searchDelayScope;
-let autoSearchScope;
-beforeEach(() => {
-  searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
-  // Autosearch can cause some asynchronous issues with the typing timeout, using basic search
-  autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', false);
-});
-
 afterEach(() => {
-  assertNockRequest(searchDelayScope);
-  assertNockRequest(autoSearchScope);
   nock.cleanAll();
 });
+
+jest.mock('../../../../../components/Search', () => () => 'mocked!');
 
 test('Can enable and disable add filter button', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
@@ -70,7 +58,6 @@ test('Can enable and disable add filter button', async (done) => {
     .get(packageGroupsPath)
     .query(true)
     .reply(200, allPackageGroups);
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
@@ -91,7 +78,6 @@ test('Can enable and disable add filter button', async (done) => {
     expect(getByLabelText('add_filter_rule')).toHaveAttribute('aria-disabled', 'false');
   });
 
-  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(packageGroupsScope, done);
@@ -125,8 +111,6 @@ test('Can remove a filter rule', async (done) => {
     .query(true)
     .reply(200, cvFilterDetails);
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-
   const { getAllByLabelText, getByText, queryByText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
       cvId={1}
@@ -146,7 +130,6 @@ test('Can remove a filter rule', async (done) => {
   fireEvent.click(getByText('Remove'));
 
 
-  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleScope);
@@ -184,7 +167,6 @@ test('Can add a filter rule', async (done) => {
     .query(true)
     .reply(200, cvFilterDetails);
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getAllByLabelText, getByText, queryByText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
@@ -205,7 +187,6 @@ test('Can add a filter rule', async (done) => {
   fireEvent.click(getByText('Add'));
 
 
-  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleScope);
@@ -244,7 +225,6 @@ test('Can bulk remove filter rules', async (done) => {
     .query(true)
     .reply(200, cvFilterDetails);
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
@@ -267,7 +247,6 @@ test('Can bulk remove filter rules', async (done) => {
   expect(getByLabelText('bulk_remove')).toBeInTheDocument();
   fireEvent.click(getByLabelText('bulk_remove'));
 
-  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleBulkDeleteScope);
@@ -306,7 +285,6 @@ test('Can bulk add filter rules', async (done) => {
     .query(true)
     .reply(200, cvFilterDetails);
 
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
   const { getByText, queryByText, getByLabelText } =
     renderWithRedux(withCVRoute(<ContentViewFilterDetails
@@ -328,12 +306,10 @@ test('Can bulk add filter rules', async (done) => {
   expect(getByLabelText('bulk_add')).toBeInTheDocument();
   fireEvent.click(getByLabelText('bulk_add'));
 
-  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvFiltersRuleBulkAddScope);
   assertNockRequest(cvRequestCallbackScope);
-
   assertNockRequest(packageGroupsScope, done);
 });
 
@@ -372,12 +348,6 @@ test('Can show affected repository tab on dropdown selection and add repos', asy
     .query(true)
     .reply(200, allPackageGroups);
 
-  const searchDelayScopeSecond = mockSetting(nockInstance, 'autosearch_delay', 500, 3);
-
-  const autoSearchScopeSecond = mockSetting(nockInstance, 'autosearch_while_typing', false, 3);
-
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, true, [], 2);
-  const autocompleteScopeSecond = mockAutocomplete(nockInstance, autoCompleteRepoURL, true, [], 2);
 
   const {
     getAllByLabelText, getByLabelText, getAllByText, getByText, queryByText,
@@ -410,12 +380,8 @@ test('Can show affected repository tab on dropdown selection and add repos', asy
   expect(getByLabelText('add_repositories')).toHaveAttribute('aria-disabled', 'false');
   fireEvent.click(getByLabelText('add_repositories'));
 
-  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(autocompleteScopeSecond);
-  assertNockRequest(searchDelayScopeSecond);
-  assertNockRequest(autoSearchScopeSecond);
   assertNockRequest(cvAllReposScope);
   assertNockRequest(bulkAddReposScope);
   assertNockRequest(cvFilterScope);
@@ -458,13 +424,6 @@ test('Can show affected repository tab and remove affected repos', async (done) 
     .query(true)
     .reply(200, allPackageGroups);
 
-  const searchDelayScopeSecond = mockSetting(nockInstance, 'autosearch_delay', 500, 3);
-
-  const autoSearchScopeSecond = mockSetting(nockInstance, 'autosearch_while_typing', false, 3);
-
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl, true, [], 2);
-  const autocompleteScopeSecond = mockAutocomplete(nockInstance, autoCompleteRepoURL, true, [], 2);
-
   const {
     getAllByLabelText, getByLabelText, getByText, queryByText,
   } =
@@ -491,12 +450,8 @@ test('Can show affected repository tab and remove affected repos', async (done) 
   fireEvent.click(getAllByLabelText('bulk_actions')[1]);
   expect(getByLabelText('bulk_remove')).toHaveAttribute('aria-disabled', 'false');
   fireEvent.click(getByLabelText('bulk_remove'));
-  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
-  assertNockRequest(autocompleteScopeSecond);
-  assertNockRequest(searchDelayScopeSecond);
-  assertNockRequest(autoSearchScopeSecond);
   assertNockRequest(cvAllReposScope);
   assertNockRequest(bulkRemoveReposScope);
   assertNockRequest(cvFilterScope);
@@ -505,7 +460,6 @@ test('Can show affected repository tab and remove affected repos', async (done) 
 });
 
 test('Can filter by added/not added rules', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
   const { rules } = cvFilterDetails;
   const { name } = rules[0];
 
@@ -557,7 +511,6 @@ test('Can filter by added/not added rules', async (done) => {
     getByLabelText(NOT_ADDED).click();
   });
 
-  assertNockRequest(autocompleteScope);
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(packageGroupsScope, done);
