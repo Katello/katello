@@ -6,7 +6,9 @@ import {
   EnhancementIcon,
 } from '@patternfly/react-icons';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import { translate as __ } from 'foremanReact/common/I18n';
 import './ContentViewVersionErrata.scss';
+import InactiveText from '../../components/InactiveText';
 
 const ContentViewVersionErrata = ({ cvId, versionId, errataCounts }) => {
   const {
@@ -19,22 +21,24 @@ const ContentViewVersionErrata = ({ cvId, versionId, errataCounts }) => {
     enhancement: EnhancementIcon,
   };
 
-  const getHref = type => `/content_views/${cvId}/versions/${versionId}/errata?queryPagedSearch=%20type%20%3D%20${type}`;
-
   const ErrataLinkwithIcon = () => Object.keys(errataIcons).map((type) => {
     const ErrataIcon = errataIcons[type];
     return (
       <React.Fragment key={type}>
         <ErrataIcon title={type} />
-        <a className="errata-icons-with-commas" href={getHref(type)}> {`${errataCounts[type] || '0'}`} </a>
+        <p className="errata-icons-with-commas">{errataCounts[type] || '0'}</p>
       </React.Fragment>
     );
   });
 
+  if (total === 0) {
+    return <InactiveText text={__('No errata')} />;
+  }
+
   return (
     <React.Fragment>
-      <a href={urlBuilder(`content_views/${cvId}/versions/${versionId}/errata`, '')}>{`${total || 0} `}</a>
-      (<ErrataLinkwithIcon />)
+      <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/errata`, '')}>{`${total || 0} `}</a>
+      ( <ErrataLinkwithIcon /> )
     </React.Fragment>
   );
 };
