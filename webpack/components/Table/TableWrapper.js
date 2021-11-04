@@ -38,6 +38,7 @@ const TableWrapper = ({
   emptySearchBody,
   disableSearch,
   nodesBelowSearch,
+  bookmarkController,
   ...allTableProps
 }) => {
   const dispatch = useDispatch();
@@ -48,7 +49,6 @@ const TableWrapper = ({
   const { pageRowCount } = getPageStats({ total, page, perPage });
   const unresolvedStatus = !!allTableProps?.status && allTableProps.status !== STATUS.RESOLVED;
   const unresolvedStatusOrNoRows = unresolvedStatus || pageRowCount === 0;
-  const searchNotUnderway = !(searchQuery || activeFilters);
   const showPagination = !unresolvedStatusOrNoRows;
   const showActionButtons = actionButtons && !unresolvedStatus;
   const showToggleGroup = toggleGroup && !unresolvedStatus;
@@ -164,13 +164,13 @@ const TableWrapper = ({
           <FlexItem alignSelf={{ default: 'alignSelfCenter' }}>
             <SelectAllCheckbox
               {...{
-                      selectAll,
-                      selectPage,
-                      selectNone,
-                      selectedCount,
-                      pageRowCount,
-                    }
-                }
+                selectAll,
+                selectPage,
+                selectNone,
+                selectedCount,
+                pageRowCount,
+              }
+              }
               totalCount={Number(metadata?.selectable ?? total)}
               areAllRowsOnPageSelected={areAllRowsOnPageSelected()}
               areAllRowsSelected={areAllRowsSelected()}
@@ -180,11 +180,12 @@ const TableWrapper = ({
         {!disableSearch &&
           <FlexItem>
             <Search
-              isDisabled={unresolvedStatusOrNoRows && searchNotUnderway}
+              isDisabled={unresolvedStatusOrNoRows && !searchQuery}
               patternfly4
               onSearch={search => updateSearchQuery(search)}
               getAutoCompleteParams={getAutoCompleteParams}
               foremanApiAutoComplete={foremanApiAutoComplete}
+              bookmarkController={bookmarkController}
             />
           </FlexItem>
         }
@@ -282,6 +283,7 @@ TableWrapper.propTypes = {
   emptySearchBody: PropTypes.string,
   disableSearch: PropTypes.bool,
   nodesBelowSearch: PropTypes.node,
+  bookmarkController: PropTypes.string,
 };
 
 TableWrapper.defaultProps = {
@@ -303,6 +305,7 @@ TableWrapper.defaultProps = {
   emptySearchBody: __('Try changing your search settings.'),
   disableSearch: false,
   nodesBelowSearch: null,
+  bookmarkController: undefined,
 };
 
 export default TableWrapper;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -9,81 +9,90 @@ import { default as TypeAheadSearchPf4 } from './pf4Search/TypeAheadSearch';
 import { getActiveItems } from './helpers/helpers';
 
 import './TypeAhead.scss';
+import useDebounce from '../../utils/useDebounce';
 
-class TypeAhead extends Component {
-  constructor(props) {
-    super(props);
+const TypeAhead = ({
+  items,
+  isDisabled,
+  onInputUpdate,
+  onSearch,
+  actionText,
+  initialInputValue,
+  patternfly4,
+  autoSearchEnabled,
+  autoSearchDelay,
+  bookmarkController,
+}) => {
+  const [inputValue, setInputValue] = useState(initialInputValue);
 
-    this.state = {
-      inputValue: this.props.initialInputValue,
-    };
-  }
+  const debouncedValue = useDebounce(inputValue, autoSearchDelay);
+  useEffect(
+    () => {
+      onInputUpdate(debouncedValue);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [debouncedValue],
+  );
 
-  handleStateChange = ({ inputValue }) => {
-    if (typeof inputValue === 'string') {
-      this.props.onInputUpdate(inputValue);
-      this.setState({ inputValue });
+  const handleStateChange = ({ inputValue: value }) => {
+    if (typeof value === 'string') {
+      setInputValue(value);
     }
   };
 
-  clearSearch = () => {
-    this.setState({ inputValue: '' }, () => this.props.onSearch(this.state.inputValue));
+  const clearSearch = () => {
+    setInputValue('');
+    onSearch('');
   };
 
-  render() {
-    const {
-      onSearch, onInputUpdate, items, actionText, patternfly4, autoSearchEnabled, ...rest
-    } = this.props;
+  const activeItems = getActiveItems(items);
 
-    const activeItems = getActiveItems(items);
-
-    return (
-      <Downshift
-        onStateChange={this.handleStateChange}
-        defaultHighlightedIndex={0}
-        selectedItem={this.state.inputValue}
-        {...rest}
-      >
-        {({
+  return (
+    <Downshift
+      onStateChange={handleStateChange}
+      defaultHighlightedIndex={0}
+      selectedItem={inputValue}
+    >
+      {({
+        getInputProps,
+        getItemProps,
+        isOpen,
+        inputValue: internalInputValue,
+        highlightedIndex,
+        selectedItem,
+        selectItem,
+        openMenu,
+      }) => {
+        const typeAheadProps = {
+          bookmarkController,
+          isDisabled,
+          userInputValue: inputValue,
+          clearSearch,
           getInputProps,
           getItemProps,
           isOpen,
-          inputValue,
+          inputValue: internalInputValue,
           highlightedIndex,
           selectedItem,
           selectItem,
           openMenu,
-        }) => {
-          const typeAheadProps = {
-            isDisabled: this.props.isDisabled,
-            userInputValue: this.state.inputValue,
-            clearSearch: this.clearSearch,
-            getInputProps,
-            getItemProps,
-            isOpen,
-            inputValue,
-            highlightedIndex,
-            selectedItem,
-            selectItem,
-            openMenu,
-            onSearch,
-            items,
-            activeItems,
-            shouldShowItems: isOpen && items.length > 0,
-          };
+          onSearch,
+          items,
+          activeItems,
+          shouldShowItems: isOpen && items.length > 0,
+        };
 
-          return (
-            <div>
-              {patternfly4 ?
-                <TypeAheadSearchPf4 autoSearchEnabled={autoSearchEnabled} {...typeAheadProps} /> :
-                <TypeAheadSearch actionText={actionText} {...typeAheadProps} />}
-            </div>
-          );
-        }}
-      </Downshift>
-    );
-  }
-}
+        return (
+          <div>
+            {patternfly4 ?
+              <TypeAheadSearchPf4 autoSearchEnabled={autoSearchEnabled} {...typeAheadProps} /> :
+              <TypeAheadSearch actionText={actionText} {...typeAheadProps} />}
+          </div>
+        );
+      }}
+    </Downshift>
+  );
+};
 
 TypeAhead.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
@@ -101,6 +110,8 @@ TypeAhead.propTypes = {
   initialInputValue: PropTypes.string,
   patternfly4: PropTypes.bool,
   autoSearchEnabled: PropTypes.bool.isRequired,
+  autoSearchDelay: PropTypes.number,
+  bookmarkController: PropTypes.string,
 };
 
 TypeAhead.defaultProps = {
@@ -108,6 +119,8 @@ TypeAhead.defaultProps = {
   initialInputValue: '',
   patternfly4: false,
   isDisabled: undefined,
+  autoSearchDelay: 500,
+  bookmarkController: undefined,
 };
 
 export default TypeAhead;

@@ -44,6 +44,11 @@ afterEach(() => {
   nock.cleanAll();
 });
 
+jest.mock('../../../../../utils/useDebounce', () => ({
+  __esModule: true,
+  default: value => value,
+}));
+
 test('Can call API and show filters on page load', async (done) => {
   const { name, description } = firstFilter;
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);

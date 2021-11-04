@@ -18,9 +18,14 @@ const renderOptions = { apiNamespace: CONTENT_VIEWS_KEY };
 let firstCV;
 let searchDelayScope;
 let autoSearchScope;
+let scopeBookmark;
 beforeEach(() => {
   const { results } = cvIndexData;
   [firstCV] = results;
+  scopeBookmark = nockInstance
+    .get('/api/v2/bookmarks')
+    .query(true)
+    .reply(200, {});
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
 });
@@ -33,21 +38,15 @@ afterEach(() => {
 
 test('Can call API for CVs and show on screen on page load', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-
-  // Mocking API call with nock so it returns the fixture data
   const scope = nockInstance
     .get(cvIndexPath)
     .query(true)
     .reply(200, cvIndexData);
 
-  // Using a custom rendering function that sets up both redux and react-router.
-  // This allows us to use the component as it is normally used
   const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
 
-  // query* functions will return the element or null if it cannot be found
-  // get* functions will return the element or throw an error if it cannot be found
-  // Assert that the CV is not showing yet by searching by name and the query returning null
   expect(queryByText(firstCV.name)).toBeNull();
+
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
   await patientlyWaitFor(() => {
     expect(queryByText(firstCV.name)).toBeInTheDocument();
@@ -55,9 +54,10 @@ test('Can call API for CVs and show on screen on page load', async (done) => {
     expect(queryByText('Composite content views')).toBeInTheDocument();
   });
 
-  // Assert request was made and completed, see helper function
+
+  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+  assertNockRequest(scope, done);
 });
 
 test('Can show last task and link to it', async (done) => {
@@ -79,7 +79,8 @@ test('Can show last task and link to it', async (done) => {
     // If no task is found display empty text N/A
     expect(queryByText('N/A')).toBeTruthy();
   });
-  // Assert request was made and completed, see helper function
+
+  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
@@ -112,7 +113,7 @@ test('Can show latest version and link to it', async (done) => {
     expect(getByText('dev').closest('a'))
       .toHaveAttribute('href', '/lifecycle_environments/2');
   });
-  // Assert request was made and completed, see helper function
+  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
@@ -150,7 +151,7 @@ test('Can expand cv and show activation keys and hosts', async (done) => {
     expect(queryByLabelText('host_link_2')).toHaveAttribute('href', '/hosts?search=content_view_id+%3D+2');
     expect(queryByLabelText('host_link_2').textContent).toEqual('1');
   });
-  // Assert request was made and completed, see helper function
+
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
@@ -188,21 +189,6 @@ test('Can handle errored response', async (done) => {
 
   expect(queryByText(firstCV.name)).toBeNull();
   await patientlyWaitFor(() => expect(queryByText(/Something went wrong! Please check server logs!/i)).toBeInTheDocument());
-  assertNockRequest(autocompleteScope);
-  assertNockRequest(scope, done);
-});
-
-test('Can handle loading state while request is being made', async (done) => {
-  const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
-  const scope = nockInstance
-    .get(cvIndexPath)
-    .delay(2000) // Delay the response so we can check loading state properly
-    .query(true)
-    .reply(200);
-
-  const { queryByText } = renderWithRedux(<ContentViewsPage />, renderOptions);
-
-  expect(queryByText('Loading')).toBeTruthy();
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
 });

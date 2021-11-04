@@ -1,7 +1,7 @@
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { head } from 'lodash';
 import { SUBSCRIPTIONS_QUANTITIES_FAILURE } from '../scenes/Subscriptions/SubscriptionConstants';
-
 
 const getSubscriptionsErrorMessage = (message) => {
   const errorMessageHash = {
@@ -9,6 +9,15 @@ const getSubscriptionsErrorMessage = (message) => {
     '410 Gone': __('The subscription is no longer available'),
   };
   return errorMessageHash[message];
+};
+
+
+export const getBookmarkErrorMsgs = ({ data: { error } } = {}) => {
+  if (error) {
+    const { full_messages: fullMessages } = error;
+    return head(fullMessages);
+  }
+  return '';
 };
 
 const getCustomMessage = (actionType, message) => {

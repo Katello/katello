@@ -33,13 +33,17 @@ const cVDropDownOptionsPath = api.getApiUrl('/content_views?organization_id=1&en
 
 const cvDeleteUrl = api.getApiUrl('/content_views/20/remove');
 
-
+let scopeBookmark;
 let firstCV;
 let searchDelayScope;
 let autoSearchScope;
 beforeEach(() => {
   const { results } = cvIndexData;
   [firstCV] = results;
+  scopeBookmark = nockInstance
+    .get('/api/v2/bookmarks')
+    .query(true)
+    .reply(200, {});
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
 });
@@ -83,6 +87,7 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
   await patientlyWaitFor(() => expect(queryByText('Remove versions from environments')).toBeInTheDocument());
 
   assertNockRequest(scope);
+  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
   assertNockRequest(envPathDeleteScope);
   assertNockRequest(cvDetailsScope);
@@ -216,6 +221,7 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   fireEvent.click(getAllByText('Delete')[0]);
 
   assertNockRequest(scope);
+  assertNockRequest(scopeBookmark);
   assertNockRequest(autocompleteScope);
   assertNockRequest(envPathDeleteScope);
   assertNockRequest(cvDetailsScope);

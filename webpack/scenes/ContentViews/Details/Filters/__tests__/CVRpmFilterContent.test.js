@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 
 import ContentViewFilterDetails from '../ContentViewFilterDetails';
@@ -46,6 +46,11 @@ afterEach(() => {
   nock.cleanAll();
 });
 
+jest.mock('../../../../../utils/useDebounce', () => ({
+  __esModule: true,
+  default: value => value,
+}));
+
 test('Can show filter details and package groups on page load', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
   const cvFilterScope = nockInstance
@@ -78,6 +83,7 @@ test('Can show filter details and package groups on page load', async (done) => 
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope, done);
+  await act(() => Promise.resolve());
 });
 
 test('Can search for package rules in package filter details', async (done) => {
@@ -86,7 +92,8 @@ test('Can search for package rules in package filter details', async (done) => {
   const { name: cvFilterName } = cvFilterDetails;
   const { name: firstPackageRuleName } = firstPackageRule;
   const { name: lastPackageRuleName } = lastPackageRule;
-  const searchQueryMatcher = actualParams => actualParams?.search?.includes(lastPackageRuleName);
+  const searchQueryMatcher = actualParams =>
+    actualParams?.search?.includes(lastPackageRuleName);
 
   const cvFilterScope = nockInstance
     .get(cvFilterDetailsPath)
