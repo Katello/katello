@@ -4,6 +4,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { Form, FormGroup, TextInput, ActionGroup, Button } from '@patternfly/react-core';
 import {
   selectCopyContentViewError, selectCopyContentViews,
@@ -44,8 +45,12 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
   }
 
   return (
-    <Form>
-      <FormGroup label="Name" isRequired fieldId="name">
+    <Form onSubmit={(e) => {
+      e.preventDefault();
+      onSubmit();
+    }}
+    >
+      <FormGroup label={__('Name')} isRequired fieldId="name">
         <TextInput
           isRequired
           type="text"
@@ -53,14 +58,21 @@ const CopyContentViewForm = ({ cvId, setModalOpen }) => {
           aria-label="input_name"
           name="name"
           value={name}
-          onChange={value => setName(value)}
+          onChange={setName}
         />
       </FormGroup>
       <ActionGroup>
-        <Button aria-label="copy_content_view" variant="primary" isDisabled={saving} onClick={() => onSubmit()}>Copy content view</Button>
-        <Button variant="link" onClick={() => setModalOpen(false)}>Cancel</Button>
+        <Button
+          aria-label="copy_content_view"
+          variant="primary"
+          isDisabled={saving}
+          type="submit"
+        >
+          {__('Copy content view')}
+        </Button>
+        <Button variant="link" onClick={() => setModalOpen(false)}>{__('Cancel')}</Button>
       </ActionGroup>
-    </Form>
+    </Form >
   );
 };
 
