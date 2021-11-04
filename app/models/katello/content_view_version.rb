@@ -130,7 +130,7 @@ module Katello
     end
 
     def description
-      history.publish.successful.first.try(:notes)
+      history.publish.first.try(:notes)
     end
 
     def default_content_view?

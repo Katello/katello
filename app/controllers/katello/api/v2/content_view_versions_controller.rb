@@ -64,7 +64,7 @@ module Katello
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :description, String, :desc => N_("The description for the content view version"), :required => true
     def update
-      history = @content_view_version.history.publish.successful.first
+      history = @content_view_version.history.publish.first
       if history.blank?
         fail HttpErrors::BadRequest, _("This content view version doesn't have a history.")
       else
