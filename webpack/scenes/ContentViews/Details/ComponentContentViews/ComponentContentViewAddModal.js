@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalVariant, FormSelect,
+import {
+  Modal, ModalVariant, FormSelect,
   FormSelectOption, Checkbox, Form, FormGroup,
-  ActionGroup, Button } from '@patternfly/react-core';
+  ActionGroup, Button,
+} from '@patternfly/react-core';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
-import { selectCVDetails,
+import {
+  selectCVDetails,
   selectCVDetailStatus,
-  selectCVDetailError } from '../../Details/ContentViewDetailSelectors';
+  selectCVDetailError,
+} from '../../Details/ContentViewDetailSelectors';
 import { addComponent } from '../ContentViewDetailActions';
 
 const ComponentContentViewAddModal = ({
@@ -91,7 +95,11 @@ const ComponentContentViewAddModal = ({
       }}
       appendTo={document.body}
     >
-      <Form>
+      <Form onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+      >
         <FormGroup label={__('Version')} isRequired fieldId="version">
           <FormSelect
             value={selected}
@@ -104,7 +112,7 @@ const ComponentContentViewAddModal = ({
             {options.map((option, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <FormSelectOption key={index} value={option.value} label={option.label} />
-          ))}
+            ))}
           </FormSelect>
         </FormGroup>
         <FormGroup fieldId="latest">
@@ -118,7 +126,7 @@ const ComponentContentViewAddModal = ({
           />
         </FormGroup>
         <ActionGroup>
-          <Button aria-label="add_component" variant="primary" onClick={() => onSubmit()}>{__('Submit')}</Button>
+          <Button aria-label="add_component" variant="primary" type="submit">{__('Submit')}</Button>
           <Button variant="link" onClick={() => setIsOpen(false)}>{__('Cancel')}</Button>
         </ActionGroup>
       </Form>

@@ -64,7 +64,11 @@ const CreateContentViewForm = ({ setModalOpen }) => {
   }
 
   return (
-    <Form>
+    <Form onSubmit={(e) => {
+      e.preventDefault();
+      onSave();
+    }}
+    >
       <FormGroup label={__('Name')} isRequired fieldId="name">
         <TextInput
           isRequired
@@ -163,7 +167,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           aria-label="create_content_view"
           variant="primary"
           isDisabled={saving}
-          onClick={() => onSave()}
+          type="submit"
         >
           {__('Create content view')}
         </Button>
