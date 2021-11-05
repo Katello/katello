@@ -20,7 +20,8 @@ module Katello
                                :version => self.version,
                                :content_view_filter_id => self.content_view_filter_id,
                                :min_version => self.min_version,
-                               :max_version => self.max_version)
+                               :max_version => self.max_version,
+                               :architecture => self.architecture)
       other = other.where.not(:id => self.id) if self.id
       if other.exists?
         errors.add(:base, "This package filter rule already exists.")
