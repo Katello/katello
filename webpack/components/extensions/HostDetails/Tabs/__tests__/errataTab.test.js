@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
+import { renderWithRedux, patientlyWaitFor, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
 import { HOST_ERRATA_KEY } from '../../HostErrata/HostErrataConstants';
@@ -66,15 +66,17 @@ const defaultQueryWithoutSearch = {
   page: 1,
 };
 const defaultQuery = { ...defaultQueryWithoutSearch, search: '' };
+const page2Query = { ...defaultQueryWithoutSearch, page: 2 };
 
 let firstErrata;
+let thirdErrata;
 let searchDelayScope;
 let autoSearchScope;
 
 beforeEach(() => {
   // jest.resetModules();
   const { results } = mockErrataData;
-  [firstErrata] = results;
+  [firstErrata, , thirdErrata] = results;
   searchDelayScope = mockSetting(nockInstance, 'autosearch_delay', 500);
   autoSearchScope = mockSetting(nockInstance, 'autosearch_while_typing', true);
 });
@@ -217,7 +219,7 @@ test('Can select all errata across pages through checkbox', async (done) => {
 
   const scope2 = nockInstance
     .get(hostErrata)
-    .query({ ...defaultQueryWithoutSearch, page: 2 })
+    .query(page2Query)
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -258,7 +260,7 @@ test('Can deselect all errata across pages through checkbox', async (done) => {
 
   const scope2 = nockInstance
     .get(hostErrata)
-    .query({ ...defaultQueryWithoutSearch, page: 2 })
+    .query(page2Query)
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -302,7 +304,7 @@ test('Can select & deselect errata across pages', async (done) => {
 
   const scope2 = nockInstance
     .get(hostErrata)
-    .query({ ...defaultQueryWithoutSearch, page: 2 })
+    .query(page2Query)
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -390,7 +392,7 @@ test('Can de-select items in select all mode across pages', async (done) => {
 
   const scope3 = nockInstance
     .get(hostErrata)
-    .query({ ...defaultQueryWithoutSearch, page: 2 })
+    .query(page2Query)
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -528,7 +530,7 @@ test('Select all is disabled if all rows are selected', async (done) => {
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Toggle Group shows if its not the default contentview or library enviroment', async (done) => {
+test('Toggle Group shows if it\'s not the default content view or library enviroment', async (done) => {
   // Setup autocomplete with mockForemanAutoComplete since we aren't adding /katello
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
@@ -550,7 +552,7 @@ test('Toggle Group shows if its not the default contentview or library enviromen
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Toggle Group does not show if its the default contentview ', async (done) => {
+test('Toggle Group does not show if it\'s the default content view ', async (done) => {
   const options = renderOptions({
     ...contentFacetAttributes,
     content_view_default: true,
@@ -576,7 +578,7 @@ test('Toggle Group does not show if its the default contentview ', async (done) 
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
 });
 
-test('Toggle Group does not show if its the  library env ', async (done) => {
+test('Toggle Group does not show if it\'s the  library environment', async (done) => {
   const options = renderOptions({
     ...contentFacetAttributes,
     lifecycle_environment_library: true,
@@ -643,7 +645,7 @@ test('Can select only installable errata across pages through checkbox', async (
 
   const scope2 = nockInstance
     .get(hostErrata)
-    .query({ ...defaultQueryWithoutSearch, page: 2 })
+    .query(page2Query)
     .reply(200, makeMockErrata({ page: 2 }));
 
   const {
@@ -692,4 +694,92 @@ test('Can toggle with the Toggle Group ', async (done) => {
   expect(queryByLabelText('Show All')).toHaveAttribute('aria-pressed', 'false');
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done); // Pass jest callback to confirm test is done
+});
+
+test('Can filter by errata type', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostErrata)
+    .query(defaultQuery)
+    .reply(200, mockErrataData);
+
+  const scope2 = nockInstance
+    .get(hostErrata)
+    .query({ ...defaultQuery, type: 'security' })
+    .reply(200, { ...mockErrataData, results: [firstErrata] });
+
+  const {
+    queryByText,
+    getByRole,
+    getAllByText,
+    getByText,
+  } = renderWithRedux(<ErrataTab />, renderOptions());
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  // the Bugfix text in the table is just a text node, while the dropdown is a button
+  expect(getByText('Bugfix', { ignore: ['button', 'title'] })).toBeInTheDocument();
+  expect(getByText('Enhancement', { ignore: ['button', 'title'] })).toBeInTheDocument();
+  const typeDropdown = queryByText('Type', { ignore: 'th' });
+  expect(typeDropdown).toBeInTheDocument();
+  fireEvent.click(typeDropdown);
+  const security = getByRole('option', { name: 'select Security' });
+  fireEvent.click(security);
+  await patientlyWaitFor(() => {
+    expect(queryByText('Bugfix')).not.toBeInTheDocument();
+    expect(queryByText('Enhancement')).not.toBeInTheDocument();
+  });
+
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
+});
+
+test('Can filter by severity', async (done) => {
+  const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+  const scope = nockInstance
+    .get(hostErrata)
+    .query(defaultQuery)
+    .reply(200, mockErrataData);
+
+  const scope2 = nockInstance
+    .get(hostErrata)
+    .query({ ...defaultQuery, severity: 'Important' })
+    .reply(200, { ...mockErrataData, results: [thirdErrata] });
+
+  const {
+    queryByText,
+    getByRole,
+    getAllByText,
+    getByText,
+  } = renderWithRedux(<ErrataTab />, renderOptions());
+
+  // Assert that the errata are now showing on the screen, but wait for them to appear.
+  await patientlyWaitFor(() => expect(getAllByText('Important')[0]).toBeInTheDocument());
+  // the Bugfix text in the table is just a text node, while the dropdown is a button
+  expect(getByText('Moderate', { ignore: ['button', 'title'] })).toBeInTheDocument();
+  expect(getByText('Important', { ignore: ['.pf-c-select__toggle-text', 'title'] })).toBeInTheDocument();
+  expect(getByText('Critical', { ignore: ['button', 'title'] })).toBeInTheDocument();
+  const severityDropdown = queryByText('Severity', { ignore: 'th' });
+  expect(severityDropdown).toBeInTheDocument();
+  fireEvent.click(severityDropdown);
+  const important = getByRole('option', { name: 'select Important' });
+  fireEvent.click(important);
+  await patientlyWaitFor(() => {
+    expect(queryByText('Moderate', { ignore: ['.pf-c-select__toggle-text'] })).not.toBeInTheDocument();
+    expect(queryByText('Critical', { ignore: ['.pf-c-select__toggle-text'] })).not.toBeInTheDocument();
+  });
+  await patientlyWaitFor(() => {
+    expect(getByText('Important', { ignore: ['.pf-c-select__toggle-text', 'title'] })).toBeInTheDocument();
+  });
+
+
+  assertNockRequest(autocompleteScope);
+  assertNockRequest(scope);
+  assertNockRequest(searchDelayScope);
+  assertNockRequest(autoSearchScope);
+  assertNockRequest(scope2, done); // Pass jest callback to confirm test is done
 });

@@ -7,7 +7,7 @@ module Katello
       bugfix: Katello::Erratum::BUGZILLA, # ['bugfix', 'recommended']
       security: Katello::Erratum::SECURITY, # ['security']
       enhancement: Katello::Erratum::ENHANCEMENT # ['enhancement', 'optional']
-    }
+    }.freeze
 
     before_action :find_host, only: :index
     before_action :find_host_editable, except: :index

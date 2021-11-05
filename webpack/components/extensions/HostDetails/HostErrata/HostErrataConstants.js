@@ -4,7 +4,7 @@ export const HOST_ERRATA_APPLY_KEY = 'HOST_ERRATUM_APPLY';
 
 export const ERRATA_TYPES = {
   SECURITY: 'Security',
-  BUGFIX: 'Bug fix',
+  BUGFIX: 'Bugfix',
   ENHANCEMENT: 'Enhancement',
 };
 export const ERRATA_SEVERITIES = {
