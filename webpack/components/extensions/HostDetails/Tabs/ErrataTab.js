@@ -259,7 +259,7 @@ export const ErrataTab = () => {
               <Th key="select-all" />
               {columnHeaders.map(col =>
                 <Th key={col}>{col}</Th>)}
-              <Th />
+              <Th key="action-menu" />
             </Tr>
           </Thead>
           <>
