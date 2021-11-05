@@ -310,7 +310,7 @@ module ::Actions::Katello::Repository
                                 [{href: "demo_task/href"}],
                                 "file")
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
-                                [{href: "demo_task/artifact_href"}], repository_pulp3, proxy)
+                                {pulp_tasks: [{href: "demo_task/artifact_href"}]}, repository_pulp3, proxy)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
@@ -326,7 +326,7 @@ module ::Actions::Katello::Repository
 
       plan_action action, repository_pulp3, proxy, {:path => file, :filename => 'puppet_module.tar.gz'}, 'file'
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
-                                "demo_content/href", repository_pulp3, proxy)
+                                {content_unit_href: "demo_content/href"}, repository_pulp3, proxy)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
@@ -360,7 +360,7 @@ module ::Actions::Katello::Repository
                                 [{href: "demo_task/href"}],
                                 "python_package")
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
-                                [{href: "demo_task/artifact_href"}], repository_python_pulp3, proxy)
+                                {pulp_tasks: [{href: "demo_task/artifact_href"}]}, repository_python_pulp3, proxy)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_python_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])
@@ -376,7 +376,7 @@ module ::Actions::Katello::Repository
 
       plan_action action, repository_python_pulp3, proxy, {:path => file, :filename => 'shelf_reader-0.1-py2-none-any.whl'}, 'python_package'
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::ImportUpload,
-                                "demo_content/href", repository_python_pulp3, proxy)
+                                {content_unit_href: "demo_content/href"}, repository_python_pulp3, proxy)
       assert_action_planed_with(action, ::Actions::Pulp3::Repository::SaveVersion,
                                 repository_python_pulp3,
                                 tasks: [{href: "demo_task/version_href"}])

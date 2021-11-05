@@ -13,7 +13,7 @@ module Actions
           duplicate_sha_artifact_list = ::Katello::Pulp3::Api::Core.new(smart_proxy).artifacts_api.list("sha256": input[:sha256])
           duplicate_sha_artifact_href = duplicate_sha_artifact_list&.results&.first&.pulp_href
           if duplicate_sha_artifact_href
-            uploads_api.delete(upload_href)
+            uploads_api.delete(input[:upload_href])
             output[:artifact_href] = duplicate_sha_artifact_href
             output[:pulp_tasks] = nil
           else

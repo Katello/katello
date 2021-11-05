@@ -4,15 +4,19 @@ module Actions
   module Pulp3
     module Repository
       class ImportUpload < Pulp3::AbstractAsyncTask
-        def plan(content_unit, repository, smart_proxy)
-          plan_self(:content_unit => content_unit,
+        def plan(save_artifact_output, repository, smart_proxy)
+          plan_self(:save_artifact_output => save_artifact_output,
                     :repository_id => repository.id,
                     :smart_proxy_id => smart_proxy.id)
         end
 
         def invoke_external_task
-          content_unit = input[:content_unit]
-          content_unit_href = content_unit.is_a?(String) ? content_unit : content_unit.last[:created_resources].first
+          if input[:save_artifact_output][:pulp_tasks]&.any?
+            content_unit_href = input[:save_artifact_output][:pulp_tasks].last[:created_resources].first
+          else
+            content_unit_href = input[:save_artifact_output][:content_unit_href]
+          end
+
           repo = ::Katello::Repository.find(input[:repository_id])
           repo_backend_service = repo.backend_service(smart_proxy)
           output[:content_unit_href] = content_unit_href
