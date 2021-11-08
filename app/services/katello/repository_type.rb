@@ -145,7 +145,7 @@ module Katello
 
     class ContentType
       attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable,
-                    :primary_content, :index_on_pulp3, :generic_browser, :content_type
+                    :primary_content, :index_on_pulp3, :generic_browser, :content_type, :repository_import_on_upload
 
       def initialize(options)
         self.model_class = options[:model_class]
@@ -159,6 +159,7 @@ module Katello
         self.removable = options[:removable] || false
         self.primary_content = options[:primary_content] || false
         self.generic_browser = options[:generic_browser]
+        self.repository_import_on_upload = options[:repository_import_on_upload]
       end
 
       def label

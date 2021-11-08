@@ -83,7 +83,6 @@ module Katello
     validate :ensure_valid_authentication_token, :if => :yum?
     validate :ensure_valid_deb_constraints, :if => :deb?
     validate :ensure_no_checksum_on_demand
-    validates :url, presence: true, if: :ostree?
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
     validates :product_id, :presence => true
     validates :ostree_upstream_sync_policy, :inclusion => {:in => OSTREE_UPSTREAM_SYNC_POLICIES, :allow_blank => true}, :if => :ostree?

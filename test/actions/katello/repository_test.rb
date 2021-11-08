@@ -399,7 +399,10 @@ module ::Actions::Katello::Repository
         unit_type_id: 'docker_manifest',
         unit_key: {'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'},
         upload_id: 1,
-        unit_metadata: nil
+        unit_metadata: nil,
+        generate_metadata: true,
+        sync_capsule: true,
+        content_type: 'docker_manifest'
       }
       assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                  docker_repository, SmartProxy.pulp_primary,
@@ -422,7 +425,10 @@ module ::Actions::Katello::Repository
         unit_type_id: 'docker_tag',
         unit_key: unit_keys[0],
         upload_id: 1,
-        unit_metadata: unit_keys[0]
+        unit_metadata: unit_keys[0],
+        generate_metadata: true,
+        sync_capsule: true,
+        content_type: 'docker_tag'
       }
       assert_action_planned_with(action, ::Actions::Pulp3::Orchestration::Repository::ImportUpload,
                                  docker_repository, SmartProxy.pulp_primary,
