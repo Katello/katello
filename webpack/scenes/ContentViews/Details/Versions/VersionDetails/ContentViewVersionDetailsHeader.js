@@ -45,7 +45,7 @@ const ContentViewVersionDetailsHeader = ({
       </TextContent>
       <Flex>
         {environments?.map(({ name, id }) =>
-          <FlexItem key={name}><Label color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label></FlexItem>)}
+          <FlexItem key={name}><Label isTruncated color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label></FlexItem>)}
       </Flex>
     </GridItem>
   </>
