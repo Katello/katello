@@ -35,7 +35,7 @@ module Katello
                                       Erratum::CONTENT_TYPE.to_sym => "Katello::ContentViewErratumFilter",
                                       DOCKER.to_sym => "Katello::ContentViewDockerFilter",
                                       MODULE_STREAM.to_sym => "Katello::ContentViewModuleStreamFilter"}
-    scoped_search :on => :inclusion, :rename => :inclusion_type, :complete_value => {:include => true, :exclude => :false}
+    scoped_search :on => :inclusion, :rename => :inclusion_type, :complete_value => {include: "true", exclude: "false"}
 
     def self.yum(include_module_streams = true)
       types = [::Katello::ContentViewPackageGroupFilter.name,
