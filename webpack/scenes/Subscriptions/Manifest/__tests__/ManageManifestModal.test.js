@@ -9,7 +9,10 @@ jest.mock('foremanReact/components/ForemanModal');
 
 describe('manage manifest modal', () => {
   const noop = jest.fn();
-  const organization = { id: 1, redhat_repository_url: 'https://redhat.com' };
+  const organization = {
+    id: 1,
+    cdn_configuration: {},
+  };
 
   it('should render', () => {
     const page = shallow(<ManageManifestModal
@@ -23,10 +26,11 @@ describe('manage manifest modal', () => {
       loadManifestHistory={noop}
       organization={organization}
       loadOrganization={noop}
-      saveOrganization={noop}
+      updateCdnConfiguration={noop}
       bulkSearch={noop}
       manifestHistory={manifestHistorySuccessState}
       taskInProgress={false}
+      getContentCredentials={noop}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });

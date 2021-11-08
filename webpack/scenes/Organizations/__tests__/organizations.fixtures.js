@@ -77,26 +77,3 @@ export const getFailureActions = [
     type: 'GET_ORGANIZATION_FAILURE',
   },
 ];
-
-export const saveSuccessActions = [
-  {
-    type: 'SAVE_ORGANIZATION_REQUEST',
-  },
-  {
-    response: requestSuccessResponse,
-    type: 'SAVE_ORGANIZATION_SUCCESS',
-  },
-  {
-    type: 'GET_ORGANIZATION_REQUEST',
-  },
-];
-
-export const saveFailureActions = [
-  {
-    type: 'SAVE_ORGANIZATION_REQUEST',
-  },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'SAVE_ORGANIZATION_FAILURE',
-  },
-];

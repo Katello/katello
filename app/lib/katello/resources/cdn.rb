@@ -41,7 +41,12 @@ module Katello
                                     :ssl_ca_cert)
 
           if options[:ssl_ca_cert].present?
-            ca_cert = OpenSSL::X509::Certificate.new(options[:ssl_ca_cert])
+            begin
+              ca_cert = OpenSSL::X509::Certificate.new(options[:ssl_ca_cert])
+            rescue
+              raise _("Invalid SSL CA certificate given for CDN")
+            end
+
             @cert_store = OpenSSL::X509::Store.new
             @cert_store.add_cert(ca_cert)
           end
@@ -112,6 +117,7 @@ module Katello
           net
         end
 
+        # rubocop:disable Metrics/MethodLength
         def get(path, _headers = {})
           net = http_downloader
           path = File.join(@uri.request_uri, path)
@@ -140,6 +146,8 @@ module Katello
                 fail exception_class.new(nil, code)
               end
             end
+          rescue SocketError
+            raise _("Couldn't establish a connection to %s") % @uri
           rescue EOFError
             raise RestClient::ServerBrokeConnection
           rescue Timeout::Error
@@ -152,6 +160,7 @@ module Katello
             raise Errors::SecurityViolation, _("CDN loading error: access forbidden to %s") % used_url
           end
         end
+        # rubocop:enable Metrics/MethodLength
 
         def valid_path?(path, postfix)
           get(File.join(path, postfix)).present?
