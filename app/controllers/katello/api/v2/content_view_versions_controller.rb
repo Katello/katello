@@ -163,6 +163,9 @@ module Katello
 
     def find_optional_readable_content_view
       @view = ContentView.readable.find_by(:id => params[:content_view_id])
+      if params[:content_view_id] && !@view
+        fail HttpErrors::NotFound, _("Couldn't find content view with id: '%s'") % params[:content_view_id]
+      end
     end
 
     def find_publishable_content_view
