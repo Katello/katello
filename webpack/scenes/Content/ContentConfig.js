@@ -5,7 +5,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import ContentInfo from './Details/ContentInfo';
 import LastSync from '../ContentViews/Details/Repositories/LastSync';
 import ContentRepositories from './Details/ContentRepositories';
-import ContentCounts from './Details/ContentCounts';
+import ContentCounts from '../ContentViews/Details/Repositories/ContentCounts';
 
 export default () => [
   {
@@ -58,9 +58,8 @@ export default () => [
           },
           {
             title: __('Content Count'),
-            getProperty: (unit, singularLabel) =>
+            getProperty: unit =>
               (<ContentCounts
-                typeSingularLabel={singularLabel}
                 productId={unit.product.id}
                 repoId={unit.id}
                 counts={unit.content_counts}
@@ -69,6 +68,16 @@ export default () => [
         ],
       },
     ],
+  },
+  {
+    names: {
+      pluralTitle: __('OSTree Refs'),
+      singularTitle: __('OSTree Ref'),
+      pluralLowercase: __('OSTree refs'),
+      singularLowercase: __('OSTree ref'),
+      pluralLabel: 'ostree_refs',
+      singularLabel: 'ostree_ref',
+    },
   },
   {
     names: {
@@ -123,9 +132,8 @@ export default () => [
           },
           {
             title: __('Content Count'),
-            getProperty: (unit, singularLabel) =>
+            getProperty: unit =>
               (<ContentCounts
-                typeSingularLabel={singularLabel}
                 productId={unit.product.id}
                 repoId={unit.id}
                 counts={unit.content_counts}
