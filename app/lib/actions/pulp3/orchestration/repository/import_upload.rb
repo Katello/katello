@@ -33,7 +33,7 @@ module Actions
                                                 repository,
                                                 smart_proxy,
                                                 commit_output[:pulp_tasks],
-                                                args.dig(:unit_type_id)).output
+                                                args.dig(:unit_type_id), args).output
                 end
 
                 plan_self(:commit_output => commit_output[:pulp_tasks], :artifact_output => artifact_output)
