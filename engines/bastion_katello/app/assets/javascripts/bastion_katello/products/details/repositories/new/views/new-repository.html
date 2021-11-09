@@ -329,7 +329,7 @@
         </p>
       </div>
 
-      <div class="checkbox" ng-hide="repository.content_type === 'ostree' || repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">
+      <div class="checkbox" ng-hide="repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">
         <label>
           <input id="unprotected" name="unprotected" ng-model="repository.unprotected" type="checkbox"/>
           <span translate>Publish via HTTP</span>

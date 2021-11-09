@@ -1,6 +1,7 @@
 require 'proxy_api'
 require 'proxy_api/pulp'
 require 'proxy_api/pulp_node'
+require 'proxy_api/container_gateway'
 
 module Katello
   module Concerns
@@ -128,7 +129,7 @@ module Katello
                            auth_required: !unauthenticated_container_repositories.include?(repo.id) }
           end
         end
-        ProxyAPI::ContainerGateway.new(url: self.url).repository_list({ repositories: repo_list })
+        ::ProxyAPI::ContainerGateway.new(url: self.url).repository_list({ repositories: repo_list })
       end
 
       def update_user_container_repo_mapping(users)

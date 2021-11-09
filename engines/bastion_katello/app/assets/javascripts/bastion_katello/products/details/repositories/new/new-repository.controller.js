@@ -129,9 +129,6 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
             $scope.save = function (repository) {
                 var fields = ['upstream_password', 'upstream_username', 'ansible_collection_auth_token', 'ansible_collection_auth_url', 'ansible_collection_requirements'];
-                if (repository.content_type === 'ostree') {
-                    repository.unprotected = false;
-                }
                 if (repository.content_type === 'yum') {
                     repository.os_versions = $scope.osVersionsParam();
                     if ($scope.repositoryForm.ignore_srpms.$modelValue) {

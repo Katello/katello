@@ -12,7 +12,9 @@ module Katello
             name: "#{generate_backend_object_name}"
           }
 
-          unless ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
+          if ::Katello::RepositoryTypeManager.find(repo.content_type).pulp3_skip_publication
+            options.merge!(repository_version: repo.version_href)
+          else
             options.merge!(publication: repo.publication_href)
           end
 
@@ -29,7 +31,7 @@ module Katello
         end
 
         def partial_repo_path
-          repo.repository_type.partial_repo_path
+          "/pulp/content/#{repo.relative_path}/".sub('//', '/')
         end
       end
     end

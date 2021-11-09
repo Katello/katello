@@ -5,7 +5,6 @@ Katello::RepositoryTypeManager.register('python') do
   pulp3_service_class Katello::Pulp3::Repository::Generic
   pulp3_api_class Katello::Pulp3::Api::Generic
   pulp3_plugin 'python'
-  partial_repo_path '' #TODO: add partial repo path
 
   client_module_class PulpPythonClient
   api_class PulpPythonClient::ApiClient

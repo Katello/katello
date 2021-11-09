@@ -440,8 +440,6 @@ module Katello
       scheme = force_http ? 'http' : 'https'
       if docker?
         "#{pulp_uri.host.downcase}/#{container_repository_name}"
-      elsif ostree?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/content/web/#{relative_path}"
       elsif ansible_collection?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp_ansible/galaxy/#{relative_path}/api/"
       else
