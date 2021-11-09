@@ -17,13 +17,14 @@ module Actions
 
         def invoke_external_task
           repository = ::Katello::Repository.find(input[:repository_id])
+          backend = repository.backend_service(smart_proxy).with_mirror_adapter
           #yum repositories use metadata mirroring always, so we should never
-          # regenerate metadata on proxies
-          if repository.yum?
+          # regenerate metadata on proxies.  but if there is no publication,
+          # it means the repo was likely empty and syncing didn't generate one
+          if repository.yum? && backend.publication_href.present?
             []
           else
-            smart_proxy = ::SmartProxy.unscoped.find(input[:smart_proxy_id])
-            repository.backend_service(smart_proxy).with_mirror_adapter.create_publication
+            backend.create_publication
           end
         end
       end
