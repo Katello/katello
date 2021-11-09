@@ -261,7 +261,7 @@
       <dt translate>Publish via HTTPS</dt>
       <dd translate>Yes</dd>
 
-      <span ng-hide="repository.content_type === 'ostree' || repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">
+      <span ng-hide="repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">
         <dt translate>Publish via HTTP</dt>
         <dd bst-edit-checkbox="repository.unprotected"
             formatter="booleanToYesNo"

@@ -6,7 +6,6 @@ Katello::RepositoryTypeManager.register('ostree') do
   pulp3_api_class Katello::Pulp3::Api::Generic
   pulp3_plugin 'ostree'
   pulp3_skip_publication true
-  partial_repo_path '' #TODO: add partial repo path
 
   client_module_class PulpOstreeClient
   api_class PulpOstreeClient::ApiClient

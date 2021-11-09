@@ -13,7 +13,7 @@ module Katello
     end
 
     def_field :allow_creation_by_user, :service_class, :pulp3_service_class, :pulp3_plugin,
-              :pulp3_skip_publication, :configuration_class, :partial_repo_path, :pulp3_api_class,
+              :pulp3_skip_publication, :configuration_class, :pulp3_api_class,
               :repositories_api_class, :api_class, :remotes_api_class, :repository_versions_api_class,
               :distributions_api_class, :remote_class, :repo_sync_url_class, :client_module_class,
               :distribution_class, :publication_class, :publications_api_class, :url_description
