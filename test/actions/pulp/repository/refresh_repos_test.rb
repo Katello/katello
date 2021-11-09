@@ -41,7 +41,6 @@ module ::Actions::Pulp::Repository
         planned_action = create_and_plan_action action_class, @smart_proxy, repository: repo
         # repo already exist in capsule
         ::Katello::Pulp::SmartProxyRepository.any_instance.expects(:current_repositories).returns([repo])
-        pulp_repo.expects(:mirror_needs_updates?).returns(true)
         pulp_repo.expects(:refresh_mirror_entities).once.returns([])
         run_action planned_action
       end
@@ -74,7 +73,6 @@ module ::Actions::Pulp::Repository
         planned_action = create_and_plan_action action_class, @smart_proxy, repository: repo
         # repo already exist in capsule
         ::Katello::Pulp3::SmartProxyRepository.any_instance.expects(:current_repositories).returns([repo])
-        pulp_repo.expects(:mirror_needs_updates?).returns(true)
         pulp_repo.expects(:refresh_mirror_entities).once.returns([])
         run_action planned_action
       end
