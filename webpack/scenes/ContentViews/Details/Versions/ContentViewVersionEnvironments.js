@@ -15,7 +15,7 @@ const ContentViewVersionEnvironments = ({ environments }) => {
     <React.Fragment key={env.id}>
       <Flex>
         <FlexItem>
-          <Label color="purple" href={`/lifecycle_environments/${env.id}`}>{`${env.name}`}</Label>
+          <Label isTruncated color="purple" href={`/lifecycle_environments/${env.id}`}>{env.name}</Label>
         </FlexItem>
         <FlexItem>
           <InactiveText text={` ${env.publish_date} ago`} /><br />

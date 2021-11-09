@@ -43,7 +43,7 @@ const HostContentViewDetails = ({
                 <Flex>
                   <FlexItem spacer={{ default: 'spacerNone' }}><ContentViewIcon composite={contentView.composite} /></FlexItem>
                   <FlexItem><a href={`/content_views/${contentView.id}`}>{`${contentView.name}`}</a> </FlexItem>
-                  <FlexItem><Label color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{`${lifecycleEnvironment.name}`}</Label></FlexItem>
+                  <FlexItem><Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{`${lifecycleEnvironment.name}`}</Label></FlexItem>
                 </Flex>
               </DescriptionListDescription>
             </DescriptionListGroup>

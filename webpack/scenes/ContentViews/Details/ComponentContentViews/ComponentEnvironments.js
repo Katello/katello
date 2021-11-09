@@ -6,7 +6,7 @@ const ComponentEnvironments = ({ environments }) => {
   const envList = environments.map(env =>
     (
       <FlexItem key={env.id} style={{ marginTop: '0.25em', marginBottom: '0.25em' }}>
-        <Label color="purple" href={`/lifecycle_environments/${env.id}`}>{`${env.name}`}</Label>
+        <Label color="purple" href={`/lifecycle_environments/${env.id}`} isTruncated>{`${env.name}`}</Label>
       </FlexItem>
     ));
   return (

@@ -39,7 +39,7 @@ const CVVersionRemoveReview = () => {
           </Flex>
           <Flex>
             {selectedEnv?.map(({ name, id }) =>
-              <FlexItem key={name}><Label color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label></FlexItem>)}
+              <FlexItem key={name}><Label isTruncated color="purple" href={`/lifecycle_environments/${id}`}>{name}</Label></FlexItem>)}
           </Flex>
         </>}
       {affectedHosts &&
@@ -48,7 +48,7 @@ const CVVersionRemoveReview = () => {
           <Flex>
             <FlexItem><ExclamationTriangleIcon /></FlexItem>
             <FlexItem><p>{__(`${pluralize(hostResponse.length, 'host')} will be moved to content view ${selectedCVNameForHosts} in `)}</p></FlexItem>
-            <FlexItem><Label color="purple" href={`/lifecycle_environments/${selectedEnvForHost[0].id}`}>{selectedEnvForHost[0].name}</Label></FlexItem>
+            <FlexItem><Label isTruncated color="purple" href={`/lifecycle_environments/${selectedEnvForHost[0].id}`}>{selectedEnvForHost[0].name}</Label></FlexItem>
           </Flex>
         </>}
       {affectedActivationKeys &&
@@ -57,7 +57,7 @@ const CVVersionRemoveReview = () => {
         <Flex>
           <FlexItem><ExclamationTriangleIcon /></FlexItem>
           <FlexItem><p>{__(`${pluralize(akResponse.length, 'activation key')} will be moved to content view ${selectedCVNameForAK} in `)}</p></FlexItem>
-          <FlexItem><Label color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>{selectedEnvForAK[0].name}</Label></FlexItem>
+          <FlexItem><Label isTruncated color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>{selectedEnvForAK[0].name}</Label></FlexItem>
         </Flex>
       </>}
     </>
