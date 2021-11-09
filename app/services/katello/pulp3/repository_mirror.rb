@@ -79,7 +79,7 @@ module Katello
       end
 
       def publication_href
-        api.publications_api.list(:repository_version => version_href).results.first.pulp_href
+        api.publications_api.list(:repository_version => version_href).results.first&.pulp_href
       end
 
       def create_version(options = {})

@@ -40,7 +40,7 @@ module Actions
             pulp_repo = repo.backend_service(smart_proxy)
             if !current_repos_on_capsule_ids.include?(repo.id)
               pulp_repo.create_mirror_entities
-            elsif pulp_repo.mirror_needs_updates?
+            else
               tasks += pulp_repo.refresh_mirror_entities
             end
           end
