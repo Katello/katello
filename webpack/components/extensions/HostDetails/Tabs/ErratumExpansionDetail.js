@@ -20,20 +20,20 @@ const ErratumExpansionDetail = ({ erratum }) => {
   return (
     <DescriptionList>
       <DescriptionListGroup>
-        <Term>Synopsis</Term>
+        <Term>{__('Synopsis')}</Term>
         <Description>{synopsis}</Description>
       </DescriptionListGroup>
       <DescriptionListGroup>
-        <Term>Summary</Term>
+        <Term>{__('Summary')}</Term>
         <Description>{summary}</Description>
       </DescriptionListGroup>
       <DescriptionListGroup>
-        <Term>Solution</Term>
+        <Term>{__('Solution')}</Term>
         <Description>{solution}</Description>
       </DescriptionListGroup>
       {showDescription &&
         <DescriptionListGroup>
-          <Term>Full description</Term>
+          <Term>{__('Full description')}</Term>
           <Description>
             <span style={{ whiteSpace: 'pre-line' }}>{description}</span>
           </Description>

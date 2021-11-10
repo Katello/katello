@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -217,6 +218,21 @@ class SubscriptionsPage extends Component {
       },
     };
 
+    const SCAAlert = simpleContentAccess ? (
+      <Alert type="info">
+        <FormattedMessage
+          id="sca-alert"
+          values={{
+            subscriptionWatch: <a href={SUBSCRIPTION_WATCH_URL} target="_blank" rel="noreferrer">{__('Subscription Watch')}</a>,
+            br: <br />,
+          }}
+          defaultMessage={__(`This organization has Simple Content Access enabled.
+          Hosts are not required to have subscriptions attached to access repositories.
+          {br}
+          Learn more about your overall subscription usage at {subscriptionWatch}.`)}
+        />
+      </Alert>
+    ) : null;
     return (
       <Grid bsClass="container-fluid">
         <Row>
@@ -255,15 +271,7 @@ class SubscriptionsPage extends Component {
             />
 
             <div id="subscriptions-table" className="modal-container">
-              {simpleContentAccess && (
-                <Alert type="info">
-                  This organization has Simple Content Access enabled.
-                  Hosts are not required to have subscriptions attached to access repositories.
-                  <br />
-                  Learn more about your overall subscription usage at
-                  {' '}<a href={SUBSCRIPTION_WATCH_URL} target="_blank" rel="noreferrer">Subscription Watch</a>.
-                </Alert>
-              )}
+              {SCAAlert}
               <SubscriptionsTable
                 canManageSubscriptionAllocations={canManageSubscriptionAllocations}
                 loadSubscriptions={this.props.loadSubscriptions}
