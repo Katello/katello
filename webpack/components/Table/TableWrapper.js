@@ -189,13 +189,13 @@ const TableWrapper = ({
             />
           </FlexItem>
         }
-        {showActionButtons &&
-          <FlexItem style={{ marginLeft: '16px' }}>
-            {actionButtons}
-          </FlexItem>}
         {showToggleGroup &&
           <FlexItem style={{ marginLeft: '16px' }}>
             {toggleGroup}
+          </FlexItem>}
+        {showActionButtons &&
+          <FlexItem style={{ marginLeft: '16px' }}>
+            {actionButtons}
           </FlexItem>}
 
         {showPagination &&

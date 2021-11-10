@@ -19,6 +19,7 @@ import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { isEmpty } from 'lodash';
+import SelectableDropdown from '../../../SelectableDropdown';
 import { useSet, useBulkSelect } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import { ErrataType, ErrataSeverity } from '../../../../components/Errata';
@@ -26,7 +27,7 @@ import { getInstallableErrata, regenerateApplicability, applyViaKatelloAgent } f
 import ErratumExpansionDetail from './ErratumExpansionDetail';
 import ErratumExpansionContents from './ErratumExpansionContents';
 import { selectHostErrataStatus } from '../HostErrata/HostErrataSelectors';
-import { HOST_ERRATA_KEY } from '../HostErrata/HostErrataConstants';
+import { HOST_ERRATA_KEY, ERRATA_TYPES, ERRATA_SEVERITIES, TYPES_TO_PARAM, SEVERITIES_TO_PARAM } from '../HostErrata/HostErrataConstants';
 import './ErrataTab.scss';
 
 export const ErrataTab = () => {
@@ -38,17 +39,23 @@ export const ErrataTab = () => {
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
   const dispatch = useDispatch();
   const toggleGroupStates = ['all', 'installable'];
-  const [all, installable] = toggleGroupStates;
-  const [toggleGroupState, setToggleGroupState] = useState(installable);
+  const [ALL, INSTALLABLE] = toggleGroupStates;
+  const ERRATA_TYPE = __('Type');
+  const ERRATA_SEVERITY = __('Severity');
+  const [toggleGroupState, setToggleGroupState] = useState(INSTALLABLE);
 
   const [isBulkActionOpen, setIsBulkActionOpen] = useState(false);
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const expandedErrata = useSet([]);
   const erratumIsExpanded = id => expandedErrata.has(id);
+  const [errataTypeSelected, setErrataTypeSelected] = useState(ERRATA_TYPE);
+  const [errataSeveritySelected, setErrataSeveritySelected] = useState(ERRATA_SEVERITY);
+  const activeFilters = [errataTypeSelected, errataSeveritySelected];
+  const defaultFilters = [ERRATA_TYPE, ERRATA_SEVERITY];
 
   const emptyContentTitle = __('This host does not have any installable errata.');
   const emptyContentBody = __('Installable errata will appear here when available.');
-  const emptySearchTitle = __('No matching installable errata found');
+  const emptySearchTitle = __('No matching errata found');
   const emptySearchBody = __('Try changing your search settings.');
   const columnHeaders = [
     __('Errata'),
@@ -58,21 +65,33 @@ export const ErrataTab = () => {
     __('Synopsis'),
     __('Published date'),
   ];
+
   const fetchItems = useCallback(
-    params => (hostId ?
-      getInstallableErrata(
+    (params) => {
+      if (!hostId) return null;
+      const modifiedParams = { ...params };
+      if (errataTypeSelected !== ERRATA_TYPE) {
+        modifiedParams.type = TYPES_TO_PARAM[errataTypeSelected];
+      }
+      if (errataSeveritySelected !== ERRATA_SEVERITY) {
+        modifiedParams.severity = SEVERITIES_TO_PARAM[errataSeveritySelected];
+      }
+      return getInstallableErrata(
         hostId,
         {
-          include_applicable: toggleGroupState === all,
-          ...params,
+          include_applicable: toggleGroupState === ALL,
+          ...modifiedParams,
         },
-      ) : null),
-    [hostId, toggleGroupState, all],
+      );
+    },
+    [hostId, toggleGroupState, ALL, ERRATA_SEVERITY, ERRATA_TYPE,
+      errataTypeSelected, errataSeveritySelected],
   );
 
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostErrataStatus(state));
+
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
     updateSearchQuery, selectNone, fetchBulkParams, ...selectAll
@@ -118,48 +137,90 @@ export const ErrataTab = () => {
     }
   };
 
+  const handleErrataTypeSelected = newType => setErrataTypeSelected((prevType) => {
+    if (prevType === newType) {
+      return ERRATA_TYPE;
+    }
+    return newType;
+  });
+
+  const handleErrataSeveritySelected = newSeverity => setErrataSeveritySelected((prevSeverity) => {
+    if (prevSeverity === newSeverity) {
+      return ERRATA_SEVERITY;
+    }
+    return newSeverity;
+  });
+
   const actionButtons = (
-    <Split hasGutter>
-      <SplitItem>
-        <ActionList isIconList>
-          <ActionListItem>
-            <Button isDisabled={selectedCount === 0} onClick={applyByKatelloAgent}> {__('Apply')} </Button>
-          </ActionListItem>
-          <ActionListItem>
-            <Dropdown
-              toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-              isOpen={isBulkActionOpen}
-              isPlain
-              dropdownItems={dropdownItems}
-            />
-          </ActionListItem>
-        </ActionList>
-      </SplitItem>
-    </Split>
+    <>
+      <Split hasGutter>
+        <SplitItem>
+          <ActionList isIconList>
+            <ActionListItem>
+              <Button isDisabled={selectedCount === 0} onClick={applyByKatelloAgent}> {__('Apply')} </Button>
+            </ActionListItem>
+            <ActionListItem>
+              <Dropdown
+                toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                isOpen={isBulkActionOpen}
+                isPlain
+                dropdownItems={dropdownItems}
+              />
+            </ActionListItem>
+          </ActionList>
+        </SplitItem>
+      </Split>
+    </>
   );
 
-  let toggleGroup;
-  if (!contentFacet.contentViewDefault && !contentFacet.lifecycleEnvironmentLibrary) {
-    toggleGroup = (
-      <ToggleGroup aria-label="Installable Errata">
-        <ToggleGroupItem
-          text={__('All')}
-          buttonId="allToggle"
-          aria-label="Show All"
-          isSelected={toggleGroupState === all}
-          onChange={() => setToggleGroupState(all)}
+  const hostIsNonLibrary = (
+    !contentFacet.contentViewDefault && !contentFacet.lifecycleEnvironmentLibrary
+  );
+  const toggleGroup = (
+    <Split hasGutter>
+      <SplitItem>
+        <SelectableDropdown
+          id="errata-type-dropdown"
+          title={ERRATA_TYPE}
+          showTitle={false}
+          items={Object.values(ERRATA_TYPES)}
+          selected={errataTypeSelected}
+          setSelected={handleErrataTypeSelected}
         />
+      </SplitItem>
+      <SplitItem>
+        <SelectableDropdown
+          id="errata-severity-dropdown"
+          title={ERRATA_SEVERITY}
+          showTitle={false}
+          items={Object.values(ERRATA_SEVERITIES)}
+          selected={errataSeveritySelected}
+          setSelected={handleErrataSeveritySelected}
+        />
+      </SplitItem>
+      {hostIsNonLibrary &&
+      <SplitItem>
+        <ToggleGroup aria-label="Installable Errata">
+          <ToggleGroupItem
+            text={__('All')}
+            buttonId="allToggle"
+            aria-label="Show All"
+            isSelected={toggleGroupState === ALL}
+            onChange={() => setToggleGroupState(ALL)}
+          />
 
-        <ToggleGroupItem
-          text={__('Installable')}
-          buttonId="installableToggle"
-          aria-label="Show Installable"
-          isSelected={toggleGroupState === installable}
-          onChange={() => setToggleGroupState(installable)}
-        />
-      </ToggleGroup>
-    );
+          <ToggleGroupItem
+            text={__('Installable')}
+            buttonId="installableToggle"
+            aria-label="Show Installable"
+            isSelected={toggleGroupState === INSTALLABLE}
+            onChange={() => setToggleGroupState(INSTALLABLE)}
+          />
+        </ToggleGroup>
+      </SplitItem>
   }
+    </Split>
+  );
 
   return (
     <div>
@@ -172,6 +233,8 @@ export const ErrataTab = () => {
                 emptySearchTitle,
                 emptySearchBody,
                 status,
+                activeFilters,
+                defaultFilters,
                 actionButtons,
                 searchQuery,
                 updateSearchQuery,
@@ -180,7 +243,8 @@ export const ErrataTab = () => {
                 toggleGroup,
                 }
           }
-          additionalListeners={[hostId, toggleGroupState]}
+          additionalListeners={[
+            hostId, toggleGroupState, errataTypeSelected, errataSeveritySelected]}
           fetchItems={fetchItems}
           autocompleteEndpoint={`/hosts/${hostId}/errata/auto_complete_search`}
           foremanApiAutoComplete

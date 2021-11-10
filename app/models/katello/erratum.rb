@@ -5,8 +5,15 @@ module Katello
     SECURITY = ["security"].freeze
     BUGZILLA = ["bugfix", "recommended"].freeze
     ENHANCEMENT = ["enhancement", "optional"].freeze
-
     TYPES = [SECURITY, BUGZILLA, ENHANCEMENT].flatten.freeze
+
+    NONE = "None".freeze
+    LOW = "Low".freeze
+    MODERATE = "Moderate".freeze
+    IMPORTANT = "Important".freeze
+    CRITICAL = "Critical".freeze
+    SEVERITIES = [NONE, LOW, MODERATE, IMPORTANT, CRITICAL].freeze
+
     CONTENT_TYPE = "erratum".freeze
     BACKEND_IDENTIFIER_FIELD = "erratum_pulp3_href".freeze
 
