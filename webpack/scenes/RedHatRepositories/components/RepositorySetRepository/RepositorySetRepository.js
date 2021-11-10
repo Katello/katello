@@ -106,7 +106,7 @@ class RepositorySetRepository extends Component {
         actions={
           <Spinner loading={this.props.loading} inline>
             <OverlayTrigger
-              overlay={<Tooltip id="enable">Enable</Tooltip>}
+              overlay={<Tooltip id="enable">{__('Enable')}</Tooltip>}
               placement="bottom"
               trigger={['hover', 'focus']}
               rootClose={false}

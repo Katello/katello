@@ -1,20 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { BugIcon, EnhancementIcon, SecurityIcon, UnknownIcon } from '@patternfly/react-icons';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 const ErratumTypeLabel = ({ type }) => {
   switch (type) {
     case 'bugfix':
       return (
-        <p><BugIcon /> Bugfix</p>
+        <p><BugIcon />{' '}{__('Bugfix')}</p>
       );
     case 'enhancement':
       return (
-        <p><EnhancementIcon /> Enhancement</p>
+        <p><EnhancementIcon />{' '}{__('Enhancement')}</p>
       );
     case 'security':
       return (
-        <p><SecurityIcon /> Security</p>
+        <p><SecurityIcon />{' '}{__('Security')}</p>
       );
     default:
       return (
