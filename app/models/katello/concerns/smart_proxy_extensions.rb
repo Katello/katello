@@ -443,7 +443,11 @@ module Katello
       end
 
       def rhsm_url
-        if pulp_primary?
+        # Since Foreman 3.1 this setting is set
+        if (rhsm_url = setting(SmartProxy::PULP3_FEATURE, 'rhsm_url'))
+          rhsm_url
+        # Compatibility fall back
+        elsif pulp_primary?
           "https://#{URI.parse(url).host}/rhsm"
         elsif pulp_mirror?
           "https://#{URI.parse(url).host}:8443/rhsm"
