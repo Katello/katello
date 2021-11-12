@@ -8,6 +8,7 @@ import {
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
+import ContentConfig from './../../../Content/ContentConfig';
 
 const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
   const {
@@ -25,8 +26,6 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
     const countLabel = `${type.names.singularLabel}_count`;
     genericContentTypes[countLabel.replace(/([-_]\w)/g, g => g[1].toUpperCase())] = [cvVersion[countLabel], type.names.pluralLowercase];
   });
-  // Ansible Collections has a tab in version details so it's handled separately below.
-  delete genericContentTypes.ansibleCollectionCount;
   const genericContentCountsStyle = { whiteSpace: 'pre-line' };
 
   return (
@@ -63,12 +62,19 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
         <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/ansibleCollections`, '')}>{`${ansibleCollectionCount} Collections`}</a><br />
       </>
       }
+      <>
+        <span style={genericContentCountsStyle}>
+          {Object.keys(genericContentTypes).filter(typeCountKey => genericContentTypes[typeCountKey][0] > 0).map(typeCountKey => `${genericContentTypes[typeCountKey][0]} ${genericContentTypes[typeCountKey][1]}\n`)}
+        </span>
+      </>
       {(moduleStreamCount === 0 && debCount === 0 &&
         dockerManifestCount === 0 && dockerTagCount === 0 &&
         fileCount === 0 && ansibleCollectionCount === 0 &&
-        <TextContent>
-          <Text component={TextVariants.small}>{__('N/A')}</Text>
-        </TextContent>
+        Object.keys(genericContentTypes).map(typeCountKey =>
+          genericContentTypes[typeCountKey][0]).reduce((pv, cv) => pv + cv) === 0 &&
+          <TextContent>
+            <Text component={TextVariants.small}>{__('N/A')}</Text>
+          </TextContent>
       )
       }
     </React.Fragment>

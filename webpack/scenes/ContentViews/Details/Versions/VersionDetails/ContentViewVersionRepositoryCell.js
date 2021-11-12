@@ -8,6 +8,7 @@ import {
   GridItem,
 } from '@patternfly/react-core';
 import InactiveText from '../../../components/InactiveText';
+import ContentConfig from '../../../../Content/ContentConfig';
 
 const ContentViewVersionRepositoryCell = ({
   data: {
@@ -68,6 +69,13 @@ const ContentViewVersionRepositoryCell = ({
       name: __('Source RPMs'),
     },
   };
+
+  ContentConfig().forEach((type) => {
+    CONTENT_COUNTS[type.names.singularLabel] = {
+      name: type.names.pluralLowercase,
+      url: `products/${id}/repositories/${libraryInstanceId}/content/${type.names.pluralLabel}`,
+    };
+  });
 
   const getContentSpan = (num) => {
     switch (true) {
