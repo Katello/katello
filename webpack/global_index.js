@@ -22,6 +22,6 @@ addGlobalFill('host-details-page-tabs', 'Content', <ContentTab key="content" />,
 /* eslint-disable max-len */
 // addGlobalFill('host-details-page-tabs', 'Subscription', <SubscriptionTab key="subscription" />, 100);
 addGlobalFill('host-details-page-tabs', 'Traces', <TracesTab key="traces" />, 800);
-addGlobalFill('host-details-page-tabs', 'Repository Sets', <RepositorySetsTab key="repository-sets" />, 700);
+addGlobalFill('host-details-page-tabs', 'Repository sets', <RepositorySetsTab key="repository-sets" />, 700);
 
 addGlobalFill('details-cards', 'Content View Details', <ContentViewDetailsCard key="content-view-details" />);

@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Skeleton, ToggleGroup, ToggleGroupItem, Label, Tooltip, Alert, AlertActionCloseButton } from '@patternfly/react-core';
@@ -19,6 +20,7 @@ import { enableRepoSetRepo, disableRepoSetRepo, resetRepoSetRepo, getHostReposit
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
 import { useBulkSelect } from '../../../../../components/Table/TableHooks';
 import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
+import './RepositorySetsTab.scss';
 
 const getEnabledValue = ({ enabled, enabledContentOverride }) => {
   const isOverridden = (enabledContentOverride !== null);
@@ -187,14 +189,27 @@ const RepositorySetsTab = () => {
   return (
     <div>
       <div id="errata-tab">
-        {alertShowing &&
-          <Alert
-            variant="info"
-            isInline
-            title={alertText}
-            actionClose={<AlertActionCloseButton onClose={() => setAlertShowing(false)} />}
-          />
-        }
+        <div className="content-header">
+          <div className="repo-sets-blurb">
+            <FormattedMessage
+              className="repo-sets-blurb"
+              id="repo-sets-blurb"
+              defaultMessage={__('Below are the repository sets currently available for this content host. For Red Hat subscriptions, additional content can be made available through the {rhrp}. Changing default settings requires subscription-manager 1.10 or newer to be installed on this host.')}
+              values={{
+                rhrp: <a href="/redhat_repositories">{__('Red Hat Repositories page')}</a>,
+              }}
+            />
+          </div>
+          {alertShowing &&
+            <Alert
+              variant="info"
+              className="repo-sets-alert"
+              isInline
+              title={alertText}
+              actionClose={<AlertActionCloseButton onClose={() => setAlertShowing(false)} />}
+            />
+          }
+        </div>
         <TableWrapper
           {...{
                 metadata,
