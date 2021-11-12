@@ -178,7 +178,34 @@ export const useBulkSelect = ({
     }
   };
 
-  const fetchBulkParams = () => {
+  const fetchBulkParamsQueryForm = () => {
+    const query = [];
+    if (selectAllMode) {
+      if (searchQuery) {
+        query.push(searchQuery);
+      }
+      if (!isEmpty(exclusionSet)) {
+        if (!isEmpty(query)) {
+          query.push('and');
+        }
+
+        query.push(idColumn);
+        query.push('!^');
+        query.push(`(${[...exclusionSet].join(',')})`);
+      }
+    } else {
+      query.push(idColumn);
+      query.push('^');
+      query.push(`(${[...inclusionSet].join(',')})`);
+    }
+
+    return query.join(' ');
+  };
+
+  const fetchBulkParams = (queryForm = false) => {
+    if (queryForm) {
+      return fetchBulkParamsQueryForm();
+    }
     const selected = {
       included: {
         ids: [],
@@ -199,6 +226,7 @@ export const useBulkSelect = ({
     } else {
       return {};
     }
+
     return selected;
   };
 

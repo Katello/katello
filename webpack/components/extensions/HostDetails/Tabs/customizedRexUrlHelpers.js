@@ -1,6 +1,6 @@
 import { REX_FEATURES } from './RemoteExecutionConstants';
 import { KATELLO_TRACER_PACKAGE } from './HostTracesConstants';
-import { errataInclusionType } from '../HostErrata/HostErrataConstants';
+import { ERRATA_SEARCH_QUERY } from '../HostErrata/HostErrataConstants';
 
 export const katelloPackageInstallUrl = ({ hostname }) => {
   const urlQuery = encodeURI([
@@ -21,18 +21,13 @@ export const resolveTraceUrl = ({ hostname, ids }) => {
 };
 
 export const errataInstallUrl = ({
-  hostname, ids, all, search,
+  hostname, search,
 }) => {
   const params = [
     `feature=${REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL}`,
-    `inputs[errata]=${ids.join(',')}`,
     `host_ids=name ^ (${hostname})`,
+    `inputs[${ERRATA_SEARCH_QUERY}]=${search}`,
   ];
-  params.push(`inputs[Inclusion Type]=${errataInclusionType(all)}`);
-
-  if (all && search) {
-    params.push(`inputs[Filter Errata]=${search}`);
-  }
   const urlQuery = encodeURI(params.join('&'));
   return `/job_invocations/new?${urlQuery}`;
 };

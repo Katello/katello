@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 import { renderWithRedux, patientlyWaitFor, within, fireEvent } from 'react-testing-lib-wrapper';
 import { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
-import { HOST_ERRATA_KEY, errataInclusionType } from '../../HostErrata/HostErrataConstants';
+import { HOST_ERRATA_KEY, ERRATA_SEARCH_QUERY } from '../../HostErrata/HostErrataConstants';
 import { REX_FEATURES } from '../RemoteExecutionConstants';
 import { ErrataTab } from '../ErrataTab';
 import mockErrataData from './errata.fixtures.json';
@@ -981,8 +981,7 @@ test('Can bulk apply via remote execution', async (done) => {
 
   // eslint-disable-next-line camelcase
   const jobInvocationBody = ({ job_invocation: { inputs, feature, search_query } }) =>
-    inputs['Inclusion Type'] === errataInclusionType(false) &&
-     inputs.errata === `${results[0].errata_id},${results[1].errata_id}` &&
+    inputs[ERRATA_SEARCH_QUERY] === `errata_id ^ (${results[0].errata_id},${results[1].errata_id})` &&
      feature === REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL &&
      // eslint-disable-next-line camelcase
      search_query === `name ^ (${hostName})`;
@@ -1030,8 +1029,7 @@ test('Can select all, exclude and bulk apply via remote execution', async (done)
     .reply(200, mockErrata);
 
   const jobInvocationBody = ({ job_invocation: { inputs } }) =>
-    inputs['Inclusion Type'] === errataInclusionType(true) &&
-    inputs.errata === results[0].errata_id;
+    inputs[ERRATA_SEARCH_QUERY] === `errata_id !^ (${results[0].errata_id})`;
 
   const resolveErrataScope = nockInstance
     .post(jobInvocations, jobInvocationBody)
@@ -1086,8 +1084,9 @@ test('Can apply errata in bulk via customized remote execution', async (done) =>
   expect(viaRexAction).toBeInTheDocument();
   expect(viaRexAction).toHaveAttribute(
     'href',
-    `/job_invocations/new?feature=${feature}&inputs%5Berrata%5D=${errata}&host_ids=name%20%5E%20(${hostName})&inputs%5BInclusion%20Type%5D=Include%20the%20errata%20below`,
+    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BErrata%20Search%20Query%5D=errata_id%20%5E%20(${errata})`,
   );
+
   viaRexAction.click();
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
@@ -1136,7 +1135,6 @@ test('Can apply a single erratum to the host via katello agent', async (done) =>
   assertNockRequest(scope, done);
 });
 
-
 test('Can apply a single erratum to the host via remote execution', async (done) => {
   const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
   const mockErrata = makeMockErrata({});
@@ -1147,8 +1145,7 @@ test('Can apply a single erratum to the host via remote execution', async (done)
     .reply(200, mockErrata);
 
   const jobInvocationBody = ({ job_invocation: { inputs } }) =>
-    inputs['Inclusion Type'] === errataInclusionType(false) &&
-    inputs.errata === results[0].errata_id;
+    inputs[ERRATA_SEARCH_QUERY] === `errata_id = ${results[0].errata_id}`;
 
   const resolveErrataScope = nockInstance
     .post(jobInvocations, jobInvocationBody)
@@ -1203,7 +1200,7 @@ test('Can apply a single erratum to the host via customized remote execution', a
   viaRexAction.click();
   expect(viaRexAction).toHaveAttribute(
     'href',
-    `/job_invocations/new?feature=${feature}&inputs%5Berrata%5D=${errataId}&host_ids=name%20%5E%20(${hostName})&inputs%5BInclusion%20Type%5D=Include%20the%20errata%20below`,
+    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BErrata%20Search%20Query%5D=errata_id%20=%20${errataId}`,
   );
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);

@@ -389,18 +389,8 @@ module Katello
         ::Katello::HostTracer.helpers_for(traces)
       end
 
-      def advisory_helpers(errata:, all: false, search: nil)
-        return [] if all && errata.blank? && search.blank?
-        bulk_params = { all: all, included: {search: search}, excluded: {} }
-
-        if all
-          bulk_params[:excluded][:ids] = errata
-        else
-          bulk_params[:included][:ids] = errata
-        end
-        ::Katello::BulkItemsHelper.new(bulk_params: bulk_params,
-                                       model_scope: ::Katello::Erratum.installable_for_hosts([self]),
-                                       key: :errata_id).fetch.pluck(:errata_id)
+      def advisory_ids(search:)
+        ::Katello::Erratum.installable_for_hosts([self]).search_for(search).pluck(:errata_id)
       end
 
       def valid_content_override_label?(content_label)
@@ -425,7 +415,7 @@ end
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
-        :installed_packages, :traces_helpers, :advisory_helpers
+        :installed_packages, :traces_helpers, :advisory_ids
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

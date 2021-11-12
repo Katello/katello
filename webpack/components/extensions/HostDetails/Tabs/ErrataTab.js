@@ -94,7 +94,7 @@ export const ErrataTab = () => {
   const response = useSelector(state => selectAPIResponse(state, HOST_ERRATA_KEY));
   const { results, ...metadata } = response;
   const status = useSelector(state => selectHostErrataStatus(state));
-
+  const errataSearchQuery = id => `errata_id = ${id}`;
   const {
     selectOne, isSelected, searchQuery, selectedCount, isSelectable,
     updateSearchQuery, selectNone, fetchBulkParams, ...selectAll
@@ -109,44 +109,24 @@ export const ErrataTab = () => {
 
   const applyErratumViaRemoteExecution = id => dispatch(installErrata({
     hostname,
-    errata: id,
-    all: false,
+    search: errataSearchQuery(id),
   }));
 
   const applyViaRemoteExecution = () => {
-    const selected = fetchBulkParams();
-    if (!isEmpty(selected)) {
-      let ids = selected.included.ids || [];
-      let search = null;
-      if (selected.all) {
-        ids = selected.excluded.ids || [];
-        ({ included: { search } } = selected);
-      }
+    dispatch(installErrata({
+      hostname, search: fetchBulkParams(true),
+    }));
 
-      dispatch(installErrata({
-        hostname, search, errata: [...ids].join(','), all: selected.all,
-      }));
-
-      const params = { page: metadata.page, per_page: metadata.per_page, search: metadata.search };
-      dispatch(getInstallableErrata(
-        hostId,
-        { ...params, include_applicable: toggleGroupState === ALL },
-      ));
-    }
+    const params = { page: metadata.page, per_page: metadata.per_page, search: metadata.search };
+    dispatch(getInstallableErrata(
+      hostId,
+      { ...params, include_applicable: toggleGroupState === ALL },
+    ));
   };
 
-  const bulkCustomizedRexUrl = () => {
-    const selected = fetchBulkParams();
-    let ids = selected?.included?.ids || [];
-    let search = null;
-    if (selected?.all) {
-      ids = selected?.excluded?.ids || [];
-      search = selected?.included?.search;
-    }
-    return errataInstallUrl({
-      hostname, ids, all: selected?.all, search,
-    });
-  };
+  const bulkCustomizedRexUrl = () => errataInstallUrl({
+    hostname, search: fetchBulkParams(true),
+  });
 
   const recalculateErrata = () => {
     setIsBulkActionOpen(false);
@@ -362,7 +342,7 @@ export const ErrataTab = () => {
                   {
                     title: __('Apply via customized remote execution'),
                     component: 'a',
-                    href: errataInstallUrl({ hostname, ids: [errataId] }),
+                    href: errataInstallUrl({ hostname, search: errataSearchQuery(errataId) }),
                   },
                 ];
 

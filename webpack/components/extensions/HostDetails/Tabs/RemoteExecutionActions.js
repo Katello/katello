@@ -3,7 +3,7 @@ import { REX_JOB_INVOCATIONS_KEY, REX_FEATURES } from './RemoteExecutionConstant
 import { foremanApi } from '../../../../services/api';
 import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
-import { errataInclusionType } from '../HostErrata/HostErrataConstants';
+import { ERRATA_SEARCH_QUERY } from '../HostErrata/HostErrataConstants';
 
 const errorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);
@@ -33,22 +33,12 @@ const katelloTracerResolveParams = ({ hostname, ids }) =>
   });
 
 const katelloHostErrataInstallParams = ({
-  hostname, errata, all = false, search,
-}) => {
-  const inputs = { 'Inclusion Type': errataInclusionType(all) };
-  if (errata) {
-    inputs.errata = errata;
-  }
-  if (all && search) {
-    inputs['Filter Errata'] = search;
-  }
-
-  return baseParams({
-    hostname,
-    inputs,
-    feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL,
-  });
-};
+  hostname, search,
+}) => baseParams({
+  hostname,
+  inputs: { [ERRATA_SEARCH_QUERY]: search },
+  feature: REX_FEATURES.KATELLO_HOST_ERRATA_INSTALL,
+});
 
 export const installPackage = ({ hostname, packageName }) => post({
   type: API_OPERATIONS.POST,
@@ -75,13 +65,13 @@ export const resolveTraces = ({ hostname, ids }) => post({
 });
 
 export const installErrata = ({
-  hostname, errata, all = false, search,
+  hostname, search,
 }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
   params: katelloHostErrataInstallParams({
-    hostname, errata, all, search,
+    hostname, search,
   }),
   handleSuccess: response => renderTaskStartedToast({
     humanized: { action: `Install Errata on ${hostname}` },
