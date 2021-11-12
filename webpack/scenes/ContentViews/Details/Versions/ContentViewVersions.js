@@ -7,6 +7,7 @@ import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { STATUS } from 'foremanReact/constants';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { selectIntervals } from 'foremanReact/redux/middlewares/IntervalMiddleware/IntervalSelectors.js';
 
 import TableWrapper from '../../../../components/Table/TableWrapper';
 import InactiveText from '../../components/InactiveText';
@@ -25,6 +26,7 @@ import TaskPresenter from '../../components/TaskPresenter/TaskPresenter';
 import { startPollingTask } from '../../../Tasks/TaskActions';
 import RemoveCVVersionWizard from './Delete/RemoveCVVersionWizard';
 import { hasPermission } from '../../helpers';
+import { pollTaskKey } from '../../../Tasks/helpers';
 
 const ContentViewVersions = ({ cvId, details }) => {
   const response = useSelector(state => selectCVVersions(state, cvId));
@@ -46,6 +48,7 @@ const ContentViewVersions = ({ cvId, details }) => {
   const [deleteVersion, setDeleteVersion] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const { permissions } = details;
+  const intervals = useSelector(state => selectIntervals(state));
 
   const columnHeaders = [
     __('Version'),
@@ -82,7 +85,7 @@ const ContentViewVersions = ({ cvId, details }) => {
     ];
   }, [cvId]);
 
-  const buildActiveTaskCells = useCallback((cvVersion) => {
+  const buildActiveTaskCells = useCallback((cvVersion, pollIntervals) => {
     const {
       version,
       description,
@@ -91,7 +94,7 @@ const ContentViewVersions = ({ cvId, details }) => {
     } = cvVersion;
     const { task } = activeHistory[0];
     const { result } = task || {};
-    if (result !== 'error') {
+    if (result !== 'error' && !pollIntervals[pollTaskKey(task.id)]) {
       dispatch(startPollingTask(task.id, task));
     }
 
@@ -122,7 +125,7 @@ const ContentViewVersions = ({ cvId, details }) => {
         } = cvVersion;
 
         const cells = activeHistory.length ?
-          buildActiveTaskCells(cvVersion) :
+          buildActiveTaskCells(cvVersion, intervals) :
           buildCells(cvVersion);
         newRows.push({
           cvVersionId: versionId,
@@ -139,7 +142,7 @@ const ContentViewVersions = ({ cvId, details }) => {
       const newRows = buildRows();
       setRows(newRows);
     }
-  }, [response, results, buildActiveTaskCells, buildCells, dispatch, loading, setRows]);
+  }, [response, results, buildActiveTaskCells, buildCells, dispatch, loading, setRows, intervals]);
 
   const onPromote = ({ cvVersionId, cvVersionName, cvVersionEnvironments }) => {
     setVersionIdToPromote(cvVersionId);
