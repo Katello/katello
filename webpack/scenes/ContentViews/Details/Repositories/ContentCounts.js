@@ -46,6 +46,8 @@ const ContentCounts = ({ productId, repoId, counts }) => {
     if (config) {
       const { pluralLowercase, singularLowercase, pluralLabel } = config.names;
       info = [pluralLowercase, singularLowercase, pluralLabel];
+    } else if (!info) {
+      info = ['unknown units', 'unknown unit', ''];
     }
     // package and rpm are the same
     if (type !== 'package' && count > 0) allCounts.push(appendCount(type, count, info, productId, repoId));
