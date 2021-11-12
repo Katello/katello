@@ -2,6 +2,10 @@ object @capsule
 
 attribute :last_sync_time
 
+node :unsyncable_content_types do
+  ::Katello::SmartProxyHelper.new(@capsule).unsyncable_content_types
+end
+
 child :active_sync_tasks => :active_sync_tasks do
   extends 'foreman_tasks/api/tasks/show'
 end

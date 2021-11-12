@@ -423,7 +423,7 @@ module Katello
         repos = Katello::Repository
         repos = repos.in_environment(environment) if environment
         repos = repos.in_content_views([content_view]) if content_view
-        repos
+        repos.respond_to?(:to_a) ? repos : repos.none
       end
 
       def repos_in_sync_history
