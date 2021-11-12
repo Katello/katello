@@ -50,7 +50,6 @@ module ::Actions::Katello::CapsuleContent
                   repository_id: repo.id,
                   environment_id: nil
                 }
-      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
@@ -69,6 +68,16 @@ module ::Actions::Katello::CapsuleContent
       end
     end
 
+    it 'plans correctly for a pulp3 yum repo without the proper plugin' do
+      with_pulp3_features(capsule_content.smart_proxy)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
+      capsule_content.smart_proxy.stubs(:capabilities).returns([])
+      repo = katello_repositories(:fedora_17_x86_64)
+      repo.root.update_attribute(:unprotected, true)
+      tree = plan_action_tree(action_class, capsule_content.smart_proxy, :repository_id => repo.id)
+      refute_tree_planned(tree, ::Actions::Pulp3::CapsuleContent::Sync)
+    end
+
     it 'plans correctly for a pulp3 yum repo' do
       with_pulp3_features(capsule_content.smart_proxy)
       capsule_content.smart_proxy.add_lifecycle_environment(environment)
@@ -80,7 +89,6 @@ module ::Actions::Katello::CapsuleContent
                   repository_id: repo.id,
                   environment_id: nil
       }
-      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
@@ -140,7 +148,6 @@ module ::Actions::Katello::CapsuleContent
                   environment_id: nil
                 }
 
-      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
 
       assert_tree_planned_with(tree, ::Actions::Pulp3::CapsuleContent::Sync) do |input|
@@ -170,14 +177,7 @@ module ::Actions::Katello::CapsuleContent
                   environment_id: nil
                 }
 
-      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
-
-      assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
-        assert_equal repo.pulp_id, input[:repo_pulp_id]
-        assert input[:sync_options][:remove_missing]
-      end
     end
 
     it 'plans correctly for a pulp yum repo' do
@@ -191,14 +191,8 @@ module ::Actions::Katello::CapsuleContent
                   environment_id: nil
                 }
 
-      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_steps(tree, ::Actions::Pulp3::ContentGuard::Refresh)
-      assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
-        assert_equal repo.pulp_id, input[:repo_pulp_id]
-        assert input[:sync_options][:remove_missing]
-      end
     end
 
     it 'plans correctly for a pulp2 file repo' do
@@ -211,14 +205,7 @@ module ::Actions::Katello::CapsuleContent
                   environment_id: nil
                 }
 
-      assert_tree_planned_with(tree, ::Actions::Pulp::Orchestration::Repository::RefreshRepos, options)
       assert_tree_planned_with(tree, ::Actions::Pulp3::Orchestration::Repository::RefreshRepos, options)
-      assert_tree_planned_with(tree, Actions::Pulp::Consumer::UnassociateUnits, capsule_id: capsule_content.smart_proxy.id, repo_pulp_id: repo.pulp_id)
-      assert_tree_planned_with(tree, Actions::Pulp::Consumer::SyncCapsule) do |input|
-        assert_equal capsule_content.smart_proxy.id, input[:capsule_id]
-        assert_equal repo.pulp_id, input[:repo_pulp_id]
-        refute input[:sync_options][:remove_missing]
-      end
     end
 
     it 'allows limiting scope of the syncing to one environment' do
