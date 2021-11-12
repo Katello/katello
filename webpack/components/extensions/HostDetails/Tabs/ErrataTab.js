@@ -18,7 +18,6 @@ import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import IsoDate from 'foremanReact/components/common/dates/IsoDate';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
-import { isEmpty } from 'lodash';
 import SelectableDropdown from '../../../SelectableDropdown';
 import { useSet, useBulkSelect } from '../../../../components/Table/TableHooks';
 import TableWrapper from '../../../../components/Table/TableWrapper';
@@ -114,7 +113,7 @@ export const ErrataTab = () => {
 
   const applyViaRemoteExecution = () => {
     dispatch(installErrata({
-      hostname, search: fetchBulkParams(true),
+      hostname, search: fetchBulkParams(),
     }));
 
     const params = { page: metadata.page, per_page: metadata.per_page, search: metadata.search };
@@ -125,7 +124,7 @@ export const ErrataTab = () => {
   };
 
   const bulkCustomizedRexUrl = () => errataInstallUrl({
-    hostname, search: fetchBulkParams(true),
+    hostname, search: (selectedCount > 0) ? fetchBulkParams() : '',
   });
 
   const recalculateErrata = () => {
@@ -135,13 +134,11 @@ export const ErrataTab = () => {
 
   const applyByKatelloAgent = () => {
     const selected = fetchBulkParams();
-    if (!isEmpty(selected)) {
-      const parameters = { bulk_errata_ids: JSON.stringify(selected) };
-      setIsBulkActionOpen(false);
-      selectNone();
-      dispatch(applyViaKatelloAgent(hostId, parameters));
-    }
+    setIsBulkActionOpen(false);
+    selectNone();
+    dispatch(applyViaKatelloAgent(hostId, { search: selected }));
   };
+
   const applyErratumViaKatelloAgent = id => dispatch(applyViaKatelloAgent(
     hostId,
     { errata_ids: [id] },

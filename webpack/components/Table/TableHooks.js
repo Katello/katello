@@ -178,56 +178,19 @@ export const useBulkSelect = ({
     }
   };
 
-  const fetchBulkParamsQueryForm = () => {
-    const query = [];
-    if (selectAllMode) {
-      if (searchQuery) {
-        query.push(searchQuery);
-      }
-      if (!isEmpty(exclusionSet)) {
-        if (!isEmpty(query)) {
-          query.push('and');
-        }
-
-        query.push(idColumn);
-        query.push('!^');
-        query.push(`(${[...exclusionSet].join(',')})`);
-      }
-    } else {
-      query.push(idColumn);
-      query.push('^');
-      query.push(`(${[...inclusionSet].join(',')})`);
-    }
-
-    return query.join(' ');
-  };
-
-  const fetchBulkParams = (queryForm = false) => {
-    if (queryForm) {
-      return fetchBulkParamsQueryForm();
-    }
-    const selected = {
-      included: {
-        ids: [],
-        search: null,
-      },
-      excluded: {
-        ids: [],
-      },
-      all: false,
+  const fetchBulkParams = () => {
+    const searchQueryWithExclusionSet = () => {
+      const query = [searchQuery,
+        !isEmpty(exclusionSet) && `${idColumn} !^ (${[...exclusionSet].join(',')})`];
+      return query.filter(item => item).join(' and ');
     };
 
-    if (selectAllMode) {
-      selected.included.search = searchQuery;
-      selected.excluded.ids = [...exclusionSet];
-      selected.all = true;
-    } else if (!isEmpty(inclusionSet)) {
-      selected.included.ids = [...inclusionSet];
-    } else {
-      return {};
-    }
+    const searchQueryWithInclusionSet = () => {
+      if (isEmpty(inclusionSet)) throw new Error('No Items Selected');
+      return `${idColumn} ^ (${[...inclusionSet].join(',')})`;
+    };
 
-    return selected;
+    return selectAllMode ? searchQueryWithExclusionSet() : searchQueryWithInclusionSet();
   };
 
   const prevSearchRef = usePrevious({ searchQuery });

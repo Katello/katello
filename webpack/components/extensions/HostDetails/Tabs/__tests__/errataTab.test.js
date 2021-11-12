@@ -843,11 +843,10 @@ test('Can bulk apply via katello agent', async (done) => {
     .query(defaultQuery)
     .reply(200, mockErrata);
 
-  const postBody = ({ bulk_errata_ids: bulkErrataIds }) => {
-    const { included: { ids }, all } = JSON.parse(bulkErrataIds);
-    return isEqual(ids, [results[0].errata_id, results[1].errata_id]) && !all;
+  const postBody = ({ search }) => {
+    const [firstResult, secondResult] = results;
+    return isEqual(search, `errata_id ^ (${firstResult.errata_id},${secondResult.errata_id})`);
   };
-
   const resolveErrataScope = nockInstance
     .put(applyByKatelloAgentUrl, postBody)
     .reply(201, mockResolveErrataTask);
@@ -890,9 +889,9 @@ test('Can select all, exclude and bulk apply via katello agent', async (done) =>
     .query(defaultQuery)
     .reply(200, mockErrata);
 
-  const postBody = ({ bulk_errata_ids: bulkErrataIds }) => {
-    const { excluded: { ids }, all } = JSON.parse(bulkErrataIds);
-    return isEqual(ids, [results[0].errata_id]) && all;
+  const postBody = ({ search }) => {
+    const [firstResult] = results;
+    return isEqual(search, `errata_id !^ (${firstResult.errata_id})`);
   };
 
   const resolveErrataScope = nockInstance
@@ -1084,7 +1083,7 @@ test('Can apply errata in bulk via customized remote execution', async (done) =>
   expect(viaRexAction).toBeInTheDocument();
   expect(viaRexAction).toHaveAttribute(
     'href',
-    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BErrata%20Search%20Query%5D=errata_id%20%5E%20(${errata})`,
+    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BErrata%20search%20query%5D=errata_id%20%5E%20(${errata})`,
   );
 
   viaRexAction.click();
@@ -1200,7 +1199,7 @@ test('Can apply a single erratum to the host via customized remote execution', a
   viaRexAction.click();
   expect(viaRexAction).toHaveAttribute(
     'href',
-    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BErrata%20Search%20Query%5D=errata_id%20=%20${errataId}`,
+    `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BErrata%20search%20query%5D=errata_id%20=%20${errataId}`,
   );
   assertNockRequest(autocompleteScope);
   assertNockRequest(scope, done);
