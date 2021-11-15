@@ -78,11 +78,6 @@ module Katello
             PulpcoreClient::ImportersPulpImportsApi.expects(:new)
             core.import_api
           end
-
-          def test_orphans_api
-            PulpcoreClient::OrphansApi.expects(:new)
-            core.orphans_api
-          end
         end
       end
     end

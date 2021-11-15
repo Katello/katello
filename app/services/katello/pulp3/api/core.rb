@@ -102,7 +102,7 @@ module Katello
         end
 
         def orphans_api
-          PulpcoreClient::OrphansApi.new(core_api_client)
+          PulpcoreClient::OrphansCleanupApi.new(core_api_client)
         end
 
         def artifacts_api
@@ -152,7 +152,7 @@ module Katello
         end
 
         def delete_orphans
-          [orphans_api.delete]
+          [orphans_api.cleanup(PulpcoreClient::OrphansCleanup.new(orphan_protection_time: Setting[:orphan_protection_time]))]
         end
 
         def delete_remote(remote_href)
