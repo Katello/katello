@@ -134,6 +134,10 @@ module Katello
       scoped_search_results(query: blank_query, page: page, per_page: per_page, error: message)
     end
 
+    def skip_session
+      request.session_options[:skip] = true
+    end
+
     protected
 
     def scoped_search_query(query, group)
