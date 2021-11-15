@@ -9,10 +9,6 @@ module Katello
       api_base_url "/katello/api"
     end
 
-    def resource_list
-      render json: self.class.rhsm_resource_list
-    end
-
     def rhsm_resource_list
       # The RHSM resource list is required to interact with RHSM on the client.
       # When requested, it will return a list of the resources (href & rel) defined by katello
@@ -22,27 +18,8 @@ module Katello
       render json: self.class.rhsm_resource_list
     end
 
-    def self.resource_list
-      @resource_list ||= generate_resource_list
-    end
-
     def self.rhsm_resource_list
       @rhsm_resource_list ||= generate_rhsm_resource_list
-    end
-
-    def self.generate_resource_list
-      all_routes = Engine.routes.routes
-      all_routes = all_routes.collect { |r| r.path.spec.to_s }
-
-      api_root_routes = all_routes.select do |path|
-        path =~ %r{^/katello/api(\(/:api_version\))?/[^/]+/:id\(\.:format\)$}
-      end
-      api_root_routes = api_root_routes.collect do |path|
-        path = path.sub("(/:api_version)", "")
-        path[0..-(":id(.:format)".length + 1)]
-      end
-
-      api_root_routes.collect! { |r| { :rel => r["/katello/api/".size..-2], :href => r } }
     end
 
     def self.generate_rhsm_resource_list
