@@ -22,8 +22,7 @@ angular.module('Bastion.organizations').service('FencedPages', ['$state',
             'subscriptions',
             'sync-plans',
             'files',
-            'debs',
-            'ostree-branches'
+            'debs'
         ];
 
         function getRootPath(path) {

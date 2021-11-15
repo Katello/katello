@@ -29,7 +29,6 @@ module BastionKatello
           debs
           docker_tags
           files
-          ostree_branches
           errata
           packages
           lifecycle_environments

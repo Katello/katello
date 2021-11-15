@@ -52,16 +52,6 @@
                 type: Erratum,
                 repositoryType: 'yum'
             },
-            'ostree-branches': {
-                type: OstreeBranch,
-                repositoryType: 'ostree',
-                params: {
-                    'content_type': "ostree",
-                    'content_view_version_id': $scope.$stateParams.versionId,
-                    'sort_by': 'version',
-                    'sort_order': 'DESC'
-                }
-            },
             'module-streams': {
                 type: ModuleStream,
                 repositoryType: 'yum',

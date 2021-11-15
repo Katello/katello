@@ -130,16 +130,6 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             parent: 'content-view.version.details'
         }
     })
-    .state('content-view.version.ostree-branches', {
-        url: '/ostree_branches',
-        permission: 'view_content_views',
-        controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-ostree-branches.html',
-        ncyBreadcrumb: {
-            label: '{{ "OSTree Branches" | translate }}',
-            parent: 'content-view.version.details'
-        }
-    })
     .state('content-view.version.module-streams', {
         url: '/module_streams',
         permission: 'view_content_views',

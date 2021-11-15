@@ -56,7 +56,6 @@ export const requestSuccessResponse = Immutable({
       },
       last_sync: null,
       content_counts: {
-        ostree_branch: 0,
         docker_manifest: 0,
         docker_manifest_list: 0,
         docker_tag: 0,
@@ -97,7 +96,6 @@ export const requestSuccessResponse = Immutable({
       },
       last_sync: null,
       content_counts: {
-        ostree_branch: 0,
         docker_manifest: 0,
         docker_manifest_list: 0,
         docker_tag: 0,

@@ -3,7 +3,6 @@ describe('Controller: NewRepositoryController', function() {
         FormUtils,
         Notification,
         DownloadPolicy,
-        OstreeUpstreamSyncPolicy,
         YumContentUnits,
         $httpBackend,
         HttpProxyPolicy,
@@ -23,7 +22,6 @@ describe('Controller: NewRepositoryController', function() {
             HttpProxy = $injector.get('MockResource').$new();
 
         DownloadPolicy = $injector.get('DownloadPolicy');
-        OstreeUpstreamSyncPolicy = $injector.get('OstreeUpstreamSyncPolicy');
         YumContentUnits = $injector.get('YumContentUnits');
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');

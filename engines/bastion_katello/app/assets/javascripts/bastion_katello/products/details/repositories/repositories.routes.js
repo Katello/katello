@@ -126,15 +126,6 @@
                 parent: 'product.repository.info'
             }
         })
-        .state('product.repository.manage-content.ostree-branches', {
-            url: '/ostree_branches',
-            permission: 'view_products',
-            templateUrl: 'products/details/repositories/details/views/repository-manage-ostree-branches.html',
-            ncyBreadcrumb: {
-                label: "{{'OSTree Branches' | translate }}",
-                parent: 'product.repository.info'
-            }
-        })
         .state('product.repository.manage-content.module-streams', {
             url: '/module_streams',
             permission: 'view_products',
