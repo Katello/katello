@@ -17,7 +17,7 @@ node :next_version do |content_view|
 end
 
 child :last_task => :last_task do |_task|
-  attributes :id
+  attributes :id, :started_at
   attributes :result => :result
   node :last_sync_words do |object|
     if object.try(:started_at)

@@ -54,7 +54,11 @@ export default () => [
           {
             title: __('Sync Status'),
             getProperty: unit =>
-              <LastSync lastSyncWords={unit?.last_sync_words} lastSync={unit?.last_sync} />,
+              (<LastSync
+                startedAt={unit?.last_sync?.started_at}
+                lastSyncWords={unit?.last_sync_words}
+                lastSync={unit?.last_sync}
+              />),
           },
           {
             title: __('Content Count'),
@@ -128,7 +132,11 @@ export default () => [
           {
             title: __('Sync Status'),
             getProperty: unit =>
-              <LastSync lastSyncWords={unit?.last_sync_words} lastSync={unit?.last_sync} />,
+              (<LastSync
+                startedAt={unit?.started_at}
+                lastSyncWords={unit?.last_sync_words}
+                lastSync={unit?.last_sync}
+              />),
           },
           {
             title: __('Content Count'),
