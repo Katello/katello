@@ -43,7 +43,8 @@ module Katello
     RHEL6 = 'rhel-6'.freeze
     RHEL7 = 'rhel-7'.freeze
     RHEL8 = 'rhel-8'.freeze
-    ALLOWED_OS_VERSIONS = [RHEL6, RHEL7, RHEL8].freeze
+    RHEL9 = 'rhel-9'.freeze
+    ALLOWED_OS_VERSIONS = [RHEL6, RHEL7, RHEL8, RHEL9].freeze
 
     belongs_to :product, :inverse_of => :root_repositories, :class_name => "Katello::Product"
     has_one :provider, :through => :product
