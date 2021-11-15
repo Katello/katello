@@ -90,8 +90,7 @@ module Katello
           errata.count != pulp_counts['erratum'].to_i ||
           package_groups.count != pulp_counts['package_group'].to_i ||
           docker_manifests.count != pulp_counts['docker_manifest'].to_i ||
-          docker_tags.count != pulp_counts['docker_tag'].to_i ||
-          ostree_branches.count != pulp_counts['ostree'].to_i
+          docker_tags.count != pulp_counts['docker_tag'].to_i
       end
 
       def empty_in_pulp?

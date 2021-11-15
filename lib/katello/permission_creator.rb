@@ -254,7 +254,6 @@ module Katello
                                                             :compare,
                                                             :repositories],
                            'katello/api/v2/file_units' => [:index, :show, :auto_complete_search, :compare],
-                           'katello/api/v2/ostree_branches' => [:index, :show, :auto_complete_search, :compare],
                            'katello/api/v2/errata' => [:index, :show, :auto_complete_search, :compare],
                            'katello/api/v2/module_streams' => [:index, :show, :auto_complete_search, :compare, :auto_complete_name],
                            'katello/api/v2/ansible_collections' => [:index, :show, :auto_complete_search, :compare],

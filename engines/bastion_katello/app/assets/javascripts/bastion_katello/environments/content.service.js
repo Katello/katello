@@ -51,11 +51,6 @@
                 display: translate('Container Image Tags'),
                 repositoryType: 'docker'
             }, {
-                state: 'ostree',
-                resource: 'OstreeBranch',
-                display: translate('OSTree Branches'),
-                repositoryType: 'ostree'
-            }, {
                 state: 'module-streams',
                 resource: 'ModuleStream',
                 display: translate('Module Streams'),

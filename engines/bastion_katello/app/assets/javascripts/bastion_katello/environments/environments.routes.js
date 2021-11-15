@@ -108,17 +108,6 @@ angular.module('Bastion.environments').config(['$stateProvider', function ($stat
             parent: 'environment.details'
         }
     })
-    .state('environment.ostree', {
-        url: '/ostree?repositoryId&contentViewId',
-        reloadOnSearch: false,
-        permission: 'view_lifecycle_environments',
-        controller: 'EnvironmentContentController',
-        templateUrl: 'environments/details/views/environment-ostree.html',
-        ncyBreadcrumb: {
-            label: '{{ "OSTree Branches" | translate }}',
-            parent: 'environment.details'
-        }
-    })
     .state('environment.content-views', {
         url: '/content-views',
         reloadOnSearch: false,

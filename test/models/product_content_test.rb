@@ -61,13 +61,6 @@ module Katello
       @content.update(content_type: ::Katello::Repository::CANDLEPIN_DOCKER_TYPE)
       refute_includes ProductContent.displayable, @product_content
 
-      @content.update(content_type: ::Katello::Repository::CANDLEPIN_OSTREE_TYPE)
-      ::Katello::RepositoryTypeManager.stubs(:enabled?).returns(true)
-      assert_includes ProductContent.displayable, @product_content
-
-      ::Katello::RepositoryTypeManager.stubs(:enabled?).returns(false)
-      refute_includes ProductContent.displayable, @product_content
-
       @content.update(content_type: 'arbitrary type')
       assert_includes ProductContent.displayable, @product_content
     end

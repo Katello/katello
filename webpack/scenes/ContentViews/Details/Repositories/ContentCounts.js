@@ -14,7 +14,6 @@ const repoLabels = {
   docker_manifest_list: ['container manifest lists', 'container manifest list', 'content/docker_manifest_lists'],
   docker_tag: ['container tags', 'container tag', 'content/docker_tags'],
   file: ['files', 'file', 'content/files'],
-  ostree_branch: ['ostree branches', 'ostree branch', 'content/ostree_branches'],
   package_group: ['package groups', 'package group', 'package_groups'],
   srpm: ['source RPMs', 'source RPM', 'source_rpms'], // no link?
 };

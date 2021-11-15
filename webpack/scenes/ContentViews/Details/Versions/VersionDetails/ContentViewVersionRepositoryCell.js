@@ -50,9 +50,6 @@ const ContentViewVersionRepositoryCell = ({
       name: __('Module streams'),
       url: `products/${id}/repositories/${libraryInstanceId}/content/module_streams`,
     },
-    ostree_branch: {
-      name: __('OStree branches'),
-    },
     package: {
       name: __('Packages'),
       url: `products/${id}/repositories/${libraryInstanceId}/content/packages`,

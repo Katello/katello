@@ -80,11 +80,6 @@ describe('Controller: ContentViewsVersionContentController', function() {
         expect($scope.nutupane.resource).toBe(Erratum);
     });
 
-    it("setups up OSTree Branches resource when is state is 'ostree-branches'", function() {
-        SetupController('content-view.version.ostree-branches');
-        expect($scope.nutupane.resource).toBe(OstreeBranch);
-    });
-
     it("setups up docker Repo resource when is state is 'docker content'", function() {
         SetupController('content-view.version.docker');
         expect($scope.nutupane.resource).toBe(Repository);
