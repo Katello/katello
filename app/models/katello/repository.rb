@@ -79,9 +79,6 @@ module Katello
     has_many :repository_docker_meta_tags, :class_name => "Katello::RepositoryDockerMetaTag", :dependent => :delete_all
     has_many :docker_meta_tags, :through => :repository_docker_meta_tags
 
-    has_many :repository_ostree_branches, :class_name => "Katello::RepositoryOstreeBranch", :dependent => :delete_all
-    has_many :ostree_branches, :through => :repository_ostree_branches
-
     has_many :repository_debs, :class_name => "Katello::RepositoryDeb", :dependent => :delete_all
     has_many :debs, :through => :repository_debs
 
@@ -178,7 +175,7 @@ module Katello
     delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :arch, :label, :url, :unprotected,
              :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
-             :upstream_authentication_token, :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases,
+             :upstream_authentication_token, :deb_releases,
              :deb_components, :deb_architectures, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id,
              :ssl_client_key_id, :os_versions, :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist,
              :ansible_collection_requirements, :ansible_collection_auth_url, :ansible_collection_auth_token,
@@ -259,13 +256,7 @@ module Katello
     end
 
     def self.undisplayable_types
-      ret = [::Katello::Repository::CANDLEPIN_DOCKER_TYPE]
-
-      unless ::Katello::RepositoryTypeManager.enabled?(Repository::OSTREE_TYPE)
-        ret << ::Katello::Repository::CANDLEPIN_OSTREE_TYPE
-      end
-
-      ret
+      [::Katello::Repository::CANDLEPIN_DOCKER_TYPE]
     end
 
     def self.in_organization(org)
@@ -693,10 +684,6 @@ module Katello
       end
     end
 
-    def ostree_branch_names
-      self.ostree_branches.map(&:name)
-    end
-
     def units_for_removal(ids, type_class = nil)
       removable_unit_association = unit_type_for_removal(type_class)
       table_name = removable_unit_association.table_name
@@ -737,21 +724,6 @@ module Katello
         distribution_variant: self.distribution_variant,
         distribution_bootable: self.distribution_bootable
       }
-    end
-
-    def check_duplicate_branch_names(branch_names)
-      dupe_branch_checker = {}
-      dupe_branch_checker.default = 0
-      branch_names.each do |branch|
-        dupe_branch_checker[branch] += 1
-      end
-
-      duplicate_branch_names = dupe_branch_checker.select { |_, value| value > 1 }.keys
-
-      unless duplicate_branch_names.empty?
-        fail ::Katello::Errors::ConflictException,
-              _("Duplicate branches specified - %{branches}") % { branches: duplicate_branch_names.join(", ")}
-      end
     end
 
     # deleteable? is already taken by the authorization mixin

@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, Notification, repository, DownloadPolicy, OstreeUpstreamSyncPolicy, YumContentUnits, HttpProxy, HttpProxyPolicy, RepositoryTypesService;
+    var $scope, $state, translate, Notification, repository, DownloadPolicy, YumContentUnits, HttpProxy, HttpProxyPolicy, RepositoryTypesService;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -16,7 +16,6 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
         repository = new Repository();
         DownloadPolicy = $injector.get("DownloadPolicy");
-        OstreeUpstreamSyncPolicy = $injector.get("OstreeUpstreamSyncPolicy");
         YumContentUnits = $injector.get("YumContentUnits");
         HttpProxyPolicy = $injector.get("HttpProxyPolicy");
         RepositoryTypesService.genericContentTypes = function() {};

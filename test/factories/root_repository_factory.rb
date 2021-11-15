@@ -35,7 +35,6 @@ FactoryBot.define do
     trait :ostree_root do
       content_type { "ostree" }
       download_policy { "" }
-      ostree_upstream_sync_policy { "latest" }
     end
 
     trait :deb_root do

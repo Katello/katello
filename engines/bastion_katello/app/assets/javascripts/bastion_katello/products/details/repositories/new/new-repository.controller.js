@@ -14,7 +14,6 @@
  * @requires BastionConfig
  * @requires Checksum
  * @requires DownloadPolicy
- * @requires OstreeUpstreamSyncPolicy
  * @requires Architecture
  * @requires RepositoryTypesService
  * @requires OSVersions
@@ -24,8 +23,8 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
-        function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, OSVersions) {
+    ['$scope', '$sce', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'Architecture', 'RepositoryTypesService', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
+        function ($scope, $sce, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, Architecture, RepositoryTypesService, HttpProxy, HttpProxyPolicy, OSVersions) {
 
             function success() {
                 Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -63,8 +62,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
             $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
                 'checksum_type': null, 'mirror_on_sync': true, 'verify_ssl_on_sync': true,
-                'download_policy': BastionConfig.defaultDownloadPolicy, 'arch': null,
-                'ostree_upstream_sync_policy': 'latest'});
+                'download_policy': BastionConfig.defaultDownloadPolicy, 'arch': null});
 
             $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
                 $scope.page.loading = false;
@@ -78,7 +76,6 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
             $scope.checksums = Checksum.checksums;
             $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
-            $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
 
             $scope.$watch('repository.name', function () {
                 if ($scope.repositoryForm && $scope.repositoryForm.name) {

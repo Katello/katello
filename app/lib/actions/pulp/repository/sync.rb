@@ -77,8 +77,6 @@ module Actions
             Presenters::FileUnitPresenter.new(self)
           elsif repo.try(:docker?)
             Presenters::DockerPresenter.new(self)
-          elsif repo.try(:ostree?)
-            Presenters::OstreePresenter.new(self)
           elsif repo.try(:deb?)
             Presenters::DebPresenter.new(self)
           end

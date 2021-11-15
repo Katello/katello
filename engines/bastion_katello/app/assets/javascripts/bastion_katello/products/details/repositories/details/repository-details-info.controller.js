@@ -10,7 +10,6 @@
  * @requires CurrentOrganization
  * @requires Checksum
  * @requires DownloadPolicy
- * @requires OstreeUpstreamSyncPolicy
  * @requires Architecture
  * @requires HttpProxyPolicy
  * @requires OSVersions
@@ -20,8 +19,8 @@
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions', 'RepositoryTypesService',
-        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions, RepositoryTypesService) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions', 'RepositoryTypesService',
+        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions, RepositoryTypesService) {
             $scope.organization = CurrentOrganization;
 
             $scope.progress = {uploading: false};
@@ -199,7 +198,6 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.checksums = Checksum.checksums;
             $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
-            $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
 
             $scope.checksumTypeDisplay = function (checksum) {
                 return Checksum.checksumType(checksum);
