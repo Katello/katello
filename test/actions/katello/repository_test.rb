@@ -154,7 +154,7 @@ module ::Actions::Katello::Repository
 
       assert_action_planned_with action, ::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, in_use_repository.library_instances_inverse
 
-      refute_action_planned action, ::Actions::Katello::Product::ContentDestroy
+      assert_action_planned_with action, ::Actions::Katello::Product::ContentDestroy, in_use_repository.root
     end
 
     it 'plans when custom and no clones' do
