@@ -14,8 +14,6 @@ Katello::Engine.routes.draw do
         # re-routes alphabetical
         ##############################
 
-        root :to => 'root#resource_list'
-
         api_resources :capsules, :only => [:index, :show] do
           member do
             resource :content, :only => [], :controller => 'capsule_content' do
