@@ -34,7 +34,6 @@ module Katello
       'katello/api/v2/repositories/gpg_key_content',
       'katello/api/rhsm/candlepin_proxies/server_status',
       'katello/api/rhsm/candlepin_proxies/consumer_activate',
-      'katello/api/v2/root/resource_list',
       'katello/api/v2/ping/index',
       'katello/api/v2/ping/server_status',
       'katello/api/v2/katello_ping/index',

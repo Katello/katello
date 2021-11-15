@@ -6,12 +6,6 @@ module Katello
       setup_controller_defaults_api
     end
 
-    def test_resource_list
-      get :resource_list
-
-      assert_response :success
-    end
-
     def test_rhsm_resource_list
       results = JSON.parse(get(:rhsm_resource_list).body)
 
