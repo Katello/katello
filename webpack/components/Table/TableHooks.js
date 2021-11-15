@@ -186,7 +186,7 @@ export const useBulkSelect = ({
     };
 
     const searchQueryWithInclusionSet = () => {
-      if (isEmpty(inclusionSet)) throw new Error('No Items Selected');
+      if (isEmpty(inclusionSet)) throw new Error('Cannot build a search query with no items selected');
       return `${idColumn} ^ (${[...inclusionSet].join(',')})`;
     };
 
