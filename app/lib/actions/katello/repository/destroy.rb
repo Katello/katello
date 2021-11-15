@@ -37,7 +37,7 @@ module Actions
               handle_redhat_content(repository) unless skip_environment_update
             else
               if destroy_content && !skip_environment_update
-                handle_custom_content(repository)
+                handle_custom_content(repository, remove_from_content_view_versions)
               end
             end
           end
@@ -57,9 +57,9 @@ module Actions
           end
         end
 
-        def handle_custom_content(repository)
+        def handle_custom_content(repository, remove_from_content_view_versions)
           #if this is the last instance of a custom repo, destroy the content
-          if repository.root.repositories.where.not(id: repository.id).empty?
+          if remove_from_content_view_versions || repository.root.repositories.where.not(id: repository.id).empty?
             plan_action(::Actions::Katello::Product::ContentDestroy, repository.root)
           end
         end
