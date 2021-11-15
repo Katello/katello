@@ -272,6 +272,7 @@ class ManageManifestModal extends Component {
                             <FormControl
                               componentClass="select"
                               placeholder="select"
+                              defaultValue={organization.cdn_configuration.ssl_ca_credential_id}
                               onChange={this.updateCdnSSLCaCredentialId}
                             >
                               <option value="" />
