@@ -153,7 +153,7 @@ class ManageManifestModal extends Component {
       </option>
     ));
 
-    const cdnPasswordDefaultValue = organization.cdn_configuration.password_exists ?
+    const cdnPasswordDefaultValue = organization?.cdn_configuration?.password_exists ?
       PASSWORD_PLACEHOLDER : this.state.cdn_password;
 
     const actionInProgress = (taskInProgress || manifestActionStarted);
