@@ -154,7 +154,8 @@ class Setting::Content < Setting
       self.set('bulk_load_size', N_('The number of items fetched from a single paged Pulp API call.'), 2000,
                N_('Pulp bulk load size')),
       self.set('upload_profiles_without_dynflow', N_('Allow Katello to update host installed packages, enabled repos, and module inventory directly instead of wrapped in Dynflow tasks (try turning off if Puma processes are using too much memory)'), true,
-               N_('Upload profiles without Dynflow'))
+               N_('Upload profiles without Dynflow')),
+      self.set('orphan_protection_time', N_('Time in minutes to consider orphan content as orphaned.'), 1440, N_('Orphaned Content Protection Time'))
     ]
   end
 
