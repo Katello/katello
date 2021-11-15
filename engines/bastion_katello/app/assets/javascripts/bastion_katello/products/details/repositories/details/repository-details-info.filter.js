@@ -1,13 +1,3 @@
-/**
- * @ngdoc object
- * @name  Bastion.repositories.controller:OstreeUpstreamSyncPolicyFilter
- *
- * @requires translate
- * @requires OstreeUpstreamSyncPolicy
- * @requires YumContentUnits
- * @requires HttpProxyPolicy
-**/
-
 angular.module('Bastion.components.formatters').filter('upstreamPasswordFilter', [function () {
     return function (displayValue, repository) {
         if (repository["upstream_auth_exists"]) {

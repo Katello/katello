@@ -18,18 +18,10 @@ module Katello
     IGNORABLE_CONTENT_UNIT_TYPES = %w(srpm).freeze
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
 
-    OSTREE_UPSTREAM_SYNC_POLICY_LATEST = "latest".freeze
-    OSTREE_UPSTREAM_SYNC_POLICY_ALL = "all".freeze
-    OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM = "custom".freeze
-    OSTREE_UPSTREAM_SYNC_POLICIES = [OSTREE_UPSTREAM_SYNC_POLICY_LATEST, OSTREE_UPSTREAM_SYNC_POLICY_ALL, OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM].freeze
-
     SUBSCRIBABLE_TYPES = [Repository::YUM_TYPE, Repository::OSTREE_TYPE, Repository::DEB_TYPE].freeze
 
     CONTENT_ATTRIBUTE_RESTRICTIONS = {
-      :ostree_upstream_sync_depth => [Repository::OSTREE_TYPE],
-      :ostree_upstream_sync_policy => [Repository::OSTREE_TYPE],
       :download_policy => [Repository::YUM_TYPE, Repository::DEB_TYPE]
-
     }.freeze
 
     NO_DEFAULT_HTTP_PROXY = 'none'.freeze
@@ -59,8 +51,6 @@ module Katello
     has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference', :foreign_key => :root_repository_id,
              :dependent => :destroy, :inverse_of => :root_repository
 
-    before_validation :update_ostree_upstream_sync_policy
-
     validates_lengths_from_database :except => [:label]
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -86,9 +76,6 @@ module Katello
     validates :url, presence: true, if: :ostree?
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
     validates :product_id, :presence => true
-    validates :ostree_upstream_sync_policy, :inclusion => {:in => OSTREE_UPSTREAM_SYNC_POLICIES, :allow_blank => true}, :if => :ostree?
-    validates :ostree_upstream_sync_depth, :presence => true, :numericality => { :only_integer => true },
-      :if => proc { |r| r.ostree? && r.ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM }
     validates :content_type, :inclusion => {
       :in => ->(_) { Katello::RepositoryTypeManager.enabled_repository_types.keys },
       :allow_blank => false,
@@ -200,34 +187,6 @@ module Katello
         end
       rescue
         errors.add(:base, _('Requirements is not valid yaml.'))
-      end
-    end
-
-    def update_ostree_upstream_sync_policy
-      return unless ostree?
-      if self.ostree_upstream_sync_policy.blank?
-        self.ostree_upstream_sync_policy = OSTREE_UPSTREAM_SYNC_POLICY_LATEST
-      end
-
-      if self.ostree_upstream_sync_policy_changed? &&
-        previous_changes[:ostree_upstream_sync_policy].present?
-        self.ostree_upstream_sync_depth = nil unless self.ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM
-      end
-    end
-
-    def compute_ostree_upstream_sync_depth
-      if ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM
-        ostree_upstream_sync_depth
-      elsif ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_ALL
-        -1
-      else
-        0
-      end
-    end
-
-    def ensure_no_ostree_upstream_sync_policy
-      if !ostree? && ostree_upstream_sync_policy.present?
-        errors.add(:ostree_upstream_sync_policy, N_("cannot be set for non-ostree repositories."))
       end
     end
 
@@ -372,7 +331,7 @@ module Katello
 
     def pulp_update_needed?
       changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
-                                 upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignorable_content
+                                 upstream_username upstream_password ignorable_content
                                  ssl_ca_cert_id ssl_client_cert_id ssl_client_key_id http_proxy_policy http_proxy_id download_concurrency)
       changeable_attributes += %w(name container_repository_name docker_tags_whitelist) if docker?
       changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?

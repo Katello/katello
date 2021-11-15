@@ -122,16 +122,6 @@ Foreman::Plugin.register :katello do
          :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::FILE_TYPE) }
 
     menu :top_menu,
-         :ostree_branches,
-         :caption => N_('OSTree Branches'),
-         :url => '/ostree_branches',
-         :url_hash => {:controller => 'katello/api/v2/ostree_branches',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false,
-         :if => lambda { ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::OSTREE_TYPE) }
-
-    menu :top_menu,
          :packages,
          :caption => N_('Packages'),
          :url => '/packages',

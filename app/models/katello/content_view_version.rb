@@ -314,10 +314,6 @@ module Katello
       FileUnit.in_repositories(archived_repos)
     end
 
-    def ostree_branches
-      OstreeBranch.in_repositories(archived_repos)
-    end
-
     def docker_manifests
       DockerManifest.in_repositories(archived_repos)
     end
@@ -357,8 +353,7 @@ module Katello
       update_content_counts! if content_counts.blank?
       counts = Hash[content_counts.map { |key, value| ["#{key}_count", value] }]
       counts.merge("module_stream_count" => counts["modulemd_count"],
-                   "package_count" => counts["rpm_count"],
-                   "ostree_branch_count" => counts["ostree_count"])
+                   "package_count" => counts["rpm_count"])
     end
 
     def check_ready_to_promote!(to_env)

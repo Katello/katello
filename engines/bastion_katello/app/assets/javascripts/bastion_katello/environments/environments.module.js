@@ -14,7 +14,6 @@ angular.module('Bastion.environments', [
     'Bastion.components',
     'Bastion.errata',
     'Bastion.packages',
-    'Bastion.ostree-branches',
     'Bastion.repositories',
     'Bastion.content-views',
     'Bastion.dates'

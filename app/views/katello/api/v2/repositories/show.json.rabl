@@ -21,8 +21,6 @@ glue(@resource.root) do
 
   attributes :product_type
   attributes :upstream_username
-  attributes :ostree_upstream_sync_policy, :ostree_upstream_sync_depth
-  attributes :compute_ostree_upstream_sync_depth => :computed_ostree_upstream_sync_depth
   attributes :deb_releases, :deb_components, :deb_architectures
   attributes :http_proxy_policy
   attributes :http_proxy_id
@@ -53,7 +51,6 @@ glue(@resource.root) do
   end
 end
 
-attributes :ostree_branch_names => :ostree_branches
 attributes :relative_path
 attributes :promoted? => :promoted
 attributes :content_view_version_id, :library_instance_id

@@ -71,13 +71,6 @@
       </a>
     </li>
 
-    <li ng-class="{active: isState('content-view.version.ostree-branches')}"
-        ng-show="version.ostree_branch_count !== 0">
-      <a ui-sref="content-view.version.ostree-branches({versionId: version.id})">
-        <span translate>OSTree Branches</span>
-      </a>
-    </li>
-
     <li ng-class="{active: isState('content-view.version.details')}">
       <a ui-sref="content-view.version.details({versionId: version.id})">
         <span translate>Details</span>
