@@ -47,11 +47,11 @@ module Katello
     def test_invalid_os_versions
       @root.content_type = 'yum'
       @root.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
-      @root.os_versions = ['rhel-8', 'rhel-9']
+      @root.os_versions = ['rhel-8', 'rhel-5']
       assert_not_valid @root
       assert_equal @root.errors.full_messages, [
         "Os versions invalid: Repositories can only require one OS version.",
-        "Os versions must be one of: rhel-6, rhel-7, rhel-8"
+        "Os versions must be one of: rhel-6, rhel-7, rhel-8, rhel-9"
       ]
     end
 

@@ -15,7 +15,6 @@ describe('Service: OSVersions', function() {
         var result = OSVersions.getOSVersionsOptions();
         var sample = result[0];
         expect(Array.isArray(result)).toBe(true);
-        expect(result.length).toEqual(4);
         expect(Object.keys(sample)).toEqual(['name', 'id']);
     });
 
