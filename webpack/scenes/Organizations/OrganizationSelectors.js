@@ -1,3 +1,13 @@
+import {
+  selectAPIStatus,
+} from 'foremanReact/redux/API/APISelectors';
+
+import { STATUS } from 'foremanReact/constants';
+
+import {
+  UPDATE_CDN_CONFIGURATION_KEY,
+} from './OrganizationConstants';
+
 export const selectOrganizationState = state => state.katello.organization;
 
 export const selectManifestName = state =>
@@ -16,3 +26,9 @@ export const selectIsManifestImported = state =>
 
 export const selectSimpleContentAccessEnabled = state =>
   selectOrganizationState(state).simple_content_access;
+
+export const selectCdnConfigurationUpdateStatus = state =>
+  selectAPIStatus(state, UPDATE_CDN_CONFIGURATION_KEY);
+
+export const selectUpdatingCdnConfiguration = state =>
+  selectCdnConfigurationUpdateStatus(state) === STATUS.PENDING;
