@@ -106,6 +106,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
         <Grid hasGutter>
           <GridItem span={6}>
             <Tile
+              style={{ height: '100%' }}
               isStacked
               aria-label="component_tile"
               icon={<ContentViewIcon composite={false} />}
@@ -119,6 +120,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
           </GridItem>
           <GridItem span={6}>
             <Tile
+              style={{ height: '100%' }}
               isStacked
               aria-label="composite_tile"
               icon={<ContentViewIcon composite />}

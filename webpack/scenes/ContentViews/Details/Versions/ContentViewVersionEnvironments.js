@@ -13,12 +13,12 @@ const ContentViewVersionEnvironments = ({ environments }) => {
 
   return environments.map(env => (
     <React.Fragment key={env.id}>
-      <Flex>
+      <Flex style={{ margin: '4px 0' }} >
         <FlexItem>
           <Label isTruncated color="purple" href={`/lifecycle_environments/${env.id}`}>{env.name}</Label>
         </FlexItem>
         <FlexItem>
-          <InactiveText text={` ${env.publish_date} ago`} /><br />
+          <InactiveText text={` ${env.publish_date} ago`} />
         </FlexItem>
       </Flex>
     </React.Fragment>));
