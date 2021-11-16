@@ -8,41 +8,39 @@ export const loadingState = Immutable({
   loading: true,
 });
 
-export const updateCdnConfigurationSuccessResponse = Immutable(
-  {
-    id: "6c536461-e7e3-421a-9d7a-780a39cd8fb4",
-    label: "Actions::Katello::CdnConfiguration::Update",
-    pending: false,
-    action: "Update CDN Configuration",
-    username: "admin",
-    started_at: "2021-11-16 12:00:46 -0500",
-    ended_at: "2021-11-16 12:00:47 -0500",
-    state: "stopped",
-    result: "success",
-    progress: 1,
-    input: {
-      locale: "en",
-      current_request_id: "7a0d7e03-ced1-4925-8790-79b73d25d29b",
-      current_timezone: "America/New_York",
-      current_organization_id: 4,
-      current_location_id: 2,
-      current_user_id: 4
-    },
-    output: {},
-    humanized: {
-      action: "Update CDN Configuration",
-      input: [],
-      output: "",
-      errors: []
-    },
-    cli_example: null,
-    start_at: "2021-11-16 12:00:46 -0500",
-    available_actions: {
-      cancellable: false,
-      resumable: false
-    }
-  }
-);
+export const updateCdnConfigurationSuccessResponse = Immutable({
+  id: '6c536461-e7e3-421a-9d7a-780a39cd8fb4',
+  label: 'Actions::Katello::CdnConfiguration::Update',
+  pending: false,
+  action: 'Update CDN Configuration',
+  username: 'admin',
+  started_at: '2021-11-16 12:00:46 -0500',
+  ended_at: '2021-11-16 12:00:47 -0500',
+  state: 'stopped',
+  result: 'success',
+  progress: 1,
+  input: {
+    locale: 'en',
+    current_request_id: '7a0d7e03-ced1-4925-8790-79b73d25d29b',
+    current_timezone: 'America/New_York',
+    current_organization_id: 4,
+    current_location_id: 2,
+    current_user_id: 4,
+  },
+  output: {},
+  humanized: {
+    action: 'Update CDN Configuration',
+    input: [],
+    output: '',
+    errors: [],
+  },
+  cli_example: null,
+  start_at: '2021-11-16 12:00:46 -0500',
+  available_actions: {
+    cancellable: false,
+    resumable: false,
+  },
+});
 
 export const requestSuccessResponse = Immutable({
   label: 'Default_Organization',
