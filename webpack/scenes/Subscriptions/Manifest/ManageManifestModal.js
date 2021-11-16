@@ -302,6 +302,8 @@ class ManageManifestModal extends Component {
                         <Row>
                           <Col smOffset={5} sm={7}>
                             <Button
+                              id="updateCdnConfiguration"
+                              data-testid="updateCdnConfiguration"
                               onClick={this.updateCdnConfiguration}
                               disabled={updatingCdnConfiguration}
                             >
