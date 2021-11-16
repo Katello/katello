@@ -95,7 +95,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
         { title: <Bullseye><RepoIcon type={contentType} /></Bullseye> },
         { title: <a href={urlBuilder(`products/${productId}/repositories`, '', id)}>{name}</a> },
         productName,
-        { title: <LastSync {...{ lastSyncWords, lastSync }} /> },
+        { title: <LastSync {...{ startedAt: lastSync?.started_at, lastSyncWords, lastSync }} /> },
         { title: <ContentCounts {...{ counts, productId }} repoId={id} /> },
         {
           title: <AddedStatusLabel added={addedToCV || statusSelected === ADDED} />,

@@ -36,10 +36,12 @@ const ContentViewVersionErrata = ({ cvId, versionId, errataCounts }) => {
   }
 
   return (
-    <React.Fragment>
-      <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/errata`, '')}>{`${total || 0} `}</a>
+    <>
+      <a href={urlBuilder(`content_views/${cvId}#/versions/${versionId}/errata`, '')}>
+        {total || 0}{' '}
+      </a>
       ( <ErrataLinkwithIcon /> )
-    </React.Fragment>
+    </>
   );
 };
 
