@@ -12,21 +12,28 @@ import { Table } from '../../../components/pf3Table';
 import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
+import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../ContentCredentials/ContentCredentialConstants';
 import SimpleContentAccess from './SimpleContentAccess';
 
 import './ManageManifestModal.scss';
 
+const PASSWORD_PLACEHOLDER = '******';
+
 class ManageManifestModal extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      redhat_repository_url: null,
+      cdn_url: null,
+      cdn_username: null,
+      cdn_password: null,
+      cdn_organization_label: null,
+      cdn_ssl_ca_credential_id: null,
     };
   }
 
   componentDidMount() {
     this.props.loadManifestHistory();
+    this.props.getContentCredentials({ content_type: CONTENT_CREDENTIAL_CERT_TYPE });
   }
 
   componentDidUpdate(prevProps) {
@@ -57,12 +64,46 @@ class ManageManifestModal extends Component {
     }
   };
 
-  updateRepositoryUrl = (event) => {
-    this.setState({ redhat_repository_url: event.target.value });
+  updateCdnUrl = (event) => {
+    this.setState({ cdn_url: event.target.value });
   };
 
-  saveOrganization = () => {
-    this.props.saveOrganization({ redhat_repository_url: this.state.redhat_repository_url });
+  updateCdnUsername = (event) => {
+    this.setState({ cdn_username: event.target.value });
+  };
+
+  hidePasswordPlaceholder = (event) => {
+    const { target } = event;
+    target.value = this.state.cdn_password;
+  };
+
+  showPasswordPlaceholder = (event) => {
+    if (this.state.cdn_password || this.props.organization.cdn_configuration.password_exists) {
+      const { target } = event;
+      target.value = PASSWORD_PLACEHOLDER;
+    }
+  };
+
+  updateCdnPassword = (event) => {
+    this.setState({ cdn_password: event.target.value });
+  };
+
+  updateCdnOrganizationLabel = (event) => {
+    this.setState({ cdn_organization_label: event.target.value });
+  };
+
+  updateCdnSSLCaCredentialId = (event) => {
+    this.setState({ cdn_ssl_ca_credential_id: event.target.value });
+  };
+
+  updateCdnConfiguration = () => {
+    this.props.updateCdnConfiguration({
+      url: this.state.cdn_url,
+      username: this.state.cdn_username,
+      password: this.state.cdn_password,
+      upstream_organization_label: this.state.cdn_organization_label,
+      ssl_ca_credential_id: this.state.cdn_ssl_ca_credential_id,
+    });
   };
 
   uploadManifest = (fileList) => {
@@ -102,7 +143,18 @@ class ManageManifestModal extends Component {
       disableSimpleContentAccess,
       taskInProgress,
       manifestActionStarted,
+      updatingCdnConfiguration,
+      contentCredentials,
     } = this.props;
+
+    const contentCredentialOptions = contentCredentials.map(({ name, id }) => (
+      <option key={id} value={id}>
+        {name}
+      </option>
+    ));
+
+    const cdnPasswordDefaultValue = organization?.cdn_configuration?.password_exists ?
+      PASSWORD_PLACEHOLDER : this.state.cdn_password;
 
     const actionInProgress = (taskInProgress || manifestActionStarted);
     const showRedHatProviderDetails = canEditOrganizations;
@@ -159,22 +211,87 @@ class ManageManifestModal extends Component {
               <Form className="form-horizontal">
                 {showRedHatProviderDetails &&
                   <React.Fragment>
-                    <h3>{__('Red Hat Provider Details')}</h3>
+                    <h3>{__('CDN Configuration for Red Hat content')}</h3>
                     <hr />
                     <FormGroup>
                       <Grid>
                         <Row>
                           <Col sm={5}>
                             <ControlLabel htmlFor="cdnUrl">
-                              {__('Red Hat CDN URL')}
+                              {__('URL')}
                             </ControlLabel>
                           </Col>
                           <Col sm={7}>
                             <FormControl
                               id="cdnUrl"
                               type="text"
-                              defaultValue={this.state.redhat_repository_url || organization.redhat_repository_url || ''}
-                              onBlur={this.updateRepositoryUrl}
+                              defaultValue={this.state.cdn_url || organization.cdn_configuration.url || ''}
+                              onChange={this.updateCdnUrl}
+                            />
+                          </Col>
+                        </Row>
+                        <Row style={{ paddingTop: '10px' }} >
+                          <Col sm={5}>
+                            <ControlLabel htmlFor="cdnUsername">
+                              {__('Username')}
+                            </ControlLabel>
+                          </Col>
+                          <Col sm={7}>
+                            <FormControl
+                              id="cdnUsername"
+                              type="text"
+                              defaultValue={this.state.cdn_username || organization.cdn_configuration.username || ''}
+                              onChange={this.updateCdnUsername}
+                            />
+                          </Col>
+                        </Row>
+                        <Row style={{ paddingTop: '10px' }} >
+                          <Col sm={5}>
+                            <ControlLabel htmlFor="cdnPassword">
+                              {__('Password')}
+                            </ControlLabel>
+                          </Col>
+                          <Col sm={7}>
+                            <FormControl
+                              id="cdnPassword"
+                              type="text"
+                              defaultValue={cdnPasswordDefaultValue}
+                              onFocus={this.hidePasswordPlaceholder}
+                              onBlur={this.showPasswordPlaceholder}
+                              onChange={this.updateCdnPassword}
+                            />
+                          </Col>
+                        </Row>
+                        <Row style={{ paddingTop: '10px' }} >
+                          <Col sm={5}>
+                            <ControlLabel htmlFor="cdnSSLCaCredential">
+                              {__('SSL CA Content Credential')}
+                            </ControlLabel>
+                          </Col>
+                          <Col sm={7}>
+                            <FormControl
+                              componentClass="select"
+                              placeholder="select"
+                              defaultValue={organization.cdn_configuration.ssl_ca_credential_id}
+                              onChange={this.updateCdnSSLCaCredentialId}
+                            >
+                              <option value="" />
+                              {contentCredentialOptions}
+                            </FormControl>
+                          </Col>
+                        </Row>
+                        <Row style={{ paddingTop: '10px' }} >
+                          <Col sm={5}>
+                            <ControlLabel htmlFor="cdnOrganizationLabel">
+                              {__('Organization Label')}
+                            </ControlLabel>
+                          </Col>
+                          <Col sm={7}>
+                            <FormControl
+                              id="cdnOrganizationLabel"
+                              type="text"
+                              defaultValue={this.state.cdn_organization_label || organization.cdn_configuration.upstream_organization_label || ''}
+                              onChange={this.updateCdnOrganizationLabel}
                             />
                           </Col>
                         </Row>
@@ -184,8 +301,13 @@ class ManageManifestModal extends Component {
                       <Grid>
                         <Row>
                           <Col smOffset={5} sm={7}>
-                            <Button onClick={this.saveOrganization} disabled={organization.loading}>
-                              {organization.loading ? buttonLoading : __('Update')}
+                            <Button
+                              id="updateCdnConfiguration"
+                              data-testid="updateCdnConfiguration"
+                              onClick={this.updateCdnConfiguration}
+                              disabled={updatingCdnConfiguration}
+                            >
+                              {updatingCdnConfiguration ? buttonLoading : __('Update')}
                             </Button>
                           </Col>
                         </Row>
@@ -315,9 +437,17 @@ ManageManifestModal.propTypes = {
   enableSimpleContentAccess: PropTypes.func.isRequired,
   disableSimpleContentAccess: PropTypes.func.isRequired,
   loadManifestHistory: PropTypes.func.isRequired,
+  getContentCredentials: PropTypes.func.isRequired,
   organization: PropTypes.shape({
+    id: PropTypes.number,
     loading: PropTypes.bool,
-    redhat_repository_url: PropTypes.string,
+    cdn_configuration: PropTypes.shape({
+      url: PropTypes.string,
+      username: PropTypes.string,
+      upstream_organization_label: PropTypes.string,
+      ssl_ca_credential_id: PropTypes.number,
+      password_exists: PropTypes.bool,
+    }),
     owner_details: PropTypes.shape({
       upstreamConsumer: PropTypes.shape({
         uuid: PropTypes.string,
@@ -334,7 +464,7 @@ ManageManifestModal.propTypes = {
   disableManifestActions: PropTypes.bool,
   disabledReason: PropTypes.string,
   loadOrganization: PropTypes.func.isRequired,
-  saveOrganization: PropTypes.func.isRequired,
+  updateCdnConfiguration: PropTypes.func.isRequired,
   taskInProgress: PropTypes.bool.isRequired,
   simpleContentAccess: PropTypes.bool,
   simpleContentAccessEligible: PropTypes.bool,
@@ -347,6 +477,11 @@ ManageManifestModal.propTypes = {
   setModalClosed: PropTypes.func.isRequired,
   setModalOpen: PropTypes.func.isRequired,
   manifestActionStarted: PropTypes.bool,
+  contentCredentials: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+  })),
+  updatingCdnConfiguration: PropTypes.bool,
 };
 
 ManageManifestModal.defaultProps = {
@@ -360,6 +495,8 @@ ManageManifestModal.defaultProps = {
   simpleContentAccess: false,
   simpleContentAccessEligible: undefined,
   manifestActionStarted: false,
+  updatingCdnConfiguration: false,
+  contentCredentials: [],
 };
 
 export default ManageManifestModal;
