@@ -7,6 +7,7 @@ import SystemStatuses from './components/extensions/about';
 import RegistrationCommands from './components/extensions/RegistrationCommands';
 import ContentTab from './components/extensions/HostDetails/Tabs/ContentTab';
 import ContentViewDetailsCard from './components/extensions/HostDetails/Cards/ContentViewDetailsCard';
+import ErrataOverviewCard from './components/extensions/HostDetails/Cards/ErrataOverviewCard';
 
 // import SubscriptionTab from './components/extensions/HostDetails/Tabs/SubscriptionTab';
 import RepositorySetsTab from './components/extensions/HostDetails/Tabs/RepositorySetsTab/RepositorySetsTab';
@@ -29,4 +30,6 @@ addGlobalFill(
   'details-cards',
   'Content View Details',
   <ContentViewDetailsCard key="content-view-details" />,
+  2000,
 );
+addGlobalFill('details-cards', 'Installable errata', <ErrataOverviewCard key="errata-overview" />, 1900);

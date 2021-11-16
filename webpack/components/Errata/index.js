@@ -5,8 +5,65 @@ import {
   BugIcon,
   SecurityIcon,
   EnhancementIcon,
+  SquareIcon,
 } from '@patternfly/react-icons';
 import PropTypes from 'prop-types';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
+
+export const ErrataMapper = ({ data, id }) => data.map(({ x: type, y: count }) => <ErrataSummary count={count} type={type} key={`${count} ${type}`} id={id} />);
+
+export const ErrataSummary = ({ type, count, id }) => {
+  let ErrataIcon;
+  let label;
+  let name;
+  let url;
+  let color;
+  switch (type) {
+    case 'security':
+      label = __('Security');
+      ErrataIcon = SecurityIcon;
+      name = 'security advisories';
+      color = '#0066cc';
+      url = <a href={urlBuilder(`content_hosts/${id}/errata`, '')}> {count} {name} </a>;
+      break;
+    case 'recommended':
+    case 'bugfix':
+      label = __('Bugfix');
+      ErrataIcon = BugIcon;
+      name = 'bug fixes';
+      color = '#8bc1f7';
+      url = <a href={urlBuilder(`content_hosts/${id}/errata`, '')}> {count} {name} </a>;
+      break;
+    case 'enhancement':
+    case 'optional':
+      label = __('Enhancement');
+      ErrataIcon = EnhancementIcon;
+      name = 'enhancements';
+      color = '#002f5d';
+      url = <a href={urlBuilder(`content_hosts/${id}/errata`, '')}> {count} {name} </a>;
+      break;
+    default:
+  }
+  if (!ErrataIcon) return null;
+
+  return (
+    <span style={{ whiteSpace: 'nowrap' }}>
+      <TableText wrapModifier="nowrap">
+        <SquareIcon size="sm" color={color} />
+        <span style={{ marginLeft: '8px' }}>
+          <ErrataIcon title={label} />
+          {url}
+        </span>
+      </TableText>
+    </span>
+  );
+};
+
+ErrataSummary.propTypes = {
+  type: PropTypes.string.isRequired,
+  count: PropTypes.number.isRequired,
+  id: PropTypes.number.isRequired,
+};
 
 export const ErrataType = ({ type }) => {
   let ErrataIcon;
@@ -29,6 +86,7 @@ export const ErrataType = ({ type }) => {
     default:
   }
   if (!ErrataIcon) return null;
+
 
   return (
     <TableText wrapModifier="nowrap">
