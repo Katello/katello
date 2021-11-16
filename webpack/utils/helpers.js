@@ -40,7 +40,7 @@ export const getResponseErrorMsgs = ({ data, actionType } = {}) => {
       data.displayMessage ||
       data.message ||
       data.errors ||
-      data.error;
+      data.error?.message;
     return Array.isArray(messages) ? messages : [messages];
   }
   return [];

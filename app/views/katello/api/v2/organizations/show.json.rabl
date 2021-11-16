@@ -16,7 +16,7 @@ node :owner_details do |org|
 end
 
 node :cdn_configuration do |org|
-  partial('katello/api/v2/organizations/cdn_configuration', object: org.cdn_configuration)
+  partial('katello/api/v2/cdn_configurations/show', object: org.cdn_configuration)
 end
 
 node :default_content_view_id do |org|
