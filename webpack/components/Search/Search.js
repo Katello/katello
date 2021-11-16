@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { ControlLabel } from 'react-bootstrap';
 import { loadSetting } from 'foremanReact/components/Settings/SettingsActions';
@@ -26,11 +26,14 @@ const Search = ({
 }) => {
   const [items, setItems] = useState([]);
   const dispatch = useDispatch();
+  const mountedRef = useRef(true);
 
   const onInputUpdate = async (searchTerm = '') => {
     const newItems = items.filter(({ text }) => stringIncludes(text, searchTerm));
 
     if (newItems.length !== items.length) {
+      // Checking whether the current component is mounted before state change events
+      if (!mountedRef.current) return;
       setItems(newItems);
     }
 
@@ -43,6 +46,8 @@ const Search = ({
       } else {
         data = await api.get(endpoint, undefined, params);
       }
+      // Checking whether the current component is mounted before state change events
+      if (!mountedRef.current) return;
       setItems(data?.data?.filter(({ error }) => !error).map(({ label }) => ({
         text: label.trim(),
       })));
@@ -56,6 +61,7 @@ const Search = ({
   useEffect(() => {
     dispatch(loadSetting(AUTOSEARCH_DELAY));
     dispatch(loadSetting(AUTOSEARCH_WHILE_TYPING));
+    return () => { mountedRef.current = false; };
   }, [dispatch]);
 
   const onNewSearch = (search) => {

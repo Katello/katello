@@ -83,7 +83,7 @@ test('Can show filter details and package groups on page load', async (done) => 
   assertNockRequest(cvFilterScope);
   assertNockRequest(cvFiltersScope);
   assertNockRequest(cvPackageFilterRulesScope, done);
-  await act(() => Promise.resolve());
+  act(done);
 });
 
 test('Can search for package rules in package filter details', async (done) => {

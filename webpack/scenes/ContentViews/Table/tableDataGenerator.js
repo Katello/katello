@@ -1,5 +1,5 @@
 import React from 'react';
-import { fitContent, expandable } from '@patternfly/react-table';
+import { fitContent, expandable, sortable } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -12,7 +12,13 @@ import LastSync from '../Details/Repositories/LastSync';
 
 export const buildColumns = () => [
   { title: __('Type'), cellFormatters: [expandable], transforms: [fitContent] },
-  __('Name'), __('Last published'), __('Last task'), __('Latest version'),
+  {
+    title: __('Name'),
+    transforms: [sortable],
+  },
+  __('Last published'),
+  __('Last task'),
+  __('Latest version'),
 ];
 
 const buildRow = (contentView) => {
@@ -22,12 +28,12 @@ const buildRow = (contentView) => {
     latest_version_environments: latestVersionEnvironments, last_task: lastTask,
   } = contentView;
   /* eslint-enable max-len */
-  const { last_sync_words: lastSyncWords } = lastTask || {};
+  const { last_sync_words: lastSyncWords, started_at: startedAt } = lastTask || {};
   const row = [
     { title: <ContentViewIcon composite={composite ? true : undefined} /> },
     { title: <Link to={`${urlBuilder('content_views', '')}${id}`}>{name}</Link> },
     { title: lastPublished ? <LongDateTime date={lastPublished} showRelativeTimeTooltip /> : <InactiveText text={__('Not yet published')} /> },
-    { title: <LastSync lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /> },
+    { title: <LastSync startedAt={startedAt} lastSync={lastTask} lastSyncWords={lastSyncWords} emptyMessage="N/A" /> },
     {
       title: latestVersion ? <ContentViewVersionCell {...{
         id, latestVersion, latestVersionId, latestVersionEnvironments,
@@ -87,8 +93,8 @@ const buildExpandableRows = (contentViews) => {
             cvName={name}
             cvComposite={composite}
             {...{
- activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
-}}
+              activationKeys, hosts, relatedCVCount, relatedCompositeCVs,
+            }}
           />,
           props: {
             colSpan: 2,

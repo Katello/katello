@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useSelector, useDispatch } from 'react-redux';
-import { omit } from 'lodash';
+import { omit, upperCase } from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import { Button } from '@patternfly/react-core';
@@ -24,6 +24,7 @@ const ContentViewTable = () => {
   const status = useSelector(selectContentViewStatus);
   const error = useSelector(selectContentViewError);
   const [table, setTable] = useState({ rows: [], columns: [] });
+  const [sortBy, setSortBy] = useState({});
   const [rowMappingIds, setRowMappingIds] = useState([]);
   const [searchQuery, updateSearchQuery] = useState('');
   const loadingResponse = status === STATUS.PENDING;
@@ -104,12 +105,16 @@ const ContentViewTable = () => {
         setRowMappingIds(newRowMappingIds);
         setCvTableStatus(tableStatus());
       }
+      return () => {
+        // This sets the loading state so that the table doesn't flicker on return
+        setCvTableStatus(STATUS.PENDING);
+      };
     },
     [response, status, loadingResponse, setTable, setRowMappingIds,
       setCvResults, setCvTableStatus, setCurrentStep, cvResults, rowMappingIds],
   );
 
-  const onCollapse = (event, rowId, isOpen) => {
+  const onCollapse = (_event, rowId, isOpen) => {
     let rows;
     if (rowId === -1) {
       rows = table.rows.map(row => ({ ...row, isOpen }));
@@ -159,7 +164,33 @@ const ContentViewTable = () => {
     ];
   };
 
-  const additionalListeners = new Array(isPublishModalOpen);
+  const indexToSortVariable = (key) => {
+    switch (key) {
+      case 2:
+        return 'name';
+      default:
+        return undefined;
+    }
+  };
+
+  const onSort = (_event, index, direction) => {
+    setCvTableStatus(STATUS.PENDING);
+    setSortBy({ index, direction });
+  };
+
+  const { index: sortByIndex, direction } = sortBy;
+  const fetchItems = useCallback(
+    params =>
+      getContentViews({
+        ...params,
+        ...sortByIndex ? {
+          sort_by: indexToSortVariable(sortByIndex),
+          sort_order: upperCase(direction),
+        } : {},
+      }),
+    [sortByIndex, direction],
+  );
+
   const emptyContentTitle = __("You currently don't have any Content Views.");
   const emptyContentBody = __('A content view can be added by using the "Create content view" button above.');
   const emptySearchTitle = __('No matching content views found');
@@ -179,12 +210,14 @@ const ContentViewTable = () => {
         actionResolver,
         searchQuery,
         updateSearchQuery,
-        additionalListeners,
+        fetchItems,
       }}
+      additionalListeners={[isPublishModalOpen, sortByIndex, direction]}
+      sortBy={sortBy}
+      onSort={onSort}
       bookmarkController="katello_content_views"
       variant={TableVariant.compact}
       status={cvTableStatus}
-      fetchItems={useCallback(getContentViews, [])}
       onCollapse={onCollapse}
       canSelectAll={false}
       cells={columns}

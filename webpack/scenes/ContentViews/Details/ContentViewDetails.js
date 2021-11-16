@@ -62,17 +62,26 @@ export default () => {
   return (
     <Grid className="grid-with-margin">
       <DetailsContainer cvId={cvId}>
-        <React.Fragment>
+        <>
           <CVBreadCrumb />
-          <GridItem xl={8} lg={7} sm={12} >
-            <Flex>
+          <GridItem xl={8} lg={7} sm={12} style={{ margin: '10px 0' }}>
+            <Flex alignItems={{
+              default: 'alignItemsCenter',
+            }}
+            >
               <FlexItem>
                 <TextContent>
-                  <Text component={TextVariants.h1}>{`${name} content view`}</Text>
+                  <Text component={TextVariants.h1}>
+                    {name} {__('content view')}
+                  </Text>
                 </TextContent>
               </FlexItem>
-              <FlexItem spacer={{ default: 'spacerXl' }}>
-                <Text component={TextVariants.h1}><ContentViewIcon composite={composite} /></Text>
+              <FlexItem>
+                <TextContent>
+                  <Text component={TextVariants.h2}>
+                    <ContentViewIcon composite={composite} />
+                  </Text>
+                </TextContent>
               </FlexItem>
             </Flex>
           </GridItem>
@@ -110,8 +119,8 @@ export default () => {
           <GridItem span={12}>
             <RoutedTabs tabs={tabs} defaultTabIndex={1} />
           </GridItem>
-        </React.Fragment>
-      </DetailsContainer>
-    </Grid>
+        </ >
+      </DetailsContainer >
+    </Grid >
   );
 };
