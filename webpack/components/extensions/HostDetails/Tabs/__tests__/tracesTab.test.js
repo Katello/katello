@@ -2,13 +2,15 @@ import React from 'react';
 import { renderWithRedux, waitFor, patientlyWaitFor, fireEvent, act } from 'react-testing-lib-wrapper';
 import nock, { nockInstance, assertNockRequest, mockForemanAutocomplete, mockSetting } from '../../../../../test-utils/nockWrapper';
 import { foremanApi } from '../../../../../services/api';
-import { HOST_TRACES_KEY } from '../HostTracesConstants';
+import { REX_FEATURES } from '../RemoteExecutionConstants';
+import { HOST_TRACES_KEY, TRACES_SEARCH_QUERY } from '../HostTracesConstants';
 import TracesTab from '../TracesTab';
 import mockTraceData from './traces.fixtures.json';
 import mockResolveTraceTask from './resolveTraces.fixtures.json';
 import emptyTraceResults from './tracerEmptyTraceResults.fixtures.json';
 import mockJobInvocationStatus from './tracerEnableJobInvocation.fixtures.json';
 
+const hostName = 'client.example.com';
 const tracerInstalledResponse = {
   id: 1,
   name: 'client.example.com',
@@ -29,6 +31,8 @@ const renderOptions = isTracerInstalled => ({ // sets initial Redux state
   initialState: {
     API: {
       HOST_DETAILS: {
+        name: hostName,
+        id: 1,
         response: isTracerInstalled ? tracerInstalledResponse : tracerNotInstalledResponse,
         status: 'RESOLVED',
       },
@@ -165,7 +169,6 @@ describe('With tracer installed', () => {
     });
     traceCheckbox.click();
     expect(traceCheckbox.checked).toEqual(true);
-
     const actionMenu = getByLabelText('bulk_actions');
     actionMenu.click();
     const viaRexAction = queryByText('Restart via remote execution');
@@ -177,12 +180,53 @@ describe('With tracer installed', () => {
     assertNockRequest(scope, done);
   });
 
+  test('Can select all, exclude and bulk restart traces via remote execution', async (done) => {
+    // This is the same test as above,
+    // but using the table action bar instead of the Restart app button
+    const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
+    const thirdTrace = mockTraceData.results[2];
+    const scope = nockInstance
+      .get(hostTraces)
+      .times(2)
+      .reply(200, mockTraceData);
+    const jobInvocationBody = ({ job_invocation: { inputs } }) =>
+      inputs[TRACES_SEARCH_QUERY] === `id !^ (${firstTrace.id},${thirdTrace.id})`;
+
+    const resolveTracesScope = nockInstance
+      .post(jobInvocations, jobInvocationBody)
+      .reply(201, mockResolveTraceTask);
+
+    const {
+      getByLabelText, getByText,
+    } = renderWithRedux(
+      <TracesTab />,
+      renderOptions(true),
+    );
+
+    let traceCheckbox;
+    // Assert that the traces are now showing on the screen, but wait for them to appear.
+    await patientlyWaitFor(() => {
+      const traceNameNode = getByText(firstTrace.application);
+      traceCheckbox = checkboxToTheLeftOf(traceNameNode);
+    });
+    const selectAllCheckbox = getByLabelText('Select all');
+    selectAllCheckbox.click();
+    expect(traceCheckbox.checked).toEqual(true);
+    getByLabelText('Select row 0').click(); // de select
+    getByLabelText('Select row 2').click(); // de select
+
+    getByText('Restart app').click();
+
+    assertNockRequest(autocompleteScope);
+    assertNockRequest(resolveTracesScope);
+    assertNockRequest(scope, done);
+  });
+
   test('Can restart a single trace via remote execution', async (done) => {
     const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
 
     const scope = nockInstance
       .get(hostTraces)
-      .times(2)
       .reply(200, mockTraceData);
     const resolveTracesScope = nockInstance
       .post(jobInvocations)
@@ -214,6 +258,7 @@ describe('With tracer installed', () => {
   });
 
   test('Can restart a single trace via customized remote execution', async (done) => {
+    const feature = REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE;
     const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
     const scope = nockInstance
       .get(hostTraces)
@@ -239,7 +284,7 @@ describe('With tracer installed', () => {
     });
     expect(viaCustomizedRexAction).toHaveAttribute(
       'href',
-      '/job_invocations/new?feature=katello_host_tracer_resolve&inputs%5Bids%5D=10&host_ids=name%20%5E%20(client.example.com)',
+      `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BTraces%20search%20query%5D=id%20=%20${firstTrace.id}`,
     );
 
     assertNockRequest(autocompleteScope);
@@ -248,7 +293,7 @@ describe('With tracer installed', () => {
 
   test('Can bulk restart traces via customized remote execution', async (done) => {
     const autocompleteScope = mockForemanAutocomplete(nockInstance, autocompleteUrl);
-
+    const feature = REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE;
     const scope = nockInstance
       .get(hostTraces)
       .reply(200, mockTraceData);
@@ -272,7 +317,7 @@ describe('With tracer installed', () => {
     expect(viaCustomizedRexAction).toBeInTheDocument();
     expect(viaCustomizedRexAction).toHaveAttribute(
       'href',
-      '/job_invocations/new?feature=katello_host_tracer_resolve&inputs%5Bids%5D=10&host_ids=name%20%5E%20(client.example.com)',
+      `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5BTraces%20search%20query%5D=id%20%5E%20(${firstTrace.id})`,
     );
 
     assertNockRequest(autocompleteScope);
@@ -359,6 +404,7 @@ describe('Without tracer installed', () => {
   });
 
   test('Can enable tracer via customized remote execution', async () => {
+    const feature = REX_FEATURES.KATELLO_PACKAGE_INSTALL;
     const { getByText, getByRole, queryByText }
       = renderWithRedux(<TracesTab />, renderOptions(false));
 
@@ -378,7 +424,7 @@ describe('Without tracer installed', () => {
     expect(enableTracesModalLink)
       .toHaveAttribute(
         'href',
-        '/job_invocations/new?feature=katello_package_install&inputs%5Bpackage%5D=katello-host-tools-tracer&host_ids=name%20%5E%20(client.example.com)',
+        `/job_invocations/new?feature=${feature}&host_ids=name%20%5E%20(${hostName})&inputs%5Bpackage%5D=katello-host-tools-tracer`,
       );
     enableTracesModalLink.click();
     expect(enableTracesModalLink).toHaveClass('pf-m-in-progress');

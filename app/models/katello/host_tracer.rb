@@ -5,6 +5,7 @@ module Katello
     belongs_to :host, :inverse_of => :host_traces, :class_name => '::Host::Managed'
 
     scope :reboot_required, -> { where(app_type: 'static') }
+    scope :selectable, -> { where.not(app_type: 'session') }
 
     validates :application, :length => {:maximum => 255}, :presence => true
     validates :app_type, :length => {:maximum => 255}, :presence => true

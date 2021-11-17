@@ -6,15 +6,14 @@ description_format: 'Resolve Traces'
 feature: katello_host_tracer_resolve
 provider_type: SSH
 template_inputs:
-- name: ids
-  description: A comma-separated list of trace IDs to resolve
+- name: Traces search query
+  description: Search query to provide traces to resolve
   input_type: user
   required: true
 %>
 
 <%
-ids = input(:ids).split(',').map { |split| split.strip.to_i }
-commands = @host.traces_helpers(ids)
+commands = @host.traces_helpers(search: input('Traces search query'))
 reboot = commands.delete('reboot')
 -%>
 <% if reboot -%>
