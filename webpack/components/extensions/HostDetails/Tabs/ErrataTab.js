@@ -144,8 +144,15 @@ export const ErrataTab = () => {
     { errata_ids: [id] },
   ));
 
-  const apply = () => (contentFacet.remoteExecutionByDefault ? applyViaRemoteExecution() :
-    applyByKatelloAgent());
+  const katelloAgentAvailable = (contentFacet.katelloAgentInstalled &&
+                                 contentFacet.katelloAgentEnabled);
+  const apply = () => {
+    if (contentFacet.remoteExecutionByDefault || !katelloAgentAvailable) {
+      applyViaRemoteExecution();
+    } else {
+      applyByKatelloAgent();
+    }
+  };
 
   const dropdownItems = [
     <DropdownItem
@@ -158,7 +165,6 @@ export const ErrataTab = () => {
     </DropdownItem>,
   ];
 
-  const katelloAgentAvailable = (contentFacet.katelloAgentInstalled && contentFacet.katelloAgentEnabled);
   if (katelloAgentAvailable) {
     dropdownItems.push((
       <DropdownItem
@@ -208,14 +214,13 @@ export const ErrataTab = () => {
     return newSeverity;
   });
 
-  const applyButtonDisabled = selectedCount === 0 || !(katelloAgentAvailable || contentFacet.remoteExecutionByDefault);
   const actionButtons = (
     <>
       <Split hasGutter>
         <SplitItem>
           <ActionList isIconList>
             <ActionListItem>
-              <Button isDisabled={applyButtonDisabled} onClick={apply}> {__('Apply')} </Button>
+              <Button isDisabled={selectedCount === 0} onClick={apply}> {__('Apply')} </Button>
             </ActionListItem>
             <ActionListItem>
               <Dropdown
