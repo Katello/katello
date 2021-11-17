@@ -46,8 +46,11 @@ module Katello
     # {:name => :view_lifecycle_environments, :search => 'name=Dev'} OR
     # [{:name => :view_lifecycle_environments, :search => 'name=Dev'}, ..] OR
     # :view_lifecycle_environments
-    def setup_user_with_permissions(permissions, user)
+    def setup_user_with_permissions(permissions, user, organizations: [], locations: [])
       as_admin do
+        user.update!(organizations: organizations) unless organizations.blank?
+        user.update!(locations: locations) unless locations.blank?
+
         actual_permissions = if permissions.is_a?(Hash)
                                [permissions]
                              elsif permissions.is_a?(Array)
@@ -68,9 +71,9 @@ module Katello
       end
     end
 
-    def setup_current_user_with_permissions(permissions)
+    def setup_current_user_with_permissions(permissions, organizations: [], locations: [])
       fail("setup_current_user_with_permissions called with current user not set") unless User.current
-      setup_user_with_permissions(permissions, User.current)
+      setup_user_with_permissions(permissions, User.current, organizations: organizations, locations: locations)
     end
   end
 end
