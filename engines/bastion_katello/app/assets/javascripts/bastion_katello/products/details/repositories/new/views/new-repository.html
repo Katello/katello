@@ -332,8 +332,11 @@
       <div class="checkbox" ng-hide="repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">
         <label>
           <input id="unprotected" name="unprotected" ng-model="repository.unprotected" type="checkbox"/>
-          <span translate>Publish via HTTP</span>
+          <span translate>Unprotected</span>
         </label>
+        <p class="help-block" translate>
+          Do not require a subscription entitlement certificate for accessing this repository.
+        </p>
       </div>
 
       <div bst-form-group label="{{ 'GPG Key' | translate }}" ng-show="repository.content_type === 'yum' || repository.content_type === 'deb'">

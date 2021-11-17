@@ -262,7 +262,7 @@
       <dd translate>Yes</dd>
 
       <span ng-hide="repository.content_type === 'docker' || repository.content_type === 'ansible_collection'">
-        <dt translate>Publish via HTTP</dt>
+        <dt translate>Unprotected</dt>
         <dd bst-edit-checkbox="repository.unprotected"
             formatter="booleanToYesNo"
             on-save="save(repository)"
