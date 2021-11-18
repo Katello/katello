@@ -17,13 +17,14 @@ Foreman::Plugin.register :katello do
          :turbolinks => false
 
     menu :top_menu,
-         :redhat_provider,
-         :caption => N_('Red Hat Repositories'),
-         :url => '/redhat_repositories',
-         :url_hash => {:controller => 'katello/api/v2/repository_sets',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+        :redhat_provider,
+        :caption => N_('Red Hat Repositories'),
+        :url => '/redhat_repositories',
+        :url_hash => {:controller => 'katello/api/v2/repository_sets',
+                      :action => 'index'},
+        :engine => Katello::Engine,
+        :turbolinks => false,
+        :if => lambda { !::Setting['content_disconnected'] }
 
     menu :top_menu,
          :products,
