@@ -33,6 +33,14 @@ module Katello
       assert_response :success
     end
 
+    def test_include_latest_upgradable
+      HostPackagePresenter.expects(:with_latest).with(anything, @host)
+
+      get :index, params: { :host_id => @host.id, :include_latest_upgradable => true }
+
+      assert_response :success
+    end
+
     def test_install_package
       ::Katello.stubs(:with_katello_agent?).returns(true)
 
