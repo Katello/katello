@@ -2,14 +2,14 @@
 kind: job_template
 name: Install Errata - Katello SSH Default
 job_category: Katello
-description_format: 'Install errata %{errata}'
+description_format: 'Install errata %{Errata search query}'
 feature: katello_errata_install
 provider_type: SSH
 template_inputs:
-- name: errata
-  description: A comma separated list of errata to install
+- name: Errata search query
+  description: Filter criteria for errata to be installed.
   input_type: user
-  required: true
+  required: false
 foreign_input_sets:
 - template: Package Action - SSH Default
   exclude: action,package
@@ -19,6 +19,8 @@ foreign_input_sets:
     <% advisories = input(:errata).split(',').join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'install -n -t patch', :package => advisories) %>
 <% else %>
-    <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
+    <% advisory_ids = @host.advisory_ids(search: input("Errata search query")) %>
+
+    <% advisories = advisory_ids.map { |e| "--advisory=#{e}" }.join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>
 <% end %>
