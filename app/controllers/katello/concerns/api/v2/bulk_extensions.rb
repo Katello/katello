@@ -8,7 +8,6 @@ module Katello
           bulk_params = ActiveSupport::JSON.decode(bulk_params).
                         deep_symbolize_keys
         end
-
         bulk_params[:included] ||= {}
         bulk_params[:excluded] ||= {}
 
@@ -22,18 +21,9 @@ module Katello
           fail HttpErrors::BadRequest, _("Sending a list of included IDs is not allowed when all items are being selected.")
         end
 
-        items = model_scope
-        if bulk_params[:included][:ids]
-          items = model_scope.where(key => bulk_params[:included][:ids])
-        elsif bulk_params[:included][:search]
-          items = model_scope.search_for(bulk_params[:included][:search])
-        end
-
-        if bulk_params[:excluded][:ids]
-          items = items.where.not(key => bulk_params[:excluded][:ids])
-        end
-
-        items
+        ::Katello::BulkItemsHelper.new(bulk_params: bulk_params,
+                                       model_scope: model_scope,
+                                       key: key).fetch
       end
     end
   end

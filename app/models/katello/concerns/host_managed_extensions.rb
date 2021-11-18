@@ -389,6 +389,10 @@ module Katello
         ::Katello::HostTracer.helpers_for(traces)
       end
 
+      def advisory_ids(search:)
+        ::Katello::Erratum.installable_for_hosts([self]).search_for(search).pluck(:errata_id)
+      end
+
       def valid_content_override_label?(content_label)
         available_content = subscription_facet.candlepin_consumer.available_product_content
         available_content.map(&:content).any? { |content| content.label == content_label }
@@ -411,7 +415,7 @@ end
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
-        :installed_packages, :traces_helpers
+        :installed_packages, :traces_helpers, :advisory_ids
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

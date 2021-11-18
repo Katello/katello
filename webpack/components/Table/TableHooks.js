@@ -179,27 +179,18 @@ export const useBulkSelect = ({
   };
 
   const fetchBulkParams = () => {
-    const selected = {
-      included: {
-        ids: [],
-        search: null,
-      },
-      excluded: {
-        ids: [],
-      },
-      all: false,
+    const searchQueryWithExclusionSet = () => {
+      const query = [searchQuery,
+        !isEmpty(exclusionSet) && `${idColumn} !^ (${[...exclusionSet].join(',')})`];
+      return query.filter(item => item).join(' and ');
     };
 
-    if (selectAllMode) {
-      selected.included.search = searchQuery;
-      selected.excluded.ids = [...exclusionSet];
-      selected.all = true;
-    } else if (!isEmpty(inclusionSet)) {
-      selected.included.ids = [...inclusionSet];
-    } else {
-      return {};
-    }
-    return selected;
+    const searchQueryWithInclusionSet = () => {
+      if (isEmpty(inclusionSet)) throw new Error('Cannot build a search query with no items selected');
+      return `${idColumn} ^ (${[...inclusionSet].join(',')})`;
+    };
+
+    return selectAllMode ? searchQueryWithExclusionSet() : searchQueryWithInclusionSet();
   };
 
   const prevSearchRef = usePrevious({ searchQuery });

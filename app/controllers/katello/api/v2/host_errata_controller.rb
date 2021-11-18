@@ -63,6 +63,7 @@ module Katello
     param :errata_ids, Array, :desc => N_("List of Errata ids to install. Will be removed in %s") % katello_agent_removal_release, required: true
 
     param_group :bulk_errata_ids
+    param_group :search, Api::V2::ApiController
     def apply
       task = async_task(::Actions::Katello::Host::Erratum::Install, @host, content: @errata_ids)
       respond_for_async :resource => task
@@ -143,7 +144,11 @@ module Katello
         missing = params[:errata_ids] - Erratum.where(:errata_id => params[:errata_ids]).pluck(:errata_id)
         fail HttpErrors::NotFound, _("Couldn't find errata ids '%s'") % missing.to_sentence if missing.any?
         @errata_ids = params[:errata_ids]
+      elsif params[:search]
+        @errata_ids = @host.advisory_ids(search: params[:search])
       else
+        # old angular way
+        # Todo: remove this when the old content-host errata page is removed
         @errata_ids = find_bulk_errata_ids([@host], params[:bulk_errata_ids])
       end
     end
