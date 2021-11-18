@@ -19,6 +19,16 @@ const ContentViewVersionContent = ({ cvId, versionId, cvVersion }) => {
     ansible_collection_count: ansibleCollectionCount,
   } = cvVersion;
 
+  const genericContentTypes = {};
+
+  ContentConfig().forEach((type) => {
+    const countLabel = `${type.names.singularLabel}_count`;
+    genericContentTypes[countLabel.replace(/([-_]\w)/g, g => g[1].toUpperCase())] = [cvVersion[countLabel], type.names.pluralLowercase];
+  });
+  // Ansible Collections has a tab in version details so it's handled separately below.
+  delete genericContentTypes.ansibleCollectionCount;
+  const genericContentCountsStyle = { whiteSpace: 'pre-line' };
+
   return (
     <React.Fragment>
       {(moduleStreamCount > 0 &&
