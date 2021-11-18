@@ -5,13 +5,13 @@ import {
   ExclamationCircleIcon,
   InProgressIcon,
 } from '@patternfly/react-icons';
+import { FormattedDate } from 'react-intl';
 import { Tooltip, TooltipPosition } from '@patternfly/react-core';
 
 import { foremanUrl } from 'foremanReact/common/helpers';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import InactiveText from '../../components/InactiveText';
-import { makeReadableDate } from '../../../../utils/dateTimeHelpers';
 
 const LastSync = ({
   lastSyncWords, lastSync, emptyMessage, startedAt,
@@ -41,7 +41,15 @@ const LastSync = ({
       return (
         <Tooltip
           position={TooltipPosition.top}
-          content={makeReadableDate(startedAt)}
+          content={
+            <FormattedDate
+              value={startedAt}
+              day="2-digit"
+              month="long"
+              hour="2-digit"
+              minute="2-digit"
+              year="numeric"
+            />}
         >
           <a
             href={foremanUrl(`/foreman_tasks/tasks/${id}/`)}

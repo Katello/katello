@@ -38,6 +38,8 @@ afterEach(() => {
   assertNockRequest(autoSearchScope);
 });
 
+jest.mock('react-intl', () => ({ addLocaleData: () => { }, FormattedDate: () => 'mocked' }));
+
 test('Can enable and disable add repositories button', async (done) => {
   const autocompleteScope = mockAutocomplete(nockInstance, autocompleteUrl);
 
