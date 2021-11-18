@@ -33,6 +33,10 @@ module Katello
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::ProductContent)
     def index
+      if Setting['content_disconnected']
+        respond_for_index(:collection => { :error => _("Repositories are not available for enablement while in disconnected mode.") }, :status => :forbidden)
+        return
+      end
       collection = scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent)
       collection[:results] = ProductContentFinder.wrap_with_overrides(
           product_contents: collection[:results],
