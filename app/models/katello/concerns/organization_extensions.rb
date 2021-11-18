@@ -55,6 +55,10 @@ module Katello
         # so that it will execute after :dependent => :destroy
         before_destroy :destroy_taxable_taxonomies
 
+        def self.non_audited_columns
+          super | [:created_in_katello]
+        end
+
         def default_content_view
           ContentView.default.where(:organization_id => self.id).first
         end
