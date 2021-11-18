@@ -30,3 +30,5 @@ export const SEVERITIES_TO_PARAM = {
 };
 
 export default HOST_ERRATA_KEY;
+
+export const ERRATA_SEARCH_QUERY = 'Errata search query';

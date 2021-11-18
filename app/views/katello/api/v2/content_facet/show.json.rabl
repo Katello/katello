@@ -25,6 +25,14 @@ child :content_facet => :content_facet_attributes do
   node :katello_tracer_installed do |content_facet|
     content_facet.tracer_installed?
   end
+
+  node :katello_agent_enabled do
+    Katello.with_katello_agent?
+  end
+
+  node :remote_execution_by_default do
+    Katello.remote_execution_by_default?
+  end
 end
 
 attributes :description, :facts
