@@ -20,10 +20,12 @@ module Katello
 
     api :GET, "/hosts/:host_id/packages", N_("List packages installed on the host")
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
+    param :include_latest_upgradable, :boolean, :desc => N_("Also include the latest upgradable package version for each host package")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::InstalledPackage)
     def index
       collection = scoped_search(index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
+      collection[:results] = HostPackagePresenter.with_latest(collection[:results], @host) if ::Foreman::Cast.to_bool(params[:include_latest_upgradable])
       respond_for_index(:collection => collection)
     end
 
