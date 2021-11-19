@@ -82,6 +82,8 @@ module Katello
 
         def test_dup_errata
           Katello::Erratum.destroy_all
+          ::Katello::Pulp3::Repository.any_instance.stubs(:ssl_remote_options).returns({})
+
           repo_1 = katello_repositories(:rhel_7_x86_64)
           repo_1.root.update!(:url => 'file:///var/lib/pulp/sync_imports/test_repos/zoo2', :download_policy => 'immediate')
           ensure_creatable(repo_1, @primary)

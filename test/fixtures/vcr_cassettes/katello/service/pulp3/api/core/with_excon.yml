@@ -2,17 +2,19 @@
 http_interactions:
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - OpenAPI-Generator/3.15.2/ruby
+      - OpenAPI-Generator/3.16.0/ruby
       Accept:
       - application/json
       Content-Type:
       - application/json
+      Correlation-Id:
+      - abc123
       Authorization:
       - Basic YWRtaW46cGFzc3dvcmQ=
   response:
@@ -23,11 +25,11 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:29:30 GMT
+      - Mon, 01 Nov 2021 20:29:26 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '912'
+      - '761'
       Connection:
       - keep-alive
       Vary:
@@ -41,7 +43,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - dab9280532cc4600a11f3674373c743a
+      - 2ef6d9d2af664c05a8f5c77dcf08ece5
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -49,27 +51,23 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6MTExMiwibmV4dCI6Imh0dHBzOi8vcHVscDMtc2FuZGJveC1j
-        ZW50b3M3LmJhbG1vcmEuZXhhbXBsZS5jb206NDQzL3B1bHAvYXBpL3YzL3Rh
+        eyJjb3VudCI6Mzk5NiwibmV4dCI6Imh0dHBzOi8vcHVscDMtc2FuZGJveC1j
+        ZW50b3M3LmNhbm5vbG8uZXhhbXBsZS5jb206NDQzL3B1bHAvYXBpL3YzL3Rh
         c2tzLz9saW1pdD0xJm9mZnNldD0xIiwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9lYjE2NDlh
-        Zi1jYTBkLTQzMTEtYmY0ZS00OTY2MjQ2ODRiYjYvIiwicHVscF9jcmVhdGVk
-        IjoiMjAyMS0xMC0wNlQxNzoyOTowOC44NTI2NjFaIiwic3RhdGUiOiJjb21w
-        bGV0ZWQiLCJuYW1lIjoicHVscF9ycG0uYXBwLnRhc2tzLmNvcHkuY29weV9j
-        b250ZW50IiwibG9nZ2luZ19jaWQiOiJhOWRhZjIyNWZlZDA0MzNkYWM2MWM2
-        NjVlMzMxN2Y5MiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEwLTA2VDE3OjI5OjA4
-        Ljk1NjM4OFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTAtMDZUMTc6Mjk6MDku
-        MzczMjMxWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMv
-        d29ya2Vycy82YjcxM2NhNS1lMWZiLTQ3OWEtODZhMy04NWVkMTFiMzkzZmIv
-        IiwicGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19n
-        cm91cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVz
-        b3VyY2VzIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS84
-        MWY0MTAwNi0yZWI1LTRlMjYtYWVhZi02NzgzMTY2YzgzNzcvdmVyc2lvbnMv
-        MS8iXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9hcGkv
-        djMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vODFmNDEwMDYtMmViNS00ZTI2LWFl
-        YWYtNjc4MzE2NmM4Mzc3LyIsInNoYXJlZDovcHVscC9hcGkvdjMvcmVwb3Np
-        dG9yaWVzL3JwbS9ycG0vOTVkY2EzMjAtYmVhMy00ZTU4LWEzMzgtYTJmNWRk
-        NDZkNGM5LyJdfV19
+        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mOWQwM2Q2
+        MC0xZmM4LTQ0MzgtYTcyYy04MjhkYzIwN2NlYWQvIiwicHVscF9jcmVhdGVk
+        IjoiMjAyMS0xMS0wMVQyMDoyOToyMC4wNjcxNzJaIiwic3RhdGUiOiJjb21w
+        bGV0ZWQiLCJuYW1lIjoicHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJh
+        bF9kZWxldGUiLCJsb2dnaW5nX2NpZCI6IjRmYzQyMzg0ZmQwYjQxZDI5NmNk
+        YmZiN2Q3YWU0MDMzIiwic3RhcnRlZF9hdCI6IjIwMjEtMTEtMDFUMjA6Mjk6
+        MjAuMTI0NjEwWiIsImZpbmlzaGVkX2F0IjoiMjAyMS0xMS0wMVQyMDoyOToy
+        MC4xOTA1MDFaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92
+        My93b3JrZXJzLzEzOGRhODE4LTRkZjQtNGUzZS1iYjJhLWJjMmYxMWUzNjk1
+        NS8iLCJwYXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNr
+        X2dyb3VwIjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9y
+        ZXNvdXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9w
+        dWxwL2FwaS92My9yZXBvc2l0b3JpZXMvY29udGFpbmVyL2NvbnRhaW5lci8x
+        OGE3YjA3OS1jMDc0LTQ5ZGQtYTc3YS1mYzhiNmI1YjAzOGMvIl19XX0=
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:29:30 GMT
+  recorded_at: Mon, 01 Nov 2021 20:29:26 GMT
 recorded_with: VCR 3.0.3
