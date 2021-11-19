@@ -210,12 +210,12 @@ describe('With tracer installed', () => {
       traceCheckbox = checkboxToTheLeftOf(traceNameNode);
     });
     const selectAllCheckbox = getByLabelText('Select all');
-    selectAllCheckbox.click();
+    fireEvent.click(selectAllCheckbox);
     expect(traceCheckbox.checked).toEqual(true);
-    getByLabelText('Select row 0').click(); // de select
-    getByLabelText('Select row 2').click(); // de select
+    fireEvent.click(getByLabelText('Select row 0')); // de select
+    fireEvent.click(getByLabelText('Select row 2')); // de select
 
-    getByText('Restart app').click();
+    fireEvent.click(getByText('Restart app'));
 
     assertNockRequest(autocompleteScope);
     assertNockRequest(resolveTracesScope);
@@ -275,7 +275,7 @@ describe('With tracer installed', () => {
       traceActionMenu = actionMenuToTheRightOf(traceNameNode);
       expect(traceActionMenu).toHaveAttribute('aria-label', 'Actions');
     });
-    traceActionMenu.click();
+    fireEvent.click(traceActionMenu);
 
     let viaCustomizedRexAction;
     await patientlyWaitFor(() => {
@@ -311,7 +311,7 @@ describe('With tracer installed', () => {
     expect(traceCheckbox.checked).toEqual(true);
 
     const actionMenu = getByLabelText('bulk_actions');
-    actionMenu.click();
+    fireEvent.click(actionMenu);
     const viaCustomizedRexAction = queryByText('Restart via customized remote execution');
 
     expect(viaCustomizedRexAction).toBeInTheDocument();

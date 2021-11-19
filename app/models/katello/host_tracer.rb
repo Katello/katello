@@ -10,6 +10,7 @@ module Katello
     validates :application, :length => {:maximum => 255}, :presence => true
     validates :app_type, :length => {:maximum => 255}, :presence => true
 
+    scoped_search :on => :id, :only_explicit => true
     scoped_search :on => :application, :complete_value => true
     scoped_search :on => :app_type, :complete_value => true
     scoped_search :on => :helper, :complete_value => true
