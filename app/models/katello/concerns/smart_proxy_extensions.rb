@@ -186,7 +186,7 @@ module Katello
       end
 
       def pulp3_ssl_configuration(config)
-        legacy_pulp_cert = !self.setting(PULP3_FEATURE, 'client_authentication')&.include?('client_certificates')
+        legacy_pulp_cert = !self.setting(PULP3_FEATURE, 'client_authentication')&.include?('client_certificate')
 
         if Faraday.default_adapter == :excon
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert_filename(use_admin_as_cn_cert: legacy_pulp_cert)
