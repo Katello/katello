@@ -195,6 +195,14 @@ const ContentViewTable = () => {
   const emptyContentBody = __('A content view can be added by using the "Create content view" button above.');
   const emptySearchTitle = __('No matching content views found');
   const emptySearchBody = __('Try changing your search settings.');
+  const {
+    id,
+    latestVersionId,
+    latestVersionName,
+    latestVersionEnvironments,
+    environments,
+    versions,
+  } = actionableCvDetails;
 
   const { rows, columns } = table;
   return (
@@ -243,17 +251,17 @@ const ContentViewTable = () => {
           }
           {isPromoteModalOpen &&
             <ContentViewVersionPromote
-              cvId={actionableCvDetails.id}
-              versionIdToPromote={actionableCvDetails.latestVersionId}
-              versionNameToPromote={actionableCvDetails.latestVersionName}
-              versionEnvironments={actionableCvDetails.latestVersionEnvironments}
+              cvId={id && Number(id)}
+              versionIdToPromote={latestVersionId}
+              versionNameToPromote={latestVersionName}
+              versionEnvironments={latestVersionEnvironments}
               setIsOpen={setIsPromoteModalOpen}
             />
           }
           {isDeleteModalOpen && <ContentViewDeleteWizard
-            cvId={actionableCvDetails.id}
-            cvEnvironments={actionableCvDetails.environments}
-            cvVersions={actionableCvDetails.versions}
+            cvId={id && Number(id)}
+            cvEnvironments={environments}
+            cvVersions={versions}
             show={isDeleteModalOpen}
             setIsOpen={setIsDeleteModalOpen}
             currentStep={currentStep}

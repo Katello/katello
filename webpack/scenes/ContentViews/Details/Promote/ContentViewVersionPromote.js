@@ -3,7 +3,10 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, TextArea, ActionGroup, Button, Modal, ModalVariant, Alert } from '@patternfly/react-core';
+import {
+  Form, FormGroup, TextArea, ActionGroup, Button,
+  Modal, ModalVariant, Alert, TextContent, AlertActionCloseButton,
+} from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 import {
@@ -24,7 +27,8 @@ const ContentViewVersionPromote = ({
 }) => {
   const [description, setDescription] = useState('');
   const [userCheckedItems, setUserCheckedItems] = useState([]);
-  const [promoting, setPromoting] = useState(false);
+  const [alertDismissed, setAlertDismissed] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [forcePromote, setForcePromote] = useState([]);
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
@@ -39,7 +43,7 @@ const ContentViewVersionPromote = ({
   const dispatch = useDispatch();
 
   const onPromote = () => {
-    setPromoting(true);
+    setLoading(true);
     dispatch(promoteContentViewVersion({
       id: versionIdToPromote,
       description,
@@ -55,9 +59,9 @@ const ContentViewVersionPromote = ({
       dispatch(getContentViewVersions(cvId));
     }
     if (promoteError) {
-      setPromoting(false);
+      setLoading(false);
     }
-  }, [promoteResponse, promoteResolved, promoteError, setPromoting, setIsOpen, dispatch, cvId]);
+  }, [promoteResponse, promoteResolved, promoteError, setLoading, setIsOpen, dispatch, cvId]);
 
   const envPathFlat = useMemo(() => {
     if (!environmentPathLoading) {
@@ -88,6 +92,8 @@ const ContentViewVersionPromote = ({
     setForcePromote(userCheckedItems.filter(item => !isValid(item)));
   }, [userCheckedItems, setForcePromote, isValid]);
 
+  const submitDisabled = loading || userCheckedItems.length === 0;
+
   return (
     <Modal
       title={__(`Promote version ${versionNameToPromote}`)}
@@ -98,9 +104,13 @@ const ContentViewVersionPromote = ({
       }}
       appendTo={document.body}
     >
-      {promoting ? <Loading loadingText={__('Please wait while the task starts..')} /> :
-      <>
-        <Form>
+      {loading ?
+        <Loading loadingText={__('Please wait while the task starts..')} /> :
+        <Form onSubmit={(e) => {
+          e.preventDefault();
+          onPromote();
+        }}
+        >
           <FormGroup label="Description" fieldId="description">
             <TextArea
               isRequired
@@ -112,28 +122,34 @@ const ContentViewVersionPromote = ({
               onChange={value => setDescription(value)}
             />
           </FormGroup>
-        </Form>
-        <hr />
-        {forcePromote.length > 0 && (
-          <Alert variant="info" isInline title="Force Promotion">
-            <p>{__('Selected environments are out of the environment order. ' +
-              'The recommended practice is to promote to the next environment in the path.')}
-            </p>
-            <ComponentEnvironments environments={forcePromote} />
-          </Alert>)}
-        <EnvironmentPaths
-          userCheckedItems={userCheckedItems}
-          setUserCheckedItems={setUserCheckedItems}
-          promotedEnvironments={versionEnvironments}
-          publishing={false}
-        />
-        <Form>
-          <ActionGroup>
+          {!alertDismissed && forcePromote.length > 0 && (
+            <Alert
+              variant="info"
+              isInline
+              title={__('Force promotion')}
+              actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
+            >
+              <TextContent>
+                {forcePromote.length > 1 ? __('Selected environments ') : __('Selected environment ')}
+                <ComponentEnvironments environments={forcePromote} />
+                {forcePromote.length > 1 ?
+                  __(' are out of the environment path order. The recommended practice is to promote the next environment in the path.') :
+                  __(' is out of the environment path order. The recommended practice is to promote the next environment in the path.')
+                }
+              </TextContent>
+            </Alert>)}
+          <EnvironmentPaths
+            userCheckedItems={userCheckedItems}
+            setUserCheckedItems={setUserCheckedItems}
+            promotedEnvironments={versionEnvironments}
+            publishing={false}
+          />
+          <ActionGroup style={{ margin: 0 }}>
             <Button
               aria-label="promote_content_view"
               variant="primary"
-              isDisabled={promoting}
-              onClick={() => onPromote()}
+              isDisabled={submitDisabled}
+              type="submit"
             >
               {__('Promote')}
             </Button>
@@ -142,7 +158,7 @@ const ContentViewVersionPromote = ({
             </Button>
           </ActionGroup>
         </Form>
-      </>}
+      }
     </Modal>
   );
 };

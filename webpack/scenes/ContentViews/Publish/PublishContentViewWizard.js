@@ -33,7 +33,7 @@ const PublishContentViewWizard = ({
   const steps = [
     {
       id: 1,
-      name: 'Publish',
+      name: __('Publish'),
       component: <CVPublishForm
         description={description}
         setDescription={setDescription}
@@ -47,11 +47,11 @@ const PublishContentViewWizard = ({
       />,
     },
     {
-      id: 2, name: 'Review', component: <CVPublishReview details={details} userCheckedItems={userCheckedItems} show={show} />, nextButtonText: 'Finish',
+      id: 2, name: __('Review details'), component: <CVPublishReview details={details} userCheckedItems={userCheckedItems} show={show} />, nextButtonText: 'Finish',
     },
     {
       id: 3,
-      name: 'Finish',
+      name: __('Finish'),
       component: <CVPublishFinish
         description={description}
         setDescription={setDescription}

@@ -1,13 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Alert, Flex, FlexItem, Label } from '@patternfly/react-core';
+import { Alert, Flex, FlexItem, Label, AlertActionCloseButton } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { selectCVActivationKeys, selectCVHosts } from '../../../ContentViewDetailSelectors';
 import DeleteContext from '../DeleteContext';
 import { pluralize } from '../../../../../../utils/helpers';
+import WizardHeader from '../../../../components/WizardHeader';
 
 const CVVersionRemoveReview = () => {
+  const [alertDismissed, setAlertDismissed] = useState(false);
   const {
     cvId, versionNameToRemove, versionEnvironments, selectedEnvSet,
     selectedEnvForAK, selectedCVNameForAK, selectedCVNameForHosts,
@@ -20,16 +22,21 @@ const CVVersionRemoveReview = () => {
   const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
   const versionDeleteInfo = __(`Version ${versionNameToRemove} will be deleted from all environments. It will no longer be available for promotion.`);
   const removalNotice = __(`Version ${versionNameToRemove} will be removed from the environments listed below, and will remain available for later promotion. ` +
-      'Changes listed below will be effective after clicking Remove.');
+    'Changes listed below will be effective after clicking Remove.');
 
   return (
     <>
-      <h2>{__('Review Details')}</h2>
-      {(deleteFlow || removeDeletionFlow) &&
-      <Alert variant="warning" isInline title={__('Warning')}>
-        <p style={{ marginBottom: '0.5em' }}>{versionDeleteInfo}</p>
-      </Alert>}
-      {!(deleteFlow || removeDeletionFlow) && removalNotice}
+      <WizardHeader title={__('Review Details')} />
+      {!alertDismissed && (deleteFlow || removeDeletionFlow) &&
+        <Alert
+          variant="warning"
+          isInline
+          title={__('Warning')}
+          actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
+        >
+          <p style={{ marginBottom: '0.5em' }}>{versionDeleteInfo}</p>
+        </Alert>}
+      {!(deleteFlow || removeDeletionFlow) && <WizardHeader description={removalNotice} />}
       {(selectedEnv.length !== 0) &&
         <>
           <h3>{__('Environments')}</h3>
@@ -52,14 +59,14 @@ const CVVersionRemoveReview = () => {
           </Flex>
         </>}
       {affectedActivationKeys &&
-      <>
-        <h3>{__('Activation keys')}</h3>
-        <Flex>
-          <FlexItem><ExclamationTriangleIcon /></FlexItem>
-          <FlexItem><p>{__(`${pluralize(akResponse.length, 'activation key')} will be moved to content view ${selectedCVNameForAK} in `)}</p></FlexItem>
-          <FlexItem><Label isTruncated color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>{selectedEnvForAK[0].name}</Label></FlexItem>
-        </Flex>
-      </>}
+        <>
+          <h3>{__('Activation keys')}</h3>
+          <Flex>
+            <FlexItem><ExclamationTriangleIcon /></FlexItem>
+            <FlexItem><p>{__(`${pluralize(akResponse.length, 'activation key')} will be moved to content view ${selectedCVNameForAK} in `)}</p></FlexItem>
+            <FlexItem><Label isTruncated color="purple" href={`/lifecycle_environments/${selectedEnvForAK[0].id}`}>{selectedEnvForAK[0].name}</Label></FlexItem>
+          </Flex>
+        </>}
     </>
   );
 };

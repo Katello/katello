@@ -32,7 +32,7 @@ export const LabelComponent = () => (
 
 export const LabelDependencies = () => (
   <Flex>
-    <FlexItem spacer={{ default: 'spacerSm' }}>{__('Solve Dependencies')}</FlexItem>
+    <FlexItem spacer={{ default: 'spacerSm' }}>{__('Solve dependencies')}</FlexItem>
     <FlexItem>
       {HelpToolTip(dependenciesHelpText)}
     </FlexItem>
@@ -41,7 +41,7 @@ export const LabelDependencies = () => (
 
 export const LabelAutoPublish = () => (
   <Flex>
-    <FlexItem spacer={{ default: 'spacerSm' }}>{__('Auto Publish')}</FlexItem>
+    <FlexItem spacer={{ default: 'spacerSm' }}>{__('Auto publish')}</FlexItem>
     <FlexItem>
       {HelpToolTip(autoPublishHelpText)}
     </FlexItem>
@@ -50,7 +50,7 @@ export const LabelAutoPublish = () => (
 
 export const LabelImportOnly = () => (
   <Flex>
-    <FlexItem spacer={{ default: 'spacerSm' }}>{__('Import Only')}</FlexItem>
+    <FlexItem spacer={{ default: 'spacerSm' }}>{__('Import only')}</FlexItem>
     <FlexItem>
       {HelpToolTip(importOnlyHelpText)}
     </FlexItem>

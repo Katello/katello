@@ -355,9 +355,9 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(queryByText('Label')).not.toBeInTheDocument();
   expect(queryByText('Composite content view')).not.toBeInTheDocument();
   expect(queryByText('Component content view')).not.toBeInTheDocument();
-  expect(queryByText('Solve Dependencies')).not.toBeInTheDocument();
-  expect(queryByText('Auto Publish')).not.toBeInTheDocument();
-  expect(queryByText('Import Only')).not.toBeInTheDocument();
+  expect(queryByText('Solve dependencies')).not.toBeInTheDocument();
+  expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(queryByText('Import only')).not.toBeInTheDocument();
 
   getByLabelText('create_content_view').click();
 
@@ -366,9 +366,9 @@ test('Displays Create Content View and opens modal with Form', async () => {
   expect(getByText('Label')).toBeInTheDocument();
   expect(getByText('Composite content view')).toBeInTheDocument();
   expect(getByText('Component content view')).toBeInTheDocument();
-  expect(getByText('Solve Dependencies')).toBeInTheDocument();
-  expect(queryByText('Auto Publish')).not.toBeInTheDocument();
-  expect(getByText('Import Only')).toBeInTheDocument();
+  expect(getByText('Solve dependencies')).toBeInTheDocument();
+  expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(getByText('Import only')).toBeInTheDocument();
 });
 
 /* eslint-enable no-useless-escape */
