@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/?name=2_duplicate
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/repositories/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -25,501 +25,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:26 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '683'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 7923e1ef5a244a4c95b6f903ccaa0be3
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Strict-Transport-Security:
-      - max-age=15768000
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS9kODZmMWY1ZC0yZTYxLTQ0OTEtYjc1YS0xMGI0MWVkNGE3Y2Qv
-        IiwicHVscF9jcmVhdGVkIjoiMjAyMS0xMC0wNlQxNzo0MToxNC44NzcxMTVa
-        IiwidmVyc2lvbnNfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS9kODZmMWY1ZC0yZTYxLTQ0OTEtYjc1YS0xMGI0MWVkNGE3Y2Qv
-        dmVyc2lvbnMvIiwicHVscF9sYWJlbHMiOnt9LCJsYXRlc3RfdmVyc2lvbl9o
-        cmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9ycG0vcnBtL2Q4NmYx
-        ZjVkLTJlNjEtNDQ5MS1iNzVhLTEwYjQxZWQ0YTdjZC92ZXJzaW9ucy8wLyIs
-        Im5hbWUiOiIyX2R1cGxpY2F0ZSIsImRlc2NyaXB0aW9uIjpudWxsLCJyZXRh
-        aW5fcmVwb192ZXJzaW9ucyI6bnVsbCwicmVtb3RlIjpudWxsLCJhdXRvcHVi
-        bGlzaCI6ZmFsc2UsIm1ldGFkYXRhX3NpZ25pbmdfc2VydmljZSI6bnVsbCwi
-        cmV0YWluX3BhY2thZ2VfdmVyc2lvbnMiOjAsIm1ldGFkYXRhX2NoZWNrc3Vt
-        X3R5cGUiOm51bGwsInBhY2thZ2VfY2hlY2tzdW1fdHlwZSI6bnVsbCwiZ3Bn
-        Y2hlY2siOjAsInJlcG9fZ3BnY2hlY2siOjAsInNxbGl0ZV9tZXRhZGF0YSI6
-        ZmFsc2V9XX0=
-    http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:26 GMT
-- request:
-    method: delete
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/d86f1f5d-2e61-4491-b75a-10b41ed4a7cd/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.20.1
-      Date:
-      - Wed, 06 Oct 2021 17:41:26 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 4fd924897cb44867afa588f457a85c00
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2FjOTA5ZmFhLTBlZjYtNDM2
-        Yi04ZDg2LTIyZWYzZGU4ODYwNS8ifQ==
-    http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:26 GMT
-- request:
-    method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/?name=2_duplicate
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.20.1
-      Date:
-      - Wed, 06 Oct 2021 17:41:27 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '649'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - aef6c16c8aad4db78503e201e5655326
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Strict-Transport-Security:
-      - max-age=15768000
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL3JwbS9y
-        cG0vN2MxNWU5YjUtNDNlYi00YzEzLThmMDktMDJlZmZkM2VkMTVmLyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjEtMTAtMDZUMTc6NDE6MTQuMzM5NzIxWiIsIm5h
-        bWUiOiIyX2R1cGxpY2F0ZSIsInVybCI6Imh0dHA6Ly93ZWJzaXRlLmNvbS8i
-        LCJjYV9jZXJ0IjoiS0pMOktERiooREYmKigqJCYoKiMkSkxLSkQoRCgoRCIs
-        ImNsaWVudF9jZXJ0IjoiS0pMOktERiooREYmKigqJCYoKiMkSkxLSkQoRCgo
-        RCIsInRsc192YWxpZGF0aW9uIjpmYWxzZSwicHJveHlfdXJsIjpudWxsLCJw
-        dWxwX2xhYmVscyI6e30sInB1bHBfbGFzdF91cGRhdGVkIjoiMjAyMS0xMC0w
-        NlQxNzo0MToyMC43NTg0OTRaIiwiZG93bmxvYWRfY29uY3VycmVuY3kiOm51
-        bGwsIm1heF9yZXRyaWVzIjpudWxsLCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJ0
-        b3RhbF90aW1lb3V0IjozMDAuMCwiY29ubmVjdF90aW1lb3V0IjpudWxsLCJz
-        b2NrX2Nvbm5lY3RfdGltZW91dCI6bnVsbCwic29ja19yZWFkX3RpbWVvdXQi
-        Om51bGwsImhlYWRlcnMiOm51bGwsInJhdGVfbGltaXQiOm51bGwsInNsZXNf
-        YXV0aF90b2tlbiI6bnVsbH1dfQ==
-    http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:27 GMT
-- request:
-    method: delete
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/7c15e9b5-43eb-4c13-8f09-02effd3ed15f/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.20.1
-      Date:
-      - Wed, 06 Oct 2021 17:41:27 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - '092a0b206f08431f9d5ee269c6a63072'
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzcyNTU3OTRlLTRhMGYtNDli
-        Yi04ODJjLTNmOGMzNWQ0MzgzNS8ifQ==
-    http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:27 GMT
-- request:
-    method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/tasks/ac909faa-0ef6-436b-8d86-22ef3de88605/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.15.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.20.1
-      Date:
-      - Wed, 06 Oct 2021 17:41:28 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '607'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - e8d8a62998a94fdcba8864dfd78fbeeb
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Strict-Transport-Security:
-      - max-age=15768000
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvYWM5MDlmYWEtMGVm
-        Ni00MzZiLThkODYtMjJlZjNkZTg4NjA1LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTAtMDZUMTc6NDE6MjYuNTQ3MDM5WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiI0ZmQ5MjQ4OTdjYjQ0ODY3YWZhNTg4ZjQ1
-        N2E4NWMwMCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEwLTA2VDE3OjQxOjI2LjY3
-        MjA4OFoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTAtMDZUMTc6NDE6MjcuMDI4
-        MTQyWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy82YjcxM2NhNS1lMWZiLTQ3OWEtODZhMy04NWVkMTFiMzkzZmIvIiwi
-        cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
-        cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
-        Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9ycG0vZDg2ZjFmNWQtMmU2MS00NDkx
-        LWI3NWEtMTBiNDFlZDRhN2NkLyJdfQ==
-    http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:28 GMT
-- request:
-    method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/tasks/7255794e-4a0f-49bb-882c-3f8c35d43835/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.15.2/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.20.1
-      Date:
-      - Wed, 06 Oct 2021 17:41:28 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '602'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 96d4a51404614bc580e4a1ffea16517d
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Strict-Transport-Security:
-      - max-age=15768000
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvNzI1NTc5NGUtNGEw
-        Zi00OWJiLTg4MmMtM2Y4YzM1ZDQzODM1LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTAtMDZUMTc6NDE6MjcuNzAwMDI1WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiIwOTJhMGIyMDZmMDg0MzFmOWQ1ZWUyNjlj
-        NmE2MzA3MiIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEwLTA2VDE3OjQxOjI3Ljc5
-        OTQwMVoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTAtMDZUMTc6NDE6MjcuOTAz
-        MTI3WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy82YjcxM2NhNS1lMWZiLTQ3OWEtODZhMy04NWVkMTFiMzkzZmIvIiwi
-        cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
-        cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
-        Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9h
-        cGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzdjMTVlOWI1LTQzZWItNGMxMy04ZjA5
-        LTAyZWZmZDNlZDE1Zi8iXX0=
-    http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:28 GMT
-- request:
-    method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?name=2_duplicate
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.20.1
-      Date:
-      - Wed, 06 Oct 2021 17:41:29 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '466'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - 152aa14b044447c182717d5f07066bf0
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-      Strict-Transport-Security:
-      - max-age=15768000
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
-        L3JwbS9ycG0vOTJiMTIzM2YtNTIxZC00NmY5LTljMDUtYWYwMTgwZTQ1MTEy
-        LyIsInB1bHBfY3JlYXRlZCI6IjIwMjEtMTAtMDZUMTc6NDE6MTcuNDY3MTE5
-        WiIsImJhc2VfcGF0aCI6IkFDTUVfQ29ycG9yYXRpb24vZGV2L2ZlZG9yYV8x
-        N19kdXBsaWNhdGVfbGFiZWwiLCJiYXNlX3VybCI6Imh0dHBzOi8vcHVscDMt
-        c2FuZGJveC1jZW50b3M3LmJhbG1vcmEuZXhhbXBsZS5jb20vcHVscC9jb250
-        ZW50L0FDTUVfQ29ycG9yYXRpb24vZGV2L2ZlZG9yYV8xN19kdXBsaWNhdGVf
-        bGFiZWwvIiwiY29udGVudF9ndWFyZCI6bnVsbCwicHVscF9sYWJlbHMiOnt9
-        LCJuYW1lIjoiMl9kdXBsaWNhdGUiLCJyZXBvc2l0b3J5IjpudWxsLCJwdWJs
-        aWNhdGlvbiI6bnVsbH1dfQ==
-    http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:29 GMT
-- request:
-    method: delete
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/92b1233f-521d-46f9-9c05-af0180e45112/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.20.1
-      Date:
-      - Wed, 06 Oct 2021 17:41:29 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - DENY
-      X-Content-Type-Options:
-      - nosniff
-      Referrer-Policy:
-      - same-origin
-      Correlation-Id:
-      - c38c4401264b4b0889d3e03860823e68
-      Access-Control-Expose-Headers:
-      - Correlation-ID
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2NiZmQzMjI2LWQ2OTAtNGM3
-        Zi05ZWU4LTM0ZWM3NjViZGMwZi8ifQ==
-    http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:29 GMT
-- request:
-    method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Content-Type:
-      - application/json
-      User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.20.1
-      Date:
-      - Wed, 06 Oct 2021 17:41:30 GMT
+      - Mon, 01 Nov 2021 20:15:01 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -537,7 +43,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 6204bf856d62447f8122377f68816f07
+      - 2c14f580de4141b7a58b6b3ac1e8c86d
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -548,10 +54,10 @@ http_interactions:
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:30 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:01 GMT
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/tasks/cbfd3226-d690-4c7f-9ee8-34ec765bdc0f/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/remotes/rpm/rpm/?name=2_duplicate
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -559,7 +65,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.2/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -574,17 +80,17 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:30 GMT
+      - Mon, 01 Nov 2021 20:15:02 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '558'
+      - '52'
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
-      - GET, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
       X-Content-Type-Options:
@@ -592,7 +98,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - a41bb656b60f456d8c915b8095994366
+      - 1657e9db8f2a45c19d5d319b5b5f2835
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -600,24 +106,123 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvY2JmZDMyMjYtZDY5
-        MC00YzdmLTllZTgtMzRlYzc2NWJkYzBmLyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTAtMDZUMTc6NDE6MjkuNDc5NTg0WiIsInN0YXRlIjoiY29tcGxldGVk
-        IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVs
-        ZXRlIiwibG9nZ2luZ19jaWQiOiJjMzhjNDQwMTI2NGI0YjA4ODlkM2UwMzg2
-        MDgyM2U2OCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEwLTA2VDE3OjQxOjI5LjU4
-        NDg3M1oiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTAtMDZUMTc6NDE6MjkuNzA3
-        NDc3WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy8wNWU2ZDdmNC1iNTY0LTRlNzMtODJlYi0xNWI1MGE1MTI0YTMvIiwi
-        cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
-        cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
-        Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvYXBpL3Yz
-        L2Rpc3RyaWJ1dGlvbnMvIl19
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:30 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:02 GMT
+- request:
+    method: get
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/distributions/rpm/rpm/?name=2_duplicate
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.20.1
+      Date:
+      - Mon, 01 Nov 2021 20:15:02 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '52'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - b3b6dc5ec0ba4f388a65c9efc4ec732b
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Strict-Transport-Security:
+      - max-age=15768000
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Mon, 01 Nov 2021 20:15:02 GMT
+- request:
+    method: get
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - OpenAPI-Generator/3.16.1/ruby
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.20.1
+      Date:
+      - Mon, 01 Nov 2021 20:15:02 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '52'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Correlation-Id:
+      - 98b50fb8f5524c91824892ec2e73ae8d
+      Access-Control-Expose-Headers:
+      - Correlation-ID
+      Strict-Transport-Security:
+      - max-age=15768000
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
+    http_version: 
+  recorded_at: Mon, 01 Nov 2021 20:15:02 GMT
 - request:
     method: post
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/remotes/rpm/rpm/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/remotes/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
@@ -630,7 +235,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -645,7 +250,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:30 GMT
+      - Mon, 01 Nov 2021 20:15:02 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -653,7 +258,7 @@ http_interactions:
       Connection:
       - keep-alive
       Location:
-      - "/pulp/api/v3/remotes/rpm/rpm/ae3fe0c4-e66a-455d-9337-49f528525817/"
+      - "/pulp/api/v3/remotes/rpm/rpm/6506f02f-84d7-420a-839a-bfe5bf1bcc59/"
       Vary:
       - Accept, Cookie
       Allow:
@@ -665,7 +270,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 6e0e9ec385b04d29b151b18887941fd4
+      - 12035779c78b489c841b292bece0bd2f
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -673,23 +278,23 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtL2Fl
-        M2ZlMGM0LWU2NmEtNDU1ZC05MzM3LTQ5ZjUyODUyNTgxNy8iLCJwdWxwX2Ny
-        ZWF0ZWQiOiIyMDIxLTEwLTA2VDE3OjQxOjMwLjkwNjMwNloiLCJuYW1lIjoi
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVtb3Rlcy9ycG0vcnBtLzY1
+        MDZmMDJmLTg0ZDctNDIwYS04MzlhLWJmZTViZjFiY2M1OS8iLCJwdWxwX2Ny
+        ZWF0ZWQiOiIyMDIxLTExLTAxVDIwOjE1OjAyLjgyODA5NFoiLCJuYW1lIjoi
         Ml9kdXBsaWNhdGUiLCJ1cmwiOiJodHRwOi8vbXlyZXBvLmNvbSIsImNhX2Nl
         cnQiOm51bGwsImNsaWVudF9jZXJ0IjpudWxsLCJ0bHNfdmFsaWRhdGlvbiI6
         dHJ1ZSwicHJveHlfdXJsIjpudWxsLCJwdWxwX2xhYmVscyI6e30sInB1bHBf
-        bGFzdF91cGRhdGVkIjoiMjAyMS0xMC0wNlQxNzo0MTozMC45MDYzNDlaIiwi
+        bGFzdF91cGRhdGVkIjoiMjAyMS0xMS0wMVQyMDoxNTowMi44MjgxMTNaIiwi
         ZG93bmxvYWRfY29uY3VycmVuY3kiOm51bGwsIm1heF9yZXRyaWVzIjpudWxs
         LCJwb2xpY3kiOiJpbW1lZGlhdGUiLCJ0b3RhbF90aW1lb3V0IjozMDAuMCwi
         Y29ubmVjdF90aW1lb3V0IjpudWxsLCJzb2NrX2Nvbm5lY3RfdGltZW91dCI6
         bnVsbCwic29ja19yZWFkX3RpbWVvdXQiOm51bGwsImhlYWRlcnMiOm51bGws
         InJhdGVfbGltaXQiOm51bGwsInNsZXNfYXV0aF90b2tlbiI6bnVsbH0=
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:30 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:02 GMT
 - request:
     method: post
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/repositories/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
@@ -699,7 +304,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -714,7 +319,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:31 GMT
+      - Mon, 01 Nov 2021 20:15:03 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -722,7 +327,7 @@ http_interactions:
       Connection:
       - keep-alive
       Location:
-      - "/pulp/api/v3/repositories/rpm/rpm/f4705d90-59a3-4078-bf83-5b1dd34e9fd9/"
+      - "/pulp/api/v3/repositories/rpm/rpm/66bba883-6a05-4dde-95c8-3e2c13e83a3e/"
       Vary:
       - Accept, Cookie
       Allow:
@@ -734,7 +339,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - a0f2a864eba44a429d37e524f0449960
+      - 4f5c87fdc0ad4c77a88a610f338515e9
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -743,13 +348,13 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vZjQ3MDVkOTAtNTlhMy00MDc4LWJmODMtNWIxZGQzNGU5ZmQ5LyIsInB1
-        bHBfY3JlYXRlZCI6IjIwMjEtMTAtMDZUMTc6NDE6MzEuNDk2NjExWiIsInZl
+        cG0vNjZiYmE4ODMtNmEwNS00ZGRlLTk1YzgtM2UyYzEzZTgzYTNlLyIsInB1
+        bHBfY3JlYXRlZCI6IjIwMjEtMTEtMDFUMjA6MTU6MDMuMjE5NTk3WiIsInZl
         cnNpb25zX2hyZWYiOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL3JwbS9y
-        cG0vZjQ3MDVkOTAtNTlhMy00MDc4LWJmODMtNWIxZGQzNGU5ZmQ5L3ZlcnNp
+        cG0vNjZiYmE4ODMtNmEwNS00ZGRlLTk1YzgtM2UyYzEzZTgzYTNlL3ZlcnNp
         b25zLyIsInB1bHBfbGFiZWxzIjp7fSwibGF0ZXN0X3ZlcnNpb25faHJlZiI6
-        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS9mNDcwNWQ5MC01
-        OWEzLTQwNzgtYmY4My01YjFkZDM0ZTlmZDkvdmVyc2lvbnMvMC8iLCJuYW1l
+        Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvcnBtL3JwbS82NmJiYTg4My02
+        YTA1LTRkZGUtOTVjOC0zZTJjMTNlODNhM2UvdmVyc2lvbnMvMC8iLCJuYW1l
         IjoiMl9kdXBsaWNhdGUiLCJkZXNjcmlwdGlvbiI6bnVsbCwicmV0YWluX3Jl
         cG9fdmVyc2lvbnMiOm51bGwsInJlbW90ZSI6bnVsbCwiYXV0b3B1Ymxpc2gi
         OmZhbHNlLCJtZXRhZGF0YV9zaWduaW5nX3NlcnZpY2UiOm51bGwsInJldGFp
@@ -758,22 +363,22 @@ http_interactions:
         IjowLCJyZXBvX2dwZ2NoZWNrIjowLCJzcWxpdGVfbWV0YWRhdGEiOmZhbHNl
         fQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:31 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:03 GMT
 - request:
     method: post
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/publications/rpm/rpm/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/publications/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL3JwbS9ycG0vZjQ3MDVkOTAtNTlhMy00MDc4LWJmODMtNWIxZGQzNGU5
-        ZmQ5L3ZlcnNpb25zLzAvIiwiZ3BnY2hlY2siOjAsInJlcG9fZ3BnY2hlY2si
+        aWVzL3JwbS9ycG0vNjZiYmE4ODMtNmEwNS00ZGRlLTk1YzgtM2UyYzEzZTgz
+        YTNlL3ZlcnNpb25zLzAvIiwiZ3BnY2hlY2siOjAsInJlcG9fZ3BnY2hlY2si
         OjAsInNxbGl0ZV9tZXRhZGF0YSI6ZmFsc2V9
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -788,7 +393,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:32 GMT
+      - Mon, 01 Nov 2021 20:15:03 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -806,19 +411,19 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 30a63fd8dda340a7855b869b2b07e5fe
+      - 4adb1765c9224cee90bf9336bd488925
       Access-Control-Expose-Headers:
       - Correlation-ID
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2VlYjA5MzIwLTA4MDQtNDE2
-        Yy1iZjI0LTRkN2RiMDhmYWNjNC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA1N2NiZGM4LTZhYTMtNDc1
+        Mi04MTAxLTRjNzQyYjkyZDgzZS8ifQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:32 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:03 GMT
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/tasks/eeb09320-0804-416c-bf24-4d7db08facc4/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/tasks/057cbdc8-6aa3-4752-8101-4c742b92d83e/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -826,7 +431,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.2/ruby
+      - OpenAPI-Generator/3.16.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -841,11 +446,11 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:32 GMT
+      - Mon, 01 Nov 2021 20:15:04 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '813'
+      - '820'
       Connection:
       - keep-alive
       Vary:
@@ -859,7 +464,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 70731fde52ca4bf9b8c64aeee3feb4b2
+      - 28e068dd21ae46a5ad347875d4aa5598
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -867,30 +472,30 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZWViMDkzMjAtMDgw
-        NC00MTZjLWJmMjQtNGQ3ZGIwOGZhY2M0LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTAtMDZUMTc6NDE6MzIuNDg0MTQ4WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMDU3Y2JkYzgtNmFh
+        My00NzUyLTgxMDEtNGM3NDJiOTJkODNlLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMTEtMDFUMjA6MTU6MDMuODQwNzczWiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBfcnBtLmFwcC50YXNrcy5wdWJsaXNoaW5nLnB1Ymxp
-        c2giLCJsb2dnaW5nX2NpZCI6IjMwYTYzZmQ4ZGRhMzQwYTc4NTViODY5YjJi
-        MDdlNWZlIiwic3RhcnRlZF9hdCI6IjIwMjEtMTAtMDZUMTc6NDE6MzIuNTc3
-        MDcyWiIsImZpbmlzaGVkX2F0IjoiMjAyMS0xMC0wNlQxNzo0MTozMi44NDE3
-        MjhaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3Jr
-        ZXJzLzA1ZTZkN2Y0LWI1NjQtNGU3My04MmViLTE1YjUwYTUxMjRhMy8iLCJw
+        c2giLCJsb2dnaW5nX2NpZCI6IjRhZGIxNzY1YzkyMjRjZWU5MGJmOTMzNmJk
+        NDg4OTI1Iiwic3RhcnRlZF9hdCI6IjIwMjEtMTEtMDFUMjA6MTU6MDMuODc4
+        MzI3WiIsImZpbmlzaGVkX2F0IjoiMjAyMS0xMS0wMVQyMDoxNTowNC4wMzYz
+        OTBaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92My93b3Jr
+        ZXJzL2NlNzNkMWFhLTQzM2MtNGQ4YS04Nzc3LTc0ODJlNjE2MzhiYi8iLCJw
         YXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNrX2dyb3Vw
         IjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbeyJtZXNzYWdlIjoiR2VuZXJh
         dGluZyByZXBvc2l0b3J5IG1ldGFkYXRhIiwiY29kZSI6InB1Ymxpc2guZ2Vu
         ZXJhdGluZ19tZXRhZGF0YSIsInN0YXRlIjoiY29tcGxldGVkIiwidG90YWwi
         OjEsImRvbmUiOjEsInN1ZmZpeCI6bnVsbH1dLCJjcmVhdGVkX3Jlc291cmNl
-        cyI6WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vYzUyZGRk
-        NGEtZTRmYi00ZTVmLThjNjEtMGE5NWIzNWY0MzM1LyJdLCJyZXNlcnZlZF9y
-        ZXNvdXJjZXNfcmVjb3JkIjpbIi9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMv
-        cnBtL3JwbS9mNDcwNWQ5MC01OWEzLTQwNzgtYmY4My01YjFkZDM0ZTlmZDkv
-        Il19
+        cyI6WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vMTcxNTYw
+        MjItZDg1NC00N2VjLWE5YWUtNzEwYThkYTI5YWY0LyJdLCJyZXNlcnZlZF9y
+        ZXNvdXJjZXNfcmVjb3JkIjpbInNoYXJlZDovcHVscC9hcGkvdjMvcmVwb3Np
+        dG9yaWVzL3JwbS9ycG0vNjZiYmE4ODMtNmEwNS00ZGRlLTk1YzgtM2UyYzEz
+        ZTgzYTNlLyJdfQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:32 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:04 GMT
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -898,7 +503,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -913,7 +518,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:33 GMT
+      - Mon, 01 Nov 2021 20:15:04 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -931,7 +536,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 8a4142e8e9564dfaa097468a255ff37f
+      - b54d555279ce471abb0e6f7e30194cbc
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -942,23 +547,23 @@ http_interactions:
         eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOltdfQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:33 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:04 GMT
 - request:
     method: post
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/distributions/rpm/rpm/
     body:
       encoding: UTF-8
       base64_string: |
         eyJiYXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdf
         ZHVwbGljYXRlX2xhYmVsIiwiY29udGVudF9ndWFyZCI6bnVsbCwibmFtZSI6
         IjJfZHVwbGljYXRlIiwicHVibGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVi
-        bGljYXRpb25zL3JwbS9ycG0vYzUyZGRkNGEtZTRmYi00ZTVmLThjNjEtMGE5
-        NWIzNWY0MzM1LyJ9
+        bGljYXRpb25zL3JwbS9ycG0vMTcxNTYwMjItZDg1NC00N2VjLWE5YWUtNzEw
+        YThkYTI5YWY0LyJ9
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -973,7 +578,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:33 GMT
+      - Mon, 01 Nov 2021 20:15:04 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -991,19 +596,19 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 12fb04f3c23842488af87b598a5bff30
+      - 057446d99afc4172b8e36a73554113d4
       Access-Control-Expose-Headers:
       - Correlation-ID
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzI1NjQ2OGZjLTIzZWMtNDQ3
-        Ny04ZTc5LWQwYzE0ZDZhMWJiNC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2ZiMzAxZTRjLTMyYWQtNGY3
+        OS1hYjYyLTMzMTUzYmE1OWIwYS8ifQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:33 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:04 GMT
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/tasks/256468fc-23ec-4477-8e79-d0c14d6a1bb4/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/tasks/fb301e4c-32ad-4f79-ab62-33153ba59b0a/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1011,7 +616,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.2/ruby
+      - OpenAPI-Generator/3.16.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1026,7 +631,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:34 GMT
+      - Mon, 01 Nov 2021 20:15:04 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -1044,7 +649,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 8e439b67a1b94d70913f182b6e2d85a5
+      - 72c6e5ad25e34080b923f5ed9408867f
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -1052,26 +657,26 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMjU2NDY4ZmMtMjNl
-        Yy00NDc3LThlNzktZDBjMTRkNmExYmI0LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTAtMDZUMTc6NDE6MzMuNzg3Njg4WiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvZmIzMDFlNGMtMzJh
+        ZC00Zjc5LWFiNjItMzMxNTNiYTU5YjBhLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMTEtMDFUMjA6MTU6MDQuNTk5Mjc3WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfY3Jl
-        YXRlIiwibG9nZ2luZ19jaWQiOiIxMmZiMDRmM2MyMzg0MjQ4OGFmODdiNTk4
-        YTViZmYzMCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEwLTA2VDE3OjQxOjMzLjky
-        MDExMloiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTAtMDZUMTc6NDE6MzQuMjQy
-        NTY2WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy8wNWU2ZDdmNC1iNTY0LTRlNzMtODJlYi0xNWI1MGE1MTI0YTMvIiwi
+        YXRlIiwibG9nZ2luZ19jaWQiOiIwNTc0NDZkOTlhZmM0MTcyYjhlMzZhNzM1
+        NTQxMTNkNCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTExLTAxVDIwOjE1OjA0LjY1
+        MjY3N1oiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTEtMDFUMjA6MTU6MDQuNzc1
+        MzAzWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy8xMzhkYTgxOC00ZGY0LTRlM2UtYmIyYS1iYzJmMTFlMzY5NTUvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
-        Y2VzIjpbIi9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL3JwbS9ycG0vNmQx
-        MGNiZWYtNDFmZi00NmFhLTlhMjQtNmI0MDM2ZTcyMTkwLyJdLCJyZXNlcnZl
+        Y2VzIjpbIi9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zL3JwbS9ycG0vN2I2
+        YjQ5NTYtN2NmOS00ZDYzLThkNjctYmRlNzBjOTUyZDU4LyJdLCJyZXNlcnZl
         ZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9hcGkvdjMvZGlzdHJpYnV0aW9ucy8i
         XX0=
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:34 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:04 GMT
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/6d10cbef-41ff-46aa-9a24-6b4036e72190/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/distributions/rpm/rpm/7b6b4956-7cf9-4d63-8d67-bde70c952d58/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1079,7 +684,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -1094,7 +699,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:34 GMT
+      - Mon, 01 Nov 2021 20:15:05 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -1112,7 +717,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 12afcd8cacdb41128922270a79382b6d
+      - ce9e7a33675c4fa1acbaaa1b9a33188c
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -1121,21 +726,21 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvZGlzdHJpYnV0aW9ucy9ycG0v
-        cnBtLzZkMTBjYmVmLTQxZmYtNDZhYS05YTI0LTZiNDAzNmU3MjE5MC8iLCJw
-        dWxwX2NyZWF0ZWQiOiIyMDIxLTEwLTA2VDE3OjQxOjM0LjIxNTEwNFoiLCJi
+        cnBtLzdiNmI0OTU2LTdjZjktNGQ2My04ZDY3LWJkZTcwYzk1MmQ1OC8iLCJw
+        dWxwX2NyZWF0ZWQiOiIyMDIxLTExLTAxVDIwOjE1OjA0Ljc2MDU2N1oiLCJi
         YXNlX3BhdGgiOiJBQ01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVw
         bGljYXRlX2xhYmVsIiwiYmFzZV91cmwiOiJodHRwczovL3B1bHAzLXNhbmRi
-        b3gtY2VudG9zNy5iYWxtb3JhLmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9B
+        b3gtY2VudG9zNy5jYW5ub2xvLmV4YW1wbGUuY29tL3B1bHAvY29udGVudC9B
         Q01FX0NvcnBvcmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xhYmVs
         LyIsImNvbnRlbnRfZ3VhcmQiOm51bGwsInB1bHBfbGFiZWxzIjp7fSwibmFt
         ZSI6IjJfZHVwbGljYXRlIiwicmVwb3NpdG9yeSI6bnVsbCwicHVibGljYXRp
-        b24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vYzUyZGRk
-        NGEtZTRmYi00ZTVmLThjNjEtMGE5NWIzNWY0MzM1LyJ9
+        b24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vMTcxNTYw
+        MjItZDg1NC00N2VjLWE5YWUtNzEwYThkYTI5YWY0LyJ9
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:34 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:05 GMT
 - request:
     method: put
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/repositories/rpm/rpm/f4705d90-59a3-4078-bf83-5b1dd34e9fd9/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/repositories/rpm/rpm/66bba883-6a05-4dde-95c8-3e2c13e83a3e/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1145,7 +750,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -1160,7 +765,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:35 GMT
+      - Mon, 01 Nov 2021 20:15:05 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -1178,19 +783,19 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - fb35b29783624af7a5cea69075ec52fd
+      - a364ffd575dd4463915418406ea8b97a
       Access-Control-Expose-Headers:
       - Correlation-ID
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2RiZDkwYTRhLWQxNjAtNDMx
-        MC04Zjg2LTMyNGUzNjkxNDU3YS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBiZTUzNDM1LTQ3Y2YtNDI5
+        Yy05ZjhjLTM5N2FmYTIyYWZmMC8ifQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:35 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:05 GMT
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/distributions/rpm/rpm/?base_path=ACME_Corporation/dev/fedora_17_duplicate_label
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1198,7 +803,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -1213,7 +818,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:36 GMT
+      - Mon, 01 Nov 2021 20:15:05 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -1231,7 +836,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - c0426a99e4fd47c69278f3a164ecd7ed
+      - b6f75613e1d249b6aeb99d6ce48e7be0
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -1241,33 +846,33 @@ http_interactions:
       base64_string: |
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25z
-        L3JwbS9ycG0vNmQxMGNiZWYtNDFmZi00NmFhLTlhMjQtNmI0MDM2ZTcyMTkw
-        LyIsInB1bHBfY3JlYXRlZCI6IjIwMjEtMTAtMDZUMTc6NDE6MzQuMjE1MTA0
+        L3JwbS9ycG0vN2I2YjQ5NTYtN2NmOS00ZDYzLThkNjctYmRlNzBjOTUyZDU4
+        LyIsInB1bHBfY3JlYXRlZCI6IjIwMjEtMTEtMDFUMjA6MTU6MDQuNzYwNTY3
         WiIsImJhc2VfcGF0aCI6IkFDTUVfQ29ycG9yYXRpb24vZGV2L2ZlZG9yYV8x
         N19kdXBsaWNhdGVfbGFiZWwiLCJiYXNlX3VybCI6Imh0dHBzOi8vcHVscDMt
-        c2FuZGJveC1jZW50b3M3LmJhbG1vcmEuZXhhbXBsZS5jb20vcHVscC9jb250
+        c2FuZGJveC1jZW50b3M3LmNhbm5vbG8uZXhhbXBsZS5jb20vcHVscC9jb250
         ZW50L0FDTUVfQ29ycG9yYXRpb24vZGV2L2ZlZG9yYV8xN19kdXBsaWNhdGVf
         bGFiZWwvIiwiY29udGVudF9ndWFyZCI6bnVsbCwicHVscF9sYWJlbHMiOnt9
         LCJuYW1lIjoiMl9kdXBsaWNhdGUiLCJyZXBvc2l0b3J5IjpudWxsLCJwdWJs
-        aWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvcnBtL3JwbS9j
-        NTJkZGQ0YS1lNGZiLTRlNWYtOGM2MS0wYTk1YjM1ZjQzMzUvIn1dfQ==
+        aWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvcnBtL3JwbS8x
+        NzE1NjAyMi1kODU0LTQ3ZWMtYTlhZS03MTBhOGRhMjlhZjQvIn1dfQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:36 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:05 GMT
 - request:
     method: patch
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/6d10cbef-41ff-46aa-9a24-6b4036e72190/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/distributions/rpm/rpm/7b6b4956-7cf9-4d63-8d67-bde70c952d58/
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb250ZW50X2d1YXJkIjpudWxsLCJiYXNlX3BhdGgiOiJBQ01FX0NvcnBv
         cmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xhYmVsIiwicHVibGlj
-        YXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vYzUy
-        ZGRkNGEtZTRmYi00ZTVmLThjNjEtMGE5NWIzNWY0MzM1LyJ9
+        YXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vMTcx
+        NTYwMjItZDg1NC00N2VjLWE5YWUtNzEwYThkYTI5YWY0LyJ9
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -1282,7 +887,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:36 GMT
+      - Mon, 01 Nov 2021 20:15:06 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -1300,19 +905,19 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - d822e7e76a6a4f2cb4a5569a21f886b4
+      - 79090b55d5784879ab88c1ebca4e66a0
       Access-Control-Expose-Headers:
       - Correlation-ID
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzdmZmQ3ZWFmLWZkZjMtNGUy
-        NS05MzdiLWY0YmIxZTg0ODQ0OC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzlmNjNhMjJhLTIyZDMtNDYz
+        ZS1iOTY2LTcyNzFmMGFlYWQ4Yi8ifQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:36 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:06 GMT
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/tasks/7ffd7eaf-fdf3-4e25-937b-f4bb1e848448/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/tasks/9f63a22a-22d3-463e-b966-7271f0aead8b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1320,7 +925,7 @@ http_interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.2/ruby
+      - OpenAPI-Generator/3.16.0/ruby
       Accept:
       - application/json
       Authorization:
@@ -1335,7 +940,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:37 GMT
+      - Mon, 01 Nov 2021 20:15:06 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -1353,7 +958,7 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - fb22740210754ff2ad8438be8b677827
+      - 765a87da9c934d96b9c72c5d6696e341
       Access-Control-Expose-Headers:
       - Correlation-ID
       Strict-Transport-Security:
@@ -1361,36 +966,36 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvN2ZmZDdlYWYtZmRm
-        My00ZTI1LTkzN2ItZjRiYjFlODQ4NDQ4LyIsInB1bHBfY3JlYXRlZCI6IjIw
-        MjEtMTAtMDZUMTc6NDE6MzYuNjA0MzIyWiIsInN0YXRlIjoiY29tcGxldGVk
+        eyJwdWxwX2hyZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvOWY2M2EyMmEtMjJk
+        My00NjNlLWI5NjYtNzI3MWYwYWVhZDhiLyIsInB1bHBfY3JlYXRlZCI6IjIw
+        MjEtMTEtMDFUMjA6MTU6MDYuMDI2Nzc1WiIsInN0YXRlIjoiY29tcGxldGVk
         IiwibmFtZSI6InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfdXBk
-        YXRlIiwibG9nZ2luZ19jaWQiOiJkODIyZTdlNzZhNmE0ZjJjYjRhNTU2OWEy
-        MWY4ODZiNCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTEwLTA2VDE3OjQxOjM2LjY3
-        MzM0NVoiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTAtMDZUMTc6NDE6MzYuOTEx
-        MTIzWiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
-        a2Vycy82YjcxM2NhNS1lMWZiLTQ3OWEtODZhMy04NWVkMTFiMzkzZmIvIiwi
+        YXRlIiwibG9nZ2luZ19jaWQiOiI3OTA5MGI1NWQ1Nzg0ODc5YWI4OGMxZWJj
+        YTRlNjZhMCIsInN0YXJ0ZWRfYXQiOiIyMDIxLTExLTAxVDIwOjE1OjA2LjA4
+        NDM2MloiLCJmaW5pc2hlZF9hdCI6IjIwMjEtMTEtMDFUMjA6MTU6MDYuMTk0
+        ODk5WiIsImVycm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29y
+        a2Vycy9jZTczZDFhYS00MzNjLTRkOGEtODc3Ny03NDgyZTYxNjM4YmIvIiwi
         cGFyZW50X3Rhc2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91
         cCI6bnVsbCwicHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3Vy
         Y2VzIjpbXSwicmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvYXBpL3Yz
         L2Rpc3RyaWJ1dGlvbnMvIl19
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:37 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:06 GMT
 - request:
     method: patch
-    uri: https://pulp3-sandbox-centos7.balmora.example.com/pulp/api/v3/distributions/rpm/rpm/6d10cbef-41ff-46aa-9a24-6b4036e72190/
+    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/distributions/rpm/rpm/7b6b4956-7cf9-4d63-8d67-bde70c952d58/
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb250ZW50X2d1YXJkIjpudWxsLCJiYXNlX3BhdGgiOiJBQ01FX0NvcnBv
         cmF0aW9uL2Rldi9mZWRvcmFfMTdfZHVwbGljYXRlX2xhYmVsIiwicHVibGlj
-        YXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vYzUy
-        ZGRkNGEtZTRmYi00ZTVmLThjNjEtMGE5NWIzNWY0MzM1LyJ9
+        YXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL3JwbS9ycG0vMTcx
+        NTYwMjItZDg1NC00N2VjLWE5YWUtNzEwYThkYTI5YWY0LyJ9
     headers:
       Content-Type:
       - application/json
       User-Agent:
-      - OpenAPI-Generator/3.15.0/ruby
+      - OpenAPI-Generator/3.16.1/ruby
       Accept:
       - application/json
       Authorization:
@@ -1405,7 +1010,7 @@ http_interactions:
       Server:
       - nginx/1.20.1
       Date:
-      - Wed, 06 Oct 2021 17:41:37 GMT
+      - Mon, 01 Nov 2021 20:15:06 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -1423,14 +1028,14 @@ http_interactions:
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 3999d585c6a944bb8b4eae4dbf62f698
+      - 3ac3b24ef38e4376a4cb7cf03c1a795e
       Access-Control-Expose-Headers:
       - Correlation-ID
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzAxMWE4YjA5LWMwYTYtNDVj
-        NS05NjRjLWJmNGNmNWMyNjA5OC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2Q3YzgxNDdjLWU5ZjAtNDQw
+        Yi04ZTAyLTU4MDRmMTA0OWFlZC8ifQ==
     http_version: 
-  recorded_at: Wed, 06 Oct 2021 17:41:37 GMT
+  recorded_at: Mon, 01 Nov 2021 20:15:06 GMT
 recorded_with: VCR 3.0.3
