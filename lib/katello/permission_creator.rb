@@ -53,7 +53,7 @@ module Katello
       @plugin.permission :manage_capsule_content,
                          {
                            'katello/api/v2/capsule_content' => [:add_lifecycle_environment, :remove_lifecycle_environment,
-                                                                :sync, :cancel_sync],
+                                                                :sync, :reclaim_space, :cancel_sync],
                            'katello/api/v2/capsules' => [:index, :show]
                          },
                          :resource_type => 'SmartProxy'
@@ -290,7 +290,7 @@ module Katello
       @plugin.permission :edit_products,
                          {
                            'katello/api/v2/products' => [:update],
-                           'katello/api/v2/repositories' => [:create, :update, :remove_content, :import_uploads, :upload_content, :republish, :verify_checksum],
+                           'katello/api/v2/repositories' => [:create, :update, :remove_content, :import_uploads, :upload_content, :republish, :verify_checksum, :reclaim_space],
                            'katello/api/v2/products_bulk_actions' => [:update_sync_plans, :update_http_proxy, :verify_checksum_products],
                            'katello/api/v2/content_uploads' => [:create, :update, :destroy],
                            'katello/api/v2/organizations' => [:repo_discover, :cancel_repo_discover],
@@ -313,7 +313,7 @@ module Katello
                            'katello/api/v2/products' => [:sync],
                            'katello/api/v2/repositories' => [:sync],
                            'katello/api/v2/products_bulk_actions' => [:sync_products],
-                           'katello/api/v2/repositories_bulk_actions' => [:sync_repositories],
+                           'katello/api/v2/repositories_bulk_actions' => [:sync_repositories, :reclaim_space_from_repositories],
                            'katello/api/v2/sync' => [:index],
                            'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy]
                          },

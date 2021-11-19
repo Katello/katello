@@ -22,6 +22,7 @@ Katello::Engine.routes.draw do
               post :sync
               get :sync, :action => :sync_status
               delete :sync, :action => :cancel_sync
+              post :reclaim_space
               post '/lifecycle_environments' => 'capsule_content#add_lifecycle_environment'
               delete '/lifecycle_environments/:environment_id' => 'capsule_content#remove_lifecycle_environment'
             end
@@ -392,6 +393,7 @@ Katello::Engine.routes.draw do
           collection do
             match '/bulk/destroy' => 'repositories_bulk_actions#destroy_repositories', :via => :put
             match '/bulk/sync' => 'repositories_bulk_actions#sync_repositories', :via => :post
+            match '/bulk/reclaim_space' => 'repositories_bulk_actions#reclaim_space_from_repositories', :via => :post
             get :auto_complete_search
           end
           api_resources :sync, :only => [:index]
@@ -420,6 +422,7 @@ Katello::Engine.routes.draw do
             put :remove_content
             post :sync
             post :verify_checksum
+            post :reclaim_space
             post :upload_content
             put :import_uploads
           end

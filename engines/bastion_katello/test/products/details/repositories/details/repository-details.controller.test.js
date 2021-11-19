@@ -1,10 +1,22 @@
 describe('Controller: RepositoryDetailsController', function() {
-    var $scope, $state, translate, Notification, repository, syncableRepo;
+    var $scope, $state, $uibModal, translate, Notification, repository, syncableRepo;
 
     beforeEach(module(
         'Bastion.repositories',
         'Bastion.test-mocks'
     ));
+
+    beforeEach(function () {
+        $uibModal = {
+            open: function () {
+                return {
+                    closed: {
+                        then: function () {}
+                    }
+                }
+            }
+        };
+    });
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
@@ -42,12 +54,25 @@ describe('Controller: RepositoryDetailsController', function() {
         $controller('RepositoryDetailsController', {
             $scope: $scope,
             $state: $state,
+            $uibModal: $uibModal,
             translate: translate,
             Notification: Notification,
             Product: Product,
             Repository: Repository
         });
     }));
+
+    it('can open a reclaim space modal', function () {
+        var result;
+        spyOn($uibModal, 'open').and.callThrough();
+
+        $scope.openReclaimSpaceModal();
+
+        result = $uibModal.open.calls.argsFor(0)[0];
+
+        expect(result.templateUrl).toContain('repository-details-reclaim-space-modal.html');
+        expect(result.controller).toBe('RepositoryDetailsReclaimSpaceModalController');
+    });
 
     it('retrieves and puts a repository on the scope', function() {
         expect($scope.repository).toBeDefined();

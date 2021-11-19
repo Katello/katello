@@ -18,6 +18,7 @@ angular.module('Bastion.repositories').factory('Repository',
                 update: { method: 'PUT' },
                 sync: { method: 'POST', params: { action: 'sync' } },
                 verifyChecksum: { method: 'POST', params: { action: 'verify_checksum' }},
+                reclaimSpace: { method: 'POST', params: { action: 'reclaim_space' }},
                 removePackages: { method: 'PUT', params: { action: 'remove_packages'}},
                 removeContent: { method: 'PUT', params: { action: 'remove_content'}},
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
@@ -47,7 +48,8 @@ angular.module('Bastion.repositories').factory('RepositoryBulkAction',
             {'organization_id': CurrentOrganization},
             {
                 removeRepositories: {method: 'PUT', params: {action: 'destroy'}},
-                syncRepositories: {method: 'POST', params: {action: 'sync'}}
+                syncRepositories: {method: 'POST', params: {action: 'sync'}},
+                reclaimSpaceFromRepositories: {method: 'POST', params: {action: 'reclaim_space'}}
             }
         );
 

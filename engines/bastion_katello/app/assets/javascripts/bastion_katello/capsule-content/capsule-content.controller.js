@@ -131,8 +131,24 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
 
         $scope.isTaskInProgress = isTaskInProgress;
 
+        $scope.reclaimSpace = function () {
+            if (!$scope.syncState.is(syncState.SYNCING) && !$scope.syncState.is(syncState.RECLAIMING_SPACE)) {
+
+                $scope.syncState.set(syncState.RECLAIM_SPACE_TRIGGERED);
+
+                CapsuleContent.reclaimSpace({id: capsuleId}).$promise.then(function (task) {
+                    $scope.syncStatus['active_sync_tasks'].push(task);
+                    $scope.syncTask = aggregateTasks($scope.syncStatus['active_sync_tasks']);
+                    $scope.syncState.set(syncState.RECLAIMING_SPACE);
+                }, function (response) {
+                    processError(response);
+                    $scope.syncState.set(syncState.DEFAULT);
+                });
+            }
+        };
+
         $scope.syncCapsule = function (skipMetadataCheck) {
-            if (!$scope.syncState.is(syncState.SYNCING)) {
+            if (!$scope.syncState.is(syncState.SYNCING) && !$scope.syncState.is(syncState.RECLAIMING_SPACE)) {
 
                 $scope.syncState.set(syncState.SYNC_TRIGGERED);
 
@@ -164,10 +180,14 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
 
             if (currentSyncState.is(currentSyncState.SYNCING)) {
                 message = translate("Smart proxy currently syncing to your locations...");
+            } else if (currentSyncState.is(currentSyncState.RECLAIMING_SPACE)) {
+                message = translate("Smart proxy currently reclaiming space...");
             } else if (currentSyncState.is(currentSyncState.SYNC_TRIGGERED)) {
                 message = translate("Synchronization is about to start...");
             } else if (currentSyncState.is(currentSyncState.CANCEL_TRIGGERED)) {
                 message = translate("Synchronization is being cancelled...");
+            } else if (currentSyncState.is(currentSyncState.RECLAIM_SPACE_TRIGGERED)) {
+                message = translate("Space reclamation is about to start...");
             } else {
                 syncableEnvs = _.filter(syncStatus['lifecycle_environments'], {syncable: true});
 

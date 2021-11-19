@@ -830,6 +830,15 @@ module Katello
       assert_response :success
     end
 
+    def test_reclaim_space
+      assert_async_task ::Actions::Pulp3::Repository::ReclaimSpace do |repo|
+        repo.id == @repository.id
+      end
+
+      post :reclaim_space, params: { :id => @repository.id }
+      assert_response :success
+    end
+
     def test_verify_checksum_protected
       allowed_perms = [@update_permission]
       denied_perms = [@create_permission, @read_permission, @destroy_permission, @sync_permission]

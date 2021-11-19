@@ -28,6 +28,13 @@
       </span>
     </button>
 
+    <button type="button" class="btn btn-default"
+            ng-click="openReclaimSpaceModal()"
+            ng-hide="denied('sync_products', product)"
+            ng-disabled="syncInProgress || table.numSelected == 0">
+      <span translate>Reclaim Space</span>
+    </button>
+
     <div bst-modal="removeSelectedRepositories()" model="table">
       <div data-block="modal-header"
            translate

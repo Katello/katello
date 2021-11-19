@@ -4,7 +4,7 @@ module Katello
       api_base_url "/katello/api"
     end
 
-    before_action :find_capsule, :except => [:sync, :cancel_sync, :add_lifecycle_environment, :remove_lifecycle_environment]
+    before_action :find_capsule, :except => [:sync, :cancel_sync, :add_lifecycle_environment, :remove_lifecycle_environment, :reclaim_space]
     before_action :find_editable_capsule, :only => [:sync, :cancel_sync, :add_lifecycle_environment, :remove_lifecycle_environment]
     before_action :find_environment, :only => [:add_lifecycle_environment, :remove_lifecycle_environment]
     before_action :find_optional_organization, :only => [:sync_status]
@@ -86,6 +86,14 @@ module Katello
       end
     end
 
+    api :POST, '/capsules/:id/reclaim_space', N_('Reclaim space from all On Demand repositories on a smart proxy')
+    param :id, :number, :required => true, :desc => N_('Id of the smart proxy')
+    def reclaim_space
+      find_capsule(true)
+      task = async_task(::Actions::Pulp3::CapsuleContent::ReclaimSpace, @capsule)
+      respond_for_async :resource => task
+    end
+
     protected
 
     def respond_for_lifecycle_environments_index(environments)
@@ -104,9 +112,9 @@ module Katello
       end
     end
 
-    def find_capsule
+    def find_capsule(primary_okay = false)
       @capsule = SmartProxy.unscoped.authorized(:view_capsule_content).find(params[:id])
-      unless @capsule&.pulp_mirror?
+      unless @capsule&.pulp_mirror? || primary_okay
         fail _("This request may only be performed on a Smart proxy that has the Pulpcore feature with mirror=true.")
       end
     end

@@ -1,11 +1,12 @@
 (function () {
-    function RepositoryDetailsController($scope, $state, translate, Repository, Product, ApiErrorHandler, Notification) {
+    function RepositoryDetailsController($scope, $state, $uibModal, translate, Repository, Product, ApiErrorHandler, Notification) {
         /**
          * @ngdoc object
          * @name  Bastion.repositories.controller:RepositoryDetailsController
          *
          * @requires $scope
          * @requires $state
+         * @requires $uibModal
          * @requires translate
          * @requires Repository
          * @requires ApiErrorHandler
@@ -89,6 +90,19 @@
             }, errorHandler);
         };
 
+        $scope.openReclaimSpaceModal = function (repository) {
+            $uibModal.open({
+                templateUrl: 'products/details/repositories/details/views/repository-details-reclaim-space-modal.html',
+                controller: 'RepositoryDetailsReclaimSpaceModalController',
+                size: 'lg',
+                resolve: {
+                    reclaimParams: function() {
+                        return { repository: repository };
+                    }
+                }
+            });
+        };
+
         $scope.republishRepository = function (repository) {
             Repository.republish({id: repository.id}, function (task) {
                 $state.go('product.repository.tasks.details', {taskId: task.id});
@@ -132,5 +146,5 @@
 
     angular.module('Bastion.repositories').controller('RepositoryDetailsController', RepositoryDetailsController);
 
-    RepositoryDetailsController.$inject = ['$scope', '$state', 'translate', 'Repository', 'Product', 'ApiErrorHandler', 'Notification'];
+    RepositoryDetailsController.$inject = ['$scope', '$state', '$uibModal', 'translate', 'Repository', 'Product', 'ApiErrorHandler', 'Notification'];
 })();
