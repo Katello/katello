@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
 import EnableTracerEmptyState from './EnableTracerEmptyState';
 import TableWrapper from '../../../Table/TableWrapper';
-import { useSelectionSet } from '../../../Table/TableHooks';
+import { useBulkSelect } from '../../../Table/TableHooks';
 import { getHostTraces } from './HostTracesActions';
 import { resolveTraces } from './RemoteExecutionActions';
 import { selectHostTracesStatus } from './HostTracesSelectors';
@@ -15,7 +15,6 @@ import { resolveTraceUrl } from './customizedRexUrlHelpers';
 import './TracesTab.scss';
 
 const TracesTab = () => {
-  const [searchQuery, updateSearchQuery] = useState('');
   const hostDetails = useSelector(state => selectAPIResponse(state, 'HOST_DETAILS'));
   const dispatch = useDispatch();
   const {
@@ -37,34 +36,40 @@ const TracesTab = () => {
   const toggleBulkAction = () => setIsBulkActionOpen(prev => !prev);
   const response = useSelector(state => selectAPIResponse(state, 'HOST_TRACES'));
   const { results, ...meta } = response;
+  const tracesSearchQuery = id => `id = ${id}`;
   const {
-    selectOne,
-    isSelected, isSelectable,
-    selectionSet: selectedTraces,
-    ...selectAll
-  } = useSelectionSet({
+    selectOne, isSelected, searchQuery, selectedCount, isSelectable,
+    updateSearchQuery, selectNone, fetchBulkParams, ...selectAll
+  } = useBulkSelect({
     results,
     metadata: meta,
     isSelectable: result => !!result.restart_command,
   });
 
-  const onBulkRestartApp = (ids) => {
-    dispatch(resolveTraces({ hostname, ids: [...ids].join(',') }));
-    selectedTraces.clear();
 
+  const onBulkRestartApp = () => {
+    dispatch(resolveTraces({
+      hostname, search: fetchBulkParams(),
+    }));
+    selectNone();
     const params = { page: meta.page, per_page: meta.per_page, search: meta.search };
     dispatch(getHostTraces(hostId, params));
   };
 
-  const bulkCustomizedRexUrl = ids => resolveTraceUrl({ hostname, ids: [...ids] });
+  const onRestartApp = id => dispatch(resolveTraces({
+    hostname,
+    search: tracesSearchQuery(id),
+  }));
 
-  const onRestartApp = id => onBulkRestartApp([id]);
+  const bulkCustomizedRexUrl = () => resolveTraceUrl({
+    hostname, search: (selectedCount > 0) ? fetchBulkParams() : '',
+  });
 
   const dropdownItems = [
-    <DropdownItem isDisabled={!selectedTraces.size} aria-label="bulk_rex" key="bulk_rex" component="button" onClick={() => onBulkRestartApp(selectedTraces)}>
+    <DropdownItem isDisabled={selectedCount === 0} aria-label="bulk_rex" key="bulk_rex" component="button" onClick={onBulkRestartApp}>
       {__('Restart via remote execution')}
     </DropdownItem>,
-    <DropdownItem isDisabled={!selectedTraces.size} aria-label="bulk_rex_customized" key="bulk_rex_customized" component="a" href={bulkCustomizedRexUrl(selectedTraces)}>
+    <DropdownItem isDisabled={selectedCount === 0} aria-label="bulk_rex_customized" key="bulk_rex_customized" component="a" href={bulkCustomizedRexUrl()}>
       {__('Restart via customized remote execution')}
     </DropdownItem>,
   ];
@@ -76,8 +81,8 @@ const TracesTab = () => {
           <ActionListItem>
             <Button
               variant="secondary"
-              isDisabled={!selectedTraces.size}
-              onClick={() => onBulkRestartApp(selectedTraces)}
+              isDisabled={selectedCount === 0}
+              onClick={onBulkRestartApp}
             >
               {__('Restart app')}
             </Button>
@@ -96,9 +101,6 @@ const TracesTab = () => {
 
   );
   const status = useSelector(state => selectHostTracesStatus(state));
-  // const selectAll = () => {
-  //   // leaving blank until we can implement selectAll Katello-wide
-  // };
   if (showEnableTracer) return <EnableTracerEmptyState />;
 
   if (!hostId) return <Skeleton />;
@@ -108,21 +110,26 @@ const TracesTab = () => {
     <div id="traces-tab">
       <h3>{__('Tracer helps administrators identify applications that need to be restarted after a system is patched.')}</h3>
       <TableWrapper
-        actionButtons={actionButtons}
-        searchQuery={searchQuery}
-        emptyContentBody={emptyContentBody}
-        emptyContentTitle={emptyContentTitle}
-        emptySearchBody={emptySearchBody}
-        emptySearchTitle={emptySearchTitle}
-        updateSearchQuery={updateSearchQuery}
-        fetchItems={fetchItems}
+        {...{
+                emptyContentTitle,
+                emptyContentBody,
+                emptySearchTitle,
+                emptySearchBody,
+                status,
+                searchQuery,
+                updateSearchQuery,
+                selectedCount,
+                selectNone,
+                fetchItems,
+                actionButtons,
+                }
+          }
+        metadata={meta}
         autocompleteEndpoint={`/hosts/${hostId}/traces/auto_complete_search`}
         foremanApiAutoComplete
-        displaySelectAllCheckbox
         rowsCount={results?.length}
         variant={TableVariant.compact}
-        status={status}
-        metadata={meta}
+        displaySelectAllCheckbox
         {...selectAll}
       >
         <Thead>
@@ -146,7 +153,7 @@ const TracesTab = () => {
           let rowDropdownItems = [
             { title: 'Restart via remote execution', onClick: () => onRestartApp(id) },
             {
-              component: 'a', href: resolveTraceUrl({ hostname, ids: [id] }), title: 'Restart via customized remote execution',
+              component: 'a', href: resolveTraceUrl({ hostname, search: tracesSearchQuery(id) }), title: 'Restart via customized remote execution',
             },
           ];
           if (resolveDisabled) {

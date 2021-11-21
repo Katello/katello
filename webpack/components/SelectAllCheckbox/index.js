@@ -71,13 +71,13 @@ const SelectAllCheckbox = ({
     <DropdownItem key="select-none" component="button" isDisabled={selectedCount === 0} onClick={handleSelectNone} >
       {`${__('Select none')} (0)`}
     </DropdownItem>,
-    <DropdownItem key="select-page" component="button" isDisabled={areAllRowsOnPageSelected} onClick={handleSelectPage}>
+    <DropdownItem key="select-page" component="button" isDisabled={pageRowCount === 0 || areAllRowsOnPageSelected} onClick={handleSelectPage}>
       {`${__('Select page')} (${pageRowCount})`}
     </DropdownItem>,
   ];
   if (canSelectAll) {
     selectAllDropdownItems.push((
-      <DropdownItem key="select-all" id="all" component="button" isDisabled={areAllRowsSelected} onClick={handleSelectAll}>
+      <DropdownItem key="select-all" id="all" component="button" isDisabled={totalCount === 0 || areAllRowsSelected} onClick={handleSelectAll}>
         {`${__('Select all')} (${totalCount})`}
       </DropdownItem>));
   }

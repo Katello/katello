@@ -5,18 +5,16 @@ model: JobTemplate
 job_category: Katello via Ansible
 description_format: Resolve Traces
 template_inputs:
-- name: ids
-  description: A comma-separated list of trace IDs to resolve
+- name: Traces search query
+  description: Search query to provide traces to resolve
   input_type: user
   required: true
-  advanced: false
 provider_type: Ansible
 kind: job_template
 %>
 
 <%
-ids = input(:ids).split(',').map { |split| split.strip.to_i }
-commands = @host.traces_helpers(ids)
+commands = @host.traces_helpers(search: input('Traces search query'))
 reboot = commands.delete('reboot')
 -%>
 <%= render_template(
