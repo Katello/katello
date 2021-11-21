@@ -383,9 +383,8 @@ module Katello
         @traces_status_label ||= get_status(::Katello::TraceStatus).to_label(options)
       end
 
-      def traces_helpers(ids = nil)
-        traces = host_traces
-        traces = host_traces.where(id: ids) if ids.present?
+      def traces_helpers(search:)
+        traces = host_traces.selectable.search_for(search)
         ::Katello::HostTracer.helpers_for(traces)
       end
 

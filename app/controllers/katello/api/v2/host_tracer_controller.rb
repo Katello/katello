@@ -35,6 +35,10 @@ module Katello
       @host.host_traces
     end
 
+    def total_selectable(query)
+      query.where(:id => @host.host_traces.selectable).count
+    end
+
     private
 
     def find_host
