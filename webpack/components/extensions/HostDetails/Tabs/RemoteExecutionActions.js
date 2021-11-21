@@ -4,6 +4,7 @@ import { foremanApi } from '../../../../services/api';
 import { getResponseErrorMsgs } from '../../../../utils/helpers';
 import { renderTaskStartedToast } from '../../../../scenes/Tasks/helpers';
 import { ERRATA_SEARCH_QUERY } from '../HostErrata/HostErrataConstants';
+import { TRACES_SEARCH_QUERY } from './HostTracesConstants';
 
 const errorToast = (error) => {
   const message = getResponseErrorMsgs(error.response);
@@ -25,10 +26,10 @@ const katelloPackageInstallParams = ({ hostname, packageName }) =>
     feature: REX_FEATURES.KATELLO_PACKAGE_INSTALL,
   });
 
-const katelloTracerResolveParams = ({ hostname, ids }) =>
+const katelloTracerResolveParams = ({ hostname, search }) =>
   baseParams({
     hostname,
-    inputs: { ids },
+    inputs: { [TRACES_SEARCH_QUERY]: search },
     feature: REX_FEATURES.KATELLO_HOST_TRACER_RESOLVE,
   });
 
@@ -52,11 +53,11 @@ export const installPackage = ({ hostname, packageName }) => post({
   errorToast: error => errorToast(error),
 });
 
-export const resolveTraces = ({ hostname, ids }) => post({
+export const resolveTraces = ({ hostname, search }) => post({
   type: API_OPERATIONS.POST,
   key: REX_JOB_INVOCATIONS_KEY,
   url: foremanApi.getApiUrl('/job_invocations'),
-  params: katelloTracerResolveParams({ hostname, ids }),
+  params: katelloTracerResolveParams({ hostname, search }),
   handleSuccess: response => renderTaskStartedToast({
     humanized: { action: `Resolve traces on ${hostname}` },
     id: response?.data?.dynflow_task?.id,
