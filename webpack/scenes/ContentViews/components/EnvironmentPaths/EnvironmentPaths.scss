@@ -1,8 +1,20 @@
-.env-labels-with-pointer {
-  &:not(:last-child):after {
-    content: '>';
-    margin-top: 3px;
+.env-path {
+  .pf-c-form__group {
+    margin: 20px 0;
   }
-  display: inline-flex;
-  margin-top: 3px;
+
+  .env-path__labels-with-pointer {
+    &:not(:last-child):after {
+      content: '>';
+      margin-top: 3px;
+    }
+
+    display: inline-flex;
+    margin: 3px 1px;
+    align-items: center;
+  }
+
+  hr {
+    margin: 0;
+  }
 }

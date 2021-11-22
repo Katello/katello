@@ -69,9 +69,9 @@ test('Displays dependent fields correctly', () => {
   expect(getByText('Label')).toBeInTheDocument();
   expect(getByText('Composite content view')).toBeInTheDocument();
   expect(getByText('Component content view')).toBeInTheDocument();
-  expect(getByText('Solve Dependencies')).toBeInTheDocument();
-  expect(queryByText('Auto Publish')).not.toBeInTheDocument();
-  expect(getByText('Import Only')).toBeInTheDocument();
+  expect(getByText('Solve dependencies')).toBeInTheDocument();
+  expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(getByText('Import only')).toBeInTheDocument();
 
   // label auto_set
   fireEvent.change(getByLabelText('input_name'), { target: { value: '123 2123' } });
@@ -79,13 +79,13 @@ test('Displays dependent fields correctly', () => {
 
   // display Auto Publish when Composite CV
   fireEvent.click(getByLabelText('composite_tile'));
-  expect(queryByText('Solve Dependencies')).not.toBeInTheDocument();
-  expect(getByText('Auto Publish')).toBeInTheDocument();
-  expect(queryByText('Import Only')).not.toBeInTheDocument();
+  expect(queryByText('Solve dependencies')).not.toBeInTheDocument();
+  expect(getByText('Auto publish')).toBeInTheDocument();
+  expect(queryByText('Import only')).not.toBeInTheDocument();
 
   // display Solve Dependencies when Component CV
   fireEvent.click(getByLabelText('component_tile'));
-  expect(getByText('Solve Dependencies')).toBeInTheDocument();
-  expect(queryByText('Auto Publish')).not.toBeInTheDocument();
-  expect(getByText('Import Only')).toBeInTheDocument();
+  expect(getByText('Solve dependencies')).toBeInTheDocument();
+  expect(queryByText('Auto publish')).not.toBeInTheDocument();
+  expect(getByText('Import only')).toBeInTheDocument();
 });

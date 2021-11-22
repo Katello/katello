@@ -10,6 +10,7 @@ import { createContentView } from '../ContentViewsActions';
 import { selectCreateContentViews, selectCreateContentViewStatus, selectCreateContentViewError } from './ContentViewCreateSelectors';
 import { LabelDependencies, LabelAutoPublish, LabelImportOnly } from './ContentViewFormComponents';
 import ContentViewIcon from '../components/ContentViewIcon';
+import './CreateContentViewForm.scss';
 
 const CreateContentViewForm = ({ setModalOpen }) => {
   const dispatch = useDispatch();
@@ -63,6 +64,8 @@ const CreateContentViewForm = ({ setModalOpen }) => {
     return (<Redirect to={`/content_views/${id}`} />);
   }
 
+  const submitDisabled = name.length <= 2 || label.length <= 2 || saving;
+
   return (
     <Form onSubmit={(e) => {
       e.preventDefault();
@@ -115,7 +118,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
               onClick={() => { setComponent(true); setComposite(false); }}
               isSelected={component}
             >
-              {__('Single content view consisting of repositories')}
+              {__('Single content view consisting of e.g. repositories')}
             </Tile>
           </GridItem>
           <GridItem span={6}>
@@ -168,7 +171,7 @@ const CreateContentViewForm = ({ setModalOpen }) => {
         <Button
           aria-label="create_content_view"
           variant="primary"
-          isDisabled={saving}
+          isDisabled={submitDisabled}
           type="submit"
         >
           {__('Create content view')}
