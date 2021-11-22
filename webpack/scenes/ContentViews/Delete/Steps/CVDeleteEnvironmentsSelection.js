@@ -9,6 +9,7 @@ import { pluralize } from '../../../../utils/helpers';
 import Loading from '../../../../components/Loading';
 import './CVEnvironmentSelectionForm.scss';
 import InactiveText from '../../components/InactiveText';
+import WizardHeader from '../../components/WizardHeader';
 
 const CVDeleteEnvironmentSelection = () => {
   const {
@@ -35,25 +36,26 @@ const CVDeleteEnvironmentSelection = () => {
 
   return (
     <>
-      <h2>{__('Remove versions from environments')}</h2>
-      {!resolved && <Loading loadingText={__('Loading versions')} />}
-      {resolved &&
-        <>
+      <WizardHeader
+        title={__('Remove versions from environments')}
+        description={resolved &&
           <Flex>
-            <FlexItem><ExclamationTriangleIcon /></FlexItem>
+            <FlexItem style={{ marginRight: '8px' }}><ExclamationTriangleIcon /></FlexItem>
             {versionCount ?
-              (
-                <FlexItem style={{ marginBottom: '0.5em' }}>
-                  {__(`${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted`)}
-                </FlexItem>
-              ) :
-              (
-                <FlexItem style={{ marginBottom: '0.5em' }}>
-                  {__('This content view does not have any versions associated.')}
-                </FlexItem>
-              )
+              <FlexItem>
+                {__(`${pluralize(versionCount, 'content view version')} in the environments below will be removed when content view is deleted`)}
+              </FlexItem>
+              :
+              <FlexItem>
+                {__('This content view does not have any versions associated.')}
+              </FlexItem>
             }
-          </Flex>
+          </Flex>}
+      />
+      {!resolved ?
+        <Loading loadingText={__('Loading versions')} /> :
+        <>
+
           {results?.map((version, index) => (
             <ExpandableSection
               key={version.id}
@@ -72,27 +74,27 @@ const CVDeleteEnvironmentSelection = () => {
                   </Thead>
                   <Tbody>
                     {version?.environments?.map((env, rowIndex) => {
-                  const {
-                    id, name, activation_key_count: akCount, host_count: hostCount,
-                  } = env;
-                  return (
-                    <Tr key={`${name}_${id}`}>
-                      <Td
-                        key={`${name}__${id}_select`}
-                        select={{
-                          rowIndex,
-                          isSelected: true,
-                          disable: true,
-                        }}
-                      />
-                      <Td>
-                        {name}
-                      </Td>
-                      <Td>{hostCount}</Td>
-                      <Td>{akCount}</Td>
-                    </Tr>
-                  );
-                })}
+                      const {
+                        id, name, activation_key_count: akCount, host_count: hostCount,
+                      } = env;
+                      return (
+                        <Tr key={`${name}_${id}`}>
+                          <Td
+                            key={`${name}__${id}_select`}
+                            select={{
+                              rowIndex,
+                              isSelected: true,
+                              disable: true,
+                            }}
+                          />
+                          <Td>
+                            {name}
+                          </Td>
+                          <Td>{hostCount}</Td>
+                          <Td>{akCount}</Td>
+                        </Tr>
+                      );
+                    })}
                   </Tbody>
                 </TableComposable> :
                 <InactiveText text={__('This version is not promoted to any environments.')} />

@@ -1,20 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label, Flex, FlexItem } from '@patternfly/react-core';
+import { Label } from '@patternfly/react-core';
 
-const ComponentEnvironments = ({ environments }) => {
-  const envList = environments.map(env =>
-    (
-      <FlexItem key={env.id} style={{ marginTop: '0.25em', marginBottom: '0.25em' }}>
-        <Label color="purple" href={`/lifecycle_environments/${env.id}`} isTruncated>{`${env.name}`}</Label>
-      </FlexItem>
-    ));
-  return (
-    <Flex grow={{ default: 'grow' }} spaceItems={{ default: 'spaceItemsSm' }}>
-      {envList}
-    </Flex>
-  );
-};
+const ComponentEnvironments = ({ environments }) => environments.map((env, index) => (
+  <Label
+    key={env.id}
+    style={{ margin: `4px 0 4px ${index > 0 ? '4px' : '0'}` }}
+    color="purple"
+    href={`/lifecycle_environments/${env.id}`}
+    isTruncated
+  >
+    {`${env.name}`}
+  </Label>
+));
+
 
 ComponentEnvironments.propTypes = {
   environments: PropTypes.instanceOf(Array),

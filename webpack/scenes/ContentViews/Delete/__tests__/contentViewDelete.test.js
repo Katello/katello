@@ -75,7 +75,9 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
     .query(true)
     .reply(200, cvDetailsData);
 
-  const { getByText, getAllByLabelText, queryByText } =
+  const {
+    getAllByText, getByText, getAllByLabelText, queryByText,
+  } =
     renderWithRedux(<ContentViewsPage />, renderOptions);
   expect(queryByText(firstCV.name)).toBeNull();
   // Assert that the CV name is now showing on the screen, but wait for it to appear.
@@ -84,7 +86,7 @@ test('Can call API for CVs and show Delete Wizard for the row', async (done) => 
   fireEvent.click(getAllByLabelText('Actions')[0]);
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Delete'));
-  await patientlyWaitFor(() => expect(queryByText('Remove versions from environments')).toBeInTheDocument());
+  await patientlyWaitFor(() => expect(getAllByText('Remove versions from environments')[1]).toBeInTheDocument());
 
   assertNockRequest(scope);
   assertNockRequest(scopeBookmark);
@@ -132,7 +134,7 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
     system_environment_id: 9,
     key_content_view_id: 2,
     key_environment_id: 9,
-    id: '20',
+    id: 20,
   };
 
   const cvDeleteScope = nockInstance
@@ -166,7 +168,7 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   expect(getAllByLabelText('Actions')[0]).toHaveAttribute('aria-expanded', 'true');
   fireEvent.click(getByText('Delete'));
   await patientlyWaitFor(() => {
-    expect(queryByText('Remove versions from environments')).toBeInTheDocument();
+    expect(getAllByText('Remove versions from environments')[1]).toBeInTheDocument();
     expect(queryByText('Version 1.0')).toBeInTheDocument();
   });
   fireEvent.click(getByText('Next'));
@@ -210,7 +212,7 @@ test('Can open Delete wizard and delete CV with all steps', async (done) => {
   // Move to Review
   fireEvent.click(getByText('Next'));
   await patientlyWaitFor(() => {
-    expect(getByText('Review Details')).toBeInTheDocument();
+    expect(getAllByText('Review details')[1]).toBeInTheDocument();
     expect(getByText('Environments')).toBeInTheDocument();
     expect(getByText('Content hosts')).toBeInTheDocument();
     expect(getByText('1 host will be moved to content view cv2 in')).toBeInTheDocument();

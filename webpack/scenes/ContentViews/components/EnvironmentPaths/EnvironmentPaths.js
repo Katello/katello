@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Form, FormGroup, Checkbox } from '@patternfly/react-core';
+import { FormGroup, Checkbox, TextContent } from '@patternfly/react-core';
 import { selectEnvironmentPaths, selectEnvironmentPathsStatus } from './EnvironmentPathSelectors';
 import EnvironmentLabels from '../EnvironmentLabels';
 import './EnvironmentPaths.scss';
@@ -36,41 +36,40 @@ const EnvironmentPaths = ({
   /* eslint-disable react/no-array-index-key */
   return (
     <>
-      <b
-        style={{ marginBottom: '1em' }}
-      >{headerText}
-      </b>
-      <Form style={{ marginTop: '1em' }}>{results.map((path, count) => {
-        const {
-          environments,
-        } = path || {};
-        return (
-          <React.Fragment key={count}>
-            <FormGroup key={`fg-${count}`} isInline fieldId="environment-checkbox-group">
-              {environments.map(env =>
+      <TextContent>{headerText}</TextContent>
+      <div>
+        {results.map((path, index) => {
+          const {
+            environments,
+          } = path || {};
+          return (
+            <div className="env-path" key={index}>
+              {index === 0 && <hr />}
+              <FormGroup key={`fg-${index}`} isInline fieldId="environment-checkbox-group">
+                {environments.map(env =>
                 (<Checkbox
                   isChecked={(publishing && env.library) ||
-                  envCheckedInList(env, userCheckedItems) ||
-                  envCheckedInList(env, promotedEnvironments)}
+                    envCheckedInList(env, userCheckedItems) ||
+                    envCheckedInList(env, promotedEnvironments)}
                   isDisabled={(publishing && env.library)
-                  || envCheckedInList(env, promotedEnvironments)}
-                  style={{ marginRight: '3px', marginBottom: '1px' }}
-                  className="env-labels-with-pointer"
-                  key={`${env.id}${count}`}
-                  id={`${env.id}${count}`}
+                    || envCheckedInList(env, promotedEnvironments)}
+                  className="env-path__labels-with-pointer"
+                  key={`${env.id}${index}`}
+                  id={`${env.id}${index}`}
                   label={<EnvironmentLabels environments={env} />}
                   aria-label={env.label}
                   onChange={checked => oncheckedChange(checked, env)}
                 />))}
-            </FormGroup>
-            <hr key={`hr${count}`} style={{ margin: '0em' }} />
-          </React.Fragment>
-        );
-      })}
-      </Form>
+              </FormGroup>
+              <hr />
+            </div>
+          );
+        })
+          /* eslint-enable react/no-array-index-key */
+        }
+      </div>
     </>
   );
-  /* eslint-enable react/no-array-index-key */
 };
 
 EnvironmentPaths.propTypes = {

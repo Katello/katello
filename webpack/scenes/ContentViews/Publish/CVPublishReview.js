@@ -1,16 +1,23 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
+import {
+  TableComposable, Thead, Tbody, Tr, Th,
+  Td,
+} from '@patternfly/react-table';
+import { EnterpriseIcon, RegistryIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { STATUS } from 'foremanReact/constants';
 import ContentViewIcon from '../components/ContentViewIcon';
 import InactiveText from '../components/InactiveText';
 import ComponentEnvironments from '../Details/ComponentContentViews/ComponentEnvironments';
 import { selectEnvironmentPaths, selectEnvironmentPathsStatus } from '../components/EnvironmentPaths/EnvironmentPathSelectors';
+import WizardHeader from '../components/WizardHeader';
 
 const CVPublishReview = ({
-  details,
+  details: {
+    name, composite, next_version: nextVersion,
+  },
   userCheckedItems,
 }) => {
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
@@ -26,33 +33,38 @@ const CVPublishReview = ({
     return [];
   }, [environmentPathResponse, environmentPathLoading, userCheckedItems]);
 
-  const {
-    name, composite, next_version: nextVersion,
-  } = details;
-
   return (
-    <TableComposable aria-label="Review Table">
-      <Thead>
-        <Tr>
-          <Th>{__('Content view')}</Th>
-          <Th>{__('Version')}</Th>
-          <Th>{__('Environments')}</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        <Tr>
-          <Td>
-            <><ContentViewIcon composite={composite} description={name} /><InactiveText text={__('Newly published')} /></>
-          </Td>
-          <Td>
-            {__('Version')} {nextVersion}
-          </Td>
-          <Td>
-            <ComponentEnvironments environments={promotedToEnvironments} />
-          </Td>
-        </Tr>
-      </Tbody>
-    </TableComposable>
+    <>
+      <WizardHeader
+        title={__('Review details')}
+        description={
+          <>
+            {__('Review your currently selected changes for ')}<b>{composite ? <RegistryIcon /> : <EnterpriseIcon />} {name}.</b>
+          </>}
+      />
+      <TableComposable aria-label="Review Table">
+        <Thead>
+          <Tr>
+            <Th>{__('Content view name')}</Th>
+            <Th>{__('Version')}</Th>
+            <Th>{__('Environments')}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr>
+            <Td>
+              <><ContentViewIcon composite={composite} description={name} /><InactiveText text={__('Newly published')} /></>
+            </Td>
+            <Td>
+              {__('Version')} {nextVersion}
+            </Td>
+            <Td>
+              <ComponentEnvironments environments={promotedToEnvironments} />
+            </Td>
+          </Tr>
+        </Tbody>
+      </TableComposable>
+    </>
   );
 };
 

@@ -23,9 +23,9 @@ test('Can call API and show Wizard', async (done) => {
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => {}}
+    setIsOpen={() => { }}
     currentStep={1}
-    setCurrentStep={() => {}}
+    setCurrentStep={() => { }}
   />);
 
   await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
@@ -44,9 +44,9 @@ test('Can show Wizard and show environment paths', async (done) => {
   const { getByText, getByLabelText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => {}}
+    setIsOpen={() => { }}
     currentStep={1}
-    setCurrentStep={() => {}}
+    setCurrentStep={() => { }}
   />);
 
   await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
@@ -75,9 +75,9 @@ test('Can show and hide force promotion alert', async (done) => {
   } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => {}}
+    setIsOpen={() => { }}
     currentStep={1}
-    setCurrentStep={() => {}}
+    setCurrentStep={() => { }}
   />);
 
   await patientlyWaitFor(() => expect(getByText('Publish new version - 6.0')).toBeInTheDocument());
@@ -95,24 +95,24 @@ test('Can show and hide force promotion alert', async (done) => {
 
   // check outOfOrderEnv
   fireEvent.click(getByLabelText(outOfOrderEnv));
-  expect(getByText('Force Promotion')).toBeInTheDocument();
+  expect(getByText('Force promotion')).toBeInTheDocument();
   expect(getAllByText(outOfOrderEnv)[0].closest('a'))
     .toHaveAttribute('href', '/lifecycle_environments/5');
 
   // check outOfOrder env in 2nd path
   fireEvent.click(getByLabelText(outOfOrderEnv2));
-  expect(getByText('Force Promotion')).toBeInTheDocument();
+  expect(getByText('Force promotion')).toBeInTheDocument();
   expect(getAllByText(outOfOrderEnv2)[0].closest('a'))
     .toHaveAttribute('href', '/lifecycle_environments/7');
 
   // uncheck outOfOrderEnv
   fireEvent.click(getByLabelText(outOfOrderEnv));
   fireEvent.click(getByLabelText(outOfOrderEnv2));
-  expect(queryByText('Force Promotion')).not.toBeInTheDocument();
+  expect(queryByText('Force promotion')).not.toBeInTheDocument();
 
   // Check inOrderEnv
   fireEvent.click(getByLabelText(inOrderEnv));
-  expect(queryByText('Force Promotion')).not.toBeInTheDocument();
+  expect(queryByText('Force promotion')).not.toBeInTheDocument();
 
   useSelectorMock.mockClear();
   assertNockRequest(scope, done);
@@ -128,9 +128,9 @@ test('Can show Wizard form and move to review', async (done) => {
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => {}}
+    setIsOpen={() => { }}
     currentStep={1}
-    setCurrentStep={() => {}}
+    setCurrentStep={() => { }}
   />);
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(environmentPathsData);
@@ -164,9 +164,9 @@ test('Can move to Finish step and publish CV', async (done) => {
   const { getByText } = renderWithRedux(<PublishContentViewWizard
     details={cvDetailData}
     show
-    setIsOpen={() => {}}
+    setIsOpen={() => { }}
     currentStep={1}
-    setCurrentStep={() => {}}
+    setCurrentStep={() => { }}
   />);
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
   useSelectorMock.mockReturnValue(environmentPathsData);
