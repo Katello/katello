@@ -9,6 +9,7 @@ describe('RedHatRepositories page', () => {
   const page = shallow(<RedHatRepositoriesPage
     loadEnabledRepos={jest.fn()}
     loadRepositorySets={jest.fn()}
+    loadOrganization={jest.fn()}
     updateRecommendedRepositorySets={jest.fn()}
     enabledRepositories={{
       loading: false,
@@ -22,11 +23,19 @@ describe('RedHatRepositories page', () => {
       search: {},
       missingPermissions: [],
     }}
+    organization={{
+      id: 1000,
+      cdn_configuration: {
+        type: 'redhat_cdn',
+        url: 'http://cdn.example.com',
+      },
+    }}
   />);
 
   const permissionDeniedPage = shallow(<RedHatRepositoriesPage
     loadEnabledRepos={jest.fn()}
     loadRepositorySets={jest.fn()}
+    loadOrganization={jest.fn()}
     updateRecommendedRepositorySets={jest.fn()}
     enabledRepositories={{
       loading: false,
@@ -38,6 +47,13 @@ describe('RedHatRepositories page', () => {
       loading: false,
       search: {},
       missingPermissions: ['view_organizations'],
+    }}
+    organization={{
+      id: 1000,
+      cdn_configuration: {
+        type: 'redhat_cdn',
+        url: 'http://cdn.example.com',
+      },
     }}
   />);
 

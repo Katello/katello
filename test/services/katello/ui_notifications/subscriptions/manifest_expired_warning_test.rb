@@ -49,12 +49,12 @@ module Katello
         end
 
         def test_with_disconnected_enabled
-          Setting[:content_disconnected] = true
+          Setting[:subscription_connection_enabled] = false
           Net::HTTP.expects(:request).never
           @class.deliver!([@product.organization])
           assert_empty NotificationBlueprint.find_by(name: 'manifest_expired_warning').notifications
         ensure
-          Setting[:content_disconnected] = false
+          Setting[:subscription_connection_enabled] = true
         end
 
         def test_without_product

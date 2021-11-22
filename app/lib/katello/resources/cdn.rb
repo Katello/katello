@@ -58,7 +58,7 @@ module Katello
 
         def self.create(product: nil, cdn_configuration:)
           options = {}
-          if cdn_configuration.redhat?
+          if cdn_configuration.redhat_cdn?
             options[:ssl_client_cert] = OpenSSL::X509::Certificate.new(product.certificate)
             options[:ssl_client_key] = OpenSSL::PKey::RSA.new(product.key)
             options[:ssl_ca_file] = self.ca_file

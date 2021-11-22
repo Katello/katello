@@ -39,7 +39,7 @@ const updateCdnConfigurationErrorToast = (error) => {
   return messages;
 };
 
-export const updateCdnConfiguration = (params) => {
+export const updateCdnConfiguration = (params, updateResults, onError) => {
   const nonNullParams = Object.keys(params)
     .filter(key => params[key] !== null)
     .reduce((a, k) => ({ ...a, [k]: params[k] }), {});
@@ -51,6 +51,10 @@ export const updateCdnConfiguration = (params) => {
     params: nonNullParams,
     errorToast: error => updateCdnConfigurationErrorToast(error),
     successToast: response => updateCdnConfigurationSuccessToast(response),
+    updateData: (_, resp) => {
+      updateResults(resp);
+    },
+    handleError: onError,
   });
 };
 

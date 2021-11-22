@@ -7,7 +7,7 @@ module Katello
         CDN_PATH = '/content/dist/rhel/server/7/listing'.freeze
 
         def self.deliver!(orgs = ::Organization.all)
-          return if Setting[:content_disconnected]
+          return unless Setting[:subscription_connection_enabled]
 
           orgs.each do |org|
             if cdn_inaccessible?(org) || upstream_inaccessible?(org)

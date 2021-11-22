@@ -75,8 +75,8 @@ class Setting::Content < Setting
                20, N_('Accept action timeout')),
       self.set('content_action_finish_timeout', N_("Time in seconds to wait for a Host to finish a remote action"),
                3600, N_('Finish action timeout')),
-      self.set('content_disconnected', N_("A server operating in disconnected mode does not communicate with the Red Hat CDN."),
-               false, N_('Disconnected mode')),
+      self.set('subscription_connection_enabled', N_("Can communicate with the Red Hat Portal for subscriptions."),
+               true, N_('Subscription connection enabled')),
       self.set('errata_status_installable', N_("Calculate errata host status based only on errata in a Host's Content View and Lifecycle Environment"),
                false, N_('Installable errata from Content View')),
       self.set('restrict_composite_view', N_("If this is enabled, a composite content view may not be published or "\

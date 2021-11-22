@@ -134,13 +134,17 @@ module Katello
 
     api :PUT, "/organizations/:id/cdn_configuration", N_("Update the CDN configuration")
     param :id, String, :desc => N_("ID of the Organization"), :required => true
-    param :ssl_ca_credential_id, Integer, :desc => N_("Content Credential to use for SSL CA")
-    param :username, String, :desc => N_("Username for authentication")
-    param :password, String, :desc => N_("Password for authentication")
-    param :upstream_organization_label, String, :desc => N_("Upstream organization to sync CDN content from")
-    param :url, String, :desc => N_("Upstream server to sync CDN content from")
+    param :type, String, :desc => N_("CDN configuration type. One of %s.") % CdnConfiguration::TYPES, :required => true
+    param :url, String, :desc => N_("Upstream foreman server to sync CDN content from. Relevant only for 'upstream_server' type.")
+    param :username, String, :desc => N_("Username for authentication. Relevant only for 'upstream_server' type.")
+    param :password, String, :desc => N_("Password for authentication. Relevant only for 'upstream_server' type.")
+    param :upstream_organization_label, String, :desc => N_("Upstream organization to sync CDN content from. Relevant only for 'upstream_server' type.")
+    param :upstream_content_view_label, String, :desc => N_("Upstream Content View Label, default: Default_Organization_View. Relevant only for 'upstream_server' type.")
+    param :upstream_lifecycle_environment_label, String, :desc => N_("Upstream Lifecycle Environment, default: Library. Relevant only for 'upstream_server' type.")
+    param :ssl_ca_credential_id, Integer, :desc => N_("Content Credential to use for SSL CA. Relevant only for 'upstream_server' type.")
     def cdn_configuration
-      config_keys = [:url, :username, :password, :upstream_organization_label, :ssl_ca_credential_id]
+      config_keys = [:url, :username, :password, :upstream_organization_label, :ssl_ca_credential_id, :type,
+                     :upstream_lifecycle_environment_label, :upstream_content_view_label]
       config_params = params.slice(*config_keys).permit!.to_h
 
       task = sync_task(::Actions::Katello::CdnConfiguration::Update, @organization.cdn_configuration, config_params)

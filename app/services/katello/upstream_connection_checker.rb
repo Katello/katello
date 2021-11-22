@@ -1,7 +1,7 @@
 module Katello
   class UpstreamConnectionChecker
     POSSIBLE_EXCEPTIONS = [
-      Katello::Errors::DisconnectedMode,
+      Katello::Errors::SubscriptionConnectionNotEnabled,
       Katello::Errors::ManifestExpired,
       Katello::Errors::UpstreamConsumerGone,
       Katello::Errors::UpstreamConsumerNotFound,
@@ -33,7 +33,7 @@ module Katello
     private
 
     def assert_connected
-      fail Katello::Errors::DisconnectedMode if Setting[:content_disconnected]
+      fail Katello::Errors::SubscriptionConnectionNotEnabled unless Setting[:subscription_connection_enabled]
     end
 
     def assert_can_upstream_ping
