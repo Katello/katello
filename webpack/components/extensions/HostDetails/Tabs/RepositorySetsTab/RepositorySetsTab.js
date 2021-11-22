@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,9 +15,11 @@ import { FlagIcon } from '@patternfly/react-icons';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { propsToCamelCase } from 'foremanReact/common/helpers';
 import { selectAPIResponse } from 'foremanReact/redux/API/APISelectors';
+import { STATUS } from 'foremanReact/constants';
 import TableWrapper from '../../../../../components/Table/TableWrapper';
 import { enableRepoSetRepo, disableRepoSetRepo, resetRepoSetRepo, getHostRepositorySets } from './RepositorySetsActions';
 import { selectRepositorySetsStatus } from './RepositorySetsSelectors';
+import { selectHostDetailsStatus } from '../../HostDetailsSelectors.js';
 import { useBulkSelect } from '../../../../../components/Table/TableHooks';
 import { REPOSITORY_SETS_KEY } from './RepositorySetsConstants.js';
 import './RepositorySetsTab.scss';
@@ -66,8 +68,14 @@ const RepositorySetsTab = () => {
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
-  const nonLibraryHost = contentFacet.contentViewDefault === false &&
-    contentFacet.lifecycleEnvironmentLibrary === false;
+  const {
+    contentViewDefault,
+    lifecycleEnvironmentLibrary,
+    contentViewName,
+    lifecycleEnvironmentName,
+  } = contentFacet;
+  const nonLibraryHost = contentViewDefault === false &&
+    lifecycleEnvironmentLibrary === false;
   const simpleContentAccess = (Number(subscriptionStatus) === 5);
   const dispatch = useDispatch();
   const toggleGroupStates = ['noLimit', 'limitToEnvironment'];
@@ -75,7 +83,7 @@ const RepositorySetsTab = () => {
   const defaultToggleGroupState = nonLibraryHost ? limitToEnvironment : noLimit;
   const [toggleGroupState, setToggleGroupState] =
     useState(defaultToggleGroupState);
-  const [alertShowing, setAlertShowing] = useState(nonLibraryHost);
+  const [alertShowing, setAlertShowing] = useState(false);
   const emptyContentTitle = __('No repository sets to show.');
   const emptyContentBody = __('Repository sets will appear here when available.');
   const emptySearchTitle = __('No matching repository sets found');
@@ -108,6 +116,15 @@ const RepositorySetsTab = () => {
     metadata,
     isSelectable: () => false,
   });
+
+  const hostDetailsStatus = useSelector(state => selectHostDetailsStatus(state));
+
+  useEffect(() => {
+    // wait until host details are loaded to set alertShowing
+    if (hostDetailsStatus === STATUS.RESOLVED) {
+      setAlertShowing(nonLibraryHost);
+    }
+  }, [hostDetailsStatus, nonLibraryHost]);
 
   if (!hostId) return <Skeleton />;
 
@@ -171,13 +188,15 @@ const RepositorySetsTab = () => {
     );
   }
 
+  const hostEnvText = 'the "{contentViewName}" content view and "{lifecycleEnvironmentName}" environment';
+
   const scaAlert = (toggleGroupState === limitToEnvironment ?
-    __('Showing only repositories in the host\'s content view and lifecycle environment.') :
-    __('Showing all available repositories.'));
+    `Showing only repositories in ${hostEnvText}.` :
+    'Showing all available repositories.');
 
   const nonScaAlert = (toggleGroupState === limitToEnvironment ?
-    __('Showing repositories in the host\'s content view and lifecycle environment that are available through subscriptions.') :
-    __('Showing all repositories available through subscriptions.'));
+    `Showing repositories in ${hostEnvText} that are available through subscriptions.` :
+    'Showing all repositories available through subscriptions.');
 
   let alertText;
   if (simpleContentAccess) {
@@ -188,7 +207,7 @@ const RepositorySetsTab = () => {
 
   return (
     <div>
-      <div id="errata-tab">
+      <div id="repo-sets-tab">
         <div className="content-header">
           <div className="repo-sets-blurb">
             <FormattedMessage
@@ -205,7 +224,17 @@ const RepositorySetsTab = () => {
               variant="info"
               className="repo-sets-alert"
               isInline
-              title={alertText}
+              title={
+                <FormattedMessage
+                  className="repo-sets-alert-title"
+                  id="repo-sets-alert-title"
+                  defaultMessage={alertText}
+                  values={{
+                    contentViewName,
+                    lifecycleEnvironmentName,
+                  }}
+                />
+              }
               actionClose={<AlertActionCloseButton onClose={() => setAlertShowing(false)} />}
             />
           }
