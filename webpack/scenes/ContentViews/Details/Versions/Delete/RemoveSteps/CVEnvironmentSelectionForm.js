@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { Alert, Checkbox, EmptyState, EmptyStateVariant, Title, EmptyStateBody } from '@patternfly/react-core';
+import { Alert, Checkbox, EmptyState, EmptyStateVariant, Title, EmptyStateBody, AlertActionCloseButton } from '@patternfly/react-core';
 import { TableVariant, TableComposable, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { translate as __ } from 'foremanReact/common/I18n';
 import DeleteContext from '../DeleteContext';
 
 const CVEnvironmentSelectionForm = () => {
+  const [alertDismissed, setAlertDismissed] = useState(false);
   const {
     versionNameToRemove, versionEnvironments, selectedEnvSet,
     setAffectedActivationKeys, setAffectedHosts, deleteFlow,
@@ -51,55 +52,60 @@ const CVEnvironmentSelectionForm = () => {
     'You can delete this version completely and it will no longer be available for promotion.');
   return (
     <>
-      {deleteFlow &&
-      <Alert variant="warning" isInline title={__('Warning')}>
-        <p style={{ marginBottom: '0.5em' }}>{versionDeleteInfo}</p>
-      </Alert>
+      {!alertDismissed && deleteFlow &&
+        <Alert
+          variant="warning"
+          isInline
+          title={__('Warning')}
+          actionClose={<AlertActionCloseButton onClose={() => setAlertDismissed(true)} />}
+        >
+          <p style={{ marginBottom: '0.5em' }}>{versionDeleteInfo}</p>
+        </Alert>
       }
       {(!deleteFlow &&
         (removeDeletionFlow || areAllSelected() || versionEnvironments.length === 0))
-      && (
-      <Alert variant="warning" isInline title={__('Warning')}>
-        <p style={{ marginBottom: '0.5em' }}>{removeDeletionFlow ? versionDeleteInfo : versionRemovalInfo}</p>
-        <Checkbox
-          id="delete_version"
-          label={__('Delete version')}
-          isChecked={removeDeletionFlow}
-          onChange={checked => setRemoveDeletionFlow(checked)}
-          style={{ margin: 0 }}
-        />
-      </Alert>)}
-      {(versionEnvironments.length !== 0) &&
-      <TableComposable variant={TableVariant.compact}>
-        <Thead>
-          <Tr>
-            <Td
-              select={{
-              rowIndex: 0,
-              onSelect: onSelectAll,
-              isSelected: areAllSelected() || deleteFlow || removeDeletionFlow,
-              disable: deleteFlow || removeDeletionFlow,
-              }}
+        && (
+          <Alert variant="warning" isInline title={__('Warning')}>
+            <p style={{ marginBottom: '0.5em' }}>{removeDeletionFlow ? versionDeleteInfo : versionRemovalInfo}</p>
+            <Checkbox
+              id="delete_version"
+              label={__('Delete version')}
+              isChecked={removeDeletionFlow}
+              onChange={checked => setRemoveDeletionFlow(checked)}
+              style={{ margin: 0 }}
             />
-            {columnHeaders.map(col =>
-              <Th key={col}>{col}</Th>)}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {versionEnvironments?.map(({
-                                       id, name, activation_key_count: akCount,
-                                       host_count: hostCount,
-                                     }, rowIndex) =>
+          </Alert>)}
+      {(versionEnvironments.length !== 0) &&
+        <TableComposable variant={TableVariant.compact}>
+          <Thead>
+            <Tr>
+              <Td
+                select={{
+                  rowIndex: 0,
+                  onSelect: onSelectAll,
+                  isSelected: areAllSelected() || deleteFlow || removeDeletionFlow,
+                  disable: deleteFlow || removeDeletionFlow,
+                }}
+              />
+              {columnHeaders.map(col =>
+                <Th key={col}>{col}</Th>)}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {versionEnvironments?.map(({
+              id, name, activation_key_count: akCount,
+              host_count: hostCount,
+            }, rowIndex) =>
             (
               <Tr key={`${name}_${id}`}>
                 <Td
                   key={`${name}__${id}_select`}
                   select={{
-                          rowIndex,
-                          onSelect: (event, isSelected) => onSelect(event, isSelected, id),
-                          isSelected: selectedEnvSet.has(id) || deleteFlow || removeDeletionFlow,
-                          disable: deleteFlow || removeDeletionFlow,
-                        }}
+                    rowIndex,
+                    onSelect: (event, isSelected) => onSelect(event, isSelected, id),
+                    isSelected: selectedEnvSet.has(id) || deleteFlow || removeDeletionFlow,
+                    disable: deleteFlow || removeDeletionFlow,
+                  }}
                 />
                 <Td>
                   {name}
@@ -108,18 +114,18 @@ const CVEnvironmentSelectionForm = () => {
                 <Td>{akCount}</Td>
               </Tr>
             ))
-          }
-        </Tbody>
-      </TableComposable>}
+            }
+          </Tbody>
+        </TableComposable>}
       {(versionEnvironments.length === 0) &&
-      <EmptyState variant={EmptyStateVariant.xs}>
-        <Title headingLevel="h4" size="md">
-          {__('This version has not been promoted to any environments.')}
-        </Title>
-        <EmptyStateBody>
-          {versionEnvironmentsEmptyInfo}
-        </EmptyStateBody>
-      </EmptyState>}
+        <EmptyState variant={EmptyStateVariant.xs}>
+          <Title headingLevel="h4" size="md">
+            {__('This version has not been promoted to any environments.')}
+          </Title>
+          <EmptyStateBody>
+            {versionEnvironmentsEmptyInfo}
+          </EmptyStateBody>
+        </EmptyState>}
     </>
   );
 };

@@ -10,13 +10,15 @@ html .pagination-pf-pagesize.btn-group {
 
 // necessary because of !important table margin css from foreman
 // https://github.com/theforeman/foreman/blob/develop/app/assets/stylesheets/base.scss#L242
-.table + .table-view-pf-pagination {
+.table+.table-view-pf-pagination {
   margin-top: -6px !important;
 }
 
 // don't use this class if you need a dropdown menu to extend outside the table cell
 .neat-table-cells {
-  td, th {
+
+  td,
+  th {
     overflow: auto;
     word-wrap: break-word;
   }
@@ -30,6 +32,7 @@ html .pagination-pf-pagesize.btn-group {
     word-wrap: break-word;
   }
 }
+
 // override foreman's .editable styles, that are conflicting with the patternfly ones
 .pf-table-inline-edit {
   .editable {
@@ -45,14 +48,16 @@ html .pagination-pf-pagesize.btn-group {
 // needed to ensure correct spacing between buttons and the button
 // container
 .toolbar-pf .form-group {
+
   .btn,
   .btn-group,
   .btn-container,
   .tooltip-button-helper {
-    + .btn,
-    + .btn-group,
-    + .btn-container,
-    + .tooltip-button-helper {
+
+    +.btn,
+    +.btn-group,
+    +.btn-container,
+    +.tooltip-button-helper {
       margin-left: 5px;
     }
   }
@@ -67,17 +72,34 @@ html .pagination-pf-pagesize.btn-group {
   margin: 24px 0px;
 }
 
+// Modal sizing fix
 .pf-l-bullseye .pf-c-modal-box {
   margin-top: 76px;
   max-height: calc(100vh - 76px);
+
   @media (min-width: 768px) {
     max-width: calc(100vw - 240px);
     margin-left: 200px;
   }
 }
 
+// Makes question tooltips have a hover state
+.foreman-spaced-icon {
+  margin: 0 8px;
+
+  svg {
+    color: var(--pf-global--Color--200)
+  }
+
+  svg:hover {
+    color: var(--pf-global--Color--100)
+  }
+}
+
 @keyframes hideme {
-  0%, 70% {
+
+  0%,
+  70% {
     opacity: 1;
   }
 
@@ -87,7 +109,7 @@ html .pagination-pf-pagesize.btn-group {
 }
 
 .tooltip {
-  margin:auto;
+  margin: auto;
   animation-direction: normal;
   animation-name: hideme;
   animation-duration: 2s;

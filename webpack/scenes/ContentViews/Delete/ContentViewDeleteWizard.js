@@ -62,7 +62,7 @@ const ContentViewDeleteWizard =
 
     const environmentSelectionStep = {
       id: 1,
-      name: __('Remove from environments'),
+      name: __('Remove versions from environments'),
       component: <CVDeleteEnvironmentSelection />,
     };
     const affectedHostsStep = {
@@ -78,7 +78,7 @@ const ContentViewDeleteWizard =
     };
     const reviewStep = {
       id: 4,
-      name: __('Review'),
+      name: __('Review details'),
       component: <CVDeletionReview />,
       canJumpTo: canReview,
       nextButtonText: __('Delete'),
@@ -135,7 +135,7 @@ const ContentViewDeleteWizard =
         setSelectedCVNameForHosts,
         affectedActivationKeys,
         affectedHosts,
-        }}
+      }}
       >
         <Wizard
           title={__('Delete content view')}
@@ -143,9 +143,9 @@ const ContentViewDeleteWizard =
           steps={steps}
           startAtStep={currentStep}
           onClose={() => {
-              setIsOpen(false);
-              setCurrentStep(0);
-            }}
+            setIsOpen(false);
+            setCurrentStep(0);
+          }}
           isOpen={show}
         />
       </CVDeleteContext.Provider>
