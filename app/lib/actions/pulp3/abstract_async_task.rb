@@ -46,7 +46,7 @@ module Actions
       end
 
       def combined_tasks
-        return nil if pulp_tasks.nil? || task_groups.nil?
+        return nil if pulp_tasks.nil? && task_groups.nil?
         pulp_tasks + task_groups
       end
 
@@ -120,11 +120,23 @@ module Actions
       end
 
       def external_task=(external_task_data)
-        #currently we assume everything coming from invoke_external_task_methods are tasks
         tasks = transform_task_response(external_task_data)
-        output[:pulp_tasks] = new_or_existing_objects(::Katello::Pulp3::Task, tasks)
+        output[:pulp_tasks] = [] if output[:pulp_tasks].nil?
+        output[:task_groups] = [] if output[:task_groups].nil?
+        if tasks.detect { |task| task['task'] || (task['pulp_href'] && !task['tasks']) }
+          output[:pulp_tasks] = new_or_existing_objects(::Katello::Pulp3::Task, tasks)
+          add_task_groups
+        else
+          output[:pulp_tasks] = []
+          tasks.each do |task|
+            if task['task_group']
+              output[:task_groups] << ::Katello::Pulp3::TaskGroup.new_from_href(smart_proxy, task['task_group'])
+            elsif task['pulp_href'] && task['tasks']
+              output[:task_groups] << ::Katello::Pulp3::TaskGroup.new_from_href(smart_proxy, task['pulp_href'])
+            end
+          end
+        end
 
-        add_task_groups
         check_for_errors
       end
 
