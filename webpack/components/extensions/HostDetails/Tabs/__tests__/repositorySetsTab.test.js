@@ -42,6 +42,7 @@ const defaultQuery = {
   host_id: 1,
   per_page: 20,
   page: 1,
+  search: '',
 };
 const libraryQuery = {
   ...defaultQuery,

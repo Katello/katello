@@ -66,14 +66,15 @@ const RepositorySetsTab = () => {
     content_facet_attributes: contentFacetAttributes,
   } = hostDetails;
   const contentFacet = propsToCamelCase(contentFacetAttributes ?? {});
-  const nonLibraryHost = !contentFacet.contentViewDefault &&
-  !contentFacet.lifecycleEnvironmentLibrary;
+  const nonLibraryHost = contentFacet.contentViewDefault === false &&
+    contentFacet.lifecycleEnvironmentLibrary === false;
   const simpleContentAccess = (Number(subscriptionStatus) === 5);
   const dispatch = useDispatch();
   const toggleGroupStates = ['noLimit', 'limitToEnvironment'];
   const [noLimit, limitToEnvironment] = toggleGroupStates;
+  const defaultToggleGroupState = nonLibraryHost ? limitToEnvironment : noLimit;
   const [toggleGroupState, setToggleGroupState] =
-    useState(nonLibraryHost ? limitToEnvironment : noLimit);
+    useState(defaultToggleGroupState);
   const [alertShowing, setAlertShowing] = useState(nonLibraryHost);
   const emptyContentTitle = __('No repository sets to show.');
   const emptyContentBody = __('Repository sets will appear here when available.');
@@ -178,7 +179,6 @@ const RepositorySetsTab = () => {
     __('Showing repositories in the host\'s content view and lifecycle environment that are available through subscriptions.') :
     __('Showing all repositories available through subscriptions.'));
 
-
   let alertText;
   if (simpleContentAccess) {
     alertText = scaAlert;
@@ -225,6 +225,8 @@ const RepositorySetsTab = () => {
                 toggleGroup,
                 }
           }
+          activeFilters={[toggleGroupState]}
+          defaultFilters={[defaultToggleGroupState]}
           additionalListeners={[hostId, toggleGroupState]}
           fetchItems={fetchItems}
           autocompleteEndpoint="/repository_sets/auto_complete_search"
