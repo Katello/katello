@@ -109,8 +109,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
                 if ($scope.genericRemoteOptions && $scope.genericRemoteOptions !== []) {
                     $scope.genericRemoteOptions.forEach(function(option) {
-                       if (option.type === "Array" && option.value) {
-                           repository[option.name] = option.value.split(option.delimiter);
+                       if (option.type === "Array") {
+                           repository[option.name] = option.value ? option.value.split(option.delimiter) : [];
                        } else {
                            repository[option.name] = option.value;
                        }
