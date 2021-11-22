@@ -38,8 +38,8 @@ module Katello
       def needs_updates?
         remote = fetch_remote
         return true if remote.blank?
-        options = repo_service.compute_remote_options
-        options.keys.any? { |key| remote.send(key) != options[key] }
+        options = compute_remote_options
+        options.keys.any? { |key| strip(remote.send(key)) != strip(options[key]) }
       end
 
       def remote_href
@@ -205,6 +205,16 @@ module Katello
       def create_distribution(path)
         distribution_data = api.distribution_class.new(distribution_options(path))
         repo_service.distributions_api.create(distribution_data)
+      end
+
+      private
+
+      def strip(value)
+        if value.respond_to?(:strip)
+          value.strip
+        else
+          value
+        end
       end
     end
   end
