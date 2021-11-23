@@ -13,7 +13,6 @@
  * @requires DockerManifest
  * @requires DockerManifestList
  * @requires DockerTag
- * @requires OstreeBranch
  * @requires File
  * @requires Deb
  * @requires ModuleStream
@@ -25,8 +24,8 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb', 'ModuleStream', 'AnsibleCollection', 'GenericContent', 'RepositoryTypesService',
-    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb, ModuleStream, AnsibleCollection, GenericContent, RepositoryTypesService) {
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'File', 'Deb', 'ModuleStream', 'AnsibleCollection', 'GenericContent', 'RepositoryTypesService',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, DockerManifest, DockerManifestList, DockerTag, File, Deb, ModuleStream, AnsibleCollection, GenericContent, RepositoryTypesService) {
         var contentTypes, nutupaneParams;
 
         function success(response, selected) {
