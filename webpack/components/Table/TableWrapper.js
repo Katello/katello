@@ -63,8 +63,6 @@ const TableWrapper = ({
   const hasChanged = (oldValue, newValue) => !isEqual(oldValue, newValue);
 
   const spawnFetch = useCallback((paginationData) => {
-    // The search component will update the search query when a search is performed, listen for that
-    // and perform the search so we can be sure the searchQuery is updated when search is performed.
     const fetchWithParams = (allParams = {}) => {
       const newRequest = {
         ...(paginationData ?? paginationParams()),
