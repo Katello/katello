@@ -28,8 +28,8 @@ module Katello
     param :with_custom, :bool, :required => false, :desc => N_("If true, return custom repository sets along with redhat repos")
     param :activation_key_id, :number, :desc => N_("activation key identifier"), :required => false
     param :host_id, :number, :desc => N_("Id of the host"), :required => false
-    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions. Relevant for Activation Keys only")
-    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the activation key's content view version. Relevant for Activation Keys only")
+    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions.")
+    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the host's or activation key's content view version and lifecycle environment.")
     param_group :search, Api::V2::ApiController
     add_scoped_search_description_for(Katello::ProductContent)
     def index
