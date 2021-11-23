@@ -3,6 +3,8 @@ namespace :katello do
   task :pulp3_migration_stats => [:environment] do
     User.current = User.anonymous_admin
 
+    migrated_deb_count = ::Katello::Deb.where('pulp_id LIKE ?', '%/pulp/api/v3/content/deb/packages/%').
+      or(::Katello::Deb.where.not(migrated_pulp3_href: nil)).count
     migrated_rpm_count = ::Katello::Rpm.where('pulp_id LIKE ?', '%/pulp/api/v3/content/rpm/packages/%').
       or(::Katello::Rpm.where.not(migrated_pulp3_href: nil)).count
     migrated_erratum_count = ::Katello::RepositoryErratum.where.not(erratum_pulp3_href: nil).count
@@ -10,6 +12,7 @@ namespace :katello do
     migratable_repo_count = ::Katello::Repository.count - ::Katello::Repository.puppet_type.count -
       ::Katello::Repository.ostree_type.count - ::Katello::Repository.deb_type.count
 
+    immediate_unmigrated_deb_count = ::Katello::Deb.count - migrated_deb_count
     on_demand_rpm_count = Katello::RepositoryRpm.where(:repository_id => Katello::Repository.yum_type.on_demand).
       select(:rpm_id).distinct.count
     on_demand_unmigrated_rpm_count = on_demand_rpm_count - migrated_rpm_count
@@ -19,25 +22,28 @@ namespace :katello do
     # Immediate RPMs: (9.39E-04)*(#RPMs) + -3
     # Repositories: 0.0746*(#Repos) + -2.07
     migration_minutes = (0.000646 * on_demand_unmigrated_rpm_count - 3.22 +
+                         0.000943 * immediate_unmigrated_deb_count - 3 + # copied from RPM, no scientific analysis has been done ;-)
                          0.000943 * immediate_unmigrated_rpm_count - 3 +
                          0.0746 * migratable_repo_count).to_i
     hours = (migration_minutes / 60) % 60
     minutes = migration_minutes % 60
 
     puts "============Migration Summary================"
+    puts "Migrated/Total DEBs: #{migrated_deb_count}/#{::Katello::Deb.count}"
     puts "Migrated/Total RPMs: #{migrated_rpm_count}/#{::Katello::Rpm.count}"
     puts "Migrated/Total errata: #{migrated_erratum_count}/#{::Katello::RepositoryErratum.count}"
     puts "Migrated/Total repositories: #{migrated_repo_count}/#{migratable_repo_count}"
 
     # The timing formulas go negative if the amount of content is negligibly small
     if migration_minutes >= 5
-      puts "Estimated migration time based on yum content: #{hours} hours, #{minutes} minutes"
+      puts "Estimated migration time based on yum/apt content: #{hours} hours, #{minutes} minutes"
     elsif migrated_rpm_count == ::Katello::Rpm.count &&
+      migrated_deb_count == ::Katello::Deb.count &&
       migrated_erratum_count == ::Katello::RepositoryErratum.count &&
       migrated_repo_count == migratable_repo_count
       puts "All content has been migrated."
     else
-      puts "Estimated migration time based on yum content: fewer than 5 minutes"
+      puts "Estimated migration time based on yum/apt content: fewer than 5 minutes"
     end
 
     puts
