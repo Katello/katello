@@ -46,4 +46,13 @@ node :permissions do |env|
   }
 end
 
+node :content_views do |env|
+  env.content_views.non_default.map do |cv|
+    {
+      :name => cv.name,
+      :id => cv.id
+    }
+  end
+end
+
 extends 'katello/api/v2/common/timestamps'
