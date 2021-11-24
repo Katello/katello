@@ -16,10 +16,16 @@ namespace :katello do
       reimport_all = ::Foreman::Cast.to_bool(ENV['reimport_all'])
       wait = ::Foreman::Cast.to_bool(ENV['wait'] || 'true')
       preserve_output = ::Foreman::Cast.to_bool(ENV['preserve_output'])
+      repository_types = ENV['repository_types']&.split(',')&.map(&:strip)
 
       User.current = User.anonymous_api_admin
       Katello::Pulp3::MigrationSwitchover.new(SmartProxy.pulp_primary).remove_orphaned_content
-      task = ForemanTasks.async_task(Actions::Pulp3::ContentMigration, SmartProxy.pulp_primary, reimport_all: reimport_all)
+      task = ForemanTasks.async_task(
+        Actions::Pulp3::ContentMigration,
+        SmartProxy.pulp_primary,
+        reimport_all: reimport_all,
+        repository_types: repository_types
+      )
 
       if wait
         clear_count = nil
