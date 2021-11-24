@@ -42,4 +42,6 @@ Katello::Engine.routes.draw do
   match '/labs' => 'react#index', :via => [:get]
   match '/labs/*page' => 'react#index', :via => [:get]
   match '/organization_select' => 'react#index', :via => [:get]
+
+  get '/change_host_content_source', to: 'react#index'
 end

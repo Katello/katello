@@ -299,6 +299,7 @@ Foreman::Plugin.register :katello do
 
   describe_host do
     overview_buttons_provider :content_host_overview_button
+    multiple_actions_provider :hosts_change_content_source
   end
 
   if Katello.with_remote_execution?

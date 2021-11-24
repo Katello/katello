@@ -6,6 +6,8 @@
 import componentRegistry from 'foremanReact/components/componentRegistry';
 import Application from './containers/Application/index';
 import Content from './scenes/SmartProxy/Content';
+import ChangeContentSource from './scenes/Hosts/ChangeContentSource';
+
 import './redux';
 // Not currently mocking anything
 // import './services/api/setupMocks';
@@ -18,4 +20,9 @@ componentRegistry.register({
 componentRegistry.register({
   name: 'Content',
   type: Content,
+});
+
+componentRegistry.register({
+  name: 'ChangeContentSource',
+  type: ChangeContentSource,
 });

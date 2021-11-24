@@ -32,6 +32,8 @@ Foreman::Application.routes.draw do
     end
   end
 
+  post '/change_host_content_source/data', to: 'hosts#change_content_source_data'
+
   namespace :api do
     scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
       match '/hosts/post_index' => 'hosts#index', :via => :post
@@ -80,6 +82,7 @@ Foreman::Application.routes.draw do
             match '/bulk/system_purpose' => 'hosts_bulk_actions#system_purpose', :via => :put
             match '/bulk/available_incremental_updates' => 'hosts_bulk_actions#available_incremental_updates', :via => :post
             match '/bulk/module_streams' => 'hosts_bulk_actions#module_streams', :via => :post
+            match '/bulk/change_content_source' => 'hosts_bulk_actions#change_content_source', :via => :put
             match '/subscriptions/' => 'host_subscriptions#create', :via => :post
           end
 

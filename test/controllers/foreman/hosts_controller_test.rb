@@ -129,4 +129,18 @@ class HostsControllerTest < ActionController::TestCase
       assert_redirected_to host_path(host)
     end
   end
+
+  test 'change content source' do
+    host = FactoryBot.create(:host, :with_content, content_view: katello_environments(:library).content_views.first,
+    lifecycle_environment: katello_environments(:library),
+    content_source: FactoryBot.create(:smart_proxy, :with_pulp3))
+    host2 = FactoryBot.create(:host)
+
+    get :change_content_source_data, params: { host_ids: [host.id, host2.id] }
+    assert_response :success
+
+    response = JSON.parse(@response.body)
+    assert_equal response['content_hosts_ids'], [host.id]
+    assert_equal response['hosts_without_content'], [host2.name]
+  end
 end

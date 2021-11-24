@@ -266,5 +266,9 @@ module Katello
         :priority => 900
       }]
     end
+
+    def hosts_change_content_source
+      [{ action: [_('Change Content Source'), '/change_host_content_source', false], priority: 100 }]
+    end
   end
 end

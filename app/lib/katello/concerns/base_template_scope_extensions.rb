@@ -288,6 +288,17 @@ module Katello
         Katello.with_katello_agent?
       end
 
+      include Katello::ContentSourceHelper
+
+      apipie :method, "Generate script to change a host's content source" do
+        returns String
+      end
+      def change_content_source(host, ca_cert)
+        return missing_content_source(host) unless host.content_source
+
+        prepare_ssl_cert(ca_cert) + configure_subman(host.content_source)
+      end
+
       private
 
       def host_subscription_facet(host)
