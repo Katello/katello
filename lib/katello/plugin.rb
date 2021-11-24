@@ -332,7 +332,7 @@ Foreman::Plugin.register :katello do
 
   register_info_provider Katello::Host::InfoProvider
 
-  medium_providers.register(Katello::ManagedContentMediumProvider)
+  medium_providers_registry.register(Katello::ManagedContentMediumProvider)
 
   Katello::PermissionCreator.new(self).define
   add_all_permissions_to_default_roles
