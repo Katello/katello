@@ -63,7 +63,7 @@ class SetOrganization extends Component {
                   placeholder={__('Select an organization')}
                   id="organization"
                   name="organization"
-                  className="form-control"
+                  className="form-control without_select2"
                   options={list}
                   onChange={this.onSelectItem}
                 />

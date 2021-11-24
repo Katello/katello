@@ -9,6 +9,8 @@ module Katello
           case params[:action]
           when 'content_hosts'
             'view'
+          when 'change_content_source'
+            'edit'
           else
             super
           end
@@ -67,6 +69,36 @@ module Katello
                  'Registered', 'Last Checkin'])
             end
           end
+        end
+
+        def change_content_source_data
+          hosts = ::Host.where(id: params[:host_ids])
+          content_hosts_ids = []
+          hosts_without_content = []
+
+          hosts.each do |host|
+            if host.content_facet
+              content_hosts_ids << host.id
+            else
+              hosts_without_content << host.name
+            end
+          end
+
+          environments = KTEnvironment.readable.where(organization: Organization.current).includes([:organization, :env_priors, :priors]).order(:name)
+          content_sources = SmartProxy.authorized(:view_smart_proxies).with_content.includes([:smart_proxy_features])
+
+          if Katello.with_remote_execution?
+            template_id = JobTemplate.find_by(name: 'Change content source')&.id
+            job_invocation_path = new_job_invocation_path(template_id: template_id, host_ids: content_hosts_ids) if template_id
+          end
+
+          render json: {
+            content_hosts_ids: content_hosts_ids,
+            hosts_without_content: hosts_without_content,
+            environments: environments,
+            content_sources: content_sources,
+            job_invocation_path: job_invocation_path
+          }
         end
       end
     end

@@ -3,11 +3,13 @@ module Katello
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::Api::V2::ContentOverridesController
+    include Katello::ContentSourceHelper
+    include ::Foreman::Renderer::Scope::Macros::Base
 
     before_action :find_host_collections, only: [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_action :find_environment, only: [:environment_content_view]
     before_action :find_content_view, only: [:environment_content_view]
-    before_action :find_editable_hosts, except: [:destroy_hosts, :resolve_traces]
+    before_action :find_editable_hosts, except: [:destroy_hosts, :resolve_traces, :change_content_source]
     before_action :find_deletable_hosts, only: [:destroy_hosts]
     before_action :find_readable_hosts, only: [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, only: [:available_incremental_updates]
@@ -303,6 +305,33 @@ module Katello
       host_module_streams = Katello::ModuleStream.available_for_hosts(@hosts)
       respond_for_index(collection: scoped_search(host_module_streams, :name, :asc, options),
                         template: '../../../api/v2/module_streams/name_streams')
+    end
+
+    api :PUT, "/hosts/bulk/change_content_source", N_("Update the content source for specified hosts and generate the reconfiguration script")
+    param :host_ids, Array, required: true, desc: N_("The ids of the hosts to alter. Hosts not managed by Katello are ignored")
+    param :environment_id, :number, required: true, desc: N_("The id of the lifecycle environment")
+    param :content_view_id, :number, required: true, desc: N_("The id of the content view")
+    param :content_source_id, :number, required: true, desc: N_("The id of the content source")
+    def change_content_source
+      hosts = ::Host.where(id: params[:host_ids])
+      throw_resource_not_found(name: 'host', id: params[:host_ids]) unless hosts.any?
+
+      lifecycle_environment = KTEnvironment.readable.find(params[:environment_id])
+      content_view = Katello::ContentView.readable.find(params[:content_view_id])
+      content_source = SmartProxy.authorized(:view_smart_proxies).find(params[:content_source_id])
+      template = prepare_ssl_cert(foreman_server_ca_cert) + configure_subman(content_source)
+
+      hosts.each do |host|
+        next unless host.content_facet
+
+        host.content_facet.lifecycle_environment = lifecycle_environment
+        host.content_facet.content_view = content_view
+        host.content_facet.content_source = content_source
+
+        host.update_candlepin_associations
+      end
+
+      render plain: template
     end
 
     private

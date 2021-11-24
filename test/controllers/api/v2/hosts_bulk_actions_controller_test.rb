@@ -496,5 +496,85 @@ module Katello
         put :resolve_traces, params: { trace_ids: [host_one_trace.id] }
       end
     end
+
+    #
+    # Change host content source tests
+    #
+
+    def test_change_content_source
+      prepare_certificates
+      host = FactoryBot.create(:host, :with_content, content_view: katello_environments(:library).content_views.first,
+                                                     lifecycle_environment: katello_environments(:library),
+                                                     content_source: FactoryBot.create(:smart_proxy, :with_pulp3))
+
+      lifecycle_environment = katello_environments(:dev)
+      content_view = lifecycle_environment.content_views.first
+      content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
+
+      put :change_content_source, params: { environment_id: lifecycle_environment.id,
+                                            content_view_id: content_view.id,
+                                            content_source_id: content_source.id,
+                                            host_ids: [host.id] }
+      assert_response :success
+
+      assert_equal host.reload.lifecycle_environment, lifecycle_environment
+      assert_equal host.reload.content_view, content_view
+      assert_equal host.reload.content_source_id, content_source.id
+
+      assert_includes @response.body, "Configure subscription-manager"
+      assert_includes @response.body, content_source.pulp_content_url.to_s
+    end
+
+    def test_change_cs_ignored_hosts
+      prepare_certificates
+      host = FactoryBot.create(:host, :with_content, content_view: katello_environments(:library).content_views.first,
+                                                     lifecycle_environment: katello_environments(:library),
+                                                     content_source: FactoryBot.create(:smart_proxy, :with_pulp3))
+
+      host2 = FactoryBot.create(:host)
+      lifecycle_environment = katello_environments(:dev)
+      content_view = lifecycle_environment.content_views.first
+      content_source = FactoryBot.create(:smart_proxy, :with_pulp3)
+
+      put :change_content_source, params: { environment_id: lifecycle_environment.id,
+                                            content_view_id: content_view.id,
+                                            content_source_id: content_source.id,
+                                            host_ids: [host.id] }
+      assert_response :success
+      refute host2.reload.content_facet
+    end
+
+    def test_change_cs_no_hosts
+      put :change_content_source
+      assert_response :not_found
+    end
+
+    def test_change_cs_environment_not_found
+      put :change_content_source, params: { environment_id: 0, host_ids: ::Host.all.map(&:id).to_a }
+      assert_response :not_found
+    end
+
+    def test_change_cs_content_view_not_found
+      put :change_content_source, params: { environment_id: katello_environments(:library).id,
+                                            content_view_id: 0,
+                                            host_ids: ::Host.all.map(&:id).to_a }
+      assert_response :not_found
+    end
+
+    def test_change_cs_content_source_not_found
+      put :change_content_source, params: { environment_id: katello_environments(:library).id,
+                                            content_view_id: katello_content_views.first.id,
+                                            content_source_id: 0,
+                                            host_ids: ::Host.all.map(&:id).to_a }
+      assert_response :not_found
+    end
+
+    private
+
+    def prepare_certificates
+      cert_path = Rails.root.join('test/static_fixtures/certificates/example.com.crt')
+      Setting[:server_ca_file] = cert_path
+      Setting[:ssl_ca_file] = cert_path
+    end
   end
 end
