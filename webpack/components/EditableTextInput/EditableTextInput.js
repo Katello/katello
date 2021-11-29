@@ -44,6 +44,11 @@ const EditableTextInput = ({
         setPasswordPlaceholder(null);
         setPasswordReset(true);
       }
+
+      if (inputValue === null) {
+        // setting an empty string indicates the password will be cleared
+        setInputValue('');
+      }
     }
   };
 

@@ -93,6 +93,7 @@ const CdnConfiguration = (props) => {
         >
           <EditableTextInput
             attribute="cdn-password"
+            value={password}
             isPassword
             hasPassword={cdnConfiguration.password_exists}
             onEdit={editPassword}
