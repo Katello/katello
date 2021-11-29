@@ -4,6 +4,7 @@ module Actions
     module Repository
       class ImportUpload < Actions::EntryAction
         include Actions::Katello::PulpSelector
+        # rubocop:disable Metrics/MethodLength
         def plan(repository, uploads, options = {})
           action_subject(repository)
           repository.clear_smart_proxy_sync_histories
@@ -21,6 +22,7 @@ module Actions
           else
             unit_type_id = SmartProxy.pulp_primary.content_service(options[:content_type])::CONTENT_TYPE
           end
+          content_type = ::Katello::RepositoryTypeManager.find_content_type(options[:content_type])
 
           sequence do
             upload_results = concurrence do
@@ -34,8 +36,15 @@ module Actions
                   unit_metadata: unit_metadata
                 }
 
-                import_upload = plan_action(Actions::Pulp3::Orchestration::Repository::ImportUpload,
-                                  repository, SmartProxy.pulp_primary, import_upload_args)
+                import_upload_args.merge!(options)
+
+                if content_type.repository_import_on_upload
+                  action_class = ::Actions::Pulp3::Orchestration::Repository::ImportRepositoryUpload
+                else
+                  action_class = ::Actions::Pulp3::Orchestration::Repository::ImportUpload
+                end
+
+                import_upload = plan_action(action_class, repository, SmartProxy.pulp_primary, import_upload_args)
                 plan_action(FinishUpload, repository, :import_upload_task => import_upload.output,
                             generate_metadata: false, content_type: options[:content_type])
                 import_upload.output
@@ -46,6 +55,7 @@ module Actions
             plan_self(repository_id: repository.id, sync_capsule: sync_capsule, upload_results: upload_results)
           end
         end
+        # rubocop:enable Metrics/MethodLength
 
         def run
           repository = ::Katello::Repository.find(input[:repository_id])

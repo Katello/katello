@@ -116,24 +116,30 @@ module Katello
         content_unit_list page_opts
       end
 
+      # rubocop:disable Lint/UselessAssignment
       def self.find_duplicate_unit(repository, unit_type_id, file, checksum)
+        filter_label = 'sha256'
+        if unit_type_id == 'ostree_ref'
+          filter_label = 'checksum'
+        end
         content_backend_service = SmartProxy.pulp_primary.content_service(unit_type_id)
         duplicates_allowed = ::Katello::RepositoryTypeManager.find_content_type(unit_type_id).try(:duplicates_allowed)
         if repository.generic? && duplicates_allowed
           filename_key = ::Katello::RepositoryTypeManager.find_content_type(unit_type_id).filename_key
           duplicate_sha_path_content_list = content_backend_service.content_api(repository.repository_type, unit_type_id).list(
-            "sha256": checksum,
+            filter_label: checksum,
             filename_key => file[:filename])
         elsif repository.generic?
           duplicate_sha_path_content_list = content_backend_service.content_api(repository.repository_type, unit_type_id).list(
-            "sha256": checksum)
+            filter_label: checksum)
         else
           duplicate_sha_path_content_list = content_backend_service.content_api.list(
-            "sha256": checksum,
+            filter_label: checksum,
             "relative_path": file[:filename])
         end
         duplicate_sha_path_content_list
       end
+      # rubocop:enable Lint/UselessAssignment
     end
   end
 end

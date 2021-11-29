@@ -474,6 +474,15 @@ module Katello
         end
       end
 
+      def repository_import_content(artifact_href, options = {})
+        ostree_import = PulpOstreeClient::OstreeRepoImport.new
+        ostree_import.artifact = artifact_href
+        ostree_import.repository_name = options[:ostree_repository_name]
+        ostree_import.ref = options[:ostree_ref]
+        ostree_import.parent_commit = options[:ostree_parent_commit]
+        api.repositories_api.import_commits(repository_reference.repository_href, ostree_import)
+      end
+
       def add_content(content_unit_href, remove_all_units = false)
         content_unit_href = [content_unit_href] unless content_unit_href.is_a?(Array)
         if remove_all_units
