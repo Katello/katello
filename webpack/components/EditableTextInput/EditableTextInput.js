@@ -138,13 +138,16 @@ const EditableTextInput = ({
             <TimesIcon />
           </Button>
         </SplitItem>
-        <SplitItem>
-          <Button aria-label={`show-password ${attribute}`} variant="plain" isDisabled={inputValue?.length < 1} onClick={toggleShowPassword}>
-            { showPassword ?
-              (<EyeSlashIcon />) :
-              (<EyeIcon />)}
-          </Button>
-        </SplitItem>
+        { isPassword ?
+          <SplitItem>
+            <Button aria-label={`show-password ${attribute}`} variant="plain" isDisabled={inputValue?.length < 1} onClick={toggleShowPassword}>
+              { showPassword ?
+                (<EyeSlashIcon />) :
+                (<EyeIcon />)}
+            </Button>
+          </SplitItem> :
+          null
+        }
       </Split>
     );
   }
