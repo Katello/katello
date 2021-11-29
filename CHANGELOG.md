@@ -13,6 +13,7 @@
  * Upgrade Pulpcore and plugins to 3.16 ([#33832](https://projects.theforeman.org/issues/33832), [2068c4e4](https://github.com/Katello/katello.git/commit/2068c4e4c57c30a0a22185665748dafd73774346))
  * Add "What was your strategy?" question to PR template ([#33708](https://projects.theforeman.org/issues/33708), [f176d979](https://github.com/Katello/katello.git/commit/f176d979c4f25a695e292658c2f9f25209e02b7c))
  * Add PR template to remind contributors to add context and testing steps ([#33571](https://projects.theforeman.org/issues/33571), [873c50aa](https://github.com/Katello/katello.git/commit/873c50aaf5287f8c78a8de41d9479da5de9b69a5))
+ * Remove old ostree code ([#33925](https://projects.theforeman.org/issues/33925), [383facce](https://github.com/Katello/katello/commit/383facce4587719adf1270ef6a47f55a509fd810))
 
 ### Inter Server Sync
  * UI for Connected ISS ([#33874](https://projects.theforeman.org/issues/33874), [8f098309](https://github.com/Katello/katello.git/commit/8f0983097bd100b883e7636ee394c0f0938db4b1))
@@ -35,6 +36,7 @@
  * Applicability for deb packages ([#27625](https://projects.theforeman.org/issues/27625), [d519e0fd](https://github.com/Katello/katello.git/commit/d519e0fde4c839522719d6af663a3c40c0adef5b), [f3ab52fb](https://github.com/Katello/katello.git/commit/f3ab52fb60173ade330626ba542b413cf8900427))
  * Add json of extra metadata to generic content model ([#33780](https://projects.theforeman.org/issues/33780), [19372d28](https://github.com/Katello/katello.git/commit/19372d286b88264ec8bf53d111de99580d19011f))
  * Add filename attribute to python packages ([#33650](https://projects.theforeman.org/issues/33650), [04197518](https://github.com/Katello/katello.git/commit/0419751898683514ba6c153b26d9617982334507))
+ * Support restricting repository to rhel 9 cli ([#33923](https://projects.theforeman.org/issues/33923), [9feababd](https://github.com/Katello/katello.git/commit/9feababd9f3e2b859426422ae170cd2953f334f9))
 
 ### Web UI
  * UI for listing generic content units at repository level + removal support ([#33616](https://projects.theforeman.org/issues/33616), [ee9adf33](https://github.com/Katello/katello.git/commit/ee9adf332ba65ee6199408343aa3fd8fb79536b3))
@@ -68,6 +70,7 @@
  * Move Ansible Collections Content page to the generic UI ([#33720](https://projects.theforeman.org/issues/33720), [8c6803a0](https://github.com/Katello/katello.git/commit/8c6803a0750f2bb9d091a7d9e19120ffd774bcdf))
  * New Host details Errata - Filter by type & severity ([#33834](https://projects.theforeman.org/issues/33834), [a764d607](https://github.com/Katello/katello.git/commit/a764d6079de7c3973075efe2e9881a068c8ea84a))
  * Allow accessing the ActivationKey name in the safe mode ([#33818](https://projects.theforeman.org/issues/33818), [574136ae](https://github.com/Katello/katello.git/commit/574136ae75b96b2ece56a0f7c8a6233547e1551b))
+ * [SAT-4229] Packages - basic table)[#33849](https://projects.theforeman.org/issues/33818), [1324d8c8](https://github.com/Katello/katello/commit/1324d8c8c0ab759258c192334b987bf96837fadb))
 
 ### Hosts
  * [SAT-4229] Content - Errata - Recalculate ([#33516](https://projects.theforeman.org/issues/33516), [da26df34](https://github.com/Katello/katello.git/commit/da26df34d2f760ffc6384404facf7d51d4d863d5))
