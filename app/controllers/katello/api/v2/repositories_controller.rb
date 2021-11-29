@@ -430,10 +430,16 @@ module Katello
       end
 
       begin
+        upload_args = {
+          content_type: params[:content_type],
+          generate_metadata: generate_metadata,
+          sync_capsule: sync_capsule
+        }
+        upload_args.merge!(generic_content_type_import_upload_args)
+
         respond_for_async(resource: send(
           async ? :async_task : :sync_task,
-          ::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-          generate_metadata: generate_metadata, sync_capsule: sync_capsule, content_type: params[:content_type]))
+          ::Actions::Katello::Repository::ImportUpload, @repository, uploads, upload_args))
       rescue => e
         raise HttpErrors::BadRequest, e.message
       end
@@ -624,6 +630,16 @@ module Katello
         generic_remote_options[option.name] = repo_params[option.name]
       end
       generic_remote_options
+    end
+
+    def generic_content_type_import_upload_args
+      args = {}
+      @repository.repository_type&.import_attributes&.collect do |import_attribute|
+        if params[import_attribute.api_param]
+          args[import_attribute.api_param] = params[import_attribute.api_param]
+        end
+      end
+      args
     end
 
     def check_import_parameters

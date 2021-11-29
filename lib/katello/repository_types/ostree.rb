@@ -25,7 +25,9 @@ Katello::RepositoryTypeManager.register('ostree') do
                        pulp3_api: PulpOstreeClient::ContentRefsApi,
                        pulp3_service_class: Katello::Pulp3::GenericContentUnit,
                        model_name: lambda { |pulp_unit| pulp_unit["name"] },
-                       model_version: lambda { |pulp_unit| pulp_unit["version"] }
+                       model_version: lambda { |pulp_unit| pulp_unit["checksum"] },
+                       uploadable: true,
+                       repository_import_on_upload: true
 
   import_attribute :ref, :content_type => 'ostree_ref',
                         :api_param => :ostree_ref,
