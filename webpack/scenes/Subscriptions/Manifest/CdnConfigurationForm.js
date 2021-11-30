@@ -22,9 +22,9 @@ import {
 } from '../../Organizations/OrganizationSelectors';
 
 import { updateCdnConfiguration } from '../../Organizations/OrganizationActions';
-import './CdnConfiguration.scss';
+import './CdnConfigurationForm.scss';
 
-const CdnConfiguration = (props) => {
+const CdnConfigurationForm = (props) => {
   const {
     contentCredentials,
     cdnConfiguration,
@@ -41,8 +41,15 @@ const CdnConfiguration = (props) => {
   const updatingCdnConfiguration = useSelector(state => selectUpdatingCdnConfiguration(state));
 
   const editPassword = (value) => {
-    setPassword(value);
+    if (value === null) {
+      setPassword('');
+    } else {
+      setPassword(value);
+    }
   };
+
+  const hasPassword = (cdnConfiguration.password_exists && password === null)
+    || password?.length > 0;
 
   const performUpdate = () => {
     dispatch(updateCdnConfiguration({
@@ -95,7 +102,7 @@ const CdnConfiguration = (props) => {
             attribute="cdn-password"
             value={password}
             isPassword
-            hasPassword={cdnConfiguration.password_exists}
+            hasPassword={hasPassword}
             onEdit={editPassword}
           />
         </FormGroup>
@@ -137,7 +144,7 @@ const CdnConfiguration = (props) => {
   );
 };
 
-CdnConfiguration.propTypes = {
+CdnConfigurationForm.propTypes = {
   contentCredentials: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
@@ -148,11 +155,12 @@ CdnConfiguration.propTypes = {
     upstream_organization_label: PropTypes.string,
     ssl_ca_credential_id: PropTypes.number,
     password_exists: PropTypes.bool,
-  }).isRequired,
+  }),
 };
 
-CdnConfiguration.defaultProps = {
+CdnConfigurationForm.defaultProps = {
   contentCredentials: [],
+  cdnConfiguration: {},
 };
 
-export default CdnConfiguration;
+export default CdnConfigurationForm;

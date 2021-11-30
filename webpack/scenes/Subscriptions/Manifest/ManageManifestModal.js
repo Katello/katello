@@ -14,7 +14,7 @@ import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
 import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../ContentCredentials/ContentCredentialConstants';
 import SimpleContentAccess from './SimpleContentAccess';
-import CdnConfiguration from './CdnConfiguration';
+import CdnConfigurationForm from './CdnConfigurationForm';
 
 import './ManageManifestModal.scss';
 
@@ -93,9 +93,9 @@ class ManageManifestModal extends Component {
     } = this.props;
 
     const actionInProgress = (taskInProgress || manifestActionStarted);
-    const showRedHatProviderDetails = canEditOrganizations;
+    const showCdnConfigurationTab = canEditOrganizations;
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
-    const showManifestTab = (showRedHatProviderDetails || showSubscriptionManifest);
+    const showManifestTab = (canEditOrganizations || showSubscriptionManifest);
     const disableSCASwitch = (
       // allow users to turn SCA off even if they are not eligible to turn it back on
       (!simpleContentAccessEligible && !simpleContentAccess) ||
@@ -140,17 +140,6 @@ class ManageManifestModal extends Component {
         <Tabs id="manifest-history-tabs">
           {showManifestTab &&
             <Tab eventKey={1} title={__('Manifest')}>
-                {showRedHatProviderDetails &&
-                  <Grid>
-                    <h3>{__('CDN Configuration for Red Hat Content')}</h3>
-                    <hr />
-                    <CdnConfiguration
-                      cdnConfiguration={organization.cdn_configuration}
-                      contentCredentials={contentCredentials}
-                    />
-                    <br />
-                  </Grid>
-                }
                 {showSubscriptionManifest &&
                   <React.Fragment>
                     <Grid>
@@ -250,6 +239,18 @@ class ManageManifestModal extends Component {
               />
             </LoadingState>
           </Tab>
+          {showCdnConfigurationTab &&
+            <Tab eventKey={3} title={__('CDN Configuration')}>
+              <Grid>
+                <h3>{__('CDN Configuration for Red Hat Content')}</h3>
+                <hr />
+                <CdnConfigurationForm
+                  cdnConfiguration={organization.cdn_configuration}
+                  contentCredentials={contentCredentials}
+                />
+              </Grid>
+            </Tab>
+          }
         </Tabs>
         <ForemanModal.Footer>
           <Button bsStyle="primary" onClick={this.hideModal}>

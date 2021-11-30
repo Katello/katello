@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import Loading from '../Loading';
 import './editableTextInput.scss';
 
-const PASSWORD_MASK = '******';
+const PASSWORD_MASK = '••••••••';
 
 const EditableTextInput = ({
   onEdit, value, textArea, attribute, placeholder, isPassword, hasPassword,
@@ -24,7 +24,6 @@ const EditableTextInput = ({
   const [submitting, setSubmitting] = useState(false);
   const [passwordPlaceholder, setPasswordPlaceholder] = useState(hasPassword
     ? PASSWORD_MASK : null);
-  const [passwordReset, setPasswordReset] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -42,12 +41,6 @@ const EditableTextInput = ({
     if (isPassword) {
       if (passwordPlaceholder) {
         setPasswordPlaceholder(null);
-        setPasswordReset(true);
-      }
-
-      if (inputValue === null) {
-        // setting an empty string indicates the password will be cleared
-        setInputValue('');
       }
     }
   };
@@ -95,9 +88,8 @@ const EditableTextInput = ({
 
   const onClear = () => {
     if (isPassword) {
-      if (passwordReset) {
+      if (hasPassword || inputValue?.length > 0) {
         setPasswordPlaceholder(PASSWORD_MASK);
-        setPasswordReset(false);
       }
     }
 
@@ -140,7 +132,7 @@ const EditableTextInput = ({
         </SplitItem>
         { isPassword ?
           <SplitItem>
-            <Button aria-label={`show-password ${attribute}`} variant="plain" isDisabled={inputValue?.length < 1} onClick={toggleShowPassword}>
+            <Button aria-label={`show-password ${attribute}`} variant="plain" isDisabled={!inputValue?.length > 0} onClick={toggleShowPassword}>
               { showPassword ?
                 (<EyeSlashIcon />) :
                 (<EyeIcon />)}

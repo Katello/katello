@@ -59,7 +59,7 @@ test('shows a mask over the password when there is one', () => {
     hasPassword
   />);
 
-  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('******');
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('••••••••');
 });
 
 test('shows a mask over the password after undoing changes', () => {
@@ -74,7 +74,7 @@ test('shows a mask over the password after undoing changes', () => {
   expect(getByLabelText(`${attribute} text input`)).toHaveTextContent('');
 
   getByLabelText(`clear ${attribute}`).click();
-  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('******');
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('••••••••');
 });
 
 test('shows a mask over the password after editing', async () => {
@@ -92,7 +92,7 @@ test('shows a mask over the password after editing', async () => {
   getByLabelText(`submit ${attribute}`).click();
 
   await patientlyWaitFor(() => expect(getByLabelText(`${attribute} text value`)).toBeInTheDocument());
-  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('******');
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('••••••••');
 });
 
 test('shows a placeholder after clearing the password', async () => {
