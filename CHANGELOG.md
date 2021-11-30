@@ -172,7 +172,8 @@
 
 ### Tests
  * Increase nock timeout for longer running tests and possibly slow CI ([#33692](https://projects.theforeman.org/issues/33692), [ad887ced](https://github.com/Katello/katello.git/commit/ad887cedda5033ca1a888f8459f0eacda2124f6c))
-  * Fix memory exceeded issue surround katello tests in CI   ([#33796](https://projects.theforeman.org/issues/33796), [831260db](https://github.com/Katello/katello.git/commit/831260db8fc6bfb9af7b23020e44da7f439010d7))
+ * Fix memory exceeded issue surround katello tests in CI   ([#33796](https://projects.theforeman.org/issues/33796), [831260db](https://github.com/Katello/katello.git/commit/831260db8fc6bfb9af7b23020e44da7f439010d7))
+ * Fixes nightly failures due to package availability, ([eb698858](https://github.com/Katello/katello/pull/9797/commits/eb698858443544c662146f5c94f3b65064abe98f))
 
 ### API
  * Cache resource list API responses ([#33651](https://projects.theforeman.org/issues/33651), [cf9edcda](https://github.com/Katello/katello.git/commit/cf9edcdaffa7d3d3fba8e65e8b996ddfb2576039))
