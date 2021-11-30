@@ -286,6 +286,7 @@ Katello::Engine.routes.draw do
             end
           end
         end
+        api_resources :content_units, :only => [:index, :show], :controller => 'generic_content_units'
 
         match "/ping" => "katello_ping#index", :via => :get
         match "/status" => "katello_ping#server_status", :via => :get
@@ -408,6 +409,7 @@ Katello::Engine.routes.draw do
           Katello::RepositoryTypeManager.generic_content_types(false).each do |type|
             api_resources type.pluralize.to_sym, :only => [:index, :show], :controller => 'generic_content_units', :content_type => type
           end
+          api_resources :content_units, :only => [:index, :show], :controller => 'generic_content_units'
 
           api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :update]
 

@@ -14,6 +14,13 @@ module Katello
       setup_product_permissions
     end
 
+    def test_content_units_required_param
+      get :index, :params => {}
+
+      assert_response :error
+      assert_match "Required param content_type is missing", @response.body
+    end
+
     def test_python_package_index
       get :index, :params => { content_type: "python_package" }
 
