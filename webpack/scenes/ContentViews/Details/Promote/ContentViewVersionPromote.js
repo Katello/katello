@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { STATUS } from 'foremanReact/constants';
 import PropTypes from 'prop-types';
 import {
@@ -8,7 +9,6 @@ import {
   Modal, ModalVariant, Alert, TextContent, AlertActionCloseButton,
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
-
 import {
   selectEnvironmentPaths,
   selectEnvironmentPathsStatus,
@@ -23,13 +23,15 @@ import ComponentEnvironments from '../ComponentContentViews/ComponentEnvironment
 import Loading from '../../../../components/Loading';
 
 const ContentViewVersionPromote = ({
-  cvId, versionIdToPromote, versionNameToPromote, versionEnvironments, setIsOpen,
+  cvId, versionIdToPromote, versionNameToPromote,
+  versionEnvironments, setIsOpen, detailsPage,
 }) => {
   const [description, setDescription] = useState('');
   const [userCheckedItems, setUserCheckedItems] = useState([]);
   const [alertDismissed, setAlertDismissed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [forcePromote, setForcePromote] = useState([]);
+  const [redirect, setRedirect] = useState(false);
   const environmentPathResponse = useSelector(selectEnvironmentPaths);
   const environmentPathStatus = useSelector(selectEnvironmentPathsStatus);
   const environmentPathLoading = environmentPathStatus === STATUS.PENDING;
@@ -55,13 +57,18 @@ const ContentViewVersionPromote = ({
 
   useDeepCompareEffect(() => {
     if (promoteResolved && promoteResponse) {
-      setIsOpen(false);
       dispatch(getContentViewVersions(cvId));
+      if (detailsPage) {
+        setRedirect(true);
+      } else {
+        setIsOpen(false);
+      }
     }
     if (promoteError) {
       setLoading(false);
     }
-  }, [promoteResponse, promoteResolved, promoteError, setLoading, setIsOpen, dispatch, cvId]);
+  }, [promoteResponse, promoteResolved, promoteError, detailsPage,
+    setRedirect, setLoading, setIsOpen, dispatch, cvId]);
 
   const envPathFlat = useMemo(() => {
     if (!environmentPathLoading) {
@@ -93,6 +100,10 @@ const ContentViewVersionPromote = ({
   }, [userCheckedItems, setForcePromote, isValid]);
 
   const submitDisabled = loading || userCheckedItems.length === 0;
+
+  if (redirect && detailsPage) {
+    return (<Redirect to="/versions" />);
+  }
 
   return (
     <Modal
@@ -169,11 +180,13 @@ ContentViewVersionPromote.propTypes = {
   versionNameToPromote: PropTypes.string.isRequired,
   versionEnvironments: PropTypes.arrayOf(PropTypes.shape({})),
   setIsOpen: PropTypes.func,
+  detailsPage: PropTypes.bool,
 };
 
 ContentViewVersionPromote.defaultProps = {
   versionEnvironments: [],
   setIsOpen: null,
+  detailsPage: false,
 };
 
 export default ContentViewVersionPromote;

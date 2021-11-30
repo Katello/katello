@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { STATUS } from 'foremanReact/constants';
 import { translate as __ } from 'foremanReact/common/I18n';
@@ -13,7 +14,8 @@ const CVVersionDeleteFinish = () => {
     cvId, versionIdToRemove, versionEnvironments,
     setIsOpen, selectedEnvSet,
     selectedCVForAK, selectedEnvForAK, selectedCVForHosts,
-    selectedEnvForHost, affectedActivationKeys, affectedHosts, deleteFlow, removeDeletionFlow,
+    selectedEnvForHost, affectedActivationKeys, affectedHosts,
+    deleteFlow, removeDeletionFlow, detailsPage,
   } = useContext(DeleteContext);
   const removeCVVersionResponse = useSelector(state =>
     selectRemoveCVVersionResponse(state, versionIdToRemove, versionEnvironments));
@@ -22,14 +24,20 @@ const CVVersionDeleteFinish = () => {
   const removeResolved = removeCVVersionStatus === STATUS.RESOLVED;
   const dispatch = useDispatch();
   const [removeDispatched, setRemoveDispatched] = useState(false);
+  const [redirect, setRedirect] = useState(false);
   const selectedEnv = versionEnvironments.filter(env => selectedEnvSet.has(env.id));
 
   useDeepCompareEffect(() => {
     if (removeResolved && removeCVVersionResponse && removeDispatched) {
-      setIsOpen(false);
       dispatch(getContentViewVersions(cvId));
+      if (detailsPage) {
+        setRedirect(true);
+      } else {
+        setIsOpen(false);
+      }
     }
-  }, [removeCVVersionResponse, removeResolved, setIsOpen, dispatch, cvId, removeDispatched]);
+  }, [removeCVVersionResponse, removeResolved, setIsOpen,
+    dispatch, cvId, removeDispatched, detailsPage, setRedirect]);
 
   /*
     The remove version from environment API takes the following params :
@@ -88,6 +96,9 @@ const CVVersionDeleteFinish = () => {
     selectedEnvForAK, selectedEnvForHost, selectedEnv,
     removeCVVersionResponse, removeCVVersionStatus, removeDispatched]);
 
+  if (redirect) {
+    return (<Redirect to="/versions" />);
+  }
   return <Loading loadingText={__('Please wait while the task starts..')} />;
 };
 

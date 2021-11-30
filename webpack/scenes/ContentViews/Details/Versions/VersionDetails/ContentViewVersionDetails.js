@@ -21,6 +21,7 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
   const { push } = useHistory();
   const dispatch = useDispatch();
   const [versionDetails, setVersionDetails] = useState({});
+  const [mounted, setMounted] = useState(true);
   // Example urls expected:/versions/:id or /versions/:id/repositories.
   const tab = pathname.split('/')[3];
   const response = useSelector(state =>
@@ -31,10 +32,11 @@ const ContentViewVersionDetails = ({ cvId, details }) => {
   const tableConfigs = getCVVersionTableConfigs({ cvId, versionId });
 
   useEffect(() => {
-    if (isEmpty(response) && status === STATUS.PENDING) {
+    if (mounted || (isEmpty(response) && status === STATUS.PENDING)) {
       dispatch(getContentViewVersionDetails(versionId, cvId));
     }
-  }, [dispatch, versionId, cvId, response, status]);
+    return () => { setMounted(false); };
+  }, [dispatch, mounted, setMounted, versionId, cvId, response, status]);
 
   useDeepCompareEffect(() => {
     if (loaded) {

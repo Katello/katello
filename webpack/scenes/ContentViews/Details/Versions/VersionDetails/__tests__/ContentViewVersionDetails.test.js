@@ -2,7 +2,7 @@ import React from 'react';
 import { renderWithRedux, patientlyWaitFor } from 'react-testing-lib-wrapper';
 import { Route } from 'react-router-dom';
 import { head, last } from 'lodash';
-import { nockInstance, assertNockRequest, mockSetting, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
+import nock, { nockInstance, assertNockRequest, mockSetting, mockAutocomplete } from '../../../../../../test-utils/nockWrapper';
 import api from '../../../../../../services/api';
 import { cvVersionDetailsKey } from '../../../../ContentViewsConstants';
 import ContentViewVersionDetails from '../ContentViewVersionDetails';
@@ -20,12 +20,15 @@ import ContentViewVersionModuleStreamsData from './ContentViewVersionModuleStrea
 import ContentViewVersionDebPackagesData from './ContentViewVersionDebPackages.fixtures.json';
 import ContentViewVersionAnsibleCollectionsData from './ContentViewVersionAnsibleCollections.fixtures.json';
 import ContentViewVersionDockerTagsData from './ContentViewVersionDockerTags.fixtures.json';
+import environmentPathsData from '../../Delete/__tests__/versionRemoveEnvPaths.fixtures';
 
 // This changes the api count value so that only the specified tab will show.
 const getTabSpecificData = key => ({
   ...ContentViewVersionDetailsData,
   [key]: ContentViewVersionDetailsCounts[key],
 });
+let envScope;
+const environmentPathsPath = api.getApiUrl('/organizations/1/environments/paths');
 
 const withCVRoute = component => <Route path="/versions/:versionId([0-9]+)">{component}</Route>;
 
@@ -39,11 +42,23 @@ const renderOptions = {
   },
 };
 
+beforeEach(() => {
+  envScope = nockInstance
+    .get(environmentPathsPath)
+    .query(true)
+    .reply(200, environmentPathsData);
+});
+
+afterEach(() => {
+  assertNockRequest(envScope);
+  nock.cleanAll();
+});
 // This is written separately, as the autocomplete/search scopes are not needed.
 test('Can show versions details - Components Tab', async (done) => {
   const { version } = ContentViewVersionDetailsData;
   const scope = nockInstance
     .get(cvVersions)
+    .times(2)
     .query(true)
     .reply(200, getTabSpecificData('component_view_count'));
 
@@ -72,6 +87,7 @@ test('Can show versions details - Components Tab', async (done) => {
       .content_view.name)).toBeTruthy();
   });
 
+  assertNockRequest(scope);
   assertNockRequest(scope);
   assertNockRequest(componentScope, done);
 });
@@ -188,6 +204,7 @@ testConfig.forEach(({
 
     const scope = nockInstance
       .get(cvVersions)
+      .times(2)
       .query(true)
       .reply(200, getTabSpecificData(countKey));
 
@@ -219,6 +236,7 @@ testConfig.forEach(({
     assertNockRequest(autocompleteScope);
     assertNockRequest(searchDelayScope);
     assertNockRequest(autoSearchScope);
+    assertNockRequest(scope);
     assertNockRequest(tabScope);
     assertNockRequest(scope, done);
   }));
@@ -239,6 +257,7 @@ test('Can change repository selector', async (done) => {
   const scope = nockInstance
     .get(cvVersions)
     .query(true)
+    .times(2)
     .reply(200, {
       ...getTabSpecificData(countKey),
       repositories: ContentViewVersionDetailsCounts.repositories,
@@ -284,6 +303,7 @@ test('Can change repository selector', async (done) => {
   assertNockRequest(autocompleteScope);
   assertNockRequest(searchDelayScope);
   assertNockRequest(autoSearchScope);
+  assertNockRequest(scope);
   assertNockRequest(tabScope);
   assertNockRequest(scope, done);
 });
