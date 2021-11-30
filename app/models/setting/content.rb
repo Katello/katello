@@ -13,7 +13,6 @@ class Setting::Content < Setting
     download_policies = proc { hashify_parameters(::Katello::RootRepository::DOWNLOAD_POLICIES) }
 
     proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }
-    dependency_solving_options = proc { hashify_parameters(['conservative', 'greedy']) }
     cdn_ssl_versions = proc { hashify_parameters(Katello::Resources::CDN::SUPPORTED_SSL_VERSIONS) }
     http_proxy_select = [{
       name: _("HTTP Proxies"),
@@ -125,12 +124,6 @@ class Setting::Content < Setting
       self.set('content_view_solve_dependencies',
                N_('The default dependency solving value for new Content Views.'),
                false, N_('Content View Dependency Solving Default')),
-      self.set('dependency_solving_algorithm',
-               N_("How the logic of solving dependencies in a Content View is managed. Conservative will only add " \
-               "packages to solve the dependencies if the package needed doesn't exist. Greedy will pull in the " \
-               "latest package to solve a dependency even if it already does exist in the repository."),
-               'conservative', N_('Content View Dependency Solving Algorithm'), nil,
-               :collection => dependency_solving_options),
       self.set('host_dmi_uuid_duplicates',
                N_("If hosts fail to register because of duplicate DMI UUIDs " \
                   "add their comma-separated values here. Subsequent registrations will generate a unique DMI UUID for the affected hosts."),
