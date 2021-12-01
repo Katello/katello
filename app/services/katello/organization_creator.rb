@@ -28,7 +28,9 @@ module Katello
     def seed!
       ActiveRecord::Base.transaction do
         @organization.setup_label_from_name
-        @organization.save!
+
+        # existing validation errors are not resolvable here, so don't validatate
+        @organization.save(validate: false)
 
         create_library_environment
         create_library_view
@@ -47,7 +49,9 @@ module Katello
         create_backend_objects!
 
         @organization.created_in_katello = true
-        @organization.save!
+
+        # existing validation errors are not resolvable here, so don't validatate
+        @organization.save(validate: false)
       end
     end
 
