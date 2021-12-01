@@ -53,8 +53,15 @@ const CdnConfigurationForm = (props) => {
     || password?.length > 0;
 
   const requiresValidation = username || password || organizationLabel || sslCaCredentialId;
+
+  const requiredFields = [username, organizationLabel, sslCaCredentialId];
+
+  if (!hasPassword) {
+    requiredFields.push(password);
+  }
+
   const validated = requiresValidation ?
-    ![username, password, organizationLabel, sslCaCredentialId].some(field => field === null) :
+    !requiredFields.some(field => field === null) :
     true;
 
   const performUpdate = () => {
