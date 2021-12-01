@@ -1,9 +1,5 @@
 import React from 'react';
 import {
-  DescriptionList,
-  DescriptionListTerm,
-  DescriptionListGroup,
-  DescriptionListDescription,
   Card,
   CardHeader,
   CardTitle,
@@ -30,36 +26,34 @@ const HostContentViewDetails = ({
   }
 
   return (
-    <GridItem rowSpan={2} md={6} lg={3}>
+    <GridItem rowSpan={2} md={6} lg={4}>
       <Card isHoverable>
         <CardHeader>
-          <CardTitle>{__('Content View Details')}</CardTitle>
+          <CardTitle>{__('Content view details')}</CardTitle>
         </CardHeader>
         <CardBody>
-          <DescriptionList isHorizontal isAutoColumnWidths>
-            <DescriptionListGroup>
-              <DescriptionListTerm>{__('Content View')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                <Flex>
-                  <FlexItem spacer={{ default: 'spacerNone' }}><ContentViewIcon composite={contentView.composite} /></FlexItem>
-                  <FlexItem><a href={`/content_views/${contentView.id}`}>{`${contentView.name}`}</a> </FlexItem>
-                  <FlexItem><Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{`${lifecycleEnvironment.name}`}</Label></FlexItem>
-                </Flex>
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-            <DescriptionListGroup>
-              <DescriptionListTerm>{__('Version in use')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                <Flex>
-                  <FlexItem>
-                    <a href={urlBuilder(`content_views/${contentView.id}/versions/${contentViewVersionId}`, '')}>
-                      {versionLabel}
-                    </a>
-                  </FlexItem>
-                </Flex>
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-          </DescriptionList>
+          <Flex direction={{ default: 'column' }}>
+            <Flex
+              direction={{ default: 'row', sm: 'row' }}
+              flexWrap={{ default: 'nowrap' }}
+              alignItems={{ default: 'alignItemsCenter', sm: 'alignItemsCenter' }}
+            >
+              <ContentViewIcon composite={contentView.composite} style={{ marginRight: '2px' }} />
+              <h3>{__('Content view')}</h3>
+            </Flex>
+            <Flex direction={{ default: 'row', sm: 'row' }} flexWrap={{ default: 'wrap' }}>
+              <a style={{ fontSize: '14px' }} href={`/content_views/${contentView.id}`}>{`${contentView.name}`}</a>
+              <Label isTruncated color="purple" href={`/lifecycle_environments/${lifecycleEnvironment.id}`}>{`${lifecycleEnvironment.name}`}</Label>
+            </Flex>
+          </Flex>
+          <Flex direction={{ default: 'column' }}>
+            <FlexItem>
+              <h3>{__('Version in use')}</h3>
+              <a style={{ fontSize: '14px' }} href={urlBuilder(`content_views/${contentView.id}/versions/${contentViewVersionId}`, '')}>
+                {versionLabel}
+              </a>
+            </FlexItem>
+          </Flex>
         </CardBody>
       </Card>
     </GridItem>
