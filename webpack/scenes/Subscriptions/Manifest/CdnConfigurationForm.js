@@ -9,7 +9,6 @@ import {
   FormGroup,
   FormSelect,
   FormSelectOption,
-  Spinner,
   TextInput,
 } from '@patternfly/react-core';
 
@@ -60,15 +59,6 @@ const CdnConfigurationForm = (props) => {
       ssl_ca_credential_id: sslCaCredentialId,
     }));
   };
-
-  const updateButtonContent = (
-    updatingCdnConfiguration ? (
-      <React.Fragment>
-        <Spinner size="md" />
-        {__('Updating')}
-      </React.Fragment>) :
-      __('Update')
-  );
 
   return (
     <div id="cdn-configuration">
@@ -135,8 +125,9 @@ const CdnConfigurationForm = (props) => {
             variant="secondary"
             onClick={performUpdate}
             isDisabled={updatingCdnConfiguration}
+            isLoading={updatingCdnConfiguration}
           >
-            {updateButtonContent}
+            {__('Update')}
           </Button>
         </ActionGroup>
       </Form>

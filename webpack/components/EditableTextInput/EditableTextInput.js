@@ -98,7 +98,7 @@ const EditableTextInput = ({
   };
 
   const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
+    setShowPassword(prevShowPassword => !prevShowPassword);
   };
 
   const inputProps = {
@@ -132,7 +132,7 @@ const EditableTextInput = ({
         </SplitItem>
         { isPassword ?
           <SplitItem>
-            <Button aria-label={`show-password ${attribute}`} variant="plain" isDisabled={!inputValue?.length > 0} onClick={toggleShowPassword}>
+            <Button aria-label={`show-password ${attribute}`} variant="plain" isDisabled={!inputValue?.length} onClick={toggleShowPassword}>
               { showPassword ?
                 (<EyeSlashIcon />) :
                 (<EyeIcon />)}
