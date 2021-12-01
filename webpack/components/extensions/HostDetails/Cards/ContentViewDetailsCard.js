@@ -33,8 +33,12 @@ const HostContentViewDetails = ({
         </CardHeader>
         <CardBody>
           <Flex direction={{ default: 'column' }}>
-            <Flex direction={{ default: 'row', sm: 'row' }} flexWrap={{ default: 'nowrap' }}>
-              <ContentViewIcon composite={contentView.composite} />
+            <Flex
+              direction={{ default: 'row', sm: 'row' }}
+              flexWrap={{ default: 'nowrap' }}
+              alignItems={{ default: 'alignItemsCenter', sm: 'alignItemsCenter' }}
+            >
+              <ContentViewIcon composite={contentView.composite} style={{ marginRight: '2px' }} />
               <h3>{__('Content view')}</h3>
             </Flex>
             <Flex direction={{ default: 'row', sm: 'row' }} flexWrap={{ default: 'wrap' }}>
