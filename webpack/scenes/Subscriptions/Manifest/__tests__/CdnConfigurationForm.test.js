@@ -97,17 +97,10 @@ test('the form shall reflect the given cdnConfiguration', () => {
 });
 
 test('resetting the password sends nothing to the API', async (done) => {
-  const { getByLabelText } = renderWithRedux(<CdnConfigurationForm
-    cdnConfiguration={cdnConfiguration}
-  />, { initialState });
+  const { getByLabelText } = renderWithRedux(<CdnConfigurationForm />, { initialState });
 
   const updateCdnConfigurationRequest = nockInstance
-    .put(updateCdnConfigurationPath, {
-      url: 'http://currentcdn.example.com',
-      username: 'CurrentUser',
-      upstream_organization_label: 'CurrentOrg',
-      ssl_ca_credential_id: 2,
-    })
+    .put(updateCdnConfigurationPath, {}) // note the empty request body
     .reply(200, updateCdnConfigurationSuccessResponse);
 
   fireEvent.click(getByLabelText('edit cdn-password'));

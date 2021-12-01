@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
   ActionGroup,
+  Alert,
   Button,
   Form,
+  FormAlert,
   FormGroup,
   FormSelect,
   FormSelectOption,
@@ -50,6 +52,11 @@ const CdnConfigurationForm = (props) => {
   const hasPassword = (cdnConfiguration.password_exists && password === null)
     || password?.length > 0;
 
+  const requiresValidation = username || password || organizationLabel || sslCaCredentialId;
+  const validated = requiresValidation ?
+    ![username, password, organizationLabel, sslCaCredentialId].some(field => field === null) :
+    true;
+
   const performUpdate = () => {
     dispatch(updateCdnConfiguration({
       url,
@@ -63,6 +70,16 @@ const CdnConfigurationForm = (props) => {
   return (
     <div id="cdn-configuration">
       <Form isHorizontal>
+        { !validated && (
+          <FormAlert>
+            <Alert
+              variant="danger"
+              title={__('Username, Password, Organization Label, and SSL CA Content Credential must be provided together.')}
+              aria-live="polite"
+              isInline
+            />
+          </FormAlert>
+        )}
         <FormGroup
           label={__('URL')}
           isRequired
@@ -77,6 +94,7 @@ const CdnConfigurationForm = (props) => {
         </FormGroup>
         <FormGroup
           label={__('Username')}
+          isRequired={requiresValidation}
         >
           <TextInput
             aria-label="cdn-username"
@@ -87,6 +105,7 @@ const CdnConfigurationForm = (props) => {
         </FormGroup>
         <FormGroup
           label={__('Password')}
+          isRequired={requiresValidation}
         >
           <EditableTextInput
             attribute="cdn-password"
@@ -98,6 +117,7 @@ const CdnConfigurationForm = (props) => {
         </FormGroup>
         <FormGroup
           label={__('Organization Label')}
+          isRequired={requiresValidation}
         >
           <TextInput
             aria-label="cdn-organization-label"
@@ -108,6 +128,7 @@ const CdnConfigurationForm = (props) => {
         </FormGroup>
         <FormGroup
           label={__('SSL CA Content Credential')}
+          isRequired={requiresValidation}
         >
           <FormSelect
             aria-label="cdn-ssl-ca-content-credential"
@@ -124,7 +145,7 @@ const CdnConfigurationForm = (props) => {
             aria-label="update-cdn-configuration"
             variant="secondary"
             onClick={performUpdate}
-            isDisabled={updatingCdnConfiguration}
+            isDisabled={updatingCdnConfiguration || !validated}
             isLoading={updatingCdnConfiguration}
           >
             {__('Update')}
