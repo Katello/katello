@@ -61,7 +61,7 @@ const CdnConfigurationForm = (props) => {
   }
 
   const validated = requiresValidation ?
-    !requiredFields.some(field => field === null) :
+    !requiredFields.some(field => !field) :
     true;
 
   const performUpdate = () => {
