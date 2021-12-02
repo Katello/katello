@@ -50,3 +50,85 @@ test('input is set back to original value after clearing', () => {
   // Original value is still showing even though it's been edited
   expect(getByLabelText(`${attribute} text value`)).toHaveTextContent(actualValue);
 });
+
+test('shows a mask over the password when there is one', () => {
+  const { getByLabelText } = render(<EditableTextInput
+    attribute={attribute}
+    onEdit={jest.fn()}
+    isPassword
+    hasPassword
+  />);
+
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('••••••••');
+});
+
+test('shows a mask over the password after undoing changes', () => {
+  const { getByLabelText } = render(<EditableTextInput
+    attribute={attribute}
+    onEdit={jest.fn()}
+    isPassword
+    hasPassword
+  />);
+
+  getByLabelText(`edit ${attribute}`).click();
+  expect(getByLabelText(`${attribute} text input`)).toHaveTextContent('');
+
+  getByLabelText(`clear ${attribute}`).click();
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('••••••••');
+});
+
+test('shows a mask over the password after editing', async () => {
+  const newPassword = 'Pizza';
+  const { getByLabelText } = render(<EditableTextInput
+    attribute={attribute}
+    onEdit={jest.fn()}
+    isPassword
+    hasPassword
+  />);
+
+  getByLabelText(`edit ${attribute}`).click();
+  fireEvent.change(getByLabelText(`${attribute} text input`), { target: { value: newPassword } });
+  expect(getByLabelText(`${attribute} text input`)).toHaveValue(newPassword);
+  getByLabelText(`submit ${attribute}`).click();
+
+  await patientlyWaitFor(() => expect(getByLabelText(`${attribute} text value`)).toBeInTheDocument());
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('••••••••');
+});
+
+test('shows a placeholder after clearing the password', async () => {
+  const { getByLabelText } = render(<EditableTextInput
+    attribute={attribute}
+    onEdit={jest.fn()}
+    isPassword
+    hasPassword
+  />);
+
+  getByLabelText(`edit ${attribute}`).click();
+  getByLabelText(`submit ${attribute}`).click();
+
+  await patientlyWaitFor(() => expect(getByLabelText(`${attribute} text value`)).toBeInTheDocument());
+  expect(getByLabelText(`${attribute} text value`)).toHaveTextContent('None provided');
+});
+
+test('can toggle showing the current password', async () => {
+  const { getByLabelText } = render(<EditableTextInput
+    attribute={attribute}
+    onEdit={jest.fn()}
+    isPassword
+    hasPassword
+  />);
+
+  getByLabelText(`edit ${attribute}`).click();
+
+  expect(getByLabelText(`show-password ${attribute}`)).toHaveAttribute('disabled', '');
+
+  const newPassword = 'New Password';
+  fireEvent.change(getByLabelText(`${attribute} text input`), { target: { value: newPassword } });
+  expect(getByLabelText(`${attribute} text input`)).toHaveAttribute('type', 'password');
+
+  getByLabelText(`show-password ${attribute}`).click();
+  expect(getByLabelText(`${attribute} text input`)).toHaveAttribute('type', 'text');
+
+  getByLabelText(`show-password ${attribute}`).click();
+  expect(getByLabelText(`${attribute} text input`)).toHaveAttribute('type', 'password');
+});
