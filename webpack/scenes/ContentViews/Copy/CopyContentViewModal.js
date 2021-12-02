@@ -30,7 +30,7 @@ const CopyContentViewModal = ({
 };
 
 CopyContentViewModal.propTypes = {
-  cvId: PropTypes.string,
+  cvId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   cvName: PropTypes.string,
   show: PropTypes.bool,
   setIsOpen: PropTypes.func,

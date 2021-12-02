@@ -32,7 +32,7 @@ test('Can copy content view from form', async (done) => {
   getByLabelText('copy_content_view').click();
   // Form closes it self on success
   await patientlyWaitFor(() => {
-    expect(queryByText('Name')).not.toBeInTheDocument();
+    expect(setModalOpen).toBeCalled();
   });
 
   assertNockRequest(copyscope, done);
