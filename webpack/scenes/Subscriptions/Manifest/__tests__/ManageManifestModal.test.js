@@ -3,8 +3,6 @@ import { cleanup } from '@testing-library/react';
 import { renderWithRedux, fireEvent, patientlyWaitFor } from 'react-testing-lib-wrapper';
 import ManifestModal from '../../Manifest';
 import { manifestHistorySuccessState, manifestHistorySuccessResponse } from './manifest.fixtures';
-import { updateCdnConfigurationSuccessResponse } from '../../../Organizations/__tests__/organizations.fixtures';
-import { contentCredentialsResponse } from '../../../ContentCredentials/__tests__/contentCredentials.fixtures';
 import { nockInstance, assertNockRequest } from '../../../../test-utils/nockWrapper';
 import api from '../../../../services/api';
 
@@ -65,33 +63,6 @@ const enableSimpleContetAccessPath = api.getApiUrl('/organizations/1/simple_cont
 const disableSimpleContetAccessPath = api.getApiUrl('/organizations/1/simple_content_access/disable');
 const manifestHistoryPath = api.getApiUrl('/organizations/1/subscriptions/manifest_history');
 const getContentCredentialsPath = api.getApiUrl('/content_credentials?organization_id=1&content_type=cert');
-const updateCdnConfigurationPath = api.getApiUrl('/organizations/1/cdn_configuration');
-
-test('Can update the CDN configuration', async (done) => {
-  const { getByTestId } = renderWithRedux(<ManifestModal {...defaultProps} />, { initialState });
-
-  const getscope = nockInstance
-    .get(manifestHistoryPath)
-    .query(true)
-    .reply(200, manifestHistorySuccessResponse);
-
-  const contentCredentialsRequest = nockInstance
-    .get(getContentCredentialsPath)
-    .reply(200, contentCredentialsResponse);
-
-  const updateCdnConfigurationRequest = nockInstance
-    .put(updateCdnConfigurationPath)
-    .reply(200, updateCdnConfigurationSuccessResponse);
-
-  const updateButton = getByTestId('updateCdnConfiguration');
-  await patientlyWaitFor(() => { expect(updateButton).toBeInTheDocument(); });
-
-  fireEvent.click(updateButton);
-
-  assertNockRequest(contentCredentialsRequest);
-  assertNockRequest(getscope);
-  assertNockRequest(updateCdnConfigurationRequest, done);
-});
 
 test('Enable Simple Content Access after toggle switch value to true', async (done) => {
   const { getByTestId } = renderWithRedux(<ManifestModal {...defaultProps} />, { initialState });

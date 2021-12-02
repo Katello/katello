@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Col, Row, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Grid, Col, Row, Tabs, Tab, FormControl, ControlLabel } from 'react-bootstrap';
 import { Button, Spinner } from 'patternfly-react';
 import ForemanModal from 'foremanReact/components/ForemanModal';
 import Slot from 'foremanReact/components/common/Slot';
@@ -14,23 +14,11 @@ import DeleteManifestModalText from './DeleteManifestModalText';
 import { MANAGE_MANIFEST_MODAL_ID, DELETE_MANIFEST_MODAL_ID } from './ManifestConstants';
 import { CONTENT_CREDENTIAL_CERT_TYPE } from '../../ContentCredentials/ContentCredentialConstants';
 import SimpleContentAccess from './SimpleContentAccess';
+import CdnConfigurationForm from './CdnConfigurationForm';
 
 import './ManageManifestModal.scss';
 
-const PASSWORD_PLACEHOLDER = '******';
-
 class ManageManifestModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cdn_url: null,
-      cdn_username: null,
-      cdn_password: null,
-      cdn_organization_label: null,
-      cdn_ssl_ca_credential_id: null,
-    };
-  }
-
   componentDidMount() {
     this.props.loadManifestHistory();
     this.props.getContentCredentials({ content_type: CONTENT_CREDENTIAL_CERT_TYPE });
@@ -62,48 +50,6 @@ class ManageManifestModal extends Component {
     if (this.props.deleteManifestModalExists) {
       this.props.setModalClosed({ id: DELETE_MANIFEST_MODAL_ID });
     }
-  };
-
-  updateCdnUrl = (event) => {
-    this.setState({ cdn_url: event.target.value });
-  };
-
-  updateCdnUsername = (event) => {
-    this.setState({ cdn_username: event.target.value });
-  };
-
-  hidePasswordPlaceholder = (event) => {
-    const { target } = event;
-    target.value = this.state.cdn_password;
-  };
-
-  showPasswordPlaceholder = (event) => {
-    if (this.state.cdn_password || this.props.organization.cdn_configuration.password_exists) {
-      const { target } = event;
-      target.value = PASSWORD_PLACEHOLDER;
-    }
-  };
-
-  updateCdnPassword = (event) => {
-    this.setState({ cdn_password: event.target.value });
-  };
-
-  updateCdnOrganizationLabel = (event) => {
-    this.setState({ cdn_organization_label: event.target.value });
-  };
-
-  updateCdnSSLCaCredentialId = (event) => {
-    this.setState({ cdn_ssl_ca_credential_id: event.target.value });
-  };
-
-  updateCdnConfiguration = () => {
-    this.props.updateCdnConfiguration({
-      url: this.state.cdn_url,
-      username: this.state.cdn_username,
-      password: this.state.cdn_password,
-      upstream_organization_label: this.state.cdn_organization_label,
-      ssl_ca_credential_id: this.state.cdn_ssl_ca_credential_id,
-    });
   };
 
   uploadManifest = (fileList) => {
@@ -143,23 +89,13 @@ class ManageManifestModal extends Component {
       disableSimpleContentAccess,
       taskInProgress,
       manifestActionStarted,
-      updatingCdnConfiguration,
       contentCredentials,
     } = this.props;
 
-    const contentCredentialOptions = contentCredentials.map(({ name, id }) => (
-      <option key={id} value={id}>
-        {name}
-      </option>
-    ));
-
-    const cdnPasswordDefaultValue = organization?.cdn_configuration?.password_exists ?
-      PASSWORD_PLACEHOLDER : this.state.cdn_password;
-
     const actionInProgress = (taskInProgress || manifestActionStarted);
-    const showRedHatProviderDetails = canEditOrganizations;
+    const showCdnConfigurationTab = canEditOrganizations;
     const showSubscriptionManifest = (canImportManifest || canDeleteManifest);
-    const showManifestTab = (showRedHatProviderDetails || showSubscriptionManifest);
+    const showManifestTab = (canEditOrganizations || showSubscriptionManifest);
     const disableSCASwitch = (
       // allow users to turn SCA off even if they are not eligible to turn it back on
       (!simpleContentAccessEligible && !simpleContentAccess) ||
@@ -177,11 +113,7 @@ class ManageManifestModal extends Component {
         url: 'http://redhat.com',
       },
     });
-    const buttonLoading = (
-      <span>
-        {__('Updating...')}
-        <span className="fa fa-spinner fa-spin" />
-      </span>);
+
     const getManifestName = () => {
       let name = __('No Manifest Uploaded');
 
@@ -208,206 +140,94 @@ class ManageManifestModal extends Component {
         <Tabs id="manifest-history-tabs">
           {showManifestTab &&
             <Tab eventKey={1} title={__('Manifest')}>
-              <Form className="form-horizontal">
-                {showRedHatProviderDetails &&
-                  <React.Fragment>
-                    <h3>{__('CDN Configuration for Red Hat content')}</h3>
-                    <hr />
-                    <FormGroup>
-                      <Grid>
-                        <Row>
-                          <Col sm={5}>
-                            <ControlLabel htmlFor="cdnUrl">
-                              {__('URL')}
-                            </ControlLabel>
-                          </Col>
-                          <Col sm={7}>
-                            <FormControl
-                              id="cdnUrl"
-                              type="text"
-                              defaultValue={this.state.cdn_url || organization.cdn_configuration.url || ''}
-                              onChange={this.updateCdnUrl}
-                            />
-                          </Col>
-                        </Row>
-                        <Row style={{ paddingTop: '10px' }} >
-                          <Col sm={5}>
-                            <ControlLabel htmlFor="cdnUsername">
-                              {__('Username')}
-                            </ControlLabel>
-                          </Col>
-                          <Col sm={7}>
-                            <FormControl
-                              id="cdnUsername"
-                              type="text"
-                              defaultValue={this.state.cdn_username || organization.cdn_configuration.username || ''}
-                              onChange={this.updateCdnUsername}
-                            />
-                          </Col>
-                        </Row>
-                        <Row style={{ paddingTop: '10px' }} >
-                          <Col sm={5}>
-                            <ControlLabel htmlFor="cdnPassword">
-                              {__('Password')}
-                            </ControlLabel>
-                          </Col>
-                          <Col sm={7}>
-                            <FormControl
-                              id="cdnPassword"
-                              type="text"
-                              defaultValue={cdnPasswordDefaultValue}
-                              onFocus={this.hidePasswordPlaceholder}
-                              onBlur={this.showPasswordPlaceholder}
-                              onChange={this.updateCdnPassword}
-                            />
-                          </Col>
-                        </Row>
-                        <Row style={{ paddingTop: '10px' }} >
-                          <Col sm={5}>
-                            <ControlLabel htmlFor="cdnSSLCaCredential">
-                              {__('SSL CA Content Credential')}
-                            </ControlLabel>
-                          </Col>
-                          <Col sm={7}>
-                            <FormControl
-                              componentClass="select"
-                              placeholder="select"
-                              defaultValue={organization.cdn_configuration.ssl_ca_credential_id}
-                              onChange={this.updateCdnSSLCaCredentialId}
-                            >
-                              <option value="" />
-                              {contentCredentialOptions}
-                            </FormControl>
-                          </Col>
-                        </Row>
-                        <Row style={{ paddingTop: '10px' }} >
-                          <Col sm={5}>
-                            <ControlLabel htmlFor="cdnOrganizationLabel">
-                              {__('Organization Label')}
-                            </ControlLabel>
-                          </Col>
-                          <Col sm={7}>
-                            <FormControl
-                              id="cdnOrganizationLabel"
-                              type="text"
-                              defaultValue={this.state.cdn_organization_label || organization.cdn_configuration.upstream_organization_label || ''}
-                              onChange={this.updateCdnOrganizationLabel}
-                            />
-                          </Col>
-                        </Row>
-                      </Grid>
-                    </FormGroup>
-                    <FormGroup>
-                      <Grid>
-                        <Row>
-                          <Col smOffset={5} sm={7}>
-                            <Button
-                              id="updateCdnConfiguration"
-                              data-testid="updateCdnConfiguration"
-                              onClick={this.updateCdnConfiguration}
-                              disabled={updatingCdnConfiguration}
-                            >
-                              {updatingCdnConfiguration ? buttonLoading : __('Update')}
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Grid>
-                    </FormGroup>
-                    <br />
-                  </React.Fragment>
-                }
                 {showSubscriptionManifest &&
                   <React.Fragment>
-
-                    <FormGroup>
-                      <Grid>
-                        <h3>{__('Subscription Manifest')}</h3>
-                        <hr />
-                        { isManifestImported &&
-                          <Row>
-                            <SimpleContentAccess
-                              enableSimpleContentAccess={enableSimpleContentAccess}
-                              disableSimpleContentAccess={disableSimpleContentAccess}
-                              isSimpleContentAccessEnabled={simpleContentAccess}
-                              canToggleSimpleContentAccess={!disableSCASwitch}
-                              simpleContentAccessEligible={simpleContentAccessEligible}
-                            />
-                          </Row>
+                    <Grid>
+                      <h3>{__('Subscription Manifest')}</h3>
+                      <hr />
+                      { isManifestImported &&
+                      <Row>
+                        <SimpleContentAccess
+                          enableSimpleContentAccess={enableSimpleContentAccess}
+                          disableSimpleContentAccess={disableSimpleContentAccess}
+                          isSimpleContentAccessEnabled={simpleContentAccess}
+                          canToggleSimpleContentAccess={!disableSCASwitch}
+                          simpleContentAccessEligible={simpleContentAccessEligible}
+                        />
+                      </Row>
                         }
-                        <Row>
-                          <Col sm={5}>
-                            <strong>{__('Subscription Allocation')}</strong>
-                          </Col>
-                          <Col sm={7}>
-                            {getManifestName()}
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col sm={5}>
-                            {canImportManifest &&
-                              <ControlLabel
-                                style={{ paddingTop: '10px' }}
-                              >
-                                <div>{__('Import New Manifest')}</div>
-                              </ControlLabel>
+                      <Row>
+                        <Col sm={5}>
+                          <strong>{__('Subscription Allocation')}</strong>
+                        </Col>
+                        <Col sm={7}>
+                          {getManifestName()}
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col sm={5}>
+                          {canImportManifest &&
+                          <ControlLabel
+                            style={{ paddingTop: '10px' }}
+                          >
+                            <div>{__('Import New Manifest')}</div>
+                          </ControlLabel>
                             }
-                          </Col>
-                          <Col sm={7} className="manifest-actions">
-                            <Spinner loading={actionInProgress} />
-                            {canImportManifest &&
-                              <FormControl
-                                id="usmaFile"
-                                type="file"
-                                accept=".zip"
-                                disabled={actionInProgress}
-                                onChange={e => this.uploadManifest(e.target.files)}
-                              />
+                        </Col>
+                        <Col sm={7} className="manifest-actions">
+                          <Spinner loading={actionInProgress} />
+                          {canImportManifest &&
+                          <FormControl
+                            id="usmaFile"
+                            type="file"
+                            accept=".zip"
+                            disabled={actionInProgress}
+                            onChange={e => this.uploadManifest(e.target.files)}
+                          />
                             }
-                            <div id="manifest-actions-row">
-                              {canImportManifest &&
-                                <TooltipButton
-                                  onClick={this.refreshManifest}
-                                  tooltipId="refresh-manifest-button-tooltip"
-                                  tooltipText={disabledReason}
-                                  tooltipPlacement="top"
-                                  title={__('Refresh')}
-                                  disabled={!isManifestImported ||
+                          <div id="manifest-actions-row">
+                            {canImportManifest &&
+                            <TooltipButton
+                              onClick={this.refreshManifest}
+                              tooltipId="refresh-manifest-button-tooltip"
+                              tooltipText={disabledReason}
+                              tooltipPlacement="top"
+                              title={__('Refresh')}
+                              disabled={!isManifestImported ||
                                     actionInProgress || disableManifestActions}
-                                />
+                            />
                               }
-                              {canDeleteManifest &&
-                                <React.Fragment>
-                                  <TooltipButton
-                                    disabled={!isManifestImported || actionInProgress}
-                                    bsStyle="danger"
-                                    onClick={this.showDeleteManifestModal}
-                                    title={__('Delete')}
-                                    tooltipId="delete-manifest-button-tooltip"
-                                    tooltipText={this.disabledTooltipText()}
-                                    tooltipPlacement="top"
-                                  />
-                                </React.Fragment>
+                            {canDeleteManifest &&
+                            <React.Fragment>
+                              <TooltipButton
+                                disabled={!isManifestImported || actionInProgress}
+                                bsStyle="danger"
+                                onClick={this.showDeleteManifestModal}
+                                title={__('Delete')}
+                                tooltipId="delete-manifest-button-tooltip"
+                                tooltipText={this.disabledTooltipText()}
+                                tooltipPlacement="top"
+                              />
+                            </React.Fragment>
                               }
-                            </div>
-                            <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
-                              <DeleteManifestModalText />
-                              <ForemanModal.Footer>
-                                <Button bsStyle="default" onClick={this.hideDeleteManifestModal}>
-                                  {__('Cancel')}
-                                </Button>
-                                <Button bsStyle="danger" onClick={this.deleteManifest}>
-                                  {__('Delete')}
-                                </Button>
-                              </ForemanModal.Footer>
-                            </ForemanModal>
-                          </Col>
-                        </Row>
-                      </Grid>
-                    </FormGroup>
+                          </div>
+                          <ForemanModal title={__('Confirm delete manifest')} id={DELETE_MANIFEST_MODAL_ID}>
+                            <DeleteManifestModalText />
+                            <ForemanModal.Footer>
+                              <Button bsStyle="default" onClick={this.hideDeleteManifestModal}>
+                                {__('Cancel')}
+                              </Button>
+                              <Button bsStyle="danger" onClick={this.deleteManifest}>
+                                {__('Delete')}
+                              </Button>
+                            </ForemanModal.Footer>
+                          </ForemanModal>
+                        </Col>
+                      </Row>
+                    </Grid>
                   </React.Fragment>
                 }
-                <Slot id="katello-manage-manifest-form" multi />
-              </Form>
+              <Slot id="katello-manage-manifest-form" multi />
             </Tab>
           }
           <Tab eventKey={2} title={__('Manifest History')}>
@@ -419,6 +239,18 @@ class ManageManifestModal extends Component {
               />
             </LoadingState>
           </Tab>
+          {showCdnConfigurationTab &&
+            <Tab eventKey={3} title={__('CDN Configuration')}>
+              <Grid>
+                <h3>{__('CDN Configuration for Red Hat Content')}</h3>
+                <hr />
+                <CdnConfigurationForm
+                  cdnConfiguration={organization.cdn_configuration}
+                  contentCredentials={contentCredentials}
+                />
+              </Grid>
+            </Tab>
+          }
         </Tabs>
         <ForemanModal.Footer>
           <Button bsStyle="primary" onClick={this.hideModal}>
@@ -464,7 +296,6 @@ ManageManifestModal.propTypes = {
   disableManifestActions: PropTypes.bool,
   disabledReason: PropTypes.string,
   loadOrganization: PropTypes.func.isRequired,
-  updateCdnConfiguration: PropTypes.func.isRequired,
   taskInProgress: PropTypes.bool.isRequired,
   simpleContentAccess: PropTypes.bool,
   simpleContentAccessEligible: PropTypes.bool,
@@ -481,7 +312,6 @@ ManageManifestModal.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
   })),
-  updatingCdnConfiguration: PropTypes.bool,
 };
 
 ManageManifestModal.defaultProps = {
@@ -495,7 +325,6 @@ ManageManifestModal.defaultProps = {
   simpleContentAccess: false,
   simpleContentAccessEligible: undefined,
   manifestActionStarted: false,
-  updatingCdnConfiguration: false,
   contentCredentials: [],
 };
 
