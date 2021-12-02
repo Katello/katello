@@ -7,12 +7,6 @@ require "webmock/minitest"
 require 'mocha/minitest'
 require 'set'
 require 'robottelo/reporter/attributes'
-require 'minitest/reporters'
-
-if ENV['USE_MEAN_TIME_REPORTER'] == '1'
-  Minitest::Reporters.use!(Minitest::Reporters::MeanTimeReporter.new(previous_runs_filename: Rails.root.join('tmp', 'katello_minitest_reporters_previous_run'),
-                                                                     report_filename: Rails.root.join('tmp', 'katello_minitest_reporters_report')))
-end
 
 SimpleCov.formatters = [
   SimpleCov::Formatter::RcovFormatter,
