@@ -1,4 +1,4 @@
-import { addToast } from 'foremanReact/redux/actions/toasts';
+import { addToast } from 'foremanReact/components/ToastsList';
 import { propsToSnakeCase } from 'foremanReact/common/helpers';
 import { get } from 'foremanReact/redux/API';
 import { stopInterval, withInterval } from 'foremanReact/redux/middlewares/IntervalMiddleware';

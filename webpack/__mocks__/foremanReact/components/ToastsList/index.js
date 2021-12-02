@@ -1,7 +1,8 @@
 export const addToast = toast => ({
-  type: 'TOASTS_ADD',
+  type: 'toasts/addToast',
   payload: {
-    message: toast,
+    key: 'addToast',
+    toast,
   },
 });
 

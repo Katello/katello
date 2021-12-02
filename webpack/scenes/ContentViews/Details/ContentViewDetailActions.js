@@ -1,5 +1,5 @@
 import { API_OPERATIONS, APIActions, get, put, post } from 'foremanReact/redux/API';
-import { addToast } from 'foremanReact/redux/actions/toasts';
+import { addToast } from 'foremanReact/components/ToastsList';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   RPM_PACKAGES_CONTENT,

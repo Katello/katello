@@ -7,7 +7,6 @@
 <% end %>
 
 <% content_for(:content) do %>
-    <%= notifications %>
     <div id="organization-id" data-id="<%= Organization.current.id if Organization.current %>" ></div>
     <div id="user-id" data-id="<%= User.current.id if User.current %>" ></div>
     <div id="reactRoot">
