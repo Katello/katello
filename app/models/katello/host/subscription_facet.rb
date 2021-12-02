@@ -217,7 +217,7 @@ module Katello
         if ignore_os?(host.operatingsystem, rhsm_facts)
           rhsm_facts[:ignore_os] = true
         end
-        host.import_facts(rhsm_facts)
+        ::HostFactImporter.new(host).import_facts(rhsm_facts)
       end
 
       def self.ignore_os?(host_os, rhsm_facts)
