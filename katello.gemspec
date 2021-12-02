@@ -71,7 +71,6 @@ Gem::Specification.new do |gem|
   # Testing
   gem.add_development_dependency "factory_bot_rails", "~> 4.5"
   gem.add_development_dependency "minitest-tags"
-  gem.add_development_dependency "minitest-reporters"
   gem.add_development_dependency "mocha"
   gem.add_development_dependency "vcr", "< 4.0.0"
   gem.add_development_dependency "webmock"

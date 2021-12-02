@@ -2,8 +2,6 @@ require File.expand_path("../engine", File.dirname(__FILE__))
 
 begin
   namespace :jenkins do
-    ENV['USE_MEAN_TIME_REPORTER'] = '1' unless ENV['USE_MEAN_TIME_REPORTER'] == '0'
-
     task :katello do
       Rake::Task['jenkins:setup:minitest'].invoke
       Rake::Task['rake:test:katello'].invoke
