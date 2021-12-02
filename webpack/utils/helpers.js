@@ -1,4 +1,4 @@
-import { addToast } from 'foremanReact/redux/actions/toasts';
+import { addToast } from 'foremanReact/components/ToastsList';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { head } from 'lodash';
 import { SUBSCRIPTIONS_QUANTITIES_FAILURE } from '../scenes/Subscriptions/SubscriptionConstants';
@@ -77,10 +77,11 @@ export const apiResponse = (actionType, result, additionalData = {}) => (dispatc
 };
 
 export const sendErrorNotifications = messages => (dispatch) => {
-  messages.forEach((msg) => {
+  messages.forEach((msg, item) => {
     const message = typeof msg === 'string' ? msg : `${msg.message}: ${msg.details}`;
     dispatch(addToast({
-      type: 'error',
+      type: 'danger',
+      key: `toastError_${item}`,
       message,
       sticky: true,
     }));
