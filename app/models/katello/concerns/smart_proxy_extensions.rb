@@ -184,17 +184,17 @@ module Katello
         end
       end
 
-      def pulp3_ssl_configuration(config)
-        legacy_pulp_cert = !self.setting(PULP3_FEATURE, 'client_authentication')&.include?('client_certificates')
+      def pulp3_ssl_configuration(config, connection_adapter = Faraday.default_adapter)
+        legacy_pulp_cert = !self.setting(PULP3_FEATURE, 'client_authentication')&.include?('client_certificate')
 
-        if Faraday.default_adapter == :excon
+        if connection_adapter == :excon
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert_filename(use_admin_as_cn_cert: legacy_pulp_cert)
           config.ssl_client_key = ::Cert::Certs.ssl_client_key_filename(use_admin_as_cn_cert: legacy_pulp_cert)
-        elsif Faraday.default_adapter == :net_http
+        elsif connection_adapter == :net_http
           config.ssl_client_cert = ::Cert::Certs.ssl_client_cert(use_admin_as_cn_cert: legacy_pulp_cert)
           config.ssl_client_key = ::Cert::Certs.ssl_client_key(use_admin_as_cn_cert: legacy_pulp_cert)
         else
-          fail "Unexpected faraday default_adapter #{Faraday.default_adapter}!  Cannot continue, this is likely a bug."
+          fail "Unexpected connection_adapter #{Faraday.default_adapter}!  Cannot continue, this is likely a bug."
         end
       end
 
