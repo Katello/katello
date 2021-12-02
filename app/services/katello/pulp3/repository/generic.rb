@@ -24,7 +24,7 @@ module Katello
         def remote_options
           generic_remote_options = JSON.parse(root.generic_remote_options)
           if generic_remote_options.any?
-            common_remote_options.merge(generic_remote_options.select { |_, v| !v.nil? }).symbolize_keys
+            common_remote_options.merge(generic_remote_options).symbolize_keys
           else
             common_remote_options
           end
