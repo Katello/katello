@@ -173,7 +173,7 @@ module Katello
     delegate :name, :label, :docker_upstream_name, :url, :download_concurrency, :to => :root
 
     delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :arch, :label, :url, :unprotected,
-             :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
+             :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirroring_policy,
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
              :upstream_authentication_token, :deb_releases,
              :deb_components, :deb_architectures, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id,
@@ -285,12 +285,12 @@ module Katello
       ::Katello::Resources::CDN::CdnResource.ca_file if ::Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
     end
 
-    def using_mirrored_metadata?
-      self.yum? && self.library_instance? && self.mirror_on_sync
-    end
-
     def archive?
       self.environment.nil?
+    end
+
+    def using_mirrored_metadata?
+      self.yum? && self.library_instance? && self.root.mirroring_policy == Katello::RootRepository::MIRRORING_POLICY_COMPLETE
     end
 
     def in_default_view?

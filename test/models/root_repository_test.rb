@@ -246,8 +246,8 @@ module Katello
       fedora = katello_products(:fedora)
       redhat = katello_products(:redhat)
 
-      RootRepository.create!(:product => fedora, :name => :foo, :content_type => :yum, :download_policy => :immediate, :url => 'http://foo/')
-      RootRepository.create!(:product => redhat, :name => :foo, :content_type => :yum, :download_policy => :immediate, :url => 'http://foo/')
+      RootRepository.create!(:product => fedora, :name => :foo, :content_type => :yum, :download_policy => :immediate, :url => 'http://foo/', :mirroring_policy => 'mirror_content_only')
+      RootRepository.create!(:product => redhat, :name => :foo, :content_type => :yum, :download_policy => :immediate, :url => 'http://foo/', :mirroring_policy => 'mirror_content_only')
 
       assert_raises(ActiveRecord::RecordInvalid) do
         RootRepository.create!(:product => fedora, :name => :foo, :content_type => :yum, :download_policy => :immediate, :url => 'http://foo/')
@@ -417,6 +417,7 @@ module Katello
       @root.download_policy = nil
       @root.docker_upstream_name = ""
       @root.url = nil
+
       assert @root.valid?
       @root.url = ""
       refute @root.valid?
@@ -572,7 +573,7 @@ module Katello
     end
 
     def test_nil_url_url
-      new_repo = Katello::RootRepository.new(@fedora_root.attributes.slice('product_id', 'content_type', 'download_policy'))
+      new_repo = Katello::RootRepository.new(@fedora_root.attributes.slice('product_id', 'content_type', 'download_policy', 'mirroring_policy'))
       new_repo.product = @fedora_root.product
       new_repo.name = "new_custom_repo"
       new_repo.label = "new_custom_repo"

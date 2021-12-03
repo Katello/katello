@@ -272,18 +272,23 @@
         </p>
       </div>
 
-      <div class="checkbox" ng-hide="repository.content_type === 'ostree'">
-        <label>
-          <input id="mirror_on_sync" name="mirror_on_sync" ng-model="repository.mirror_on_sync" type="checkbox"/>
-          <span translate>Mirror on Sync</span>
-        </label>
+      <div bst-form-group label="{{ 'Mirroring Policy' | translate }}">
+        <select id="mirroring_policy"
+                name="mirroring_policy"
+                ng-model="repository.mirroring_policy"
+                ng-options="id as name for (id, name) in mirroringPolicies(repository.content_type)">
+        </select>
 
-        <p class="help-block" translate>
-          Selecting this option will result in contents that are no longer part of the upstream repository being removed during synchronization.
+        <p class="help-block">
+          <ul>
+        <li translate><b>Additive:</b> new content available during sync will be added to the repository, and no content will be removed. </li>
+            <li translate><b>Mirror Content Only</b>: any new content available during sync will be added to the repository and any content removed from the upstream repository will be removed from the local repository.</li>
+            <li translate ng-show="repository.content_type == 'yum'"><b>Mirror Complete</b>: a sync behaves exactly like "Mirror Content Only", but also mirrors metadata as well.  This is the fastest method, and preserves repository signatures, but is only supported by yum and not by all upstream repositories.</li>
+          </ul>
         </p>
       </div>
 
-      <div bst-form-group label="{{ 'Retain package versions' | translate }}" ng-if="(repository.content_type === 'yum' && repository.mirror_on_sync === false)">
+      <div bst-form-group label="{{ 'Retain package versions' | translate }}" ng-if="(repository.content_type === 'yum' && repository.mirroring_policy === 'additive')">
         <input id="retain_package_versions_count" name="retain_package_versions_count" ng-model="repository.retain_package_versions_count" type="number"/>
 
         <p class="help-block">

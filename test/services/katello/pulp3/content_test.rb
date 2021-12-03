@@ -23,6 +23,7 @@ module Katello
         def teardown
           ForemanTasks.sync_task(
               ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @primary) rescue "skipped repo delete"
+          Setting[:orphan_protection_time] = 0
           ForemanTasks.sync_task(
               ::Actions::Pulp3::Orchestration::OrphanCleanup::RemoveOrphans, @primary) rescue "skipped remove orphans"
         end
