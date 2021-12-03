@@ -5,6 +5,8 @@ FactoryBot.define do
     sequence(:content_id)
     url { "http://localhost/foo" }
     download_policy { "on_demand" }
+    mirroring_policy { "mirror_content_only" }
+
     association :product, :factory => :katello_product, :strategy => :build
     http_proxy_policy { Katello::RootRepository::NO_DEFAULT_HTTP_PROXY }
 

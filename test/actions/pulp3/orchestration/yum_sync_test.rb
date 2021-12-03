@@ -47,7 +47,7 @@ module ::Actions::Pulp3
 
     def test_sync_mirror_false
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
-      @repo.root.update(mirror_on_sync: false)
+      @repo.root.update(mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE)
       @repo.update(publication_href: nil, version_href: nil) #validate that sync populates these
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @primary, sync_args)
       @repo.reload
@@ -111,7 +111,7 @@ module ::Actions::Pulp3
 
     def test_incompatible_mirror_repo_error
       @repo.root.update!(url: 'https://dl.fedoraproject.org/pub/epel/7/x86_64/')
-      @repo.root.update!(mirror_on_sync: true)
+      @repo.root.update(mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_COMPLETE)
       @repo.reload
       sync_args = {:smart_proxy_id => @primary.id, :repo_id => @repo.id}
       assert_raises ForemanTasks::TaskError do

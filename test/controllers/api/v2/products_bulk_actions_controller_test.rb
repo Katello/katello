@@ -29,7 +29,7 @@ module Katello
     def create_docker_repo
       FactoryBot.create(:katello_repository, :docker, :product_id => @products.first.id, :environment => @organization.library,
                          :content_view_version => @organization.default_content_view.versions.first, :url => 'http://foo.com/foo',
-                         :docker_upstream_name => 'foobar', :unprotected => true)
+                         :docker_upstream_name => 'foobar', :unprotected => true, :mirroring_policy => 'additive')
     end
 
     def test_destroy_products

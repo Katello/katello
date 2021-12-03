@@ -54,7 +54,7 @@ module ::Actions::Pulp3
       pre_content_count = pre_content.count
       @repo.root.update(:ansible_collection_requirements => "---\n
   collections:\n
-  - newswangerd.collection_demo", :mirror_on_sync => false)
+  - newswangerd.collection_demo", :mirroring_policy => ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE)
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
           @repo,
