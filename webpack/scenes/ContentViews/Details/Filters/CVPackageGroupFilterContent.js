@@ -216,54 +216,51 @@ const CVPackageGroupFilterContent = ({
             actionResolver={hasPermission(permissions, 'edit_content_views') ? actionResolver : null}
             onSelect={hasPermission(permissions, 'edit_content_views') ? onSelect(rows, setRows) : null}
             actionButtons={hasPermission(permissions, 'edit_content_views') &&
-            <Split hasGutter>
-              <SplitItem data-testid="allAddedNotAdded">
-                <Select
-                  variant={SelectVariant.single}
-                  onToggle={setSelectOpen}
-                  onSelect={(_event, selection) => {
-                    setSelectedIndex(allAddedNotAdded.indexOf(selection));
-                    setSelectOpen(false);
-                  }}
-                  selections={allAddedNotAdded[selectedIndex]}
-                  isOpen={selectOpen}
-                  isCheckboxSelectionBadgeHidden
-                >
-                  {allAddedNotAdded.map(item =>
-                    <SelectOption aria-label={item} key={item} value={item} />)}
-                </Select>
-              </SplitItem>
-              <SplitItem>
-                <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
-                  {__('Add filter rule')}
-                </Button>
-              </SplitItem>
-              <SplitItem>
-                <Dropdown
-                  toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
-                  isOpen={bulkActionOpen}
-                  isPlain
-                  dropdownItems={[
-                    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={bulkAdd}>
-                      {__('Add')}
-                    </DropdownItem>,
-                    <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
-                      {__('Remove')}
-                    </DropdownItem>]
-                  }
-                />
-              </SplitItem>
-            </Split>
+              <Split hasGutter>
+                <SplitItem data-testid="allAddedNotAdded">
+                  <Select
+                    variant={SelectVariant.single}
+                    onToggle={setSelectOpen}
+                    onSelect={(_event, selection) => {
+                      setSelectedIndex(allAddedNotAdded.indexOf(selection));
+                      setSelectOpen(false);
+                    }}
+                    selections={allAddedNotAdded[selectedIndex]}
+                    isOpen={selectOpen}
+                    isCheckboxSelectionBadgeHidden
+                  >
+                    {allAddedNotAdded.map(item =>
+                      <SelectOption aria-label={item} key={item} value={item} />)}
+                  </Select>
+                </SplitItem>
+                <SplitItem>
+                  <Button isDisabled={!hasNotAddedSelected} onClick={bulkAdd} variant="secondary" aria-label="add_filter_rule">
+                    {__('Add filter rule')}
+                  </Button>
+                </SplitItem>
+                <SplitItem>
+                  <Dropdown
+                    toggle={<KebabToggle aria-label="bulk_actions" onToggle={toggleBulkAction} />}
+                    isOpen={bulkActionOpen}
+                    isPlain
+                    dropdownItems={[
+                      <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
+                        {__('Remove')}
+                      </DropdownItem>]
+                    }
+                  />
+                </SplitItem>
+              </Split>
             }
           />
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-        <div className="tab-body-with-spacing">
-          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
-        </div>
-      </Tab>
+        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
+          <div className="tab-body-with-spacing">
+            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
+          </div>
+        </Tab>
       }
     </Tabs>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { lowerCase, upperFirst } from 'lodash';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import {
   Bullseye,
@@ -34,7 +35,6 @@ import LastSync from './LastSync';
 import RepoIcon from './RepoIcon';
 import AddedStatusLabel from '../../../../components/AddedStatusLabel';
 import SelectableDropdown from '../../../../components/SelectableDropdown';
-import { capitalize } from '../../../../utils/helpers';
 import { hasPermission } from '../../helpers';
 
 const allRepositories = 'All repositories';
@@ -129,8 +129,8 @@ const ContentViewRepositories = ({ cvId, details }) => {
       allRepoTypes[allRepositories] = 'all';
       repoTypesResponse.forEach((type) => {
         const { name } = type;
-        const typeFullName = Object.prototype.hasOwnProperty.call(repoTypeNames, name) ?
-          repoTypeNames[name] : capitalize(name);
+        const typeFullName = name in repoTypeNames ?
+          repoTypeNames[name] : upperFirst(lowerCase(name));
         allRepoTypes[`${typeFullName} Repositories`] = name;
       });
       setRepoTypes(allRepoTypes);
@@ -209,9 +209,6 @@ const ContentViewRepositories = ({ cvId, details }) => {
   const defaultFilters = [allRepositories, ALL_STATUSES];
 
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={addBulk}>
-      {__('Add')}
-    </DropdownItem>,
     <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={removeBulk}>
       {__('Remove')}
     </DropdownItem>,
@@ -255,7 +252,7 @@ const ContentViewRepositories = ({ cvId, details }) => {
           </SplitItem>
           <SplitItem>
             <SelectableDropdown
-              items={[ADDED, NOT_ADDED, ALL_STATUSES]}
+              items={[ALL_STATUSES, ADDED, NOT_ADDED]}
               title={__('Status')}
               selected={statusSelected}
               setSelected={setStatusSelected}

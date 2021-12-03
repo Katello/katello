@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TextInput, TextArea, Text, TextVariants, Button, Split, SplitItem } from '@patternfly/react-core';
+import {
+  TextInput, TextArea, Text, Button, Split,
+  SplitItem, Tooltip, TooltipPosition,
+} from '@patternfly/react-core';
 import {
   EyeIcon,
   EyeSlashIcon,
@@ -130,10 +133,10 @@ const EditableTextInput = ({
             <TimesIcon />
           </Button>
         </SplitItem>
-        { isPassword ?
+        {isPassword ?
           <SplitItem>
             <Button aria-label={`show-password ${attribute}`} variant="plain" isDisabled={!inputValue?.length} onClick={toggleShowPassword}>
-              { showPassword ?
+              {showPassword ?
                 (<EyeSlashIcon />) :
                 (<EyeIcon />)}
             </Button>
@@ -146,23 +149,32 @@ const EditableTextInput = ({
   return (
     <Split>
       <SplitItem>
-        <Text aria-label={`${attribute} text value`} component={component || TextVariants.p}>
-          {passwordPlaceholder || inputValue || (<i>{placeholder}</i>)}
-        </Text>
-      </SplitItem>
+        {inputValue ?
+          <Text aria-label={`${attribute} text value`} component={component}>
+            {editing ? inputValue : passwordPlaceholder || inputValue}
+          </Text> :
+          <Text className="textInput-placeholder" aria-label={`${attribute} text value`} component={component}>
+            {passwordPlaceholder || placeholder}
+          </Text>}
+      </SplitItem >
       {!disabled &&
         <SplitItem>
-          <Button
-            className="foreman-edit-icon"
-            aria-label={`edit ${attribute}`}
-            variant="plain"
-            onClick={onEditClick}
+          <Tooltip
+            position={TooltipPosition.top}
+            content={__('Edit')}
           >
-            <PencilAltIcon />
-          </Button>
+            <Button
+              className="foreman-edit-icon"
+              aria-label={`edit ${attribute}`}
+              variant="plain"
+              onClick={onEditClick}
+            >
+              <PencilAltIcon />
+            </Button>
+          </Tooltip>
         </SplitItem>
       }
-    </Split>
+    </Split >
   );
 };
 

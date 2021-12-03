@@ -34,7 +34,7 @@ const AddEditContainerTagRuleModal = ({
 
   return (
     <Modal
-      title={isEditing ? __('Edit rule') : __('Add rule')}
+      title={isEditing ? __('Edit filter rule') : __('Add filter rule')}
       variant={ModalVariant.small}
       isOpen
       onClose={onClose}

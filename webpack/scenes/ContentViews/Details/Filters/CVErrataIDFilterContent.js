@@ -317,13 +317,10 @@ const CVErrataIDFilterContent = ({
                       isOpen={bulkActionOpen}
                       isPlain
                       dropdownItems={[
-                        <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={bulkAdd}>
-                          {__('Add')}
-                        </DropdownItem>,
                         <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={bulkRemove}>
                           {__('Remove')}
                         </DropdownItem>]
-                    }
+                      }
                     />
                   </SplitItem>
                 }
@@ -418,11 +415,11 @@ const CVErrataIDFilterContent = ({
         </div>
       </Tab>
       {(repositories.length || showAffectedRepos) &&
-      <Tab eventKey={1} title={<TabTitleText>{__('Affected Repositories')}</TabTitleText>}>
-        <div className="tab-body-with-spacing">
-          <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
-        </div>
-      </Tab>
+        <Tab eventKey={1} title={<TabTitleText>{__('Affected repositories')}</TabTitleText>}>
+          <div className="tab-body-with-spacing">
+            <AffectedRepositoryTable cvId={cvId} filterId={filterId} repoType="yum" setShowAffectedRepos={setShowAffectedRepos} details={details} />
+          </div>
+        </Tab>
       }
     </Tabs>
   );

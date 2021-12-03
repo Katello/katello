@@ -186,21 +186,21 @@ test('Can add package rules to filter in a self-closing modal', async (done) => 
   expect(queryByText(cvFilterName)).toBeNull();
   await patientlyWaitFor(() => {
     expect(getByText(cvFilterName)).toBeInTheDocument();
-    expect(getByLabelText('create_rpm_rule')).toBeInTheDocument();
+    expect(getByLabelText('add_rpm_rule')).toBeInTheDocument();
   });
-  getByLabelText('create_rpm_rule').click();
+  getByLabelText('add_rpm_rule').click();
   await patientlyWaitFor(() => {
     expect(getByLabelText('input_name')).toBeInTheDocument();
     expect(getByLabelText('input_architecture')).toBeInTheDocument();
-    expect(getByLabelText('create_package_filter_rule')).toBeInTheDocument();
+    expect(getByLabelText('add_package_filter_rule')).toBeInTheDocument();
   });
 
   fireEvent.change(getByLabelText('input_name'), { target: { value: 'elephant' } });
   fireEvent.change(getByLabelText('input_architecture'), { target: { value: 'noarch' } });
-  fireEvent.submit(getByLabelText('create_package_filter_rule'));
+  fireEvent.submit(getByLabelText('add_package_filter_rule'));
 
   await patientlyWaitFor(() => {
-    expect(queryByText('Create rule')).not.toBeInTheDocument();
+    expect(queryByText('Add rule')).not.toBeInTheDocument();
   });
   assertNockRequest(autocompleteScope);
   assertNockRequest(cvFiltersScope);
@@ -307,8 +307,8 @@ test('Edit rpm filter rule in a self-closing modal', async (done) => {
   getByText('Edit').click();
 
   await patientlyWaitFor(() => {
-    expect(getByText('Edit package filter rule')).toBeInTheDocument();
-    fireEvent.submit(getByLabelText('create_package_filter_rule'));
+    expect(getByText('Edit RPM rule')).toBeInTheDocument();
+    fireEvent.submit(getByLabelText('add_package_filter_rule'));
   });
 
   await patientlyWaitFor(() => {

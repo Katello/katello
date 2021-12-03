@@ -1,10 +1,12 @@
 import React from 'react';
-import { EmptyState,
+import {
+  EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
   Bullseye,
-  Title } from '@patternfly/react-core';
+  Title,
+} from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { CubeIcon, ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';

@@ -179,9 +179,6 @@ const AffectedRepositoryTable = ({
   const activeFilters = [productSelected];
   const defaultFilters = [allProducts];
   const dropdownItems = [
-    <DropdownItem aria-label="bulk_add" key="bulk_add" isDisabled={!hasNotAddedSelected} component="button" onClick={addBulk}>
-      {__('Add')}
-    </DropdownItem>,
     <DropdownItem aria-label="bulk_remove" key="bulk_remove" isDisabled={!hasAddedSelected} component="button" onClick={removeBulk}>
       {__('Remove')}
     </DropdownItem>,
@@ -226,7 +223,7 @@ const AffectedRepositoryTable = ({
                 <ActionList>
                   <ActionListItem>
                     <Button onClick={addBulk} isDisabled={!hasNotAddedSelected} variant="secondary" aria-label="add_repositories">
-                      Add repositories
+                      {__('Add repositories')}
                     </Button>
                   </ActionListItem>
                   <ActionListItem>
