@@ -11,7 +11,7 @@ module Actions
                                            owner:         root.product.organization.label,
                                            name:          root.name,
                                            type:          root.content_type,
-                                           arches:        root.arch == "noarch" ? nil : root.arch,
+                                           arches:        root.format_arches,
                                            label:         root.custom_content_label,
                                            os_versions:   root.os_versions&.join(','),
                                            content_url:   root.custom_content_path)
@@ -30,7 +30,7 @@ module Actions
                           content_id:  content_id,
                           name:        root.name,
                           type:        root.content_type,
-                          arches:      root.arch == "noarch" ? "" : root.arch,
+                          arches:      root.format_arches,
                           label:       root.custom_content_label,
                           content_url: root.custom_content_path,
                           gpg_key_url: root.library_instance.yum_gpg_key_url)

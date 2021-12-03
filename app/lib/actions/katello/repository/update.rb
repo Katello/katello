@@ -24,7 +24,7 @@ module Actions
                         :gpg_key_url => repository.yum_gpg_key_url,
                         :label => content.label,
                         :type => root.content_type,
-                        :arches => root.arch == "noarch" ? nil : root.arch,
+                        :arches => root.format_arches,
                         :os_versions => root.os_versions&.join(',')
                       )
 
