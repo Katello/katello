@@ -281,7 +281,7 @@ module Katello
       end
 
       def test_unregister_host_rhsm_facts
-        FactValue.create!(value: 'something', host: @host, fact_name: RhsmFactName.create(name: 'some-fact'))
+        FactValue.create!(value: 'something', host: @host, fact_name: FactNames::Rhsm.create(name: 'some-fact'))
 
         ::Katello::RegistrationManager.unregister_host(@host, unregistering: true)
 

@@ -28,7 +28,7 @@ module Katello
     def test_rhsm_fact_values
       assert_empty @foreman_host.rhsm_fact_values
 
-      fv = FactValue.create!(value: 'something', host: @foreman_host, fact_name: RhsmFactName.create(name: 'some-fact'))
+      fv = FactValue.create!(value: 'something', host: @foreman_host, fact_name: FactNames::Rhsm.create(name: 'some-fact'))
 
       assert_equal [fv], @foreman_host.rhsm_fact_values
     end

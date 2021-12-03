@@ -178,7 +178,7 @@ module Katello
       end
 
       def rhsm_fact_values
-        self.fact_values.joins(:fact_name).where("#{::FactName.table_name}.type = '#{Katello::RhsmFactName}'")
+        self.fact_values.joins(:fact_name).where("#{::FactName.table_name}.type = '#{FactNames::Rhsm}'")
       end
 
       def self.available_locks

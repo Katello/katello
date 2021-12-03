@@ -212,7 +212,7 @@ module Katello
 
       def self.update_facts(host, rhsm_facts)
         return if host.build? || rhsm_facts.nil?
-        rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
+        rhsm_facts[:_type] = FactNames::Rhsm::FACT_TYPE
         rhsm_facts[:_timestamp] = Time.now.to_s
         if ignore_os?(host.operatingsystem, rhsm_facts)
           rhsm_facts[:ignore_os] = true
