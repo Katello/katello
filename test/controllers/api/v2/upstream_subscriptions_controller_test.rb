@@ -70,7 +70,7 @@ module Katello
     def test_destroy
       params = { pool_ids: %w(1 2 3), organization_id: @organization.id }
       assert_async_task ::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements do |entitlement_ids|
-        entitlement_ids.must_equal %w(1 2 3)
+        _(entitlement_ids).must_equal %w(1 2 3)
       end
 
       delete :destroy, params: params
@@ -115,7 +115,7 @@ module Katello
       pools = [{"id" => "12345", "quantity" => 5}]
 
       assert_async_task ::Actions::Katello::UpstreamSubscriptions::UpdateEntitlements do |poolz|
-        poolz.must_equal pools
+        _(poolz).must_equal pools
       end
 
       put :update, params: { organization_id: @organization.id, pools: pools }

@@ -187,7 +187,7 @@ module Katello
       clause_gen = setup_whitelist_filter(rules) do |gen|
         gen.expects(:package_clauses_for_errata).once.
                     returns(returned_packages).with do |clauses|
-                      clauses.map(&:to_sql).must_equal(expected_errata_clauses.map(&:to_sql))
+                      _(clauses.map(&:to_sql)).must_equal(expected_errata_clauses.map(&:to_sql))
                     end
       end
       assert_equal prepend_modular(returned_packages), clause_gen.copy_clause
@@ -196,7 +196,7 @@ module Katello
       clause_gen = setup_blacklist_filter(rules) do |gen|
         gen.expects(:package_clauses_for_errata).once.
                     returns(returned_packages).with do |clauses|
-                      clauses.map(&:to_sql).must_equal(expected_errata_clauses.map(&:to_sql))
+                      _(clauses.map(&:to_sql)).must_equal(expected_errata_clauses.map(&:to_sql))
                     end
       end
       expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [returned_packages]}]}

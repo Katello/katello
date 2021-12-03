@@ -147,19 +147,19 @@ module Katello
     def test_create_and_delete
       parameters = { :repository_id => @repo.id, :name => 'My_Group', :description => "My Group", :mandatory_package_names => ["katello-agent"]}
       assert_sync_task(::Actions::Katello::Repository::UploadPackageGroup) do |repository, params|
-        repository.must_equal @repo
-        params[:name].must_equal parameters[:name]
-        params[:description].must_equal parameters[:description]
-        params[:mandatory_package_names].must_equal parameters[:mandatory_package_names]
-        params[:user_visible].must_equal true
+        _(repository).must_equal @repo
+        _(params[:name]).must_equal parameters[:name]
+        _(params[:description]).must_equal parameters[:description]
+        _(params[:mandatory_package_names]).must_equal parameters[:mandatory_package_names]
+        _(params[:user_visible]).must_equal true
       end
 
       post(:create, params: parameters)
       assert_response :success
 
       assert_sync_task(::Actions::Katello::Repository::DestroyPackageGroup) do |repository, pkg_group_id|
-        repository.must_equal @repo
-        pkg_group_id.must_equal "My_Group"
+        _(repository).must_equal @repo
+        _(pkg_group_id).must_equal "My_Group"
       end
       delete(:destroy, params: { :name => "My_Group", :repository_id => @repo.id })
       assert_response :success

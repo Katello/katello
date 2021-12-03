@@ -37,7 +37,7 @@ module Katello
 
     belongs_to :root, :inverse_of => :repositories, :class_name => "Katello::RootRepository"
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
-    belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse, :foreign_key => :library_instance_id
+    belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse
     has_many :library_instances_inverse,
              :class_name  => 'Katello::Repository',
              :dependent   => :restrict_with_exception,
@@ -105,7 +105,7 @@ module Katello
     has_many :filters, :through => :repository_content_view_filters
 
     belongs_to :content_view_version, :inverse_of => :repositories, :class_name => "Katello::ContentViewVersion"
-    has_many :distribution_references, :class_name => 'Katello::Pulp3::DistributionReference', :foreign_key => :repository_id,
+    has_many :distribution_references, :class_name => 'Katello::Pulp3::DistributionReference',
              :dependent => :destroy, :inverse_of => :repository
 
     has_many :smart_proxy_sync_histories, :class_name => "::Katello::SmartProxySyncHistory", :inverse_of => :repository, :dependent => :delete_all

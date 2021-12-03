@@ -15,7 +15,7 @@ module Katello
                :class_name => "Katello::ContentView",
                :inverse_of => :filters
 
-    has_many :repository_content_view_filters, :class_name => "Katello::RepositoryContentViewFilter", :dependent => :delete_all, :inverse_of => :filter, :foreign_key => :content_view_filter_id
+    has_many :repository_content_view_filters, :class_name => "Katello::RepositoryContentViewFilter", :dependent => :delete_all, :inverse_of => :filter
     has_many :repositories, :through => :repository_content_view_filters, :class_name => "Katello::Repository"
 
     validates_lengths_from_database

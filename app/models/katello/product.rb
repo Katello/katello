@@ -15,7 +15,7 @@ module Katello
     belongs_to :provider, :inverse_of => :products, :class_name => 'Katello::Provider'
     belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
     belongs_to :gpg_key, :inverse_of => :products, :class_name => "Katello::ContentCredential"
-    has_many :product_contents, :foreign_key => 'product_id', :class_name => "Katello::ProductContent", :dependent => :destroy
+    has_many :product_contents, :class_name => "Katello::ProductContent", :dependent => :destroy
     has_many :contents, :through => :product_contents
     has_many :displayable_product_contents, -> { displayable }, :foreign_key => 'product_id', :class_name => "Katello::ProductContent", :dependent => :destroy
     belongs_to :ssl_ca_cert, :class_name => "Katello::ContentCredential", :inverse_of => :ssl_ca_products

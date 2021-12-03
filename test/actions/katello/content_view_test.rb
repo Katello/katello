@@ -341,7 +341,7 @@ module ::Actions::Katello::ContentView
 
     it 'raises error when validation fails' do
       ::Actions::Katello::ContentView::Update.any_instance.expects(:action_subject).with(content_view)
-      proc { create_and_plan_action action_class, content_view, :name => '' }.must_raise(ActiveRecord::RecordInvalid)
+      _ { proc { create_and_plan_action action_class, content_view, :name => '' } }.must_raise(ActiveRecord::RecordInvalid)
     end
   end
 

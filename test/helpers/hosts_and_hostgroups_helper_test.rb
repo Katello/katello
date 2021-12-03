@@ -92,7 +92,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     ret = [{:name => "boo" }]
     ::Operatingsystem.expects(:find).with(@os.id).returns(@os).at_least_once
     @os.expects(:kickstart_repos).returns(ret).with do |host|
-      host.must_be_kind_of(::Host::Managed)
+      _(host).must_be_kind_of(::Host::Managed)
       assert_equal @os, host.os
       assert_equal @env, host.content_facet.lifecycle_environment
       assert_equal @cv, host.content_facet.content_view
@@ -112,7 +112,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     ret = [{:name => "boo" }]
 
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
-      param_host.must_be_kind_of(::Host::Managed)
+      _(param_host).must_be_kind_of(::Host::Managed)
       assert_equal @os, param_host.os
       assert_equal @env, param_host.content_facet.lifecycle_environment
       assert_equal @cv, param_host.content_facet.content_view
@@ -148,7 +148,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     ret = [{:name => "boo" }]
 
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
-      param_host.must_be_kind_of(::Host::Managed)
+      _(param_host).must_be_kind_of(::Host::Managed)
       assert_equal @os, param_host.os
       assert_equal @env, param_host.content_facet.lifecycle_environment
       assert_equal @cv, param_host.content_facet.content_view
@@ -174,7 +174,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     ret = [{:name => "boo" }]
 
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
-      param_host.must_be_kind_of(::Host::Managed)
+      _(param_host).must_be_kind_of(::Host::Managed)
       assert_equal @os, param_host.os
       assert_equal @env, param_host.content_facet.lifecycle_environment
       assert_equal @cv, param_host.content_facet.content_view

@@ -119,8 +119,8 @@ module Katello
       url = "http://www.redhat.com"
 
       assert_sync_task(::Actions::Katello::CdnConfiguration::Update) do |organization, params|
-        organization.id.must_equal @organization.id
-        params[:url].must_equal url
+        _(organization.id).must_equal @organization.id
+        _(params[:url]).must_equal url
       end
 
       put(:cdn_configuration, params: { :id => @organization.id, :url => url })

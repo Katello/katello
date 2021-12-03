@@ -86,7 +86,7 @@ module ::Actions::Katello::Product
 
     it 'plans' do
       action.stubs(:action_subject).with do |subject, _params|
-        subject.must_equal(product)
+        _(subject).must_equal(product)
       end
       product.expects(:save!).returns([])
       product.organization.label = 'somelabel'
@@ -129,7 +129,7 @@ module ::Actions::Katello::Product
 
     it 'raises error when validation fails' do
       ::Actions::Katello::Product::Update.any_instance.expects(:action_subject).with(product)
-      proc { create_and_plan_action action_class, product, :name => '' }.must_raise(ActiveRecord::RecordInvalid)
+      _ { proc { create_and_plan_action action_class, product, :name => '' } }.must_raise(ActiveRecord::RecordInvalid)
     end
   end
 
@@ -191,7 +191,7 @@ module ::Actions::Katello::Product
 
     it 'plans' do
       action.stubs(:action_subject).with do |subject, _params|
-        subject.must_equal(product)
+        _(subject).must_equal(product)
       end
       product.expects(:published_content_view_versions).returns([])
       product.expects(:product_contents).returns([])

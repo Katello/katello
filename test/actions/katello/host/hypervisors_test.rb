@@ -24,7 +24,7 @@ module Katello::Host
 
         plan_action(action, @hypervisor_params)
         assert_action_planed_with(action, ::Actions::Katello::Host::HypervisorsUpdate) do |results, *_|
-          results.must_equal(:hypervisors => [{:uuid => 1, :name => 'foo', :organization_label => 'org-label'}])
+          _(results).must_equal(:hypervisors => [{:uuid => 1, :name => 'foo', :organization_label => 'org-label'}])
         end
       end
 

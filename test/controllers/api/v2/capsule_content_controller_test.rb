@@ -78,7 +78,7 @@ module Katello
     def test_sync
       assert_async_task ::Actions::Katello::CapsuleContent::Sync do |capsule, options|
         assert_equal proxy_with_pulp.id, capsule.id
-        options[:environment_id].must_equal environment.id
+        _(options[:environment_id]).must_equal environment.id
       end
 
       post :sync, params: { :id => proxy_with_pulp.id, :environment_id => environment.id }
@@ -88,7 +88,7 @@ module Katello
     def test_sync_with_repo
       assert_async_task ::Actions::Katello::CapsuleContent::Sync do |capsule, options|
         assert_equal proxy_with_pulp.id, capsule.id
-        options[:repository_id].must_equal @repository.id
+        _(options[:repository_id]).must_equal @repository.id
       end
 
       post :sync, params: { :id => proxy_with_pulp.id, :repository_id => @repository.id }
@@ -98,7 +98,7 @@ module Katello
     def test_sync_with_cv
       assert_async_task ::Actions::Katello::CapsuleContent::Sync do |capsule, options|
         assert_equal proxy_with_pulp.id, capsule.id
-        options[:content_view_id].must_equal @library_dev_view.id
+        _(options[:content_view_id]).must_equal @library_dev_view.id
       end
 
       post :sync, params: { :id => proxy_with_pulp.id, :content_view_id => @library_dev_view.id }

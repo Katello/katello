@@ -59,7 +59,7 @@ module ::Actions::Katello::RepositorySet
       failed = lambda do
         plan_action(action, product, content, substitutions)
       end
-      failed.must_raise(::Katello::Errors::ConflictException)
+      _ { failed }.must_raise(::Katello::Errors::ConflictException)
     end
   end
 
@@ -80,7 +80,7 @@ module ::Actions::Katello::RepositorySet
       failed = lambda do
         plan_action(action, product, content, substitutions)
       end
-      failed.must_raise(::Katello::Errors::NotFound)
+      _ { failed }.must_raise(::Katello::Errors::NotFound)
     end
   end
 
@@ -97,8 +97,8 @@ module ::Actions::Katello::RepositorySet
     it 'plans' do
       plan_action action, product, content.cp_content_id
       assert_run_phase action do
-        action.input[:product_id].must_equal product.id
-        action.input[:content_id].must_equal content.cp_content_id
+        _(action.input[:product_id]).must_equal product.id
+        _(action.input[:content_id]).must_equal content.cp_content_id
       end
     end
 
@@ -124,7 +124,7 @@ module ::Actions::Katello::RepositorySet
     it 'considers the repo being enabled when the repository object is present' do
       repository_already_enabled!
       action = simulate_run
-      action.output[:results].first[:enabled].must_equal true
+      _(action.output[:results].first[:enabled]).must_equal true
     end
 
     def simulate_run

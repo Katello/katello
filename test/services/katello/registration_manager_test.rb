@@ -321,7 +321,7 @@ module Katello
           ::Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
         end
 
-        failed.must_raise(Exception)
+        _ { failed }.must_raise(Exception)
       end
 
       def test_registration_dead_candlepin
@@ -336,7 +336,7 @@ module Katello
           ::Katello::RegistrationManager.register_host(new_host, rhsm_params, @content_view_environment)
         end
 
-        failed.must_raise(Exception)
+        _ { failed }.must_raise(Exception)
       end
 
       # this case can only happen if candlepin/pulp dies after the host is unregistered, but before it's re-registered.
@@ -358,7 +358,7 @@ module Katello
           ::Katello::RegistrationManager.register_host(@host, rhsm_params, @content_view_environment)
         end
 
-        failed.must_raise(Exception)
+        _ { failed }.must_raise(Exception)
       end
     end
   end
