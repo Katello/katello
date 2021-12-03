@@ -170,14 +170,6 @@
             on-save="save(repository)">
         </dd>
       </span>
-      <span ng-hide="repository.content_type === 'ostree'">
-        <dt translate>Mirror on Sync</dt>
-        <dd bst-edit-checkbox="repository.mirror_on_sync"
-            formatter="booleanToYesNo"
-            on-save="save(repository)"
-            readonly="denied('edit_products', product)">
-        </dd>
-      </span>
 
       <span>
         <dt translate>HTTP Proxy</dt>
@@ -303,6 +295,17 @@
             readonly="denied('edit_products', product)"
             selector="repository.download_policy"
             options="downloadPolicies"
+            options-format="id as name for (id, name) in options"
+            on-save="save(repository)">
+        </dd>
+      </span>
+      <span ng-hide="repository.content_type === 'ostree'">
+        <dt translate>Mirroring Policy</dt>
+
+        <dd bst-edit-select="mirroringPolicyDisplay(repository.mirroring_policy, repository.content_type)"
+            readonly="denied('edit_products', product)"
+            selector="repository.mirroring_policy"
+            options="mirroringPolicies(repository.content_type)"
             options-format="id as name for (id, name) in options"
             on-save="save(repository)">
         </dd>

@@ -19,8 +19,8 @@
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions',
-        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions', 'MirroringPolicy',
+        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions, MirroringPolicy) {
             $scope.organization = CurrentOrganization;
 
             $scope.progress = {uploading: false};
@@ -178,6 +178,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.checksums = Checksum.checksums;
             $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
+            $scope.mirroringPolicies = MirroringPolicy.mirroringPolicies;
             $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
 
             $scope.checksumTypeDisplay = function (checksum) {
@@ -187,6 +188,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.downloadPolicyDisplay = function (downloadPolicy) {
                 return DownloadPolicy.downloadPolicyName(downloadPolicy);
             };
+
+            $scope.mirroringPolicyDisplay = MirroringPolicy.mirroringPolicyName;
 
             $scope.clearUpstreamAuth = function () {
                 $scope.repository['upstream_password'] = null;

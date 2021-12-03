@@ -34,7 +34,7 @@ module Katello
           :content_type => katello_content_type,
           :unprotected => unprotected?,
           :download_policy => download_policy,
-          :mirror_on_sync => true
+          :mirroring_policy => Katello::RootRepository::MIRRORING_POLICY_COMPLETE
         )
 
         Repository.new(:root => root,
