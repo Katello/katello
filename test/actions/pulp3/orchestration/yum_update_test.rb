@@ -11,7 +11,7 @@ module ::Actions::Pulp3
 
       @repo.root.update(
         verify_ssl_on_sync: false,
-        mirror_on_sync: false,
+        mirroring_policy: ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE,
         ssl_ca_cert: katello_gpg_keys(:unassigned_gpg_key),
         ssl_client_cert: katello_gpg_keys(:unassigned_gpg_key),
         ssl_client_key: katello_gpg_keys(:unassigned_gpg_key))

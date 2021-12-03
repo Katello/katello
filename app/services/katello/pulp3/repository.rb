@@ -252,7 +252,7 @@ module Katello
       end
 
       def sync_url_params(_sync_options)
-        params = {remote: repo.remote_href, mirror: repo.root.mirror_on_sync}
+        params = {remote: repo.remote_href, mirror: repo.root.mirroring_policy == Katello::RootRepository::MIRRORING_POLICY_CONTENT}
         params[:skip_types] = skip_types if skip_types
         params
       end
@@ -505,7 +505,7 @@ module Katello
       end
 
       def retain_package_versions_count
-        return 0 if root.retain_package_versions_count.nil? || root.mirror_on_sync?
+        return 0 if root.retain_package_versions_count.nil? || root.using_mirrored_content?
         root.retain_package_versions_count.to_i
       end
     end

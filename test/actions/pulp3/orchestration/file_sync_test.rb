@@ -40,7 +40,7 @@ module ::Actions::Pulp3
     end
 
     def test_sync_with_pagination
-      @repo.root.update(:url => "https://fixtures.pulpproject.org/file-many/", :mirror_on_sync => false)
+      @repo.root.update(:url => "https://fixtures.pulpproject.org/file-many/", :mirroring_policy => ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE)
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,
           @repo,
@@ -69,7 +69,7 @@ module ::Actions::Pulp3
       @repo.reload
       @repo.index_content
       pre_count_content = ::Katello::RepositoryFileUnit.where(:repository_id => @repo.id).count
-      @repo.root.update(:url => "file:///var/lib/pulp/sync_imports/test_repos/file3", :mirror_on_sync => false)
+      @repo.root.update(:url => "file:///var/lib/pulp/sync_imports/test_repos/file3", :mirroring_policy => ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE)
 
       ForemanTasks.sync_task(
           ::Actions::Pulp3::Orchestration::Repository::Update,

@@ -19,8 +19,8 @@
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions', 'RepositoryTypesService',
-        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions, RepositoryTypesService) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'Architecture', 'HttpProxy', 'HttpProxyPolicy', 'OSVersions', 'RepositoryTypesService', 'MirroringPolicy',
+        function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, Architecture, HttpProxy, HttpProxyPolicy, OSVersions, RepositoryTypesService, MirroringPolicy) {
             $scope.organization = CurrentOrganization;
 
             $scope.progress = {uploading: false};
@@ -198,6 +198,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             $scope.checksums = Checksum.checksums;
             $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
+            $scope.mirroringPolicies = MirroringPolicy.mirroringPolicies;
 
             $scope.checksumTypeDisplay = function (checksum) {
                 return Checksum.checksumType(checksum);
@@ -206,6 +207,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.downloadPolicyDisplay = function (downloadPolicy) {
                 return DownloadPolicy.downloadPolicyName(downloadPolicy);
             };
+
+            $scope.mirroringPolicyDisplay = MirroringPolicy.mirroringPolicyName;
 
             $scope.clearUpstreamAuth = function () {
                 $scope.repository['upstream_password'] = null;

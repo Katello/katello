@@ -16,10 +16,11 @@ FactoryBot.define do
       url { nil }
       unprotected { nil }
       download_policy { nil }
+      mirroring_policy { nil }
     end
 
     after(:build) do |repo, evaluator|
-      %w(product product_id content_id content_type label name docker_upstream_name url unprotected download_policy).each do |attr|
+      %w(product product_id content_id content_type label name docker_upstream_name url unprotected download_policy mirroring_policy).each do |attr|
         repo.root.send("#{attr}=", evaluator.send(attr)) if evaluator.send(attr)
       end
     end

@@ -8,7 +8,7 @@ glue(@resource.root) do
   attributes :content_type
   attributes :docker_upstream_name
   attributes :docker_tags_whitelist
-  attributes :mirror_on_sync, :verify_ssl_on_sync
+  attributes :verify_ssl_on_sync
   attributes :unprotected, :full_path, :checksum_type
   attributes :container_repository_name
   attributes :download_policy

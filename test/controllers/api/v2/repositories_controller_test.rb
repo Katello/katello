@@ -416,7 +416,20 @@ module Katello
     def test_create_with_mirror_on_sync_true
       mirror_on_sync = true
       run_test_individual_attribute(:mirror_on_sync => mirror_on_sync) do |_, repo|
-        repo.root.expects(:mirror_on_sync=).with(mirror_on_sync)
+        repo.root.expects(:mirroring_policy=).with(::Katello::RootRepository::MIRRORING_POLICY_CONTENT)
+      end
+    end
+
+    def test_create_with_mirror_on_sync_false
+      mirror_on_sync = false
+      run_test_individual_attribute(:mirror_on_sync => mirror_on_sync) do |_, repo|
+        repo.root.expects(:mirroring_policy=).with(::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE)
+      end
+    end
+
+    def test_create_with_mirroring_policy
+      run_test_individual_attribute(:mirroring_policy => ::Katello::RootRepository::MIRRORING_POLICY_CONTENT) do |_, repo|
+        repo.root.expects(:mirroring_policy=).with(::Katello::RootRepository::MIRRORING_POLICY_CONTENT)
       end
     end
 
@@ -623,6 +636,23 @@ module Katello
         attributes[:ignorable_content].must_equal ignorable_content
       end
       put :update, params: { :id => repo.id, :ignorable_content => ignorable_content }
+    end
+
+    def test_update_with_sync_policy
+      repo = katello_repositories(:fedora_17_unpublished)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        assert_equal ::Katello::RootRepository::MIRRORING_POLICY_COMPLETE, attributes[:mirroring_policy]
+      end
+      put :update, params: { :id => repo.id, :mirroring_policy => ::Katello::RootRepository::MIRRORING_POLICY_COMPLETE }
+    end
+
+    def test_update_with_mirror_on_sync
+      repo = katello_repositories(:fedora_17_unpublished)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        refute_includes attributes.keys, :mirror_on_sync
+        assert_equal ::Katello::RootRepository::MIRRORING_POLICY_ADDITIVE, attributes[:mirroring_policy]
+      end
+      put :update, params: { :id => repo.id, :mirror_on_sync => false }
     end
 
     def test_update_with_retain_package_versions_count
