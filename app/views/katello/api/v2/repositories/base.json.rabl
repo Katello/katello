@@ -6,6 +6,7 @@ attributes :pulp_id => :backend_identifier
 attributes :relative_path, :container_repository_name, :full_path, :library_instance_id
 attributes :version_href, :remote_href, :publication_href
 attributes :content_counts
+attributes :mirroring_policy
 
 glue(@object.root) do
   attributes :content_type, :url, :arch, :os_versions, :content_id, :generic_remote_options

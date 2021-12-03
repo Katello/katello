@@ -7,6 +7,7 @@ debian_pulp_ragnarok_root:
   deb_releases:         ragnarok
   deb_components:       asgard
   download_policy:      immediate
+  mirroring_policy:     "mirror_content_only"
 
 debian_9_amd64_root:
   name:                 Debian 9 amd64
@@ -19,6 +20,7 @@ debian_9_amd64_root:
   deb_components:       main
   deb_architectures:    amd64
   download_policy:      on_demand
+  mirroring_policy:     "mirror_content_only"
 
 debian_10_amd64_root:
   name:                 Debian 10 amd64
@@ -32,6 +34,7 @@ debian_10_amd64_root:
   deb_components:       main,contrib
   deb_architectures:    amd64
   download_policy:      immediate
+  mirroring_policy:     "mirror_content_only"
 
 debian_10_amd64_duplicate_root:
   name:                 Debian 10 amd64 duplicate
@@ -45,6 +48,7 @@ debian_10_amd64_duplicate_root:
   deb_components:       main,contrib
   deb_architectures:    amd64
   download_policy:      immediate
+  mirroring_policy:     "mirror_content_only"
 
 fedora_17_x86_64_root:
   name:                 Fedora 17 x86_64
@@ -57,6 +61,7 @@ fedora_17_x86_64_root:
   url:                 "http://myrepo.com"
   unprotected:           <%= true %>
   download_policy: on_demand
+  mirroring_policy:     "mirror_content_only"
 
 fedora_17_x86_64_duplicate_root:
   name:                 Fedora 17 x86_64 duplicate
@@ -68,6 +73,7 @@ fedora_17_x86_64_duplicate_root:
   url:                 "http://myrepo.com"
   unprotected:           <%= true %>
   download_policy: immediate
+  mirroring_policy:     "mirror_content_only"
 
 feedless_fedora_17_x86_64_root:
   name:                 Feedless Fedora 17 x86_64
@@ -78,7 +84,7 @@ feedless_fedora_17_x86_64_root:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   download_policy: on_demand
   unprotected:           <%= true %>
-
+  mirroring_policy:     "mirror_content_only"
 
 rhel_7_x86_64_root:
   name:                 RHEL 7 x86_64
@@ -91,6 +97,7 @@ rhel_7_x86_64_root:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   url:                 'https://cdn.example.com/rhel/7/os'
   download_policy: on_demand
+  mirroring_policy:     "mirror_content_only"
 
 rhel_6_x86_64_root:
   name:                 RHEL 6 x86_64
@@ -104,6 +111,7 @@ rhel_6_x86_64_root:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   url:                 'https://cdn.example.com/rhel/6/os'
   download_policy: on_demand
+  mirroring_policy:     "mirror_content_only"
 
 fedora_17_no_arch_root:
   name:                 Fedora 17 no arch
@@ -115,6 +123,7 @@ fedora_17_no_arch_root:
   url:                 "http://myrepo.com"
   unprotected:           <%= true %>
   download_policy: on_demand
+  mirroring_policy:     "mirror_content_only"
 
 rhel_7_no_arch_root:
   name:                 RHEL 7 no_arch
@@ -127,6 +136,7 @@ rhel_7_no_arch_root:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   url:                 'https://cdn.example.com/rhel/7/os'
   download_policy: on_demand
+  mirroring_policy:     "mirror_content_only"
 
 fedora_17_unpublished_root:
   name:                 Fedora 17 x86_64 unpublished
@@ -137,6 +147,7 @@ fedora_17_unpublished_root:
   url:                  "http://www.pleaseack.com"
   unprotected:           <%= true %>
   download_policy:      immediate
+  mirroring_policy:     "mirror_content_only"
 
 fedora_17_unpublished_2_root:
   name:                 Fedora 17 x86_64 2
@@ -147,6 +158,7 @@ fedora_17_unpublished_2_root:
   url:                  "http://www.pleaseack.com"
   unprotected:           <%= true %>
   download_policy: on_demand
+  mirroring_policy:     "mirror_content_only"
 
 srpm_repo_root:
   name:                 Source rpm repo
@@ -156,6 +168,7 @@ srpm_repo_root:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
   download_policy: on_demand
   unprotected:           <%= true %>
+  mirroring_policy:     "mirror_content_only"
 
 redis_root:
   name:                 redis
@@ -165,6 +178,7 @@ redis_root:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
+  mirroring_policy:     "mirror_content_only"
 
 busybox_root:
   name:                 busybox
@@ -176,6 +190,7 @@ busybox_root:
   unprotected:           <%= true %>
   url:                  'https://quay.io'
   docker_upstream_name: 'libpod/busybox'
+  mirroring_policy:     "mirror_content_only"
 
 busybox2_root:
   name:                 busybox
@@ -187,6 +202,7 @@ busybox2_root:
   unprotected:           <%= true %>
   url:                  'https://quay.io'
   docker_upstream_name: 'libpod/busybox'
+  mirroring_policy:     "mirror_content_only"
 
 generic_file_root:
   name:                 My Files
@@ -196,6 +212,7 @@ generic_file_root:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
+  mirroring_policy:     "mirror_content_only"
 
 pulp3_file_root_1:
   name:                 Pulp3 File 1
@@ -206,6 +223,7 @@ pulp3_file_root_1:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
   url:                  "file:///var/lib/pulp/sync_imports/test_repos/file1"
+  mirroring_policy:     "mirror_content_only"
 
 pulp3_ansible_collection_root_1:
   name:                 Pulp3 Ansible Collection 1
@@ -222,6 +240,7 @@ pulp3_ansible_collection_root_1:
   ansible_collection_auth_url: "https://some.authUrl.com"
   ansible_collection_auth_token: "random_token"
   verify_ssl_on_sync: <%= false %>
+  mirroring_policy:     "mirror_content_only"
 
 pulp3_docker_root_1:
   name:                 Pulp3 Docker 1
@@ -233,6 +252,7 @@ pulp3_docker_root_1:
   unprotected:           <%= true %>
   url:                  "https://registry-1.docker.io/"
   docker_upstream_name: "fedora/ssh"
+  mirroring_policy:     "mirror_content_only"
 
 pulp3_deb_root_1:
   name:                 Pulp3 Deb 1
@@ -245,6 +265,7 @@ pulp3_deb_root_1:
   deb_releases:         buster
   deb_components:       main
   deb_architectures:    amd64
+  mirroring_policy:     "mirror_content_only"
 
 pulp3_python_root_1:
   name:                 Pulp3 Python 1
@@ -255,6 +276,7 @@ pulp3_python_root_1:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
   url:                  ""
+  mirroring_policy:     "mirror_content_only"
 
 uln_ovm2_2_1_1_i386_patch_root:
   name:                 ovm2 i386 patch
@@ -264,3 +286,4 @@ uln_ovm2_2_1_1_i386_patch_root:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:oracle) %>
   url:                  "uln://ovm2_2.1.1_i386_patch"
   download_policy:      on_demand
+  mirroring_policy:     "mirror_content_only"

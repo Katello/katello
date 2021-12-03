@@ -113,7 +113,7 @@ module Actions
       def overwrite_pulp_error(message)
         case message
         when 'This repository uses features which are incompatible with \'mirror\' sync. Please sync without mirroring enabled.'
-          'Please disable \'mirror on sync\' because the upstream repository refers to external resources.'
+          'The "Complete Mirroring" mirroring policy is not compatible with this repository.  You may want to update it to use "Content Only"'
         else
           message
         end
