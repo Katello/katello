@@ -4,6 +4,7 @@
  *
  * @requires $scope
  * @requires $location
+ * @requires $uibModal
  * @requires Notification
  * @requires translate
  * @requires ApiErrorHandler
@@ -18,8 +19,8 @@
  *   Provides the functionality for manipulating repositories attached to a product.
  */
 angular.module('Bastion.products').controller('ProductRepositoriesController',
-    ['$scope', '$state', '$location', 'Notification', 'translate', 'ApiErrorHandler', 'Product', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane', 'RepositoryTypesService',
-    function ($scope, $state, $location, Notification, translate, ApiErrorHandler, Product, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane, RepositoryTypesService) {
+    ['$scope', '$state', '$location', '$uibModal', 'Notification', 'translate', 'ApiErrorHandler', 'Product', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane', 'RepositoryTypesService',
+    function ($scope, $state, $location, $uibModal, Notification, translate, ApiErrorHandler, Product, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane, RepositoryTypesService) {
         var repositoriesNutupane = new Nutupane(Repository, {
             'product_id': $scope.$stateParams.productId,
             'search': $location.search().search || "",
@@ -79,6 +80,17 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
 
             removalPromise.finally(function () {
                 $scope.removingRepositories = false;
+            });
+        };
+
+        $scope.openReclaimSpaceModal = function () {
+            $uibModal.open({
+                templateUrl: 'products/details/repositories/views/product-repositories-reclaim-space-modal.html',
+                controller: 'ProductRepositoriesReclaimSpaceModalController',
+                size: 'lg',
+                resolve: {
+                    reclaimParams: getParams()
+                }
             });
         };
 

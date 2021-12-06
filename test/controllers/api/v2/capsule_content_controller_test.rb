@@ -132,5 +132,14 @@ module Katello
         get :cancel_sync, params: { :id => proxy_with_pulp.id }
       end
     end
+
+    def test_reclaim_space
+      assert_async_task ::Actions::Pulp3::CapsuleContent::ReclaimSpace do |capsule|
+        assert_equal proxy_with_pulp.id, capsule.id
+      end
+
+      post :reclaim_space, params: { :id => proxy_with_pulp.id }
+      assert_response :success
+    end
   end
 end

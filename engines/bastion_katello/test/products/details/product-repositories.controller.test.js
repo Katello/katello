@@ -1,7 +1,19 @@
 describe('Controller: ProductRepositoriesController', function() {
-    var $scope, $q, expectedTable, expectedIds, Repository, RepositoryBulkAction, Nutupane, DownloadPolicy;
+    var $scope, $q, $uibModal, expectedTable, expectedIds, Repository, RepositoryBulkAction, Nutupane, DownloadPolicy;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks', 'Bastion.repositories'))
+
+    beforeEach(function () {
+        $uibModal = {
+            open: function () {
+                return {
+                    closed: {
+                        then: function () {}
+                    }
+                }
+            }
+        };
+    });
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
@@ -49,6 +61,7 @@ describe('Controller: ProductRepositoriesController', function() {
 
         $controller('ProductRepositoriesController', {
             $scope: $scope,
+            $uibModal: $uibModal,
             Repository: Repository,
             RepositoryBulkAction: RepositoryBulkAction,
             CurrentOrganization: 'ACME',
@@ -57,6 +70,18 @@ describe('Controller: ProductRepositoriesController', function() {
             RepositoryTypesService: {}
         });
     }));
+
+    it("can open a reclaim space modal", function () {
+        var result;
+        spyOn($uibModal, 'open').and.callThrough();
+
+        $scope.openReclaimSpaceModal();
+
+        result = $uibModal.open.calls.argsFor(0)[0];
+
+        expect(result.templateUrl).toContain('product-repositories-reclaim-space-modal.html');
+        expect(result.controller).toBe('ProductRepositoriesReclaimSpaceModalController');
+    });
 
     it("sets up the repositories nutupane table", function() {
         expect($scope.table).toBe(expectedTable);

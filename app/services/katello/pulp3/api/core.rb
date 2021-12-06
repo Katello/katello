@@ -55,6 +55,10 @@ module Katello
           repository_type.distributions_api_class.new(api_client)
         end
 
+        def core_repositories_api
+          PulpcoreClient::RepositoriesApi.new(core_api_client)
+        end
+
         def repositories_api
           repository_type.repositories_api_class.new(api_client)
         end
@@ -79,6 +83,10 @@ module Katello
           self.class.ignore_409_exception do
             tasks_api.tasks_cancel(task_href, data)
           end
+        end
+
+        def repositories_reclaim_space_api
+          PulpcoreClient::RepositoriesReclaimSpaceApi.new(core_api_client)
         end
 
         def exporter_api
@@ -190,6 +198,12 @@ module Katello
 
         def delete_distribution(href)
           ignore_404_exception { distributions_api.delete(href) }
+        end
+
+        def core_repositories_list_all(options = {})
+          self.class.fetch_from_list do |page_opts|
+            core_repositories_api.list(page_opts.merge(options))
+          end
         end
 
         def list_all(options = {})
