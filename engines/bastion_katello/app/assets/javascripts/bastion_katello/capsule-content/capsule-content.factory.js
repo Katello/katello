@@ -13,7 +13,8 @@ angular.module('Bastion.capsule-content').factory('CapsuleContent',
         return BastionResource('katello/api/capsules/:id/content/:action', {id: '@id'}, {
           syncStatus: {method: 'GET', isArray: false, params: {action: 'sync'}},
           sync: {method: 'post', isArray: false, params: {action: 'sync'}},
-          cancelSync: {method: 'delete', isArray: false, params: {action: 'sync'}}
+          cancelSync: {method: 'delete', isArray: false, params: {action: 'sync'}},
+          reclaimSpace: {method: 'post', isArray: false, params: {action: 'reclaim_space'}}
         });
 
     }]

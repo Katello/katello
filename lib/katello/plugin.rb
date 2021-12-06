@@ -246,6 +246,10 @@ Foreman::Plugin.register :katello do
       :name => _("Content Sync"),
       :partial => "foreman/smart_proxies/content_sync",
       :onlyif => proc { |proxy| proxy.pulp_mirror? }
+    context.add_pagelet :details_content,
+      :name => _("Reclaim Space"),
+      :partial => "foreman/smart_proxies/reclaim_space",
+      :onlyif => proc { |proxy| proxy.pulp_primary? }
   end
 
   ::Katello::HostStatusManager::STATUSES.each do |status_class|

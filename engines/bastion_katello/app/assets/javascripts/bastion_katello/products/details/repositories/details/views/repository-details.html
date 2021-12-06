@@ -38,6 +38,19 @@
           </a>
         </li>
 
+        <li role="menuitem" ng-hide="hideSyncButton(repository, false)" ng-class="{disabled: disableSyncLink()}">
+          <a ng-click="openReclaimSpaceModal(repository)" disable-link="disableSyncLink()" translate>
+            Reclaim Space
+          </a>
+
+          <span class="disabled" ng-show="syncInProgress(repository.last_sync)" translate>
+            Cannot clean Repository, a sync is already in progress.
+          </span>
+
+          <span class="disabled" ng-show="denied('sync_products', product)" translate>
+            Cannot clean Repository without the proper permissions.
+          </span>
+        </li>
         <li role="menuitem" ng-hide="syncInProgress(repository.last_sync) || denied('edit_products', product)">
           <span class="disabled" ng-show="syncInProgress(repository.last_sync)" translate>
             Cannot republish Repository, a sync is already in progress.

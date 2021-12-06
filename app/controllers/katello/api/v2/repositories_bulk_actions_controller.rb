@@ -50,6 +50,14 @@ module Katello
       end
     end
 
+    api :POST, "/repositories/bulk/reclaim_space", N_("Reclaim space from On Demand repositories")
+    param :ids, Array, :desc => N_("List of repository ids"), :required => true
+    def reclaim_space_from_repositories
+      task = async_task(::Actions::Pulp3::Repository::ReclaimSpace, @repositories)
+
+      respond_for_async :resource => task
+    end
+
     private
 
     def find_repositories

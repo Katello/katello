@@ -2,6 +2,8 @@ object @capsule
 
 attribute :last_sync_time
 
+attribute :download_policy
+
 node :unsyncable_content_types do
   ::Katello::SmartProxyHelper.new(@capsule).unsyncable_content_types
 end

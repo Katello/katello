@@ -2,7 +2,7 @@
   <h3><%= _('Content Sync') %></h3>
 
   {{ syncStatusText(syncState, syncStatus) }}
-  <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED, syncState.FAILURE)">
+  <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED, syncState.RECLAIMING_SPACE, syncState.RECLAIM_SPACE_TRIGGERED, syncState.FAILURE)">
     {{ syncTask.progressbar.value || 0 | number: 0 }}%
     <a href="<%= @task_search_url %>" target="_self">
       <div ng-class="{ active: isTaskInProgress(syncTask) }" class="progress progress-striped">
@@ -26,12 +26,12 @@
     </span>
   </div>
 
-  <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)">
-    <a ng-click="cancelSync()" class="btn btn-default" ng-disabled="!syncState.is(syncState.SYNCING)">
+  <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED, syncState.RECLAIMING_SPACE, syncState.RECLAIM_SPACE_TRIGGERED)">
+    <a ng-click="cancelSync()" class="btn btn-default" ng-disabled="!syncState.is(syncState.SYNCING, syncState.RECLAIMING_SPACE)">
       <span translate>Cancel Sync</span>
     </a>
   </div>
-  <div class="dropdown" ng-hide="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)">
+  <div class="dropdown" ng-hide="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED, syncState.RECLAIMING_SPACE, syncState.RECLAIM_SPACE_TRIGGERED)">
     <button class="btn btn-default dropdown-toggle" type="button" id="syncDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       Synchronize
       <span class="caret"></span>
@@ -50,6 +50,12 @@
           <span translate><strong>Complete Sync</strong></span>
           <p> A Complete Sync will sync repositories even if the upstream metadata appears to have no change.<br>
               Complete Sync is only relevant for yum/deb repositories and will take longer than an optimized sync.</p>
+        </a>
+      </li>
+      <li>
+        <a ng-click="reclaimSpace()" ng-hide="syncStatus.download_policy != 'on_demand'">
+          <span translate><strong>Reclaim Space</strong></span>
+          <p translate> Delete cached content units from an "On Demand" Smart Proxy.</p>
         </a>
       </li>
     </ul>
