@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://pulp3-sandbox-centos7.cannolo.example.com/pulp/api/v3/tasks/?limit=1
+    uri: https://devel8.markarth.example.com/pulp/api/v3/tasks/?limit=1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -13,61 +13,57 @@ http_interactions:
       - application/json
       Content-Type:
       - application/json
-      Correlation-Id:
-      - abc123
       Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
+      - Basic Og==
   response:
     status:
       code: 200
       message: OK
     headers:
-      Server:
-      - nginx/1.20.1
       Date:
-      - Mon, 01 Nov 2021 20:29:26 GMT
+      - Mon, 06 Dec 2021 19:37:49 GMT
+      Server:
+      - gunicorn
       Content-Type:
       - application/json
-      Content-Length:
-      - '761'
-      Connection:
-      - keep-alive
       Vary:
-      - Accept, Cookie
+      - Accept,Cookie,Accept-Encoding
       Allow:
       - GET, HEAD, OPTIONS
       X-Frame-Options:
       - DENY
+      Content-Length:
+      - '737'
       X-Content-Type-Options:
       - nosniff
       Referrer-Policy:
       - same-origin
       Correlation-Id:
-      - 2ef6d9d2af664c05a8f5c77dcf08ece5
+      - cb4d8e7aad0d40679926e8eec37b464d
       Access-Control-Expose-Headers:
       - Correlation-ID
-      Strict-Transport-Security:
-      - max-age=15768000
+      Via:
+      - 1.1 devel8.markarth.example.com
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjb3VudCI6Mzk5NiwibmV4dCI6Imh0dHBzOi8vcHVscDMtc2FuZGJveC1j
-        ZW50b3M3LmNhbm5vbG8uZXhhbXBsZS5jb206NDQzL3B1bHAvYXBpL3YzL3Rh
-        c2tzLz9saW1pdD0xJm9mZnNldD0xIiwicHJldmlvdXMiOm51bGwsInJlc3Vs
-        dHMiOlt7InB1bHBfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mOWQwM2Q2
-        MC0xZmM4LTQ0MzgtYTcyYy04MjhkYzIwN2NlYWQvIiwicHVscF9jcmVhdGVk
-        IjoiMjAyMS0xMS0wMVQyMDoyOToyMC4wNjcxNzJaIiwic3RhdGUiOiJjb21w
-        bGV0ZWQiLCJuYW1lIjoicHVscGNvcmUuYXBwLnRhc2tzLmJhc2UuZ2VuZXJh
-        bF9kZWxldGUiLCJsb2dnaW5nX2NpZCI6IjRmYzQyMzg0ZmQwYjQxZDI5NmNk
-        YmZiN2Q3YWU0MDMzIiwic3RhcnRlZF9hdCI6IjIwMjEtMTEtMDFUMjA6Mjk6
-        MjAuMTI0NjEwWiIsImZpbmlzaGVkX2F0IjoiMjAyMS0xMS0wMVQyMDoyOToy
-        MC4xOTA1MDFaIiwiZXJyb3IiOm51bGwsIndvcmtlciI6Ii9wdWxwL2FwaS92
-        My93b3JrZXJzLzEzOGRhODE4LTRkZjQtNGUzZS1iYjJhLWJjMmYxMWUzNjk1
-        NS8iLCJwYXJlbnRfdGFzayI6bnVsbCwiY2hpbGRfdGFza3MiOltdLCJ0YXNr
-        X2dyb3VwIjpudWxsLCJwcm9ncmVzc19yZXBvcnRzIjpbXSwiY3JlYXRlZF9y
-        ZXNvdXJjZXMiOltdLCJyZXNlcnZlZF9yZXNvdXJjZXNfcmVjb3JkIjpbIi9w
-        dWxwL2FwaS92My9yZXBvc2l0b3JpZXMvY29udGFpbmVyL2NvbnRhaW5lci8x
-        OGE3YjA3OS1jMDc0LTQ5ZGQtYTc3YS1mYzhiNmI1YjAzOGMvIl19XX0=
+        eyJjb3VudCI6NDg5OSwibmV4dCI6Imh0dHBzOi8vZGV2ZWw4Lm1hcmthcnRo
+        LmV4YW1wbGUuY29tOjQ0My9wdWxwL2FwaS92My90YXNrcy8/bGltaXQ9MSZv
+        ZmZzZXQ9MSIsInByZXZpb3VzIjpudWxsLCJyZXN1bHRzIjpbeyJwdWxwX2hy
+        ZWYiOiIvcHVscC9hcGkvdjMvdGFza3MvMGVkZDlkYjQtYzc3MS00Yzk5LWIy
+        ZmUtMDU4NTNjZDMxMjA2LyIsInB1bHBfY3JlYXRlZCI6IjIwMjEtMTItMDZU
+        MTk6Mzc6NDguMTA5ODI4WiIsInN0YXRlIjoiY29tcGxldGVkIiwibmFtZSI6
+        InB1bHBjb3JlLmFwcC50YXNrcy5iYXNlLmdlbmVyYWxfZGVsZXRlIiwibG9n
+        Z2luZ19jaWQiOiJlNzIyNjYyOWRhOTk0Mzg5YmIzYzI2Njc0NjE2ZGMwYSIs
+        InN0YXJ0ZWRfYXQiOiIyMDIxLTEyLTA2VDE5OjM3OjQ4LjE1MjM4NVoiLCJm
+        aW5pc2hlZF9hdCI6IjIwMjEtMTItMDZUMTk6Mzc6NDguMjQ5NzQ2WiIsImVy
+        cm9yIjpudWxsLCJ3b3JrZXIiOiIvcHVscC9hcGkvdjMvd29ya2Vycy81NTIx
+        YzNlOS05ZmIxLTRlN2ItYWU2Ny1iYmJlMWRhZWU2MGQvIiwicGFyZW50X3Rh
+        c2siOm51bGwsImNoaWxkX3Rhc2tzIjpbXSwidGFza19ncm91cCI6bnVsbCwi
+        cHJvZ3Jlc3NfcmVwb3J0cyI6W10sImNyZWF0ZWRfcmVzb3VyY2VzIjpbXSwi
+        cmVzZXJ2ZWRfcmVzb3VyY2VzX3JlY29yZCI6WyIvcHVscC9hcGkvdjMvcmVw
+        b3NpdG9yaWVzL2ZpbGUvZmlsZS9mNGUwNjhhOS05ZTJlLTRiYjQtYjkxNS01
+        ZjFlNTA3YWRmM2EvIl19XX0=
     http_version: 
-  recorded_at: Mon, 01 Nov 2021 20:29:26 GMT
+  recorded_at: Mon, 06 Dec 2021 19:37:49 GMT
 recorded_with: VCR 3.0.3
