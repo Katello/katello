@@ -1,6 +1,11 @@
 simple_host_collection:
   name:         Simple Host Collection
   description:  The simplest of host collections.
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+
+limited_hosts_host_collection:
+  name:         Five Host Collection
+  description:  A collection of five hosts
   max_hosts:    5
   unlimited_hosts: false
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>

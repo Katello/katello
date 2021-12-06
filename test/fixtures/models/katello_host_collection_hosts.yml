@@ -3,3 +3,9 @@ one_simple_host_collection:
   host_id:           <%= ActiveRecord::FixtureSet.identify(:one) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+
+limited_hosts:
+  host_collection_id:  <%= ActiveRecord::FixtureSet.identify(:limited_hosts_host_collection) %>
+  host_id:           <%= ActiveRecord::FixtureSet.identify(:one) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
