@@ -24,6 +24,11 @@ describe('Factory: CapsuleContent', function () {
         CapsuleContent.sync({ id: 1 });
     });
 
+    it('provides a way to start space reclamation', function () {
+        $httpBackend.expectPOST('katello/api/capsules/1/content/reclaim_space').respond({});
+        CapsuleContent.reclaimSpace({ id: 1 });
+    });
+
     it('provides a way to cancel synchronization', function () {
         $httpBackend.expectDELETE('katello/api/capsules/1/content/sync').respond({});
         CapsuleContent.cancelSync({ id: 1 });

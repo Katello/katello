@@ -9,6 +9,8 @@ angular.module('Bastion.capsule-content').service('syncState', function () {
 
     this.DEFAULT = 'DEFAULT';
     this.SYNCING = 'SYNCING';
+    this.RECLAIMING_SPACE = 'RECLAIMING_SPACE';
+    this.RECLAIM_SPACE_TRIGGERED = 'RECLAIM_SPACE_TRIGGERED';
     this.SYNC_TRIGGERED = 'SYNC_TRIGGERED';
     this.CANCEL_TRIGGERED = 'CANCEL_TRIGGERED';
     this.FAILURE = 'FAILURE';

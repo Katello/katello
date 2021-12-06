@@ -1,0 +1,12 @@
+<div>
+  <h3><%= _('Reclaim Space') %></h3>
+  <p translate>
+    <strong>Warning</strong>: reclaiming space will delete all cached content units in "On Demand" repositories on this Smart Proxy.<br>
+    Take precaution when cleaning custom repositories whose upstream parents don't keep old package versions.
+  </p>
+  <div class="button">
+    <button class="btn btn-default" type="button" id="reclaimSpaceButton" ng-click="reclaimSpace()" translate>
+      Reclaim Space
+    </button>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header">Reclaim Space</h4>
+  <div data-block="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+    <span translate>
+      Warning: reclaiming space for an "On Demand" repository will delete all cached content units.  Take precaution when cleaning custom repositories whose upstream parents don't keep old package versions.
+    </span>
+  </div>
+  <span data-block="modal-confirm-button">
+    <button class="btn btn-primary" ng-click="ok()">
+      <span translate>Reclaim Space</span>
+    </button>
+  </span>
+</div>

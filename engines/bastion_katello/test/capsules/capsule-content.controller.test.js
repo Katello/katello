@@ -36,6 +36,9 @@ describe('Controller: CapsuleContentController', function() {
         CapsuleContent.sync = function (params) {
             return { $promise: deferred.promise };
         }
+        CapsuleContent.reclaimSpace = function (params) {
+            return { $promise: deferred.promise };
+        }
 
         translate = function (message) {
             return message;
@@ -70,15 +73,24 @@ describe('Controller: CapsuleContentController', function() {
     describe('syncCapsule', function() {
         it('has no effect when sync is in progress', function() {
             spyOn(CapsuleContent, 'sync').and.callThrough();
+            spyOn(CapsuleContent, 'reclaimSpace').and.callThrough();
             syncState.set(syncState.SYNCING);
             $scope.syncCapsule(false);
+            $scope.reclaimSpace();
             expect(CapsuleContent.sync).not.toHaveBeenCalled();
+            expect(CapsuleContent.reclaimSpace).not.toHaveBeenCalled();
         });
 
         it('starts capsule synchronization', function() {
             spyOn(CapsuleContent, 'sync').and.callThrough();
             $scope.syncCapsule(false);
             expect(CapsuleContent.sync).toHaveBeenCalledWith({ id: '83', 'skip_metadata_check': false });
+        });
+
+        it('starts capsule space reclamation', function() {
+            spyOn(CapsuleContent, 'reclaimSpace').and.callThrough();
+            $scope.reclaimSpace();
+            expect(CapsuleContent.reclaimSpace).toHaveBeenCalledWith({ id: '83' });
         });
 
         it('starts capsule synchronization with skip metadata option', function() {
@@ -92,6 +104,11 @@ describe('Controller: CapsuleContentController', function() {
             expect(syncState.is(syncState.SYNC_TRIGGERED)).toBeTruthy();
         });
 
+        it('sets state to RECLAIM_SPACE_TRIGGERED', function() {
+            $scope.reclaimSpace();
+            expect(syncState.is(syncState.RECLAIM_SPACE_TRIGGERED)).toBeTruthy();
+        });
+
         it('sets state to SYNCING when the response is successful', function() {
             $scope.syncCapsule(false);
             deferred.resolve({id: '1'});
@@ -100,8 +117,16 @@ describe('Controller: CapsuleContentController', function() {
             expect(syncState.is(syncState.SYNCING)).toBeTruthy();
         });
 
+        it('sets state to RECLAIMING_SPACE when the response is successful', function() {
+            $scope.reclaimSpace();
+            deferred.resolve({id: '1'});
+            $scope.$apply();
 
-        it('adds task to active_sync_tasks when the response is successful', function() {
+            expect(syncState.is(syncState.RECLAIMING_SPACE)).toBeTruthy();
+        });
+
+
+        it('adds task to active_sync_tasks when the sync response is successful', function() {
             var taskCount = $scope.syncStatus['active_sync_tasks'].length;
 
             $scope.syncCapsule(false);
@@ -111,8 +136,26 @@ describe('Controller: CapsuleContentController', function() {
             expect($scope.syncStatus['active_sync_tasks'].length).toBe(taskCount + 1);
         });
 
+        it('adds task to active_sync_tasks when the reclaim space response is successful', function() {
+            var taskCount = $scope.syncStatus['active_sync_tasks'].length;
+
+            $scope.reclaimSpace();
+            deferred.resolve({id: '1'});
+            $scope.$apply();
+
+            expect($scope.syncStatus['active_sync_tasks'].length).toBe(taskCount + 1);
+        });
+
         it('sets state to DEFAULT when there is some error', function() {
             $scope.syncCapsule(false);
+            deferred.reject({});
+            $scope.$apply();
+
+            expect(syncState.is(syncState.DEFAULT)).toBeTruthy();
+        });
+
+        it('sets state to DEFAULT when there is some error', function() {
+            $scope.reclaimSpace();
             deferred.reject({});
             $scope.$apply();
 

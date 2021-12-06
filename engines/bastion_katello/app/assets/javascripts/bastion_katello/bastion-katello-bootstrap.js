@@ -1,5 +1,6 @@
 BASTION_MODULES.push(
     'Bastion.capsule-content',
+    'Bastion.pulp-primary',
     'Bastion.activation-keys',
     'Bastion.architectures' ,
     'Bastion.common',

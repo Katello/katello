@@ -23,7 +23,7 @@ module Katello
     before_action :find_unauthorized_katello_resource, :only => [:gpg_key_content]
     before_action :find_authorized_katello_resource, :only => [:show, :update, :destroy, :sync,
                                                                :remove_content, :upload_content, :republish,
-                                                               :import_uploads, :verify_checksum]
+                                                               :import_uploads, :verify_checksum, :reclaim_space]
     before_action :find_content, :only => :remove_content
     before_action :find_organization_from_repo, :only => [:update]
     before_action :error_on_rh_product, :only => [:create]
@@ -312,6 +312,15 @@ module Katello
     param :id, :number, :required => true, :desc => N_("repository ID")
     def verify_checksum
       task = async_task(::Actions::Katello::Repository::VerifyChecksum, @repository)
+      respond_for_async :resource => task
+    rescue Errors::InvalidActionOptionError => e
+      raise HttpErrors::BadRequest, e.message
+    end
+
+    api :POST, "/repositories/:id/reclaim_space", N_("Reclaim space from an On Demand repository")
+    param :id, :number, :required => true, :desc => N_("repository ID")
+    def reclaim_space
+      task = async_task(::Actions::Pulp3::Repository::ReclaimSpace, @repository)
       respond_for_async :resource => task
     rescue Errors::InvalidActionOptionError => e
       raise HttpErrors::BadRequest, e.message

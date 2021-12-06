@@ -77,5 +77,15 @@ module Katello
         post :sync_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }
       end
     end
+
+    def test_reclaim_space
+      assert_async_task(::Actions::Pulp3::Repository::ReclaimSpace) do |repos|
+        assert_equal @repositories.map(&:id).sort, repos.map(&:id).sort
+      end
+
+      post :reclaim_space_from_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }
+
+      assert_response :success
+    end
   end
 end

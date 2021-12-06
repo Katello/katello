@@ -2,6 +2,8 @@
   <div ng-controller="CapsuleContentController">
     <%= render :file => 'smart_proxies/show' %>
   </div>
-<% else -%>
-  <%= render :file => 'smart_proxies/show' %>
+<% elsif @smart_proxy.pulp_primary? -%>
+  <div ng-controller="PulpPrimaryController">
+    <%= render :file => 'smart_proxies/show' %>
+  </div>
 <% end -%>
