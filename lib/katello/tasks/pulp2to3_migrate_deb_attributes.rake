@@ -8,6 +8,7 @@ namespace :katello do
       puts "Processing Repository #{index + 1}/#{repos.count}: #{repo.name} (#{repo.id})"
       begin
         ForemanTasks.sync_task(::Actions::Katello::Repository::Update, repo.root,
+                               download_policy: 'immediate',
                                deb_architectures: repo.root.deb_architectures&.gsub(',', ' '),
                                deb_releases: repo.root.deb_releases&.gsub(',', ' '),
                                deb_components: repo.root.deb_components&.gsub(',', ' '))
