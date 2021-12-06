@@ -396,11 +396,7 @@ module Katello
 
     def format_arches
       if content_type == ::Katello::Repository::DEB_TYPE
-        # FIXME: This should be set to self.deb_architectures but it needs to have the
-        # subscription-manager PR https://github.com/candlepin/subscription-manager/pull/2213
-        # merged. Otherwise subscription-manager returns _NO_ debian repository as described in
-        # https://community.theforeman.org/t/katello-3-16-1-1-el7-subscription-manager-doesnt-create-rhsm-repos-for-ubuntu/20928/38
-        nil
+        self.deb_architectures
       else
         self.arch == "noarch" ? nil : self.arch
       end
